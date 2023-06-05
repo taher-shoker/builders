@@ -15,9 +15,25 @@
         "main": "apps/gateway/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/gateway/tsconfig.app.json",
-        "assets": ["apps/gateway/src/favicon.ico", "apps/gateway/src/assets"],
-        "styles": ["apps/gateway/src/styles.scss"],
-        "scripts": []
+        "assets": [
+          "apps/gateway/src/assets",
+          {
+            "input": "libs/shared/assets/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          },
+          {
+            "input": "libs/mode-toggle/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          },
+          "apps/gateway/src/favicon.ico"
+        ],
+        "styles": [
+          "libs/styles/src/index.scss",
+          "apps/gateway/src/styles.scss"
+        ],
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
       },
       "configurations": {
         "production": {

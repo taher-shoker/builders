@@ -1,0 +1,7 @@
+html[dir='rtl'] {
+  @import './core/lib/bootstrap_rtl';
+}
+
+body.rtl {
+  @include rtlDirection();
+}

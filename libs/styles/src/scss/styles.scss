@@ -1,0 +1,15 @@
+@import 'bootstrap/scss/bootstrap';
+@import 'core/mixins/mixins';
+@import 'rtl';
+
+// Core Components
+@import 'core/variables/colors';
+@import 'core/type';
+@import 'core/switch';
+@import 'core/cards/cards';
+@import 'core/nav';
+@import 'core/buttons';
+@import 'core/inputs';
+
+// global style
+@import './core/main';

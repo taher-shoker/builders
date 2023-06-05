@@ -1,0 +1,68 @@
+<nav class="navbar navbar-light">
+  <div class="container-fluid">
+    <div class="left-box d-flex align-items-center">
+      <span
+        role="button"
+        aria-disabled="true"
+        (click)="onClick()"
+        class="additional-menu-btn-icon"
+        [ngClass]="{ open: showMenu }"
+        (keyup.enter)="({})"
+        ><span></span
+      ></span>
+      <a href="#" class="brand ms-4">
+        <img src="{{ logoSrc }}" alt="logo" />
+      </a>
+    </div>
+    <div class="right-box d-flex align-items-center">
+      <stc-apps-mode-toggle></stc-apps-mode-toggle>
+      <div class="dropdown">
+        <button
+          class="btn dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          {{ userName }}
+          <i class="fas fa-chevron-down ml-2"></i>
+        </button>
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="dropdownMenuButton1"
+        >
+          <a class="dropdown-item" href="javascript:void(0)">
+            <stc-apps-language-selector></stc-apps-language-selector>
+          </a>
+          <div class="dropdown-divider"></div>
+          <a class="dropdown-item" [routerLink]="['/login']">{{
+            'logout' | translate
+          }}</a>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<nav
+  [ngClass]="{ open: showMenu }"
+  class="additional-navigation js-additional-nav"
+>
+  <span
+    role="button"
+    aria-disabled="true"
+    (click)="onClick()"
+    class="additional-menu-btn-icon"
+    [ngClass]="{ open: showMenu }"
+    (keyup.enter)="({})"
+    ><span></span
+  ></span>
+  <ul id="secondary-menu" class="secondary-menu clear">
+    <li class="menu-item mt-3" *ngFor="let item of allItems">
+      <i class="px-2 fas {{ item.icon }}"></i>
+      <a [routerLink]="['/' + item.url]">{{ item.name | translate }}</a>
+    </li>
+    <!-- <li class="menu-item mt-3">
+      <a [routerLink]="['/settings']">{{ 'settings' | translate }}</a>
+    </li> -->
+  </ul>
+</nav>

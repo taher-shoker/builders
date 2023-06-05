@@ -1,0 +1,27 @@
+<div class="apps-box">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-10 offset-md-1 mt-5 pb-5">
+        <div class="card">
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-3 mt-3" *ngFor="let app of apps">
+                <a class="app-link" [routerLink]="'/' + [app.path]">
+                  <div class="app">
+                    <div class="app-icon">
+                      <img
+                        src="../../../assets/images/apps/{{ app.icon }}"
+                        alt="{{ app.name }}"
+                      />
+                    </div>
+                    <h4 class="app-name">{{ app.name }}</h4>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

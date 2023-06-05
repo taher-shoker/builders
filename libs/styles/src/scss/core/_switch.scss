@@ -1,0 +1,64 @@
+.custom-switch {
+  &:hover {
+    cursor: pointer;
+  }
+  .custom-control-input {
+    &:checked ~ {
+      .custom-control-label {
+        &::before {
+          border-color: $stcColor;
+          background-color: $stcColor;
+        }
+      }
+    }
+    &:focus {
+      &:not(:checked) ~ {
+        .custom-control-label {
+          &::before {
+            border-color: unset !important;
+          }
+        }
+      }
+    }
+  }
+  .custom-control-label {
+    &::before {
+      border-color: $stcColor;
+    }
+  }
+}
+.custom-control-input:focus ~ .custom-control-label::before {
+  box-shadow: 0 0 0 0.2rem rgba($stcColor, 0.25);
+}
+
+.light-dark-menu-button {
+  position: relative;
+  right: 0px;
+  overflow: hidden;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background-color: $stcLightPink;
+  -webkit-transition: all 200ms ease;
+  transition: all 200ms ease;
+  &.dark {
+    background-color: $stcColor_dark;
+    .ofset-spin-test {
+      transform: rotateZ(-180deg);
+    }
+  }
+  cursor: pointer;
+  .ofset-spin-test {
+    position: absolute;
+    right: -150%;
+    bottom: -150%;
+    width: 300%;
+    height: 300%;
+
+    img {
+      max-width: 100%;
+      vertical-align: middle;
+      display: inline-block;
+    }
+  }
+}

@@ -1,0 +1,44 @@
+<div class="login">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-10 offset-md-1 mt-5 pb-5">
+        <div class="card">
+          <div class="card-img">
+            <img src="assets/images/login/stc.png" alt="stc" />
+          </div>
+          <h4 class="">{{ 'login_with_email' | translate }}</h4>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4 offset-md-4">
+                <form>
+                  <stc-apps-input
+                    [inputPlaceholder]="'user_Name' | translate"
+                    [inputName]="'userName'"
+                    inputIcon="fa-user"
+                  ></stc-apps-input>
+                  <stc-apps-input
+                    [inputPlaceholder]="'password' | translate"
+                    [inputName]="'password'"
+                    inputIcon="fa-lock"
+                    [inputType]="'password'"
+                  ></stc-apps-input>
+                  <stc-apps-button
+                    [buttonText]="'login' | translate"
+                    [buttonType]="'primary'"
+                    [buttonDisable]="false"
+                    (buttonAction)="onLogin()"
+                  ></stc-apps-button>
+                </form>
+                <span class="divider-line my-4">{{ 'or' | translate }}</span>
+                <stc-apps-button
+                  [buttonText]="'login_with_stc' | translate"
+                  [buttonDisable]="false"
+                ></stc-apps-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+ul {
+  list-style: none;
+}
+
+
+
+// style for theme mode
+body.dark {
+  @include darken();
+}
+body.light {
+  @include lighten();
+}
+
+
+body {
+  position: relative;
+  word-break: break-word;
+  overflow-x: hidden;
+  background-color: var(--bgColor) !important;
+  color: var(--textColor) !important;
+  direction: var(--direction);
+}
