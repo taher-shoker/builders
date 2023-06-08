@@ -6,9 +6,9 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./input.component.scss'],
 })
 export class InputComponent {
-  @Input() inputName = 'name';
-  @Input() inputId = 'name';
-  @Input() inputPlaceholder = 'name';
+  @Input() inputName!: string;
+  @Input() inputId!: string;
+  @Input() inputPlaceholder!: string;
   @Input() inputType: 'text' | 'password' = 'text';
-  @Input() inputIcon = 'fa-user';
+  @Input() inputIcon!: string;
 }

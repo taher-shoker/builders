@@ -1,6 +1,5 @@
 .btn {
   text-transform: capitalize;
-  width: 100% !important;
   &.default {
     border-color: $whiteColor !important;
     color: $whiteColor !important;
@@ -15,6 +14,14 @@
   }
 
   &.warn {
-    background-color: #e1bb1a;
+    background-color: $stcSunsetColor;
+    color: $whiteColor;
+  }
+  &.gray-outline {
+    color: $shadowStc;
+    border: 1px solid $shadowStc;
+  }
+  i {
+    padding-inline-start: 8px;
   }
 }

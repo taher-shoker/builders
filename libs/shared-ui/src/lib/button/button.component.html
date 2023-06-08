@@ -4,7 +4,8 @@
   [class]="buttonType"
   [ngStyle]="{ opacity: buttonDisable ? '0.3' : '' }"
   [disabled]="buttonDisable"
-  (click)="buttonAction.emit()"
+  (click)="onClick()"
 >
   {{ buttonText }}
+  <i class="fas {{ buttonIcon }}" *ngIf="buttonIcon"></i>
 </button>

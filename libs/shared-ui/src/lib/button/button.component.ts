@@ -7,7 +7,17 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ButtonComponent {
   @Input({ required: true }) buttonText = 'BUTTON';
-  @Input() buttonType: 'primary' | 'danger' | 'warn' | 'default' = 'default';
+  @Input() buttonType:
+    | 'primary'
+    | 'danger'
+    | 'warn'
+    | 'gray-outline'
+    | 'default' = 'default';
   @Input() buttonDisable = false;
-  @Output() buttonAction: EventEmitter<void> = new EventEmitter();
+  @Input() buttonIcon = '';
+  @Output() btnClick: EventEmitter<void> = new EventEmitter();
+
+  onClick() {
+    this.btnClick.emit();
+  }
 }

@@ -1,14 +1,20 @@
-<div class="banner-box">
+<div class="banner-box px-3">
   <div class="top-banner">
-    <div class="welcome-msg" *ngIf="welcome">
-      <h3>{{ 'welcome' | translate }}, {{ userName }}</h3>
-      <p>{{ 'welcome_back_msg' | translate }}</p>
+    <div class="left">
+      <div class="welcome-msg" *ngIf="welcome">
+        <h3>{{ 'welcome' | translate }}, {{ userName }}</h3>
+        <p>{{ 'welcome_back_msg' | translate }}</p>
+      </div>
+      <h1 *ngFor="let bcItem of breadcrumbs$ | async; let $last = last">
+        <span *ngIf="$last"> {{ bcItem.label }}</span>
+      </h1>
     </div>
-    <div class="date-status">
-      <p>
-        {{ 'last_update' | translate }} :<span> {{ '2023-05-23' }}</span>
-      </p>
+    <div class="right">
+      <div class="date-status">
+        <p>
+          {{ 'last_update' | translate }} :<span> {{ '2023-05-23' }}</span>
+        </p>
+      </div>
     </div>
   </div>
-  <h1>{{ pageTitle | translate }}</h1>
 </div>

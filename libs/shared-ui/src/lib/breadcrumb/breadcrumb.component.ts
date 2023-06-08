@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -11,6 +11,9 @@ import { Breadcrumb } from './breadcrumb.model';
   styleUrls: ['./breadcrumb.component.scss'],
 })
 export class BreadcrumbComponent {
+  @Input() colorText: 'white' | 'black' = 'black';
+  @Input() bgColor: 'primary' | 'danger' | 'warn' | 'default' = 'default';
+
   breadcrumbs$: Observable<Breadcrumb[]>;
 
   constructor(

@@ -1,0 +1,27 @@
+.breadcrumb-nav {
+  text-transform: capitalize;
+  &.default {
+    background-color: $stcLightPink;
+  }
+  &.primary {
+    background-color: $stcColor !important;
+    color: $whiteColor !important;
+    .breadcrumb-item {
+      &::before {
+        color: $whiteColor !important;
+      }
+      a {
+        color: rgba($color: $whiteColor, $alpha: 0.7) !important;
+        text-decoration: none;
+      }
+    }
+  }
+
+  &.danger {
+    background-color: #8c0808;
+  }
+
+  &.warn {
+    background-color: #e1bb1a;
+  }
+}

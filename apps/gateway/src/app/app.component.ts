@@ -14,7 +14,6 @@ export function HttpLoaderFactory(http: HttpClient) {
 })
 export class AppComponent {
   title = 'gateway';
-
   constructor(
     private translate: TranslateService,
     private languageManagerService: LanguageManagerService

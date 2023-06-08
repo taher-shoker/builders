@@ -22,3 +22,20 @@
     }
   }
 }
+
+.custom-input {
+  .stc-input-group {
+    margin-bottom: 0 !important;
+    input.stc-input {
+      background-color: rgba($color: $shadowStc, $alpha: 0.1) !important;
+      color: $shadowStc;
+      &::placeholder {
+        color: $shadowStc;
+      }
+    }
+    .input-group-text {
+      background-color: rgba($color: $shadowStc, $alpha: 0.1) !important;
+      color: $stcColor;
+    }
+  }
+}

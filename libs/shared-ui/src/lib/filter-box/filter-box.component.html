@@ -1,0 +1,40 @@
+<div class="filter-box card">
+  <div class="row align-items-center">
+    <div class="col-md-3">
+      <stc-apps-input
+        [className]="'custom-input'"
+        [inputIcon]="'fa-search'"
+      ></stc-apps-input>
+    </div>
+    <div class="col-md-7">
+      <div class="row">
+        <div class="col-md-4">
+          <stc-apps-select-drop-down
+            [label]="'Job title'"
+            [selectType]="'filter-select-box'"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-4">
+          <stc-apps-select-drop-down
+            [label]="'Privillage'"
+            [selectType]="'filter-select-box'"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-4">
+          <stc-apps-select-drop-down
+            [label]="'Team'"
+            [selectType]="'filter-select-box'"
+          ></stc-apps-select-drop-down>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2">
+      <stc-apps-button
+        [buttonText]="'Add new user'"
+        [buttonType]="'warn'"
+        [buttonIcon]="' fa-plus-circle'"
+        (btnClick)="addUserNavigate()"
+      ></stc-apps-button>
+    </div>
+  </div>
+</div>

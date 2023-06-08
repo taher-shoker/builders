@@ -1,5 +1,9 @@
-<nav aria-label="breadcrumb" class="breadcrumb-nav">
-  <ol class="breadcrumb mb-0 ms-3 py-2">
+<nav
+  aria-label="breadcrumb"
+  class="breadcrumb-nav px-3"
+  [class]="bgColor + ' ' + colorText"
+>
+  <ol class="breadcrumb mb-0 py-2">
     <li
       *ngFor="
         let bcItem of breadcrumbs$ | async;

@@ -6,7 +6,11 @@
           <div class="card-body">
             <div class="row">
               <div class="col-md-3 mt-3" *ngFor="let app of apps">
-                <a class="app-link" [routerLink]="'/' + [app.path]">
+                <a
+                  class="app-link"
+                  [routerLink]="app.internal ? '/' + [app.path] : null"
+                  [href]="app.internal ? null : [app.path]"
+                >
                   <div class="app">
                     <div class="app-icon">
                       <img

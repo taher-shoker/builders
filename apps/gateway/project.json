@@ -18,12 +18,12 @@
         "assets": [
           "apps/gateway/src/assets",
           {
-            "input": "libs/shared/assets/src/assets",
+            "input": "libs/mode-toggle/src/assets",
             "glob": "**/*",
             "output": "assets"
           },
           {
-            "input": "libs/mode-toggle/src/assets",
+            "input": "libs/shared-ui/src/assets",
             "glob": "**/*",
             "output": "assets"
           },
@@ -31,6 +31,7 @@
         ],
         "styles": [
           "libs/styles/src/index.scss",
+          "node_modules/ngx-toastr/toastr.css",
           "apps/gateway/src/styles.scss"
         ],
         "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
@@ -41,7 +42,7 @@
             {
               "type": "initial",
               "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumError": "100mb"
             },
             {
               "type": "anyComponentStyle",

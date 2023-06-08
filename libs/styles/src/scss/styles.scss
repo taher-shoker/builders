@@ -1,4 +1,6 @@
 @import 'bootstrap/scss/bootstrap';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
 @import 'core/mixins/mixins';
 @import 'rtl';
 
@@ -8,8 +10,10 @@
 @import 'core/switch';
 @import 'core/cards/cards';
 @import 'core/nav';
+@import 'core/breadcrumb';
 @import 'core/buttons';
 @import 'core/inputs';
+@import 'core/select';
 
 // global style
 @import './core/main';

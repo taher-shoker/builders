@@ -1,0 +1,54 @@
+<div class="user-form">
+  <form>
+    <div class="inputs">
+      <div class="row">
+        <div class="col-md-6">
+          <div class="input-box">
+            <label>email</label>
+            <stc-apps-input
+              [className]="'custom-input'"
+              [inputPlaceholder]="'Example@STC.COM'"
+            ></stc-apps-input>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <label>Job Title</label>
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="'EX: Developer'"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-select-drop-down
+            [label]="'Privilage'"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-select-drop-down
+            [label]="'Team'"
+          ></stc-apps-select-drop-down>
+        </div>
+      </div>
+    </div>
+    <div class="btn-form-action">
+      <stc-apps-button
+        [buttonText]="'cancel'"
+        [buttonType]="'gray-outline'"
+      ></stc-apps-button>
+
+      <div class="mx-3"></div>
+      <stc-apps-button
+        *ngIf="!isEditing"
+        [buttonText]="'Add user'"
+        [buttonType]="'warn'"
+      ></stc-apps-button>
+      <stc-apps-button
+        *ngIf="isEditing"
+        [buttonText]="'save'"
+        [buttonType]="'warn'"
+      ></stc-apps-button>
+    </div>
+  </form>
+</div>

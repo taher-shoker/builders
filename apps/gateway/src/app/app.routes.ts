@@ -10,11 +10,11 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
+    data: { breadcrumb: 'home' },
     children: [
       {
         path: '',
         component: HomeComponent,
-        data: { breadcrumb: 'home' },
       },
       {
         path: 'users-settings',

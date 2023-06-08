@@ -1,5 +1,5 @@
 <div class="input-group stc-input-group mb-3">
-  <span class="input-group-text" id="basic-addon1"
+  <span class="input-group-text" id="basic-addon1" *ngIf="inputIcon"
     ><i class="fas {{ inputIcon }}"></i
   ></span>
   <input
@@ -7,6 +7,7 @@
     [type]="inputType"
     [id]="inputName"
     [name]="inputName"
-    [placeholder]="inputPlaceholder"
+    [placeholder]="inputPlaceholder ? inputPlaceholder : ''"
+    autocomplete="off"
   />
 </div>

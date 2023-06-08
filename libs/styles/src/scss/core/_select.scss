@@ -1,0 +1,50 @@
+.mdc-text-field--filled:not(.mdc-text-field--disabled) {
+  background-color: rgba($color: $shadowStc, $alpha: 0.1);
+}
+
+.mat-mdc-form-field-infix {
+  min-height: 35px;
+}
+
+.mdc-text-field--no-label:not(.mdc-text-field--outlined):not(
+    .mdc-text-field--textarea
+  )
+  .mat-mdc-form-field-infix {
+  padding-top: 6px;
+  padding-bottom: 4px;
+}
+
+.mdc-text-field--filled .mdc-line-ripple::before,
+.mdc-text-field--filled .mdc-line-ripple::after,
+.mdc-text-field--invalid .mdc-line-ripple::after {
+  border: unset;
+}
+
+.mat-mdc-form-field-focus-overlay {
+  background-color: transparent;
+}
+
+.select-box {
+  label {
+    margin-bottom: 5px;
+  }
+  &.default {
+    display: flex;
+    flex-direction: column;
+  }
+  &.filter-select-box {
+    display: flex;
+    align-items: center;
+    label {
+      width: 45%;
+    }
+    .mdc-text-field--filled {
+      background-color: transparent !important;
+      border: 1px solid $shadowStc;
+      max-height: 43px;
+    }
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none;
+    }
+  }
+}
