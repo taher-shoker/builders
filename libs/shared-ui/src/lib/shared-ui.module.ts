@@ -19,7 +19,6 @@ import { FilterBoxComponent } from './filter-box/filter-box.component';
 import { SelectDropDownComponent } from './select-dropDown/select-drop-down.component';
 import { TableComponent } from './table/table.component';
 import { MatSortModule } from '@angular/material/sort';
-import { ResizableModule } from 'angular-resizable-element';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({

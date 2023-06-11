@@ -34,7 +34,7 @@ export class LanguageManagerService {
   }
   private init() {
     if (!this.getSavedLanguage()) {
-      //this.saveLanguage(appSettings.defaultLanguage.code);
+      this.saveLanguage(appSettings.defaultLanguage.code);
     } else {
       this.addDirection(this.getSavedLanguage());
     }

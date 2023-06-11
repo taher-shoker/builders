@@ -22,7 +22,7 @@ const routes: Routes = [
           import('./views/users-settings/users-settings.module').then(
             (m) => m.UsersSettingsModule
           ),
-        data: { breadcrumb: 'users-settings' },
+        data: { breadcrumb: 'users settings' },
       },
     ],
   },

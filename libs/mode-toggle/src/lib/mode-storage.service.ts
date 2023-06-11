@@ -1,11 +1,11 @@
-import { Injectable, InjectionToken } from "@angular/core";
-import { Mode } from "./mode-toggle.model";
+import { Injectable, InjectionToken } from '@angular/core';
+import { Mode } from './mode-toggle.model';
 
 /**
  * Injection Token for ModeStorage
  */
 export const MODE_STORAGE_SERVICE = new InjectionToken<ModeStorage>(
-  "MODE_STORAGE"
+  'MODE_STORAGE'
 );
 
 /**
@@ -34,12 +34,12 @@ export class ModeLocalStorageService implements ModeStorage {
   /**
    * key for the Local Storage
    */
-  LOCAL_STORAGE_KEY = "mode";
+  LOCAL_STORAGE_KEY = 'mode';
 
   save(mode: Mode): void {
     localStorage.setItem(this.LOCAL_STORAGE_KEY, mode.toString());
   }
   get(): Mode {
-    return <Mode>localStorage.getItem(this.LOCAL_STORAGE_KEY) || undefined;
+    return <Mode>localStorage.getItem(this.LOCAL_STORAGE_KEY) || 'light';
   }
 }
