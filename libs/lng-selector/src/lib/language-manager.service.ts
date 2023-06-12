@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@angular/core';
 
 import { DOCUMENT } from '@angular/common';
-import { AppSettings } from './app-settings.model';
-import { appSettings } from './app.settings';
+import { appSettings } from './lang-settings';
+import { AppSettings } from './lang-settings.model';
 
 @Injectable({
   providedIn: 'root',

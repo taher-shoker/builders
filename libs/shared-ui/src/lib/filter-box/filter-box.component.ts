@@ -8,7 +8,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class FilterBoxComponent {
   constructor(private router: Router, private route: ActivatedRoute) {}
-
+  privilages = [];
   addUserNavigate(): void {
     this.router.navigate(['./add-user'], { relativeTo: this.route });
   }

@@ -1,15 +1,22 @@
-<div class="select-box"  [class]="selectType">
-  <label>{{ label }}:</label>
+<div class="select-box" [class]="selectType">
+  <label
+    >{{ label }}<span>:</span
+    ><mat-error *ngIf="optionsControl.hasError('required')">
+      *</mat-error
+    ></label
+  >
   <mat-form-field>
-    <mat-select [formControl]="animalControl" required>
-      <!-- <mat-option>--</mat-option> -->
-      <mat-option *ngFor="let animal of animals" [value]="animal">
-        {{ animal.name }}
+    <mat-select
+      [formControl]="optionsControl"
+      required="{{ required }}"
+      (blur)="onInputBlur($event)"
+    >
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{ option.name }}
       </mat-option>
     </mat-select>
-    <!-- <mat-error *ngIf="animalControl.hasError('required')"
-      >Please choose an animal</mat-error
-    > -->
-    <!-- <mat-hint>{{ animalControl.value?.sound }}</mat-hint> -->
+    <mat-error *ngIf="optionsControl.hasError('required')"
+      >This Field Is Required
+    </mat-error>
   </mat-form-field>
 </div>

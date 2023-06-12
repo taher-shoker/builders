@@ -45,15 +45,15 @@ const COLUMNS_SCHEMA = [
 ];
 
 const ELEMENT_DATA: PeriodicElement[] = [
-  // {
-  //   name: 'taher shoker',
-  //   email: 'tshoker.stc@.com',
-  //   privilage: 'creator',
-  //   team: 'digital team',
-  //   jobeTitle: 'front end developer',
-  //   profileIcon:
-  //     'https://img.freepik.com/premium-vector/arab-man-avatar-face-icon-keffiyeh_768258-36.jpg?w=740',
-  // },
+  {
+    name: 'taher shoker',
+    email: 'tshoker.stc@.com',
+    privilage: 'creator',
+    team: 'digital team',
+    jobeTitle: 'front end developer',
+    profileIcon:
+      'https://img.freepik.com/premium-vector/arab-man-avatar-face-icon-keffiyeh_768258-36.jpg?w=740',
+  },
 ];
 
 @Component({

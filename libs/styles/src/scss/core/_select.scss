@@ -27,6 +27,10 @@
 .select-box {
   label {
     margin-bottom: 5px;
+    display: flex;
+    span {
+      display: none;
+    }
   }
   &.default {
     display: flex;

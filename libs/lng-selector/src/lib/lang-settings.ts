@@ -1,4 +1,4 @@
-import { AppSettings } from './app-settings.model';
+import { AppSettings } from './lang-settings.model';
 import { Language } from './language.model';
 
 const defaultLanguage: Language = {

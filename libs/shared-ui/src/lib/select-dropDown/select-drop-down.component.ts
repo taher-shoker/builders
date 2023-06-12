@@ -1,26 +1,59 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, Validators } from '@angular/forms';
+import { Component, Input, forwardRef } from '@angular/core';
+import { FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 
-interface Animal {
+interface Option {
   name: string;
-  sound: string;
+  value: string;
 }
 
 @Component({
   selector: 'stc-apps-select-drop-down',
   templateUrl: './select-drop-down.component.html',
   styleUrls: ['./select-drop-down.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => SelectDropDownComponent),
+      multi: true,
+    },
+  ],
 })
 export class SelectDropDownComponent {
   @Input({ required: true }) label!: string;
   @Input() selectType: 'filter-select-box' | 'default' = 'default';
+  @Input() options!: Option[];
+  @Input() required = false;
 
-  animalControl = new FormControl<Animal | null>(null, Validators.required);
-  selectFormControl = new FormControl('', Validators.required);
-  animals: Animal[] = [
-    { name: 'Dog', sound: 'Woof!' },
-    { name: 'Cat', sound: 'Meow!' },
-    { name: 'Cow', sound: 'Moo!' },
-    { name: 'Fox', sound: 'Wa-pa-pa-pa-pa-pa-pow!' },
-  ];
+  optionsControl = new FormControl<Option | null>(null, Validators.required);
+
+  value!: string;
+  disabled = false;
+
+  onTouched: any = () => {
+    console.log('tached');
+  };
+  onChange: any = () => {
+    console.log('changed');
+  };
+
+  writeValue(value: any): void {
+    this.value = value;
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  setDisabledState(isDisabled: boolean): void {
+    this.disabled = isDisabled;
+  }
+
+  onInputBlur(event: Event) {
+    this.onChange(this.optionsControl.value?.value);
+    this.onTouched();
+  }
 }

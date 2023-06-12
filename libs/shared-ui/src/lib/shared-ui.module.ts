@@ -6,6 +6,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 
 import { LngSelectorModule } from '@stc-apps/lng-selector';
 import { ModeToggleModule } from '@stc-apps/mode-toggle';
@@ -18,8 +22,6 @@ import { BannerComponent } from './banner/banner.component';
 import { FilterBoxComponent } from './filter-box/filter-box.component';
 import { SelectDropDownComponent } from './select-dropDown/select-drop-down.component';
 import { TableComponent } from './table/table.component';
-import { MatSortModule } from '@angular/material/sort';
-import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   imports: [
@@ -38,6 +40,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatTableModule,
     MatCheckboxModule,
     MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
   declarations: [
     ButtonComponent,

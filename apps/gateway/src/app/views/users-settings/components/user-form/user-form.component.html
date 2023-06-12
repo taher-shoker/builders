@@ -1,21 +1,23 @@
 <div class="user-form">
-  <form>
+  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
     <div class="inputs">
       <div class="row">
         <div class="col-md-6">
-          <div class="input-box">
-            <label>email</label>
-            <stc-apps-input
-              [className]="'custom-input'"
-              [inputPlaceholder]="'Example@STC.COM'"
-            ></stc-apps-input>
-          </div>
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="'Example@STC.COM'"
+            [inputId]="'email'"
+            [inputName]="'email'"
+            formControlName="email"
+          ></stc-apps-input>
         </div>
         <div class="col-md-6">
-          <label>Job Title</label>
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="'EX: Developer'"
+            [inputId]="'jobtitle'"
+            [inputName]="'jobtitle'"
+            formControlName="jobtitle"
           ></stc-apps-input>
         </div>
       </div>
@@ -23,11 +25,16 @@
         <div class="col-md-6">
           <stc-apps-select-drop-down
             [label]="'Privilage'"
+            [options]="privilages"
+            formControlName="privilage"
+            [required]="false"
           ></stc-apps-select-drop-down>
         </div>
         <div class="col-md-6">
           <stc-apps-select-drop-down
             [label]="'Team'"
+            [options]="teams"
+            formControlName="team"
           ></stc-apps-select-drop-down>
         </div>
       </div>
@@ -43,6 +50,7 @@
         *ngIf="!isEditing"
         [buttonText]="'Add user'"
         [buttonType]="'warn'"
+        (btnClick)="onSubmit()"
       ></stc-apps-button>
       <stc-apps-button
         *ngIf="isEditing"

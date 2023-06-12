@@ -1,5 +1,8 @@
 .input-group {
-  color: $whiteColor;
+  label {
+    margin-bottom: 8px;
+    text-transform: capitalize;
+  }
   &.stc-input-group {
     input {
       &.stc-input {
@@ -24,7 +27,7 @@
 }
 
 .custom-input {
-  .stc-input-group {
+  &.stc-input-group {
     margin-bottom: 0 !important;
     input.stc-input {
       background-color: rgba($color: $shadowStc, $alpha: 0.1) !important;
@@ -38,4 +41,14 @@
       color: $stcColor;
     }
   }
+}
+.mat-mdc-form-field {
+  width: 100%;
+}
+.mat-mdc-form-field-error {
+  display: inline !important;
+}
+
+.mat-mdc-form-field-infix {
+  display: flex !important;
 }

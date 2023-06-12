@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { appSettings } from './lang-settings';
+import { AppSettings } from './lang-settings.model';
 import { LanguageManagerService } from './language-manager.service';
-import { AppSettings } from './app-settings.model';
-import { appSettings } from './app.settings';
 
 @Component({
   selector: 'stc-apps-language-selector',

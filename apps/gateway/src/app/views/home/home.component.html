@@ -8,9 +8,20 @@
               <div class="col-md-3 mt-3" *ngFor="let app of apps">
                 <a
                   class="app-link"
-                  [routerLink]="app.internal ? '/' + [app.path] : null"
-                  [href]="app.internal ? null : [app.path]"
+                  [routerLink]="'/' + [app.path]"
+                  *ngIf="app.internal"
                 >
+                  <div class="app">
+                    <div class="app-icon">
+                      <img
+                        src="../../../assets/images/apps/{{ app.icon }}"
+                        alt="{{ app.name }}"
+                      />
+                    </div>
+                    <h4 class="app-name">{{ app.name }}</h4>
+                  </div>
+                </a>
+                <a class="app-link" [href]="[app.path]" *ngIf="!app.internal">
                   <div class="app">
                     <div class="app-icon">
                       <img
