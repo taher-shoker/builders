@@ -1,0 +1,52 @@
+<stc-apps-casse-form [isSubmited]="true"></stc-apps-casse-form>
+<stc-apps-dialog id="5">
+  <h3>Request More Info | CASE ID : #123432</h3>
+  <form>
+    <div class="row">
+      <div class="col-md-6">
+        <stc-apps-select-drop-down
+          [label]="'Assigned to'"
+          [options]="[]"
+        ></stc-apps-select-drop-down>
+      </div>
+
+      <div class="col-md-6">
+        <stc-apps-select-drop-down
+          [label]="'Select User'"
+          [options]="[]"
+        ></stc-apps-select-drop-down>
+      </div>
+      <div class="col-md-12">
+        <stc-apps-textarea
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'inquery'"
+          [inputName]="'Inquery'"
+        ></stc-apps-textarea>
+      </div>
+      <div class="col-md-12">
+        <stc-apps-file-uploader
+          [multiple]="true"
+          [chooseLabel]="'Add attachment'"
+        ></stc-apps-file-uploader>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-4 offset-8">
+          <div class="d-flex justify-content-end">
+            <stc-apps-button
+              [buttonText]="'cancel'"
+              [buttonType]="'gray-outline'"
+              (btnClick)="dialogService.close()"
+            ></stc-apps-button>
+
+            <div class="mx-3"></div>
+            <stc-apps-button
+              [buttonText]="'Send request'"
+              [buttonType]="'warn'"
+            ></stc-apps-button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>

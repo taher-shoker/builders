@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
@@ -7,9 +7,13 @@ import { ActivatedRoute, Router } from '@angular/router';
   styleUrls: ['./filter-box.component.scss'],
 })
 export class FilterBoxComponent {
-  constructor(private router: Router, private route: ActivatedRoute) {}
-  privilages = [];
-  addUserNavigate(): void {
-    this.router.navigate(['./add-user'], { relativeTo: this.route });
+  @Input()
+  addNavigate!: () => void;
+  @Input() addBtnLabel!: string;
+  constructor(public router: Router, public route: ActivatedRoute) {}
+
+  onAddClick() {
+    this.addNavigate();
   }
+  privilages = [];
 }

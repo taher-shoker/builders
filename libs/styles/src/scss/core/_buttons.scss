@@ -12,7 +12,10 @@
   &.danger {
     background-color: #8c0808;
   }
-
+  &.success {
+    background-color: $stcGreenColor;
+    color: $whiteColor !important;
+  }
   &.warn {
     background-color: $stcSunsetColor;
     color: $whiteColor;
@@ -20,6 +23,10 @@
   &.gray-outline {
     color: $shadowStc;
     border: 1px solid $shadowStc;
+  }
+  &.danger-outline {
+    color: $redColor;
+    border: 1px solid $redColor;
   }
   i {
     padding-inline-start: 8px;

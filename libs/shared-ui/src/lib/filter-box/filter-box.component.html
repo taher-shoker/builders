@@ -32,10 +32,10 @@
     </div>
     <div class="col-md-2">
       <stc-apps-button
-        [buttonText]="'Add new user'"
+        [buttonText]="addBtnLabel"
         [buttonType]="'warn'"
         [buttonIcon]="' fa-plus-circle'"
-        (btnClick)="addUserNavigate()"
+        (btnClick)="onAddClick()"
       ></stc-apps-button>
     </div>
   </div>

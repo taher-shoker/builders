@@ -11,6 +11,8 @@ export class ButtonComponent {
     | 'primary'
     | 'danger'
     | 'warn'
+    | 'success'
+    | 'danger-outline'
     | 'gray-outline'
     | 'default' = 'default';
   @Input() buttonDisable = false;

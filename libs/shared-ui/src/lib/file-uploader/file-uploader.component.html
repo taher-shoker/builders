@@ -1,0 +1,33 @@
+<div class="uploader-box">
+  <button class="upload-btn" (click)="onClick($event)">
+    <i class="fas fa-link"></i>
+    <span>{{ chooseLabel }}</span>
+  </button>
+  <rp>(optional)</rp>
+  <input
+    #fileUpload
+    type="file"
+    class="input_fileupload--hidden"
+    (input)="onInput($event)"
+    (change)="onFileSelected($event)"
+    [(ngModel)]="inputFileName"
+    [accept]="accept"
+    [multiple]="multiple"
+  />
+
+  <div class="row">
+    <div class="col-md-4" *ngFor="let f of files">
+      <div class="file">
+        <span>{{ f.name }}</span>
+        <button
+          class="btn"
+          mat-icon-button
+          [attr.title]="deleteButtonLabel ? deleteButtonLabel : null"
+          (click)="removeFile(f)"
+        >
+          <i class="fas fa-times-circle"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="input-group stc-input-group">
+  <label>{{ inputName }} <mat-error>* </mat-error></label>
+  <mat-form-field class="">
+    <textarea
+      matInput
+      rows="5"
+      [id]="inputId"
+      [name]="inputName"
+      matInput
+      [placeholder]="inputPlaceholder ? inputPlaceholder : ''"
+      (blur)="onInputBlur($event)"
+    ></textarea>
+  </mat-form-field>
+</div>

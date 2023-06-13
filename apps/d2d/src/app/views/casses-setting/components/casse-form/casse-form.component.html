@@ -1,0 +1,193 @@
+<div class="user-form">
+  <form [formGroup]="casseForm" (ngSubmit)="onSubmit()">
+    <div class="inputs">
+      <div class="row">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="'EX: Ahmed Mohamed'"
+            [inputId]="'customerName'"
+            [inputName]="'Customer name'"
+            formControlName="customer_name"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="'EX: Jadah'"
+            [inputId]="'city'"
+            [inputName]="'city'"
+            formControlName="city"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'existingServiceOrder'"
+            [inputName]="'Existing service order'"
+            formControlName="existing_service_order"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'serviceType'"
+            [inputName]="'Service Type'"
+            formControlName="service_type"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'existingPlate'"
+            [inputName]="'existing plate'"
+            formControlName="existing_plate"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'existingPhoneNumber'"
+            [inputName]="'Existing Phone Number'"
+            formControlName="existing_phone_number"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'activationDate'"
+            [inputName]="'Activation Date'"
+            formControlName="activation_date"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'WFMOrder'"
+            [inputName]="'WFM Order'"
+            formControlName="WFM_order"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'newPlate'"
+            [inputName]="'New Plate'"
+            formControlName="new_plate"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'newServiceOrder'"
+            [inputName]="'New Service Order'"
+            formControlName="new_service_order"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'newPhoneNumber'"
+            [inputName]="'New Phone Number'"
+            formControlName="new_phone_number"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'contactNumber'"
+            [inputName]="'Contact Number'"
+            formControlName="contact_number"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'caseLabel'"
+            [inputName]="'Case Label'"
+            formControlName="case_label"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-textarea
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'description'"
+            [inputName]="'Description'"
+            formControlName="description"
+          ></stc-apps-textarea>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-12">
+          <stc-apps-file-uploader
+            [multiple]="true"
+            [chooseLabel]="'Add attachment'"
+          ></stc-apps-file-uploader>
+        </div>
+      </div>
+    </div>
+    <div class="btn-form-action" *ngIf="!isSubmited">
+      <stc-apps-button
+        [buttonText]="'cancel'"
+        [buttonType]="'gray-outline'"
+      ></stc-apps-button>
+
+      <div class="mx-3"></div>
+      <stc-apps-button
+        *ngIf="!isEditing"
+        [buttonText]="'Add user'"
+        [buttonType]="'warn'"
+        (btnClick)="onSubmit()"
+      ></stc-apps-button>
+      <stc-apps-button
+        *ngIf="isEditing"
+        [buttonText]="'save'"
+        [buttonType]="'warn'"
+      ></stc-apps-button>
+    </div>
+    <div class="btn-form-details" *ngIf="isSubmited">
+      <stc-apps-button
+        [buttonText]="'reject'"
+        [buttonType]="'danger-outline'"
+      ></stc-apps-button>
+
+      <div class="d-flex">
+        <stc-apps-button
+          [buttonText]="'Request more info'"
+          [buttonType]="'gray-outline'"
+        ></stc-apps-button>
+
+        <div class="mx-3"></div>
+        <stc-apps-button
+          [buttonText]="'Approve'"
+          [buttonType]="'success'"
+          (btnClick)="onApproved()"
+        ></stc-apps-button>
+      </div>
+    </div>
+  </form>
+</div>

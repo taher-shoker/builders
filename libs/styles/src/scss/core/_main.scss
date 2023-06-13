@@ -2,8 +2,6 @@ ul {
   list-style: none;
 }
 
-
-
 // style for theme mode
 body.dark {
   @include darken();
@@ -12,6 +10,13 @@ body.light {
   @include lighten();
 }
 
+rp {
+  display: inline;
+  color: $shadowStc;
+}
+.display-none {
+  display: none;
+}
 
 body {
   position: relative;
