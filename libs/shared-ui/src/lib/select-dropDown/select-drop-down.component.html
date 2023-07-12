@@ -1,22 +1,19 @@
-<div class="select-box" [class]="selectType">
+<div class="select-box" [class]="selectType" *ngIf="control">
   <label
     >{{ label }}<span>:</span
-    ><mat-error *ngIf="optionsControl.hasError('required')">
-      *</mat-error
-    ></label
+    ><mat-error *ngIf="control.errors"> *</mat-error></label
   >
   <mat-form-field>
     <mat-select
-      [formControl]="optionsControl"
-      required="{{ required }}"
-      (blur)="onInputBlur($event)"
+      [formControl]="control"
+      [id]="selectId"
+      [required]="required"
+      (selectionChange)="onChangeValue($event.value)"
     >
-      <mat-option *ngFor="let option of options" [value]="option">
+      <mat-option *ngFor="let option of options" [value]="option.value">
         {{ option.name }}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="optionsControl.hasError('required')"
-      >This Field Is Required
-    </mat-error>
+    <mat-error *ngIf="control.errors">This Field Is Required </mat-error>
   </mat-form-field>
 </div>

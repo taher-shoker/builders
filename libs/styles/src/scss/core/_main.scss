@@ -22,7 +22,21 @@ body {
   position: relative;
   word-break: break-word;
   overflow-x: hidden;
-  background-color: var(--bgColor) !important;
+  background-color: var(--lightGrayColor) !important;
   color: var(--textColor) !important;
   direction: var(--direction);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: $stcColor;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

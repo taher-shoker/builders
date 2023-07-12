@@ -1,37 +1,92 @@
-import { Component, Input } from '@angular/core';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, Input, Output, OnInit, EventEmitter } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { DialogService } from '@stc-apps/shared-ui';
+import { ToastrService } from 'ngx-toastr';
+import { CassesService, File } from '../../casses.service';
 
 @Component({
   selector: 'stc-apps-casse-form',
   templateUrl: './casse-form.component.html',
   styleUrls: ['./casse-form.component.scss'],
 })
-export class CasseFormComponent {
-  @Input() isEditing!: boolean;
+export class CasseFormComponent implements OnInit {
+  form!: FormGroup;
+  @Input() readOnly!: boolean;
   @Input() isSubmited!: boolean;
-  constructor(protected dialogService: DialogService) {}
-  casseForm = new FormGroup({
-    customer_name: new FormControl('', Validators.required),
-    city: new FormControl('', Validators.required),
-    existing_service_order: new FormControl('', Validators.required),
-    service_type: new FormControl('', Validators.required),
-    existing_plate: new FormControl('', Validators.required),
-    existing_phone_number: new FormControl('', Validators.required),
-    activation_date: new FormControl('', Validators.required),
-    WFM_order: new FormControl('', Validators.required),
-    new_plate: new FormControl('', Validators.required),
-    new_service_order: new FormControl('', Validators.required),
-    new_phone_number: new FormControl('', Validators.required),
-    contact_number: new FormControl('', Validators.required),
-    case_label: new FormControl('', Validators.required),
-    description: new FormControl('', Validators.required),
-  });
-
-  onSubmit() {
-    console.log(this.casseForm.value);
+  @Input() casseId!: string;
+  @Output() caseStatus = new EventEmitter<string>();
+  formData = new FormData();
+  constructor(
+    private formBuilder: FormBuilder,
+    protected dialogService: DialogService,
+    private cassesService: CassesService,
+    private toastr: ToastrService,
+    private router: Router
+  ) {}
+  ngOnInit(): void {
+    this.casseForm();
   }
-  onApproved() {
-    this.dialogService.open('5');
+
+  casseForm() {
+    this.form = this.formBuilder.group({
+      customerName: ['', Validators.required],
+      city: ['', Validators.required],
+      existingServiceOrder: ['', Validators.required],
+      serviceType: ['', Validators.required],
+      existingPlate: ['', Validators.required],
+      existingPhoneNumber: ['', Validators.required],
+      activationDate: ['', Validators.required],
+      wfmOrder: ['', Validators.required],
+      newPlate: ['', Validators.required],
+      newServiceOrder: ['', Validators.required],
+      newPhoneNumber: ['', Validators.required],
+      contactNumber: ['', Validators.required],
+      caseLabel: ['', Validators.required],
+      description: ['', Validators.required],
+      attachments: [[]],
+    });
+  }
+  teams = [{ name: 'test', value: '1' }];
+
+  isLoading = true;
+  uploadedFiles: File[] = [];
+
+  onUploadFile(files: string | any[]) {
+    if (files) {
+      for (let i = 0; i < files?.length; i++) {
+        this.formData.append('file', files[i]);
+      }
+    }
+    this.cassesService.uploadFile(this.formData).subscribe((res: any) => {
+      if (res) {
+        this.uploadedFiles.push(res.id);
+        this.isLoading = false;
+        this.form.get('attachments')?.setValue(this.uploadedFiles);
+      }
+    });
+  }
+
+  onDeleteFile(id: number) {
+    this.cassesService.deleteFile(id).subscribe((res: any) => {
+      this.uploadedFiles = this.uploadedFiles.filter((x: any) => x !== id);
+      this.form.get('attachments')?.setValue(this.uploadedFiles);
+    });
+  }
+  onSubmit() {
+    if (this.form.valid) {
+      this.cassesService.createCasse(this.form.value).subscribe((res) => {
+        if (res) {
+          this.toastr.success('add case  successfuly');
+          this.form.reset();
+          this.router.navigate(['./home']);
+        }
+      });
+    } else {
+      Object.keys(this.form.controls).forEach((field) => {
+        const control = this.form.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
+    }
   }
 }

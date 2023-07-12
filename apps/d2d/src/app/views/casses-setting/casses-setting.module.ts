@@ -11,6 +11,11 @@ import { EditCasseComponent } from './components/edit-casse/edit-casse.component
 import { MatTableModule } from '@angular/material/table';
 import { CassesSettingRoutingModule } from './casses-setting-routing.module';
 import { CasseDetailsComponent } from './components/casse-details/casse-details.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -27,7 +32,12 @@ import { CasseDetailsComponent } from './components/casse-details/casse-details.
     ReactiveFormsModule,
     RouterModule,
     MatTableModule,
+    MatPaginatorModule,
+    MatProgressSpinnerModule,
     CassesSettingRoutingModule,
+    MatExpansionModule,
+    MatProgressBarModule,
+    MatSortModule,
   ],
   exports: [],
   providers: [],

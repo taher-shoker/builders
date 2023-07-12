@@ -13,6 +13,9 @@ import { MatInputModule } from '@angular/material/input';
 import { LngSelectorModule } from '@stc-apps/lng-selector';
 import { ModeToggleModule } from '@stc-apps/mode-toggle';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatNativeDateModule } from '@angular/material/core';
 
 import { ButtonComponent } from './button/button.component';
 import { HeaderComponent } from './header/header.component';
@@ -25,6 +28,7 @@ import { TableComponent } from './table/table.component';
 import { FileUploaderComponent } from './file-uploader/file-uploader.component';
 import { TextareaComponent } from './textarea/textarea.component';
 import { DialogComponent } from './dialog/dialog.component';
+import { DatePickerComponent } from './date-picker/date-picker.component';
 
 @NgModule({
   imports: [
@@ -46,6 +50,9 @@ import { DialogComponent } from './dialog/dialog.component';
     MatFormFieldModule,
     MatIconModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatExpansionModule,
   ],
   declarations: [
     ButtonComponent,
@@ -58,6 +65,7 @@ import { DialogComponent } from './dialog/dialog.component';
     FileUploaderComponent,
     TextareaComponent,
     DialogComponent,
+    DatePickerComponent,
   ],
   exports: [
     HeaderComponent,
@@ -71,6 +79,7 @@ import { DialogComponent } from './dialog/dialog.component';
     FileUploaderComponent,
     TextareaComponent,
     DialogComponent,
+    DatePickerComponent,
   ],
 })
 export class SharedUiModule {}

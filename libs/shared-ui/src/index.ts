@@ -7,3 +7,7 @@ export * from './lib/file-uploader/file-uploader.component';
 export * from './lib/dialog/dialog.component';
 
 export * from './lib/dialog/dialog.service';
+
+export * from './lib/banner/banner.service';
+
+export * from './lib/date-picker/date-picker.component';

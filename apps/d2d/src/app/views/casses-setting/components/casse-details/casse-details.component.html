@@ -1,33 +1,271 @@
-<stc-apps-casse-form [isSubmited]="true"></stc-apps-casse-form>
-<stc-apps-dialog id="5">
-  <h3>Request More Info | CASE ID : #123432</h3>
-  <form>
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-8">
+      <div class="row details">
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">customer name:</span>
+            <span class="val-vlue">{{ caseData?.customerName }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">City</span>
+            <span class="val-vlue">{{ caseData?.city }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Service Type</span>
+            <span class="val-vlue">{{ caseData?.serviceType }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Activation Date</span>
+            <span class="val-vlue">{{
+              caseData?.activationDate | date : 'short'
+            }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Existing Service Order</span>
+            <span class="val-vlue">{{ caseData?.existingServiceOrder }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Existing Phone Number</span>
+            <span class="val-vlue">{{ caseData?.existingPhoneNumber }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">WFM Order</span>
+            <span class="val-vlue">{{ caseData?.wfmOrder }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">New Plate</span>
+            <span class="val-vlue">{{ caseData?.newPlate }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">New Service Order</span>
+            <span class="val-vlue">{{ caseData?.newServiceOrder }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">New Phone Number </span>
+            <span class="val-vlue">{{ caseData?.newPhoneNumber }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Contract Number</span>
+            <span class="val-vlue">{{ caseData?.contactNumber }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Case Lable </span>
+            <span class="val-vlue">{{ caseData?.caseLabel }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Description </span>
+            <span class="val-vlue">{{ caseData?.description }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">Attachments </span>
+          </div>
+          <ul>
+            <li *ngFor="let item of caseData?.attachments">
+              <div class="file" (click)="downloadFile(item.id, item.fileName)">
+                <span>{{ item.fileName }}</span>
+                <i class="fas fa-arrow-alt-circle-down"></i>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <section class="tasks">
+        <figure>
+          <figcaption>
+            <h4>Logs for Case's Tasks</h4>
+            <div class="">
+              <span
+                class="case-status"
+                [ngClass]="
+                  cassesService.getKeyByValue(CaseStatus, this.caseStatus)
+                "
+                >{{ this.caseStatus }}</span
+              >
+            </div>
+          </figcaption>
+        </figure>
+        <div class="order-track">
+          <div class="order-track-step" *ngFor="let item of allTasks">
+            <div
+              class="order-track-status"
+              [ngClass]="
+                item.taskStatus === 'pending' ? ' order-track-pending' : null
+              "
+            >
+              <span
+                class="order-track-status-dot"
+                [ngClass]="
+                  item.taskStatus === 'pending'
+                    ? ' order-track-pending-dot'
+                    : null
+                "
+              >
+                <i
+                  class="fas fa-check"
+                  *ngIf="item.taskStatus !== 'pending'"
+                ></i>
+                <i
+                  class="fas fa-info"
+                  *ngIf="item.taskStatus === 'pending'"
+                ></i>
+              </span>
+              <span
+                class="order-track-status-line"
+                [ngClass]="
+                  item.taskStatus === 'pending'
+                    ? ' order-track-pending-line'
+                    : null
+                "
+              ></span>
+            </div>
+            <div class="order-track-text">
+              <p class="order-track-text-stat">{{ item.taskName }}</p>
+              <span class="order-track-text-sub">{{
+                item.completedDate | date : 'medium'
+              }}</span>
+              <div
+                class="actions my-3 d-flex justify-content-between"
+                *ngIf="item.taskStatus === 'pending'"
+              >
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.checkCase"
+                  [buttonText]="'yes'"
+                  [buttonType]="'primary'"
+                  (btnClick)="onCheck()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.checkCase"
+                  [buttonText]="'no'"
+                  (btnClick)="cancelCheck()"
+                  [buttonType]="'gray-outline'"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.fillMoreInfo"
+                  [buttonText]="'reply'"
+                  [buttonType]="'primary'"
+                  (btnClick)="replyfeed()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.approveCase"
+                  [buttonText]="'Approved'"
+                  [buttonType]="'primary'"
+                  (btnClick)="approvedTask()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.approveCase"
+                  [buttonText]="'Reject'"
+                  [buttonType]="'danger-outline'"
+                  (btnClick)="reject()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.withinSlResponse"
+                  [buttonText]="'Received'"
+                  [buttonType]="'primary'"
+                  (btnClick)="withinResponse()"
+                ></stc-apps-button>
+
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.shouldEscalate"
+                  [buttonText]="'yes'"
+                  [buttonType]="'primary'"
+                  (btnClick)="shouldFirstEscalate()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.shouldEscalate"
+                  [buttonText]="'no'"
+                  [buttonType]="'gray-outline'"
+                  (btnClick)="notFirstEscalate()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.shouldReEscalate"
+                  [buttonText]="'yes'"
+                  [buttonType]="'primary'"
+                  (btnClick)="shouldSecondEscalate()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.shouldReEscalate"
+                  [buttonText]="'no'"
+                  [buttonType]="'gray-outline'"
+                  (btnClick)="notSecondEscalate()"
+                ></stc-apps-button>
+                <stc-apps-button
+                  *ngIf="item.taskName === TaskCicle.sendToClose"
+                  [buttonText]="'Send'"
+                  [buttonType]="'primary'"
+                  (btnClick)="sendToClose()"
+                ></stc-apps-button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+</div>
+<stc-apps-dialog id="request-Info-Modal">
+  <h3>Request More Info | CASE ID : {{ casseId }}</h3>
+  <form [formGroup]="infoForm" (ngSubmit)="sendInfo()">
     <div class="row">
       <div class="col-md-6">
         <stc-apps-select-drop-down
           [label]="'Assigned to'"
-          [options]="[]"
+          [options]="assigneeType"
+          formControlName="assignedTo"
+          (selectChange)="getAssigneeValue($event)"
         ></stc-apps-select-drop-down>
       </div>
-
       <div class="col-md-6">
         <stc-apps-select-drop-down
           [label]="'Select User'"
-          [options]="[]"
+          [options]="users"
+          formControlName="selectedUser"
         ></stc-apps-select-drop-down>
       </div>
       <div class="col-md-12">
         <stc-apps-textarea
           [className]="'custom-input'"
           [inputPlaceholder]="''"
-          [inputId]="'inquery'"
-          [inputName]="'Inquery'"
+          [inputId]="'message'"
+          [inputName]="'Message'"
+          formControlName="message"
         ></stc-apps-textarea>
       </div>
       <div class="col-md-12">
         <stc-apps-file-uploader
-          [multiple]="true"
+          [multiple]="false"
           [chooseLabel]="'Add attachment'"
+          (onformchange)="onUploadFile($event)"
+          formControlName="check_case_attachment"
+          [isLoading]="isLoading"
         ></stc-apps-file-uploader>
       </div>
       <div class="row mt-4">
@@ -41,10 +279,234 @@
 
             <div class="mx-3"></div>
             <stc-apps-button
-              [buttonText]="'Send request'"
-              [buttonType]="'warn'"
+              [buttonText]="'Send '"
+              [buttonType]="'primary'"
+              (btnClick)="sendInfo()"
             ></stc-apps-button>
           </div>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>
+
+<stc-apps-dialog id="approve-Modal">
+  <p>
+    You're about to Approve Case
+    <strong>(Case ID : {{ casseId }})</strong> . Kindly note you can't rollback
+    this action, Are you sure?”
+  </p>
+  <h3>Request More Info | CASE ID : #123432</h3>
+  <div class="row mt-4">
+    <div class="col-md-4 offset-8">
+      <div class="d-flex justify-content-end">
+        <stc-apps-button
+          [buttonText]="'cancel'"
+          [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"
+        ></stc-apps-button>
+
+        <div class="mx-3"></div>
+        <stc-apps-button
+          [buttonText]="'Yes, Approve'"
+          [buttonType]="'primary'"
+        ></stc-apps-button>
+      </div>
+    </div>
+  </div>
+</stc-apps-dialog>
+
+<stc-apps-dialog id="reject-Modal">
+  <p>
+    You're about to Reject Case <strong>(Case ID : {{ casseId }})</strong>.
+    Kindly note you can't rollback this action, Are you sure?”
+  </p>
+  <form [formGroup]="rejectForm" (ngSubmit)="confirmReject()">
+    <div class="row">
+      <div class="col-md-12">
+        <stc-apps-textarea
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'reason'"
+          [inputName]="'reason'"
+          formControlName="reject_note"
+        ></stc-apps-textarea>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 offset-8">
+        <div class="d-flex justify-content-end">
+          <stc-apps-button
+            [buttonText]="'cancel'"
+            [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"
+          ></stc-apps-button>
+
+          <div class="mx-3"></div>
+          <stc-apps-button
+            [buttonText]="'Yes, Reject'"
+            [buttonType]="'danger-outline'"
+            (btnClick)="confirmReject()"
+          ></stc-apps-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>
+<stc-apps-dialog id="replyFeeback-Modal">
+  <p>
+    You're about to Fill Case <strong>(Case ID : {{ casseId }})</strong>.
+  </p>
+  <form [formGroup]="replyForm" (ngSubmit)="confirmReply()">
+    <div class="row">
+      <div class="col-md-12">
+        <stc-apps-textarea
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'message'"
+          [inputName]="'message'"
+          formControlName="message"
+        ></stc-apps-textarea>
+      </div>
+      <div class="col-md-12">
+        <stc-apps-file-uploader
+          [multiple]="false"
+          [chooseLabel]="'Add attachment'"
+          (onformchange)="onUploadFile($event)"
+          formControlName="check_case_attachment"
+          [isLoading]="isLoading"
+        ></stc-apps-file-uploader>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 offset-8">
+        <div class="d-flex justify-content-end">
+          <stc-apps-button
+            [buttonText]="'cancel'"
+            [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"
+          ></stc-apps-button>
+
+          <div class="mx-3"></div>
+          <stc-apps-button
+            [buttonText]="'send'"
+            [buttonType]="'primary'"
+            (btnClick)="confirmReply()"
+          ></stc-apps-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>
+
+<stc-apps-dialog id="close-Modal">
+  <p>
+    You're about to Close Case <strong>(Case ID : {{ casseId }})</strong>.
+    Kindly note you can't rollback this action, Are you sure?”
+  </p>
+  <form [formGroup]="closeForm" (ngSubmit)="confirmClose()">
+    <div class="row">
+      <div class="col-md-12">
+        <stc-apps-textarea
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'mailContent'"
+          [inputName]="'mailContent'"
+          formControlName="close_mail_content"
+        ></stc-apps-textarea>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 offset-8">
+        <div class="d-flex justify-content-end">
+          <stc-apps-button
+            [buttonText]="'cancel'"
+            [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"
+          ></stc-apps-button>
+
+          <div class="mx-3"></div>
+          <stc-apps-button
+            [buttonText]="'Confirm'"
+            [buttonType]="'primary'"
+            (btnClick)="confirmClose()"
+          ></stc-apps-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>
+<stc-apps-dialog id="first-escalate-Modal">
+  <p>
+    You're about to First Escalate Case
+    <strong>(Case ID : {{ casseId }})</strong>. Kindly note you can't rollback
+    this action, Are you sure?”
+  </p>
+  <form [formGroup]="firstEscalateForm" (ngSubmit)="confirmFirstEscalate()">
+    <div class="row">
+      <div class="col-md-12">
+        <stc-apps-textarea
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'first_escalate_content'"
+          [inputName]="'first escalate content'"
+          formControlName="first_escalate_content"
+        ></stc-apps-textarea>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 offset-8">
+        <div class="d-flex justify-content-end">
+          <stc-apps-button
+            [buttonText]="'cancel'"
+            [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"
+          ></stc-apps-button>
+
+          <div class="mx-3"></div>
+          <stc-apps-button
+            [buttonText]="'Confirm'"
+            [buttonType]="'primary'"
+            (btnClick)="confirmFirstEscalate()"
+          ></stc-apps-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>
+<stc-apps-dialog id="second-escalate-Modal">
+  <p>
+    You're about to Second Escalate Case
+    <strong>(Case ID : {{ casseId }})</strong>. Kindly note you can't rollback
+    this action, Are you sure?”
+  </p>
+  <form [formGroup]="secondEscalateForm" (ngSubmit)="confirmSecondEscalate()">
+    <div class="row">
+      <div class="col-md-12">
+        <stc-apps-textarea
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'second_escalate_content'"
+          [inputName]="'second escalate content'"
+          formControlName="second_escalate_content"
+        ></stc-apps-textarea>
+      </div>
+    </div>
+    <div class="row mt-4">
+      <div class="col-md-4 offset-8">
+        <div class="d-flex justify-content-end">
+          <stc-apps-button
+            [buttonText]="'cancel'"
+            [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"
+          ></stc-apps-button>
+
+          <div class="mx-3"></div>
+          <stc-apps-button
+            [buttonText]="'Confirm'"
+            [buttonType]="'primary'"
+            (btnClick)="confirmSecondEscalate()"
+          ></stc-apps-button>
         </div>
       </div>
     </div>

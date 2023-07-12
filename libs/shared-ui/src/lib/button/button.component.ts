@@ -15,7 +15,9 @@ export class ButtonComponent {
     | 'danger-outline'
     | 'gray-outline'
     | 'default' = 'default';
+  @Input() actionType: 'button' | 'submit' = 'button';
   @Input() buttonDisable = false;
+  @Input() loading = false;
   @Input() buttonIcon = '';
   @Output() btnClick: EventEmitter<void> = new EventEmitter();
 

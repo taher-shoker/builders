@@ -5,13 +5,13 @@ import { BrowserModule } from '@angular/platform-browser';
 // Import Containers
 
 const routes: Routes = [
-  { path: '', redirectTo: '/casses-setting', pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
-    path: 'casses-setting',
+    path: 'home',
     children: [
       {
         path: '',
-        data: { breadcrumb: 'casses setting' },
+        data: { breadcrumb: 'home' },
         loadChildren: () =>
           import('./views/casses-setting/casses-setting-routing.module').then(
             (m) => m.CassesSettingRoutingModule
@@ -21,7 +21,7 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [BrowserModule, RouterModule.forRoot(routes)],
+  imports: [BrowserModule, RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

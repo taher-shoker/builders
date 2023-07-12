@@ -15,6 +15,7 @@
         "main": "apps/d2d/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/d2d/tsconfig.app.json",
+        "allowedCommonJsDependencies": ["file-saver"],
         "assets": [
           "apps/d2d/src/favicon.ico",
           "apps/d2d/src/assets",
@@ -34,22 +35,13 @@
           "node_modules/ngx-toastr/toastr.css",
           "apps/d2d/src/styles.scss"
         ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/styles/src"]
+        },
         "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
       },
       "configurations": {
         "production": {
-          "budgets": [
-            {
-              "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "1mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "2kb",
-              "maximumError": "4kb"
-            }
-          ],
           "outputHashing": "all"
         },
         "development": {

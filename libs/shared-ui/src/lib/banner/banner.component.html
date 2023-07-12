@@ -5,16 +5,15 @@
         <h3>{{ 'welcome' | translate }}, {{ userName }}</h3>
         <p>{{ 'welcome_back_msg' | translate }}</p>
       </div>
-      <h1 *ngFor="let bcItem of breadcrumbs$ | async; let $last = last">
-        <span *ngIf="$last"> {{ bcItem.label }}</span>
-      </h1>
+      <h1>{{ this.data.title }}</h1>
+      <small>{{ this.data.text }}</small>
     </div>
-    <div class="right">
+    <!-- <div class="right">
       <div class="date-status">
         <p>
           {{ 'last_update' | translate }} :<span> {{ '2023-05-23' }}</span>
         </p>
       </div>
-    </div>
+    </div> -->
   </div>
 </div>

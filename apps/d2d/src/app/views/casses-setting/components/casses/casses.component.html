@@ -1,52 +1,162 @@
-<div class="users-settings">
-  <div class="top-info"></div>
-  <stc-apps-filter-box
-    [addNavigate]="addCasseNavigate"
-    [addBtnLabel]="addNewCasseLabel"
-  ></stc-apps-filter-box>
-  <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
-      <th mat-header-cell *matHeaderCellDef>
-        {{ col.label }}
-      </th>
-      <td mat-cell *matCellDef="let element">
-        <div [ngSwitch]="col.key">
-          <div class="info-name" *ngSwitchCase="'name'">
-            <div class="name">
-              <h4>{{ element[col.key] }}</h4>
-              <small>ID: {{ element.id }}</small>
+<div class="casses-settings">
+  <div class="top-info">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="static register">
+          <div class="icon">
+            <i class="fas fa-plus-square"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalRegisted }}</div>
+            <div class="title">Registerd Casses</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="static in-progress">
+          <div class="icon">
+            <i class="fas fa-retweet"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalInProgress }}</div>
+            <div class="title">In Progress Casses</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="static pending">
+          <div class="icon">
+            <i class="far fa-clock"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalPending }}</div>
+            <div class="title">Pending Casses</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="static closed">
+          <div class="icon">
+            <i class="fas fa-flag-checkered"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalClosed }}</div>
+            <div class="title">Closed Casses</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <div class="f-box">
+        <div class="row align-items-center">
+          <div class="col-md-3">
+            <h3 class="table-title">Casses List</h3>
+          </div>
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col-md-5 offset-1">
+                <div class="input-group stc-input-group custom-input mb-3">
+                  <span class="input-group-text" id="basic-addon1"
+                    ><i class="fas fa-search"></i
+                  ></span>
+                  <input
+                    type="text"
+                    matInput
+                    #input
+                    class="form-control stc-input"
+                    (keyup)="searchFilter($event)"
+                  />
+                </div>
+              </div>
+
+              <div class="col-md-2">
+                <stc-apps-button
+                  [buttonText]="'filter'"
+                  [buttonType]="'gray-outline'"
+                  [buttonIcon]="'fa-filter'"
+                  (btnClick)="toggleFilter()"
+                ></stc-apps-button>
+              </div>
+              <div class="col-md-4">
+                <stc-apps-button
+                  [buttonText]="'Add New Casse'"
+                  [buttonType]="'primary'"
+                  [buttonIcon]="' fa-plus-circle'"
+                  (btnClick)="addCasseNavigate()"
+                ></stc-apps-button>
+              </div>
             </div>
           </div>
-          <div class="btns-action" *ngSwitchCase="'actions'">
-            <button
-              mat-button
-              class="btn details"
-              (click)="detailsNavigate(element.id)"
-            >
-              Show details
-            </button>
-          </div>
-          <span class="cell-text" *ngSwitchDefault>
-            {{ element[col.key] }}
-          </span>
         </div>
-      </td>
-    </ng-container>
-    <!-- <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-        <div class="message-box">
-          <img src="../../assets/Group 590.png" alt="" />
-          <h3>No users yet</h3>
-          <p>You didn’t add any user yet, let’s add new users</p>
-          <stc-apps-button
-            [buttonText]="'Add new user'"
-            [buttonType]="'warn'"
-            [buttonIcon]="' fa-plus-circle'"
-          ></stc-apps-button>
+      </div>
+      <table mat-table [dataSource]="dataSource" matSort>
+        <div class="spinner-container" *ngIf="isLoading">
+          <mat-spinner></mat-spinner>
         </div>
-      </td>
-    </tr> -->
-    <!-- <tr class="mat-row" *matNoDataRow>
+        <ng-container
+          [matColumnDef]="col.key"
+          *ngFor="let col of columnsSchema"
+        >
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ col.label }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div [ngSwitch]="col.key">
+              <div class="info-name" *ngSwitchCase="'customerName'">
+                <div class="name">
+                  <h4>{{ element[col.key] }}</h4>
+                  <small>ID: {{ element.id }}</small>
+                </div>
+              </div>
+              <div class="info-name" *ngSwitchCase="'caseStatus'">
+                <div
+                  class="case-status"
+                  [ngClass]="
+                    this.cassesService.getKeyByValue(
+                      CaseStatus,
+                      element[col.key]
+                    )
+                  "
+                >
+                  {{ element[col.key] }}
+                </div>
+              </div>
+              <div
+                class="btns-action justify-content-end"
+                *ngSwitchCase="'actions'"
+              >
+                <button
+                  mat-button
+                  class="btn details"
+                  (click)="detailsNavigate(element.id)"
+                >
+                  Show details
+                </button>
+              </div>
+              <span class="cell-text" *ngSwitchDefault>
+                {{ element[col.key] }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            <div class="message-box">
+              <img src="../../assets/Group 590.png" alt="" />
+              <h3>No casses yet</h3>
+              <p>You didn’t add any casse yet, let’s add new casses</p>
+              <stc-apps-button
+                [buttonText]="'Add new casse'"
+                [buttonType]="'primary'"
+                [buttonIcon]="' fa-plus-circle'"
+              ></stc-apps-button>
+            </div>
+          </td>
+        </tr>
+        <!-- <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" [attr.colspan]="displayedColumns.length">
         <div class="message-box">
           <img src="../../assets/Group 597.png" alt="" />
@@ -54,12 +164,12 @@
           <p>there are no data that match your search, please try again</p>
           <stc-apps-button
             [buttonText]="'Try another data sets'"
-            [buttonType]="'warn'"
+            [buttonType]="'primary'"
           ></stc-apps-button>
         </div>
       </td>
     </tr> -->
-    <tr class="mat-row" *matNoDataRow>
+        <!-- <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" [attr.colspan]="displayedColumns.length">
         <div class="message-box">
           <img src="../../assets/Group 598.png" alt="" />
@@ -67,17 +177,246 @@
           <p>Please connect to the network and try again</p>
           <stc-apps-button
             [buttonText]="'Try again'"
-            [buttonType]="'warn'"
+            [buttonType]="'primary'"
           ></stc-apps-button>
         </div>
       </td>
-    </tr>
-    <!-- <tr class="mat-row" *matError>
+    </tr> -->
+        <!-- <tr class="mat-row" *matError>
       <td class="mat-cell" [attr.colspan]="displayedColumns.length">
         No data matching the filter.
       </td>
     </tr> -->
-    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-  </table>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator
+        [pageSize]="5"
+        [pageSizeOptions]="[5, 10, 15, 20]"
+        [showFirstLastButtons]="true"
+        [hidePageSize]="true"
+      >
+      </mat-paginator>
+    </div>
+    <div class="col-md-4">
+      <div class="pendding-tasks">
+        <h3 class="main-title"><i class="far fa-clock"></i> Pendding Tasks</h3>
+        <ul class="tasks">
+          <li class="mt-3" *ngFor="let item of allItems">
+            <div
+              class="task"
+              [ngClass]="cassesService.getKeyByValue(TaskCicle, item.taskName)"
+              (click)="navigateToTask(item.caseID)"
+              ngSwitch="{{ item.taskName }}"
+            >
+              <div class="circle-wrap" [ngSwitch]="item.taskName">
+                <div class="circle">
+                  <div class="mask full">
+                    <div class="fill"></div>
+                  </div>
+                  <div class="mask half">
+                    <div class="fill"></div>
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.checkCase"
+                  >
+                    0%
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.fillMoreInfo"
+                  >
+                    15%
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.approveCase"
+                  >
+                    30%
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.withinSlResponse"
+                  >
+                    45%
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.breanchingSlResponse"
+                  >
+                    60%
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.shouldEscalate"
+                  >
+                    70%
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.shouldReEscalate"
+                  >
+                    80%
+                  </div>
+                  <div
+                    class="inside-circle"
+                    *ngSwitchCase="TaskCicle.sendToClose"
+                  >
+                    90%
+                  </div>
+                  <div class="inside-circle" *ngSwitchDefault></div>
+                </div>
+              </div>
+
+              <div class="task-info">
+                <h5>{{ item.taskName }}</h5>
+                <div class="date">
+                  <span>LastUpdated:</span>
+                  {{ item.createdDate | date : 'medium' }}
+                </div>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
 </div>
+
+<stc-apps-dialog id="filter-Modal">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" (blur)="(OnChangesForm)">
+    <div class="inputs">
+      <div class="row">
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputId]="'customerName'"
+            [inputName]="'Customer name'"
+            formControlName="customerName"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputId]="'city'"
+            [inputName]="'city'"
+            formControlName="city"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'existingServiceOrder'"
+            [inputName]="'Existing service order'"
+            formControlName="existingServiceOrder"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'serviceType'"
+            [inputName]="'Service Type'"
+            formControlName="serviceType"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'existingPlate'"
+            [inputName]="'existing plate'"
+            formControlName="existingPlate"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'existingPhoneNumber'"
+            [inputName]="'Existing Phone Number'"
+            formControlName="existingPhoneNumber"
+          ></stc-apps-input>
+        </div>
+
+        <div class="col-md-3">
+          <stc-apps-date-picker
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'activationDate'"
+            [inputName]="'Activation Date'"
+            formControlName="activationDate"
+          >
+          </stc-apps-date-picker>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'WFMOrder'"
+            [inputName]="'WFM Order'"
+            formControlName="wfmOrder"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'newPlate'"
+            [inputName]="'New Plate'"
+            formControlName="newPlate"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'newServiceOrder'"
+            [inputName]="'New Service Order'"
+            formControlName="newServiceOrder"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'newPhoneNumber'"
+            [inputName]="'New Phone Number'"
+            formControlName="newPhoneNumber"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'contactNumber'"
+            [inputName]="'Contact Number'"
+            formControlName="contactNumber"
+          ></stc-apps-input>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 offset-10">
+        <div class="btn-form-action d-flex">
+          <stc-apps-button
+            [buttonText]="'cancel'"
+            [buttonType]="'gray-outline'"
+            (btnClick)="clearFormFilter()"
+          ></stc-apps-button>
+
+          <div class="mx-3"></div>
+          <stc-apps-button
+            [buttonText]="'Filter'"
+            [buttonType]="'primary'"
+            [buttonDisable]="disabled"
+            (btnClick)="onSubmit()"
+            [actionType]="'submit'"
+          ></stc-apps-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>

@@ -1,9 +1,6 @@
 import { Component, Input, forwardRef } from '@angular/core';
-import {
-  ControlValueAccessor,
-  FormControl,
-  NG_VALUE_ACCESSOR,
-} from '@angular/forms';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 export interface FormFieldValue {
   name: string;
 }
@@ -19,44 +16,11 @@ export interface FormFieldValue {
     },
   ],
 })
-export class InputComponent implements ControlValueAccessor {
+export class InputComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputName!: string;
   @Input() inputId!: string;
   @Input() inputPlaceholder!: string;
-  @Input() inputType: 'text' | 'password' = 'text';
+  @Input() inputType: 'text' | 'password' | 'date' = 'text';
   @Input() inputIcon!: string;
   @Input() required!: boolean;
-
-  value!: string;
-  disabled = false;
-  touched = false;
-  onTouched: any = () => {
-    this.touched = true;
-  };
-  onChange: any = () => {
-    console.log('changed');
-  };
-
-  writeValue(value: any): void {
-    this.value = value;
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  onInputBlur(event: Event) {
-    const newValue = (event.target as HTMLInputElement).value;
-    this.value = newValue;
-    this.onChange(this.value);
-    this.onTouched();
-  }
 }

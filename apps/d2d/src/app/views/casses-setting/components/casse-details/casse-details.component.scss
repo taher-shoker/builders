@@ -1,0 +1,158 @@
+@import './scss/core/variables/colors';
+
+.details {
+  background-color: $whiteColor;
+  padding: 20px;
+
+  .val {
+    display: flex;
+    align-items: center;
+    margin: 30px auto;
+    &-title {
+      text-transform: capitalize;
+      padding-inline: 10px;
+      color: rgba($color: $shadowStc, $alpha: 0.5);
+    }
+    &-vlue {
+      color: $stcColor;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+  }
+  .file {
+    background-color: rgba($color: $shadowStc, $alpha: 0.2);
+    margin: 10px 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    cursor: pointer;
+
+    i {
+      font-size: 22px;
+      color: $stcColor;
+    }
+  }
+}
+
+.tasks {
+  padding: 3rem 1.5rem;
+  border-radius: 5px;
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.1);
+  background-color: $whiteColor;
+
+  .actions {
+    width: 100%;
+    padding-top: 20px;
+  }
+  figure {
+    display: flex;
+
+    & figcaption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      & h4 {
+        font-size: 1.4rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .order-track {
+    margin-top: 2rem;
+    padding: 0 1rem;
+    border-top: 1px solid $greyColor;
+    padding-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+
+    &-step {
+      display: flex;
+      height: 7rem;
+
+      &:last-child {
+        overflow: hidden;
+        & .order-track-status span:last-of-type {
+          display: none;
+        }
+      }
+    }
+
+    &-status {
+      margin-inline-end: 1.5rem;
+      position: relative;
+      &-dot {
+        display: block;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 50%;
+        background: $greenColor;
+        text-align: center;
+        line-height: 2;
+        i {
+          color: $whiteColor;
+        }
+      }
+      &-line {
+        display: block;
+        margin: 0 auto;
+        width: 2px;
+        height: 7rem;
+        background: $greenColor;
+      }
+    }
+    &-pending {
+      &-dot {
+        background: $greyColor;
+      }
+      &-line {
+        background: $greyColor;
+      }
+    }
+
+    &-text {
+      width: 100%;
+      &-stat {
+        font-size: 1.3rem;
+        font-weight: 500;
+        margin-bottom: 3px;
+      }
+
+      &-sub {
+        font-size: 1rem;
+        font-weight: 300;
+      }
+    }
+  }
+
+  .order-track {
+    transition: all 0.3s height 0.3s;
+    transform-origin: top center;
+  }
+
+  .case-status {
+    padding: 8px 12px;
+    border-radius: 12px;
+  }
+  .registered {
+    background-color: rgba($color: $stcMoonLightColor, $alpha: 0.2);
+    color: $stcMoonLightColor;
+  }
+  .pending {
+    background-color: rgba($color: $stcSunsetColor, $alpha: 0.2);
+    color: $stcSunsetColor;
+  }
+  .inprogress {
+    background-color: rgba($color: $stcSunColor, $alpha: 0.2);
+    color: $stcSunColor;
+  }
+  .closed {
+    background-color: rgba($color: $greenColor, $alpha: 0.2);
+    color: $greenColor;
+  }
+}

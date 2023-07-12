@@ -25,4 +25,13 @@
       color: $redColor;
     }
   }
+  .left-info {
+    display: flex;
+    align-items: center;
+  }
+  .file-validation {
+    padding-inline-start: 10px;
+    color: $redColor;
+    margin-top: 8px;
+  }
 }

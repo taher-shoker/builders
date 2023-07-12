@@ -1,5 +1,10 @@
 <div class="uploader-box">
-  <button class="upload-btn" (click)="onClick($event)">
+  <button
+    type="button"
+    class="upload-btn"
+    (click)="onClick($event)"
+    [disabled]="disabled"
+  >
     <i class="fas fa-link"></i>
     <span>{{ chooseLabel }}</span>
   </button>
@@ -8,25 +13,57 @@
     #fileUpload
     type="file"
     class="input_fileupload--hidden"
-    (input)="onInput($event)"
     (change)="onFileSelected($event)"
-    [(ngModel)]="inputFileName"
-    [accept]="accept"
     [multiple]="multiple"
+    accept="{{ this.accept }}"
   />
-
-  <div class="row">
+  <div class="file-validation">{{ this.invalidFileMessageDetail }}</div>
+  <div class="row" *ngIf="isLoading">
     <div class="col-md-4" *ngFor="let f of files">
       <div class="file">
         <span>{{ f.name }}</span>
-        <button
-          class="btn"
-          mat-icon-button
-          [attr.title]="deleteButtonLabel ? deleteButtonLabel : null"
-          (click)="removeFile(f)"
-        >
-          <i class="fas fa-times-circle"></i>
-        </button>
+        <div class="left-info">
+          <div
+            class="spinner-border spinner-border-sm"
+            role="status"
+            *ngIf="isLoading"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+          <button
+            class="btn"
+            mat-icon-button
+            [attr.title]="deleteButtonLabel ? deleteButtonLabel : null"
+            (click)="removeFile(f)"
+          >
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row" *ngIf="attachmentFiles.length > 0">
+    <div class="col-md-4" *ngFor="let f of attachmentFiles">
+      <div class="file">
+        <span>{{ f }}</span>
+        <div class="left-info">
+          <div
+            class="spinner-border spinner-border-sm"
+            role="status"
+            *ngIf="isLoading"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+          <button
+            class="btn"
+            type="button"
+            mat-icon-button
+            [attr.title]="deleteButtonLabel ? deleteButtonLabel : null"
+            (click)="removeFileRemotly(f)"
+          >
+            <i class="fas fa-times-circle"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>

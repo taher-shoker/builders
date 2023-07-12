@@ -19,7 +19,7 @@ const routes: Routes = [
       {
         path: 'add-casse',
         component: AddCasseComponent,
-        data: { breadcrumb: 'Register new Case' },
+        data: { breadcrumb: 'Add new Case' },
       },
       {
         path: 'casse-details/:id',

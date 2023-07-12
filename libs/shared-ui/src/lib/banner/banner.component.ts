@@ -1,8 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { BreadcrumbService } from '../breadcrumb/breadcrumb.sevices';
-import { Observable } from 'rxjs';
 
-import { Breadcrumb } from '../breadcrumb/breadcrumb.model';
+import { BannerData, BannerDataService } from './banner.service';
 
 @Component({
   selector: 'stc-apps-banner',
@@ -11,13 +9,13 @@ import { Breadcrumb } from '../breadcrumb/breadcrumb.model';
 })
 export class BannerComponent {
   @Input() userName = '';
-  @Input({ required: true })
+  @Input()
   pageTitle!: string;
   @Input() welcome = false;
-
-  breadcrumbs$: Observable<Breadcrumb[]>;
-
-  constructor(private readonly breadcrumbService: BreadcrumbService) {
-    this.breadcrumbs$ = this.breadcrumbService.breadcrumbs$;
+  data!: BannerData;
+  constructor(private bannerDataService: BannerDataService) {
+    this.bannerDataService.data.subscribe((data) => {
+      this.data = data;
+    });
   }
 }

@@ -24,7 +24,6 @@ export class DialogService {
   open(id: string) {
     // open modal specified by id
     const modal = this.modals.find((x) => x.id === id);
-
     if (!modal) {
       throw new Error(`modal '${id}' not found`);
     }

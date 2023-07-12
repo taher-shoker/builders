@@ -19,6 +19,9 @@
   &.warn {
     background-color: $stcSunsetColor;
     color: $whiteColor;
+    .spinner-border {
+      color: $whiteColor;
+    }
   }
   &.gray-outline {
     color: $shadowStc;

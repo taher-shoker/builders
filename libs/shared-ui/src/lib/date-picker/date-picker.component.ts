@@ -3,22 +3,20 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
 @Component({
-  selector: 'stc-apps-textarea',
-  templateUrl: './textarea.component.html',
-  styleUrls: ['./textarea.component.scss'],
+  selector: 'stc-apps-date-picker',
+  templateUrl: './date-picker.component.html',
+  styleUrls: ['./date-picker.component.scss'],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
-      useExisting: forwardRef(() => TextareaComponent),
+      useExisting: forwardRef(() => DatePickerComponent),
       multi: true,
     },
   ],
 })
-export class TextareaComponent<T> extends ControlValueAccessorDirective<T> {
+export class DatePickerComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputName!: string;
   @Input() inputId!: string;
   @Input() inputPlaceholder!: string;
-  @Input() inputType: 'text' | 'password' = 'text';
-  @Input() inputIcon!: string;
   @Input() required!: boolean;
 }

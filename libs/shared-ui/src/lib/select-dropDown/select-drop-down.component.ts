@@ -1,5 +1,12 @@
-import { Component, Input, forwardRef } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
+import {
+  Component,
+  Input,
+  forwardRef,
+  EventEmitter,
+  Output,
+} from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
 interface Option {
   name: string;
@@ -18,42 +25,17 @@ interface Option {
     },
   ],
 })
-export class SelectDropDownComponent {
+export class SelectDropDownComponent<
+  T
+> extends ControlValueAccessorDirective<T> {
+  @Output() selectChange = new EventEmitter<string>();
   @Input({ required: true }) label!: string;
   @Input() selectType: 'filter-select-box' | 'default' = 'default';
-  @Input() options!: Option[];
+  @Input() options: Option[] = [];
   @Input() required = false;
+  @Input() selectId = '';
 
-  optionsControl = new FormControl<Option | null>(null, Validators.required);
-
-  value!: string;
-  disabled = false;
-
-  onTouched: any = () => {
-    console.log('tached');
-  };
-  onChange: any = () => {
-    console.log('changed');
-  };
-
-  writeValue(value: any): void {
-    this.value = value;
-  }
-
-  registerOnChange(fn: any): void {
-    this.onChange = fn;
-  }
-
-  registerOnTouched(fn: any): void {
-    this.onTouched = fn;
-  }
-
-  setDisabledState(isDisabled: boolean): void {
-    this.disabled = isDisabled;
-  }
-
-  onInputBlur(event: Event) {
-    this.onChange(this.optionsControl.value?.value);
-    this.onTouched();
+  onChangeValue(value: string) {
+    this.selectChange.emit(value);
   }
 }

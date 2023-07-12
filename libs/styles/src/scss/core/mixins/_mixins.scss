@@ -1,6 +1,7 @@
-@import "../variables/colors";
+@import '../variables/colors';
 
 $bgColor_light: $whiteColor;
+$bgColor_grayLight: $stcLightGray;
 $bgColor_dark: $stcBlackColor;
 $bgColor_darkLight: $stcBlackLightColor;
 
@@ -8,14 +9,14 @@ $textColor_light: $stcBlackColor;
 $textColor_dark: $whiteColor;
 $text_darkLight: $whiteColor;
 
-$rtlDir: "rtl";
-$text_algin: "right";
+$rtlDir: 'rtl';
+$text_algin: 'right';
 // mixin that enables css variables in light mode
 @mixin lighten() {
   --bgColor: #{$bgColor_light};
   --textColor: #{$textColor_light};
   --darkLightColor: #{$textColor_light};
-  --lightDarkColor: ;
+  --lightGrayColor: #{$bgColor_grayLight};
 }
 
 // mixin that enables css variables in dark mode
@@ -23,6 +24,7 @@ $text_algin: "right";
   --bgColor: #{$bgColor_dark};
   --textColor: #{$textColor_dark};
   --darkLightColor: #{$stcBlackLightColor};
+  --lightGrayColor: #{$bgColor_dark};
 }
 
 // mixin that enables css variables in RTL direction

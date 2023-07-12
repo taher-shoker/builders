@@ -1,17 +1,17 @@
 <div class="user-form">
-  <form [formGroup]="casseForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="inputs">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="'EX: Ahmed Mohamed'"
             [inputId]="'customerName'"
             [inputName]="'Customer name'"
-            formControlName="customer_name"
+            formControlName="customerName"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="'EX: Jadah'"
@@ -20,118 +20,117 @@
             formControlName="city"
           ></stc-apps-input>
         </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'existingServiceOrder'"
             [inputName]="'Existing service order'"
-            formControlName="existing_service_order"
+            formControlName="existingServiceOrder"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'serviceType'"
             [inputName]="'Service Type'"
-            formControlName="service_type"
+            formControlName="serviceType"
           ></stc-apps-input>
         </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'existingPlate'"
             [inputName]="'existing plate'"
-            formControlName="existing_plate"
+            formControlName="existingPlate"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'existingPhoneNumber'"
             [inputName]="'Existing Phone Number'"
-            formControlName="existing_phone_number"
+            formControlName="existingPhoneNumber"
           ></stc-apps-input>
         </div>
       </div>
+
       <div class="row mt-7">
-        <div class="col-md-6">
-          <stc-apps-input
+        <div class="col-md-4">
+          <stc-apps-date-picker
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'activationDate'"
             [inputName]="'Activation Date'"
-            formControlName="activation_date"
-          ></stc-apps-input>
+            formControlName="activationDate"
+          >
+          </stc-apps-date-picker>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'WFMOrder'"
             [inputName]="'WFM Order'"
-            formControlName="WFM_order"
+            formControlName="wfmOrder"
           ></stc-apps-input>
         </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newPlate'"
             [inputName]="'New Plate'"
-            formControlName="new_plate"
+            formControlName="newPlate"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newServiceOrder'"
             [inputName]="'New Service Order'"
-            formControlName="new_service_order"
+            formControlName="newServiceOrder"
           ></stc-apps-input>
         </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newPhoneNumber'"
             [inputName]="'New Phone Number'"
-            formControlName="new_phone_number"
+            formControlName="newPhoneNumber"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'contactNumber'"
             [inputName]="'Contact Number'"
-            formControlName="contact_number"
+            formControlName="contactNumber"
           ></stc-apps-input>
         </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'caseLabel'"
             [inputName]="'Case Label'"
-            formControlName="case_label"
+            formControlName="caseLabel"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+      </div>
+
+      <div class="row mt-7">
+        <div class="col-md-4">
           <stc-apps-textarea
             [className]="'custom-input'"
             [inputPlaceholder]="''"
@@ -140,12 +139,15 @@
             formControlName="description"
           ></stc-apps-textarea>
         </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-12">
+        <div class="col-md-8">
           <stc-apps-file-uploader
             [multiple]="true"
             [chooseLabel]="'Add attachment'"
+            (onformchange)="onUploadFile($event)"
+            [attachmentFiles]="this.form.controls['attachments'].value"
+            formControlName="attachments"
+            [isLoading]="isLoading"
+            (ondelete)="onDeleteFile($event)"
           ></stc-apps-file-uploader>
         </div>
       </div>
@@ -158,36 +160,11 @@
 
       <div class="mx-3"></div>
       <stc-apps-button
-        *ngIf="!isEditing"
-        [buttonText]="'Add user'"
-        [buttonType]="'warn'"
+        [buttonText]="'Add Case'"
+        [buttonType]="'primary'"
         (btnClick)="onSubmit()"
+        [actionType]="'submit'"
       ></stc-apps-button>
-      <stc-apps-button
-        *ngIf="isEditing"
-        [buttonText]="'save'"
-        [buttonType]="'warn'"
-      ></stc-apps-button>
-    </div>
-    <div class="btn-form-details" *ngIf="isSubmited">
-      <stc-apps-button
-        [buttonText]="'reject'"
-        [buttonType]="'danger-outline'"
-      ></stc-apps-button>
-
-      <div class="d-flex">
-        <stc-apps-button
-          [buttonText]="'Request more info'"
-          [buttonType]="'gray-outline'"
-        ></stc-apps-button>
-
-        <div class="mx-3"></div>
-        <stc-apps-button
-          [buttonText]="'Approve'"
-          [buttonType]="'success'"
-          (btnClick)="onApproved()"
-        ></stc-apps-button>
-      </div>
     </div>
   </form>
 </div>
