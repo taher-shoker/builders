@@ -13,15 +13,14 @@ export class CassesService {
 
   constructor(private http: HttpClient) {}
 
-  getCasses() {
-    const options = {};
-
-    return this.http.get(`${this.endpoint}/d2dCase`, options);
+  getCasses(filterData?: any) {
+    return this.http.get(`${this.endpoint}/d2dCase/search`, {
+      params: filterData,
+    });
   }
 
   getCasse(id: string) {
     const options = {};
-
     return this.http.get<Casse>(`${this.endpoint}/d2dCase/${id}`, options);
   }
 

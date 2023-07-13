@@ -1,3 +1,5 @@
+@import './mixins/mixins';
+
 ul {
   list-style: none;
 }
@@ -22,7 +24,7 @@ body {
   position: relative;
   word-break: break-word;
   overflow-x: hidden;
-  background-color: var(--lightGrayColor) !important;
+  background-color: rgba($color: $grayColor, $alpha: 0.1);
   color: var(--textColor) !important;
   direction: var(--direction);
 }

@@ -49,12 +49,14 @@ export class CasseFormComponent implements OnInit {
   }
   teams = [{ name: 'test', value: '1' }];
 
-  isLoading = true;
+  isLoading = false;
   uploadedFiles: File[] = [];
 
   onUploadFile(files: string | any[]) {
     if (files) {
       for (let i = 0; i < files?.length; i++) {
+        this.isLoading = true;
+
         this.formData.append('file', files[i]);
       }
     }

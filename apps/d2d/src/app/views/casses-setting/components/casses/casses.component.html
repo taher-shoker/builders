@@ -8,7 +8,7 @@
           </div>
           <div class="static-info">
             <div class="num">{{ totalRegisted }}</div>
-            <div class="title">Registerd Casses</div>
+            <div class="title">Registerd Cases</div>
           </div>
         </div>
       </div>
@@ -19,7 +19,7 @@
           </div>
           <div class="static-info">
             <div class="num">{{ totalInProgress }}</div>
-            <div class="title">In Progress Casses</div>
+            <div class="title">In Progress Cases</div>
           </div>
         </div>
       </div>
@@ -30,7 +30,7 @@
           </div>
           <div class="static-info">
             <div class="num">{{ totalPending }}</div>
-            <div class="title">Pending Casses</div>
+            <div class="title">Pending Cases</div>
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@
           </div>
           <div class="static-info">
             <div class="num">{{ totalClosed }}</div>
-            <div class="title">Closed Casses</div>
+            <div class="title">Closed Cases</div>
           </div>
         </div>
       </div>
@@ -53,7 +53,7 @@
       <div class="f-box">
         <div class="row align-items-center">
           <div class="col-md-3">
-            <h3 class="table-title">Casses List</h3>
+            <h3 class="table-title">Cases List</h3>
           </div>
           <div class="col-md-9">
             <div class="row">
@@ -82,7 +82,7 @@
               </div>
               <div class="col-md-4">
                 <stc-apps-button
-                  [buttonText]="'Add New Casse'"
+                  [buttonText]="'Add new case'"
                   [buttonType]="'primary'"
                   [buttonIcon]="' fa-plus-circle'"
                   (btnClick)="addCasseNavigate()"
@@ -107,7 +107,7 @@
             <div [ngSwitch]="col.key">
               <div class="info-name" *ngSwitchCase="'customerName'">
                 <div class="name">
-                  <h4>{{ element[col.key] }}</h4>
+                  <h4 title="{{ element[col.key] }}">{{ element[col.key] }}</h4>
                   <small>ID: {{ element.id }}</small>
                 </div>
               </div>
@@ -146,10 +146,10 @@
           <td class="mat-cell" [attr.colspan]="displayedColumns.length">
             <div class="message-box">
               <img src="../../assets/Group 590.png" alt="" />
-              <h3>No casses yet</h3>
-              <p>You didn’t add any casse yet, let’s add new casses</p>
+              <h3>No cases yet</h3>
+              <p>You didn’t add any casse yet, let’s add new case</p>
               <stc-apps-button
-                [buttonText]="'Add new casse'"
+                [buttonText]="'Add new case'"
                 [buttonType]="'primary'"
                 [buttonIcon]="' fa-plus-circle'"
               ></stc-apps-button>
@@ -199,8 +199,8 @@
       </mat-paginator>
     </div>
     <div class="col-md-4">
-      <div class="pendding-tasks">
-        <h3 class="main-title"><i class="far fa-clock"></i> Pendding Tasks</h3>
+      <div class="pending-tasks">
+        <h3 class="main-title"><i class="far fa-clock"></i> Pending Tasks</h3>
         <ul class="tasks">
           <li class="mt-3" *ngFor="let item of allItems">
             <div
@@ -272,7 +272,7 @@
               <div class="task-info">
                 <h5>{{ item.taskName }}</h5>
                 <div class="date">
-                  <span>LastUpdated:</span>
+                  <span>Last updated:</span>
                   {{ item.createdDate | date : 'medium' }}
                 </div>
               </div>
@@ -285,7 +285,12 @@
 </div>
 
 <stc-apps-dialog id="filter-Modal">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" (blur)="(OnChangesForm)">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    (blur)="(OnChangesForm)"
+    class="p-3 pb-0"
+  >
     <div class="inputs">
       <div class="row">
         <div class="col-md-3">
@@ -399,8 +404,8 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-md-4 offset-10">
-        <div class="btn-form-action d-flex">
+      <div class="col-md-4 offset-8">
+        <div class="btn-form-action d-flex justify-content-end">
           <stc-apps-button
             [buttonText]="'clear Filter'"
             [buttonType]="'gray-outline'"

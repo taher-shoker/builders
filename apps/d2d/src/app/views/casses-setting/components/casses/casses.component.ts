@@ -38,11 +38,11 @@ const COLUMNS_SCHEMA = [
     type: 'text',
     label: 'Existing Service Order',
   },
-  {
-    key: 'existingPhoneNumber',
-    type: 'text',
-    label: 'Existing Phone Number',
-  },
+  // {
+  //   key: 'existingPhoneNumber',
+  //   type: 'text',
+  //   label: 'Existing Phone Number',
+  // },
   {
     key: 'caseStatus',
     type: 'text',
@@ -80,7 +80,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
 
   allItems!: Task[];
   addCasseNavigate(): void {
-    this.router.navigate(['./add-casse'], { relativeTo: this.route });
+    this.router.navigate(['./add-case'], { relativeTo: this.route });
   }
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any[] = COLUMNS_SCHEMA;
@@ -94,7 +94,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
   disabled = false;
 
   detailsNavigate(id: string) {
-    this.router.navigate(['./casse-details', id], { relativeTo: this.route });
+    this.router.navigate(['./case-details', id], { relativeTo: this.route });
   }
   getCassesListing() {
     this.cassesService.getCasses().subscribe((res: any) => {
@@ -121,7 +121,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
   }
 
   navigateToTask(caseId: number) {
-    this.router.navigate(['./casse-details', caseId], {
+    this.router.navigate(['./case-details', caseId], {
       relativeTo: this.route,
     });
   }
@@ -170,7 +170,12 @@ export class CassesComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = searchVal;
   }
   onSubmit() {
-    console.log('jkjh');
+    this.cassesService.getCasses(this.form.value).subscribe((res: any) => {
+      this.dialogService.close();
+      this.form.reset();
+      this.isLoading = false;
+      this.dataSource.data = res;
+    });
   }
   clearFormFilter() {
     this.form.reset();

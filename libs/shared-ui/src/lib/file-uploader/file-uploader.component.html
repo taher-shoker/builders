@@ -18,8 +18,11 @@
     accept="{{ this.accept }}"
   />
   <div class="file-validation">{{ this.invalidFileMessageDetail }}</div>
-  <div class="row" *ngIf="isLoading">
-    <div class="col-md-4" *ngFor="let f of files">
+  <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
+    <span class="sr-only">Loading...</span>
+  </div>
+  <div class="row">
+    <!-- <div class="col-md-4" *ngFor="let f of files">
       <div class="file">
         <span>{{ f.name }}</span>
         <div class="left-info">
@@ -40,20 +43,13 @@
           </button>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div class="row" *ngIf="attachmentFiles.length > 0">
     <div class="col-md-4" *ngFor="let f of attachmentFiles">
       <div class="file">
         <span>{{ f }}</span>
         <div class="left-info">
-          <div
-            class="spinner-border spinner-border-sm"
-            role="status"
-            *ngIf="isLoading"
-          >
-            <span class="sr-only">Loading...</span>
-          </div>
           <button
             class="btn"
             type="button"

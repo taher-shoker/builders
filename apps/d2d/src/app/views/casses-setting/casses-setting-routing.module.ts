@@ -17,14 +17,14 @@ const routes: Routes = [
         component: CassesComponent,
       },
       {
-        path: 'add-casse',
+        path: 'add-case',
         component: AddCasseComponent,
         data: { breadcrumb: 'Add new Case' },
       },
       {
-        path: 'casse-details/:id',
+        path: 'case-details/:id',
         component: CasseDetailsComponent,
-        data: { breadcrumb: `casse-details` },
+        data: { breadcrumb: `case-details` },
       },
     ],
   },

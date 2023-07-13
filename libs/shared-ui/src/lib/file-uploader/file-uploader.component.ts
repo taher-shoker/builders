@@ -137,13 +137,17 @@ export class FileUploaderComponent implements ControlValueAccessor {
   files: File[] = [];
 
   onClick(event: any) {
-    if (this.fileUpload) this.fileUpload.nativeElement.click();
+    if (this.fileUpload) {
+      this.clearInputElement();
+      this.fileUpload.nativeElement.click();
+    }
   }
 
   onFileSelected(event: any) {
-    this.attachmentFiles = [];
+    //this.attachmentFiles = [];
     this.invalidFileMessageDetail = '';
     const files = event.target.files;
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       if (this.validate(file)) {

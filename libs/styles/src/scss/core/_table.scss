@@ -11,6 +11,7 @@ table {
     text-transform: capitalize;
   }
 }
+
 .cell-text {
   text-transform: capitalize;
 }
@@ -73,6 +74,11 @@ table {
     margin-bottom: 0px;
     color: $stcColor;
     font-weight: 400;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 160px;
+    height: 1.2em;
+    white-space: nowrap;
   }
   small {
     color: rgba($color: $shadowStc, $alpha: 0.7);
