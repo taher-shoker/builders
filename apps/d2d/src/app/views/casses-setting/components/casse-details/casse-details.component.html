@@ -48,13 +48,13 @@
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">New Plate</span>
+            <span class="val-title">New Plate#</span>
             <span class="val-vlue">{{ caseData?.newPlate }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">New Service Order</span>
+            <span class="val-title">New Service Order#</span>
             <span class="val-vlue">{{ caseData?.newServiceOrder }}</span>
           </div>
         </div>
@@ -245,7 +245,7 @@
       </div>
       <div class="col-md-6">
         <stc-apps-select-drop-down
-          [label]="'Select User'"
+          [label]="'Select ' + (infoForm.get('assignedTo')!.value === '1' ? 'Team' : 'User')"
           [options]="users"
           formControlName="selectedUser"
         ></stc-apps-select-drop-down>
@@ -255,7 +255,7 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'message'"
-          [inputName]="'Message'"
+          [inputName]="'Inquiry'"
           formControlName="message"
         ></stc-apps-textarea>
       </div>

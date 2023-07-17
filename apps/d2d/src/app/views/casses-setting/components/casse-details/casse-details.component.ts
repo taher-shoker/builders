@@ -67,7 +67,7 @@ export class CasseDetailsComponent implements OnInit {
       close_mail_content: [''],
     });
     this.infoForm = this.formBuilder.group({
-      assignedTo: ['', Validators.required],
+      assignedTo: ['1', Validators.required],
       selectedUser: ['', Validators.required],
       message: ['', Validators.required],
       check_case_attachment: [''],

@@ -45,7 +45,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'existingPlate'"
-            [inputName]="'existing plate'"
+            [inputName]="'existing plate#'"
             formControlName="existingPlate"
           ></stc-apps-input>
         </div>
@@ -85,7 +85,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newPlate'"
-            [inputName]="'New Plate'"
+            [inputName]="'New Plate#'"
             formControlName="newPlate"
           ></stc-apps-input>
         </div>
@@ -96,7 +96,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newServiceOrder'"
-            [inputName]="'New Service Order'"
+            [inputName]="'New Service Order#'"
             formControlName="newServiceOrder"
           ></stc-apps-input>
         </div>
@@ -156,6 +156,7 @@
       <stc-apps-button
         [buttonText]="'cancel'"
         [buttonType]="'gray-outline'"
+        (btnClick)="cancel()"
       ></stc-apps-button>
 
       <div class="mx-3"></div>

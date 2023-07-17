@@ -91,4 +91,8 @@ export class CasseFormComponent implements OnInit {
       });
     }
   }
+
+  cancel(){
+    this.router.navigate(["../"])
+  }
 }
