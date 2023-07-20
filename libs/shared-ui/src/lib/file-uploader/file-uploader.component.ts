@@ -148,28 +148,28 @@ export class FileUploaderComponent implements ControlValueAccessor {
     this.invalidFileMessageDetail = '';
     const files = event.target.files;
 
-    for (let i = 0; i < files.length; i++) {
-      const file = files[i];
-      if (this.validate(file)) {
-        // if (this.isImage(file)) {
-        //   file.objectURL = this.sanitizer.bypassSecurityTrustUrl(
-        //     window.URL.createObjectURL(files[i])
-        //   );
-        // }
-        // const formData = new FormData();
-        // if (files) {
-        //   for (let i = 0; i < files?.length; i++) {
-        //     formData.append('file', files[i]);
-        //   }
-        // }
-        if (!this.isMultiple()) {
-          this.files = [];
-        }
+    // for (let i = 0; i < files.length; i++) {
+    //   const file = files[i];
+    //   if (this.validate(file)) {
+    //     // if (this.isImage(file)) {
+    //     //   file.objectURL = this.sanitizer.bypassSecurityTrustUrl(
+    //     //     window.URL.createObjectURL(files[i])
+    //     //   );
+    //     // }
+    //     // const formData = new FormData();
+    //     // if (files) {
+    //     //   for (let i = 0; i < files?.length; i++) {
+    //     //     formData.append('file', files[i]);
+    //     //   }
+    //     // }
+    //     if (!this.isMultiple()) {
+    //       this.files = [];
+    //     }
 
-        this.files.push(files[i]);
-        this.onformchange.emit(files);
-      }
-    }
+    //     this.files.push(files[i]);
+    //   }
+    // }
+    this.onformchange.emit(files);
   }
 
   removeFile(file: File) {
@@ -184,7 +184,7 @@ export class FileUploaderComponent implements ControlValueAccessor {
   }
 
   validate(file: File) {
-    if (file.size > 5242880) {
+    if (file.size > 1e+7) {
       this.invalidFileMessageDetail = 'File is too big!';
       return false;
     }

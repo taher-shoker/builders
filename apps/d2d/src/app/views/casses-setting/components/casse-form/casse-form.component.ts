@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import { CassesService, File } from '../../casses.service';
+import { LanguageManagerService } from '@stc-apps/lng-selector';
 
 @Component({
   selector: 'stc-apps-casse-form',
@@ -16,13 +17,14 @@ export class CasseFormComponent implements OnInit {
   @Input() isSubmited!: boolean;
   @Input() casseId!: string;
   @Output() caseStatus = new EventEmitter<string>();
-  formData = new FormData();
+
   constructor(
     private formBuilder: FormBuilder,
     protected dialogService: DialogService,
     private cassesService: CassesService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private languageManagerService: LanguageManagerService
   ) {}
   ngOnInit(): void {
     this.casseForm();
@@ -53,20 +55,23 @@ export class CasseFormComponent implements OnInit {
   uploadedFiles: File[] = [];
 
   onUploadFile(files: string | any[]) {
+
     if (files) {
       for (let i = 0; i < files?.length; i++) {
         this.isLoading = true;
+        const formData = new FormData();
 
-        this.formData.append('file', files[i]);
+        formData.append('file', files[i]);
+
+        this.cassesService.uploadFile(formData).subscribe((res: any) => {
+          if (res) {
+            this.uploadedFiles.push(res.id);
+            this.isLoading = false;
+            this.form.get('attachments')?.setValue(this.uploadedFiles);
+          }
+        });
       }
     }
-    this.cassesService.uploadFile(this.formData).subscribe((res: any) => {
-      if (res) {
-        this.uploadedFiles.push(res.id);
-        this.isLoading = false;
-        this.form.get('attachments')?.setValue(this.uploadedFiles);
-      }
-    });
   }
 
   onDeleteFile(id: number) {
@@ -75,11 +80,18 @@ export class CasseFormComponent implements OnInit {
       this.form.get('attachments')?.setValue(this.uploadedFiles);
     });
   }
+
+  confirm(){
+    this.dialogService.open('add-case-modal');
+  }
+
   onSubmit() {
     if (this.form.valid) {
+
       this.cassesService.createCasse(this.form.value).subscribe((res) => {
         if (res) {
-          this.toastr.success('add case  successfuly');
+          const msgOfToaster = this.languageManagerService.getSavedLanguage() == 'ar' ? 'تم إضافة الحالة بنجاح' : 'Case is added successfully'
+          this.toastr.success(msgOfToaster);
           this.form.reset();
           this.router.navigate(['./home']);
         }

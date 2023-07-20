@@ -4,25 +4,25 @@
       <div class="row details">
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">customer name:</span>
-            <span class="val-vlue">{{ caseData?.customerName }}</span>
+            <span class="val-title">{{ 'customer_name'| translate}}</span>
+            <span class="val-vlue">{{ caseData?.customerName}}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">City</span>
+            <span class="val-title">{{ 'city'| translate}}</span>
             <span class="val-vlue">{{ caseData?.city }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Service Type</span>
+            <span class="val-title">{{ 'service_type'| translate}}</span>
             <span class="val-vlue">{{ caseData?.serviceType }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Activation Date</span>
+            <span class="val-title">{{ 'activation_date'| translate}}</span>
             <span class="val-vlue">{{
               caseData?.activationDate | date : 'short'
             }}</span>
@@ -30,61 +30,85 @@
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Existing Service Order</span>
+            <span class="val-title">{{ 'Existing Service Order'| translate}}</span>
             <span class="val-vlue">{{ caseData?.existingServiceOrder }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Existing Phone Number</span>
+            <span class="val-title">{{ 'existing_phone_number'| translate}}</span>
             <span class="val-vlue">{{ caseData?.existingPhoneNumber }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">WFM Order</span>
+            <span class="val-title">{{ 'wfm_order'| translate}}</span>
             <span class="val-vlue">{{ caseData?.wfmOrder }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">New Plate#</span>
+            <span class="val-title">{{ 'new_plate'| translate}}</span>
             <span class="val-vlue">{{ caseData?.newPlate }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">New Service Order#</span>
+            <span class="val-title">{{ 'new_service_order'| translate}}</span>
             <span class="val-vlue">{{ caseData?.newServiceOrder }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">New Phone Number </span>
+            <span class="val-title">{{ 'new_phone_number'| translate}}</span>
             <span class="val-vlue">{{ caseData?.newPhoneNumber }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Contract Number</span>
+            <span class="val-title">{{ 'contact_number'| translate}}</span>
             <span class="val-vlue">{{ caseData?.contactNumber }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Case Lable </span>
+            <span class="val-title">{{ 'case_label'| translate}}</span>
             <span class="val-vlue">{{ caseData?.caseLabel }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Description </span>
+            <span class="val-title">{{ 'existing_plate'| translate}}</span>
+            <span class="val-vlue">{{ caseData?.existingPlate }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">{{ 'creator_name'| translate}}</span>
+            <span class="val-vlue">{{ caseData?.creatorName || "no name"}}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">{{ 'related_team'| translate}}</span>
+            <span class="val-vlue">{{ caseData?.relatedTeam || "no name" }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">{{ 'created_at'| translate}}</span>
+            <span class="val-vlue">{{ caseData?.createdDate | date:"yyyy/mm/dd" }}</span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="val">
+            <span class="val-title">{{ 'description'| translate}}</span>
             <span class="val-vlue">{{ caseData?.description }}</span>
           </div>
         </div>
         <div class="col-md-6">
           <div class="val">
-            <span class="val-title">Attachments </span>
+            <span class="val-title">{{ 'attachments'| translate}}</span>
           </div>
           <ul>
             <li *ngFor="let item of caseData?.attachments">
@@ -101,14 +125,14 @@
       <section class="tasks">
         <figure>
           <figcaption>
-            <h4>Logs for Case's Tasks</h4>
+            <h4>{{"logs_of_cases" | translate}}</h4>
             <div class="">
               <span
                 class="case-status"
                 [ngClass]="
                   cassesService.getKeyByValue(CaseStatus, this.caseStatus)
                 "
-                >{{ this.caseStatus }}</span
+                >{{ this.caseStatus | translate}}</span
               >
             </div>
           </figcaption>
@@ -148,7 +172,7 @@
               ></span>
             </div>
             <div class="order-track-text">
-              <p class="order-track-text-stat">{{ item.taskName }}</p>
+              <p class="order-track-text-stat">{{ item.taskName | translate}}</p>
               <span class="order-track-text-sub">{{
                 item.completedDate | date : 'medium'
               }}</span>
@@ -158,68 +182,68 @@
               >
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.checkCase"
-                  [buttonText]="'yes'"
+                  [buttonText]="'yes' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="onCheck()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.checkCase"
-                  [buttonText]="'no'"
+                  [buttonText]="'no' | translate"
                   (btnClick)="cancelCheck()"
                   [buttonType]="'gray-outline'"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.fillMoreInfo"
-                  [buttonText]="'reply'"
+                  [buttonText]="'reply' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="replyfeed()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.approveCase"
-                  [buttonText]="'Approved'"
+                  [buttonText]="'approve' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="approvedTask()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.approveCase"
-                  [buttonText]="'Reject'"
+                  [buttonText]="'reject' | translate"
                   [buttonType]="'danger-outline'"
                   (btnClick)="reject()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.withinSlResponse"
-                  [buttonText]="'Received'"
+                  [buttonText]="'received' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="withinResponse()"
                 ></stc-apps-button>
 
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.shouldEscalate"
-                  [buttonText]="'yes'"
+                  [buttonText]="'yes' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="shouldFirstEscalate()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.shouldEscalate"
-                  [buttonText]="'no'"
+                  [buttonText]="'no' | translate"
                   [buttonType]="'gray-outline'"
                   (btnClick)="notFirstEscalate()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.shouldReEscalate"
-                  [buttonText]="'yes'"
+                  [buttonText]="'yes' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="shouldSecondEscalate()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.shouldReEscalate"
-                  [buttonText]="'no'"
+                  [buttonText]="'no' | translate"
                   [buttonType]="'gray-outline'"
                   (btnClick)="notSecondEscalate()"
                 ></stc-apps-button>
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.sendToClose"
-                  [buttonText]="'Send'"
+                  [buttonText]="'send' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="sendToClose()"
                 ></stc-apps-button>
@@ -232,12 +256,12 @@
   </div>
 </div>
 <stc-apps-dialog id="request-Info-Modal">
-  <h3>Request More Info | CASE ID : {{ casseId }}</h3>
+  <h3>{{"Request More Info | CASE ID" | translate}} : {{ casseId }}</h3>
   <form [formGroup]="infoForm" (ngSubmit)="sendInfo()">
     <div class="row">
       <div class="col-md-6">
         <stc-apps-select-drop-down
-          [label]="'Assigned to'"
+          [label]="'assigned_to' | translate"
           [options]="assigneeType"
           formControlName="assignedTo"
           (selectChange)="getAssigneeValue($event)"
@@ -245,7 +269,7 @@
       </div>
       <div class="col-md-6">
         <stc-apps-select-drop-down
-          [label]="'Select ' + (infoForm.get('assignedTo')!.value === '1' ? 'Team' : 'User')"
+          [label]="('Select ' + (infoForm.get('assignedTo')!.value === '1' ? 'Team' : 'User')) | translate"
           [options]="users"
           formControlName="selectedUser"
         ></stc-apps-select-drop-down>
@@ -255,15 +279,16 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'message'"
-          [inputName]="'Inquiry'"
+          [inputName]="'inquiry' | translate"
           formControlName="message"
         ></stc-apps-textarea>
       </div>
       <div class="col-md-12">
         <stc-apps-file-uploader
           [multiple]="false"
-          [chooseLabel]="'Add attachment'"
+          [chooseLabel]="'add_attachment' | translate"
           (onformchange)="onUploadFile($event)"
+          [attachmentFiles]="this.infoForm.controls['check_case_attachment'].value"
           formControlName="check_case_attachment"
           [isLoading]="isLoading"
         ></stc-apps-file-uploader>
@@ -272,16 +297,17 @@
         <div class="col-md-4 offset-8">
           <div class="d-flex justify-content-end">
             <stc-apps-button
-              [buttonText]="'cancel'"
+              [buttonText]="'cancel' | translate"
               [buttonType]="'gray-outline'"
               (btnClick)="dialogService.close()"
             ></stc-apps-button>
 
             <div class="mx-3"></div>
             <stc-apps-button
-              [buttonText]="'Send '"
+              [buttonText]="'send' | translate"
               [buttonType]="'primary'"
               (btnClick)="sendInfo()"
+              [buttonDisable]="!infoForm.valid"
             ></stc-apps-button>
           </div>
         </div>
@@ -318,8 +344,8 @@
 
 <stc-apps-dialog id="reject-Modal">
   <p>
-    You're about to Reject Case <strong>(Case ID : {{ casseId }})</strong>.
-    Kindly note you can't rollback this action, Are you sure?”
+    {{"reject_case_confirmation" | translate}} <strong>({{"case_id" | translate}}: {{ casseId }})</strong>.
+    {{"reject_case_confirmation_suffix" | translate}}
   </p>
   <form [formGroup]="rejectForm" (ngSubmit)="confirmReject()">
     <div class="row">
@@ -328,7 +354,7 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'reason'"
-          [inputName]="'reason'"
+          [inputName]="'reason' | translate"
           formControlName="reject_note"
         ></stc-apps-textarea>
       </div>
@@ -337,14 +363,14 @@
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
           <stc-apps-button
-            [buttonText]="'cancel'"
+            [buttonText]="'cancel' | translate"
             [buttonType]="'gray-outline'"
             (btnClick)="dialogService.close()"
           ></stc-apps-button>
 
           <div class="mx-3"></div>
           <stc-apps-button
-            [buttonText]="'Yes, Reject'"
+            [buttonText]="('yes' | translate )+', '+ ('reject' | translate)"
             [buttonType]="'danger-outline'"
             (btnClick)="confirmReject()"
           ></stc-apps-button>
@@ -364,7 +390,7 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'message'"
-          [inputName]="'message'"
+          [inputName]="'Feedback'"
           formControlName="message"
         ></stc-apps-textarea>
       </div>
@@ -373,6 +399,7 @@
           [multiple]="false"
           [chooseLabel]="'Add attachment'"
           (onformchange)="onUploadFile($event)"
+          [attachmentFiles]="this.infoForm.controls['check_case_attachment'].value"
           formControlName="check_case_attachment"
           [isLoading]="isLoading"
         ></stc-apps-file-uploader>
@@ -392,6 +419,7 @@
             [buttonText]="'send'"
             [buttonType]="'primary'"
             (btnClick)="confirmReply()"
+            [buttonDisable]="!replyForm.valid"
           ></stc-apps-button>
         </div>
       </div>
@@ -402,7 +430,7 @@
 <stc-apps-dialog id="close-Modal">
   <p>
     You're about to Close Case <strong>(Case ID : {{ casseId }})</strong>.
-    Kindly note you can't rollback this action, Are you sure?”
+    Kindly note you can't rollback this action, Are you sure?
   </p>
   <form [formGroup]="closeForm" (ngSubmit)="confirmClose()">
     <div class="row">
@@ -411,7 +439,7 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'mailContent'"
-          [inputName]="'mailContent'"
+          [inputName]="'Content'"
           formControlName="close_mail_content"
         ></stc-apps-textarea>
       </div>
@@ -468,6 +496,7 @@
             [buttonText]="'Confirm'"
             [buttonType]="'primary'"
             (btnClick)="confirmFirstEscalate()"
+            [buttonDisable]="!firstEscalateForm.valid"
           ></stc-apps-button>
         </div>
       </div>

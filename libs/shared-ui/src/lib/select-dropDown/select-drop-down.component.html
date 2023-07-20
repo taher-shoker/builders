@@ -11,9 +11,9 @@
       (selectionChange)="onChangeValue($event.value)"
     >
       <mat-option *ngFor="let option of options" [value]="option.value">
-        {{ option.name }}
+        {{ option.name | translate}}
       </mat-option>
     </mat-select>
-    <mat-error *ngIf="control.errors">This Field Is Required </mat-error>
+    <mat-error *ngIf="control.errors">{{"field_required" | translate}}</mat-error>
   </mat-form-field>
 </div>

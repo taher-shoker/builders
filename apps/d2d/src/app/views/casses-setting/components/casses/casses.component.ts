@@ -10,7 +10,7 @@ import {
   Task,
   TaskCicle,
 } from '../../casses.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 export interface PeriodicElement {
   id: string;
@@ -93,6 +93,22 @@ export class CassesComponent implements OnInit, AfterViewInit {
   paginator!: MatPaginator;
   disabled = false;
 
+  ngOnInit() {
+    this.getCassesListing();
+    this.getAssigneeTasks();
+    this.bannerDataService.updateData({ title: 'home', text: '' });
+    this.dataSource.paginator = this.paginator;
+
+    this.dataSource.filterPredicate = (data, filter) =>
+      (data.id == filter );
+
+    this.serchForm();
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.sort = this.sort;
+  }
+
   detailsNavigate(id: string) {
     this.router.navigate(['./case-details', id], { relativeTo: this.route });
   }
@@ -146,16 +162,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
       description: [''],
     });
   }
-  ngOnInit() {
-    this.getCassesListing();
-    this.getAssigneeTasks();
-    this.bannerDataService.updateData({ title: 'home', text: '' });
-    this.dataSource.paginator = this.paginator;
-    this.serchForm();
-  }
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
+
 
   OnChangesForm() {
     this.form.valueChanges.subscribe((val) => {
@@ -168,7 +175,10 @@ export class CassesComponent implements OnInit, AfterViewInit {
       .trim()
       .toLowerCase();
     this.dataSource.filter = searchVal;
+
   }
+
+
   onSubmit() {
     this.cassesService.getCasses(this.form.value).subscribe((res: any) => {
       this.dialogService.close();

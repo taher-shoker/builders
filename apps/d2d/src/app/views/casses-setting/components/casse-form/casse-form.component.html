@@ -5,18 +5,18 @@
         <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
-            [inputPlaceholder]="'EX: Ahmed Mohamed'"
+            [inputPlaceholder]="'ex_ahmed' | translate"
             [inputId]="'customerName'"
-            [inputName]="'Customer name'"
+            [inputName]="'customer_name' | translate"
             formControlName="customerName"
           ></stc-apps-input>
         </div>
         <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
-            [inputPlaceholder]="'EX: Jadah'"
+            [inputPlaceholder]="'ex_jeddah' | translate"
             [inputId]="'city'"
-            [inputName]="'city'"
+            [inputName]="'city' | translate"
             formControlName="city"
           ></stc-apps-input>
         </div>
@@ -25,7 +25,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'existingServiceOrder'"
-            [inputName]="'Existing service order'"
+            [inputName]="'Existing Service Order' | translate"
             formControlName="existingServiceOrder"
           ></stc-apps-input>
         </div>
@@ -36,7 +36,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'serviceType'"
-            [inputName]="'Service Type'"
+            [inputName]="'service_type' | translate"
             formControlName="serviceType"
           ></stc-apps-input>
         </div>
@@ -45,7 +45,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'existingPlate'"
-            [inputName]="'existing plate#'"
+            [inputName]="'existing_plate' | translate"
             formControlName="existingPlate"
           ></stc-apps-input>
         </div>
@@ -54,7 +54,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'existingPhoneNumber'"
-            [inputName]="'Existing Phone Number'"
+            [inputName]="'existing_phone_number' | translate"
             formControlName="existingPhoneNumber"
           ></stc-apps-input>
         </div>
@@ -66,7 +66,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'activationDate'"
-            [inputName]="'Activation Date'"
+            [inputName]="'activation_date' | translate"
             formControlName="activationDate"
           >
           </stc-apps-date-picker>
@@ -76,7 +76,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'WFMOrder'"
-            [inputName]="'WFM Order'"
+            [inputName]="'wfm_order' | translate"
             formControlName="wfmOrder"
           ></stc-apps-input>
         </div>
@@ -85,7 +85,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newPlate'"
-            [inputName]="'New Plate#'"
+            [inputName]="'new_plate' | translate"
             formControlName="newPlate"
           ></stc-apps-input>
         </div>
@@ -96,7 +96,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newServiceOrder'"
-            [inputName]="'New Service Order#'"
+            [inputName]="'new_service_order' | translate"
             formControlName="newServiceOrder"
           ></stc-apps-input>
         </div>
@@ -105,7 +105,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'newPhoneNumber'"
-            [inputName]="'New Phone Number'"
+            [inputName]="'new_phone_number' | translate"
             formControlName="newPhoneNumber"
           ></stc-apps-input>
         </div>
@@ -114,7 +114,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'contactNumber'"
-            [inputName]="'Contact Number'"
+            [inputName]="'contact_number' | translate"
             formControlName="contactNumber"
           ></stc-apps-input>
         </div>
@@ -123,7 +123,7 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'caseLabel'"
-            [inputName]="'Case Label'"
+            [inputName]="'case_label' | translate"
             formControlName="caseLabel"
           ></stc-apps-input>
         </div>
@@ -135,14 +135,14 @@
             [className]="'custom-input'"
             [inputPlaceholder]="''"
             [inputId]="'description'"
-            [inputName]="'Description'"
+            [inputName]="'description' | translate"
             formControlName="description"
           ></stc-apps-textarea>
         </div>
         <div class="col-md-8">
           <stc-apps-file-uploader
             [multiple]="true"
-            [chooseLabel]="'Add attachment'"
+            [chooseLabel]="'add_attachment' | translate"
             (onformchange)="onUploadFile($event)"
             [attachmentFiles]="this.form.controls['attachments'].value"
             formControlName="attachments"
@@ -154,18 +154,44 @@
     </div>
     <div class="btn-form-action" *ngIf="!isSubmited">
       <stc-apps-button
-        [buttonText]="'cancel'"
+        [buttonText]="'cancel' | translate"
         [buttonType]="'gray-outline'"
         (btnClick)="cancel()"
       ></stc-apps-button>
 
       <div class="mx-3"></div>
       <stc-apps-button
-        [buttonText]="'Add Case'"
+        [buttonText]="'add_case' | translate"
         [buttonType]="'primary'"
-        (btnClick)="onSubmit()"
+        (btnClick)="confirm()"
         [actionType]="'submit'"
+        [buttonDisable]="!form.valid"
       ></stc-apps-button>
     </div>
   </form>
 </div>
+
+
+<stc-apps-dialog id="add-case-modal">
+  <p>
+    {{"add_case_confirmation" | translate}}
+  </p>
+  <div class="row mt-4">
+    <div class="col-md-4 offset-8">
+      <div class="d-flex justify-content-end">
+        <stc-apps-button
+          [buttonText]="'cancel' | translate"
+          [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"
+        ></stc-apps-button>
+
+        <div class="mx-3"></div>
+        <stc-apps-button
+          [buttonText]="'confirm' | translate"
+          [buttonType]="'primary'"
+          (btnClick)="onSubmit()"
+        ></stc-apps-button>
+      </div>
+    </div>
+  </div>
+</stc-apps-dialog>

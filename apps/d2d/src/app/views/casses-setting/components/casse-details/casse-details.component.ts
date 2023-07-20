@@ -10,6 +10,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
+import { LanguageManagerService } from '@stc-apps/lng-selector';
 
 @Component({
   selector: 'stc-apps-casse-details',
@@ -45,18 +46,21 @@ export class CasseDetailsComponent implements OnInit {
     private route: ActivatedRoute,
     private router: Router,
     public cassesService: CassesService,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private languageManagerService: LanguageManagerService
   ) {}
 
   ngOnInit(): void {
     this.casseId = this.route.snapshot.params['id'];
+    const outputTitle = this.languageManagerService.getSavedLanguage() === 'ar' ? `تفاصيل حالة D2D رقم : ${this.casseId} ` : `D2D Case ( ID: ${this.casseId} ) Details`
     this.bannerDataService.updateData({
-      title: `D2D Case ( ID: ${this.casseId} ) Details`,
+      title: outputTitle,
       text: '',
     });
 
     this.cassesService.getCasse(this.casseId).subscribe((res) => {
       if (res) {
+        console.log("The RES", res)
         this.caseData = res;
         this.caseStatus = res.caseStatus;
       }
@@ -96,17 +100,22 @@ export class CasseDetailsComponent implements OnInit {
   uploadedFile: File[] = [];
   onUploadFile(files: string | any[]) {
     if (files) {
+
+
       for (let i = 0; i < files?.length; i++) {
+        this.isLoading = true;
+        const formData = new FormData();
+        formData.append('file', files[i]);
         this.formData.append('file', files[i]);
+        this.cassesService.uploadFile(this.formData).subscribe((res: any) => {
+          if (res) {
+            this.uploadedFile.push(res.id);
+            this.isLoading = false;
+            this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
+          }
+        });
       }
     }
-    this.cassesService.uploadFile(this.formData).subscribe((res: any) => {
-      if (res) {
-        this.uploadedFile.push(res.id);
-        this.isLoading = false;
-        this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
-      }
-    });
   }
   downloadFile(id: number, name: string) {
     this.cassesService.getFile(id).subscribe((buffer) => {

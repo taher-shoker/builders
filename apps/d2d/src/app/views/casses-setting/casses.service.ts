@@ -125,6 +125,7 @@ export enum TaskCicle {
   checkCase = 'Check Case Info',
   fillMoreInfo = 'Fill More Info',
   approveCase = 'Approve Case',
+  caseRejected = 'Case Rejected',
   withinSlResponse = 'Within SL Response',
   breanchingSlResponse = 'Breaching SL Response',
   shouldEscalate = 'Should Escalate',
