@@ -19,6 +19,7 @@ export interface PeriodicElement {
   existingServiceOrder: string;
   serviceType: string;
   serviceNumber: string;
+  caseSerialNumber: string;
   existingPhoneNumber: string;
 }
 const COLUMNS_SCHEMA = [
@@ -100,7 +101,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.filterPredicate = (data, filter) =>
-      (data.id == filter );
+      (data.caseSerialNumber == filter );
 
     this.serchForm();
   }
@@ -116,6 +117,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
     this.cassesService.getCasses().subscribe((res: any) => {
       this.isLoading = false;
       this.dataSource.data = res;
+      console.log("THE RES", res)
       this.totalRegisted = res.filter(
         (d: any) => d.caseStatus === CaseStatus.registered
       ).length;
@@ -180,14 +182,49 @@ export class CassesComponent implements OnInit, AfterViewInit {
 
 
   onSubmit() {
+
+    const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
+    const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
+
+    this.form.get("activationDate")?.setValue(stringifiedFormattedDate)
+
     this.cassesService.getCasses(this.form.value).subscribe((res: any) => {
       this.dialogService.close();
-      this.form.reset();
       this.isLoading = false;
       this.dataSource.data = res;
     });
   }
   clearFormFilter() {
     this.form.reset();
+    this.dialogService.close();
+    this.getCassesListing();
+  }
+
+  produceDate(month: string, day: string, year: string){
+
+    let monthNum = 0;
+    const monthsList = [
+      {name: 'Jan', id: 1},
+      {name: 'Feb', id: 2},
+      {name: 'Mar', id: 3},
+      {name: 'Apr', id: 4},
+      {name: 'May', id: 5},
+      {name: 'Jun', id: 6},
+      {name: 'Jul', id: 7},
+      {name: 'Aug', id: 8},
+      {name: 'Sep', id: 9},
+      {name: 'Oct', id: 10},
+      {name: 'Nov', id: 11},
+      {name: 'Dec', id: 12},
+    ]
+
+    for(const monthObj of monthsList){
+      if(monthObj.name === month){
+        monthNum = monthObj.id
+      }
+    }
+
+    const finalDate = `${monthNum}/${day}/${year}`;
+    return finalDate
   }
 }

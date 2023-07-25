@@ -167,6 +167,13 @@
         [actionType]="'submit'"
         [buttonDisable]="!form.valid"
       ></stc-apps-button>
+
+      <stc-apps-button
+      [buttonText]="'logger'"
+      [buttonType]="'primary'"
+      (btnClick)="logger()"
+      [actionType]="'submit'"
+    ></stc-apps-button>
     </div>
   </form>
 </div>

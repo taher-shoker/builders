@@ -1,5 +1,9 @@
 @import './scss/core/variables/colors';
 
+*{
+  word-break: keep-all;
+}
+
 .casses-settings {
   margin-inline: 25px;
   position: relative;

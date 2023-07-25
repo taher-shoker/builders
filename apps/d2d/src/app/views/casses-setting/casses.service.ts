@@ -73,6 +73,7 @@ export interface File {
   id: string;
   fileName: string;
   url: string;
+  label: string;
 }
 
 export interface Task {
@@ -119,6 +120,7 @@ export type Attachment = {
   id: number;
   fileName: string;
   url: string;
+  label: string;
 };
 
 export enum TaskCicle {

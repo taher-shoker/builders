@@ -15,7 +15,7 @@
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
     <mat-error *ngIf="control.hasError('required')"
-      >This Field Is Required
+      > {{"field_required" | translate}}
     </mat-error>
   </mat-form-field>
 </div>

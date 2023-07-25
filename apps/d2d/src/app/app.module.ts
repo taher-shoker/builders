@@ -13,7 +13,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { AppComponent } from './app.component';
 import { CassesSettingComponent } from './views/casses-setting/casses-setting.component';
 
-import { AppRoutingModule } from './app.routes';
+import { AppRoutingModule } from './app-routing.module';
 import { MatTableModule } from '@angular/material/table';
 import { CassesSettingModule } from './views/casses-setting/casses-setting.module';
 

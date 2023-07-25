@@ -19,6 +19,15 @@ const routes: Routes = [
       },
     ],
   },
+
+  {
+    path: 'administration',
+    data: { breadcrumb: 'home' },
+    loadChildren: () =>
+      import('./views/administration/administration.module').then(
+        (m) => m.AdministrationModule
+      ),
+  },
 ];
 @NgModule({
   imports: [BrowserModule, RouterModule.forRoot(routes, { useHash: true })],

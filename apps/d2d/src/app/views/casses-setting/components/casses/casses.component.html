@@ -66,6 +66,7 @@
                     type="text"
                     matInput
                     #input
+                    placeholder="{{'Search for Case Serial' | translate}}"
                     class="form-control stc-input"
                     (keyup)="searchFilter($event)"
                   />
@@ -108,7 +109,7 @@
               <div class="info-name" *ngSwitchCase="'customerName'">
                 <div class="name">
                   <h4 >{{ element[col.key] }}</h4> <!--title="{{ element[col.key] }}"-->
-                  <small>ID: {{ element.id }}</small>
+                  <small class="serial-number">{{"serial_number" | translate}}: {{ element.caseSerialNumber }}</small>
                 </div>
               </div>
               <div class="info-name" *ngSwitchCase="'caseStatus'">
@@ -146,10 +147,10 @@
           <td class="mat-cell" [attr.colspan]="displayedColumns.length">
             <div class="message-box">
               <img src="../../assets/Group 590.png" alt="" />
-              <h3>No cases yet</h3>
-              <p>You didn’t add any casse yet, let’s add new case</p>
+              <h3>{{"no_cases_yet" | translate}}</h3>
+              <p>{{"no_cases_msg" | translate}}</p>
               <stc-apps-button
-                [buttonText]="'Add new case'"
+                [buttonText]="'Add new Case' | translate"
                 [buttonType]="'primary'"
                 [buttonIcon]="' fa-plus-circle'"
               ></stc-apps-button>

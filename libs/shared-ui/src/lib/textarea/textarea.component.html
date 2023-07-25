@@ -11,6 +11,6 @@
       [placeholder]="inputPlaceholder ? inputPlaceholder : ''"
       [formControl]="control"
     ></textarea>
-    <mat-error *ngIf="control.errors">This Field Is Required </mat-error>
+    <mat-error *ngIf="control.errors">{{"field_required" | translate}} </mat-error>
   </mat-form-field>
 </div>

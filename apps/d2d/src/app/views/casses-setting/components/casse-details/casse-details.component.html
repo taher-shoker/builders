@@ -1,124 +1,138 @@
-<div class="container-fluid">
-  <div class="row">
+<div class="container-fluid views-padding">
+  <div class="row m-0 p-0">
     <div class="col-md-8">
       <div class="row details">
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'customer_name'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.customerName}}</span>
-          </div>
+
+        <div class="col-12 title-holder">
+          <h3>Case Details</h3>
         </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'city'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.city }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'service_type'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.serviceType }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'activation_date'| translate}}</span>
-            <span class="val-vlue">{{
-              caseData?.activationDate | date : 'short'
-            }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'Existing Service Order'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.existingServiceOrder }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'existing_phone_number'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.existingPhoneNumber }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'wfm_order'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.wfmOrder }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'new_plate'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.newPlate }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'new_service_order'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.newServiceOrder }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'new_phone_number'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.newPhoneNumber }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'contact_number'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.contactNumber }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'case_label'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.caseLabel }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'existing_plate'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.existingPlate }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'creator_name'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.creatorName || "no name"}}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'related_team'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.relatedTeam || "no name" }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'created_at'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.createdDate | date:"yyyy/mm/dd" }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'description'| translate}}</span>
-            <span class="val-vlue">{{ caseData?.description }}</span>
-          </div>
-        </div>
-        <div class="col-md-6">
-          <div class="val">
-            <span class="val-title">{{ 'attachments'| translate}}</span>
-          </div>
-          <ul>
-            <li *ngFor="let item of caseData?.attachments">
-              <div class="file" (click)="downloadFile(item.id, item.fileName)">
-                <span>{{ item.fileName }}</span>
-                <i class="fas fa-arrow-alt-circle-down"></i>
+
+        <div class="row">
+
+          <!-- Left Column -->
+          <div class="col left-col">
+
+            <div class="row">
+              <div class="col-12">
+                <p class="cell-name">{{ 'customer_name'| translate}}</p>
+                <p class="cell-value">{{ caseData?.customerName}}</p>
               </div>
-            </li>
-          </ul>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'service_type'| translate}}</p>
+                <p class="cell-value">{{ caseData?.serviceType }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'Existing Service Order'| translate}}</p>
+                <p class="cell-value">{{ caseData?.existingServiceOrder }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'wfm_order'| translate}}</p>
+                <p class="cell-value">{{ caseData?.wfmOrder }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'new_service_order'| translate}}</p>
+                <p class="cell-value">{{ caseData?.newServiceOrder }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'contact_number'| translate}}</p>
+                <p class="cell-value">{{ caseData?.contactNumber }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'existing_plate'| translate}}</p>
+                <p class="cell-value">{{ caseData?.existingPlate }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'related_team'| translate}}</p>
+                <p class="cell-value">{{ caseData?.relatedTeam }}</p>
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- Mid Column -->
+          <div class="col-5"></div>
+          <!-- Right Column -->
+          <div class="col  right-col">
+
+            <div class="row">
+              <div class="col-12">
+                <p class="cell-name">{{ 'city'| translate}}</p>
+                <p class="cell-value">{{ caseData?.city }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'activation_date'| translate}}</p>
+                <ng-container *ngIf="caseData">
+                  <p class="cell-value">{{ caseData.activationDate | date:"yyyy/MM/dd" }}</p>
+                </ng-container>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'existing_phone_number'| translate}}</p>
+                <p class="cell-value">{{ caseData?.existingPhoneNumber }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'new_plate'| translate}}</p>
+                <p class="cell-value">{{ caseData?.newPlate }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'new_phone_number'| translate}}</p>
+                <p class="cell-value">{{ caseData?.newPhoneNumber }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'case_label'| translate}}</p>
+                <p class="cell-value">{{ caseData?.caseLabel }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'creator_name'| translate}}</p>
+                <p class="cell-value">{{ caseData?.creatorName }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'created_at'| translate}}</p>
+                <p class="cell-value">{{ caseData?.createdDate | date:"yyyy/MM/dd"  }}</p>
+              </div>
+
+            </div>
+
+          </div>
         </div>
+
+        <div class="row">
+          <div class="col-12">
+            <p class="cell-name">{{ 'description'| translate}}</p>
+            <p class="cell-value">{{ caseData?.description }}</p>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-6">
+            <p class="cell-name">{{ 'attachments'| translate}}</p>
+
+            <ul>
+              <li *ngFor="let item of caseData?.attachments">
+                <div class="file" (click)="downloadFile(item.id, item.label)">
+                  <span>{{ item.label }}</span>
+                  <i class="fas fa-arrow-alt-circle-down"></i>
+                </div>
+              </li>
+            </ul>
+          </div>
+
+        </div>
+
       </div>
     </div>
     <div class="col-md-4">
@@ -127,12 +141,12 @@
           <figcaption>
             <h4>{{"logs_of_cases" | translate}}</h4>
             <div class="">
-              <span
+              <p
                 class="case-status"
                 [ngClass]="
                   cassesService.getKeyByValue(CaseStatus, this.caseStatus)
                 "
-                >{{ this.caseStatus | translate}}</span
+                >{{ this.caseStatus | translate}}</p
               >
             </div>
           </figcaption>
@@ -202,8 +216,8 @@
                   *ngIf="item.taskName === TaskCicle.approveCase"
                   [buttonText]="'approve' | translate"
                   [buttonType]="'primary'"
-                  (btnClick)="approvedTask()"
-                ></stc-apps-button>
+                  (btnClick)="confirm()"
+                ></stc-apps-button> <!--approvedTask()  -->
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.approveCase"
                   [buttonText]="'reject' | translate"
@@ -291,6 +305,8 @@
           [attachmentFiles]="this.infoForm.controls['check_case_attachment'].value"
           formControlName="check_case_attachment"
           [isLoading]="isLoading"
+          (ondelete)="onDeleteFile($event)"
+
         ></stc-apps-file-uploader>
       </div>
       <div class="row mt-4">
@@ -317,25 +333,28 @@
 </stc-apps-dialog>
 
 <stc-apps-dialog id="approve-Modal">
-  <p>
+  <!-- <p>
     You're about to Approve Case
     <strong>(Case ID : {{ casseId }})</strong> . Kindly note you can't rollback
     this action, Are you sure?”
-  </p>
-  <h3>Request More Info | CASE ID : #123432</h3>
+  </p> -->
+  <!-- <h3>Request More Info | CASE ID : #123432</h3> -->
+
+  <p>{{"approve_case_confirmation" | translate}}</p>
   <div class="row mt-4">
     <div class="col-md-4 offset-8">
       <div class="d-flex justify-content-end">
         <stc-apps-button
-          [buttonText]="'cancel'"
+          [buttonText]="'cancel' | translate"
           [buttonType]="'gray-outline'"
           (btnClick)="dialogService.close()"
         ></stc-apps-button>
 
         <div class="mx-3"></div>
         <stc-apps-button
-          [buttonText]="'Yes, Approve'"
+          [buttonText]="'yes_approve' | translate"
           [buttonType]="'primary'"
+          (btnClick)="approvedTask()"
         ></stc-apps-button>
       </div>
     </div>
@@ -345,7 +364,7 @@
 <stc-apps-dialog id="reject-Modal">
   <p>
     {{"reject_case_confirmation" | translate}} <strong>({{"case_id" | translate}}: {{ casseId }})</strong>.
-    {{"reject_case_confirmation_suffix" | translate}}
+    {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="rejectForm" (ngSubmit)="confirmReject()">
     <div class="row">
@@ -381,7 +400,7 @@
 </stc-apps-dialog>
 <stc-apps-dialog id="replyFeeback-Modal">
   <p>
-    You're about to Fill Case <strong>(Case ID : {{ casseId }})</strong>.
+    {{"reply_feeback" | translate}} <strong>({{"case_id" | translate}} : {{ casseId }})</strong>.
   </p>
   <form [formGroup]="replyForm" (ngSubmit)="confirmReply()">
     <div class="row">
@@ -390,18 +409,20 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'message'"
-          [inputName]="'Feedback'"
+          [inputName]="'feedback' | translate"
           formControlName="message"
         ></stc-apps-textarea>
       </div>
       <div class="col-md-12">
         <stc-apps-file-uploader
           [multiple]="false"
-          [chooseLabel]="'Add attachment'"
+          [chooseLabel]="'add_attachment' | translate"
           (onformchange)="onUploadFile($event)"
           [attachmentFiles]="this.infoForm.controls['check_case_attachment'].value"
           formControlName="check_case_attachment"
           [isLoading]="isLoading"
+          (ondelete)="onDeleteFile($event)"
+
         ></stc-apps-file-uploader>
       </div>
     </div>
@@ -409,14 +430,14 @@
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
           <stc-apps-button
-            [buttonText]="'cancel'"
+            [buttonText]="'cancel' | translate"
             [buttonType]="'gray-outline'"
             (btnClick)="dialogService.close()"
           ></stc-apps-button>
 
           <div class="mx-3"></div>
           <stc-apps-button
-            [buttonText]="'send'"
+            [buttonText]="'send' | translate"
             [buttonType]="'primary'"
             (btnClick)="confirmReply()"
             [buttonDisable]="!replyForm.valid"
@@ -429,8 +450,8 @@
 
 <stc-apps-dialog id="close-Modal">
   <p>
-    You're about to Close Case <strong>(Case ID : {{ casseId }})</strong>.
-    Kindly note you can't rollback this action, Are you sure?
+    {{"close_case_confirmation" | translate}} <strong>( {{"case_id" | translate}} : {{ casseId }})</strong>.
+    {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="closeForm" (ngSubmit)="confirmClose()">
     <div class="row">
@@ -439,7 +460,7 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'mailContent'"
-          [inputName]="'Content'"
+          [inputName]="'content' | translate"
           formControlName="close_mail_content"
         ></stc-apps-textarea>
       </div>
@@ -448,14 +469,14 @@
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
           <stc-apps-button
-            [buttonText]="'cancel'"
+            [buttonText]="'cancel' | translate"
             [buttonType]="'gray-outline'"
             (btnClick)="dialogService.close()"
           ></stc-apps-button>
 
           <div class="mx-3"></div>
           <stc-apps-button
-            [buttonText]="'Confirm'"
+            [buttonText]="'confirm' | translate"
             [buttonType]="'primary'"
             (btnClick)="confirmClose()"
           ></stc-apps-button>
@@ -466,9 +487,8 @@
 </stc-apps-dialog>
 <stc-apps-dialog id="first-escalate-Modal">
   <p>
-    You're about to First Escalate Case
-    <strong>(Case ID : {{ casseId }})</strong>. Kindly note you can't rollback
-    this action, Are you sure?”
+    {{"first_escalate_case" | translate}}
+    <strong>({{"case_id" | translate}} : {{ casseId }})</strong>. {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="firstEscalateForm" (ngSubmit)="confirmFirstEscalate()">
     <div class="row">
@@ -477,7 +497,7 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'first_escalate_content'"
-          [inputName]="'first escalate content'"
+          [inputName]="'first_escalate_content' | translate"
           formControlName="first_escalate_content"
         ></stc-apps-textarea>
       </div>
@@ -486,14 +506,14 @@
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
           <stc-apps-button
-            [buttonText]="'cancel'"
+            [buttonText]="'cancel' | translate"
             [buttonType]="'gray-outline'"
             (btnClick)="dialogService.close()"
           ></stc-apps-button>
 
           <div class="mx-3"></div>
           <stc-apps-button
-            [buttonText]="'Confirm'"
+            [buttonText]="'confirm' | translate"
             [buttonType]="'primary'"
             (btnClick)="confirmFirstEscalate()"
             [buttonDisable]="!firstEscalateForm.valid"
@@ -505,9 +525,8 @@
 </stc-apps-dialog>
 <stc-apps-dialog id="second-escalate-Modal">
   <p>
-    You're about to Second Escalate Case
-    <strong>(Case ID : {{ casseId }})</strong>. Kindly note you can't rollback
-    this action, Are you sure?”
+    {{"second_escalate_case" | translate}}
+    <strong>({{"case_id" | translate}}: {{ casseId }})</strong>. {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="secondEscalateForm" (ngSubmit)="confirmSecondEscalate()">
     <div class="row">
@@ -516,7 +535,7 @@
           [className]="'custom-input'"
           [inputPlaceholder]="''"
           [inputId]="'second_escalate_content'"
-          [inputName]="'second escalate content'"
+          [inputName]="'second_escalate_content' | translate"
           formControlName="second_escalate_content"
         ></stc-apps-textarea>
       </div>
@@ -525,14 +544,14 @@
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
           <stc-apps-button
-            [buttonText]="'cancel'"
+            [buttonText]="'cancel' | translate"
             [buttonType]="'gray-outline'"
             (btnClick)="dialogService.close()"
           ></stc-apps-button>
 
           <div class="mx-3"></div>
           <stc-apps-button
-            [buttonText]="'Confirm'"
+            [buttonText]="'confirm' | translate"
             [buttonType]="'primary'"
             (btnClick)="confirmSecondEscalate()"
           ></stc-apps-button>

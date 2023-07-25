@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import {
@@ -11,13 +11,14 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-casse-details',
   templateUrl: './casse-details.component.html',
   styleUrls: ['./casse-details.component.scss'],
 })
-export class CasseDetailsComponent implements OnInit {
+export class CasseDetailsComponent implements OnInit, OnDestroy {
   readonly TaskCicle = TaskCicle;
   readonly CaseStatus = CaseStatus;
 
@@ -39,28 +40,25 @@ export class CasseDetailsComponent implements OnInit {
     { name: 'users', value: '2' },
   ];
   users: any = [];
+
+  langSub!: Subscription;
+  invalidFileMessageDetail!: string;
+
   constructor(
     private formBuilder: FormBuilder,
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
-    private router: Router,
     public cassesService: CassesService,
-    private sanitizer: DomSanitizer,
     private languageManagerService: LanguageManagerService
   ) {}
 
   ngOnInit(): void {
     this.casseId = this.route.snapshot.params['id'];
-    const outputTitle = this.languageManagerService.getSavedLanguage() === 'ar' ? `تفاصيل حالة D2D رقم : ${this.casseId} ` : `D2D Case ( ID: ${this.casseId} ) Details`
-    this.bannerDataService.updateData({
-      title: outputTitle,
-      text: '',
-    });
+    this.subscribeToLanguage();
 
     this.cassesService.getCasse(this.casseId).subscribe((res) => {
       if (res) {
-        console.log("The RES", res)
         this.caseData = res;
         this.caseStatus = res.caseStatus;
       }
@@ -103,6 +101,7 @@ export class CasseDetailsComponent implements OnInit {
 
 
       for (let i = 0; i < files?.length; i++) {
+
         this.isLoading = true;
         const formData = new FormData();
         formData.append('file', files[i]);
@@ -117,6 +116,15 @@ export class CasseDetailsComponent implements OnInit {
       }
     }
   }
+
+  onDeleteFile(id: number) {
+    this.cassesService.deleteFile(id).subscribe((res: any) => {
+      this.uploadedFile = this.uploadedFile.filter((x: any) => x !== id);
+      this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
+    });
+  }
+
+
   downloadFile(id: number, name: string) {
     this.cassesService.getFile(id).subscribe((buffer) => {
       const data: Blob = new Blob([buffer], {
@@ -153,6 +161,13 @@ export class CasseDetailsComponent implements OnInit {
       },
     };
     this.refreshTasks(data);
+
+    this.closeForm.reset();
+    this.infoForm.reset();
+    this.rejectForm.reset();
+    this.replyForm.reset();
+    this.firstEscalateForm.reset();
+    this.secondEscalateForm.reset();
   }
   cancelCheck() {
     const data = { form: { info_needed: 0 } };
@@ -182,6 +197,11 @@ export class CasseDetailsComponent implements OnInit {
   }
 
   /** Actions with Approve Casse status  **/
+
+  confirm(){
+    this.dialogService.open('approve-Modal');
+  }
+
   approvedTask() {
     const data = { form: { case_approved: 1 } };
     this.refreshTasks(data);
@@ -255,5 +275,19 @@ export class CasseDetailsComponent implements OnInit {
   confirmClose() {
     const data = { form: this.closeForm.value };
     this.refreshTasks(data);
+  }
+
+  subscribeToLanguage(){
+    this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(res => {
+      const outputTitle = this.languageManagerService.getSavedLanguage() === 'ar' ? `تفاصيل حالة D2D رقم : ${this.casseId} ` : `D2D Case ( ID: ${this.casseId} ) Details`
+      this.bannerDataService.updateData({
+        title: outputTitle,
+        text: '',
+      });
+    })
+  }
+
+  ngOnDestroy(): void {
+      this.langSub.unsubscribe();
   }
 }

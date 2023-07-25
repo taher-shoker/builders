@@ -17,7 +17,7 @@
       [formControl]="control"
     />
     <mat-error *ngIf="control.hasError('required')"
-      >This Field Is Required
+      >{{"field_required" | translate}}
     </mat-error>
   </mat-form-field>
 </div>
