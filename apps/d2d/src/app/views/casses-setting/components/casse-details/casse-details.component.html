@@ -4,7 +4,7 @@
       <div class="row details">
 
         <div class="col-12 title-holder">
-          <h3>Case Details</h3>
+          <h3>{{"case_details" | translate}}</h3>
         </div>
 
         <div class="row">
@@ -71,7 +71,7 @@
               <div class="col-12">
                 <p class="cell-name">{{ 'activation_date'| translate}}</p>
                 <ng-container *ngIf="caseData">
-                  <p class="cell-value">{{ caseData.activationDate | date:"yyyy/MM/dd" }}</p>
+                  <p class="cell-value">{{ caseData.activationDate }}</p>
                 </ng-container>
               </div>
 
@@ -102,7 +102,7 @@
 
               <div class="col-12">
                 <p class="cell-name">{{ 'created_at'| translate}}</p>
-                <p class="cell-value">{{ caseData?.createdDate | date:"yyyy/MM/dd"  }}</p>
+                <p class="cell-value">{{ caseData?.createdDate | date:"dd/MM/YYYY"  }}</p>
               </div>
 
             </div>
@@ -418,7 +418,7 @@
           [multiple]="false"
           [chooseLabel]="'add_attachment' | translate"
           (onformchange)="onUploadFile($event)"
-          [attachmentFiles]="this.infoForm.controls['check_case_attachment'].value"
+          [attachmentFiles]="infoForm.get('check_case_attachment')?.value"
           formControlName="check_case_attachment"
           [isLoading]="isLoading"
           (ondelete)="onDeleteFile($event)"

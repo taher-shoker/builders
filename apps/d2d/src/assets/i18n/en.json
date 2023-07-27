@@ -105,5 +105,6 @@
   "no_cases_yet" : "No cases yet",
   "no_cases_msg" : "You didn’t add any case yet, let’s add new case",
   "Search for Case Serial" : "Search for Case Serial",
-  "serial_number" : "Serial Number"
+  "serial_number" : "Serial Number",
+  "case_details" : "Case Details"
 }

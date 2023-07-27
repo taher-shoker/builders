@@ -105,6 +105,7 @@
   "no_cases_yet" : "لا يوجد محتوى",
   "no_cases_msg" : "لم يتم إضافة حالات بعد, قم بإضافة واحدة",
   "Search for Case Serial" : "ابحث بالرقم التسلسلي",
-  "serial_number" : "الرقم التسلسلي"
+  "serial_number" : "الرقم التسلسلي",
+  "case_details" : "تفاصيل الحالة"
 
 }

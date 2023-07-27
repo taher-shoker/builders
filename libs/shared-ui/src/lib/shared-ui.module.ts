@@ -9,13 +9,11 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
 import { LngSelectorModule } from '@stc-apps/lng-selector';
 import { ModeToggleModule } from '@stc-apps/mode-toggle';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatExpansionModule } from '@angular/material/expansion';
-import { MatNativeDateModule } from '@angular/material/core';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 
 import { ButtonComponent } from './button/button.component';
 import { HeaderComponent } from './header/header.component';
@@ -29,6 +27,10 @@ import { FileUploaderComponent } from './file-uploader/file-uploader.component';
 import { TextareaComponent } from './textarea/textarea.component';
 import { DialogComponent } from './dialog/dialog.component';
 import { DatePickerComponent } from './date-picker/date-picker.component';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MomentDateModule } from '@angular/material-moment-adapter';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
 
 @NgModule({
   imports: [
@@ -49,8 +51,10 @@ import { DatePickerComponent } from './date-picker/date-picker.component';
     MatSortModule,
     MatFormFieldModule,
     MatIconModule,
-    MatInputModule,
     MatDatepickerModule,
+    MatInputModule,
+    MomentDateModule,
+    MatMomentDateModule,
     MatNativeDateModule,
     MatExpansionModule,
   ],
@@ -81,5 +85,8 @@ import { DatePickerComponent } from './date-picker/date-picker.component';
     DialogComponent,
     DatePickerComponent,
   ],
+  providers:[
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
+  ]
 })
 export class SharedUiModule {}

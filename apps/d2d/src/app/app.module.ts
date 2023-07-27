@@ -6,7 +6,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 
@@ -15,7 +15,13 @@ import { CassesSettingComponent } from './views/casses-setting/casses-setting.co
 
 import { AppRoutingModule } from './app-routing.module';
 import { MatTableModule } from '@angular/material/table';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { MomentDateModule } from '@angular/material-moment-adapter';
+import { MatMomentDateModule } from '@angular/material-moment-adapter';
+
 import { CassesSettingModule } from './views/casses-setting/casses-setting.module';
+import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -32,6 +38,10 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     SharedUiModule,
     MatTableModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MomentDateModule,
+    MatMomentDateModule,
     CassesSettingModule,
     TranslateModule.forRoot({
       loader: {
@@ -42,7 +52,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true}],
   bootstrap: [AppComponent],
   exports: [CassesSettingComponent],
 })

@@ -117,7 +117,6 @@ export class CassesComponent implements OnInit, AfterViewInit {
     this.cassesService.getCasses().subscribe((res: any) => {
       this.isLoading = false;
       this.dataSource.data = res;
-      console.log("THE RES", res)
       this.totalRegisted = res.filter(
         (d: any) => d.caseStatus === CaseStatus.registered
       ).length;
@@ -183,12 +182,44 @@ export class CassesComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
 
-    const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
-    const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
+    // if(this.form.get("activationDate")?.value){
+    // }
 
-    this.form.get("activationDate")?.setValue(stringifiedFormattedDate)
+    // if(this.form.get("activationDate")?.value !== null && this.form.get("activationDate")?.value !== "" && !this.form.get("activationDate")?.value.toString().includes("/")){
 
-    this.cassesService.getCasses(this.form.value).subscribe((res: any) => {
+    //   console.log("The data", this.form.get("activationDate")?.value)
+    //   debugger
+    //   const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
+    //   const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
+
+    //   this.form.get("activationDate")?.setValue(stringifiedFormattedDate)
+
+    //   // if(this.form.get("activationDate")?.value.includes("undefined")){
+    //   //   this.form.get("activationDate")?.setValue("")
+    //   // }
+
+    // }
+
+    // console.log(this.form.get("activationDate")?.value)
+    // this.form.get("activationDate")?.setValue()
+    // console.log(this.form.get("activationDate")?.value)
+
+    const formCopy = this.form.value
+    console.log("the full copy of the form", formCopy)
+
+    if(formCopy.activationDate == undefined){
+      formCopy.activationDate = ""
+    }else if(formCopy.activationDate !== ""){
+
+      formCopy.activationDate = this.form.get("activationDate")?.value?.format("DD/MM/YYYY")
+    }
+
+
+
+
+    console.log("the formCopy.activationDate", formCopy.activationDate)
+
+    this.cassesService.getCasses(formCopy).subscribe((res: any) => {
       this.dialogService.close();
       this.isLoading = false;
       this.dataSource.data = res;

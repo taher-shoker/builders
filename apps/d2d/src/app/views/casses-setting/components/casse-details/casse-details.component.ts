@@ -95,22 +95,22 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   }
 
   isLoading = false;
-  uploadedFile: File[] = [];
+  uploadedFile: any[] = []; // turn to File later
   onUploadFile(files: string | any[]) {
     if (files) {
-
 
       for (let i = 0; i < files?.length; i++) {
 
         this.isLoading = true;
         const formData = new FormData();
         formData.append('file', files[i]);
-        this.formData.append('file', files[i]);
-        this.cassesService.uploadFile(this.formData).subscribe((res: any) => {
+        // this.formData.append('file', files[i]);
+        this.cassesService.uploadFile(formData).subscribe((res: any) => {
           if (res) {
-            this.uploadedFile.push(res.id);
+            this.uploadedFile.push(res);
             this.isLoading = false;
             this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
+            console.log("The value", this.infoForm.get("check_case_attachment")?.value)
           }
         });
       }
@@ -119,7 +119,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   onDeleteFile(id: number) {
     this.cassesService.deleteFile(id).subscribe((res: any) => {
-      this.uploadedFile = this.uploadedFile.filter((x: any) => x !== id);
+      this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
       this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
     });
   }
@@ -150,7 +150,14 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   onCheck() {
     this.dialogService.open('request-Info-Modal');
   }
+
   sendInfo() {
+
+    const idsArr = []
+    for(const obj of this.uploadedFile){
+      idsArr.push(obj.id.toString())
+    }
+
     const data = {
       form: {
         info_needed: 1,
@@ -158,12 +165,19 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
         message: this.infoForm.get('message')?.value,
         // check_case_attachment: this.infoForm.get('check_case_attachment')
         //   ?.value,
+        check_case_attachment: idsArr
+
       },
     };
+
     this.refreshTasks(data);
 
     this.closeForm.reset();
     this.infoForm.reset();
+    this.uploadedFile = [];
+    console.log("The value", this.infoForm.get("check_case_attachment")?.value)
+    console.log("The value", this.uploadedFile = [])
+
     this.rejectForm.reset();
     this.replyForm.reset();
     this.firstEscalateForm.reset();
@@ -185,11 +199,28 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     }
   }
   confirmReply() {
+
+    const idsArr = []
+    for(const obj of this.uploadedFile){
+      idsArr.push(obj.id.toString())
+    }
+
     const data = {
       form: {
         message: this.replyForm.get('message')?.value,
+        reply_attachments: idsArr
       },
     };
+    this.closeForm.reset();
+    this.infoForm.reset();
+    this.uploadedFile = [];
+
+    console.log("The value", this.replyForm.get("check_case_attachment")?.value)
+
+    this.rejectForm.reset();
+    this.replyForm.reset();
+    this.firstEscalateForm.reset();
+    this.secondEscalateForm.reset();
     this.refreshTasks(data);
   }
   replyfeed() {
@@ -274,6 +305,14 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   confirmClose() {
     const data = { form: this.closeForm.value };
+    this.closeForm.reset();
+    this.infoForm.reset();
+    console.log("The value", this.infoForm.get("check_case_attachment")?.value)
+
+    this.rejectForm.reset();
+    this.replyForm.reset();
+    this.firstEscalateForm.reset();
+    this.secondEscalateForm.reset();
     this.refreshTasks(data);
   }
 

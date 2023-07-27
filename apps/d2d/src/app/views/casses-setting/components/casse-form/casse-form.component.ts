@@ -5,11 +5,29 @@ import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import { CassesService, File } from '../../casses.service';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
+import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
+import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
 
+export const APP_DATE_FORMATS = {
+    parse: {
+        dateInput: 'DD/MM/YYYY',
+    },
+    display: {
+        dateInput: 'DD/MM/YYYY',
+        monthYearLabel: 'MMMM YYYY',
+        dateA11yLabel: 'LL',
+        monthYearA11yLabel: 'MMMM YYYY'
+    },
+};
 @Component({
   selector: 'stc-apps-casse-form',
   templateUrl: './casse-form.component.html',
   styleUrls: ['./casse-form.component.scss'],
+  providers: [
+    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },
+    { provide: DateAdapter, useClass: MomentDateAdapter, deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]},
+    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } }
+  ]
 })
 export class CasseFormComponent implements OnInit {
   form!: FormGroup;
@@ -134,15 +152,30 @@ export class CasseFormComponent implements OnInit {
     return finalDate
   }
 
+  getIDsOfObjects(objects: any[]): number[]{
+
+    const finalArr = [];
+
+    for(const obj of objects){
+      finalArr.push(obj.id)
+    }
+
+    return finalArr
+  }
   onSubmit() {
     if (this.form.valid) {
 
-      const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
-      const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
+      // const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
+      // const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
 
-      this.form.get("activationDate")?.setValue(stringifiedFormattedDate)
+      // this.form.get("activationDate")?.setValue(stringifiedFormattedDate)
 
-      this.cassesService.createCasse(this.form.value).subscribe((res) => {
+      this.form.get("attachments")?.setValue(this.getIDsOfObjects(this.form.get("attachments")?.value))
+
+      const formCopy = this.form.value
+      formCopy.activationDate = this.form.get("activationDate")?.value.format("DD/MM/YYYY")
+
+      this.cassesService.createCasse(formCopy).subscribe((res) => {
         if (res) {
           const msgOfToaster = this.languageManagerService.getSavedLanguage() == 'ar' ? 'تم إضافة الحالة بنجاح' : 'Case is added successfully'
           this.toastr.success(msgOfToaster);
