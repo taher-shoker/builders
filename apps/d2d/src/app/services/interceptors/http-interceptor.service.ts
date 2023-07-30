@@ -11,7 +11,7 @@ export class HttpInterceptorService implements HttpInterceptor{
 
     const modifiedReq = req.clone({
       setHeaders: {
-        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbnRlY2giLCJleHAiOjE2OTA0NzE5NTQsImlhdCI6MTY5MDQ1Mzk1NH0.VZekFa7hExn3Y0wUQHyje3wx4q5hXRaFLsbFJzEK4hDM8e7Ufeml7AMAdhYBIJUws6n-DXl0Cx-7UplzpsiXLA` // change the token with the current one : ${localStorage.getItem("taburJWTToken")}
+        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbnRlY2giLCJleHAiOjE2OTQwNjM1OTMsImlhdCI6MTY5MDQ2MzU5M30.v0U-Ir4NKdGyzQdK3LTkKwQYw-3I4XU4Z4iqIpnuTg4AOR89KiCNDubiGaRzY3QnJmJUThQcpm_jHOnCN_N8gw` // change the token with the current one : ${localStorage.getItem("taburJWTToken")}
       }
     })
 
