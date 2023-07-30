@@ -146,21 +146,23 @@ export class CassesComponent implements OnInit, AfterViewInit {
     this.dialogService.open('filter-Modal');
   }
   serchForm() {
+
+    // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
-      customerName: [''],
-      city: [''],
-      existingServiceOrder: [''],
-      serviceType: [''],
-      existingPlate: [''],
-      existingPhoneNumber: [''],
-      activationDate: [''],
-      wfmOrder: [''],
-      newPlate: [''],
-      newServiceOrder: [''],
-      newPhoneNumber: [''],
-      contactNumber: [''],
-      caseLabel: [''],
-      description: [''],
+      customerName: ['', {nonNullable: true}],
+      city: ['', {nonNullable: true}],
+      existingServiceOrder: ['', {nonNullable: true}],
+      serviceType: ['', {nonNullable: true}],
+      existingPlate: ['', {nonNullable: true}],
+      existingPhoneNumber: ['', {nonNullable: true}],
+      activationDate: ['', {nonNullable: true}],
+      wfmOrder: ['', {nonNullable: true}],
+      newPlate: ['', {nonNullable: true}],
+      newServiceOrder: ['', {nonNullable: true}],
+      newPhoneNumber: ['', {nonNullable: true}],
+      contactNumber: ['', {nonNullable: true}],
+      caseLabel: ['', {nonNullable: true}],
+      description: ['', {nonNullable: true}],
     });
   }
 

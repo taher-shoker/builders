@@ -110,7 +110,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
             this.uploadedFile.push(res);
             this.isLoading = false;
             this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
-            console.log("The value", this.infoForm.get("check_case_attachment")?.value)
           }
         });
       }
@@ -155,7 +154,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
     const idsArr = []
     for(const obj of this.uploadedFile){
-      idsArr.push(obj.id.toString())
+      idsArr.push(obj.id)
     }
 
     const data = {
@@ -202,7 +201,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
     const idsArr = []
     for(const obj of this.uploadedFile){
-      idsArr.push(obj.id.toString())
+      idsArr.push(obj.id)
     }
 
     const data = {

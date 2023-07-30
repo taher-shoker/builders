@@ -54,6 +54,7 @@ table {
   }
   .details {
     background-color: rgba($color: $grayColor, $alpha: 0.1);
+    min-width: 120px;
   }
 }
 
