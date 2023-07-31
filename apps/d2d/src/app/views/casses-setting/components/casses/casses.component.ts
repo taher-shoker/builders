@@ -133,6 +133,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
   }
   getAssigneeTasks() {
     this.cassesService.getAssigneeTasks().subscribe((res: any) => {
+      console.log("All items :", res)
       this.allItems = res.data;
     });
   }

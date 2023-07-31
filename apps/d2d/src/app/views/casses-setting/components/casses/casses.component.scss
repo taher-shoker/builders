@@ -12,8 +12,18 @@
   position: relative;
   top: -60px;
 
+  table{
+
+    td{
+      max-width: 165px;
+      word-wrap: break-word;
+    }
+  }
+
   .top-info {
     border-radius: 5px;
+
+
     .static {
       background-color: rgb(255, 255, 255);
       border-radius: 10px;
