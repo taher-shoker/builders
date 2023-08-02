@@ -1,6 +1,6 @@
 <div class="select-box" [class]="selectType" *ngIf="control">
   <label
-    >{{ label }}<span>:</span
+    >{{ label | translate }}<span>:</span
     ><mat-error *ngIf="control.errors"> *</mat-error></label
   >
   <mat-form-field>
@@ -9,11 +9,19 @@
       [id]="selectId"
       [required]="required"
       (selectionChange)="onChangeValue($event.value)"
+      [(ngModel)]="selectId"
     >
-      <mat-option *ngFor="let option of options" [value]="option.value">
-        {{ option.name | translate}}
-      </mat-option>
+      <ng-container *ngIf="yet">
+        <mat-option *ngFor="let option of options" [value]="option[labelValue]">
+          {{ option[labelName] }}
+        </mat-option>
+      </ng-container>
     </mat-select>
-    <mat-error *ngIf="control.errors">{{"field_required" | translate}}</mat-error>
+    <mat-error *ngIf="control.errors">{{
+      'field_required' | translate
+    }}</mat-error>
   </mat-form-field>
+  <div style="display: none" *ngIf="!yet">
+    <ng-content></ng-content>
+  </div>
 </div>

@@ -1,21 +1,32 @@
-
-
 import { Injectable } from '@angular/core';
-import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
+import {
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
+  HttpRequest,
+  HttpResponse,
+} from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { CookieService } from 'ngx-cookie-service';
 
 @Injectable()
-export class HttpInterceptorService implements HttpInterceptor{
+export class HttpInterceptorService implements HttpInterceptor {
+  constructor(private cookieService: CookieService) {}
 
-  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
+  intercept(
+    request: HttpRequest<any>,
+    next: HttpHandler
+  ): Observable<HttpEvent<any>> {
+    const token = this.cookieService.get('fraud-token') || null;
+    if (token) {
+      request = request.clone({
+        setHeaders: {
+          Authorization: `Bearer ${JSON.parse(token)}`,
+        },
+      });
+    }
 
-    const modifiedReq = req.clone({
-      setHeaders: {
-        Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJhZG1pbnRlY2giLCJleHAiOjE2OTQwNjM1OTMsImlhdCI6MTY5MDQ2MzU5M30.v0U-Ir4NKdGyzQdK3LTkKwQYw-3I4XU4Z4iqIpnuTg4AOR89KiCNDubiGaRzY3QnJmJUThQcpm_jHOnCN_N8gw` // change the token with the current one : ${localStorage.getItem("taburJWTToken")}
-      }
-    })
-
-    return next.handle(modifiedReq)
+    return next.handle(request);
 
     //* uncomment to modify the HTTP RESPONSE
     // return next.handle(modifiedReq).pipe(map((event: HttpEvent<any>) => {

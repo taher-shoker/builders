@@ -6,6 +6,6 @@
   [disabled]="buttonDisable || loading"
   (click)="onClick()"
 >
-  {{ buttonText }}
+  {{ buttonText | translate }}
   <i class="fas {{ buttonIcon }}" *ngIf="buttonIcon"></i>
 </button>

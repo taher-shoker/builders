@@ -3,31 +3,38 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
 
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { HttpClient, HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 
 import { AppComponent } from './app.component';
-import { CassesSettingComponent } from './views/casses-setting/casses-setting.component';
 
-import { AppRoutingModule } from './app-routing.module';
-import { MatTableModule } from '@angular/material/table';
+import {
+  MatMomentDateModule,
+  MomentDateModule,
+} from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
-import { MomentDateModule } from '@angular/material-moment-adapter';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { MatTableModule } from '@angular/material/table';
+import { AppRoutingModule } from './app-routing.module';
 
-import { CassesSettingModule } from './views/casses-setting/casses-setting.module';
 import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
+import { HomeModule } from './views/home/home.module';
+import { LoginComponent } from './views/login/login.component';
+import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 @NgModule({
-  declarations: [AppComponent, CassesSettingComponent],
+  declarations: [AppComponent, LoginComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -42,7 +49,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatInputModule,
     MomentDateModule,
     MatMomentDateModule,
-    CassesSettingModule,
+    HomeModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -52,8 +59,19 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     ToastrModule.forRoot(),
   ],
-  providers: [{provide: HTTP_INTERCEPTORS, useClass: HttpInterceptorService, multi: true}],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
-  exports: [CassesSettingComponent],
+  exports: [],
 })
 export class AppModule {}

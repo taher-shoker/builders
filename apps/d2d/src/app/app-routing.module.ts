@@ -1,32 +1,20 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
 import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule, Routes } from '@angular/router';
+import { HomeComponent } from './views/home/home.component';
+import { LoginComponent } from './views/login/login.component';
 
 // Import Containers
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
-    path: 'home',
-    children: [
-      {
-        path: '',
-        data: { breadcrumb: 'home' },
-        loadChildren: () =>
-          import('./views/casses-setting/casses-setting-routing.module').then(
-            (m) => m.CassesSettingRoutingModule
-          ),
-      },
-    ],
+    path: '',
+    component: HomeComponent,
   },
-
   {
-    path: 'administration',
-    data: { breadcrumb: 'home' },
-    loadChildren: () =>
-      import('./views/administration/administration.module').then(
-        (m) => m.AdministrationModule
-      ),
+    path: 'login',
+    component: LoginComponent,
   },
 ];
 @NgModule({
