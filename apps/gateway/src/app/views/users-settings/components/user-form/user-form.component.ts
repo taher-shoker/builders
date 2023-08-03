@@ -17,7 +17,7 @@ export class UserFormComponent {
   });
 
   onSubmit() {
-    console.log(this.userForm.value);
+    alert('');
   }
   privilages = [
     { name: 'Creator', value: 'creator' },

@@ -74,3 +74,28 @@
     background-color: red;
   }
 }
+
+.mdc-text-field:is(.mdc-text-field--disabled) .mdc-text-field__input {
+  color: rgba($color: $shadowStc, $alpha: 1);
+}
+
+.stc-input {
+  input {
+    color: $whiteColor !important;
+    padding-inline-start: 5px;
+    &::placeholder {
+      color: $shadowStc !important;
+    }
+  }
+  .mat-mdc-text-field-wrapper {
+    padding-inline: 0;
+  }
+  .mat-mdc-form-field-infix {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .input-group-text {
+    border-end-end-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+  }
+}

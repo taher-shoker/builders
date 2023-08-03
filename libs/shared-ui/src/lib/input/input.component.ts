@@ -23,4 +23,5 @@ export class InputComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputType: 'text' | 'password' | 'date' = 'text';
   @Input() inputIcon!: string;
   @Input() required!: boolean;
+  @Input() disabled = false;
 }
