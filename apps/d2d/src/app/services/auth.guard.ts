@@ -31,7 +31,9 @@ export class AuthGuard implements CanActivate {
     return this.authService.user.pipe(
       take(1),
       map((user) => {
-        const token = JSON.parse(this.cookieService.get('fraud-token'));
+        const token = this.cookieService.get('fraud-token')
+          ? JSON.parse(this.cookieService.get('fraud-token'))
+          : '';
         const isAuth = !!user || !!token;
         if (isAuth) {
           return true;
