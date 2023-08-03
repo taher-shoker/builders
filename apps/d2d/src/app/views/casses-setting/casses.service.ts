@@ -4,6 +4,20 @@ import { HttpClient } from '@angular/common/http';
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
 
+export interface User{
+  id: 5,
+  email: string,
+  name: string,
+  jobTitle: string,
+  roles: string[],
+  teamName: null | string
+}
+
+export interface Team {
+    id: number,
+    name: "Filed Operation" | "Customer Care" | "Digital Care" | "Fraud"
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -12,7 +26,40 @@ export class CassesService {
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
 
+  loggedInUser!: User | null;
+  teams : Team[] = []
+  roles = ["CREATORS", "APPROVERS", "ADMINS"] // Current roles in the system
+
   constructor(private http: HttpClient) {}
+
+  getLoggedInUser(): User{
+    return this.loggedInUser!;
+  }
+
+  setLoggedInUser(): void{
+    const userRes = this.http.get<User>(`${this.endpoint}/users/currentUser`);
+    userRes.subscribe((res : User) => {
+      this.loggedInUser = res
+      console.log("The current logged user :", res)
+
+      if(this.loggedInUser.roles.includes("APPROVERS")){
+        this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
+      }
+    })
+  }
+
+  getSystemTeams(): Team[]{
+    return this.teams!;
+  }
+
+  setSystemTeams(): void{
+    const teamsRes = this.http.get<Team[]>(`${this.endpoint}/users/teams`);
+    teamsRes.subscribe((res : Team[]) => {
+      this.teams = res
+      console.log("The current logged user :", res)
+    })
+  }
+
 
   getCasses(filterData?: any) {
     return this.http.get(`${this.endpoint}/d2dCase/search`, {

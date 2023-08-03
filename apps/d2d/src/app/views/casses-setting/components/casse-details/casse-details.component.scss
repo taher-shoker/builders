@@ -1,5 +1,10 @@
 @import './scss/core/variables/colors';
 
+.order-date{
+  color: var(--grey-color);
+  font-size: var(--secondary-text);
+}
+
 .details {
   background-color: $whiteColor;
   padding: 20px;
@@ -72,7 +77,9 @@
   .actions {
     width: 100%;
     padding-top: 20px;
+    justify-content: space-between;
   }
+
   figure {
     display: flex;
 
@@ -102,7 +109,7 @@
       height: 7rem;
 
       &:last-child {
-        overflow: hidden;
+        // overflow: hidden;
         & .order-track-status span:last-of-type {
           display: none;
         }
@@ -184,3 +191,6 @@
   }
 }
 
+.spacer{
+  width: 50%;
+}

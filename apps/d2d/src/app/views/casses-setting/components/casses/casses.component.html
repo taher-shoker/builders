@@ -73,7 +73,7 @@
                 </div>
               </div>
 
-              <div class="col-md-3">
+              <div class="col">
                 <stc-apps-button
                   [buttonText]="'filter' | translate"
                   [buttonType]="'gray-outline'"
@@ -81,14 +81,17 @@
                   (btnClick)="toggleFilter()"
                 ></stc-apps-button>
               </div>
-              <div class="col-md-4">
-                <stc-apps-button
-                  [buttonText]="'add_new_case' | translate"
-                  [buttonType]="'primary'"
-                  [buttonIcon]="' fa-plus-circle'"
-                  (btnClick)="addCasseNavigate()"
-                ></stc-apps-button>
-              </div>
+
+              <ng-container *ngIf="cassesService.getLoggedInUser()">
+                <div class="col-md-4" *ngIf="cassesService.getLoggedInUser().roles.includes('CREATORS')">
+                  <stc-apps-button
+                    [buttonText]="'Add new Case' | translate"
+                    [buttonType]="'primary'"
+                    [buttonIcon]="' fa-plus-circle'"
+                    (btnClick)="addCasseNavigate()"
+                    ></stc-apps-button>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -149,11 +152,16 @@
               <img src="../../assets/Group 590.png" alt="" />
               <h3>{{"no_cases_yet" | translate}}</h3>
               <p>{{"no_cases_msg" | translate}}</p>
-              <stc-apps-button
-                [buttonText]="'Add new Case' | translate"
-                [buttonType]="'primary'"
-                [buttonIcon]="' fa-plus-circle'"
-              ></stc-apps-button>
+
+              <ng-container *ngIf="cassesService.getLoggedInUser()">
+                <stc-apps-button
+                  *ngIf="cassesService.getLoggedInUser().roles.includes('CREATORS')"
+                  [buttonText]="'Add new Case' | translate"
+                  [buttonType]="'primary'"
+                  [buttonIcon]="' fa-plus-circle'"
+                  (btnClick)="addCasseNavigate()"
+                ></stc-apps-button>
+              </ng-container>
             </div>
           </td>
         </tr>
@@ -204,7 +212,7 @@
         <h3 class="main-title"><i class="far fa-clock"></i> {{"pending_cases" | translate}}</h3>
         <ul class="tasks">
           <li class="mt-3" *ngFor="let item of allItems"> <!-- Each item is a pending task -->
-            <div
+            <!-- <div
               class="task"
               [ngClass]="cassesService.getKeyByValue(TaskCicle, item.taskName)"
               (click)="navigateToTask(item.caseID)"
@@ -276,6 +284,21 @@
                   <span>Last updated:</span>
                   {{ item.createdDate | date : 'medium' }}
                 </div>
+              </div>
+            </div> -->
+
+            <div class="task">
+              <div class="task-header">
+                <div class="row">
+                  <div class="col-5 left-col">{{"case_id" | translate}}: #{{item.caseID}}</div>
+                  <div class="col right-col">{{ item.createdDate | date : 'medium' }}</div> <!--10:23 AM 12 jun 2022-->
+                </div>
+              </div>
+              <div class="task-desc-holder">
+                <p class="task-desc">
+                  {{item.taskName + ' Desc' | translate}}
+
+                </p>
               </div>
             </div>
           </li>

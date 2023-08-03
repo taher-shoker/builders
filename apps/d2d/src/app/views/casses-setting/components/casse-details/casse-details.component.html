@@ -187,43 +187,48 @@
             </div>
             <div class="order-track-text">
               <p class="order-track-text-stat">{{ item.taskName | translate}}</p>
+              <p class="m-0 order-date">{{ item.createdDate | date : 'medium'}}</p>
               <span class="order-track-text-sub">{{
                 item.completedDate | date : 'medium'
               }}</span>
               <div
-                class="actions my-3 d-flex justify-content-between"
+                class="actions my-3 d-flex"
                 *ngIf="item.taskStatus === 'pending'"
               >
+
+              <ng-container *ngIf="item.taskName === TaskCicle.checkCase">
                 <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.checkCase"
                   [buttonText]="'yes' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="onCheck()"
                 ></stc-apps-button>
                 <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.checkCase"
                   [buttonText]="'no' | translate"
                   (btnClick)="cancelCheck()"
                   [buttonType]="'gray-outline'"
                 ></stc-apps-button>
+              </ng-container>
+
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.fillMoreInfo"
                   [buttonText]="'reply' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="replyfeed()"
                 ></stc-apps-button>
-                <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.approveCase"
-                  [buttonText]="'approve' | translate"
-                  [buttonType]="'primary'"
-                  (btnClick)="confirm()"
-                ></stc-apps-button> <!--approvedTask()  -->
-                <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.approveCase"
-                  [buttonText]="'reject' | translate"
-                  [buttonType]="'danger-outline'"
-                  (btnClick)="reject()"
-                ></stc-apps-button>
+
+                <ng-container *ngIf="item.taskName === TaskCicle.approveCase">
+                  <stc-apps-button
+                    [buttonText]="'approve' | translate"
+                    [buttonType]="'primary'"
+                    (btnClick)="confirm()"
+                  ></stc-apps-button> <!--approvedTask()  -->
+                  <stc-apps-button
+                    [buttonText]="'reject' | translate"
+                    [buttonType]="'danger-outline'"
+                    (btnClick)="reject()"
+                  ></stc-apps-button>
+                </ng-container>
+
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.withinSlResponse"
                   [buttonText]="'received' | translate"
@@ -231,36 +236,40 @@
                   (btnClick)="withinResponse()"
                 ></stc-apps-button>
 
-                <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.shouldEscalate"
-                  [buttonText]="'yes' | translate"
-                  [buttonType]="'primary'"
-                  (btnClick)="shouldFirstEscalate()"
-                ></stc-apps-button>
-                <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.shouldEscalate"
-                  [buttonText]="'no' | translate"
-                  [buttonType]="'gray-outline'"
-                  (btnClick)="notFirstEscalate()"
-                ></stc-apps-button>
-                <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.shouldReEscalate"
-                  [buttonText]="'yes' | translate"
-                  [buttonType]="'primary'"
-                  (btnClick)="shouldSecondEscalate()"
-                ></stc-apps-button>
-                <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.shouldReEscalate"
-                  [buttonText]="'no' | translate"
-                  [buttonType]="'gray-outline'"
-                  (btnClick)="notSecondEscalate()"
-                ></stc-apps-button>
+                <ng-container *ngIf="item.taskName === TaskCicle.shouldEscalate">
+                  <stc-apps-button
+                    [buttonText]="'yes' | translate"
+                    [buttonType]="'primary'"
+                    (btnClick)="shouldFirstEscalate()"
+                  ></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'no' | translate"
+                    [buttonType]="'gray-outline'"
+                    (btnClick)="notFirstEscalate()"
+                  ></stc-apps-button>
+                </ng-container>
+
+                <ng-container *ngIf="item.taskName === TaskCicle.shouldReEscalate">
+                  <stc-apps-button
+                    [buttonText]="'yes' | translate"
+                    [buttonType]="'primary'"
+                    (btnClick)="shouldSecondEscalate()"
+                  ></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'no' | translate"
+                    [buttonType]="'gray-outline'"
+                    (btnClick)="notSecondEscalate()"
+                  ></stc-apps-button>
+                </ng-container>
+
                 <stc-apps-button
                   *ngIf="item.taskName === TaskCicle.sendToClose"
                   [buttonText]="'send' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="sendToClose()"
                 ></stc-apps-button>
+
+                <div class="spacer"></div>
               </div>
             </div>
           </div>
