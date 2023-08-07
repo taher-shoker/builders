@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnInit, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -11,6 +11,9 @@ import {
   TaskCicle,
 } from '../../casses.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { AuthService } from '../../../../services/auth.service';
+import { CookieService } from 'ngx-cookie-service';
+import { Subscription } from 'rxjs';
 
 export interface PeriodicElement {
   id: string;
@@ -61,7 +64,7 @@ const COLUMNS_SCHEMA = [
   templateUrl: './casses.component.html',
   styleUrls: ['./casses.component.scss'],
 })
-export class CassesComponent implements OnInit, AfterViewInit {
+export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   form!: FormGroup;
   isLoading = true;
   totalRegisted = 0;
@@ -70,13 +73,22 @@ export class CassesComponent implements OnInit, AfterViewInit {
   totalClosed = 0;
   readonly CaseStatus = CaseStatus;
   readonly TaskCicle = TaskCicle;
+
+  getCasesSub!: Subscription;
+  userSub!: Subscription;
+  getAssigneeTasks!: Subscription;
+  formChangesSub!: Subscription;
+
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
     public route: ActivatedRoute,
     private bannerDataService: BannerDataService,
     public cassesService: CassesService,
-    protected dialogService: DialogService
+    protected dialogService: DialogService,
+    public authService: AuthService,
+    private cookieService: CookieService
+
   ) {}
 
   allItems!: Task[];
@@ -96,7 +108,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
 
   ngOnInit() {
     this.getCassesListing();
-    this.getAssigneeTasks();
+    this.fetchAssigneeTasks();
     this.bannerDataService.updateData({ title: 'home', text: '' });
     this.dataSource.paginator = this.paginator;
 
@@ -114,7 +126,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
     this.router.navigate(['./case-details', id], { relativeTo: this.route });
   }
   getCassesListing() {
-    this.cassesService.getCasses().subscribe((res: any) => {
+    this.getCasesSub = this.cassesService.getCasses().subscribe((res: any) => {
       this.isLoading = false;
       this.dataSource.data = res;
       this.totalRegisted = res.filter(
@@ -131,11 +143,23 @@ export class CassesComponent implements OnInit, AfterViewInit {
       ).length;
     });
   }
-  getAssigneeTasks() {
-    this.cassesService.getAssigneeTasks().subscribe((res: any) => {
-      console.log("All items :", res)
-      this.allItems = res.data;
-    });
+
+  fetchAssigneeTasks() {
+
+    this.userSub = this.authService.user.subscribe(res => {
+
+      let username = res?.userName;
+      if(!res){
+        username = JSON.parse(this.cookieService.get('fraud-user'))
+      }
+
+      this.getAssigneeTasks = this.cassesService.getAssigneeTasks(username).subscribe((res: any) => {
+        this.allItems = res.data;
+      });
+
+    })
+
+
   }
 
   navigateToTask(caseId: number) {
@@ -169,7 +193,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
 
 
   OnChangesForm() {
-    this.form.valueChanges.subscribe((val) => {
+    this.formChangesSub = this.form.valueChanges.subscribe((val) => {
       this.disabled = true;
     });
   }
@@ -185,30 +209,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
 
   onSubmit() {
 
-    // if(this.form.get("activationDate")?.value){
-    // }
-
-    // if(this.form.get("activationDate")?.value !== null && this.form.get("activationDate")?.value !== "" && !this.form.get("activationDate")?.value.toString().includes("/")){
-
-    //   console.log("The data", this.form.get("activationDate")?.value)
-    //   debugger
-    //   const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
-    //   const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
-
-    //   this.form.get("activationDate")?.setValue(stringifiedFormattedDate)
-
-    //   // if(this.form.get("activationDate")?.value.includes("undefined")){
-    //   //   this.form.get("activationDate")?.setValue("")
-    //   // }
-
-    // }
-
-    // console.log(this.form.get("activationDate")?.value)
-    // this.form.get("activationDate")?.setValue()
-    // console.log(this.form.get("activationDate")?.value)
-
     const formCopy = this.form.value
-    console.log("the full copy of the form", formCopy)
 
     if(formCopy.activationDate == undefined){
       formCopy.activationDate = ""
@@ -217,12 +218,7 @@ export class CassesComponent implements OnInit, AfterViewInit {
       formCopy.activationDate = this.form.get("activationDate")?.value?.format("DD/MM/YYYY")
     }
 
-
-
-
-    console.log("the formCopy.activationDate", formCopy.activationDate)
-
-    this.cassesService.getCasses(formCopy).subscribe((res: any) => {
+    this.getCasesSub = this.cassesService.getCasses(formCopy).subscribe((res: any) => {
       this.dialogService.close();
       this.isLoading = false;
       this.dataSource.data = res;
@@ -260,5 +256,12 @@ export class CassesComponent implements OnInit, AfterViewInit {
 
     const finalDate = `${monthNum}/${day}/${year}`;
     return finalDate
+  }
+
+  ngOnDestroy(): void {
+      this.getCasesSub?.unsubscribe();
+      this.userSub?.unsubscribe();
+      this.getAssigneeTasks?.unsubscribe();
+      this.formChangesSub?.unsubscribe();
   }
 }

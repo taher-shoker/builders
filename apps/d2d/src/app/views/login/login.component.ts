@@ -16,7 +16,7 @@ export class LoginComponent implements OnInit {
   form!: FormGroup;
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
   ) {}
 
   ngOnInit(): void {
@@ -33,6 +33,9 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       this.authService.login(this.form.value).subscribe((res: any) => {
         console.log(res);
+        // if(res.result === "SUCCESS"){
+        //   this.authService.setLoggedInUser();
+        // }
       });
     }
   }

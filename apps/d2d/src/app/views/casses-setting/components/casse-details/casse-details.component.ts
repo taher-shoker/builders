@@ -12,6 +12,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { Subscription } from 'rxjs';
+import { AuthService } from './../../../../services/auth.service';
 
 @Component({
   selector: 'stc-apps-casse-details',
@@ -40,6 +41,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     { name: 'users', value: '2' },
   ];
   users: any = [];
+  teams: any = [];
 
   langSub!: Subscription;
   invalidFileMessageDetail!: string;
@@ -50,7 +52,8 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
     public cassesService: CassesService,
-    private languageManagerService: LanguageManagerService
+    private languageManagerService: LanguageManagerService,
+    public authService : AuthService
   ) {}
 
   ngOnInit(): void {
@@ -65,11 +68,29 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     });
     this.getCaseTasks(+this.casseId);
 
+    this.authService.loggedUserStream.subscribe(res => {
+      if(res?.roles.includes("APPROVERS")){
+
+        this.cassesService.setSystemTeams().subscribe(res => {
+
+          console.log("System teams :", res)
+          this.teams = res
+          this.teams = this.teams.filter((x: any) => x.name !== "Fraud")
+        })
+
+        this.cassesService.setSystemUsers().subscribe(res => {
+
+          console.log("System Users :", res)
+          this.users = res
+        })
+      }
+    })
+
     this.closeForm = this.formBuilder.group({
       close_mail_content: [''],
     });
     this.infoForm = this.formBuilder.group({
-      assignedTo: ['1', Validators.required],
+      assignedTo: [this.assigneeType[0], Validators.required],
       selectedUser: ['', Validators.required],
       message: ['', Validators.required],
       check_case_attachment: [''],
@@ -160,10 +181,9 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     const data = {
       form: {
         info_needed: 1,
-        form_assignee: this.infoForm.get('selectedUser')?.value,
+        form_assignee: this.infoForm.get('selectedUser')?.value.email ? this.infoForm.get('selectedUser')?.value.email : this.infoForm.get('selectedUser')?.value.name,
         message: this.infoForm.get('message')?.value,
-        // check_case_attachment: this.infoForm.get('check_case_attachment')
-        //   ?.value,
+        // check_case_attachment: this.infoForm.get('check_case_attachment')?.value
         check_case_attachment: idsArr
 
       },
@@ -175,6 +195,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.infoForm.reset();
     this.uploadedFile = [];
     console.log("The value", this.infoForm.get("check_case_attachment")?.value)
+    console.log("The value", this.infoForm.get("selectedUser")?.value)
     console.log("The value", this.uploadedFile = [])
 
     this.rejectForm.reset();
@@ -192,11 +213,11 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   }
 
   /** Actions with Fill More Info status  **/
-  getAssigneeValue(value: string) {
-    if (value === '2') {
-      this.users = [{ name: 'Demo', value: 'demo' }];
-    }
-  }
+  // getAssigneeValue(value: string) {
+  //   if (value === '2') {
+  //     this.users = [{ name: 'Demo', value: 'demo' }];
+  //   }
+  // }
   confirmReply() {
 
     const idsArr = []

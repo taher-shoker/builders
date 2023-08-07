@@ -82,8 +82,8 @@
                 ></stc-apps-button>
               </div>
 
-              <ng-container *ngIf="cassesService.getLoggedInUser()">
-                <div class="col-md-4" *ngIf="cassesService.getLoggedInUser().roles.includes('CREATORS')">
+              <ng-container *ngIf="authService.getLoggedInUser()">
+                <div class="col-md-4" *ngIf="authService.getLoggedInUser().roles.includes('CREATORS')">
                   <stc-apps-button
                     [buttonText]="'Add new Case' | translate"
                     [buttonType]="'primary'"
@@ -153,9 +153,9 @@
               <h3>{{"no_cases_yet" | translate}}</h3>
               <p>{{"no_cases_msg" | translate}}</p>
 
-              <ng-container *ngIf="cassesService.getLoggedInUser()">
+              <ng-container *ngIf="authService.getLoggedInUser()">
                 <stc-apps-button
-                  *ngIf="cassesService.getLoggedInUser().roles.includes('CREATORS')"
+                  *ngIf="authService.getLoggedInUser().roles.includes('CREATORS')"
                   [buttonText]="'Add new Case' | translate"
                   [buttonType]="'primary'"
                   [buttonIcon]="' fa-plus-circle'"

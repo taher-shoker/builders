@@ -4,9 +4,18 @@ import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
+import { environment } from '../../environments/environment';
 
 import { User } from './user.model';
 
+export interface LoggedUser{
+  id: number,
+  email: string,
+  name: string,
+  jobTitle: string,
+  roles: string[],
+  teamName: null | string
+}
 export interface AuthResponseData {
   token: string;
   displayName: string;
@@ -18,10 +27,14 @@ export class AuthService {
   user = new BehaviorSubject<any>(null);
   private tokenExpirationTimer: any;
 
+  loggedInUser!: LoggedUser | null;
+
+  loggedUserStream: BehaviorSubject<LoggedUser | null> = new BehaviorSubject<LoggedUser | null>(null)
+
   constructor(
     private http: HttpClient,
     private router: Router,
-    private cookieService: CookieService
+    private cookieService: CookieService,
   ) {}
 
   login(data: any) {
@@ -67,6 +80,22 @@ export class AuthService {
       this.logout();
     }, expirationDuration);
   }
+
+  getLoggedInUser(): LoggedUser{
+    return this.loggedInUser!;
+  }
+
+  setLoggedInUser(): void{
+    this.http.get<LoggedUser>(`${environment.apiUrl}/users/currentUser`).subscribe((res : LoggedUser) => {
+      this.loggedInUser = res
+      this.loggedUserStream.next(res)
+      console.log("The current logged user :", res)
+      // if(this.loggedInUser.roles.includes("APPROVERS")){
+      //   this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
+      // }
+    })
+  }
+
 
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);

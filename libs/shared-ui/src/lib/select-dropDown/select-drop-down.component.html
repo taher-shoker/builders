@@ -9,13 +9,10 @@
       [id]="selectId"
       [required]="required"
       (selectionChange)="onChangeValue($event.value)"
-      [(ngModel)]="selectId"
     >
-      <ng-container *ngIf="yet">
-        <mat-option *ngFor="let option of options" [value]="option[labelValue]">
+        <mat-option *ngFor="let option of options" [value]="option">
           {{ option[labelName] }}
         </mat-option>
-      </ng-container>
     </mat-select>
     <mat-error *ngIf="control.errors">{{
       'field_required' | translate

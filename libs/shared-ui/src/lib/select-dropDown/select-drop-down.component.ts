@@ -4,8 +4,10 @@ import {
   ContentChildren,
   EventEmitter,
   Input,
+  OnChanges,
   Output,
   QueryList,
+  SimpleChanges,
   forwardRef,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -31,30 +33,41 @@ interface Option {
 })
 export class SelectDropDownComponent<T>
   extends ControlValueAccessorDirective<T>
-  implements AfterViewInit
+  implements AfterViewInit, OnChanges
 {
+
   @ContentChildren(MatOption) queryOptions!: QueryList<MatOption>;
   yet!: boolean;
 
-  @Output() selectChange = new EventEmitter<string>();
+  @Output() selectChange = new EventEmitter<any>();
   @Input({ required: true }) label!: string;
   @Input() selectType: 'filter-select-box' | 'default' = 'default';
   @Input() options: any[] = [];
   @Input() labelName = 'name';
   @Input() labelValue = 'id';
   @Input() required = false;
-  @Input() selectId = '';
+  @Input() selectId: any ;
 
-  onChangeValue(value: string) {
+  onChangeValue(value: any) {
+    console.warn("Value", value)
     this.selectChange.emit(value);
   }
 
-  ngAfterViewInit() {
-    this.options = this.queryOptions.map((x) => {
-      return { name: x.viewValue, id: x.value };
-    });
-    setTimeout(() => {
-      this.yet = true;
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['options']) {
+      this.options = changes['options'].currentValue;
+    }
   }
+
+  ngAfterViewInit() {
+    console.log("options", this.options)
+    // this.options = this.queryOptions.map((x) => {
+    //   return { name: x.viewValue, id: x.value };
+    // });
+    // setTimeout(() => {
+    //   this.yet = true;
+    // });
+  }
+
+
 }

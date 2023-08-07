@@ -187,16 +187,21 @@
             </div>
             <div class="order-track-text">
               <p class="order-track-text-stat">{{ item.taskName | translate}}</p>
-              <p class="m-0 order-date">{{ item.createdDate | date : 'medium'}}</p>
-              <span class="order-track-text-sub">{{
+              <p class="m-0 order-date">{{ item.completedDate ? (item.completedDate | date : 'medium') : (item.createdDate | date : 'medium')}}</p>
+              <!-- <span class="order-track-text-sub">{{
                 item.completedDate | date : 'medium'
-              }}</span>
+              }}</span> -->
+              <p class="m-0 item-msg">{{item.taskAttributes[item.taskAttributes.length -1].attributeValue}}</p>
+
+              <p *ngFor="let attachment of item.attachments" class="item-task-attachment" (click)="downloadFile(attachment.id, attachment.label)">
+                {{attachment.label}}
+              </p>
               <div
                 class="actions my-3 d-flex"
                 *ngIf="item.taskStatus === 'pending'"
               >
 
-              <ng-container *ngIf="item.taskName === TaskCicle.checkCase">
+              <ng-container *ngIf="item.taskName === TaskCicle.checkCase && authService.getLoggedInUser().roles.includes('APPROVERS')">
                 <stc-apps-button
                   [buttonText]="'yes' | translate"
                   [buttonType]="'primary'"
@@ -210,7 +215,7 @@
               </ng-container>
 
                 <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.fillMoreInfo"
+                  *ngIf="item.taskName === TaskCicle.fillMoreInfo && !authService.getLoggedInUser().roles.includes('APPROVERS')"
                   [buttonText]="'reply' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="replyfeed()"
@@ -278,6 +283,7 @@
     </div>
   </div>
 </div>
+
 <stc-apps-dialog id="request-Info-Modal">
   <h3>{{"Request More Info | CASE ID" | translate}} : {{ casseId }}</h3>
   <form [formGroup]="infoForm" (ngSubmit)="sendInfo()">
@@ -286,15 +292,19 @@
         <stc-apps-select-drop-down
           [label]="'assigned_to' | translate"
           [options]="assigneeType"
+          [labelName]="'name'"
+          [labelValue]="'value'"
           formControlName="assignedTo"
-          (selectChange)="getAssigneeValue($event)"
         ></stc-apps-select-drop-down>
       </div>
       <div class="col-md-6">
         <stc-apps-select-drop-down
-          [label]="('Select ' + (infoForm.get('assignedTo')!.value === '1' ? 'Team' : 'User')) | translate"
-          [options]="users"
+          [label]="('Select ' + (infoForm.get('assignedTo')?.value?.value === '1' ? 'Team' : 'User')) | translate"
+          [options]="infoForm.get('assignedTo')?.value?.value === '1' ? teams : users"
           formControlName="selectedUser"
+          [labelName]="'name'"
+          [labelValue]="'email'"
+          (selectChange)="infoForm.get('assignedTo')?.value?.value === '1' ? infoForm.get('selectedUser')!.setValue($event) : infoForm.get('selectedUser')!.setValue($event)"
         ></stc-apps-select-drop-down>
       </div>
       <div class="col-md-12">

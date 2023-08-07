@@ -33,6 +33,8 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.userName = JSON.parse(this.cookieService.get('fraud-user'));
+    this.authService.setLoggedInUser();
+
   }
   logOut() {
     this.authService.logout();

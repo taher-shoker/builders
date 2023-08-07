@@ -3,9 +3,10 @@ import { HttpClient } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface User{
-  id: 5,
+  id: number,
   email: string,
   name: string,
   jobTitle: string,
@@ -26,40 +27,23 @@ export class CassesService {
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
 
-  loggedInUser!: User | null;
-  teams : Team[] = []
   roles = ["CREATORS", "APPROVERS", "ADMINS"] // Current roles in the system
+
+  pendingTasks : BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  getLoggedInUser(): User{
-    return this.loggedInUser!;
+  // getSystemTeams(): Team[]{
+  //   return this.teams!;
+  // }
+
+  setSystemTeams(): Observable<Team[]>{
+    return this.http.get<Team[]>(`${this.endpoint}/users/teams`)
   }
 
-  setLoggedInUser(): void{
-    const userRes = this.http.get<User>(`${this.endpoint}/users/currentUser`);
-    userRes.subscribe((res : User) => {
-      this.loggedInUser = res
-      console.log("The current logged user :", res)
-
-      if(this.loggedInUser.roles.includes("APPROVERS")){
-        this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
-      }
-    })
+  setSystemUsers(): Observable<User[]>{
+    return this.http.get<User[]>(`${this.endpoint}/users`)
   }
-
-  getSystemTeams(): Team[]{
-    return this.teams!;
-  }
-
-  setSystemTeams(): void{
-    const teamsRes = this.http.get<Team[]>(`${this.endpoint}/users/teams`);
-    teamsRes.subscribe((res : Team[]) => {
-      this.teams = res
-      console.log("The current logged user :", res)
-    })
-  }
-
 
   getCasses(filterData?: any) {
     return this.http.get(`${this.endpoint}/d2dCase/search`, {
@@ -89,9 +73,10 @@ export class CassesService {
     return this.http.delete(`${this.endpoint}/${id}`, options);
   }
 
-  getAssigneeTasks(userName = 'demo') {
-    return this.http.get(`${this.endpoint}/cwf/task/user/${userName}`);
+  getAssigneeTasks(userEmail: string) {
+    return this.http.get(`${this.endpoint}/cwf/task/user/${userEmail}`);
   }
+
   getTaskByCaseId(caseId: number) {
     return this.http.get(`${this.endpoint}/cwf/task/${caseId}`);
   }
@@ -141,7 +126,9 @@ export interface Task {
   camundaTaskID: string;
   createdDate: Date;
   lastModifiedDate: Date;
+  attachments: Attachment[];
 }
+
 
 export interface Casse {
   id?: string;
