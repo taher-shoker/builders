@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../../services/auth.guard';
+import { UnauthorizedPageComponent } from '../unauthorized-page/unauthorized-page.component';
 
 const routes: Routes = [
   {
@@ -23,12 +24,17 @@ const routes: Routes = [
       {
         path: 'users-setting',
         data: { breadcrumb: 'users_setting' },
-        // canActivate: [AuthGuard],
-
+        canActivate: [AuthGuard],
         loadChildren: () =>
           import('../users-settings/users-settings.module').then(
             (m) => m.UsersSettingsModule
           ),
+      },
+      {
+        path: 'unauthorized-page',
+        data: { breadcrumb: '' },
+        component: UnauthorizedPageComponent,
+        // canActivate: [AuthGuard],
       },
     ],
   },

@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   Component,
   ContentChildren,
   EventEmitter,
@@ -33,9 +32,8 @@ interface Option {
 })
 export class SelectDropDownComponent<T>
   extends ControlValueAccessorDirective<T>
-  implements AfterViewInit, OnChanges
+  implements OnChanges
 {
-
   @ContentChildren(MatOption) queryOptions!: QueryList<MatOption>;
   yet!: boolean;
 
@@ -46,28 +44,19 @@ export class SelectDropDownComponent<T>
   @Input() labelName = 'name';
   @Input() labelValue = 'id';
   @Input() required = false;
-  @Input() selectId: any ;
+  @Input() selectId: any;
+  @Input() defaultAll = false;
 
   onChangeValue(value: any) {
-    console.warn("Value", value)
     this.selectChange.emit(value);
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options']) {
       this.options = changes['options'].currentValue;
+      if (this.defaultAll) {
+        this.options.unshift({ id: 'all', [this.labelName]: 'All' });
+      }
     }
   }
-
-  ngAfterViewInit() {
-    console.log("options", this.options)
-    // this.options = this.queryOptions.map((x) => {
-    //   return { name: x.viewValue, id: x.value };
-    // });
-    // setTimeout(() => {
-    //   this.yet = true;
-    // });
-  }
-
-
 }

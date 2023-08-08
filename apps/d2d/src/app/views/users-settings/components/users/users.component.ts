@@ -144,22 +144,18 @@ export class UsersComponent implements OnInit, AfterViewInit {
   getRoles() {
     this.userService.getGroups().subscribe((res) => {
       const x = res;
+      // array without ADMINS Item
       x.pop();
-      x.unshift({ groupName: 'All', id: 'all' });
-
       this.privilage = x;
     });
   }
   getTeams() {
     this.userService.getTeams().subscribe((res) => {
-      const x = res;
-      x.unshift({ id: 'all', name: 'All' });
-      this.teams = x;
+      this.teams = res;
     });
   }
-  handleSelectChange(value: any, empfilter: EmpFilter) {
-    console.log(value);
-    if (empfilter.name === 'team') {
+  handleSelectChange(value: any, dropDwonType: string) {
+    if (dropDwonType === 'team') {
       if (value.id === 'all') {
         this.dataSource.data = this.list;
       } else {
@@ -172,7 +168,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.dataSource.data = this.list;
       } else {
         this.dataSource.data = this.list.filter(
-          (x: any) => x.userGroups[0].id == value
+          (x: any) => x.userGroups[0].id == value?.id
         );
       }
     }
@@ -184,30 +180,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
     });
     this.getRoles();
     this.getTeams();
-
-    this.empFilters.push({
-      name: 'privilage',
-      key: 'userGroups',
-      options: this.privilage,
-      defaultValue: 'All',
-      labelName: 'groupName',
-    });
-    this.empFilters.push({
-      name: 'team',
-      key: 'teamDto',
-      options: this.teams,
-      defaultValue: 'All',
-      labelName: 'name',
-    });
-    this.dataSourceFilters.filterPredicate = function (record, filter) {
-      const map = new Map(JSON.parse(filter));
-      let isMatch = false;
-      for (const [key, value] of map) {
-        isMatch = value == 'All' || record[key as keyof User] == value;
-        if (!isMatch) return false;
-      }
-      return isMatch;
-    };
 
     this.dataSource.paginator = this.paginator;
     this.bannerDataService.updateData({ title: 'users_setting', text: '' });

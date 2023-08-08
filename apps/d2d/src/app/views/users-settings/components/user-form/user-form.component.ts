@@ -40,7 +40,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
-      this.restFormWithValue(this.data);
+      if (this.data) {
+        this.restFormWithValue(this.data);
+      }
     }
   }
 
@@ -55,8 +57,8 @@ export class UserFormComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.form.valid) {
       const dataForm = {
-        userGroups: [{ id: this.form.controls['userGroups'].value }],
-        teamDto: { id: this.form.controls['teamDto'].value },
+        userGroups: [{ id: this.form.controls['userGroups'].value.id }],
+        teamDto: { id: this.form.controls['teamDto'].value.id },
         email: this.form.controls['email'].value,
         name: this.form.controls['name'].value,
         jobTitle: 'kjlj',
@@ -101,12 +103,24 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.userService.getGroups().subscribe((res) => {
       res.pop();
       this.privilages = res;
+      if (this.data) {
+        this.data.userGroup = this.privilages.filter(
+          (p: any) => p.id === this.data?.userGroups[0]?.id
+        )[0];
+      }
     });
   }
 
-  getTeams() {
+  getTeams(userGroup: any) {
     this.userService.getTeams().subscribe((res) => {
-      this.teams = res;
+      if (userGroup?.id === 1) {
+        this.teams = res.filter((t: any) => t.id !== 4);
+      } else {
+        this.teams = res.filter((t: any) => t.id === 4);
+      }
+      this.data.teamDto = this.teams.filter(
+        (x: any) => x.id === this.data.teamDto.id
+      )[0];
     });
   }
 
@@ -114,32 +128,22 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.router.navigate(['./users-setting']);
   }
   handleTeam(value: any) {
-    if (value === 1) {
+    if (value.id === 1) {
       this.teams = teamsOptions.filter((t: any) => t.id !== 4);
-    } else if (value === 3) {
-      this.teams = [];
     } else {
       this.teams = teamsOptions.filter((t: any) => t.id === 4);
     }
   }
   restFormWithValue(data: any) {
-    if (data.userGroups[0].id === 1) {
-      this.teams = teamsOptions.filter((t: any) => t.id !== 4);
-    } else if (data.userGroups[0].id === 3) {
-      this.teams = [];
-    } else {
-      this.teams = teamsOptions.filter((t: any) => t.id === 4);
-    }
+    this.getGroups();
+    this.getTeams(data?.userGroups[0]);
     this.form?.get('email')?.setValue(data.email);
     this.form?.get('email')?.disable();
     this.form?.get('name')?.setValue(data.name);
     this.form?.get('name')?.disable();
-    this.form?.get('teamDto')?.setValue(data.teamDto.id);
-    this.form?.get('userGroups')?.setValue(data.userGroups[0].id);
   }
   ngOnInit() {
     this.userform();
     this.getGroups();
-    this.teams = teamsOptions;
   }
 }

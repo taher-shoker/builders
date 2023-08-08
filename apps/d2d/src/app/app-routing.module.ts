@@ -17,10 +17,6 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent,
   },
-  {
-    path: 'unauthorized-page',
-    component: UnauthorizedPageComponent,
-  },
 ];
 @NgModule({
   imports: [BrowserModule, RouterModule.forRoot(routes, { useHash: true })],

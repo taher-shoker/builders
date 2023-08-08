@@ -63,25 +63,25 @@
             [options]="jobs"
           ></stc-apps-select-drop-down>
         </div> -->
-          <div class="col-md-5" *ngFor="let empfilter of empFilters">
+          <div class="col-md-5">
             <stc-apps-select-drop-down
-              [label]="empfilter.name"
+              [label]="'privilage'"
               [selectType]="'filter-select-box'"
-              [options]="empfilter.name === 'team' ? teams : privilage"
-              [labelName]="empfilter.labelName"
-              (selectChange)="handleSelectChange($event, empfilter)"
-              [selectId]="'all'"
-              formControlName="{{ empfilter.name }} "
+              [options]="privilage"
+              [labelName]="'groupName'"
+              (selectChange)="handleSelectChange($event, 'privilage')"
+              [defaultAll]="true"
             ></stc-apps-select-drop-down>
           </div>
-          <!-- <div class="col-md-5">
+          <div class="col-md-5">
             <stc-apps-select-drop-down
               [label]="'team'"
               [selectType]="'filter-select-box'"
               [options]="teams"
-              (selectChange)="handleSelectChange($event)"
+              (selectChange)="handleSelectChange($event, 'team')"
+              [defaultAll]="true"
             ></stc-apps-select-drop-down>
-          </div> -->
+          </div>
         </div>
       </div>
       <div class="col-md-2">

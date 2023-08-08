@@ -6,13 +6,13 @@
   <mat-form-field>
     <mat-select
       [formControl]="control"
-      [id]="selectId"
       [required]="required"
       (selectionChange)="onChangeValue($event.value)"
+      [(value)]="defaultAll ? options[0] : selectId"
     >
-        <mat-option *ngFor="let option of options" [value]="option">
-          {{ option[labelName] }}
-        </mat-option>
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{ option[labelName] }}
+      </mat-option>
     </mat-select>
     <mat-error *ngIf="control.errors">{{
       'field_required' | translate

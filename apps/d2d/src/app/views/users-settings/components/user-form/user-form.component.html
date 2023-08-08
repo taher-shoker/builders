@@ -29,6 +29,7 @@
             formControlName="userGroups"
             [labelName]="'groupName'"
             [required]="true"
+            [selectId]="data?.userGroup || null"
             (selectChange)="handleTeam($event)"
           >
           </stc-apps-select-drop-down>
@@ -39,6 +40,7 @@
             formControlName="teamDto"
             [required]="true"
             [options]="teams"
+            [selectId]="data?.teamDto || null"
           >
           </stc-apps-select-drop-down>
         </div>
