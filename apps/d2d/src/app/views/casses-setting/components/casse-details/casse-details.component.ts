@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import {
   CaseStatus,
@@ -8,7 +8,6 @@ import {
   TaskCicle,
 } from '../../casses.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
 import { saveAs } from 'file-saver';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { Subscription } from 'rxjs';
@@ -33,6 +32,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   formData = new FormData();
 
   casseId!: string;
+  caseSerial!: string;
   caseStatus!: string;
   caseData: any;
   allTasks!: TaskInDetails[];
@@ -58,12 +58,18 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.casseId = this.route.snapshot.params['id'];
-    this.subscribeToLanguage();
+
+    this.bannerDataService.updateData({
+      title: "",
+      text: '',
+    });
 
     this.cassesService.getCasse(this.casseId).subscribe((res) => {
       if (res) {
         this.caseData = res;
+        this.caseSerial = res.caseSerialNumber
         this.caseStatus = res.caseStatus;
+        this.subscribeToLanguage();
       }
     });
     this.getCaseTasks(+this.casseId);
@@ -203,13 +209,16 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.firstEscalateForm.reset();
     this.secondEscalateForm.reset();
   }
+
   cancelCheck() {
     const data = { form: { info_needed: 0 } };
-    this.cassesService
-      .updateCaseTask(+this.casseId, data)
-      .subscribe((res: any) => {
-        this.getCaseTasks(+this.casseId);
-      });
+    // this.cassesService
+    //   .updateCaseTask(+this.casseId, data)
+    //   .subscribe((res: any) => {
+    //     this.getCaseTasks(+this.casseId);
+    //   });
+
+      this.refreshTasks(data)
   }
 
   /** Actions with Fill More Info status  **/
@@ -234,7 +243,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
     console.log("The msg", data)
 
-    return
 
     this.closeForm.reset();
     this.infoForm.reset();
@@ -343,7 +351,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   subscribeToLanguage(){
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(res => {
-      const outputTitle = this.languageManagerService.getSavedLanguage() === 'ar' ? `تفاصيل حالة D2D رقم : ${this.casseId} ` : `D2D Case ( ID: ${this.casseId} ) Details`
+      const outputTitle = this.languageManagerService.getSavedLanguage() === 'ar' ? `تفاصيل حالة رقم : ${this.caseSerial} ` : `D2D Case ( ID: ${this.caseSerial} ) Details`
       this.bannerDataService.updateData({
         title: outputTitle,
         text: '',

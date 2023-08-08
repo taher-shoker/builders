@@ -10,7 +10,7 @@ export interface BannerData {
 })
 export class BannerDataService {
   private dataSource = new BehaviorSubject({
-    title: 'title',
+    title: '',
     text: '',
   });
 
