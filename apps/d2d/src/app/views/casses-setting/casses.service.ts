@@ -177,6 +177,7 @@ export interface Casse {
   description: string;
   attachments: Attachment[];
   caseStatus: string;
+  caseSerialNumber: string;
 }
 
 export type Attachment = {

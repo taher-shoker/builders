@@ -140,7 +140,7 @@
         <figure>
           <figcaption>
             <h4>{{"logs_of_cases" | translate}}</h4>
-            <div class="">
+            <div>
               <p
                 class="case-status"
                 [ngClass]="
@@ -187,16 +187,31 @@
             </div>
             <div class="order-track-text">
               <p class="order-track-text-stat">{{ item.taskName | translate}}</p>
-              <p class="m-0 order-date">{{ item.completedDate ? (item.completedDate | date : 'medium') : (item.createdDate | date : 'medium')}}</p>
-              <!-- <span class="order-track-text-sub">{{
-                item.completedDate | date : 'medium'
-              }}</span> -->
-              <p class="item-msg">{{item.assignedUser}}</p>
-              <p class="m-0 item-msg">{{item.taskAttributes[item.taskAttributes.length -1]?.attributeValue == '0' ? 'No' : item.taskAttributes[item.taskAttributes.length -1]?.attributeValue}}</p>
+              <p class="m-0 order-date">By <strong>{{item.assignedUser}}</strong> on: {{ item.completedDate ? (item.completedDate | date : 'medium') : (item.createdDate | date : 'medium')}}</p>
+
+              <p class="m-0 item-msg"></p>
+
+              <ng-container *ngFor="let taskAttr of item.taskAttributes">
+
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'case_approved'">
+                  {{taskAttr.attributeValue === "0" ? "Rejected" : taskAttr.attributeValue === null ? "" : "Approved"}}
+                </p>
+
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'info_needed'">
+                  {{taskAttr.attributeValue === "0" ? "Not needed" : ""}}
+                </p>
+
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'message'">
+                  {{taskAttr.attributeValue}}
+                </p>
+
+
+              </ng-container>
 
               <p *ngFor="let attachment of item.attachments" class="item-task-attachment" (click)="downloadFile(attachment.id, attachment.label)">
                 {{attachment.label}}
               </p>
+
               <div
                 class="actions my-3 d-flex"
                 *ngIf="item.taskStatus === 'pending'"
@@ -286,7 +301,7 @@
 </div>
 
 <stc-apps-dialog id="request-Info-Modal">
-  <h3>{{"Request More Info | CASE ID" | translate}} : {{ casseId }}</h3>
+  <h3>{{"Request More Info | CASE ID" | translate}} : {{ caseSerial }}</h3>
   <form [formGroup]="infoForm" (ngSubmit)="sendInfo()">
     <div class="row">
       <div class="col-md-6">
@@ -355,7 +370,7 @@
 <stc-apps-dialog id="approve-Modal">
   <!-- <p>
     You're about to Approve Case
-    <strong>(Case ID : {{ casseId }})</strong> . Kindly note you can't rollback
+    <strong>(Case ID : {{ caseSerial }})</strong> . Kindly note you can't rollback
     this action, Are you sure?”
   </p> -->
   <!-- <h3>Request More Info | CASE ID : #123432</h3> -->
@@ -383,7 +398,7 @@
 
 <stc-apps-dialog id="reject-Modal">
   <p>
-    {{"reject_case_confirmation" | translate}} <strong>({{"case_id" | translate}}: {{ casseId }})</strong>.
+    {{"reject_case_confirmation" | translate}} <strong>({{"case_id" | translate}}: {{ caseSerial }})</strong>.
     {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="rejectForm" (ngSubmit)="confirmReject()">
@@ -420,7 +435,7 @@
 </stc-apps-dialog>
 <stc-apps-dialog id="replyFeeback-Modal">
   <p>
-    {{"reply_feeback" | translate}} <strong>({{"case_id" | translate}} : {{ casseId }})</strong>.
+    {{"reply_feeback" | translate}} <strong>({{"case_id" | translate}} : {{ caseSerial }})</strong>.
   </p>
   <form [formGroup]="replyForm" (ngSubmit)="confirmReply()">
     <div class="row">
@@ -470,7 +485,7 @@
 
 <stc-apps-dialog id="close-Modal">
   <p>
-    {{"close_case_confirmation" | translate}} <strong>( {{"case_id" | translate}} : {{ casseId }})</strong>.
+    {{"close_case_confirmation" | translate}} <strong>( {{"case_id" | translate}} : {{ caseSerial }})</strong>.
     {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="closeForm" (ngSubmit)="confirmClose()">
@@ -508,7 +523,7 @@
 <stc-apps-dialog id="first-escalate-Modal">
   <p>
     {{"first_escalate_case" | translate}}
-    <strong>({{"case_id" | translate}} : {{ casseId }})</strong>. {{"no_rollback_confirmation" | translate}}
+    <strong>({{"case_id" | translate}} : {{ caseSerial }})</strong>. {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="firstEscalateForm" (ngSubmit)="confirmFirstEscalate()">
     <div class="row">
@@ -546,7 +561,7 @@
 <stc-apps-dialog id="second-escalate-Modal">
   <p>
     {{"second_escalate_case" | translate}}
-    <strong>({{"case_id" | translate}}: {{ casseId }})</strong>. {{"no_rollback_confirmation" | translate}}
+    <strong>({{"case_id" | translate}}: {{ caseSerial }})</strong>. {{"no_rollback_confirmation" | translate}}
   </p>
   <form [formGroup]="secondEscalateForm" (ngSubmit)="confirmSecondEscalate()">
     <div class="row">
