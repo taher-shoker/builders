@@ -50,7 +50,7 @@ export class AuthService {
           this.handleAuthentication(resData.displayName, resData.token);
           this.getLoggedInUser();
           if (this.loggedInUser?.roles.includes('ADMINS')) {
-            this.router.navigate(['/user-setting']);
+            this.router.navigate(['/users-setting']);
           } else {
             this.router.navigate(['/home']);
           }
