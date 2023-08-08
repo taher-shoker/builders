@@ -109,24 +109,29 @@ export interface File {
 }
 
 export interface Task {
-  id: number;
-  taskName: string;
-  taskStatus: string;
-  assignedUser: string;
-  caseID: 0;
-  taskAttributes: [
-    {
-      attributeName: string;
-      attributeValue: string;
-      attributeType: string;
-      attributeLabel: string;
-    }
-  ];
-  completedDate: Date;
-  camundaTaskID: string;
-  createdDate: Date;
-  lastModifiedDate: Date;
-  attachments: Attachment[];
+
+  caseTasksDto : {
+
+    id: number;
+    taskName: string;
+    taskStatus: string;
+    assignedUser: string;
+    caseID: 0;
+    taskAttributes: [
+      {
+        attributeName: string;
+        attributeValue: string;
+        attributeType: string;
+        attributeLabel: string;
+      }
+    ];
+    completedDate: Date;
+    camundaTaskID: string;
+    createdDate: Date;
+    lastModifiedDate: Date;
+    attachments: Attachment[];
+  }
+  caseSerialNumber: string;
 }
 
 

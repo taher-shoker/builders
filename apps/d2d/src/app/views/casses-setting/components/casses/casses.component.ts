@@ -122,7 +122,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource.sort = this.sort;
   }
 
-  detailsNavigate(id: string) {
+  detailsNavigate(id: string | number) {
     this.router.navigate(['./case-details', id], { relativeTo: this.route });
   }
   getCassesListing() {
@@ -154,6 +154,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       }
 
       this.getAssigneeTasks = this.cassesService.getAssigneeTasks(username).subscribe((res: any) => {
+        console.log("ITEMS", res.data)
         this.allItems = res.data;
       });
 

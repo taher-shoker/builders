@@ -231,6 +231,11 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
         reply_attachments: idsArr
       },
     };
+
+    console.log("The msg", data)
+
+    return
+
     this.closeForm.reset();
     this.infoForm.reset();
     this.uploadedFile = [];

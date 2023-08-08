@@ -85,7 +85,10 @@
   .actions {
     width: 100%;
     padding-top: 20px;
-    justify-content: space-between;
+  }
+
+  stc-apps-button:first-child{
+    margin-inline-end: 10px;
   }
 
   figure {

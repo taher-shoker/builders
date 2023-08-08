@@ -57,7 +57,7 @@
           </div>
           <div class="col-md-9">
             <div class="row">
-              <div class="col-md-5">
+              <div class="col">
                 <div class="input-group stc-input-group custom-input mb-3">
                   <span class="input-group-text" id="basic-addon1"
                     ><i class="fas fa-search"></i
@@ -73,7 +73,7 @@
                 </div>
               </div>
 
-              <div class="col">
+              <div class="col-3">
                 <stc-apps-button
                   [buttonText]="'filter' | translate"
                   [buttonType]="'gray-outline'"
@@ -287,16 +287,16 @@
               </div>
             </div> -->
 
-            <div class="task">
+            <div class="task" (click)="detailsNavigate(item.caseTasksDto.caseID)">
               <div class="task-header">
                 <div class="row">
-                  <div class="col-5 left-col">{{"case_id" | translate}}: #{{item.caseID}}</div>
-                  <div class="col right-col">{{ item.createdDate | date : 'medium' }}</div> <!--10:23 AM 12 jun 2022-->
+                  <div class="col-5 left-col">{{"case_id" | translate}}: #{{item.caseSerialNumber}}</div>
+                  <div class="col right-col">{{ item.caseTasksDto.createdDate | date : 'medium' }}</div> <!--10:23 AM 12 jun 2022-->
                 </div>
               </div>
               <div class="task-desc-holder">
                 <p class="task-desc">
-                  {{item.taskName + ' Desc' | translate}}
+                  {{item.caseTasksDto.taskName + ' Desc' | translate}}
 
                 </p>
               </div>
