@@ -23,18 +23,19 @@ export class HomeComponent implements OnInit {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
+      roles: ['Approvers,Creators'],
     },
     {
       name: 'users_setting',
       url: '/users-setting',
       icon: '  fa-user-friends',
+      roles: ['Admin'],
     },
   ];
 
   ngOnInit(): void {
     this.userName = JSON.parse(this.cookieService.get('fraud-user'));
     this.authService.setLoggedInUser();
-
   }
   logOut() {
     this.authService.logout();

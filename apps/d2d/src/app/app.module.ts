@@ -29,12 +29,13 @@ import { HttpInterceptorService } from './services/interceptors/http-interceptor
 import { HomeModule } from './views/home/home.module';
 import { LoginComponent } from './views/login/login.component';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
+import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 @NgModule({
-  declarations: [AppComponent, LoginComponent],
+  declarations: [AppComponent, LoginComponent, UnauthorizedPageComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -72,6 +73,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     },
   ],
   bootstrap: [AppComponent],
-  exports: [],
+  exports: [UnauthorizedPageComponent],
 })
 export class AppModule {}

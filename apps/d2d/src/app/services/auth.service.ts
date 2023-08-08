@@ -8,13 +8,13 @@ import { environment } from '../../environments/environment';
 
 import { User } from './user.model';
 
-export interface LoggedUser{
-  id: number,
-  email: string,
-  name: string,
-  jobTitle: string,
-  roles: string[],
-  teamName: null | string
+export interface LoggedUser {
+  id: number;
+  email: string;
+  name: string;
+  jobTitle: string;
+  roles: string[];
+  teamName: null | string;
 }
 export interface AuthResponseData {
   token: string;
@@ -29,12 +29,13 @@ export class AuthService {
 
   loggedInUser!: LoggedUser | null;
 
-  loggedUserStream: BehaviorSubject<LoggedUser | null> = new BehaviorSubject<LoggedUser | null>(null)
+  loggedUserStream: BehaviorSubject<LoggedUser | null> =
+    new BehaviorSubject<LoggedUser | null>(null);
 
   constructor(
     private http: HttpClient,
     private router: Router,
-    private cookieService: CookieService,
+    private cookieService: CookieService
   ) {}
 
   login(data: any) {
@@ -47,7 +48,13 @@ export class AuthService {
         catchError(this.handleError),
         tap((resData) => {
           this.handleAuthentication(resData.displayName, resData.token);
-          this.router.navigate(['/home']);
+          this.getLoggedInUser();
+          if (this.loggedInUser?.roles.includes('ADMINS')) {
+            this.router.navigate(['/user-setting']);
+          } else {
+            this.router.navigate(['/home']);
+          }
+          //  this.router.navigate(['/home']);
         })
       );
   }
@@ -81,21 +88,22 @@ export class AuthService {
     }, expirationDuration);
   }
 
-  getLoggedInUser(): LoggedUser{
+  getLoggedInUser(): LoggedUser {
     return this.loggedInUser!;
   }
 
-  setLoggedInUser(): void{
-    this.http.get<LoggedUser>(`${environment.apiUrl}/users/currentUser`).subscribe((res : LoggedUser) => {
-      this.loggedInUser = res
-      this.loggedUserStream.next(res)
-      console.log("The current logged user :", res)
-      // if(this.loggedInUser.roles.includes("APPROVERS")){
-      //   this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
-      // }
-    })
+  setLoggedInUser(): void {
+    this.http
+      .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
+      .subscribe((res: LoggedUser) => {
+        this.loggedInUser = res;
+        this.loggedUserStream.next(res);
+        console.log('The current logged user :', res);
+        // if(this.loggedInUser.roles.includes("APPROVERS")){
+        //   this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
+        // }
+      });
   }
-
 
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);
