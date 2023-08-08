@@ -48,13 +48,16 @@ export class AuthService {
         catchError(this.handleError),
         tap((resData) => {
           this.handleAuthentication(resData.displayName, resData.token);
-          this.getLoggedInUser();
-          if (this.loggedInUser?.roles.includes('ADMINS')) {
-            this.router.navigate(['/users-setting']);
-          } else {
-            this.router.navigate(['/home']);
-          }
-          //  this.router.navigate(['/home']);
+
+          this.http
+            .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
+            .subscribe((res: LoggedUser) => {
+              if (res.roles.includes('ADMINS')) {
+                this.router.navigate(['/users-setting']);
+              } else {
+                this.router.navigate(['/home']);
+              }
+            });
         })
       );
   }
