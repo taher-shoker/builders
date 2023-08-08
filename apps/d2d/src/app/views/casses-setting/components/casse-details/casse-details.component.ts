@@ -4,7 +4,7 @@ import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import {
   CaseStatus,
   CassesService,
-  Task,
+  TaskInDetails,
   TaskCicle,
 } from '../../casses.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -35,7 +35,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   casseId!: string;
   caseStatus!: string;
   caseData: any;
-  allTasks!: Task[];
+  allTasks!: TaskInDetails[];
   assigneeType = [
     { name: 'team', value: '1' },
     { name: 'users', value: '2' },

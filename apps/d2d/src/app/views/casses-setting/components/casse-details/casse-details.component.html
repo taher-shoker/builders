@@ -156,53 +156,53 @@
             <div
               class="order-track-status"
               [ngClass]="
-                item.caseTasksDto.taskStatus === 'pending' ? ' order-track-pending' : null
+                item.taskStatus === 'pending' ? ' order-track-pending' : null
               "
             >
               <span
                 class="order-track-status-dot"
                 [ngClass]="
-                  item.caseTasksDto.taskStatus === 'pending'
+                  item.taskStatus === 'pending'
                     ? ' order-track-pending-dot'
                     : null
                 "
               >
                 <i
                   class="fas fa-check"
-                  *ngIf="item.caseTasksDto.taskStatus !== 'pending'"
+                  *ngIf="item.taskStatus !== 'pending'"
                 ></i>
                 <i
                   class="fas fa-info"
-                  *ngIf="item.caseTasksDto.taskStatus === 'pending'"
+                  *ngIf="item.taskStatus === 'pending'"
                 ></i>
               </span>
               <span
                 class="order-track-status-line"
                 [ngClass]="
-                  item.caseTasksDto.taskStatus === 'pending'
+                  item.taskStatus === 'pending'
                     ? ' order-track-pending-line'
                     : null
                 "
               ></span>
             </div>
             <div class="order-track-text">
-              <p class="order-track-text-stat">{{ item.caseTasksDto.taskName | translate}}</p>
-              <p class="m-0 order-date">{{ item.caseTasksDto.completedDate ? (item.caseTasksDto.completedDate | date : 'medium') : (item.caseTasksDto.createdDate | date : 'medium')}}</p>
+              <p class="order-track-text-stat">{{ item.taskName | translate}}</p>
+              <p class="m-0 order-date">{{ item.completedDate ? (item.completedDate | date : 'medium') : (item.createdDate | date : 'medium')}}</p>
               <!-- <span class="order-track-text-sub">{{
                 item.completedDate | date : 'medium'
               }}</span> -->
-              <p class="item-msg">{{item.caseTasksDto.assignedUser}}</p>
-              <p class="m-0 item-msg">{{item.caseTasksDto.taskAttributes[item.caseTasksDto.taskAttributes.length -1]?.attributeValue == '0' ? 'No' : item.caseTasksDto.taskAttributes[item.caseTasksDto.taskAttributes.length -1]?.attributeValue}}</p>
+              <p class="item-msg">{{item.assignedUser}}</p>
+              <p class="m-0 item-msg">{{item.taskAttributes[item.taskAttributes.length -1]?.attributeValue == '0' ? 'No' : item.taskAttributes[item.taskAttributes.length -1]?.attributeValue}}</p>
 
-              <p *ngFor="let attachment of item.caseTasksDto.attachments" class="item-task-attachment" (click)="downloadFile(attachment.id, attachment.label)">
+              <p *ngFor="let attachment of item.attachments" class="item-task-attachment" (click)="downloadFile(attachment.id, attachment.label)">
                 {{attachment.label}}
               </p>
               <div
                 class="actions my-3 d-flex"
-                *ngIf="item.caseTasksDto.taskStatus === 'pending'"
+                *ngIf="item.taskStatus === 'pending'"
               >
 
-              <ng-container *ngIf="item.caseTasksDto.taskName === TaskCicle.checkCase && authService.getLoggedInUser().roles.includes('APPROVERS')">
+              <ng-container *ngIf="item.taskName === TaskCicle.checkCase && authService.getLoggedInUser().roles.includes('APPROVERS')">
                 <stc-apps-button
                   [buttonText]="'yes' | translate"
                   [buttonType]="'primary'"
@@ -216,13 +216,13 @@
               </ng-container>
 
                 <stc-apps-button
-                  *ngIf="item.caseTasksDto.taskName === TaskCicle.fillMoreInfo && !authService.getLoggedInUser().roles.includes('APPROVERS')"
+                  *ngIf="item.taskName === TaskCicle.fillMoreInfo && !authService.getLoggedInUser().roles.includes('APPROVERS')"
                   [buttonText]="'reply' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="replyfeed()"
                 ></stc-apps-button>
 
-                <ng-container *ngIf="item.caseTasksDto.taskName === TaskCicle.approveCase && authService.getLoggedInUser().roles.includes('APPROVERS')">
+                <ng-container *ngIf="item.taskName === TaskCicle.approveCase && authService.getLoggedInUser().roles.includes('APPROVERS')">
                   <stc-apps-button
                     [buttonText]="'approve' | translate"
                     [buttonType]="'primary'"
@@ -236,13 +236,13 @@
                 </ng-container>
 
                 <stc-apps-button
-                  *ngIf="item.caseTasksDto.taskName === TaskCicle.withinSlResponse && authService.getLoggedInUser().roles.includes('APPROVERS')"
+                  *ngIf="item.taskName === TaskCicle.withinSlResponse && authService.getLoggedInUser().roles.includes('APPROVERS')"
                   [buttonText]="'received' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="withinResponse()"
                 ></stc-apps-button>
 
-                <ng-container *ngIf="item.caseTasksDto.taskName === TaskCicle.shouldEscalate && authService.getLoggedInUser().roles.includes('APPROVERS')">
+                <ng-container *ngIf="item.taskName === TaskCicle.shouldEscalate && authService.getLoggedInUser().roles.includes('APPROVERS')">
                   <stc-apps-button
                     [buttonText]="'yes' | translate"
                     [buttonType]="'primary'"
@@ -255,7 +255,7 @@
                   ></stc-apps-button>
                 </ng-container>
 
-                <ng-container *ngIf="item.caseTasksDto.taskName === TaskCicle.shouldReEscalate && authService.getLoggedInUser().roles.includes('APPROVERS')">
+                <ng-container *ngIf="item.taskName === TaskCicle.shouldReEscalate && authService.getLoggedInUser().roles.includes('APPROVERS')">
                   <stc-apps-button
                     [buttonText]="'yes' | translate"
                     [buttonType]="'primary'"
@@ -269,7 +269,7 @@
                 </ng-container>
 
                 <stc-apps-button
-                  *ngIf="item.caseTasksDto.taskName === TaskCicle.sendToClose && authService.getLoggedInUser().roles.includes('APPROVERS')"
+                  *ngIf="item.taskName === TaskCicle.sendToClose && authService.getLoggedInUser().roles.includes('APPROVERS')"
                   [buttonText]="'send' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="sendToClose()"

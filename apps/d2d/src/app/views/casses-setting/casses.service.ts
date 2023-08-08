@@ -134,6 +134,30 @@ export interface Task {
   caseSerialNumber: string;
 }
 
+export interface TaskInDetails {
+
+
+    id: number;
+    taskName: string;
+    taskStatus: string;
+    assignedUser: string;
+    caseID: 0;
+    taskAttributes: [
+      {
+        attributeName: string;
+        attributeValue: string;
+        attributeType: string;
+        attributeLabel: string;
+      }
+    ];
+    completedDate: Date;
+    camundaTaskID: string;
+    createdDate: Date;
+    lastModifiedDate: Date;
+    attachments: Attachment[];
+  caseSerialNumber: string;
+}
+
 
 export interface Casse {
   id?: string;

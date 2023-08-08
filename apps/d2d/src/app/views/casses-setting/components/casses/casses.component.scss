@@ -163,12 +163,14 @@
               overflow: auto;
 
 
+              .left-col{
+                font-size: 14px;
+              }
 
               .right-col{
                 font-size: 13px;
                 color: var(--half-black);
                 text-align: end;
-
               }
             }
           }
