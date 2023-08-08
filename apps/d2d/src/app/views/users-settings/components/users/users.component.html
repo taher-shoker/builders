@@ -37,7 +37,7 @@
     </div>
   </div>
 
-  <div class="filter-box card">
+  <div class="filter-box card" [formGroup]="filterSelect">
     <div class="row align-items-center">
       <div class="col-md-3">
         <div class="input-group stc-input-group custom-input mb-3">
@@ -71,6 +71,7 @@
               [labelName]="empfilter.labelName"
               (selectChange)="handleSelectChange($event, empfilter)"
               [selectId]="'all'"
+              formControlName="{{ empfilter.name }} "
             ></stc-apps-select-drop-down>
           </div>
           <!-- <div class="col-md-5">

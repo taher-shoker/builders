@@ -7,6 +7,7 @@ import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import { EmpFilter, User, UsersService } from '../../users.service';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface ColumnsSchema {
   key: string;
@@ -75,7 +76,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   userId!: number;
   privilage = [];
   teams = [];
-
+  filterSelect!: FormGroup;
   empFilters: EmpFilter[] = [];
   @ViewChild(MatSort, { static: true })
   sort!: MatSort;
@@ -156,22 +157,34 @@ export class UsersComponent implements OnInit, AfterViewInit {
       this.teams = x;
     });
   }
-  handleSelectChange(value: string, empfilter: EmpFilter) {
+  handleSelectChange(value: any, empfilter: EmpFilter) {
+    console.log(value);
     if (empfilter.name === 'team') {
-      this.dataSource.data = this.list.filter(
-        (x: any) => x.teamDto?.id == value
-      );
+      if (value.id === 'all') {
+        this.dataSource.data = this.list;
+      } else {
+        this.dataSource.data = this.list.filter(
+          (x: any) => x.teamDto?.id == value?.id
+        );
+      }
     } else {
-      this.dataSource.data = this.list.filter(
-        (x: any) => x.userGroups[0].id == value
-      );
+      if (value.id === 'all') {
+        this.dataSource.data = this.list;
+      } else {
+        this.dataSource.data = this.list.filter(
+          (x: any) => x.userGroups[0].id == value
+        );
+      }
     }
   }
   ngOnInit() {
     this.getUsersListing();
-
+    this.filterSelect = new FormGroup({
+      teamSelect: new FormControl('all'),
+    });
     this.getRoles();
     this.getTeams();
+
     this.empFilters.push({
       name: 'privilage',
       key: 'userGroups',
