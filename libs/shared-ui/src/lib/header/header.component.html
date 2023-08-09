@@ -4,10 +4,11 @@
       <span
         role="button"
         aria-disabled="true"
-        (click)="onClick()"
+        (click)="toggle()"
         class="additional-menu-btn-icon"
         [ngClass]="{ open: showMenu }"
         (keyup.enter)="({})"
+        #toggleButton
         ><span></span
       ></span>
       <a href="#" class="brand ms-4">
@@ -35,7 +36,7 @@
             <stc-apps-language-selector></stc-apps-language-selector>
           </a>
           <div class="dropdown-divider"></div>
-          <a class="dropdown-item" [routerLink]="['/login']">{{
+          <a role="button" class="dropdown-item" (click)="handleLogout()">{{
             'logout' | translate
           }}</a>
         </ul>
@@ -46,20 +47,25 @@
 <nav
   [ngClass]="{ open: showMenu }"
   class="additional-navigation js-additional-nav"
+  #menu
 >
   <span
+    #toggleButton
     role="button"
     aria-disabled="true"
-    (click)="onClick()"
+    (click)="toggle()"
     class="additional-menu-btn-icon"
     [ngClass]="{ open: showMenu }"
     (keyup.enter)="({})"
     ><span></span
   ></span>
+
   <ul id="secondary-menu" class="secondary-menu clear">
-    <li class="menu-item mt-3" *ngFor="let item of allItems">
-      <i class="px-2 fas {{ item.icon }}"></i>
-      <a [routerLink]="['/' + item.url]">{{ item.name | translate }}</a>
+    <img src="{{ sidebarLogoSrc }}" alt="logo" />
+    <li class="menu-item" *ngFor="let item of allItems">
+      <a [routerLink]="['/' + item.url]" routerLinkActive="active">
+        <i class="px-2 fas {{ item.icon }}"></i>{{ item.name | translate }}</a
+      >
     </li>
     <!-- <li class="menu-item mt-3">
       <a [routerLink]="['/settings']">{{ 'settings' | translate }}</a>

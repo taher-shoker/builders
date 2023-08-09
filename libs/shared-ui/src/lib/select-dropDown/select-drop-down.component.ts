@@ -1,15 +1,20 @@
 import {
   Component,
-  Input,
-  forwardRef,
+  ContentChildren,
   EventEmitter,
+  Input,
+  OnChanges,
   Output,
+  QueryList,
+  SimpleChanges,
+  forwardRef,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MatOption } from '@angular/material/core';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
 interface Option {
-  name: string;
+  [key: string]: string;
   value: string;
 }
 
@@ -25,17 +30,33 @@ interface Option {
     },
   ],
 })
-export class SelectDropDownComponent<
-  T
-> extends ControlValueAccessorDirective<T> {
-  @Output() selectChange = new EventEmitter<string>();
+export class SelectDropDownComponent<T>
+  extends ControlValueAccessorDirective<T>
+  implements OnChanges
+{
+  @ContentChildren(MatOption) queryOptions!: QueryList<MatOption>;
+  yet!: boolean;
+
+  @Output() selectChange = new EventEmitter<any>();
   @Input({ required: true }) label!: string;
   @Input() selectType: 'filter-select-box' | 'default' = 'default';
-  @Input() options: Option[] = [];
+  @Input() options: any[] = [];
+  @Input() labelName = 'name';
+  @Input() labelValue = 'id';
   @Input() required = false;
-  @Input() selectId = '';
+  @Input() selectId: any;
+  @Input() defaultAll = false;
 
-  onChangeValue(value: string) {
+  onChangeValue(value: any) {
     this.selectChange.emit(value);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['options']) {
+      this.options = changes['options'].currentValue;
+      if (this.defaultAll) {
+        this.options.unshift({ id: 'all', [this.labelName]: 'All' });
+      }
+    }
   }
 }

@@ -3,6 +3,8 @@ import { Inject, Injectable } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { appSettings } from './lang-settings';
 import { AppSettings } from './lang-settings.model';
+import { BehaviorSubject } from 'rxjs';
+
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +12,7 @@ import { AppSettings } from './lang-settings.model';
 export class LanguageManagerService {
   //@Input() appSettings: AppSettings = appSettings;
   appSettings: AppSettings = appSettings;
+  currentLanguageStream: BehaviorSubject<string> = new BehaviorSubject('en')
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.init();
@@ -17,6 +20,14 @@ export class LanguageManagerService {
 
   public getSavedLanguage() {
     return localStorage.getItem('language');
+  }
+
+  public getSavedLanguageAsStream() {
+    return this.currentLanguageStream;
+  }
+
+  public setSavedLanguageAsStream(lang: 'ar' | 'en'): void {
+    this.currentLanguageStream.next(lang);
   }
 
   public saveLanguage(languageCode: string) {

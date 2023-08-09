@@ -11,8 +11,10 @@ export class AppComponent {
   title = 'd2d';
   constructor(
     private translate: TranslateService,
-    private languageManagerService: LanguageManagerService
+    private languageManagerService: LanguageManagerService,
   ) {
+
+
     const savedLanguage =
       this.languageManagerService.getSavedLanguage() || 'en';
     this.translate.setDefaultLang('en');

@@ -169,7 +169,19 @@ export class FileUploaderComponent implements ControlValueAccessor {
     //     this.files.push(files[i]);
     //   }
     // }
-    this.onformchange.emit(files);
+
+    let allFilesValid = true;
+
+    for (let i = 0; i < files.length; i++) {
+      if (!this.validate(files[i])){
+        allFilesValid = false;
+      }
+    }
+
+    if(allFilesValid){
+
+      this.onformchange.emit(files);
+    }
   }
 
   removeFile(file: File) {

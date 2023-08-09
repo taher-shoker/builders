@@ -5,27 +5,37 @@
         <span class="input-group-text" id="basic-addon1"
           ><i class="fas fa-search"></i
         ></span>
-        <input type="text" matInput #input class="form-control stc-input" />
+        <input
+          type="text"
+          matInput
+          #input
+          placeholder="{{ 'search_for_user' | translate }}"
+          class="form-control stc-input"
+          (keyup)="searchFilter($event)"
+        />
       </div>
     </div>
     <div class="col-md-7">
       <div class="row">
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <stc-apps-select-drop-down
             [label]="'Job title'"
             [selectType]="'filter-select-box'"
+            [options]="jobs"
+          ></stc-apps-select-drop-down>
+        </div> -->
+        <div class="col-md-5">
+          <stc-apps-select-drop-down
+            [label]="'privilage'"
+            [selectType]="'filter-select-box'"
+            [options]="privilages"
           ></stc-apps-select-drop-down>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
           <stc-apps-select-drop-down
-            [label]="'Privillage'"
+            [label]="'team'"
             [selectType]="'filter-select-box'"
-          ></stc-apps-select-drop-down>
-        </div>
-        <div class="col-md-4">
-          <stc-apps-select-drop-down
-            [label]="'Team'"
-            [selectType]="'filter-select-box'"
+            [options]="teams"
           ></stc-apps-select-drop-down>
         </div>
       </div>
@@ -33,7 +43,7 @@
     <div class="col-md-2">
       <stc-apps-button
         [buttonText]="addBtnLabel"
-        [buttonType]="'warn'"
+        [buttonType]="'primary'"
         [buttonIcon]="' fa-plus-circle'"
         (btnClick)="onAddClick()"
       ></stc-apps-button>

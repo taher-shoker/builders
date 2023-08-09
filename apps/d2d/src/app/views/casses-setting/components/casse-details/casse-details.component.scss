@@ -1,8 +1,45 @@
 @import './scss/core/variables/colors';
 
+.order-date{
+  color: var(--grey-color);
+  font-size: var(--secondary-text);
+}
+
+.item-msg{
+  color: var(--grey-color);
+  font-size: var(--secondary-big-text);
+  padding-top: 5px;
+}
+
 .details {
   background-color: $whiteColor;
   padding: 20px;
+
+  .title-holder{
+    h3{
+      margin-bottom: 40px;
+    }
+  }
+
+  .left-col, .right-col{
+    .row{
+      .col-12{
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+
+
+  .cell-name{
+    color: var(--grey-color);
+    font-size: var(--side-title);
+  }
+
+  .cell-value{
+    margin-left: 15px;
+    font-weight: 500;
+  }
 
   .val {
     display: flex;
@@ -42,11 +79,18 @@
   border-radius: 5px;
   box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.1);
   background-color: $whiteColor;
+  max-height: 1040px;
+  overflow-y: scroll;
 
   .actions {
     width: 100%;
     padding-top: 20px;
   }
+
+  stc-apps-button:first-child{
+    margin-inline-end: 10px;
+  }
+
   figure {
     display: flex;
 
@@ -73,10 +117,10 @@
 
     &-step {
       display: flex;
-      height: 7rem;
+      min-height: 7rem;
 
       &:last-child {
-        overflow: hidden;
+        // overflow: hidden;
         & .order-track-status span:last-of-type {
           display: none;
         }
@@ -138,6 +182,7 @@
   .case-status {
     padding: 8px 12px;
     border-radius: 12px;
+    word-break: keep-all;
   }
   .registered {
     background-color: rgba($color: $stcMoonLightColor, $alpha: 0.2);
@@ -155,4 +200,15 @@
     background-color: rgba($color: $greenColor, $alpha: 0.2);
     color: $greenColor;
   }
+}
+
+.item-task-attachment{
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--stcColor);
+  font-weight: 500;
+}
+
+.spacer{
+  width: 50%;
 }

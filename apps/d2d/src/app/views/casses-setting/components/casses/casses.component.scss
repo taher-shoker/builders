@@ -1,12 +1,29 @@
 @import './scss/core/variables/colors';
 
+*{
+  word-break: keep-all;
+}
+// .cell-text{
+//   word-break:break-all;
+// }
+
 .casses-settings {
   margin-inline: 25px;
   position: relative;
   top: -60px;
 
+  table{
+
+    td{
+      max-width: 165px;
+      word-wrap: break-word;
+    }
+  }
+
   .top-info {
     border-radius: 5px;
+
+
     .static {
       background-color: rgb(255, 255, 255);
       border-radius: 10px;
@@ -115,6 +132,12 @@
       }
     }
     .tasks {
+
+      .row{
+        margin: 0;
+        padding: 0;
+      }
+
       height: 580px;
       padding: 0 20px;
       overflow: auto;
@@ -122,41 +145,75 @@
       background-color: white;
       max-height: inherit;
       li {
-        border-bottom: 1px solid $greyColor;
-        &:last-of-type {
-          border-bottom: unset;
-        }
-      }
 
-      .task {
-        cursor: pointer;
-        display: flex;
-        padding: 20px 10px;
+        .task{
+          border-radius: 7px;
+          overflow: hidden;
+          box-shadow: -3px 3px 3px -4px rgba(0,0,0,0.75);
+          cursor: pointer;
 
-        .task-info {
-          display: flex;
-          justify-content: space-between;
-          flex-direction: column;
-          margin-inline-start: 12px;
-        }
-        h5 {
-          display: block;
-          color: $stcColor;
-        }
-        span,
-        .date {
-          color: gray;
-        }
-        .progress-box {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          flex-direction: column;
-          span {
-            margin-bottom: 5px;
+          .task-header{
+
+            .row{
+              border-left: 5px solid #4F008C;
+              background: linear-gradient(to right, #4f008c91 0%, #9000ff1f 100%);
+              height: 31px;
+              align-content: center;
+
+              overflow: auto;
+
+
+              .left-col{
+                font-size: 14px;
+              }
+
+              .right-col{
+                font-size: 13px;
+                color: var(--half-black);
+                text-align: end;
+              }
+            }
+          }
+
+          .task-desc-holder{
+            height: 112px;
+            background-color: var(--light-grey);
+            padding: 6px 10px;
+            color: var(--grey-color);
+            overflow: auto;
           }
         }
       }
+
+      // .task {
+      //   cursor: pointer;
+      //   display: flex;
+      //   padding: 20px 10px;
+
+      //   .task-info {
+      //     display: flex;
+      //     justify-content: space-between;
+      //     flex-direction: column;
+      //     margin-inline-start: 12px;
+      //   }
+      //   h5 {
+      //     display: block;
+      //     color: $stcColor;
+      //   }
+      //   span,
+      //   .date {
+      //     color: gray;
+      //   }
+      //   .progress-box {
+      //     display: flex;
+      //     justify-content: center;
+      //     align-items: center;
+      //     flex-direction: column;
+      //     span {
+      //       margin-bottom: 5px;
+      //     }
+      //   }
+      // }
     }
   }
 }
@@ -233,73 +290,73 @@ table {
 /* color animation */
 
 /* 3rd progress bar */
-.mask .fill {
-  clip: rect(0px, 30px, 60px, 0px);
-  background-color: $stcColor;
-}
+// .mask .fill {
+//   clip: rect(0px, 30px, 60px, 0px);
+//   background-color: $stcColor;
+// }
 
-.task {
-  .mask.full,
-  .circle .fill {
-    animation: fill ease-in-out 3s;
-    transform: rotate(0deg);
-  }
-}
-.checkCase {
-  .mask.full,
-  .circle .fill {
-    transform: rotate(0deg);
-  }
-}
-.fillMoreInfo {
-  .mask.full,
-  .circle .fill {
-    animation: fill20 ease-in-out 3s;
-    transform: rotate(20deg);
-  }
-}
-.approveCase {
-  .mask.full,
-  .circle .fill {
-    animation: fill35 ease-in-out 3s;
-    transform: rotate(35deg);
-  }
-}
-.withinSlResponse {
-  .mask.full,
-  .circle .fill {
-    animation: fill80 ease-in-out 3s;
-    transform: rotate(80deg);
-  }
-}
-.breanchingSlResponse {
-  .mask.full,
-  .circle .fill {
-    animation: fill100 ease-in-out 3s;
-    transform: rotate(100deg);
-  }
-}
-.shouldEscalate {
-  .mask.full,
-  .circle .fill {
-    animation: fill130 ease-in-out 3s;
-    transform: rotate(130deg);
-  }
-}
-.shouldReEscalate {
-  .mask.full,
-  .circle .fill {
-    animation: fill155 ease-in-out 3s;
-    transform: rotate(155deg);
-  }
-}
-.sendToClose {
-  .mask.full,
-  .circle .fill {
-    animation: fill170 ease-in-out 3s;
-    transform: rotate(170deg);
-  }
-}
+// .task {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill ease-in-out 3s;
+//     transform: rotate(0deg);
+//   }
+// }
+// .checkCase {
+//   .mask.full,
+//   .circle .fill {
+//     transform: rotate(0deg);
+//   }
+// }
+// .fillMoreInfo {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill20 ease-in-out 3s;
+//     transform: rotate(20deg);
+//   }
+// }
+// .approveCase {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill35 ease-in-out 3s;
+//     transform: rotate(35deg);
+//   }
+// }
+// .withinSlResponse {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill80 ease-in-out 3s;
+//     transform: rotate(80deg);
+//   }
+// }
+// .breanchingSlResponse {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill100 ease-in-out 3s;
+//     transform: rotate(100deg);
+//   }
+// }
+// .shouldEscalate {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill130 ease-in-out 3s;
+//     transform: rotate(130deg);
+//   }
+// }
+// .shouldReEscalate {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill155 ease-in-out 3s;
+//     transform: rotate(155deg);
+//   }
+// }
+// .sendToClose {
+//   .mask.full,
+//   .circle .fill {
+//     animation: fill170 ease-in-out 3s;
+//     transform: rotate(170deg);
+//   }
+// }
 
 @keyframes fill {
   0% {

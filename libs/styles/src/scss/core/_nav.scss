@@ -202,7 +202,7 @@
     position: absolute;
     top: 0;
     left: 0;
-    width: 200px;
+    width: 400px;
     height: 100%;
     background-color: $stcColor_dark;
     color: $whiteColor;
@@ -213,8 +213,33 @@
     transform: translateX(-100%);
     flex-direction: column;
     align-items: baseline;
-    padding-left: 10px;
-    transition: 350ms ease;
+    transition: 300ms ease;
+    padding-inline: 0;
+    img {
+      margin-inline-start: 50px;
+      margin-bottom: 50px;
+    }
+    li {
+      margin-top: 30px;
+
+      a {
+        &.active {
+          background-color: rgba(
+            $color: $stcMoonLightColor,
+            $alpha: 0.1
+          ) !important;
+          color: $stcSunsetColor !important;
+        }
+        padding: 20px 50px;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        i {
+          font-size: 20px;
+          margin-inline-end: 10px;
+        }
+      }
+    }
   }
   .additional-menu-btn-icon {
     cursor: pointer;
@@ -251,7 +276,7 @@
       background-color: #9ca1a5;
     }
     &.open {
-      left: 160px;
+      left: 350px;
       top: 20px;
       &::before {
         content: '';
@@ -311,7 +336,7 @@ html[dir='rtl'] {
     }
     .additional-menu-btn-icon {
       &.open {
-        right: 160px;
+        right: 350px;
       }
     }
   }

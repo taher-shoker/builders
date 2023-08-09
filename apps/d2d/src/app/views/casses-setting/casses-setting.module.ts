@@ -17,9 +17,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSortModule } from '@angular/material/sort';
 import { TranslateModule } from '@ngx-translate/core';
+import { CassesSettingComponent } from './casses-setting.component';
 
 @NgModule({
   declarations: [
+    CassesSettingComponent,
     CassesComponent,
     CasseFormComponent,
     AddCasseComponent,
@@ -29,9 +31,9 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     CommonModule,
     SharedUiModule,
+    RouterModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule,
     TranslateModule,
     MatTableModule,
     MatPaginatorModule,

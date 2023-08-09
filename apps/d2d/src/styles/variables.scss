@@ -1,0 +1,49 @@
+
+/* Colors pallet */
+
+
+
+:root{
+  --views-padding: 26px;
+  --grey-color: #8e9aa0;
+  --side-title: 18px;
+  --secondary-text: 14px;
+  --secondary-big-text: 16px;
+  --half-black: #5f5f5f;
+  --light-grey: #f9f9f9;
+
+  --stcColor: #4f008c; // 1
+
+  // --secondaryColor: #FFE5CA;
+  // --primaryColor: #FFF3E2;
+  // --roseColor: #FA9884;
+  // --roseDarkColor: #E74646;
+
+  // --mainBorderRadius : 12px;
+  // --primaryBtnBorderRadius: 25px;
+  // --badgeBorderRadius: 16px;
+
+  // --bigTitleSize: 38px;
+  // --titleSize: 28px;
+  // --secondaryTitleSize: 20px;
+
+  // --smallShadow: -7px 5px 9px -10px rgba(0,0,0,0.75);
+
+}
+
+
+// mixin that enables css variables in light mode
+// @mixin lighten() {
+//   --bgColor: #{$bgColor_light};
+//   --textColor: #{$textColor_light};
+//   --borderColor: #{$borderColor_light};
+//   --tilesBgColor: #{$tilesBgColor_white};
+// }
+
+// mixin that enables css variables in dark mode
+// @mixin darken() {
+//   --bgColor: #{$bgColor_dark};
+//   --textColor: #{$textColor_dark};
+//   --borderColor: #{$borderColor_dark};
+//   --tilesBgColor: #{$tilesBgColor_dark};
+// }

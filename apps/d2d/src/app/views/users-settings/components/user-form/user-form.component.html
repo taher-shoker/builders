@@ -1,0 +1,71 @@
+<div class="user-form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="inputs">
+      <div class="row">
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="'Example@qeema.net'"
+            [inputId]="'email'"
+            [inputName]="'email'"
+            formControlName="email"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'name'"
+            [inputName]="'Name'"
+            formControlName="name"
+          ></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-select-drop-down
+            [label]="'privilage'"
+            [options]="privilages"
+            formControlName="userGroups"
+            [labelName]="'groupName'"
+            [required]="true"
+            [selectId]="data?.userGroup || null"
+            (selectChange)="handleTeam($event)"
+          >
+          </stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-select-drop-down
+            [label]="'team'"
+            formControlName="teamDto"
+            [required]="true"
+            [options]="teams"
+            [selectId]="data?.teamDto || null"
+          >
+          </stc-apps-select-drop-down>
+        </div>
+      </div>
+    </div>
+    <div class="btn-form-action">
+      <stc-apps-button
+        [buttonText]="'cancel'"
+        [buttonType]="'gray-outline'"
+        (btnClick)="cancel()"
+      ></stc-apps-button>
+
+      <div class="mx-3"></div>
+      <stc-apps-button
+        *ngIf="!isEditing"
+        [buttonText]="'add_user'"
+        [buttonType]="'primary'"
+        (btnClick)="onSubmit()"
+      ></stc-apps-button>
+      <stc-apps-button
+        *ngIf="isEditing"
+        [buttonText]="'save'"
+        [buttonType]="'primary'"
+        (btnClick)="onSubmit()"
+      ></stc-apps-button>
+    </div>
+  </form>
+</div>

@@ -19,9 +19,10 @@ export class LanguageSelectorComponent {
     private languageManagerService: LanguageManagerService
   ) {}
 
-  public changeLanguage(languageCode: string) {
+  public changeLanguage(languageCode: 'ar' | 'en') {
     this.translate.use(languageCode);
     this.currentLang = languageCode;
     this.languageManagerService.saveLanguage(languageCode);
+    this.languageManagerService.setSavedLanguageAsStream(languageCode)
   }
 }

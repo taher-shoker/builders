@@ -3,6 +3,21 @@ import { HttpClient } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+export interface User{
+  id: number,
+  email: string,
+  name: string,
+  jobTitle: string,
+  roles: string[],
+  teamName: null | string
+}
+
+export interface Team {
+    id: number,
+    name: "Filed Operation" | "Customer Care" | "Digital Care" | "Fraud"
+}
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +27,23 @@ export class CassesService {
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
 
+  roles = ["CREATORS", "APPROVERS", "ADMINS"] // Current roles in the system
+
+  pendingTasks : BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+
   constructor(private http: HttpClient) {}
+
+  // getSystemTeams(): Team[]{
+  //   return this.teams!;
+  // }
+
+  setSystemTeams(): Observable<Team[]>{
+    return this.http.get<Team[]>(`${this.endpoint}/users/teams`)
+  }
+
+  setSystemUsers(): Observable<User[]>{
+    return this.http.get<User[]>(`${this.endpoint}/users`)
+  }
 
   getCasses(filterData?: any) {
     return this.http.get(`${this.endpoint}/d2dCase/search`, {
@@ -42,9 +73,10 @@ export class CassesService {
     return this.http.delete(`${this.endpoint}/${id}`, options);
   }
 
-  getAssigneeTasks(userName = 'demo') {
-    return this.http.get(`${this.endpoint}/cwf/task/user/${userName}`);
+  getAssigneeTasks(userEmail: string) {
+    return this.http.get(`${this.endpoint}/cwf/task/user/${userEmail}`);
   }
+
   getTaskByCaseId(caseId: number) {
     return this.http.get(`${this.endpoint}/cwf/task/${caseId}`);
   }
@@ -73,27 +105,59 @@ export interface File {
   id: string;
   fileName: string;
   url: string;
+  label: string;
 }
 
 export interface Task {
-  id: number;
-  taskName: string;
-  taskStatus: string;
-  assignedUser: string;
-  caseID: 0;
-  taskAttributes: [
-    {
-      attributeName: string;
-      attributeValue: string;
-      attributeType: string;
-      attributeLabel: string;
-    }
-  ];
-  completedDate: Date;
-  camundaTaskID: string;
-  createdDate: Date;
-  lastModifiedDate: Date;
+
+  caseTasksDto : {
+
+    id: number;
+    taskName: string;
+    taskStatus: string;
+    assignedUser: string;
+    caseID: 0;
+    taskAttributes: [
+      {
+        attributeName: string;
+        attributeValue: string;
+        attributeType: string;
+        attributeLabel: string;
+      }
+    ];
+    completedDate: Date;
+    camundaTaskID: string;
+    createdDate: Date;
+    lastModifiedDate: Date;
+    attachments: Attachment[];
+  }
+  caseSerialNumber: string;
 }
+
+export interface TaskInDetails {
+
+
+    id: number;
+    taskName: string;
+    taskStatus: string;
+    assignedUser: string;
+    caseID: 0;
+    taskAttributes: [
+      {
+        attributeName: string;
+        attributeValue: string;
+        attributeType: string;
+        attributeLabel: string;
+      }
+    ];
+    completedDate: Date;
+    camundaTaskID: string;
+    createdDate: Date;
+    lastModifiedDate: Date;
+    attachments: Attachment[];
+  caseSerialNumber: string;
+}
+
 
 export interface Casse {
   id?: string;
@@ -113,12 +177,14 @@ export interface Casse {
   description: string;
   attachments: Attachment[];
   caseStatus: string;
+  caseSerialNumber: string;
 }
 
 export type Attachment = {
   id: number;
   fileName: string;
   url: string;
+  label: string;
 };
 
 export enum TaskCicle {
