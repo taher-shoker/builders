@@ -15,6 +15,7 @@ import { CassesSettingModule } from '../casses-setting/casses-setting.module';
 import { UsersSettingsModule } from '../users-settings/users-settings.module';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
+import { DashboardModule } from '../dashboard/dashboard.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -33,6 +34,7 @@ import { HomeComponent } from './home.component';
     MatSortModule,
     CassesSettingModule,
     UsersSettingsModule,
+    DashboardModule,
     HomeRoutingModule,
   ],
   exports: [],
