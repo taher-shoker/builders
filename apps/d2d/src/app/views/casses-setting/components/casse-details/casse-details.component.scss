@@ -121,7 +121,8 @@
 
     &-step {
       display: flex;
-      min-height: 7rem;
+      min-height: 6rem;
+      // min-height: 7rem;
 
       &:last-child {
 
@@ -154,7 +155,8 @@
         display: block;
         margin: 0 auto;
         width: 2px;
-        height: 7rem;
+        // height: 7rem;
+        height: 100%;
         background: $greenColor;
       }
     }
@@ -173,7 +175,7 @@
       width: 100%;
 
       &-stat {
-        font-size: 1.1rem;
+        font-size: 1rem;
         font-weight: 500;
         margin-bottom: 3px;
       }
