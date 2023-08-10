@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../../services/auth.guard';
 import { UnauthorizedPageComponent } from '../unauthorized-page/unauthorized-page.component';
+import { DashboardComponent } from '../dashboard/dashboard.component';
 
 const routes: Routes = [
   {
@@ -29,6 +30,12 @@ const routes: Routes = [
           import('../users-settings/users-settings.module').then(
             (m) => m.UsersSettingsModule
           ),
+      },
+      {
+        path: 'dashboard',
+        data: { breadcrumb: 'dashboard' },
+        canActivate: [AuthGuard],
+        component: DashboardComponent,
       },
       {
         path: 'unauthorized-page',

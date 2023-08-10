@@ -30,12 +30,18 @@ import { HomeModule } from './views/home/home.module';
 import { LoginComponent } from './views/login/login.component';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
+import { DashboardComponent } from './views/dashboard/dashboard.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 @NgModule({
-  declarations: [AppComponent, LoginComponent, UnauthorizedPageComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    UnauthorizedPageComponent,
+    DashboardComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -73,6 +79,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     },
   ],
   bootstrap: [AppComponent],
-  exports: [UnauthorizedPageComponent],
+  exports: [UnauthorizedPageComponent, DashboardComponent],
 })
 export class AppModule {}

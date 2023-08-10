@@ -1,0 +1,44 @@
+@import './scss/core/variables/colors';
+
+.dashboard {
+  margin-inline: 25px;
+  position: relative;
+  top: -60px;
+  .top-info {
+    border-radius: 5px;
+    .static {
+      background-color: rgb(255, 255, 255);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: row-reverse;
+      width: 100%;
+      justify-content: space-between;
+      padding: 40px;
+      align-items: center;
+      .icon {
+        width: 60px;
+        height: 60px;
+        background-color: $stcAirColor;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        i {
+          font-size: 30px;
+          color: $stcColor;
+        }
+      }
+      .static-info {
+        .num {
+          font-size: 40px;
+          font-weight: bold;
+          margin-bottom: 10px;
+          color: $stcColor;
+        }
+        .title {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+}
