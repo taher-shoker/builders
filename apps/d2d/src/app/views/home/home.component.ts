@@ -17,25 +17,38 @@ export class HomeComponent implements OnInit {
   userName = 'taher shoker';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
-
   navItems = [
     {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
-      roles: ['Approvers,Creators'],
+      roles: ['APPROVERS,CREATORS'],
     },
     {
       name: 'users_setting',
       url: '/users-setting',
       icon: '  fa-user-friends',
-      roles: ['Admin'],
+      roles: ['ADMINS'],
     },
   ];
 
   ngOnInit(): void {
     this.userName = JSON.parse(this.cookieService.get('fraud-user'));
     this.authService.setLoggedInUser();
+    this.authService.loggedUserStream.subscribe((res) => {
+      if (res?.roles) {
+        const items = [];
+        for (let i = 0; i < this.navItems.length; i++) {
+          const similar = this.navItems[i].roles.filter((element) =>
+            element.includes(res.roles[0])
+          );
+          if (similar.length > 0) {
+            items.push(this.navItems[i]);
+          }
+        }
+        this.navItems = items;
+      }
+    });
   }
   logOut() {
     this.authService.logout();
