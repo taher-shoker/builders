@@ -1,11 +1,11 @@
 @import './scss/core/variables/colors';
 
-.order-date{
+.order-date {
   color: var(--grey-color);
   font-size: var(--secondary-text);
 }
 
-.item-msg{
+.item-msg {
   color: var(--grey-color);
   font-size: var(--secondary-big-text);
   padding-top: 5px;
@@ -15,15 +15,16 @@
   background-color: $whiteColor;
   padding: 20px;
 
-  .title-holder{
-    h3{
+  .title-holder {
+    h3 {
       margin-bottom: 40px;
     }
   }
 
-  .left-col, .right-col{
-    .row{
-      .col-12{
+  .left-col,
+  .right-col {
+    .row {
+      .col-12 {
         margin-bottom: 20px;
       }
     }
@@ -31,12 +32,12 @@
 
 
 
-  .cell-name{
+  .cell-name {
     color: var(--grey-color);
     font-size: var(--side-title);
   }
 
-  .cell-value{
+  .cell-value {
     margin-left: 15px;
     font-weight: 500;
   }
@@ -45,11 +46,13 @@
     display: flex;
     align-items: center;
     margin: 30px auto;
+
     &-title {
       text-transform: capitalize;
       padding-inline: 10px;
       color: rgba($color: $shadowStc, $alpha: 0.5);
     }
+
     &-vlue {
       color: $stcColor;
       font-size: 18px;
@@ -57,6 +60,7 @@
       text-transform: capitalize;
     }
   }
+
   .file {
     background-color: rgba($color: $shadowStc, $alpha: 0.2);
     margin: 10px 0;
@@ -87,7 +91,7 @@
     padding-top: 20px;
   }
 
-  stc-apps-button:first-child{
+  stc-apps-button:first-child {
     margin-inline-end: 10px;
   }
 
@@ -120,6 +124,7 @@
       min-height: 7rem;
 
       &:last-child {
+
         // overflow: hidden;
         & .order-track-status span:last-of-type {
           display: none;
@@ -130,6 +135,7 @@
     &-status {
       margin-inline-end: 1.5rem;
       position: relative;
+
       &-dot {
         display: block;
         width: 2.2rem;
@@ -138,10 +144,12 @@
         background: $greenColor;
         text-align: center;
         line-height: 2;
+
         i {
           color: $whiteColor;
         }
       }
+
       &-line {
         display: block;
         margin: 0 auto;
@@ -150,10 +158,12 @@
         background: $greenColor;
       }
     }
+
     &-pending {
       &-dot {
         background: $greyColor;
       }
+
       &-line {
         background: $greyColor;
       }
@@ -161,8 +171,9 @@
 
     &-text {
       width: 100%;
+
       &-stat {
-        font-size: 1.3rem;
+        font-size: 1.1rem;
         font-weight: 500;
         margin-bottom: 3px;
       }
@@ -183,32 +194,37 @@
     padding: 8px 12px;
     border-radius: 12px;
     word-break: keep-all;
+    font-weight: 400;
   }
+
   .registered {
     background-color: rgba($color: $stcMoonLightColor, $alpha: 0.2);
     color: $stcMoonLightColor;
   }
+
   .pending {
-    background-color: rgba($color: $stcSunsetColor, $alpha: 0.2);
-    color: $stcSunsetColor;
+    background-color: rgba($color: $stcCoralColor, $alpha: 0.2);
+    color: $stcCoralColor;
   }
+
   .inprogress {
-    background-color: rgba($color: $stcSunColor, $alpha: 0.2);
-    color: $stcSunColor;
+    background-color: rgba($color: $stcSeaColor, $alpha: 0.2);
+    color: $stcSeaColor;
   }
+
   .closed {
-    background-color: rgba($color: $greenColor, $alpha: 0.2);
-    color: $greenColor;
+    background-color: rgba($color: $stcGreenColor, $alpha: 0.2);
+    color: $stcGreenColor;
   }
 }
 
-.item-task-attachment{
+.item-task-attachment {
   text-decoration: underline;
   cursor: pointer;
   color: var(--stcColor);
   font-weight: 500;
 }
 
-.spacer{
+.spacer {
   width: 50%;
 }
