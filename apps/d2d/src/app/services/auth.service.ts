@@ -83,6 +83,8 @@ export class AuthService {
     this.router.navigate(['/login']);
     this.cookieService.deleteAll();
     this.tokenExpirationTimer = null;
+    this.loggedUserStream.next(null);
+    this.loggedInUser = null;
   }
 
   autoLogout(expirationDuration: number) {
