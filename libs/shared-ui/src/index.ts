@@ -11,3 +11,5 @@ export * from './lib/dialog/dialog.service';
 export * from './lib/banner/banner.service';
 
 export * from './lib/date-picker/date-picker.component';
+
+export * from './lib/progress-circle-chart/progress-circle-chart.component';
