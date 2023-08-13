@@ -129,6 +129,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.router.navigate(['./users-setting']);
   }
   handleTeam(value: any) {
+    this.form?.get('teamDto')?.setValue('');
     if (value.id === 1) {
       this.teams = teamsOptions.filter((t: any) => t.id !== 4);
     } else {
