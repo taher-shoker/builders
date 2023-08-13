@@ -32,6 +32,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { ProgressCircleChartComponent } from './progress-circle-chart/progress-circle-chart.component';
+import { LineChartComponent } from './line-chart/line-chart.component';
+import { BarChartComponent } from './bar-chart/bar-chart.component';
 
 @NgModule({
   imports: [
@@ -72,6 +74,8 @@ import { ProgressCircleChartComponent } from './progress-circle-chart/progress-c
     DialogComponent,
     DatePickerComponent,
     ProgressCircleChartComponent,
+    LineChartComponent,
+    BarChartComponent,
   ],
   exports: [
     HeaderComponent,
@@ -86,7 +90,12 @@ import { ProgressCircleChartComponent } from './progress-circle-chart/progress-c
     TextareaComponent,
     DialogComponent,
     DatePickerComponent,
+<<<<<<< HEAD
     ProgressCircleChartComponent,
+=======
+    LineChartComponent,
+    BarChartComponent,
+>>>>>>> bc0542471f1fb8c95425bfc7bd8deb3a894f9d6c
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
