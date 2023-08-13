@@ -142,7 +142,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.form?.get('email')?.setValue(data.email);
     this.form?.get('email')?.disable();
     this.form?.get('name')?.setValue(data.name);
-    //this.form?.get('name')?.disable();
+    this.form?.get('name')?.disable();
     this.form?.get('jobTitle')?.setValue(data.jobTitle);
   }
   ngOnInit() {
