@@ -31,6 +31,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
 import { MomentDateModule } from '@angular/material-moment-adapter';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
+import { LocaleDatePipe } from './locale.date/locale.date.pipe';
 
 @NgModule({
   imports: [
@@ -70,6 +71,7 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     TextareaComponent,
     DialogComponent,
     DatePickerComponent,
+    LocaleDatePipe,
   ],
   exports: [
     HeaderComponent,
@@ -84,9 +86,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
     TextareaComponent,
     DialogComponent,
     DatePickerComponent,
+    LocaleDatePipe
   ],
-  providers:[
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' }
-  ]
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class SharedUiModule {}

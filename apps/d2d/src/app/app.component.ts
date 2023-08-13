@@ -2,6 +2,9 @@ import { Component } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 
+import { registerLocaleData } from '@angular/common';
+import localeAr from '@angular/common/locales/ar';
+
 @Component({
   selector: 'stc-apps-root',
   templateUrl: './app.component.html',
@@ -14,6 +17,7 @@ export class AppComponent {
     private languageManagerService: LanguageManagerService,
   ) {
 
+    registerLocaleData(localeAr);
 
     const savedLanguage =
       this.languageManagerService.getSavedLanguage() || 'en';

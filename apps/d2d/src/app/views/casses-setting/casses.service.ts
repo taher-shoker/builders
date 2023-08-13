@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-export interface User{
+export interface User {
   id: number,
   email: string,
   name: string,
@@ -15,8 +15,8 @@ export interface User{
 }
 
 export interface Team {
-    id: number,
-    name: "Filed Operation" | "Customer Care" | "Digital Care" | "Fraud"
+  id: number,
+  name: "Filed Operation" | "Customer Care" | "Digital Care" | "Fraud"
 }
 
 @Injectable({
@@ -29,19 +29,19 @@ export class CassesService {
 
   roles = ["CREATORS", "APPROVERS", "ADMINS"] // Current roles in the system
 
-  pendingTasks : BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
   // getSystemTeams(): Team[]{
   //   return this.teams!;
   // }
 
-  setSystemTeams(): Observable<Team[]>{
+  setSystemTeams(): Observable<Team[]> {
     return this.http.get<Team[]>(`${this.endpoint}/users/teams`)
   }
 
-  setSystemUsers(): Observable<User[]>{
+  setSystemUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.endpoint}/users`)
   }
 
@@ -110,7 +110,7 @@ export interface File {
 
 export interface Task {
 
-  caseTasksDto : {
+  caseTasksDto: {
 
     id: number;
     taskName: string;
@@ -135,26 +135,25 @@ export interface Task {
 }
 
 export interface TaskInDetails {
-
-
-    id: number;
-    taskName: string;
-    taskStatus: string;
-    assignedUser: string;
-    caseID: 0;
-    taskAttributes: [
-      {
-        attributeName: string;
-        attributeValue: string;
-        attributeType: string;
-        attributeLabel: string;
-      }
-    ];
-    completedDate: Date;
-    camundaTaskID: string;
-    createdDate: Date;
-    lastModifiedDate: Date;
-    attachments: Attachment[];
+  id: number;
+  taskName: string;
+  taskStatus: string;
+  assignedUser: string;
+  caseID: 0;
+  taskAttributes: [
+    {
+      attributeName: string;
+      attributeValue: string;
+      attributeType: string;
+      attributeLabel: string;
+    }
+  ];
+  completedDate: Date;
+  completedBy: string;
+  camundaTaskID: string;
+  createdDate: Date;
+  lastModifiedDate: Date;
+  attachments: Attachment[];
   caseSerialNumber: string;
 }
 

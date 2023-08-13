@@ -133,5 +133,9 @@
     "txt1": "You're about to Remove User ,",
     "txt2": " and his account",
     "txt3": "will be denied from the system accessibility, Are you sure?"
-  }
+  },
+
+  "by": "By",
+  "on": "On"
+
 }
