@@ -50,6 +50,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.form = this.formBuilder.group({
       email: new FormControl('', [Validators.required, Validators.email]),
       name: new FormControl('', Validators.required),
+      jobTitle: new FormControl('', Validators.required),
       userGroups: new FormControl('', Validators.required),
       teamDto: new FormControl('', Validators.required),
     });
@@ -61,7 +62,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         teamDto: { id: this.form.controls['teamDto'].value.id },
         email: this.form.controls['email'].value,
         name: this.form.controls['name'].value,
-        jobTitle: 'kjlj',
+        jobTitle: this.form.controls['jobTitle'].value,
       };
       if (this.isEditing) {
         this.userService
@@ -141,6 +142,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.form?.get('email')?.disable();
     this.form?.get('name')?.setValue(data.name);
     this.form?.get('name')?.disable();
+    this.form?.get('jobTitle')?.setValue(data.jobTitle);
   }
   ngOnInit() {
     this.userform();

@@ -101,6 +101,7 @@
   "creator_users": "Creator Users",
   "approver_users": "Approver Users",
   "privilege": "Privilege",
+  "jobTitle": "Job Title",
   "inquiry": "Inquiry",
   "field_required": "This Field Is Required",
   "invalid_format": " Invalid Format",

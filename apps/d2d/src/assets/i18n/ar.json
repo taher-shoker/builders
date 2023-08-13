@@ -101,6 +101,7 @@
   "creator_users": "المستخدمون المنشئون",
   "approver_users": "المستخدمون المعتمدون",
   "privilege": "الإمتياز",
+  "jobTitle": "المهنة",
   "inquiry": "إستفسار",
   "field_required": "هذا الحقل مطلوب",
   "invalid_format": "تنسيق غير صحيح  ",
