@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -45,8 +45,6 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     ModeToggleModule,
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
-    NgIf,
     MatSelectModule,
     MatPaginatorModule,
     MatTableModule,
@@ -90,12 +88,9 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     TextareaComponent,
     DialogComponent,
     DatePickerComponent,
-<<<<<<< HEAD
     ProgressCircleChartComponent,
-=======
     LineChartComponent,
     BarChartComponent,
->>>>>>> bc0542471f1fb8c95425bfc7bd8deb3a894f9d6c
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
