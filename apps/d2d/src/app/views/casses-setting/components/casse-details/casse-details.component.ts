@@ -53,44 +53,46 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public cassesService: CassesService,
     private languageManagerService: LanguageManagerService,
-    public authService : AuthService
+    public authService: AuthService
   ) {}
 
   ngOnInit(): void {
     this.casseId = this.route.snapshot.params['id'];
 
     this.bannerDataService.updateData({
-      title: "",
+      title: '',
       text: '',
     });
 
     this.cassesService.getCasse(this.casseId).subscribe((res) => {
       if (res) {
         this.caseData = res;
-        this.caseSerial = res.caseSerialNumber
+        this.caseSerial = res.caseSerialNumber;
         this.caseStatus = res.caseStatus;
         this.subscribeToLanguage();
       }
     });
     this.getCaseTasks(+this.casseId);
 
-    this.authService.loggedUserStream.subscribe(res => {
-      if(res?.roles.includes("APPROVERS")){
+    this.authService.loggedUserStream.subscribe((res) => {
+      if (res?.roles.includes('APPROVERS')) {
+        this.cassesService.setSystemTeams().subscribe((res) => {
+          console.log('System teams :', res);
+          this.teams = res;
+          this.teams = this.teams.filter((x: any) => x.name !== 'Fraud');
+        });
 
-        this.cassesService.setSystemTeams().subscribe(res => {
-
-          console.log("System teams :", res)
-          this.teams = res
-          this.teams = this.teams.filter((x: any) => x.name !== "Fraud")
-        })
-
-        this.cassesService.setSystemUsers().subscribe(res => {
-
-          console.log("System Users :", res)
-          this.users = res
-        })
+        this.cassesService.setSystemUsers().subscribe((res) => {
+          console.log('System Users :', res);
+          this.users = res;
+          this.users = this.users.filter(
+            (x: any) =>
+              x.userGroups[0]?.groupName !== 'Approvers' &&
+              x.userGroups[0]?.groupName !== 'Admins'
+          );
+        });
       }
-    })
+    });
 
     this.closeForm = this.formBuilder.group({
       close_mail_content: [''],
@@ -125,9 +127,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   uploadedFile: any[] = []; // turn to File later
   onUploadFile(files: string | any[]) {
     if (files) {
-
       for (let i = 0; i < files?.length; i++) {
-
         this.isLoading = true;
         const formData = new FormData();
         formData.append('file', files[i]);
@@ -136,7 +136,9 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
           if (res) {
             this.uploadedFile.push(res);
             this.isLoading = false;
-            this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
+            this.infoForm
+              .get('check_case_attachment')
+              ?.setValue(this.uploadedFile);
           }
         });
       }
@@ -149,7 +151,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
     });
   }
-
 
   downloadFile(id: number, name: string) {
     this.cassesService.getFile(id).subscribe((buffer) => {
@@ -178,20 +179,20 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   }
 
   sendInfo() {
-
-    const idsArr = []
-    for(const obj of this.uploadedFile){
-      idsArr.push(obj.id)
+    const idsArr = [];
+    for (const obj of this.uploadedFile) {
+      idsArr.push(obj.id);
     }
 
     const data = {
       form: {
         info_needed: 1,
-        form_assignee: this.infoForm.get('selectedUser')?.value.email ? this.infoForm.get('selectedUser')?.value.email : this.infoForm.get('selectedUser')?.value.name,
+        form_assignee: this.infoForm.get('selectedUser')?.value.email
+          ? this.infoForm.get('selectedUser')?.value.email
+          : this.infoForm.get('selectedUser')?.value.name,
         message: this.infoForm.get('message')?.value,
         // check_case_attachment: this.infoForm.get('check_case_attachment')?.value
-        check_case_attachment: idsArr
-
+        check_case_attachment: idsArr,
       },
     };
 
@@ -200,9 +201,9 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.closeForm.reset();
     this.infoForm.reset();
     this.uploadedFile = [];
-    console.log("The value", this.infoForm.get("check_case_attachment")?.value)
-    console.log("The value", this.infoForm.get("selectedUser")?.value)
-    console.log("The value", this.uploadedFile = [])
+    console.log('The value', this.infoForm.get('check_case_attachment')?.value);
+    console.log('The value', this.infoForm.get('selectedUser')?.value);
+    console.log('The value', (this.uploadedFile = []));
 
     this.rejectForm.reset();
     this.replyForm.reset();
@@ -218,7 +219,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     //     this.getCaseTasks(+this.casseId);
     //   });
 
-      this.refreshTasks(data)
+    this.refreshTasks(data);
   }
 
   /** Actions with Fill More Info status  **/
@@ -228,27 +229,28 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   //   }
   // }
   confirmReply() {
-
-    const idsArr = []
-    for(const obj of this.uploadedFile){
-      idsArr.push(obj.id)
+    const idsArr = [];
+    for (const obj of this.uploadedFile) {
+      idsArr.push(obj.id);
     }
 
     const data = {
       form: {
         message: this.replyForm.get('message')?.value,
-        reply_attachments: idsArr
+        reply_attachments: idsArr,
       },
     };
 
-    console.log("The msg", data)
-
+    console.log('The msg', data);
 
     this.closeForm.reset();
     this.infoForm.reset();
     this.uploadedFile = [];
 
-    console.log("The value", this.replyForm.get("check_case_attachment")?.value)
+    console.log(
+      'The value',
+      this.replyForm.get('check_case_attachment')?.value
+    );
 
     this.rejectForm.reset();
     this.replyForm.reset();
@@ -262,7 +264,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   /** Actions with Approve Casse status  **/
 
-  confirm(){
+  confirm() {
     this.dialogService.open('approve-Modal');
   }
 
@@ -340,7 +342,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     const data = { form: this.closeForm.value };
     this.closeForm.reset();
     this.infoForm.reset();
-    console.log("The value", this.infoForm.get("check_case_attachment")?.value)
+    console.log('The value', this.infoForm.get('check_case_attachment')?.value);
 
     this.rejectForm.reset();
     this.replyForm.reset();
@@ -349,17 +351,22 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.refreshTasks(data);
   }
 
-  subscribeToLanguage(){
-    this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(res => {
-      const outputTitle = this.languageManagerService.getSavedLanguage() === 'ar' ? `تفاصيل حالة رقم : ${this.caseSerial} ` : `D2D Case ( ID: ${this.caseSerial} ) Details`
-      this.bannerDataService.updateData({
-        title: outputTitle,
-        text: '',
+  subscribeToLanguage() {
+    this.langSub = this.languageManagerService
+      .getSavedLanguageAsStream()
+      .subscribe((res) => {
+        const outputTitle =
+          this.languageManagerService.getSavedLanguage() === 'ar'
+            ? `تفاصيل حالة رقم : ${this.caseSerial} `
+            : `D2D Case ( ID: ${this.caseSerial} ) Details`;
+        this.bannerDataService.updateData({
+          title: outputTitle,
+          text: '',
+        });
       });
-    })
   }
 
   ngOnDestroy(): void {
-      this.langSub.unsubscribe();
+    this.langSub.unsubscribe();
   }
 }
