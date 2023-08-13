@@ -55,7 +55,7 @@ export class SelectDropDownComponent<T>
     if (changes['options']) {
       this.options = changes['options'].currentValue;
       if (this.defaultAll) {
-        this.options.unshift({ id: 'all', [this.labelName]: 'All' });
+        this.options?.unshift({ id: 'all', [this.labelName]: 'All' });
       }
     }
   }
