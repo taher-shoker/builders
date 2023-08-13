@@ -12,7 +12,7 @@ export class UserFormComponent {
   userForm = new FormGroup({
     email: new FormControl('', Validators.required),
     jobtitle: new FormControl('', Validators.required),
-    privilage: new FormControl(),
+    privilege: new FormControl(),
     team: new FormControl(),
   });
 

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,8 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { EmpFilter, User, UsersService } from '../../users.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { EmpFilter, UsersService } from '../../users.service';
 
 export interface ColumnsSchema {
   key: string;
@@ -37,7 +37,7 @@ const COLUMNS_SCHEMA = [
   {
     key: 'userGroups',
     type: 'text',
-    label: 'privilage',
+    label: 'privilege',
   },
   {
     key: 'teamDto',
@@ -74,7 +74,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   approverUsers = 0;
   list!: PeriodicElement[];
   userId!: number;
-  privilage = [];
+  privilege = [];
   teams = [];
   filterSelect!: FormGroup;
   empFilters: EmpFilter[] = [];
@@ -146,7 +146,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
       const x = res;
       // array without ADMINS Item
       x.pop();
-      this.privilage = x;
+      this.privilege = x;
     });
   }
   getTeams() {

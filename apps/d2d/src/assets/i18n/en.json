@@ -100,7 +100,7 @@
   "total_users": "Total Users",
   "creator_users": "Creator Users",
   "approver_users": "Approver Users",
-  "privilage": "Privilage",
+  "privilege": "Privilege",
   "inquiry": "Inquiry",
   "field_required": "This Field Is Required",
   "invalid_format": " Invalid Format",
@@ -115,19 +115,19 @@
   "save": "Save",
   "no_cases_yet": "No cases yet",
   "no_users_yet": "No users yet",
-  "no_cases_msg" : "You didn't add any case yet, let's add new case",
+  "no_cases_msg": "You didn't add any case yet, let's add new case",
   "no_users_msg": "You didn't add any user yet, let's add new user",
-  "Search for Case Serial" : "Search for Case Serial",
+  "Search for Case Serial": "Search for Case Serial",
   "search_for_user": "Search for user name",
-  "serial_number" : "Serial Number",
-  "case_details" : "Case Details",
+  "serial_number": "Serial Number",
+  "case_details": "Case Details",
 
   "Check Case Info Desc": "You should decide whether the case needs more information, If so you should send the enquiry message and the assignee user or team and you may send attachments.",
-  "Approve Case Desc" : "You should approve or reject the case, you may send a reject note in case of rejection.",
-  "Fill More Info Desc" : "You should reply back with the needed information and you may send attachments.",
-  "Should Escalate Desc" : "You may send the case for escalation with a content message or close the case.",
-  "Should Re-Escalate Desc" : "You may send a reminder to the escalation mail with a content message or close the case.",
-  "Send to Close Desc" : "You may close the case if it's completed",
+  "Approve Case Desc": "You should approve or reject the case, you may send a reject note in case of rejection.",
+  "Fill More Info Desc": "You should reply back with the needed information and you may send attachments.",
+  "Should Escalate Desc": "You may send the case for escalation with a content message or close the case.",
+  "Should Re-Escalate Desc": "You may send a reminder to the escalation mail with a content message or close the case.",
+  "Send to Close Desc": "You may close the case if it's completed",
 
   "deleteMsg": {
     "txt1": "You're about to Remove User ,",
@@ -137,5 +137,4 @@
 
   "by": "By",
   "on": "On"
-
 }
