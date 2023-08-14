@@ -48,17 +48,18 @@
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'related_team' | translate }}</p>
-                <p
-                  class="cell-value"
-                >
-                  {{ caseData?.creatorTeamName }}
-                </p>
-              </div>
-              <div class="col-12">
                 <p class="cell-name">{{ 'type' | translate }}</p>
                 <p class="cell-value">{{ caseData?.type }}</p>
               </div>
+
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'created_at' | translate }}</p>
+                <p class="cell-value">
+                  {{ caseData?.createdDate | date : 'dd/MM/YYYY' }}
+                </p>
+              </div>
+
             </div>
           </div>
 
@@ -107,17 +108,19 @@
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'created_at' | translate }}</p>
-                <p class="cell-value">
-                  {{ caseData?.createdDate | date : 'dd/MM/YYYY' }}
-                </p>
-              </div>
-              <div class="col-12">
                 <p class="cell-name">{{ 'creator_team_Name' | translate }}</p>
                 <p class="cell-value">
                   {{ caseData?.creatorTeamName }}
                 </p>
               </div>
+
+              <div class="col-12">
+                <p class="cell-name">{{ 'last_update' | translate }}</p>
+                <p class="cell-value">
+                  {{ caseData?.lastModifiedDate | date : 'dd/MM/YYYY' }}
+                </p>
+              </div>
+
             </div>
           </div>
         </div>
