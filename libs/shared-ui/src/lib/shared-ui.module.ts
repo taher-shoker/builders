@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -47,8 +47,6 @@ import { DatePickerRangeComponent } from './date-picker-range/date-picker-range.
     ModeToggleModule,
     FormsModule,
     ReactiveFormsModule,
-    NgFor,
-    NgIf,
     MatSelectModule,
     MatPaginatorModule,
     MatTableModule,

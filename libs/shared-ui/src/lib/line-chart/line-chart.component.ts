@@ -1,183 +1,171 @@
-import { Component, ElementRef, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
-
+export interface LineChartData {
+  category: string,
+  value: number,
+}
 @Component({
   selector: 'stc-apps-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
 export class LineChartComponent implements OnInit {
-  @Input() data: any;
-  root!: am5.Root;
-  chart: any;
-  xAxis: any;
-  yAxis: any;
-
-  ngOnInit(): void {
-    this.root = am5.Root.new('chartdiv');
-    /* remove amchart logo */
-    this.initLineCart();
-    this.createSeries('Italy', 'italy');
-    this.root._logo?.dispose();
-
+  @Input() chartData!: LineChartData[];
+  @Input() colors:string[] = [];
+  ngOnInit(){
+    this.lineChart()
   }
-
-  initLineCart() {
-    this.root.setThemes([am5themes_Animated.new(this.root)]);
-    this.chart = this.root.container.children.push(
-      am5xy.XYChart.new(this.root, {})
-    );
-    const cursor = this.chart.set(
-      'cursor',
-      am5xy.XYCursor.new(this.root, {
-        behavior: 'none',
+  lineChart()
+  {
+    const data = this.chartData;
+    const root = am5.Root.new("lineChartDiv");
+    root.setThemes([
+      am5themes_Animated.new(root)
+    ]);
+    const chart = root.container.children.push(am5xy.XYChart.new(root, {
+      panX: false,
+      panY: false,
+      wheelX: "none",
+      wheelY: "none",
+      layout: root.verticalLayout
+    }));
+    // const myTheme = am5.Theme.new(root);
+    // myTheme.rule("Grid").setAll({
+    //   stroke: am5.color('#182237'),
+    //   strokeWidth: 2
+    // });
+    // myTheme.rule("Grid" , ['base']).setAll({
+    //   stroke: am5.color('#ffffff'),
+    //   strokeWidth: 2
+    // });
+    // root.setThemes([myTheme]);
+    // Create a chart instance
+    if(root._logo)
+    {
+      root._logo.dispose();
+    }
+    // chart.get("colors")?.set("step", 3);
+    const allColors:am5.Color[] = [];
+    this.colors.forEach((color:string) => {
+      allColors.push(am5.color(color))
+      chart.get("colors")?.set("colors", allColors);
+    })
+      const xAxis = chart.xAxes.push(
+        am5xy.CategoryAxis.new(root, {
+          categoryField: "category",
+          startLocation: 0.2,
+          endLocation: 0.8,
+          maxDeviation: 50,
+          renderer: am5xy.AxisRendererX.new(root, {
+            minGridDistance : 50,
+            strokeOpacity: 1,
+            strokeWidth: 2,
+            stroke : am5.color(0x000000)
+          }),
+        })
+      );
+    const yAxis = chart.yAxes.push(
+      am5xy.ValueAxis.new(root, {
+        maxDeviation: 0.5,
+        renderer: am5xy.AxisRendererY.new(root, {
+          pan:"zoom",
+          strokeOpacity: 1,
+          strokeWidth: 2,
+          stroke : am5.color(0x000000),
+          marginLeft : 15
+        })
       })
     );
-    cursor.lineY.set('visible', false);
-
-    // The data
-    this.data = [
-      {
-        year: '1930',
-        italy: 1,
-        germany: 5,
-        uk: 3,
-      },
-      {
-        year: '1934',
-        italy: 1,
-        germany: 2,
-        uk: 6,
-      },
-      {
-        year: '1938',
-        italy: 2,
-        germany: 3,
-        uk: 1,
-      },
-      {
-        year: '1950',
-        italy: 3,
-        germany: 4,
-        uk: 1,
-      },
-      {
-        year: '1954',
-        italy: 5,
-        germany: 1,
-        uk: 2,
-      },
-      {
-        year: '1958',
-        italy: 3,
-        germany: 2,
-        uk: 1,
-      },
-      {
-        year: '1962',
-        italy: 1,
-        germany: 2,
-        uk: 3,
-      },
-      {
-        year: '1966',
-        italy: 2,
-        germany: 1,
-        uk: 5,
-      },
-      {
-        year: '1970',
-        italy: 3,
-        germany: 5,
-        uk: 2,
-      },
-      {
-        year: '1974',
-        italy: 4,
-        germany: 3,
-        uk: 6,
-      },
-      {
-        year: '1978',
-        italy: 1,
-        germany: 2,
-        uk: 4,
-      },
-    ];
-
-    const xRenderer = am5xy.AxisRendererX.new(this.root, {});
-    xRenderer.grid.template.setAll({
-      forceHidden: true,
+    chart.gridContainer.dispose()
+    const xRenderer = xAxis.get("renderer");
+    const yRenderer = yAxis.get("renderer");
+    xRenderer.ticks.template.setAll({
+      stroke: am5.color(0x000000),
+      visible: true,
+      strokeWidth : 2,
+      height : 30
     });
     xRenderer.labels.template.setAll({
-      location: 0.5,
-      multiLocation: 0.5,
+      fill: am5.color(0x000000),
+      fontSize: "1em",
+      paddingTop :20
     });
 
-    this.xAxis = this.chart.xAxes.push(
-      am5xy.CategoryAxis.new(this.root, {
-        categoryField: 'year',
-        renderer: xRenderer,
-        tooltip: am5.Tooltip.new(this.root, {}),
-      })
-    );
-
-    this.xAxis.data.setAll(this.data);
-    // const yRenderer = am5xy.AxisRendererY.new(this.root, {});
-    // yRenderer.grid.template.setAll({
-    //   forceHidden: true,
+    yRenderer.labels.template.setAll({
+      fill: am5.color(0x000000),
+      fontSize: "1em",
+    });
+    // let xRenderer = xAxis.get("renderer");
+    // xRenderer.grid.template.setAll({
+    //   stroke: am5.color('#ffffff'),
+    //   strokeWidth: 0,
+    //   visible : true
     // });
-
-    this.yAxis = this.chart.yAxes.push(
-      am5xy.ValueAxis.new(this.root, {
-        maxPrecision: 0,
-        renderer: am5xy.AxisRendererY.new(this.root, {
-          inversed: true,
-        }),
-      })
-    );
-  }
-
-  createSeries(name: string, field: string) {
-    const series = this.chart.series.push(
-      am5xy.LineSeries.new(this.root, {
-        name: name,
-        xAxis: this.xAxis,
-        yAxis: this.yAxis,
-        valueYField: field,
-        categoryXField: 'year',
-        tooltip: am5.Tooltip.new(this.root, {
+    // xAxis.get("dateFormats")["day"] = "MMM";
+    const series = chart.series.push(
+      am5xy.LineSeries.new(root, {
+        xAxis: xAxis,
+        yAxis: yAxis,
+        valueYField: "value",
+        valueXField: "category",
+        categoryXField: "category",
+        categoryYField : "value",
+        legendLabelText: "[bold]Sent SMSs[/]",
+        // legendRangeLabelText: "[{stroke}]Sent SMSs[/]",
+        legendValueText: "[bold {stroke}]{value}[/]",
+        tooltip: am5.Tooltip.new(root, {
           pointerOrientation: 'horizontal',
-          labelText: '[bold]{name}[/]\n{categoryX}: {valueY}',
+          labelText: '{name} in {categoryX}: {valueY} {info}',
         }),
       })
     );
-
+      const arr:{category:string}[] = []
+      this.chartData.forEach((data2) => {
+        arr.push({category : data2.category});
+      })
+      xAxis.data.setAll(arr)
+      series.data.setAll(arr)
+    series.data.setAll(data);
     series.bullets.push(() => {
-      return am5.Bullet.new(this.root, {
-        sprite: am5.Circle.new(this.root, {
-          radius: 5,
-          fill: series.get('fill'),
-        }),
+      const circle = am5.Circle.new(root, {
+        radius: 6,
+        fill: am5.color(this.colors[1]),
+        stroke: root.interfaceColors.get("background"),
+        strokeWidth: 0,
+      });
+
+      return am5.Bullet.new(root, {
+        sprite: circle
       });
     });
 
-    series.set('setStateOnChildren', true);
-    series.states.create('hover', {});
-
-    series.mainContainer.set('setStateOnChildren', true);
-    series.mainContainer.states.create('hover', {});
-
-    series.strokes.template.states.create('hover', {
-      strokeWidth: 4,
+    chart.set('cursor', am5xy.XYCursor.new(root, {alwaysShow:false}));
+    const cursor = chart.get("cursor");
+    cursor?.lineX.setAll({
+      visible : false
     });
+    cursor?.lineY.setAll({
+      visible : false
+    });
+    xAxis.set("tooltip", am5.Tooltip.new(root, {
+      forceHidden: true
+    }));
+    yAxis.set("tooltip", am5.Tooltip.new(root, {
+      forceHidden: true,
+    }));
+    series.strokes.template.setAll({
+      strokeWidth: 2
+    });
+    // root.dateFormatter.setAll({
+    //   dateFormat: "yyyy",
+    //   dateFields: ["valueX"]
+    // });
+    // Set data
 
-    series.data.setAll(this.data);
     series.appear(1000);
+    chart.appear(1000, 100);
   }
-
-
 }

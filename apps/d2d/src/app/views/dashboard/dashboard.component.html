@@ -88,7 +88,10 @@
             </div>
 
             <div class="chart">
-              <stc-apps-line-chart></stc-apps-line-chart>
+              <stc-apps-line-chart
+                [chartData]="registeredCasesChart.chartData"
+                [colors]="registeredCasesChart.lineChartColors"
+              ></stc-apps-line-chart>
             </div>
           </div>
 
@@ -111,7 +114,10 @@
           </div>
 
           <div class="chart">
-            <!-- <stc-apps-bar-chart></stc-apps-bar-chart> -->
+            <stc-apps-bar-chart
+              [data]="productivityTeamUsers.chartData"
+              [colors]="productivityTeamUsers.barChartColors"
+            ></stc-apps-bar-chart>
           </div>
 
         </div>
@@ -134,7 +140,11 @@
           </div>
 
           <div class="chart">
-            <!-- <stc-apps-progress-circle-chart [data]="progressCircleData"></stc-apps-progress-circle-chart> -->
+            <stc-apps-progress-circle-chart
+              [data]="casesTypes.chartData"
+              [colors]="casesTypes.chartColors"
+              [totalCases]="casesTypes.totalCases"
+            ></stc-apps-progress-circle-chart>
           </div>
 
         </div>
@@ -157,7 +167,10 @@
           </div>
 
           <div class="chart">
-            <!-- <stc-apps-bar-chart></stc-apps-bar-chart> -->
+            <stc-apps-bar-chart
+              [data]="stages.chartData"
+              [colors]="stages.barChartColors"
+            ></stc-apps-bar-chart>
           </div>
 
         </div>
@@ -166,5 +179,6 @@
     </div>
 
   </div>
+
 
 </div>
