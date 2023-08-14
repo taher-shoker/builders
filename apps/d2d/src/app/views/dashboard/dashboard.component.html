@@ -35,13 +35,50 @@
         </div>
       </div>
     </div>
-
     <div class="row">
+      <div class="col-12">
+        <div class = 'chart-box'>
+          <h4>{{registeredCasesChart.title}}</h4>
+          <div class="chart" style = 'height:400px;'>
+            <stc-apps-line-chart
+              [chartData]="registeredCasesChart.chartData"
+              [colors]="registeredCasesChart.lineChartColors"
+            ></stc-apps-line-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class = 'chart-box bar-chart'>
+          <h4>{{productivityTeamUsers.title}}</h4>
+          <div class="chart" style = 'height:400px;'>
+            <stc-apps-bar-chart
+              [data]="productivityTeamUsers.chartData"
+              [colors]="productivityTeamUsers.barChartColors"
+            ></stc-apps-bar-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-12">
+        <div class = 'chart-box bar-chart'>
+          <h4>{{casesTypes.title}}</h4>
+          <div class="chart" style = 'height:700px;'>
+            <stc-apps-progress-circle-chart
+              [data]="casesTypes.chartData"
+              [colors]="casesTypes.chartColors"
+              [totalCases]="casesTypes.totalCases"
+            ></stc-apps-progress-circle-chart>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="row">
       <div class="col">
         <stc-apps-progress-circle-chart [data]="progressCircleData" [title]="'Chart to compare the cases to each other with case type'"></stc-apps-progress-circle-chart>
       </div>
     </div>
-  </div>
-  <stc-apps-line-chart></stc-apps-line-chart>
-  <stc-apps-bar-chart></stc-apps-bar-chart>
+  </div>-->
 </div>

@@ -20,7 +20,8 @@ export interface ProgressCircleData {
 export class ProgressCircleChartComponent implements OnInit, OnDestroy {
 
   @Input({required: true}) data! : ProgressCircleData[];
-  @Input() chartTitle : string = "";
+  @Input() colors : string[] = [];
+  @Input() totalCases : number = 0;
 
   root!: am5.Root;
 
@@ -33,7 +34,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy {
 
   displayProgressCircleChart(){
 
-    this.root = am5.Root.new("chartdiv");
+    this.root = am5.Root.new("progressChart");
     this.root.setThemes([
       am5themes_Animated.new(this.root)
     ]);
@@ -43,50 +44,19 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy {
       panY: false,
       // wheelX: "panX",
       // wheelY: "zoomX",
-      innerRadius: am5.percent(20),
+      innerRadius: am5.percent(25),
       startAngle: -90,
       endAngle: 180
     }));
-
     // Data
     const data = this.data
-
-    // [{
-    //   category: "Research",
-    //   value: 80,
-    //   full: 100,
-    //   columnSettings: {
-    //     fill: chart.get("colors")?.getIndex(0)
-    //   }
-    // }, {
-    //   category: "Marketing",
-    //   value: 35,
-    //   full: 100,
-    //   columnSettings: {
-    //     fill: chart.get("colors")?.getIndex(1)
-    //   }
-    // }, {
-    //   category: "Distribution",
-    //   value: 92,
-    //   full: 100,
-    //   columnSettings: {
-    //     fill: chart.get("colors")?.getIndex(2)
-    //   }
-    // }];
-
-    // Add cursor
-    // https://www.amcharts.com/docs/v5/charts/radar-chart/#Cursor
-    const cursor = chart.set("cursor", am5radar.RadarCursor.new(this.root, {
-      // behavior: "zoomX"
-    }));
-
+    // const cursor = chart.set("cursor", am5radar.RadarCursor.new(this.root, {}));
 
     // Remove those 2 lines to shows the dashes lines on hovering!
-    cursor.lineY.set("visible", false);
-    cursor.lineX.set("visible", false);
+    // cursor.lineY.set("visible", false);
+    // cursor.lineX.set("visible", false);
 
     // Create axes and their renderers
-    // https://www.amcharts.com/docs/v5/charts/radar-chart/#Adding_axes
     const xRenderer = am5radar.AxisRendererCircular.new(this.root, {
       minGridDistance: 50,
 
@@ -94,7 +64,8 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy {
 
     // Increasing the radius will push the *outside* of the circle farther
     xRenderer.labels.template.setAll({
-      radius: 10
+      radius: 10,
+      visible : false
     });
 
     // Remove this line if you want to show the dashed lines of the circle in the under-background!
@@ -109,7 +80,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy {
       max: 100,
       strictMinMax: true,
       numberFormat: "#'%'",
-      tooltip: am5.Tooltip.new(this.root, {})
+      tooltip: am5.Tooltip.new(this.root, {}),
     }));
 
     const yRenderer = am5radar.AxisRendererRadial.new(this.root, {
@@ -119,8 +90,9 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy {
     yRenderer.labels.template.setAll({
       centerX: am5.p100,
       fontWeight: "500",
-      fontSize: 18,
-      templateField: "columnSettings"
+      fontSize: 17,
+      templateField: "columnSettings",
+      radius : 5
     });
 
     yRenderer.grid.template.setAll({
@@ -135,25 +107,53 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy {
     yAxis.data.setAll(data);
 
     // Create series
-    // https://www.amcharts.com/docs/v5/charts/radar-chart/#Adding_series
     const series1 = chart.series.push(am5radar.RadarColumnSeries.new(this.root, {
       xAxis: xAxis,
       yAxis: yAxis,
       clustered: false,
       valueXField: "full",
       categoryYField: "category",
-      fill: this.root.interfaceColors.get("alternativeBackground")
+      fill: this.root.interfaceColors.get("alternativeBackground"),
     }));
 
     series1.columns.template.setAll({
       width: am5.p100,
       fillOpacity: 0.08,
       strokeOpacity: 0,
-      cornerRadius: 20
+      cornerRadius: 20,
+      dRadius : 5
     });
 
-    series1.data.setAll(data);
+    chart.children.unshift(am5.Label.new(this.root, {
+      text: "All cases",
+      fontSize: 20,
+      fontWeight: "500",
+      textAlign: "center",
+      y: am5.percent(44),
+      x: am5.percent(50),
+      centerX: am5.percent(50),
+      paddingTop: 0,
+      paddingBottom: 0,
+      fill : am5.color("#8e9aa0")
+    }));
+    chart.children.unshift(am5.Label.new(this.root, {
+      text: `${this.totalCases}`,
+      fontSize: 25,
+      fontWeight: "bold",
+      textAlign: "center",
+      y: am5.percent(49),
+      x: am5.percent(50),
+      centerX: am5.percent(50),
+      paddingTop: 0,
+      paddingBottom: 0
+    }));
 
+    series1.data.setAll(data);
+    const allColors:am5.Color[] = [];
+    this.colors.forEach((color:string) => {
+      allColors.push(am5.color(color))
+      chart.get("colors")?.set("colors", allColors);
+    })
     const series2 = chart.series.push(am5radar.RadarColumnSeries.new(this.root, {
       xAxis: xAxis,
       yAxis: yAxis,
@@ -161,16 +161,27 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy {
       valueXField: "value",
       categoryYField: "category"
     }));
-
+    const newData:any = [];
+    this.data.forEach((d , i) => {
+      newData.push({
+        category : d.category,
+        value : d.value,
+        full : d.full,
+        columnSettings : {
+          fill : chart.get("colors")?.getIndex(i)
+        }
+      })
+    })
     series2.columns.template.setAll({
       width: am5.p100,
       strokeOpacity: 0,
       tooltipText: "{category}: {valueX}%",
       cornerRadius: 20,
-      templateField: "columnSettings"
+      templateField: "columnSettings",
+      dRadius : 5
+      // fill: am5.color("#000")
     });
-
-    series2.data.setAll(data);
+    series2.data.setAll(newData);
 
     // Animate chart and series in
     // https://www.amcharts.com/docs/v5/concepts/animations/#Initial_animation
