@@ -149,7 +149,7 @@ export interface TaskInDetails {
     }
   ];
   completedDate: Date;
-  completedBy: string;
+  completedByName: string;
   camundaTaskID: string;
   createdDate: Date;
   lastModifiedDate: Date;

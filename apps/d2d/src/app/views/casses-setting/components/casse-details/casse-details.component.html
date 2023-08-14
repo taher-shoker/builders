@@ -187,7 +187,7 @@
             </div>
             <div class="order-track-text">
               <p class="order-track-text-stat">{{ item.taskName | translate}}</p>
-              <p class="m-0 order-date" *ngIf="item.taskStatus!=='pending'">{{ 'by' | translate}}: <strong>{{item.completedBy || 'old user'}}</strong>, {{ 'on' | translate}}: {{ item.completedDate ? (item.completedDate | localeDateFormat : 'longDate' ) : (item.createdDate | localeDateFormat : 'longDate')}}</p>
+              <p class="m-0 order-date" *ngIf="item.taskStatus!=='pending'">{{ 'by' | translate}}: <strong>{{item.completedByName || 'old user'}}</strong>, {{ 'on' | translate}}: {{ item.completedDate ? (item.completedDate | localeDateFormat : 'longDate' ) : (item.createdDate | localeDateFormat : 'longDate')}}</p>
 
               <p class="m-0 item-msg"></p>
 
