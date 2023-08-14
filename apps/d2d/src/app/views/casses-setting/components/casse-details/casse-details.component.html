@@ -51,9 +51,8 @@
                 <p class="cell-name">{{ 'related_team' | translate }}</p>
                 <p
                   class="cell-value"
-                  *ngFor="let item of caseData?.relatedTeams"
                 >
-                  {{ item?.name }}
+                  {{ caseData?.creatorTeamName }}
                 </p>
               </div>
               <div class="col-12">

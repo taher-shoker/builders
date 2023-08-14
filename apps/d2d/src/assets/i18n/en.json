@@ -70,7 +70,7 @@
   "type": "Type",
   "customer_name": "Customer Name",
   "creator_name": "Creator Name",
-  "related_team": "Related Team",
+  "related_team": "Creator Team",
   "created_at": "Created At",
   "service_type": "Service Type",
   "existing_plate": "Existing Plate#",
