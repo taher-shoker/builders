@@ -67,6 +67,7 @@
   "first_escalate_content": "رسالة التصعيد الأولي",
   "second_escalate_content": "رسالة التصعيد الثاني",
 
+  "type": "النوع",
   "customer_name": "إسم العميل",
   "creator_name": "إسم المنشئ",
   "related_team": "الفريق التابع",

@@ -64,6 +64,7 @@ export class CasseFormComponent implements OnInit {
       customerName: ['', Validators.required],
       city: ['', Validators.required],
       existingServiceOrder: ['', Validators.required],
+      type: ['', Validators.required],
       serviceType: ['', Validators.required],
       existingPlate: ['', Validators.required],
       existingPhoneNumber: ['', Validators.required],
@@ -169,7 +170,7 @@ export class CasseFormComponent implements OnInit {
   }
   onSubmit() {
     if (this.form.valid) {
-      this.dialogService.close()
+      this.dialogService.close();
 
       // const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
       // const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
