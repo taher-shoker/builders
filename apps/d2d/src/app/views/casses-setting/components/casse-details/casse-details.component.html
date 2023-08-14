@@ -203,7 +203,7 @@
               </p>
               <p class="m-0 order-date" *ngIf="item.taskStatus !== 'pending'">
                 {{ 'by' | translate }}:
-                <strong>{{ item.completedBy || 'old user' }}</strong
+                <strong>{{ item.completedByName || 'old user' }}</strong
                 >, {{ 'on' | translate }}:
                 {{
                   item.completedDate
