@@ -75,6 +75,19 @@
         </div>
       </div>
     </div>
+    <div class="row">
+      <div class="col-12">
+        <div class = 'chart-box bar-chart mb-0'>
+          <h4>{{stages.title}}</h4>
+          <div class="chart" style = 'height:400px;'>
+            <stc-apps-bar-chart
+              [data]="stages.chartData"
+              [colors]="stages.barChartColors"
+            ></stc-apps-bar-chart>
+          </div>
+        </div>
+      </div>
+    </div>
     <!-- <div class="row">
       <div class="col">
         <stc-apps-progress-circle-chart [data]="progressCircleData" [title]="'Chart to compare the cases to each other with case type'"></stc-apps-progress-circle-chart>

@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
+import { DomSanitizer } from '@angular/platform-browser';
 export interface BarChartData {
   year : string;
   income : number;
@@ -12,14 +13,20 @@ export interface BarChartData {
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss'],
 })
-export class BarChartComponent implements OnInit {
+export class BarChartComponent implements OnInit , AfterViewInit{
   @Input() data!: BarChartData[];
+  math = Math;
+  constructor(public dom_s: DomSanitizer){}
   @Input() colors:string[] = [];
+  chartdiv_id = '';
   ngOnInit(): void {
+    this.chartdiv_id = `${Math.random()}_chart_id`;
+  }
+  ngAfterViewInit(): void {
     this.initBarChart();
   }
   initBarChart() {
-    const root = am5.Root.new('barLineChart');
+    const root = am5.Root.new(this.chartdiv_id);
     root.setThemes([am5themes_Animated.new(root)]);
     const chart = root.container.children.push(
       am5xy.XYChart.new(root, {})

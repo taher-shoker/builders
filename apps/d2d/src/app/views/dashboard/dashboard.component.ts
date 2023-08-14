@@ -171,4 +171,60 @@ export class DashboardComponent {
       },
     ]
   }
+  stages:TeamUsers = {
+    title : "count of cases in each stage",
+    barChartColors : ['#4F008C'],
+    chartData : [
+      {
+        year: 'stage one',
+        income: 23.5,
+        expenses: 21.1,
+      },
+      {
+        year: 'stage two',
+        income: 26.2,
+        expenses: 30.5,
+      },
+      {
+        year: 'stage three',
+        income: 30.1,
+        expenses: 34.9,
+      },
+      {
+        year: 'stage four',
+        income: 29.5,
+        expenses: 31.1,
+      },
+      {
+        year: 'stage five',
+        income: 30.6,
+        expenses: 28.2,
+      },
+      {
+        year: 'stage six',
+        income: 34.1,
+        expenses: 32.9,
+      },
+      {
+        year: 'stage seven',
+        income: 50,
+        expenses: 22.9,
+      },
+      {
+        year: 'stage eight',
+        income: 20,
+        expenses: 26.9,
+      },
+      {
+        year: 'stage nine',
+        income: 40,
+        expenses: 50,
+      },
+      {
+        year: 'stage ten',
+        income: 10,
+        expenses: 22.9,
+      },
+    ]
+  };
 }
