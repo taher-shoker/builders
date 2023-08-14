@@ -34,6 +34,8 @@ import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { ProgressCircleChartComponent } from './progress-circle-chart/progress-circle-chart.component';
 import { LineChartComponent } from './line-chart/line-chart.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
+import { DatePickerWeeklyComponent } from './date-picker-weekly/date-picker-weekly.component';
+import { DatePickerRangeComponent } from './date-picker-range/date-picker-range.component';
 
 @NgModule({
   imports: [
@@ -76,6 +78,8 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     ProgressCircleChartComponent,
     LineChartComponent,
     BarChartComponent,
+    DatePickerWeeklyComponent,
+    DatePickerRangeComponent,
   ],
   exports: [
     HeaderComponent,
@@ -93,6 +97,8 @@ import { BarChartComponent } from './bar-chart/bar-chart.component';
     ProgressCircleChartComponent,
     LineChartComponent,
     BarChartComponent,
+    DatePickerWeeklyComponent,
+    DatePickerRangeComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })

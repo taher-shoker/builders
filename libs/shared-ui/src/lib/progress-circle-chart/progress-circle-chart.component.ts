@@ -20,7 +20,6 @@ export interface ProgressCircleData {
 export class ProgressCircleChartComponent implements OnInit, OnDestroy {
 
   @Input({required: true}) data! : ProgressCircleData[];
-  @Input() chartTitle : string = "";
 
   root!: am5.Root;
 

@@ -35,13 +35,136 @@
         </div>
       </div>
     </div>
+  </div>
 
-    <div class="row">
-      <div class="col">
-        <stc-apps-progress-circle-chart [data]="progressCircleData" [title]="'Chart to compare the cases to each other with case type'"></stc-apps-progress-circle-chart>
+  <div class="charts-section">
+
+    <div class="chart-view line-chart">
+      <div class="row">
+        <div class="col">
+
+          <div>
+            <div class="chart-header">
+              <div class="row">
+                <div class="col-5">
+                  <p class="chart-title">Weekly trend chart for registered cases</p>
+                </div>
+                <div class="col">
+                  <form [formGroup]="filterValueForm">
+
+                  <div class="row">
+
+
+                      <div class="col">
+                        <stc-apps-select-drop-down
+                          [label]="'Select Type' | translate"
+                          [options]="filterType"
+                          [labelName]="'name'"
+                          [labelValue]="'value'"
+                          formControlName="filterType"
+                        ></stc-apps-select-drop-down>
+                      </div>
+
+                      <div class="col">
+                        <stc-apps-select-drop-down
+                          [label]="(filterValueForm.get('filterType')?.value === filterType[0] ? 'Select User' : 'Select Team') | translate"
+                          [options]="filterValueForm.get('filterType')?.value === filterType[0] ? users : teams"
+                          [labelName]="'name'"
+                          [labelValue]="'value'"
+                          formControlName="filterValue"
+                        ></stc-apps-select-drop-down>
+                      </div>
+
+                    <div class="col-2">
+                      <!-- Put a calendar component here -->
+                      <stc-apps-date-picker-weekly></stc-apps-date-picker-weekly>
+                    </div>
+
+                  </div>
+                </form>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="chart">
+              <stc-apps-line-chart></stc-apps-line-chart>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
+
+    <div class="chart-view column-chart">
+
+      <div class="row">
+        <div class="col">
+
+          <div class="chart-header">
+            <div class="row">
+              <div class="col-5">
+                <p class="chart-title">Fraud team productivity users</p>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+
+          <div class="chart">
+            <!-- <stc-apps-bar-chart></stc-apps-bar-chart> -->
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="chart-view progress-circle-chart">
+
+      <div class="row">
+        <div class="col">
+
+          <div class="chart-header">
+            <div class="row">
+              <div class="col-5">
+                <p class="chart-title">Chart to compare the cases to each other with case type</p>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+
+          <div class="chart">
+            <!-- <stc-apps-progress-circle-chart [data]="progressCircleData"></stc-apps-progress-circle-chart> -->
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+    <div class="chart-view column-chart">
+
+      <div class="row">
+        <div class="col">
+
+          <div class="chart-header">
+            <div class="row">
+              <div class="col-5">
+                <p class="chart-title">Count of cases in each stage</p>
+              </div>
+              <div class="col"></div>
+            </div>
+          </div>
+
+          <div class="chart">
+            <!-- <stc-apps-bar-chart></stc-apps-bar-chart> -->
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
   </div>
-  <stc-apps-line-chart></stc-apps-line-chart>
-  <stc-apps-bar-chart></stc-apps-bar-chart>
+
 </div>

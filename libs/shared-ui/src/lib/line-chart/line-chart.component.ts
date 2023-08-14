@@ -11,10 +11,19 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 })
 export class LineChartComponent implements OnInit {
   @Input() data: any;
-  root: any;
+  root!: am5.Root;
   chart: any;
   xAxis: any;
   yAxis: any;
+
+  ngOnInit(): void {
+    this.root = am5.Root.new('chartdiv');
+    /* remove amchart logo */
+    this.initLineCart();
+    this.createSeries('Italy', 'italy');
+    this.root._logo?.dispose();
+
+  }
 
   initLineCart() {
     this.root.setThemes([am5themes_Animated.new(this.root)]);
@@ -131,6 +140,7 @@ export class LineChartComponent implements OnInit {
       })
     );
   }
+
   createSeries(name: string, field: string) {
     const series = this.chart.series.push(
       am5xy.LineSeries.new(this.root, {
@@ -169,12 +179,5 @@ export class LineChartComponent implements OnInit {
     series.appear(1000);
   }
 
-  ngOnInit(): void {
-    this.root = am5.Root.new('chartdiv');
-    /* remove amchart logo */
-    this.root._logo.dispose();
-    this.initLineCart();
 
-    this.createSeries('Italy', 'italy');
-  }
 }

@@ -1,0 +1,46 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+
+<button type="button" (click)="showCalendar = !showCalendar">BTN</button>
+
+<div class="calendar-holder" *ngIf="showCalendar">
+  <div class="calendar">
+
+    <div class="calendar-header">
+      <p class="select-date mb-1">SELECT DATE</p>
+      <p class="selected-date">{{selectedDate}}, {{selectedWeek}}</p>
+    </div>
+
+    <div class="years-view" *ngIf="showYearsView"> <!--  -->
+      <ul>
+        <li *ngFor="let year of yearsArr; let i = index" [id]="(i+1)+'year'" (click)="setYear(year)" [ngClass]="{'year-chosen' : selectedYear == year}">
+          {{year}}
+        </li>
+      </ul>
+    </div>
+
+    <div class="weeks-view" *ngIf="showWeeksView"> <!-- *ngIf="showWeeksView" -->
+      <p class="current-year show-hide-text">
+        <!-- <i class="fa fa-chevron-left" [class.disabled]="!isFirst" (click)="decreaseYear()"></i> -->
+        <b>{{selectedYear}}</b>
+        <!-- <i class="fa fa-chevron-right" [class.disabled]="!isFirst" (click)="increaseYear()"></i> -->
+      </p>
+      <ul>
+        <li *ngFor="let item of [].constructor(53); let i = index" [id]="(i+1)+'day'" (click)="setWeek(i+1)">
+          {{i+1}}
+        </li>
+      </ul>
+    </div>
+
+    <div class="calendar-footer">
+
+      <div class="action-btns-holder">
+        <button class="action-btn" (click)="cancelCalendar()">CANCEL</button>
+        <button class="action-btn" (click)="showYearsView = !showYearsView; showWeeksView = true" *ngIf="showYearsView" [ngClass]="{'disabled-btn': selectedYear == ''}" [disabled]="selectedYear == ''">NEXT</button>
+        <button class="action-btn" *ngIf="showWeeksView">SAVE</button>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+

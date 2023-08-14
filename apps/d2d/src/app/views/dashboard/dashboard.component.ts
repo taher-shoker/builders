@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ProgressCircleData } from '@stc-apps/shared-ui';
 
 @Component({
@@ -7,6 +8,29 @@ import { ProgressCircleData } from '@stc-apps/shared-ui';
   styleUrls: ['./dashboard.component.scss'],
 })
 export class DashboardComponent {
+
+  filterType = [
+    {name: "User", value: 0},
+    {name: "Team", value: 1},
+  ]
+
+  users = [
+    {name: "User 1", value: 0},
+    {name: "User 22", value: 1},
+  ]
+
+  teams = [
+    {name: "Team 1", value: 0},
+    {name: "Team 22", value: 1},
+  ]
+
+
+  filterValueForm: FormGroup = new FormGroup({
+    filterType: new FormControl(this.filterType[0]),
+    filterValue: new FormControl({})
+
+  })
+
   progressCircleData: ProgressCircleData[] = [
     {
       category: "219 Approved",

@@ -42,3 +42,20 @@
     }
   }
 }
+
+
+
+.chart-view{
+  text-align: start;
+  background-color: white;
+  margin: 25px 0;
+  padding: 20px;
+
+  .chart-title{
+    font-weight: bold;
+  }
+
+  .chart{
+    margin: 0 -15px;
+  }
+}
