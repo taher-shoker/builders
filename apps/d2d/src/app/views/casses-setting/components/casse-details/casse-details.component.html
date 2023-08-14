@@ -2,124 +2,137 @@
   <div class="row m-0 p-0">
     <div class="col-md-8">
       <div class="row details">
-
         <!-- <div class="col-12 title-holder">
           <h3>{{"case_details" | translate}}</h3>
         </div> -->
 
         <div class="row">
-
           <!-- Left Column -->
           <div class="col left-col">
-
             <div class="row">
               <div class="col-12">
-                <p class="cell-name">{{ 'customer_name'| translate}}</p>
-                <p class="cell-value">{{ caseData?.customerName}}</p>
+                <p class="cell-name">{{ 'customer_name' | translate }}</p>
+                <p class="cell-value">{{ caseData?.customerName }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'service_type'| translate}}</p>
+                <p class="cell-name">{{ 'service_type' | translate }}</p>
                 <p class="cell-value">{{ caseData?.serviceType }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'Existing Service Order'| translate}}</p>
+                <p class="cell-name">
+                  {{ 'Existing Service Order' | translate }}
+                </p>
                 <p class="cell-value">{{ caseData?.existingServiceOrder }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'wfm_order'| translate}}</p>
+                <p class="cell-name">{{ 'wfm_order' | translate }}</p>
                 <p class="cell-value">{{ caseData?.wfmOrder }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'new_service_order'| translate}}</p>
+                <p class="cell-name">{{ 'new_service_order' | translate }}</p>
                 <p class="cell-value">{{ caseData?.newServiceOrder }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'contact_number'| translate}}</p>
+                <p class="cell-name">{{ 'contact_number' | translate }}</p>
                 <p class="cell-value">{{ caseData?.contactNumber }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'existing_plate'| translate}}</p>
+                <p class="cell-name">{{ 'existing_plate' | translate }}</p>
                 <p class="cell-value">{{ caseData?.existingPlate }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'related_team'| translate}}</p>
-                <p class="cell-value">{{ caseData?.relatedTeam }}</p>
+                <p class="cell-name">{{ 'related_team' | translate }}</p>
+                <p
+                  class="cell-value"
+                  *ngFor="let item of caseData?.relatedTeams"
+                >
+                  {{ item?.name }}
+                </p>
               </div>
-
+              <div class="col-12">
+                <p class="cell-name">{{ 'type' | translate }}</p>
+                <p class="cell-value">{{ caseData?.type }}</p>
+              </div>
             </div>
-
           </div>
 
           <!-- Mid Column -->
           <div class="col-5"></div>
           <!-- Right Column -->
-          <div class="col  right-col">
-
+          <div class="col right-col">
             <div class="row">
               <div class="col-12">
-                <p class="cell-name">{{ 'city'| translate}}</p>
+                <p class="cell-name">{{ 'city' | translate }}</p>
                 <p class="cell-value">{{ caseData?.city }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'activation_date'| translate}}</p>
+                <p class="cell-name">{{ 'activation_date' | translate }}</p>
                 <ng-container *ngIf="caseData">
                   <p class="cell-value">{{ caseData.activationDate }}</p>
                 </ng-container>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'existing_phone_number'| translate}}</p>
+                <p class="cell-name">
+                  {{ 'existing_phone_number' | translate }}
+                </p>
                 <p class="cell-value">{{ caseData?.existingPhoneNumber }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'new_plate'| translate}}</p>
+                <p class="cell-name">{{ 'new_plate' | translate }}</p>
                 <p class="cell-value">{{ caseData?.newPlate }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'new_phone_number'| translate}}</p>
+                <p class="cell-name">{{ 'new_phone_number' | translate }}</p>
                 <p class="cell-value">{{ caseData?.newPhoneNumber }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'case_label'| translate}}</p>
+                <p class="cell-name">{{ 'case_label' | translate }}</p>
                 <p class="cell-value">{{ caseData?.caseLabel }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'creator_name'| translate}}</p>
+                <p class="cell-name">{{ 'creator_name' | translate }}</p>
                 <p class="cell-value">{{ caseData?.creatorName }}</p>
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'created_at'| translate}}</p>
-                <p class="cell-value">{{ caseData?.createdDate | date:"dd/MM/YYYY"  }}</p>
+                <p class="cell-name">{{ 'created_at' | translate }}</p>
+                <p class="cell-value">
+                  {{ caseData?.createdDate | date : 'dd/MM/YYYY' }}
+                </p>
               </div>
-
+              <div class="col-12">
+                <p class="cell-name">{{ 'creator_team_Name' | translate }}</p>
+                <p class="cell-value">
+                  {{ caseData?.creatorTeamName }}
+                </p>
+              </div>
             </div>
-
           </div>
         </div>
 
         <div class="row">
           <div class="col-12">
-            <p class="cell-name">{{ 'description'| translate}}</p>
+            <p class="cell-name">{{ 'description' | translate }}</p>
             <p class="cell-value">{{ caseData?.description }}</p>
           </div>
         </div>
 
         <div class="row">
-          <div class="col-md-6">
-            <p class="cell-name">{{ 'attachments'| translate}}</p>
+          <div class="col-md-6" *ngIf="caseData?.attachments.lenght > 0">
+            <p class="cell-name">{{ 'attachments' | translate }}</p>
 
             <ul>
               <li *ngFor="let item of caseData?.attachments">
@@ -130,24 +143,23 @@
               </li>
             </ul>
           </div>
-
         </div>
-
       </div>
     </div>
     <div class="col-md-4">
       <section class="tasks">
         <figure>
           <figcaption>
-            <h4>{{"logs_of_cases" | translate}}</h4>
+            <h4>{{ 'logs_of_cases' | translate }}</h4>
             <div>
               <p
                 class="case-status"
                 [ngClass]="
                   cassesService.getKeyByValue(CaseStatus, this.caseStatus)
                 "
-                >{{ this.caseStatus | translate}}</p
               >
+                {{ this.caseStatus | translate }}
+              </p>
             </div>
           </figcaption>
         </figure>
@@ -186,63 +198,103 @@
               ></span>
             </div>
             <div class="order-track-text">
-              <p class="order-track-text-stat">{{ item.taskName | translate}}</p>
-              <p class="m-0 order-date" *ngIf="item.taskStatus!=='pending'">{{ 'by' | translate}}: <strong>{{item.completedBy || 'old user'}}</strong>, {{ 'on' | translate}}: {{ item.completedDate ? (item.completedDate | localeDateFormat : 'longDate' ) : (item.createdDate | localeDateFormat : 'longDate')}}</p>
+              <p class="order-track-text-stat">
+                {{ item.taskName | translate }}
+              </p>
+              <p class="m-0 order-date" *ngIf="item.taskStatus !== 'pending'">
+                {{ 'by' | translate }}:
+                <strong>{{ item.completedBy || 'old user' }}</strong
+                >, {{ 'on' | translate }}:
+                {{
+                  item.completedDate
+                    ? (item.completedDate | localeDateFormat : 'longDate')
+                    : (item.createdDate | localeDateFormat : 'longDate')
+                }}
+              </p>
 
               <p class="m-0 item-msg"></p>
 
               <ng-container *ngFor="let taskAttr of item.taskAttributes">
-
-                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'case_approved'">
-                  {{taskAttr.attributeValue === "0" ? "Rejected" : taskAttr.attributeValue === null ? "" : "Approved"}}
+                <p
+                  class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'case_approved'"
+                >
+                  {{
+                    taskAttr.attributeValue === '0'
+                      ? 'Rejected'
+                      : taskAttr.attributeValue === null
+                      ? ''
+                      : 'Approved'
+                  }}
                 </p>
 
-                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'info_needed'">
-                  {{taskAttr.attributeValue === "0" ? "Not needed" : ""}}
+                <p
+                  class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'info_needed'"
+                >
+                  {{ taskAttr.attributeValue === '0' ? 'Not needed' : '' }}
                 </p>
 
-                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'message'">
-                  {{taskAttr.attributeValue}}
+                <p
+                  class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'message'"
+                >
+                  {{ taskAttr.attributeValue }}
                 </p>
-
-
               </ng-container>
 
-              <p *ngFor="let attachment of item.attachments" class="item-task-attachment" (click)="downloadFile(attachment.id, attachment.label)">
-                {{attachment.label}}
+              <p
+                *ngFor="let attachment of item.attachments"
+                class="item-task-attachment"
+                (click)="downloadFile(attachment.id, attachment.label)"
+              >
+                {{ attachment.label }}
               </p>
 
               <div
                 class="actions my-3 d-flex"
                 *ngIf="item.taskStatus === 'pending'"
               >
+                <ng-container
+                  *ngIf="
+                    item.taskName === TaskCicle.checkCase &&
+                    authService.getLoggedInUser().roles.includes('APPROVERS')
+                  "
+                >
+                  <stc-apps-button
+                    [buttonText]="'yes' | translate"
+                    [buttonType]="'primary'"
+                    (btnClick)="onCheck()"
+                  ></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'no' | translate"
+                    (btnClick)="cancelCheck()"
+                    [buttonType]="'gray-outline'"
+                  ></stc-apps-button>
+                </ng-container>
 
-              <ng-container *ngIf="item.taskName === TaskCicle.checkCase && authService.getLoggedInUser().roles.includes('APPROVERS')">
                 <stc-apps-button
-                  [buttonText]="'yes' | translate"
-                  [buttonType]="'primary'"
-                  (btnClick)="onCheck()"
-                ></stc-apps-button>
-                <stc-apps-button
-                  [buttonText]="'no' | translate"
-                  (btnClick)="cancelCheck()"
-                  [buttonType]="'gray-outline'"
-                ></stc-apps-button>
-              </ng-container>
-
-                <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.fillMoreInfo && !authService.getLoggedInUser().roles.includes('APPROVERS')"
+                  *ngIf="
+                    item.taskName === TaskCicle.fillMoreInfo &&
+                    !authService.getLoggedInUser().roles.includes('APPROVERS')
+                  "
                   [buttonText]="'reply' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="replyfeed()"
                 ></stc-apps-button>
 
-                <ng-container *ngIf="item.taskName === TaskCicle.approveCase && authService.getLoggedInUser().roles.includes('APPROVERS')">
+                <ng-container
+                  *ngIf="
+                    item.taskName === TaskCicle.approveCase &&
+                    authService.getLoggedInUser().roles.includes('APPROVERS')
+                  "
+                >
                   <stc-apps-button
                     [buttonText]="'approve' | translate"
                     [buttonType]="'primary'"
                     (btnClick)="confirm()"
-                  ></stc-apps-button> <!--approvedTask()  -->
+                  ></stc-apps-button>
+                  <!--approvedTask()  -->
                   <stc-apps-button
                     [buttonText]="'reject' | translate"
                     [buttonType]="'danger-outline'"
@@ -251,13 +303,21 @@
                 </ng-container>
 
                 <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.withinSlResponse && authService.getLoggedInUser().roles.includes('APPROVERS')"
+                  *ngIf="
+                    item.taskName === TaskCicle.withinSlResponse &&
+                    authService.getLoggedInUser().roles.includes('APPROVERS')
+                  "
                   [buttonText]="'received' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="withinResponse()"
                 ></stc-apps-button>
 
-                <ng-container *ngIf="item.taskName === TaskCicle.shouldEscalate && authService.getLoggedInUser().roles.includes('APPROVERS')">
+                <ng-container
+                  *ngIf="
+                    item.taskName === TaskCicle.shouldEscalate &&
+                    authService.getLoggedInUser().roles.includes('APPROVERS')
+                  "
+                >
                   <stc-apps-button
                     [buttonText]="'yes' | translate"
                     [buttonType]="'primary'"
@@ -270,7 +330,12 @@
                   ></stc-apps-button>
                 </ng-container>
 
-                <ng-container *ngIf="item.taskName === TaskCicle.shouldReEscalate && authService.getLoggedInUser().roles.includes('APPROVERS')">
+                <ng-container
+                  *ngIf="
+                    item.taskName === TaskCicle.shouldReEscalate &&
+                    authService.getLoggedInUser().roles.includes('APPROVERS')
+                  "
+                >
                   <stc-apps-button
                     [buttonText]="'yes' | translate"
                     [buttonType]="'primary'"
@@ -284,7 +349,10 @@
                 </ng-container>
 
                 <stc-apps-button
-                  *ngIf="item.taskName === TaskCicle.sendToClose && authService.getLoggedInUser().roles.includes('APPROVERS')"
+                  *ngIf="
+                    item.taskName === TaskCicle.sendToClose &&
+                    authService.getLoggedInUser().roles.includes('APPROVERS')
+                  "
                   [buttonText]="'send' | translate"
                   [buttonType]="'primary'"
                   (btnClick)="sendToClose()"
@@ -301,7 +369,7 @@
 </div>
 
 <stc-apps-dialog id="request-Info-Modal">
-  <h3>{{"Request More Info | CASE ID" | translate}} : {{ caseSerial }}</h3>
+  <h3>{{ 'Request More Info | CASE ID' | translate }} : {{ caseSerial }}</h3>
   <form [formGroup]="infoForm" (ngSubmit)="sendInfo()">
     <div class="row">
       <div class="col-md-6">
@@ -315,12 +383,23 @@
       </div>
       <div class="col-md-6">
         <stc-apps-select-drop-down
-          [label]="('Select ' + (infoForm.get('assignedTo')?.value?.value === '1' ? 'Team' : 'User')) | translate"
-          [options]="infoForm.get('assignedTo')?.value?.value === '1' ? teams : users"
+          [label]="
+            'Select ' +
+              (infoForm.get('assignedTo')?.value?.value === '1'
+                ? 'Team'
+                : 'User') | translate
+          "
+          [options]="
+            infoForm.get('assignedTo')?.value?.value === '1' ? teams : users
+          "
           formControlName="selectedUser"
           [labelName]="'name'"
           [labelValue]="'email'"
-          (selectChange)="infoForm.get('assignedTo')?.value?.value === '1' ? infoForm.get('selectedUser')!.setValue($event) : infoForm.get('selectedUser')!.setValue($event)"
+          (selectChange)="
+            infoForm.get('assignedTo')?.value?.value === '1'
+              ? infoForm.get('selectedUser')!.setValue($event)
+              : infoForm.get('selectedUser')!.setValue($event)
+          "
         ></stc-apps-select-drop-down>
       </div>
       <div class="col-md-12">
@@ -337,11 +416,12 @@
           [multiple]="false"
           [chooseLabel]="'add_attachment' | translate"
           (onformchange)="onUploadFile($event)"
-          [attachmentFiles]="this.infoForm.controls['check_case_attachment'].value"
+          [attachmentFiles]="
+            this.infoForm.controls['check_case_attachment'].value
+          "
           formControlName="check_case_attachment"
           [isLoading]="isLoading"
           (ondelete)="onDeleteFile($event)"
-
         ></stc-apps-file-uploader>
       </div>
       <div class="row mt-4">
@@ -375,7 +455,7 @@
   </p> -->
   <!-- <h3>Request More Info | CASE ID : #123432</h3> -->
 
-  <p>{{"approve_case_confirmation" | translate}}</p>
+  <p>{{ 'approve_case_confirmation' | translate }}</p>
   <div class="row mt-4">
     <div class="col-md-4 offset-8">
       <div class="d-flex justify-content-end">
@@ -398,8 +478,9 @@
 
 <stc-apps-dialog id="reject-Modal">
   <p>
-    {{"reject_case_confirmation" | translate}} <strong>({{"case_id" | translate}}: {{ caseSerial }})</strong>.
-    {{"no_rollback_confirmation" | translate}}
+    {{ 'reject_case_confirmation' | translate }}
+    <strong>({{ 'case_id' | translate }}: {{ caseSerial }})</strong>.
+    {{ 'no_rollback_confirmation' | translate }}
   </p>
   <form [formGroup]="rejectForm" (ngSubmit)="confirmReject()">
     <div class="row">
@@ -424,7 +505,7 @@
 
           <div class="mx-3"></div>
           <stc-apps-button
-            [buttonText]="('yes' | translate )+', '+ ('reject' | translate)"
+            [buttonText]="('yes' | translate) + ', ' + ('reject' | translate)"
             [buttonType]="'danger-outline'"
             (btnClick)="confirmReject()"
           ></stc-apps-button>
@@ -435,7 +516,8 @@
 </stc-apps-dialog>
 <stc-apps-dialog id="replyFeeback-Modal">
   <p>
-    {{"reply_feeback" | translate}} <strong>({{"case_id" | translate}} : {{ caseSerial }})</strong>.
+    {{ 'reply_feeback' | translate }}
+    <strong>({{ 'case_id' | translate }} : {{ caseSerial }})</strong>.
   </p>
   <form [formGroup]="replyForm" (ngSubmit)="confirmReply()">
     <div class="row">
@@ -457,7 +539,6 @@
           formControlName="check_case_attachment"
           [isLoading]="isLoading"
           (ondelete)="onDeleteFile($event)"
-
         ></stc-apps-file-uploader>
       </div>
     </div>
@@ -485,8 +566,9 @@
 
 <stc-apps-dialog id="close-Modal">
   <p>
-    {{"close_case_confirmation" | translate}} <strong>( {{"case_id" | translate}} : {{ caseSerial }})</strong>.
-    {{"no_rollback_confirmation" | translate}}
+    {{ 'close_case_confirmation' | translate }}
+    <strong>( {{ 'case_id' | translate }} : {{ caseSerial }})</strong>.
+    {{ 'no_rollback_confirmation' | translate }}
   </p>
   <form [formGroup]="closeForm" (ngSubmit)="confirmClose()">
     <div class="row">
@@ -522,8 +604,9 @@
 </stc-apps-dialog>
 <stc-apps-dialog id="first-escalate-Modal">
   <p>
-    {{"first_escalate_case" | translate}}
-    <strong>({{"case_id" | translate}} : {{ caseSerial }})</strong>. {{"no_rollback_confirmation" | translate}}
+    {{ 'first_escalate_case' | translate }}
+    <strong>({{ 'case_id' | translate }} : {{ caseSerial }})</strong>.
+    {{ 'no_rollback_confirmation' | translate }}
   </p>
   <form [formGroup]="firstEscalateForm" (ngSubmit)="confirmFirstEscalate()">
     <div class="row">
@@ -560,8 +643,9 @@
 </stc-apps-dialog>
 <stc-apps-dialog id="second-escalate-Modal">
   <p>
-    {{"second_escalate_case" | translate}}
-    <strong>({{"case_id" | translate}}: {{ caseSerial }})</strong>. {{"no_rollback_confirmation" | translate}}
+    {{ 'second_escalate_case' | translate }}
+    <strong>({{ 'case_id' | translate }}: {{ caseSerial }})</strong>.
+    {{ 'no_rollback_confirmation' | translate }}
   </p>
   <form [formGroup]="secondEscalateForm" (ngSubmit)="confirmSecondEscalate()">
     <div class="row">

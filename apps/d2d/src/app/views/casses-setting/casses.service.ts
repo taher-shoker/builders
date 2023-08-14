@@ -6,17 +6,17 @@ import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface User {
-  id: number,
-  email: string,
-  name: string,
-  jobTitle: string,
-  roles: string[],
-  teamName: null | string
+  id: number;
+  email: string;
+  name: string;
+  jobTitle: string;
+  roles: string[];
+  teamName: null | string;
 }
 
 export interface Team {
-  id: number,
-  name: "Filed Operation" | "Customer Care" | "Digital Care" | "Fraud"
+  id: number;
+  name: 'Filed Operation' | 'Customer Care' | 'Digital Care' | 'Fraud';
 }
 
 @Injectable({
@@ -27,22 +27,22 @@ export class CassesService {
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
 
-  roles = ["CREATORS", "APPROVERS", "ADMINS"] // Current roles in the system
+  roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   // getSystemTeams(): Team[]{
   //   return this.teams!;
   // }
 
   setSystemTeams(): Observable<Team[]> {
-    return this.http.get<Team[]>(`${this.endpoint}/users/teams`)
+    return this.http.get<Team[]>(`${this.endpoint}/users/teams`);
   }
 
   setSystemUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.endpoint}/users`)
+    return this.http.get<User[]>(`${this.endpoint}/users`);
   }
 
   getCasses(filterData?: any) {
@@ -109,9 +109,7 @@ export interface File {
 }
 
 export interface Task {
-
   caseTasksDto: {
-
     id: number;
     taskName: string;
     taskStatus: string;
@@ -130,7 +128,7 @@ export interface Task {
     createdDate: Date;
     lastModifiedDate: Date;
     attachments: Attachment[];
-  }
+  };
   caseSerialNumber: string;
 }
 
@@ -157,7 +155,6 @@ export interface TaskInDetails {
   caseSerialNumber: string;
 }
 
-
 export interface Casse {
   id?: string;
   customerName: string;
@@ -177,6 +174,8 @@ export interface Casse {
   attachments: Attachment[];
   caseStatus: string;
   caseSerialNumber: string;
+  type: string;
+  creatorTeamName: string;
 }
 
 export type Attachment = {
