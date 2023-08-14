@@ -275,7 +275,10 @@
                 <stc-apps-button
                   *ngIf="
                     item.taskName === TaskCicle.fillMoreInfo &&
-                    !authService.getLoggedInUser().roles.includes('APPROVERS')
+                    !authService
+                      .getLoggedInUser()
+                      .roles.includes('APPROVERS') &&
+                    item.assignedUser === authService.getLoggedInUser().teamName
                   "
                   [buttonText]="'reply' | translate"
                   [buttonType]="'primary'"
