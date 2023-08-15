@@ -3,9 +3,10 @@ import { ActivatedRoute } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import {
   CaseStatus,
-  CassesService,
+  CasesService,
   TaskInDetails,
   TaskCicle,
+  Case,
 } from '../../casses.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { saveAs } from 'file-saver';
@@ -51,7 +52,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
-    public cassesService: CassesService,
+    public CasesService: CasesService,
     private languageManagerService: LanguageManagerService,
     public authService: AuthService
   ) {}
@@ -64,7 +65,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       text: '',
     });
 
-    this.cassesService.getCasse(this.casseId).subscribe((res) => {
+    this.CasesService.getCase(this.casseId).subscribe((res) => {
       if (res) {
         this.caseData = res;
         this.caseSerial = res.caseSerialNumber;
@@ -77,14 +78,14 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
     this.authService.loggedUserStream.subscribe((res) => {
       if (res?.roles.includes('APPROVERS')) {
-        this.cassesService.setSystemTeams().subscribe((res) => {
+        this.CasesService.setSystemTeams().subscribe((res) => {
           console.log('System teams :', res);
           this.teams = res;
           this.teams = this.teams.filter((x: any) => x.name !== 'Fraud');
           this.handleTeam(this.caseData, this.teams);
         });
 
-        this.cassesService.setSystemUsers().subscribe((res) => {
+        this.CasesService.setSystemUsers().subscribe((res) => {
           console.log('System Users :', res);
           this.users = res;
           this.users = this.users.filter(
@@ -120,7 +121,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     });
   }
   getCaseTasks(id: number) {
-    this.cassesService.getTaskByCaseId(id).subscribe((res: any) => {
+    this.CasesService.getTaskByCaseId(id).subscribe((res: any) => {
       this.allTasks = res.data.filter((t: any) => t.assignedUser);
     });
   }
@@ -134,7 +135,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
         const formData = new FormData();
         formData.append('file', files[i]);
         // this.formData.append('file', files[i]);
-        this.cassesService.uploadFile(formData).subscribe((res: any) => {
+        this.CasesService.uploadFile(formData).subscribe((res: any) => {
           if (res) {
             this.uploadedFile.push(res);
             this.isLoading = false;
@@ -148,14 +149,14 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   }
 
   onDeleteFile(id: number) {
-    this.cassesService.deleteFile(id).subscribe((res: any) => {
+    this.CasesService.deleteFile(id).subscribe((res: any) => {
       this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
       this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
     });
   }
 
   downloadFile(id: number, name: string) {
-    this.cassesService.getFile(id).subscribe((buffer) => {
+    this.CasesService.getFile(id).subscribe((buffer) => {
       const data: Blob = new Blob([buffer], {
         type: 'text/csv;charset=utf-8',
       });
@@ -166,13 +167,13 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   }
   /** function to call fetching all tasks again and close any Modal if found **/
   refreshTasks(data: any) {
-    this.cassesService
-      .updateCaseTask(+this.casseId, data)
-      .subscribe((res: any) => {
+    this.CasesService.updateCaseTask(+this.casseId, data).subscribe(
+      (res: any) => {
         this.caseStatus = res.caseStatus;
         this.dialogService.close();
         this.getCaseTasks(+this.casseId);
-      });
+      }
+    );
   }
 
   /** Actions with check case info (Request More Info) status **/
@@ -215,7 +216,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   cancelCheck() {
     const data = { form: { info_needed: 0 } };
-    // this.cassesService
+    // this.CasesService
     //   .updateCaseTask(+this.casseId, data)
     //   .subscribe((res: any) => {
     //     this.getCaseTasks(+this.casseId);
@@ -381,7 +382,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  handleTeam(caseData?: any, team?: any) {
+  handleTeam(caseData?: Case, team?: any) {
     if (caseData && team) {
       console.log(team);
       console.log(caseData?.creatorTeamName);

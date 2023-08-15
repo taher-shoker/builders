@@ -22,7 +22,7 @@ export interface Team {
 @Injectable({
   providedIn: 'root',
 })
-export class CassesService {
+export class CasesService {
   baseUrl = environment.apiUrl;
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
@@ -33,10 +33,6 @@ export class CassesService {
 
   constructor(private http: HttpClient) {}
 
-  // getSystemTeams(): Team[]{
-  //   return this.teams!;
-  // }
-
   setSystemTeams(): Observable<Team[]> {
     return this.http.get<Team[]>(`${this.endpoint}/users/teams`);
   }
@@ -45,30 +41,30 @@ export class CassesService {
     return this.http.get<User[]>(`${this.endpoint}/users`);
   }
 
-  getCasses(filterData?: any) {
+  getCases(filterData?: any) {
     return this.http.get(`${this.endpoint}/d2dCase/search`, {
       params: filterData,
     });
   }
 
-  getCasse(id: string) {
+  getCase(id: string) {
     const options = {};
-    return this.http.get<Casse>(`${this.endpoint}/d2dCase/${id}`, options);
+    return this.http.get<Case>(`${this.endpoint}/d2dCase/${id}`, options);
   }
 
-  createCasse(data: any) {
+  createCase(data: any) {
     const options = {};
 
     return this.http.post(`${this.endpoint}/d2dCase`, data, options);
   }
 
-  updateCasse(id: string, data: any) {
+  updateCase(id: string, data: any) {
     const options = {};
 
     return this.http.put(`${this.endpoint}/${id}`, data, options);
   }
 
-  deleteCasse(id: string) {
+  deleteCase(id: string) {
     const options = {};
     return this.http.delete(`${this.endpoint}/${id}`, options);
   }
@@ -155,7 +151,7 @@ export interface TaskInDetails {
   caseSerialNumber: string;
 }
 
-export interface Casse {
+export interface Case {
   id?: string;
   customerName: string;
   city: string;
