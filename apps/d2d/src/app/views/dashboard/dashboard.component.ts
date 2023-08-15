@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ProgressCircleData } from '@stc-apps/shared-ui';
-import { BarChartData } from 'libs/shared-ui/src/lib/bar-chart/bar-chart.component';
-import { LineChartData } from 'libs/shared-ui/src/lib/line-chart/line-chart.component';
+import { BarChartData } from '@stc-apps/shared-ui';
+import { LineChartData } from '@stc-apps/shared-ui';
 interface RegisteredCases {
   title : string;
   lineChartColors:string[];
@@ -85,52 +85,42 @@ export class DashboardComponent {
       {
         year: 'ahmed mohamed',
         income: 23.5,
-        expenses: 21.1,
       },
       {
         year: 'tamer maged',
         income: 26.2,
-        expenses: 30.5,
       },
       {
         year: 'ahmed mohsen',
         income: 30.1,
-        expenses: 34.9,
       },
       {
         year: 'hany amer',
         income: 29.5,
-        expenses: 31.1,
       },
       {
         year: 'tamer ahmed',
         income: 30.6,
-        expenses: 28.2,
       },
       {
         year: 'hany amr',
         income: 34.1,
-        expenses: 32.9,
       },
       {
         year: 'ahmed amr',
         income: 50,
-        expenses: 22.9,
       },
       {
         year: 'ali ahmed',
         income: 20,
-        expenses: 26.9,
       },
       {
         year: 'fawzey',
         income: 40,
-        expenses: 50,
       },
       {
         year: 'seif ashraf',
         income: 10,
-        expenses: 22.9,
       },
     ]
   };
@@ -140,34 +130,28 @@ export class DashboardComponent {
     totalCases : 342,
     chartData : [
       {
-        category: "219 Approved",
+        category: "Approved",
         value: 80,
-        full: 100,
       },
       {
-        category: "120 Rejected",
+        category: "Rejected",
         value: 70,
-        full: 100
       },
       {
-        category: "76 Closed",
+        category: "Closed",
         value: 75,
-        full: 100
       },
       {
-        category: "23 Not Approved Yet",
+        category: "Not Approved Yet",
         value: 66,
-        full: 100
       },
       {
-        category: "21 Escalation 1 Already sent",
+        category: "Escalation 1 Already sent",
         value: 90,
-        full: 100
       },
       {
-        category: "12 Escalation 2 Already sent",
+        category: "Escalation 2 Already sent",
         value: 90,
-        full: 100
       },
     ]
   }
@@ -178,52 +162,42 @@ export class DashboardComponent {
       {
         year: 'stage one',
         income: 23.5,
-        expenses: 21.1,
       },
       {
         year: 'stage two',
         income: 26.2,
-        expenses: 30.5,
       },
       {
         year: 'stage three',
         income: 30.1,
-        expenses: 34.9,
       },
       {
         year: 'stage four',
         income: 29.5,
-        expenses: 31.1,
       },
       {
         year: 'stage five',
         income: 30.6,
-        expenses: 28.2,
       },
       {
         year: 'stage six',
         income: 34.1,
-        expenses: 32.9,
       },
       {
         year: 'stage seven',
         income: 50,
-        expenses: 22.9,
       },
       {
         year: 'stage eight',
         income: 20,
-        expenses: 26.9,
       },
       {
         year: 'stage nine',
         income: 40,
-        expenses: 50,
       },
       {
         year: 'stage ten',
         income: 10,
-        expenses: 22.9,
       },
     ]
   };
