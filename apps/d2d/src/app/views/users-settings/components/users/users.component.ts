@@ -164,8 +164,12 @@ export class UsersComponent implements OnInit, AfterViewInit {
         );
       }
     } else {
+      this.filterSelect
+        .get('teamSelect')
+        ?.setValue({ id: 'all', name: 'All' }, { emitEvent: false });
       if (value.id === 'all') {
         this.dataSource.data = this.list;
+        this.teams = teamsOptions;
       } else {
         this.teams = [];
         if (value.id === 1) {
@@ -182,7 +186,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getUsersListing();
     this.filterSelect = new FormGroup({
-      teamSelect: new FormControl('all'),
+      teamSelect: new FormControl(''),
     });
     this.getRoles();
     this.getTeams();
