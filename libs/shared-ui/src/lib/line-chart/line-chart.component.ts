@@ -1,10 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit , AfterViewInit} from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
-
+import { LanguageManagerService } from '@stc-apps/lng-selector';
+import { Subscription } from 'rxjs';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 export interface LineChartData {
-  category: string,
+  category: string | number,
   value: number,
 }
 @Component({
@@ -12,25 +13,49 @@ export interface LineChartData {
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent implements OnInit {
+export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit{
   @Input() chartData!: LineChartData[];
   @Input() colors:string[] = [];
+  direction:string | null = "";
+  root!: am5.Root;
+  langSub!: Subscription;
+  chartdiv_id = '';
+  constructor(private languageManagerService: LanguageManagerService){}
   ngOnInit(){
-    this.lineChart()
+    this.chartdiv_id = `${Math.random()}_chart_id`;
+
   }
+  ngAfterViewInit(): void {
+    this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(lang => {
+      this.direction = localStorage.getItem("language");
+      // console.log(this.direction);
+      // console.log(lang);
+      // console.log("localStorage" , localStorage.getItem("language"));
+      this.lineChart()
+    })
+  }
+  maybeDisposeRoot(divId:string) {
+    am5.array.each(am5.registry.rootElements, function (root:any) {
+      if (root?.dom.id == divId) {
+        root.dispose();
+      }
+    });
+  };
   lineChart()
   {
+    // console.log(this.direction);
     const data = this.chartData;
-    const root = am5.Root.new("lineChartDiv");
-    root.setThemes([
-      am5themes_Animated.new(root)
+    this.maybeDisposeRoot(this.chartdiv_id);
+    this.root = am5.Root.new(this.chartdiv_id);
+    this.root.setThemes([
+      am5themes_Animated.new(this.root)
     ]);
-    const chart = root.container.children.push(am5xy.XYChart.new(root, {
+    const chart = this.root.container.children.push(am5xy.XYChart.new(this.root, {
       panX: false,
       panY: false,
       wheelX: "none",
       wheelY: "none",
-      layout: root.verticalLayout
+      layout: this.root.verticalLayout,
     }));
     // const myTheme = am5.Theme.new(root);
     // myTheme.rule("Grid").setAll({
@@ -43,9 +68,9 @@ export class LineChartComponent implements OnInit {
     // });
     // root.setThemes([myTheme]);
     // Create a chart instance
-    if(root._logo)
+    if(this.root._logo)
     {
-      root._logo.dispose();
+      this.root._logo.dispose();
     }
     // chart.get("colors")?.set("step", 3);
     const allColors:am5.Color[] = [];
@@ -54,31 +79,36 @@ export class LineChartComponent implements OnInit {
       chart.get("colors")?.set("colors", allColors);
     })
       const xAxis = chart.xAxes.push(
-        am5xy.CategoryAxis.new(root, {
+        am5xy.CategoryAxis.new(this.root, {
           categoryField: "category",
           startLocation: 0.2,
           endLocation: 0.8,
           maxDeviation: 50,
-          renderer: am5xy.AxisRendererX.new(root, {
+          renderer: am5xy.AxisRendererX.new(this.root, {
             minGridDistance : 50,
             strokeOpacity: 1,
             strokeWidth: 2,
-            stroke : am5.color(0x000000)
+            stroke : am5.color(0x000000),
+            inversed : this.direction == 'ar' ? true : false
           }),
         })
       );
     const yAxis = chart.yAxes.push(
-      am5xy.ValueAxis.new(root, {
+      am5xy.ValueAxis.new(this.root, {
         maxDeviation: 0.5,
-        renderer: am5xy.AxisRendererY.new(root, {
+        renderer: am5xy.AxisRendererY.new(this.root, {
           pan:"zoom",
           strokeOpacity: 1,
           strokeWidth: 2,
           stroke : am5.color(0x000000),
-          marginLeft : 15
+          marginLeft : this.direction == 'ar' ? 0 : 15,
+          marginRight : this.direction == 'ar' ? 15 : 0,
+          opposite : this.direction == 'ar' ? true : false
         })
       })
     );
+    this.root.numberFormatter.set("numberFormat", "#.#a");
+
     chart.gridContainer.dispose()
     const xRenderer = xAxis.get("renderer");
     const yRenderer = yAxis.get("renderer");
@@ -91,12 +121,14 @@ export class LineChartComponent implements OnInit {
     xRenderer.labels.template.setAll({
       fill: am5.color(0x000000),
       fontSize: "1em",
-      paddingTop :20
+      paddingTop :20,
+      direction : this.direction == 'ar' ? "rtl" : "ltr"
     });
 
     yRenderer.labels.template.setAll({
       fill: am5.color(0x000000),
       fontSize: "1em",
+      direction : this.direction == 'ar' ? "rtl" : "ltr"
     });
     // let xRenderer = xAxis.get("renderer");
     // xRenderer.grid.template.setAll({
@@ -106,23 +138,27 @@ export class LineChartComponent implements OnInit {
     // });
     // xAxis.get("dateFormats")["day"] = "MMM";
     const series = chart.series.push(
-      am5xy.LineSeries.new(root, {
+      am5xy.LineSeries.new(this.root, {
         xAxis: xAxis,
         yAxis: yAxis,
         valueYField: "value",
         valueXField: "category",
+        sequencedInterpolation : true,
         categoryXField: "category",
         categoryYField : "value",
-        legendLabelText: "[bold]Sent SMSs[/]",
-        // legendRangeLabelText: "[{stroke}]Sent SMSs[/]",
-        legendValueText: "[bold {stroke}]{value}[/]",
-        tooltip: am5.Tooltip.new(root, {
-          pointerOrientation: 'horizontal',
+        tooltip: am5.Tooltip.new(this.root, {
+          pointerOrientation: 'vertical',
           labelText: '{name} in {categoryX}: {valueY} {info}',
         }),
       })
     );
-      const arr:{category:string}[] = []
+    series.get("tooltip")?.label.set("direction" , this.direction == 'ar' ? "rtl" : "ltr");
+
+
+    // series.get("tooltip")?.setAll({
+    //   reverseChildren : true
+    // })
+      const arr:{category:string | number}[] = []
       this.chartData.forEach((data2) => {
         arr.push({category : data2.category});
       })
@@ -130,19 +166,19 @@ export class LineChartComponent implements OnInit {
       series.data.setAll(arr)
     series.data.setAll(data);
     series.bullets.push(() => {
-      const circle = am5.Circle.new(root, {
+      const circle = am5.Circle.new(this.root, {
         radius: 6,
         fill: am5.color(this.colors[1]),
-        stroke: root.interfaceColors.get("background"),
+        stroke: this.root.interfaceColors.get("background"),
         strokeWidth: 0,
       });
 
-      return am5.Bullet.new(root, {
+      return am5.Bullet.new(this.root, {
         sprite: circle
       });
     });
 
-    chart.set('cursor', am5xy.XYCursor.new(root, {alwaysShow:false}));
+    chart.set('cursor', am5xy.XYCursor.new(this.root, {alwaysShow:false}));
     const cursor = chart.get("cursor");
     cursor?.lineX.setAll({
       visible : false
@@ -150,10 +186,10 @@ export class LineChartComponent implements OnInit {
     cursor?.lineY.setAll({
       visible : false
     });
-    xAxis.set("tooltip", am5.Tooltip.new(root, {
+    xAxis.set("tooltip", am5.Tooltip.new(this.root, {
       forceHidden: true
     }));
-    yAxis.set("tooltip", am5.Tooltip.new(root, {
+    yAxis.set("tooltip", am5.Tooltip.new(this.root, {
       forceHidden: true,
     }));
     series.strokes.template.setAll({
@@ -167,5 +203,9 @@ export class LineChartComponent implements OnInit {
 
     series.appear(1000);
     chart.appear(1000, 100);
+  }
+  ngOnDestroy(): void {
+    this.langSub.unsubscribe();
+    this.root.dispose();
   }
 }

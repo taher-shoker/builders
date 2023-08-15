@@ -5,7 +5,7 @@
 </button>
 
 <div class="calendar-holder" *ngIf="showCalendar">
-  <div class="calendar" [ngStyle]="langDirection === 'en' ? {'right': '0%'} : {'left' : '0%'}">
+  <div class="calendar" [ngStyle]="langDirection == 'en' ? {'right': '0%'} : {'left' : '0%'}">
 
     <div class="calendar-header">
       <p class="select-date mb-1">SELECT DATE</p>
