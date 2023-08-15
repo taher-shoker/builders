@@ -233,7 +233,46 @@
                 >
                   {{ taskAttr.attributeValue === '0' ? 'Not needed' : '' }}
                 </p>
-
+                <p
+                  class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'should_first_escalate'"
+                >
+                  {{
+                    taskAttr.attributeValue === '0'
+                      ? ('not_escalate' | translate)
+                      : ''
+                  }}
+                </p>
+                <p
+                  class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'first_escalate_content'"
+                >
+                  {{
+                    taskAttr.attributeValue === null
+                      ? ''
+                      : taskAttr.attributeValue
+                  }}
+                </p>
+                <p
+                  class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'should_second_escalate'"
+                >
+                  {{
+                    taskAttr.attributeValue === '0'
+                      ? ('not_escalate' | translate)
+                      : ''
+                  }}
+                </p>
+                <p
+                  class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'second_escalate_content'"
+                >
+                  {{
+                    taskAttr.attributeValue === null
+                      ? ''
+                      : taskAttr.attributeValue
+                  }}
+                </p>
                 <p
                   class="m-0 item-msg"
                   *ngIf="taskAttr.attributeName === 'message'"

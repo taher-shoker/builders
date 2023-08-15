@@ -130,7 +130,7 @@
   "Should Escalate Desc": "You may send the case for escalation with a content message or close the case.",
   "Should Re-Escalate Desc": "You may send a reminder to the escalation mail with a content message or close the case.",
   "Send to Close Desc": "You may close the case if it's completed",
-
+  "not_escalate": "Not Escalate",
   "deleteMsg": {
     "txt1": "You're about to Remove User ,",
     "txt2": " and his account",
