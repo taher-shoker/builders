@@ -77,7 +77,8 @@
 
                     <div class="col-2">
                       <!-- Put a calendar component here -->
-                      <stc-apps-date-picker-weekly></stc-apps-date-picker-weekly>
+                      <stc-apps-date-picker-weekly (date)="filter($event)"></stc-apps-date-picker-weekly>
+                      <!-- <stc-apps-date-picker-weekly-range (date)="filterRangeDate($event)"></stc-apps-date-picker-weekly-range> -->
                     </div>
 
                   </div>

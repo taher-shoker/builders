@@ -1,10 +1,11 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, Input, OnInit, forwardRef} from '@angular/core';
-import { FormControl } from '@angular/forms';
-import * as moment from 'moment';
+import { Component, EventEmitter, OnInit, Output, forwardRef} from '@angular/core';
+// import { FormControl } from '@angular/forms';
+// import * as moment from 'moment';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
 import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
+import { LanguageManagerService } from '@stc-apps/lng-selector';
 
 const APP_DATE_FORMATS = {
   parse: {
@@ -17,6 +18,21 @@ const APP_DATE_FORMATS = {
       monthYearA11yLabel: 'MMMM YYYY'
   },
 };
+
+export interface YearObj{
+  yearNum: number,
+  id: number
+}
+
+export interface WeeklyDateObj {
+  year: string | number,
+  week: string | number
+}
+
+export interface YearRangeObj{
+  fromDate: WeeklyDateObj,
+  toDate: WeeklyDateObj,
+}
 
 @Component({
   selector: 'stc-apps-date-picker-weekly',
@@ -38,88 +54,112 @@ const APP_DATE_FORMATS = {
   ],
 })
 export class DatePickerWeeklyComponent implements OnInit {
-  isFirst: boolean = true;
+
+  @Output() date: EventEmitter<string> = new EventEmitter<string>();
+  // @Input() formControlParentalState: FormControl = new FormControl(moment()); // Variable to receive Form control from parent to maintain the last date user has inserted
+
   showCalendar: boolean = false;
+  langDirection: string = 'en';
+
   showYearsView: boolean = true;
   showWeeksView: boolean = false;
 
-  selectedDate : string = "Choose year";
-  selectedWeek : string = "";
-  selectedYear : number | string = "";
+  stringifiedDate : string = "Choose year"; // That prop mixes the selectedWeek and selectedYearNo for the template-view
+  selectedWeek : string = ""; // That prop holds the text of Week no:
 
-  yearsArr : number[] = [];
+  selectedYearNo : number | string = "";
+  selectedWeekNo : string | number = "";
 
-  @Input() formControlParentalState: FormControl = new FormControl(moment()); // Variable to receive Form control from parent to maintain the last date user has inserted
+  selectedYearObject!: YearObj;
+  yearsArr : YearObj[] = [];
+  showSaveButton: boolean = false;
 
-  day = moment();
-
-  currentYear: number = Number(this.day.format("Y"));
-  currentYear2!: number;
-
+  constructor(private langService: LanguageManagerService){}
 
   ngOnInit(){
-    console.warn("El state", this.formControlParentalState.value)
     this.populateYears()
+
+    this.langService.currentLanguageStream.subscribe(res => {
+      this.langDirection = res;
+    })
   }
 
   populateYears(){
-
-    for(let i = 2011; i <= 2028; i++){
-      this.yearsArr.push(i)
+    for(let yearNum = 2020, i = 0; yearNum <= new Date().getFullYear(); yearNum++, i++){
+      this.yearsArr.push({yearNum: yearNum, id: i})
     }
-
-    console.log(this.yearsArr)
   }
 
   cancelCalendar(){
-    this.showCalendar = !this.showCalendar;
-    this.showYearsView = true;
-    this.showWeeksView = false;
+    this.closeCalendar();
     this.resetCalendar();
   }
 
-  resetCalendar(){
-    this.selectedDate = "Choose year";
-    this.selectedWeek = "";
+  showYearView(){
+    this.showYearsView = true;
+    this.showWeeksView = false;
   }
 
-  setYear(year: string | number){
-    year = year.toString()
-    this.selectedDate = year
-    this.selectedYear = year
-    console.log("selected year", this.selectedDate)
+  showWeekView(){
+    this.showYearsView = false;
+    this.showWeeksView = true;
+    this.showSaveButton = false;
+  }
+
+  closeCalendar(){
+    this.showCalendar = !this.showCalendar;
+  }
+
+  resetCalendar(){
+
+    this.showYearView();
+    this.showSaveButton = false;
+
+    this.stringifiedDate = "Choose year";
+    this.selectedYearNo = "";
+
+    this.selectedWeek = "";
+    this.selectedWeekNo = "";
+  }
+
+  setYear(year: YearObj){
+
+    this.selectedYearNo = "";
+    this.stringifiedDate = year.yearNum.toString()
+    this.selectedYearNo = year.yearNum
+
+    console.log("selected year", this.stringifiedDate)
+    this.selectedYearObject = year
+
   }
 
   setWeek(week: string | number){
     this.selectedWeek = `Week No: ${week.toString()}`
+    this.selectedWeekNo = week.toString()
+    this.showSaveButton = true;
   }
 
-  increaseYear() {
-    if (this.isFirst) {
-      this.currentYear = Number(this.currentYear) + 1;
+  moveYearBack(){
+    if(this.selectedYearObject.id > 0){
+      this.selectedYearNo = this.yearsArr[this.selectedYearObject.id-1].yearNum
+      this.selectedYearObject = this.yearsArr[this.selectedYearObject.id - 1]
     }
-
-    for (let index = 1; index <= 53; index++) {
-      document.getElementById(`${index}day`)?.classList.remove("selectedClass");
-    }
-    // this.filterObject.frequent = 0;
-
-    // this.calendarService.allFrequentsHolder.next(
-    //   JSON.parse(localStorage.getItem("calendarFilter"))
-    // );
   }
 
-  decreaseYear() {
-    if (this.isFirst) {
-      this.currentYear = Number(this.currentYear) - 1;
-    }
-    for (let index = 1; index <= 53; index++) {
-      document.getElementById(`${index}day`)?.classList.remove("selectedClass");
-    }
-    // this.filterObject.frequent = 0;
+  moveYearForward(){
 
-    // this.calendarService.allFrequentsHolder.next(
-    //   JSON.parse(localStorage.getItem("calendarFilter"))
-    // );
+    if(this.selectedYearObject.id < this.yearsArr.length-1){
+      this.selectedYearNo = this.yearsArr[this.selectedYearObject.id+1].yearNum
+      this.selectedYearObject = this.yearsArr[this.selectedYearObject.id + 1]
+    }
   }
+
+  sendDate(){
+    const outputDate = `${this.selectedYearNo}/${this.selectedWeekNo}`
+    console.warn(outputDate)
+    this.date.emit(outputDate);
+    this.closeCalendar();
+    this.showYearView();
+  }
+
 }

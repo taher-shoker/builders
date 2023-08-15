@@ -36,6 +36,7 @@ import { LineChartComponent } from './line-chart/line-chart.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
 import { DatePickerWeeklyComponent } from './date-picker-weekly/date-picker-weekly.component';
 import { DatePickerRangeComponent } from './date-picker-range/date-picker-range.component';
+import { DatePickerWeeklyRangeComponent } from './date-picker-weekly-range/date-picker-weekly-range.component';
 
 @NgModule({
   imports: [
@@ -78,6 +79,7 @@ import { DatePickerRangeComponent } from './date-picker-range/date-picker-range.
     BarChartComponent,
     DatePickerWeeklyComponent,
     DatePickerRangeComponent,
+    DatePickerWeeklyRangeComponent,
   ],
   exports: [
     HeaderComponent,
@@ -97,6 +99,7 @@ import { DatePickerRangeComponent } from './date-picker-range/date-picker-range.
     BarChartComponent,
     DatePickerWeeklyComponent,
     DatePickerRangeComponent,
+    DatePickerWeeklyRangeComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })

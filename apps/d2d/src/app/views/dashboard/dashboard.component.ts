@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
-import { ProgressCircleData } from '@stc-apps/shared-ui';
+import { ProgressCircleData, YearRangeObj } from '@stc-apps/shared-ui';
 import { BarChartData } from '@stc-apps/shared-ui';
 import { LineChartData } from '@stc-apps/shared-ui';
 interface RegisteredCases {
@@ -251,4 +251,13 @@ export class DashboardComponent {
       },
     ]
   };
+
+  filter(filterStr: string){
+    console.log("Da filter", filterStr)
+  }
+
+  filterRangeDate(filterObj: Event){
+    const filterObject = filterObj as unknown as YearRangeObj;
+    console.log("Da filter", filterObject)
+  }
 }
