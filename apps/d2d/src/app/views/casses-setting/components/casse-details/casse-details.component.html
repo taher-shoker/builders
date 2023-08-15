@@ -278,7 +278,7 @@
                     !authService
                       .getLoggedInUser()
                       .roles.includes('APPROVERS') &&
-                    item.assignedUser === authService.getLoggedInUser().teamName
+                    checkAssigne(item)
                   "
                   [buttonText]="'reply' | translate"
                   [buttonType]="'primary'"

@@ -366,6 +366,18 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       });
   }
 
+  checkAssigne(item: any) {
+    if (item?.isAssigneeTeam) {
+      if (item?.assignedUser === this.authService.getLoggedInUser().teamName) {
+        return true;
+      }
+    } else {
+      if (item?.assignedUser === this.authService.getLoggedInUser().email) {
+        return true;
+      }
+    }
+    return false;
+  }
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
   }
