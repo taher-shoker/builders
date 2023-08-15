@@ -127,10 +127,7 @@
                 <div
                   class="case-status"
                   [ngClass]="
-                    this.cassesService.getKeyByValue(
-                      CaseStatus,
-                      element[col.key]
-                    )
+                    CasesService.getKeyByValue(CaseStatus, element[col.key])
                   "
                 >
                   {{ element[col.key] | translate }}

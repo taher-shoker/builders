@@ -154,7 +154,7 @@
               <p
                 class="case-status"
                 [ngClass]="
-                  cassesService.getKeyByValue(CaseStatus, this.caseStatus)
+                  CasesService.getKeyByValue(CaseStatus, this.caseStatus)
                 "
               >
                 {{ this.caseStatus | translate }}
