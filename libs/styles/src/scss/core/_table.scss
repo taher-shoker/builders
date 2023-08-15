@@ -107,3 +107,9 @@ table {
     color: rgba($color: $shadowStc, $alpha: 0.7);
   }
 }
+
+html[dir='rtl'] {
+  .mat-sort-header-content {
+    font-size: 16px;
+  }
+}
