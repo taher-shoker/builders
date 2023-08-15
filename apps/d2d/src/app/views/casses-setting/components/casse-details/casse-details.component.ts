@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnDestroy,
-  OnInit,
-  OnChanges,
-  SimpleChanges,
-} from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import {
@@ -24,7 +18,7 @@ import { AuthService } from './../../../../services/auth.service';
   templateUrl: './casse-details.component.html',
   styleUrls: ['./casse-details.component.scss'],
 })
-export class CasseDetailsComponent implements OnInit, OnChanges, OnDestroy {
+export class CasseDetailsComponent implements OnInit, OnDestroy {
   readonly TaskCicle = TaskCicle;
   readonly CaseStatus = CaseStatus;
 
@@ -62,9 +56,6 @@ export class CasseDetailsComponent implements OnInit, OnChanges, OnDestroy {
     public authService: AuthService
   ) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
-  }
   ngOnInit(): void {
     this.casseId = this.route.snapshot.params['id'];
 
@@ -79,6 +70,7 @@ export class CasseDetailsComponent implements OnInit, OnChanges, OnDestroy {
         this.caseSerial = res.caseSerialNumber;
         this.caseStatus = res.caseStatus;
         this.subscribeToLanguage();
+        this.handleTeam(this.caseData, this.teams);
       }
     });
     this.getCaseTasks(+this.casseId);
@@ -89,7 +81,7 @@ export class CasseDetailsComponent implements OnInit, OnChanges, OnDestroy {
           console.log('System teams :', res);
           this.teams = res;
           this.teams = this.teams.filter((x: any) => x.name !== 'Fraud');
-          this.handleTeam(this.teams);
+          this.handleTeam(this.caseData, this.teams);
         });
 
         this.cassesService.setSystemUsers().subscribe((res) => {
@@ -389,17 +381,14 @@ export class CasseDetailsComponent implements OnInit, OnChanges, OnDestroy {
     return false;
   }
 
-  handleTeam(value?: any) {
-    console.log(this.caseData?.creatorTeamName, value);
-    this.selectedTeam = value.filter(
-      (t: any) => t.name === this.caseData?.creatorTeamName
-    )[0];
-    console.log(this.selectedTeam);
-    // if (value.value === '1') {
-    //   this.infoForm
-    //     .get('selectedUser')
-    //     ?.setValue({ id: 3, name: 'Digital Care' }, { emitEvent: false });
-    // }
+  handleTeam(caseData?: any, team?: any) {
+    if (caseData && team) {
+      console.log(team);
+      console.log(caseData?.creatorTeamName);
+      this.selectedTeam = team.filter(
+        (t: any) => t.name === this.caseData?.creatorTeamName
+      )[0];
+    }
   }
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
