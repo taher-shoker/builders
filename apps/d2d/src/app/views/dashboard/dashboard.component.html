@@ -100,7 +100,9 @@
               ></stc-apps-line-chart>
             </div>
             <div *ngIf="registeredCasesChart && registeredCasesChart.chartData && registeredCasesChart.chartData.length === 0">
-              <p class = "emptyDataMsg">there is no data</p>
+              <p class = "emptyDataMsg">{{
+                direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
+              }}</p>
             </div>
           </div>
         </div>
@@ -125,7 +127,9 @@
             ></stc-apps-bar-chart>
           </div>
           <div class="chart" *ngIf="productivityTeamUsers && productivityTeamUsers.data && productivityTeamUsers.data.length === 0">
-            <p class = "emptyDataMsg">there is no data</p>
+            <p class = "emptyDataMsg">{{
+              direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
+            }}</p>
           </div>
         </div>
       </div>
@@ -145,7 +149,7 @@
             </div>
           </div>
 
-          <div class="chart" style = 'height:700px;' *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length > 0">
+          <div class="chart" *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length > 0">
             <stc-apps-progress-circle-chart
               [data]="casesTypes.chartData"
               [colors]="casesTypes.chartColors"
@@ -153,7 +157,9 @@
             ></stc-apps-progress-circle-chart>
           </div>
           <div class="chart" *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length === 0">
-            <p class = "emptyDataMsg">there is no data</p>
+            <p class = "emptyDataMsg">{{
+              direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
+            }}</p>
           </div>
         </div>
       </div>
@@ -177,7 +183,9 @@
             ></stc-apps-bar-chart>
           </div>
           <div class="chart" *ngIf="stages && stages.data && stages.data.length === 0">
-            <p class = "emptyDataMsg">there is no data</p>
+            <p class = "emptyDataMsg">{{
+              direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
+            }}</p>
           </div>
         </div>
       </div>

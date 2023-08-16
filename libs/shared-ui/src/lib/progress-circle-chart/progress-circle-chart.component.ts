@@ -31,9 +31,6 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
   ngAfterViewInit(): void {
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(lang => {
       this.direction = localStorage.getItem("language");
-      // console.log(this.direction);
-      // console.log(lang);
-      // console.log("localStorage" , localStorage.getItem("language"));
       this.displayProgressCircleChart();
     })
   }
@@ -87,12 +84,15 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     xRenderer.grid.template.setAll({
       forceHidden: true,
     });
-
+    const numbers:number[] = [];
+    this.data.forEach(el => {
+      numbers.push(el.value)
+    })
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(this.root, {
         renderer: xRenderer,
         min: 0,
-        max: 100,
+        max: Math.max(...numbers) + 5,
         strictMinMax: true,
         numberFormat: "#'%'",
         tooltip: am5.Tooltip.new(this.root, {}),
@@ -194,8 +194,19 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         strokeOpacity: 0,
         cornerRadius: 20,
         dRadius: 5,
-        tooltipHTML: '<div class = "tooltip-text">{category}: {valueX}</div>',
+        tooltipHTML: '<div class = "tooltip-text">{category}: {value}</div>',
         templateField: 'columnSettings',
+      });
+      const cellSize = 30;
+      series.events.on("datavalidated", function(ev) {
+        const series2 = ev.target;
+        const chart:any = series2.chart;
+        const xAxis:any = chart?.xAxes.getIndex(0);
+        // Calculate how we need to adjust chart height
+        const chartHeight = series.data.length * cellSize + xAxis.height() + chart.get("paddingTop", 0) + chart.get("paddingBottom", 0);
+
+        // Set it on chart's container
+        chart.root.dom.style.height = (chartHeight * 3) + "px";
       });
       return series;
     };
@@ -243,6 +254,8 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
       height: 15,
       dx : this.direction == 'ar' ? 10 : 0
     });
+
+
     // yAxis.data.setAll(newData);
     yAxis.data.setAll(data);
     series1.appear(1000);

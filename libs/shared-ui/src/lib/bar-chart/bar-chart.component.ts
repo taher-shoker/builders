@@ -120,7 +120,7 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy{
     series.columns.template.setAll({
       tooltipY: am5.percent(10),
       templateField: 'columnSettings',
-      width : am5.percent(40),
+      width : am5.percent(20),
     });
     series.data.setAll(this.data);
     chart.set('cursor', am5xy.XYCursor.new(this.root, {alwaysShow:false}));

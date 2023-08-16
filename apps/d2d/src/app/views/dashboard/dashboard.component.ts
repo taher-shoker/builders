@@ -139,14 +139,14 @@ export class DashboardComponent implements OnInit{
   {
     this.dashboardService.getChartTypesData().subscribe(data => {
       console.log(data);
-      let newData:{category:string , value:number}[] = [];
+      const newData:{category:string , value:number}[] = [];
       data.d2DCaseTypeCountDtoList.forEach(chart => {
         newData.push({
           category : chart.caseType,
           value : chart.caseCount,
         })
       })
-      newData = newData.splice(newData.length - 6,6);
+      // newData = newData.splice(newData.length - 6,6);
       this.casesTypes = {
         titleEn : "chart to compare the cases to each other with case type",
         titleAr : "مخطط لمقارنة الحالات مع بعضها البعض بنوع الحالة",
