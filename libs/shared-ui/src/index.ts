@@ -21,3 +21,5 @@ export * from './lib/line-chart/line-chart.component';
 export * from './lib/date-picker-weekly/date-picker-weekly.component';
 
 export * from './lib/date-picker-range/date-picker-range.component';
+
+export * from './lib/date-picker-weekly-range/date-picker-weekly-range.component';
