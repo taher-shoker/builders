@@ -44,11 +44,11 @@ const COLUMNS_SCHEMA = [
     type: 'text',
     label: 'team',
   },
-  // {
-  //   key: 'jobeTitle',
-  //   type: 'text',
-  //   label: 'jobe Title',
-  // },
+  {
+    key: 'jobTitle',
+    type: 'text',
+    label: 'jobe Title',
+  },
   {
     key: 'actions',
     type: 'actions',
@@ -116,10 +116,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
     });
   }
   searchFilter(event: Event) {
-    const searchVal = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
-    this.dataSource.filter = searchVal;
+    const searchVal = (event.target as HTMLInputElement).value;
+
+    this.dataSource.filter = searchVal.trim().toLowerCase();
   }
 
   getCreatorUsersLength(arr: any) {
@@ -192,6 +191,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
     this.dataSource.paginator = this.paginator;
     this.bannerDataService.updateData({ title: 'users_setting', text: '' });
+
+    this.dataSource.filterPredicate = function (record, filter) {
+      return (
+        record.name.toLocaleLowerCase().indexOf(filter) != -1 ||
+        record.email.toLocaleLowerCase().indexOf(filter) != -1
+      );
+    };
   }
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
