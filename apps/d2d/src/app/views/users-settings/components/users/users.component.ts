@@ -169,9 +169,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
         ?.setValue({ id: 'all', name: 'All' }, { emitEvent: false });
       if (value.id === 'all') {
         this.dataSource.data = this.list;
-        this.teams = teamsOptions;
+        this.getTeams();
       } else {
-        this.teams = [];
         if (value.id === 1) {
           this.teams = teamsOptions.filter((t: any) => t.id !== 4);
         } else {

@@ -109,7 +109,8 @@ table {
 }
 
 html[dir='rtl'] {
-  .mat-sort-header-content {
+  .mat-sort-header-content,
+  .mat-mdc-table .mdc-data-table__header-row .mdc-data-table__header-cell {
     font-size: 16px;
   }
 }
