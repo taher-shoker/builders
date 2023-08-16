@@ -6,8 +6,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 export interface BarChartData {
-  year : string;
-  income : number;
+  name : string;
+  value : number;
 }
 @Component({
   selector: 'stc-apps-bar-chart',
@@ -43,6 +43,8 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy{
     });
   };
   initBarChart() {
+    console.log(this.data);
+
     this.maybeDisposeRoot(this.chartdiv_id);
     this.root = am5.Root.new(this.chartdiv_id);
     this.root.setThemes([am5themes_Animated.new(this.root)]);
@@ -54,6 +56,7 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy{
     {
       this.root._logo.dispose();
     }
+    this.root.numberFormatter.set("numberFormat", "#.0a");
     const xRenderer = am5xy.AxisRendererX.new(this.root, {
       minGridDistance : 50,
       strokeOpacity: 0.1,
@@ -63,7 +66,7 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy{
     });
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(this.root, {
-        categoryField: 'year',
+        categoryField: 'name',
         renderer: xRenderer,
         tooltip: am5.Tooltip.new(this.root, {})
       })
@@ -101,16 +104,16 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy{
     });
     const series = chart.series.push(
       am5xy.ColumnSeries.new(this.root, {
-        name: 'Income',
+        name: 'value',
         xAxis: xAxis,
         yAxis: yAxis,
-        valueYField: 'income',
-        categoryXField: 'year',
+        valueYField: 'value',
+        categoryXField: 'name',
         tooltip: am5.Tooltip.new(this.root, {
           pointerOrientation: 'horizontal',
-          labelText: '{name} in {categoryX}: {valueY} {info}',
+          labelText: '{categoryX}: {valueY} {info}',
         }),
-        fill : am5.color(this.colors[0]),
+        fill : am5.color("#4f008c"),
       })
     );
     series.get("tooltip")?.label.set("direction" , this.direction == 'ar' ? "rtl" : "ltr");

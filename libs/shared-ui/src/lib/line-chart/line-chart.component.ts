@@ -5,7 +5,7 @@ import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { Subscription } from 'rxjs';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 export interface LineChartData {
-  category: string,
+  category: string | number,
   value: number,
 }
 @Component({
@@ -107,6 +107,8 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit{
         })
       })
     );
+    this.root.numberFormatter.set("numberFormat", "#.#a");
+
     chart.gridContainer.dispose()
     const xRenderer = xAxis.get("renderer");
     const yRenderer = yAxis.get("renderer");
@@ -156,7 +158,7 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit{
     // series.get("tooltip")?.setAll({
     //   reverseChildren : true
     // })
-      const arr:{category:string}[] = []
+      const arr:{category:string | number}[] = []
       this.chartData.forEach((data2) => {
         arr.push({category : data2.category});
       })

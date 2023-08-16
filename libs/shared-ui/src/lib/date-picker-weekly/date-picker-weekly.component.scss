@@ -1,0 +1,134 @@
+
+.calendar{
+  width: 280px;
+  height: 320px;
+  position: absolute;
+  right: 0;
+  background-color: white;
+  z-index: 9999;
+  border: 1px solid black;
+  box-shadow: 4px 5px 8px -5px rgba(0,0,0,0.75);
+}
+
+.calendar-header{
+  padding: 0px 15px;
+
+  height: 25%;
+  background-color: var(--stc-color);
+
+  .select-date, .selected-date{
+    color: white;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .selected-date{
+    font-size: 19px;
+    margin-bottom: 0;
+    margin-top: 14px;
+
+  }
+}
+
+.years-view{
+
+  ul{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 0;
+    padding: 8px 15px;
+
+  }
+
+  li{
+    font-size: 14px;
+    padding: 4px;
+    border-radius: 14px;
+
+  }
+}
+
+.current-year{
+  text-align: center;
+  margin-bottom: 4px;
+
+}
+
+.selectedClass {
+  background-color: var(--stcCoralColor);
+  color: white;
+  font-weight: bold;
+  // cursor: none;
+}
+
+
+.weeks-view{
+
+  ul {
+    // height: 130px;
+    // width: 100%;
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    padding-left: 2px;
+    padding-right: 2px;
+    margin: 0;
+    // list-style: none;
+  }
+}
+
+li {
+  display: inline;
+  cursor: pointer;
+  text-align: center;
+}
+
+li:hover {
+  background-color: var(--stc-color);
+  color: white;
+  font-weight: bold;
+}
+
+.year-chosen{
+  background-color: var(--stc-color);
+  color: white;
+  font-weight: bold;
+}
+
+.calendar-footer{
+  border-top: 1px solid var(--stc-Silver-Color);
+  height: 10%;
+
+  .action-btns-holder{
+    text-align: end;
+    font-size: 12px;
+    margin-inline-end: 20px;
+
+    .action-btn{
+      background-color: white;
+      border: none;
+      color: var(--stc-color);
+      font-weight: 500;
+      border-radius: 14px;
+
+      &:hover{
+        background-color: var(--stc-color-light);
+      }
+
+    }
+
+    .disabled-btn{
+      color: var(--stc-Silver-Color);
+
+      &:hover{
+        background-color: white;
+      }
+    }
+  }
+}
+
+.fa {
+  cursor: pointer;
+  margin: 0 10px;
+}
+
+

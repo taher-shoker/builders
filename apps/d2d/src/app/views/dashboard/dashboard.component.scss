@@ -42,19 +42,32 @@
     }
   }
 }
-.chart-box {
-  background-color:#fff;
-  border-radius: 15px;
+
+
+
+.chart-view{
+  text-align: start;
+  background-color: white;
+  margin: 25px 0;
   padding: 20px;
   margin:25px 0;
-  h4 {
-    font-weight: 500;
-    text-transform: capitalize;
-    font-size: 1.25rem !important;
-  }
-  &.bar-chart
-  {
-    margin-top: 0;
-    margin-bottom: 25px;
-  }
+
+}
+.chart{
+  margin: 0 -15px;
+}
+.chart-title {
+  font-weight: 500;
+  text-transform: capitalize;
+  font-size: 1.25rem !important;
+  color:var(--stc-color);
+}
+.emptyDataMsg
+{
+  text-align: center;
+  text-transform: capitalize;
+  color:var(--stc-color);
+  font-size: 20px;
+  font-weight: bold;
+  font-style:italic;
 }
