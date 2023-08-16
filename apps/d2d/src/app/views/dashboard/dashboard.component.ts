@@ -77,41 +77,7 @@ export class DashboardComponent implements OnInit{
       this.dashboardUserCases = data;
     })
   }
-  getProductivityChartData()
-  {
-    this.dashboardService.getProductivityChartData().subscribe((data) => {
-      const newData:{name:string , value:number}[] = [];
-      data.data.forEach((chart:{fraudUserDisplayName:string , productivityFrequency:number}) => {
-        newData.push({
-          name : chart.fraudUserDisplayName,
-          value : chart.productivityFrequency
-        })
-      });
-      this.productivityTeamUsers = {
-        titleEn : "Fraud Team Productivity Users",
-        titleAr : "مستخدمي إنتاجية فريق الاحتيال",
-        data : newData
-      };
-    })
-  }
-  getStatusChartData()
-  {
-    this.dashboardService.getStatusChartData().subscribe(data => {
-      console.log(data);
-      const newData:{name:string , value:number}[] = [];
-      data.data.forEach((chart:{caseStatus:string , caseCount:number}) => {
-        newData.push({
-          name : chart.caseStatus,
-          value : chart.caseCount
-        })
-      });
-      this.stages = {
-        titleEn : "Fraud Team Productivity Users",
-        titleAr : "مستخدمي إنتاجية فريق الاحتيال",
-        data : newData
-      };
-    })
-  }
+  // first chart
   getTrendChartData()
   {
     // console.log(this.authService.getLoggedInUser());
@@ -135,25 +101,63 @@ export class DashboardComponent implements OnInit{
       }
     })
   }
-  getChartTypesData()
+  // second chart
+  getProductivityChartData()
   {
-    this.dashboardService.getChartTypesData().subscribe(data => {
-      console.log(data);
-      const newData:{category:string , value:number}[] = [];
-      data.d2DCaseTypeCountDtoList.forEach(chart => {
+    this.dashboardService.getProductivityChartData().subscribe((data) => {
+      const newData:{name:string , value:number}[] = [];
+      data.data.forEach((chart:{fraudUserDisplayName:string , productivityFrequency:number}) => {
         newData.push({
-          category : chart.caseType,
-          value : chart.caseCount,
+          name : chart.fraudUserDisplayName,
+          value : chart.productivityFrequency
         })
+      });
+      this.productivityTeamUsers = {
+        titleEn : "Fraud Team Productivity Users",
+        titleAr : "مستخدمي إنتاجية فريق الاحتيال",
+        data : newData
+      };
+    })
+  }
+  // third chart
+  getChartTypesData()
+    {
+      this.dashboardService.getChartTypesData().subscribe(data => {
+        console.log(data);
+        const newData:{category:string , value:number}[] = [];
+        data.d2DCaseTypeCountDtoList.forEach(chart => {
+          newData.push({
+            category : chart.caseType,
+            value : chart.caseCount,
+          })
+        })
+        // newData = newData.splice(newData.length - 6,6);
+        this.casesTypes = {
+          titleEn : "chart to compare the cases to each other with case type",
+          titleAr : "مخطط لمقارنة الحالات مع بعضها البعض بنوع الحالة",
+          chartColors : ["#4f008c" , "#ff1a1a" , "#8e9aa0" , "#1bced8" , "#ffdd40" , "#ff6a39"],
+          totalCases : this.dashboardUserCases && this.dashboardUserCases.allCaseCount ? this.dashboardUserCases.allCaseCount : 0,
+          chartData : newData
+        }
       })
-      // newData = newData.splice(newData.length - 6,6);
-      this.casesTypes = {
-        titleEn : "chart to compare the cases to each other with case type",
-        titleAr : "مخطط لمقارنة الحالات مع بعضها البعض بنوع الحالة",
-        chartColors : ["#4f008c" , "#ff1a1a" , "#8e9aa0" , "#1bced8" , "#ffdd40" , "#ff6a39"],
-        totalCases : this.dashboardUserCases && this.dashboardUserCases.allCaseCount ? this.dashboardUserCases.allCaseCount : 0,
-        chartData : newData
-      }
+  }
+  // fourth chart
+  getStatusChartData()
+  {
+    this.dashboardService.getStatusChartData().subscribe(data => {
+      console.log(data);
+      const newData:{name:string , value:number}[] = [];
+      data.data.forEach((chart:{caseStatus:string , caseCount:number}) => {
+        newData.push({
+          name : chart.caseStatus,
+          value : chart.caseCount
+        })
+      });
+      this.stages = {
+        titleEn : "Fraud Team Productivity Users",
+        titleAr : "مستخدمي إنتاجية فريق الاحتيال",
+        data : newData
+      };
     })
   }
   ngOnInit(): void {

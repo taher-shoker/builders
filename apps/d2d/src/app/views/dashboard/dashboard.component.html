@@ -93,7 +93,7 @@
               </div>
             </div>
 
-            <div class="chart" *ngIf="registeredCasesChart && registeredCasesChart.chartData && registeredCasesChart.chartData.length > 0">
+            <div class="chart" style = 'height: 400px;' *ngIf="registeredCasesChart && registeredCasesChart.chartData && registeredCasesChart.chartData.length > 0">
               <stc-apps-line-chart
                 [chartData]="registeredCasesChart.chartData"
                 [colors]="registeredCasesChart.lineChartColors"

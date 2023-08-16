@@ -55,7 +55,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         panY: false,
         // wheelX: "panX",
         // wheelY: "zoomX",
-        innerRadius: am5.percent(25),
+        innerRadius: am5.percent(20),
         startAngle: this.direction == 'en' ? -90 : -90,
         endAngle: this.direction == 'en' ? 180 : 180,
       })
@@ -85,14 +85,16 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
       forceHidden: true,
     });
     const numbers:number[] = [];
+    let sum = 0;
     this.data.forEach(el => {
       numbers.push(el.value)
+      sum += el.value;
     })
     const xAxis = chart.xAxes.push(
       am5xy.ValueAxis.new(this.root, {
         renderer: xRenderer,
         min: 0,
-        max: Math.max(...numbers) + 5,
+        max: sum,
         strictMinMax: true,
         numberFormat: "#'%'",
         tooltip: am5.Tooltip.new(this.root, {}),
@@ -142,7 +144,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     );
     chart.children.unshift(
       am5.Label.new(this.root, {
-        text: `${this.totalCases}`,
+        text: `${sum}`,
         fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center',
@@ -196,6 +198,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         dRadius: 5,
         tooltipHTML: '<div class = "tooltip-text">{category}: {value}</div>',
         templateField: 'columnSettings',
+        fill : am5.color("#000")
       });
       const cellSize = 30;
       series.events.on("datavalidated", function(ev) {
@@ -219,28 +222,32 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     const legend = chart.children.push(
       am5.Legend.new(this.root, {
         centerX: am5.percent(50),
+        centerY: am5.percent(50),
         x: am5.percent(50),
-        y: am5.percent(100),
-        layout: this.root.horizontalLayout,
+        y: am5.percent(97),
+        // layout: this.root.horizontalLayout,
         reverseChildren: this.direction == 'ar' ? true : false,
         nameField: 'categoryX',
         templateField: 'category',
-        // width : am5.percent(100),
+        layout: am5.GridLayout.new(this.root, {
+          maxColumns: 9,
+          fixedWidthGrid: true
+        })
       }),
     );
     legend.itemContainers.template.setAll({
       reverseChildren : this.direction == 'ar' ? true : false,
+      height:40
     })
     legend.data.setAll(series2.dataItems);
     legend.valueLabels.template.setAll({
       fill: am5.color('#000000'),
-      oversizedBehavior : "truncate"
     });
     legend.labels.template.setAll({
       // maxWidth: 140,
       // width: 140,
       height : 24,
-      oversizedBehavior:"truncate",
+      oversizedBehavior:"wrap",
       visible: true,
       reverseChildren : this.direction == 'ar' ? true : false,
       direction : this.direction == 'ar' ? "rtl" : "ltr"
