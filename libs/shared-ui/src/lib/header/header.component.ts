@@ -19,6 +19,7 @@ export class HeaderComponent {
   @Input() logoSrc: string | undefined;
   @Input() sidebarLogoSrc: string | undefined;
   @Output() logOut: EventEmitter<void> = new EventEmitter();
+  @Output() backToHome: EventEmitter<void> = new EventEmitter();
 
   @Input({ required: true })
   allItems!: NavItem[];
