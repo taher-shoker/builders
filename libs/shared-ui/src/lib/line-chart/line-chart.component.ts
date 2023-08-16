@@ -97,7 +97,6 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit{
       am5xy.ValueAxis.new(this.root, {
         maxDeviation: 0.5,
         renderer: am5xy.AxisRendererY.new(this.root, {
-          pan:"zoom",
           strokeOpacity: 1,
           strokeWidth: 2,
           stroke : am5.color(0x000000),
@@ -148,7 +147,7 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit{
         categoryYField : "value",
         tooltip: am5.Tooltip.new(this.root, {
           pointerOrientation: 'vertical',
-          labelText: '{name} in {categoryX}: {valueY} {info}',
+          labelText: '{categoryX}: {valueY} {info}',
         }),
       })
     );

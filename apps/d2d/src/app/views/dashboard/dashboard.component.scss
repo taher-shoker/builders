@@ -8,6 +8,9 @@
     border-radius: 5px;
     .static {
       background-color: rgb(255, 255, 255);
+      box-shadow: 0 2px 10px 0 rgba(0,0,0,0.08);
+      -webkit-box-shadow: 0 2px 10px 0 rgba(0,0,0,0.08);
+      -moz-box-shadow: 0 2px 10px 0 rgba(0,0,0,0.08);
       border-radius: 10px;
       display: flex;
       flex-direction: row-reverse;
@@ -15,6 +18,10 @@
       justify-content: space-between;
       padding: 40px;
       align-items: center;
+      @media all and (max-width:768px)
+      {
+        margin-bottom: 20px;
+      }
       .icon {
         width: 60px;
         height: 60px;
@@ -44,14 +51,16 @@
 }
 
 
-
 .chart-view{
   text-align: start;
   background-color: white;
   margin: 25px 0;
   padding: 20px;
   margin:25px 0;
-
+  border-radius: 10px !important;
+  box-shadow: 0 2px 10px 0 rgba(0,0,0,0.08);
+  -webkit-box-shadow: 0 2px 10px 0 rgba(0,0,0,0.08);
+  -moz-box-shadow: 0 2px 10px 0 rgba(0,0,0,0.08);
 }
 .chart{
   margin: 0 -15px;
