@@ -114,7 +114,7 @@ export class DashboardComponent implements OnInit{
       });
       this.productivityTeamUsers = {
         titleEn : "Fraud Team Productivity Users",
-        titleAr : "مستخدمي إنتاجية فريق الاحتيال",
+        titleAr : "مستخدمي إنتاجية الفريق",
         data : newData
       };
     })
@@ -154,8 +154,8 @@ export class DashboardComponent implements OnInit{
         })
       });
       this.stages = {
-        titleEn : "Fraud Team Productivity Users",
-        titleAr : "مستخدمي إنتاجية فريق الاحتيال",
+        titleEn : "count of cases in each stage",
+        titleAr : "عدد الحالات في كل مرحلة",
         data : newData
       };
     })
