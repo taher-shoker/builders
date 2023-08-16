@@ -10,8 +10,14 @@ export interface User{
   email: string,
   name: string,
   jobTitle: string,
-  roles: string[],
-  teamName: null | string
+  roles?: string[],
+  teamName?: null | string,
+  userGroups: Group[]
+}
+
+interface Group{
+  id: number,
+  groupName: string
 }
 
 export interface Team {

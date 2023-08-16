@@ -80,12 +80,13 @@
                           [labelName]="'name'"
                           [labelValue]="'value'"
                           formControlName="filterValue"
+                          (selectChange)="filterTrendChartWithUser($event)"
                         ></stc-apps-select-drop-down>
                       </div>
 
                       <div class="col-2">
                         <!-- Put a calendar component here -->
-                        <stc-apps-date-picker-weekly (date)="filter($event)"></stc-apps-date-picker-weekly>
+                        <stc-apps-date-picker-weekly-range (dateRange)="filterLineChart($event)"></stc-apps-date-picker-weekly-range>
                         <!-- <stc-apps-date-picker-weekly-range (date)="filterRangeDate($event)"></stc-apps-date-picker-weekly-range> -->
                       </div>
                     </div>
@@ -119,6 +120,16 @@
                 <p class="chart-title">{{direction === 'en' ? productivityTeamUsers?.titleEn : productivityTeamUsers?.titleAr}}</p>
               </div>
               <div class="col"></div>
+              <div class="col-3">
+                <stc-apps-select-drop-down
+                  [options]="dateFilterOption"
+                  [label]="'Select Date' | translate"
+                  [labelName]="'name'"
+                  [labelValue]="'value'"
+                  (selectChange)="filterProductivityUser($event)"
+                >
+                </stc-apps-select-drop-down>
+              </div>
             </div>
           </div>
 
@@ -147,6 +158,12 @@
                 </p>
               </div>
               <div class="col"></div>
+              <div class="col-3">
+                <stc-apps-date-picker-range
+                  (valueChangedEvent)="filterProgressCircle($event)"
+                  >
+                </stc-apps-date-picker-range>
+              </div>
             </div>
           </div>
 
@@ -175,6 +192,13 @@
                 <p class="chart-title">{{direction === 'en' ? stages?.titleEn : stages?.titleAr}}</p>
               </div>
               <div class="col"></div>
+              <div class="col-3">
+                <stc-apps-date-picker-range
+                (valueChangedEvent)="filterStages($event)"
+
+                  >
+                </stc-apps-date-picker-range>
+              </div>
             </div>
           </div>
 

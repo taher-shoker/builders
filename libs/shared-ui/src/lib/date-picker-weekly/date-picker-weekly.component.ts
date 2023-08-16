@@ -85,7 +85,7 @@ export class DatePickerWeeklyComponent implements OnInit {
   }
 
   populateYears(){
-    for(let yearNum = 2020, i = 0; yearNum <= new Date().getFullYear(); yearNum++, i++){
+    for(let yearNum = 2023, i = 0; yearNum <= new Date().getFullYear(); yearNum++, i++){
       this.yearsArr.push({yearNum: yearNum, id: i})
     }
   }

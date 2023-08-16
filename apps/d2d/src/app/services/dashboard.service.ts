@@ -4,6 +4,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { DashboardUsersCases  } from '../views/dashboard/dashboard.component';
+import { DateRange, WeeklyDateObj } from '@stc-apps/shared-ui';
 interface ProductivityChartData {
   data : {
     fraudUserDisplayName:string;
@@ -34,24 +35,46 @@ interface WeeklyTrendChart {
 })
 export class DashboardService {
   constructor(private http: HttpClient){}
+
   getDashboardUsersData():Observable<DashboardUsersCases>
   {
     return this.http.get<DashboardUsersCases>(`${environment.apiUrl}/dashboard`);
   }
-  getWeeklyTrendChartData(username?:string , teamname?:string):Observable<WeeklyTrendChart>
+
+  getWeeklyTrendChartData(fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, username?:string , teamname?:string):Observable<WeeklyTrendChart>
   {
-    return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?username=${username}`);
+    if(teamname){
+      return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&teamName=${teamname}`);
+    }else{
+      return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=22&yearFrom=2023&weekTo=50&yearTo=2023&username=${username}`);
+    }
   }
-  getProductivityChartData():Observable<ProductivityChartData>
+
+  getProductivityChartData(fromDate?: string, toDate?: string):Observable<ProductivityChartData>
   {
     return this.http.get<ProductivityChartData>(`${environment.apiUrl}/dashboard/chart/fraud`);
   }
-  getStatusChartData():Observable<StatusChartData>
+
+  getStatusChartData(fromDate?: string, toDate?: string):Observable<StatusChartData>
   {
-    return this.http.get<StatusChartData>(`${environment.apiUrl}/dashboard/chart/status`);
+    let params = undefined;
+
+    if(fromDate && toDate){
+      params = {startDate: fromDate, endDate: toDate}
+    }
+
+    return this.http.get<StatusChartData>(`${environment.apiUrl}/dashboard/chart/status`, {params});
   }
-  getChartTypesData():Observable<ChartTypesData>
+
+  getChartTypesData(fromDate?: string, toDate?: string):Observable<ChartTypesData>
   {
-    return this.http.get<ChartTypesData>(`${environment.apiUrl}/dashboard/chart/type`);
+
+    let params = undefined;
+
+    if(fromDate && toDate){
+      params = {startDate: fromDate, endDate: toDate}
+    }
+    return this.http.get<ChartTypesData>(`${environment.apiUrl}/dashboard/chart/type`, {params});
   }
+
 }
