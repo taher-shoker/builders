@@ -80,13 +80,13 @@
                           [labelName]="'name'"
                           [labelValue]="'value'"
                           formControlName="filterValue"
-                          (selectChange)="filterTrendChartWithUser($event)"
+                          (selectChange)="filterLineChartWithUser($event)"
                         ></stc-apps-select-drop-down>
                       </div>
 
                       <div class="col-2">
                         <!-- Put a calendar component here -->
-                        <stc-apps-date-picker-weekly-range (dateRange)="filterLineChart($event)"></stc-apps-date-picker-weekly-range>
+                        <stc-apps-date-picker-weekly-range (dateRange)="filterLineChartWithDate($event)"></stc-apps-date-picker-weekly-range>
                         <!-- <stc-apps-date-picker-weekly-range (date)="filterRangeDate($event)"></stc-apps-date-picker-weekly-range> -->
                       </div>
                     </div>

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, ElementRef, Input, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, OnDestroy, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5radar from '@amcharts/amcharts5/radar';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -19,7 +19,7 @@ export interface ProgressCircleData {
   templateUrl: './progress-circle-chart.component.html',
   styleUrls: ['./progress-circle-chart.component.scss'],
 })
-export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterViewInit{
+export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterViewInit, OnChanges{
   @Input({ required: true }) data!: ProgressCircleData[];
   @Input() colors: string[] = [];
   @Input() totalCases: number = 0;
@@ -28,6 +28,14 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
   root!: am5.Root;
   chartdiv_id = '';
   constructor(private elRef: ElementRef , private languageManagerService: LanguageManagerService) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && !changes['data'].firstChange) {
+      this.data = changes['data'].currentValue;
+      this.displayProgressCircleChart()
+    }
+  }
+
   ngAfterViewInit(): void {
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(lang => {
       this.direction = localStorage.getItem("language");

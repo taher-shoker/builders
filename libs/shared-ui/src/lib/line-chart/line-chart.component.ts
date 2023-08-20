@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit , AfterViewInit} from '@angular/core';
+import { Component, Input, OnDestroy, OnInit , AfterViewInit, OnChanges, SimpleChanges} from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
@@ -13,7 +13,7 @@ export interface LineChartData {
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
 })
-export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit{
+export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, OnChanges{
   @Input() chartData!: LineChartData[];
   @Input() colors:string[] = [];
   direction:string | null = "";
@@ -21,6 +21,14 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit{
   langSub!: Subscription;
   chartdiv_id = '';
   constructor(private languageManagerService: LanguageManagerService){}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['chartData'] && !changes['chartData'].firstChange) {
+      this.chartData = changes['chartData'].currentValue;
+      this.lineChart()
+    }
+  }
+
   ngOnInit(){
     this.chartdiv_id = `${Math.random()}_chart_id`;
 

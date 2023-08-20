@@ -88,17 +88,17 @@ export class DashboardComponent implements OnInit{
     })
   }
 
-
-
   getDashboardUsers()
   {
     this.dashboardService.getDashboardUsersData().subscribe((data:DashboardUsersCases) => {
       this.dashboardUserCases = data;
     })
   }
+
   getProductivityChartData(fromDate?: string, toDate?: string)
   {
     this.dashboardService.getProductivityChartData(fromDate, toDate).subscribe((data) => {
+      console.log("THE DATA", data)
       const newData:{name:string , value:number}[] = [];
       data.data.forEach((chart:{fraudUserDisplayName:string , productivityFrequency:number}) => {
         newData.push({
@@ -113,6 +113,7 @@ export class DashboardComponent implements OnInit{
       };
     })
   }
+
   getStatusChartData(fromDate?: string, toDate?: string)
   {
     this.dashboardService.getStatusChartData(fromDate, toDate).subscribe(data => {
@@ -131,14 +132,12 @@ export class DashboardComponent implements OnInit{
       };
     })
   }
-  getTrendChartData(fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, user? : User)
+
+  getTrendChartData(fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, user? : string, team?: string)
   {
-    // console.log(this.authService.getLoggedInUser());
-    this.dashboardService.getWeeklyTrendChartData(fromDate, toDate, user?.email , this.teams[0]?.name).subscribe(data => {
+    this.dashboardService.getWeeklyTrendChartData(user, team, fromDate, toDate).subscribe(data => {
       console.log(data);
-      // if(data.data.length > 0)
-      // {
-      // }
+
       const newData:{category:number | string , value:number}[] = [];
       data.data.forEach(chart => {
         newData.push({
@@ -154,8 +153,11 @@ export class DashboardComponent implements OnInit{
       }
     })
   }
+
   getChartTypesData(fromDate?: string, toDate?: string)
   {
+    console.log("Da progress before calling", fromDate, toDate)
+
     this.dashboardService.getChartTypesData(fromDate, toDate).subscribe(data => {
       console.log(data);
       const newData:{category:string , value:number}[] = [];
@@ -165,7 +167,7 @@ export class DashboardComponent implements OnInit{
           value : chart.caseCount,
         })
       })
-      // newData = newData.splice(newData.length - 6,6);
+
       this.casesTypes = {
         titleEn : "chart to compare the cases to each other with case type",
         titleAr : "مخطط لمقارنة الحالات مع بعضها البعض بنوع الحالة",
@@ -186,7 +188,7 @@ export class DashboardComponent implements OnInit{
           this.teams = res
           this.teams = this.teams.filter((x: any) => x.name !== "Fraud")
 
-          this.getTrendChartData();
+          this.getTrendChartData(undefined, undefined, undefined, this.teams[0].name);
           // this.filterValueForm.get("filterType")?.setValue(this.filterType[1])
           this.filterValueForm.get("filterValue")?.setValue(this.teams[0])
 
@@ -202,17 +204,33 @@ export class DashboardComponent implements OnInit{
     })
   }
 
-  filterLineChart(filterObj: YearRangeObj){
+  filterLineChartWithDate(filterObj: YearRangeObj){
     console.log("Da filter", filterObj)
-    this.getTrendChartData(filterObj.fromDate, filterObj.toDate)
+
+    if(this.filterValueForm.get('filterValue')?.value.email){
+      console.log("the value in email is", this.filterValueForm.get('filterValue')?.value)
+      this.getTrendChartData(filterObj.fromDate, filterObj.toDate, this.filterValueForm.get('filterValue')?.value.email)
+
+    }else{
+      console.log("the value in else is", this.filterValueForm.get('filterValue')?.value)
+      this.getTrendChartData(filterObj.fromDate, filterObj.toDate, undefined, this.filterValueForm.get('filterValue')?.value.name)
+
+    }
   }
 
   filterProgressCircle(newDate: DateRange){
+    console.log("Da progress", newDate)
+
     this.getChartTypesData(newDate.fromDate.toLocaleDateString('sv'), newDate.toDate.toLocaleDateString('sv'))
   }
 
-  filterTrendChartWithUser(user: User){
-    // this.getTrendChartData(user)
+  filterLineChartWithUser(user: any){
+    console.log("DA USAR", user)
+    if(user.email){
+      this.getTrendChartData(undefined, undefined, user.email)
+    }else{
+      this.getTrendChartData(undefined ,undefined, undefined, user.name)
+    }
   }
 
   filterProductivityUser(dateObj : {name: string, id: number}){
@@ -231,7 +249,6 @@ export class DashboardComponent implements OnInit{
 
       console.log(fromDate, toDate)
 
-      console.log("THISSS", fromDate)
     }else if(dateObj.id === 1){
 
       // Get the current date

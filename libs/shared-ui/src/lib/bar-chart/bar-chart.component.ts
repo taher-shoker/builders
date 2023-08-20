@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit , OnDestroy} from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit , OnDestroy, SimpleChanges, OnChanges} from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
@@ -14,7 +14,7 @@ export interface BarChartData {
   templateUrl: './bar-chart.component.html',
   styleUrls: ['./bar-chart.component.scss'],
 })
-export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy{
+export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy, OnChanges{
   @Input() data!: BarChartData[];
   root!: am5.Root;
   math = Math;
@@ -23,6 +23,14 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy{
   constructor(public dom_s: DomSanitizer,private languageManagerService: LanguageManagerService){}
   @Input() colors:string[] = [];
   chartdiv_id = '';
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && !changes['data'].firstChange) {
+      this.data = changes['data'].currentValue;
+      this.initBarChart()
+    }
+  }
+
   ngOnInit(): void {
     this.chartdiv_id = `${Math.random()}_chart_id`;
   }

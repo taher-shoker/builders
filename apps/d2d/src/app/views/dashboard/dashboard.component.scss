@@ -71,6 +71,14 @@
   font-size: 1.25rem !important;
   color:var(--stc-color);
 }
+
+.line-chart{
+  form{
+    .row{
+      align-items: center;
+    }
+  }
+}
 .emptyDataMsg
 {
   text-align: center;

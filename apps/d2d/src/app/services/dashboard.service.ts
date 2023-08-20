@@ -41,13 +41,23 @@ export class DashboardService {
     return this.http.get<DashboardUsersCases>(`${environment.apiUrl}/dashboard`);
   }
 
-  getWeeklyTrendChartData(fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, username?:string , teamname?:string):Observable<WeeklyTrendChart>
+  getWeeklyTrendChartData(username?:string, teamname?:string, fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, ):Observable<WeeklyTrendChart>
   {
-    if(teamname){
-      return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&teamName=${teamname}`);
+
+    if(fromDate && toDate){
+      if(teamname){
+        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&teamName=${teamname}`);
+      }else{
+        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&username=${username}`);
+      }
     }else{
-      return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=22&yearFrom=2023&weekTo=50&yearTo=2023&username=${username}`);
+      if(teamname){
+        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?teamName=${teamname}`);
+      }else{
+        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?username=${username}`);
+      }
     }
+
   }
 
   getProductivityChartData(fromDate?: string, toDate?: string):Observable<ProductivityChartData>
