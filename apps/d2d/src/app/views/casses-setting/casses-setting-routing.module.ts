@@ -4,6 +4,7 @@ import { CassesComponent } from './components/casses/casses.component';
 import { AddCasseComponent } from './components/add-casse/add-casse.component';
 import { CasseDetailsComponent } from './components/casse-details/casse-details.component';
 import { CassesSettingComponent } from './casses-setting.component';
+import { AuthGuard } from '../../services/auth.guard';
 
 const routes: Routes = [
   {
@@ -19,7 +20,8 @@ const routes: Routes = [
       {
         path: 'add-case',
         component: AddCasseComponent,
-        data: { breadcrumb: 'Add new Case' },
+        data: { breadcrumb: 'Add new Case', permissions: 'CREATORS' },
+        canActivate: [AuthGuard],
       },
       {
         path: 'case-details/:id',
