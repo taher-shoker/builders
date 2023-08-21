@@ -4,33 +4,33 @@
       <div class="col-md-4">
         <div class="static register">
           <div class="icon">
-            <i class="fas fa-user-friends"></i>
+            <i class="fas fa-plus-square"></i>
           </div>
           <div class="static-info">
-            <div class="num">{{ dashboardUserCases?.allCaseCount }}</div>
-            <div class="title">{{ 'total_cases' | translate }}</div>
+            <div class="num">{{ insightsData[0]?.value }}</div>
+            <div class="title">{{ 'closed_cases' | translate }} <span class="period-desc">{{'last 7 days' | translate}}</span></div>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="static in-progress">
           <div class="icon">
-            <i class="fas fa-user-edit"></i>
+            <i class="far fa-clock"></i>
           </div>
           <div class="static-info">
-            <div class="num">{{ dashboardUserCases?.rejectedCaseCount }}</div>
-            <div class="title">{{ 'rejected_cases' | translate }}</div>
+            <div class="num">{{ insightsData[1]?.value }}</div>
+            <div class="title">{{ 'inProgress_cases' | translate }} <span class="period-desc">{{'last 7 days' | translate}}</span></div>
           </div>
         </div>
       </div>
       <div class="col-md-4">
         <div class="static pending">
           <div class="icon">
-            <i class="fas fa-user-check"></i>
+            <i class="fas fa-retweet"></i>
           </div>
           <div class="static-info">
-            <div class="num">{{ dashboardUserCases?.approvedCaseCount }}</div>
-            <div class="title">{{ 'approved_cases' | translate }}</div>
+            <div class="num">{{ insightsData[2]?.value }}</div>
+            <div class="title">{{ 'pending_cases' | translate }} <span class="period-desc">{{'last 7 days' | translate}}</span></div>
           </div>
         </div>
       </div>
@@ -121,14 +121,19 @@
               </div>
               <div class="col"></div>
               <div class="col-3">
-                <stc-apps-select-drop-down
-                  [options]="dateFilterOption"
-                  [label]="'Select Period' | translate"
-                  [labelName]="'name'"
-                  [labelValue]="'value'"
-                  (selectChange)="filterProductivityUser($event)"
-                >
-                </stc-apps-select-drop-down>
+                <form [formGroup]="filterProductivityGroup">
+                  <stc-apps-select-drop-down
+                    [options]="dateFilterOption"
+                    [label]="'Select Period' | translate"
+                    [labelName]="'name'"
+                    [labelValue]="'value'"
+                    (selectChange)="filterProductivityUser($event)"
+                    formControlName="filterValue"
+
+                  >
+                  </stc-apps-select-drop-down>
+
+                </form>
               </div>
             </div>
           </div>
@@ -161,6 +166,8 @@
               <div class="col-3">
                 <stc-apps-date-picker-range
                   (valueChangedEvent)="filterProgressCircle($event)"
+                  [startDate]="startDate"
+                  [endDate]="endDate"
                   >
                 </stc-apps-date-picker-range>
               </div>
@@ -194,6 +201,8 @@
               <div class="col"></div>
               <div class="col-3">
                 <stc-apps-date-picker-range
+                [startDate]="startDate"
+                [endDate]="endDate"
                 (valueChangedEvent)="filterStages($event)"
 
                   >

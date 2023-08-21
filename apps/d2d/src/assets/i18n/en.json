@@ -38,7 +38,8 @@
   "last_update": "Last Update",
   "registered_cases": "Registered Cases",
   "inProgress_cases": "In Progress Cases",
-  "pending_cases": "Pending Actions",
+  "pending_actions": "Pending Actions",
+  "pending_cases": "Pending Cases",
   "closed_cases": "Closed Cases",
   "cases_list": "Cases List",
   "total_cases": "Total Cases",
@@ -143,5 +144,6 @@
   "Select Date": "Select Date",
   "Select Period": "Select Period",
   "by": "By",
-  "on": "On"
+  "on": "On",
+  "last 7 days": "last 7 days"
 }

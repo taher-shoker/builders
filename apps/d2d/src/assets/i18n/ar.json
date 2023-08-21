@@ -38,7 +38,8 @@
   "last_update": "أخر تحديث",
   "registered_cases": "الحالات المسجلة",
   "inProgress_cases": "الحالات المفتوحه",
-  "pending_cases": "المهام المعلقة",
+  "pending_actions": "المهام المعلقة",
+  "pending_cases": "الحالات المعلقة",
   "closed_cases": "الحالات المغلقة",
   "cases_list": "قائمة الحالات",
   "total_cases": "كل الحالات",
@@ -143,5 +144,7 @@
   "Select Date": "اختر تاريخ",
   "Select Period": "حدد مدة",
   "by": "بواسطة",
-  "on": "في"
+  "on": "في",
+  "last 7 days": "اخر 7 ايام"
+
 }

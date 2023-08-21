@@ -1,4 +1,5 @@
-import { Component, Input, forwardRef, Output, EventEmitter } from '@angular/core';
+import { Component, Input, forwardRef, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 // import { NG_VALUE_ACCESSOR } from '@angular/forms';
 // import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
@@ -41,7 +42,8 @@ export interface DateRange{
   //   },
   // ],
 })
-export class DatePickerRangeComponent{
+export class DatePickerRangeComponent implements OnInit, OnChanges{
+
   @Output() valueChangedEvent: EventEmitter<DateRange> = new EventEmitter<DateRange>(); // Mat datepicker emits event of type "any"
 
   @Input() inputName!: string;
@@ -49,7 +51,30 @@ export class DatePickerRangeComponent{
   @Input() inputPlaceholder!: string;
   @Input() required!: boolean;
 
+  @Input() startDate!: Date;
+  @Input() endDate!: Date;
+
   firstDateRange! : Date | null;
+
+  dateFormGroup = new FormGroup({
+    start: new FormControl(this.startDate),
+    end: new FormControl(this.endDate),
+  });
+
+  ngOnInit(): void {
+    console.log("The two inputs :", this.startDate)
+    console.log("The two inputs :", this.endDate)
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+
+    if (changes['startDate'] ) {//&& !changes['chartData'].firstChange
+      this.dateFormGroup.get('start')?.setValue(this.startDate);
+      this.dateFormGroup.get('end')?.setValue(this.endDate);
+      // this.endDate = changes['endDate'].currentValue;
+    }
+
+  }
+
 
   firstValueChanged(event: MatDatepickerInputEvent<Date>){
     this.firstDateRange = event.value

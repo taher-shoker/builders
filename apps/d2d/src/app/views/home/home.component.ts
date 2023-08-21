@@ -54,7 +54,7 @@ export class HomeComponent implements OnInit {
           );
           if (similar.length > 0) {
             items.push(this.navItems[i]);
-            this.urlHome = this.navItems[i].urlHome;
+            this.urlHome = this.navItems[i].urlHome!;
           }
         }
         this.navItems = items;

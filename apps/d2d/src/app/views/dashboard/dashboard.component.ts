@@ -65,10 +65,17 @@ export class DashboardComponent implements OnInit{
     filterValue: new FormControl({})
   })
 
+  filterProductivityGroup: FormGroup = new FormGroup({
+    filterValue: new FormControl({})
+  })
+
   productivityTeamUsers?:TeamUsers;
   registeredCasesChart?:RegisteredCases;
   casesTypes?: CaseTypes;
   stages?:TeamUsers;
+
+  endDate: Date = new Date();
+  startDate : Date = new Date(new Date().setDate(new Date().getDate() - 7))
 
   constructor(
     private dashboardService:DashboardService ,
@@ -78,24 +85,29 @@ export class DashboardComponent implements OnInit{
   ){}
 
   ngOnInit(): void {
-    this.getDashboardUsers();
-    this.getProductivityChartData();
-    this.getStatusChartData();
+    this.getDashboardInsights();
+    this.getStatusChartData(this.startDate.toLocaleDateString('sv'), this.endDate.toLocaleDateString('sv'));
     this.getChartTypesData();
     this.getUsersAndTeams();
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe((lang:string) => {
       this.direction = localStorage.getItem("language");
     })
+
+    this.filterProductivityGroup.get('filterValue')?.setValue(this.dateFilterOption[1])
+    this.filterProductivityUser(this.dateFilterOption[1]);
+
   }
 
-  getDashboardUsers()
+  getDashboardInsights()
   {
-    this.dashboardService.getDashboardUsersData().subscribe((data:DashboardUsersCases) => {
-      this.dashboardUserCases = data;
-    })
+    // this.dashboardService.getDashboardUsersData().subscribe((data:DashboardUsersCases) => {
+    //   this.dashboardUserCases = data;
+    // })
+
+    this.dashboardService.getStatusChartData(this.startDate.toLocaleDateString('sv'), this.endDate.toLocaleDateString('sv'))
   }
 
-  getProductivityChartData(fromDate?: string, toDate?: string)
+  getProductivityChartData(fromDate: string, toDate: string)
   {
     this.dashboardService.getProductivityChartData(fromDate, toDate).subscribe((data) => {
       console.log("THE DATA", data)
@@ -107,29 +119,39 @@ export class DashboardComponent implements OnInit{
         })
       });
       this.productivityTeamUsers = {
-        titleEn : "Fraud Team Productivity Users",
-        titleAr : "مستخدمي إنتاجية الفريق",
+        titleEn : "Fraud Team Productivity",
+        titleAr : "إنتاجية فريق الاختلاسات",
         data : newData
       };
     })
   }
+
+  insightsData: any[] = []
 
   getStatusChartData(fromDate?: string, toDate?: string)
   {
     this.dashboardService.getStatusChartData(fromDate, toDate).subscribe(data => {
       console.log(data);
       const newData:{name:string , value:number}[] = [];
+
       data.data.forEach((chart:{caseStatus:string , caseCount:number}) => {
         newData.push({
           name : chart.caseStatus,
           value : chart.caseCount
+        });
+
+        this.insightsData.push({
+          name : chart.caseStatus,
+          value : chart.caseCount
         })
       });
+
       this.stages = {
-        titleEn : "count of cases in each stage",
-        titleAr : "عدد الحالات في كل مرحلة",
+        titleEn : "Each stage count",
+        titleAr : "عدد حالات كل مرحلة",
         data : newData
       };
+
     })
   }
 
@@ -148,8 +170,8 @@ export class DashboardComponent implements OnInit{
         })
       })
       this.registeredCasesChart = {
-        titleEn : "weekly trend chart for registered cases",
-        titleAr : "مخطط الاتجاه الأسبوعي للحالات المسجلة",
+        titleEn : "weekly trend for registered cases",
+        titleAr : "الاتجاه الأسبوعي للحالات المسجلة",
         lineChartColors : ['#45006F' , '#FF6A39'],
         chartData : newData
       }
@@ -171,8 +193,8 @@ export class DashboardComponent implements OnInit{
       })
 
       this.casesTypes = {
-        titleEn : "chart to compare the cases to each other with case type",
-        titleAr : "مخطط لمقارنة الحالات مع بعضها البعض بنوع الحالة",
+        titleEn : "Cases of each type",
+        titleAr : "حالات كل نوع",
         chartColors : ["#4f008c" , "#ff1a1a" , "#8e9aa0" , "#1bced8" , "#ffdd40" , "#ff6a39"],
         totalCases : this.dashboardUserCases && this.dashboardUserCases.allCaseCount ? this.dashboardUserCases.allCaseCount : 0,
         chartData : newData
