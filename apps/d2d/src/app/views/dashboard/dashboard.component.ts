@@ -205,27 +205,22 @@ export class DashboardComponent implements OnInit{
   }
 
   filterLineChartWithDate(filterObj: YearRangeObj){
-    console.log("Da filter", filterObj)
 
     if(this.filterValueForm.get('filterValue')?.value.email){
-      console.log("the value in email is", this.filterValueForm.get('filterValue')?.value)
       this.getTrendChartData(filterObj.fromDate, filterObj.toDate, this.filterValueForm.get('filterValue')?.value.email)
 
     }else{
-      console.log("the value in else is", this.filterValueForm.get('filterValue')?.value)
       this.getTrendChartData(filterObj.fromDate, filterObj.toDate, undefined, this.filterValueForm.get('filterValue')?.value.name)
 
     }
   }
 
   filterProgressCircle(newDate: DateRange){
-    console.log("Da progress", newDate)
 
     this.getChartTypesData(newDate.fromDate.toLocaleDateString('sv'), newDate.toDate.toLocaleDateString('sv'))
   }
 
   filterLineChartWithUser(user: any){
-    console.log("DA USAR", user)
     if(user.email){
       this.getTrendChartData(undefined, undefined, user.email)
     }else{
