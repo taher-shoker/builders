@@ -104,7 +104,9 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
       );
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(this.root, {
-        maxDeviation: 0.5,
+        maxDeviation: 1,
+        min : 0,
+        extraMax : 3,
         renderer: am5xy.AxisRendererY.new(this.root, {
           strokeOpacity: 1,
           strokeWidth: 2,
@@ -115,7 +117,7 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
         })
       })
     );
-    this.root.numberFormatter.set("numberFormat", "#.#a");
+    this.root.numberFormatter.set("numberFormat", "#");
 
     chart.gridContainer.dispose()
     const xRenderer = xAxis.get("renderer");
