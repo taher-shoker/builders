@@ -138,11 +138,13 @@ export class DashboardComponent implements OnInit{
     this.dashboardService.getWeeklyTrendChartData(user, team, fromDate, toDate).subscribe(data => {
       console.log(data);
 
-      const newData:{category:number | string , value:number}[] = [];
+      const newData:{category:number | string , value:string , caseCount:number}[] = [];
       data.data.forEach(chart => {
         newData.push({
           category : chart.yearNum.toString(),
-          value : chart.weekNum,
+          value : `W ${chart.weekNum}`,
+          caseCount : chart.casesCount
+
         })
       })
       this.registeredCasesChart = {
