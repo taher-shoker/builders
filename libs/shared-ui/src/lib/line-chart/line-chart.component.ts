@@ -37,9 +37,6 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
   ngAfterViewInit(): void {
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(lang => {
       this.direction = localStorage.getItem("language");
-      // console.log(this.direction);
-      // console.log(lang);
-      // console.log("localStorage" , localStorage.getItem("language"));
       this.lineChart()
     })
   }
@@ -52,7 +49,6 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
   };
   lineChart()
   {
-    // console.log(this.direction);
     const data = this.chartData;
     this.maybeDisposeRoot(this.chartdiv_id);
     this.root = am5.Root.new(this.chartdiv_id);

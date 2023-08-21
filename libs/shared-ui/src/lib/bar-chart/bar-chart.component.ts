@@ -37,9 +37,6 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy, On
   ngAfterViewInit(): void {
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(lang => {
       this.direction = localStorage.getItem("language");
-      // console.log(this.direction);
-      // console.log(lang);
-      // console.log("localStorage" , localStorage.getItem("language"));
       this.initBarChart()
     })
   }
@@ -51,7 +48,6 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy, On
     });
   };
   initBarChart() {
-    console.log(this.data);
 
     this.maybeDisposeRoot(this.chartdiv_id);
     this.root = am5.Root.new(this.chartdiv_id);

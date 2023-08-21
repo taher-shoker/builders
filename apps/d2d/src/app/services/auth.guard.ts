@@ -37,8 +37,6 @@ export class AuthGuard implements CanActivate {
 
           const roles = this.cookieService.get('fraud-roles')
 
-          console.log("User in auth>>>>", this.authService.loggedInUser)
-          console.log("ROUTE >>>>", route.data['permissions'])
         const isAuth = !!user || !!token;
         if (isAuth) {
           if(route.data['permissions']){

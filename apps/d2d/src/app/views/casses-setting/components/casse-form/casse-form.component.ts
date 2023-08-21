@@ -104,7 +104,6 @@ export class CasseFormComponent implements OnInit {
   }
 
   onDeleteFile(id: number) {
-    console.log('EL ID ', id);
     this.casesService.deleteFile(id).subscribe((res: any) => {
       this.uploadedFiles = this.uploadedFiles.filter((x: any) => x.id !== id);
       this.form.get('attachments')?.setValue(this.uploadedFiles);

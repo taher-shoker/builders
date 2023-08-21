@@ -32,7 +32,6 @@ export class LoginComponent implements OnInit {
   onSubmit(): void {
     if (this.form.valid) {
       this.authService.login(this.form.value).subscribe((res: any) => {
-        console.log(res);
         // if(res.result === "SUCCESS"){
         //   this.authService.setLoggedInUser();
         // }

@@ -104,7 +104,6 @@ export class AuthService {
         this.loggedInUser = res;
         this.loggedUserStream.next(res);
         this.cookieService.set('fraud-roles', JSON.stringify(res.roles));
-        console.log('The current logged user :', res);
         // if(this.loggedInUser.roles.includes("APPROVERS")){
         //   this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
         // }

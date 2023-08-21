@@ -110,7 +110,6 @@ export class DashboardComponent implements OnInit{
   getProductivityChartData(fromDate: string, toDate: string)
   {
     this.dashboardService.getProductivityChartData(fromDate, toDate).subscribe((data) => {
-      console.log("THE DATA", data)
       const newData:{name:string , value:number}[] = [];
       data.data.forEach((chart:{fraudUserDisplayName:string , productivityFrequency:number}) => {
         newData.push({
@@ -131,7 +130,6 @@ export class DashboardComponent implements OnInit{
   getStatusChartData(fromDate?: string, toDate?: string)
   {
     this.dashboardService.getStatusChartData(fromDate, toDate).subscribe(data => {
-      console.log(data);
       const newData:{name:string , value:number}[] = [];
 
       data.data.forEach((chart:{caseStatus:string , caseCount:number}) => {
@@ -158,8 +156,6 @@ export class DashboardComponent implements OnInit{
   getTrendChartData(fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, user? : string, team?: string)
   {
     this.dashboardService.getWeeklyTrendChartData(user, team, fromDate, toDate).subscribe(data => {
-      console.log(data);
-
       const newData:{category:number | string , value:string , caseCount:number}[] = [];
       data.data.forEach(chart => {
         newData.push({
@@ -180,10 +176,8 @@ export class DashboardComponent implements OnInit{
 
   getChartTypesData(fromDate?: string, toDate?: string)
   {
-    console.log("Da progress before calling", fromDate, toDate)
 
     this.dashboardService.getChartTypesData(fromDate, toDate).subscribe(data => {
-      console.log(data);
       const newData:{category:string , value:number}[] = [];
       data.d2DCaseTypeCountDtoList.forEach(chart => {
         newData.push({
@@ -208,7 +202,6 @@ export class DashboardComponent implements OnInit{
 
         this.casesService.setSystemTeams().subscribe(res => {
 
-          console.log("System teams :", res)
           this.teams = res
           this.teams = this.teams.filter((x: any) => x.name !== "Fraud")
 
@@ -221,7 +214,6 @@ export class DashboardComponent implements OnInit{
         this.casesService.setSystemUsers().subscribe(res => {
 
 
-          console.log("System Users :", res)
           this.users = res.filter(x => x.userGroups[0].groupName === "Creators")
         })
       }
@@ -266,7 +258,6 @@ export class DashboardComponent implements OnInit{
       d.setFullYear(d.getFullYear() - 1)
       fromDate = d.toLocaleDateString('sv')
 
-      console.log(fromDate, toDate)
 
     }else if(dateObj.id === 1){
 
@@ -280,7 +271,6 @@ export class DashboardComponent implements OnInit{
       fromDate = oneMonthBefore.getFullYear() + "-" + (oneMonthBefore.getMonth() + 1) + "-" + oneMonthBefore.getDate();
       // Return an array of the two dates
 
-      console.log(fromDate, toDate)
     }else if(dateObj.id === 2){
       // Get the current date
       const today = new Date();
@@ -292,14 +282,12 @@ export class DashboardComponent implements OnInit{
       fromDate = oneMonthBefore.getFullYear() + "-" + (oneMonthBefore.getMonth() + 1) + "-" + oneMonthBefore.getDate();
       // Return an array of the two dates
 
-      console.log(fromDate, toDate)
     }else {
        // Get the current date
        const today = new Date();
        // Format the date as year-month-day
        toDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
        fromDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-       console.log(fromDate, toDate)
     }
     this.getProductivityChartData(fromDate, toDate)
   }

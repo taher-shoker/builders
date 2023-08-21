@@ -128,7 +128,6 @@ export class DatePickerWeeklyComponent implements OnInit {
     this.stringifiedDate = year.yearNum.toString()
     this.selectedYearNo = year.yearNum
 
-    console.log("selected year", this.stringifiedDate)
     this.selectedYearObject = year
 
   }

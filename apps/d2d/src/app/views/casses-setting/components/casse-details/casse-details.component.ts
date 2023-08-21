@@ -80,14 +80,12 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.authService.loggedUserStream.subscribe((res) => {
       if (res?.roles.includes('APPROVERS')) {
         this.CasesService.setSystemTeams().subscribe((res) => {
-          console.log('System teams :', res);
           this.teams = res;
           this.teams = this.teams.filter((x: any) => x.name !== 'Fraud');
           this.handleTeam(this.caseData, this.teams);
         });
 
         this.CasesService.setSystemUsers().subscribe((res) => {
-          console.log('System Users :', res);
           this.users = res;
           this.users = this.users.filter(
             (x: any) =>
@@ -206,9 +204,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.closeForm.reset();
     this.infoForm.reset();
     this.uploadedFile = [];
-    console.log('The value', this.infoForm.get('check_case_attachment')?.value);
-    console.log('The value', this.infoForm.get('selectedUser')?.value);
-    console.log('The value', (this.uploadedFile = []));
 
     this.rejectForm.reset();
     this.replyForm.reset();
@@ -246,16 +241,10 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       },
     };
 
-    console.log('The msg', data);
 
     this.closeForm.reset();
     this.infoForm.reset();
     this.uploadedFile = [];
-
-    console.log(
-      'The value',
-      this.replyForm.get('check_case_attachment')?.value
-    );
 
     this.rejectForm.reset();
     this.replyForm.reset();
@@ -352,7 +341,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     const data = { form: this.closeForm.value };
     this.closeForm.reset();
     this.infoForm.reset();
-    console.log('The value', this.infoForm.get('check_case_attachment')?.value);
 
     this.rejectForm.reset();
     this.replyForm.reset();
@@ -391,8 +379,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   handleTeam(caseData?: Case, team?: any) {
     if (caseData && team) {
-      console.log(team);
-      console.log(caseData?.creatorTeamName);
+
       this.selectedTeam = team.filter(
         (t: any) => t.name === this.caseData?.creatorTeamName
       )[0];

@@ -110,7 +110,6 @@ export class DatePickerWeeklyRangeComponent implements OnInit{
     this.selectedDateOne = year.yearNum.toString()
     this.selectedYearNoOne = year.yearNum
 
-    console.log("selected year", this.selectedDate)
     this.selectedYearObject = year
 
   }
@@ -131,7 +130,6 @@ export class DatePickerWeeklyRangeComponent implements OnInit{
 
       this.showSaveButton = true;
 
-      console.log("This selectedDateTwo", this.selectedDateTwo)
     }
   }
 
@@ -144,7 +142,6 @@ export class DatePickerWeeklyRangeComponent implements OnInit{
 
   moveYearForward(){
     if(this.selectedYearObject.id < this.yearsArr.length-1){
-      console.log("The obj", this.selectedYearObject)
       this.selectedYearNoTwo =  this.yearsArr[this.selectedYearObject.id + 1].yearNum
       this.selectedYearObject = this.yearsArr[this.selectedYearObject.id + 1]
     }

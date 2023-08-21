@@ -42,7 +42,7 @@ export interface DateRange{
   //   },
   // ],
 })
-export class DatePickerRangeComponent implements OnInit, OnChanges{
+export class DatePickerRangeComponent implements OnChanges{
 
   @Output() valueChangedEvent: EventEmitter<DateRange> = new EventEmitter<DateRange>(); // Mat datepicker emits event of type "any"
 
@@ -61,10 +61,6 @@ export class DatePickerRangeComponent implements OnInit, OnChanges{
     end: new FormControl(this.endDate),
   });
 
-  ngOnInit(): void {
-    console.log("The two inputs :", this.startDate)
-    console.log("The two inputs :", this.endDate)
-  }
   ngOnChanges(changes: SimpleChanges): void {
 
     if (changes['startDate'] ) {//&& !changes['chartData'].firstChange

@@ -159,7 +159,6 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.getAssigneeTasks = this.CasesService.getAssigneeTasks(
         username
       ).subscribe((res: any) => {
-        console.log('ITEMS', res.data);
         this.allItems = res.data;
       });
     });
