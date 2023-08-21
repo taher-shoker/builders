@@ -33,6 +33,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   formData = new FormData();
 
   casseId!: string;
+  taskId!: number;
   caseSerial!: string;
   caseStatus!: string;
   caseData: any;
@@ -166,8 +167,8 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     });
   }
   /** function to call fetching all tasks again and close any Modal if found **/
-  refreshTasks(data: any) {
-    this.CasesService.updateCaseTask(+this.casseId, data).subscribe(
+  refreshTasks(taskId: number, data: any) {
+    this.CasesService.updateCaseTask(+this.casseId, taskId, data).subscribe(
       (res: any) => {
         this.caseStatus = res.caseStatus;
         this.dialogService.close();
@@ -177,7 +178,8 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   }
 
   /** Actions with check case info (Request More Info) status **/
-  onCheck() {
+  onCheck(taskId: number) {
+    this.taskId = taskId;
     this.dialogService.open('request-Info-Modal');
   }
 
@@ -199,7 +201,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       },
     };
 
-    this.refreshTasks(data);
+    this.refreshTasks(this.taskId, data);
 
     this.closeForm.reset();
     this.infoForm.reset();
@@ -214,7 +216,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.secondEscalateForm.reset();
   }
 
-  cancelCheck() {
+  cancelCheck(taskId: number) {
     const data = { form: { info_needed: 0 } };
     // this.CasesService
     //   .updateCaseTask(+this.casseId, data)
@@ -222,7 +224,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     //     this.getCaseTasks(+this.casseId);
     //   });
 
-    this.refreshTasks(data);
+    this.refreshTasks(taskId, data);
   }
 
   /** Actions with Fill More Info status  **/
@@ -259,24 +261,27 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.replyForm.reset();
     this.firstEscalateForm.reset();
     this.secondEscalateForm.reset();
-    this.refreshTasks(data);
+    this.refreshTasks(this.taskId, data);
   }
-  replyfeed() {
+  replyfeed(taskId: number) {
+    this.taskId = taskId;
     this.dialogService.open('replyFeeback-Modal');
   }
 
   /** Actions with Approve Casse status  **/
 
-  confirm() {
+  confirm(taskId: number) {
+    this.taskId = taskId;
     this.dialogService.open('approve-Modal');
   }
 
   approvedTask() {
     const data = { form: { case_approved: 1 } };
-    this.refreshTasks(data);
+    this.refreshTasks(this.taskId, data);
   }
   /** Actions with Reject status **/
-  reject() {
+  reject(taskId: number) {
+    this.taskId = taskId;
     this.dialogService.open('reject-Modal');
   }
   confirmReject() {
@@ -286,23 +291,23 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
         reject_note: this.rejectForm.get('reject_note')?.value,
       },
     };
-    this.refreshTasks(data);
+    this.refreshTasks(this.taskId, data);
   }
   /** Actions with Within Response Casse status  **/
 
-  withinResponse() {
+  withinResponse(taskId: number) {
     const data = { form: {} };
-
-    this.refreshTasks(data);
+    this.refreshTasks(taskId, data);
   }
   /** Actions with Should First Escalate  Casse status  **/
 
-  shouldFirstEscalate() {
+  shouldFirstEscalate(taskId: number) {
+    this.taskId = taskId;
     this.dialogService.open('first-escalate-Modal');
   }
-  notFirstEscalate() {
+  notFirstEscalate(taskId: number) {
     const data = { form: { should_first_escalate: 0 } };
-    this.refreshTasks(data);
+    this.refreshTasks(taskId, data);
   }
   confirmFirstEscalate() {
     const data = {
@@ -313,16 +318,17 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
         )?.value,
       },
     };
-    this.refreshTasks(data);
+    this.refreshTasks(this.taskId, data);
   }
   /** Actions with Should Second Escalate  Casse status  **/
 
-  shouldSecondEscalate() {
+  shouldSecondEscalate(taskId: number) {
+    this.taskId = taskId;
     this.dialogService.open('second-escalate-Modal');
   }
-  notSecondEscalate() {
+  notSecondEscalate(taskId: number) {
     const data = { form: { should_second_escalate: 0 } };
-    this.refreshTasks(data);
+    this.refreshTasks(taskId, data);
   }
   confirmSecondEscalate() {
     const data = {
@@ -333,11 +339,12 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
         )?.value,
       },
     };
-    this.refreshTasks(data);
+    this.refreshTasks(this.taskId, data);
   }
   /** Actions with Send to Close  Casse status  **/
 
-  sendToClose() {
+  sendToClose(taskId: number) {
+    this.taskId = taskId;
     this.dialogService.open('close-Modal');
   }
 
@@ -351,7 +358,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     this.replyForm.reset();
     this.firstEscalateForm.reset();
     this.secondEscalateForm.reset();
-    this.refreshTasks(data);
+    this.refreshTasks(this.taskId, data);
   }
 
   subscribeToLanguage() {

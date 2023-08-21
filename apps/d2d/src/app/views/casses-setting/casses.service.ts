@@ -76,8 +76,11 @@ export class CasesService {
   getTaskByCaseId(caseId: number) {
     return this.http.get(`${this.endpoint}/cwf/task/${caseId}`);
   }
-  updateCaseTask(caseId: number, data: any) {
-    return this.http.post(`${this.endpoint}/cwf/task/${caseId}`, data);
+  updateCaseTask(caseId: number, taskId: number, data: any) {
+    return this.http.post(
+      `${this.endpoint}/cwf/task/${caseId}/${taskId}`,
+      data
+    );
   }
 
   uploadFile(data: any) {

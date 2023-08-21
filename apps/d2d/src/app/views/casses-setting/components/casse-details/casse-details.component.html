@@ -151,12 +151,9 @@
           <figcaption>
             <h4>{{ 'logs_of_cases' | translate }}</h4>
             <div>
-              <p
-                class="case-status"
-                [ngClass]="
+              <p class="case-status" [ngClass]="
                   CasesService.getKeyByValue(CaseStatus, this.caseStatus)
-                "
-              >
+                ">
                 {{ this.caseStatus | translate }}
               </p>
             </div>
@@ -164,37 +161,22 @@
         </figure>
         <div class="order-track">
           <div class="order-track-step" *ngFor="let item of allTasks">
-            <div
-              class="order-track-status"
-              [ngClass]="
+            <div class="order-track-status" [ngClass]="
                 item.taskStatus === 'pending' ? ' order-track-pending' : null
-              "
-            >
-              <span
-                class="order-track-status-dot"
-                [ngClass]="
+              ">
+              <span class="order-track-status-dot" [ngClass]="
                   item.taskStatus === 'pending'
                     ? ' order-track-pending-dot'
                     : null
-                "
-              >
-                <i
-                  class="fas fa-check"
-                  *ngIf="item.taskStatus !== 'pending'"
-                ></i>
-                <i
-                  class="fas fa-info"
-                  *ngIf="item.taskStatus === 'pending'"
-                ></i>
+                ">
+                <i class="fas fa-check" *ngIf="item.taskStatus !== 'pending'"></i>
+                <i class="fas fa-info" *ngIf="item.taskStatus === 'pending'"></i>
               </span>
-              <span
-                class="order-track-status-line"
-                [ngClass]="
+              <span class="order-track-status-line" [ngClass]="
                   item.taskStatus === 'pending'
                     ? ' order-track-pending-line'
                     : null
-                "
-              ></span>
+                "></span>
             </div>
             <div class="order-track-text">
               <p class="order-track-text-stat">
@@ -202,202 +184,130 @@
               </p>
               <p class="m-0 order-date" *ngIf="item.taskStatus !== 'pending'">
                 {{ 'by' | translate }}:
-                <strong>{{ item.completedByName || 'System' }}</strong
-                >, {{ 'on' | translate }}:
+                <strong>{{ item.completedByName || 'System' }}</strong>, {{ 'on' | translate }}:
                 {{
-                  item.completedDate
-                    ? (item.completedDate | localeDateFormat : 'longDate')
-                    : (item.createdDate | localeDateFormat : 'longDate')
+                item.completedDate
+                ? (item.completedDate | localeDateFormat : 'longDate')
+                : (item.createdDate | localeDateFormat : 'longDate')
                 }}
               </p>
 
               <p class="m-0 item-msg"></p>
 
               <ng-container *ngFor="let taskAttr of item.taskAttributes">
-                <p
-                  class="m-0 item-msg"
-                  *ngIf="taskAttr.attributeName === 'case_approved'"
-                >
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'case_approved'">
                   {{
-                    taskAttr.attributeValue === '0'
-                      ? 'Rejected'
-                      : taskAttr.attributeValue === null
-                      ? ''
-                      : 'Approved'
+                  taskAttr.attributeValue === '0'
+                  ? 'Rejected'
+                  : taskAttr.attributeValue === null
+                  ? ''
+                  : 'Approved'
                   }}
                 </p>
 
-                <p
-                  class="m-0 item-msg"
-                  *ngIf="taskAttr.attributeName === 'info_needed'"
-                >
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'info_needed'">
                   {{ taskAttr.attributeValue === '0' ? 'Not needed' : '' }}
                 </p>
-                <p
-                  class="m-0 item-msg"
-                  *ngIf="taskAttr.attributeName === 'should_first_escalate'"
-                >
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'should_first_escalate'">
                   {{
-                    taskAttr.attributeValue === '0'
-                      ? ('not_escalate' | translate)
-                      : ''
+                  taskAttr.attributeValue === '0'
+                  ? ('not_escalate' | translate)
+                  : ''
                   }}
                 </p>
-                <p
-                  class="m-0 item-msg"
-                  *ngIf="taskAttr.attributeName === 'first_escalate_content'"
-                >
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'first_escalate_content'">
                   {{
-                    taskAttr.attributeValue === null
-                      ? ''
-                      : taskAttr.attributeValue
+                  taskAttr.attributeValue === null
+                  ? ''
+                  : taskAttr.attributeValue
                   }}
                 </p>
-                <p
-                  class="m-0 item-msg"
-                  *ngIf="taskAttr.attributeName === 'should_second_escalate'"
-                >
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'should_second_escalate'">
                   {{
-                    taskAttr.attributeValue === '0'
-                      ? ('not_escalate' | translate)
-                      : ''
+                  taskAttr.attributeValue === '0'
+                  ? ('not_escalate' | translate)
+                  : ''
                   }}
                 </p>
-                <p
-                  class="m-0 item-msg"
-                  *ngIf="taskAttr.attributeName === 'second_escalate_content'"
-                >
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'second_escalate_content'">
                   {{
-                    taskAttr.attributeValue === null
-                      ? ''
-                      : taskAttr.attributeValue
+                  taskAttr.attributeValue === null
+                  ? ''
+                  : taskAttr.attributeValue
                   }}
                 </p>
-                <p
-                  class="m-0 item-msg"
-                  *ngIf="taskAttr.attributeName === 'message'"
-                >
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'message'">
                   {{ taskAttr.attributeValue }}
                 </p>
               </ng-container>
 
-              <p
-                *ngFor="let attachment of item.attachments"
-                class="item-task-attachment"
-                (click)="downloadFile(attachment.id, attachment.label)"
-              >
+              <p *ngFor="let attachment of item.attachments" class="item-task-attachment"
+                (click)="downloadFile(attachment.id, attachment.label)">
                 {{ attachment.label }}
               </p>
 
-              <div
-                class="actions my-3 d-flex"
-                *ngIf="item.taskStatus === 'pending'"
-              >
-                <ng-container
-                  *ngIf="
+              <div class="actions my-3 d-flex" *ngIf="item.taskStatus === 'pending'">
+                <ng-container *ngIf="
                     item.taskName === TaskCicle.checkCase &&
                     authService.getLoggedInUser().roles.includes('APPROVERS')
-                  "
-                >
-                  <stc-apps-button
-                    [buttonText]="'yes' | translate"
-                    [buttonType]="'primary'"
-                    (btnClick)="onCheck()"
-                  ></stc-apps-button>
-                  <stc-apps-button
-                    [buttonText]="'no' | translate"
-                    (btnClick)="cancelCheck()"
-                    [buttonType]="'gray-outline'"
-                  ></stc-apps-button>
+                  ">
+                  <stc-apps-button [buttonText]="'yes' | translate" [buttonType]="'primary'"
+                    (btnClick)="onCheck(item.id)"></stc-apps-button>
+                  <stc-apps-button [buttonText]="'no' | translate" (btnClick)="cancelCheck(item.id)"
+                    [buttonType]="'gray-outline'"></stc-apps-button>
                 </ng-container>
 
-                <stc-apps-button
-                  *ngIf="
+                <stc-apps-button *ngIf="
                     item.taskName === TaskCicle.fillMoreInfo &&
                     !authService
                       .getLoggedInUser()
                       .roles.includes('APPROVERS') &&
                     checkAssigne(item)
-                  "
-                  [buttonText]="'reply' | translate"
-                  [buttonType]="'primary'"
-                  (btnClick)="replyfeed()"
-                ></stc-apps-button>
+                  " [buttonText]="'reply' | translate" [buttonType]="'primary'"
+                  (btnClick)="replyfeed(item.id)"></stc-apps-button>
 
-                <ng-container
-                  *ngIf="
+                <ng-container *ngIf="
                     item.taskName === TaskCicle.approveCase &&
                     authService.getLoggedInUser().roles.includes('APPROVERS')
-                  "
-                >
-                  <stc-apps-button
-                    [buttonText]="'approve' | translate"
-                    [buttonType]="'primary'"
-                    (btnClick)="confirm()"
-                  ></stc-apps-button>
+                  ">
+                  <stc-apps-button [buttonText]="'approve' | translate" [buttonType]="'primary'"
+                    (btnClick)="confirm(item.id)"></stc-apps-button>
                   <!--approvedTask()  -->
-                  <stc-apps-button
-                    [buttonText]="'reject' | translate"
-                    [buttonType]="'danger-outline'"
-                    (btnClick)="reject()"
-                  ></stc-apps-button>
+                  <stc-apps-button [buttonText]="'reject' | translate" [buttonType]="'danger-outline'"
+                    (btnClick)="reject(item.id)"></stc-apps-button>
                 </ng-container>
 
-                <stc-apps-button
-                  *ngIf="
+                <stc-apps-button *ngIf="
                     item.taskName === TaskCicle.withinSlResponse &&
                     authService.getLoggedInUser().roles.includes('APPROVERS')
-                  "
-                  [buttonText]="'received' | translate"
-                  [buttonType]="'primary'"
-                  (btnClick)="withinResponse()"
-                ></stc-apps-button>
+                  " [buttonText]="'received' | translate" [buttonType]="'primary'"
+                  (btnClick)="withinResponse(item.id)"></stc-apps-button>
 
-                <ng-container
-                  *ngIf="
+                <ng-container *ngIf="
                     item.taskName === TaskCicle.shouldEscalate &&
                     authService.getLoggedInUser().roles.includes('APPROVERS')
-                  "
-                >
-                  <stc-apps-button
-                    [buttonText]="'yes' | translate"
-                    [buttonType]="'primary'"
-                    (btnClick)="shouldFirstEscalate()"
-                  ></stc-apps-button>
-                  <stc-apps-button
-                    [buttonText]="'no' | translate"
-                    [buttonType]="'gray-outline'"
-                    (btnClick)="notFirstEscalate()"
-                  ></stc-apps-button>
+                  ">
+                  <stc-apps-button [buttonText]="'yes' | translate" [buttonType]="'primary'"
+                    (btnClick)="shouldFirstEscalate(item.id)"></stc-apps-button>
+                  <stc-apps-button [buttonText]="'no' | translate" [buttonType]="'gray-outline'"
+                    (btnClick)="notFirstEscalate(item.id)"></stc-apps-button>
                 </ng-container>
 
-                <ng-container
-                  *ngIf="
+                <ng-container *ngIf="
                     item.taskName === TaskCicle.shouldReEscalate &&
                     authService.getLoggedInUser().roles.includes('APPROVERS')
-                  "
-                >
-                  <stc-apps-button
-                    [buttonText]="'yes' | translate"
-                    [buttonType]="'primary'"
-                    (btnClick)="shouldSecondEscalate()"
-                  ></stc-apps-button>
-                  <stc-apps-button
-                    [buttonText]="'no' | translate"
-                    [buttonType]="'gray-outline'"
-                    (btnClick)="notSecondEscalate()"
-                  ></stc-apps-button>
+                  ">
+                  <stc-apps-button [buttonText]="'yes' | translate" [buttonType]="'primary'"
+                    (btnClick)="shouldSecondEscalate(item.id)"></stc-apps-button>
+                  <stc-apps-button [buttonText]="'no' | translate" [buttonType]="'gray-outline'"
+                    (btnClick)="notSecondEscalate(item.id)"></stc-apps-button>
                 </ng-container>
 
-                <stc-apps-button
-                  *ngIf="
+                <stc-apps-button *ngIf="
                     item.taskName === TaskCicle.sendToClose &&
                     authService.getLoggedInUser().roles.includes('APPROVERS')
-                  "
-                  [buttonText]="'send' | translate"
-                  [buttonType]="'primary'"
-                  (btnClick)="sendToClose()"
-                ></stc-apps-button>
+                  " [buttonText]="'send' | translate" [buttonType]="'primary'"
+                  (btnClick)="sendToClose(item.id)"></stc-apps-button>
 
                 <div class="spacer"></div>
               </div>
@@ -414,74 +324,43 @@
   <form [formGroup]="infoForm" (ngSubmit)="sendInfo()">
     <div class="row">
       <div class="col-md-6">
-        <stc-apps-select-drop-down
-          [label]="'assigned_to' | translate"
-          [options]="assigneeType"
-          [labelName]="'name'"
-          [labelValue]="'value'"
-          formControlName="assignedTo"
-        ></stc-apps-select-drop-down>
+        <stc-apps-select-drop-down [label]="'assigned_to' | translate" [options]="assigneeType" [labelName]="'name'"
+          [labelValue]="'value'" formControlName="assignedTo"></stc-apps-select-drop-down>
       </div>
       <div class="col-md-6">
-        <stc-apps-select-drop-down
-          [label]="
+        <stc-apps-select-drop-down [label]="
             'Select ' +
               (infoForm.get('assignedTo')?.value?.value === '1'
                 ? 'Team'
                 : 'User') | translate
-          "
-          [options]="
+          " [options]="
             infoForm.get('assignedTo')?.value?.value === '1' ? teams : users
-          "
-          formControlName="selectedUser"
-          [labelName]="'name'"
-          [labelValue]="'email'"
-          (selectChange)="
+          " formControlName="selectedUser" [labelName]="'name'" [labelValue]="'email'" (selectChange)="
             infoForm.get('assignedTo')?.value?.value === '1'
               ? infoForm.get('selectedUser')!.setValue($event)
               : infoForm.get('selectedUser')!.setValue($event)
-          "
-          [selectId]="selectedTeam || null"
-        ></stc-apps-select-drop-down>
+          " [selectId]="selectedTeam || null"></stc-apps-select-drop-down>
       </div>
       <div class="col-md-12">
-        <stc-apps-textarea
-          [className]="'custom-input'"
-          [inputPlaceholder]="''"
-          [inputId]="'message'"
-          [inputName]="'inquiry' | translate"
-          formControlName="message"
-        ></stc-apps-textarea>
+        <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'message'"
+          [inputName]="'inquiry' | translate" formControlName="message"></stc-apps-textarea>
       </div>
       <div class="col-md-12">
-        <stc-apps-file-uploader
-          [multiple]="false"
-          [chooseLabel]="'add_attachment' | translate"
-          (onformchange)="onUploadFile($event)"
-          [attachmentFiles]="
+        <stc-apps-file-uploader [multiple]="false" [chooseLabel]="'add_attachment' | translate"
+          (onformchange)="onUploadFile($event)" [attachmentFiles]="
             this.infoForm.controls['check_case_attachment'].value
-          "
-          formControlName="check_case_attachment"
-          [isLoading]="isLoading"
-          (ondelete)="onDeleteFile($event)"
-        ></stc-apps-file-uploader>
+          " formControlName="check_case_attachment" [isLoading]="isLoading"
+          (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
       </div>
       <div class="row mt-4">
         <div class="col-md-4 offset-8">
           <div class="d-flex justify-content-end">
-            <stc-apps-button
-              [buttonText]="'cancel' | translate"
-              [buttonType]="'gray-outline'"
-              (btnClick)="dialogService.close()"
-            ></stc-apps-button>
+            <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+              (btnClick)="dialogService.close()"></stc-apps-button>
 
             <div class="mx-3"></div>
-            <stc-apps-button
-              [buttonText]="'send' | translate"
-              [buttonType]="'primary'"
-              (btnClick)="sendInfo()"
-              [buttonDisable]="!infoForm.valid"
-            ></stc-apps-button>
+            <stc-apps-button [buttonText]="'send' | translate" [buttonType]="'primary'" (btnClick)="sendInfo()"
+              [buttonDisable]="!infoForm.valid"></stc-apps-button>
           </div>
         </div>
       </div>
@@ -501,18 +380,12 @@
   <div class="row mt-4">
     <div class="col-md-4 offset-8">
       <div class="d-flex justify-content-end">
-        <stc-apps-button
-          [buttonText]="'cancel' | translate"
-          [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"
-        ></stc-apps-button>
+        <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"></stc-apps-button>
 
         <div class="mx-3"></div>
-        <stc-apps-button
-          [buttonText]="'yes_approve' | translate"
-          [buttonType]="'primary'"
-          (btnClick)="approvedTask()"
-        ></stc-apps-button>
+        <stc-apps-button [buttonText]="'yes_approve' | translate" [buttonType]="'primary'"
+          (btnClick)="approvedTask()"></stc-apps-button>
       </div>
     </div>
   </div>
@@ -527,30 +400,19 @@
   <form [formGroup]="rejectForm" (ngSubmit)="confirmReject()">
     <div class="row">
       <div class="col-md-12">
-        <stc-apps-textarea
-          [className]="'custom-input'"
-          [inputPlaceholder]="''"
-          [inputId]="'reason'"
-          [inputName]="'reason' | translate"
-          formControlName="reject_note"
-        ></stc-apps-textarea>
+        <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'reason'"
+          [inputName]="'reason' | translate" formControlName="reject_note"></stc-apps-textarea>
       </div>
     </div>
     <div class="row mt-4">
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
-          <stc-apps-button
-            [buttonText]="'cancel' | translate"
-            [buttonType]="'gray-outline'"
-            (btnClick)="dialogService.close()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"></stc-apps-button>
 
           <div class="mx-3"></div>
-          <stc-apps-button
-            [buttonText]="('yes' | translate) + ', ' + ('reject' | translate)"
-            [buttonType]="'danger-outline'"
-            (btnClick)="confirmReject()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="('yes' | translate) + ', ' + ('reject' | translate)"
+            [buttonType]="'danger-outline'" (btnClick)="confirmReject()"></stc-apps-button>
         </div>
       </div>
     </div>
@@ -564,42 +426,25 @@
   <form [formGroup]="replyForm" (ngSubmit)="confirmReply()">
     <div class="row">
       <div class="col-md-12">
-        <stc-apps-textarea
-          [className]="'custom-input'"
-          [inputPlaceholder]="''"
-          [inputId]="'message'"
-          [inputName]="'feedback' | translate"
-          formControlName="message"
-        ></stc-apps-textarea>
+        <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'message'"
+          [inputName]="'feedback' | translate" formControlName="message"></stc-apps-textarea>
       </div>
       <div class="col-md-12">
-        <stc-apps-file-uploader
-          [multiple]="false"
-          [chooseLabel]="'add_attachment' | translate"
-          (onformchange)="onUploadFile($event)"
-          [attachmentFiles]="infoForm.get('check_case_attachment')?.value"
-          formControlName="check_case_attachment"
-          [isLoading]="isLoading"
-          (ondelete)="onDeleteFile($event)"
-        ></stc-apps-file-uploader>
+        <stc-apps-file-uploader [multiple]="false" [chooseLabel]="'add_attachment' | translate"
+          (onformchange)="onUploadFile($event)" [attachmentFiles]="infoForm.get('check_case_attachment')?.value"
+          formControlName="check_case_attachment" [isLoading]="isLoading"
+          (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
       </div>
     </div>
     <div class="row mt-4">
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
-          <stc-apps-button
-            [buttonText]="'cancel' | translate"
-            [buttonType]="'gray-outline'"
-            (btnClick)="dialogService.close()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"></stc-apps-button>
 
           <div class="mx-3"></div>
-          <stc-apps-button
-            [buttonText]="'send' | translate"
-            [buttonType]="'primary'"
-            (btnClick)="confirmReply()"
-            [buttonDisable]="!replyForm.valid"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'send' | translate" [buttonType]="'primary'" (btnClick)="confirmReply()"
+            [buttonDisable]="!replyForm.valid"></stc-apps-button>
         </div>
       </div>
     </div>
@@ -615,30 +460,19 @@
   <form [formGroup]="closeForm" (ngSubmit)="confirmClose()">
     <div class="row">
       <div class="col-md-12">
-        <stc-apps-textarea
-          [className]="'custom-input'"
-          [inputPlaceholder]="''"
-          [inputId]="'mailContent'"
-          [inputName]="'content' | translate"
-          formControlName="close_mail_content"
-        ></stc-apps-textarea>
+        <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'mailContent'"
+          [inputName]="'content' | translate" formControlName="close_mail_content"></stc-apps-textarea>
       </div>
     </div>
     <div class="row mt-4">
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
-          <stc-apps-button
-            [buttonText]="'cancel' | translate"
-            [buttonType]="'gray-outline'"
-            (btnClick)="dialogService.close()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"></stc-apps-button>
 
           <div class="mx-3"></div>
-          <stc-apps-button
-            [buttonText]="'confirm' | translate"
-            [buttonType]="'primary'"
-            (btnClick)="confirmClose()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'confirm' | translate" [buttonType]="'primary'"
+            (btnClick)="confirmClose()"></stc-apps-button>
         </div>
       </div>
     </div>
@@ -653,31 +487,20 @@
   <form [formGroup]="firstEscalateForm" (ngSubmit)="confirmFirstEscalate()">
     <div class="row">
       <div class="col-md-12">
-        <stc-apps-textarea
-          [className]="'custom-input'"
-          [inputPlaceholder]="''"
-          [inputId]="'first_escalate_content'"
+        <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'first_escalate_content'"
           [inputName]="'first_escalate_content' | translate"
-          formControlName="first_escalate_content"
-        ></stc-apps-textarea>
+          formControlName="first_escalate_content"></stc-apps-textarea>
       </div>
     </div>
     <div class="row mt-4">
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
-          <stc-apps-button
-            [buttonText]="'cancel' | translate"
-            [buttonType]="'gray-outline'"
-            (btnClick)="dialogService.close()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"></stc-apps-button>
 
           <div class="mx-3"></div>
-          <stc-apps-button
-            [buttonText]="'confirm' | translate"
-            [buttonType]="'primary'"
-            (btnClick)="confirmFirstEscalate()"
-            [buttonDisable]="!firstEscalateForm.valid"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'confirm' | translate" [buttonType]="'primary'"
+            (btnClick)="confirmFirstEscalate()" [buttonDisable]="!firstEscalateForm.valid"></stc-apps-button>
         </div>
       </div>
     </div>
@@ -692,30 +515,20 @@
   <form [formGroup]="secondEscalateForm" (ngSubmit)="confirmSecondEscalate()">
     <div class="row">
       <div class="col-md-12">
-        <stc-apps-textarea
-          [className]="'custom-input'"
-          [inputPlaceholder]="''"
-          [inputId]="'second_escalate_content'"
+        <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'second_escalate_content'"
           [inputName]="'second_escalate_content' | translate"
-          formControlName="second_escalate_content"
-        ></stc-apps-textarea>
+          formControlName="second_escalate_content"></stc-apps-textarea>
       </div>
     </div>
     <div class="row mt-4">
       <div class="col-md-4 offset-8">
         <div class="d-flex justify-content-end">
-          <stc-apps-button
-            [buttonText]="'cancel' | translate"
-            [buttonType]="'gray-outline'"
-            (btnClick)="dialogService.close()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"></stc-apps-button>
 
           <div class="mx-3"></div>
-          <stc-apps-button
-            [buttonText]="'confirm' | translate"
-            [buttonType]="'primary'"
-            (btnClick)="confirmSecondEscalate()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'confirm' | translate" [buttonType]="'primary'"
+            (btnClick)="confirmSecondEscalate()"></stc-apps-button>
         </div>
       </div>
     </div>
