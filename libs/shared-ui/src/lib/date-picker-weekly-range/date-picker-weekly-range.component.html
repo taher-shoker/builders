@@ -8,7 +8,7 @@
   <div class="calendar">
 
     <div class="calendar-header">
-      <p class="select-date mb-1">SELECT DATE</p>
+      <p class="select-date mb-1">SELECT WEEK</p>
       <p class="selected-date-range">{{selectedDateOne}}, {{selectedWeekOne}}</p>
       <p class="selected-date-range" *ngIf="selectedWeekOne != ''">{{selectedDateTwo}}, {{selectedWeekTwo}}</p>
     </div>
@@ -38,7 +38,7 @@
       <div class="action-btns-holder">
         <button class="action-btn" (click)="cancelCalendar()">RESET</button>
         <button class="action-btn" (click)="showWeekView()" *ngIf="showYearsView" [ngClass]="{'disabled-btn': selectedYearNo == '' && selectedYearNoOne == ''}" [disabled]="selectedYearNo == '' && selectedYearNoOne == '' ">NEXT</button>
-        <button class="action-btn" [ngClass]="{'disabled-btn' : !showSaveButton}" [disabled]="!showSaveButton" (click)="sendDate()">SAVE</button>
+        <button class="action-btn" [ngClass]="{'disabled-btn' : !showSaveButton}" [disabled]="!showSaveButton" (click)="sendDate()">FILTER</button>
       </div>
     </div>
 

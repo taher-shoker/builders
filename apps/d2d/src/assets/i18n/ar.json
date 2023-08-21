@@ -41,6 +41,9 @@
   "pending_cases": "المهام المعلقة",
   "closed_cases": "الحالات المغلقة",
   "cases_list": "قائمة الحالات",
+  "total_cases": "كل الحالات",
+  "rejected_cases": "الحالات المرفوضة",
+  "approved_cases": "الحالات الموثقة",
   "add_new_case": "أضف حالة جديدة",
   "filter": "تصفية",
   "clear_filter": "إلغاء التصفية",
@@ -135,5 +138,7 @@
     "txt2": "وحسابه",
     "txt3": "سيتم رفض الوصول إلى النظام ، هل أنت متأكد؟"
   },
-  "Select Date": "اختر تاريخ"
+  "Select Date": "اختر تاريخ",
+  "Select Period": "حدد مدة"
+
 }

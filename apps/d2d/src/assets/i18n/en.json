@@ -41,6 +41,9 @@
   "pending_cases": "Pending Cases",
   "closed_cases": "Closed Cases",
   "cases_list": "Cases List",
+  "total_cases": "Total Cases",
+  "rejected_cases": "Rejected Cases",
+  "approved_cases": "Approved Cases",
   "add_new_case": "Add New Case",
   "filter": "Filter",
   "clear_filter": "Clear Filter",
@@ -135,5 +138,6 @@
     "txt2": " and his account",
     "txt3": "will be denied from the system accessibility, Are you sure?"
   },
-  "Select Date": "Select Date"
+  "Select Date": "Select Date",
+  "Select Period": "Select Period"
 }

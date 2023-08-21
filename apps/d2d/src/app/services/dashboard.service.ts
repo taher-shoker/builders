@@ -62,7 +62,12 @@ export class DashboardService {
 
   getProductivityChartData(fromDate?: string, toDate?: string):Observable<ProductivityChartData>
   {
-    return this.http.get<ProductivityChartData>(`${environment.apiUrl}/dashboard/chart/fraud`);
+
+    if(fromDate && toDate){
+      return this.http.get<ProductivityChartData>(`${environment.apiUrl}/dashboard/chart/fraud?startDate=${fromDate}&endDate=${toDate}`);
+    }else{
+      return this.http.get<ProductivityChartData>(`${environment.apiUrl}/dashboard/chart/fraud`);
+    }
   }
 
   getStatusChartData(fromDate?: string, toDate?: string):Observable<StatusChartData>
