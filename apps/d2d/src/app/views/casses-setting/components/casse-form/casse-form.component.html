@@ -31,7 +31,7 @@
         </div>
       </div>
       <div class="row mt-7">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
@@ -40,7 +40,16 @@
             formControlName="serviceType"
           ></stc-apps-input>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'type'"
+            [inputName]="'type' | translate"
+            formControlName="type"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
@@ -49,7 +58,7 @@
             formControlName="existingPlate"
           ></stc-apps-input>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
@@ -178,10 +187,9 @@
   </form>
 </div>
 
-
 <stc-apps-dialog id="add-case-modal">
   <p>
-    {{"add_case_confirmation" | translate}}
+    {{ 'add_case_confirmation' | translate }}
   </p>
   <div class="row mt-4">
     <div class="col-md-4 offset-8">

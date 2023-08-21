@@ -1,4 +1,10 @@
-import { Component, AfterViewInit, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import {
+  Component,
+  AfterViewInit,
+  OnInit,
+  ViewChild,
+  OnDestroy,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import {
   CaseStatus,
-  CassesService,
+  CasesService,
   Task,
   TaskCicle,
 } from '../../casses.service';
@@ -84,11 +90,10 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     public router: Router,
     public route: ActivatedRoute,
     private bannerDataService: BannerDataService,
-    public cassesService: CassesService,
+    public CasesService: CasesService,
     protected dialogService: DialogService,
     public authService: AuthService,
     private cookieService: CookieService
-
   ) {}
 
   allItems!: Task[];
@@ -113,7 +118,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.filterPredicate = (data, filter) =>
-      (data.caseSerialNumber == filter );
+      data.caseSerialNumber == filter;
 
     this.serchForm();
   }
@@ -126,7 +131,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['./case-details', id], { relativeTo: this.route });
   }
   getCassesListing() {
-    this.getCasesSub = this.cassesService.getCasses().subscribe((res: any) => {
+    this.getCasesSub = this.CasesService.getCases().subscribe((res: any) => {
       this.isLoading = false;
       this.dataSource.data = res;
       this.totalRegisted = res.filter(
@@ -145,22 +150,19 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   fetchAssigneeTasks() {
-
-    this.userSub = this.authService.user.subscribe(res => {
-
+    this.userSub = this.authService.user.subscribe((res) => {
       let username = res?.userName;
-      if(!res){
-        username = JSON.parse(this.cookieService.get('fraud-user'))
+      if (!res) {
+        username = JSON.parse(this.cookieService.get('fraud-user'));
       }
 
-      this.getAssigneeTasks = this.cassesService.getAssigneeTasks(username).subscribe((res: any) => {
-        console.log("ITEMS", res.data)
+      this.getAssigneeTasks = this.CasesService.getAssigneeTasks(
+        username
+      ).subscribe((res: any) => {
+        console.log('ITEMS', res.data);
         this.allItems = res.data;
       });
-
-    })
-
-
+    });
   }
 
   navigateToTask(caseId: number) {
@@ -172,26 +174,24 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogService.open('filter-Modal');
   }
   serchForm() {
-
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
-      customerName: ['', {nonNullable: true}],
-      city: ['', {nonNullable: true}],
-      existingServiceOrder: ['', {nonNullable: true}],
-      serviceType: ['', {nonNullable: true}],
-      existingPlate: ['', {nonNullable: true}],
-      existingPhoneNumber: ['', {nonNullable: true}],
-      activationDate: ['', {nonNullable: true}],
-      wfmOrder: ['', {nonNullable: true}],
-      newPlate: ['', {nonNullable: true}],
-      newServiceOrder: ['', {nonNullable: true}],
-      newPhoneNumber: ['', {nonNullable: true}],
-      contactNumber: ['', {nonNullable: true}],
-      caseLabel: ['', {nonNullable: true}],
-      description: ['', {nonNullable: true}],
+      customerName: ['', { nonNullable: true }],
+      city: ['', { nonNullable: true }],
+      existingServiceOrder: ['', { nonNullable: true }],
+      serviceType: ['', { nonNullable: true }],
+      existingPlate: ['', { nonNullable: true }],
+      existingPhoneNumber: ['', { nonNullable: true }],
+      activationDate: ['', { nonNullable: true }],
+      wfmOrder: ['', { nonNullable: true }],
+      newPlate: ['', { nonNullable: true }],
+      newServiceOrder: ['', { nonNullable: true }],
+      newPhoneNumber: ['', { nonNullable: true }],
+      contactNumber: ['', { nonNullable: true }],
+      caseLabel: ['', { nonNullable: true }],
+      description: ['', { nonNullable: true }],
     });
   }
-
 
   OnChangesForm() {
     this.formChangesSub = this.form.valueChanges.subscribe((val) => {
@@ -204,26 +204,26 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       .trim()
       .toLowerCase();
     this.dataSource.filter = searchVal;
-
   }
 
-
   onSubmit() {
+    const formCopy = this.form.value;
 
-    const formCopy = this.form.value
-
-    if(formCopy.activationDate == undefined){
-      formCopy.activationDate = ""
-    }else if(formCopy.activationDate !== ""){
-
-      formCopy.activationDate = this.form.get("activationDate")?.value?.format("DD/MM/YYYY")
+    if (formCopy.activationDate == undefined) {
+      formCopy.activationDate = '';
+    } else if (formCopy.activationDate !== '') {
+      formCopy.activationDate = this.form
+        .get('activationDate')
+        ?.value?.format('DD/MM/YYYY');
     }
 
-    this.getCasesSub = this.cassesService.getCasses(formCopy).subscribe((res: any) => {
-      this.dialogService.close();
-      this.isLoading = false;
-      this.dataSource.data = res;
-    });
+    this.getCasesSub = this.CasesService.getCases(formCopy).subscribe(
+      (res: any) => {
+        this.dialogService.close();
+        this.isLoading = false;
+        this.dataSource.data = res;
+      }
+    );
   }
   clearFormFilter() {
     this.form.reset();
@@ -231,38 +231,37 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getCassesListing();
   }
 
-  produceDate(month: string, day: string, year: string){
-
+  produceDate(month: string, day: string, year: string) {
     let monthNum = 0;
     const monthsList = [
-      {name: 'Jan', id: 1},
-      {name: 'Feb', id: 2},
-      {name: 'Mar', id: 3},
-      {name: 'Apr', id: 4},
-      {name: 'May', id: 5},
-      {name: 'Jun', id: 6},
-      {name: 'Jul', id: 7},
-      {name: 'Aug', id: 8},
-      {name: 'Sep', id: 9},
-      {name: 'Oct', id: 10},
-      {name: 'Nov', id: 11},
-      {name: 'Dec', id: 12},
-    ]
+      { name: 'Jan', id: 1 },
+      { name: 'Feb', id: 2 },
+      { name: 'Mar', id: 3 },
+      { name: 'Apr', id: 4 },
+      { name: 'May', id: 5 },
+      { name: 'Jun', id: 6 },
+      { name: 'Jul', id: 7 },
+      { name: 'Aug', id: 8 },
+      { name: 'Sep', id: 9 },
+      { name: 'Oct', id: 10 },
+      { name: 'Nov', id: 11 },
+      { name: 'Dec', id: 12 },
+    ];
 
-    for(const monthObj of monthsList){
-      if(monthObj.name === month){
-        monthNum = monthObj.id
+    for (const monthObj of monthsList) {
+      if (monthObj.name === month) {
+        monthNum = monthObj.id;
       }
     }
 
     const finalDate = `${monthNum}/${day}/${year}`;
-    return finalDate
+    return finalDate;
   }
 
   ngOnDestroy(): void {
-      this.getCasesSub?.unsubscribe();
-      this.userSub?.unsubscribe();
-      this.getAssigneeTasks?.unsubscribe();
-      this.formChangesSub?.unsubscribe();
+    this.getCasesSub?.unsubscribe();
+    this.userSub?.unsubscribe();
+    this.getAssigneeTasks?.unsubscribe();
+    this.formChangesSub?.unsubscribe();
   }
 }

@@ -2,7 +2,7 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="inputs">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="'Example@qeema.net'"
@@ -11,7 +11,7 @@
             formControlName="email"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputPlaceholder]="''"
@@ -20,11 +20,20 @@
             formControlName="name"
           ></stc-apps-input>
         </div>
+        <div class="col-md-4">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'jobTitle'"
+            [inputName]="'jobTitle'"
+            formControlName="jobTitle"
+          ></stc-apps-input>
+        </div>
       </div>
       <div class="row mt-7">
         <div class="col-md-6">
           <stc-apps-select-drop-down
-            [label]="'privilage'"
+            [label]="'privilege'"
             [options]="privilages"
             formControlName="userGroups"
             [labelName]="'groupName'"

@@ -13,7 +13,7 @@ import { Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { CassesService, File } from '../../casses.service';
+import { CasesService, File } from '../../casses.service';
 
 export const APP_DATE_FORMATS = {
   parse: {
@@ -50,7 +50,7 @@ export class CasseFormComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     protected dialogService: DialogService,
-    private cassesService: CassesService,
+    private casesService: CasesService,
     private toastr: ToastrService,
     private router: Router,
     private languageManagerService: LanguageManagerService
@@ -64,6 +64,7 @@ export class CasseFormComponent implements OnInit {
       customerName: ['', Validators.required],
       city: ['', Validators.required],
       existingServiceOrder: ['', Validators.required],
+      type: ['', Validators.required],
       serviceType: ['', Validators.required],
       existingPlate: ['', Validators.required],
       existingPhoneNumber: ['', Validators.required],
@@ -91,7 +92,7 @@ export class CasseFormComponent implements OnInit {
 
         formData.append('file', files[i]);
 
-        this.cassesService.uploadFile(formData).subscribe((res: any) => {
+        this.casesService.uploadFile(formData).subscribe((res: any) => {
           if (res) {
             this.uploadedFiles.push(res);
             this.isLoading = false;
@@ -104,7 +105,7 @@ export class CasseFormComponent implements OnInit {
 
   onDeleteFile(id: number) {
     console.log('EL ID ', id);
-    this.cassesService.deleteFile(id).subscribe((res: any) => {
+    this.casesService.deleteFile(id).subscribe((res: any) => {
       this.uploadedFiles = this.uploadedFiles.filter((x: any) => x.id !== id);
       this.form.get('attachments')?.setValue(this.uploadedFiles);
     });
@@ -169,7 +170,7 @@ export class CasseFormComponent implements OnInit {
   }
   onSubmit() {
     if (this.form.valid) {
-      this.dialogService.close()
+      this.dialogService.close();
 
       // const cutDate = this.form.get("activationDate")?.value.toString().split(" ")
       // const stringifiedFormattedDate = this.produceDate(cutDate[1], cutDate[2], cutDate[3])
@@ -185,7 +186,7 @@ export class CasseFormComponent implements OnInit {
         .get('activationDate')
         ?.value.format('DD/MM/YYYY');
 
-      this.cassesService.createCasse(formCopy).subscribe((res) => {
+      this.casesService.createCase(formCopy).subscribe((res) => {
         if (res) {
           const msgOfToaster =
             this.languageManagerService.getSavedLanguage() == 'ar'

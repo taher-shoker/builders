@@ -21,60 +21,56 @@ interface Group{
 }
 
 export interface Team {
-    id: number,
-    name: "Filed Operation" | "Customer Care" | "Digital Care" | "Fraud"
+  id: number;
+  name: 'Filed Operation' | 'Customer Care' | 'Digital Care' | 'Fraud';
 }
 
 @Injectable({
   providedIn: 'root',
 })
-export class CassesService {
+export class CasesService {
   baseUrl = environment.apiUrl;
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
 
-  roles = ["CREATORS", "APPROVERS", "ADMINS"] // Current roles in the system
+  roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
 
-  pendingTasks : BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
+  pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(private http: HttpClient) {}
 
-  // getSystemTeams(): Team[]{
-  //   return this.teams!;
-  // }
-
-  setSystemTeams(): Observable<Team[]>{
-    return this.http.get<Team[]>(`${this.endpoint}/users/teams`)
+  setSystemTeams(): Observable<Team[]> {
+    return this.http.get<Team[]>(`${this.endpoint}/users/teams`);
   }
 
-  setSystemUsers(): Observable<User[]>{
-    return this.http.get<User[]>(`${this.endpoint}/users`)
+  setSystemUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.endpoint}/users`);
   }
 
-  getCasses(filterData?: any) {
+  getCases(filterData?: any) {
     return this.http.get(`${this.endpoint}/d2dCase/search`, {
       params: filterData,
     });
   }
 
-  getCasse(id: string) {
+  getCase(id: string) {
     const options = {};
-    return this.http.get<Casse>(`${this.endpoint}/d2dCase/${id}`, options);
+    return this.http.get<Case>(`${this.endpoint}/d2dCase/${id}`, options);
   }
 
-  createCasse(data: any) {
+  createCase(data: any) {
     const options = {};
 
     return this.http.post(`${this.endpoint}/d2dCase`, data, options);
   }
 
-  updateCasse(id: string, data: any) {
+  updateCase(id: string, data: any) {
     const options = {};
 
     return this.http.put(`${this.endpoint}/${id}`, data, options);
   }
 
-  deleteCasse(id: string) {
+  deleteCase(id: string) {
     const options = {};
     return this.http.delete(`${this.endpoint}/${id}`, options);
   }
@@ -86,8 +82,11 @@ export class CassesService {
   getTaskByCaseId(caseId: number) {
     return this.http.get(`${this.endpoint}/cwf/task/${caseId}`);
   }
-  updateCaseTask(caseId: number, data: any) {
-    return this.http.post(`${this.endpoint}/cwf/task/${caseId}`, data);
+  updateCaseTask(caseId: number, taskId: number, data: any) {
+    return this.http.post(
+      `${this.endpoint}/cwf/task/${caseId}/${taskId}`,
+      data
+    );
   }
 
   uploadFile(data: any) {
@@ -115,9 +114,7 @@ export interface File {
 }
 
 export interface Task {
-
-  caseTasksDto : {
-
+  caseTasksDto: {
     id: number;
     taskName: string;
     taskStatus: string;
@@ -136,36 +133,34 @@ export interface Task {
     createdDate: Date;
     lastModifiedDate: Date;
     attachments: Attachment[];
-  }
+  };
   caseSerialNumber: string;
 }
 
 export interface TaskInDetails {
-
-
-    id: number;
-    taskName: string;
-    taskStatus: string;
-    assignedUser: string;
-    caseID: 0;
-    taskAttributes: [
-      {
-        attributeName: string;
-        attributeValue: string;
-        attributeType: string;
-        attributeLabel: string;
-      }
-    ];
-    completedDate: Date;
-    camundaTaskID: string;
-    createdDate: Date;
-    lastModifiedDate: Date;
-    attachments: Attachment[];
+  id: number;
+  taskName: string;
+  taskStatus: string;
+  assignedUser: string;
+  caseID: 0;
+  taskAttributes: [
+    {
+      attributeName: string;
+      attributeValue: string;
+      attributeType: string;
+      attributeLabel: string;
+    }
+  ];
+  completedDate: Date;
+  completedByName: string;
+  camundaTaskID: string;
+  createdDate: Date;
+  lastModifiedDate: Date;
+  attachments: Attachment[];
   caseSerialNumber: string;
 }
 
-
-export interface Casse {
+export interface Case {
   id?: string;
   customerName: string;
   city: string;
@@ -184,6 +179,8 @@ export interface Casse {
   attachments: Attachment[];
   caseStatus: string;
   caseSerialNumber: string;
+  type: string;
+  creatorTeamName: string;
 }
 
 export type Attachment = {

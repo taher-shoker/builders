@@ -34,7 +34,9 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.router.navigate(['/unauthorized-page']);
         }
         const error = err.message;
-        this.toastr.error(error);
+        this.toastr.error(
+          err?.error?.debugMessage ? err?.error?.debugMessage : error
+        );
         return throwError(error);
       })
     );

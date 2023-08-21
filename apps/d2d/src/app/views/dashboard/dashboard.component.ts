@@ -7,7 +7,7 @@ import { DashboardService } from '../../services/dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { Subscription } from 'rxjs';
-import { CassesService, Team, User } from '../casses-setting/casses.service';
+import { CasesService, Team, User } from '../casses-setting/casses.service';
 
 
 interface RegisteredCases {
@@ -74,7 +74,7 @@ export class DashboardComponent implements OnInit{
     private dashboardService:DashboardService ,
     private authService:AuthService,
     private languageManagerService: LanguageManagerService,
-    private casesService: CassesService
+    private casesService: CasesService
   ){}
 
   ngOnInit(): void {

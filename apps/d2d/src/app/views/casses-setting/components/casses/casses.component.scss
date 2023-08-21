@@ -1,23 +1,37 @@
 @import './scss/core/variables/colors';
 
-*{
+* {
   word-break: keep-all;
 }
+
 // .cell-text{
 //   word-break:break-all;
 // }
+
+// ::ng-deep tr.mat-sort-header-content:first {
+//   // width: 100% !important;
+//   display: flex !important;
+// }
+// ::ng-deep .mat-sort-header-content {
+//   width: 100% !important;
+//   display: block !important;
+// }
+
 
 .casses-settings {
   margin-inline: 25px;
   position: relative;
   top: -60px;
 
-  table{
+  table {
 
-    td{
+    td {
       max-width: 165px;
       word-wrap: break-word;
+      // text-align: center;
     }
+
+
   }
 
   .top-info {
@@ -33,19 +47,23 @@
       justify-content: space-between;
       padding: 20px;
       align-items: center;
+
       .icon {
-        width: 60px;
-        height: 60px;
+        width: 50px;
+        height: 50px;
         background-color: red;
         display: flex;
         justify-content: center;
         align-items: center;
         border-radius: 10px;
+
         i {
-          font-size: 40px;
+          // font-size: 40px;
+          font-size: 1rem;
           color: $whiteColor;
         }
       }
+
       .static-info {
         .num {
           font-size: 40px;
@@ -53,59 +71,72 @@
           margin-bottom: 10px;
           color: $stcColor;
         }
+
         .title {
           font-weight: bold;
         }
       }
+
       &.register {
         .static-info {
           .title {
             color: $stcMoonLightColor !important;
           }
         }
+
         .icon {
           background-color: $stcMoonLightColor;
         }
       }
+
       &.in-progress {
         .static-info {
           .title {
-            color: $stcSunColor !important;
+            color: $stcSeaColor !important;
           }
         }
+
         .icon {
-          background-color: $stcSunColor;
+          background-color: $stcSeaColor;
         }
       }
+
       &.pending {
         .static-info {
           .title {
-            color: $stcSunsetColor !important;
+            color: $stcCoralColor !important;
           }
         }
+
         .icon {
-          background-color: $stcSunsetColor;
+          background-color: $stcCoralColor;
         }
       }
+
       &.closed {
         .static-info {
           .title {
-            color: $greenColor !important;
+            color: $stcGreenColor !important;
           }
         }
+
         .icon {
-          background-color: $greenColor;
+          background-color: $stcGreenColor;
         }
       }
     }
   }
+
   .f-box {
     .table-title {
       font-weight: bold;
       color: $stcColor;
+      font-size: 1.35rem;
     }
+
     background-color: $whiteColor;
     padding: 20px;
+
     .actions {
       width: 100%;
       align-items: center;
@@ -118,22 +149,27 @@
       }
     }
   }
+
   .pending-tasks {
     background-color: white;
     height: 100%;
+
     .main-title {
       padding: 20px;
       border-bottom: 1px solid $greyColor;
       font-weight: bold;
       margin: 0;
       color: $stcColor;
+      font-size: 1.35rem !important;
+
       i {
         color: $stcColor_dark;
       }
     }
+
     .tasks {
 
-      .row{
+      .row {
         margin: 0;
         padding: 0;
       }
@@ -144,17 +180,18 @@
       border-radius: 5px 0 0 5px;
       background-color: white;
       max-height: inherit;
+
       li {
 
-        .task{
+        .task {
           border-radius: 7px;
           overflow: hidden;
-          box-shadow: -3px 3px 3px -4px rgba(0,0,0,0.75);
+          box-shadow: -3px 3px 3px -4px rgba(0, 0, 0, 0.75);
           cursor: pointer;
 
-          .task-header{
+          .task-header {
 
-            .row{
+            .row {
               border-left: 5px solid #4F008C;
               background: linear-gradient(to right, #4f008c91 0%, #9000ff1f 100%);
               height: 31px;
@@ -163,11 +200,11 @@
               overflow: auto;
 
 
-              .left-col{
+              .left-col {
                 font-size: 14px;
               }
 
-              .right-col{
+              .right-col {
                 font-size: 13px;
                 color: var(--half-black);
                 text-align: end;
@@ -175,14 +212,19 @@
             }
           }
 
-          .task-desc-holder{
-            height: 112px;
+          .task-desc-holder {
+            // height: 112px;
             background-color: var(--light-grey);
             padding: 6px 10px;
             color: var(--grey-color);
-            overflow: auto;
+            // overflow: auto;
+            .task-desc{
+              font-size: 0.9rem;
+            }
           }
         }
+        .task:hover{
+          transform: translate(10px, 0px);        }
       }
 
       // .task {
@@ -217,26 +259,34 @@
     }
   }
 }
+
 table {
   .case-status {
     padding: 8px 12px;
     border-radius: 12px;
+    width: 100%;
+    text-align: center;
+    font-weight: 400;
   }
+
   .registered {
     background-color: rgba($color: $stcMoonLightColor, $alpha: 0.2);
     color: $stcMoonLightColor;
   }
+
   .pending {
-    background-color: rgba($color: $stcSunsetColor, $alpha: 0.2);
-    color: $stcSunsetColor;
+    background-color:rgba($color: $stcCoralColor, $alpha: 0.2);
+    color: $stcCoralColor;
   }
+
   .inprogress {
-    background-color: rgba($color: $stcSunColor, $alpha: 0.2);
-    color: $stcSunColor;
+    background-color: rgba($color: $stcSeaColor, $alpha: 0.2);
+    color: $stcSeaColor;
   }
+
   .closed {
-    background-color: rgba($color: $greenColor, $alpha: 0.2);
-    color: $greenColor;
+    background-color: rgba($color: $stcGreenColor, $alpha: 0.2);
+    color: $stcGreenColor;
   }
 }
 
@@ -362,30 +412,37 @@ table {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(0deg);
   }
 }
+
 @keyframes fill20 {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(20deg);
   }
 }
+
 @keyframes fill35 {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(35deg);
   }
 }
+
 @keyframes fill80 {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(80deg);
   }
@@ -395,6 +452,7 @@ table {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(100deg);
   }
@@ -404,14 +462,17 @@ table {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(130deg);
   }
 }
+
 @keyframes fill155 {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(155deg);
   }
@@ -421,10 +482,19 @@ table {
   0% {
     transform: rotate(0deg);
   }
+
   100% {
     transform: rotate(170deg);
   }
 }
 
-body.rtl {
+body.rtl {}
+
+.btn.details {
+  font-size: 0.85rem;
+}
+
+.btn.details:hover {
+  background-color: $stcColor;
+  color: #fff
 }

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
@@ -6,8 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { EmpFilter, User, UsersService } from '../../users.service';
-import { FormControl, FormGroup } from '@angular/forms';
+import { EmpFilter, UsersService, teamsOptions } from '../../users.service';
 
 export interface ColumnsSchema {
   key: string;
@@ -37,18 +37,18 @@ const COLUMNS_SCHEMA = [
   {
     key: 'userGroups',
     type: 'text',
-    label: 'privilage',
+    label: 'privilege',
   },
   {
     key: 'teamDto',
     type: 'text',
     label: 'team',
   },
-  // {
-  //   key: 'jobeTitle',
-  //   type: 'text',
-  //   label: 'jobe Title',
-  // },
+  {
+    key: 'jobTitle',
+    type: 'text',
+    label: 'jobe Title',
+  },
   {
     key: 'actions',
     type: 'actions',
@@ -74,8 +74,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
   approverUsers = 0;
   list!: PeriodicElement[];
   userId!: number;
-  privilage = [];
-  teams = [];
+  privilege!: any[];
+  teams!: any[];
   filterSelect!: FormGroup;
   empFilters: EmpFilter[] = [];
   @ViewChild(MatSort, { static: true })
@@ -116,10 +116,9 @@ export class UsersComponent implements OnInit, AfterViewInit {
     });
   }
   searchFilter(event: Event) {
-    const searchVal = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
-    this.dataSource.filter = searchVal;
+    const searchVal = (event.target as HTMLInputElement).value;
+
+    this.dataSource.filter = searchVal.trim().toLowerCase();
   }
 
   getCreatorUsersLength(arr: any) {
@@ -146,7 +145,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
       const x = res;
       // array without ADMINS Item
       x.pop();
-      this.privilage = x;
+      this.privilege = x;
     });
   }
   getTeams() {
@@ -164,9 +163,18 @@ export class UsersComponent implements OnInit, AfterViewInit {
         );
       }
     } else {
+      this.filterSelect
+        .get('teamSelect')
+        ?.setValue({ id: 'all', name: 'All' }, { emitEvent: false });
       if (value.id === 'all') {
         this.dataSource.data = this.list;
+        this.getTeams();
       } else {
+        if (value.id === 1) {
+          this.teams = teamsOptions.filter((t: any) => t.id !== 4);
+        } else {
+          this.teams = teamsOptions.filter((t: any) => t.id === 4);
+        }
         this.dataSource.data = this.list.filter(
           (x: any) => x.userGroups[0].id == value?.id
         );
@@ -176,13 +184,20 @@ export class UsersComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     this.getUsersListing();
     this.filterSelect = new FormGroup({
-      teamSelect: new FormControl('all'),
+      teamSelect: new FormControl(''),
     });
     this.getRoles();
     this.getTeams();
 
     this.dataSource.paginator = this.paginator;
     this.bannerDataService.updateData({ title: 'users_setting', text: '' });
+
+    this.dataSource.filterPredicate = function (record, filter) {
+      return (
+        record.name.toLocaleLowerCase().indexOf(filter) != -1 ||
+        record.email.toLocaleLowerCase().indexOf(filter) != -1
+      );
+    };
   }
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
