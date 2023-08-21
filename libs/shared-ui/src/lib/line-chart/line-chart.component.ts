@@ -6,7 +6,8 @@ import { Subscription } from 'rxjs';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 export interface LineChartData {
   category: string | number,
-  value: number,
+  value: string,
+  caseCount:number
 }
 @Component({
   selector: 'stc-apps-line-chart',
@@ -88,7 +89,7 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
     })
       const xAxis = chart.xAxes.push(
         am5xy.CategoryAxis.new(this.root, {
-          categoryField: "category",
+          categoryField: "value",
           startLocation: 0.2,
           endLocation: 0.8,
           maxDeviation: 50,
@@ -148,14 +149,14 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
       am5xy.LineSeries.new(this.root, {
         xAxis: xAxis,
         yAxis: yAxis,
-        valueYField: "value",
+        valueYField: "caseCount",
         valueXField: "category",
         sequencedInterpolation : true,
-        categoryXField: "category",
-        categoryYField : "value",
+        categoryXField: "value",
+        categoryYField : "caseCount",
         tooltip: am5.Tooltip.new(this.root, {
           pointerOrientation: 'vertical',
-          labelText: '{categoryX}: {valueY} {info}',
+          labelText: '{categoryX} : {valueY} {info}',
         }),
       })
     );
@@ -165,13 +166,13 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
     // series.get("tooltip")?.setAll({
     //   reverseChildren : true
     // })
-      const arr:{category:string | number}[] = []
-      this.chartData.forEach((data2) => {
-        arr.push({category : data2.category});
-      })
-      xAxis.data.setAll(arr)
-      series.data.setAll(arr)
-    series.data.setAll(data);
+      // const arr:{category:string | number}[] = []
+      // this.chartData.forEach((data2) => {
+      //   arr.push({category : data2.category});
+      // })
+      xAxis.data.setAll(this.chartData)
+      series.data.setAll(this.chartData)
+    // series.data.setAll(data);
     series.bullets.push(() => {
       const circle = am5.Circle.new(this.root, {
         radius: 6,
