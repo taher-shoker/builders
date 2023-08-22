@@ -4,7 +4,7 @@ import { DialogComponent } from './dialog.component';
 
 @Injectable({ providedIn: 'root' })
 export class DialogService {
-  private modals: DialogComponent[] = [];
+  public modals: DialogComponent[] = [];
 
   add(modal: DialogComponent) {
     if (!modal.id || this.modals.find((x) => x.id === modal.id)) {

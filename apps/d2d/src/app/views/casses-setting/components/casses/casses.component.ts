@@ -121,6 +121,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       data.caseSerialNumber == filter;
 
     this.serchForm();
+    this.dialogService.modals = [];
   }
 
   ngAfterViewInit() {
