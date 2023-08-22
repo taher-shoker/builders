@@ -88,11 +88,15 @@ export class BarChartComponent implements OnInit , AfterViewInit , OnDestroy, On
     });
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(this.root, {
+        maxDeviation:1,
         min: 0,
         extraMax: 0.1,
         renderer: yRenderer
       })
     );
+
+    this.root.numberFormatter.set("numberFormat", "#");
+
     yRenderer.grid.template.setAll({
       strokeOpacity : 0,
     });
