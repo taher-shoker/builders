@@ -1,43 +1,95 @@
-@import 'libs/styles/src/scss/core/variables/colors.scss';
+@import './scss/core/variables/colors';
+@import './scss/core/inputs';
+@import './scss/core/buttons';
+
 .login {
-  background-image: url('../../../assets/images/login/bg-login.png');
-  background-size: cover;
-  background-position: center;
+  background-color: $whiteColor;
   height: 100%;
   min-height: 100vh;
+  padding: 50px;
+  position: relative;
+  .shape4 {
+    background-image: url('../../../assets/images/login/shape4.png');
+    height: 400px;
+    width: 500px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    right: -180px;
+    top: -105px;
+  }
   .card {
     text-align: center;
-    padding-top: 35px;
-    padding-bottom: 35px;
+    padding-top: 80px;
     width: 100%;
-    background-color: transparent;
+    background-color: $stcColor;
+    position: relative;
+    min-height: 630px;
+    border-radius: 20px;
+    .shape1,
+    .shape2 {
+      background-image: url('../../../assets/images/login/dots-shape.png');
+      height: 400px;
+      width: 500px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      position: absolute;
+    }
 
+    .shape1 {
+      left: -120px;
+      top: -20px;
+    }
+    .shape2 {
+      right: -210px;
+    }
+    .shape3 {
+      background-image: url('../../../assets/images/login/vector-shape.png');
+      width: 425px;
+      height: 160px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      bottom: 55px;
+      left: 27%;
+    }
     h4 {
       padding-top: 65px;
       color: $whiteColor;
-      font-weight: 400;
+      font-weight: 700;
+      font-size: 32px;
+      text-transform: capitalize;
+      margin-bottom: 30px;
     }
-
-    .divider-line {
-      text-transform: uppercase;
-      display: block;
-      position: relative;
-      color: rgba($color: $whiteColor, $alpha: 0.5);
-      &::after,
-      &::before {
-        content: '';
-        height: 1px;
-        width: 40%;
-        background-color: rgba($color: $whiteColor, $alpha: 0.3);
-        position: absolute;
-        top: 12px;
-      }
-      &::before {
-        left: 0;
-      }
-      &::after {
-        right: 0;
-      }
+    p {
+      font-size: 18px;
+      color: $whiteColor;
+      font-style: normal;
     }
+  }
+  .divider-line {
+    text-transform: uppercase;
+    display: block;
+    position: relative;
+    color: rgba($color: $greyColor, $alpha: 0.7);
+    text-align: center;
+    &::after,
+    &::before {
+      content: '';
+      height: 1px;
+      width: 40%;
+      background-color: rgba($color: $greyColor, $alpha: 0.7);
+      position: absolute;
+      top: 12px;
+    }
+    &::before {
+      left: 0;
+    }
+    &::after {
+      right: 0;
+    }
+  }
+  .btn.stc-color-outline {
+    font-weight: 700 !important;
   }
 }

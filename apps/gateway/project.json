@@ -34,6 +34,9 @@
           "node_modules/ngx-toastr/toastr.css",
           "apps/gateway/src/styles.scss"
         ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/styles/src"]
+        },
         "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
       },
       "configurations": {

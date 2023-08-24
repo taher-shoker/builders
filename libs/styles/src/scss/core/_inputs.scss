@@ -99,3 +99,32 @@
     border-top-right-radius: 0 !important;
   }
 }
+.outline-input {
+  input {
+    color: $stcColor !important;
+    padding-inline-start: 5px;
+    height: 56px !important;
+    &::placeholder {
+      color: $shadowStc !important;
+    }
+  }
+  .mat-mdc-text-field-wrapper {
+    padding-inline: 0;
+    background-color: $whiteColor !important;
+    border: 1px solid $greyColor;
+    border-radius: 12px;
+  }
+  .mat-mdc-form-field-infix {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+  }
+  .input-group-text {
+    border-end-end-radius: 0 !important;
+    border-top-right-radius: 0 !important;
+    color: $greyColor !important;
+  }
+}
+.mat-icon {
+  line-height: 22px;
+  text-align: center;
+}
