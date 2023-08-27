@@ -60,6 +60,11 @@ const COLUMNS_SCHEMA = [
     type: 'text',
     label: 'Case Status',
   },
+    {
+    key: 'type',
+    type: 'text',
+    label: 'Case Type',
+  },
   {
     key: 'actions',
     type: 'actions',
