@@ -83,4 +83,8 @@ export class DatePickerRangeComponent implements OnChanges{
       this.valueChangedEvent.emit(rangedObj)
     }
   }
+
+  filteredDays(calendarDate: Date): boolean{
+    return calendarDate < new Date() && calendarDate >= new Date("2023-1-1");
+  }
 }

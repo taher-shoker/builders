@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
   Component,
   AfterViewInit,
@@ -19,7 +20,8 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
-import { Subscription } from 'rxjs';
+import { Subscription, tap } from 'rxjs';
+import { UtilsService } from '@stc-apps/lng-selector';
 
 export interface PeriodicElement {
   id: string;
@@ -85,6 +87,17 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   getAssigneeTasks!: Subscription;
   formChangesSub!: Subscription;
 
+  // Props of the paginator :
+  casesPagesCount: number = 0;
+
+
+  types : {statusName: string}[] = [
+    {statusName: "Registered"},
+    {statusName: "Pending"},
+    {statusName: "In Progress"},
+    {statusName: "Closed"}
+  ]
+
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -93,7 +106,8 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     public CasesService: CasesService,
     protected dialogService: DialogService,
     public authService: AuthService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    public utils : UtilsService
   ) {}
 
   allItems!: Task[];
@@ -124,30 +138,65 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogService.modals = [];
   }
 
+  // previousPageIndex!: number;
+  // nextPageIndex!: number;
+  pagesFetchedIndexes: number[] = [0]
+
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    this.paginator.page.subscribe(pageRes => {
+      const formCopy = this.form.value;
+
+      console.log("THE STAT", this.form.value)
+      // formCopy.status ? formCopy.status = formCopy.status.statusName : formCopy.status == undefined ? formCopy.status = '' : formCopy.status = ''
+
+      console.log("page res is :", pageRes)
+
+      if(!this.pagesFetchedIndexes.includes(pageRes.pageIndex)){
+
+        this.pagesFetchedIndexes.push(pageRes.pageIndex)
+        this.getCasesSub = this.CasesService.getCases({page: pageRes.pageIndex, ...formCopy}).subscribe((res: any) =>{
+          this.populateCases(res)
+        })
+      }
+
+    });
   }
 
   detailsNavigate(id: string | number) {
     this.router.navigate(['./case-details', id], { relativeTo: this.route });
   }
   getCassesListing() {
-    this.getCasesSub = this.CasesService.getCases().subscribe((res: any) => {
-      this.isLoading = false;
-      this.dataSource.data = res;
-      this.totalRegisted = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.registered
-      ).length;
-      this.totalInProgress = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.inprogress
-      ).length;
-      this.totalPending = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.pending
-      ).length;
-      this.totalClosed = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.closed
-      ).length;
+    this.getCasesSub = this.CasesService.getCases().subscribe((res: any) =>{
+      this.populateCases(res)
     });
+  }
+
+  populateCases(res: any){
+    console.log("THE RES", res)
+    this.isLoading = false;
+    this.casesPagesCount = res.totalElements
+
+    if(res.first){
+      this.dataSource.data = res.content;
+      this.pagesFetchedIndexes = [0]
+    }else{
+      this.dataSource.data = [...this.dataSource.data, ...res.content];
+
+    }
+
+    this.totalRegisted = res.content.filter(
+      (d: any) => d.caseStatus === CaseStatus.registered
+    ).length;
+    this.totalInProgress = res.content.filter(
+      (d: any) => d.caseStatus === CaseStatus.inprogress
+    ).length;
+    this.totalPending = res.content.filter(
+      (d: any) => d.caseStatus === CaseStatus.pending
+    ).length;
+    this.totalClosed = res.content.filter(
+      (d: any) => d.caseStatus === CaseStatus.closed
+    ).length;
   }
 
   fetchAssigneeTasks() {
@@ -160,7 +209,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.getAssigneeTasks = this.CasesService.getAssigneeTasks(
         username
       ).subscribe((res: any) => {
-        this.allItems = res.data;
+        this.allItems = this.utils.sorter(res.data, 'caseSerialNumber', "DESC")
       });
     });
   }
@@ -190,6 +239,8 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       contactNumber: ['', { nonNullable: true }],
       caseLabel: ['', { nonNullable: true }],
       description: ['', { nonNullable: true }],
+      status: ['', { nonNullable: true }],
+      type: ['', { nonNullable: true }]
     });
   }
 
@@ -208,6 +259,9 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSubmit() {
     const formCopy = this.form.value;
+    console.log("THE STAT", this.form.value)
+
+    formCopy.status = formCopy.status.statusName
 
     if (formCopy.activationDate == undefined) {
       formCopy.activationDate = '';
@@ -220,8 +274,9 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getCasesSub = this.CasesService.getCases(formCopy).subscribe(
       (res: any) => {
         this.dialogService.close();
-        this.isLoading = false;
-        this.dataSource.data = res;
+        // this.isLoading = false;
+        // this.dataSource.data = res.content;
+        this.populateCases(res)
       }
     );
   }

@@ -129,7 +129,7 @@
   "serial_number": "Serial Number",
   "case_details": "Case Details",
 
-  "Check Case Info Desc": "You should decide whether the case needs more information, If so you should send the enquiry message and the assignee user or team and you may send attachments.",
+  "Check Case Info Desc": "You should decide whether the case needs more information, If so you should send the inquiry message and the assignee user or team and you may send attachments.",
   "Approve Case Desc": "You should approve or reject the case, you may send a reject note in case of rejection.",
   "Fill More Info Desc": "You should reply back with the needed information and you may send attachments.",
   "Should Escalate Desc": "You may send the case for escalation with a content message or close the case.",
@@ -145,5 +145,7 @@
   "Select Period": "Select Period",
   "by": "By",
   "on": "On",
-  "last 7 days": "last 7 days"
+  "last 7 days": "last 7 days",
+  "select_status": "Select Status",
+  "dashboard": "Dashboard"
 }

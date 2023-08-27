@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { Subscription } from 'rxjs';
 import { CasesService, Team, User } from '../casses-setting/casses.service';
+import { DateAdapter } from '@angular/material/core';
 
 
 interface RegisteredCases {
@@ -81,7 +82,8 @@ export class DashboardComponent implements OnInit{
     private dashboardService:DashboardService ,
     private authService:AuthService,
     private languageManagerService: LanguageManagerService,
-    private casesService: CasesService
+    private casesService: CasesService,
+    private dateAdapter: DateAdapter<any>
   ){}
 
   ngOnInit(): void {
@@ -91,6 +93,7 @@ export class DashboardComponent implements OnInit{
     this.getUsersAndTeams();
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe((lang:string) => {
       this.direction = localStorage.getItem("language");
+      this.dateAdapter.setLocale(this.direction)
     })
 
     this.filterProductivityGroup.get('filterValue')?.setValue(this.dateFilterOption[1])
@@ -119,7 +122,7 @@ export class DashboardComponent implements OnInit{
       });
       this.productivityTeamUsers = {
         titleEn : "Fraud Team Productivity",
-        titleAr : "إنتاجية فريق الاختلاسات",
+        titleAr : "إنتاجية فريق مكافحة الاختلاسات",
         data : newData
       };
     })
@@ -166,8 +169,8 @@ export class DashboardComponent implements OnInit{
         })
       })
       this.registeredCasesChart = {
-        titleEn : "weekly trend for registered cases",
-        titleAr : "الاتجاه الأسبوعي للحالات المسجلة",
+        titleEn : "Weekly Trend For All Cases",
+        titleAr : "الاتجاه الأسبوعي لكل الحالات",
         lineChartColors : ['#45006F' , '#FF6A39'],
         chartData : newData
       }

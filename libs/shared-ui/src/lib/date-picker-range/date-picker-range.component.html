@@ -1,6 +1,6 @@
 <mat-form-field>
   <mat-label>Enter a date range</mat-label>
-  <mat-date-range-input [rangePicker]="picker" [formGroup]="dateFormGroup">
+  <mat-date-range-input [rangePicker]="picker" [formGroup]="dateFormGroup" [dateFilter]="filteredDays">
     <input matStartDate placeholder="Start date" formControlName="start" (dateChange)="firstValueChanged($event)">
     <input matEndDate placeholder="End date" formControlName="end" (dateChange)="valueChanged($event)"> <!-- Emit when the second input only is changed-->
   </mat-date-range-input>

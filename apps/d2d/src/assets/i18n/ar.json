@@ -145,6 +145,7 @@
   "Select Period": "حدد مدة",
   "by": "بواسطة",
   "on": "في",
-  "last 7 days": "اخر 7 ايام"
-
+  "last 7 days": "اخر 7 ايام",
+  "select_status": "اختر حالة",
+  "dashboard" : "لوحة المعلومات"
 }
