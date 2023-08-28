@@ -61,9 +61,9 @@ const COLUMNS_SCHEMA = [
     label: 'Case Status',
   },
     {
-    key: 'type',
+    key: 'createdDate',
     type: 'text',
-    label: 'Case Type',
+    label: 'Created at',
   },
   {
     key: 'actions',

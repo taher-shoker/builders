@@ -123,6 +123,7 @@
                   >
                 </div>
               </div>
+
               <div class="info-name" *ngSwitchCase="'caseStatus'">
                 <div
                   class="case-status"
@@ -133,6 +134,13 @@
                   {{ element[col.key] | translate }}
                 </div>
               </div>
+
+              <div class="info-name" *ngSwitchCase="'createdDate'">
+                <div class="name">
+                  <p>{{ element[col.key] | date : 'dd/MM/YYYY'}}</p>
+                </div>
+              </div>
+
               <div
                 class="btns-action justify-content-end"
                 *ngSwitchCase="'actions'"
