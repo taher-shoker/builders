@@ -17,7 +17,8 @@ import { NavItem } from './header.model';
 export class HeaderComponent {
   @Input() userName: string | undefined;
   @Input() logoSrc: string | undefined;
-  @Input() sidebarLogoSrc: string | undefined;
+  @Input() showLang = true;
+  @Input({ required: true }) sidebarLogoSrc: string | undefined;
   @Output() logOut: EventEmitter<void> = new EventEmitter();
   @Output() backToHome: EventEmitter<void> = new EventEmitter();
 

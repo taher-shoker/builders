@@ -9,16 +9,13 @@ export class UsersSettingsComponent {
   title = 'users settings';
   userName = 'taher shoker';
   logoSrc = 'assets/images/brand/stc-logo.png';
+  sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
+
   navItems = [
     {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
-    },
-    {
-      name: 'settings',
-      url: '/settings',
-      icon: ' fa-cog',
     },
   ];
 }
