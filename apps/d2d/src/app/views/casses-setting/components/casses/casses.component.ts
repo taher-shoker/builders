@@ -267,6 +267,9 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     console.log("THE STAT", this.form.value)
 
     formCopy.status = formCopy.status.statusName
+    if(formCopy.status === undefined){
+      formCopy.status = ""
+    }
 
     if (formCopy.activationDate == undefined) {
       formCopy.activationDate = '';
