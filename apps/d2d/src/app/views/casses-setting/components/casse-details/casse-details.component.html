@@ -166,7 +166,7 @@
           </figcaption>
         </figure>
         <div class="order-track">
-          <div class="order-track-step" *ngFor="let item of allTasks">
+          <div class="order-track-step" *ngFor="let item of allTasks; let i = index">
             <div class="order-track-status" [ngClass]="
                 item.taskStatus === 'pending' ? ' order-track-pending' : null
               ">
@@ -198,21 +198,52 @@
                 }}
               </p>
 
-              <p class="m-0 item-msg"></p>
+
+              <ng-container *ngIf="item.taskName === 'Within SL Response' && item.taskStatus === 'completed' && allTasks[i+1].taskName === 'Send to Close'">
+
+                <p class="m-0 item-msg">
+                  {{"response_recvd_from_chnls" | translate}}
+                </p>
+
+              </ng-container>
+
+              <ng-container *ngIf="item.taskName === 'Within SL Response' && item.taskStatus === 'breached'">
+
+                <p class="m-0 item-msg">
+                  {{"response_not_recvd_from_chnls" | translate}}
+                </p>
+
+              </ng-container>
+
+              <ng-container *ngIf="item.taskName === 'Breaching SL Response' && item.taskStatus === 'completed' && allTasks[i+1].taskName === 'Send to Close'">
+
+                <p class="m-0 item-msg">
+                  {{"response_recvd_from_chnls" | translate}}
+                </p>
+
+              </ng-container>
+
+              <ng-container *ngIf="item.taskName === 'Breaching SL Response' && item.taskStatus === 'breached'">
+
+                <p class="m-0 item-msg">
+                  {{"response_not_recvd_from_chnls" | translate}}
+                </p>
+
+              </ng-container>
 
               <ng-container *ngFor="let taskAttr of item.taskAttributes">
                 <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'case_approved'">
                   {{
                   taskAttr.attributeValue === '0'
-                  ? 'Rejected'
+                  ? ('rejected' | translate)
                   : taskAttr.attributeValue === null
                   ? ''
-                  : 'Approved'
+                  : ('approved' | translate)
                   }}
                 </p>
 
                 <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'info_needed'">
-                  {{ taskAttr.attributeValue === '0' ? 'Not needed' : '' }}
+                  {{ taskAttr.attributeValue === '0' ? ('not_needed' | translate) : '' }}
                 </p>
                 <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'should_first_escalate'">
                   {{
@@ -242,9 +273,11 @@
                   : taskAttr.attributeValue
                   }}
                 </p>
-                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'message'">
+                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'message' || taskAttr.attributeName === 'close_mail_content'">
                   {{ taskAttr.attributeValue }}
                 </p>
+
+
               </ng-container>
 
               <p *ngFor="let attachment of item.attachments" class="item-task-attachment"
@@ -345,7 +378,7 @@
             infoForm.get('assignedTo')?.value?.value === '1'
               ? infoForm.get('selectedUser')!.setValue($event)
               : infoForm.get('selectedUser')!.setValue($event)
-          " [selectId]="selectedTeam || null"></stc-apps-select-drop-down>
+          " [selectId]="selectedUser || null"></stc-apps-select-drop-down>
       </div>
       <div class="col-md-12">
         <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'message'"

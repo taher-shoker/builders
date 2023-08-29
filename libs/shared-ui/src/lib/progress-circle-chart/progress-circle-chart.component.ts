@@ -109,6 +109,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         // templateField: 'category',
       })
     );
+
     const yRenderer = am5radar.AxisRendererRadial.new(this.root, {
       minGridDistance: 20,
       templateField: 'category',
@@ -136,6 +137,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     );
 
     // create label in the center of the chart
+
     chart.children.unshift(
       am5.Label.new(this.root, {
         text: 'All cases',
@@ -148,6 +150,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         paddingTop: 0,
         paddingBottom: 0,
         fill: am5.color('#8e9aa0'),
+
       })
     );
     chart.children.unshift(
@@ -161,6 +164,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         centerX: am5.percent(50),
         paddingTop: 0,
         paddingBottom: 0,
+
       })
     );
 
@@ -199,7 +203,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         })
       );
       series.columns.template.setAll({
-        width: am5.p100,
+        width: am5.p100, //
         fillOpacity: fillOpacity,
         strokeOpacity: 0,
         cornerRadius: 20,
@@ -208,16 +212,24 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         templateField: 'columnSettings',
         fill : am5.color("#000")
       });
+
       const cellSize = 30;
-      series.events.on("datavalidated", function(ev) {
+
+      series.events.on("datavalidated", (ev) => {
         const series2 = ev.target;
         const chart:any = series2.chart;
         const xAxis:any = chart?.xAxes.getIndex(0);
         // Calculate how we need to adjust chart height
         const chartHeight = series.data.length * cellSize + xAxis.height() + chart.get("paddingTop", 0) + chart.get("paddingBottom", 0);
 
+
         // Set it on chart's container
-        chart.root.dom.style.height = (chartHeight * 3) + "px";
+        if(this.data.length < 5){
+
+          chart.root.dom.style.height = (chartHeight * 7) + "px";
+        }else{
+          chart.root.dom.style.height = (chartHeight * 3) + "px";
+        }
       });
       return series;
     };

@@ -41,6 +41,10 @@ export class DashboardService {
     return this.http.get<DashboardUsersCases>(`${environment.apiUrl}/dashboard`);
   }
 
+  getInsightsCards(fromDate: string, toDate: string){
+    return this.http.get<StatusChartData>(`${environment.apiUrl}/dashboard/chart/status/user?startDate=${fromDate}&endDate=${toDate}`);
+  }
+
   getWeeklyTrendChartData(username?:string, teamname?:string, fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, ):Observable<WeeklyTrendChart>
   {
 

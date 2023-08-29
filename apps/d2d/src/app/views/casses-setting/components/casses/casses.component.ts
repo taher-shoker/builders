@@ -22,6 +22,7 @@ import { AuthService } from '../../../../services/auth.service';
 import { CookieService } from 'ngx-cookie-service';
 import { Subscription, tap } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
+import { DashboardService } from '../../../../services/dashboard.service';
 
 export interface PeriodicElement {
   id: string;
@@ -112,7 +113,8 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     protected dialogService: DialogService,
     public authService: AuthService,
     private cookieService: CookieService,
-    public utils : UtilsService
+    public utils : UtilsService,
+    private dashboardService: DashboardService
   ) {}
 
   allItems!: Task[];
@@ -131,6 +133,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   disabled = false;
 
   ngOnInit() {
+    this.populateInsightsCards();
     this.getCassesListing();
     this.fetchAssigneeTasks();
     this.bannerDataService.updateData({ title: 'home', text: '' });
@@ -190,18 +193,32 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
     }
 
-    this.totalRegisted = res.content.filter(
-      (d: any) => d.caseStatus === CaseStatus.registered
-    ).length;
-    this.totalInProgress = res.content.filter(
-      (d: any) => d.caseStatus === CaseStatus.inprogress
-    ).length;
-    this.totalPending = res.content.filter(
-      (d: any) => d.caseStatus === CaseStatus.pending
-    ).length;
-    this.totalClosed = res.content.filter(
-      (d: any) => d.caseStatus === CaseStatus.closed
-    ).length;
+    // this.totalRegisted = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.registered
+    // ).length;
+    // this.totalInProgress = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.inprogress
+    // ).length;
+    // this.totalPending = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.pending
+    // ).length;
+    // this.totalClosed = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.closed
+    // ).length;
+  }
+
+  endDate: Date = new Date();
+  startDate : Date = new Date(new Date().setDate(new Date().getDate() - 7))
+
+  populateInsightsCards(){
+
+    this.dashboardService.getInsightsCards(this.startDate.toLocaleDateString('sv'), this.endDate.toLocaleDateString('sv')).subscribe(res => {
+
+      this.totalRegisted = res.data.filter((d: any) => d.caseStatus === CaseStatus.registered)[0].caseCount;
+      this.totalInProgress = res.data.filter((d: any) => d.caseStatus === CaseStatus.inprogress)[0].caseCount;
+      this.totalPending = res.data.filter((d: any) => d.caseStatus === CaseStatus.pending)[0].caseCount;
+
+    })
   }
 
   fetchAssigneeTasks() {

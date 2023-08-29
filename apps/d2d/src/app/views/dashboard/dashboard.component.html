@@ -120,7 +120,7 @@
                 <p class="chart-title">{{direction === 'en' ? productivityTeamUsers?.titleEn : productivityTeamUsers?.titleAr}}</p>
               </div>
               <div class="col"></div>
-              <div class="col-3">
+              <!-- <div class="col-3">
                 <form [formGroup]="filterProductivityGroup">
                   <stc-apps-select-drop-down
                     [options]="dateFilterOption"
@@ -134,6 +134,14 @@
                   </stc-apps-select-drop-down>
 
                 </form>
+              </div> -->
+              <div class="col-3">
+                <stc-apps-date-picker-range
+                  (valueChangedEvent)="filterProductivityUser($event)"
+                  [startDate]="startDate"
+                  [endDate]="endDate"
+                  >
+                </stc-apps-date-picker-range>
               </div>
             </div>
           </div>
