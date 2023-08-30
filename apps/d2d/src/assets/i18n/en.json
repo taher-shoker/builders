@@ -152,5 +152,6 @@
   "response_not_recvd_from_chnls": "The response has not been received from Channels",
   "not_needed": "Not needed",
   "rejected": "Rejected",
-  "approved": "Approved"
+  "approved": "Approved",
+  "d2d_fraud_cases": "d2d fraud cases"
 }

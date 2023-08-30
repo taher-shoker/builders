@@ -47,7 +47,7 @@ const COLUMNS_SCHEMA = [
   {
     key: 'jobTitle',
     type: 'text',
-    label: 'Job Title',
+    label: 'jobTitle',
   },
   {
     key: 'actions',

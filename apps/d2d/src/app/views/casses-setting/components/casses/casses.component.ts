@@ -61,10 +61,10 @@ const COLUMNS_SCHEMA = [
     type: 'text',
     label: 'Case Status',
   },
-    {
+  {
     key: 'createdDate',
     type: 'text',
-    label: 'Created at',
+    label: 'created_at',
   },
   {
     key: 'actions',
@@ -96,13 +96,12 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   // Props of the paginator :
   casesPagesCount: number = 0;
 
-
-  types : {statusName: string}[] = [
-    {statusName: "Registered"},
-    {statusName: "Pending"},
-    {statusName: "In Progress"},
-    {statusName: "Closed"}
-  ]
+  types: { statusName: string }[] = [
+    { statusName: 'Registered' },
+    { statusName: 'Pending' },
+    { statusName: 'In Progress' },
+    { statusName: 'Closed' },
+  ];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -113,7 +112,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     protected dialogService: DialogService,
     public authService: AuthService,
     private cookieService: CookieService,
-    public utils : UtilsService,
+    public utils: UtilsService,
     private dashboardService: DashboardService
   ) {}
 
@@ -136,7 +135,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.populateInsightsCards();
     this.getCassesListing();
     this.fetchAssigneeTasks();
-    this.bannerDataService.updateData({ title: 'home', text: '' });
+    this.bannerDataService.updateData({ title: 'd2d_fraud_cases', text: '' });
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.filterPredicate = (data, filter) =>
@@ -148,26 +147,27 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   // previousPageIndex!: number;
   // nextPageIndex!: number;
-  pagesFetchedIndexes: number[] = [0]
+  pagesFetchedIndexes: number[] = [0];
 
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
-    this.paginator.page.subscribe(pageRes => {
+    this.paginator.page.subscribe((pageRes) => {
       const formCopy = this.form.value;
 
-      console.log("THE STAT", this.form.value)
+      console.log('THE STAT', this.form.value);
       // formCopy.status ? formCopy.status = formCopy.status.statusName : formCopy.status == undefined ? formCopy.status = '' : formCopy.status = ''
 
-      console.log("page res is :", pageRes)
+      console.log('page res is :', pageRes);
 
-      if(!this.pagesFetchedIndexes.includes(pageRes.pageIndex)){
-
-        this.pagesFetchedIndexes.push(pageRes.pageIndex)
-        this.getCasesSub = this.CasesService.getCases({page: pageRes.pageIndex, ...formCopy}).subscribe((res: any) =>{
-          this.populateCases(res)
-        })
+      if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
+        this.pagesFetchedIndexes.push(pageRes.pageIndex);
+        this.getCasesSub = this.CasesService.getCases({
+          page: pageRes.pageIndex,
+          ...formCopy,
+        }).subscribe((res: any) => {
+          this.populateCases(res);
+        });
       }
-
     });
   }
 
@@ -175,22 +175,21 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.router.navigate(['./case-details', id], { relativeTo: this.route });
   }
   getCassesListing() {
-    this.getCasesSub = this.CasesService.getCases().subscribe((res: any) =>{
-      this.populateCases(res)
+    this.getCasesSub = this.CasesService.getCases().subscribe((res: any) => {
+      this.populateCases(res);
     });
   }
 
-  populateCases(res: any){
-    console.log("THE RES", res)
+  populateCases(res: any) {
+    console.log('THE RES', res);
     this.isLoading = false;
-    this.casesPagesCount = res.totalElements
+    this.casesPagesCount = res.totalElements;
 
-    if(res.first){
+    if (res.first) {
       this.dataSource.data = res.content;
-      this.pagesFetchedIndexes = [0]
-    }else{
+      this.pagesFetchedIndexes = [0];
+    } else {
       this.dataSource.data = [...this.dataSource.data, ...res.content];
-
     }
 
     // this.totalRegisted = res.content.filter(
@@ -208,17 +207,25 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   endDate: Date = new Date();
-  startDate : Date = new Date(new Date().setDate(new Date().getDate() - 7))
+  startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
-  populateInsightsCards(){
-
-    this.dashboardService.getInsightsCards(this.startDate.toLocaleDateString('sv'), this.endDate.toLocaleDateString('sv')).subscribe(res => {
-
-      this.totalRegisted = res.data.filter((d: any) => d.caseStatus === CaseStatus.registered)[0].caseCount;
-      this.totalInProgress = res.data.filter((d: any) => d.caseStatus === CaseStatus.inprogress)[0].caseCount;
-      this.totalPending = res.data.filter((d: any) => d.caseStatus === CaseStatus.pending)[0].caseCount;
-
-    })
+  populateInsightsCards() {
+    this.dashboardService
+      .getInsightsCards(
+        this.startDate.toLocaleDateString('sv'),
+        this.endDate.toLocaleDateString('sv')
+      )
+      .subscribe((res) => {
+        this.totalRegisted = res.data.filter(
+          (d: any) => d.caseStatus === CaseStatus.registered
+        )[0].caseCount;
+        this.totalInProgress = res.data.filter(
+          (d: any) => d.caseStatus === CaseStatus.inprogress
+        )[0].caseCount;
+        this.totalPending = res.data.filter(
+          (d: any) => d.caseStatus === CaseStatus.pending
+        )[0].caseCount;
+      });
   }
 
   fetchAssigneeTasks() {
@@ -231,7 +238,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       this.getAssigneeTasks = this.CasesService.getAssigneeTasks(
         username
       ).subscribe((res: any) => {
-        this.allItems = this.utils.sorter(res.data, 'caseSerialNumber', "DESC")
+        this.allItems = this.utils.sorter(res.data, 'caseSerialNumber', 'DESC');
       });
     });
   }
@@ -262,7 +269,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       caseLabel: ['', { nonNullable: true }],
       description: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
-      type: ['', { nonNullable: true }]
+      type: ['', { nonNullable: true }],
     });
   }
 
@@ -281,11 +288,11 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSubmit() {
     const formCopy = this.form.value;
-    console.log("THE STAT", this.form.value)
+    console.log('THE STAT', this.form.value);
 
-    formCopy.status = formCopy.status.statusName
-    if(formCopy.status === undefined){
-      formCopy.status = ""
+    formCopy.status = formCopy.status.statusName;
+    if (formCopy.status === undefined) {
+      formCopy.status = '';
     }
 
     if (formCopy.activationDate == undefined) {
@@ -301,7 +308,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
         this.dialogService.close();
         // this.isLoading = false;
         // this.dataSource.data = res.content;
-        this.populateCases(res)
+        this.populateCases(res);
       }
     );
   }
