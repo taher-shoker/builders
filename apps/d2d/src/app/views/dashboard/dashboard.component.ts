@@ -97,7 +97,7 @@ export class DashboardComponent implements OnInit{
     })
 
     this.filterProductivityGroup.get('filterValue')?.setValue(this.dateFilterOption[1])
-    this.filterProductivityUser(this.dateFilterOption[1]);
+    this.getProductivityChartData(this.startDate.toLocaleDateString('sv'), this.endDate.toLocaleDateString('sv'));
 
   }
 
@@ -247,52 +247,52 @@ export class DashboardComponent implements OnInit{
     }
   }
 
-  filterProductivityUser(dateObj : {name: string, id: number}){
+  filterProductivityUser(newDate: DateRange){ //dateObj : {name: string, id: number}
 
-    let filterValue;
-    let fromDate;
-    let toDate;
+    // let filterValue;
+    // let fromDate;
+    // let toDate;
 
-    if(dateObj.id === 0){
-      const d = new Date();
-      d.setFullYear(d.getFullYear())
-      toDate = d.toLocaleDateString('sv');
+    // if(dateObj.id === 0){
+    //   const d = new Date();
+    //   d.setFullYear(d.getFullYear())
+    //   toDate = d.toLocaleDateString('sv');
 
-      d.setFullYear(d.getFullYear() - 1)
-      fromDate = d.toLocaleDateString('sv')
+    //   d.setFullYear(d.getFullYear() - 1)
+    //   fromDate = d.toLocaleDateString('sv')
 
 
-    }else if(dateObj.id === 1){
+    // }else if(dateObj.id === 1){
 
-      // Get the current date
-      const today = new Date();
-      // Format the date as year-month-day
-      toDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-      // Get the date one month before by subtracting 30 days in milliseconds
-      const oneMonthBefore = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
-      // Format the date as year-month-day
-      fromDate = oneMonthBefore.getFullYear() + "-" + (oneMonthBefore.getMonth() + 1) + "-" + oneMonthBefore.getDate();
-      // Return an array of the two dates
+    //   // Get the current date
+    //   const today = new Date();
+    //   // Format the date as year-month-day
+    //   toDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    //   // Get the date one month before by subtracting 30 days in milliseconds
+    //   const oneMonthBefore = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
+    //   // Format the date as year-month-day
+    //   fromDate = oneMonthBefore.getFullYear() + "-" + (oneMonthBefore.getMonth() + 1) + "-" + oneMonthBefore.getDate();
+    //   // Return an array of the two dates
 
-    }else if(dateObj.id === 2){
-      // Get the current date
-      const today = new Date();
-      // Format the date as year-month-day
-      toDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-      // Get the date one month before by subtracting 30 days in milliseconds
-      const oneMonthBefore = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
-      // Format the date as year-month-day
-      fromDate = oneMonthBefore.getFullYear() + "-" + (oneMonthBefore.getMonth() + 1) + "-" + oneMonthBefore.getDate();
-      // Return an array of the two dates
+    // }else if(dateObj.id === 2){
+    //   // Get the current date
+    //   const today = new Date();
+    //   // Format the date as year-month-day
+    //   toDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    //   // Get the date one month before by subtracting 30 days in milliseconds
+    //   const oneMonthBefore = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+    //   // Format the date as year-month-day
+    //   fromDate = oneMonthBefore.getFullYear() + "-" + (oneMonthBefore.getMonth() + 1) + "-" + oneMonthBefore.getDate();
+    //   // Return an array of the two dates
 
-    }else {
-       // Get the current date
-       const today = new Date();
-       // Format the date as year-month-day
-       toDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-       fromDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
-    }
-    this.getProductivityChartData(fromDate, toDate)
+    // }else {
+    //    // Get the current date
+    //    const today = new Date();
+    //    // Format the date as year-month-day
+    //    toDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    //    fromDate = today.getFullYear() + "-" + (today.getMonth() + 1) + "-" + today.getDate();
+    // }
+    this.getProductivityChartData(newDate.fromDate.toLocaleDateString('sv'), newDate.toDate.toLocaleDateString('sv'))
   }
 
   filterStages(newDate: DateRange){

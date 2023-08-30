@@ -147,5 +147,11 @@
   "on": "في",
   "last 7 days": "اخر 7 ايام",
   "select_status": "اختر حالة",
-  "dashboard" : "لوحة المعلومات"
+  "dashboard" : "لوحة المعلومات",
+  "response_recvd_from_chnls": "تم استلام الرد من قنوات",
+  "response_not_recvd_from_chnls": "لم يتم استلام الرد من قنوات",
+  "not_needed": "غير مطلوب",
+  "rejected": "مرفوض",
+  "approved": "موثق"
+
 }

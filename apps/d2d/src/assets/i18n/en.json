@@ -147,5 +147,10 @@
   "on": "On",
   "last 7 days": "last 7 days",
   "select_status": "Select Status",
-  "dashboard": "Dashboard"
+  "dashboard": "Dashboard",
+  "response_recvd_from_chnls": "The response has been received from Channels",
+  "response_not_recvd_from_chnls": "The response has not been received from Channels",
+  "not_needed": "Not needed",
+  "rejected": "Rejected",
+  "approved": "Approved"
 }
