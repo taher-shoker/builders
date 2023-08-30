@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { EmpFilter, UsersService, teamsOptions } from '../../users.service';
+import { UsersService, teamsOptions } from '../../users.service';
 
 export interface ColumnsSchema {
   key: string;
@@ -77,7 +77,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   privilege!: any[];
   teams!: any[];
   filterSelect!: FormGroup;
-  empFilters: EmpFilter[] = [];
+  selectedPrivilege = 0;
   @ViewChild(MatSort, { static: true })
   sort!: MatSort;
   @ViewChild(MatPaginator, { static: true })
@@ -156,7 +156,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
   handleSelectChange(value: any, dropDwonType: string) {
     if (dropDwonType === 'team') {
       if (value.id === 'all') {
-        this.dataSource.data = this.list;
+        if (this.selectedPrivilege !== 0) {
+          this.dataSource.data = this.list.filter(
+            (x: any) => x.userGroups[0].id == this.selectedPrivilege
+          );
+        } else {
+          this.dataSource.data = this.list;
+        }
       } else {
         this.dataSource.data = this.list.filter(
           (x: any) => x.teamDto?.id == value?.id
@@ -170,6 +176,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.dataSource.data = this.list;
         this.getTeams();
       } else {
+        this.selectedPrivilege = value.id;
         if (value.id === 1) {
           this.teams = teamsOptions.filter((t: any) => t.id !== 4);
         } else {
