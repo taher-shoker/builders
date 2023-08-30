@@ -1,5 +1,7 @@
-::ng-deep html[dir=rtl] label{
-  display: none!important;
+::ng-deep html[dir='rtl'] {
+  .mdc-floating-label {
+    display: none !important;
+  }
 }
 
 ::ng-deep .mdc-icon-button {
