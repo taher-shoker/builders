@@ -14,7 +14,7 @@ import {
 import { Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { ToastrService } from 'ngx-toastr';
-import { UsersService, teamsOptions } from '../../users.service';
+import { UsersService } from '../../users.service';
 
 @Component({
   selector: 'stc-apps-user-form',
@@ -29,6 +29,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   privilages = [];
   teams: any[] = [];
+  teamsOptions!: any[];
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -114,6 +115,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   getTeams(userGroup: any) {
     this.userService.getTeams().subscribe((res) => {
+      this.teamsOptions = res;
       if (userGroup?.id === 1) {
         this.teams = res.filter((t: any) => t.id !== 4);
       } else {
@@ -129,11 +131,12 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.router.navigate(['./users-setting']);
   }
   handleTeam(value: any) {
+    this.getTeams(value);
     this.form?.get('teamDto')?.setValue('');
     if (value.id === 1) {
-      this.teams = teamsOptions.filter((t: any) => t.id !== 4);
+      this.teams = this.teamsOptions.filter((t: any) => t.id !== 4);
     } else {
-      this.teams = teamsOptions.filter((t: any) => t.id === 4);
+      this.teams = this.teamsOptions.filter((t: any) => t.id === 4);
     }
   }
   restFormWithValue(data: any) {
