@@ -14,9 +14,10 @@ import { AuthService } from '../../services/auth.service';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
+  isLoading = false;
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -30,8 +31,11 @@ export class LoginComponent implements OnInit {
     });
   }
   onSubmit(): void {
+    this.isLoading = true;
+
     if (this.form.valid) {
       this.authService.login(this.form.value).subscribe((res: any) => {
+        this.isLoading = false;
         // if(res.result === "SUCCESS"){
         //   this.authService.setLoggedInUser();
         // }
