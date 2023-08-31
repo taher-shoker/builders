@@ -40,9 +40,8 @@ export class AuthService {
 
   login(data: any) {
     return this.http
-      .post<AuthResponseData>(
-        'http://localhost:9084/cem/reporting-api/user/authenticate',
-        data
+      .post<AuthResponseData>(`${environment.authUrl}/cem/reporting-api/user/authenticate`,
+        data  
       )
       .pipe(
         catchError(this.handleError),
