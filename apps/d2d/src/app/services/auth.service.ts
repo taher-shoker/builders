@@ -40,8 +40,9 @@ export class AuthService {
 
   login(data: any) {
     return this.http
-      .post<AuthResponseData>(`${environment.authUrl}/cem/reporting-api/user/authenticate`,
-        data  
+      .post<AuthResponseData>(
+        `${environment.authUrl}/cem/reporting-api/user/authenticate`,
+        data
       )
       .pipe(
         catchError(this.handleError),
@@ -112,8 +113,8 @@ export class AuthService {
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);
     this.user.next(user);
-    this.cookieService.set('fraud-token', JSON.stringify(token));
-    this.cookieService.set('fraud-user', JSON.stringify(displayName));
+    this.cookieService.set('token', token);
+    this.cookieService.set('displayName', displayName);
 
     //localStorage.setItem('userData', JSON.stringify(user));
   }

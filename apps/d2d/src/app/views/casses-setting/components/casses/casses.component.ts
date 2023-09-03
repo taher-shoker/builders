@@ -232,7 +232,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.userSub = this.authService.user.subscribe((res) => {
       let username = res?.userName;
       if (!res) {
-        username = JSON.parse(this.cookieService.get('fraud-user'));
+        username = this.cookieService.get('displayName');
       }
 
       this.getAssigneeTasks = this.CasesService.getAssigneeTasks(

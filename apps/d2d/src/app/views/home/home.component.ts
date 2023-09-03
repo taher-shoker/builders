@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this.userName = JSON.parse(this.cookieService.get('fraud-user'));
+    this.userName = this.cookieService.get('displayName');
     this.authService.setLoggedInUser();
     this.authService.loggedUserStream.subscribe((res) => {
       if (res?.roles) {

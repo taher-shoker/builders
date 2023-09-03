@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://localhost:8091/api/fm',
-  authUrl: 'http://localhost:9084/',
+  apiUrl: 'http://cemeye.stc.com.sa:8092/api/fm',
+  authUrl: 'http://cemeye.stc.com.sa:8092',
 };

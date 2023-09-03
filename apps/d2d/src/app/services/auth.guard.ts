@@ -31,17 +31,19 @@ export class AuthGuard implements CanActivate {
     return this.authService.user.pipe(
       take(1),
       map((user) => {
-        const token = this.cookieService.get('fraud-token')
-          ? JSON.parse(this.cookieService.get('fraud-token'))
+        const token = this.cookieService.get('token')
+          ? this.cookieService.get('token')
           : '';
 
-          const roles = this.cookieService.get('fraud-roles')
+        const roles = this.cookieService.get('fraud-roles');
 
         const isAuth = !!user || !!token;
         if (isAuth) {
-          if(route.data['permissions']){
+          if (route.data['permissions']) {
             // route.data['permissions'].includes('')
-            roles.includes(route.data['permissions']) ? true : this.router.navigate(['/unauthorized-page']);
+            roles.includes(route.data['permissions'])
+              ? true
+              : this.router.navigate(['/unauthorized-page']);
           }
           return true;
         }

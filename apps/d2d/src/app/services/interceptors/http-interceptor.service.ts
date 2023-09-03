@@ -17,11 +17,11 @@ export class HttpInterceptorService implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    const token = this.cookieService.get('fraud-token') || null;
+    const token = this.cookieService.get('token') || null;
     if (token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${JSON.parse(token)}`,
+          Authorization: `Bearer ${token}`,
         },
       });
     }
