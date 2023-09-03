@@ -45,14 +45,30 @@
           "optimization": {
             "scripts": true,
             "styles": {
-                "minify": true,
-                "inlineCritical": false
+              "minify": true,
+              "inlineCritical": false
             }
-        },
+          },
           "fileReplacements": [
             {
               "replace": "apps/d2d/src/environments/environment.ts",
               "with": "apps/d2d/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/d2d/src/environments/environment.ts",
+              "with": "apps/d2d/src/environments/environment.stage.ts"
             }
           ],
           "outputHashing": "all"
@@ -74,6 +90,9 @@
       "configurations": {
         "production": {
           "browserTarget": "d2d:build:production"
+        },
+        "staging": {
+          "browserTarget": "d2d:build:staging"
         },
         "development": {
           "browserTarget": "d2d:build:development"
