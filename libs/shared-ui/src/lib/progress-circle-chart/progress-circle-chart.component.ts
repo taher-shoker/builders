@@ -224,9 +224,11 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
 
 
         // Set it on chart's container
-        if(this.data.length < 5){
+        if(this.data.length < 2){
 
           chart.root.dom.style.height = (chartHeight * 7) + "px";
+        }else if(this.data.length < 3){
+          chart.root.dom.style.height = (chartHeight * 5) + "px";
         }else{
           chart.root.dom.style.height = (chartHeight * 3) + "px";
         }
