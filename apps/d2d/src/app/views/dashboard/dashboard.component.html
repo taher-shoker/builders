@@ -14,29 +14,30 @@
         </div>
       </div>
       <div class="col-md-4">
-        <div class="static in-progress">
-          <div class="icon">
-            <i class="far fa-clock"></i>
-          </div>
-          <div class="static-info">
-            <div class="num">{{ insightsData[1]?.value }}</div>
-            <div class="title">{{ 'inProgress_cases' | translate }} <span class="period-desc">{{'last 7 days' |
-                translate}}</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
         <div class="static pending">
           <div class="icon">
             <i class="fas fa-retweet"></i>
           </div>
           <div class="static-info">
-            <div class="num">{{ insightsData[2]?.value }}</div>
+            <div class="num">{{ insightsData[1]?.value }}</div>
             <div class="title">{{ 'pending_cases' | translate }} <span class="period-desc">{{'last 7 days' |
                 translate}}</span></div>
           </div>
         </div>
       </div>
+      <div class="col-md-4">
+        <div class="static in-progress">
+          <div class="icon">
+            <i class="far fa-clock"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ insightsData[2]?.value }}</div>
+            <div class="title">{{ 'inProgress_cases' | translate }} <span class="period-desc">{{'last 7 days' |
+                translate}}</span></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 

@@ -76,6 +76,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   userId!: number;
   privilege!: any[];
   teams!: any[];
+  teamsOptions!: any[];
   filterSelect!: FormGroup;
   selectedPrivilege = 0;
   @ViewChild(MatSort, { static: true })
@@ -151,6 +152,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   getTeams() {
     this.userService.getTeams().subscribe((res) => {
       this.teams = res;
+      this.teamsOptions = res;
     });
   }
   handleSelectChange(value: any, dropDwonType: string) {
@@ -178,9 +180,11 @@ export class UsersComponent implements OnInit, AfterViewInit {
       } else {
         this.selectedPrivilege = value.id;
         if (value.id === 1) {
-          this.teams = teamsOptions.filter((t: any) => t.id !== 4);
+          this.teams = this.teamsOptions.filter(
+            (t: any) => t.id !== 4 && t.id !== 'all'
+          );
         } else {
-          this.teams = teamsOptions.filter((t: any) => t.id === 4);
+          this.teams = this.teamsOptions.filter((t: any) => t.id === 4);
         }
         this.dataSource.data = this.list.filter(
           (x: any) => x.userGroups[0].id == value?.id
