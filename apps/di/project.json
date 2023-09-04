@@ -15,9 +15,29 @@
         "main": "apps/di/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/di/tsconfig.app.json",
-        "assets": ["apps/di/src/favicon.ico", "apps/di/src/assets"],
-        "styles": ["apps/di/src/styles.scss"],
-        "scripts": []
+        "allowedCommonJsDependencies": ["file-saver"],
+        "assets": [
+          "apps/di/src/favicon.ico",
+          "apps/di/src/assets",
+          {
+            "input": "libs/mode-toggle/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          },
+          {
+            "input": "libs/shared-ui/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          }],
+        "styles": [
+          "libs/styles/src/index.scss",
+          "node_modules/ngx-toastr/toastr.css",
+          "apps/di/src/styles.scss"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/styles/src"]
+        },
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
       },
       "configurations": {
         "production": {

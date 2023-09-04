@@ -207,7 +207,7 @@ export class DashboardComponent implements OnInit {
           });
         });
         this.registeredCasesChart = {
-          titleEn: 'Weekly Trend For All Cases',
+          titleEn: 'Weekly Trend For Registered Cases',
           titleAr: 'الاتجاه الأسبوعي لكل الحالات',
           lineChartColors: ['#45006F', '#FF6A39'],
           chartData: newData,
