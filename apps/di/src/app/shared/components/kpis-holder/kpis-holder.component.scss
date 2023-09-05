@@ -1,0 +1,7 @@
+@import './scss/core/variables/colors';
+
+.kpis-holder {
+  background-color: rgba($color: $greyColor, $alpha: 0.1);
+  padding: 25px;
+  border-radius: 12px;
+}
