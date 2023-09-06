@@ -10,15 +10,16 @@
     margin-top: 16px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    flex-wrap: wrap;
     .item {
-      width: 200px;
+      width: 190px;
       height: 115px;
       background-color: $whiteColor;
       display: flex;
       border-radius: 12px;
       padding: 16px;
       box-shadow: 10px 10px 10px $stcLightGray;
+      margin: 10px 5px;
       .icon {
         width: 40px;
         height: 40px;
@@ -60,8 +61,14 @@
     }
   }
   .filter {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .filter-item {
+      width: 32%;
+      margin: 10px 5px;
+    }
     ::ng-deep .filter-select-box {
-      background-color: #f8f8f8;
       border-radius: 5px;
       padding-inline-start: 10px;
       label {
@@ -109,5 +116,12 @@
       font-weight: 400;
       margin-bottom: 0;
     }
+  }
+}
+
+@media screen and (min-width: 1400px) {
+  /* STYLES HERE */
+  .kpis-statistics {
+    justify-content: space-between;
   }
 }
