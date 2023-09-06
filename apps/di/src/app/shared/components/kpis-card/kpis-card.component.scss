@@ -1,0 +1,70 @@
+@import './scss/core/variables/colors';
+
+.kpi-item {
+  padding: 25px 20px;
+  border-radius: 10px;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba($color: $greyColor, $alpha: 0.5);
+  gap: 18px;
+  &:hover {
+    background-color: $stcColor;
+    color: $whiteColor;
+    cursor: pointer;
+    h4 {
+      color: $whiteColor;
+    }
+  }
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+  }
+  &.active {
+    background-color: $stcColor;
+    color: $whiteColor;
+    h4 {
+      color: $whiteColor;
+    }
+  }
+  .status {
+    &.acheived {
+      .status-number {
+        color: $stcOasisColor;
+      }
+    }
+    &.not-acheived {
+      .status-number {
+        color: $redColor;
+      }
+    }
+    span {
+      font-size: 16px;
+      font-weight: 500;
+      text-transform: capitalize;
+    }
+  }
+  .info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &.acheived {
+      .number {
+        color: $stcOasisColor;
+      }
+    }
+    &.not-acheived {
+      .number {
+        color: $redColor;
+        i {
+          transform: rotate(180deg);
+        }
+      }
+    }
+    span {
+      font-size: 16px;
+      font-weight: 400;
+      text-transform: capitalize;
+    }
+  }
+}

@@ -1,1 +1,10 @@
-<p>kpis-holder works!</p>
+<div class="kpis-holder">
+  <div class="mb-4">
+    <div class="input-group stc-input-group custom-input ">
+      <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+      <input type="text" matInput #input placeholder="{{ 'Search for KPIs'  }}" class="form-control stc-input" />
+    </div>
+  </div>
+
+  <stc-apps-kpis-card></stc-apps-kpis-card>
+</div>

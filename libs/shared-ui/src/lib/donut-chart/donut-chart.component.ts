@@ -57,7 +57,7 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
     const chart = this.root.container.children.push(
     am5percent.PieChart.new(this.root, {
       layout: this.root.verticalLayout,
-      innerRadius: am5.percent(70)
+      innerRadius: am5.percent(70),
     }));
 
     /* remove amchart logo */
