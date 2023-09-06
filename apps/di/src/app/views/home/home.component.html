@@ -1,1 +1,68 @@
-<p>home works!</p>
+<div class="home-holder">
+
+  <div class="intro-section">
+    <p class="hello-user">Hello, Assem Khalifa</p>
+
+    <p class="overview-text">Welcome Back! Here's overview of the STC Digital transformation index</p>
+
+    <p class="section-heading">STC DIGITAL INDEX</p>
+  </div>
+
+  <div class="stc-digital-index-section">
+    <div class="stc-digital-index">
+      <div class="row legends-row">
+        <div class="col-7 capabilities-col">
+          <div class="row">
+            <div class="col">
+              <div class="building">
+
+                <div class="text"><span class="color-circle building-circle"></span>Capability Building</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="utilization">
+
+                <div class="text"><span class="color-circle utilization-circle"></span>Capability Utilization</div>
+              </div>
+            </div>
+            <div class="col">
+              <div class="experience">
+
+                <div class="text"><span class="color-circle experience-circle"></span>Digital Experience & Impact</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-5 achieve-col">
+          <div class="text">Achieved<span class="color-circle achieved-circle"></span></div>
+          <div class="text">Not Achieved<span class="color-circle not-achieved-circle"></span></div>
+
+        </div>
+      </div>
+
+      <div class="row charts-row">
+
+        <div class="col">
+
+          <div class="donut-chart-holder">
+            <stc-apps-donut-chart></stc-apps-donut-chart>
+          </div>
+          <div class="donut-chart-holder">
+            <stc-apps-donut-chart></stc-apps-donut-chart>
+          </div>
+          <div class="donut-chart-holder">
+            <stc-apps-donut-chart></stc-apps-donut-chart>
+          </div>
+
+        </div>
+        <div class="col-2"></div>
+        <div class="col-6">
+          <stc-apps-progress-circle-chart
+            [data]="data"
+            [colors]="colors"
+          ></stc-apps-progress-circle-chart>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

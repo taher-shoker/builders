@@ -3,7 +3,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
@@ -13,6 +13,7 @@ import { KpisHolderComponent } from './shared/components/kpis-holder/kpis-holder
 import { KpisCardComponent } from './shared/components/kpis-card/kpis-card.component';
 import { TrendCardComponent } from './shared/components/trend-card/trend-card.component';
 import { LoginComponent } from './views/login/login.component';
+import { HttpInterceptorService } from './shared/interceptors/http-interceptor.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -40,7 +41,13 @@ export function HttpLoaderFactory(http: HttpClient) {
     }),
     ToastrModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
