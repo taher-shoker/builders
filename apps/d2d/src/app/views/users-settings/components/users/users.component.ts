@@ -74,6 +74,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   approverUsers = 0;
   list!: PeriodicElement[];
   userId!: number;
+  user!: any;
   privilege!: any[];
   teams!: any[];
   teamsOptions!: any[];
@@ -118,7 +119,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
   searchFilter(event: Event) {
     const searchVal = (event.target as HTMLInputElement).value;
-
     this.dataSource.filter = searchVal.trim().toLowerCase();
   }
 
@@ -215,7 +215,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
   deleteItem(id: number) {
     this.userId = id;
-    this.dialogService.open(`${id}`);
+    this.user = this.dataSource.data.filter((u: any) => u.id === id)[0];
+    this.dialogService.open(`delete-modal`);
   }
   editItem(id: number): void {
     this.router.navigate(['./edit-user', id], { relativeTo: this.route });

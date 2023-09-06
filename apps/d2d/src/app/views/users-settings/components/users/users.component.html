@@ -41,17 +41,9 @@
     <div class="row align-items-center">
       <div class="col-md-3">
         <div class="input-group stc-input-group custom-input mb-3">
-          <span class="input-group-text" id="basic-addon1"
-            ><i class="fas fa-search"></i
-          ></span>
-          <input
-            type="text"
-            matInput
-            #input
-            placeholder="{{ 'search_for_user' | translate }}"
-            class="form-control stc-input"
-            (keyup)="searchFilter($event)"
-          />
+          <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+          <input type="text" matInput #input placeholder="{{ 'search_for_user' | translate }}"
+            class="form-control stc-input" (keyup)="searchFilter($event)" />
         </div>
       </div>
       <div class="col-md-7">
@@ -64,34 +56,20 @@
           ></stc-apps-select-drop-down>
         </div> -->
           <div class="col-md-5">
-            <stc-apps-select-drop-down
-              [label]="'privilege'"
-              [selectType]="'filter-select-box'"
-              [options]="privilege"
-              [labelName]="'groupName'"
-              (selectChange)="handleSelectChange($event, 'privilege')"
-              [defaultAll]="true"
-            ></stc-apps-select-drop-down>
+            <stc-apps-select-drop-down [label]="'privilege'" [selectType]="'filter-select-box'" [options]="privilege"
+              [labelName]="'groupName'" (selectChange)="handleSelectChange($event, 'privilege')"
+              [defaultAll]="true"></stc-apps-select-drop-down>
           </div>
           <div class="col-md-5">
-            <stc-apps-select-drop-down
-              [label]="'team'"
-              [selectType]="'filter-select-box'"
-              [options]="teams"
-              (selectChange)="handleSelectChange($event, 'team')"
-              [defaultAll]="true"
-              formControlName="teamSelect"
-            ></stc-apps-select-drop-down>
+            <stc-apps-select-drop-down [label]="'team'" [selectType]="'filter-select-box'" [options]="teams"
+              (selectChange)="handleSelectChange($event, 'team')" [defaultAll]="true"
+              formControlName="teamSelect"></stc-apps-select-drop-down>
           </div>
         </div>
       </div>
       <div class="col-md-2">
-        <stc-apps-button
-          [buttonText]="addNewUserLabel"
-          [buttonType]="'primary'"
-          [buttonIcon]="' fa-plus-circle'"
-          (btnClick)="addUserNavigate()"
-        ></stc-apps-button>
+        <stc-apps-button [buttonText]="addNewUserLabel" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+          (btnClick)="addUserNavigate()"></stc-apps-button>
       </div>
     </div>
   </div>
@@ -104,11 +82,7 @@
       <td mat-cell *matCellDef="let element">
         <div [ngSwitch]="col.key">
           <div class="info-name" *ngSwitchCase="'name'">
-            <img
-              src="{{ element.profileIcon }}"
-              alt=""
-              *ngIf="element.profileIcon"
-            />
+            <img src="{{ element.profileIcon }}" alt="" *ngIf="element.profileIcon" />
             <div class="name">
               <h4>{{ element[col.key] }}</h4>
               <small>{{ element.email }}</small>
@@ -121,48 +95,11 @@
             {{ element[col.key]?.name }}
           </span>
           <div class="btns-action" *ngSwitchCase="'actions'">
-            <stc-apps-dialog id="{{ element.id }}">
-              <p class="text">
-                <span>{{ 'deleteMsg.txt1' | translate }} </span>
-                <strong>{{ element.name }}</strong>
 
-                <span> {{ 'deleteMsg.txt2' | translate }} </span>
-
-                <strong>{{ element.email }}</strong>
-                <span> {{ 'deleteMsg.txt3' | translate }}</span>
-              </p>
-
-              <div class="row mt-4">
-                <div class="col-md-4 offset-8">
-                  <div class="d-flex justify-content-end">
-                    <stc-apps-button
-                      [buttonText]="'cancel' | translate"
-                      [buttonType]="'gray-outline'"
-                      (btnClick)="dialogService.close()"
-                    ></stc-apps-button>
-
-                    <div class="mx-3"></div>
-                    <stc-apps-button
-                      [buttonText]="'delete_user'"
-                      [buttonType]="'primary'"
-                      (btnClick)="confirmDelete()"
-                    ></stc-apps-button>
-                  </div>
-                </div>
-              </div>
-            </stc-apps-dialog>
-            <button
-              mat-button
-              class="btn edit-btn-table"
-              (click)="editItem(element.id)"
-            >
+            <button mat-button class="btn edit-btn-table" (click)="editItem(element.id)">
               <i class="fas fa-pencil-alt"></i>
             </button>
-            <button
-              mat-button
-              class="btn delete-btn-table"
-              (click)="deleteItem(element.id)"
-            >
+            <button mat-button class="btn delete-btn-table" (click)="deleteItem(element.id)">
               <i class="far fa-trash-alt"></i>
             </button>
           </div>
@@ -178,12 +115,8 @@
           <img src="../../assets/Group 590.png" alt="" />
           <h3>{{ 'no_users_yet' | translate }}</h3>
           <p>{{ 'no_users_msg' | translate }}</p>
-          <stc-apps-button
-            [buttonText]="'add_new_user'"
-            [buttonType]="'primary'"
-            [buttonIcon]="' fa-plus-circle'"
-            (btnClick)="addUserNavigate()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'add_new_user'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+            (btnClick)="addUserNavigate()"></stc-apps-button>
         </div>
       </td>
     </tr>
@@ -221,11 +154,30 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-  <mat-paginator
-    [pageSize]="5"
-    [pageSizeOptions]="[5, 10, 15, 20]"
-    [showFirstLastButtons]="true"
-    [hidePageSize]="true"
-  >
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]" [showFirstLastButtons]="true" [hidePageSize]="true">
   </mat-paginator>
 </div>
+<stc-apps-dialog id="delete-modal">
+  <p class="text">
+    <span>{{ 'deleteMsg.txt1' | translate }} </span>
+    <strong>{{user?.name }}</strong>
+
+    <span> {{ 'deleteMsg.txt2' | translate }} </span>
+
+    <strong>{{ user?.email}}</strong>
+    <span> {{ 'deleteMsg.txt3' | translate }}</span>
+  </p>
+
+  <div class="row mt-4">
+    <div class="col-md-4 offset-8">
+      <div class="d-flex justify-content-end">
+        <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"></stc-apps-button>
+
+        <div class="mx-3"></div>
+        <stc-apps-button [buttonText]="'delete_user'" [buttonType]="'primary'"
+          (btnClick)="confirmDelete()"></stc-apps-button>
+      </div>
+    </div>
+  </div>
+</stc-apps-dialog>
