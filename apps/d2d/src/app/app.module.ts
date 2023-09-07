@@ -30,9 +30,10 @@ import { HomeModule } from './views/home/home.module';
 import { LoginComponent } from './views/login/login.component';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
+import { environment } from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
 @NgModule({
   declarations: [AppComponent, LoginComponent, UnauthorizedPageComponent],
