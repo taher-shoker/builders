@@ -45,22 +45,43 @@
         <div class="col">
 
           <div class="donut-chart-holder">
-            <stc-apps-donut-chart></stc-apps-donut-chart>
+            <stc-apps-donut-chart [colors]="colors" [data]="data"></stc-apps-donut-chart>
           </div>
           <div class="donut-chart-holder">
-            <stc-apps-donut-chart></stc-apps-donut-chart>
+            <stc-apps-donut-chart [colors]="colors" [data]="data"></stc-apps-donut-chart>
           </div>
           <div class="donut-chart-holder">
-            <stc-apps-donut-chart></stc-apps-donut-chart>
+            <stc-apps-donut-chart [colors]="colors" [data]="data"></stc-apps-donut-chart>
           </div>
 
         </div>
-        <div class="col-2"></div>
+        <div class="col-2 polylines-col">
+
+          <div class="polylines-holder">
+            <svg xmlns="http://www.w3.org/2000/svg" class="polyline-1" viewBox="0 0 216 59" fill="none">
+              <path d="M215.708 7.2534C215.073 10.1297 212.226 11.9465 209.35 11.3115C206.474 10.6765 204.657 7.83005 205.292 4.9538C205.927 2.07755 208.774 0.260665 211.65 0.895682C214.526 1.5307 216.343 4.37715 215.708 7.2534ZM11.2079 54.6498C10.5729 57.5261 7.72646 59.3429 4.8502 58.7079C1.97394 58.0729 0.157071 55.2265 0.792088 52.3502C1.42711 49.4739 4.27354 47.6571 7.1498 48.2921C10.0261 48.9271 11.8429 51.7735 11.2079 54.6498ZM210.5 53.5L211.5 53.5L210.5 54.5L210.5 53.5ZM211.5 6.10361L211.5 53.5L209.5 53.5L209.5 6.10359L211.5 6.10361ZM210.5 54.5L6 54.5L6 52.5L210.5 52.5L210.5 54.5Z" fill="#8E9AA0"/>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="polyline-2" viewBox="0 0 217 209" fill="none">
+              <path d="M216.208 6.6498C215.573 9.52605 212.726 11.3429 209.85 10.7079C206.974 10.0729 205.157 7.22645 205.792 4.3502C206.427 1.47395 209.274 -0.342935 212.15 0.292082C215.026 0.927099 216.843 3.77355 216.208 6.6498ZM11.2079 204.15C10.5729 207.026 7.72646 208.843 4.8502 208.208C1.97394 207.573 0.157065 204.726 0.792083 201.85C1.4271 198.974 4.27353 197.157 7.14979 197.792C10.0261 198.427 11.8429 201.274 11.2079 204.15ZM110.5 5.5L109.5 5.5L110.5 4.5L110.5 5.5ZM110.5 203L111.5 203L110.5 204L110.5 203ZM211 6.5L110.5 6.5L110.5 4.5L211 4.5V6.5ZM111.5 5.5L111.5 203L109.5 203L109.5 5.5L111.5 5.5ZM110.5 204L6 204L5.99999 202L110.5 202L110.5 204Z" fill="#8E9AA0"/>
+            </svg>
+
+            <svg xmlns="http://www.w3.org/2000/svg" class="polyline-3" viewBox="0 0 199 326" fill="none">
+              <path d="M198.708 7.44035C198.073 10.3166 195.226 12.1335 192.35 11.4985C189.474 10.8635 187.657 8.017 188.292 5.14075C188.927 2.2645 191.774 0.447615 194.65 1.08263C197.526 1.71765 199.343 4.5641 198.708 7.44035ZM11.2079 321.15C10.5729 324.026 7.72641 325.843 4.85015 325.208C1.9739 324.573 0.157016 321.726 0.792035 318.85C1.42705 315.974 4.2735 314.157 7.14976 314.792C10.026 315.427 11.8429 318.274 11.2079 321.15ZM135.5 6.29055L134.5 6.29055L135.5 5.29055L135.5 6.29055ZM135.5 320L136.5 320L135.5 321L135.5 320ZM193.5 7.29055L135.5 7.29055L135.5 5.29055L193.5 5.29055L193.5 7.29055ZM136.5 6.29055L136.5 320L134.5 320L134.5 6.29055L136.5 6.29055ZM135.5 321L5.99996 321L5.99995 319L135.5 319L135.5 321Z" fill="#8E9AA0"/>
+            </svg>
+          </div>
+        </div>
         <div class="col-6">
-          <stc-apps-progress-circle-chart
-            [data]="data"
-            [colors]="colors"
-          ></stc-apps-progress-circle-chart>
+
+          <div class="progress-circle-holder">
+            <stc-apps-progress-circle-chart
+              [data]="data"
+              [colors]="colors"
+              [hideLegend]="true"
+              [customHeight]="600"
+              [topPosition]="-15"
+            ></stc-apps-progress-circle-chart>
+          </div>
         </div>
       </div>
     </div>

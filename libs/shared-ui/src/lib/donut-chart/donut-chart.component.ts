@@ -6,8 +6,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 
-interface BarChartData {
-  name : string;
+interface DonutChartData {
+  category : string;
   value : number;
 }
 @Component({
@@ -17,7 +17,7 @@ interface BarChartData {
 })
 export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, OnChanges{
 
-  @Input() data!: BarChartData[];
+  @Input() data!: DonutChartData[];
   root!: am5.Root;
   direction:string | null = "";
   langSub!: Subscription;
@@ -67,6 +67,27 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
     }
 
     this.root.numberFormatter.set("numberFormat", "#.0a");
+    const allColors: am5.Color[] = [];
+    this.colors.forEach((color: string) => {
+      allColors.push(am5.color(color));
+    });
+    chart.get('colors')?.set('colors', allColors);
+    const newData: {
+      category: string;
+      full:number;
+      value: number;
+      columnSettings: { fill: am5.Color | undefined };
+    }[] = [];
+    this.data.forEach((d, i) => {
+      newData.push({
+        category: d.category,
+        value: d.value,
+        full : d.value + 200,
+        columnSettings: {
+          fill: chart.get('colors')?.getIndex(i),
+        },
+      });
+    });
 
     const series = chart.series.push(am5percent.PieSeries.new(this.root, {
       valueField: "value",
@@ -75,7 +96,7 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
     }));
 
     series.labels.template.setAll({
-      textType: "circular",
+      textType: "adjusted",
       centerX: 0,
       centerY: 0
     });

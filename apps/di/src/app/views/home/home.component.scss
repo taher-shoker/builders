@@ -69,5 +69,33 @@
 }
 
 .donut-chart-holder{
-  height: 150px;
+  height: 200px;
+}
+
+.polylines-holder{
+  width: 100%;
+
+  >svg{
+    width: 200px;
+  }
+}
+
+.polylines-col{
+  margin-left: -70px;
+  margin-right: 115px;
+}
+
+.polyline-2{
+  margin-top: 50px;
+}
+
+.polyline-3{
+  margin-top: -110px;
+}
+
+
+// progress-circle-holder Styles :
+
+.progress-circle-holder{
+  height: 500px;
 }
