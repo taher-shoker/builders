@@ -173,7 +173,7 @@
 
           <div class="chart"
             *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length > 0">
-            <stc-apps-progress-circle-chart [data]="casesTypes.chartData" [colors]="casesTypes.chartColors"
+            <stc-apps-progress-circle-chart [hideLegend]="true" [data]="casesTypes.chartData" [colors]="casesTypes.chartColors"
               [totalCases]="casesTypes.totalCases"></stc-apps-progress-circle-chart>
           </div>
           <div class="chart"

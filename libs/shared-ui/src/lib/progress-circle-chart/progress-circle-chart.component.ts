@@ -23,6 +23,13 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
   @Input({ required: true }) data!: ProgressCircleData[];
   @Input() colors: string[] = [];
   @Input() totalCases: number = 0;
+
+  @Input() topPosition!: number;
+  @Input() hideLegend: boolean = false;
+  @Input() customHeight!: number;
+  @Input() customWidth!: number;
+
+
   langSub!: Subscription;
   direction:string | null = '';
   root!: am5.Root;
@@ -233,14 +240,28 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         chart.root.dom.style.height = (chartHeight * 3) + "px";
 
         // Set it on chart's container
-        // if(this.data.length < 2){
+        if(!this.customHeight){
 
-        //   chart.root.dom.style.height = (chartHeight * 7) + "px";
-        // }else if(this.data.length < 3){
-        //   chart.root.dom.style.height = (chartHeight * 5) + "px";
-        // }else{
-        //   chart.root.dom.style.height = (chartHeight * 3) + "px";
-        // }
+          if(this.data.length < 2){
+
+            chart.root.dom.style.height = (chartHeight * 7) + "px";
+          }else if(this.data.length < 3){
+            chart.root.dom.style.height = (chartHeight * 5) + "px";
+          }else{
+            chart.root.dom.style.height = (chartHeight * 3) + "px";
+          }
+        }else{
+          chart.root.dom.style.height = `${this.customHeight}px`;
+          chart.root.dom.style.top = `${this.topPosition}%`;
+          chart.root.dom.style.position = `relative`;
+
+
+        }
+
+        if(this.customWidth){
+          chart.root.dom.style.width = `${this.customWidth}px`;
+          chart.root.dom.style.margin = `auto`;
+        }
       });
       return series;
     };
@@ -249,50 +270,54 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     // set data to series
     series2.data.setAll(newData);
     series1.data.setAll(newData);
+
     // add legend to chart
-    const legend = chart.children.push(
-      am5.Legend.new(this.root, {
-        centerX: am5.percent(50),
-        centerY: am5.percent(50),
-        x: am5.percent(50),
-        y: this.data.length < 6 ? am5.percent(105) : am5.percent(100),
-        // layout: this.root.horizontalLayout,
-        reverseChildren: this.direction == 'ar' ? true : false,
-        nameField: 'categoryX',
-        templateField: 'category',
-        layout: am5.GridLayout.new(this.root, {
-          maxColumns: 9,
-          fixedWidthGrid: true
-        })
-      }),
-    );
-    legend.itemContainers.template.setAll({
-      reverseChildren : this.direction == 'ar' ? true : false,
-      height:40
-    })
-    legend.data.setAll(series2.dataItems);
-    legend.valueLabels.template.setAll({
-      fill: am5.color('#000000'),
-    });
-    legend.labels.template.setAll({
-      // maxWidth: 140,
-      // width: 140,
-      height : 24,
-      oversizedBehavior:"wrap",
-      visible: true,
-      reverseChildren : this.direction == 'ar' ? true : false,
-      direction : this.direction == 'ar' ? "rtl" : "ltr",
-      marginBottom: 60
-    });
-    legend.markerRectangles.template.setAll({
-      cornerRadiusTL: 10,
-      cornerRadiusTR: 10,
-      cornerRadiusBL: 10,
-      cornerRadiusBR: 10,
-      width: 15,
-      height: 15,
-      dx : this.direction == 'ar' ? 10 : 0
-    });
+    if(!this.hideLegend){
+
+      const legend = chart.children.push(
+        am5.Legend.new(this.root, {
+          centerX: am5.percent(50),
+          centerY: am5.percent(50),
+          x: am5.percent(50),
+          y: this.data.length < 6 ? am5.percent(105) : am5.percent(100),
+          // layout: this.root.horizontalLayout,
+          reverseChildren: this.direction == 'ar' ? true : false,
+          nameField: 'categoryX',
+          templateField: 'category',
+          layout: am5.GridLayout.new(this.root, {
+            maxColumns: 9,
+            fixedWidthGrid: true
+          })
+        }),
+      );
+      legend.itemContainers.template.setAll({
+        reverseChildren : this.direction == 'ar' ? true : false,
+        height:40
+      })
+      legend.data.setAll(series2.dataItems);
+      legend.valueLabels.template.setAll({
+        fill: am5.color('#000000'),
+      });
+      legend.labels.template.setAll({
+        // maxWidth: 140,
+        // width: 140,
+        height : 24,
+        oversizedBehavior:"wrap",
+        visible: true,
+        reverseChildren : this.direction == 'ar' ? true : false,
+        direction : this.direction == 'ar' ? "rtl" : "ltr",
+        marginBottom: 60
+      });
+      legend.markerRectangles.template.setAll({
+        cornerRadiusTL: 10,
+        cornerRadiusTR: 10,
+        cornerRadiusBL: 10,
+        cornerRadiusBR: 10,
+        width: 15,
+        height: 15,
+        dx : this.direction == 'ar' ? 10 : 0
+      });
+    }
 
 
     // yAxis.data.setAll(newData);

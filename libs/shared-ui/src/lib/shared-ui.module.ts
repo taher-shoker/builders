@@ -38,6 +38,7 @@ import { DatePickerWeeklyComponent } from './date-picker-weekly/date-picker-week
 import { DatePickerRangeComponent } from './date-picker-range/date-picker-range.component';
 import { DatePickerWeeklyRangeComponent } from './date-picker-weekly-range/date-picker-weekly-range.component';
 import { LocaleDatePipe } from './locale.date/locale.date.pipe';
+import { DonutChartComponent } from './donut-chart/donut-chart.component';
 
 @NgModule({
   imports: [
@@ -82,6 +83,7 @@ import { LocaleDatePipe } from './locale.date/locale.date.pipe';
     DatePickerRangeComponent,
     DatePickerWeeklyRangeComponent,
     LocaleDatePipe,
+    DonutChartComponent,
   ],
   exports: [
     HeaderComponent,
@@ -102,7 +104,8 @@ import { LocaleDatePipe } from './locale.date/locale.date.pipe';
     DatePickerWeeklyComponent,
     DatePickerRangeComponent,
     DatePickerWeeklyRangeComponent,
-    LocaleDatePipe
+    LocaleDatePipe,
+    DonutChartComponent,
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })

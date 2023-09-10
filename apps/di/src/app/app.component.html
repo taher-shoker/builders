@@ -1,0 +1,7 @@
+<stc-apps-header [userName]="userName" [logoSrc]="logoSrc" [allItems]="navItems" [sidebarLogoSrc]="sidebarLogoSrc"
+  (logOut)="logOut()" (backToHome)="backToHome()"></stc-apps-header>
+
+<div class="main">
+  <stc-apps-breadcrumb [bgColor]="'transparent'"></stc-apps-breadcrumb>
+  <router-outlet></router-outlet>
+</div>
