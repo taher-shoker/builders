@@ -57,13 +57,17 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     this.root = am5.Root.new(this.chartdiv_id);
     this.root.setThemes([am5themes_Animated.new(this.root)]);
     this.root._logo?.dispose();
+
     const chart = this.root.container.children.push(
       am5radar.RadarChart.new(this.root, {
         panX: false,
         panY: false,
         // wheelX: "panX",
         // wheelY: "zoomX",
-        innerRadius: am5.percent(20),
+        innerRadius: this.data.length < 6 ? am5.percent(30) : am5.percent(19),
+        // centerX:am5.percent(10),
+        // centerY:am5.percent(40),
+        radius: am5.percent(100),
         startAngle: this.direction == 'en' ? -90 : -90,
         endAngle: this.direction == 'en' ? 180 : 180,
       })
@@ -141,15 +145,17 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     chart.children.unshift(
       am5.Label.new(this.root, {
         text: 'All cases',
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: '500',
         textAlign: 'center',
-        y: am5.percent(44),
+        y: this.data.length < 6 ? am5.percent(42) : am5.percent(45) , //am5.percent(40),
         x: am5.percent(50),
-        centerX: am5.percent(50),
-        paddingTop: 0,
-        paddingBottom: 0,
+        centerX: am5.percent(50) ,
+        centerY: am5.percent(5),
+        paddingBottom: 20,
         fill: am5.color('#8e9aa0'),
+        marginBottom: 20,
+
 
       })
     );
@@ -159,11 +165,12 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center',
-        y: am5.percent(49),
+        y: am5.percent(48),
         x: am5.percent(50),
         centerX: am5.percent(50),
-        paddingTop: 0,
-        paddingBottom: 0,
+        paddingTop: 20,
+        paddingBottom: 20,
+        marginTop: 20,
 
       })
     );
@@ -222,16 +229,18 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         // Calculate how we need to adjust chart height
         const chartHeight = series.data.length * cellSize + xAxis.height() + chart.get("paddingTop", 0) + chart.get("paddingBottom", 0);
 
+        console.log("height is :",chartHeight);
+        chart.root.dom.style.height = (chartHeight * 3) + "px";
 
         // Set it on chart's container
-        if(this.data.length < 2){
+        // if(this.data.length < 2){
 
-          chart.root.dom.style.height = (chartHeight * 7) + "px";
-        }else if(this.data.length < 3){
-          chart.root.dom.style.height = (chartHeight * 5) + "px";
-        }else{
-          chart.root.dom.style.height = (chartHeight * 3) + "px";
-        }
+        //   chart.root.dom.style.height = (chartHeight * 7) + "px";
+        // }else if(this.data.length < 3){
+        //   chart.root.dom.style.height = (chartHeight * 5) + "px";
+        // }else{
+        //   chart.root.dom.style.height = (chartHeight * 3) + "px";
+        // }
       });
       return series;
     };
@@ -246,7 +255,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         centerX: am5.percent(50),
         centerY: am5.percent(50),
         x: am5.percent(50),
-        y: am5.percent(97),
+        y: this.data.length < 6 ? am5.percent(105) : am5.percent(100),
         // layout: this.root.horizontalLayout,
         reverseChildren: this.direction == 'ar' ? true : false,
         nameField: 'categoryX',
@@ -272,7 +281,8 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
       oversizedBehavior:"wrap",
       visible: true,
       reverseChildren : this.direction == 'ar' ? true : false,
-      direction : this.direction == 'ar' ? "rtl" : "ltr"
+      direction : this.direction == 'ar' ? "rtl" : "ltr",
+      marginBottom: 60
     });
     legend.markerRectangles.template.setAll({
       cornerRadiusTL: 10,
