@@ -16,7 +16,6 @@ const routes: Routes = [
         path: 'home',
         data: { breadcrumb: 'home' },
         canActivate: [AuthGuard],
-
         loadChildren: () =>
           import('../casses-setting/casses-setting.module').then(
             (m) => m.CassesSettingModule
