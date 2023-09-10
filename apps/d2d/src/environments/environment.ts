@@ -3,4 +3,5 @@ export const environment = {
   apiUrl: 'http://localhost:8090/api/fm',
   authUrl: 'http://localhost:9084',
   languageFilesPath: '/assets/i18n/',
+  loginPath: '/login',
 };

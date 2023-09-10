@@ -39,7 +39,9 @@ export class AuthGuard implements CanActivate {
 
         const isAuth = !!user || !!token;
         if (isAuth) {
-          if (route.data['permissions']) {
+          if (roles.includes('ADMINS')) {
+            this.router.navigate(['/users-setting']);
+          } else if (route.data['permissions']) {
             // route.data['permissions'].includes('')
             roles.includes(route.data['permissions'])
               ? true

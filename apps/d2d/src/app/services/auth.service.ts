@@ -48,18 +48,21 @@ export class AuthService {
         catchError(this.handleError),
         tap((resData) => {
           this.handleAuthentication(resData.displayName, resData.token);
-
-          this.http
-            .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
-            .subscribe((res: LoggedUser) => {
-              if (res.roles.includes('ADMINS')) {
-                this.router.navigate(['/users-setting']);
-              } else {
-                this.router.navigate(['/home']);
-              }
-            });
+          this.getUserData();
         })
       );
+  }
+  getUserData() {
+    this.http
+      .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
+      .subscribe((res: LoggedUser) => {
+        this.cookieService.set('fraud-roles', res?.roles[0]);
+        if (res.roles.includes('ADMINS')) {
+          this.router.navigate(['/users-setting']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      });
   }
 
   autoLogin() {
@@ -80,7 +83,7 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
-    this.router.navigate(['/login']);
+    this.router.navigate([environment?.loginPath]);
     this.cookieService.deleteAll();
     this.tokenExpirationTimer = null;
     this.loggedUserStream.next(null);
