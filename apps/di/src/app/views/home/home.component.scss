@@ -1,3 +1,7 @@
+*{
+  margin: 0;
+}
+
 
 .hello-user{
   color: white;
@@ -78,6 +82,24 @@
   >svg{
     width: 200px;
   }
+
+  span{
+    position: absolute;
+    word-break: keep-all;
+    left: 103%;
+  }
+}
+
+.svg-text-liner{
+  position: relative;
+}
+
+.polyline-1-text{
+  top: -4px;
+}
+
+.polyline-2-text{
+  top: 16%;
 }
 
 .polylines-col{

@@ -27,6 +27,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
   @Input() topPosition!: number;
   @Input() hideLegend: boolean = false;
   @Input() customHeight!: number;
+  @Input() customWidth!: number;
 
 
   langSub!: Subscription;
@@ -254,6 +255,12 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
           chart.root.dom.style.top = `${this.topPosition}%`;
           chart.root.dom.style.position = `relative`;
 
+
+        }
+
+        if(this.customWidth){
+          chart.root.dom.style.width = `${this.customWidth}px`;
+          chart.root.dom.style.margin = `auto`;
         }
       });
       return series;
