@@ -3,4 +3,5 @@ export const environment = {
   apiUrl: 'http://cemeye.stc.com.sa:8092/api/fm',
   authUrl: 'http://cemeye.stc.com.sa:8092',
   languageFilesPath: '/cem/reporting/fraudworkspace/assets/i18n/',
+  loginPath: '/cem/reporting/login',
 };

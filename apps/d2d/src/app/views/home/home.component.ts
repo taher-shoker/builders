@@ -44,6 +44,7 @@ export class HomeComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this.authService.getUserData();
     this.userName = this.cookieService.get('displayName');
     this.authService.setLoggedInUser();
     this.authService.loggedUserStream.subscribe((res) => {
