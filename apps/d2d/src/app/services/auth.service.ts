@@ -93,7 +93,7 @@ export class AuthService {
     this.user.next(null);
     this.cookieService.removeAll();
     this.tokenExpirationTimer = null;
-    this.loggedUserStream.next(null);
+    //  this.loggedUserStream.next(null);
     this.loggedInUser = null;
 
     this.navigateToLogin();
