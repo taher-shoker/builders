@@ -1,35 +1,25 @@
 import { Injectable } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivate,
-  Router,
-  RouterStateSnapshot,
-  UrlTree,
-} from '@angular/router';
-import { Observable } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { ActivatedRouteSnapshot, CanActivate, Router } from '@angular/router';
 
 import { AuthService } from './auth.service';
 import { CookieService } from 'ngx-cookie';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
+export class AdminAuthGuard implements CanActivate {
   constructor(
-    private authService: AuthService,
-    private router: Router,
-    private cookieService: CookieService
+    public authService: AuthService,
+    public router: Router,
+    public cookieService: CookieService
   ) {}
-
   canActivate(route: ActivatedRouteSnapshot): boolean {
     const token = this.cookieService.get('token')
       ? this.cookieService.get('token')
       : '';
 
-    console.log('route', route);
     if (!token) {
       this.authService.navigateToLogin();
       return false;
-    } else if (!this.authService.isAdminUser()) {
+    } else if (this.authService.isAdminUser()) {
       return true;
     }
     return false;

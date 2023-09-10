@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -14,6 +14,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     public router: Router
   ) {}
+
   urlHome!: string;
   title = { title: 'home', text: '' };
   userName = 'taher shoker';
@@ -42,11 +43,10 @@ export class HomeComponent implements OnInit {
       urlHome: '/users-setting',
     },
   ];
-
-  ngOnInit(): void {
+  ngOnInit() {
     this.authService.getUserData();
-    this.userName = this.cookieService.get('displayName');
-    this.authService.setLoggedInUser();
+
+    this.userName = this.cookieService.get('displayName') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       if (res?.roles) {
         const items = [];
@@ -63,10 +63,11 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  logOut() {
-    this.authService.logout();
-  }
+
   backToHome() {
     this.router.navigate([this.urlHome]);
+  }
+  logOut() {
+    this.authService.logout();
   }
 }

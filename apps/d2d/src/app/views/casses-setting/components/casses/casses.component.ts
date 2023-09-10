@@ -19,7 +19,7 @@ import {
 } from '../../casses.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie';
 import { Subscription, tap } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
 import { DashboardService } from '../../../../services/dashboard.service';
@@ -230,13 +230,12 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   fetchAssigneeTasks() {
     this.userSub = this.authService.user.subscribe((res) => {
-      let username = res?.userName;
-      if (!res) {
-        username = this.cookieService.get('displayName');
-      }
+      const currentUser = this.cookieService.get('fraud-user')
+        ? JSON.parse(this.cookieService.get('fraud-user') || '')
+        : this.authService.getLoggedInUser();
 
       this.getAssigneeTasks = this.CasesService.getAssigneeTasks(
-        username
+        currentUser.email
       ).subscribe((res: any) => {
         this.allItems = this.utils.sorter(res.data, 'caseSerialNumber', 'DESC');
       });

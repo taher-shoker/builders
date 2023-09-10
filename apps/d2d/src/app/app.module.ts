@@ -31,6 +31,7 @@ import { LoginComponent } from './views/login/login.component';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
 import { environment } from '../environments/environment';
+import { CookieModule } from 'ngx-cookie';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -60,6 +61,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
     }),
     ToastrModule.forRoot(),
+    CookieModule.withOptions(),
   ],
   providers: [
     {
