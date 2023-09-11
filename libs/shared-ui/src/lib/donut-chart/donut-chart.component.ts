@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { AfterViewInit, Component, Input, OnInit , OnDestroy, SimpleChanges, OnChanges} from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';
@@ -6,10 +7,19 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 
-interface DonutChartData {
+export interface DonutChartData {
   category : string;
   value : number;
 }
+
+export interface LabelLine{
+  value: string,
+  styles? : string,
+  fontSize: number,
+  centerX?: number,
+  centerY: number
+}
+
 @Component({
   selector: 'stc-apps-donut-chart',
   templateUrl: './donut-chart.component.html',
@@ -18,6 +28,9 @@ interface DonutChartData {
 export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, OnChanges{
 
   @Input() data!: DonutChartData[];
+  @Input() textsColor: string = "#4f008c";
+  @Input() labelsLines: LabelLine[] = [];
+
   root!: am5.Root;
   direction:string | null = "";
   langSub!: Subscription;
@@ -58,6 +71,7 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
     am5percent.PieChart.new(this.root, {
       layout: this.root.verticalLayout,
       innerRadius: am5.percent(70),
+      // radius: am5.percent(70),
     }));
 
     /* remove amchart logo */
@@ -66,12 +80,10 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
       this.root._logo.dispose();
     }
 
-    this.root.numberFormatter.set("numberFormat", "#.0a");
-    const allColors: am5.Color[] = [];
-    this.colors.forEach((color: string) => {
-      allColors.push(am5.color(color));
-    });
-    chart.get('colors')?.set('colors', allColors);
+    // this.root.numberFormatter.set("numberFormat", "#.0a");
+
+    // chart.get('colors')?.set('colors', allColors);
+
     const newData: {
       category: string;
       full:number;
@@ -95,22 +107,45 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
       alignLabels: false
     }));
 
+    const allColors: am5.Color[] = [];
+    this.colors.forEach((color: string) => {
+      allColors.push(am5.color(color));
+    });
+    series.get("colors")?.set('colors',allColors)
+
+
     series.labels.template.setAll({
       textType: "adjusted",
       centerX: 0,
-      centerY: 0
+      centerY: 0,
+      text: `[${this.textsColor}][500]{value}%[/]`
     });
 
-    series.data.setAll([
-      { value: 10, category: "One" },
-      { value: 9, category: "Two" },
-      { value: 6, category: "Three" },
-    ]);
+    // Disabling labels and ticks
+    // series.labels.template.set("visible", false);
+    // series.ticks.template.set("visible", false);
+
+    series.data.setAll(this.data);
+
+    // Add labels in chart center
+
+    this.labelsLines.forEach((labelLine) => {
+      const label = series.children.push(am5.Label.new(this.root, {
+        text: `${labelLine.styles ? labelLine.styles : ""}${labelLine.value}`,
+        fontSize: labelLine.fontSize,
+        centerX: am5.percent(50),
+        centerY: am5.percent(labelLine.centerY),
+        // oversizedBehavior: "fit"
+
+      }));
+    })
 
 
-    this.root.numberFormatter.set("numberFormat", "#");
+
+    // this.root.numberFormatter.set("numberFormat", "#");
 
     series.get("tooltip")?.label.set("direction" , this.direction == 'ar' ? "rtl" : "ltr");
+
 
     chart.appear(1000, 100);
   }

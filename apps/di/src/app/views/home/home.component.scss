@@ -20,8 +20,10 @@
 
 .stc-digital-index{
   background-color: white;
+  max-width: 1060px;
 }
 
+// Legend Styles :
 .legends-row{
   padding: 15px;
 }
@@ -72,21 +74,39 @@
   }
 }
 
+// end of legends and heading
+
+
+//Donut charts Column :
+
+.donuts-col{
+  margin-left: -3%;
+}
+
 .donut-chart-holder{
   height: 200px;
 }
 
-.polylines-holder{
-  width: 100%;
+// End of donuts
 
-  >svg{
-    width: 200px;
+// Polylines styles :
+
+
+.polylines-holder{
+  width: 190px;
+  margin-left: -25px;
+
+  svg{
+    width: 100%;
   }
 
   span{
     position: absolute;
     word-break: keep-all;
     left: 103%;
+    width: 230px;
+    font-size: 12px;
+
   }
 }
 
@@ -99,20 +119,36 @@
 }
 
 .polyline-2-text{
-  top: 16%;
+  // top: 16%;
+  top:-19%;
+
+}
+
+.polyline-3-text{
+  top: -70%;
 }
 
 .polylines-col{
   margin-left: -70px;
-  margin-right: 115px;
+  margin-right: 130px;
+}
+
+.polyline-1{
+  height: 100px;
+  margin-top: -20px;
+
 }
 
 .polyline-2{
-  margin-top: 50px;
+  // margin-top: 50px;
+  margin-top: -20px;
+
 }
 
 .polyline-3{
-  margin-top: -110px;
+  // margin-top: -110px;
+  margin-top: -120px;
+
 }
 
 
@@ -120,4 +156,15 @@
 
 .progress-circle-holder{
   height: 500px;
+}
+
+
+// Assets :
+
+.mat-arrow-up{
+
+  width: 14px;
+  font-size: 15px;
+  padding-top: 8px;
+
 }

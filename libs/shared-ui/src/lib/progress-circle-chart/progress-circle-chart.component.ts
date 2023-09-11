@@ -113,7 +113,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
       am5xy.ValueAxis.new(this.root, {
         renderer: xRenderer,
         min: 0,
-        max: sum,
+        max: sum, // Pass max as 100 , as an input to maximize the circle to 100
         strictMinMax: true,
         numberFormat: "#'%'",
         tooltip: am5.Tooltip.new(this.root, {}),
