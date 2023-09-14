@@ -8,14 +8,16 @@
   min-height: 100vh;
   padding: 50px;
   position: relative;
+
   .shape4 {
     background-image: url('../../../assets/images/login/shape4.png');
     height: 400px;
-    width: 500px;
+    width: 100px;
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     position: absolute;
-    right: -180px;
+    right: 0px;
     top: -105px;
   }
   .card {
@@ -91,5 +93,61 @@
   }
   .btn.stc-color-outline {
     font-weight: 700 !important;
+  }
+}
+
+@media only screen and (min-width: 800px) and (max-width: 1100px) {
+  .login {
+    padding: 50px 0;
+    h4 {
+      padding-top: 10px !important;
+      font-size: 25px !important;
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+    }
+  }
+  .shape3 {
+    bottom: 30px !important;
+    left: 15% !important;
+  }
+}
+@media only screen and (max-width: 800px) {
+  .login {
+    background-color: $stcColor;
+    padding-top: 5px;
+    h4 {
+      padding-top: 10px !important;
+      font-size: 25px !important;
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+    }
+    .card {
+      border: unset;
+      min-height: unset;
+      padding: 0;
+    }
+    ::ng-deep .btn.primary {
+      background-color: $whiteColor !important;
+      color: $stcColor !important;
+    }
+    ::ng-deep .btn.stc-color-outline {
+      border-color: $whiteColor !important;
+      color: $whiteColor !important;
+    }
+    ::ng-deep label {
+      color: $whiteColor !important;
+    }
+  }
+  .shape4,
+  .shape1,
+  .shape2,
+  .shape3 {
+    display: none;
   }
 }

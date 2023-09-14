@@ -1,8 +1,185 @@
 <div class="users-settings">
-  <div class="top-info"></div>
-  <stc-apps-filter-box
-    [addNavigate]="addUserNavigate"
-    [addBtnLabel]="addNewUserLabel"
-  ></stc-apps-filter-box>
-  <stc-apps-table> </stc-apps-table>
+  <div class="top-info">
+    <div class="row">
+      <div class="col-md-4">
+        <div class="static register">
+          <div class="icon">
+            <i class="fas fa-user-friends"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalUsers }}</div>
+            <div class="title">{{ 'Total Users'}}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="static in-progress">
+          <div class="icon">
+            <i class="fas fa-user-edit"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ creatorUsers }}</div>
+            <div class="title">{{ 'Creator Users' }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="static pending">
+          <div class="icon">
+            <i class="fas fa-user-check"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ approverUsers }}</div>
+            <div class="title">{{ 'Approver Users' }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="filter-box card" [formGroup]="filterSelect">
+    <div class="row align-items-center">
+      <div class="col-md-3">
+        <div class="input-group stc-input-group custom-input mb-3">
+          <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+          <input type="text" matInput #input placeholder="{{ 'Search for user name'  }}" class="form-control stc-input"
+            (keyup)="searchFilter($event)" />
+        </div>
+      </div>
+      <!-- <div class="col-md-7">
+        <div class="row">
+          <div class="col-md-5">
+            <stc-apps-select-drop-down
+              [label]="'privilege'"
+              [selectType]="'filter-select-box'"
+              [options]="privilege"
+              [labelName]="'groupName'"
+              (selectChange)="handleSelectChange($event, 'privilege')"
+              [defaultAll]="true"
+            ></stc-apps-select-drop-down>
+          </div>
+          <div class="col-md-5">
+            <stc-apps-select-drop-down
+              [label]="'team'"
+              [selectType]="'filter-select-box'"
+              [options]="teams"
+              (selectChange)="handleSelectChange($event, 'team')"
+              [defaultAll]="true"
+              formControlName="teamSelect"
+            ></stc-apps-select-drop-down>
+          </div>
+        </div>
+      </div> -->
+      <div class="col-md-2">
+        <stc-apps-button [buttonText]="'Add New User'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+          (btnClick)="addUserNavigate()"></stc-apps-button>
+      </div>
+    </div>
+  </div>
+
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
+      <th mat-header-cell *matHeaderCellDef>
+        {{ col.label }}
+      </th>
+      <td mat-cell *matCellDef="let element">
+        <div [ngSwitch]="col.key">
+          <div class="info-name" *ngSwitchCase="'name'">
+            <img src="{{ element.profileIcon }}" alt="" *ngIf="element.profileIcon" />
+            <div class="name">
+              <h4>{{ element[col.key] }}</h4>
+              <small>{{ element.email }}</small>
+            </div>
+          </div>
+          <span class="cell-text" *ngSwitchCase="'userGroups'">
+            {{ element.userGroups[0].groupName }}
+          </span>
+          <span class="cell-text" *ngSwitchCase="'teamDto'">
+            {{ element[col.key]?.name }}
+          </span>
+          <div class="btns-action" *ngSwitchCase="'actions'">
+            <stc-apps-dialog id="{{ element.id }}">
+              <p class="text">
+                <span>{{ 'deleteMsg.txt1' }} </span>
+                <strong>{{ element.name }}</strong>
+
+                <span> {{ 'deleteMsg.txt2' }} </span>
+
+                <strong>{{ element.email }}</strong>
+                <span> {{ 'deleteMsg.txt3' }}</span>
+              </p>
+
+              <div class="row mt-4">
+                <div class="col-md-4 offset-8">
+                  <div class="d-flex justify-content-end">
+                    <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+                      (btnClick)="dialogService.close()"></stc-apps-button>
+
+                    <div class="mx-3"></div>
+                    <stc-apps-button [buttonText]="'delete_user'" [buttonType]="'primary'"
+                      (btnClick)="confirmDelete()"></stc-apps-button>
+                  </div>
+                </div>
+              </div>
+            </stc-apps-dialog>
+            <button mat-button class="btn edit-btn-table" (click)="editItem(element.id)">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+            <button mat-button class="btn delete-btn-table" (click)="deleteItem(element.id)">
+              <i class="far fa-trash-alt"></i>
+            </button>
+          </div>
+          <span class="cell-text" *ngSwitchDefault>
+            {{ element[col.key] }}
+          </span>
+        </div>
+      </td>
+    </ng-container>
+    <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div class="message-box">
+          <img src="../../assets/Group 590.png" alt="" />
+          <h3>{{ 'No users yet' }}</h3>
+          <p>{{ 'You didn&lsquo;t add any user yet, let&lsquo;s add new user' }}</p>
+          <stc-apps-button [buttonText]="'Add New User'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+            (btnClick)="addUserNavigate()"></stc-apps-button>
+        </div>
+      </td>
+    </tr>
+    <!-- <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div class="message-box">
+          <img src="../../assets/Group 597.png" alt="" />
+          <h3>Sorry !</h3>
+          <p>there are no data that match your search, please try again</p>
+          <stc-apps-button
+            [buttonText]="'Try another data sets'"
+            [buttonType]="'warn'"
+          ></stc-apps-button>
+        </div>
+      </td>
+    </tr> -->
+    <!-- <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div class="message-box">
+          <img src="../../assets/Group 598.png" alt="" />
+          <h3>No network connection !</h3>
+          <p>Please connect to the network and try again</p>
+          <stc-apps-button
+            [buttonText]="'Try again'"
+            [buttonType]="'warn'"
+          ></stc-apps-button>
+        </div>
+      </td>
+    </tr> -->
+    <!-- <tr class="mat-row" *matError>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        No data matching the filter.
+      </td>
+    </tr> -->
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]" [showFirstLastButtons]="true" [hidePageSize]="true">
+  </mat-paginator>
 </div>

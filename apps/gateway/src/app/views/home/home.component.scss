@@ -4,6 +4,15 @@
 .apps-box {
   position: relative;
   z-index: 9999;
+  &::before {
+    content: '';
+    width: 1px;
+    height: 85%;
+    background-color: rgba($color: $greyColor, $alpha: 0.7);
+    top: 50px;
+    left: -65px;
+    position: absolute;
+  }
   li {
     background-color: rgba($color: $greyColor, $alpha: 0.2);
     margin: 16px auto;
@@ -24,6 +33,25 @@
       a {
         color: $whiteColor;
       }
+    }
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  li {
+    a {
+      font-size: 18px !important;
+    }
+  }
+}
+
+@media only screen and (max-width: 800px) {
+  .apps-box {
+    &::before {
+      display: none;
+    }
+    li {
+      background-color: $whiteColor !important;
     }
   }
 }

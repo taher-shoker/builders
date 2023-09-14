@@ -20,12 +20,12 @@ const routes: Routes = [
       {
         path: 'add-user',
         component: AddUserComponent,
-        data: { breadcrumb: 'Add User' },
+        data: { breadcrumb: 'add_user' },
       },
       {
-        path: 'edit-user',
+        path: 'edit-user/:id',
         component: EditUserComponent,
-        data: { breadcrumb: 'Edit User' },
+        data: { breadcrumb: 'edit_user' },
       },
     ],
   },

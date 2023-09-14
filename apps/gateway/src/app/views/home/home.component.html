@@ -2,7 +2,7 @@
   <div class="shape4"></div>
   <div class="container-fluid">
     <div class="row align-items-center">
-      <div class="col-md-5   ">
+      <div class="col-md-5 ">
 
 
         <div class="card">
@@ -13,15 +13,15 @@
           <div class="card-img">
             <img src="assets/images/login/stc.png" alt="stc" />
           </div>
-          <h4 class="">{{ 'Welcome, Mohamed!' | translate }}</h4>
+          <h4 class="">{{ 'Welcome, Mohamed!' }}</h4>
           <p>Let’s discover the applications</p>
-          <div class="card-body">
 
-          </div>
         </div>
       </div>
-      <div class="col-md-7  ">
+
+      <div class="col-md-7  col-sm-12">
         <div class="row">
+
           <div class="col-md-8 offset-md-2">
             <ul class="apps-box ">
               <li>
@@ -30,7 +30,7 @@
                 </a>
               </li>
               <li>
-                <a href="/">
+                <a href="http://localhost:59056/#/login">
                   Fraud Management
                 </a>
               </li>
@@ -41,7 +41,7 @@
                 </a>
               </li>
               <li>
-                <a href="#">
+                <a [routerLink]="['/home/users-setting']">
                   Tech & Ops Dashboard
                 </a>
               </li>

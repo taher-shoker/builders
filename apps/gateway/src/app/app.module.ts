@@ -15,6 +15,7 @@ import { AppRoutingModule } from './app.routes';
 
 import { LoginComponent } from './views/login/login.component';
 import { HomeComponent } from './views/home/home.component';
+import { UsersSettingsModule } from './views/users-settings/users-settings.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
@@ -31,6 +32,7 @@ export function HttpLoaderFactory(http: HttpClient) {
     AppRoutingModule,
     HttpClientModule,
     SharedUiModule,
+    UsersSettingsModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,

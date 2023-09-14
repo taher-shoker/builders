@@ -1,41 +1,57 @@
 <div class="user-form">
-  <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="inputs">
       <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
-            [inputPlaceholder]="'Example@STC.COM'"
+            [inputPlaceholder]="'Example@qeema.net'"
             [inputId]="'email'"
             [inputName]="'email'"
             formControlName="email"
           ></stc-apps-input>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
-            [inputPlaceholder]="'EX: Developer'"
-            [inputId]="'jobtitle'"
-            [inputName]="'job title'"
-            formControlName="jobtitle"
+            [inputPlaceholder]="''"
+            [inputId]="'name'"
+            [inputName]="'Name'"
+            formControlName="name"
+          ></stc-apps-input>
+        </div>
+        <div class="col-md-4">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'jobTitle'"
+            [inputName]="'jobTitle'"
+            formControlName="jobTitle"
           ></stc-apps-input>
         </div>
       </div>
       <div class="row mt-7">
         <div class="col-md-6">
           <stc-apps-select-drop-down
-            [label]="'Privilage'"
+            [label]="'privilege'"
             [options]="privilages"
-            formControlName="privilege"
-            [required]="false"
-          ></stc-apps-select-drop-down>
+            formControlName="userGroups"
+            [labelName]="'groupName'"
+            [required]="true"
+            [selectId]="data?.userGroup || null"
+            (selectChange)="handleTeam($event)"
+          >
+          </stc-apps-select-drop-down>
         </div>
         <div class="col-md-6">
           <stc-apps-select-drop-down
-            [label]="'Team'"
+            [label]="'team'"
+            formControlName="teamDto"
+            [required]="true"
             [options]="teams"
-            formControlName="team"
-          ></stc-apps-select-drop-down>
+            [selectId]="data?.teamDto || null"
+          >
+          </stc-apps-select-drop-down>
         </div>
       </div>
     </div>
@@ -43,19 +59,21 @@
       <stc-apps-button
         [buttonText]="'cancel'"
         [buttonType]="'gray-outline'"
+        (btnClick)="cancel()"
       ></stc-apps-button>
 
       <div class="mx-3"></div>
       <stc-apps-button
         *ngIf="!isEditing"
-        [buttonText]="'Add user'"
-        [buttonType]="'warn'"
+        [buttonText]="'add_user'"
+        [buttonType]="'primary'"
         (btnClick)="onSubmit()"
       ></stc-apps-button>
       <stc-apps-button
         *ngIf="isEditing"
         [buttonText]="'save'"
-        [buttonType]="'warn'"
+        [buttonType]="'primary'"
+        (btnClick)="onSubmit()"
       ></stc-apps-button>
     </div>
   </form>
