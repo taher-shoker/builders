@@ -16,7 +16,19 @@
       }
     }
   }
-
+  &.transparent {
+    background-color: transparent !important;
+    color: $whiteColor !important;
+    .breadcrumb-item {
+      &::before {
+        color: $whiteColor !important;
+      }
+      a {
+        color: rgba($color: $whiteColor, $alpha: 0.7) !important;
+        text-decoration: none;
+      }
+    }
+  }
   &.danger {
     background-color: #8c0808;
   }

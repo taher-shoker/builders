@@ -8,18 +8,8 @@
           </div>
           <div class="static-info">
             <div class="num">{{ insightsData[0]?.value }}</div>
-            <div class="title">{{ 'closed_cases' | translate }} <span class="period-desc">{{'last 7 days' | translate}}</span></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="static in-progress">
-          <div class="icon">
-            <i class="far fa-clock"></i>
-          </div>
-          <div class="static-info">
-            <div class="num">{{ insightsData[1]?.value }}</div>
-            <div class="title">{{ 'inProgress_cases' | translate }} <span class="period-desc">{{'last 7 days' | translate}}</span></div>
+            <div class="title">{{ 'registered_cases' | translate }} <span class="period-desc">{{'last 7 days' |
+                translate}}</span></div>
           </div>
         </div>
       </div>
@@ -29,11 +19,25 @@
             <i class="fas fa-retweet"></i>
           </div>
           <div class="static-info">
-            <div class="num">{{ insightsData[2]?.value }}</div>
-            <div class="title">{{ 'pending_cases' | translate }} <span class="period-desc">{{'last 7 days' | translate}}</span></div>
+            <div class="num">{{ insightsData[1]?.value }}</div>
+            <div class="title">{{ 'pending_cases' | translate }} <span class="period-desc">{{'last 7 days' |
+                translate}}</span></div>
           </div>
         </div>
       </div>
+      <div class="col-md-4">
+        <div class="static in-progress">
+          <div class="icon">
+            <i class="far fa-clock"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ insightsData[2]?.value }}</div>
+            <div class="title">{{ 'inProgress_cases' | translate }} <span class="period-desc">{{'last 7 days' |
+                translate}}</span></div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 
@@ -43,7 +47,7 @@
         <div class="col">
           <div>
             <div class="chart-header">
-              <div class="row">
+              <div class="row ">
                 <div class="col-5">
                   <p class="chart-title">
                     {{direction === 'en' ? registeredCasesChart?.titleEn : registeredCasesChart?.titleAr}}
@@ -51,42 +55,32 @@
                 </div>
                 <div class="col">
                   <form [formGroup]="filterValueForm">
-                    <div class="row">
+                    <div class="row ">
                       <div class="col">
-                        <stc-apps-select-drop-down
-                          [label]="'Select Type' | translate"
-                          [options]="filterType"
-                          [labelName]="'name'"
-                          [labelValue]="'value'"
-                          formControlName="filterType"
-                        ></stc-apps-select-drop-down>
+                        <stc-apps-select-drop-down [label]="'Select Type'" [options]="filterType" [labelName]="'name'"
+                          [labelValue]="'value'" formControlName="filterType"></stc-apps-select-drop-down>
                       </div>
 
                       <div class="col">
-                        <stc-apps-select-drop-down
-                          [label]="
+                        <stc-apps-select-drop-down [label]="
                             (filterValueForm.get('filterType')?.value ===
                             filterType[0]
                               ? 'Select User'
                               : 'Select Team'
-                            ) | translate
-                          "
-                          [options]="
+                            )
+                          " [options]="
                             filterValueForm.get('filterType')?.value ===
                             filterType[0]
                               ? users
                               : teams
-                          "
-                          [labelName]="'name'"
-                          [labelValue]="'value'"
-                          formControlName="filterValue"
-                          (selectChange)="filterLineChartWithUser($event)"
-                        ></stc-apps-select-drop-down>
+                          " [labelName]="'name'" [labelValue]="'value'" formControlName="filterValue"
+                          (selectChange)="filterLineChartWithUser($event)"></stc-apps-select-drop-down>
                       </div>
 
                       <div class="col-2 calendar-col">
                         <!-- Put a calendar component here -->
-                        <stc-apps-date-picker-weekly-range (dateRange)="filterLineChartWithDate($event)"></stc-apps-date-picker-weekly-range>
+                        <stc-apps-date-picker-weekly-range
+                          (dateRange)="filterLineChartWithDate($event)"></stc-apps-date-picker-weekly-range>
                         <!-- <stc-apps-date-picker-weekly-range (date)="filterRangeDate($event)"></stc-apps-date-picker-weekly-range> -->
                       </div>
                     </div>
@@ -95,16 +89,16 @@
               </div>
             </div>
 
-            <div class="chart" style = 'height: 400px;' *ngIf="registeredCasesChart && registeredCasesChart.chartData && registeredCasesChart.chartData.length > 0">
-              <stc-apps-line-chart
-                [chartData]="registeredCasesChart.chartData"
-                [colors]="registeredCasesChart.lineChartColors"
-              ></stc-apps-line-chart>
+            <div class="chart" style='height: 400px;'
+              *ngIf="registeredCasesChart && registeredCasesChart.chartData && registeredCasesChart.chartData.length > 0">
+              <stc-apps-line-chart [chartData]="registeredCasesChart.chartData"
+                [colors]="registeredCasesChart.lineChartColors"></stc-apps-line-chart>
             </div>
-            <div *ngIf="registeredCasesChart && registeredCasesChart.chartData && registeredCasesChart.chartData.length === 0">
-              <p class = "emptyDataMsg">{{
+            <div
+              *ngIf="registeredCasesChart && registeredCasesChart.chartData && registeredCasesChart.chartData.length === 0">
+              <p class="emptyDataMsg">{{
                 direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
-              }}</p>
+                }}</p>
             </div>
           </div>
         </div>
@@ -117,10 +111,11 @@
           <div class="chart-header">
             <div class="row">
               <div class="col-5">
-                <p class="chart-title">{{direction === 'en' ? productivityTeamUsers?.titleEn : productivityTeamUsers?.titleAr}}</p>
+                <p class="chart-title">{{direction === 'en' ? productivityTeamUsers?.titleEn :
+                  productivityTeamUsers?.titleAr}}</p>
               </div>
               <div class="col"></div>
-              <div class="col-3">
+              <!-- <div class="col-3">
                 <form [formGroup]="filterProductivityGroup">
                   <stc-apps-select-drop-down
                     [options]="dateFilterOption"
@@ -134,19 +129,24 @@
                   </stc-apps-select-drop-down>
 
                 </form>
+              </div> -->
+              <div class="col-3">
+                <stc-apps-date-picker-range (valueChangedEvent)="filterProductivityUser($event)" [startDate]="startDate"
+                  [endDate]="endDate">
+                </stc-apps-date-picker-range>
               </div>
             </div>
           </div>
 
-          <div class="chart" style="height: 400px;" *ngIf="productivityTeamUsers && productivityTeamUsers.data && productivityTeamUsers.data.length > 0">
-            <stc-apps-bar-chart
-              [data]="productivityTeamUsers.data"
-            ></stc-apps-bar-chart>
+          <div class="chart" style="height: 400px;"
+            *ngIf="productivityTeamUsers && productivityTeamUsers.data && productivityTeamUsers.data.length > 0">
+            <stc-apps-bar-chart [data]="productivityTeamUsers.data"></stc-apps-bar-chart>
           </div>
-          <div class="chart" *ngIf="productivityTeamUsers && productivityTeamUsers.data && productivityTeamUsers.data.length === 0">
-            <p class = "emptyDataMsg">{{
+          <div class="chart"
+            *ngIf="productivityTeamUsers && productivityTeamUsers.data && productivityTeamUsers.data.length === 0">
+            <p class="emptyDataMsg">{{
               direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
-            }}</p>
+              }}</p>
           </div>
         </div>
       </div>
@@ -164,27 +164,23 @@
               </div>
               <div class="col"></div>
               <div class="col-3">
-                <stc-apps-date-picker-range
-                  (valueChangedEvent)="filterProgressCircle($event)"
-                  [startDate]="startDate"
-                  [endDate]="endDate"
-                  >
+                <stc-apps-date-picker-range (valueChangedEvent)="filterProgressCircle($event)" [startDate]="startDate"
+                  [endDate]="endDate">
                 </stc-apps-date-picker-range>
               </div>
             </div>
           </div>
 
-          <div class="chart" *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length > 0">
-            <stc-apps-progress-circle-chart
-              [data]="casesTypes.chartData"
-              [colors]="casesTypes.chartColors"
-              [totalCases]="casesTypes.totalCases"
-            ></stc-apps-progress-circle-chart>
+          <div class="chart"
+            *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length > 0">
+            <stc-apps-progress-circle-chart [hideLegend]="true" [data]="casesTypes.chartData" [colors]="casesTypes.chartColors"
+              [totalCases]="casesTypes.totalCases"></stc-apps-progress-circle-chart>
           </div>
-          <div class="chart" *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length === 0">
-            <p class = "emptyDataMsg">{{
+          <div class="chart"
+            *ngIf="casesTypes && casesTypes.chartData && casesTypes.chartData && casesTypes.chartData.length === 0">
+            <p class="emptyDataMsg">{{
               direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
-            }}</p>
+              }}</p>
           </div>
         </div>
       </div>
@@ -200,26 +196,20 @@
               </div>
               <div class="col"></div>
               <div class="col-3">
-                <stc-apps-date-picker-range
-                [startDate]="startDate"
-                [endDate]="endDate"
-                (valueChangedEvent)="filterStages($event)"
-
-                  >
+                <stc-apps-date-picker-range [startDate]="startDate" [endDate]="endDate"
+                  (valueChangedEvent)="filterStages($event)">
                 </stc-apps-date-picker-range>
               </div>
             </div>
           </div>
 
           <div class="chart" style="height: 400px;" *ngIf="stages && stages.data && stages.data.length > 0">
-            <stc-apps-bar-chart
-              [data]="stages.data"
-            ></stc-apps-bar-chart>
+            <stc-apps-bar-chart [data]="stages.data"></stc-apps-bar-chart>
           </div>
           <div class="chart" *ngIf="stages && stages.data && stages.data.length === 0">
-            <p class = "emptyDataMsg">{{
+            <p class="emptyDataMsg">{{
               direction === 'en' ? 'there is no data' : 'لا توجد بيانات'
-            }}</p>
+              }}</p>
           </div>
         </div>
       </div>

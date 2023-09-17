@@ -46,9 +46,15 @@ export class SelectDropDownComponent<T>
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;
+  @Input() outputValue! : string; // if passed, the component should output this value from the object
 
   onChangeValue(value: any) {
-    this.selectChange.emit(value);
+    if(this.outputValue){
+      this.selectChange.emit(value[this.outputValue]);
+      console.warn("Da values", value[this.outputValue])
+    }else{
+      this.selectChange.emit(value);
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {

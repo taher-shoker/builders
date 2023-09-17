@@ -22,7 +22,7 @@
                   </div>
 
                   <stc-apps-button [buttonText]="'login' | translate" [buttonType]="'primary'" [buttonDisable]="false"
-                    (btnClick)="onSubmit()"></stc-apps-button>
+                    (btnClick)="onSubmit()" [loading]="isLoading"></stc-apps-button>
                 </form>
                 <span class="divider-line my-4">{{ 'or' | translate }}</span>
                 <stc-apps-button [buttonText]="'login_with_stc' | translate" [buttonDisable]="false"></stc-apps-button>

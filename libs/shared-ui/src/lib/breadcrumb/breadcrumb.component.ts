@@ -12,7 +12,8 @@ import { Breadcrumb } from './breadcrumb.model';
 })
 export class BreadcrumbComponent {
   @Input() colorText: 'white' | 'black' = 'black';
-  @Input() bgColor: 'primary' | 'danger' | 'warn' | 'default' = 'default';
+  @Input() bgColor: 'primary' | 'danger' | 'warn' | 'transparent' | 'default' =
+    'default';
 
   breadcrumbs$: Observable<Breadcrumb[]>;
 

@@ -45,6 +45,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   users: any = [];
   teams: any = [];
   selectedTeam = {};
+  selectedUser = {};
   langSub!: Subscription;
   invalidFileMessageDetail!: string;
 
@@ -82,7 +83,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
         this.CasesService.setSystemTeams().subscribe((res) => {
           this.teams = res;
           this.teams = this.teams.filter((x: any) => x.name !== 'Fraud');
-          this.handleTeam(this.caseData, this.teams);
+          // this.handleTeam(this.caseData, this.teams);
         });
 
         this.CasesService.setSystemUsers().subscribe((res) => {
@@ -92,6 +93,8 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
               x.userGroups[0]?.groupName !== 'Approvers' &&
               x.userGroups[0]?.groupName !== 'Admins'
           );
+          this.handleUser(this.caseData, this.users);
+
         });
       }
     });
@@ -100,7 +103,7 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       close_mail_content: [''],
     });
     this.infoForm = this.formBuilder.group({
-      assignedTo: [this.assigneeType[0], Validators.required],
+      assignedTo: [this.assigneeType[1], Validators.required], //That makes the dropdown of team/users to have a *USER* option selected by default
       selectedUser: ['', Validators.required],
       message: ['', Validators.required],
       check_case_attachment: [''],
@@ -385,6 +388,16 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       )[0];
     }
   }
+
+  handleUser(caseData?: Case, users?: any) {
+    if (caseData && users) {
+
+      this.selectedUser = users.filter(
+        (u: any) => u.email === this.caseData?.creatorEmail
+      )[0];
+    }
+  }
+
   ngOnDestroy(): void {
     this.langSub.unsubscribe();
   }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
   Component,
   AfterViewInit,
@@ -18,8 +19,10 @@ import {
 } from '../../casses.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
-import { CookieService } from 'ngx-cookie-service';
-import { Subscription } from 'rxjs';
+import { CookieService } from 'ngx-cookie';
+import { Subscription, tap } from 'rxjs';
+import { UtilsService } from '@stc-apps/lng-selector';
+import { DashboardService } from '../../../../services/dashboard.service';
 
 export interface PeriodicElement {
   id: string;
@@ -59,6 +62,11 @@ const COLUMNS_SCHEMA = [
     label: 'Case Status',
   },
   {
+    key: 'createdDate',
+    type: 'text',
+    label: 'created_at',
+  },
+  {
     key: 'actions',
     type: 'actions',
     label: '',
@@ -85,6 +93,16 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   getAssigneeTasks!: Subscription;
   formChangesSub!: Subscription;
 
+  // Props of the paginator :
+  casesPagesCount: number = 0;
+
+  types: { statusName: string }[] = [
+    { statusName: 'Registered' },
+    { statusName: 'Pending' },
+    { statusName: 'In Progress' },
+    { statusName: 'Closed' },
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -93,7 +111,9 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     public CasesService: CasesService,
     protected dialogService: DialogService,
     public authService: AuthService,
-    private cookieService: CookieService
+    private cookieService: CookieService,
+    public utils: UtilsService,
+    private dashboardService: DashboardService
   ) {}
 
   allItems!: Task[];
@@ -112,9 +132,10 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   disabled = false;
 
   ngOnInit() {
+    this.populateInsightsCards();
     this.getCassesListing();
     this.fetchAssigneeTasks();
-    this.bannerDataService.updateData({ title: 'home', text: '' });
+    this.bannerDataService.updateData({ title: 'd2d_fraud_cases', text: '' });
     this.dataSource.paginator = this.paginator;
 
     this.dataSource.filterPredicate = (data, filter) =>
@@ -124,8 +145,30 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogService.modals = [];
   }
 
+  // previousPageIndex!: number;
+  // nextPageIndex!: number;
+  pagesFetchedIndexes: number[] = [0];
+
   ngAfterViewInit() {
     this.dataSource.sort = this.sort;
+    this.paginator.page.subscribe((pageRes) => {
+      const formCopy = this.form.value;
+
+      console.log('THE STAT', this.form.value);
+      // formCopy.status ? formCopy.status = formCopy.status.statusName : formCopy.status == undefined ? formCopy.status = '' : formCopy.status = ''
+
+      console.log('page res is :', pageRes);
+
+      if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
+        this.pagesFetchedIndexes.push(pageRes.pageIndex);
+        this.getCasesSub = this.CasesService.getCases({
+          page: pageRes.pageIndex,
+          ...formCopy,
+        }).subscribe((res: any) => {
+          this.populateCases(res);
+        });
+      }
+    });
   }
 
   detailsNavigate(id: string | number) {
@@ -133,34 +176,68 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
   getCassesListing() {
     this.getCasesSub = this.CasesService.getCases().subscribe((res: any) => {
-      this.isLoading = false;
-      this.dataSource.data = res;
-      this.totalRegisted = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.registered
-      ).length;
-      this.totalInProgress = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.inprogress
-      ).length;
-      this.totalPending = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.pending
-      ).length;
-      this.totalClosed = res.filter(
-        (d: any) => d.caseStatus === CaseStatus.closed
-      ).length;
+      this.populateCases(res);
     });
+  }
+
+  populateCases(res: any) {
+    console.log('THE RES', res);
+    this.isLoading = false;
+    this.casesPagesCount = res.totalElements;
+
+    if (res.first) {
+      this.dataSource.data = res.content;
+      this.pagesFetchedIndexes = [0];
+    } else {
+      this.dataSource.data = [...this.dataSource.data, ...res.content];
+    }
+
+    // this.totalRegisted = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.registered
+    // ).length;
+    // this.totalInProgress = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.inprogress
+    // ).length;
+    // this.totalPending = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.pending
+    // ).length;
+    // this.totalClosed = res.content.filter(
+    //   (d: any) => d.caseStatus === CaseStatus.closed
+    // ).length;
+  }
+
+  endDate: Date = new Date();
+  startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
+
+  populateInsightsCards() {
+    this.dashboardService
+      .getInsightsCards(
+        this.startDate.toLocaleDateString('sv'),
+        this.endDate.toLocaleDateString('sv')
+      )
+      .subscribe((res) => {
+        this.totalRegisted = res.data.filter(
+          (d: any) => d.caseStatus === CaseStatus.registered
+        )[0].caseCount;
+        this.totalInProgress = res.data.filter(
+          (d: any) => d.caseStatus === CaseStatus.inprogress
+        )[0].caseCount;
+        this.totalPending = res.data.filter(
+          (d: any) => d.caseStatus === CaseStatus.pending
+        )[0].caseCount;
+      });
   }
 
   fetchAssigneeTasks() {
     this.userSub = this.authService.user.subscribe((res) => {
-      let username = res?.userName;
-      if (!res) {
-        username = JSON.parse(this.cookieService.get('fraud-user'));
-      }
+      const currentUser = this.cookieService.get('fraud-user')
+        ? JSON.parse(this.cookieService.get('fraud-user') || '')
+        : this.authService.getLoggedInUser();
 
       this.getAssigneeTasks = this.CasesService.getAssigneeTasks(
-        username
+        currentUser.email
       ).subscribe((res: any) => {
-        this.allItems = res.data;
+        this.allItems = this.utils.sorter(res.data, 'caseSerialNumber', 'DESC');
       });
     });
   }
@@ -190,6 +267,8 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
       contactNumber: ['', { nonNullable: true }],
       caseLabel: ['', { nonNullable: true }],
       description: ['', { nonNullable: true }],
+      status: ['', { nonNullable: true }],
+      type: ['', { nonNullable: true }],
     });
   }
 
@@ -208,6 +287,12 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   onSubmit() {
     const formCopy = this.form.value;
+    console.log('THE STAT', this.form.value);
+
+    formCopy.status = formCopy.status.statusName;
+    if (formCopy.status === undefined) {
+      formCopy.status = '';
+    }
 
     if (formCopy.activationDate == undefined) {
       formCopy.activationDate = '';
@@ -220,8 +305,9 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getCasesSub = this.CasesService.getCases(formCopy).subscribe(
       (res: any) => {
         this.dialogService.close();
-        this.isLoading = false;
-        this.dataSource.data = res;
+        // this.isLoading = false;
+        // this.dataSource.data = res.content;
+        this.populateCases(res);
       }
     );
   }

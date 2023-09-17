@@ -7,7 +7,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { EmpFilter, UsersService, teamsOptions } from '../../users.service';
+import { UsersService, teamsOptions } from '../../users.service';
 
 export interface ColumnsSchema {
   key: string;
@@ -47,7 +47,7 @@ const COLUMNS_SCHEMA = [
   {
     key: 'jobTitle',
     type: 'text',
-    label: 'jobe Title',
+    label: 'jobTitle',
   },
   {
     key: 'actions',
@@ -74,10 +74,12 @@ export class UsersComponent implements OnInit, AfterViewInit {
   approverUsers = 0;
   list!: PeriodicElement[];
   userId!: number;
+  user!: any;
   privilege!: any[];
   teams!: any[];
+  teamsOptions!: any[];
   filterSelect!: FormGroup;
-  empFilters: EmpFilter[] = [];
+  selectedPrivilege = 0;
   @ViewChild(MatSort, { static: true })
   sort!: MatSort;
   @ViewChild(MatPaginator, { static: true })
@@ -117,7 +119,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
   searchFilter(event: Event) {
     const searchVal = (event.target as HTMLInputElement).value;
-
     this.dataSource.filter = searchVal.trim().toLowerCase();
   }
 
@@ -151,12 +152,19 @@ export class UsersComponent implements OnInit, AfterViewInit {
   getTeams() {
     this.userService.getTeams().subscribe((res) => {
       this.teams = res;
+      this.teamsOptions = res;
     });
   }
   handleSelectChange(value: any, dropDwonType: string) {
     if (dropDwonType === 'team') {
       if (value.id === 'all') {
-        this.dataSource.data = this.list;
+        if (this.selectedPrivilege !== 0) {
+          this.dataSource.data = this.list.filter(
+            (x: any) => x.userGroups[0].id == this.selectedPrivilege
+          );
+        } else {
+          this.dataSource.data = this.list;
+        }
       } else {
         this.dataSource.data = this.list.filter(
           (x: any) => x.teamDto?.id == value?.id
@@ -170,10 +178,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.dataSource.data = this.list;
         this.getTeams();
       } else {
+        this.selectedPrivilege = value.id;
         if (value.id === 1) {
-          this.teams = teamsOptions.filter((t: any) => t.id !== 4);
+          this.teams = this.teamsOptions.filter(
+            (t: any) => t.id !== 4 && t.id !== 'all'
+          );
         } else {
-          this.teams = teamsOptions.filter((t: any) => t.id === 4);
+          this.teams = this.teamsOptions.filter((t: any) => t.id === 4);
         }
         this.dataSource.data = this.list.filter(
           (x: any) => x.userGroups[0].id == value?.id
@@ -204,7 +215,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
   deleteItem(id: number) {
     this.userId = id;
-    this.dialogService.open(`${id}`);
+    this.user = this.dataSource.data.filter((u: any) => u.id === id)[0];
+    this.dialogService.open(`delete-modal`);
   }
   editItem(id: number): void {
     this.router.navigate(['./edit-user', id], { relativeTo: this.route });

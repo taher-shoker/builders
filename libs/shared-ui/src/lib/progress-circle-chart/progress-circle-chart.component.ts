@@ -23,6 +23,13 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
   @Input({ required: true }) data!: ProgressCircleData[];
   @Input() colors: string[] = [];
   @Input() totalCases: number = 0;
+
+  @Input() topPosition!: number;
+  @Input() hideLegend: boolean = false;
+  @Input() customHeight!: number;
+  @Input() customWidth!: number;
+
+
   langSub!: Subscription;
   direction:string | null = '';
   root!: am5.Root;
@@ -57,13 +64,17 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     this.root = am5.Root.new(this.chartdiv_id);
     this.root.setThemes([am5themes_Animated.new(this.root)]);
     this.root._logo?.dispose();
+
     const chart = this.root.container.children.push(
       am5radar.RadarChart.new(this.root, {
         panX: false,
         panY: false,
         // wheelX: "panX",
         // wheelY: "zoomX",
-        innerRadius: am5.percent(20),
+        innerRadius: this.data.length < 6 ? am5.percent(30) : am5.percent(19),
+        // centerX:am5.percent(10),
+        // centerY:am5.percent(40),
+        radius: am5.percent(100),
         startAngle: this.direction == 'en' ? -90 : -90,
         endAngle: this.direction == 'en' ? 180 : 180,
       })
@@ -109,6 +120,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         // templateField: 'category',
       })
     );
+
     const yRenderer = am5radar.AxisRendererRadial.new(this.root, {
       minGridDistance: 20,
       templateField: 'category',
@@ -136,18 +148,22 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     );
 
     // create label in the center of the chart
+
     chart.children.unshift(
       am5.Label.new(this.root, {
         text: 'All cases',
-        fontSize: 20,
+        fontSize: 25,
         fontWeight: '500',
         textAlign: 'center',
-        y: am5.percent(44),
+        y: this.data.length < 6 ? am5.percent(42) : am5.percent(45) , //am5.percent(40),
         x: am5.percent(50),
-        centerX: am5.percent(50),
-        paddingTop: 0,
-        paddingBottom: 0,
+        centerX: am5.percent(50) ,
+        centerY: am5.percent(5),
+        paddingBottom: 20,
         fill: am5.color('#8e9aa0'),
+        marginBottom: 20,
+
+
       })
     );
     chart.children.unshift(
@@ -156,11 +172,13 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         fontSize: 25,
         fontWeight: 'bold',
         textAlign: 'center',
-        y: am5.percent(49),
+        y: am5.percent(48),
         x: am5.percent(50),
         centerX: am5.percent(50),
-        paddingTop: 0,
-        paddingBottom: 0,
+        paddingTop: 20,
+        paddingBottom: 20,
+        marginTop: 20,
+
       })
     );
 
@@ -199,7 +217,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         })
       );
       series.columns.template.setAll({
-        width: am5.p100,
+        width: am5.p100, //
         fillOpacity: fillOpacity,
         strokeOpacity: 0,
         cornerRadius: 20,
@@ -208,16 +226,42 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         templateField: 'columnSettings',
         fill : am5.color("#000")
       });
+
       const cellSize = 30;
-      series.events.on("datavalidated", function(ev) {
+
+      series.events.on("datavalidated", (ev) => {
         const series2 = ev.target;
         const chart:any = series2.chart;
         const xAxis:any = chart?.xAxes.getIndex(0);
         // Calculate how we need to adjust chart height
         const chartHeight = series.data.length * cellSize + xAxis.height() + chart.get("paddingTop", 0) + chart.get("paddingBottom", 0);
 
-        // Set it on chart's container
+        console.log("height is :",chartHeight);
         chart.root.dom.style.height = (chartHeight * 3) + "px";
+
+        // Set it on chart's container
+        if(!this.customHeight){
+
+          if(this.data.length < 2){
+
+            chart.root.dom.style.height = (chartHeight * 7) + "px";
+          }else if(this.data.length < 3){
+            chart.root.dom.style.height = (chartHeight * 5) + "px";
+          }else{
+            chart.root.dom.style.height = (chartHeight * 3) + "px";
+          }
+        }else{
+          chart.root.dom.style.height = `${this.customHeight}px`;
+          chart.root.dom.style.top = `${this.topPosition}%`;
+          chart.root.dom.style.position = `relative`;
+
+
+        }
+
+        if(this.customWidth){
+          chart.root.dom.style.width = `${this.customWidth}px`;
+          chart.root.dom.style.margin = `auto`;
+        }
       });
       return series;
     };
@@ -226,49 +270,54 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
     // set data to series
     series2.data.setAll(newData);
     series1.data.setAll(newData);
+
     // add legend to chart
-    const legend = chart.children.push(
-      am5.Legend.new(this.root, {
-        centerX: am5.percent(50),
-        centerY: am5.percent(50),
-        x: am5.percent(50),
-        y: am5.percent(97),
-        // layout: this.root.horizontalLayout,
-        reverseChildren: this.direction == 'ar' ? true : false,
-        nameField: 'categoryX',
-        templateField: 'category',
-        layout: am5.GridLayout.new(this.root, {
-          maxColumns: 9,
-          fixedWidthGrid: true
-        })
-      }),
-    );
-    legend.itemContainers.template.setAll({
-      reverseChildren : this.direction == 'ar' ? true : false,
-      height:40
-    })
-    legend.data.setAll(series2.dataItems);
-    legend.valueLabels.template.setAll({
-      fill: am5.color('#000000'),
-    });
-    legend.labels.template.setAll({
-      // maxWidth: 140,
-      // width: 140,
-      height : 24,
-      oversizedBehavior:"wrap",
-      visible: true,
-      reverseChildren : this.direction == 'ar' ? true : false,
-      direction : this.direction == 'ar' ? "rtl" : "ltr"
-    });
-    legend.markerRectangles.template.setAll({
-      cornerRadiusTL: 10,
-      cornerRadiusTR: 10,
-      cornerRadiusBL: 10,
-      cornerRadiusBR: 10,
-      width: 15,
-      height: 15,
-      dx : this.direction == 'ar' ? 10 : 0
-    });
+    if(!this.hideLegend){
+
+      const legend = chart.children.push(
+        am5.Legend.new(this.root, {
+          centerX: am5.percent(50),
+          centerY: am5.percent(50),
+          x: am5.percent(50),
+          y: this.data.length < 6 ? am5.percent(105) : am5.percent(100),
+          // layout: this.root.horizontalLayout,
+          reverseChildren: this.direction == 'ar' ? true : false,
+          nameField: 'categoryX',
+          templateField: 'category',
+          layout: am5.GridLayout.new(this.root, {
+            maxColumns: 9,
+            fixedWidthGrid: true
+          })
+        }),
+      );
+      legend.itemContainers.template.setAll({
+        reverseChildren : this.direction == 'ar' ? true : false,
+        height:40
+      })
+      legend.data.setAll(series2.dataItems);
+      legend.valueLabels.template.setAll({
+        fill: am5.color('#000000'),
+      });
+      legend.labels.template.setAll({
+        // maxWidth: 140,
+        // width: 140,
+        height : 24,
+        oversizedBehavior:"wrap",
+        visible: true,
+        reverseChildren : this.direction == 'ar' ? true : false,
+        direction : this.direction == 'ar' ? "rtl" : "ltr",
+        marginBottom: 60
+      });
+      legend.markerRectangles.template.setAll({
+        cornerRadiusTL: 10,
+        cornerRadiusTR: 10,
+        cornerRadiusBL: 10,
+        cornerRadiusBR: 10,
+        width: 15,
+        height: 15,
+        dx : this.direction == 'ar' ? 10 : 0
+      });
+    }
 
 
     // yAxis.data.setAll(newData);

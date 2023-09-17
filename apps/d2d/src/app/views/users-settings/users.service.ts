@@ -91,7 +91,7 @@ export interface filterOption {
 export const teamsOptions = [
   {
     id: 1,
-    name: 'Filed Operation',
+    name: 'Field Operation',
   },
   {
     id: 2,

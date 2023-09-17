@@ -5,7 +5,7 @@
 </button>
 
 <div class="calendar-holder" *ngIf="showCalendar">
-  <div class="calendar">
+  <div class="calendar" [ngStyle]="langDirection == 'en' ? {'right': '0%'} : {'left' : '0%'}">
 
     <div class="calendar-header">
       <p class="select-date mb-1">SELECT WEEK</p>
@@ -23,9 +23,9 @@
 
     <div class="weeks-view" *ngIf="showWeeksView"> <!-- *ngIf="showWeeksView" -->
       <p class="current-year show-hide-text">
-        <i class="fa fa-chevron-left" [class.disabled]="selectedYearObject.id == 0" (click)="moveYearBack()"></i>
+        <i [class]="langDirection === 'en' ? 'fa fa-chevron-left' : 'fa fa-chevron-right'" [class.disabled]="selectedYearObject.id == 0" (click)="moveYearBack()"></i>
         <b>{{(selectedYearNoOne && selectedYearNoTwo) || selectedYearNoOne }}</b>
-        <i class="fa fa-chevron-right" [class.disabled]="selectedYearObject.id == yearsArr.length-1" (click)="moveYearForward()"></i>
+        <i [class]="langDirection === 'en' ? 'fa fa-chevron-right' : 'fa fa-chevron-left'" [class.disabled]="selectedYearObject.id == yearsArr.length-1" (click)="moveYearForward()"></i>
       </p>
       <ul>
         <li *ngFor="let item of [].constructor(53); let i = index" (click)="setWeek(i+1)" [ngClass]="{'week-chosen' : selectedWeekNo == (i+1) || selectedWeekNoOne == (i+1) || selectedWeekNoTwo == (i+1), 'week-in-range' : (i+1) > +selectedWeekNoOne && (i+1) < +selectedWeekNoTwo}">

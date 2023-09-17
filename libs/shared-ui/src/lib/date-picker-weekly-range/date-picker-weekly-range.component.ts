@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import * as moment from 'moment';
 import { YearRangeObj, YearObj } from '../date-picker-weekly/date-picker-weekly.component';
+import { LanguageManagerService } from '@stc-apps/lng-selector';
 
 @Component({
   selector: 'stc-apps-date-picker-weekly-range',
@@ -16,6 +17,7 @@ export class DatePickerWeeklyRangeComponent implements OnInit{
 
   isFirst: boolean = true;
   showCalendar: boolean = false;
+  langDirection: string | null= localStorage.getItem("language");;
 
   showYearsView: boolean = true;
   showWeeksView: boolean = false;
@@ -45,8 +47,15 @@ export class DatePickerWeeklyRangeComponent implements OnInit{
 
   showSaveButton: boolean = false;
 
+  constructor(private langService: LanguageManagerService){}
+
   ngOnInit(){
     this.populateYears()
+
+    this.langService.currentLanguageStream.subscribe(res => {
+      this.langDirection = res;
+      console.log("THE LANG", this.langDirection)
+    })
   }
 
   populateYears(){
@@ -116,20 +125,16 @@ export class DatePickerWeeklyRangeComponent implements OnInit{
 
   setWeek(week: string | number){
 
-    if(this.selectedWeekOne == ""){
+    if(this.selectedWeekOne == "" || Number(week) < Number(this.selectedWeekNoOne)){
       this.selectedWeekOne = `Week No: ${week.toString()}`
       this.selectedWeekNoOne = week.toString()
-
       this.showSaveButton = false;
-
     }else{
       this.selectedDateTwo = this.selectedYearObject.yearNum.toString()
       this.selectedYearNoTwo = this.selectedYearObject.yearNum
       this.selectedWeekTwo = `Week No: ${week.toString()}`
       this.selectedWeekNoTwo = week.toString()
-
       this.showSaveButton = true;
-
     }
   }
 

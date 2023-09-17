@@ -12,7 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 export class LanguageManagerService {
   //@Input() appSettings: AppSettings = appSettings;
   appSettings: AppSettings = appSettings;
-  currentLanguageStream: BehaviorSubject<string> = new BehaviorSubject('en')
+  currentLanguageStream: BehaviorSubject<string> = new BehaviorSubject(<string>localStorage.getItem("language"))
 
   constructor(@Inject(DOCUMENT) private document: Document) {
     this.init();
