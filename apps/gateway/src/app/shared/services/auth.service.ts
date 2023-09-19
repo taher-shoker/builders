@@ -64,6 +64,8 @@ export class AuthService {
     const token = this.cookieService.get('token')
       ? this.cookieService.get('token')
       : '';
+    this._isLoggedIn$.next(!!token);
+
     if (token) {
       this.getUserData();
     }
@@ -141,6 +143,8 @@ export class AuthService {
         } else {
           console.log('User have permision for CEO dashborad app');
         }
+      } else {
+        this.router.navigate(['/home']);
       }
     });
   }

@@ -7,6 +7,7 @@ import {
 } from '@angular/forms';
 import { AuthService } from '../../shared/services/auth.service';
 import { environment } from '../../../environments/environment';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'stc-apps-login',
@@ -18,10 +19,12 @@ export class LoginComponent implements OnInit {
   isLoading = false;
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService
+    private authService: AuthService,
+    private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
+    this.cookieService.removeAll();
     if (environment.production) {
       this.authService.navigateToLogin();
     } else {
