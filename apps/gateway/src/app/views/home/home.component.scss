@@ -9,7 +9,7 @@
     width: 1px;
     height: 85%;
     background-color: rgba($color: $greyColor, $alpha: 0.7);
-    top: 50px;
+    top: 12px;
     left: -65px;
     position: absolute;
   }
@@ -20,7 +20,9 @@
     display: flex;
     align-items: center;
     padding-inline-start: 25px;
+
     a {
+      position: relative;
       width: 100%;
       text-decoration: none;
       color: $stcColor;

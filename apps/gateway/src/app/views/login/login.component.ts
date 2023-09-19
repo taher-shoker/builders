@@ -5,6 +5,8 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
+import { AuthService } from '../../shared/services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'stc-apps-login',
@@ -13,20 +15,32 @@ import {
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  constructor(private formBuilder: FormBuilder) {}
+  isLoading = false;
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
-    this.loginForm();
+    if (environment.production) {
+      this.authService.navigateToLogin();
+    } else {
+      this.loginForm();
+    }
   }
+
   loginForm() {
     this.form = this.formBuilder.group({
-      email: new FormControl('', [Validators.required]),
+      username: new FormControl('', [Validators.required]),
       password: new FormControl('', Validators.required),
     });
   }
   onSubmit(): void {
+    this.isLoading = true;
     if (this.form.valid) {
-      console.log(this.form.value);
+      this.authService.login(this.form.value).subscribe((res: any) => {
+        this.isLoading = false;
+      });
     }
   }
 }

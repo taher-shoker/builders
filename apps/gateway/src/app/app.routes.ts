@@ -5,12 +5,15 @@ import { BrowserModule } from '@angular/platform-browser';
 // Import Containers
 import { LoginComponent } from './views/login/login.component';
 import { HomeComponent } from './views/home/home.component';
+import { authGuard } from './shared/guards/auth.guard';
+import { LoggedInAuthGuard } from './shared/guards/logedInAuth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
     data: { breadcrumb: 'home' },
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -26,10 +29,14 @@ const routes: Routes = [
       },
     ],
   },
-  { path: 'login', component: LoginComponent },
+  {
+    path: 'login',
+    component: LoginComponent,
+    canActivate: [LoggedInAuthGuard],
+  },
 ];
 @NgModule({
-  imports: [BrowserModule, RouterModule.forRoot(routes)],
+  imports: [BrowserModule, RouterModule.forRoot(routes, { useHash: true })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

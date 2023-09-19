@@ -24,7 +24,7 @@
             <form [formGroup]="form">
               <div class="mb-2">
                 <stc-apps-input [inputName]="'email'" [className]="'stc-input outline-input'"
-                  [inputPlaceholder]="'Enter your email'" [inputId]="'email'" formControlName="email"
+                  [inputPlaceholder]="'Enter your email'" [inputId]="'email'" formControlName="username"
                   [inputIcon]="'fa-user'"></stc-apps-input>
               </div>
               <div class="mb-2">
@@ -33,8 +33,8 @@
                   formControlName="password" [inputIcon]="'fa-lock'"></stc-apps-input>
               </div>
 
-              <stc-apps-button [buttonText]="'login' | translate" [buttonType]="'primary'" [buttonDisable]="false"
-                (btnClick)="onSubmit()"></stc-apps-button>
+              <stc-apps-button [loading]="isLoading" [buttonText]="'login' | translate" [buttonType]="'primary'"
+                [buttonDisable]="false" (btnClick)="onSubmit()"></stc-apps-button>
             </form>
             <span class="divider-line my-4">{{ 'or' | translate }}</span>
             <stc-apps-button [buttonType]="'stc-color-outline'" [buttonText]="'login_with_stc' | translate"

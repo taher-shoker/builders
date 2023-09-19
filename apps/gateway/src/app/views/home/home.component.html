@@ -13,7 +13,7 @@
           <div class="card-img">
             <img src="assets/images/login/stc.png" alt="stc" />
           </div>
-          <h4 class="">{{ 'Welcome, Mohamed!' }}</h4>
+          <h4 class="">Welcome, {{authService.loggedInUser?.name}}</h4>
           <p>Let’s discover the applications</p>
 
         </div>
@@ -24,30 +24,12 @@
 
           <div class="col-md-8 offset-md-2">
             <ul class="apps-box ">
-              <li>
-                <a href="#">
-                  CCEX Workspace
-                </a>
-              </li>
-              <li>
-                <a href="http://localhost:59056/#/login">
-                  Fraud Management
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  DI Dashboard
-
-                </a>
-              </li>
-              <li>
-                <a [routerLink]="['/home/users-setting']">
-                  Tech & Ops Dashboard
+              <li *ngFor="let item of authService.availableSystems">
+                <a href={{item.systemUrl}}>
+                  {{item.displayName}}
                 </a>
               </li>
             </ul>
-
-
           </div>
         </div>
       </div>
