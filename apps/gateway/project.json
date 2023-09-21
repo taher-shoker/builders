@@ -15,6 +15,7 @@
         "main": "apps/gateway/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/gateway/tsconfig.app.json",
+        "allowedCommonJsDependencies": ["lodash"],
         "assets": [
           "apps/gateway/src/assets",
           "apps/gateway/src/favicon.ico",

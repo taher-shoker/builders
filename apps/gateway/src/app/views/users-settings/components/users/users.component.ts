@@ -7,7 +7,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { EmpFilter, UsersService, teamsOptions } from '../../users.service';
+import { User, UserGroup, UsersService } from '../../users.service';
+import * as _ from 'lodash';
 
 export interface ColumnsSchema {
   key: string;
@@ -77,7 +78,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
   privilege!: any[];
   teams!: any[];
   filterSelect!: FormGroup;
-  empFilters: EmpFilter[] = [];
   @ViewChild(MatSort, { static: true })
   sort!: MatSort;
   @ViewChild(MatPaginator, { static: true })
@@ -91,6 +91,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     private languageManagerService: LanguageManagerService,
     private toastr: ToastrService
   ) {}
+
   addUserNavigate(): void {
     this.router.navigate(['./add-user'], { relativeTo: this.route });
   }
@@ -98,16 +99,16 @@ export class UsersComponent implements OnInit, AfterViewInit {
   getUsersListing() {
     this.userService.getUsers().subscribe((res: any) => {
       this.list = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Admins'
+        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
       );
       this.dataSource.data = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Admins'
+        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
       );
       this.dataSourceFilters.data = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Admins'
+        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
       );
       this.totalUsers = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Admins'
+        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
       ).length;
 
       this.getCreatorUsersLength(res);
@@ -120,37 +121,58 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = searchVal.trim().toLowerCase();
   }
 
-  getCreatorUsersLength(arr: any) {
-    const list: any[] = [];
-    arr.map((currentValue: any, index: any) => {
-      if (currentValue.userGroups[0].groupName === 'Creators') {
-        list.push(currentValue);
-      }
+  getCreatorUsersLength(users: User[]) {
+    const sys = this.userService.sysName;
+    const list: UserGroup[] = [];
+    _.forEach(users, function (value) {
+      _.forEach(value.userGroups, function (group) {
+        group.roles[0].system.name === sys &&
+          group.roles[0].roleName === 'CREATORS' &&
+          list.push(group);
+      });
     });
     this.creatorUsers = list.length;
   }
 
-  getApproverUsersLength(arr: any) {
-    const list: any[] = [];
-    arr.map((currentValue: any, index: any) => {
-      if (currentValue.userGroups[0].groupName === 'Approvers') {
-        list.push(currentValue);
-      }
+  getApproverUsersLength(users: User[]) {
+    const sys = this.userService.sysName;
+    const list: UserGroup[] = [];
+    _.forEach(users, function (value) {
+      _.forEach(value.userGroups, function (group) {
+        group.roles[0].system.name === sys &&
+          group.roles[0].roleName === 'APPROVERS' &&
+          list.push(group);
+      });
     });
     this.approverUsers = list.length;
   }
+
   getRoles() {
-    this.userService.getGroups().subscribe((res) => {
-      const x = res;
-      // array without ADMINS Item
-      x.pop();
-      this.privilege = x;
-    });
+    this.privilege = this.userService.getRoles();
   }
+
   getTeams() {
-    this.userService.getTeams().subscribe((res) => {
-      this.teams = res;
+    this.teams = this.userService.getTeams();
+  }
+  getUserPrivilege(user: User) {
+    const sys = this.userService.sysName;
+    let x = '';
+    _.forEach(user.userGroups, (group) => {
+      if (group.roles[0].system.name === sys) {
+        x = group.roles[0].roleName;
+      }
     });
+    return x;
+  }
+  getUserTeam(user: User) {
+    const sys = this.userService.sysName;
+    let x = '';
+    _.forEach(user.userGroups, (group) => {
+      if (group.roles[0].system.name === sys) {
+        x = group.groupName;
+      }
+    });
+    return x;
   }
   handleSelectChange(value: any, dropDwonType: string) {
     if (dropDwonType === 'team') {
@@ -170,9 +192,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.getTeams();
       } else {
         if (value.id === 1) {
-          this.teams = teamsOptions.filter((t: any) => t.id !== 4);
+          this.teams = this.userService
+            .getTeams()
+            .filter((t: any) => t.id !== 4);
         } else {
-          this.teams = teamsOptions.filter((t: any) => t.id === 4);
+          this.teams = this.userService
+            .getTeams()
+            .filter((t: any) => t.id === 4);
         }
         this.dataSource.data = this.list.filter(
           (x: any) => x.userGroups[0].id == value?.id
@@ -181,20 +207,20 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
   ngOnInit() {
-    //this.getUsersListing();
+    this.getUsersListing();
     this.filterSelect = new FormGroup({
       teamSelect: new FormControl(''),
     });
-    this.getRoles();
+    this.userService.getGroups();
     this.getTeams();
 
     this.dataSource.paginator = this.paginator;
-    this.bannerDataService.updateData({ title: 'users_setting', text: '' });
+    this.bannerDataService.updateData({ title: 'users setting', text: '' });
 
     this.dataSource.filterPredicate = function (record, filter) {
       return (
-        record.name.toLocaleLowerCase().indexOf(filter) != -1 ||
-        record.email.toLocaleLowerCase().indexOf(filter) != -1
+        record.name?.toLocaleLowerCase().indexOf(filter) != -1 ||
+        record.email?.toLocaleLowerCase().indexOf(filter) != -1
       );
     };
   }

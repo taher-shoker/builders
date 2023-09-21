@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService } from '@stc-apps/shared-ui';
-import { UsersService } from '../../users.service';
+import { User, UsersService } from '../../users.service';
 
 @Component({
   selector: 'stc-apps-edit-user',
@@ -10,7 +10,7 @@ import { UsersService } from '../../users.service';
 })
 export class EditUserComponent implements OnInit {
   userId!: string;
-  userData = {};
+  userData!: User;
   constructor(
     public router: Router,
     public route: ActivatedRoute,
@@ -26,6 +26,6 @@ export class EditUserComponent implements OnInit {
   ngOnInit() {
     this.userId = this.route.snapshot.params['id'];
     this.getUser(this.userId);
-    this.bannerDataService.updateData({ title: 'edit_user', text: '' });
+    this.bannerDataService.updateData({ title: '', text: '' });
   }
 }

@@ -14,7 +14,7 @@ import {
 import { Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { ToastrService } from 'ngx-toastr';
-import { UsersService, teamsOptions } from '../../users.service';
+import { User, UsersService } from '../../users.service';
 
 @Component({
   selector: 'stc-apps-user-form',
@@ -23,12 +23,13 @@ import { UsersService, teamsOptions } from '../../users.service';
 })
 export class UserFormComponent implements OnInit, OnChanges {
   @Input() isEditing!: boolean;
-  @Input() data!: any;
+  @Input() data!: User;
 
   form!: FormGroup;
-
-  privilages = [];
+  privilages: any[] = [];
   teams: any[] = [];
+  selectedPrivilege = '';
+  selectedTeam = '';
   constructor(
     private formBuilder: FormBuilder,
     private router: Router,
@@ -100,42 +101,37 @@ export class UserFormComponent implements OnInit, OnChanges {
       });
     }
   }
+
   getGroups() {
-    this.userService.getGroups().subscribe((res) => {
-      res.pop();
-      this.privilages = res;
-      if (this.data) {
-        this.data.userGroup = this.privilages.filter(
-          (p: any) => p.id === this.data?.userGroups[0]?.id
-        )[0];
-      }
-    });
+    this.privilages = this.userService.getRoles();
+    if (this.data) {
+      this.selectedPrivilege = this.privilages.filter(
+        (p: any) => p.id === this.data?.userGroups[0]?.roles[0]?.id
+      )[0];
+    }
   }
 
   getTeams(userGroup: any) {
-    this.userService.getTeams().subscribe((res) => {
-      if (userGroup?.id === 1) {
-        this.teams = res.filter((t: any) => t.id !== 4);
-      } else {
-        this.teams = res.filter((t: any) => t.id === 4);
-      }
-      this.data.teamDto = this.teams.filter(
-        (x: any) => x.id === this.data.teamDto.id
-      )[0];
-    });
+    if (userGroup?.id === 1) {
+      this.teams = this.userService.getTeams().filter((t: any) => t.id !== 4);
+    } else {
+      this.teams = this.userService.getTeams().filter((t: any) => t.id === 4);
+    }
   }
 
   cancel() {
     this.router.navigate(['./users-setting']);
   }
+
   handleTeam(value: any) {
     this.form?.get('teamDto')?.setValue('');
-    if (value.id === 1) {
-      this.teams = teamsOptions.filter((t: any) => t.id !== 4);
+    if (value.id === 2) {
+      this.teams = this.userService.getTeams().filter((t: any) => t.id !== 4);
     } else {
-      this.teams = teamsOptions.filter((t: any) => t.id === 4);
+      this.teams = this.userService.getTeams().filter((t: any) => t.id === 4);
     }
   }
+
   restFormWithValue(data: any) {
     this.getGroups();
     this.getTeams(data?.userGroups[0]);

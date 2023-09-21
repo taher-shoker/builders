@@ -14,6 +14,12 @@ export class HomeComponent implements OnInit {
     public authService: AuthService
   ) {}
   ngOnInit(): void {
+    if (
+      JSON.parse(this.cookieService.get('system') || '') ===
+      'FRAUD_ManagementUsers'
+    ) {
+      this.authService.navigateToLFraudPages();
+    }
     this.apps = this.authService.availableSystems;
   }
 }

@@ -1,8 +1,77 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { environment } from '../../../environments/environment';
+import * as _ from 'lodash';
 
+import { environment } from '../../../environments/environment';
+import { CookieService } from 'ngx-cookie';
+const data = [
+  {
+    id: 2,
+    groupName: 'Digital Care',
+    roles: [
+      {
+        id: 2,
+        roleName: 'CREATORS',
+        system: {
+          id: 2,
+          name: 'FRAUD_ManagementUsers',
+        },
+      },
+    ],
+  },
+  {
+    id: 4,
+    groupName: 'Field Operation',
+    roles: [
+      {
+        id: 2,
+        roleName: 'CREATORS',
+        system: {
+          id: 2,
+          name: 'FRAUD_ManagementUsers',
+        },
+      },
+    ],
+  },
+  {
+    id: 1,
+    groupName: 'Customer Care',
+    roles: [
+      {
+        id: 2,
+        roleName: 'CREATORS',
+        system: {
+          id: 2,
+          name: 'FRAUD_ManagementUsers',
+        },
+      },
+    ],
+  },
+  {
+    id: 5,
+    groupName: 'Fraud',
+    roles: [
+      {
+        id: 1,
+        roleName: 'APPROVERS',
+        system: {
+          id: 2,
+          name: 'FRAUD_ManagementUsers',
+        },
+      },
+    ],
+  },
+];
+
+export interface UserGroup {
+  id: number;
+  groupName: string;
+  roles: {
+    id: number;
+    roleName: string;
+    system: { id: number; name: string };
+  }[];
+}
 @Injectable({
   providedIn: 'root',
 })
@@ -10,18 +79,23 @@ export class UsersService {
   baseUrl = environment.apiUrl;
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
+  allGroups: UserGroup[] = [];
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
-  constructor(private http: HttpClient) {}
+  sysName = JSON.parse(this.cookieService.get('system') || '');
+  sysParam = new HttpParams().set('system', this.sysName);
 
-  getUsers(filterData?: any) {
-    return this.http.get(`${this.endpoint}/users`, {
-      params: filterData,
+  getUsers() {
+    const usersParams = new HttpParams().set('system', this.sysName);
+    return this.http.get<User[]>(`${this.endpoint}/users`, {
+      params: usersParams,
     });
   }
 
   getUser(id: string) {
-    const options = {};
-    return this.http.get<User>(`${this.endpoint}/users/${id}`, options);
+    return this.http.get<User>(`${this.endpoint}/users/id/${id}`, {
+      params: this.sysParam,
+    });
   }
 
   createUser(data: any) {
@@ -42,16 +116,25 @@ export class UsersService {
   }
 
   getGroups() {
-    const options = {};
-    return this.http.get<any>(`${this.endpoint}/groups`, options);
-  }
-  getRoles() {
-    const options = {};
-    return this.http.get<any>(`${this.endpoint}/users/roles`, options);
+    this.http
+      .get<UserGroup[]>(`${this.endpoint}/groups`, {
+        params: this.sysParam,
+      })
+      .subscribe((res) => {
+        this.allGroups = res;
+      });
   }
   getTeams() {
-    const options = {};
-    return this.http.get<any>(`${this.endpoint}/users/teams`, options);
+    const allTeams = this.allGroups.map((t) => {
+      return { id: t.id, name: t.groupName };
+    });
+    return _.uniq(allTeams);
+  }
+  getRoles() {
+    const allRoles = this.allGroups.map((t) => {
+      return { id: t.roles[0].id, groupName: t.roles[0].roleName };
+    });
+    return _.uniqWith(allRoles, _.isEqual);
   }
 
   getKeyByValue(obj: any, status: string) {
@@ -63,8 +146,8 @@ export interface User {
   id?: number | undefined;
   name: string;
   email: string;
-  userGroups: any;
-  teamDto: any;
+  username: string;
+  userGroups: UserGroup[];
 }
 
 export type Attachment = {
@@ -74,35 +157,8 @@ export type Attachment = {
   label: string;
 };
 
-export interface EmpFilter {
-  name: string;
-  options: any[];
-  defaultValue: string;
-  labelName: string;
-  key: string;
-}
-
 export interface filterOption {
   name: string;
   value: string;
   isdefault: boolean;
 }
-
-export const teamsOptions = [
-  {
-    id: 1,
-    name: 'Filed Operation',
-  },
-  {
-    id: 2,
-    name: 'Customer Care',
-  },
-  {
-    id: 3,
-    name: 'Digital Care',
-  },
-  {
-    id: 4,
-    name: 'Fraud',
-  },
-];

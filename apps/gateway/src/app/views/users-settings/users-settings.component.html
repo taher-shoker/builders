@@ -1,5 +1,5 @@
 <stc-apps-header [userName]="userName" [sidebarLogoSrc]="sidebarLogoSrc" [logoSrc]="logoSrc" [allItems]="navItems"
-  [showLang]="false"></stc-apps-header>
+  [showLang]="false" (logOut)="logOut()" (backToHome)="backToHome()"></stc-apps-header>
 <stc-apps-breadcrumb [bgColor]="'primary'"></stc-apps-breadcrumb>
 <stc-apps-banner [pageTitle]="title"></stc-apps-banner>
 <router-outlet></router-outlet>

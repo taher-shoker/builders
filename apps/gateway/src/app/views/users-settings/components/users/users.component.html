@@ -92,10 +92,10 @@
             </div>
           </div>
           <span class="cell-text" *ngSwitchCase="'userGroups'">
-            {{ element.userGroups[0].groupName }}
+            {{ getUserPrivilege(element) }}
           </span>
           <span class="cell-text" *ngSwitchCase="'teamDto'">
-            {{ element[col.key]?.name }}
+            {{ getUserTeam(element) }}
           </span>
           <div class="btns-action" *ngSwitchCase="'actions'">
             <stc-apps-dialog id="{{ element.id }}">

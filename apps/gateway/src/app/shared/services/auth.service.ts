@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, of, tap } from 'rxjs';
+import { BehaviorSubject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie';
 import { environment } from '../../../environments/environment';
@@ -82,6 +82,11 @@ export class AuthService {
       );
   }
 
+  isAdminUser() {
+    return this.loggedUserStream
+      .getValue()
+      ?.userGroups[0].roles[0].roleName.includes('ADMINS');
+  }
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);
     this.user.next(user);
@@ -98,7 +103,7 @@ export class AuthService {
         if (res.dto.systems.length > 0) {
           if (specialSys.some((o) => res.dto.systems.includes(o))) {
             this.setLoggedInUser();
-            this.router.navigate(['/home']);
+            this.router.navigate(['/apps']);
           }
         } else {
           this.cookieService.removeAll();
@@ -123,15 +128,6 @@ export class AuthService {
     return this.http.get<System[]>(`${this.baseUrl}/users/systems`);
   }
 
-  navigateToLogin() {
-    if (environment.production) {
-      const routeToLogin = window.location.origin + '/cem/reporting/login';
-      window.location.href = routeToLogin;
-    } else {
-      this.router.navigate(['/login']);
-    }
-  }
-
   setAvailableSystems(res: LoggedUser) {
     this.getAllSystem().subscribe((resSys) => {
       this.filterSys(resSys, res);
@@ -144,7 +140,7 @@ export class AuthService {
           console.log('User have permision for CEO dashborad app');
         }
       } else {
-        this.router.navigate(['/home']);
+        this.router.navigate(['/apps']);
       }
     });
   }
@@ -154,13 +150,29 @@ export class AuthService {
     this.cookieService.put('fraud-roles', res.userGroups[0].roles[0].roleName);
     this.cookieService.put('fraud-user', JSON.stringify(res));
     this.cookieService.put(
+      'system',
+      JSON.stringify(res.userGroups[0].roles[0].system.name)
+    );
+
+    this.cookieService.put(
       'login-path',
       JSON.stringify(window.location.origin)
     );
+    this.navigateToLFraudPages();
+  }
 
-    window.location.href = this.availableSystems[0].systemUrl
-      ? this.availableSystems[0].systemUrl
-      : 'http://localhost:51635/#/home';
+  // function to handle navigate Fraud Management System
+  navigateToLFraudPages() {
+    if (
+      this.loggedUserStream?.getValue()?.userGroups[0].roles[0].roleName ===
+      'ADMINS'
+    ) {
+      this.router.navigate(['users-setting']);
+    } else {
+      window.location.href = this.availableSystems[0]?.systemUrl
+        ? this.availableSystems[0]?.systemUrl
+        : 'http://localhost:51635/#/home';
+    }
   }
 
   // function to handle DI Dashboard System
@@ -177,6 +189,21 @@ export class AuthService {
       });
     });
     this.availableSystems = filteredSys;
+  }
+
+  logout() {
+    this.user.next(null);
+    this.cookieService.remove('token');
+    this.loggedInUser = null;
+    this.navigateToLogin();
+  }
+  navigateToLogin() {
+    if (environment.production) {
+      const routeToLogin = window.location.origin + '/cem/reporting/login';
+      window.location.href = routeToLogin;
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 }
 
