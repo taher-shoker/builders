@@ -1,15 +1,21 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { Router, RouterModule, Routes } from '@angular/router';
+import {
+  RouteReuseStrategy,
+  Router,
+  RouterModule,
+  Routes,
+} from '@angular/router';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
 import { AdminAuthGuard } from './services/admin.auth.guard';
 import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
+import { AppRouteReuseStrategy } from './views/users-settings/AppRouteReuseStrategy';
 
 // Import Containers
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: '',
     component: HomeComponent,
@@ -35,8 +41,14 @@ const routes: Routes = [
   },
 ];
 @NgModule({
-  imports: [BrowserModule, RouterModule.forRoot(routes, { useHash: true })],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(routes, {
+      useHash: true,
+    }),
+  ],
   exports: [RouterModule],
+  providers: [{ provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }],
 })
 export class AppRoutingModule {
   constructor(private router: Router) {}

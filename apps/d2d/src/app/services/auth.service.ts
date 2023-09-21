@@ -70,7 +70,11 @@ export class AuthService {
   }
 
   isAdminUser() {
-    return this.loggedUserStream.getValue()?.roles.includes('ADMINS');
+    return (
+      this.loggedUserStream.getValue()?.roles.includes('ADMINS') ||
+      JSON.parse(this.cookieService.get('fraud-user') || '')['roles'][0] ===
+        'ADMINS'
+    );
   }
 
   autoLogin() {

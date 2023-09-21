@@ -94,7 +94,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
               x.userGroups[0]?.groupName !== 'Admins'
           );
           this.handleUser(this.caseData, this.users);
-
         });
       }
     });
@@ -244,7 +243,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       },
     };
 
-
     this.closeForm.reset();
     this.infoForm.reset();
     this.uploadedFile = [];
@@ -382,7 +380,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   handleTeam(caseData?: Case, team?: any) {
     if (caseData && team) {
-
       this.selectedTeam = team.filter(
         (t: any) => t.name === this.caseData?.creatorTeamName
       )[0];
@@ -391,7 +388,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
 
   handleUser(caseData?: Case, users?: any) {
     if (caseData && users) {
-
       this.selectedUser = users.filter(
         (u: any) => u.email === this.caseData?.creatorEmail
       )[0];
@@ -399,6 +395,6 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.langSub.unsubscribe();
+    this.langSub?.unsubscribe();
   }
 }

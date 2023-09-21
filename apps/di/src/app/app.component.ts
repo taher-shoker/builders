@@ -8,7 +8,7 @@ import { Component } from '@angular/core';
 export class AppComponent {
   urlHome!: string;
   title = { title: 'home', text: '' };
-  userName = 'taher shoker';
+  userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
   navItems = [
@@ -42,5 +42,4 @@ export class AppComponent {
   backToHome() {
     // this.router.navigate([this.urlHome]);
   }
-
 }
