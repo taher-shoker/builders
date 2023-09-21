@@ -54,6 +54,7 @@ export class AuthService {
 
   loggedUserStream: BehaviorSubject<LoggedUser | null> =
     new BehaviorSubject<LoggedUser | null>(null);
+  isLoading = false;
 
   constructor(
     private http: HttpClient,

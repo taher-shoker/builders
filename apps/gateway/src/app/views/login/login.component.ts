@@ -16,10 +16,9 @@ import { CookieService } from 'ngx-cookie';
 })
 export class LoginComponent implements OnInit {
   form!: FormGroup;
-  isLoading = false;
   constructor(
     private formBuilder: FormBuilder,
-    private authService: AuthService,
+    public authService: AuthService,
     private cookieService: CookieService
   ) {}
 
@@ -38,12 +37,24 @@ export class LoginComponent implements OnInit {
       password: new FormControl('', Validators.required),
     });
   }
+
   onSubmit(): void {
-    this.isLoading = true;
+    this.authService.isLoading = true;
     if (this.form.valid) {
       this.authService.login(this.form.value).subscribe((res: any) => {
-        this.isLoading = false;
+        this.authService.isLoading = false;
       });
+    }
+  }
+
+  keyDownFunction(event: KeyboardEvent) {
+    if (event.keyCode === 13) {
+      this.authService.isLoading = true;
+      if (this.form.valid) {
+        this.authService.login(this.form.value).subscribe((res: any) => {
+          this.authService.isLoading = false;
+        });
+      }
     }
   }
 }

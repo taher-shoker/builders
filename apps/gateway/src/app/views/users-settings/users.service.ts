@@ -98,6 +98,11 @@ export class UsersService {
     });
   }
 
+  getUserByUserName(userName: string) {
+    const options = {};
+    // return this.http.get<User>(`${this.endpoint}/users/${id}`, options);
+  }
+
   createUser(data: any) {
     const options = {};
 

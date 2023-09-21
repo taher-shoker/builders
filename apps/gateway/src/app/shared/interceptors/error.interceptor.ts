@@ -10,13 +10,15 @@ import { catchError } from 'rxjs/operators';
 // import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
   constructor(
     // private authService: AuthService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private authService: AuthService
   ) {}
 
   intercept(
@@ -25,12 +27,11 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        console.warn("EL ERR", err)
+        console.warn('EL ERR', err);
         if (err.status === 401) {
-
-          if(err.error.status === "UNAUTHORIZED"){
+          if (err.error.status === 'UNAUTHORIZED') {
             this.router.navigate(['/unauthorized-page']);
-          }else{
+          } else {
             // auto logout if 401 response returned from api
             // this.authService.logout();
           }
@@ -40,6 +41,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.router.navigate(['/unauthorized-page']);
         }
         const error = err.message;
+        this.authService.isLoading = false;
         this.toastr.error(
           err?.error?.debugMessage ? err?.error?.debugMessage : error
         );
