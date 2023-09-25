@@ -15,8 +15,8 @@ export class AddUserComponent implements OnInit {
 
   ngOnInit() {
     this.bannerDataService.updateData({
-      title: 'add_new_user',
-      text: 'add_user_txt',
+      title: 'add new user',
+      text: 'Please add actual data and be sure to add all data',
     });
   }
 }

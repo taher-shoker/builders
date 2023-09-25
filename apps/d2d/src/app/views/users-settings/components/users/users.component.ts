@@ -223,15 +223,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
   confirmDelete() {
     this.userService.deleteUser(this.userId).subscribe((res) => {
-      const msgOfToaster =
-        this.languageManagerService.getSavedLanguage() == 'ar'
-          ? 'تم حذف المستخدم بنجاح'
-          : 'User is deleted successfully';
-
       if (res) {
         this.dialogService.close();
         this.getUsersListing();
-        this.toastr.success(msgOfToaster);
+        this.toastr.success('User is deleted successfully');
       }
     });
   }

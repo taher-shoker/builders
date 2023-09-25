@@ -14,12 +14,7 @@ import { AuthService } from '../services/auth.service';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
-  constructor(
-    // private authService: AuthService,
-    private toastr: ToastrService,
-    private router: Router,
-    private authService: AuthService
-  ) {}
+  constructor(private toastr: ToastrService, private router: Router) {}
 
   intercept(
     request: HttpRequest<any>,
@@ -41,7 +36,6 @@ export class ErrorInterceptor implements HttpInterceptor {
           this.router.navigate(['/unauthorized-page']);
         }
         const error = err.message;
-        this.authService.isLoading = false;
         this.toastr.error(
           err?.error?.debugMessage ? err?.error?.debugMessage : error
         );

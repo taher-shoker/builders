@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { CookieService } from 'ngx-cookie';
 import { Router } from '@angular/router';
@@ -8,14 +8,14 @@ import { Router } from '@angular/router';
   templateUrl: './users-settings.component.html',
   styleUrls: ['./users-settings.component.scss'],
 })
-export class UsersSettingsComponent {
+export class UsersSettingsComponent implements OnInit {
   constructor(
     private authService: AuthService,
     private cookieService: CookieService,
     private router: Router
   ) {}
   title = 'users settings';
-  userName = 'taher shoker';
+  userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
 
@@ -26,6 +26,11 @@ export class UsersSettingsComponent {
       icon: 'fa-user-cog',
     },
   ];
+
+  ngOnInit() {
+    this.userName = this.cookieService.get('displayName') || '';
+  }
+
   backToHome() {
     this.router.navigate(['/users-setting']);
   }
