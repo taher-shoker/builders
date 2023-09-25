@@ -38,7 +38,7 @@
             </form>
             <span class="divider-line my-4">{{ 'or' | translate }}</span>
             <stc-apps-button [buttonType]="'stc-color-outline'" [buttonText]="'login_with_stc' | translate"
-              [buttonDisable]="false"></stc-apps-button>
+              [buttonDisable]="false" (btnClick)="loginWithSSO()"></stc-apps-button>
           </div>
         </div>
       </div>

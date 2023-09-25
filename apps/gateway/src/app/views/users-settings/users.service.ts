@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
+import { ActivatedRoute } from '@angular/router';
 const data = [
   {
     id: 2,
@@ -80,9 +81,13 @@ export class UsersService {
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
   allGroups: UserGroup[] = [];
-  constructor(private http: HttpClient, private cookieService: CookieService) {}
+  constructor(
+    private http: HttpClient,
+    private cookieService: CookieService,
+    private route: ActivatedRoute
+  ) {}
 
-  sysName = JSON.parse(this.cookieService.get('system') || '');
+  sysName = JSON.parse(this.cookieService.get('granted-systems') || '')[0];
   sysParam = new HttpParams().set('system', this.sysName);
 
   getUsers() {

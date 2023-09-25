@@ -17,7 +17,7 @@ export class HomeComponent implements OnInit {
 
   urlHome!: string;
   title = { title: 'home', text: '' };
-  userName = 'taher shoker';
+  userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
   navItems = [
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.authService.getUserData();
 
-    this.userName = this.cookieService.get('displayName') || '';
+    this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       if (res?.roles) {
         const items = [];
