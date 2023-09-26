@@ -6,10 +6,12 @@ export const environment = {
   systems: {
     ceo_system:
       'http://localhost:9084/cem/reporting/apigateway/api/auth/authenticatehub?hub_username=',
-    tp_system: 'http://localhost:4200/pages/geo-eye',
-    tp_admin_system: 'http://localhost:4200/system-configurations',
-    fraud_system: 'http://localhost:51635/',
-    di_system: 'https://www.google.com',
+    tp_system: 'http://localhost:9001/cem/reporting/tp/',
+    tp_admin_system:
+      'http://localhost:9001/cem/reporting/tp/system-configurations',
+    fraud_system: 'http://localhost:9001/cem/reporting/fraudworkspace/',
+    di_system: 'http://localhost:9001/cem/reporting/dtworkspace/',
   },
   sso_url: 'https://www.google.com',
+  languageFilesPath: '/cem/reporting/assets/i18n/',
 };

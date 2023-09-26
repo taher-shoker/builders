@@ -24,11 +24,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.cookieService.removeAll();
-    if (environment.production) {
-      this.authService.navigateToLogin();
-    } else {
-      this.loginForm();
-    }
+    this.loginForm();
   }
 
   loginForm() {

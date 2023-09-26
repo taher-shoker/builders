@@ -23,9 +23,10 @@ import { UsersSettingsModule } from './views/users-settings/users-settings.modul
 import { CookieModule } from 'ngx-cookie';
 import { HttpInterceptorService } from './shared/interceptors/http-interceptor.service';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
+import { environment } from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
 
 @NgModule({

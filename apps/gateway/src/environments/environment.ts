@@ -12,4 +12,5 @@ export const environment = {
     di_system: 'https://www.google.com',
   },
   sso_url: 'https://www.google.com',
+  languageFilesPath: '/assets/i18n/',
 };

@@ -313,7 +313,7 @@ export class AuthService {
   }
   navigateToLogin() {
     if (environment.production) {
-      const routeToLogin = window.location.origin + '/cem/reporting/login';
+      const routeToLogin = window.location.origin + '/cem/reporting/#/login';
       window.location.href = routeToLogin;
     } else {
       this.router.navigate(['/login']);
