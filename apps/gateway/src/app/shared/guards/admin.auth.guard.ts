@@ -21,7 +21,8 @@ export class AdminAuthGuard implements CanActivate {
       return false;
     } else if (this.authService.isAdminUser()) {
       return true;
+    } else {
+      return true;
     }
-    return false;
   }
 }

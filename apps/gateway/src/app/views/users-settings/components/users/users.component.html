@@ -1,5 +1,5 @@
 <div class="users-settings">
-  <div class="top-info">
+  <div class="top-info" *ngIf="userService.sysName !== 'DI_Management'">
     <div class="row">
       <div class="col-md-4">
         <div class="static register">
@@ -49,13 +49,13 @@
       <div class="col-md-7">
         <div class="row">
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="'privilege'" [selectType]="'filter-select-box'" [options]="privilege"
-              [labelName]="'groupName'" (selectChange)="handleSelectChange($event, 'privilege')"
-              [defaultAll]="true"></stc-apps-select-drop-down>
+            <stc-apps-select-drop-down [label]="userService.translateText('privilege')"
+              [selectType]="'filter-select-box'" [options]="privilege" [labelName]="'groupName'"
+              (selectChange)="handleSelectChange($event, 'privilege')" [defaultAll]="true"></stc-apps-select-drop-down>
           </div>
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="'team'" [selectType]="'filter-select-box'" [options]="teams"
-              (selectChange)="handleSelectChange($event, 'team')" [defaultAll]="true"
+            <stc-apps-select-drop-down [label]="userService.translateText('team')" [selectType]="'filter-select-box'"
+              [options]="teams" (selectChange)="handleSelectChange($event, 'team')" [defaultAll]="true"
               formControlName="teamSelect"></stc-apps-select-drop-down>
           </div>
         </div>
@@ -168,7 +168,7 @@
           (btnClick)="dialogService.close()"></stc-apps-button>
 
         <div class="mx-3"></div>
-        <stc-apps-button [buttonText]="'delete_user'" [buttonType]="'primary'"
+        <stc-apps-button [buttonText]="'delete user'" [buttonType]="'primary'"
           (btnClick)="confirmDelete()"></stc-apps-button>
       </div>
     </div>

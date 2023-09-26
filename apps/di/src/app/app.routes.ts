@@ -10,7 +10,6 @@ export const appRoutes: Route[] = [
   {
     path: 'users-setting',
     component: HomeComponent,
-    canActivate: [AdminAuthGuard],
   },
   {
     path: 'trend',

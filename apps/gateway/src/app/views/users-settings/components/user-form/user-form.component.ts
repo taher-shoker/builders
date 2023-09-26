@@ -138,10 +138,19 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   handleTeam(value: any) {
     this.form?.get('teamDto')?.setValue('');
-    if (value.id === 2) {
-      this.teams = this.userService.getTeams().filter((t: any) => t.id !== 5);
-    } else {
-      this.teams = this.userService.getTeams().filter((t: any) => t.id === 5);
+    switch (value.groupName) {
+      case 'CREATORS':
+        this.teams = this.userService.getTeams().filter((t: any) => t.id !== 5);
+
+        break;
+      case 'APPROVERS':
+        this.teams = this.userService.getTeams().filter((t: any) => t.id === 5);
+        break;
+      case 'DI_USER':
+        this.teams = this.userService.getTeams();
+        break;
+      default:
+        break;
     }
   }
 
@@ -149,8 +158,8 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (!this.form.get('email')?.errors) {
       this.userService
         .getUserByUserName(this.form.get('email')?.value)
-        .subscribe({
-          next: (res) => {
+        .subscribe(
+          (res) => {
             if (res.userGroups.length > 0) {
               this.dialogService.open('alert-modal');
             } else {
@@ -160,8 +169,14 @@ export class UserFormComponent implements OnInit, OnChanges {
               this.enableFields();
             }
           },
-          error: (e) => console.error(e),
-        });
+          (error) => {
+            this.userService.getGroups();
+            this.getRoles();
+            this.form?.get('name')?.enable();
+            this.form?.get('jobTitle')?.enable();
+            this.enableFields();
+          }
+        );
     }
   }
 

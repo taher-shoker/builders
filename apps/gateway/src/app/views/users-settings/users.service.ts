@@ -4,6 +4,7 @@ import * as _ from 'lodash';
 
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
+import { di_labels, fraud_labels } from '../../shared/constant/labels';
 
 export interface UserGroup {
   id: number;
@@ -22,10 +23,8 @@ export class UsersService {
   endpoint = `${this.baseUrl}`;
   endpointAttachments = `${this.baseUrl}/attachment`;
   allGroups: UserGroup[] = [];
-  constructor(
-    private http: HttpClient,
-    private cookieService: CookieService,
-  ) {}
+  labels: { label: string; text: string }[] = [];
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   sysName = JSON.parse(this.cookieService.get('granted-systems') || '')[0];
   sysParam = new HttpParams().set('system', this.sysName);
@@ -88,11 +87,26 @@ export class UsersService {
   }
 
   getTeams() {
-    const allTeams = this.allGroups
-      .filter((g) => g.groupName !== 'Fraud Admins')
-      .map((t) => {
-        return { id: t.id, name: t.groupName };
-      });
+    let allTeams: { id: number; name: string }[] = [];
+
+    switch (this.sysName) {
+      case 'FRAUD_ManagementUsers':
+        allTeams = this.allGroups
+          .filter((g) => g.groupName !== 'Fraud Admins')
+          .map((t) => {
+            return { id: t.id, name: t.groupName };
+          });
+        break;
+      case 'DI_Management':
+        allTeams = this.allGroups
+          .filter((g) => g.groupName !== 'DI_Admins')
+          .map((t) => {
+            return { id: t.id, name: t.groupName };
+          });
+        break;
+      default:
+        break;
+    }
     return _.uniq(allTeams);
   }
 
@@ -128,6 +142,24 @@ export class UsersService {
   }
   getKeyByValue(obj: any, status: string) {
     return Object.keys(obj)[Object.values(obj).indexOf(status)];
+  }
+
+  // fuction for get labels accordding to the system
+  getLabels() {
+    switch (this.sysName) {
+      case 'FRAUD_ManagementUsers':
+        this.labels = fraud_labels;
+        break;
+      case 'DI_Management':
+        this.labels = di_labels;
+        break;
+      default:
+        break;
+    }
+  }
+
+  translateText(label: string) {
+    return this.labels.filter((l) => l.label === label)[0]?.text;
   }
 }
 

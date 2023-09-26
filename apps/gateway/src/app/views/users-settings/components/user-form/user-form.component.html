@@ -1,118 +1,69 @@
 <div class="user-form">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="inputs">
-      <div class="row">
+      <div class="row align-items-center">
         <div class="col-md-4">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputPlaceholder]="'user_email@stc.com.sa'"
-            [inputId]="'email'"
-            [inputName]="'email'"
-            formControlName="email"
-          ></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'user_email@stc.com.sa'" [inputId]="'email'"
+            [inputName]="'email'" formControlName="email"></stc-apps-input>
         </div>
-        <div class="col-md-2 mt-1">
-          <stc-apps-button
-            *ngIf="!isEditing"
-            [buttonText]="'Search On User'"
-            [buttonType]="'primary'"
-            (btnClick)="checkUserExist()"
-            [buttonDisable]="form.get('email')?.value === ''"
-          ></stc-apps-button>
+        <div class="col-md-2 mt-1r">
+          <stc-apps-button *ngIf="!isEditing" [buttonText]="'Search On User'" [buttonType]="'primary'"
+            (btnClick)="checkUserExist()" [buttonDisable]="form.get('email')?.value === ''"></stc-apps-button>
         </div>
       </div>
       <div class="row mt-2">
         <div class="col-md-6">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputPlaceholder]="''"
-            [inputId]="'name'"
-            [inputName]="'Name'"
-            formControlName="name"
-          ></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'name'" [inputName]="'Name'"
+            formControlName="name"></stc-apps-input>
         </div>
         <div class="col-md-6">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputPlaceholder]="''"
-            [inputId]="'jobTitle'"
-            [inputName]="'jobTitle'"
-            formControlName="jobTitle"
-          ></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'jobTitle'"
+            [inputName]="'job Title'" formControlName="jobTitle"></stc-apps-input>
         </div>
       </div>
       <div class="row mt-7">
         <div class="col-md-6">
-          <stc-apps-select-drop-down
-            [label]="'privilege'"
-            [options]="privilages"
-            formControlName="userGroups"
-            [labelName]="'groupName'"
-            [required]="true"
-            [selectId]="selectedPrivilege || null"
-            (selectChange)="handleTeam($event)"
-          >
+          <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
+            formControlName="userGroups" [labelName]="'groupName'" [required]="true"
+            [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
           </stc-apps-select-drop-down>
         </div>
         <div class="col-md-6">
-          <stc-apps-select-drop-down
-            [label]="'team'"
-            formControlName="teamDto"
-            [required]="true"
-            [options]="teams"
-            [selectId]="selectedTeam || null"
-          >
+          <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
+            [required]="true" [options]="teams" [selectId]="selectedTeam || null">
           </stc-apps-select-drop-down>
         </div>
       </div>
     </div>
     <div class="btn-form-action">
-      <stc-apps-button
-        [buttonText]="'cancel'"
-        [buttonType]="'gray-outline'"
-        (btnClick)="cancel()"
-      ></stc-apps-button>
+      <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'" (btnClick)="cancel()"></stc-apps-button>
 
       <div class="mx-3"></div>
-      <stc-apps-button
-        *ngIf="!isEditing"
-        [buttonText]="'Add User'"
-        [buttonType]="'primary'"
-        (btnClick)="onSubmit()"
-      ></stc-apps-button>
-      <stc-apps-button
-        *ngIf="isEditing"
-        [buttonText]="'save'"
-        [buttonType]="'primary'"
-        (btnClick)="onSubmit()"
-      ></stc-apps-button>
+      <stc-apps-button *ngIf="!isEditing" [buttonText]="'Add User'" [buttonType]="'primary'"
+        (btnClick)="onSubmit()"></stc-apps-button>
+      <stc-apps-button *ngIf="isEditing" [buttonText]="'save'" [buttonType]="'primary'"
+        (btnClick)="onSubmit()"></stc-apps-button>
     </div>
   </form>
 </div>
 <stc-apps-dialog id="alert-modal">
-  <p class="text">
+  <p class="text text-center">
     <span>{{ 'This Account' }} </span>
     <strong>{{ form.get('email')?.value }}</strong>
     <span>
-      {{ 'is already assigne to the system,so we can&lsquo;t Add it' }}
+      {{ 'is already exists in the system' }}
     </span>
   </p>
 
   <div class="row mt-4">
     <div class="col-md-4 offset-8">
       <div class="d-flex justify-content-end">
-        <stc-apps-button
-          [buttonText]="'cancel'"
-          [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"
-        ></stc-apps-button>
+        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"></stc-apps-button>
 
         <div class="mx-3"></div>
-        <stc-apps-button
-          [buttonText]="'Ok'"
-          [buttonType]="'primary'"
-          (btnClick)="router.navigate(['./users-setting'])"
-        ></stc-apps-button>
+        <stc-apps-button [buttonText]="'Ok'" [buttonType]="'primary'"
+          (btnClick)="router.navigate(['./users-setting'])"></stc-apps-button>
       </div>
     </div>
   </div>

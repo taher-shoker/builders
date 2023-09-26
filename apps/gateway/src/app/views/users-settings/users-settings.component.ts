@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../shared/services/auth.service';
 import { CookieService } from 'ngx-cookie';
 import { Router } from '@angular/router';
+import { UsersService } from './users.service';
 
 @Component({
   selector: 'stc-apps-users-settings',
@@ -11,6 +12,7 @@ import { Router } from '@angular/router';
 export class UsersSettingsComponent implements OnInit {
   constructor(
     private authService: AuthService,
+    public userService: UsersService,
     private cookieService: CookieService,
     private router: Router
   ) {}
@@ -28,6 +30,8 @@ export class UsersSettingsComponent implements OnInit {
   ];
 
   ngOnInit() {
+    this.userService.getLabels();
+
     this.userName = this.cookieService.get('displayName') || '';
   }
 
@@ -36,8 +40,5 @@ export class UsersSettingsComponent implements OnInit {
   }
   logOut() {
     this.authService.logout();
-  }
-  ngOnInit(): void {
-    this.userName = this.cookieService.get('USER_FULLNAME') || '';
   }
 }
