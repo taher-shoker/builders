@@ -4,65 +4,6 @@ import * as _ from 'lodash';
 
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
-import { ActivatedRoute } from '@angular/router';
-const data = [
-  {
-    id: 2,
-    groupName: 'Digital Care',
-    roles: [
-      {
-        id: 2,
-        roleName: 'CREATORS',
-        system: {
-          id: 2,
-          name: 'FRAUD_ManagementUsers',
-        },
-      },
-    ],
-  },
-  {
-    id: 4,
-    groupName: 'Field Operation',
-    roles: [
-      {
-        id: 2,
-        roleName: 'CREATORS',
-        system: {
-          id: 2,
-          name: 'FRAUD_ManagementUsers',
-        },
-      },
-    ],
-  },
-  {
-    id: 1,
-    groupName: 'Customer Care',
-    roles: [
-      {
-        id: 2,
-        roleName: 'CREATORS',
-        system: {
-          id: 2,
-          name: 'FRAUD_ManagementUsers',
-        },
-      },
-    ],
-  },
-  {
-    id: 5,
-    groupName: 'Fraud',
-    roles: [
-      {
-        id: 1,
-        roleName: 'APPROVERS',
-        system: {
-          id: 2,
-          name: 'FRAUD_ManagementUsers',
-        },
-      },
-    ],
-  },
-];
 
 export interface UserGroup {
   id: number;
@@ -84,7 +25,6 @@ export class UsersService {
   constructor(
     private http: HttpClient,
     private cookieService: CookieService,
-    private route: ActivatedRoute
   ) {}
 
   sysName = JSON.parse(this.cookieService.get('granted-systems') || '')[0];
@@ -103,9 +43,10 @@ export class UsersService {
     });
   }
 
-  getUserByUserName(userName: string) {
-    const options = {};
-    // return this.http.get<User>(`${this.endpoint}/users/${id}`, options);
+  getUserByUserName(username: string) {
+    return this.http.get<User>(`${this.endpoint}/users/username/${username}`, {
+      params: this.sysParam,
+    });
   }
 
   createUser(data: any) {
@@ -116,13 +57,13 @@ export class UsersService {
 
   updateUser(data: any) {
     const options = {};
-
     return this.http.put(`${this.endpoint}/users`, data, options);
   }
 
   deleteUser(id: number) {
-    const options = {};
-    return this.http.delete(`${this.endpoint}/users/${id}`, options);
+    return this.http.delete(`${this.endpoint}/users/${id}`, {
+      params: this.sysParam,
+    });
   }
 
   getGroups() {
@@ -131,22 +72,60 @@ export class UsersService {
         params: this.sysParam,
       })
       .subscribe((res) => {
-        this.allGroups = res;
+        if (res) {
+          this.allGroups = res;
+          this.getRoles();
+          this.getTeams();
+        }
       });
   }
+
+  addUserGroup(userId: number, groupId: number, data?: any) {
+    return this.http.patch(
+      `${this.endpoint}/users/groups/${userId}/${groupId}`,
+      data
+    );
+  }
+
   getTeams() {
-    const allTeams = this.allGroups.map((t) => {
-      return { id: t.id, name: t.groupName };
-    });
+    const allTeams = this.allGroups
+      .filter((g) => g.groupName !== 'Fraud Admins')
+      .map((t) => {
+        return { id: t.id, name: t.groupName };
+      });
     return _.uniq(allTeams);
   }
+
   getRoles() {
-    const allRoles = this.allGroups.map((t) => {
-      return { id: t.roles[0].id, groupName: t.roles[0].roleName };
-    });
+    const allRoles = this.allGroups
+      .filter((g) => g.roles[0].roleName !== 'ADMINS')
+      .map((t) => {
+        return { id: t.roles[0].id, groupName: t.roles[0].roleName };
+      });
     return _.uniqWith(allRoles, _.isEqual);
   }
 
+  // functions using in table to get columns data
+  getUserPrivilege(user: User) {
+    const sys = this.sysName;
+    let x = '';
+    _.forEach(user.userGroups, (group) => {
+      if (group.roles[0].system.name === sys) {
+        x = group.roles[0].roleName;
+      }
+    });
+    return x;
+  }
+  getUserTeam(user: User) {
+    const sys = this.sysName;
+    let x = '';
+    _.forEach(user.userGroups, (group) => {
+      if (group.roles[0].system.name === sys) {
+        x = group.groupName;
+      }
+    });
+    return x;
+  }
   getKeyByValue(obj: any, status: string) {
     return Object.keys(obj)[Object.values(obj).indexOf(status)];
   }

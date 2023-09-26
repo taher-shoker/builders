@@ -46,30 +46,20 @@
             (keyup)="searchFilter($event)" />
         </div>
       </div>
-      <!-- <div class="col-md-7">
+      <div class="col-md-7">
         <div class="row">
           <div class="col-md-5">
-            <stc-apps-select-drop-down
-              [label]="'privilege'"
-              [selectType]="'filter-select-box'"
-              [options]="privilege"
-              [labelName]="'groupName'"
-              (selectChange)="handleSelectChange($event, 'privilege')"
-              [defaultAll]="true"
-            ></stc-apps-select-drop-down>
+            <stc-apps-select-drop-down [label]="'privilege'" [selectType]="'filter-select-box'" [options]="privilege"
+              [labelName]="'groupName'" (selectChange)="handleSelectChange($event, 'privilege')"
+              [defaultAll]="true"></stc-apps-select-drop-down>
           </div>
           <div class="col-md-5">
-            <stc-apps-select-drop-down
-              [label]="'team'"
-              [selectType]="'filter-select-box'"
-              [options]="teams"
-              (selectChange)="handleSelectChange($event, 'team')"
-              [defaultAll]="true"
-              formControlName="teamSelect"
-            ></stc-apps-select-drop-down>
+            <stc-apps-select-drop-down [label]="'team'" [selectType]="'filter-select-box'" [options]="teams"
+              (selectChange)="handleSelectChange($event, 'team')" [defaultAll]="true"
+              formControlName="teamSelect"></stc-apps-select-drop-down>
           </div>
         </div>
-      </div> -->
+      </div>
       <div class="col-md-2">
         <stc-apps-button [buttonText]="'Add New User'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
           (btnClick)="addUserNavigate()"></stc-apps-button>
@@ -92,36 +82,13 @@
             </div>
           </div>
           <span class="cell-text" *ngSwitchCase="'userGroups'">
-            {{ getUserPrivilege(element) }}
+            {{ userService.getUserPrivilege(element) }}
           </span>
           <span class="cell-text" *ngSwitchCase="'teamDto'">
-            {{ getUserTeam(element) }}
+            {{ userService.getUserTeam(element) }}
           </span>
           <div class="btns-action" *ngSwitchCase="'actions'">
-            <stc-apps-dialog id="{{ element.id }}">
-              <p class="text">
-                <span>{{ 'deleteMsg.txt1' }} </span>
-                <strong>{{ element.name }}</strong>
 
-                <span> {{ 'deleteMsg.txt2' }} </span>
-
-                <strong>{{ element.email }}</strong>
-                <span> {{ 'deleteMsg.txt3' }}</span>
-              </p>
-
-              <div class="row mt-4">
-                <div class="col-md-4 offset-8">
-                  <div class="d-flex justify-content-end">
-                    <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
-                      (btnClick)="dialogService.close()"></stc-apps-button>
-
-                    <div class="mx-3"></div>
-                    <stc-apps-button [buttonText]="'delete_user'" [buttonType]="'primary'"
-                      (btnClick)="confirmDelete()"></stc-apps-button>
-                  </div>
-                </div>
-              </div>
-            </stc-apps-dialog>
             <button mat-button class="btn edit-btn-table" (click)="editItem(element.id)">
               <i class="fas fa-pencil-alt"></i>
             </button>
@@ -183,3 +150,27 @@
   <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]" [showFirstLastButtons]="true" [hidePageSize]="true">
   </mat-paginator>
 </div>
+<stc-apps-dialog id="delete-modal">
+  <p class="text">
+    <span>{{ 'You&lsquo;re about to Remove User ,' }} </span>
+    <strong>{{ user?.name }}</strong>
+
+    <span> {{ 'and his / her account' }} </span>
+
+    <strong>{{ user?.email }}</strong>
+    <span> {{ 'will be denied from the system accessibility, Are you sure?' }}</span>
+  </p>
+
+  <div class="row mt-4">
+    <div class="col-md-4 offset-8">
+      <div class="d-flex justify-content-end">
+        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"></stc-apps-button>
+
+        <div class="mx-3"></div>
+        <stc-apps-button [buttonText]="'delete_user'" [buttonType]="'primary'"
+          (btnClick)="confirmDelete()"></stc-apps-button>
+      </div>
+    </div>
+  </div>
+</stc-apps-dialog>

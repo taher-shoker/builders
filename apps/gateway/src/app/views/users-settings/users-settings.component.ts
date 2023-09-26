@@ -26,6 +26,11 @@ export class UsersSettingsComponent implements OnInit {
       icon: 'fa-user-cog',
     },
   ];
+
+  ngOnInit() {
+    this.userName = this.cookieService.get('displayName') || '';
+  }
+
   backToHome() {
     this.router.navigate(['/users-setting']);
   }
