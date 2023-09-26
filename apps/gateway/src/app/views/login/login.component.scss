@@ -10,6 +10,16 @@
   position: relative;
   display: flex;
   align-items: center;
+  .log-out {
+    position: absolute;
+    right: 16px;
+    bottom: 16px;
+    color: $whiteColor;
+    cursor: pointer;
+    i {
+      margin-right: 6px;
+    }
+  }
   .shape4 {
     background-image: url('../../../assets/images/login/shape4.png');
     height: 400px;
@@ -109,6 +119,10 @@
       height: 150px;
       object-fit: contain;
     }
+    .log-out {
+      top: 20px;
+      right: 20px;
+    }
   }
   .shape3 {
     bottom: 30px !important;
@@ -127,6 +141,10 @@
       width: 150px;
       height: 150px;
       object-fit: contain;
+    }
+    .log-out {
+      top: 0;
+      right: -20px;
     }
     .card {
       border: unset;
