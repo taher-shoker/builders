@@ -5,8 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 // Import Containers
 import { LoginComponent } from './views/login/login.component';
 import { HomeComponent } from './views/home/home.component';
-import { authGuard } from './shared/guards/auth.guard';
-import { LoggedInAuthGuard } from './shared/guards/logedInAuth.guard';
+import { AuthGuard } from './shared/guards/auth.guard';
 import { AdminAuthGuard } from './shared/guards/admin.auth.guard';
 
 const routes: Routes = [
@@ -14,7 +13,7 @@ const routes: Routes = [
   {
     path: 'apps',
     data: { breadcrumb: 'apps' },
-    canActivate: [authGuard],
+    canActivate: [AuthGuard],
     children: [
       {
         path: '',

@@ -26,25 +26,30 @@ export class UsersService {
   labels: { label: string; text: string }[] = [];
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
-  sysName = JSON.parse(this.cookieService.get('granted-systems') || '')[0];
-  sysParam = new HttpParams().set('system', this.sysName);
+
+  getCurrentSystem() : string{
+    return JSON.parse(this.cookieService.get('granted-systems') || '')[0];
+  }
+
+  setSystemParam(): HttpParams {
+    return new HttpParams().set('system', this.getCurrentSystem());
+  }
 
   getUsers() {
-    const usersParams = new HttpParams().set('system', this.sysName);
     return this.http.get<User[]>(`${this.endpoint}/users`, {
-      params: usersParams,
+      params: this.setSystemParam(),
     });
   }
 
   getUser(id: string) {
     return this.http.get<User>(`${this.endpoint}/users/id/${id}`, {
-      params: this.sysParam,
+      params: this.setSystemParam(),
     });
   }
 
   getUserByUserName(username: string) {
     return this.http.get<User>(`${this.endpoint}/users/username/${username}`, {
-      params: this.sysParam,
+      params: this.setSystemParam(),
     });
   }
 
@@ -61,14 +66,14 @@ export class UsersService {
 
   deleteUser(id: number) {
     return this.http.delete(`${this.endpoint}/users/${id}`, {
-      params: this.sysParam,
+      params: this.setSystemParam(),
     });
   }
 
   getGroups() {
     this.http
       .get<UserGroup[]>(`${this.endpoint}/groups`, {
-        params: this.sysParam,
+        params: this.setSystemParam(),
       })
       .subscribe((res) => {
         if (res) {
@@ -89,7 +94,7 @@ export class UsersService {
   getTeams() {
     let allTeams: { id: number; name: string }[] = [];
 
-    switch (this.sysName) {
+    switch (this.getCurrentSystem()) {
       case 'FRAUD_ManagementUsers':
         allTeams = this.allGroups
           .filter((g) => g.groupName !== 'Fraud Admins')
@@ -121,7 +126,7 @@ export class UsersService {
 
   // functions using in table to get columns data
   getUserPrivilege(user: User) {
-    const sys = this.sysName;
+    const sys = this.getCurrentSystem();
     let x = '';
     _.forEach(user.userGroups, (group) => {
       if (group.roles[0].system.name === sys) {
@@ -131,7 +136,7 @@ export class UsersService {
     return x;
   }
   getUserTeam(user: User) {
-    const sys = this.sysName;
+    const sys = this.getCurrentSystem();
     let x = '';
     _.forEach(user.userGroups, (group) => {
       if (group.roles[0].system.name === sys) {
@@ -146,7 +151,7 @@ export class UsersService {
 
   // fuction for get labels accordding to the system
   getLabels() {
-    switch (this.sysName) {
+    switch (this.getCurrentSystem()) {
       case 'FRAUD_ManagementUsers':
         this.labels = fraud_labels;
         break;

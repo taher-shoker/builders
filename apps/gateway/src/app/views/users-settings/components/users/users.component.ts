@@ -126,7 +126,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   getCreatorUsersLength(users: User[]) {
-    const sys = this.userService.sysName;
+    const sys = this.userService.getCurrentSystem();
     const list: UserGroup[] = [];
     _.forEach(users, function (value) {
       _.forEach(value.userGroups, function (group) {
@@ -139,7 +139,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   getApproverUsersLength(users: User[]) {
-    const sys = this.userService.sysName;
+    const sys = this.userService.getCurrentSystem();
     const list: UserGroup[] = [];
     _.forEach(users, function (value) {
       _.forEach(value.userGroups, function (group) {

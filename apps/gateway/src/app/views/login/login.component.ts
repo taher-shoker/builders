@@ -35,22 +35,26 @@ export class LoginComponent implements OnInit {
   }
 
   onSubmit(): void {
-    this.authService.isLoading = true;
-    if (this.form.valid) {
-      this.authService.login(this.form.value).subscribe((res: any) => {
-        this.authService.isLoading = false;
-      });
-    }
+    this.createLogin();
   }
 
   keyDownFunction(event: KeyboardEvent) {
     if (event.keyCode === 13) {
-      this.authService.isLoading = true;
-      if (this.form.valid) {
-        this.authService.login(this.form.value).subscribe((res: any) => {
+      this.createLogin();
+    }
+  }
+
+  createLogin() {
+    this.authService.isLoading = true;
+    if (this.form.valid) {
+      this.authService.login(this.form.value).subscribe(
+        (res: any) => {
           this.authService.isLoading = false;
-        });
-      }
+        },
+        (err) => {
+          this.authService.isLoading = false;
+        }
+      );
     }
   }
 

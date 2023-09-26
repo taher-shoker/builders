@@ -1,5 +1,5 @@
 <div class="users-settings">
-  <div class="top-info" *ngIf="userService.sysName !== 'DI_Management'">
+  <div class="top-info" *ngIf="userService.getCurrentSystem() !== 'DI_Management'">
     <div class="row">
       <div class="col-md-4">
         <div class="static register">

@@ -77,6 +77,15 @@ export class AuthService {
   getLoggedInUser(): BehaviorSubject<LoggedUser | null> {
     return this.loggedUserStream;
   }
+  isAuthorizedUser(): boolean {
+    const user =
+      this.getLoggedInUser().getValue() || this.cookieService.get('token');
+    if (user == null) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 
   login(data: { username: string; password: string }) {
     return this.http
@@ -89,10 +98,33 @@ export class AuthService {
       );
   }
 
+  ssoLogin() {
+    return this.http
+      .post<any>(
+        `http://localhost:7080/administration/saml/login`,
+        { username: "mohfibrahim.c@stc.com.sa", password: "cem@123456" }
+      )
+      .pipe(
+        tap((resData: any) => {
+          console.log("SSO",resData)
+
+        })
+      );
+  }
+
   isAdminUser() {
-    return this.loggedUserStream
+    const user =
+      this.getLoggedInUser().getValue() || this.cookieService.get('token');
+
+    const isAdminRole = this.loggedUserStream
       .getValue()
       ?.userGroups[0].roles[0].roleName.includes('ADMINS');
+
+    if (user != null && isAdminRole == true) {
+      return true;
+    } else {
+      return false;
+    }
   }
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);
@@ -103,6 +135,7 @@ export class AuthService {
   }
 
   getUserData() {
+    this.gratnedSystems = [];
     this.http
       .get<any>(`${this.loginTPUrl}/user/getCurrentUserData`)
       .subscribe((res: any) => {
@@ -151,7 +184,6 @@ export class AuthService {
             this.cookieService.put('ceo-username', res.dto.username);
           }
 
-
           if (
             res.dto.systems.includes('FRAUD_ManagementUsers') ||
             res.dto.systems.includes('DI_Management')
@@ -164,6 +196,8 @@ export class AuthService {
             'granted-systems',
             JSON.stringify(this.gratnedSystems)
           );
+          // eslint-disable-next-line no-debugger
+          debugger;
           this.router.navigate(['/apps']);
 
           //  this.setLoggedInUser();
@@ -191,6 +225,8 @@ export class AuthService {
           'granted-systems',
           JSON.stringify(this.gratnedSystems)
         );
+        // eslint-disable-next-line no-debugger
+        debugger;
         this.router.navigate(['/apps']);
       });
   }
@@ -215,6 +251,8 @@ export class AuthService {
           }
         }
       } else {
+        // eslint-disable-next-line no-debugger
+        debugger;
         this.router.navigate(['/apps']);
       }
     });
