@@ -48,7 +48,7 @@ const COLUMNS_SCHEMA = [
   {
     key: 'jobTitle',
     type: 'text',
-    label: 'jobe Title',
+    label: 'job Title',
   },
   {
     key: 'actions',
@@ -180,18 +180,18 @@ export class UsersComponent implements OnInit, AfterViewInit {
           case 'CREATORS':
             this.teams = this.userService
               .getTeams()
-              .filter((t: any) => t.id !== 5);
+              .filter((t: any) => t.roleName == 'CREATORS'); //
 
             break;
           case 'APPROVERS':
             this.teams = this.userService
               .getTeams()
-              .filter((t: any) => t.id === 5);
-            break;
-          case 'DI_USER':
-            this.teams = this.userService.getTeams();
+              .filter((t: any) => t.roleName == 'APPROVERS');
             break;
           default:
+            this.teams = this.userService
+              .getTeams()
+              .filter((x: any) => x.roleName == value.groupName);
             break;
         }
         this.dataSource.data = this.list.filter(

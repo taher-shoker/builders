@@ -98,14 +98,22 @@ export class UsersService {
         allTeams = this.allGroups
           .filter((g) => g.groupName !== 'Fraud Admins')
           .map((t) => {
-            return { id: t.id, name: t.groupName };
+            return {
+              id: t.id,
+              name: t.groupName,
+              roleName: t.roles[0].roleName,
+            };
           });
         break;
       case 'DI_Management':
         allTeams = this.allGroups
           .filter((g) => g.groupName !== 'DI_Admins')
           .map((t) => {
-            return { id: t.id, name: t.groupName };
+            return {
+              id: t.id,
+              name: t.groupName,
+              roleName: t.roles[0].roleName,
+            };
           });
         break;
       default:

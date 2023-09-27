@@ -118,20 +118,25 @@ export class UserFormComponent implements OnInit, OnChanges {
   getTeams(userGroup: any) {
     switch (userGroup?.roles[0].roleName) {
       case 'CREATORS':
-        this.teams = this.userService.getTeams().filter((t: any) => t.id !== 5);
+        this.teams = this.userService
+          .getTeams()
+          .filter((t: any) => t.roleName == 'CREATORS'); //
 
         break;
       case 'APPROVERS':
-        this.teams = this.userService.getTeams().filter((t: any) => t.id === 5);
-        break;
-      case 'DI_USER':
-        this.teams = this.userService.getTeams();
-        console.log(this.teams);
-
+        this.teams = this.userService
+          .getTeams()
+          .filter((t: any) => t.roleName == 'APPROVERS');
         break;
       default:
+        console.log(this.userService.getTeams());
+        this.teams = this.userService
+          .getTeams()
+          .filter((x: any) => x.roleName == userGroup?.roles[0].roleName);
         break;
     }
+
+
     if (this.data) {
       this.selectedTeam = this.teams.filter(
         (p: any) => p.id === this.data?.userGroups[0].id
@@ -147,16 +152,21 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.form?.get('teamDto')?.setValue('');
     switch (value.groupName) {
       case 'CREATORS':
-        this.teams = this.userService.getTeams().filter((t: any) => t.id !== 5);
+        this.teams = this.userService
+          .getTeams()
+          .filter((t: any) => t.roleName == 'CREATORS'); //
 
         break;
       case 'APPROVERS':
-        this.teams = this.userService.getTeams().filter((t: any) => t.id === 5);
-        break;
-      case 'DI_USER':
-        this.teams = this.userService.getTeams();
+        this.teams = this.userService
+          .getTeams()
+          .filter((t: any) => t.roleName == 'APPROVERS');
         break;
       default:
+        console.log(this.userService.getTeams());
+        this.teams = this.userService
+          .getTeams()
+          .filter((x: any) => x.roleName == value.groupName);
         break;
     }
   }
