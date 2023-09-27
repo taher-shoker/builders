@@ -26,8 +26,7 @@ export class UsersService {
   labels: { label: string; text: string }[] = [];
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
-
-  getCurrentSystem() : string{
+  getCurrentSystem(): string {
     return JSON.parse(this.cookieService.get('granted-systems') || '')[0];
   }
 
@@ -164,7 +163,7 @@ export class UsersService {
   }
 
   translateText(label: string) {
-    return this.labels.filter((l) => l.label === label)[0]?.text;
+    return this.labels.filter((l) => l.label === label)[0]?.text || label;
   }
 }
 

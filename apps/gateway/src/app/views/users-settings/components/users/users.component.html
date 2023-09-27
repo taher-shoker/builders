@@ -70,7 +70,7 @@
   <table mat-table [dataSource]="dataSource" matSort>
     <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
       <th mat-header-cell *matHeaderCellDef>
-        {{ col.label }}
+        {{ userService.translateText(col.label)}}
       </th>
       <td mat-cell *matCellDef="let element">
         <div [ngSwitch]="col.key">
