@@ -116,14 +116,21 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   getTeams(userGroup: any) {
-    if (userGroup?.roles[0].id === 2) {
-      this.teams = this.userService
-        .getTeams()
-        .filter((t: any) => t.id !== 5 && t.name);
-    } else {
-      this.teams = this.userService
-        .getTeams()
-        .filter((t: any) => t.id === 5 && t.name);
+    switch (userGroup?.roles[0].roleName) {
+      case 'CREATORS':
+        this.teams = this.userService.getTeams().filter((t: any) => t.id !== 5);
+
+        break;
+      case 'APPROVERS':
+        this.teams = this.userService.getTeams().filter((t: any) => t.id === 5);
+        break;
+      case 'DI_USER':
+        this.teams = this.userService.getTeams();
+        console.log(this.teams);
+
+        break;
+      default:
+        break;
     }
     if (this.data) {
       this.selectedTeam = this.teams.filter(
