@@ -102,22 +102,20 @@ export class UsersComponent implements OnInit, AfterViewInit {
   getUsersListing() {
     this.userService.getUsers().subscribe((res: any) => {
       this.list = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
+        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
       this.dataSource.data = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
+        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
       this.dataSourceFilters.data = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
+        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
       this.totalUsers = res.filter(
-        (l: any) => l.userGroups[0].groupName !== 'Fraud Admins'
+        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       ).length;
 
       this.getCreatorUsersLength(res);
       this.getApproverUsersLength(res);
-      this.getRoles();
-      this.getTeams();
     });
   }
   searchFilter(event: Event) {
@@ -176,24 +174,25 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.dataSource.data = this.list;
         this.getTeams();
       } else {
-        switch (value.groupName) {
-          case 'CREATORS':
-            this.teams = this.userService
-              .getTeams()
-              .filter((t: any) => t.roleName == 'CREATORS'); //
+        this.teams = this.userService
+          .getTeams()
+          .filter((x: any) => x.roleName == value.groupName);
+        // switch (value.groupName) {
+        //   case 'CREATORS':
+        //     this.teams = this.userService
+        //       .getTeams()
+        //       .filter((t: any) => t.roleName == 'CREATORS'); //
 
-            break;
-          case 'APPROVERS':
-            this.teams = this.userService
-              .getTeams()
-              .filter((t: any) => t.roleName == 'APPROVERS');
-            break;
-          default:
-            this.teams = this.userService
-              .getTeams()
-              .filter((x: any) => x.roleName == value.groupName);
-            break;
-        }
+        //     break;
+        //   case 'APPROVERS':
+        //     this.teams = this.userService
+        //       .getTeams()
+        //       .filter((t: any) => t.roleName == 'APPROVERS');
+        //     break;
+        //   default:
+
+        //     break;
+        // }
         this.dataSource.data = this.list.filter(
           (x: any) => this.userService.getUserPrivilege(x) === value?.groupName
         );
@@ -208,11 +207,14 @@ export class UsersComponent implements OnInit, AfterViewInit {
       privilegeSelect: new FormControl(''),
     });
 
-    this.userService.getGroups();
-    if (this.userService.allGroups) {
-      this.getRoles();
-      this.getTeams();
-    }
+    this.userService.getGroups().subscribe((res) => {
+      if (res) {
+        this.userService.allGroups = res;
+        this.getRoles();
+        this.getTeams();
+      }
+    });
+
     this.dataSource.paginator = this.paginator;
     this.bannerDataService.updateData({ title: 'users setting', text: '' });
     this.dataSource.filterPredicate = function (record, filter) {

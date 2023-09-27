@@ -32,6 +32,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   selectedPrivilege!: { id: number; groupName: string };
   selectedTeam!: { id: number; name: string };
   addGroups = false;
+  showInputs = true;
   userTeam = '';
   userId = 0;
   constructor(
@@ -136,7 +137,6 @@ export class UserFormComponent implements OnInit, OnChanges {
         break;
     }
 
-
     if (this.data) {
       this.selectedTeam = this.teams.filter(
         (p: any) => p.id === this.data?.userGroups[0].id
@@ -150,29 +150,14 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   handleTeam(value: any) {
     this.form?.get('teamDto')?.setValue('');
-    switch (value.groupName) {
-      case 'CREATORS':
-        this.teams = this.userService
-          .getTeams()
-          .filter((t: any) => t.roleName == 'CREATORS'); //
-
-        break;
-      case 'APPROVERS':
-        this.teams = this.userService
-          .getTeams()
-          .filter((t: any) => t.roleName == 'APPROVERS');
-        break;
-      default:
-        console.log(this.userService.getTeams());
-        this.teams = this.userService
-          .getTeams()
-          .filter((x: any) => x.roleName == value.groupName);
-        break;
-    }
+    this.teams = this.userService
+      .getTeams()
+      .filter((x: any) => x.roleName == value.groupName);
   }
 
   checkUserExist() {
     if (!this.form.get('email')?.errors) {
+      this.showInputs = true;
       this.userService
         .getUserByUserName(this.form.get('email')?.value)
         .subscribe(
@@ -222,6 +207,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.userform();
     if (!this.isEditing) {
       this.disableFields();
+      this.showInputs = false;
     }
     this.userService.getGroups();
     this.getRoles();

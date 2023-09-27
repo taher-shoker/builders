@@ -70,17 +70,9 @@ export class UsersService {
   }
 
   getGroups() {
-    this.http
-      .get<UserGroup[]>(`${this.endpoint}/groups`, {
-        params: this.setSystemParam(),
-      })
-      .subscribe((res) => {
-        if (res) {
-          this.allGroups = res;
-          this.getRoles();
-          this.getTeams();
-        }
-      });
+    return this.http.get<UserGroup[]>(`${this.endpoint}/groups`, {
+      params: this.setSystemParam(),
+    });
   }
 
   addUserGroup(userId: number, groupId: number, data?: any) {
@@ -92,7 +84,6 @@ export class UsersService {
 
   getTeams() {
     let allTeams: { id: number; name: string }[] = [];
-
     switch (this.getCurrentSystem()) {
       case 'FRAUD_ManagementUsers':
         allTeams = this.allGroups

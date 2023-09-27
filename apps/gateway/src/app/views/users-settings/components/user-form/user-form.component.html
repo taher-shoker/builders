@@ -11,7 +11,7 @@
             (btnClick)="checkUserExist()" [buttonDisable]="form.get('email')?.value === ''"></stc-apps-button>
         </div>
       </div>
-      <div class="row mt-2">
+      <div class="row mt-2" *ngIf="showInputs">
         <div class="col-md-6">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'name'" [inputName]="'Name'"
             formControlName="name"></stc-apps-input>
@@ -21,7 +21,7 @@
             [inputName]="'job Title'" formControlName="jobTitle"></stc-apps-input>
         </div>
       </div>
-      <div class="row mt-7">
+      <div class="row mt-7" *ngIf="showInputs">
         <div class="col-md-6">
           <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
             formControlName="userGroups" [labelName]="'groupName'" [required]="true"
@@ -39,7 +39,7 @@
       <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'" (btnClick)="cancel()"></stc-apps-button>
 
       <div class="mx-3"></div>
-      <stc-apps-button *ngIf="!isEditing" [buttonText]="'Add User'" [buttonType]="'primary'"
+      <stc-apps-button *ngIf="!isEditing && showInputs" [buttonText]="'Add User'" [buttonType]="'primary'"
         (btnClick)="onSubmit()"></stc-apps-button>
       <stc-apps-button *ngIf="isEditing" [buttonText]="'save'" [buttonType]="'primary'"
         (btnClick)="onSubmit()"></stc-apps-button>
