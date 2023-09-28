@@ -175,12 +175,21 @@ export class AuthService {
             if (res.dto.systems.includes('DI_Management')) {
               this.gratnedSystems.push('DI_Management');
             }
+            console.log('form lenght == 1 case');
 
             this.setLoggedInUser();
           }
 
           this.handleUserSystems();
         } else if (res.dto.systems.length > 1) {
+          this.loggedInUser = {
+            name: res.dto.displayName,
+            id: res.dto.id,
+            email: res.dto.username,
+            username: res.dto.username,
+            jobTitle: '',
+            userGroups: res.dto.userGroupedMenusDTO,
+          };
           if (res.dto.systems.includes('TP_DashboardUsers')) {
             this.handleTPSysNeeds(res);
           }
@@ -192,6 +201,8 @@ export class AuthService {
             res.dto.systems.includes('FRAUD_ManagementUsers') ||
             res.dto.systems.includes('DI_Management')
           ) {
+            console.log('form lenght > 1 case');
+
             this.setLoggedInUser();
           }
 
@@ -215,6 +226,10 @@ export class AuthService {
   }
 
   setLoggedInUser(): void {
+    this.cookieService.put(
+      'granted-systems',
+      JSON.stringify(this.gratnedSystems)
+    );
     this.http
       .get<LoggedUser>(`${this.baseUrl}/users/currentLoggedUser`)
       .subscribe(async (res: LoggedUser) => {
@@ -223,14 +238,7 @@ export class AuthService {
         this.cookieService.put('USER_FULLNAME', res.name);
         await this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
 
-        this.setAvailableSystems(res);
-
-        this.cookieService.put(
-          'granted-systems',
-          JSON.stringify(this.gratnedSystems)
-        );
-        // eslint-disable-next-line no-debugger
-        debugger;
+        this.handleSystemsNeeds(res);
         this.router.navigate(['/apps']);
       });
   }
@@ -239,7 +247,7 @@ export class AuthService {
     return this.http.get<System[]>(`${this.baseUrl}/users/systems`);
   }
 
-  setAvailableSystems(res: LoggedUser, tpUser?: TPUserModel) {
+  handleSystemsNeeds(res: LoggedUser, tpUser?: TPUserModel) {
     this.getAllSystem().subscribe((resSys) => {
       this.filterSys(resSys, res);
       if (this.availableSystems.length === 1) {
@@ -255,8 +263,6 @@ export class AuthService {
           }
         }
       } else {
-        // eslint-disable-next-line no-debugger
-        debugger;
         this.router.navigate(['/apps']);
       }
     });
@@ -429,6 +435,7 @@ export class AuthService {
               });
               break;
             case 'FRAUD_ManagementUsers':
+              console.log('form FRAUD_ManagementUsers case');
               this.setLoggedInUser();
               this.passedSystems.push({
                 systemUrl: environment.systems.fraud_system,
@@ -437,6 +444,8 @@ export class AuthService {
               });
               break;
             case 'DI_Management':
+              console.log('form DI_Management case');
+
               this.setLoggedInUser();
               this.passedSystems.push({
                 systemUrl: environment.systems.di_system,
@@ -472,9 +481,7 @@ export class AuthService {
           environment.systems.ceo_system +
           this.cookieService.get('ceo-username');
       }
-      console.log(
-        this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName
-      );
+
       if (gratnedSystems[0] === 'FRAUD_ManagementUsers') {
         // the user is related to the Fraud only
         if (
