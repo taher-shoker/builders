@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, of } from "rxjs";
 import { delay, tap } from "rxjs/operators";
 import { HttpClient } from '@angular/common/http';
+import { CookieService } from "ngx-cookie";
 
 
 @Injectable({
@@ -14,8 +15,9 @@ export class AuthService {
 
   isLoggedIn = this._isLoggedIn$.asObservable();
 
-  constructor(private http: HttpClient){
-    const token = localStorage.getItem('token');
+  constructor(private http: HttpClient,
+  private _cookieService:CookieService) {
+    const token = this._cookieService.get("token");
     console.log("Token is", !!token)
     this._isLoggedIn$.next(!!token)
   }

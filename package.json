@@ -26,6 +26,7 @@
     "bootstrap": "^5.0.0",
     "file-saver": "^2.0.5",
     "moment": "^2.29.4",
+    "ngx-cookie": "^6.0.1",
     "ngx-cookie-service": "^16.0.0",
     "ngx-toastr": "^17.0.2",
     "rxjs": "~7.8.0",
