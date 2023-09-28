@@ -1,92 +1,238 @@
+
 <div class="home-holder">
 
-  <div class="intro-section">
-    <p class="hello-user">Hello, Assem Khalifa</p>
-
-    <p class="overview-text">Welcome Back! Here's overview of the STC Digital transformation index</p>
-
-    <p class="section-heading">STC DIGITAL INDEX</p>
-  </div>
 
   <div class="stc-digital-index-section">
+    <div class="intro-section">
+      <p class="hello-user">Hello, Assem Khalifa</p>
+
+      <p class="overview-text">
+        Welcome Back! Here's overview of the STC Digital transformation index
+      </p>
+
+      <p class="section-heading">STC DIGITAL INDEX</p>
+    </div>
     <div class="stc-digital-index">
       <div class="row legends-row">
         <div class="col-8 capabilities-col">
           <div class="row">
             <div class="col">
               <div class="building">
-
-                <div class="text"><span class="color-circle building-circle"></span>Capability Building</div>
+                <div class="text">
+                  <span class="color-circle building-circle"></span>Capability
+                  Building
+                </div>
               </div>
             </div>
             <div class="col">
               <div class="utilization">
-
-                <div class="text"><span class="color-circle utilization-circle"></span>Capability Utilization</div>
+                <div class="text">
+                  <span class="color-circle utilization-circle"></span
+                  >Capability Utilization
+                </div>
               </div>
             </div>
             <div class="col">
               <div class="experience">
-
-                <div class="text"><span class="color-circle experience-circle"></span>Digital Experience & Impact</div>
+                <div class="text">
+                  <span class="color-circle experience-circle"></span>Digital
+                  Experience & Impact
+                </div>
               </div>
             </div>
           </div>
         </div>
         <div class="col-4 achieve-col">
-          <div class="text">Achieved<span class="color-circle achieved-circle"></span></div>
-          <div class="text">Not Achieved<span class="color-circle not-achieved-circle"></span></div>
+          <div class="text">
+            Achieved<span class="color-circle achieved-circle"></span>
+          </div>
+          <div class="text">
+            Not Achieved<span class="color-circle not-achieved-circle"></span>
+          </div>
         </div>
       </div>
 
+
       <div class="row charts-row">
-
         <div class="col donuts-col">
-
           <div class="donut-chart-holder">
-            <stc-apps-donut-chart [colors]="donutColors" [labelsLines]="labels1" [data]="donutData1"></stc-apps-donut-chart>
+            <stc-apps-donut-chart
+              [colors]="donutColors"
+              [labelsLines]="busLabels"
+              [data]="busData"
+              [changesHappend]="receivedChanges"
+            ></stc-apps-donut-chart>
           </div>
           <div class="donut-chart-holder">
-            <stc-apps-donut-chart [colors]="donutColors" [labelsLines]="labels2" [data]="donutData2"></stc-apps-donut-chart>
+            <stc-apps-donut-chart
+              [colors]="donutColors"
+              [labelsLines]="fusLabels"
+              [data]="fusData"
+            ></stc-apps-donut-chart>
           </div>
           <div class="donut-chart-holder">
-            <stc-apps-donut-chart [colors]="donutColors" [labelsLines]="labels3" [data]="donutData3"></stc-apps-donut-chart>
+            <stc-apps-donut-chart
+              [colors]="donutColors"
+              [labelsLines]="techLabels"
+              [data]="techData"
+            ></stc-apps-donut-chart>
           </div>
-
         </div>
         <div class="col-2 polylines-col">
-
           <div class="polylines-holder">
             <p class="svg-text-liner">
-              <svg xmlns="http://www.w3.org/2000/svg" class="polyline-1" viewBox="0 0 216 59" fill="none">
-                <path d="M215.708 7.2534C215.073 10.1297 212.226 11.9465 209.35 11.3115C206.474 10.6765 204.657 7.83005 205.292 4.9538C205.927 2.07755 208.774 0.260665 211.65 0.895682C214.526 1.5307 216.343 4.37715 215.708 7.2534ZM11.2079 54.6498C10.5729 57.5261 7.72646 59.3429 4.8502 58.7079C1.97394 58.0729 0.157071 55.2265 0.792088 52.3502C1.42711 49.4739 4.27354 47.6571 7.1498 48.2921C10.0261 48.9271 11.8429 51.7735 11.2079 54.6498ZM210.5 53.5L211.5 53.5L210.5 54.5L210.5 53.5ZM211.5 6.10361L211.5 53.5L209.5 53.5L209.5 6.10359L211.5 6.10361ZM210.5 54.5L6 54.5L6 52.5L210.5 52.5L210.5 54.5Z" fill="#8E9AA0"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="polyline-1"
+                viewBox="0 0 216 59"
+                fill="none"
+              >
+                <path
+                  d="M215.708 7.2534C215.073 10.1297 212.226 11.9465 209.35 11.3115C206.474 10.6765 204.657 7.83005 205.292 4.9538C205.927 2.07755 208.774 0.260665 211.65 0.895682C214.526 1.5307 216.343 4.37715 215.708 7.2534ZM11.2079 54.6498C10.5729 57.5261 7.72646 59.3429 4.8502 58.7079C1.97394 58.0729 0.157071 55.2265 0.792088 52.3502C1.42711 49.4739 4.27354 47.6571 7.1498 48.2921C10.0261 48.9271 11.8429 51.7735 11.2079 54.6498ZM210.5 53.5L211.5 53.5L210.5 54.5L210.5 53.5ZM211.5 6.10361L211.5 53.5L209.5 53.5L209.5 6.10359L211.5 6.10361ZM210.5 54.5L6 54.5L6 52.5L210.5 52.5L210.5 54.5Z"
+                  fill="#8E9AA0"
+                />
               </svg>
 
-              <span class="polyline-1-text">25.77% / 22.35 <mat-icon class="mat-arrow-up">arrow_upward</mat-icon> 3.32 From Last Month</span>
+              <span class="polyline-text polyline-1-text"
+                ><span
+                  class="total-value"
+                  [ngClass]="{
+                    achieved: buDeltaAchieved,
+                    'not-achieved': !buDeltaAchieved
+                  }"
+                  >{{buScore}}</span
+                >
+                / <span class="last-month-value">{{buTarget}}</span>
+                <mat-icon
+                  class="mat-arrow-up achieved"
+                  *ngIf="buDeltaAchieved"
+                  >arrow_upward</mat-icon
+                >
+                <!-- <i *ngIf="buDeltaAchieved" class="fas fa-solid fa-arrow-up "></i> -->
+                <mat-icon
+                  class="mat-arrow-down not-achieved"
+                  *ngIf="!buDeltaAchieved"
+                  >arrow_downward</mat-icon
+                >
 
+                <!-- <i *ngIf="!buDeltaAchieved" class="fas fa-solid fa-arrow-down not-achieved"></i> -->
+
+                <span
+                  class="delta"
+                  [ngClass]="{
+                    achieved: buDeltaAchieved,
+                    'not-achieved': !buDeltaAchieved
+                  }"
+                  >{{buDelta}}</span
+                >
+                From Last Month</span
+              >
             </p>
 
             <p class="svg-text-liner">
-              <svg xmlns="http://www.w3.org/2000/svg" class="polyline-2" viewBox="0 0 217 209" fill="none">
-                <path d="M216.208 6.6498C215.573 9.52605 212.726 11.3429 209.85 10.7079C206.974 10.0729 205.157 7.22645 205.792 4.3502C206.427 1.47395 209.274 -0.342935 212.15 0.292082C215.026 0.927099 216.843 3.77355 216.208 6.6498ZM11.2079 204.15C10.5729 207.026 7.72646 208.843 4.8502 208.208C1.97394 207.573 0.157065 204.726 0.792083 201.85C1.4271 198.974 4.27353 197.157 7.14979 197.792C10.0261 198.427 11.8429 201.274 11.2079 204.15ZM110.5 5.5L109.5 5.5L110.5 4.5L110.5 5.5ZM110.5 203L111.5 203L110.5 204L110.5 203ZM211 6.5L110.5 6.5L110.5 4.5L211 4.5V6.5ZM111.5 5.5L111.5 203L109.5 203L109.5 5.5L111.5 5.5ZM110.5 204L6 204L5.99999 202L110.5 202L110.5 204Z" fill="#8E9AA0"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="polyline-2"
+                viewBox="0 0 217 209"
+                fill="none"
+              >
+                <path
+                  d="M216.208 6.6498C215.573 9.52605 212.726 11.3429 209.85 10.7079C206.974 10.0729 205.157 7.22645 205.792 4.3502C206.427 1.47395 209.274 -0.342935 212.15 0.292082C215.026 0.927099 216.843 3.77355 216.208 6.6498ZM11.2079 204.15C10.5729 207.026 7.72646 208.843 4.8502 208.208C1.97394 207.573 0.157065 204.726 0.792083 201.85C1.4271 198.974 4.27353 197.157 7.14979 197.792C10.0261 198.427 11.8429 201.274 11.2079 204.15ZM110.5 5.5L109.5 5.5L110.5 4.5L110.5 5.5ZM110.5 203L111.5 203L110.5 204L110.5 203ZM211 6.5L110.5 6.5L110.5 4.5L211 4.5V6.5ZM111.5 5.5L111.5 203L109.5 203L109.5 5.5L111.5 5.5ZM110.5 204L6 204L5.99999 202L110.5 202L110.5 204Z"
+                  fill="#8E9AA0"
+                />
               </svg>
 
-              <span class="polyline-2-text">25.77% / 22.35 <mat-icon class="mat-arrow-up">arrow_upward</mat-icon> 3.32 From Last Month</span>
+              <span class="polyline-text polyline-2-text"
+                ><span
+                  class="total-value"
+                  [ngClass]="{
+                    achieved: fuDeltaAchieved,
+                    'not-achieved': !fuDeltaAchieved
+                  }"
+                  >{{fuScore}}</span
+                >
+                / <span class="last-month-value">{{fuTarget}}</span>
+                <mat-icon
+                  class="mat-arrow-up achieved"
+                  *ngIf="fuDeltaAchieved"
+                  >arrow_upward</mat-icon
+                >
 
+                <!-- <i *ngIf="fuDeltaAchieved" class="fas fa-solid fa-arrow-up mat-arrow-up achieved"></i> -->
+
+                <mat-icon
+                  class="mat-arrow-down not-achieved"
+                  *ngIf="!fuDeltaAchieved"
+                  >arrow_downward</mat-icon
+                >
+
+                <!-- <i *ngIf="!fuDeltaAchieved" class="fas fa-solid fa-arrow-down mat-arrow-down not-achieved"></i> -->
+
+                <span
+                  class="delta"
+                  [ngClass]="{
+                    achieved: fuDeltaAchieved,
+                    'not-achieved': !fuDeltaAchieved
+                  }"
+                  >{{fuDelta}}</span
+                >
+                From Last Month</span
+              >
             </p>
 
             <p class="svg-text-liner">
-              <svg xmlns="http://www.w3.org/2000/svg" class="polyline-3" viewBox="0 0 199 326" fill="none">
-                <path d="M198.708 7.44035C198.073 10.3166 195.226 12.1335 192.35 11.4985C189.474 10.8635 187.657 8.017 188.292 5.14075C188.927 2.2645 191.774 0.447615 194.65 1.08263C197.526 1.71765 199.343 4.5641 198.708 7.44035ZM11.2079 321.15C10.5729 324.026 7.72641 325.843 4.85015 325.208C1.9739 324.573 0.157016 321.726 0.792035 318.85C1.42705 315.974 4.2735 314.157 7.14976 314.792C10.026 315.427 11.8429 318.274 11.2079 321.15ZM135.5 6.29055L134.5 6.29055L135.5 5.29055L135.5 6.29055ZM135.5 320L136.5 320L135.5 321L135.5 320ZM193.5 7.29055L135.5 7.29055L135.5 5.29055L193.5 5.29055L193.5 7.29055ZM136.5 6.29055L136.5 320L134.5 320L134.5 6.29055L136.5 6.29055ZM135.5 321L5.99996 321L5.99995 319L135.5 319L135.5 321Z" fill="#8E9AA0"/>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="polyline-3"
+                viewBox="0 0 199 326"
+                fill="none"
+              >
+                <path
+                  d="M198.708 7.44035C198.073 10.3166 195.226 12.1335 192.35 11.4985C189.474 10.8635 187.657 8.017 188.292 5.14075C188.927 2.2645 191.774 0.447615 194.65 1.08263C197.526 1.71765 199.343 4.5641 198.708 7.44035ZM11.2079 321.15C10.5729 324.026 7.72641 325.843 4.85015 325.208C1.9739 324.573 0.157016 321.726 0.792035 318.85C1.42705 315.974 4.2735 314.157 7.14976 314.792C10.026 315.427 11.8429 318.274 11.2079 321.15ZM135.5 6.29055L134.5 6.29055L135.5 5.29055L135.5 6.29055ZM135.5 320L136.5 320L135.5 321L135.5 320ZM193.5 7.29055L135.5 7.29055L135.5 5.29055L193.5 5.29055L193.5 7.29055ZM136.5 6.29055L136.5 320L134.5 320L134.5 6.29055L136.5 6.29055ZM135.5 321L5.99996 321L5.99995 319L135.5 319L135.5 321Z"
+                  fill="#8E9AA0"
+                />
               </svg>
 
-              <span class="polyline-3-text">25.77% / 22.35 <mat-icon class="mat-arrow-up">arrow_upward</mat-icon> 3.32 From Last Month</span>
+              <span class="polyline-text polyline-3-text"
+                ><span
+                  class="total-value"
+                  [ngClass]="{
+                    achieved: techDeltaAchieved,
+                    'not-achieved': !techDeltaAchieved
+                  }"
+                  >{{techScore}}</span
+                >
+                / <span class="last-month-value">{{techTarget}}</span>
+                <mat-icon
+                  class="mat-arrow-up achieved"
+                  *ngIf="techDeltaAchieved"
+                  >arrow_upward</mat-icon
+                >
 
+                <!-- <i *ngIf="techDeltaAchieved" class="fas fa-solid fa-arrow-up mat-arrow-up achieved"></i> -->
+
+                <mat-icon
+                  class="mat-arrow-down not-achieved"
+                  *ngIf="!techDeltaAchieved"
+                  >arrow_downward</mat-icon
+                >
+
+                <!-- <i *ngIf="!techDeltaAchieved" class="fas fa-solid fa-arrow-down mat-arrow-down not-achieved"></i> -->
+
+                <span
+                  class="delta"
+                  [ngClass]="{
+                    achieved: techDeltaAchieved,
+                    'not-achieved': !techDeltaAchieved
+                  }"
+                  >{{techDelta}}</span
+                >
+                From Last Month</span
+              >
             </p>
           </div>
         </div>
         <div class="col-6">
-
           <div class="progress-circle-holder">
             <stc-apps-progress-circle-chart
               [data]="data"
@@ -95,6 +241,10 @@
               [customHeight]="600"
               [customWidth]="530"
               [topPosition]="-13"
+              [maxRange]="100"
+              [labelsLines]="progressCircleLabels"
+              [showCategoryOnly]="true"
+
             ></stc-apps-progress-circle-chart>
           </div>
         </div>

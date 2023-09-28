@@ -10,17 +10,24 @@
 
 .overview-text{
   color: var(--stc-grey-color);
+  margin-top: 10px;
 }
 
 .section-heading{
   color: white;
   font-size: 24px;
   margin-top: 25px;
+  margin-bottom: 15px;
+}
+
+.stc-digital-index-section{
+  max-width: 1060px;
+  margin: auto;
+
 }
 
 .stc-digital-index{
   background-color: white;
-  max-width: 1060px;
 }
 
 // Legend Styles :
@@ -100,13 +107,12 @@
     width: 100%;
   }
 
-  span{
+  .polyline-text {
     position: absolute;
     word-break: keep-all;
     left: 103%;
-    width: 230px;
-    font-size: 12px;
-
+    width: 260px;
+    font-size: 15px;
   }
 }
 
@@ -161,7 +167,7 @@
 
 // Assets :
 
-.mat-arrow-up{
+.mat-arrow-up, .mat-arrow-down{
 
   width: 14px;
   font-size: 15px;

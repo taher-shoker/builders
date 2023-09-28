@@ -16,7 +16,7 @@
 
   &.default {
     border-color: $whiteColor !important;
-    color: $whiteColor !important;
+    color: $whiteColor; /* !important; Commented because it doesn't get overridden in the components CSS */
     .loader {
       border-color: $whiteColor !important;
       border-bottom-color: transparent !important;

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, Input, OnDestroy, OnInit , AfterViewInit, OnChanges, SimpleChanges} from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -16,7 +17,11 @@ export interface LineChartData {
 })
 export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, OnChanges{
   @Input() chartData!: LineChartData[];
+  @Input() targetData!: LineChartData[];
+  @Input() target2Data: LineChartData[]= [];
   @Input() colors:string[] = [];
+  @Input() trendModuleState: boolean = false;
+
   direction:string | null = "";
   root!: am5.Root;
   langSub!: Subscription;
@@ -90,14 +95,16 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
           endLocation: 0.8,
           maxDeviation: 50,
           renderer: am5xy.AxisRendererX.new(this.root, {
-            minGridDistance : 50,
+            minGridDistance : 20,
             strokeOpacity: 1,
-            strokeWidth: 2,
-            stroke : am5.color(0x000000),
-            inversed : this.direction == 'ar' ? true : false
+            strokeWidth: 1,
+            stroke : am5.color('#8e9aa0'),
+            inversed : this.direction == 'ar' ? true : false,
+
           }),
         })
       );
+
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(this.root, {
         maxDeviation: 1,
@@ -105,10 +112,10 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
         extraMax : 3,
         renderer: am5xy.AxisRendererY.new(this.root, {
           strokeOpacity: 1,
-          strokeWidth: 2,
-          stroke : am5.color(0x000000),
-          marginLeft : this.direction == 'ar' ? 0 : 15,
-          marginRight : this.direction == 'ar' ? 15 : 0,
+          strokeWidth: 1,
+          stroke : am5.color('#8e9aa0'),
+          marginLeft : this.trendModuleState ? 20 : (this.direction == 'ar' ? 0 : 15), // ignore margins in trend module
+          marginRight : this.trendModuleState ? 20 : (this.direction == 'ar' ? 15 : 0),
           opposite : this.direction == 'ar' ? true : false
         })
       })
@@ -118,10 +125,11 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
     chart.gridContainer.dispose()
     const xRenderer = xAxis.get("renderer");
     const yRenderer = yAxis.get("renderer");
+
     xRenderer.ticks.template.setAll({
-      stroke: am5.color(0x000000),
+      stroke : am5.color('#8e9aa0'),
       visible: true,
-      strokeWidth : 2,
+      strokeWidth : 1,
       height : 30
     });
     xRenderer.labels.template.setAll({
@@ -160,6 +168,35 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
     );
     series.get("tooltip")?.label.set("direction" , this.direction == 'ar' ? "rtl" : "ltr");
 
+    const series2 = chart.series.push(am5xy.LineSeries.new(this.root, {
+      name: "Series 2",
+      xAxis: xAxis,
+      yAxis: yAxis,
+      valueYField: "caseCount",
+      valueXField: "category",
+      categoryXField: "value",
+      categoryYField : "caseCount",
+
+    }));
+    series2.strokes.template.setAll({
+      strokeDasharray: [2, 2],
+      strokeWidth: 2
+    });
+
+    const series3 = chart.series.push(am5xy.LineSeries.new(this.root, {
+      name: "Series 3",
+      xAxis: xAxis,
+      yAxis: yAxis,
+      valueYField: "caseCount",
+      valueXField: "category",
+      categoryXField: "value",
+      categoryYField : "caseCount",
+
+    }));
+    series3.strokes.template.setAll({
+      strokeDasharray: [2, 2],
+      strokeWidth: 2
+    });
 
     // series.get("tooltip")?.setAll({
     //   reverseChildren : true
@@ -168,8 +205,13 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
       // this.chartData.forEach((data2) => {
       //   arr.push({category : data2.category});
       // })
+
+
       xAxis.data.setAll(this.chartData)
       series.data.setAll(this.chartData)
+      series2?.data.setAll(this.targetData)
+      series3?.data.setAll(this.target2Data)
+
     // series.data.setAll(data);
     series.bullets.push(() => {
       const circle = am5.Circle.new(this.root, {

@@ -7,6 +7,8 @@ import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import { Subscription } from 'rxjs';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
+import { LabelLine } from '../donut-chart/donut-chart.component';
+import { DomSanitizer } from '@angular/platform-browser';
 
 export interface ProgressCircleData {
   category: string;
@@ -23,6 +25,9 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
   @Input({ required: true }) data!: ProgressCircleData[];
   @Input() colors: string[] = [];
   @Input() totalCases: number = 0;
+  @Input() maxRange! : number;
+  @Input() labelsLines: LabelLine[] = [];
+  @Input() showCategoryOnly: boolean = false;
 
   @Input() topPosition!: number;
   @Input() hideLegend: boolean = false;
@@ -34,7 +39,12 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
   direction:string | null = '';
   root!: am5.Root;
   chartdiv_id = '';
-  constructor(private elRef: ElementRef , private languageManagerService: LanguageManagerService) {}
+  constructor(
+    private elRef: ElementRef,
+    private languageManagerService: LanguageManagerService,
+    // public dom_s: DomSanitizer,
+
+    ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data'] && !changes['data'].firstChange) {
@@ -113,7 +123,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
       am5xy.ValueAxis.new(this.root, {
         renderer: xRenderer,
         min: 0,
-        max: sum, // Pass max as 100 , as an input to maximize the circle to 100
+        max: this.maxRange ? this.maxRange : sum, // Pass max as 100 , as an input to maximize the circle to 100
         strictMinMax: true,
         numberFormat: "#'%'",
         tooltip: am5.Tooltip.new(this.root, {}),
@@ -132,7 +142,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
       fontSize: 15,
       templateField: 'columnSettings',
       radius: 5,
-      text : "[bold][fontSize: 20px]{value}[/]    [#888]{category}",
+      text : this.showCategoryOnly ? "[#888]{category}" : "[bold][fontSize: 20px]{value}[/]    [#888]{category}",
     });
 
 
@@ -149,38 +159,61 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
 
     // create label in the center of the chart
 
-    chart.children.unshift(
-      am5.Label.new(this.root, {
-        text: 'All cases',
-        fontSize: 25,
-        fontWeight: '500',
-        textAlign: 'center',
-        y: this.data.length < 6 ? am5.percent(42) : am5.percent(45) , //am5.percent(40),
-        x: am5.percent(50),
-        centerX: am5.percent(50) ,
-        centerY: am5.percent(5),
-        paddingBottom: 20,
-        fill: am5.color('#8e9aa0'),
-        marginBottom: 20,
 
-
+    if(this.labelsLines){
+      this.labelsLines.forEach((labelLine) => {
+        chart.children.unshift(
+          am5.Label.new(this.root, {
+            // text: ``,
+            fontSize: labelLine.fontSize,
+            fontWeight: '500',
+            textAlign: 'center',
+            y: am5.percent(40) , //am5.percent(40),
+            x: am5.percent(50),
+            centerX: am5.percent(50) ,
+            centerY: am5.percent(labelLine.centerY!),
+            paddingBottom: 20,
+            fill: am5.color('#8e9aa0'),
+            marginBottom: 20,
+            // html: this.dom_s.bypassSecurityTrustHtml() `<i class="fas fa-arrow-alt-circle-down"></i>${labelLine.styles ? labelLine.styles : ""}${labelLine.value}`
+            html: `${labelLine.html}`
+          })
+        );
       })
-    );
-    chart.children.unshift(
-      am5.Label.new(this.root, {
-        text: `${sum}`,
-        fontSize: 25,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        y: am5.percent(48),
-        x: am5.percent(50),
-        centerX: am5.percent(50),
-        paddingTop: 20,
-        paddingBottom: 20,
-        marginTop: 20,
+    }else{
+      chart.children.unshift(
+        am5.Label.new(this.root, {
+          text: 'All cases',
+          fontSize: 25,
+          fontWeight: '500',
+          textAlign: 'center',
+          y: this.data.length < 6 ? am5.percent(42) : am5.percent(45) , //am5.percent(40),
+          x: am5.percent(50),
+          centerX: am5.percent(50) ,
+          centerY: am5.percent(5),
+          paddingBottom: 20,
+          fill: am5.color('#8e9aa0'),
+          marginBottom: 20,
+        })
+      );
 
-      })
-    );
+      chart.children.unshift(
+        am5.Label.new(this.root, {
+          text: `${sum}`,
+          fontSize: 25,
+          fontWeight: 'bold',
+          textAlign: 'center',
+          y: am5.percent(48),
+          x: am5.percent(50),
+          centerX: am5.percent(50),
+          paddingTop: 20,
+          paddingBottom: 20,
+          marginTop: 20,
+
+        })
+      );
+
+    }
 
     const allColors: am5.Color[] = [];
     this.colors.forEach((color: string) => {

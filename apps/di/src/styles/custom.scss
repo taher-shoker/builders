@@ -1,4 +1,24 @@
 
+.view-title{
+  font-weight: bold;
+  color: var(--stc-color);
+}
+
 .views-padding{
   padding: var(--views-padding);
+}
+
+.achieved{
+  color: var(--stc-oasis-color);
+  font-weight: 500;
+}
+
+.not-achieved{
+  color: var(--stc-red-color);
+  font-weight: 500;
+}
+
+.last-month-value{
+  font-weight: 500;
+
 }

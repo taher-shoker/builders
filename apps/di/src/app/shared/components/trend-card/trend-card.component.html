@@ -1,1 +1,25 @@
-<p>trend-card works!</p>
+<div class="trend-card-holder">
+
+  <div class="trend-card row">
+    <div class="donut-chart col-3">
+      <p class="card-title">BUs DI Trend</p>
+      <p>+4.43% Above target</p>
+      <div class="donut-chart-holder">
+        <stc-apps-donut-chart
+          [trendModuleState]="true"
+          [colors]="donutColors"
+          [labelsLines]="donutLabels"
+          [data]="donutData1"
+        ></stc-apps-donut-chart>
+      </div>
+    </div>
+    <div class="line-chart col">
+      <stc-apps-line-chart [trendModuleState]="true" [chartData]="lineChartData"
+      [colors]="lineChartColors" [targetData]="lineChartDataTarget" [target2Data]="lineChartDataTarget2"></stc-apps-line-chart>
+    </div>
+    <div class="actions-col col-auto" *ngIf="!hideDetailsBtn" >
+      <stc-apps-button [buttonText]="'Show KPIs'" [bgColor]="'rgb(79 0 140 / 5%)'" [textColor]="'#4f008c'" [fontWeight]="'500'" [paddingX]="'15px'" (btnClick)="navToKpiDetails()"></stc-apps-button>
+    </div>
+  </div>
+
+</div>

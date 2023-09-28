@@ -65,7 +65,8 @@
     align-items: center;
     flex-wrap: wrap;
     .filter-item {
-      width: 32%;
+      // width: 32%;
+      width: 19%;
       margin: 10px 5px;
     }
     ::ng-deep .filter-select-box {
@@ -117,6 +118,18 @@
       margin-bottom: 0;
     }
   }
+}
+
+.status-badge{
+  background-color: var(--stc-oasis-color-light);
+  border-left: 5px solid var(--stc-oasis-color);
+  color: var(--stc-oasis-color);
+  padding: 10px;
+  padding-left: 13px;
+}
+
+.line-chart{
+  height: 300px;
 }
 
 @media screen and (min-width: 1400px) {

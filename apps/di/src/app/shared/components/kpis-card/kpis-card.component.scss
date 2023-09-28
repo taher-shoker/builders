@@ -68,3 +68,12 @@
     }
   }
 }
+
+.active {
+  background-color: $stcColor;
+  color: $whiteColor;
+  cursor: pointer;
+  h4 {
+    color: $whiteColor;
+  }
+}

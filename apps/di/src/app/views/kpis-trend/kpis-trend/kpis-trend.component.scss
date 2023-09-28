@@ -1,0 +1,130 @@
+
+// Tabs row styles :
+.tab-span{
+  min-width: 75px;
+  display: inline-block;
+  color: white;
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.active{
+  opacity: 1;
+
+  .tab-name{
+    border-bottom: 3px solid var(--stc-coral-color);
+    padding-bottom: 5px;
+  }
+}
+
+// End of Tabs row styles ^
+
+
+// View container Styles :
+
+.view-container{
+  background-color: var(--light-grey);
+  margin-top: 20px;
+}
+
+
+// End of container styles ^
+
+
+// unit measurement styles :
+
+.symbols-row{
+  text-align: end;
+}
+
+.baseline-holder, .target-holder, .last-update-holder{
+  display: inline-block;
+  margin: 0 11px;
+  margin-top: 15px;
+
+  p{
+    display: flex;
+    align-items: center;
+  }
+}
+
+.baseline-shape{
+  color: var(--half-black);
+  opacity: 0.5;
+  .circle{
+    background-color: var(--half-black);
+
+  }
+}
+
+.target-shape{
+  color: var(--stc-color);
+  opacity: 0.5;
+
+  .circle{
+    background-color: var(--stc-color);
+
+  }
+}
+
+.last-update-holder{
+
+  .date{
+    opacity: 0.5;
+  }
+}
+
+.circle{
+  display: inline-block;
+  height: 13px;
+  width: 13px;
+  border-radius: 50%;
+
+}
+
+
+// Legend row styles :
+
+.legends-row{
+  padding: 15px;
+  padding-top:0 ;
+  justify-content: space-between;
+}
+
+.capabilities-col{
+
+  .row{
+    justify-content: flex-end;
+  }
+}
+
+.color-circle{
+  height: 15px;
+  width: 15px;
+  display: inline-block;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+
+.building-circle{
+  background-color: var(--stc-Sea-Color);
+}
+
+.utilization-circle{
+  background-color: var(--stc-sun-color);
+}
+
+.experience-circle{
+  background-color: var(--stc-sunset-color);
+}
+
+.building, .utilization, .experience {
+
+  .text{
+    font-size: 13px;
+    align-items: center;
+    display: flex;
+  }
+}
+

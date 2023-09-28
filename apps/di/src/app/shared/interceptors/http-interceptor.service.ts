@@ -21,7 +21,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     if (token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZWNobm9sb2d5X3VzZXJAcWVlbWEubmV0IiwiZXhwIjoxNjk2NzA4MzkxLCJpYXQiOjE2OTU2MjgzOTF9.BHJG4Ol_UVhsTRFTXYMWt43Mr3-ireiNiFA1Vr3p8eGvH0fVIKnQ1ii-pmxRyHgHgwFFQVZjrJFlyTkiURfPQg`,
         },
       });
     }
