@@ -22,23 +22,27 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        console.warn('EL ERR', err);
-        if (err.status === 401) {
-          if (err.error.status === 'UNAUTHORIZED') {
-            this.router.navigate(['/unauthorized-page']);
-          } else {
-            // auto logout if 401 response returned from api
-            // this.authService.logout();
-          }
-        }
-        if (err.status === 403) {
-          //this.authService.logout();
-          this.router.navigate(['/unauthorized-page']);
-        }
         const error = err.message;
-        this.toastr.error(
-          err?.error?.debugMessage ? err?.error?.debugMessage : error
-        );
+
+        console.warn('EL ERR', err);
+        if (err.error?.debugMessage !== 'User Is Not Found') {
+          if (err.status === 401) {
+            if (err.error.status === 'UNAUTHORIZED') {
+              this.router.navigate(['/unauthorized-page']);
+            } else {
+              // auto logout if 401 response returned from api
+              // this.authService.logout();
+            }
+          }
+          if (err.status === 403) {
+            //this.authService.logout();
+            this.router.navigate(['/unauthorized-page']);
+          }
+          this.toastr.error(
+            err?.error?.debugMessage ? err?.error?.debugMessage : error
+          );
+        }
+
         return throwError(error);
       })
     );
