@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AuthService } from '../../services/auth.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'stc-apps-login',
@@ -21,7 +22,11 @@ export class LoginComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loginForm();
+    if (environment.production) {
+      this.authService.navigateToLogin();
+    } else {
+      this.loginForm();
+    }
   }
 
   loginForm() {
@@ -36,9 +41,9 @@ export class LoginComponent implements OnInit {
     if (this.form.valid) {
       this.authService.login(this.form.value).subscribe((res: any) => {
         this.isLoading = false;
-        // if(res.result === "SUCCESS"){
-        //   this.authService.setLoggedInUser();
-        // }
+        if (res.result === 'SUCCESS') {
+          this.authService.setLoggedInUser();
+        }
       });
     }
   }

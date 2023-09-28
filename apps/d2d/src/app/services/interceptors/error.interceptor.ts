@@ -25,24 +25,23 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        console.warn("EL ERR", err)
+        console.warn('EL ERR', err);
+        const error = err.message;
         if (err.status === 401) {
-
-          if(err.error.status === "UNAUTHORIZED"){
-            this.router.navigate(['/unauthorized-page']);
-          }else{
+          if (err.error.status === 'UNAUTHORIZED') {
+            // this.router.navigate(['/unauthorized-page']);
+          } else {
             // auto logout if 401 response returned from api
             this.authService.logout();
           }
-        }
-        if (err.status === 403) {
+        } else if (err.status === 403) {
           //this.authService.logout();
-          this.router.navigate(['/unauthorized-page']);
+          // this.router.navigate(['/unauthorized-page']);
+        } else {
+          this.toastr.error(
+            err?.error?.debugMessage ? err?.error?.debugMessage : error
+          );
         }
-        const error = err.message;
-        this.toastr.error(
-          err?.error?.debugMessage ? err?.error?.debugMessage : error
-        );
         return throwError(error);
       })
     );

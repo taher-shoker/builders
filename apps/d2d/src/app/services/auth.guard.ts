@@ -10,7 +10,7 @@ import { Observable } from 'rxjs';
 import { map, take, tap } from 'rxjs/operators';
 
 import { AuthService } from './auth.service';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie';
 
 @Injectable({ providedIn: 'root' })
 export class AuthGuard implements CanActivate {
@@ -20,40 +20,18 @@ export class AuthGuard implements CanActivate {
     private cookieService: CookieService
   ) {}
 
-  canActivate(
-    route: ActivatedRouteSnapshot,
-    router: RouterStateSnapshot
-  ):
-    | boolean
-    | UrlTree
-    | Promise<boolean | UrlTree>
-    | Observable<boolean | UrlTree> {
-    return this.authService.user.pipe(
-      take(1),
-      map((user) => {
-        const token = this.cookieService.get('token')
-          ? this.cookieService.get('token')
-          : '';
+  canActivate(route: ActivatedRouteSnapshot): boolean {
+    const token = this.cookieService.get('token')
+      ? this.cookieService.get('token')
+      : '';
 
-        const roles = this.cookieService.get('fraud-roles');
-
-        const isAuth = !!user || !!token;
-        if (isAuth) {
-          if (route.data['permissions']) {
-            // route.data['permissions'].includes('')
-            roles.includes(route.data['permissions'])
-              ? true
-              : this.router.navigate(['/unauthorized-page']);
-          }
-          return true;
-        }
-        return this.router.createUrlTree(['/login']);
-      }),
-      tap((isAuth) => {
-        if (!isAuth) {
-          this.router.navigate(['/login']);
-        }
-      })
-    );
+    console.log('route', route);
+    if (!token) {
+      this.authService.navigateToLogin();
+      return false;
+    } else if (!this.authService.isAdminUser()) {
+      return true;
+    }
+    return false;
   }
 }

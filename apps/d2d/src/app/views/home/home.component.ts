@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
 
@@ -14,9 +14,10 @@ export class HomeComponent implements OnInit {
     private authService: AuthService,
     public router: Router
   ) {}
+
   urlHome!: string;
   title = { title: 'home', text: '' };
-  userName = 'taher shoker';
+  userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
   navItems = [
@@ -42,10 +43,10 @@ export class HomeComponent implements OnInit {
       urlHome: '/users-setting',
     },
   ];
+  ngOnInit() {
+    this.authService.getUserData();
 
-  ngOnInit(): void {
-    this.userName = this.cookieService.get('displayName');
-    this.authService.setLoggedInUser();
+    this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       if (res?.roles) {
         const items = [];
@@ -62,10 +63,11 @@ export class HomeComponent implements OnInit {
       }
     });
   }
-  logOut() {
-    this.authService.logout();
-  }
+
   backToHome() {
     this.router.navigate([this.urlHome]);
+  }
+  logOut() {
+    this.authService.logout();
   }
 }

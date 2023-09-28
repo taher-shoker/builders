@@ -21,26 +21,20 @@ const routes: Routes = [
             (m) => m.CassesSettingModule
           ),
       },
-      {
-        path: 'users-setting',
-        data: { breadcrumb: 'users_setting' },
-        canActivate: [AuthGuard],
-        loadChildren: () =>
-          import('../users-settings/users-settings.module').then(
-            (m) => m.UsersSettingsModule
-          ),
-      },
+      // {
+      //   path: 'users-setting',
+      //   data: { breadcrumb: 'users_setting' },
+      //   // canActivate: [AuthGuard],
+      //   loadChildren: () =>
+      //     import('../users-settings/users-settings.module').then(
+      //       (m) => m.UsersSettingsModule
+      //     ),
+      // },
       {
         path: 'dashboard',
         data: { breadcrumb: 'dashboard' },
         canActivate: [AuthGuard],
         component: DashboardComponent,
-      },
-      {
-        path: 'unauthorized-page',
-        data: { breadcrumb: '' },
-        component: UnauthorizedPageComponent,
-        // canActivate: [AuthGuard],
       },
     ],
   },

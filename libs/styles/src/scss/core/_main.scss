@@ -19,13 +19,15 @@ rp {
 .display-none {
   display: none;
 }
-
+label {
+  text-transform: capitalize;
+}
 body {
   position: relative;
   word-break: break-word;
   overflow-x: hidden;
   // background-color: rgba($color: $grayColor, $alpha: 0.1);
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   color: var(--textColor) !important;
   direction: var(--direction);
 }

@@ -16,6 +16,7 @@ export class ButtonComponent implements OnInit {
     | 'success'
     | 'danger-outline'
     | 'gray-outline'
+    | 'stc-color-outline'
     | 'default' = 'default';
   @Input() actionType: 'button' | 'submit' = 'button';
   @Input() buttonDisable = false;

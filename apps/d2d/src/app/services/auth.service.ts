@@ -1,7 +1,7 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
@@ -48,18 +48,29 @@ export class AuthService {
         catchError(this.handleError),
         tap((resData) => {
           this.handleAuthentication(resData.displayName, resData.token);
-
-          this.http
-            .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
-            .subscribe((res: LoggedUser) => {
-              if (res.roles.includes('ADMINS')) {
-                this.router.navigate(['/users-setting']);
-              } else {
-                this.router.navigate(['/home']);
-              }
-            });
+          this.getUserData();
         })
       );
+  }
+
+  getUserData() {
+    this.http
+      .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
+      .subscribe((res: LoggedUser) => {
+        this.loggedUserStream.next(res);
+        this.loggedInUser = res;
+        this.cookieService.put('fraud-roles', res?.roles[0]);
+        this.cookieService.put('fraud-user', JSON.stringify(res));
+        if (res.roles.includes('ADMINS')) {
+          this.router.navigate(['/users-setting']);
+        } else {
+          this.router.navigate(['/home']);
+        }
+      });
+  }
+
+  isAdminUser() {
+    return this.loggedUserStream.getValue()?.roles.includes('ADMINS');
   }
 
   autoLogin() {
@@ -80,11 +91,23 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
-    this.router.navigate(['/login']);
-    this.cookieService.deleteAll();
+    this.cookieService.remove('token');
     this.tokenExpirationTimer = null;
-    this.loggedUserStream.next(null);
+    //  this.loggedUserStream.next(null);
     this.loggedInUser = null;
+
+    this.navigateToLogin();
+  }
+
+  navigateToLogin() {
+    const loginPath = JSON.parse(this.cookieService.get('login-path') || '');
+    if (environment.production) {
+      const routeToLogin = loginPath + '/cem/reporting/login';
+      window.location.href = routeToLogin;
+    } else {
+      //this.router.navigate(['/login']);
+      window.location.href = loginPath + '/login';
+    }
   }
 
   autoLogout(expirationDuration: number) {
@@ -103,7 +126,8 @@ export class AuthService {
       .subscribe((res: LoggedUser) => {
         this.loggedInUser = res;
         this.loggedUserStream.next(res);
-        this.cookieService.set('fraud-roles', JSON.stringify(res.roles));
+        this.cookieService.put('fraud-roles', res.roles[0]);
+        this.cookieService.put('fraud-user', JSON.stringify(res));
         // if(this.loggedInUser.roles.includes("APPROVERS")){
         //   this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
         // }
@@ -113,8 +137,8 @@ export class AuthService {
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);
     this.user.next(user);
-    this.cookieService.set('token', token);
-    this.cookieService.set('displayName', displayName);
+    this.cookieService.put('token', token);
+    this.cookieService.put('displayName', displayName);
 
     //localStorage.setItem('userData', JSON.stringify(user));
   }

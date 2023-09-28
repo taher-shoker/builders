@@ -53,6 +53,10 @@
     color: $shadowStc;
     border: 1px solid $shadowStc;
   }
+  &.stc-color-outline {
+    color: $stcColor;
+    border: 1px solid $stcColor;
+  }
   &.danger-outline {
     color: $redColor;
     border: 1px solid $redColor;

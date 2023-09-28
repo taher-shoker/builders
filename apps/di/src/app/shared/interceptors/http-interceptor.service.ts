@@ -7,7 +7,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { CookieService } from 'ngx-cookie-service';
+import { CookieService } from 'ngx-cookie';
 
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
