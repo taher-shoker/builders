@@ -14,7 +14,6 @@ import { LevelZeroResponse } from './../../shared/models/http-response.model';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent implements OnInit {
-
   dataService = inject(DataService);
   receivedChanges: boolean = false;
 
@@ -63,17 +62,17 @@ export class HomeComponent implements OnInit {
   ];
 
   busLabels: LabelLine[] = [
-    { value: 'BUs DI', styles: '[bold]', centerY: 90, fontSize: 15 },
+    { value: 'BUs DI', styles: '[bold]', centerY: 90, fontSize: 12 },
     { value: '0', styles: '[#00c48c][bold]', centerY: 27, fontSize: 22 },
   ];
 
   fusLabels: LabelLine[] = [
-    { value: 'FUs DI', styles: '[bold]', centerY: 90, fontSize: 15 },
+    { value: 'FUs DI', styles: '[bold]', centerY: 90, fontSize: 12 },
     { value: '0', styles: '[#bb2222][bold]', centerY: 27, fontSize: 22 }, // red-Color-dark #bb2222
   ];
 
   techLabels: LabelLine[] = [
-    { value: 'Technology DI', styles: '[bold]', centerY: 90, fontSize: 14 },
+    { value: 'Technology DI', styles: '[bold]', centerY: 90, fontSize: 12 },
     { value: '0', styles: '[#00c48c][bold]', centerY: 27, fontSize: 22 }, // Oasis green color #00c48c
   ];
 
@@ -96,7 +95,6 @@ export class HomeComponent implements OnInit {
   fuDelta!: number;
   techDelta!: number;
 
-
   progressColors = ['#1cced8', '#a54ee1', '#45006F'];
   donutColors = ['#ff6a39', '#ffdd40', '#1cced8'];
 
@@ -105,29 +103,71 @@ export class HomeComponent implements OnInit {
       console.log('Home res', res);
 
       const config = [
-        {bName: "busLabels", propOfDataResponse: "BUs", bNameData: "busData", bNameScore: "buScore", bNameTarget: "buTarget", bNameDelta: "buDelta"},
-        {bName: "fusLabels", propOfDataResponse: "FUs", bNameData: "fusData", bNameScore: "fuScore", bNameTarget: "fuTarget", bNameDelta: "fuDelta"},
-        {bName: "techLabels", propOfDataResponse: "Technology", bNameData: "techData",  bNameScore: "techScore", bNameTarget: "techTarget", bNameDelta: "techDelta"}
-      ]
+        {
+          bName: 'busLabels',
+          propOfDataResponse: 'BUs',
+          bNameData: 'busData',
+          bNameScore: 'buScore',
+          bNameTarget: 'buTarget',
+          bNameDelta: 'buDelta',
+        },
+        {
+          bName: 'fusLabels',
+          propOfDataResponse: 'FUs',
+          bNameData: 'fusData',
+          bNameScore: 'fuScore',
+          bNameTarget: 'fuTarget',
+          bNameDelta: 'fuDelta',
+        },
+        {
+          bName: 'techLabels',
+          propOfDataResponse: 'Technology',
+          bNameData: 'techData',
+          bNameScore: 'techScore',
+          bNameTarget: 'techTarget',
+          bNameDelta: 'techDelta',
+        },
+      ];
 
-      for(const configElement of config){
-        this.distributeBusinessNameOverall(res, configElement.bName, configElement.propOfDataResponse)
-        this.distributeBusinessNameData(res, configElement.bNameData, configElement.propOfDataResponse)
-        this.populateScores(res, configElement.bNameScore, configElement.propOfDataResponse)
-        this.populateTargets(res, configElement.bNameTarget, configElement.propOfDataResponse)
-        this.populateDeltas(res, configElement.bNameDelta, configElement.propOfDataResponse)
-
+      for (const configElement of config) {
+        this.distributeBusinessNameOverall(
+          res,
+          configElement.bName,
+          configElement.propOfDataResponse
+        );
+        this.distributeBusinessNameData(
+          res,
+          configElement.bNameData,
+          configElement.propOfDataResponse
+        );
+        this.populateScores(
+          res,
+          configElement.bNameScore,
+          configElement.propOfDataResponse
+        );
+        this.populateTargets(
+          res,
+          configElement.bNameTarget,
+          configElement.propOfDataResponse
+        );
+        this.populateDeltas(
+          res,
+          configElement.bNameDelta,
+          configElement.propOfDataResponse
+        );
       }
-      this.populateSTCOverall(res)
+      this.populateSTCOverall(res);
 
-      this.buDeltaAchieved = res.data.BUs[0].achievedFlag === "0" ? false : true
-      this.fuDeltaAchieved = res.data.FUs[0].achievedFlag === "0" ? false : true
-      this.techDeltaAchieved = res.data.Technology[0].achievedFlag === "0" ? false : true
-
+      this.buDeltaAchieved =
+        res.data.BUs[0].achievedFlag === '0' ? false : true;
+      this.fuDeltaAchieved =
+        res.data.FUs[0].achievedFlag === '0' ? false : true;
+      this.techDeltaAchieved =
+        res.data.Technology[0].achievedFlag === '0' ? false : true;
     });
   }
 
-  populateSTCOverall(data: LevelZeroResponse){
+  populateSTCOverall(data: LevelZeroResponse) {
     this.overallScore = data.data.Overall[0].score;
     this.overallTarget = data.data.Overall[0].target;
     this.overallDelta = data.data.Overall[0].monthDiff;
@@ -147,48 +187,63 @@ export class HomeComponent implements OnInit {
       },
       { html: `<p>From last month</p>`, centerY: -100 },
     ];
-    this.progressCircleLabels = [...temp]
+    this.progressCircleLabels = [...temp];
   }
 
-  distributeBusinessNameOverall(data: LevelZeroResponse, businessName: string, lookUpPropName: string){
-    this[businessName][1].value = data.data[lookUpPropName][0].score + "%";
-    const temp = {[businessName]: this[businessName]}
-    this[businessName] = [...temp[businessName]]
+  distributeBusinessNameOverall(
+    data: LevelZeroResponse,
+    businessName: string,
+    lookUpPropName: string
+  ) {
+    this[businessName][1].value = data.data[lookUpPropName][0].score + '%';
+    const temp = { [businessName]: this[businessName] };
+    this[businessName] = [...temp[businessName]];
 
-    if(businessName === "busLabels"){
-      this.data[0].value = data.data[lookUpPropName][0].score
-
-    }else if(businessName === "fusLabels"){
-      this.data[1].value = data.data[lookUpPropName][0].score
-
-    }else{
-      this.data[2].value = data.data[lookUpPropName][0].score
+    if (businessName === 'busLabels') {
+      this.data[0].value = data.data[lookUpPropName][0].score;
+    } else if (businessName === 'fusLabels') {
+      this.data[1].value = data.data[lookUpPropName][0].score;
+    } else {
+      this.data[2].value = data.data[lookUpPropName][0].score;
     }
 
     const dataTemp = this.data;
-    this.data = [...dataTemp]
+    this.data = [...dataTemp];
   }
 
-  populateScores(data: LevelZeroResponse, businessName: string, lookUpPropName: string){
-    this[businessName] = data.data[lookUpPropName][0].score + "%";
+  populateScores(
+    data: LevelZeroResponse,
+    businessName: string,
+    lookUpPropName: string
+  ) {
+    this[businessName] = data.data[lookUpPropName][0].score + '%';
   }
 
-  populateTargets(data: LevelZeroResponse, businessName: string, lookUpPropName: string){
-    this[businessName] = data.data[lookUpPropName][0].target + "%";
+  populateTargets(
+    data: LevelZeroResponse,
+    businessName: string,
+    lookUpPropName: string
+  ) {
+    this[businessName] = data.data[lookUpPropName][0].target + '%';
   }
 
-  populateDeltas(data: LevelZeroResponse, businessName: string, lookUpPropName: string){
-    this[businessName] = data.data[lookUpPropName][0].monthDiff + "%";
+  populateDeltas(
+    data: LevelZeroResponse,
+    businessName: string,
+    lookUpPropName: string
+  ) {
+    this[businessName] = data.data[lookUpPropName][0].monthDiff + '%';
   }
 
-
-  distributeBusinessNameData(data: LevelZeroResponse, businessName: string, lookUpPropName: string){
-    for(let i = 1; i < 4; i++){
-      this[businessName][i-1].value = data.data[lookUpPropName][i].score;
-      const temp = {[businessName]: this[businessName]}
-      this[businessName] = [...temp[businessName]]
+  distributeBusinessNameData(
+    data: LevelZeroResponse,
+    businessName: string,
+    lookUpPropName: string
+  ) {
+    for (let i = 1; i < 4; i++) {
+      this[businessName][i - 1].value = data.data[lookUpPropName][i].score;
+      const temp = { [businessName]: this[businessName] };
+      this[businessName] = [...temp[businessName]];
     }
   }
-
-
 }
