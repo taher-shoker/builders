@@ -11,6 +11,6 @@ export const environment = {
     fraud_system: 'http://localhost:51635/',
     di_system: 'https://www.google.com',
   },
-  sso_url: 'https://www.google.com',
+  sso_url: 'http://localhost:7080/administration/saml/login',
   languageFilesPath: '/assets/i18n/',
 };

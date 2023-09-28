@@ -59,6 +59,8 @@ export class AuthService {
 
   gratnedSystems: string[] = [];
 
+  passedSystems: System[] = [];
+
   constructor(
     private cookieService: CookieService,
     private router: Router,
@@ -88,6 +90,7 @@ export class AuthService {
   }
 
   login(data: { username: string; password: string }) {
+    this.availableSystems = [];
     return this.http
       .post<AuthResponseData>(`${this.loginTPUrl}/user/authenticate`, data)
       .pipe(
@@ -100,14 +103,13 @@ export class AuthService {
 
   ssoLogin() {
     return this.http
-      .post<any>(
-        `http://localhost:7080/administration/saml/login`,
-        { username: "mohfibrahim.c@stc.com.sa", password: "cem@123456" }
-      )
+      .post<any>(`http://localhost:7080/administration/saml/login`, {
+        username: 'mohfibrahim.c@stc.com.sa',
+        password: 'cem@123456',
+      })
       .pipe(
         tap((resData: any) => {
-          console.log("SSO",resData)
-
+          console.log('SSO', resData);
         })
       );
   }
@@ -176,6 +178,8 @@ export class AuthService {
 
             this.setLoggedInUser();
           }
+
+          this.handleUserSystems();
         } else if (res.dto.systems.length > 1) {
           if (res.dto.systems.includes('TP_DashboardUsers')) {
             this.handleTPSysNeeds(res);
@@ -197,10 +201,10 @@ export class AuthService {
             JSON.stringify(this.gratnedSystems)
           );
           // eslint-disable-next-line no-debugger
-          debugger;
           this.router.navigate(['/apps']);
 
           //  this.setLoggedInUser();
+          this.handleUserSystems();
         } else {
           this.cookieService.removeAll();
           this.toastr.error(
@@ -395,6 +399,109 @@ export class AuthService {
       systems: ['TP_DashboardUsers'],
     };
     return userModel;
+  }
+
+  handleUserSystems(): System[] {
+    this.passedSystems = [];
+    // the user has access to legacy systems TP or CEO
+    const gratnedSystems: string[] = JSON.parse(
+      this.cookieService.get('granted-systems') || ''
+    );
+
+    if (gratnedSystems.length > 1) {
+      if (gratnedSystems) {
+        gratnedSystems.forEach((system) => {
+          switch (system) {
+            case 'TP_DashboardUsers':
+              this.passedSystems.push({
+                systemUrl: environment.systems.tp_system,
+                name: 'TP Dashboard',
+                displayName: 'TP Dashboard',
+              });
+              break;
+            case 'CEO_DashboardUsers':
+              this.passedSystems.push({
+                systemUrl:
+                  environment.systems.ceo_system +
+                  this.cookieService.get('ceo-username'),
+                name: 'CCEX Workspace',
+                displayName: 'CCEX Workspace',
+              });
+              break;
+            case 'FRAUD_ManagementUsers':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl: environment.systems.fraud_system,
+                name: 'Fraud Management Workspace',
+                displayName: 'Fraud Management Workspace',
+              });
+              break;
+            case 'DI_Management':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl: environment.systems.di_system,
+                name: 'DT Workspace',
+                displayName: 'DT Workspace',
+              });
+              break;
+            default:
+              break;
+          }
+        });
+
+        return this.passedSystems;
+      }
+      return [];
+    } else {
+      // navigate to the system directly after checking the user role
+      if (gratnedSystems[0] === 'TP_DashboardUsers') {
+        // the user is related to the TP only
+        if (this.cookieService.get('tp-role') === 'ADMIN_TECHNICAL') {
+          // navigate to the admin module
+          window.location.href = environment.systems.tp_admin_system;
+        } else {
+          // navigate to the app
+          window.location.href = environment.systems.tp_system;
+        }
+      }
+
+      if (gratnedSystems[0] === 'CEO_DashboardUsers') {
+        // the user is related to the CEO only
+        // navigate to the CEO Link
+        window.location.href =
+          environment.systems.ceo_system +
+          this.cookieService.get('ceo-username');
+      }
+      console.log(
+        this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName
+      );
+      if (gratnedSystems[0] === 'FRAUD_ManagementUsers') {
+        // the user is related to the Fraud only
+        if (
+          this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
+          'ADMINS'
+        ) {
+          this.router.navigate(['users-setting']);
+        } else {
+          window.location.href = environment.systems.fraud_system; //'http://localhost:9001/';
+        }
+      }
+
+      if (gratnedSystems[0] === 'DI_Management') {
+        // the user is related to the Fraud only
+
+        if (
+          this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
+          'ADMINS'
+        ) {
+          this.router.navigate(['users-setting']);
+        } else {
+          window.location.href = environment.systems.di_system; //'http://localhost:9001/';
+        }
+      }
+
+      return [{ name: gratnedSystems[0] }];
+    }
   }
 }
 
