@@ -182,6 +182,11 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
 
+  keyDownFunction(event: KeyboardEvent) {
+    if (event.keyCode === 13) {
+      this.checkUserExist();
+    }
+  }
   restFormWithValue(data: any) {
     this.getRoles();
     if (!this.addGroups) {

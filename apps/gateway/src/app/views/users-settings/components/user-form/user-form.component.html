@@ -1,5 +1,5 @@
 <div class="user-form">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" (keydown)="keyDownFunction($event)">
     <div class="inputs">
       <div class="row align-items-center">
         <div class="col-md-4">
