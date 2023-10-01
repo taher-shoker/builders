@@ -17,10 +17,16 @@ export class HomeComponent implements OnInit {
     private router: Router
   ) {}
   ngOnInit(): void {
-    if (
-      (JSON.parse(this.cookieService.get('granted-systems') || '').length == 0 ||
-      this.apps.length == 0 ) && !this.authService.isAdminUser()
-    ) {
+    if (this.cookieService.get('granted-systems')) {
+      if (
+        (JSON.parse(this.cookieService.get('granted-systems') || '').length ==
+          0 ||
+          this.apps.length == 0) &&
+        !this.authService.isAdminUser()
+      ) {
+        this.authService.getUserData();
+      }
+    } else {
       this.authService.getUserData();
     }
   }
