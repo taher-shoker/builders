@@ -18,8 +18,8 @@ export class HomeComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     if (
-      JSON.parse(this.cookieService.get('granted-systems') || '').length == 0 ||
-      this.apps.length == 0
+      (JSON.parse(this.cookieService.get('granted-systems') || '').length == 0 ||
+      this.apps.length == 0 ) && !this.authService.isAdminUser()
     ) {
       this.authService.getUserData();
     }

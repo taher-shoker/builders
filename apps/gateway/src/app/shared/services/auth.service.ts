@@ -121,7 +121,7 @@ export class AuthService {
     const isAdminRole = this.loggedUserStream
       .getValue()
       ?.userGroups[0].roles[0].roleName.includes('ADMINS');
-
+debugger
     if (user != null && isAdminRole == true) {
       return true;
     } else {
@@ -141,6 +141,8 @@ export class AuthService {
     this.http
       .get<any>(`${this.loginTPUrl}/user/getCurrentUserData`)
       .subscribe((res: any) => {
+        console.log(res);
+        debugger
         if (res.dto.systems.length == 1) {
           if (res.dto.systems.includes('TP_DashboardUsers')) {
             // checking if the user has TP access to handle the needs
@@ -175,8 +177,6 @@ export class AuthService {
             if (res.dto.systems.includes('DI_Management')) {
               this.gratnedSystems.push('DI_Management');
             }
-            console.log('form lenght == 1 case');
-
             this.setLoggedInUser();
           }
 
@@ -201,8 +201,6 @@ export class AuthService {
             res.dto.systems.includes('FRAUD_ManagementUsers') ||
             res.dto.systems.includes('DI_Management')
           ) {
-            console.log('form lenght > 1 case');
-
             this.setLoggedInUser();
           }
 
@@ -211,7 +209,6 @@ export class AuthService {
             'granted-systems',
             JSON.stringify(this.gratnedSystems)
           );
-          // eslint-disable-next-line no-debugger
           this.router.navigate(['/apps']);
 
           //  this.setLoggedInUser();
@@ -370,7 +367,6 @@ export class AuthService {
 
   // adding token to simulate TP system
   applyUserValuesCookies(user: TPUserModel) {
-    console.log('user', user);
     this.cookieService.put('username', user.username, {
       // httpOnly: true,
       secure: true,
@@ -435,7 +431,6 @@ export class AuthService {
               });
               break;
             case 'FRAUD_ManagementUsers':
-              console.log('form FRAUD_ManagementUsers case');
               this.setLoggedInUser();
               this.passedSystems.push({
                 systemUrl: environment.systems.fraud_system,
@@ -444,8 +439,6 @@ export class AuthService {
               });
               break;
             case 'DI_Management':
-              console.log('form DI_Management case');
-
               this.setLoggedInUser();
               this.passedSystems.push({
                 systemUrl: environment.systems.di_system,
@@ -482,6 +475,10 @@ export class AuthService {
           this.cookieService.get('ceo-username');
       }
 
+
+      console.log(
+        this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName
+      );
       if (gratnedSystems[0] === 'FRAUD_ManagementUsers') {
         // the user is related to the Fraud only
         if (
@@ -496,7 +493,6 @@ export class AuthService {
 
       if (gratnedSystems[0] === 'DI_Management') {
         // the user is related to the Fraud only
-
         if (
           this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
           'ADMINS'

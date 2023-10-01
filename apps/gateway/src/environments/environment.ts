@@ -9,7 +9,7 @@ export const environment = {
     tp_system: 'http://localhost:4200/pages/geo-eye',
     tp_admin_system: 'http://localhost:4200/system-configurations',
     fraud_system: 'http://localhost:51635/',
-    di_system: 'https://www.google.com',
+    di_system: 'http://localhost:9001/cem/reporting/dtworkspace/',
   },
   sso_url: 'http://localhost:7080/administration/saml/login',
   languageFilesPath: '/assets/i18n/',

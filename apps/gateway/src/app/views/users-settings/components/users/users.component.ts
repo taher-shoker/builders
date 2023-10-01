@@ -177,22 +177,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.teams = this.userService
           .getTeams()
           .filter((x: any) => x.roleName == value.groupName);
-        // switch (value.groupName) {
-        //   case 'CREATORS':
-        //     this.teams = this.userService
-        //       .getTeams()
-        //       .filter((t: any) => t.roleName == 'CREATORS'); //
-
-        //     break;
-        //   case 'APPROVERS':
-        //     this.teams = this.userService
-        //       .getTeams()
-        //       .filter((t: any) => t.roleName == 'APPROVERS');
-        //     break;
-        //   default:
-
-        //     break;
-        // }
         this.dataSource.data = this.list.filter(
           (x: any) => this.userService.getUserPrivilege(x) === value?.groupName
         );

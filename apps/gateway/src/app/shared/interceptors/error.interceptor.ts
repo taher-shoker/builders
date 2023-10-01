@@ -23,8 +23,6 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         const error = err.message;
-
-        console.warn('EL ERR', err);
         if (err.error?.debugMessage !== 'User Is Not Found') {
           if (err.status === 401) {
             if (err.error.status === 'UNAUTHORIZED') {
@@ -39,7 +37,11 @@ export class ErrorInterceptor implements HttpInterceptor {
             this.router.navigate(['/unauthorized-page']);
           }
           this.toastr.error(
-            err?.error?.debugMessage ? err?.error?.debugMessage : error
+            err?.error?.debugMessage
+              ? err?.error?.debugMessage
+              : err?.error?.result
+              ? err?.error?.result
+              : "Something went wrong!"
           );
         }
 
