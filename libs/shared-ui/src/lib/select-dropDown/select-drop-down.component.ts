@@ -46,13 +46,13 @@ export class SelectDropDownComponent<T>
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;
-  @Input() outputValue! : string; // if passed, the component should output this value from the object
+  @Input() outputValue!: string; // if passed, the component should output this value from the object
 
   onChangeValue(value: any) {
-    if(this.outputValue){
+    if (this.outputValue) {
       this.selectChange.emit(value[this.outputValue]);
-      console.warn("Da values", value[this.outputValue])
-    }else{
+      console.warn('Da values', value[this.outputValue]);
+    } else {
       this.selectChange.emit(value);
     }
   }
@@ -61,7 +61,7 @@ export class SelectDropDownComponent<T>
     if (changes['options']) {
       this.options = changes['options'].currentValue;
       if (this.defaultAll) {
-        this.options?.unshift({ id: 'all', [this.labelName]: 'All' });
+        this.options?.unshift({ id: 'all', [this.labelName]: '-' });
       }
     }
   }
