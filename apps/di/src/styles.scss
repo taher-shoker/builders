@@ -1,4 +1,16 @@
 /* You can add global styles to this file, and also import other style files */
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+// @import "./assets/fonts/Roboto_Condensed/RobotoCondensed-Regular.ttf";
 @import "./styles/custom.scss";
 @import "./styles/variables.scss";
+
+@font-face {
+  font-family: 'Roboto Condensed';
+  src: url('./assets/fonts/Roboto_Condensed/RobotoCondensed-light.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+html, body{
+  font-family: 'Roboto Condensed', sans-serif;
+}

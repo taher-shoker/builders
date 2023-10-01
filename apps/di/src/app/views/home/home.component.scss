@@ -1,41 +1,39 @@
-*{
+* {
   margin: 0;
 }
 
-
-.hello-user{
+.hello-user {
   color: white;
   font-size: 32px;
 }
 
-.overview-text{
+.overview-text {
   color: var(--stc-grey-color);
   margin-top: 10px;
 }
 
-.section-heading{
+.section-heading {
   color: white;
   font-size: 24px;
   margin-top: 25px;
   margin-bottom: 15px;
 }
 
-.stc-digital-index-section{
-  max-width: 1060px;
+.stc-digital-index-section {
+  width: 1200px;
   margin: auto;
-
 }
 
-.stc-digital-index{
+.stc-digital-index {
   background-color: white;
 }
 
 // Legend Styles :
-.legends-row{
+.legends-row {
   padding: 15px;
 }
 
-.color-circle{
+.color-circle {
   height: 15px;
   width: 15px;
   display: inline-block;
@@ -43,39 +41,40 @@
   margin-right: 10px;
 }
 
-.building-circle{
+.building-circle {
   background-color: var(--stc-Sea-Color);
 }
 
-.utilization-circle{
+.utilization-circle {
   background-color: var(--stc-sun-color);
 }
 
-.experience-circle{
+.experience-circle {
   background-color: var(--stc-sunset-color);
 }
 
-.achieved-circle{
+.achieved-circle {
   background-color: var(--stc-green-color);
 }
 
-.not-achieved-circle{
+.not-achieved-circle {
   background-color: var(--stc-red-color);
 }
 
-.building, .utilization, .experience {
-
-  .text{
+.building,
+.utilization,
+.experience {
+  .text {
     font-size: 14px;
     align-items: center;
     display: flex;
   }
 }
 
-.achieve-col{
+.achieve-col {
   text-align: end;
 
-  .color-circle{
+  .color-circle {
     margin: 0;
     margin-left: 10px;
   }
@@ -83,14 +82,13 @@
 
 // end of legends and heading
 
-
 //Donut charts Column :
 
-.donuts-col{
+.donuts-col {
   margin-left: -3%;
 }
 
-.donut-chart-holder{
+.donut-chart-holder {
   height: 200px;
 }
 
@@ -98,12 +96,11 @@
 
 // Polylines styles :
 
-
-.polylines-holder{
+.polylines-holder {
   width: 190px;
   margin-left: -25px;
 
-  svg{
+  svg {
     width: 100%;
   }
 
@@ -112,65 +109,70 @@
     word-break: keep-all;
     left: 103%;
     width: 260px;
-    font-size: 15px;
+    font-size: 16px;
   }
 }
 
-.svg-text-liner{
+.svg-text-liner {
   position: relative;
 }
 
-.polyline-1-text{
+.polyline-1-text {
   top: -4px;
 }
 
-.polyline-2-text{
+.polyline-2-text {
   // top: 16%;
-  top:-19%;
-
+  top: -19%;
 }
 
-.polyline-3-text{
+.polyline-3-text {
   top: -70%;
 }
 
-.polylines-col{
+.polylines-col {
   margin-left: -70px;
   margin-right: 130px;
 }
 
-.polyline-1{
+.polyline-1 {
   height: 100px;
   margin-top: -20px;
-
 }
 
-.polyline-2{
+.polyline-2 {
   // margin-top: 50px;
   margin-top: -20px;
-
 }
 
-.polyline-3{
+.polyline-3 {
   // margin-top: -110px;
   margin-top: -120px;
-
 }
-
 
 // progress-circle-holder Styles :
 
-.progress-circle-holder{
+.progress-circle-holder {
   height: 500px;
 }
 
-
 // Assets :
 
-.mat-arrow-up, .mat-arrow-down{
+// .mat-arrow-up, .mat-arrow-down{
 
-  width: 14px;
-  font-size: 15px;
-  padding-top: 8px;
+//   width: 14px;
+//   font-size: 15px;
+//   padding-top: 8px;
+//   margin-left: 3px;
+// }
 
+.fas {
+  margin-left: 5px;
+  margin-right: 2px;
+  font-size: 12px;
+}
+
+.flm-txt {
+  font-size: 12px;
+  color: var(--stc-Silver-Color);
 }

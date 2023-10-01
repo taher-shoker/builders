@@ -6,5 +6,7 @@
     </div>
   </div>
 
-  <stc-apps-kpis-card *ngFor="let card of kpiCards" [cardData]="card" [currentActiveCardID]="id" (cardClick)="handleCardClick($event)"></stc-apps-kpis-card>
+  <ng-container *ngIf="kpis">
+    <stc-apps-kpis-card *ngFor="let card of kpis" [cardData]="card" [currentActiveCardID]="id" (click)="handleCardClick(card.kpiId)"></stc-apps-kpis-card>
+  </ng-container>
 </div>

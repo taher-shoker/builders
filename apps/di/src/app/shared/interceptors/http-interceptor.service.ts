@@ -21,7 +21,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     if (token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZWNobm9sb2d5X3VzZXJAcWVlbWEubmV0IiwiZXhwIjoxNjk2NzA4MzkxLCJpYXQiOjE2OTU2MjgzOTF9.BHJG4Ol_UVhsTRFTXYMWt43Mr3-ireiNiFA1Vr3p8eGvH0fVIKnQ1ii-pmxRyHgHgwFFQVZjrJFlyTkiURfPQg`,
+          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJidV91c2VyQHFlZW1hLm5ldCIsImV4cCI6MTY5NjcwODMzMCwiaWF0IjoxNjk1NjI4MzMwfQ.UFy_RMiARelNpuF3E9WEcR8IZqphonv5xCPu_Xoez_WX77xD2OJyvMf9XqlrHFqnFL0i6TwcSzIjXLyIcVAX1w`,
         },
       });
     }

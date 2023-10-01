@@ -63,17 +63,17 @@ export class HomeComponent implements OnInit {
   ];
 
   busLabels: LabelLine[] = [
-    { value: 'BUs DI', styles: '[bold]', centerY: 90, fontSize: 15 },
+    { value: 'BUs DI', styles: '[bold]', centerY: 90, fontSize: 12 },
     { value: '0', styles: '[#00c48c][bold]', centerY: 27, fontSize: 22 },
   ];
 
   fusLabels: LabelLine[] = [
-    { value: 'FUs DI', styles: '[bold]', centerY: 90, fontSize: 15 },
+    { value: 'FUs DI', styles: '[bold]', centerY: 90, fontSize: 12 },
     { value: '0', styles: '[#bb2222][bold]', centerY: 27, fontSize: 22 }, // red-Color-dark #bb2222
   ];
 
   techLabels: LabelLine[] = [
-    { value: 'Technology DI', styles: '[bold]', centerY: 90, fontSize: 14 },
+    { value: 'Technology DI', styles: '[bold]', centerY: 90, fontSize: 12 },
     { value: '0', styles: '[#00c48c][bold]', centerY: 27, fontSize: 22 }, // Oasis green color #00c48c
   ];
 
