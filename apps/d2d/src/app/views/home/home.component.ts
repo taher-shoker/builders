@@ -35,13 +35,6 @@ export class HomeComponent implements OnInit {
       roles: ['APPROVERS'],
       urlHome: '/home',
     },
-    {
-      name: 'users_setting',
-      url: '/users-setting',
-      icon: '  fa-user-friends',
-      roles: ['ADMINS'],
-      urlHome: '/users-setting',
-    },
   ];
   ngOnInit() {
     this.authService.getUserData();
