@@ -160,10 +160,18 @@ export class UsersComponent implements OnInit, AfterViewInit {
   handleSelectChange(value: any, dropDwonType: string) {
     if (dropDwonType === 'team') {
       if (value.id === 'all') {
-        this.dataSource.data = this.list;
+        if (this.selectedPrivilege.id !== 0) {
+          this.dataSource.data = this.list.filter(
+            (x: any) =>
+              this.userService.getUserPrivilege(x) ===
+              this.selectedPrivilege.groupName
+          );
+        } else {
+          this.dataSource.data = this.list;
+        }
       } else {
         this.dataSource.data = this.list.filter(
-          (x: any) => this.userService.getUserTeam(x) == value?.name
+          (x: any) => this.userService.getUserTeam(x) === value?.name
         );
       }
     } else {
@@ -174,6 +182,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.dataSource.data = this.list;
         this.getTeams();
       } else {
+        this.selectedPrivilege = value;
+
         this.teams = this.userService
           .getTeams()
           .filter((x: any) => x.roleName == value.groupName);
