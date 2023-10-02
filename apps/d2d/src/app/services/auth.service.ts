@@ -54,19 +54,26 @@ export class AuthService {
   }
 
   getUserData() {
-    this.http
-      .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
-      .subscribe((res: LoggedUser) => {
-        this.loggedUserStream.next(res);
-        this.loggedInUser = res;
-        this.cookieService.put('fraud-roles', res?.roles[0]);
-        this.cookieService.put('fraud-user', JSON.stringify(res));
-        if (res.roles.includes('ADMINS')) {
-          this.router.navigate(['/users-setting']);
-        } else {
-          this.router.navigate(['/home']);
-        }
+    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    const roles = user.userGroups
+      .filter((g: any) => g.roles[0].system.name === 'FRAUD_ManagementUsers')
+      .map((t: any) => {
+        return t.roles[0].roleName;
       });
+    const teamName = user.userGroups
+      .filter((g: any) => g.roles[0].system.name === 'FRAUD_ManagementUsers')
+      .map((t: any) => {
+        return t.groupName;
+      })[0];
+    const fraudUser: LoggedUser = {
+      roles: roles,
+      teamName: teamName,
+      ...user,
+    };
+    this.loggedUserStream.next(fraudUser);
+    this.loggedInUser = fraudUser;
+    this.cookieService.put('fraud-roles', fraudUser?.roles[0]);
+    this.cookieService.put('fraud-user', JSON.stringify(fraudUser));
   }
 
   isAdminUser() {
@@ -100,13 +107,13 @@ export class AuthService {
   }
 
   navigateToLogin() {
-    const loginPath = JSON.parse(this.cookieService.get('login-path') || '');
+    const Path = JSON.parse(this.cookieService.get('gateway-path') || '');
     if (environment.production) {
-      const routeToLogin = loginPath + '/cem/reporting/login';
+      const routeToLogin = Path + '/cem/reporting/login';
       window.location.href = routeToLogin;
     } else {
       //this.router.navigate(['/login']);
-      window.location.href = loginPath + '/login';
+      window.location.href = Path + '/login';
     }
   }
 

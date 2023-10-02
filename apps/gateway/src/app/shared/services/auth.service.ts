@@ -121,7 +121,7 @@ export class AuthService {
     const isAdminRole = this.loggedUserStream
       .getValue()
       ?.userGroups[0].roles[0].roleName.includes('ADMINS');
-    debugger;
+
     if (user != null && isAdminRole == true) {
       return true;
     } else {
@@ -133,6 +133,7 @@ export class AuthService {
     this.user.next(user);
     this.cookieService.put('token', token);
     this.cookieService.put('displayName', displayName);
+    this.cookieService.put('gateway-path', JSON.stringify(window.origin));
     this._isLoggedIn$.next(!!token);
   }
 
@@ -141,8 +142,6 @@ export class AuthService {
     this.http
       .get<any>(`${this.loginTPUrl}/user/getCurrentUserData`)
       .subscribe((res: any) => {
-        console.log(res);
-        debugger;
         if (res.dto.systems.length == 1) {
           if (res.dto.systems.includes('TP_DashboardUsers')) {
             // checking if the user has TP access to handle the needs
