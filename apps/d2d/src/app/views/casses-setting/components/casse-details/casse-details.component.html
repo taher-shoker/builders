@@ -199,7 +199,8 @@
               </p>
 
 
-              <ng-container *ngIf="item.taskName === 'Within SL Response' && item.taskStatus === 'completed' && allTasks[i+1].taskName === 'Send to Close'">
+              <ng-container
+                *ngIf="item.taskName === 'Within SL Response' && item.taskStatus === 'completed' && allTasks[i+1].taskName === 'Send to Close'">
 
                 <p class="m-0 item-msg">
                   {{"response_recvd_from_chnls" | translate}}
@@ -215,7 +216,8 @@
 
               </ng-container>
 
-              <ng-container *ngIf="item.taskName === 'Breaching SL Response' && item.taskStatus === 'completed' && allTasks[i+1].taskName === 'Send to Close'">
+              <ng-container
+                *ngIf="item.taskName === 'Breaching SL Response' && item.taskStatus === 'completed' && allTasks[i+1].taskName === 'Send to Close'">
 
                 <p class="m-0 item-msg">
                   {{"response_recvd_from_chnls" | translate}}
@@ -273,7 +275,8 @@
                   : taskAttr.attributeValue
                   }}
                 </p>
-                <p class="m-0 item-msg" *ngIf="taskAttr.attributeName === 'message' || taskAttr.attributeName === 'close_mail_content'">
+                <p class="m-0 item-msg"
+                  *ngIf="taskAttr.attributeName === 'message' || taskAttr.attributeName === 'close_mail_content'">
                   {{ taskAttr.attributeValue }}
                 </p>
 
@@ -374,7 +377,9 @@
                 : 'User') | translate
           " [options]="
             infoForm.get('assignedTo')?.value?.value === '1' ? teams : users
-          " formControlName="selectedUser" [labelName]="'name'" [labelValue]="'email'" (selectChange)="
+          " formControlName="selectedUser"
+          [labelName]="infoForm.get('assignedTo')?.value?.value === '1' ? 'groupName' : 'name'" [labelValue]="'email'"
+          (selectChange)="
             infoForm.get('assignedTo')?.value?.value === '1'
               ? infoForm.get('selectedUser')!.setValue($event)
               : infoForm.get('selectedUser')!.setValue($event)

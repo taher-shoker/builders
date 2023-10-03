@@ -230,8 +230,8 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   fetchAssigneeTasks() {
     this.userSub = this.authService.user.subscribe((res) => {
-      const currentUser = this.cookieService.get('fraud-user')
-        ? JSON.parse(this.cookieService.get('fraud-user') || '')
+      const currentUser = this.cookieService.get('MODERN_SYSTEM_USER')
+        ? JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '')
         : this.authService.getLoggedInUser();
 
       this.getAssigneeTasks = this.CasesService.getAssigneeTasks(

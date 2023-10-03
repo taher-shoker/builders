@@ -31,8 +31,8 @@ export class UsersSettingsComponent implements OnInit {
 
   ngOnInit() {
     this.userService.getLabels();
-
-    this.userName = this.cookieService.get('displayName') || '';
+    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    this.userName = user.name;
   }
 
   backToHome() {

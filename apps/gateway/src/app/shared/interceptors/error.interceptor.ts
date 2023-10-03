@@ -23,7 +23,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         const error = err.message;
-        if (err.error?.debugMessage !== 'User Is Not Found') {
+        if (
+          err.error?.debugMessage !== 'User Is Not Found' &&
+          err.status !== 503
+        ) {
           if (err.status === 401) {
             if (err.error.status === 'UNAUTHORIZED') {
               this.router.navigate(['/unauthorized-page']);
@@ -41,7 +44,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               ? err?.error?.debugMessage
               : err?.error?.result
               ? err?.error?.result
-              : "Something went wrong!"
+              : 'Something went wrong!'
           );
         }
 

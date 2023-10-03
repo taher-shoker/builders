@@ -24,6 +24,8 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
+  baseUrl = `${environment.apiUrl}/fm`;
+
   user = new BehaviorSubject<any>(null);
   private tokenExpirationTimer: any;
 
@@ -72,8 +74,6 @@ export class AuthService {
     };
     this.loggedUserStream.next(fraudUser);
     this.loggedInUser = fraudUser;
-    this.cookieService.put('fraud-roles', fraudUser?.roles[0]);
-    this.cookieService.put('fraud-user', JSON.stringify(fraudUser));
   }
 
   isAdminUser() {
@@ -107,14 +107,7 @@ export class AuthService {
   }
 
   navigateToLogin() {
-    const Path = JSON.parse(this.cookieService.get('gateway-path') || '');
-    if (environment.production) {
-      const routeToLogin = Path + '/cem/reporting/login';
-      window.location.href = routeToLogin;
-    } else {
-      //this.router.navigate(['/login']);
-      window.location.href = Path + '/login';
-    }
+    window.location.href = environment.loginPath;
   }
 
   autoLogout(expirationDuration: number) {
@@ -129,15 +122,12 @@ export class AuthService {
 
   setLoggedInUser(): void {
     this.http
-      .get<LoggedUser>(`${environment.apiUrl}/users/currentUser`)
+      .get<LoggedUser>(`${this.baseUrl}/users/currentUser`)
       .subscribe((res: LoggedUser) => {
         this.loggedInUser = res;
         this.loggedUserStream.next(res);
         this.cookieService.put('fraud-roles', res.roles[0]);
         this.cookieService.put('fraud-user', JSON.stringify(res));
-        // if(this.loggedInUser.roles.includes("APPROVERS")){
-        //   this.setSystemTeams(); // Since the user is of team APPROVERS, we need to feed the teams to the system. else don't !
-        // }
       });
   }
 

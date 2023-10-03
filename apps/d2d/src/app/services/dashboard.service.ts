@@ -3,97 +3,123 @@ import { environment } from '../../environments/environment';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { DashboardUsersCases  } from '../views/dashboard/dashboard.component';
+import { DashboardUsersCases } from '../views/dashboard/dashboard.component';
 import { DateRange, WeeklyDateObj } from '@stc-apps/shared-ui';
 interface ProductivityChartData {
-  data : {
-    fraudUserDisplayName:string;
-    productivityFrequency:number;
-  }[]
+  data: {
+    fraudUserDisplayName: string;
+    productivityFrequency: number;
+  }[];
 }
 interface StatusChartData {
-  data : {
-    caseStatus:string;
-    caseCount:number;
-  }[]
+  data: {
+    caseStatus: string;
+    caseCount: number;
+  }[];
 }
 interface ChartTypesData {
   d2DCaseTypeCountDtoList: {
-    caseType:string;
-    caseCount:number;
-  }[]
+    caseType: string;
+    caseCount: number;
+  }[];
 }
 interface WeeklyTrendChart {
   data: {
-    yearNum:number;
-    weekNum:number;
-    casesCount:number
-  }[]
+    yearNum: number;
+    weekNum: number;
+    casesCount: number;
+  }[];
 }
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DashboardService {
-  constructor(private http: HttpClient){}
+  baseUrl = `${environment.apiUrl}/fm`;
 
-  getDashboardUsersData():Observable<DashboardUsersCases>
-  {
-    return this.http.get<DashboardUsersCases>(`${environment.apiUrl}/dashboard`);
+  constructor(private http: HttpClient) {}
+
+  getDashboardUsersData(): Observable<DashboardUsersCases> {
+    return this.http.get<DashboardUsersCases>(`${this.baseUrl}/dashboard`);
   }
 
-  getInsightsCards(fromDate: string, toDate: string){
-    return this.http.get<StatusChartData>(`${environment.apiUrl}/dashboard/chart/status/user?startDate=${fromDate}&endDate=${toDate}`);
+  getInsightsCards(fromDate: string, toDate: string) {
+    return this.http.get<StatusChartData>(
+      `${this.baseUrl}/dashboard/chart/status/user?startDate=${fromDate}&endDate=${toDate}`
+    );
   }
 
-  getWeeklyTrendChartData(username?:string, teamname?:string, fromDate?: WeeklyDateObj, toDate?: WeeklyDateObj, ):Observable<WeeklyTrendChart>
-  {
-
-    if(fromDate && toDate){
-      if(teamname){
-        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&teamName=${teamname}`);
-      }else{
-        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&username=${username}`);
+  getWeeklyTrendChartData(
+    username?: string,
+    teamname?: string,
+    fromDate?: WeeklyDateObj,
+    toDate?: WeeklyDateObj
+  ): Observable<WeeklyTrendChart> {
+    if (fromDate && toDate) {
+      if (teamname) {
+        return this.http.get<WeeklyTrendChart>(
+          `${this.baseUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&teamName=${teamname}`
+        );
+      } else {
+        return this.http.get<WeeklyTrendChart>(
+          `${this.baseUrl}/dashboard/trend?weekFrom=${fromDate?.week}&yearFrom=${fromDate?.year}&weekTo=${toDate?.week}&yearTo=${toDate?.year}&username=${username}`
+        );
       }
-    }else{
-      if(teamname){
-        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?teamName=${teamname}`);
-      }else{
-        return this.http.get<WeeklyTrendChart>(`${environment.apiUrl}/dashboard/trend?username=${username}`);
+    } else {
+      if (teamname) {
+        return this.http.get<WeeklyTrendChart>(
+          `${this.baseUrl}/dashboard/trend?teamName=${teamname}`
+        );
+      } else {
+        return this.http.get<WeeklyTrendChart>(
+          `${this.baseUrl}/dashboard/trend?username=${username}`
+        );
       }
     }
-
   }
 
-  getProductivityChartData(fromDate?: string, toDate?: string):Observable<ProductivityChartData>
-  {
-
-    if(fromDate && toDate){
-      return this.http.get<ProductivityChartData>(`${environment.apiUrl}/dashboard/chart/fraud?startDate=${fromDate}&endDate=${toDate}`);
-    }else{
-      return this.http.get<ProductivityChartData>(`${environment.apiUrl}/dashboard/chart/fraud`);
+  getProductivityChartData(
+    fromDate?: string,
+    toDate?: string
+  ): Observable<ProductivityChartData> {
+    if (fromDate && toDate) {
+      return this.http.get<ProductivityChartData>(
+        `${this.baseUrl}/dashboard/chart/fraud?startDate=${fromDate}&endDate=${toDate}`
+      );
+    } else {
+      return this.http.get<ProductivityChartData>(
+        `${this.baseUrl}/dashboard/chart/fraud`
+      );
     }
   }
 
-  getStatusChartData(fromDate?: string, toDate?: string):Observable<StatusChartData>
-  {
+  getStatusChartData(
+    fromDate?: string,
+    toDate?: string
+  ): Observable<StatusChartData> {
     let params = undefined;
 
-    if(fromDate && toDate){
-      params = {startDate: fromDate, endDate: toDate}
+    if (fromDate && toDate) {
+      params = { startDate: fromDate, endDate: toDate };
     }
 
-    return this.http.get<StatusChartData>(`${environment.apiUrl}/dashboard/chart/status`, {params});
+    return this.http.get<StatusChartData>(
+      `${this.baseUrl}/dashboard/chart/status`,
+      { params }
+    );
   }
 
-  getChartTypesData(fromDate?: string, toDate?: string):Observable<ChartTypesData>
-  {
-
+  getChartTypesData(
+    fromDate?: string,
+    toDate?: string
+  ): Observable<ChartTypesData> {
     let params = undefined;
 
-    if(fromDate && toDate){
-      params = {startDate: fromDate, endDate: toDate}
+    if (fromDate && toDate) {
+      params = { startDate: fromDate, endDate: toDate };
     }
-    return this.http.get<ChartTypesData>(`${environment.apiUrl}/dashboard/chart/type`, {params});
+    return this.http.get<ChartTypesData>(
+      `${this.baseUrl}/dashboard/chart/type`,
+      { params }
+    );
   }
-
 }

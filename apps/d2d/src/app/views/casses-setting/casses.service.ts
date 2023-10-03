@@ -1,23 +1,23 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 
-export interface User{
-  id: number,
-  email: string,
-  name: string,
-  jobTitle: string,
-  roles?: string[],
-  teamName?: null | string,
-  userGroups: Group[]
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  jobTitle: string;
+  roles?: string[];
+  teamName?: null | string;
+  userGroups: Group[];
 }
 
-interface Group{
-  id: number,
-  groupName: string
+interface Group {
+  id: number;
+  groupName: string;
 }
 
 export interface Team {
@@ -30,7 +30,8 @@ export interface Team {
 })
 export class CasesService {
   baseUrl = environment.apiUrl;
-  endpoint = `${this.baseUrl}`;
+  fmUrl = `${this.baseUrl}/fm`;
+  adminUrl = `${this.baseUrl}/admin`;
   endpointAttachments = `${this.baseUrl}/attachment`;
 
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
@@ -38,55 +39,58 @@ export class CasesService {
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
   constructor(private http: HttpClient) {}
-
+  setSystemParam(): HttpParams {
+    return new HttpParams().set('system', 'FRAUD_ManagementUsers');
+  }
   setSystemTeams(): Observable<Team[]> {
-    return this.http.get<Team[]>(`${this.endpoint}/users/teams`);
+    return this.http.get<Team[]>(`${this.adminUrl}/groups`, {
+      params: this.setSystemParam(),
+    });
   }
 
   setSystemUsers(): Observable<User[]> {
-    return this.http.get<User[]>(`${this.endpoint}/users`);
+    return this.http.get<User[]>(`${this.adminUrl}/users`, {
+      params: this.setSystemParam(),
+    });
   }
 
   getCases(filterData?: any) {
-    return this.http.get(`${this.endpoint}/d2dCase/search`, {
+    return this.http.get(`${this.fmUrl}/d2dCase/search`, {
       params: filterData,
     });
   }
 
   getCase(id: string) {
     const options = {};
-    return this.http.get<Case>(`${this.endpoint}/d2dCase/${id}`, options);
+    return this.http.get<Case>(`${this.fmUrl}/d2dCase/${id}`, options);
   }
 
   createCase(data: any) {
     const options = {};
 
-    return this.http.post(`${this.endpoint}/d2dCase`, data, options);
+    return this.http.post(`${this.fmUrl}/d2dCase`, data, options);
   }
 
   updateCase(id: string, data: any) {
     const options = {};
 
-    return this.http.put(`${this.endpoint}/${id}`, data, options);
+    return this.http.put(`${this.fmUrl}/${id}`, data, options);
   }
 
   deleteCase(id: string) {
     const options = {};
-    return this.http.delete(`${this.endpoint}/${id}`, options);
+    return this.http.delete(`${this.fmUrl}/${id}`, options);
   }
 
   getAssigneeTasks(userEmail: string) {
-    return this.http.get(`${this.endpoint}/cwf/task/user/${userEmail}`);
+    return this.http.get(`${this.fmUrl}/cwf/task/user/${userEmail}`);
   }
 
   getTaskByCaseId(caseId: number) {
-    return this.http.get(`${this.endpoint}/cwf/task/${caseId}`);
+    return this.http.get(`${this.fmUrl}/cwf/task/${caseId}`);
   }
   updateCaseTask(caseId: number, taskId: number, data: any) {
-    return this.http.post(
-      `${this.endpoint}/cwf/task/${caseId}/${taskId}`,
-      data
-    );
+    return this.http.post(`${this.fmUrl}/cwf/task/${caseId}/${taskId}`, data);
   }
 
   uploadFile(data: any) {

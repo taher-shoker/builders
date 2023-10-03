@@ -39,8 +39,8 @@ export class HomeComponent implements OnInit {
   ngOnInit() {
     this.authService.getUserData();
 
-    this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
+      this.userName = res?.name || '';
       if (res?.roles) {
         const items = [];
         for (let i = 0; i < this.navItems.length; i++) {

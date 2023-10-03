@@ -132,8 +132,6 @@ export class AuthService {
     const user = new User(displayName, token);
     this.user.next(user);
     this.cookieService.put('token', token);
-    this.cookieService.put('displayName', displayName);
-    this.cookieService.put('gateway-path', JSON.stringify(window.origin));
     this._isLoggedIn$.next(!!token);
   }
 
@@ -231,7 +229,7 @@ export class AuthService {
       .subscribe(async (res: LoggedUser) => {
         this.loggedInUser = res;
         this.loggedUserStream.next(res);
-        this.cookieService.put('USER_FULLNAME', res.name);
+        // this.cookieService.put('USER_FULLNAME', res.name);
         this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
 
         this.handleSystemsNeeds(res);
@@ -263,10 +261,10 @@ export class AuthService {
       this.filterSys(resSys, res);
       if (this.availableSystems.length === 1) {
         if (this.availableSystems[0].name === 'FRAUD_ManagementUsers') {
-          this.handleFraudSysNeeds(res);
+          //this.handleFraudSysNeeds(res);
           // this.navigateToLFraudPages();
         } else if (this.availableSystems[0].name === 'DI_Management') {
-          this.handleDiDashboardSysNeeds(res);
+          // this.handleDiDashboardSysNeeds(res);
           // this.navigateToLDIPages();
         } else {
           if (tpUser) {
