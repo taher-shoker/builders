@@ -252,7 +252,17 @@ export class DashboardComponent implements OnInit {
       if (res?.roles.includes('APPROVERS')) {
         this.casesService.setSystemTeams().subscribe((res) => {
           this.teams = res;
-          this.teams = this.teams.filter((x: any) => x.name !== 'Fraud');
+          this.teams = res
+            .filter(
+              (g) => g.groupName !== 'Fraud Admins' && g.groupName !== 'Fraud'
+            )
+            .map((t) => {
+              return {
+                id: t.id,
+                name: t.groupName,
+                roleName: t.roles[0].roleName,
+              };
+            });
 
           this.getTrendChartData(
             undefined,
@@ -266,7 +276,7 @@ export class DashboardComponent implements OnInit {
 
         this.casesService.setSystemUsers().subscribe((res) => {
           this.users = res.filter(
-            (x) => x.userGroups[0].groupName === 'Creators'
+            (x) => x.userGroups[0].roles[0].roleName === 'CREATORS'
           );
         });
       }

@@ -18,6 +18,7 @@ export interface User {
 interface Group {
   id: number;
   groupName: string;
+  roles: { id: number; roleName: string }[];
 }
 
 export interface Team {
@@ -42,8 +43,8 @@ export class CasesService {
   setSystemParam(): HttpParams {
     return new HttpParams().set('system', 'FRAUD_ManagementUsers');
   }
-  setSystemTeams(): Observable<Team[]> {
-    return this.http.get<Team[]>(`${this.adminUrl}/groups`, {
+  setSystemTeams(): Observable<any[]> {
+    return this.http.get<any[]>(`${this.adminUrl}/groups`, {
       params: this.setSystemParam(),
     });
   }
