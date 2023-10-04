@@ -89,6 +89,7 @@ export interface KpiItem {
   actualValue: number;
   diffFromLastMonth: number;
   target: number;
+  date: Date;
 }
 
 export interface KpiDetailsResponse{

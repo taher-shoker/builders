@@ -21,7 +21,7 @@
     <div class="row">
       <div class="col">
         <p class="neutral" [ngClass]="{'achieved' : cardData.achievedFlag === '1' , 'not-achieved' : cardData.achievedFlag === '0'}">{{cardData.actualValue}}%</p>
-        <p class="secondary-date">{{(cardData.yearNum + ', ' +cardData.frequencyNum) | date:'MMMM, y'}}</p>
+        <p class="secondary-date">{{cardData.date | date:'MMMM, y'}}</p>
       </div>
       <div class="col">
         <p class="neutral" [ngClass]="{'achieved' : cardData.achievedFlag === '1' , 'not-achieved' : cardData.achievedFlag === '0'}"><i class="fas fa-long-arrow-alt-{{cardData.achievedFlag === '0' ? 'down' : 'up'}}"></i>{{cardData.diffFromLastMonth}}%</p>

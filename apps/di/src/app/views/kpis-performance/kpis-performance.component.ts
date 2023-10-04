@@ -128,6 +128,8 @@ export class KpisPerformanceComponent implements OnInit {
         .subscribe((res: LevelTwoResponse) => {
           console.log('DA RES', res);
           this.kpisCount = res.kpiCount;
+          res.data.forEach(x=> x.date = new Date(x.yearNum,x.frequencyNum-1));
+
           this.kpisList = res.data;
           this.kpisListUnfiltered = res.data;
           this.unitSector = res.data[0].unitSectorGroup;
