@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, ElementRef, Input, OnInit, OnDestroy, AfterViewInit, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, OnDestroy, AfterViewInit, OnChanges, SimpleChanges, Output } from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5radar from '@amcharts/amcharts5/radar';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -9,6 +9,7 @@ import { Subscription } from 'rxjs';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { LabelLine } from '../donut-chart/donut-chart.component';
 import { DomSanitizer } from '@angular/platform-browser';
+import { EventEmitter } from '@angular/core';
 
 export interface ProgressCircleData {
   category: string;
@@ -22,6 +23,8 @@ export interface ProgressCircleData {
   styleUrls: ['./progress-circle-chart.component.scss'],
 })
 export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterViewInit, OnChanges{
+  @Output() sliceClick: EventEmitter<string> = new EventEmitter<string>();
+
   @Input({ required: true }) data!: ProgressCircleData[];
   @Input() colors: string[] = [];
   @Input() totalCases: number = 0;
@@ -145,17 +148,19 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
       text : this.showCategoryOnly ? "[#888]{category}" : "[bold][fontSize: 20px]{value}[/]    [#888]{category}",
     });
 
-
     yRenderer.grid.template.setAll({
       forceHidden: true,
     });
 
+    const categoryAxis = am5xy.CategoryAxis.new(this.root, {
+      categoryField: 'category',
+      renderer: yRenderer,
+    })
+
     const yAxis = chart.yAxes.push(
-      am5xy.CategoryAxis.new(this.root, {
-        categoryField: 'category',
-        renderer: yRenderer,
-      })
+      categoryAxis
     );
+
 
     // create label in the center of the chart
 
@@ -247,6 +252,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
           categoryYField: categoryField,
           categoryXField: categoryField,
           fill: this.root.interfaceColors.get('alternativeBackground'),
+
         })
       );
       series.columns.template.setAll({
@@ -257,8 +263,15 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         dRadius: 5,
         tooltipHTML: '<div class = "tooltip-text">{category}: {value}</div>',
         templateField: 'columnSettings',
-        fill : am5.color("#000")
+        fill : am5.color("#000"),
+        cursorOverStyle: "pointer"
       });
+
+      series.columns.template.events.on("click", (ev) => {
+        console.log(ev);
+        this.sliceClick.emit((<any>ev.target.dataItem?.dataContext)['category'])
+
+      })
 
       const cellSize = 30;
 

@@ -7,6 +7,8 @@ import {
 } from '@stc-apps/shared-ui';
 import { DataService } from '../../shared/services/data.service';
 import { LevelZeroResponse } from './../../shared/models/http-response.model';
+import { Router } from '@angular/router';
+import { AuthService } from '../../shared/services/auth.service';
 
 @Component({
   selector: 'stc-apps-home',
@@ -16,7 +18,11 @@ import { LevelZeroResponse } from './../../shared/models/http-response.model';
 export class HomeComponent implements OnInit {
 
   dataService = inject(DataService);
+  authService = inject(AuthService);
+  router = inject(Router);
   receivedChanges: boolean = false;
+
+  username: string = "";
 
   data: ProgressCircleData[] = [
     { category: 'TECHNOLOGY DI ', value: 20 },
@@ -24,7 +30,7 @@ export class HomeComponent implements OnInit {
     { category: 'CLUSTER DI', value: 90 },
   ];
 
-  overallScore: number = 1;
+  overallScore: number = 0;
   overallTarget: number = 0;
   overallDelta: number = 0;
 
@@ -101,6 +107,8 @@ export class HomeComponent implements OnInit {
   donutColors = ['#ff6a39', '#ffdd40', '#1cced8'];
 
   ngOnInit(): void {
+
+    this.username =this.authService.displayName
     this.dataService.getLevelZeroData().subscribe((res: LevelZeroResponse) => {
       console.log('Home res', res);
 
@@ -190,5 +198,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-
+  navToTrend(buName: string){
+    console.log()
+    this.router.navigate(['/trend'])
+  }
 }

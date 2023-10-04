@@ -23,21 +23,14 @@ export interface BusinessName {
 
 // Level one models :
 
-export interface LevelOneResponse {
-  trends: {
-    additionalProp1: AdditionalPropTrend[];
-    additionalProp2: AdditionalPropTrend[];
-    additionalProp3: AdditionalPropTrend[];
-  };
+export type LevelOneResponse  = TrendCard[]
 
-  scores: {
-    additionalProp1: AdditionalPropScore[];
-    additionalProp2: AdditionalPropScore[];
-    additionalProp3: AdditionalPropScore[];
-  };
+export interface TrendCard {
+  trends: Trend[],
+  scores: Score[]
 }
 
-interface BaseAdditionalProp {
+interface BaseTrendCard {
   yearNum: number;
   frequencyNum: number;
   frequencyType: FrequencyType;
@@ -47,7 +40,7 @@ interface BaseAdditionalProp {
   target: number;
 }
 
-export interface AdditionalPropScore extends BaseAdditionalProp {
+export interface Score extends BaseTrendCard {
   dimension: Dimension;
   aboveTarget: number;
   achievedFlag: AchievedFlag;
@@ -55,7 +48,7 @@ export interface AdditionalPropScore extends BaseAdditionalProp {
   lastUpdate: string;
 }
 
-export interface AdditionalPropTrend extends BaseAdditionalProp {
+export interface Trend extends BaseTrendCard {
   baseline: 0;
 }
 
@@ -109,7 +102,7 @@ export interface KpiDetails {
   frequencyNum: number;
   frequencyType: FrequencyType;
   goal: null;
-  kpiDirection: number;
+  kpiDirection: 0 | 1 | -1;
   kpiId: string;
   kpiName: string;
   lastUpdate: null;
@@ -129,10 +122,10 @@ export interface KpiDetails {
 // Known & shared types :
 
 type FrequencyType = 'M' | 'W';
-type Dimension =
+export type Dimension =
   | 'Overall'
   | 'Capability Building'
   | 'Capability Utilization'
   | 'Digital Experience & Impact';
-type UnitSectorGroup = 'BUs' | 'FUs' | 'Technology' | 'Overall';
-type AchievedFlag = '1' | '0';
+export type UnitSectorGroup = 'BUs' | 'FUs' | 'Technology' | 'Overall';
+export type AchievedFlag = '1' | '0';

@@ -7,6 +7,8 @@ import { KpisHolderComponent } from '../../shared/components/kpis-holder/kpis-ho
 import { KpisCardComponent } from '../../shared/components/kpis-card/kpis-card.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -14,6 +16,6 @@ import { RouterModule } from '@angular/router';
     KpisCardComponent,
     KpisHolderComponent,
   ],
-  imports: [CommonModule, SharedUiModule, RouterModule.forChild(routes)],
+  imports: [CommonModule, SharedUiModule, RouterModule.forChild(routes), ReactiveFormsModule],
 })
 export class KpisPerformanceModule {}

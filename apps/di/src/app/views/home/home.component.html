@@ -1,7 +1,7 @@
 <div class="home-holder">
   <div class="stc-digital-index-section">
     <div class="intro-section">
-      <p class="hello-user">Hello, Assem Khalifa</p>
+      <p class="hello-user">Hello, {{username}}</p>
 
       <p class="overview-text">
         Welcome Back! Here's overview of the STC Digital transformation index
@@ -236,6 +236,7 @@
               [maxRange]="100"
               [labelsLines]="progressCircleLabels"
               [showCategoryOnly]="true"
+              (sliceClick)="navToTrend($event)"
             ></stc-apps-progress-circle-chart>
           </div>
         </div>

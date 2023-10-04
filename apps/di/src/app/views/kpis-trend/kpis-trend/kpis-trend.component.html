@@ -1,8 +1,12 @@
 <div class="trend-holder">
-  <div class="tabs-row">
-    <span class="tab-span" *ngFor="let tab of tabs" (click)="activateTab(tab)" [ngClass]="{'active': tab === activeTab}">
-      <span class="tab-name">{{tab}}</span>
-    </span>
+  <div class="tabs-row" #tabz>
+
+    <ng-container *ngFor="let tab of tabs">
+      <span class="tab-span" *hasRole="tab" (click)="activateTab(tab)" [ngClass]="{'active': tab === activeTab}" [class]="tab">
+        <span class="tab-name">{{tab}}</span>
+      </span>
+    </ng-container>
+
   </div>
 
   <div class="view-container">
@@ -23,7 +27,7 @@
     </div>
     <div class="row legends-row">
 
-      <div class="col-2 col-xl-5 achieve-col">
+      <div class="col-2 col-xl-5 achieve-col" *ngIf="firstCard">
         <p class="view-title">{{activeTab}} OVERVIEW</p>
       </div>
 
@@ -57,9 +61,25 @@
       </div>
 
     </div>
-    <stc-apps-trend-card [hideDetailsBtn]="true"></stc-apps-trend-card>
+    <!-- <stc-apps-trend-card [hideDetailsBtn]="true"></stc-apps-trend-card>
     <stc-apps-trend-card></stc-apps-trend-card>
     <stc-apps-trend-card></stc-apps-trend-card>
-    <stc-apps-trend-card></stc-apps-trend-card>
+    <stc-apps-trend-card></stc-apps-trend-card> -->
+<!--
+    <ng-container *ngIf="firstCard$">
+    </ng-container> -->
+    <stc-apps-trend-card *ngIf="firstCard" [hideDetailsBtn]="true" [trendCard]="firstCard"></stc-apps-trend-card>
+
+    <div class="row legends-row" *ngIf="firstCard">
+
+      <div class="col-2 col-xl-5">
+        <p class="view-title">{{activeTab}} IN DETAILS</p>
+      </div>
+
+      <div class="col"></div>
+    </div>
+    <ng-container *ngFor="let trendCard of trendCards$ | async; let i = index">
+      <stc-apps-trend-card *ngIf="i !== 0" [trendCard]="trendCard"></stc-apps-trend-card>
+    </ng-container>
   </div>
 </div>
