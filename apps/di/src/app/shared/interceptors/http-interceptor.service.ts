@@ -4,10 +4,10 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {
@@ -21,7 +21,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     if (token) {
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJidV91c2VyQHFlZW1hLm5ldCIsImV4cCI6MTY5NjcwODMzMCwiaWF0IjoxNjk1NjI4MzMwfQ.UFy_RMiARelNpuF3E9WEcR8IZqphonv5xCPu_Xoez_WX77xD2OJyvMf9XqlrHFqnFL0i6TwcSzIjXLyIcVAX1w`,
+          Authorization: `Bearer ${token}`,
         },
       });
     }

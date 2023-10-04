@@ -6,10 +6,12 @@ import { KpisTrendComponent } from './kpis-trend/kpis-trend.component';
 import { TrendCardComponent } from '../../shared/components/trend-card/trend-card.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { RouterModule } from '@angular/router';
+import { HasRoleDirective } from '../../shared/directives/has-role.directive';
+import { AbsPipe } from "../../shared/pipes/operators-remover.pipe";
 
 @NgModule({
-  declarations: [KpisTrendComponent, TrendCardComponent],
-  imports: [CommonModule, SharedUiModule ,RouterModule.forChild(routes)],
+    declarations: [KpisTrendComponent, TrendCardComponent, HasRoleDirective],
+    imports: [CommonModule, SharedUiModule, RouterModule.forChild(routes), AbsPipe]
 })
 
 export class KpisTrendModule {}

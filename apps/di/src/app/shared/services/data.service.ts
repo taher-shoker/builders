@@ -3,11 +3,11 @@ import { Injectable, inject } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import {
-  KpiDetails,
   KpiDetailsResponse,
   LevelOneResponse,
   LevelTwoResponse,
   LevelZeroResponse,
+  UnitSectorGroup,
 } from '../models/http-response.model';
 
 @Injectable({
@@ -24,18 +24,21 @@ export class DataService {
   }
 
   /**
+   * @param unitSectorGroup pass the role of the user, to which group he relates
    * @returns The Data of Level one (Di Dashboard)
    */
-  getLevelOneData(): Observable<LevelOneResponse> {
-    return this.http.get<LevelOneResponse>(`${environment.apiUrl}/l1`);
+  getLevelOneData(unitSectorGroup: UnitSectorGroup): Observable<LevelOneResponse> {
+    const params = {params: new HttpParams().set('unitSectorGroup', unitSectorGroup)}
+    return this.http.get<LevelOneResponse>(`${environment.apiUrl}/l1`, params);
   }
 
   /**
+   * @param unitSector Pass the name of the unit sector to show its details
    * @returns The KPI details
    */
-  getKPIsOfBusinessName(): Observable<LevelTwoResponse> {
-    // const params = {params: new HttpParams().set('kpiId', kpiId)}
-    return this.http.get<LevelTwoResponse>(`${environment.apiUrl}/l2/kpi`);
+  getKPIsOfBusinessName(unitSector: string): Observable<LevelTwoResponse> {
+    const params = {params: new HttpParams().set('unitSector', unitSector)}
+    return this.http.get<LevelTwoResponse>(`${environment.apiUrl}/l2/kpi`, params);
   }
 
   /**

@@ -16,9 +16,8 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { ToastrModule } from 'ngx-toastr';
 import { HomeComponent } from './views/home/home.component';
 
-import { LoginComponent } from './views/login/login.component';
 import { HttpInterceptorService } from './shared/interceptors/http-interceptor.service';
-import { CookieModule, CookieService } from 'ngx-cookie';
+import { CookieModule } from 'ngx-cookie';
 // import { KpisPerformanceModule } from './views/kpis-performance/kpis-performance.module';
 // import { KpisTrendModule } from './views/kpis-trend/kpis-trend.module';
 
@@ -26,7 +25,7 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 @NgModule({
-  declarations: [AppComponent, HomeComponent, LoginComponent],
+  declarations: [AppComponent, HomeComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -42,7 +41,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
     }),
     ToastrModule.forRoot(),
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, {useHash: true}),
     CookieModule.withOptions(),
   ],
   providers: [
@@ -50,7 +49,7 @@ export function HttpLoaderFactory(http: HttpClient) {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
       multi: true,
-    }
+    },
   ],
   bootstrap: [AppComponent],
 })

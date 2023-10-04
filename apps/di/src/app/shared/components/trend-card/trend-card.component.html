@@ -1,25 +1,51 @@
 <div class="trend-card-holder">
-
   <div class="trend-card row">
     <div class="donut-chart col-3">
-      <p class="card-title">BUs DI Trend</p>
-      <p> <span [ngClass]="{'achieved' : 5, 'not-achieved' : false, 'neutral': 0}">+4.43% </span> Above target</p>
+      <p class="card-title">{{ caption }}</p>
+      <p>
+        <span
+          [ngClass]="{
+            achieved: trendCard.scores[0].achievedFlag === '1',
+            'not-achieved': trendCard.scores[0].achievedFlag === '0',
+            neutral: !trendCard.scores[0].achievedFlag
+          }"
+          >
+          <i *ngIf="trendCard.scores[0].achievedFlag === '1'" style="font-size: 14px" class="fas fa-solid fa-arrow-up achieved"></i>
+          <i *ngIf="trendCard.scores[0].achievedFlag === '0'" style="font-size: 14px" class="fas fa-solid fa-arrow-down not-achieved"></i>
+          {{ overallAboveTarget | abs }}%
+        </span>
+        {{
+          trendCard.scores[0].achievedFlag === '1' ? 'Above' : 'Below'
+        }}
+        target
+      </p>
       <div class="donut-chart-holder">
         <stc-apps-donut-chart
           [trendModuleState]="true"
           [colors]="donutColors"
           [labelsLines]="donutLabels"
-          [data]="donutData1"
+          [data]="donutDimensions"
         ></stc-apps-donut-chart>
       </div>
     </div>
     <div class="line-chart col">
-      <stc-apps-line-chart [trendModuleState]="true" [chartData]="lineChartData"
-      [colors]="lineChartColors" [targetData]="lineChartDataTarget" [target2Data]="lineChartDataTarget2"></stc-apps-line-chart>
+      <stc-apps-line-chart
+        [trendModuleState]="true"
+        [chartData]="lineChartData"
+        [colors]="lineChartColors"
+        [targetData]="lineChartTarget"
+        [target2Data]="lineChartBaseline"
+      ></stc-apps-line-chart>
     </div>
-    <div class="actions-col col-auto" *ngIf="!hideDetailsBtn" >
-      <stc-apps-button [buttonText]="'Show KPIs'" [bgColor]="'rgb(79 0 140 / 5%)'" [textColor]="'#4f008c'" [fontWeight]="'500'" [paddingX]="'15px'" (btnClick)="navToKpiDetails()"></stc-apps-button>
+    <div class="actions-col col-auto" *ngIf="!hideDetailsBtn">
+      <stc-apps-button
+        [buttonText]="'Show KPIs'"
+        [bgColor]="'rgb(79 0 140 / 5%)'"
+        [textColor]="'#4f008c'"
+        [fontWeight]="'500'"
+        [paddingX]="'15px'"
+        (btnClick)="navToKpiDetails()"
+      ></stc-apps-button>
     </div>
   </div>
-
 </div>

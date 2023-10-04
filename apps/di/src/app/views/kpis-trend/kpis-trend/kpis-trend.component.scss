@@ -86,9 +86,11 @@
 // Legend row styles :
 
 .legends-row{
-  padding: 15px;
+  padding: 0 15px;
   padding-top:0 ;
   justify-content: space-between;
+  margin-bottom: -30px;
+
 }
 
 .capabilities-col{

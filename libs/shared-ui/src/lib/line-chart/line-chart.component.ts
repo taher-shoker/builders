@@ -7,8 +7,8 @@ import { Subscription } from 'rxjs';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 export interface LineChartData {
   category: string | number,
-  value: string,
-  caseCount:number
+  value: string | number,
+  caseCount?:number
 }
 @Component({
   selector: 'stc-apps-line-chart',
@@ -90,7 +90,7 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
     })
       const xAxis = chart.xAxes.push(
         am5xy.CategoryAxis.new(this.root, {
-          categoryField: "value",
+          categoryField: "category",
           startLocation: 0.2,
           endLocation: 0.8,
           maxDeviation: 50,
@@ -155,14 +155,14 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
       am5xy.LineSeries.new(this.root, {
         xAxis: xAxis,
         yAxis: yAxis,
-        valueYField: "caseCount",
-        valueXField: "category",
+        valueYField: "value",
+        // valueXField: "category",
         sequencedInterpolation : true,
-        categoryXField: "value",
-        categoryYField : "caseCount",
+        categoryXField: "category",
+        // categoryYField : "value",
         tooltip: am5.Tooltip.new(this.root, {
           pointerOrientation: 'vertical',
-          labelText: '{categoryX} : {valueY} {info}',
+          labelText: '{categoryX} : {valueY}%',
         }),
       })
     );
@@ -172,10 +172,10 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
       name: "Series 2",
       xAxis: xAxis,
       yAxis: yAxis,
-      valueYField: "caseCount",
-      valueXField: "category",
-      categoryXField: "value",
-      categoryYField : "caseCount",
+      valueYField: "value",
+      // valueXField: "value",
+      categoryXField: "category",
+      // categoryYField : "caseCount",
 
     }));
     series2.strokes.template.setAll({
@@ -187,10 +187,10 @@ export class LineChartComponent implements OnInit , OnDestroy , AfterViewInit, O
       name: "Series 3",
       xAxis: xAxis,
       yAxis: yAxis,
-      valueYField: "caseCount",
-      valueXField: "category",
-      categoryXField: "value",
-      categoryYField : "caseCount",
+      valueYField: "value",
+      // valueXField: "value",
+      categoryXField: "category",
+      // categoryYField : "caseCount",
 
     }));
     series3.strokes.template.setAll({

@@ -2,7 +2,16 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { DataService } from '../../../shared/services/data.service';
 import { ProgressCircleData } from '@stc-apps/shared-ui';
-import { LevelOneResponse } from '../../../shared/models/http-response.model';
+import {
+  TrendCard,
+  UnitSectorGroup,
+} from '../../../shared/models/http-response.model';
+import { Observable } from 'rxjs';
+import { UserRole, UserRoles } from '../../../shared/models/role.model';
+import { ViewChild } from '@angular/core';
+import { ElementRef } from '@angular/core';
+import { AuthService } from '../../../shared/services/auth.service';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'stc-apps-kpis-trend',
@@ -10,8 +19,11 @@ import { LevelOneResponse } from '../../../shared/models/http-response.model';
   styleUrls: ['./kpis-trend.component.scss'],
 })
 export class KpisTrendComponent implements OnInit {
+  @ViewChild('tabz') tabz!: ElementRef;
 
   dataService = inject(DataService);
+  authService = inject(AuthService);
+  route = inject(ActivatedRoute);
 
   data: ProgressCircleData[] = [
     { category: 'TECHNOLOGY DI ', value: 20 },
@@ -19,38 +31,46 @@ export class KpisTrendComponent implements OnInit {
     { category: 'CLUSTER DI', value: 90 },
   ];
 
-  tabs: string[] = ['BUs', 'FUs', 'Technology'];
+  tabs: string[] = [];
+  activeTab: string = '';
 
-  activeTab: string = 'BUs';
+  trendCards$!: Observable<TrendCard[]>;
+  firstCard?: TrendCard;
+
+  userRoles!: UserRole[];
 
   ngOnInit(): void {
-    this.dataService.getLevelOneData().subscribe(res => {
-      console.log("The res :", res)
-    })
+    this.route.data.subscribe(({roles}) => {
+
+      const userRoles : UserRoles = roles
+      this.authService.setUserRoles(userRoles.userGroups[0].roles)
+
+      if (userRoles.userGroups[0].roles[0].roleName === 'ALL') {
+        this.tabs = ['BUs', 'FUs', 'Technology'];
+      } else {
+        this.tabs.push(userRoles.userGroups[0].roles[0].roleName);
+      }
+
+      this.activateTab(this.tabs[0]);
+    });
   }
 
-  activateTab(tabName: string){
-    if(tabName !== this.activeTab){
-      this.activeTab = tabName
+  fetchCards() {
+    this.firstCard = undefined;
+
+    this.trendCards$ = this.dataService.getLevelOneData(
+      this.activeTab as UnitSectorGroup
+    );
+    this.trendCards$.subscribe((res) => {
+      this.firstCard = { ...res[0] };
+    });
+  }
+
+  activateTab(tabName: string) {
+      if (tabName !== this.activeTab) {
+      this.activeTab = tabName;
+      this.fetchCards();
     }
   }
 
-  distributeBusinessNameOverall(data: LevelOneResponse, businessName: string, lookUpPropName: string){
-    // this[businessName][1].value = data[lookUpPropName][0].score + "%";
-    // const temp = {[businessName]: this[businessName]}
-    // this[businessName] = [...temp[businessName]]
-
-    // if(businessName === "busLabels"){
-    //   this.data[0].value = data.data[lookUpPropName][0].score
-
-    // }else if(businessName === "fusLabels"){
-    //   this.data[1].value = data.data[lookUpPropName][0].score
-
-    // }else{
-    //   this.data[2].value = data.data[lookUpPropName][0].score
-    // }
-
-    // const dataTemp = this.data;
-    // this.data = [...dataTemp]
-  }
 }
