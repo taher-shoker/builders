@@ -257,24 +257,18 @@ export class AuthService {
   }
 
   handleSystemsNeeds(res: LoggedUser, tpUser?: TPUserModel) {
-    this.getAllSystem().subscribe((resSys) => {
-      this.filterSys(resSys, res);
-      if (this.availableSystems.length === 1) {
-        if (this.availableSystems[0].name === 'FRAUD_ManagementUsers') {
-          //this.handleFraudSysNeeds(res);
-          // this.navigateToLFraudPages();
-        } else if (this.availableSystems[0].name === 'DI_Management') {
-          // this.handleDiDashboardSysNeeds(res);
-          // this.navigateToLDIPages();
-        } else {
-          if (tpUser) {
-            console.log('User have permission to TP or CEO');
-          }
-        }
-      } else {
-        this.router.navigate(['/apps']);
-      }
-    });
+    if (this.gratnedSystems.length === 1) {
+      // if (this.gratnedSystems[0] === 'FRAUD_ManagementUsers') {
+      // } else if (this.gratnedSystems[0] === 'DI_Management') {
+      // } else {
+      //   if (tpUser) {
+      //     console.log('User have permission to TP or CEO');
+      //   }
+      // }
+      console.log("one system")// investigation purposes
+    } else {
+      this.router.navigate(['/apps']);
+    }
   }
 
   // function to handle TP
@@ -296,8 +290,8 @@ export class AuthService {
 
   // function to handle Fraud Management System
   handleFraudSysNeeds(res: LoggedUser) {
-    this.cookieService.put('fraud-roles', res.userGroups[0].roles[0].roleName);
-    this.cookieService.put('fraud-user', JSON.stringify(res));
+    // this.cookieService.put('fraud-roles', res.userGroups[0].roles[0].roleName);
+    // this.cookieService.put('fraud-user', JSON.stringify(res));
     this.cookieService.put(
       'system',
       JSON.stringify(res.userGroups[0].roles[0].system.name)

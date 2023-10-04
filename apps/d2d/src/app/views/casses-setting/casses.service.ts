@@ -33,7 +33,7 @@ export class CasesService {
   baseUrl = environment.apiUrl;
   fmUrl = `${this.baseUrl}/fm`;
   adminUrl = `${this.baseUrl}/admin`;
-  endpointAttachments = `${this.baseUrl}/attachment`;
+  endpointAttachments = `${this.baseUrl}/fm/attachment`;
 
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
 
