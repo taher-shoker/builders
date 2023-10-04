@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { KpisPerformanceComponent } from './kpis-performance';
+import { KpisPerformanceComponent } from './kpis-performance.component';
 
 export const routes: Routes = [
   {

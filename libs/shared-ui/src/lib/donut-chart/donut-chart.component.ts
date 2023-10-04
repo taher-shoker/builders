@@ -21,8 +21,6 @@ export type LabelLine = {
   html?: string // in this property, the developer should send a HTML code, with style attribute if there's a need to style the element
 }
 
-
-
 @Component({
   selector: 'stc-apps-donut-chart',
   templateUrl: './donut-chart.component.html',
@@ -88,7 +86,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
     const chart = this.root.container.children.push(
     am5percent.PieChart.new(this.root, {
       layout: this.root.verticalLayout,
-      innerRadius: this.trendModuleState ? am5.percent(80) : am5.percent(70),
+      innerRadius: this.trendModuleState ? am5.percent(80) : am5.percent(85),
       paddingLeft: 25,
       paddingRight: 25,
       paddingTop: 25,
@@ -144,6 +142,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
       centerX: 0,
       centerY: 0,
       text: `[${this.textsColor}][500]{value}%[/]`,
+      fontSize: 12
     });
 
     // Disabling labels and ticks

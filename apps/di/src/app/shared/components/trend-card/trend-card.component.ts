@@ -21,13 +21,6 @@ export class TrendCardComponent {
     {category: "cat 3", value: "val 3", caseCount: 5},
     {category: "cat 4", value: "val 4", caseCount: 9},
     {category: "cat 5", value: "val 5", caseCount: 14},
-    // {category: "cat 5", value: "val 6", caseCount: 14},
-    // {category: "cat 5", value: "val 7", caseCount: 11},
-    // {category: "cat 5", value: "val 8", caseCount: 12},
-    // {category: "cat 5", value: "val 9", caseCount: 14},
-    // {category: "cat 5", value: "val 10", caseCount: 15},
-    // {category: "cat 5", value: "val 11", caseCount: 14},
-    // {category: "cat 5", value: "val 12", caseCount: 12},
   ]
 
   lineChartDataTarget : LineChartData[] = [

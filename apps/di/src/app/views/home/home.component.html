@@ -1,7 +1,4 @@
-
 <div class="home-holder">
-
-
   <div class="stc-digital-index-section">
     <div class="intro-section">
       <p class="hello-user">Hello, Assem Khalifa</p>
@@ -52,7 +49,6 @@
         </div>
       </div>
 
-
       <div class="row charts-row">
         <div class="col donuts-col">
           <div class="donut-chart-holder">
@@ -100,22 +96,20 @@
                     achieved: buDeltaAchieved,
                     'not-achieved': !buDeltaAchieved
                   }"
-                  >{{buScore}}</span
+                  >{{ buScore }}</span
                 >
-                / <span class="last-month-value">{{buTarget}}</span>
-                <mat-icon
-                  class="mat-arrow-up achieved"
-                  *ngIf="buDeltaAchieved"
+                / <span class="last-month-value">{{ buTarget }}</span>
+                <!-- <mat-icon class="mat-arrow-up achieved" *ngIf="buDeltaAchieved"
                   >arrow_upward</mat-icon
-                >
-                <!-- <i *ngIf="buDeltaAchieved" class="fas fa-solid fa-arrow-up "></i> -->
-                <mat-icon
+                > -->
+                <i *ngIf="buDeltaAchieved" class="fas fa-solid fa-arrow-up"></i>
+                <!-- <mat-icon
                   class="mat-arrow-down not-achieved"
                   *ngIf="!buDeltaAchieved"
                   >arrow_downward</mat-icon
-                >
+                > -->
 
-                <!-- <i *ngIf="!buDeltaAchieved" class="fas fa-solid fa-arrow-down not-achieved"></i> -->
+                <i *ngIf="!buDeltaAchieved" class="fas fa-solid fa-arrow-down not-achieved"></i>
 
                 <span
                   class="delta"
@@ -123,9 +117,9 @@
                     achieved: buDeltaAchieved,
                     'not-achieved': !buDeltaAchieved
                   }"
-                  >{{buDelta}}</span
+                  >{{ buDelta }}</span
                 >
-                From Last Month</span
+                <span class="flm-txt"> from last month </span></span
               >
             </p>
 
@@ -149,24 +143,22 @@
                     achieved: fuDeltaAchieved,
                     'not-achieved': !fuDeltaAchieved
                   }"
-                  >{{fuScore}}</span
+                  >{{ fuScore }}</span
                 >
-                / <span class="last-month-value">{{fuTarget}}</span>
-                <mat-icon
-                  class="mat-arrow-up achieved"
-                  *ngIf="fuDeltaAchieved"
+                / <span class="last-month-value">{{ fuTarget }}</span>
+                <!-- <mat-icon class="mat-arrow-up achieved" *ngIf="fuDeltaAchieved"
                   >arrow_upward</mat-icon
-                >
+                > -->
 
-                <!-- <i *ngIf="fuDeltaAchieved" class="fas fa-solid fa-arrow-up mat-arrow-up achieved"></i> -->
+                <i *ngIf="fuDeltaAchieved" class="fas fa-solid fa-arrow-up achieved"></i>
 
-                <mat-icon
+                <!-- <mat-icon
                   class="mat-arrow-down not-achieved"
                   *ngIf="!fuDeltaAchieved"
                   >arrow_downward</mat-icon
-                >
+                > -->
 
-                <!-- <i *ngIf="!fuDeltaAchieved" class="fas fa-solid fa-arrow-down mat-arrow-down not-achieved"></i> -->
+                <i *ngIf="!fuDeltaAchieved" class="fas fa-solid fa-arrow-down not-achieved"></i>
 
                 <span
                   class="delta"
@@ -174,9 +166,9 @@
                     achieved: fuDeltaAchieved,
                     'not-achieved': !fuDeltaAchieved
                   }"
-                  >{{fuDelta}}</span
+                  >{{ fuDelta }}</span
                 >
-                From Last Month</span
+                <span class="flm-txt"> from last month </span></span
               >
             </p>
 
@@ -200,24 +192,24 @@
                     achieved: techDeltaAchieved,
                     'not-achieved': !techDeltaAchieved
                   }"
-                  >{{techScore}}</span
+                  >{{ techScore }}</span
                 >
-                / <span class="last-month-value">{{techTarget}}</span>
-                <mat-icon
+                / <span class="last-month-value">{{ techTarget }}</span>
+                <!-- <mat-icon
                   class="mat-arrow-up achieved"
                   *ngIf="techDeltaAchieved"
                   >arrow_upward</mat-icon
-                >
+                > -->
 
-                <!-- <i *ngIf="techDeltaAchieved" class="fas fa-solid fa-arrow-up mat-arrow-up achieved"></i> -->
+                <i *ngIf="techDeltaAchieved" class="fas fa-solid fa-arrow-up achieved"></i>
 
-                <mat-icon
+                <!-- <mat-icon
                   class="mat-arrow-down not-achieved"
                   *ngIf="!techDeltaAchieved"
                   >arrow_downward</mat-icon
-                >
+                > -->
 
-                <!-- <i *ngIf="!techDeltaAchieved" class="fas fa-solid fa-arrow-down mat-arrow-down not-achieved"></i> -->
+                <i *ngIf="!techDeltaAchieved" class="fas fa-solid fa-arrow-down not-achieved"></i>
 
                 <span
                   class="delta"
@@ -225,9 +217,9 @@
                     achieved: techDeltaAchieved,
                     'not-achieved': !techDeltaAchieved
                   }"
-                  >{{techDelta}}</span
+                  >{{ techDelta }}</span
                 >
-                From Last Month</span
+                <span class="flm-txt"> from last month </span></span
               >
             </p>
           </div>
@@ -244,7 +236,6 @@
               [maxRange]="100"
               [labelsLines]="progressCircleLabels"
               [showCategoryOnly]="true"
-
             ></stc-apps-progress-circle-chart>
           </div>
         </div>

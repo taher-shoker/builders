@@ -3,7 +3,7 @@
   <div class="trend-card row">
     <div class="donut-chart col-3">
       <p class="card-title">BUs DI Trend</p>
-      <p>+4.43% Above target</p>
+      <p> <span [ngClass]="{'achieved' : 5, 'not-achieved' : false, 'neutral': 0}">+4.43% </span> Above target</p>
       <div class="donut-chart-holder">
         <stc-apps-donut-chart
           [trendModuleState]="true"
