@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { AfterViewInit, Component, Input, OnInit , OnDestroy, SimpleChanges, OnChanges} from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';
@@ -6,35 +7,58 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 
-interface DonutChartData {
+export interface DonutChartData {
   category : string;
   value : number;
 }
+
+export type LabelLine = {
+  value?: string,
+  styles? : string,
+  fontSize?: number,
+  centerX?: number,
+  centerY: number,
+  html?: string // in this property, the developer should send a HTML code, with style attribute if there's a need to style the element
+}
+
 @Component({
   selector: 'stc-apps-donut-chart',
   templateUrl: './donut-chart.component.html',
   styleUrls: ['./donut-chart.component.scss'],
 })
-export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, OnChanges{
+export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges{
 
   @Input() data!: DonutChartData[];
+  @Input() textsColor: string = "#4f008c";
+  @Input() labelsLines: LabelLine[] = [];
+  @Input() trendModuleState: boolean = false;
+
+  @Input() changesHappend: boolean = false;
+
   root!: am5.Root;
   direction:string | null = "";
   langSub!: Subscription;
   constructor(public dom_s: DomSanitizer,private languageManagerService: LanguageManagerService){}
   @Input() colors:string[] = [];
-  chartdiv_id = '';
+  // chartdiv_id = '';
+  chartdiv_id = `${Math.random()}_chart_id`;
+
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data'] && !changes['data'].firstChange) {
+    if (changes['labelsLines'] && !changes['labelsLines'].firstChange) { //&& !changes['data'].firstChange
+      this.labelsLines = changes['labelsLines'].currentValue;
+      this.initDonutChart()
+    }
+
+    if (changes['data'] && !changes['data'].firstChange) { //&& !changes['data'].firstChange
       this.data = changes['data'].currentValue;
       this.initDonutChart()
     }
   }
 
-  ngOnInit(): void {
-    this.chartdiv_id = `${Math.random()}_chart_id`;
-  }
+  // ngOnInit(): void {
+  //   this.chartdiv_id = `${Math.random()}_chart_id`;
+  // }
   ngAfterViewInit(): void {
     this.langSub = this.languageManagerService.getSavedLanguageAsStream().subscribe(lang => {
       this.direction = localStorage.getItem("language");
@@ -50,14 +74,25 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
   };
   initDonutChart() {
 
+    // if(!this.chartdiv_id){
+    //   return
+    // }
+
     this.maybeDisposeRoot(this.chartdiv_id);
     this.root = am5.Root.new(this.chartdiv_id);
+
     this.root.setThemes([am5themes_Animated.new(this.root)]);
 
     const chart = this.root.container.children.push(
     am5percent.PieChart.new(this.root, {
       layout: this.root.verticalLayout,
-      innerRadius: am5.percent(70),
+      innerRadius: this.trendModuleState ? am5.percent(80) : am5.percent(85),
+      paddingLeft: 25,
+      paddingRight: 25,
+      paddingTop: 25,
+      paddingBottom: 25,
+      width: am5.percent(90),
+      // radius: am5.percent(70),
     }));
 
     /* remove amchart logo */
@@ -66,12 +101,10 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
       this.root._logo.dispose();
     }
 
-    this.root.numberFormatter.set("numberFormat", "#.0a");
-    const allColors: am5.Color[] = [];
-    this.colors.forEach((color: string) => {
-      allColors.push(am5.color(color));
-    });
-    chart.get('colors')?.set('colors', allColors);
+    // this.root.numberFormatter.set("numberFormat", "#.0a");
+
+    // chart.get('colors')?.set('colors', allColors);
+
     const newData: {
       category: string;
       full:number;
@@ -95,22 +128,62 @@ export class DonutChartComponent implements OnInit , AfterViewInit , OnDestroy, 
       alignLabels: false
     }));
 
+
+
+    const allColors: am5.Color[] = [];
+    this.colors.forEach((color: string) => {
+      allColors.push(am5.color(color));
+    });
+    series.get("colors")?.set('colors',allColors)
+
+
     series.labels.template.setAll({
       textType: "adjusted",
       centerX: 0,
-      centerY: 0
+      centerY: 0,
+      text: `[${this.textsColor}][500]{value}%[/]`,
+      fontSize: 12
     });
 
-    series.data.setAll([
-      { value: 10, category: "One" },
-      { value: 9, category: "Two" },
-      { value: 6, category: "Three" },
-    ]);
+    // Disabling labels and ticks
+    // series.labels.template.set("visible", false);
+    // series.ticks.template.set("visible", false);
 
+    series.data.setAll(this.data);
 
-    this.root.numberFormatter.set("numberFormat", "#");
+    // Add labels in chart center
+
+    if(this.labelsLines){
+
+      if(!this.labelsLines[0].html){
+
+        this.labelsLines.forEach((labelLine) => {
+          const label = series.children.push(am5.Label.new(this.root, {
+            text: `${labelLine.styles ? labelLine.styles : ""}${labelLine.value}`,
+            fontSize: labelLine.fontSize,
+            centerX: am5.percent(50),
+            centerY: am5.percent(labelLine.centerY),
+            // oversizedBehavior: "fit"
+          }));
+        })
+      }else{
+        this.labelsLines.forEach((labelLine) => {
+          const label = series.children.push(am5.Label.new(this.root, {
+            fontSize: labelLine.fontSize,
+            centerX: am5.percent(50),
+            centerY: am5.percent(labelLine.centerY),
+            // oversizedBehavior: "fit"
+            html: `${labelLine.html}`
+
+          }));
+        })
+      }
+    }
+
+    // this.root.numberFormatter.set("numberFormat", "#");
 
     series.get("tooltip")?.label.set("direction" , this.direction == 'ar' ? "rtl" : "ltr");
+
 
     chart.appear(1000, 100);
   }

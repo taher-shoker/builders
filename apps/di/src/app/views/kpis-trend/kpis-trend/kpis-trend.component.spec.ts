@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { LoginComponent } from './login.component';
+import { KpisTrendComponent } from './kpis-trend.component';
 
-describe('LoginComponent', () => {
-  let component: LoginComponent;
-  let fixture: ComponentFixture<LoginComponent>;
+describe('KpisTrendComponent', () => {
+  let component: KpisTrendComponent;
+  let fixture: ComponentFixture<KpisTrendComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoginComponent],
+      declarations: [KpisTrendComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(LoginComponent);
+    fixture = TestBed.createComponent(KpisTrendComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

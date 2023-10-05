@@ -1,0 +1,286 @@
+<div class="kpis-performance">
+  <h4 class="main-title">{{ unitSector }}'s KPIs performance</h4>
+  <div class="kpis-statistics">
+    <div class="item">
+      <div class="icon purble">
+        <img src="assets/images/kpis-icons/chart-square.svg" alt="Total KPIs" />
+      </div>
+      <div class="item-info">
+        <h5 class="kpi-count-title">Total KPIs</h5>
+        <p>{{ kpisCount?.totalKpis || 0 }}</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon green">
+        <img src="assets/images/kpis-icons/tick-square.svg" alt="Acheived" />
+      </div>
+      <div class="item-info">
+        <h5 class="kpi-count-title">Acheived</h5>
+        <p>{{ kpisCount?.achievedKpis || 0 }}</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon stcBlue">
+        <img src="assets/images/kpis-icons/share.svg" alt="Over acheived" />
+      </div>
+      <div class="item-info">
+        <h5 class="kpi-count-title">Over acheived</h5>
+        <p>{{ kpisCount?.overAchievedKpis || 0 }}</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon gray">
+        <img src="assets/images/kpis-icons/share.svg" alt="On track" />
+      </div>
+      <div class="item-info">
+        <h5 class="kpi-count-title">On track</h5>
+        <p>{{ kpisCount?.onTrackKpis || 0 }}</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon warn">
+        <img src="assets/images/kpis-icons/danger.svg" alt="Lag behind" />
+      </div>
+      <div class="item-info">
+        <h5 class="kpi-count-title">Lag behind</h5>
+        <p>{{ kpisCount?.lagBehindKpis || 0 }}</p>
+      </div>
+    </div>
+    <div class="item">
+      <div class="icon danger">
+        <img src="assets/images/kpis-icons/close-square.svg" alt="Risk" />
+      </div>
+      <div class="item-info">
+        <h5 class="kpi-count-title">Risk</h5>
+        <p>{{ kpisCount?.riskKpis || 0 }}</p>
+      </div>
+    </div>
+  </div>
+  <div class="content">
+    <form [formGroup]="filtersForm">
+      <div class="filter">
+        <div class="filter-item">
+          <stc-apps-select-drop-down
+            [label]="'KPIs status :'"
+            [selectType]="'filter-select-box'"
+            [options]="kpisStatus"
+            [labelSize]="11"
+            (selectChange)="filterWith($event)"
+            formControlName="kpisStatusFilter"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="filter-item">
+          <stc-apps-select-drop-down
+            [label]="'Dimensions :'"
+            [selectType]="'filter-select-box'"
+            [options]="kpisDimensions"
+            (selectChange)="filterWith($event)"
+            formControlName="kpisDimensionsFilter"
+            [labelSize]="11"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="filter-item">
+          <stc-apps-select-drop-down
+            [label]="'Objective two :'"
+            [selectType]="'filter-select-box'"
+            [options]="kpisObjectiveTwo"
+            (selectChange)="filterWith($event)"
+            [labelSize]="11"
+            formControlName="kpisObjectiveTwoFilter"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="filter-item">
+          <stc-apps-select-drop-down
+            [label]="'Objective three :'"
+            [selectType]="'filter-select-box'"
+            [options]="kpisObjectiveThree"
+            (selectChange)="filterWith($event)"
+            formControlName="kpisObjectiveThreeFilter"
+            [labelSize]="11"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="filter-item">
+          <stc-apps-select-drop-down
+            [label]="'Units :'"
+            [selectType]="'filter-select-box'"
+            [options]="kpisUnits"
+            (selectChange)="filterWith($event)"
+            formControlName="kpisUnitsFilter"
+            [labelSize]="11"
+          ></stc-apps-select-drop-down>
+        </div>
+      </div>
+    </form>
+    <div class="row mt-4">
+      <div class="col-md-4">
+        <stc-apps-kpis-holder
+          [kpis]="kpisList"
+          (kpiClick)="fetchKpiDetails($event)"
+        ></stc-apps-kpis-holder>
+      </div>
+      <div class="col-md-8">
+        <div class="right-part" *ngIf="kpiDetails">
+          <div class="line-chart-box">
+            <div class="header">
+              <h4>{{ selectedKpi.kpiName }}</h4>
+              <!-- <div class="date">
+                <span>Last updated :today</span>
+              </div> -->
+            </div>
+          </div>
+
+          <div class="status-and-filter-row row">
+            <div class="col-5">
+              <div
+                class="status-badge"
+                [ngClass]="{
+                  'achieved-bg': selectedKpi.achievedFlag === '1',
+                  'not-achieved-bg': selectedKpi.achievedFlag === '0'
+                }"
+              >
+                Status:
+                {{
+                  selectedKpi.achievedFlag === '0' ? 'Not Achieved' : 'Achieved'
+                }}
+              </div>
+            </div>
+
+            <div class="col"></div>
+            <!-- <div class="col">
+              <stc-apps-select-drop-down
+                [label]="''"
+                [selectType]="'filter-select-box'"
+                [defaultAll]="true"
+                [options]="months"
+              ></stc-apps-select-drop-down>
+            </div> -->
+          </div>
+
+          <div
+            class="line-chart"
+            *ngIf="kpiDetails.length; else noDataForChart"
+          >
+            <stc-apps-line-chart
+              [trendModuleState]="true"
+              [chartData]="lineChartData"
+              [colors]="lineChartColors"
+              [targetData]="lineChartTarget"
+            ></stc-apps-line-chart>
+          </div>
+
+          <ng-template #noDataForChart>
+            <p class="no-data-text">No data available !</p>
+          </ng-template>
+
+          <div class="kpi-details-section" *ngIf="kpiDetails.length">
+            <div class="divider"></div>
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Goal</h6>
+                  <p>{{ kpiDetails[0]?.goal || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Objective</h6>
+                  <p>{{ kpiDetails[0]?.objective || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Direction</h6>
+                  <p>
+                    {{
+                      kpiDetails[0]?.kpiDirection === 1
+                        ? 'Increasing'
+                        : 'Decreasing'
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Unit / Sector</h6>
+                  <p>{{ kpiDetails[0]?.unitSector + ' Unit' || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Method</h6>
+                  <p>{{ kpiDetails[0]?.method || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Frequency</h6>
+                  <p>
+                    {{
+                      kpiDetails[0]?.frequencyType === 'M'
+                        ? 'Monthly'
+                        : kpiDetails[0]?.frequencyType === 'W'
+                        ? 'Weekly'
+                        : '-'
+                    }}
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="row mt-3">
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>YE Scoring</h6>
+                  <p>{{ kpiDetails[0]?.yeScoring || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Validation Auth.</h6>
+                  <p>{{ kpiDetails[0]?.validationAuth || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="details-item">
+                  <h6>Weight</h6>
+                  <p>{{ kpiDetails[0]?.weight || '-' }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="users-item">
+                  <h6>Owner</h6>
+                  <p>{{ kpiDetails[0]?.owner || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="users-item">
+                  <h6>Custodian</h6>
+                  <p>{{ kpiDetails[0]?.custodian || '-' }}</p>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="users-item">
+                  <h6>Sponsor</h6>
+                  <p>{{ kpiDetails[0]?.sponsor || '-' }}</p>
+                </div>
+              </div>
+            </div>
+            <div class="divider"></div>
+            <div class="row">
+              <div class="col-md-12">
+                <div class="description-item">
+                  <h6>Definition</h6>
+                  <p>{{ kpiDetails[0]?.definition || '-' }}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
