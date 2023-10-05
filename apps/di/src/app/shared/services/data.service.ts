@@ -27,8 +27,12 @@ export class DataService {
    * @param unitSectorGroup pass the role of the user, to which group he relates
    * @returns The Data of Level one (Di Dashboard)
    */
-  getLevelOneData(unitSectorGroup: UnitSectorGroup): Observable<LevelOneResponse> {
-    const params = {params: new HttpParams().set('unitSectorGroup', unitSectorGroup)}
+  getLevelOneData(
+    unitSectorGroup: UnitSectorGroup
+  ): Observable<LevelOneResponse> {
+    const params = {
+      params: new HttpParams().set('unitSectorGroup', unitSectorGroup),
+    };
     return this.http.get<LevelOneResponse>(`${environment.apiUrl}/l1`, params);
   }
 
@@ -37,8 +41,11 @@ export class DataService {
    * @returns The KPI details
    */
   getKPIsOfBusinessName(unitSector: string): Observable<LevelTwoResponse> {
-    const params = {params: new HttpParams().set('unitSector', unitSector)}
-    return this.http.get<LevelTwoResponse>(`${environment.apiUrl}/l2/kpi`, params);
+    const params = { params: new HttpParams().set('unitSector', unitSector) };
+    return this.http.get<LevelTwoResponse>(
+      `${environment.apiUrl}/l2/kpi`,
+      params
+    );
   }
 
   /**
@@ -47,7 +54,17 @@ export class DataService {
    */
 
   getDetailsOfKPIs(id: string): Observable<KpiDetailsResponse> {
-    const params = {params: new HttpParams().set('kpiId', id)}
-    return this.http.get<KpiDetailsResponse>(`${environment.apiUrl}/l2/kpi/trend`, params);
+    const params = { params: new HttpParams().set('kpiId', id) };
+    return this.http.get<KpiDetailsResponse>(
+      `${environment.apiUrl}/l2/kpi/trend`,
+      params
+    );
+  }
+
+  formatDate(freq: number, yearNum: number): string {
+    let month = `${freq}`;
+    const year: string = yearNum.toString();
+    if (month.length < 2) month = '0' + month;
+    return [year, month, '01'].join('-');
   }
 }

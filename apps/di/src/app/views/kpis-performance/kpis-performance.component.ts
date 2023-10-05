@@ -128,7 +128,9 @@ export class KpisPerformanceComponent implements OnInit {
         .subscribe((res: LevelTwoResponse) => {
           console.log('DA RES', res);
           this.kpisCount = res.kpiCount;
-          res.data.forEach(x=> x.date = new Date(x.yearNum,x.frequencyNum-1));
+          res.data.forEach(
+            (x) => (x.date = new Date(x.yearNum, x.frequencyNum - 1))
+          );
 
           this.kpisList = res.data;
           this.kpisListUnfiltered = res.data;
@@ -154,16 +156,16 @@ export class KpisPerformanceComponent implements OnInit {
       // Push an object into each of the 3 arrays , data - target - baseline :
 
       this.lineChartData.push({
-        category: new NumberToMonthNamePipe().transform(
-          trendCard.data[i].frequencyNum.toString(),
-          true
+        category: this.dataService.formatDate(
+          trendCard.data[i].frequencyNum,
+          trendCard.data[i].yearNum
         ),
         value: trendCard.data[i].actualValue,
       });
       this.lineChartTarget.push({
-        category: new NumberToMonthNamePipe().transform(
-          trendCard.data[i].frequencyNum.toString(),
-          true
+        category: this.dataService.formatDate(
+          trendCard.data[i].frequencyNum,
+          trendCard.data[i].yearNum
         ),
         value: trendCard.data[i].target,
       });
@@ -173,12 +175,11 @@ export class KpisPerformanceComponent implements OnInit {
   currentChosenFilters: { name: string; kpiProperty: string }[] = [];
 
   filterWith({ name, kpiProperty }: { name: string; kpiProperty: string }) {
-
-    if(kpiProperty === "achievedFlag") {
-      if(name === "Achieved"){
-        name = "1"
-      }else{
-        name = "0"
+    if (kpiProperty === 'achievedFlag') {
+      if (name === 'Achieved') {
+        name = '1';
+      } else {
+        name = '0';
       }
     }
     console.log('El event', name);
@@ -218,4 +219,6 @@ export class KpisPerformanceComponent implements OnInit {
   resetFilters() {
     this.kpisList = this.kpisListUnfiltered;
   }
+
+
 }

@@ -7,6 +7,7 @@ import { TrendCard } from '../../models/http-response.model';
 import { OnInit } from '@angular/core';
 import { NumberToMonthNamePipe } from '../../pipes/number-to-month-name.pipe';
 import { AbsPipe } from '../../pipes/operators-remover.pipe';
+import { DataService } from '../../services/data.service';
 
 @Component({
   selector: 'stc-apps-trend-card',
@@ -18,6 +19,7 @@ export class TrendCardComponent implements OnInit {
   @Input({ required: true }) trendCard!: TrendCard;
 
   router = inject(Router);
+  _dataService = inject(DataService);
 
   //Should hold the dimensions of the donut
   donutDimensions: DonutChartData[] = [];
@@ -93,23 +95,23 @@ export class TrendCardComponent implements OnInit {
       // Push an object into each of the 3 arrays , data - target - baseline :
 
       this.lineChartData.push({
-        category: new NumberToMonthNamePipe().transform(
-          trendCard.trends[i].frequencyNum.toString(),
-          true
+        category: this._dataService.formatDate(
+          trendCard.trends[i].frequencyNum,
+          trendCard.trends[i].yearNum
         ),
         value: trendCard.trends[i].score,
       });
       this.lineChartTarget.push({
-        category: new NumberToMonthNamePipe().transform(
-          trendCard.trends[i].frequencyNum.toString(),
-          true
+        category: this._dataService.formatDate(
+          trendCard.trends[i].frequencyNum,
+          trendCard.trends[i].yearNum
         ),
         value: trendCard.trends[i].target,
       });
       this.lineChartBaseline.push({
-        category: new NumberToMonthNamePipe().transform(
-          trendCard.trends[i].frequencyNum.toString(),
-          true
+        category: this._dataService.formatDate(
+          trendCard.trends[i].frequencyNum,
+          trendCard.trends[i].yearNum
         ),
         value: trendCard.trends[i].baseline,
       });
