@@ -1,11 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { AuthService } from './shared/services/auth.service';
 
 @Component({
   selector: 'stc-apps-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  authService = inject(AuthService);
+
   urlHome!: string;
   title = { title: 'home', text: '' };
   userName = '';
@@ -13,18 +16,18 @@ export class AppComponent {
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
   navItems = [
     {
-      name: 'home',
+      name: 'Home',
       url: '/home',
       icon: 'fa-home',
       // roles: ['APPROVERS,CREATORS'],
-      urlHome: '/home',
+      // urlHome: '/home',
     },
     {
-      name: 'dashboard',
-      url: '/dashboard',
+      name: 'Trends',
+      url: '/trend',
       icon: 'fa-chart-line',
-      roles: ['APPROVERS'],
-      urlHome: '/home',
+      // roles: ['APPROVERS'],
+      // urlHome: '/home',
     },
     // {
     //   name: 'users_setting',
@@ -35,8 +38,16 @@ export class AppComponent {
     // },
   ];
 
+  ngOnInit(): void {
+    this.authService.displayName;
+    this.authService.displayName.subscribe((res) => {
+      this.userName = res;
+    });
+  }
+
   logOut() {
     // this.authService.logout();
+    this.authService.logout();
   }
 
   backToHome() {

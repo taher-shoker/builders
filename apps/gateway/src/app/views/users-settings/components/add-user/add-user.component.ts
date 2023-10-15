@@ -1,8 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { BannerDataService } from '@stc-apps/shared-ui';
+import { UsersService } from '../../users.service';
 
 @Component({
   selector: 'stc-apps-add-user',
   templateUrl: './add-user.component.html',
   styleUrls: ['./add-user.component.scss'],
 })
-export class AddUserComponent {}
+export class AddUserComponent implements OnInit {
+  constructor(
+    public userService: UsersService,
+    private bannerDataService: BannerDataService
+  ) {}
+
+  ngOnInit() {
+    this.bannerDataService.updateData({
+      title: 'add new user',
+      text: 'Please add actual data and be sure to add all data',
+    });
+  }
+}

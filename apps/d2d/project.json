@@ -95,7 +95,8 @@
           "browserTarget": "d2d:build:staging"
         },
         "development": {
-          "browserTarget": "d2d:build:development"
+          "browserTarget": "d2d:build:development",
+          "port": 51635
         }
       },
       "defaultConfiguration": "development"

@@ -1,5 +1,5 @@
 <div class="select-box" [class]="selectType" *ngIf="control">
-  <label>{{ label | translate }}<span>:</span><mat-error *ngIf="control.errors"> *</mat-error></label>
+  <label [ngStyle]="{'font-size': labelSize + 'px'}">{{ label | translate }}<span>:</span><mat-error *ngIf="control.errors"> *</mat-error></label>
   <mat-form-field>
     <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
       [(value)]="defaultAll ? options ? options[0] : '' : selectId">

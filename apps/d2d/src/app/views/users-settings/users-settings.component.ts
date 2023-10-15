@@ -45,9 +45,7 @@ export class UsersSettingsComponent implements OnInit {
   ];
   ngOnInit() {
     this.authService.getUserData();
-
-    this.userName =
-      JSON.parse(this.cookieService.get('fraud-user') || '')['name'] || '';
+    this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       if (res?.roles) {
         const items = [];

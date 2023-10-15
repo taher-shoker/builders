@@ -65,7 +65,8 @@
     align-items: center;
     flex-wrap: wrap;
     .filter-item {
-      width: 32%;
+      // width: 32%;
+      width: 19%;
       margin: 10px 5px;
     }
     ::ng-deep .filter-select-box {
@@ -119,9 +120,26 @@
   }
 }
 
+.kpi-count-title{
+  font-size: 14px;
+}
+
+.status-badge{
+  padding: 10px;
+  padding-left: 13px;
+}
+
+.line-chart{
+  height: 300px;
+}
+
 @media screen and (min-width: 1400px) {
   /* STYLES HERE */
   .kpis-statistics {
     justify-content: space-between;
   }
 }
+
+
+
+

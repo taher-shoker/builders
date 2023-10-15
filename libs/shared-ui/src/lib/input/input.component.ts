@@ -24,4 +24,15 @@ export class InputComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputIcon!: string;
   @Input() required!: boolean;
   @Input() disabled = false;
+
+  showPassword = false;
+
+  toggelPassword(): void {
+    this.showPassword = !this.showPassword;
+    if (this.showPassword) {
+      this.inputType = 'text';
+    } else {
+      this.inputType = 'password';
+    }
+  }
 }
