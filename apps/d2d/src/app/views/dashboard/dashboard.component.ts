@@ -5,10 +5,10 @@ import {
   DateRange,
   ProgressCircleData,
   WeeklyDateObj,
+  WeeklyLineChartData,
   YearRangeObj,
 } from '@stc-apps/shared-ui';
 import { BarChartData } from '@stc-apps/shared-ui';
-import { LineChartData } from '@stc-apps/shared-ui';
 import { DashboardService } from '../../services/dashboard.service';
 import { AuthService } from '../../services/auth.service';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
@@ -20,7 +20,7 @@ interface RegisteredCases {
   titleEn?: string;
   titleAr?: string;
   lineChartColors: string[];
-  chartData: LineChartData[];
+  chartData: WeeklyLineChartData[];
 }
 interface TeamUsers {
   titleEn?: string;

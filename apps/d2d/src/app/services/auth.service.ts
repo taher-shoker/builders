@@ -77,11 +77,7 @@ export class AuthService {
   }
 
   isAdminUser() {
-    return (
-      this.loggedUserStream.getValue()?.roles.includes('ADMINS') ||
-      JSON.parse(this.cookieService.get('fraud-user') || '')['roles'][0] ===
-        'ADMINS'
-    );
+    return this.loggedUserStream.getValue()?.roles.includes('ADMINS');
   }
 
   autoLogin() {
@@ -111,7 +107,7 @@ export class AuthService {
   }
 
   navigateToLogin() {
-    window.location.href = environment.loginPath;
+    window.location.href = window.location.origin + environment.loginPath;
   }
 
   autoLogout(expirationDuration: number) {
