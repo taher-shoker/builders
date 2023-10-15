@@ -68,7 +68,7 @@ export class AuthService {
   logout() {
     this._isLoggedIn$.next(false);
     this._cookieService.removeAll();
-    window.location.href = environment.loginPath;
+    window.location.href = window.location.origin + environment.loginPath;
   }
   // login(username: string, password: string) {
   //   return this.http.post('someString', { username, password }).pipe(

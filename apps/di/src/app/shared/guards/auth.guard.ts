@@ -17,12 +17,11 @@ export const authGuard: CanActivateFn = (route, state): boolean => {
   const token = cookiesService.get('token');
 
   if (!token) {
-    console.log(environment.loginPath);
-    window.location.href = environment.loginPath;
+    window.location.href = window.location.origin + environment.loginPath;
     return false;
   } else if (auth.isDiUser()) {
     return true;
   }
-  window.location.href = environment.loginPath;
+  window.location.href = window.location.origin + environment.loginPath;
   return false;
 };
