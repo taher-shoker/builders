@@ -30,7 +30,7 @@ export interface Team {
   providedIn: 'root',
 })
 export class CasesService {
-  baseUrl = environment.apiUrl;
+  baseUrl = window.location.origin + environment.apiUrl;
   fmUrl = `${this.baseUrl}/fm`;
   adminUrl = `${this.baseUrl}/admin`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
