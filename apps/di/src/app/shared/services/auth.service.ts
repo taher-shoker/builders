@@ -28,7 +28,7 @@ export class AuthService {
 
   getCurrentUserRoles(): Observable<UserRoles> {
     return this.http.get<UserRoles>(
-      `${environment.authUrl}/cem/reporting/apigateway/api/v2/admin/users/currentLoggedUser`
+      `${window.location.origin}/cem/reporting/apigateway/api/v2/admin/users/currentLoggedUser`
     );
   }
 
