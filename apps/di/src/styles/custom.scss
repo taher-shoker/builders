@@ -1,4 +1,47 @@
 
+.view-title{
+  font-weight: bold;
+  color: var(--stc-color);
+}
+
 .views-padding{
   padding: var(--views-padding);
+}
+
+.neutral, .secondary-text, .secondary-date{
+  color: var(--stc-grey-color);
+}
+
+
+.achieved{
+  color: var(--stc-oasis-color);
+  font-weight: bold;
+}
+
+.not-achieved{
+  color: var(--stc-red-color);
+  font-weight: bold;
+}
+
+.achieved-bg{
+  background-color: var(--stc-oasis-color-light);
+  border-left: 5px solid var(--stc-oasis-color);
+  color: var(--stc-oasis-color);
+}
+
+.not-achieved-bg{
+  background-color: var(--stc-red-color-light);
+  border-left: 5px solid var(--stc-red-color);
+  color: var(--stc-red-color);
+}
+
+.last-month-value{
+  font-weight: bold;
+
+}
+
+.no-data-text{
+  padding: 30px;
+  font-weight: bold !important;
+  color: var(--stc-color)!important;
 }

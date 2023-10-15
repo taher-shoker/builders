@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { KpisPerformanceComponent } from './kpis-performance';
+import { KpisPerformanceComponent } from './kpis-performance.component';
 
-const routes: Routes = [
+export const routes: Routes = [
   {
     path: '',
     component: KpisPerformanceComponent,
@@ -10,8 +10,8 @@ const routes: Routes = [
   },
 ];
 
-@NgModule({
-  imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule],
-})
-export class KpisPerformanceRoutingModule {}
+// @NgModule({
+//   imports: [RouterModule.forChild(routes)],
+//   exports: [RouterModule],
+// })
+// export class KpisPerformanceRoutingModule {}

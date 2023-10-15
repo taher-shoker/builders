@@ -1,27 +1,17 @@
 <div class="input-group stc-input-group" *ngIf="control">
-  <label *ngIf="inputName"
-    >{{ inputName | translate }}
-    <mat-error *ngIf="control.hasError('required')">* </mat-error></label
-  >
+  <label *ngIf="inputName">{{ inputName | translate }}
+    <mat-error *ngIf="control.hasError('required')">* </mat-error></label>
   <mat-form-field class="">
-    <span class="input-group-text" id="basic-addon1" *ngIf="inputIcon"
-      ><i class="fas {{ inputIcon }}"></i
-    ></span>
-    <input
-      [type]="inputType"
-      [id]="inputId"
-      [name]="inputName"
-      matInput
-      [placeholder]="inputPlaceholder ? inputPlaceholder : ''"
-      autocomplete="off"
-      [formControl]="control"
-      [readonly]="disabled"
-    />
-    <mat-error *ngIf="control.hasError('required')"
-      >{{ 'field_required' | translate }}
+    <span class="input-group-text" id="basic-addon1" *ngIf="inputIcon"><i class="fas {{ inputIcon }}"></i></span>
+    <input [type]="inputType" [id]="inputId" [name]="inputName" matInput
+      [placeholder]="inputPlaceholder ? inputPlaceholder : ''" autocomplete="new-password" [formControl]="control"
+      [readonly]="disabled" />
+    <mat-icon matSuffix *ngIf="inputId === 'password'" (click)="toggelPassword()"><i
+        class="fas {{ showPassword  ? ' fa-eye' : '  fa-eye-slash' }}"></i></mat-icon>
+
+    <mat-error *ngIf="control.hasError('required')">{{ 'field_required' | translate }}
     </mat-error>
-    <mat-error *ngIf="control.hasError('email')"
-      >{{ 'invalid_format' | translate }}
+    <mat-error *ngIf="control.hasError('email')">{{ 'invalid_format' | translate }}
     </mat-error>
   </mat-form-field>
 </div>

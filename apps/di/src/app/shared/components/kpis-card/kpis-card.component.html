@@ -1,15 +1,36 @@
-<div class="kpi-item ">
-  <h4>% Completion of External Assessment</h4>
+<!-- <div class="kpi-item " (click)="notifyParent(cardData.kpiId)" [ngClass]="{'active' : currentActiveCardID === cardData.kpiId}">
+  <h4>{{cardData.kpiName}}</h4>
   <div class="status acheived">
     <span>Statues : </span>
-    <span class="status-number">87 % ( Acheived )</span>
+    <span class="status-number">{{cardData.status}}</span>
   </div>
   <div class="info not-acheived">
     <span class="number">
       <i class="fas fa-long-arrow-alt-up"></i>
-      3.32
+      {{cardData.diffFromLastMonth}}
     </span>
     <span>From last month</span>
-    <span>target: 85%</span>
+    <span>Target:{{cardData.target}}%</span>
   </div>
 </div>
+ -->
+
+ <div class="kpi-holder">
+  <div class="kpi-item" [ngClass]="{'active' : currentActiveCardID === cardData.kpiId}">
+    <p class="kpi-title">{{cardData.kpiName}}</p>
+    <div class="row">
+      <div class="col">
+        <p class="neutral" [ngClass]="{'achieved' : cardData.achievedFlag === '1' , 'not-achieved' : cardData.achievedFlag === '0'}">{{cardData.actualValue}}%</p>
+        <p class="secondary-date">{{cardData.date | date:'MMMM, y'}}</p>
+      </div>
+      <div class="col">
+        <p class="neutral" [ngClass]="{'achieved' : cardData.achievedFlag === '1' , 'not-achieved' : cardData.achievedFlag === '0'}"><i class="fas fa-long-arrow-alt-{{cardData.achievedFlag === '0' ? 'down' : 'up'}}"></i>{{cardData.diffFromLastMonth}}%</p>
+        <p class="secondary-text">From last month</p>
+      </div>
+      <div class="col">
+        <p class="neutral" [ngClass]="{'achieved' : cardData.achievedFlag === '1' , 'not-achieved' : cardData.achievedFlag === '0'}">{{cardData.target}}%</p>
+        <p class="secondary-text">Target</p>
+      </div>
+    </div>
+  </div>
+ </div>
