@@ -19,9 +19,7 @@ export interface UserGroup {
   providedIn: 'root',
 })
 export class UsersService {
-  baseUrl = environment.apiUrl;
-  endpoint = `${this.baseUrl}`;
-  endpointAttachments = `${this.baseUrl}/attachment`;
+  endpoint = window.location.origin + environment.apiUrl;
   allGroups: UserGroup[] = [];
   labels: { label: string; text: string }[] = [];
   constructor(private http: HttpClient, private cookieService: CookieService) {}

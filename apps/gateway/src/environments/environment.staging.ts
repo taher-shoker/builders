@@ -8,7 +8,7 @@ export const environment = {
       '/cem/reporting/apigateway/api/auth/authenticatehub?hub_username=',
     tp_system: '/cem/reporting/tp/',
     tp_admin_system: '/cem/reporting/tp/',
-    fraud_system: 'ظcem/reporting/fraudworkspace/',
+    fraud_system: 'cem/reporting/fraudworkspace/',
     di_system: '/cem/reporting/dtworkspace/',
   },
   sso_url: 'http://localhost:7080/administration/saml/login',

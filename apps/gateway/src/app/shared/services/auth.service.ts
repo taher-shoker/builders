@@ -41,7 +41,7 @@ export interface System {
   providedIn: 'root',
 })
 export class AuthService {
-  baseUrl = environment.apiUrl;
+  baseUrl = window.location.origin + environment.apiUrl;
   loginTPUrl = window.location.origin + environment.tpLogInUrl;
 
   availableSystems!: System[];
@@ -239,9 +239,10 @@ export class AuthService {
             this.router.navigate(['users-setting']);
           } else {
             if (this.gratnedSystems[0] == 'DI_Management') {
-              window.location.href = environment.systems.di_system;
+              window.location.href =
+                window.location.origin + environment.systems.di_system;
             } else if (this.gratnedSystems[0] == 'FRAUD_ManagementUsers') {
-              window.location.href = environment.systems.fraud_system;
+              window.location.href = window.location.origin + environment.systems.fraud_system;
             } else {
               console.log('not handled system');
             }
@@ -470,10 +471,10 @@ export class AuthService {
         // the user is related to the TP only
         if (this.cookieService.get('tp-role') === 'ADMIN_TECHNICAL') {
           // navigate to the admin module
-          window.location.href = environment.systems.tp_admin_system;
+          window.location.href = window.location.origin + environment.systems.tp_admin_system;
         } else {
           // navigate to the app
-          window.location.href = environment.systems.tp_system;
+          window.location.href = window.location.origin + environment.systems.tp_system;
         }
       }
 
