@@ -54,6 +54,10 @@
             {
               "replace": "apps/gateway/src/environments/environment.ts",
               "with": "apps/gateway/src/environments/environment.prod.ts"
+            },
+            {
+              "replace": "apps/gateway/src/environments/environment.ts",
+              "with": "apps/gateway/src/environments/environment.staging.ts"
             }
           ],
           "outputHashing": "all"

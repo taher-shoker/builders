@@ -132,7 +132,6 @@ export class AuthService {
     const user = new User(displayName, token);
     this.user.next(user);
     this.cookieService.put('token', token);
-    this.cookieService.put('displayName', displayName);
     this._isLoggedIn$.next(!!token);
   }
 
@@ -175,12 +174,19 @@ export class AuthService {
             if (res.dto.systems.includes('DI_Management')) {
               this.gratnedSystems.push('DI_Management');
             }
-
             this.setLoggedInUser();
           }
 
           this.handleUserSystems();
         } else if (res.dto.systems.length > 1) {
+          this.loggedInUser = {
+            name: res.dto.displayName,
+            id: res.dto.id,
+            email: res.dto.username,
+            username: res.dto.username,
+            jobTitle: '',
+            userGroups: res.dto.userGroupedMenusDTO,
+          };
           if (res.dto.systems.includes('TP_DashboardUsers')) {
             this.handleTPSysNeeds(res);
           }
@@ -200,7 +206,6 @@ export class AuthService {
             'granted-systems',
             JSON.stringify(this.gratnedSystems)
           );
-          // eslint-disable-next-line no-debugger
           this.router.navigate(['/apps']);
 
           //  this.setLoggedInUser();
@@ -215,23 +220,35 @@ export class AuthService {
   }
 
   setLoggedInUser(): void {
+    this.cookieService.put(
+      'granted-systems',
+      JSON.stringify(this.gratnedSystems)
+    );
     this.http
       .get<LoggedUser>(`${this.baseUrl}/users/currentLoggedUser`)
       .subscribe(async (res: LoggedUser) => {
         this.loggedInUser = res;
         this.loggedUserStream.next(res);
-        this.cookieService.put('USER_FULLNAME', res.name);
-        await this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
+        // this.cookieService.put('USER_FULLNAME', res.name);
+        this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
 
-        this.setAvailableSystems(res);
+        this.handleSystemsNeeds(res);
 
-        this.cookieService.put(
-          'granted-systems',
-          JSON.stringify(this.gratnedSystems)
-        );
-        // eslint-disable-next-line no-debugger
-        debugger;
-        this.router.navigate(['/apps']);
+        if (this.gratnedSystems.length == 1) {
+          if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
+            this.router.navigate(['users-setting']);
+          } else {
+            if (this.gratnedSystems[0] == 'DI_Management') {
+              window.location.href = environment.systems.di_system;
+            } else if (this.gratnedSystems[0] == 'FRAUD_ManagementUsers') {
+              window.location.href = environment.systems.fraud_system;
+            } else {
+              console.log('not handled system');
+            }
+          }
+        } else {
+          this.router.navigate(['/apps']);
+        }
       });
   }
 
@@ -239,27 +256,19 @@ export class AuthService {
     return this.http.get<System[]>(`${this.baseUrl}/users/systems`);
   }
 
-  setAvailableSystems(res: LoggedUser, tpUser?: TPUserModel) {
-    this.getAllSystem().subscribe((resSys) => {
-      this.filterSys(resSys, res);
-      if (this.availableSystems.length === 1) {
-        if (this.availableSystems[0].name === 'FRAUD_ManagementUsers') {
-          this.handleFraudSysNeeds(res);
-          // this.navigateToLFraudPages();
-        } else if (this.availableSystems[0].name === 'DI_Management') {
-          this.handleDiDashboardSysNeeds(res);
-          // this.navigateToLDIPages();
-        } else {
-          if (tpUser) {
-            console.log('User have permission to TP or CEO');
-          }
-        }
-      } else {
-        // eslint-disable-next-line no-debugger
-        debugger;
-        this.router.navigate(['/apps']);
-      }
-    });
+  handleSystemsNeeds(res: LoggedUser, tpUser?: TPUserModel) {
+    if (this.gratnedSystems.length === 1) {
+      // if (this.gratnedSystems[0] === 'FRAUD_ManagementUsers') {
+      // } else if (this.gratnedSystems[0] === 'DI_Management') {
+      // } else {
+      //   if (tpUser) {
+      //     console.log('User have permission to TP or CEO');
+      //   }
+      // }
+      console.log("one system")// investigation purposes
+    } else {
+      this.router.navigate(['/apps']);
+    }
   }
 
   // function to handle TP
@@ -281,8 +290,8 @@ export class AuthService {
 
   // function to handle Fraud Management System
   handleFraudSysNeeds(res: LoggedUser) {
-    this.cookieService.put('fraud-roles', res.userGroups[0].roles[0].roleName);
-    this.cookieService.put('fraud-user', JSON.stringify(res));
+    // this.cookieService.put('fraud-roles', res.userGroups[0].roles[0].roleName);
+    // this.cookieService.put('fraud-user', JSON.stringify(res));
     this.cookieService.put(
       'system',
       JSON.stringify(res.userGroups[0].roles[0].system.name)
@@ -364,7 +373,6 @@ export class AuthService {
 
   // adding token to simulate TP system
   applyUserValuesCookies(user: TPUserModel) {
-    console.log('user', user);
     this.cookieService.put('username', user.username, {
       // httpOnly: true,
       secure: true,
@@ -472,33 +480,33 @@ export class AuthService {
           environment.systems.ceo_system +
           this.cookieService.get('ceo-username');
       }
-      console.log(
-        this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName
-      );
-      if (gratnedSystems[0] === 'FRAUD_ManagementUsers') {
-        // the user is related to the Fraud only
-        if (
-          this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
-          'ADMINS'
-        ) {
-          this.router.navigate(['users-setting']);
-        } else {
-          window.location.href = environment.systems.fraud_system; //'http://localhost:9001/';
-        }
-      }
 
-      if (gratnedSystems[0] === 'DI_Management') {
-        // the user is related to the Fraud only
+      // console.log(
+      //   this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName
+      // );
+      // if (gratnedSystems[0] === 'FRAUD_ManagementUsers') {
+      //   // the user is related to the Fraud only
+      //   if (
+      //     this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
+      //     'ADMINS'
+      //   ) {
+      //     // this.router.navigate(['users-setting']);
+      //   } else {
+      //     // window.location.href = environment.systems.fraud_system; //'http://localhost:9001/';
+      //   }
+      // }
 
-        if (
-          this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
-          'ADMINS'
-        ) {
-          this.router.navigate(['users-setting']);
-        } else {
-          window.location.href = environment.systems.di_system; //'http://localhost:9001/';
-        }
-      }
+      // if (gratnedSystems[0] === 'DI_Management') {
+      //   // the user is related to the Fraud only
+      //   if (
+      //     this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
+      //     'ADMINS'
+      //   ) {
+      //     // this.router.navigate(['users-setting']);
+      //   } else {
+      //     // window.location.href = environment.systems.di_system; //'http://localhost:9001/';
+      //   }
+      // }
 
       return [{ name: gratnedSystems[0] }];
     }

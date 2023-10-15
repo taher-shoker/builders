@@ -3,7 +3,7 @@ export const environment = {
   apiUrl: 'http://localhost:9084/cem/reporting/apigateway/api/v2/fm/',
   authUrl: 'http://localhost:9084',
   languageFilesPath: '/assets/i18n/',
-  loginPath: '/login',
+  loginPath: 'http://localhost:4200/#/login',
 };
 
 // export const environment = {

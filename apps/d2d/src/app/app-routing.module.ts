@@ -8,7 +8,6 @@ import {
 } from '@angular/router';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
-import { AdminAuthGuard } from './services/admin.auth.guard';
 import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
 import { AppRouteReuseStrategy } from './views/users-settings/AppRouteReuseStrategy';
 
@@ -29,15 +28,6 @@ const routes: Routes = [
     data: { breadcrumb: '' },
     component: UnauthorizedPageComponent,
     // canActivate: [AuthGuard],
-  },
-  {
-    path: 'users-setting',
-    data: { breadcrumb: 'users_setting' },
-    canActivate: [AdminAuthGuard],
-    loadChildren: () =>
-      import('./views/users-settings/users-settings.module').then(
-        (m) => m.UsersSettingsModule
-      ),
   },
 ];
 @NgModule({

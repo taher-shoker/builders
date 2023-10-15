@@ -307,7 +307,6 @@ export class LineChartComponent
     }
 
     const allColors: am5.Color[] = [];
-
     this.colors.forEach((color: string) => {
       allColors.push(am5.color(color));
       chart.get('colors')?.set('colors', allColors);

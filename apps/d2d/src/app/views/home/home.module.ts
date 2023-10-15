@@ -12,7 +12,6 @@ import { MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { CassesSettingModule } from '../casses-setting/casses-setting.module';
-import { UsersSettingsModule } from '../users-settings/users-settings.module';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { DashboardModule } from '../dashboard/dashboard.module';
@@ -33,7 +32,6 @@ import { DashboardModule } from '../dashboard/dashboard.module';
     MatProgressBarModule,
     MatSortModule,
     CassesSettingModule,
-    UsersSettingsModule,
     DashboardModule,
     HomeRoutingModule,
   ],

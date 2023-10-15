@@ -17,26 +17,24 @@ export class HomeComponent implements OnInit {
     private router: Router
   ) {}
   ngOnInit(): void {
-    // this.authService.getUserData();
-
-    if (!this.cookieService.get('granted-systems')) {
-      this.authService.getUserData();
+    if (this.cookieService.get('granted-systems')) {
+      if (
+        (JSON.parse(this.cookieService.get('granted-systems') || '').length ==
+          0 ||
+          this.apps.length == 0) &&
+        !this.authService.isAdminUser()
+      ) {
+        this.authService.getUserData();
+      }
     } else {
-      this.apps = this.authService.handleUserSystems();
+      this.authService.getUserData();
     }
   }
 
   getGrantedSystems() {
-    if (
-      this.cookieService.get('granted-systems')
-        ? JSON.parse(this.cookieService.get('granted-systems') || '')
-        : false
-    ) {
+    if (this.apps.length == 0) {
       this.apps = this.authService.handleUserSystems();
     }
-
-    return this.cookieService.get('granted-systems')
-      ? JSON.parse(this.cookieService.get('granted-systems') || '')
-      : false;
+    return this.apps.length > 0;
   }
 }

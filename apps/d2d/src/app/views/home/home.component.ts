@@ -35,19 +35,13 @@ export class HomeComponent implements OnInit {
       roles: ['APPROVERS'],
       urlHome: '/home',
     },
-    {
-      name: 'users_setting',
-      url: '/users-setting',
-      icon: '  fa-user-friends',
-      roles: ['ADMINS'],
-      urlHome: '/users-setting',
-    },
   ];
   ngOnInit() {
     this.authService.getUserData();
 
     this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
+      this.userName = res?.name || '';
       if (res?.roles) {
         const items = [];
         for (let i = 0; i < this.navItems.length; i++) {

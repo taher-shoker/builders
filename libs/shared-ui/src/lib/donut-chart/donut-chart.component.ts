@@ -159,6 +159,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
       scale: 1,
     })
 
+    series.data.setAll(this.data);
 
     // Disabling labels and ticks
     // series.labels.template.set("visible", false);

@@ -1,5 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import * as _ from 'lodash';
+
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import {
   CaseStatus,
@@ -7,6 +9,7 @@ import {
   TaskInDetails,
   TaskCicle,
   Case,
+  User,
 } from '../../casses.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { saveAs } from 'file-saver';
@@ -82,16 +85,18 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
       if (res?.roles.includes('APPROVERS')) {
         this.CasesService.setSystemTeams().subscribe((res) => {
           this.teams = res;
-          this.teams = this.teams.filter((x: any) => x.name !== 'Fraud');
+          this.teams = this.teams.filter(
+            (x: any) =>
+              x.groupName !== 'Fraud' && x.groupName !== 'Fraud Admins'
+          );
           // this.handleTeam(this.caseData, this.teams);
         });
 
         this.CasesService.setSystemUsers().subscribe((res) => {
-          this.users = res;
-          this.users = this.users.filter(
-            (x: any) =>
-              x.userGroups[0]?.groupName !== 'Approvers' &&
-              x.userGroups[0]?.groupName !== 'Admins'
+          this.users = res.filter(
+            (x: User) =>
+              this.getUserPrivilege(x) !== 'APPROVERS' &&
+              this.getUserPrivilege(x) !== 'ADMINS'
           );
           this.handleUser(this.caseData, this.users);
         });
@@ -394,6 +399,15 @@ export class CasseDetailsComponent implements OnInit, OnDestroy {
     }
   }
 
+  getUserPrivilege(user: User) {
+    let x = '';
+    _.forEach(user.userGroups, (group: any) => {
+      if (group.roles[0].system.name === 'FRAUD_ManagementUsers') {
+        x = group.roles[0].roleName;
+      }
+    });
+    return x;
+  }
   ngOnDestroy(): void {
     this.langSub?.unsubscribe();
   }
