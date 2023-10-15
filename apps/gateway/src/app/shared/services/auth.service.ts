@@ -42,7 +42,7 @@ export interface System {
 })
 export class AuthService {
   baseUrl = environment.apiUrl;
-  loginTPUrl = environment.tpLogInUrl;
+  loginTPUrl = window.location.origin + environment.tpLogInUrl;
 
   availableSystems!: System[];
   private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
@@ -265,7 +265,7 @@ export class AuthService {
       //     console.log('User have permission to TP or CEO');
       //   }
       // }
-      console.log("one system")// investigation purposes
+      console.log('one system'); // investigation purposes
     } else {
       this.router.navigate(['/apps']);
     }
@@ -422,7 +422,8 @@ export class AuthService {
           switch (system) {
             case 'TP_DashboardUsers':
               this.passedSystems.push({
-                systemUrl: environment.systems.tp_system,
+                systemUrl:
+                  window.location.origin + environment.systems.tp_system,
                 name: 'TP Dashboard',
                 displayName: 'TP Dashboard',
               });
@@ -430,6 +431,7 @@ export class AuthService {
             case 'CEO_DashboardUsers':
               this.passedSystems.push({
                 systemUrl:
+                  window.location.origin +
                   environment.systems.ceo_system +
                   this.cookieService.get('ceo-username'),
                 name: 'CCEX Workspace',
@@ -439,7 +441,8 @@ export class AuthService {
             case 'FRAUD_ManagementUsers':
               this.setLoggedInUser();
               this.passedSystems.push({
-                systemUrl: environment.systems.fraud_system,
+                systemUrl:
+                  window.location.origin + environment.systems.fraud_system,
                 name: 'Fraud Management Workspace',
                 displayName: 'Fraud Management Workspace',
               });
@@ -447,7 +450,8 @@ export class AuthService {
             case 'DI_Management':
               this.setLoggedInUser();
               this.passedSystems.push({
-                systemUrl: environment.systems.di_system,
+                systemUrl:
+                  window.location.origin + environment.systems.di_system,
                 name: 'DT Workspace',
                 displayName: 'DT Workspace',
               });
