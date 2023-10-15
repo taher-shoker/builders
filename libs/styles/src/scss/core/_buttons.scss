@@ -16,7 +16,7 @@
 
   &.default {
     border-color: $whiteColor !important;
-    color: $whiteColor !important;
+    color: $whiteColor; /* !important; Commented because it doesn't get overridden in the components CSS */
     .loader {
       border-color: $whiteColor !important;
       border-bottom-color: transparent !important;
@@ -52,6 +52,10 @@
   &.gray-outline {
     color: $shadowStc;
     border: 1px solid $shadowStc;
+  }
+  &.stc-color-outline {
+    color: $stcColor;
+    border: 1px solid $stcColor;
   }
   &.danger-outline {
     color: $redColor;

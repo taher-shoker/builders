@@ -91,7 +91,7 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
-    this.cookieService.removeAll();
+    this.cookieService.remove('token');
     this.tokenExpirationTimer = null;
     //  this.loggedUserStream.next(null);
     this.loggedInUser = null;
@@ -100,11 +100,13 @@ export class AuthService {
   }
 
   navigateToLogin() {
+    const loginPath = JSON.parse(this.cookieService.get('login-path') || '');
     if (environment.production) {
-      const routeToLogin = window.location.origin + '/cem/reporting/login';
+      const routeToLogin = loginPath + '/cem/reporting/login';
       window.location.href = routeToLogin;
     } else {
-      this.router.navigate(['/login']);
+      //this.router.navigate(['/login']);
+      window.location.href = loginPath + '/login';
     }
   }
 

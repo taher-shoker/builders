@@ -44,7 +44,7 @@ const COLUMNS_SCHEMA = [
 
 const ELEMENT_DATA: PeriodicElement[] = [
   {
-    name: 'taher shoker',
+    name: '',
     email: 'tshoker.stc@.com',
     privilege: 'creator',
     team: 'digital team',

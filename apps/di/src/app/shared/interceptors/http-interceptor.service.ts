@@ -4,10 +4,10 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse,
 } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class HttpInterceptorService implements HttpInterceptor {

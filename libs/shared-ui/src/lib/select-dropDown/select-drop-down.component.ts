@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
   Component,
   ContentChildren,
@@ -43,6 +44,7 @@ export class SelectDropDownComponent<T>
   @Input() options: any[] = [];
   @Input() labelName = 'name';
   @Input() labelValue = 'id';
+  @Input() labelSize: number = 16;
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;

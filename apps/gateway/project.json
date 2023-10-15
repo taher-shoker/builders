@@ -15,8 +15,11 @@
         "main": "apps/gateway/src/main.ts",
         "polyfills": ["zone.js"],
         "tsConfig": "apps/gateway/tsconfig.app.json",
+        "allowedCommonJsDependencies": ["lodash"],
         "assets": [
           "apps/gateway/src/assets",
+          "apps/gateway/src/favicon.ico",
+
           {
             "input": "libs/mode-toggle/src/assets",
             "glob": "**/*",
@@ -26,28 +29,31 @@
             "input": "libs/shared-ui/src/assets",
             "glob": "**/*",
             "output": "assets"
-          },
-          "apps/gateway/src/favicon.ico"
+          }
         ],
         "styles": [
           "libs/styles/src/index.scss",
           "node_modules/ngx-toastr/toastr.css",
           "apps/gateway/src/styles.scss"
         ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/styles/src"]
+        },
         "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
       },
       "configurations": {
         "production": {
-          "budgets": [
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
             {
-              "type": "initial",
-              "maximumWarning": "500kb",
-              "maximumError": "100mb"
-            },
-            {
-              "type": "anyComponentStyle",
-              "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "replace": "apps/gateway/src/environments/environment.ts",
+              "with": "apps/gateway/src/environments/environment.prod.ts"
             }
           ],
           "outputHashing": "all"

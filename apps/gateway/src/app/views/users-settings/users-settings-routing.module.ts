@@ -23,7 +23,7 @@ const routes: Routes = [
         data: { breadcrumb: 'Add User' },
       },
       {
-        path: 'edit-user',
+        path: 'edit-user/:id',
         component: EditUserComponent,
         data: { breadcrumb: 'Edit User' },
       },
