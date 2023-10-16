@@ -364,6 +364,7 @@ export class AuthService {
   logout() {
     this.user.next(null);
     this.cookieService.remove('token');
+    this.cookieService.remove('generatedToken');
     this.loggedInUser = null;
     this.navigateToLogin();
   }
@@ -390,10 +391,10 @@ export class AuthService {
       // httpOnly: true,
       secure: true,
     });
-    this.cookieService.put('tokenType', 'Web', {
-      // httpOnly: true,
-      secure: true,
-    });
+    // this.cookieService.put('tokenType', 'Web', {
+    //   // httpOnly: true,
+    //   secure: true,
+    // });
   }
   // create TP model from token
   createUserModelFromCookies(): TPUserModel {
