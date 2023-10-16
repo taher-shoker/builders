@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: '/cem/reporting/apigateway/api/fm',
+  apiUrl: '/cem/reporting/apigateway/api/v2',
   languageFilesPath: '/cem/reporting/fraudworkspace/assets/i18n/',
-  loginPath: '/cem/reporting/login',
+  loginPath: '/cem/reporting/',
 };

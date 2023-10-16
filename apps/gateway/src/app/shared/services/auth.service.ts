@@ -42,7 +42,10 @@ export interface System {
 })
 export class AuthService {
   baseUrl = window.location.origin + environment.apiUrl;
-  loginTPUrl = window.location.origin + environment.tpLogInUrl;
+  loginTPUrl =
+    window.location.origin === 'https://igateapp.stc.com.sa'
+      ? window.location.origin + '/cem' + environment.tpLogInUrl
+      : window.location.origin + environment.tpLogInUrl;
 
   availableSystems!: System[];
   private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
@@ -242,7 +245,8 @@ export class AuthService {
               window.location.href =
                 window.location.origin + environment.systems.di_system;
             } else if (this.gratnedSystems[0] == 'FRAUD_ManagementUsers') {
-              window.location.href = window.location.origin + environment.systems.fraud_system;
+              window.location.href =
+                window.location.origin + environment.systems.fraud_system;
             } else {
               console.log('not handled system');
             }
@@ -364,12 +368,8 @@ export class AuthService {
     this.navigateToLogin();
   }
   navigateToLogin() {
-    if (environment.production) {
-      const routeToLogin = window.location.origin + '/cem/reporting/#/login';
-      window.location.href = routeToLogin;
-    } else {
-      this.router.navigate(['/login']);
-    }
+    const routeToLogin = window.location.origin + '/cem/reporting/';
+    window.location.href = routeToLogin;
   }
 
   // adding token to simulate TP system
@@ -471,10 +471,12 @@ export class AuthService {
         // the user is related to the TP only
         if (this.cookieService.get('tp-role') === 'ADMIN_TECHNICAL') {
           // navigate to the admin module
-          window.location.href = window.location.origin + environment.systems.tp_admin_system;
+          window.location.href =
+            window.location.origin + environment.systems.tp_admin_system;
         } else {
           // navigate to the app
-          window.location.href = window.location.origin + environment.systems.tp_system;
+          window.location.href =
+            window.location.origin + environment.systems.tp_system;
         }
       }
 
@@ -482,6 +484,7 @@ export class AuthService {
         // the user is related to the CEO only
         // navigate to the CEO Link
         window.location.href =
+          window.location.origin +
           environment.systems.ceo_system +
           this.cookieService.get('ceo-username');
       }

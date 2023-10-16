@@ -43,7 +43,7 @@ export class AuthService {
   login(data: any) {
     return this.http
       .post<AuthResponseData>(
-        `${window.location.origin}/cem/reporting-api/user/authenticate`,
+        `${window.location.origin}/reporting-api/user/authenticate`,
         data
       )
       .pipe(

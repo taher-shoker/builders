@@ -23,6 +23,7 @@ export class HttpInterceptorService implements HttpInterceptor {
         setHeaders: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
+          'Access-Token-Type': this.cookieService.get('tokenType') || 'Web',
         },
       });
     }

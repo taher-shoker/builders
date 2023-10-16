@@ -1,6 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'http://cemeye.stc.com.sa:8092/api/fm',
-  authUrl: 'http://cemeye.stc.com.sa:8092',
+  apiUrl: '/cem/reporting/apigateway/api/v2/di',
   loginPath: '/cem/reporting/',
 };
