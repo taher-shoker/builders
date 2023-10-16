@@ -26,7 +26,11 @@ import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { environment } from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
+  return new TranslateHttpLoader(
+    http,
+    window.location.origin + environment.languageFilesPath,
+    '.json'
+  );
 }
 
 @NgModule({
