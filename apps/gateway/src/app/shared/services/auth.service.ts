@@ -104,19 +104,6 @@ export class AuthService {
       );
   }
 
-  ssoLogin() {
-    return this.http
-      .post<any>(`http://localhost:7080/administration/saml/login`, {
-        username: 'mohfibrahim.c@stc.com.sa',
-        password: 'cem@123456',
-      })
-      .pipe(
-        tap((resData: any) => {
-          console.log('SSO', resData);
-        })
-      );
-  }
-
   isAdminUser() {
     const user =
       this.getLoggedInUser().getValue() || this.cookieService.get('token');
