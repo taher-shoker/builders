@@ -18,10 +18,15 @@ export class HttpInterceptorService implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
     const token = this.cookieService.get('token') || null;
+    const gToken = this.cookieService.get('tokenGenerated') || null;
+    const type = this.cookieService.get('tokenType') || '';
     if (token) {
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,
+          'Authorization-Generated': `Bearer ${gToken}`,
+          'Content-Type': 'application/json',
+          'Access-Token-Type': type,
         },
       });
     }
