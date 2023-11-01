@@ -118,7 +118,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   allItems!: Task[];
   addCasseNavigate(): void {
-    this.router.navigate(['./add-case'], { relativeTo: this.route });
+    this.router.navigate(['./add_case'], { relativeTo: this.route });
   }
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any[] = COLUMNS_SCHEMA;
@@ -172,7 +172,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   detailsNavigate(id: string | number) {
-    this.router.navigate(['./case-details', id], { relativeTo: this.route });
+    this.router.navigate(['./case_details', id], { relativeTo: this.route });
   }
   getCassesListing() {
     this.getCasesSub = this.CasesService.getCases().subscribe((res: any) => {
@@ -243,7 +243,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   navigateToTask(caseId: number) {
-    this.router.navigate(['./case-details', caseId], {
+    this.router.navigate(['./case_details', caseId], {
       relativeTo: this.route,
     });
   }

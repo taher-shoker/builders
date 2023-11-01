@@ -4,6 +4,7 @@ import { HomeComponent } from './home.component';
 import { AuthGuard } from '../../services/auth.guard';
 import { UnauthorizedPageComponent } from '../unauthorized-page/unauthorized-page.component';
 import { DashboardComponent } from '../dashboard/dashboard.component';
+import { reportingGuard } from '../../services/guards/reporting.guard';
 
 const routes: Routes = [
   {
@@ -15,7 +16,7 @@ const routes: Routes = [
       {
         path: 'home',
         data: { breadcrumb: 'home' },
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, reportingGuard],
         loadChildren: () =>
           import('../casses-setting/casses-setting.module').then(
             (m) => m.CassesSettingModule
@@ -33,7 +34,7 @@ const routes: Routes = [
       {
         path: 'dashboard',
         data: { breadcrumb: 'dashboard' },
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, reportingGuard],
         component: DashboardComponent,
       },
     ],
