@@ -68,17 +68,17 @@ export class HomeComponent implements OnInit {
 
   busLabels: LabelLine[] = [
     { value: 'BUs DI', styles: '[bold]', centerY: 90, fontSize: 12 },
-    { value: '0', styles: '[#00c48c][bold]', centerY: 27, fontSize: 22 },
+    { value: '0', styles: '', centerY: 27, fontSize: 22 },
   ];
 
   fusLabels: LabelLine[] = [
     { value: 'FUs DI', styles: '[bold]', centerY: 90, fontSize: 12 },
-    { value: '0', styles: '[#bb2222][bold]', centerY: 27, fontSize: 22 }, // red-Color-dark #bb2222
+    { value: '0', styles: '', centerY: 27, fontSize: 22 }, // red-Color-dark #bb2222
   ];
 
   techLabels: LabelLine[] = [
     { value: 'Technology DI', styles: '[bold]', centerY: 90, fontSize: 12 },
-    { value: '0', styles: '[#00c48c][bold]', centerY: 27, fontSize: 22 }, // Oasis green color #00c48c
+    { value: '0', styles: '', centerY: 27, fontSize: 22 }, // Oasis green color #00c48c
   ];
 
   buDeltaAchieved!: boolean;
@@ -207,6 +207,7 @@ export class HomeComponent implements OnInit {
     lookUpPropName: string
   ) {
     this[businessName][1].value = data.data[lookUpPropName][0].score + '%';
+    data.data[lookUpPropName][0].score > 0 ? this[businessName][1].styles = '[#00c48c][bold]' : '[#bb2222][bold]'
     const temp = { [businessName]: this[businessName] };
     this[businessName] = [...temp[businessName]];
 
