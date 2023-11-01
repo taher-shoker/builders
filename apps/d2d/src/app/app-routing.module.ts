@@ -1,15 +1,11 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import {
-  RouteReuseStrategy,
-  Router,
-  RouterModule,
-  Routes,
-} from '@angular/router';
+import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './views/home/home.component';
 import { LoginComponent } from './views/login/login.component';
 import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
 import { AppRouteReuseStrategy } from './views/users-settings/AppRouteReuseStrategy';
+import { reportingGuard } from './services/guards/reporting.guard';
 
 // Import Containers
 
@@ -40,6 +36,4 @@ const routes: Routes = [
   exports: [RouterModule],
   providers: [{ provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }],
 })
-export class AppRoutingModule {
-  constructor(private router: Router) {}
-}
+export class AppRoutingModule {}

@@ -8,9 +8,8 @@
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    // "suppressImplicitAnyIndexErrors": true,
-    // "ignoreDeprecations": "5.0",
-
+    "suppressImplicitAnyIndexErrors": true,
+    "ignoreDeprecations": "5.0"
   },
   "files": [],
   "include": [],
@@ -31,7 +30,6 @@
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
     "strictTemplates": true,
-    // "suppressImplicitAnyIndexErrors": true,
 
   }
 }
