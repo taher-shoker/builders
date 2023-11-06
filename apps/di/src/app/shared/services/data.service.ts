@@ -16,12 +16,15 @@ import {
 })
 export class DataService {
   http = inject(HttpClient);
+  baseURL = `${environment.apiUrl}/di`;
 
   /**
    * @returns The data of the level zero (DI Dashboard), a LevelZeroResponse object.
    */
   getLevelZeroData(): Observable<LevelZeroResponse> {
-    return this.http.get<LevelZeroResponse>(`${window.location.origin}${environment.apiUrl}/l0`);
+    return this.http.get<LevelZeroResponse>(
+      `${this.baseURL}/l0`
+    );
   }
 
   /**
@@ -34,7 +37,10 @@ export class DataService {
     const params = {
       params: new HttpParams().set('unitSectorGroup', unitSectorGroup),
     };
-    return this.http.get<LevelOneResponse>(`${window.location.origin}${environment.apiUrl}/l1`, params);
+    return this.http.get<LevelOneResponse>(
+      `${this.baseURL}/l1`,
+      params
+    );
   }
 
   /**
@@ -44,7 +50,7 @@ export class DataService {
   getKPIsOfBusinessName(unitSector: string): Observable<LevelTwoResponse> {
     const params = { params: new HttpParams().set('unitSector', unitSector) };
     return this.http.get<LevelTwoResponse>(
-      `${window.location.origin}${environment.apiUrl}/l2/kpi`,
+      `${this.baseURL}/l2/kpi`,
       params
     );
   }
@@ -57,15 +63,16 @@ export class DataService {
   getDetailsOfKPIs(id: string): Observable<KpiDetailsResponse> {
     const params = { params: new HttpParams().set('kpiId', id) };
     return this.http.get<KpiDetailsResponse>(
-      `${window.location.origin}${environment.apiUrl}/l2/kpi/trend`,
+      `${this.baseURL}/l2/kpi/trend`,
       params
     );
   }
 
-  getFilters(): Observable<Filters>{
-    return this.http.get<Filters>(`${window.location.origin}${environment.apiUrl}/l2/kpi/list`)
+  getFilters(): Observable<Filters> {
+    return this.http.get<Filters>(
+      `${this.baseURL}/l2/kpi/list`
+    );
   }
-
 
   formatDate(freq: number, yearNum: number): string {
     let month = `${freq}`;

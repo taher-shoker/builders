@@ -19,7 +19,7 @@ export const reportingGuard: CanActivateFn = (route, state): boolean => {
     // console.warn("route is", route)
     // console.warn("the pathTo", pathTo)
     if (pages[pathTo]) {
-      reportingService.postReport(pages[pathTo]).subscribe((res) => {
+      reportingService.postReport(pages[pathTo]).subscribe(() => {
         console.log('gon send', pages[pathTo])
       });
     }

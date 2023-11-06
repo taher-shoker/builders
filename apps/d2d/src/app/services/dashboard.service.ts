@@ -34,7 +34,7 @@ interface WeeklyTrendChart {
   providedIn: 'root',
 })
 export class DashboardService {
-  baseUrl = `${window.location.origin}${environment.apiUrl}/fm`;
+  baseUrl = `${environment.apiUrl}/fm`;
 
   constructor(private http: HttpClient) {}
 

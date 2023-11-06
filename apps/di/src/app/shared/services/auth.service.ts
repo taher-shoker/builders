@@ -26,9 +26,13 @@ export class AuthService {
     // }
   }
 
+  baseURL = window.location.origin.includes('localhost')
+    ? 'http://localhost:9084'
+    : window.location.origin;
+
   getCurrentUserRoles(): Observable<UserRoles> {
     return this.http.get<UserRoles>(
-      `${window.location.origin}/cem/reporting/apigateway/api/v2/admin/users/currentLoggedUser`
+      `${this.baseURL}/cem/reporting/apigateway/api/v2/admin/users/currentLoggedUser`
     );
   }
 

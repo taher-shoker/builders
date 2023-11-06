@@ -6,6 +6,7 @@ import { registerLocaleData } from '@angular/common';
 import localeAr from '@angular/common/locales/ar';
 import { AuthService } from './services/auth.service';
 import { Router } from '@angular/router';
+import { ReportingService } from './services/reporting.service';
 
 @Component({
   selector: 'stc-apps-root',
@@ -19,8 +20,12 @@ export class AppComponent {
     private translate: TranslateService,
     private languageManagerService: LanguageManagerService,
     private authService: AuthService,
-    public router: Router
+    public router: Router,
+    private _reportingService: ReportingService
   ) {
+
+    this._reportingService.postReport('Authenticcation-Done').subscribe(() =>{console.log("init login")});
+
     registerLocaleData(localeAr);
 
     const savedLanguage =

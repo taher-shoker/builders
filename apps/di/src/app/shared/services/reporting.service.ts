@@ -1,42 +1,39 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment';
+import { CookieService } from 'ngx-cookie';
 
 export interface DatesQuery {
-  yearFrom: string,
-  yearTo: string,
-  monthFrom: string,
-  monthTo: string,
-  dayFrom: string,
-  dayTo: string
+  yearFrom: string;
+  yearTo: string;
+  monthFrom: string;
+  monthTo: string;
+  dayFrom: string;
+  dayTo: string;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReportingService {
+  constructor(
+    private http: HttpClient,
+    private _cookieService: CookieService
+  ) {}
 
-  constructor(private http: HttpClient) {}
+  postReport(pageName: string) {
+    const user = JSON.parse(
+      this._cookieService.get('MODERN_SYSTEM_USER') || ''
+    );
 
-  postReport(pageName: string){
-    const bodyObj = {pageName, systemName: "DI Dashboard"}
-    return this.http.post(`${environment.apiUrl}/report/page`, bodyObj)
+    const payload = {
+      pageName: pageName,
+      systemName: 'DI Dashboard',
+      userName: user.username,
+      userDisplayName: user.name,
+      userJobTitle: user.jobTitle,
+    };
+    // const bodyObj = {pageName, systemName: "DI Dashboard"}
+    return this.http.post(`${environment.reportApiUrl}/report/page`, payload);
   }
-
-  // getReport(datesObj? : DatesQuery){
-  //   if(datesObj){
-  //     return this.http.get(`${environment.apiUrl}/report/page?dateFrom=${datesObj.yearFrom}-${datesObj.monthFrom}-${datesObj.dayFrom}&dateTo=${datesObj.yearTo}-${datesObj.monthTo}-${datesObj.dayTo}`)
-  //   }else{
-  //     return this.http.get(`${environment.apiUrl}/report/page`)
-  //   }
-  // }
-
-  // getLogin(datesObj? : DatesQuery){
-  //   if(datesObj){
-  //     return this.http.get(`${environment.apiUrl}/report/page?pageName=Authenticcation-Done&dateFrom=${datesObj.yearFrom}-${datesObj.monthFrom}-${datesObj.dayFrom}&dateTo=${datesObj.yearTo}-${datesObj.monthTo}-${datesObj.dayTo}`)
-  //   }else{
-  //     return this.http.get(`${environment.apiUrl}/report/page?pageName=Authenticcation-Done`)
-  //   }
-  // }
-
 }

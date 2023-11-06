@@ -24,7 +24,8 @@ export interface AuthResponseData {
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {
-  baseUrl = `${window.location.origin}${environment.apiUrl}/fm`;
+  // baseUrl = `${window.location.origin}${environment.apiUrl}/fm`;
+  baseUrl = `${environment.apiUrl}/fm`;
 
   user = new BehaviorSubject<any>(null);
   private tokenExpirationTimer: any;

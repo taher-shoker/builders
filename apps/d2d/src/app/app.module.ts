@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -32,10 +32,20 @@ import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
 import { environment } from '../environments/environment';
 import { CookieModule } from 'ngx-cookie';
+import { ReportingService } from './services/reporting.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
+
+export function initializeApp(reportingService: ReportingService) {
+  return () => {
+   reportingService.postReport('Authenticcation-Done').subscribe(() => {
+     console.log('Init Log');
+   });
+ }
+}
+
 @NgModule({
   declarations: [AppComponent, LoginComponent, UnauthorizedPageComponent],
   imports: [
@@ -72,6 +82,12 @@ export function HttpLoaderFactory(http: HttpClient) {
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => initializeApp,
+      deps: [ReportingService],
       multi: true,
     },
   ],

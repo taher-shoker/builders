@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -18,12 +18,23 @@ import { HomeComponent } from './views/home/home.component';
 
 import { HttpInterceptorService } from './shared/interceptors/http-interceptor.service';
 import { CookieModule } from 'ngx-cookie';
+import { ReportingService } from './shared/services/reporting.service';
 // import { KpisPerformanceModule } from './views/kpis-performance/kpis-performance.module';
 // import { KpisTrendModule } from './views/kpis-trend/kpis-trend.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
+
+export function initializeApp(reportingService: ReportingService) {
+  return () => {
+    reportingService.postReport('Authenticcation-Done').subscribe(() => {
+      console.log('Init Log');
+    });
+  };
+}
+
+
 @NgModule({
   declarations: [AppComponent, HomeComponent],
   imports: [
@@ -41,13 +52,19 @@ export function HttpLoaderFactory(http: HttpClient) {
       },
     }),
     ToastrModule.forRoot(),
-    RouterModule.forRoot(appRoutes, {useHash: true}),
+    RouterModule.forRoot(appRoutes, { useHash: true }),
     CookieModule.withOptions(),
   ],
   providers: [
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
+      multi: true,
+    },
+    {
+      provide: APP_INITIALIZER,
+      useFactory: () => initializeApp,
+      deps: [ReportingService],
       multi: true,
     },
   ],
