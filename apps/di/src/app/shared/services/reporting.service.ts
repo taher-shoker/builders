@@ -16,6 +16,10 @@ export interface DatesQuery {
   providedIn: 'root',
 })
 export class ReportingService {
+  [x: string]: any;
+  reportService(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
   constructor(
     private http: HttpClient,
     private _cookieService: CookieService

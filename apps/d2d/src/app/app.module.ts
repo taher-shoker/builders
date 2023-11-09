@@ -33,17 +33,16 @@ import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorize
 import { environment } from '../environments/environment';
 import { CookieModule } from 'ngx-cookie';
 import { ReportingService } from './services/reporting.service';
+import { AppInitService } from './services/app-init.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
 
-export function initializeApp(reportingService: ReportingService) {
-  return () => {
-   reportingService.postReport('Authenticcation-Done').subscribe(() => {
-     console.log('Init Log');
-   });
- }
+export function initializeApp(appInitService: AppInitService) {
+  return (): Promise<any> => {
+    return appInitService.Init();
+  };
 }
 
 @NgModule({
@@ -74,6 +73,8 @@ export function initializeApp(reportingService: ReportingService) {
     CookieModule.withOptions(),
   ],
   providers: [
+    AppInitService,
+    ReportingService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
@@ -87,7 +88,7 @@ export function initializeApp(reportingService: ReportingService) {
     {
       provide: APP_INITIALIZER,
       useFactory: () => initializeApp,
-      deps: [ReportingService],
+      deps: [AppInitService, ReportingService],
       multi: true,
     },
   ],

@@ -41,10 +41,6 @@ export class AppComponent implements OnInit {
   ];
 
   ngOnInit(): void {
-    this._reportingService.postReport('Authenticcation-Done').subscribe(() => {
-      console.log('init login');
-    });
-
     this.authService.displayName;
     this.authService.displayName.subscribe((res) => {
       this.userName = res;

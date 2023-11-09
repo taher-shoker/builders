@@ -25,7 +25,6 @@ export class AuthGuard implements CanActivate {
       ? this.cookieService.get('token')
       : '';
 
-    console.log('route', route);
     if (!token) {
       this.authService.navigateToLogin();
       return false;

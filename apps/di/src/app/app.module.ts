@@ -19,18 +19,15 @@ import { HomeComponent } from './views/home/home.component';
 import { HttpInterceptorService } from './shared/interceptors/http-interceptor.service';
 import { CookieModule } from 'ngx-cookie';
 import { ReportingService } from './shared/services/reporting.service';
-// import { KpisPerformanceModule } from './views/kpis-performance/kpis-performance.module';
-// import { KpisTrendModule } from './views/kpis-trend/kpis-trend.module';
+import { AppInitService } from './shared/services/app-init.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 
-export function initializeApp(reportingService: ReportingService) {
-  return () => {
-    reportingService.postReport('Authenticcation-Done').subscribe(() => {
-      console.log('Init Log');
-    });
+export function initializeDTApp(appInitService: AppInitService) {
+  return (): Promise<any> => {
+    return appInitService.Init();
   };
 }
 
@@ -42,8 +39,6 @@ export function initializeApp(reportingService: ReportingService) {
     BrowserAnimationsModule,
     HttpClientModule,
     SharedUiModule,
-    // KpisPerformanceModule,
-    // KpisTrendModule,
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
@@ -56,6 +51,8 @@ export function initializeApp(reportingService: ReportingService) {
     CookieModule.withOptions(),
   ],
   providers: [
+    ReportingService,
+    AppInitService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
@@ -63,8 +60,8 @@ export function initializeApp(reportingService: ReportingService) {
     },
     {
       provide: APP_INITIALIZER,
-      useFactory: () => initializeApp,
-      deps: [ReportingService],
+      useFactory: initializeDTApp,
+      deps: [AppInitService, ReportingService],
       multi: true,
     },
   ],

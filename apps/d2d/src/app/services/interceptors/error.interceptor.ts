@@ -23,10 +23,8 @@ export class ErrorInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log(request)
     return next.handle(request).pipe(
       catchError((err) => {
-        console.warn('EL ERR', err);
         const error = err.message;
         if (err.status === 401) {
           if (err.error.status === 'UNAUTHORIZED') {

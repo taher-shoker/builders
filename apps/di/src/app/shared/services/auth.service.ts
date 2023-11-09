@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie';
 import { UserRole, UserRoles } from '../models/role.model';
 import { environment } from '../../../environments/environment';
+import { ReportingService } from './reporting.service';
 
 @Injectable({
   providedIn: 'root',
@@ -16,7 +17,11 @@ export class AuthService {
   userRoles!: UserRole[];
   displayName: BehaviorSubject<string> = new BehaviorSubject<string>('');
 
-  constructor(private http: HttpClient, private _cookieService: CookieService) {
+  constructor(
+    private http: HttpClient,
+    private _cookieService: CookieService,
+    private _reportingService: ReportingService
+  ) {
     const token = this._cookieService.get('token');
     console.log('Token is', !!token);
     this._isLoggedIn$.next(!!token);
