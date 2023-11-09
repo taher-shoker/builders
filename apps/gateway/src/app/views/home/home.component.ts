@@ -3,6 +3,7 @@ import { CookieService } from 'ngx-cookie';
 import { AuthService, System } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
+import { AgentService } from '../../shared/services/agent.service';
 
 @Component({
   selector: 'stc-apps-home',
@@ -14,7 +15,8 @@ export class HomeComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
     public authService: AuthService,
-    private router: Router
+    private router: Router,
+    private agentService: AgentService
   ) {}
   ngOnInit(): void {
     if (this.cookieService.get('granted-systems')) {
@@ -34,6 +36,12 @@ export class HomeComponent implements OnInit {
   getGrantedSystems() {
     if (this.apps.length == 0) {
       this.apps = this.authService.handleUserSystems();
+    }
+    if (this.agentService.isAgentFromMobileDevice()) {
+      this.apps = this.apps.filter(
+        (x) =>
+          !x.displayName?.includes('DT') && !x.displayName?.includes('Fraud')
+      );
     }
     return this.apps.length > 0;
   }

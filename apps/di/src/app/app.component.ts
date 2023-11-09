@@ -1,5 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from './shared/services/auth.service';
+import { ReportingService } from './shared/services/reporting.service';
 
 @Component({
   selector: 'stc-apps-root',
@@ -8,6 +9,7 @@ import { AuthService } from './shared/services/auth.service';
 })
 export class AppComponent implements OnInit {
   authService = inject(AuthService);
+  _reportingService = inject(ReportingService);
 
   urlHome!: string;
   title = { title: 'home', text: '' };
@@ -39,6 +41,10 @@ export class AppComponent implements OnInit {
   ];
 
   ngOnInit(): void {
+    this._reportingService.postReport('Authenticcation-Done').subscribe(() => {
+      console.log('init login');
+    });
+
     this.authService.displayName;
     this.authService.displayName.subscribe((res) => {
       this.userName = res;

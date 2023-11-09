@@ -41,11 +41,11 @@ export interface System {
   providedIn: 'root',
 })
 export class AuthService {
-  baseUrl = window.location.origin + environment.apiUrl;
+  baseUrl = environment.apiUrl;
   loginTPUrl =
     window.location.origin === 'https://igateapp.stc.com.sa'
       ? window.location.origin + '/cem' + environment.tpLogInUrl
-      : window.location.origin + environment.tpLogInUrl;
+      : environment.tpLogInUrl;
 
   availableSystems!: System[];
   private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
@@ -94,14 +94,19 @@ export class AuthService {
 
   login(data: { username: string; password: string }) {
     this.availableSystems = [];
-    return this.http
-      .post<AuthResponseData>(`${this.loginTPUrl}/user/authenticate`, data)
-      .pipe(
-        tap((resData: AuthResponseData) => {
-          this.handleAuthentication(resData.displayName, resData.token);
-          this.getUserData();
-        })
-      );
+    return (
+      this.http
+        .post<AuthResponseData>(`${this.loginTPUrl}/user/authenticate`,
+        // .post<AuthResponseData>(`http://localhost:9084/cem/reporting-api/user/authenticate`,
+          data
+        )
+        .pipe(
+          tap((resData: AuthResponseData) => {
+            this.handleAuthentication(resData.displayName, resData.token);
+            this.getUserData();
+          })
+        )
+    );
   }
 
   isAdminUser() {
@@ -504,7 +509,7 @@ export class AuthService {
       //   }
       // }
 
-      return [{ name: gratnedSystems[0] }];
+      return gratnedSystems[0] ? [{ name: gratnedSystems[0] }]:[];
     }
   }
 }
