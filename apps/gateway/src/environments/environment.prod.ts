@@ -9,6 +9,7 @@ export const environment = {
     tp_admin_system: '/cem/reporting/tp/system-configurations',
     fraud_system: '/cem/reporting/fraudworkspace/',
     di_system: '/cem/reporting/admin/system-configurations',
+    jira_system: '/cem/reporting/jiradashboard/',
   },
   sso_url: '/reporting-api/saml/saml/login',
   languageFilesPath: '/cem/reporting/assets/i18n/',

@@ -94,19 +94,18 @@ export class AuthService {
 
   login(data: { username: string; password: string }) {
     this.availableSystems = [];
-    return (
-      this.http
-        .post<AuthResponseData>(`${this.loginTPUrl}/user/authenticate`,
+    return this.http
+      .post<AuthResponseData>(
+        `${this.loginTPUrl}/user/authenticate`,
         // .post<AuthResponseData>(`http://localhost:9084/cem/reporting-api/user/authenticate`,
-          data
-        )
-        .pipe(
-          tap((resData: AuthResponseData) => {
-            this.handleAuthentication(resData.displayName, resData.token);
-            this.getUserData();
-          })
-        )
-    );
+        data
+      )
+      .pipe(
+        tap((resData: AuthResponseData) => {
+          this.handleAuthentication(resData.displayName, resData.token);
+          this.getUserData();
+        })
+      );
   }
 
   isAdminUser() {
@@ -169,6 +168,9 @@ export class AuthService {
             if (res.dto.systems.includes('DI_Management')) {
               this.gratnedSystems.push('DI_Management');
             }
+            if (res.dto.systems.includes('Jira_Dahsboard')) {
+              this.gratnedSystems.push('Jira_Dahsboard');
+            }
             this.setLoggedInUser();
           }
 
@@ -191,7 +193,8 @@ export class AuthService {
 
           if (
             res.dto.systems.includes('FRAUD_ManagementUsers') ||
-            res.dto.systems.includes('DI_Management')
+            res.dto.systems.includes('DI_Management') ||
+            res.dto.systems.includes('Jira_Dahsboard')
           ) {
             this.setLoggedInUser();
           }
@@ -425,7 +428,7 @@ export class AuthService {
             case 'CEO_DashboardUsers':
               this.passedSystems.push({
                 systemUrl:
-                  window.location.origin +
+
                   environment.systems.ceo_system +
                   this.cookieService.get('ceo-username'),
                 name: 'CCEX Workspace',
@@ -448,6 +451,15 @@ export class AuthService {
                   window.location.origin + environment.systems.di_system,
                 name: 'DT Workspace',
                 displayName: 'DT Workspace',
+              });
+              break;
+            case 'Jira_Dahsboard':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin + environment.systems.jira_system,
+                name: 'Jira Dashboard',
+                displayName: 'Jira Dashboard',
               });
               break;
             default:
@@ -477,7 +489,7 @@ export class AuthService {
         // the user is related to the CEO only
         // navigate to the CEO Link
         window.location.href =
-          window.location.origin +
+
           environment.systems.ceo_system +
           this.cookieService.get('ceo-username');
       }
@@ -509,7 +521,7 @@ export class AuthService {
       //   }
       // }
 
-      return gratnedSystems[0] ? [{ name: gratnedSystems[0] }]:[];
+      return gratnedSystems[0] ? [{ name: gratnedSystems[0] }] : [];
     }
   }
 }
