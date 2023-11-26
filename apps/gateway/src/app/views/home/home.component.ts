@@ -31,6 +31,8 @@ export class HomeComponent implements OnInit {
     } else {
       this.authService.getUserData();
     }
+
+    this.getGrantedSystems();
   }
 
   getGrantedSystems() {

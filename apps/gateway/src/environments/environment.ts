@@ -3,6 +3,7 @@ export const environment = {
   apiUrl: 'http://localhost:9084/cem/reporting/apigateway/api/v2/admin',
   tpLogInUrl: 'http://localhost:9084/cem/reporting-api',
   systems: {
+    _ceo_system: 'http://localhost:4200/',
     ceo_system:
       'http://localhost:9084/cem/reporting/apigateway/api/auth/authenticatehub?hub_username=',
     tp_system: '/cem/reporting/tp/',

@@ -64,6 +64,8 @@ export class AuthService {
 
   passedSystems: System[] = [];
 
+  ceoRedirected = false;
+
   constructor(
     private cookieService: CookieService,
     private router: Router,
@@ -128,7 +130,7 @@ export class AuthService {
     this.cookieService.put('token', token);
     this._isLoggedIn$.next(!!token);
   }
-
+  setCurrentLoggedInUser = false;
   getUserData() {
     this.gratnedSystems = [];
     this.http
@@ -174,7 +176,7 @@ export class AuthService {
             this.setLoggedInUser();
           }
 
-          this.handleUserSystems();
+          // this.handleUserSystems();
         } else if (res.dto.systems.length > 1) {
           this.loggedInUser = {
             name: res.dto.displayName,
@@ -207,49 +209,53 @@ export class AuthService {
           this.router.navigate(['/apps']);
 
           //  this.setLoggedInUser();
-          this.handleUserSystems();
+          // this.handleUserSystems();
         } else {
           this.cookieService.removeAll();
           this.toastr.error(
             'There is something wrong; please contact the administrator'
           );
         }
+        this.handleUserSystems();
       });
   }
 
   setLoggedInUser(): void {
-    this.cookieService.put(
-      'granted-systems',
-      JSON.stringify(this.gratnedSystems)
-    );
-    this.http
-      .get<LoggedUser>(`${this.baseUrl}/users/currentLoggedUser`)
-      .subscribe(async (res: LoggedUser) => {
-        this.loggedInUser = res;
-        this.loggedUserStream.next(res);
-        // this.cookieService.put('USER_FULLNAME', res.name);
-        this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
+    if (this.setCurrentLoggedInUser == false) {
+      this.setCurrentLoggedInUser = true;
+      this.cookieService.put(
+        'granted-systems',
+        JSON.stringify(this.gratnedSystems)
+      );
+      this.http
+        .get<LoggedUser>(`${this.baseUrl}/users/currentLoggedUser`)
+        .subscribe(async (res: LoggedUser) => {
+          this.loggedInUser = res;
+          this.loggedUserStream.next(res);
+          // this.cookieService.put('USER_FULLNAME', res.name);
+          this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
 
-        this.handleSystemsNeeds(res);
+          this.handleSystemsNeeds(res);
 
-        if (this.gratnedSystems.length == 1) {
-          if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
-            this.router.navigate(['users-setting']);
-          } else {
-            if (this.gratnedSystems[0] == 'DI_Management') {
-              window.location.href =
-                window.location.origin + environment.systems.di_system;
-            } else if (this.gratnedSystems[0] == 'FRAUD_ManagementUsers') {
-              window.location.href =
-                window.location.origin + environment.systems.fraud_system;
+          if (this.gratnedSystems.length == 1) {
+            if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
+              this.router.navigate(['users-setting']);
             } else {
-              console.log('not handled system');
+              if (this.gratnedSystems[0] == 'DI_Management') {
+                window.location.href =
+                  window.location.origin + environment.systems.di_system;
+              } else if (this.gratnedSystems[0] == 'FRAUD_ManagementUsers') {
+                window.location.href =
+                  window.location.origin + environment.systems.fraud_system;
+              } else {
+                console.log('not handled system');
+              }
             }
+          } else {
+            this.router.navigate(['/apps']);
           }
-        } else {
-          this.router.navigate(['/apps']);
-        }
-      });
+        });
+    }
   }
 
   getAllSystem() {
@@ -428,7 +434,6 @@ export class AuthService {
             case 'CEO_DashboardUsers':
               this.passedSystems.push({
                 systemUrl:
-
                   environment.systems.ceo_system +
                   this.cookieService.get('ceo-username'),
                 name: 'CCEX Workspace',
@@ -488,38 +493,13 @@ export class AuthService {
       if (gratnedSystems[0] === 'CEO_DashboardUsers') {
         // the user is related to the CEO only
         // navigate to the CEO Link
-        window.location.href =
-
-          environment.systems.ceo_system +
-          this.cookieService.get('ceo-username');
+        if (this.ceoRedirected == false) {
+          this.ceoRedirected = true;
+          window.location.href =
+            environment.systems.ceo_system +
+            this.cookieService.get('ceo-username');
+        }
       }
-
-      // console.log(
-      //   this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName
-      // );
-      // if (gratnedSystems[0] === 'FRAUD_ManagementUsers') {
-      //   // the user is related to the Fraud only
-      //   if (
-      //     this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
-      //     'ADMINS'
-      //   ) {
-      //     // this.router.navigate(['users-setting']);
-      //   } else {
-      //     // window.location.href = environment.systems.fraud_system; //'http://localhost:9001/';
-      //   }
-      // }
-
-      // if (gratnedSystems[0] === 'DI_Management') {
-      //   // the user is related to the Fraud only
-      //   if (
-      //     this.getLoggedInUser().getValue()?.userGroups[0].roles[0].roleName ===
-      //     'ADMINS'
-      //   ) {
-      //     // this.router.navigate(['users-setting']);
-      //   } else {
-      //     // window.location.href = environment.systems.di_system; //'http://localhost:9001/';
-      //   }
-      // }
 
       return gratnedSystems[0] ? [{ name: gratnedSystems[0] }] : [];
     }

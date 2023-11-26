@@ -1,10 +1,10 @@
 export const environment = {
   production: true,
-  apiUrl: '/cem/reporting/apigateway/api/v2/admin',
-  tpLogInUrl: '/reporting-api',
+  apiUrl: 'http://localhost:9084/cem/reporting/apigateway/api/v2/admin',
+  tpLogInUrl: 'http://localhost:9084/cem/reporting-api',
   systems: {
     ceo_system:
-      '/cem/reporting/apigateway/api/auth/authenticatehub?hub_username=',
+      'http://localhost:9084/cem/reporting/apigateway/api/auth/authenticatehub?hub_username=',
     tp_system: '/cem/reporting/tp/',
     tp_admin_system: '/cem/reporting/tp/system-configurations',
     fraud_system: '/cem/reporting/fraudworkspace/',
