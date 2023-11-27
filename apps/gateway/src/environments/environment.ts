@@ -12,6 +12,6 @@ export const environment = {
     di_system: '/cem/reporting/dtworkspace/',
     jira_system: '/cem/reporting/jiradashboard/',
   },
-  sso_url: '/reporting-api/saml/saml/login',
+  sso_url: 'http://localhost:7080/administration/saml/login',
   languageFilesPath: '/assets/i18n/',
 };

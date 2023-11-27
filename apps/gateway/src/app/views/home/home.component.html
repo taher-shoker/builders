@@ -26,7 +26,7 @@
         <div class="row">
 
           <div class="col-md-8 offset-md-2">
-            <ul class="apps-box " *ngIf="this.apps.length > 0">
+            <ul class="apps-box " *ngIf="getGrantedSystems()">
               <li *ngFor="let item of apps">
                 <a href={{item.systemUrl}}>
                   {{item.displayName}}

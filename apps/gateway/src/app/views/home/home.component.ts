@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
     private cookieService: CookieService,
     public authService: AuthService,
     private router: Router,
-    private agentService: AgentService
+    private agentService: AgentService,
   ) {}
   ngOnInit(): void {
     if (this.cookieService.get('granted-systems')) {
@@ -36,15 +36,22 @@ export class HomeComponent implements OnInit {
   }
 
   getGrantedSystems() {
-    if (this.apps.length == 0) {
+    if (
+      this.apps.length == 0 &&
+      this.isGrantedSystemSettled()
+    ) {
       this.apps = this.authService.handleUserSystems();
+      if (this.agentService.isAgentFromMobileDevice()) {
+        this.apps = this.apps.filter(
+          (x) =>
+            !x.displayName?.includes('DT') && !x.displayName?.includes('Fraud')
+        );
+      }
     }
-    if (this.agentService.isAgentFromMobileDevice()) {
-      this.apps = this.apps.filter(
-        (x) =>
-          !x.displayName?.includes('DT') && !x.displayName?.includes('Fraud')
-      );
-    }
-    return this.apps.length > 0;
+    return this.isGrantedSystemSettled();
+  }
+
+  isGrantedSystemSettled() :boolean{
+    return this.cookieService.get('granted-systems')!= undefined;
   }
 }

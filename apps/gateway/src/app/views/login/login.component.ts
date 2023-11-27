@@ -59,6 +59,6 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithSSO() {
-    window.location.href = window.location.origin + environment.sso_url;
+    window.location.href = environment.sso_url;
   }
 }
