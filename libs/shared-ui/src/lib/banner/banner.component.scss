@@ -1,0 +1,32 @@
+@import '../../../../styles/src/scss/core/variables/colors';
+
+.banner-box {
+  min-height: 170px;
+  max-height: 452px;
+  background-color: $stcColor;
+  color: $whiteColor;
+  position: relative;
+  .top-banner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .welcome-msg {
+      text-transform: capitalize;
+      p {
+        color: $greyColor;
+      }
+    }
+    .date-status {
+      p {
+        span {
+          color: $whiteColor;
+          opacity: 0.5;
+        }
+      }
+    }
+  }
+  h1 {
+    text-transform: capitalize;
+    color: $whiteColor;
+  }
+}

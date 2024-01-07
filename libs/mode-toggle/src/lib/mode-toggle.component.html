@@ -1,0 +1,10 @@
+<div
+  title="{{ modeToggleService.lightMode ? 'Light' : 'Dark' }}"
+  (click)="toggle()"
+  [ngClass]="{ dark: !modeToggleService.lightMode }"
+  class="light-dark-menu-button"
+>
+  <div class="ofset-spin-test">
+    <img src="../assets/dark_light.svg" width="150" alt="" />
+  </div>
+</div>

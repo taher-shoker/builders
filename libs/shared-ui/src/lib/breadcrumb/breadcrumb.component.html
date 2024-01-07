@@ -1,0 +1,13 @@
+<nav aria-label="breadcrumb" class="breadcrumb-nav px-3" [class]="bgColor + ' ' + colorText">
+  <ol class="breadcrumb mb-0 py-2">
+    <li *ngFor="
+        let bcItem of breadcrumbs$ | async;
+        let $index = index;
+        let $last = last
+      " title="{{ bcItem.label }}" class="breadcrumb-item">
+      <a *ngIf="!$last" [ngClass]="{ active: $last }" class="cursor-pointer" [routerLink]="['/' + bcItem.url]">{{
+        bcItem.label | translate }}</a>
+      <span *ngIf="$last && $index !== 0" class="active">{{ bcItem.label | translate }}</span>
+    </li>
+  </ol>
+</nav>

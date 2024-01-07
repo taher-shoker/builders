@@ -1,0 +1,41 @@
+<div class="login">
+  <div class="shape4"></div>
+  <div class="log-out" (click)="authService.logout()">
+    <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
+  </div>
+  <div class="container-fluid">
+    <div class="row align-items-center">
+      <div class="col-md-5 ">
+
+
+        <div class="card">
+          <div class="shape1"></div>
+          <div class="shape2"></div>
+          <div class="shape3"></div>
+
+          <div class="card-img">
+            <img src="assets/images/login/stc.png" alt="stc" />
+          </div>
+          <h4 class="">Welcome, {{authService.loggedInUser?.name}}</h4>
+          <p>Let’s discover the applications</p>
+
+        </div>
+      </div>
+
+      <div class="col-md-7  col-sm-12">
+        <div class="row">
+
+          <div class="col-md-8 offset-md-2">
+            <ul class="apps-box " *ngIf="getGrantedSystems()">
+              <li *ngFor="let item of apps">
+                <a href={{item.systemUrl}}>
+                  {{item.displayName}}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

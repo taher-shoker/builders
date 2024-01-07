@@ -1,0 +1,32 @@
+/* modals are hidden by default */
+stc-apps-dialog {
+  display: none;
+  .stc-modal {
+    /* modal container fixed across whole screen */
+    position: fixed;
+    inset: 0;
+
+    /* z-index must be higher than everything else on the page */
+    z-index: 10000;
+
+    /* semi-transparent black background exposed by padding */
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 40px;
+    /* enables scrolling for tall modals */
+    overflow: auto;
+  }
+
+  .stc-modal-body {
+    padding: 20px 50px;
+    background: #fff;
+    width: 70vw;
+    margin: 0 auto;
+    border-radius: 10px;
+    // min-height: 300px;
+  }
+}
+
+body.stc-modal-open {
+  /* body overflow is hidden to hide main scrollbar when modal window is open */
+  overflow: hidden;
+}

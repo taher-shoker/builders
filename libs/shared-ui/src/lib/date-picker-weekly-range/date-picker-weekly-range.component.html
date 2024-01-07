@@ -1,0 +1,48 @@
+<!-- eslint-disable @angular-eslint/template/eqeqeq -->
+
+<button type="button" class="calendar-btn" (click)="showCalendar = !showCalendar">
+  <i class="far fa-calendar-alt"></i>
+</button>
+
+<div class="calendar-holder" *ngIf="showCalendar">
+  <div class="calendar" [ngStyle]="langDirection == 'en' ? {'right': '0%'} : {'left' : '0%'}">
+
+    <div class="calendar-header">
+      <p class="select-date mb-1">SELECT WEEK</p>
+      <p class="selected-date-range">{{selectedDateOne}}, {{selectedWeekOne}}</p>
+      <p class="selected-date-range" *ngIf="selectedWeekOne != ''">{{selectedDateTwo}}, {{selectedWeekTwo}}</p>
+    </div>
+
+    <div class="years-view" *ngIf="showYearsView">
+      <div class="row">
+        <div class="col-4" *ngFor="let year of yearsArr; let i = index" (click)="setYear(year)" [ngClass]="{'year-chosen' : selectedYearNo == year.yearNum || selectedYearNoOne == year.yearNum}">
+          {{year.yearNum}}
+        </div>
+      </div>
+    </div>
+
+    <div class="weeks-view" *ngIf="showWeeksView"> <!-- *ngIf="showWeeksView" -->
+      <p class="current-year show-hide-text">
+        <i [class]="langDirection === 'en' ? 'fa fa-chevron-left' : 'fa fa-chevron-right'" [class.disabled]="selectedYearObject.id == 0" (click)="moveYearBack()"></i>
+        <b>{{(selectedYearNoOne && selectedYearNoTwo) || selectedYearNoOne }}</b>
+        <i [class]="langDirection === 'en' ? 'fa fa-chevron-right' : 'fa fa-chevron-left'" [class.disabled]="selectedYearObject.id == yearsArr.length-1" (click)="moveYearForward()"></i>
+      </p>
+      <ul>
+        <li *ngFor="let item of [].constructor(53); let i = index" (click)="setWeek(i+1)" [ngClass]="{'week-chosen' : selectedWeekNo == (i+1) || selectedWeekNoOne == (i+1) || selectedWeekNoTwo == (i+1), 'week-in-range' : (i+1) > +selectedWeekNoOne && (i+1) < +selectedWeekNoTwo}">
+          {{i+1}}
+        </li>
+      </ul>
+    </div>
+
+    <div class="calendar-footer">
+      <div class="action-btns-holder">
+        <button class="action-btn" (click)="cancelCalendar()">RESET</button>
+        <button class="action-btn" (click)="showWeekView()" *ngIf="showYearsView" [ngClass]="{'disabled-btn': selectedYearNo == '' && selectedYearNoOne == ''}" [disabled]="selectedYearNo == '' && selectedYearNoOne == '' ">NEXT</button>
+        <button class="action-btn" [ngClass]="{'disabled-btn' : !showSaveButton}" [disabled]="!showSaveButton" (click)="sendDate()">FILTER</button>
+      </div>
+    </div>
+
+
+  </div>
+</div>
+

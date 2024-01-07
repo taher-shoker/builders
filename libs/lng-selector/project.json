@@ -1,0 +1,8 @@
+{
+  "name": "lng-selector",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/lng-selector/src",
+  "prefix": "stc-apps",
+  "tags": [],
+  "projectType": "library"
+}

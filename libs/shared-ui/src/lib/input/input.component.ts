@@ -1,0 +1,38 @@
+import { Component, Input, forwardRef } from '@angular/core';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
+export interface FormFieldValue {
+  name: string;
+}
+@Component({
+  selector: 'stc-apps-input',
+  templateUrl: './input.component.html',
+  styleUrls: ['./input.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => InputComponent),
+      multi: true,
+    },
+  ],
+})
+export class InputComponent<T> extends ControlValueAccessorDirective<T> {
+  @Input() inputName!: string;
+  @Input() inputId!: string;
+  @Input() inputPlaceholder!: string;
+  @Input() inputType: 'text' | 'password' | 'date' = 'text';
+  @Input() inputIcon!: string;
+  @Input() required!: boolean;
+  @Input() disabled = false;
+
+  showPassword = false;
+
+  toggelPassword(): void {
+    this.showPassword = !this.showPassword;
+    if (this.showPassword) {
+      this.inputType = 'text';
+    } else {
+      this.inputType = 'password';
+    }
+  }
+}

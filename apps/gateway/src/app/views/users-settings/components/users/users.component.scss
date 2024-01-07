@@ -1,0 +1,91 @@
+@import './scss/core/variables/colors';
+
+.users-settings {
+  margin-inline: 25px;
+  position: relative;
+  top: -60px;
+  table {
+    td {
+      max-width: 165px;
+      word-wrap: break-word;
+    }
+  }
+  .top-info {
+    border-radius: 5px;
+    .static {
+      background-color: rgb(255, 255, 255);
+      border-radius: 10px;
+      display: flex;
+      flex-direction: row-reverse;
+      width: 100%;
+      justify-content: space-between;
+      padding: 40px;
+      align-items: center;
+      .icon {
+        width: 60px;
+        height: 60px;
+        background-color: $stcAirColor;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 10px;
+        i {
+          font-size: 30px;
+          color: $stcColor;
+        }
+      }
+      .static-info {
+        .num {
+          font-size: 40px;
+          font-weight: bold;
+          margin-bottom: 10px;
+          color: $stcColor;
+        }
+        .title {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+  .filter-box {
+    border-radius: 5px;
+    margin-block: 20px;
+    padding: 30px;
+    border: none;
+    background-color: $whiteColor;
+  }
+
+  .f-box {
+    .table-title {
+      font-weight: bold;
+      color: $stcColor;
+    }
+    background-color: $whiteColor;
+    padding: 20px;
+    .actions {
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+
+      .btn {
+        &:first-of-type {
+          margin-inline: 20px;
+        }
+      }
+    }
+  }
+  ::ng-deep .mat-mdc-form-field {
+    width: fit-content !important;
+  }
+}
+
+p.text {
+  width: 80%;
+  margin: 60px auto;
+  line-height: 2;
+}
+
+::ng-deep .select-box.filter-select-box label {
+  width: auto !important;
+  margin-right: 16px;
+}

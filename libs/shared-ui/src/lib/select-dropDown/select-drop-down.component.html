@@ -1,0 +1,17 @@
+<div class="select-box" [class]="selectType" *ngIf="control">
+  <label [ngStyle]="{'font-size': labelSize + 'px'}">{{ label | translate }}<span>:</span><mat-error *ngIf="control.errors"> *</mat-error></label>
+  <mat-form-field>
+    <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
+      [(value)]="defaultAll ? options ? options[0] : '' : selectId">
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{ option[labelName] }}
+      </mat-option>
+    </mat-select>
+    <mat-error *ngIf="control.errors">{{
+      'field_required' | translate
+      }}</mat-error>
+  </mat-form-field>
+  <div style="display: none" *ngIf="!yet">
+    <ng-content></ng-content>
+  </div>
+</div>

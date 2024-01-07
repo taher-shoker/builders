@@ -1,0 +1,145 @@
+@import './scss/core/variables/colors';
+
+.kpis-performance {
+  background-color: #f9f9f9;
+  padding: 30px;
+  .main-title {
+    font-weight: 700;
+  }
+  .kpis-statistics {
+    margin-top: 16px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .item {
+      width: 190px;
+      height: 115px;
+      background-color: $whiteColor;
+      display: flex;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 10px 10px 10px $stcLightGray;
+      margin: 10px 5px;
+      .icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 5px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-inline-end: 16px;
+        &.purble {
+          background-color: rgba($color: $stcSeaColor, $alpha: 0.2);
+        }
+        &.green {
+          background-color: rgba($color: $stcGreenColor, $alpha: 0.2);
+        }
+        &.stcBlue {
+          background-color: rgba($color: $stcMoonLightColor, $alpha: 0.2);
+        }
+        &.gray {
+          background-color: rgba($color: $greyColor, $alpha: 0.2);
+        }
+        &.warn {
+          background-color: rgba($color: $stcSunsetColor, $alpha: 0.2);
+        }
+        &.danger {
+          background-color: rgba($color: $redColor, $alpha: 0.2);
+        }
+      }
+      .item-info {
+        h5 {
+          color: $blackColor;
+          font-weight: 400;
+          margin-bottom: 16px;
+        }
+        p {
+          font-size: 24px;
+          font-weight: 500;
+        }
+      }
+    }
+  }
+  .filter {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    .filter-item {
+      // width: 32%;
+      width: 19%;
+      margin: 10px 5px;
+    }
+    ::ng-deep .filter-select-box {
+      border-radius: 5px;
+      padding-inline-start: 10px;
+      label {
+        width: 58% !important;
+      }
+    }
+  }
+  .content {
+    margin: 20px auto;
+    background-color: $whiteColor;
+    padding: 40px 20px;
+    border-radius: 12px;
+    .right-part {
+      padding: 30px;
+      border-left: 1px solid rgba($color: $greyColor, $alpha: 0.2);
+      .line-chart-box {
+        .header {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          h4 {
+            font-size: 20px;
+            color: $stcColorDark;
+            font-weight: 500;
+          }
+          .date {
+            color: rgba($color: $greyColor, $alpha: 0.7);
+          }
+        }
+      }
+      .divider {
+        border-top: 1px solid rgba($color: $greyColor, $alpha: 0.2);
+        margin: 50px auto;
+      }
+    }
+    h6 {
+      color: rgba($color: $greyColor, $alpha: 0.4);
+      font-size: 20px;
+      font-weight: 400;
+      text-transform: capitalize;
+    }
+    p {
+      color: $stcColorDark;
+      font-size: 18px;
+      font-weight: 400;
+      margin-bottom: 0;
+    }
+  }
+}
+
+.kpi-count-title{
+  font-size: 14px;
+}
+
+.status-badge{
+  padding: 10px;
+  padding-left: 13px;
+}
+
+.line-chart{
+  height: 300px;
+}
+
+@media screen and (min-width: 1400px) {
+  /* STYLES HERE */
+  .kpis-statistics {
+    justify-content: space-between;
+  }
+}
+
+
+
+

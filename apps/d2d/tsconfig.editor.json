@@ -1,0 +1,7 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*.ts", "../../libs/lng-selector/src/lib/utils.service.ts"],
+  "compilerOptions": {
+    "types": ["jest", "node"]
+  }
+}

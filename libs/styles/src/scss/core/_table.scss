@@ -1,0 +1,116 @@
+table {
+}
+.full-width-table {
+  width: 100%;
+}
+
+.mat-mdc-table .mdc-data-table__header-row {
+  background-color: rgba($color: $stcColor, $alpha: 0.1);
+  .mdc-data-table__header-cell {
+    color: $stcColor;
+    text-transform: capitalize;
+  }
+}
+
+.cell-text {
+  text-transform: capitalize;
+}
+
+.mat-mdc-table .mdc-data-table__row {
+  border-bottom: 1px solid $stcAirColor;
+  height: 95px;
+}
+.btns-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .delete-btn-table,
+  .edit-btn-table {
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    &:active {
+      border: none;
+    }
+    &:focus {
+      outline: none;
+    }
+    i {
+      padding: 8px;
+      border-radius: 4px;
+    }
+  }
+  .delete-btn-table {
+    i {
+      color: $redColor;
+      background-color: rgba($color: $redColor, $alpha: 0.1);
+    }
+  }
+  .edit-btn-table {
+    i {
+      color: $stcOasisColor;
+      background-color: rgba($color: $stcOasisColor, $alpha: 0.1);
+    }
+  }
+  .details {
+    background-color: rgba($color: $grayColor, $alpha: 0.1);
+    min-width: 120px;
+  }
+}
+
+.info-name {
+  display: flex;
+  align-items: center;
+
+  img {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 50%;
+    border: 1px solid lightgray;
+    margin-inline-end: 16px;
+  }
+  p {
+    text-transform: capitalize;
+    margin-bottom: 0px;
+    color: $stcColor;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 160px;
+    height: 1.2em;
+    white-space: nowrap;
+  }
+  small {
+    color: rgba($color: $shadowStc, $alpha: 0.7);
+  }
+}
+
+.message-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding-top: 110px;
+  padding-bottom: 50px;
+  img {
+    width: 180;
+    height: 180px;
+    object-fit: contain;
+  }
+  h3 {
+    font-size: 25px;
+    font-weight: 400;
+  }
+  p {
+    color: rgba($color: $shadowStc, $alpha: 0.7);
+  }
+}
+
+html[dir='rtl'] {
+  .mat-sort-header-content,
+  .mat-mdc-table .mdc-data-table__header-row .mdc-data-table__header-cell {
+    font-size: 16px;
+  }
+}

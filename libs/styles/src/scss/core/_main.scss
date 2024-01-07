@@ -1,0 +1,47 @@
+@import './mixins/mixins';
+
+ul {
+  list-style: none;
+}
+
+// style for theme mode
+body.dark {
+  @include darken();
+}
+body.light {
+  @include lighten();
+}
+
+rp {
+  display: inline;
+  color: $shadowStc;
+}
+.display-none {
+  display: none;
+}
+label {
+  text-transform: capitalize;
+}
+body {
+  position: relative;
+  word-break: break-word;
+  overflow-x: hidden;
+  // background-color: rgba($color: $grayColor, $alpha: 0.1);
+  background-color: #f8f8f8;
+  color: var(--textColor) !important;
+  direction: var(--direction);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: $stcColor;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

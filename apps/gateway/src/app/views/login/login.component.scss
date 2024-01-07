@@ -1,0 +1,170 @@
+@import './scss/core/variables/colors';
+@import './scss/core/inputs';
+@import './scss/core/buttons';
+
+.login {
+  background-color: $whiteColor;
+  height: 100%;
+  min-height: 100vh;
+  padding: 50px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  .log-out {
+    position: absolute;
+    right: 110px;
+    top: 16px;
+    color: $stcColor;
+    cursor: pointer;
+    i {
+      margin-right: 6px;
+    }
+  }
+  .shape4 {
+    background-image: url('../../../assets/images/login/shape4.png');
+    height: 400px;
+    width: 100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    position: absolute;
+    right: 0px;
+    top: -105px;
+  }
+  .card {
+    text-align: center;
+    padding-top: 80px;
+    width: 100%;
+    background-color: $stcColor;
+    position: relative;
+    min-height: 630px;
+    border-radius: 20px;
+    .shape1,
+    .shape2 {
+      background-image: url('../../../assets/images/login/dots-shape.png');
+      height: 400px;
+      width: 500px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      position: absolute;
+    }
+
+    .shape1 {
+      left: -120px;
+      top: -20px;
+    }
+    .shape2 {
+      right: -210px;
+    }
+    .shape3 {
+      background-image: url('../../../assets/images/login/vector-shape.png');
+      width: 425px;
+      height: 160px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      position: absolute;
+      bottom: 55px;
+      left: 27%;
+    }
+    h4 {
+      padding-top: 65px;
+      color: $whiteColor;
+      font-weight: 700;
+      font-size: 32px;
+      text-transform: capitalize;
+      margin-bottom: 30px;
+    }
+    p {
+      font-size: 18px;
+      color: $whiteColor;
+      font-style: normal;
+    }
+  }
+  .divider-line {
+    text-transform: uppercase;
+    display: block;
+    position: relative;
+    color: rgba($color: $greyColor, $alpha: 0.7);
+    text-align: center;
+    &::after,
+    &::before {
+      content: '';
+      height: 1px;
+      width: 40%;
+      background-color: rgba($color: $greyColor, $alpha: 0.7);
+      position: absolute;
+      top: 12px;
+    }
+    &::before {
+      left: 0;
+    }
+    &::after {
+      right: 0;
+    }
+  }
+  .btn.stc-color-outline {
+    font-weight: 700 !important;
+  }
+}
+
+@media only screen and (min-width: 800px) and (max-width: 1100px) {
+  .login {
+    padding: 50px 0;
+    h4 {
+      padding-top: 10px !important;
+      font-size: 25px !important;
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+    }
+    .log-out {
+      display: none;
+    }
+  }
+  .shape3 {
+    bottom: 30px !important;
+    left: 15% !important;
+  }
+}
+@media only screen and (max-width: 800px) {
+  .login {
+    background-color: $stcColor;
+    padding-top: 5px;
+    h4 {
+      padding-top: 10px !important;
+      font-size: 25px !important;
+    }
+    img {
+      width: 150px;
+      height: 150px;
+      object-fit: contain;
+    }
+    .log-out {
+      display: none;
+    }
+    .card {
+      border: unset;
+      min-height: unset;
+      padding: 0;
+    }
+    ::ng-deep .btn.primary {
+      background-color: $whiteColor !important;
+      color: $stcColor !important;
+    }
+    ::ng-deep .btn.stc-color-outline {
+      border-color: $whiteColor !important;
+      color: $whiteColor !important;
+    }
+    ::ng-deep label {
+      color: $whiteColor !important;
+    }
+  }
+  .shape4,
+  .shape1,
+  .shape2,
+  .shape3 {
+    display: none;
+  }
+}

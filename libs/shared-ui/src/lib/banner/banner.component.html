@@ -1,0 +1,19 @@
+<div class="banner-box px-3">
+  <div class="top-banner">
+    <div class="left">
+      <div class="welcome-msg" *ngIf="welcome">
+        <h3>{{ 'welcome' | translate }}, {{ userName }}</h3>
+        <p>{{ 'welcome_back_msg' | translate }}</p>
+      </div>
+      <h1>{{ this.data.title | translate }}</h1>
+      <small>{{ this.data.text | translate}}</small>
+    </div>
+    <!-- <div class="right">
+      <div class="date-status">
+        <p>
+          {{ 'last_update' | translate }} :<span> {{ '2023-05-23' }}</span>
+        </p>
+      </div>
+    </div> -->
+  </div>
+</div>

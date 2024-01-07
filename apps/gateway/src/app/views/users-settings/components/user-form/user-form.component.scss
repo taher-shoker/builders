@@ -1,0 +1,36 @@
+.user-form {
+  min-height: 400px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  label {
+    margin-bottom: 10px;
+    text-transform: capitalize;
+  }
+  .mt-7 {
+    margin-top: 3rem;
+  }
+  .mt-1r {
+    margin-top: 0.8rem;
+  }
+  .inputs {
+    padding: 50px;
+    background-color: #e8e9e9;
+  }
+  .btn-form-action {
+    display: flex;
+    align-items: center;
+    align-self: end;
+    width: 100%;
+    justify-content: flex-end;
+    padding: 30px 50px;
+    button {
+      margin-left: 20px;
+    }
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+}

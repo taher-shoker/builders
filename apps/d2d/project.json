@@ -1,0 +1,135 @@
+{
+  "name": "d2d",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "stc-apps",
+  "sourceRoot": "apps/d2d/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/d2d",
+        "index": "apps/d2d/src/index.html",
+        "main": "apps/d2d/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/d2d/tsconfig.app.json",
+        "allowedCommonJsDependencies": ["file-saver"],
+        "assets": [
+          "apps/d2d/src/favicon.ico",
+          "apps/d2d/src/assets",
+          {
+            "input": "libs/mode-toggle/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          },
+          {
+            "input": "libs/shared-ui/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          }
+        ],
+        "styles": [
+          "libs/styles/src/index.scss",
+          "node_modules/ngx-toastr/toastr.css",
+          "apps/d2d/src/styles.scss"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/styles/src"]
+        },
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/d2d/src/environments/environment.ts",
+              "with": "apps/d2d/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/d2d/src/environments/environment.ts",
+              "with": "apps/d2d/src/environments/environment.stage.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+
+      "configurations": {
+        "production": {
+          "browserTarget": "d2d:build:production"
+        },
+        "staging": {
+          "browserTarget": "d2d:build:staging"
+        },
+        "development": {
+          "browserTarget": "d2d:build:development",
+          "port": 51635
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "d2d:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/d2d/**/*.ts", "apps/d2d/**/*.html"]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/d2d/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server"
+    }
+  }
+}

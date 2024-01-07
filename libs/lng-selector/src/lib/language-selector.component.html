@@ -1,0 +1,14 @@
+<!-- <div *ngFor="let language of appSettings.languages">
+  <button (click)="changeLanguage(language.code)">
+    {{ language.key }}
+  </button>
+</div> -->
+
+<div class="lang-box">
+  <button (click)="changeLanguage('en')" *ngIf="currentLang === 'ar'">
+    {{ 'English' }}
+  </button>
+  <button (click)="changeLanguage('ar')" *ngIf="currentLang === 'en'">
+    {{ 'العربية' }}
+  </button>
+</div>

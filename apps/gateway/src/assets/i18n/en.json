@@ -1,0 +1,16 @@
+{
+  "home": "Home",
+  "logout": "Log out",
+  "login": "Login",
+  "login_with_email": "Login to your account",
+  "login_with_stc": "Login with STC",
+  "user_Name": "User Name",
+  "password": "Password",
+  "settings": "Settings",
+  "statistics": "Statistics",
+  "welcome": "Welcome",
+  "strategic_projects": "Strategic Projects",
+  "welcome_back_msg": "Welcome Back! Here’s overview of GPMO Dashboard",
+  "last_update": "Last Update",
+  "invalid_format": " Invalid Format"
+}
