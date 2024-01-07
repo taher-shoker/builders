@@ -95,8 +95,7 @@ export class CasesService {
   }
 
   uploadFile(data: any) {
-    const options = {};
-    return this.http.post(this.endpointAttachments, data, options);
+    return this.http.post(this.endpointAttachments, data);
   }
   getFile(id: any) {
     return this.http.get(`${this.endpointAttachments}/${id}/download`, {

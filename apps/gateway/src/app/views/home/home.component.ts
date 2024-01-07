@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
-import { AuthService, System } from '../../shared/services/auth.service';
+import { AuthService } from '../../shared/services/auth.service';
 import { Router } from '@angular/router';
-import { environment } from '../../../environments/environment';
 import { AgentService } from '../../shared/services/agent.service';
+import { System } from '../../shared/models/auth.model';
 
 @Component({
   selector: 'stc-apps-home',
@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit {
     private cookieService: CookieService,
     public authService: AuthService,
     private router: Router,
-    private agentService: AgentService,
+    private agentService: AgentService
   ) {}
   ngOnInit(): void {
     if (this.cookieService.get('granted-systems')) {
@@ -36,10 +36,7 @@ export class HomeComponent implements OnInit {
   }
 
   getGrantedSystems() {
-    if (
-      this.apps.length == 0 &&
-      this.isGrantedSystemSettled()
-    ) {
+    if (this.apps.length == 0 && this.isGrantedSystemSettled()) {
       this.apps = this.authService.handleUserSystems();
       if (this.agentService.isAgentFromMobileDevice()) {
         this.apps = this.apps.filter(
@@ -51,7 +48,7 @@ export class HomeComponent implements OnInit {
     return this.isGrantedSystemSettled();
   }
 
-  isGrantedSystemSettled() :boolean{
-    return this.cookieService.get('granted-systems')!= undefined;
+  isGrantedSystemSettled(): boolean {
+    return this.cookieService.get('granted-systems') != undefined;
   }
 }

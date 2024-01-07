@@ -8,18 +8,23 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": ["{options.outputPath}"],
+      "outputs": [
+        "{options.outputPath}"
+      ],
       "options": {
         "outputPath": "dist/apps/gateway",
         "index": "apps/gateway/src/index.html",
         "main": "apps/gateway/src/main.ts",
-        "polyfills": ["zone.js"],
+        "polyfills": [
+          "zone.js"
+        ],
         "tsConfig": "apps/gateway/tsconfig.app.json",
-        "allowedCommonJsDependencies": ["lodash"],
+        "allowedCommonJsDependencies": [
+          "lodash"
+        ],
         "assets": [
           "apps/gateway/src/assets",
           "apps/gateway/src/favicon.ico",
-
           {
             "input": "libs/mode-toggle/src/assets",
             "glob": "**/*",
@@ -37,9 +42,13 @@
           "apps/gateway/src/styles.scss"
         ],
         "stylePreprocessorOptions": {
-          "includePaths": ["libs/styles/src"]
+          "includePaths": [
+            "libs/styles/src"
+          ]
         },
-        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
+        "scripts": [
+          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
+        ]
       },
       "configurations": {
         "production": {
@@ -53,8 +62,20 @@
           "fileReplacements": [
             {
               "replace": "apps/gateway/src/environments/environment.ts",
-              "with": "apps/gateway/src/environments/environment.prod.ts"
-            },
+              "with": "apps/gateway/src/environments/environment.production.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
             {
               "replace": "apps/gateway/src/environments/environment.ts",
               "with": "apps/gateway/src/environments/environment.staging.ts"
@@ -93,14 +114,21 @@
     },
     "lint": {
       "executor": "@nx/linter:eslint",
-      "outputs": ["{options.outputFile}"],
+      "outputs": [
+        "{options.outputFile}"
+      ],
       "options": {
-        "lintFilePatterns": ["apps/gateway/**/*.ts", "apps/gateway/**/*.html"]
+        "lintFilePatterns": [
+          "apps/gateway/**/*.ts",
+          "apps/gateway/**/*.html"
+        ]
       }
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "outputs": [
+        "{workspaceRoot}/coverage/{projectRoot}"
+      ],
       "options": {
         "jestConfig": "apps/gateway/jest.config.ts",
         "passWithNoTests": true

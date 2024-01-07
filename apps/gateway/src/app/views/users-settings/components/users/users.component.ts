@@ -4,11 +4,18 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
+import * as _ from 'lodash';
+
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { User, UserGroup, UsersService } from '../../users.service';
-import * as _ from 'lodash';
+import {
+  User,
+  Team,
+  Role,
+  UserGroup,
+} from '../../../../shared/models/users-settings.model';
+import { UsersService } from '../../users.service';
 
 export interface ColumnsSchema {
   key: string;
@@ -16,18 +23,6 @@ export interface ColumnsSchema {
   label: string;
 }
 
-export interface PeriodicElement {
-  id?: number;
-  name: string;
-  email: string;
-  userGroups: {
-    id: number;
-    groupName: string;
-    roles: { id: number; roleName: string }[];
-  }[];
-  teamDto: { id: number; name: string };
-  profileIcon: string;
-}
 const COLUMNS_SCHEMA = [
   {
     key: 'name',
@@ -65,20 +60,20 @@ const COLUMNS_SCHEMA = [
 export class UsersComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: ColumnsSchema[] = COLUMNS_SCHEMA;
-  dataSource = new MatTableDataSource<PeriodicElement>();
-  dataSourceFilters = new MatTableDataSource<PeriodicElement>();
+  dataSource = new MatTableDataSource<User>();
+  dataSourceFilters = new MatTableDataSource<User>();
 
   filterDictionary = new Map<string, string>();
 
   totalUsers = 0;
   creatorUsers = 0;
   approverUsers = 0;
-  list!: PeriodicElement[];
-  user!: any;
+  list!: User[];
+  user: User | undefined;
   userId!: number;
-  privilege!: any[];
-  teams!: any[];
-  selectedPrivilege!: { id: any; groupName: string };
+  privilege!: Role[];
+  teams!: Team[];
+  selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   filterSelect!: FormGroup;
   @ViewChild(MatSort, { static: true })
@@ -100,18 +95,18 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   getUsersListing() {
-    this.userService.getUsers().subscribe((res: any) => {
+    this.userService.getUsers().subscribe((res) => {
       this.list = res.filter(
-        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
+        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
       this.dataSource.data = res.filter(
-        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
+        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
       this.dataSourceFilters.data = res.filter(
-        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
+        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
       this.totalUsers = res.filter(
-        (l: any) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
+        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       ).length;
 
       this.getCreatorUsersLength(res);
@@ -157,40 +152,63 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.teams = this.userService.getTeams();
   }
 
-  handleSelectChange(value: any, dropDwonType: string) {
-    if (dropDwonType === 'team') {
-      if (value.id === 'all') {
-        if (this.selectedPrivilege.id !== 0) {
-          this.dataSource.data = this.list.filter(
-            (x: any) =>
-              this.userService.getUserPrivilege(x) ===
-              this.selectedPrivilege.groupName
-          );
-        } else {
-          this.dataSource.data = this.list;
-        }
-      } else {
-        this.dataSource.data = this.list.filter(
-          (x: any) => this.userService.getUserTeam(x) === value?.name
-        );
-      }
-    } else {
-      this.filterSelect
-        .get('teamSelect')
-        ?.setValue({ id: 'all', name: 'All' }, { emitEvent: false });
-      if (value.id === 'all') {
-        this.dataSource.data = this.list;
-        this.getTeams();
-      } else {
-        this.selectedPrivilege = value;
+  /** filters functions for dropDown  **/
+  handleSelectChange(value: Team | Role, dropDownType: string) {
+    console.log(value);
 
-        this.teams = this.userService
-          .getTeams()
-          .filter((x: any) => x.roleName == value.groupName);
-        this.dataSource.data = this.list.filter(
-          (x: any) => this.userService.getUserPrivilege(x) === value?.groupName
-        );
-      }
+    if (dropDownType === 'team') {
+      this.handleTeamDropdownChange(value);
+    } else {
+      this.handleRoleDropdownChange(value);
+    }
+  }
+
+  private handleTeamDropdownChange(value: Team | Role) {
+    const isAllSelected = value.id.toString() === 'all';
+
+    if (isAllSelected) {
+      this.handleAllSelectedForTeamDropdown();
+    } else {
+      this.dataSource.data = this.list.filter(
+        (x) => this.userService.getUserTeam(x) === (value as Team)?.name
+      );
+    }
+  }
+
+  private handleAllSelectedForTeamDropdown() {
+    if (this.selectedPrivilege.id !== 0) {
+      this.dataSource.data = this.list.filter(
+        (x) =>
+          this.userService.getUserPrivilege(x) ===
+          this.selectedPrivilege.groupName
+      );
+    } else {
+      this.dataSource.data = this.list;
+    }
+  }
+
+  private handleRoleDropdownChange(value: Team | Role) {
+    const teamSelectControl = this.filterSelect?.get('teamSelect');
+    teamSelectControl?.setValue(
+      { id: 'all', name: 'All' },
+      { emitEvent: false }
+    );
+
+    const isAllSelected = value.id.toString() === 'all';
+
+    if (isAllSelected) {
+      this.dataSource.data = this.list;
+      this.getTeams();
+    } else {
+      this.selectedPrivilege = value as Role; // Assuming 'Role' is a subtype of 'Team'
+      this.teams = this.userService
+        .getTeams()
+        .filter((x) => x.roleName == (value as Role).groupName);
+
+      this.dataSource.data = this.list.filter(
+        (x) =>
+          this.userService.getUserPrivilege(x) === (value as Role)?.groupName
+      );
     }
   }
 
@@ -224,7 +242,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
   deleteItem(id: number) {
     this.userId = id;
-    this.user = this.dataSource.data.filter((u: any) => u.id === id)[0];
+    this.user = this.dataSource.data.filter((u) => u.id === id)[0];
     this.dialogService.open(`delete-modal`);
   }
   editItem(id: number): void {
