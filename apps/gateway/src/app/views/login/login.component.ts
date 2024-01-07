@@ -48,11 +48,13 @@ export class LoginComponent implements OnInit {
     this.authService.isLoading = true;
     if (this.form.valid) {
       this.authService.login(this.form.value).subscribe(
-        (res: any) => {
+        () => {
           this.authService.isLoading = false;
         },
         (err) => {
-          this.authService.isLoading = false;
+          if (err) {
+            this.authService.isLoading = false;
+          }
         }
       );
     }

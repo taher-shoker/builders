@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { UsersService } from '../../users.service';
 import { BannerDataService } from '@stc-apps/shared-ui';
-import { User, UsersService } from '../../users.service';
+import { User } from '../../../../shared/models/users-settings.model';
 
 @Component({
   selector: 'stc-apps-edit-user',

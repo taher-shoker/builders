@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector, Optional } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie';
@@ -6,37 +6,9 @@ import { environment } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { TPUserModel } from '../models/TP/TPUserModel';
+import { UserGroup } from '../models/users-settings.model';
+import { AuthResponseData, LoggedUser, System } from '../models/auth.model';
 
-export interface AuthResponseData {
-  token: string;
-  displayName: string;
-  result: string;
-}
-export interface LoggedUser {
-  id: number;
-  email: string;
-  name: string;
-  jobTitle: string;
-  userGroups: UserGroup[];
-  username: null | string;
-}
-export interface UserGroup {
-  id: number;
-  groupName: string;
-  roles: {
-    id: number;
-    roleName: string;
-    system: { id: number; name: string };
-  }[];
-}
-
-export interface System {
-  id?: number;
-  name: string;
-  systemUrl?: string;
-  displayName?: string;
-  tpGroupedMenuId?: number;
-}
 @Injectable({
   providedIn: 'root',
 })
@@ -52,7 +24,7 @@ export class AuthService {
 
   isLoggedIn = this._isLoggedIn$.asObservable();
 
-  user = new BehaviorSubject<any>(null);
+  user = new BehaviorSubject<User | null>(null);
 
   loggedInUser!: LoggedUser | null;
 
@@ -235,7 +207,7 @@ export class AuthService {
           // this.cookieService.put('USER_FULLNAME', res.name);
           this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
 
-          this.handleSystemsNeeds(res);
+          this.handleSystemsNeeds(); // may be need to remove;
 
           if (this.gratnedSystems.length == 1) {
             if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
@@ -262,7 +234,7 @@ export class AuthService {
     return this.http.get<System[]>(`${this.baseUrl}/users/systems`);
   }
 
-  handleSystemsNeeds(res: LoggedUser, tpUser?: TPUserModel) {
+  handleSystemsNeeds() {
     if (this.gratnedSystems.length === 1) {
       // if (this.gratnedSystems[0] === 'FRAUD_ManagementUsers') {
       // } else if (this.gratnedSystems[0] === 'DI_Management') {

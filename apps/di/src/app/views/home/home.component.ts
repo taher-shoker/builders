@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   authService = inject(AuthService);
   router = inject(Router);
 
-  username: string = "";
+  username: string = '';
 
   data: ProgressCircleData[] = [
     { category: 'TECHNOLOGY DI ', value: 20 },
@@ -104,12 +104,11 @@ export class HomeComponent implements OnInit {
   donutColors = ['#1cced8', '#ffdd40', '#ff6a39']; // Donuts colors
 
   ngOnInit(): void {
+    this.authService.displayName;
 
-    this.authService.displayName
-
-    this.authService.displayName.subscribe(res => {
-      this.username = res
-    })
+    this.authService.displayName.subscribe((res) => {
+      this.username = res;
+    });
     this.dataService.getLevelZeroData().subscribe((res: LevelZeroResponse) => {
       console.log('Home res', res);
 
@@ -207,7 +206,9 @@ export class HomeComponent implements OnInit {
     lookUpPropName: string
   ) {
     this[businessName][1].value = data.data[lookUpPropName][0].score + '%';
-    data.data[lookUpPropName][0].score > 0 ? this[businessName][1].styles = '[#00c48c][bold]' : '[#bb2222][bold]'
+    data.data[lookUpPropName][0].score > 0
+      ? (this[businessName][1].styles = '[#00c48c][bold]')
+      : '[#bb2222][bold]';
     const temp = { [businessName]: this[businessName] };
     this[businessName] = [...temp[businessName]];
 
@@ -254,14 +255,14 @@ export class HomeComponent implements OnInit {
   ) {
     for (let i = 1; i < 4; i++) {
       this[businessName][i - 1].value = data.data[lookUpPropName][i].score;
-      this[businessName][i - 1].category = data.data[lookUpPropName][i].dimension;
+      this[businessName][i - 1].category =
+        data.data[lookUpPropName][i].dimension;
       const temp = { [businessName]: this[businessName] };
       this[businessName] = [...temp[businessName]];
     }
   }
 
-  navToTrend(buName: string){
-    console.log()
-    this.router.navigate(['/trend'])
+  navToTrend(buName: string) {
+    this.router.navigate(['/trend']);
   }
 }

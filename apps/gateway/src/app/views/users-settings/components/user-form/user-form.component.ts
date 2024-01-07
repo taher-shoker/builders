@@ -14,8 +14,15 @@ import {
 import { Router } from '@angular/router';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { ToastrService } from 'ngx-toastr';
-import { User, UsersService } from '../../users.service';
+
 import { DialogService } from '@stc-apps/shared-ui';
+import {
+  User,
+  Team,
+  Role,
+  UserGroup,
+} from '../../../../shared/models/users-settings.model';
+import { UsersService } from '../../users.service';
 
 @Component({
   selector: 'stc-apps-user-form',
@@ -27,9 +34,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   @Input() data!: User;
 
   form!: FormGroup;
-  privilages: { id: number; groupName: string }[] | any[] = [];
-  teams: any[] = [];
-  selectedPrivilege!: { id: number; groupName: string };
+  privilages: Role[] = [];
+  teams: Team[] = [];
+  selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   addGroups = false;
   showInputs = true;
@@ -65,39 +72,44 @@ export class UserFormComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.form.valid) {
       const dataForm = {
-        userGroups: [{ id: this.form.controls['teamDto'].value.id }],
-        email: this.form.controls['email'].value,
-        name: this.form.controls['name'].value,
-        jobTitle: this.form.controls['jobTitle'].value,
+        userGroups: [{ id: this.form.get('teamDto')?.value.id }],
+        email: this.form.get('email')?.value,
+        name: this.form.get('name')?.value,
+        jobTitle: this.form.get('jobTitle')?.value,
       };
+
+      const onSuccess = (message: string) => {
+        this.toastr.success(message);
+        this.form.reset();
+        this.router.navigate(['./users-setting']);
+      };
+
+      const handleError = (error: any) => {
+        console.error('Error:', error);
+        // Handle error as needed
+      };
+
       if (this.isEditing) {
         this.userService
           .updateUser({ id: this.data.id, ...dataForm })
-          .subscribe((res) => {
-            if (res) {
-              this.toastr.success('User is edit successfully');
-              this.form.reset();
-              this.router.navigate(['./users-setting']);
-            }
-          });
+          .subscribe(
+            () => onSuccess('User is edited successfully'),
+            handleError
+          );
       } else if (this.addGroups) {
         this.userService
           .addUserGroup(this.userId, this.form.get('teamDto')?.value.id, {})
-          .subscribe((res) => {
-            if (res) {
-              this.toastr.success('User Group  is added successfully');
-              this.form.reset();
-              this.router.navigate(['./users-setting']);
-            }
-          });
+          .subscribe(
+            () => onSuccess('User Group is added successfully'),
+            handleError
+          );
       } else {
-        this.userService.createUser(dataForm).subscribe((res) => {
-          if (res) {
-            this.toastr.success('User is added successfully');
-            this.form.reset();
-            this.router.navigate(['../users-setting']);
-          }
-        });
+        this.userService
+          .createUser(dataForm)
+          .subscribe(
+            () => onSuccess('User is added successfully'),
+            handleError
+          );
       }
     } else {
       Object.keys(this.form.controls).forEach((field) => {
@@ -111,35 +123,34 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.privilages = this.userService.getRoles();
     if (this.data) {
       this.selectedPrivilege = this.privilages.filter(
-        (p: any) => p.id === this.data?.userGroups[0]?.roles[0]?.id
+        (p) => p.id === this.data?.userGroups[0]?.roles[0]?.id
       )[0];
     }
   }
 
-  getTeams(userGroup: any) {
+  getTeams(userGroup: UserGroup) {
     switch (userGroup?.roles[0].roleName) {
       case 'CREATORS':
         this.teams = this.userService
           .getTeams()
-          .filter((t: any) => t.roleName == 'CREATORS'); //
+          .filter((t) => t.roleName == 'CREATORS'); //
 
         break;
       case 'APPROVERS':
         this.teams = this.userService
           .getTeams()
-          .filter((t: any) => t.roleName == 'APPROVERS');
+          .filter((t) => t.roleName == 'APPROVERS');
         break;
       default:
-        console.log(this.userService.getTeams());
         this.teams = this.userService
           .getTeams()
-          .filter((x: any) => x.roleName == userGroup?.roles[0].roleName);
+          .filter((x) => x.roleName == userGroup?.roles[0].roleName);
         break;
     }
 
     if (this.data) {
       this.selectedTeam = this.teams.filter(
-        (p: any) => p.id === this.data?.userGroups[0].id
+        (p: Team) => p.id === this.data?.userGroups[0].id
       )[0];
     }
   }
@@ -148,11 +159,11 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.router.navigate(['./users-setting']);
   }
 
-  handleTeam(value: any) {
+  handleTeam(value: Role) {
     this.form?.get('teamDto')?.setValue('');
     this.teams = this.userService
       .getTeams()
-      .filter((x: any) => x.roleName == value.groupName);
+      .filter((x) => x.roleName == value.groupName);
   }
 
   checkUserExist() {
@@ -187,7 +198,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.checkUserExist();
     }
   }
-  restFormWithValue(data: any) {
+  restFormWithValue(data: User) {
     this.getRoles();
     if (!this.addGroups) {
       this.getTeams(data?.userGroups[0]);
