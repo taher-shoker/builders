@@ -12,5 +12,6 @@
   "strategic_projects": "Strategic Projects",
   "welcome_back_msg": "Welcome Back! Here’s overview of GPMO Dashboard",
   "last_update": "Last Update",
-  "invalid_format": " Invalid Format"
+  "invalid_format": " Invalid Format",
+  "field_required": "This Field Is Required"
 }

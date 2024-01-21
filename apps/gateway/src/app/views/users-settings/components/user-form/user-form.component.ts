@@ -12,7 +12,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
-import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { ToastrService } from 'ngx-toastr';
 
 import { DialogService } from '@stc-apps/shared-ui';
@@ -38,6 +37,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   teams: Team[] = [];
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
+  selectedGroup: number[] = [];
   addGroups = false;
   showInputs = true;
   userTeam = '';
@@ -47,8 +47,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     protected router: Router,
     public userService: UsersService,
     private toastr: ToastrService,
-    protected dialogService: DialogService,
-    private languageManagerService: LanguageManagerService
+    protected dialogService: DialogService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -65,14 +64,24 @@ export class UserFormComponent implements OnInit, OnChanges {
       email: new FormControl('', [Validators.required, Validators.email]),
       name: new FormControl('', Validators.required),
       jobTitle: new FormControl('', Validators.required),
-      userGroups: new FormControl('', Validators.required),
+      userGroups: new FormControl(
+        '',
+        this.userService.getCurrentSystem() === 'DI_Management'
+          ? Validators.nullValidator
+          : Validators.required
+      ),
       teamDto: new FormControl('', Validators.required),
     });
   }
   onSubmit() {
     if (this.form.valid) {
       const dataForm = {
-        userGroups: [{ id: this.form.get('teamDto')?.value.id }],
+        userGroups:
+          this.userService.getCurrentSystem() === 'DI_Management'
+            ? this.form
+                .get('teamDto')
+                ?.value.map((g: { id: number; name: string }) => ({ id: g }))
+            : [{ id: this.form.get('teamDto')?.value.id }],
         email: this.form.get('email')?.value,
         name: this.form.get('name')?.value,
         jobTitle: this.form.get('jobTitle')?.value,
@@ -84,9 +93,8 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.router.navigate(['./users-setting']);
       };
 
-      const handleError = (error: any) => {
+      const handleError = (error: unknown) => {
         console.error('Error:', error);
-        // Handle error as needed
       };
 
       if (this.isEditing) {
@@ -129,25 +137,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   getTeams(userGroup: UserGroup) {
-    switch (userGroup?.roles[0].roleName) {
-      case 'CREATORS':
-        this.teams = this.userService
-          .getTeams()
-          .filter((t) => t.roleName == 'CREATORS'); //
-
-        break;
-      case 'APPROVERS':
-        this.teams = this.userService
-          .getTeams()
-          .filter((t) => t.roleName == 'APPROVERS');
-        break;
-      default:
-        this.teams = this.userService
-          .getTeams()
-          .filter((x) => x.roleName == userGroup?.roles[0].roleName);
-        break;
-    }
-
+    this.teams = this.userService
+      .getTeams()
+      .filter((x) => x.roleName == userGroup?.roles[0].roleName);
     if (this.data) {
       this.selectedTeam = this.teams.filter(
         (p: Team) => p.id === this.data?.userGroups[0].id
@@ -174,17 +166,14 @@ export class UserFormComponent implements OnInit, OnChanges {
         .subscribe(
           (res) => {
             if (res.userGroups.length > 0) {
-              this.dialogService.open('alert-modal');
-            } else {
               this.addGroups = true;
               this.userId = res?.id || 0;
               this.restFormWithValue(res);
               this.enableFields();
+              this.dialogService.open('alert-modal');
             }
           },
           (error) => {
-            this.userService.getGroups();
-            this.getRoles();
             this.form?.get('name')?.enable();
             this.form?.get('jobTitle')?.enable();
             this.enableFields();
@@ -199,11 +188,16 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
   restFormWithValue(data: User) {
-    this.getRoles();
     if (!this.addGroups) {
       this.getTeams(data?.userGroups[0]);
+      if (this.userService.getCurrentSystem() === 'DI_Management') {
+        this.selectedGroup = this.data.userGroups.map(
+          (group: UserGroup) => group.id
+        );
+      }
     }
-    this.form?.get('email')?.setValue(data.email);
+
+    this.form?.get('email')?.setValue(data?.email);
     this.form?.get('email')?.disable();
     this.form?.get('name')?.setValue(data.name);
     this.form?.get('name')?.disable();
@@ -225,7 +219,26 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.disableFields();
       this.showInputs = false;
     }
-    this.userService.getGroups();
-    this.getRoles();
+    this.handleGrouping();
+  }
+
+  handleGrouping() {
+    this.userService.getGroups().subscribe((res: UserGroup[]) => {
+      if (res) {
+        this.userService.getGroups().subscribe((res: UserGroup[]) => {
+          if (res) {
+            this.userService.allGroups = res;
+            this.getTeams(this.data?.userGroups[0]);
+            this.getRoles();
+          }
+        });
+
+        if (this.data) {
+          this.selectedGroup = this.data.userGroups.map(
+            (group: UserGroup) => group.id
+          );
+        }
+      }
+    });
   }
 }

@@ -131,12 +131,12 @@ export class UsersService {
     });
     return privilege;
   }
-  getUserTeam(user: User): string {
+  getUserTeam(user: User): string | string[] {
     const sys = this.getCurrentSystem();
-    let x = '';
+    const x: string[] = []; // Initialize as an empty array
     _.forEach(user.userGroups, (group) => {
       if (group.roles[0].system.name === sys) {
-        x = group.groupName;
+        x.push(group.groupName);
       }
     });
     return x;

@@ -57,3 +57,7 @@
 .cdk-overlay-container {
   z-index: 99999 !important;
 }
+.mat-mdc-optgroup-label {
+  font-weight: 600;
+  color: $stcColor;
+}

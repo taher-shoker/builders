@@ -154,8 +154,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   /** filters functions for dropDown  **/
   handleSelectChange(value: Team | Role, dropDownType: string) {
-    console.log(value);
-
     if (dropDownType === 'team') {
       this.handleTeamDropdownChange(value);
     } else {
@@ -169,8 +167,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (isAllSelected) {
       this.handleAllSelectedForTeamDropdown();
     } else {
-      this.dataSource.data = this.list.filter(
-        (x) => this.userService.getUserTeam(x) === (value as Team)?.name
+      this.dataSource.data = this.list.filter((x) =>
+        this.userService.getUserTeam(x).includes((value as Team)?.name)
       );
     }
   }
@@ -218,15 +216,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
       teamSelect: new FormControl(''),
       privilegeSelect: new FormControl(''),
     });
-
-    this.userService.getGroups().subscribe((res) => {
-      if (res) {
-        this.userService.allGroups = res;
-        this.getRoles();
-        this.getTeams();
-      }
-    });
-
+    this.handleGroups();
     this.dataSource.paginator = this.paginator;
     this.bannerDataService.updateData({ title: 'users setting', text: '' });
     this.dataSource.filterPredicate = function (record, filter) {
@@ -235,6 +225,15 @@ export class UsersComponent implements OnInit, AfterViewInit {
         record.email?.toLocaleLowerCase().indexOf(filter) != -1
       );
     };
+  }
+  public handleGroups() {
+    this.userService.getGroups().subscribe((res) => {
+      if (res) {
+        this.userService.allGroups = res;
+        this.getRoles();
+        this.getTeams();
+      }
+    });
   }
 
   ngAfterViewInit() {

@@ -1,0 +1,41 @@
+@import './scss/core/variables/colors';
+.file-uploader {
+  cursor: pointer;
+  margin: 16px auto;
+  border: 1px dashed $stcColor;
+  padding: 45px 16px;
+  color: $stcColor;
+  border-radius: 10px;
+  &.error {
+    border-color: $redColor;
+  }
+  i {
+    font-size: 65px;
+  }
+  p {
+    font-weight: bold;
+  }
+}
+
+.file {
+  background-color: $stcAirColor;
+  color: $stcColor;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 16px;
+  margin-top: 30px;
+
+  i.pi-times {
+    color: $redColor;
+  }
+  i.pi-download {
+    color: $stcMoonLightColor;
+  }
+}
+
+.error-file {
+  margin: 5px auto;
+  color: $pinkColor;
+  padding-left: 10px;
+}

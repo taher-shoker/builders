@@ -32,6 +32,15 @@ export class UsersSettingsComponent implements OnInit {
   ngOnInit() {
     this.userService.getLabels();
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+
+    if (this.userService.getCurrentSystem() === 'DI_Management') {
+      this.navItems.push({
+        name: 'Data Upload',
+        url: '/data-upload',
+        icon: 'fa-database',
+      });
+    }
+
     this.userName = user.name;
   }
 

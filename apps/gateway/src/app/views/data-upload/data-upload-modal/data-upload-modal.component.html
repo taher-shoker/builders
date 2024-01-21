@@ -1,0 +1,88 @@
+<stc-apps-dialog id="add-modal">
+
+  <h2 mat-dialog-title style="text-align: center">Upload File</h2>
+  <div class="example-container">
+    <mat-dialog-content class="example-form" [formGroup]="form">
+      <form class='upload-form' [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="row">
+          <div class="col-lg-12 col-xl-12 col-sm-12 col-md-12">
+
+            <stc-apps-select-drop-down [label]="'Choose Source Type'" [options]="sourcesTypes"
+              formControlName="sourceType" [required]="true" (selectChange)="selectedSourceType($event)">
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-lg-4 mt-4 col-md-6 col-sm-12" *ngIf="!disableDropdown">
+
+            <stc-apps-select-drop-down [label]='"From"' [options]="weeksNumbers" formControlName="from"
+              [required]="true" (selectChange)="selectFrom($event)">
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-lg-4 mt-4 col-md-6 col-sm-12" *ngIf="!disableDropdown">
+
+            <stc-apps-select-drop-down [label]=' "To"' [options]="weeksNumbers" formControlName="to" [required]="true"
+              (selectChange)="selectTo($event)">
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-lg-4 mt-4 col-md-6 col-sm-12" *ngIf="!disableDropdown">
+
+            <stc-apps-select-drop-down [label]='"Year"' [options]="allYears" formControlName="year" [required]="true">
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-12">
+            <div class="error-file" *ngIf="errorMsg2">
+              {{errorMsg2}}
+            </div>
+          </div>
+          <div class="col-md-12 mt2">
+            <div>
+              <label for="">Upload File :</label>
+              <div *ngIf="files.length === 0 || errorSize || errorType " class='file-uploader' [ngClass]="form.controls['file'].invalid &&
+                  (form.controls['file'].dirty ||
+                    form.controls['file'].touched) ? 'error' : ''" (click)='uploadClick()'>
+                <input #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)" name="file"
+                  hidden accept=".csv, text/csv">
+                <div class='text-center'>
+                  <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                  <p>Browse to Upload Only CSV File</p>
+                </div>
+              </div>
+              <div class="error-file" *ngIf="errorSize">Please upload file less than 20M</div>
+              <div class="error-file" *ngIf="errorType">Please upload CSV files only</div>
+
+              <div class="error-file" *ngIf="  form.controls['file'].invalid &&
+                  (form.controls['file'].dirty ||
+                    form.controls['file'].touched)">This Field Is Required</div>
+
+            </div>
+            <div class='file-box' *ngIf='files && files.length >  0 && !errorSize && !errorType'>
+              <div class="file">
+                <span><i class="pi pi-file-o"></i>
+                  {{ files[0].name }}</span>
+                <!-- <div class="spinner-border spinner-border-sm" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div> -->
+                <i role="button" class="fa fa-times-circle " (click)="clearInputElement()"></i>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mat-dialog-content>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-4 offset-8">
+      <div class="d-flex justify-content-end">
+        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+          (btnClick)="closeModal()"></stc-apps-button>
+
+        <div class="mx-3"></div>
+        <stc-apps-button [buttonText]="'Upload'" [buttonType]="'primary'" (btnClick)="onSubmit()" [loading]="isLoading "
+          [buttonDisable]=" errorMsg2 !== '' || errorSize || errorType">
+
+        </stc-apps-button>
+      </div>
+    </div>
+  </div>
+</stc-apps-dialog>

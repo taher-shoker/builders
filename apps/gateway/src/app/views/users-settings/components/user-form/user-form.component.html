@@ -21,7 +21,7 @@
             [inputName]="'job Title'" formControlName="jobTitle"></stc-apps-input>
         </div>
       </div>
-      <div class="row mt-7" *ngIf="showInputs">
+      <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() !== 'DI_Management'">
         <div class="col-md-6">
           <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
             formControlName="userGroups" [labelName]="'groupName'" [required]="true"
@@ -31,6 +31,20 @@
         <div class="col-md-6">
           <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
             [required]="true" [options]="teams" [selectId]="selectedTeam || null">
+          </stc-apps-select-drop-down>
+        </div>
+      </div>
+      <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'DI_Management'">
+        <div class="col-md-6">
+          <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
+            formControlName="userGroups" [labelName]="'groupName'" [required]="true"
+            [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+          </stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-select-drop-down [label]="userService.translateText('team')" [options]="teams"
+            formControlName="teamDto" [required]="true" [multi]="true" [groupOptions]="'roles'"
+            [selectId]="selectedGroup">
           </stc-apps-select-drop-down>
         </div>
       </div>

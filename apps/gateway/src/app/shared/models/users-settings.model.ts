@@ -22,6 +22,7 @@ export interface UserGroup {
     system: { id: number; name: string };
   }[];
 }
+
 export type Attachment = {
   id: number;
   fileName: string;
