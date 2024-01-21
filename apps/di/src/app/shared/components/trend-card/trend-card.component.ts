@@ -36,7 +36,6 @@ export class TrendCardComponent implements OnInit {
   //Use this to control the colors of the line chart
   lineChartColors = ['#5f5f5f', '#45006F'];
 
-
   donutLabels: LabelLine[] = [];
 
   //Use this to control the colors of the donut
@@ -68,7 +67,6 @@ export class TrendCardComponent implements OnInit {
         this.target = trendCard.scores[i].target;
         this.delta = trendCard.scores[i].monthDiff;
       } else {
-
         this.donutDimensions.push({
           value: trendCard.scores[i].score,
           category: trendCard.scores[i].dimension,
@@ -76,15 +74,17 @@ export class TrendCardComponent implements OnInit {
       }
     }
 
-    const upArrow: string = `<i style="font-size: 14px" class="fas fa-solid fa-arrow-up achieved"></i>`
-    const downArrow: string = `<i style="font-size: 14px" class="fas fa-solid fa-arrow-down not-achieved"></i>`
+    const upArrow: string = `<i style="font-size: 14px" class="fas fa-solid fa-arrow-up achieved"></i>`;
+    const downArrow: string = `<i style="font-size: 14px" class="fas fa-solid fa-arrow-down not-achieved"></i>`;
     const temp = [
       {
         html: `<p style="color:#00c48c; font-weight:bold; font-size: 13px">${this.score}%<span style="font-weight:normal; color:black; margin-left:6px">/${this.target}%</span></p>`,
         centerY: 60,
       },
       {
-        html: `<p> ${trendCard.scores[0].achievedFlag === '0' ? downArrow : upArrow} ${new AbsPipe().transform(this.delta)}%</p>`,
+        html: `<p> ${
+          trendCard.scores[0].achievedFlag === '0' ? downArrow : upArrow
+        } ${new AbsPipe().transform(this.delta)}%</p>`,
         centerY: 30,
       },
       { html: `<p style="font-size: 10px">From last month</p>`, centerY: 0 },
@@ -121,6 +121,7 @@ export class TrendCardComponent implements OnInit {
   }
 
   navToKpiDetails() {
+    console.log(this.trendCard);
     this.router.navigate(['/performance', this.trendCard.scores[0].unitSector]);
   }
 }

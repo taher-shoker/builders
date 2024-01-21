@@ -5,6 +5,7 @@ import { UsersSettingsComponent } from './users-settings.component';
 import { AddUserComponent } from './components/add-user/add-user.component';
 import { UsersComponent } from './components/users/users.component';
 import { EditUserComponent } from './components/edit-user/edit-user.component';
+import { DataUploadComponent } from '../data-upload/data-upload.component';
 
 const routes: Routes = [
   {
@@ -26,6 +27,11 @@ const routes: Routes = [
         path: 'edit-user/:id',
         component: EditUserComponent,
         data: { breadcrumb: 'Edit User' },
+      },
+      {
+        path: 'data-upload',
+        component: DataUploadComponent,
+        data: { breadcrumb: 'Data Upload' },
       },
     ],
   },

@@ -44,11 +44,15 @@ export class SelectDropDownComponent<T>
   @Input() options: any[] = [];
   @Input() labelName = 'name';
   @Input() labelValue = 'id';
+  @Input() groupName = 'groupName';
+  @Input() groupOptions = 'roles';
   @Input() labelSize: number = 16;
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;
   @Input() outputValue!: string; // if passed, the component should output this value from the object
+  @Input() group = false;
+  @Input() multi = false;
 
   onChangeValue(value: any) {
     if (this.outputValue) {
@@ -58,6 +62,40 @@ export class SelectDropDownComponent<T>
       this.selectChange.emit(value);
     }
   }
+  pokemonGroups: any[] = [
+    {
+      name: 'Grass',
+      pokemon: [
+        { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
+        { value: 'oddish-1', viewValue: 'Oddish' },
+        { value: 'bellsprout-2', viewValue: 'Bellsprout' },
+      ],
+    },
+    {
+      name: 'Water',
+      pokemon: [
+        { value: 'squirtle-3', viewValue: 'Squirtle' },
+        { value: 'psyduck-4', viewValue: 'Psyduck' },
+        { value: 'horsea-5', viewValue: 'Horsea' },
+      ],
+    },
+    {
+      name: 'Fire',
+      disabled: true,
+      pokemon: [
+        { value: 'charmander-6', viewValue: 'Charmander' },
+        { value: 'vulpix-7', viewValue: 'Vulpix' },
+        { value: 'flareon-8', viewValue: 'Flareon' },
+      ],
+    },
+    {
+      name: 'Psychic',
+      pokemon: [
+        { value: 'mew-9', viewValue: 'Mew' },
+        { value: 'mewtwo-10', viewValue: 'Mewtwo' },
+      ],
+    },
+  ];
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options']) {

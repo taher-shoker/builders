@@ -25,7 +25,7 @@ export class HttpInterceptorService implements HttpInterceptor {
         setHeaders: {
           Authorization: `Bearer ${token}`,
           'Authorization-Generated': `Bearer ${gToken}`,
-          'Content-Type': 'application/json',
+          // 'Content-Type': 'application/json',
           'Access-Token-Type': type,
         },
       });

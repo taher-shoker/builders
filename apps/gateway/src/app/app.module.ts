@@ -24,6 +24,12 @@ import { CookieModule } from 'ngx-cookie';
 import { HttpInterceptorService } from './shared/interceptors/http-interceptor.service';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { environment } from '../environments/environment';
+import { DataUploadComponent } from './views/data-upload/data-upload.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatSortModule } from '@angular/material/sort';
+import { MatSelectModule } from '@angular/material/select';
+import { DataUploadModalComponent } from './views/data-upload/data-upload-modal/data-upload-modal.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -34,13 +40,23 @@ export function HttpLoaderFactory(http: HttpClient) {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, HomeComponent],
+  declarations: [
+    AppComponent,
+    LoginComponent,
+    HomeComponent,
+    DataUploadComponent,
+    DataUploadModalComponent,
+  ],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule,
     FormsModule,
     ReactiveFormsModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatSortModule,
+    MatSelectModule,
     AppRoutingModule,
     HttpClientModule,
     SharedUiModule,
@@ -68,5 +84,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     },
   ],
   bootstrap: [AppComponent],
+  exports: [DataUploadComponent, DataUploadModalComponent],
 })
 export class AppModule {}

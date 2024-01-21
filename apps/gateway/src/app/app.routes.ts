@@ -7,6 +7,7 @@ import { LoginComponent } from './views/login/login.component';
 import { HomeComponent } from './views/home/home.component';
 import { AuthGuard } from './shared/guards/auth.guard';
 import { AdminAuthGuard } from './shared/guards/admin.auth.guard';
+import { DataUploadComponent } from './views/data-upload/data-upload.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/apps', pathMatch: 'full' },
@@ -30,6 +31,7 @@ const routes: Routes = [
       ),
     data: { breadcrumb: 'users setting' },
   },
+
   {
     path: 'login',
     component: LoginComponent,

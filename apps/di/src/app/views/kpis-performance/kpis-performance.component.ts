@@ -112,6 +112,7 @@ export class KpisPerformanceComponent implements OnInit {
     this.unitSector = this.route.snapshot.paramMap.get('unit_sector')!;
 
     if (this.unitSector) {
+      console.log(this.unitSector);
       this.dataService
         .getKPIsOfBusinessName(this.unitSector)
         .subscribe((res: LevelTwoResponse) => {
@@ -136,7 +137,7 @@ export class KpisPerformanceComponent implements OnInit {
 
     this.selectedKpi = kpiItem;
     this.dataService
-      .getDetailsOfKPIs(kpiItem.id)
+      .getDetailsOfKPIs(kpiItem.id, this.unitSector)
       .subscribe((res: KpiDetailsResponse) => {
         this.kpiDetails = res.data;
 
@@ -249,7 +250,7 @@ export class KpisPerformanceComponent implements OnInit {
 
     const filterObj = { name, kpiProperty };
 
-    console.log("La Filter", filterObj)
+    console.log('La Filter', filterObj);
     const idx = this.currentChosenFilters.findIndex(
       (obj) => obj.kpiProperty === filterObj.kpiProperty
     );

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, tap } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { CookieService } from 'ngx-cookie';
 import { environment } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
@@ -104,9 +104,12 @@ export class AuthService {
   }
   setCurrentLoggedInUser = false;
   getUserData() {
+    const headers = new HttpHeaders().set('content-type', 'application/json');
     this.gratnedSystems = [];
     this.http
-      .get<any>(`${this.loginTPUrl}/user/getCurrentUserData`)
+      .get<any>(`${this.loginTPUrl}/user/getCurrentUserData`, {
+        headers: headers,
+      })
       .subscribe((res: any) => {
         if (res.dto.systems.length == 1) {
           if (res.dto.systems.includes('TP_DashboardUsers')) {
