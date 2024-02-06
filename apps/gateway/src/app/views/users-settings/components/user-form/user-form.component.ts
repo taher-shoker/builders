@@ -1,5 +1,7 @@
 import {
   Component,
+  ElementRef,
+  HostListener,
   Input,
   OnChanges,
   OnInit,
@@ -20,6 +22,7 @@ import {
   Team,
   Role,
   UserGroup,
+  UserTeam,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
 
@@ -40,14 +43,30 @@ export class UserFormComponent implements OnInit, OnChanges {
   selectedGroup: number[] = [];
   addGroups = false;
   showInputs = true;
+  hideDropdown = false;
   userTeam = '';
   userId = 0;
+
+  @HostListener('document:click', ['$event'])
+  onClick(event: Event) {
+    const target = event.target as HTMLElement;
+    const attributeOpenValue =
+      this.el.nativeElement.getAttribute('attribute-open');
+    if (target.className === 'stc-modal' && attributeOpenValue !== 'true') {
+      const clickedInside = this.el.nativeElement.contains(target);
+      if (!clickedInside) {
+        this.dialogService.close();
+        this.router.navigate(['./users-setting']);
+      }
+    }
+  }
   constructor(
     private formBuilder: FormBuilder,
     protected router: Router,
     public userService: UsersService,
     private toastr: ToastrService,
-    protected dialogService: DialogService
+    protected dialogService: DialogService,
+    private el: ElementRef
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -70,22 +89,40 @@ export class UserFormComponent implements OnInit, OnChanges {
           ? Validators.nullValidator
           : Validators.required
       ),
-      teamDto: new FormControl('', Validators.required),
+      teamDto: new FormControl([], Validators.required),
     });
   }
   onSubmit() {
     if (this.form.valid) {
-      const dataForm = {
-        userGroups:
-          this.userService.getCurrentSystem() === 'DI_Management'
-            ? this.form
-                .get('teamDto')
-                ?.value.map((g: { id: number; name: string }) => ({ id: g }))
-            : [{ id: this.form.get('teamDto')?.value.id }],
-        email: this.form.get('email')?.value,
-        name: this.form.get('name')?.value,
-        jobTitle: this.form.get('jobTitle')?.value,
-      };
+      let dataForm;
+      if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        dataForm = {
+          userGroups: [{ id: this.form.get('userGroups')?.value.id }],
+          teams: this.form.get('teamDto')?.value.id
+            ? [
+                {
+                  id: this.form.get('teamDto')?.value.id,
+                },
+              ]
+            : null,
+
+          email: this.form.get('email')?.value,
+          name: this.form.get('name')?.value,
+          jobTitle: this.form.get('jobTitle')?.value,
+        };
+      } else {
+        dataForm = {
+          userGroups:
+            this.userService.getCurrentSystem() === 'DI_Management'
+              ? this.form
+                  .get('teamDto')
+                  ?.value.map((g: { id: number; name: string }) => ({ id: g }))
+              : [{ id: this.form.get('teamDto')?.value.id }],
+          email: this.form.get('email')?.value,
+          name: this.form.get('name')?.value,
+          jobTitle: this.form.get('jobTitle')?.value,
+        };
+      }
 
       const onSuccess = (message: string) => {
         this.toastr.success(message);
@@ -106,7 +143,13 @@ export class UserFormComponent implements OnInit, OnChanges {
           );
       } else if (this.addGroups) {
         this.userService
-          .addUserGroup(this.userId, this.form.get('teamDto')?.value.id, {})
+          .addUserGroup(
+            this.userId,
+            this.userService.getCurrentSystem() === 'DI_Milestones'
+              ? this.form.get('userGroups')?.value.id
+              : this.form.get('teamDto')?.value.id,
+            {}
+          )
           .subscribe(
             () => onSuccess('User Group is added successfully'),
             handleError
@@ -130,20 +173,42 @@ export class UserFormComponent implements OnInit, OnChanges {
   getRoles() {
     this.privilages = this.userService.getRoles();
     if (this.data) {
-      this.selectedPrivilege = this.privilages.filter(
-        (p) => p.id === this.data?.userGroups[0]?.roles[0]?.id
-      )[0];
+      if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        this.selectedPrivilege = this.privilages.filter(
+          (p) => p.id === this.data?.userGroups[0]?.id
+        )[0];
+      } else {
+        this.selectedPrivilege = this.privilages.filter(
+          (p) => p.id === this.data?.userGroups[0]?.roles[0]?.id
+        )[0];
+      }
     }
   }
 
   getTeams(userGroup: UserGroup) {
-    this.teams = this.userService
-      .getTeams()
-      .filter((x) => x.roleName == userGroup?.roles[0].roleName);
+    this.teams =
+      this.userService.getCurrentSystem() === 'DI_Milestones'
+        ? this.userService.allTeams
+        : this.userService
+            .getTeams()
+            .filter((x) => x.roleName == userGroup?.roles[0].roleName);
     if (this.data) {
-      this.selectedTeam = this.teams.filter(
-        (p: Team) => p.id === this.data?.userGroups[0].id
-      )[0];
+      if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        if (this.data?.teams && this.data.teams.length > 0) {
+          const userTeam = this.data?.teams[0].id;
+          this.selectedTeam = this.teams.filter(
+            (p: any) => p.id === userTeam
+          )[0];
+        } else if (this.data.userGroups[0].groupName === 'DT_Director') {
+          this.hideDropdown = true;
+          this.form.get('teamDto')?.setValidators(null);
+          this.form.get('teamDto')?.updateValueAndValidity();
+        }
+      } else {
+        this.selectedTeam = this.teams.filter(
+          (p: Team) => p.id === this.data?.userGroups[0].id
+        )[0];
+      }
     }
   }
 
@@ -152,10 +217,21 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   handleTeam(value: Role) {
-    this.form?.get('teamDto')?.setValue('');
-    this.teams = this.userService
-      .getTeams()
-      .filter((x) => x.roleName == value.groupName);
+    if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+      if (value.id === 29) {
+        this.hideDropdown = true;
+        this.form.get('teamDto')?.setValidators(null);
+        this.form.get('teamDto')?.updateValueAndValidity();
+      } else {
+        this.hideDropdown = false;
+        this.teams = this.userService.allTeams;
+      }
+    } else {
+      this.form?.get('teamDto')?.setValue('');
+      this.teams = this.userService
+        .getTeams()
+        .filter((x) => x.roleName == value.groupName);
+    }
   }
 
   checkUserExist() {
@@ -166,12 +242,12 @@ export class UserFormComponent implements OnInit, OnChanges {
         .subscribe(
           (res) => {
             if (res.userGroups.length > 0) {
-              this.addGroups = true;
-              this.userId = res?.id || 0;
-              this.restFormWithValue(res);
-              this.enableFields();
               this.dialogService.open('alert-modal');
             }
+            this.addGroups = true;
+            this.userId = res?.id || 0;
+            this.restFormWithValue(res);
+            this.enableFields();
           },
           (error) => {
             this.form?.get('name')?.enable();
@@ -223,6 +299,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   handleGrouping() {
+    this.userService.getAllTeams().subscribe((res) => {
+      this.userService.allTeams = res;
+    });
     this.userService.getGroups().subscribe((res: UserGroup[]) => {
       if (res) {
         this.userService.getGroups().subscribe((res: UserGroup[]) => {

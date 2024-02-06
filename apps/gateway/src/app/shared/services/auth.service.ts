@@ -136,7 +136,8 @@ export class AuthService {
 
           if (
             res.dto.systems.includes('FRAUD_ManagementUsers') ||
-            res.dto.systems.includes('DI_Management')
+            res.dto.systems.includes('DI_Management') ||
+            res.dto.systems.includes('DI_Milestones')
           ) {
             // checking if the user has fraud or DI access to handle the needs
             if (res.dto.systems.includes('FRAUD_ManagementUsers')) {
@@ -144,6 +145,9 @@ export class AuthService {
             }
             if (res.dto.systems.includes('DI_Management')) {
               this.gratnedSystems.push('DI_Management');
+            }
+            if (res.dto.systems.includes('DI_Milestones')) {
+              this.gratnedSystems.push('DI_Milestones');
             }
             if (res.dto.systems.includes('Jira_Dahsboard')) {
               this.gratnedSystems.push('Jira_Dahsboard');

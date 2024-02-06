@@ -5,6 +5,7 @@ export interface User {
   jobTitle: string;
   username: string;
   userGroups: UserGroup[];
+  teams?: UserTeam[];
 }
 export interface RequestUser {
   id?: number | undefined;
@@ -12,6 +13,7 @@ export interface RequestUser {
   email: string;
   jobTitle: string;
   userGroups: { id: string }[];
+  teams?: { id: string }[] | null;
 }
 export interface UserGroup {
   id: number;
@@ -21,6 +23,11 @@ export interface UserGroup {
     roleName: string;
     system: { id: number; name: string };
   }[];
+}
+export interface UserTeam {
+  id: number;
+  name: string;
+  systemDto: { id: number; name: string };
 }
 
 export type Attachment = {

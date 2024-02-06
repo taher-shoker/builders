@@ -21,7 +21,7 @@
             [inputName]="'job Title'" formControlName="jobTitle"></stc-apps-input>
         </div>
       </div>
-      <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() !== 'DI_Management'">
+      <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'FRAUD_ManagementUsers'">
         <div class="col-md-6">
           <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
             formControlName="userGroups" [labelName]="'groupName'" [required]="true"
@@ -29,6 +29,19 @@
           </stc-apps-select-drop-down>
         </div>
         <div class="col-md-6">
+          <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
+            [required]="true" [options]="teams" [selectId]="selectedTeam || null">
+          </stc-apps-select-drop-down>
+        </div>
+      </div>
+      <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'DI_Milestones'">
+        <div class="col-md-6">
+          <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
+            formControlName="userGroups" [labelName]="'groupName'" [required]="true"
+            [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+          </stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-6" *ngIf="!hideDropdown">
           <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
             [required]="true" [options]="teams" [selectId]="selectedTeam || null">
           </stc-apps-select-drop-down>
@@ -70,15 +83,9 @@
   </p>
 
   <div class="row mt-4">
-    <div class="col-md-4 offset-8">
-      <div class="d-flex justify-content-end">
-        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"></stc-apps-button>
-
-        <div class="mx-3"></div>
-        <stc-apps-button [buttonText]="'Ok'" [buttonType]="'primary'"
-          (btnClick)="router.navigate(['./users-setting'])"></stc-apps-button>
-      </div>
+    <div class="col-md-4 offset-4">
+      <stc-apps-button [buttonText]="'Ok'" [buttonType]="'primary'"
+        (btnClick)="router.navigate(['./users-setting'])"></stc-apps-button>
     </div>
   </div>
 </stc-apps-dialog>
