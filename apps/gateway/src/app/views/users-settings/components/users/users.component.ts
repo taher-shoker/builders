@@ -163,13 +163,31 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   private handleTeamDropdownChange(value: Team | Role) {
     const isAllSelected = value.id.toString() === 'all';
-
     if (isAllSelected) {
       this.handleAllSelectedForTeamDropdown();
     } else {
-      this.dataSource.data = this.list.filter((x) =>
-        this.userService.getUserTeam(x).includes((value as Team)?.name)
-      );
+      if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        console.log(this.selectedPrivilege);
+        if (this.selectedPrivilege.id !== 0) {
+          this.dataSource.data = this.list
+            .filter((x) =>
+              this.userService.getUserTeam(x).includes((value as Team)?.name)
+            )
+            .filter((x) =>
+              this.userService
+                .getUserPrivilege(x)
+                .includes((this.selectedPrivilege as Role)?.groupName)
+            );
+        } else {
+          this.dataSource.data = this.list.filter((x) =>
+            this.userService.getUserTeam(x).includes((value as Team)?.name)
+          );
+        }
+      } else {
+        this.dataSource.data = this.list.filter((x) =>
+          this.userService.getUserTeam(x).includes((value as Team)?.name)
+        );
+      }
     }
   }
 
@@ -197,11 +215,22 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (isAllSelected) {
       this.dataSource.data = this.list;
       this.getTeams();
+      if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        this.selectedPrivilege = { id: 0, groupName: 'all' };
+      }
     } else {
       this.selectedPrivilege = value as Role; // Assuming 'Role' is a subtype of 'Team'
-      this.teams = this.userService
-        .getTeams()
-        .filter((x) => x.roleName == (value as Role).groupName);
+      if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        if (this.selectedPrivilege.id === 29) {
+          this.teams = [];
+        } else {
+          this.teams = this.userService.getTeams();
+        }
+      } else {
+        this.teams = this.userService
+          .getTeams()
+          .filter((x) => x.roleName == (value as Role).groupName);
+      }
 
       this.dataSource.data = this.list.filter(
         (x) =>
@@ -217,6 +246,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
       privilegeSelect: new FormControl(''),
     });
     this.handleGroups();
+    this.handleTeams();
+
     this.dataSource.paginator = this.paginator;
     this.bannerDataService.updateData({ title: 'users setting', text: '' });
     this.dataSource.filterPredicate = function (record, filter) {
@@ -232,6 +263,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.userService.allGroups = res;
         this.getRoles();
         this.getTeams();
+      }
+    });
+  }
+  public handleTeams() {
+    this.userService.getAllTeams().subscribe((res) => {
+      if (res) {
+        this.userService.allTeams = res;
       }
     });
   }

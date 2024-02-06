@@ -20,6 +20,7 @@ import {
 export class UsersService {
   endpoint = environment.apiUrl;
   allGroups: UserGroup[] = [];
+  allTeams: any[] = [];
   labels: { label: string; text: string }[] = [];
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
@@ -68,6 +69,11 @@ export class UsersService {
       params: this.setSystemParam(),
     });
   }
+  getAllTeams(): Observable<UserGroup[]> {
+    return this.http.get<UserGroup[]>(`${this.endpoint}/teams`, {
+      params: this.setSystemParam(),
+    });
+  }
 
   addUserGroup(
     userId: number,
@@ -105,6 +111,9 @@ export class UsersService {
             };
           });
         break;
+      case 'DI_Milestones':
+        allTeams = this.allTeams;
+        break;
       default:
         break;
     }
@@ -112,11 +121,21 @@ export class UsersService {
   }
 
   getRoles(): Role[] {
-    const allRoles = this.allGroups
-      .filter((g) => g.roles[0].roleName !== 'ADMINS')
-      .map((t) => {
-        return { id: t.roles[0].id, groupName: t.roles[0].roleName };
-      });
+    let allRoles;
+    if (this.getCurrentSystem() === 'DI_Milestones') {
+      allRoles = this.allGroups
+        .filter((g) => g.roles[0].roleName !== 'ADMINS')
+        .map((t) => {
+          return { id: t.id, groupName: t.groupName };
+        });
+    } else {
+      allRoles = this.allGroups
+        .filter((g) => g.roles[0].roleName !== 'ADMINS')
+        .map((t) => {
+          return { id: t.roles[0].id, groupName: t.roles[0].roleName };
+        });
+    }
+
     return _.uniqWith(allRoles, _.isEqual);
   }
 
@@ -134,11 +153,18 @@ export class UsersService {
   getUserTeam(user: User): string | string[] {
     const sys = this.getCurrentSystem();
     const x: string[] = []; // Initialize as an empty array
-    _.forEach(user.userGroups, (group) => {
-      if (group.roles[0].system.name === sys) {
-        x.push(group.groupName);
-      }
-    });
+    if (this.getCurrentSystem() === 'DI_Milestones') {
+      _.forEach(user.teams, (team) => {
+        x.push(team.name);
+      });
+    } else {
+      _.forEach(user.userGroups, (group) => {
+        if (group.roles[0].system.name === sys) {
+          x.push(group.groupName);
+        }
+      });
+    }
+
     return x;
   }
   getKeyByValue(
