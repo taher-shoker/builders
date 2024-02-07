@@ -175,6 +175,7 @@ export class AuthService {
           if (
             res.dto.systems.includes('FRAUD_ManagementUsers') ||
             res.dto.systems.includes('DI_Management') ||
+            res.dto.systems.includes('DI_Milestones') ||
             res.dto.systems.includes('Jira_Dahsboard')
           ) {
             this.setLoggedInUser();
@@ -214,8 +215,6 @@ export class AuthService {
           // this.cookieService.put('USER_FULLNAME', res.name);
           this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
 
-          this.handleSystemsNeeds(); // may be need to remove;
-
           if (this.gratnedSystems.length == 1) {
             if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
               this.router.navigate(['users-setting']);
@@ -226,6 +225,10 @@ export class AuthService {
               } else if (this.gratnedSystems[0] == 'FRAUD_ManagementUsers') {
                 window.location.href =
                   window.location.origin + environment.systems.fraud_system;
+              } else if (this.gratnedSystems[0] == 'DI_Milestones') {
+                window.location.href =
+                  window.location.origin +
+                  environment.systems.di_milestones_system;
               } else {
                 console.log('not handled system');
               }
@@ -239,21 +242,6 @@ export class AuthService {
 
   getAllSystem() {
     return this.http.get<System[]>(`${this.baseUrl}/users/systems`);
-  }
-
-  handleSystemsNeeds() {
-    if (this.gratnedSystems.length === 1) {
-      // if (this.gratnedSystems[0] === 'FRAUD_ManagementUsers') {
-      // } else if (this.gratnedSystems[0] === 'DI_Management') {
-      // } else {
-      //   if (tpUser) {
-      //     console.log('User have permission to TP or CEO');
-      //   }
-      // }
-      console.log('one system'); // investigation purposes
-    } else {
-      this.router.navigate(['/apps']);
-    }
   }
 
   // function to handle TP
@@ -274,20 +262,6 @@ export class AuthService {
   }
 
   // function to handle Fraud Management System
-  handleFraudSysNeeds(res: LoggedUser) {
-    // this.cookieService.put('fraud-roles', res.userGroups[0].roles[0].roleName);
-    // this.cookieService.put('fraud-user', JSON.stringify(res));
-    this.cookieService.put(
-      'system',
-      JSON.stringify(res.userGroups[0].roles[0].system.name)
-    );
-
-    this.cookieService.put(
-      'login-path',
-      JSON.stringify(window.location.origin)
-    );
-  }
-
   // function to handle navigate Fraud Management System
   // navigateToLFraudPages() {
   //   if (
@@ -303,19 +277,7 @@ export class AuthService {
   // }
 
   // function to handle DI Dashboard System
-  handleDiDashboardSysNeeds(res: LoggedUser) {
-    this.cookieService.put('di-roles', res.userGroups[0].roles[0].roleName);
-    this.cookieService.put('di-user', JSON.stringify(res));
-    this.cookieService.put(
-      'system',
-      JSON.stringify(res.userGroups[0].roles[0].system.name)
-    );
 
-    this.cookieService.put(
-      'login-path',
-      JSON.stringify(window.location.origin)
-    );
-  }
   // function to handle navigate DI System
   // navigateToLDIPages() {
   //   if (
@@ -435,6 +397,16 @@ export class AuthService {
                   window.location.origin + environment.systems.di_system,
                 name: 'DT Workspace',
                 displayName: 'DT Workspace',
+              });
+              break;
+            case 'DI_Milestones':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin +
+                  environment.systems.di_milestones_system,
+                name: 'DT Milestones Validation',
+                displayName: 'DT Milestones Validation',
               });
               break;
             case 'Jira_Dahsboard':

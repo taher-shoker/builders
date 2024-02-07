@@ -10,6 +10,7 @@ export const environment = {
     tp_admin_system: '/cem/reporting/tp/system-configurations',
     fraud_system: '/cem/reporting/fraudworkspace/',
     di_system: '/cem/reporting/dtworkspace/',
+    di_milestones_system: '',
     jira_system: '/cem/reporting/jiradashboard/',
   },
   sso_url: 'http://localhost:7080/administration/saml/login',
