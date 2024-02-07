@@ -1,0 +1,73 @@
+.pending-tasks {
+  background-color: white;
+  height: 100%;
+
+  .main-title {
+    padding: 20px;
+    border-bottom: 1px solid var(--grey-color);
+    font-weight: bold;
+    margin: 0;
+    color: var(--stc-color);
+    font-size: 1.35rem !important;
+
+    i {
+      color: var(--stc-color-dark);
+    }
+  }
+
+  .tasks {
+    .row {
+      margin: 0;
+      padding: 0;
+    }
+
+    height: 580px;
+    padding: 0 20px;
+    overflow: auto;
+    border-radius: 5px 0 0 5px;
+    background-color: white;
+    max-height: inherit;
+
+    li {
+      .task {
+        border-radius: 7px;
+        overflow: hidden;
+        box-shadow: -3px 3px 3px -4px rgba(0, 0, 0, 0.75);
+        cursor: pointer;
+
+        .task-header {
+          .row {
+            border-left: 5px solid #4f008c;
+            background: linear-gradient(to right, #4f008c91 0%, #9000ff1f 100%);
+            height: 31px;
+            align-content: center;
+
+            overflow: auto;
+
+            .left-col {
+              font-size: 14px;
+            }
+
+            .right-col {
+              font-size: 13px;
+              color: var(--half-black);
+              text-align: end;
+            }
+          }
+        }
+
+        .task-desc-holder {
+          background-color: var(--light-grey);
+          padding: 6px 10px;
+          color: var(--grey-color);
+          .task-desc {
+            font-size: 0.9rem;
+          }
+        }
+      }
+      .task:hover {
+        transform: translate(10px, 0px);
+      }
+    }
+  }
+}

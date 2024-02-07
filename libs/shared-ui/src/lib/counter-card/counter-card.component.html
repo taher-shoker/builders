@@ -1,0 +1,12 @@
+<div class="row counter-card">
+
+  <div class="col data-col">
+    <div class="num">{{ count }}</div>
+    <div class="caption" [ngStyle]="{'color': captionColor ?? iconBgColor }">{{ caption }}</div>
+  </div>
+
+  <div class="col-3 icon-col" [ngStyle]="{'background-color': iconBgColor}">
+    <i [class]="iconClass"></i>
+  </div>
+
+</div>

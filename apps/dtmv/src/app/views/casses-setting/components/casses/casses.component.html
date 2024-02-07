@@ -1,0 +1,260 @@
+<div class="casses-settings">
+  <div class="top-info">
+    <div class="row">
+      <div class="col-md-4">
+
+        <stc-apps-counter-card [count]="0" [caption]="'registered_cases' | translate" [iconClass]="'fas fa-plus-square'" [iconBgColor]="'#a54ee1'"></stc-apps-counter-card>
+        <div class="static register">
+          <div class="icon">
+            <i class="fas fa-plus-square"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalRegisted }}</div>
+            <div class="title">{{ 'registered_cases' | translate }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="static pending">
+          <div class="icon">
+            <i class="far fa-clock"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalPending }}</div>
+            <div class="title">{{ 'pending_actions' | translate }}</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="static in-progress">
+          <div class="icon">
+            <i class="fas fa-retweet"></i>
+          </div>
+          <div class="static-info">
+            <div class="num">{{ totalInProgress }}</div>
+            <div class="title">{{ 'inProgress_cases' | translate }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row mt-4">
+    <div class="col-md-8">
+      <div class="f-box">
+        <div class="row align-items-center">
+          <div class="col-md-3">
+            <p class="table-title">{{ 'cases_list' | translate }}</p>
+          </div>
+          <div class="col-md-9">
+            <div class="row">
+              <div class="col">
+                <div class="input-group stc-input-group custom-input mb-3">
+                  <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                  <input type="text" matInput #input placeholder="{{ 'Search for Case Serial' | translate }}"
+                    class="form-control stc-input" (keyup)="searchFilter($event)" />
+                </div>
+              </div>
+
+              <div class="col-3">
+                <stc-apps-button [buttonText]="'filter' | translate" [buttonType]="'gray-outline'"
+                  [buttonIcon]="'fa-filter'" (btnClick)="toggleFilter()"></stc-apps-button>
+              </div>
+
+              <ng-container *ngIf="authService.getLoggedInUser()">
+                <div class="col-md-4" *ngIf="
+                    authService.getLoggedInUser().roles.includes('CREATORS')
+                  ">
+                  <stc-apps-button [buttonText]="'Add new Case' | translate" [buttonType]="'primary'"
+                    [buttonIcon]="' fa-plus-circle'" (btnClick)="addCasseNavigate()"></stc-apps-button>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        </div>
+      </div>
+      <table mat-table [dataSource]="dataSource" matSort>
+        <div class="spinner-container" *ngIf="isLoading">
+          <mat-spinner></mat-spinner>
+        </div>
+        <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>
+            {{ col.label | translate }}
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <div [ngSwitch]="col.key">
+              <div class="info-name" *ngSwitchCase="'customerName'">
+                <div class="name">
+                  <p>{{ element[col.key] }}</p>
+                  <small class="serial-number">{{ 'serial_number' | translate }}:
+                    {{ element.caseSerialNumber }}</small>
+                </div>
+              </div>
+
+              <div class="info-name" *ngSwitchCase="'caseStatus'">
+                <div class="case-status" [ngClass]="
+                    CasesService.getKeyByValue(CaseStatus, element[col.key])
+                  ">
+                  {{ element[col.key] | translate }}
+                </div>
+              </div>
+
+              <div class="info-name" *ngSwitchCase="'createdDate'">
+                <div class="name">
+                  <p>{{ element[col.key] | date : 'longDate'}}</p>
+                </div>
+              </div>
+
+              <div class="btns-action justify-content-end" *ngSwitchCase="'actions'">
+                <button mat-button class="btn details" (click)="detailsNavigate(element.id)">
+                  {{ 'show_details' | translate }}
+                </button>
+              </div>
+              <span class="cell-text" *ngSwitchDefault>
+                {{ element[col.key] }}
+              </span>
+            </div>
+          </td>
+        </ng-container>
+        <tr class="mat-row" *matNoDataRow>
+          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+            <div class="message-box">
+              <img src="assets/Group 590.png" alt="" />
+              <h3>{{ 'no_cases_yet' | translate }}</h3>
+              <p>{{ 'no_cases_msg' | translate }}</p>
+
+              <ng-container *ngIf="authService.getLoggedInUser()">
+                <stc-apps-button *ngIf="
+                    authService.getLoggedInUser().roles.includes('CREATORS')
+                  " [buttonText]="'Add new Case' | translate" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+                  (btnClick)="addCasseNavigate()"></stc-apps-button>
+              </ng-container>
+            </div>
+          </td>
+        </tr>
+        <!-- <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div class="message-box">
+          <img src="assets/Group 597.png" alt="" />
+          <h3>Sorry !</h3>
+          <p>there are no data that match your search, please try again</p>
+          <stc-apps-button
+            [buttonText]="'Try another data sets'"
+            [buttonType]="'primary'"
+          ></stc-apps-button>
+        </div>
+      </td>
+    </tr> -->
+        <!-- <tr class="mat-row" *matNoDataRow>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        <div class="message-box">
+          <img src="assets/Group 598.png" alt="" />
+          <h3>No network connection !</h3>
+          <p>Please connect to the network and try again</p>
+          <stc-apps-button
+            [buttonText]="'Try again'"
+            [buttonType]="'primary'"
+          ></stc-apps-button>
+        </div>
+      </td>
+    </tr> -->
+        <!-- <tr class="mat-row" *matError>
+      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+        No data matching the filter.
+      </td>
+    </tr> -->
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+      <mat-paginator [length]="casesPagesCount" [pageSize]="10" [showFirstLastButtons]="true" [hidePageSize]="true">
+      </mat-paginator>
+    </div>
+    <div class="col-md-4">
+      <stc-apps-items-list [caption]="'pending_actions'" [items]="allItems"></stc-apps-items-list>
+
+
+    </div>
+  </div>
+</div>
+
+<stc-apps-dialog id="filter-Modal">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" (blur)="(OnChangesForm)" class="p-3 pb-0">
+    <div class="inputs">
+      <div class="row">
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputId]="'customerName'"
+            [inputName]="'customer_name' | translate" formControlName="customerName"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputId]="'city'" [inputName]="'city' | translate"
+            formControlName="city"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'existingServiceOrder'"
+            [inputName]="'Existing Service Order' | translate" formControlName="existingServiceOrder"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'serviceType'"
+            [inputName]="'service_type' | translate" formControlName="serviceType"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'existingPlate'"
+            [inputName]="'existing_plate' | translate" formControlName="existingPlate"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'existingPhoneNumber'"
+            [inputName]="'existing_phone_number' | translate" formControlName="existingPhoneNumber"></stc-apps-input>
+        </div>
+
+        <div class="col-md-3">
+          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
+            [inputName]="'activation_date' | translate" formControlName="activationDate">
+          </stc-apps-date-picker>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'WFMOrder'"
+            [inputName]="'wfm_order' | translate" formControlName="wfmOrder"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'newPlate'"
+            [inputName]="'new_plate' | translate" formControlName="newPlate"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'newServiceOrder'"
+            [inputName]="'new_service_order' | translate" formControlName="newServiceOrder"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'newPhoneNumber'"
+            [inputName]="'new_phone_number' | translate" formControlName="newPhoneNumber"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'contactNumber'"
+            [inputName]="'contact_number' | translate" formControlName="contactNumber"></stc-apps-input>
+        </div>
+        <div class="col-md-3">
+
+          <stc-apps-select-drop-down [label]="'select_status' | translate" [options]="types" formControlName="status"
+            [labelName]="'statusName'" [outputValue]="'statusName'"></stc-apps-select-drop-down>
+
+        </div>
+        <div class="col-md-3">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'type'"
+            [inputName]="'type' | translate" formControlName="type"></stc-apps-input>
+        </div>
+
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-4 offset-8">
+        <div class="btn-form-action d-flex justify-content-end">
+          <stc-apps-button [buttonText]="'clear_filter' | translate" [buttonType]="'gray-outline'"
+            (btnClick)="clearFormFilter()"></stc-apps-button>
+
+          <div class="mx-3"></div>
+          <stc-apps-button [buttonText]="'filter' | translate" [buttonType]="'primary'" [buttonDisable]="disabled"
+            (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+        </div>
+      </div>
+    </div>
+  </form>
+</stc-apps-dialog>

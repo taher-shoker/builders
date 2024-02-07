@@ -8,20 +8,14 @@
   "targets": {
     "build": {
       "executor": "@angular-devkit/build-angular:browser",
-      "outputs": [
-        "{options.outputPath}"
-      ],
+      "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/apps/di",
         "index": "apps/di/src/index.html",
         "main": "apps/di/src/main.ts",
-        "polyfills": [
-          "zone.js"
-        ],
+        "polyfills": ["zone.js"],
         "tsConfig": "apps/di/tsconfig.app.json",
-        "allowedCommonJsDependencies": [
-          "file-saver"
-        ],
+        "allowedCommonJsDependencies": ["file-saver"],
         "assets": [
           "apps/di/src/favicon.ico",
           "apps/di/src/assets",
@@ -42,13 +36,9 @@
           "apps/di/src/styles.scss"
         ],
         "stylePreprocessorOptions": {
-          "includePaths": [
-            "libs/styles/src"
-          ]
+          "includePaths": ["libs/styles/src"]
         },
-        "scripts": [
-          "node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"
-        ]
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
       },
       "configurations": {
         "production": {
@@ -109,31 +99,14 @@
       }
     },
     "lint": {
-      "executor": "@nx/linter:eslint",
-      "outputs": [
-        "{options.outputFile}"
-      ],
-      "options": {
-        "lintFilePatterns": [
-          "apps/di/**/*.ts",
-          "apps/di/**/*.html"
-        ]
-      }
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
     },
     "test": {
       "executor": "@nx/jest:jest",
-      "outputs": [
-        "{workspaceRoot}/coverage/{projectRoot}"
-      ],
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "apps/di/jest.config.ts",
-        "passWithNoTests": true
-      },
-      "configurations": {
-        "ci": {
-          "ci": true,
-          "codeCoverage": true
-        }
+        "jestConfig": "apps/di/jest.config.ts"
       }
     },
     "serve-static": {
