@@ -1,0 +1,24 @@
+
+.counter-card {
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  padding: 20px;
+  align-items: center;
+  font-weight: bold;
+}
+
+.num {
+  font-size: 2.5rem;
+  margin-bottom: 10px;
+  color: var(--stc-color);
+}
+
+.icon-col{
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  color: white;
+}

@@ -1,0 +1,73 @@
+
+/* Colors pallet */
+
+:root{
+  --views-padding: 26px;
+  --grey-color: #8e9aa0;
+
+  --stc-grey-color: #8B97A7;
+  --side-title: 16px;
+  --secondary-text: 12px;
+  --secondary-big-text: 14px;
+  --half-black: #5f5f5f;
+  --light-grey: #f9f9f9;
+
+  --stc-color: #4f008c;
+  --stc-color-dark: #3c016a;
+
+  --stc-color-darker: #200238;
+  --stc-black-color: #1d252d;
+
+  --stc-moon-light-color: #a54ee1;
+  --stc-coral-color: #ff375e;
+
+  --stc-sun-color: #ffdd40;
+  --stc-sunset-color: #ff6a39; // 4
+
+  --stc-oasis-color: #00c48c; // 6
+  --stc-Sea-Color: #1cced8; // 3
+
+  --stc-Silver-Color: #8e9aa0;
+  --stc-Air-Color: #f3f3f1;
+
+  --red-Color: #c82a27;
+  --red-Color-dark: #bb2222;
+
+  --green-Color: #58c090;
+  --green-Color-dark: #2a8e18;
+
+  --stc-color-light: #beacce;
+
+  // --secondaryColor: #FFE5CA;
+  // --primaryColor: #FFF3E2;
+  // --roseColor: #FA9884;
+  // --roseDarkColor: #E74646;
+
+  // --mainBorderRadius : 12px;
+  // --primaryBtnBorderRadius: 25px;
+  // --badgeBorderRadius: 16px;
+
+  // --bigTitleSize: 38px;
+  // --titleSize: 28px;
+  // --secondaryTitleSize: 20px;
+
+  // --smallShadow: -7px 5px 9px -10px rgba(0,0,0,0.75);
+
+}
+
+
+// mixin that enables css variables in light mode
+// @mixin lighten() {
+//   --bgColor: #{--bgColor_light};
+//   --textColor: #{--textColor_light};
+//   --borderColor: #{--borderColor_light};
+//   --tilesBgColor: #{--tilesBgColor_white};
+// }
+
+// mixin that enables css variables in dark mode
+// @mixin darken() {
+//   --bgColor: #{--bgColor_dark};
+//   --textColor: #{--textColor_dark};
+//   --borderColor: #{--borderColor_dark};
+//   --tilesBgColor: #{--tilesBgColor_dark};
+// }

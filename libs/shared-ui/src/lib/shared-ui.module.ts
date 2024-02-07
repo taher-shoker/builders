@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -40,6 +40,15 @@ import { DatePickerWeeklyRangeComponent } from './date-picker-weekly-range/date-
 import { LocaleDatePipe } from './locale.date/locale.date.pipe';
 import { DonutChartComponent } from './donut-chart/donut-chart.component';
 import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.component';
+import { CounterCardComponent } from './counter-card/counter-card.component';
+import { HttpClient } from '@angular/common/http';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { environment } from './environments/environment';
+import { ItemsListComponent } from './items-list/items-list.component';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
+}
 
 @NgModule({
   imports: [
@@ -64,6 +73,13 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
     MatMomentDateModule,
     MatNativeDateModule,
     MatExpansionModule,
+    TranslateModule.forRoot({
+      loader: {
+        provide: TranslateLoader,
+        useFactory: HttpLoaderFactory,
+        deps: [HttpClient],
+      },
+    }),
   ],
   declarations: [
     ButtonComponent,
@@ -86,6 +102,8 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
     LocaleDatePipe,
     DonutChartComponent,
     WeeklyLineChartComponent,
+    CounterCardComponent,
+    ItemsListComponent
   ],
   exports: [
     HeaderComponent,
@@ -110,6 +128,9 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
     DonutChartComponent,
     MatIconModule,
     WeeklyLineChartComponent,
+    CounterCardComponent,
+    ItemsListComponent
+
   ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
