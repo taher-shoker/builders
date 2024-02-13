@@ -4,6 +4,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { CookieService } from 'ngx-cookie';
 
 export interface User {
   id: number;
@@ -31,7 +32,7 @@ export interface Team {
 })
 export class CasesService {
   baseUrl = environment.apiUrl;
-  fmUrl = `${this.baseUrl}/fm`;
+  dtUrl = `${this.baseUrl}/dt-milestone-service`;
   adminUrl = `${this.baseUrl}/admin`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
 
@@ -39,59 +40,85 @@ export class CasesService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  constructor(private http: HttpClient) {}
-  setSystemParam(): HttpParams {
-    return new HttpParams().set('system', 'FRAUD_ManagementUsers');
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
+
+  isDTDirector!: boolean;
+  getCurrentSystem(): string {
+    return JSON.parse(this.cookieService.get('granted-systems') || '')[0];
   }
+
+  setSystemParam(): HttpParams {
+    return new HttpParams().set('system', 'DI_Milestones');
+  }
+
   setSystemTeams(): Observable<any[]> {
-    return this.http.get<any[]>(`${this.adminUrl}/groups`, {
+    return this.http.get<any[]>(`${this.adminUrl}/teams`, {
       params: this.setSystemParam(),
     });
   }
+  setUserTeam() {
+    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    return user.teams[0].name;
+  }
+  getMilestoneUsersType() {
+    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    return user.userGroups[0].groupName;
+  }
 
+  checkIsDirector() {
+    if (this.getMilestoneUsersType() === 'DT_Director') {
+      this.isDTDirector = true;
+    } else {
+      this.isDTDirector = false;
+    }
+  }
   setSystemUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.adminUrl}/users`, {
       params: this.setSystemParam(),
     });
   }
 
+  createMilestone(data: any) {
+    return this.http.post(`${this.dtUrl}/milestones/add`, data);
+  }
+  addBulkData(data: FormData, relatedTeam: string) {
+    const params = new HttpParams().set('relatedTeam', relatedTeam);
+
+    return this.http.post(`${this.dtUrl}/milestones/bulk/upload`, data, {
+      params,
+    });
+  }
   getCases(filterData?: any) {
-    return this.http.get(`${this.fmUrl}/d2dCase/search`, {
+    return this.http.get(`${this.dtUrl}/d2dCase/search`, {
       params: filterData,
     });
   }
 
   getCase(id: string) {
     const options = {};
-    return this.http.get<Case>(`${this.fmUrl}/d2dCase/${id}`, options);
-  }
-
-  createCase(data: any) {
-    const options = {};
-
-    return this.http.post(`${this.fmUrl}/d2dCase`, data, options);
+    return this.http.get<Case>(`${this.dtUrl}/d2dCase/${id}`, options);
   }
 
   updateCase(id: string, data: any) {
     const options = {};
 
-    return this.http.put(`${this.fmUrl}/${id}`, data, options);
+    return this.http.put(`${this.dtUrl}/${id}`, data, options);
   }
 
   deleteCase(id: string) {
     const options = {};
-    return this.http.delete(`${this.fmUrl}/${id}`, options);
+    return this.http.delete(`${this.dtUrl}/${id}`, options);
   }
 
   getAssigneeTasks(userEmail: string) {
-    return this.http.get(`${this.fmUrl}/cwf/task/user/${userEmail}`);
+    return this.http.get(`${this.dtUrl}/cwf/task/user/${userEmail}`);
   }
 
   getTaskByCaseId(caseId: number) {
-    return this.http.get(`${this.fmUrl}/cwf/task/${caseId}`);
+    return this.http.get(`${this.dtUrl}/cwf/task/${caseId}`);
   }
   updateCaseTask(caseId: number, taskId: number, data: any) {
-    return this.http.post(`${this.fmUrl}/cwf/task/${caseId}/${taskId}`, data);
+    return this.http.post(`${this.dtUrl}/cwf/task/${caseId}/${taskId}`, data);
   }
 
   uploadFile(data: any) {

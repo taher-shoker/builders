@@ -38,7 +38,13 @@ export class ErrorInterceptor implements HttpInterceptor {
           // this.router.navigate(['/unauthorized-page']);
         } else {
           this.toastr.error(
-            err?.error?.debugMessage ? err?.error?.debugMessage : error
+            err?.error?.debugMessage
+              ? err?.error?.debugMessage
+              : err?.error?.result
+              ? err?.error?.result
+              : err?.error?.message
+              ? err?.error?.message
+              : 'Something went wrong!'
           );
         }
         return throwError(error);

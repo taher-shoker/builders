@@ -99,6 +99,7 @@ export class SelectDropDownComponent<T>
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options']) {
+      console.log(this.selectId);
       this.options = changes['options'].currentValue;
       if (this.defaultAll) {
         this.options?.unshift({ id: 'all', [this.labelName]: '-' });

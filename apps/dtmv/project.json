@@ -74,7 +74,7 @@
           "fileReplacements": [
             {
               "replace": "apps/dtmv/src/environments/environment.ts",
-              "with": "apps/dtmv/src/environments/environment.staging.ts"
+              "with": "apps/dtmv/src/environments/environment.stage.ts"
             }
           ],
           "outputHashing": "all"

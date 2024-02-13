@@ -1,0 +1,25 @@
+.mat-mdc-tab-header {
+  padding-inline-start: 50px;
+}
+.mat-mdc-tab {
+  background-color: rgba($color: $shadowStc, $alpha: 0.5) !important;
+  //margin-inline: 16px;
+  //border-radius: 8px;
+  &:first-of-type {
+    border-radius: 8px 0 0 8px;
+  }
+  &:last-of-type {
+    border-radius: 0 8px 8px 0;
+  }
+  .mdc-tab__text-label {
+    color: #fff !important;
+  }
+  &.mdc-tab--active {
+    background-color: $stcColor !important;
+    border: unset;
+  }
+}
+
+.mdc-tab-indicator {
+  display: none !important;
+}

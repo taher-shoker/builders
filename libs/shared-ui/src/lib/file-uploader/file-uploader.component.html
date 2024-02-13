@@ -1,22 +1,11 @@
 <div class="uploader-box">
-  <button
-    type="button"
-    class="upload-btn"
-    (click)="onClick($event)"
-    [disabled]="disabled"
-  >
+  <button type="button" class="upload-btn" (click)="onClick($event)" [disabled]="disabled">
     <i class="fas fa-link"></i>
     <span>{{ chooseLabel }}</span>
   </button>
-  <rp>{{"optional" | translate}}</rp>
-  <input
-    #fileUpload
-    type="file"
-    class="input_fileupload--hidden"
-    (change)="onFileSelected($event)"
-    [multiple]="multiple"
-    accept="{{ this.accept }}"
-  />
+  <rp *ngIf="!required">{{"optional" | translate}}</rp>
+  <input #fileUpload type="file" class="input_fileupload--hidden" (change)="onFileSelected($event)"
+    [multiple]="multiple" accept="{{ this.accept }}" />
   <div class="file-validation">{{ this.invalidFileMessageDetail }}</div>
   <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoading">
     <span class="sr-only">Loading...</span>
@@ -50,13 +39,8 @@
       <div class="file">
         <span>{{ f.label }}</span>
         <div class="left-info">
-          <button
-            class="btn"
-            type="button"
-            mat-icon-button
-            [attr.title]="deleteButtonLabel ? deleteButtonLabel : null"
-            (click)="removeFileRemotly(f.id)"
-          >
+          <button class="btn" type="button" mat-icon-button [attr.title]="deleteButtonLabel ? deleteButtonLabel : null"
+            (click)="removeFileRemotly(f.id)">
             <i class="fas fa-times-circle"></i>
           </button>
         </div>
