@@ -1,0 +1,66 @@
+<div class="mt-4 ">
+
+  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+    <mat-tab label="Create Milestone"> <stc-apps-milestone-form></stc-apps-milestone-form></mat-tab>
+    <mat-tab label="Bulk Upload">
+      <div class="p-50">
+        <form class='upload-form' [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="row">
+            <div class="col-12">
+              <div>
+                <label for="">Upload File :</label>
+                <div *ngIf="files.length === 0 || errorSize || errorType " class='file-uploader' [ngClass]="form.controls['file'].invalid &&
+                                                    (form.controls['file'].dirty ||
+                                                      form.controls['file'].touched) ? 'error' : ''"
+                  (click)='uploadClick()'>
+                  <input #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)" name="file"
+                    hidden accept="{{accept}}">
+                  <div class='text-center'>
+                    <i class="fa fa-cloud-upload" aria-hidden="true"></i>
+                    <p>Browse to Upload Only XLs File</p>
+                  </div>
+                </div>
+                <div class="error-file" *ngIf="errorSize">Please upload file less than 20M</div>
+                <div class="error-file" *ngIf="errorType">Please upload XLs files only</div>
+
+                <div class="error-file" *ngIf="  form.controls['file'].invalid &&
+                                                    (form.controls['file'].dirty ||
+                                                      form.controls['file'].touched)">This Field Is Required</div>
+
+              </div>
+              <div class='file-box' *ngIf='files && files.length >  0 && !errorSize && !errorType'>
+                <div class="file">
+                  <span><i class="pi pi-file-o"></i>
+                    {{ files[0].name }}</span>
+
+                  <i role="button" class="fa fa-times-circle " (click)="clearInputElement()"></i>
+
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row mt-4">
+            <div class="offset-md-9 col-md-3">
+              <div class="row">
+                <div class="col-4"></div>
+                <div class="col-4">
+                  <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+                    (btnClick)="cancel()"></stc-apps-button>
+                </div>
+                <div class="col-4">
+                  <stc-apps-button [buttonText]="'Upload'" [buttonType]="'primary'" [loading]="isLoading "
+                    (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </form>
+
+
+      </div>
+    </mat-tab>
+  </mat-tab-group>
+
+
+</div>

@@ -13,5 +13,18 @@
     </mat-error>
     <mat-error *ngIf="control.hasError('email')">{{ 'invalid_format' | translate }}
     </mat-error>
+    <mat-error *ngIf="control.hasError('maxlength')">{{ 'Please enter text less than '+
+      control.getError('maxlength').requiredLength + ' character' |
+      translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('max') ">
+      {{ 'Please enter number less than ' + control.getError('max').max | translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('min') ">
+      {{ 'Please enter number greater than ' + control.getError('min').min | translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('pattern')">
+      {{ 'Please enter only numbers ' }}
+    </mat-error>
   </mat-form-field>
 </div>

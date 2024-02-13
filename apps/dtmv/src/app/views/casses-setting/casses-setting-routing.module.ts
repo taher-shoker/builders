@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
-import { CassesComponent } from './components/casses/casses.component';
-import { AddCasseComponent } from './components/add-casse/add-casse.component';
-import { CasseDetailsComponent } from './components/casse-details/casse-details.component';
-import { CassesSettingComponent } from './casses-setting.component';
+import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../services/auth.guard';
 import { reportingGuard } from '../../services/guards/reporting.guard';
+import { CassesSettingComponent } from './casses-setting.component';
+import { AddMilestoneComponent } from './components/add-milestone/add-milestone.component';
+import { CasseDetailsComponent } from './components/casse-details/casse-details.component';
+import { CassesComponent } from './components/casses/casses.component';
 
 const routes: Routes = [
   {
@@ -19,8 +19,8 @@ const routes: Routes = [
         component: CassesComponent,
       },
       {
-        path: 'add_case',
-        component: AddCasseComponent,
+        path: 'add_milestone',
+        component: AddMilestoneComponent,
         data: { breadcrumb: 'Add new Case', permissions: 'CREATORS' },
         canActivate: [AuthGuard, reportingGuard],
       },

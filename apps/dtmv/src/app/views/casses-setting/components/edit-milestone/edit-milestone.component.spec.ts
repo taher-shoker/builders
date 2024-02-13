@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { CasseFormComponent } from './casse-form.component';
+import { EditMilestineComponent } from './edit-milestone.component';
 
-describe('CasseFormComponent', () => {
-  let component: CasseFormComponent;
-  let fixture: ComponentFixture<CasseFormComponent>;
+describe('EditMilestineComponent', () => {
+  let component: EditMilestineComponent;
+  let fixture: ComponentFixture<EditMilestineComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [CasseFormComponent],
+      declarations: [EditMilestineComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(CasseFormComponent);
+    fixture = TestBed.createComponent(EditMilestineComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

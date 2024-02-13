@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { AddCasseComponent } from './add-casse.component';
+import { MilestoneFormComponent } from './milestone-form.component';
 
-describe('AddCasseComponent', () => {
-  let component: AddCasseComponent;
-  let fixture: ComponentFixture<AddCasseComponent>;
+describe('MilestoneFormComponent', () => {
+  let component: MilestoneFormComponent;
+  let fixture: ComponentFixture<MilestoneFormComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [AddCasseComponent],
+      declarations: [MilestoneFormComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AddCasseComponent);
+    fixture = TestBed.createComponent(MilestoneFormComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

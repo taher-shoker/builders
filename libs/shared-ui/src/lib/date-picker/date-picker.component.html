@@ -1,21 +1,14 @@
 <div class="input-group stc-input-group" *ngIf="control">
-  <label
-    >{{ inputName }}
+  <label>{{ inputName }}
     <mat-error *ngIf="control.hasError('required')">* </mat-error>
   </label>
 
   <mat-form-field>
-    <input
-      matInput
-      [matDatepicker]="picker"
-      [id]="inputId"
-      [name]="inputName"
-      [formControl]="control"
-    />
+    <input matInput [matDatepicker]="picker" [matDatepickerFilter]="myFilter" (dateChange)="addEvent( $event)"
+      [id]="inputId" [name]="inputName" [formControl]="control" />
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker></mat-datepicker>
-    <mat-error *ngIf="control.hasError('required')"
-      > {{"field_required" | translate}}
+    <mat-error *ngIf="control.hasError('required')"> {{"field_required" | translate}}
     </mat-error>
   </mat-form-field>
 </div>

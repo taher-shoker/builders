@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EditCasseComponent } from './edit-casse.component';
+import { AddMilestoneComponent } from './add-milestone.component';
 
-describe('EditCasseComponent', () => {
-  let component: EditCasseComponent;
-  let fixture: ComponentFixture<EditCasseComponent>;
+describe('AddMilestoneComponent', () => {
+  let component: AddMilestoneComponent;
+  let fixture: ComponentFixture<AddMilestoneComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [EditCasseComponent],
+      declarations: [AddMilestoneComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EditCasseComponent);
+    fixture = TestBed.createComponent(AddMilestoneComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

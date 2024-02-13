@@ -103,6 +103,8 @@ export class FileUploaderComponent implements ControlValueAccessor {
   @Input()
   isLoading!: boolean;
   @Input()
+  required = false;
+  @Input()
   withCredentials: any;
   @Input()
   invalidFileMessageDetail!: string;
@@ -173,13 +175,12 @@ export class FileUploaderComponent implements ControlValueAccessor {
     let allFilesValid = true;
 
     for (let i = 0; i < files.length; i++) {
-      if (!this.validate(files[i])){
+      if (!this.validate(files[i])) {
         allFilesValid = false;
       }
     }
 
-    if(allFilesValid){
-
+    if (allFilesValid) {
       this.onformchange.emit(files);
     }
   }
@@ -196,7 +197,7 @@ export class FileUploaderComponent implements ControlValueAccessor {
   }
 
   validate(file: File) {
-    if (file.size > 1e+7) {
+    if (file.size > 1e7) {
       this.invalidFileMessageDetail = 'File is too big!';
       return false;
     }
