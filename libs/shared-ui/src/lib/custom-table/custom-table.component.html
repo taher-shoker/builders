@@ -1,0 +1,69 @@
+<table mat-table [dataSource]="dataSource" matSort>
+  <div class="spinner-container" *ngIf="isLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header>
+      {{ col.label | translate }}
+    </th>
+    <td mat-cell *matCellDef="let element">
+      <div>
+        <div class="info-name" *ngIf="col.type !== 'date' && col.type !== 'actions'">
+          <div class="name">
+            <p>{{ element[col.key] ?? '-' }}</p>
+          </div>
+        </div>
+
+        <div class="info-name" *ngIf="col.type === 'date'">
+          <div class="name">
+            <p>{{ (element[col.key] | date : col.dateString) ?? '-' }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="col.type === 'actions'">
+          <div class="actions-row">
+            <button mat-button class="btn details" *ngFor="let action of col.actions"
+              (click)="raiseAction(element,action)">
+              <span class="{{action}}" *ngIf="action === 'edit'"><i class="fas fa-pencil-alt"></i></span>
+              <span class="{{action}}" *ngIf="action === 'delete'"><i class="far fa-trash-alt"></i>
+              </span>
+            </button>
+          </div>
+        </div>
+
+        <!-- <div class="btns-action justify-content-end" *ngSwitchCase="'actions'">
+          <button
+            mat-button
+            class="btn details"
+            (click)="detailsNavigate(element.id)"
+          >
+            {{ 'show_details' | translate }}
+          </button>
+        </div> -->
+        <!-- <span class="cell-text" *ngSwitchDefault>
+          {{ element[col.key] }}
+        </span> -->
+      </div>
+    </td>
+  </ng-container>
+  <tr class="mat-row" *matNoDataRow>
+    <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+      <div class="message-box">
+        <img src="assets/Group 590.png" alt="" />
+        <h3>{{ 'no_cases_yet' | translate }}</h3>
+        <p>{{ 'no_cases_msg' | translate }}</p>
+
+        <!-- <ng-container *ngIf="authService.getLoggedInUser()">
+          <stc-apps-button *ngIf="
+              authService.getLoggedInUser().roles.includes('CREATORS')
+            " [buttonText]="'Add new Case' | translate" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+            (btnClick)="addCasseNavigate()"></stc-apps-button>
+        </ng-container> -->
+      </div>
+    </td>
+  </tr>
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+<mat-paginator [length]="casesPagesCount" [pageSize]="10" [showFirstLastButtons]="true" [hidePageSize]="true">
+</mat-paginator>

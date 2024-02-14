@@ -1,43 +1,4 @@
 <div class="casses-settings">
-  <div class="top-info">
-    <div class="row">
-      <div class="col-md-4">
-
-        <stc-apps-counter-card [count]="0" [caption]="'registered_cases' | translate" [iconClass]="'fas fa-plus-square'" [iconBgColor]="'#a54ee1'"></stc-apps-counter-card>
-        <div class="static register">
-          <div class="icon">
-            <i class="fas fa-plus-square"></i>
-          </div>
-          <div class="static-info">
-            <div class="num">{{ totalRegisted }}</div>
-            <div class="title">{{ 'registered_cases' | translate }}</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="static pending">
-          <div class="icon">
-            <i class="far fa-clock"></i>
-          </div>
-          <div class="static-info">
-            <div class="num">{{ totalPending }}</div>
-            <div class="title">{{ 'pending_actions' | translate }}</div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4">
-        <div class="static in-progress">
-          <div class="icon">
-            <i class="fas fa-retweet"></i>
-          </div>
-          <div class="static-info">
-            <div class="num">{{ totalInProgress }}</div>
-            <div class="title">{{ 'inProgress_cases' | translate }}</div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
 
   <div class="row mt-4">
     <div class="col-md-8">
@@ -73,106 +34,13 @@
           </div>
         </div>
       </div>
-      <table mat-table [dataSource]="dataSource" matSort>
-        <div class="spinner-container" *ngIf="isLoading">
-          <mat-spinner></mat-spinner>
-        </div>
-        <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>
-            {{ col.label | translate }}
-          </th>
-          <td mat-cell *matCellDef="let element">
-            <div [ngSwitch]="col.key">
-              <div class="info-name" *ngSwitchCase="'customerName'">
-                <div class="name">
-                  <p>{{ element[col.key] }}</p>
-                  <small class="serial-number">{{ 'serial_number' | translate }}:
-                    {{ element.caseSerialNumber }}</small>
-                </div>
-              </div>
 
-              <div class="info-name" *ngSwitchCase="'caseStatus'">
-                <div class="case-status" [ngClass]="
-                    CasesService.getKeyByValue(CaseStatus, element[col.key])
-                  ">
-                  {{ element[col.key] | translate }}
-                </div>
-              </div>
-
-              <div class="info-name" *ngSwitchCase="'createdDate'">
-                <div class="name">
-                  <p>{{ element[col.key] | date : 'longDate'}}</p>
-                </div>
-              </div>
-
-              <div class="btns-action justify-content-end" *ngSwitchCase="'actions'">
-                <button mat-button class="btn details" (click)="detailsNavigate(element.id)">
-                  {{ 'show_details' | translate }}
-                </button>
-              </div>
-              <span class="cell-text" *ngSwitchDefault>
-                {{ element[col.key] }}
-              </span>
-            </div>
-          </td>
-        </ng-container>
-        <tr class="mat-row" *matNoDataRow>
-          <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-            <div class="message-box">
-              <img src="assets/Group 590.png" alt="" />
-              <h3>{{ 'no_cases_yet' | translate }}</h3>
-              <p>{{ 'no_cases_msg' | translate }}</p>
-
-              <ng-container *ngIf="authService.getLoggedInUser()">
-                <stc-apps-button *ngIf="
-                    authService.getLoggedInUser().roles.includes('CREATORS')
-                  " [buttonText]="'Add new Case' | translate" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
-                  (btnClick)="addCasseNavigate()"></stc-apps-button>
-              </ng-container>
-            </div>
-          </td>
-        </tr>
-        <!-- <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-        <div class="message-box">
-          <img src="assets/Group 597.png" alt="" />
-          <h3>Sorry !</h3>
-          <p>there are no data that match your search, please try again</p>
-          <stc-apps-button
-            [buttonText]="'Try another data sets'"
-            [buttonType]="'primary'"
-          ></stc-apps-button>
-        </div>
-      </td>
-    </tr> -->
-        <!-- <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-        <div class="message-box">
-          <img src="assets/Group 598.png" alt="" />
-          <h3>No network connection !</h3>
-          <p>Please connect to the network and try again</p>
-          <stc-apps-button
-            [buttonText]="'Try again'"
-            [buttonType]="'primary'"
-          ></stc-apps-button>
-        </div>
-      </td>
-    </tr> -->
-        <!-- <tr class="mat-row" *matError>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-        No data matching the filter.
-      </td>
-    </tr> -->
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      </table>
-      <mat-paginator [length]="casesPagesCount" [pageSize]="10" [showFirstLastButtons]="true" [hidePageSize]="true">
-      </mat-paginator>
+      <stc-apps-custom-table [dataSource]="tableData" [columnsSchema]="columnsSchema"
+        [pagesFetchedIndexes]="pagesFetchedIndexes" (pageIndexChange)="onPageIndexChange($event)"
+        (doAction)="tableAction($event)"></stc-apps-custom-table>
     </div>
     <div class="col-md-4">
       <stc-apps-items-list [caption]="'pending_actions'" [items]="allItems"></stc-apps-items-list>
-
-
     </div>
   </div>
 </div>
@@ -232,16 +100,13 @@
             [inputName]="'contact_number' | translate" formControlName="contactNumber"></stc-apps-input>
         </div>
         <div class="col-md-3">
-
           <stc-apps-select-drop-down [label]="'select_status' | translate" [options]="types" formControlName="status"
             [labelName]="'statusName'" [outputValue]="'statusName'"></stc-apps-select-drop-down>
-
         </div>
         <div class="col-md-3">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'type'"
             [inputName]="'type' | translate" formControlName="type"></stc-apps-input>
         </div>
-
       </div>
     </div>
     <div class="row">
@@ -257,4 +122,27 @@
       </div>
     </div>
   </form>
+</stc-apps-dialog>
+
+<stc-apps-dialog id="delete-modal">
+  <p class="text">
+    <span>{{ 'You&lsquo;re about to Remove Milestone , ' }} </span>
+    <strong>#{{ rowData?.id }}</strong>
+
+
+    <span> {{ ' Kindly note you can&lsquo;t roll back this action. Are you sure?' }}</span>
+  </p>
+
+  <div class="row mt-4">
+    <div class="col-md-4 offset-8">
+      <div class="d-flex justify-content-end">
+        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"></stc-apps-button>
+
+        <div class="mx-3"></div>
+        <!-- <stc-apps-button [buttonText]="'delete user'" [buttonType]="'primary'"
+          (btnClick)="confirmDelete()"></stc-apps-button> -->
+      </div>
+    </div>
+  </div>
 </stc-apps-dialog>
