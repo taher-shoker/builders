@@ -1,3 +1,4 @@
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -45,18 +46,46 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from './environments/environment';
 import { ItemsListComponent } from './items-list/items-list.component';
+import { CustomTableComponent } from './custom-table/custom-table.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
 
+const modules = [BreadCrumbModule, MatIconModule];
+
+const components = [
+  ButtonComponent,
+  HeaderComponent,
+  InputComponent,
+  BannerComponent,
+  FilterBoxComponent,
+  SelectDropDownComponent,
+  TableComponent,
+  FileUploaderComponent,
+  TextareaComponent,
+  DialogComponent,
+  DatePickerComponent,
+  ProgressCircleChartComponent,
+  LineChartComponent,
+  BarChartComponent,
+  DatePickerWeeklyComponent,
+  DatePickerRangeComponent,
+  DatePickerWeeklyRangeComponent,
+  LocaleDatePipe,
+  DonutChartComponent,
+  WeeklyLineChartComponent,
+  CounterCardComponent,
+  ItemsListComponent,
+  CustomTableComponent,
+];
+
 @NgModule({
   imports: [
     CommonModule,
     RouterModule,
-    TranslateModule,
+    // TranslateModule,
     LngSelectorModule,
-    BreadCrumbModule,
     ModeToggleModule,
     FormsModule,
     ReactiveFormsModule,
@@ -66,7 +95,6 @@ export function HttpLoaderFactory(http: HttpClient) {
     MatCheckboxModule,
     MatSortModule,
     MatFormFieldModule,
-    MatIconModule,
     MatDatepickerModule,
     MatInputModule,
     MomentDateModule,
@@ -80,58 +108,11 @@ export function HttpLoaderFactory(http: HttpClient) {
         deps: [HttpClient],
       },
     }),
+    MatProgressSpinnerModule,
   ],
-  declarations: [
-    ButtonComponent,
-    HeaderComponent,
-    InputComponent,
-    BannerComponent,
-    FilterBoxComponent,
-    SelectDropDownComponent,
-    TableComponent,
-    FileUploaderComponent,
-    TextareaComponent,
-    DialogComponent,
-    DatePickerComponent,
-    ProgressCircleChartComponent,
-    LineChartComponent,
-    BarChartComponent,
-    DatePickerWeeklyComponent,
-    DatePickerRangeComponent,
-    DatePickerWeeklyRangeComponent,
-    LocaleDatePipe,
-    DonutChartComponent,
-    WeeklyLineChartComponent,
-    CounterCardComponent,
-    ItemsListComponent
-  ],
-  exports: [
-    HeaderComponent,
-    BreadCrumbModule,
-    InputComponent,
-    ButtonComponent,
-    BannerComponent,
-    FilterBoxComponent,
-    SelectDropDownComponent,
-    TableComponent,
-    FileUploaderComponent,
-    TextareaComponent,
-    DialogComponent,
-    DatePickerComponent,
-    ProgressCircleChartComponent,
-    LineChartComponent,
-    BarChartComponent,
-    DatePickerWeeklyComponent,
-    DatePickerRangeComponent,
-    DatePickerWeeklyRangeComponent,
-    LocaleDatePipe,
-    DonutChartComponent,
-    MatIconModule,
-    WeeklyLineChartComponent,
-    CounterCardComponent,
-    ItemsListComponent
+  declarations: [...components],
+  exports: [...components, ...modules],
 
-  ],
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class SharedUiModule {}

@@ -1,13 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import {
-  Component,
-  AfterViewInit,
-  OnInit,
-  ViewChild,
-  OnDestroy,
-} from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
@@ -20,9 +12,13 @@ import {
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { CookieService } from 'ngx-cookie';
-import { Subscription, tap } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
 import { DashboardService } from '../../../../services/dashboard.service';
+import {
+  ActionEventData,
+  ColumnsSchema,
+} from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 
 export interface PeriodicElement {
   id: string;
@@ -34,42 +30,39 @@ export interface PeriodicElement {
   caseSerialNumber: string;
   existingPhoneNumber: string;
 }
-const COLUMNS_SCHEMA = [
-  {
-    key: 'customerName',
-    type: 'text',
-    label: 'Name',
-  },
 
+const COLUMNS_SCHEMA: ColumnsSchema[] = [
   {
-    key: 'city',
+    key: 'milestoneName',
     type: 'text',
-    label: 'city',
+    label: 'Milestone Name',
   },
   {
-    key: 'existingServiceOrder',
+    key: 'teamName',
     type: 'text',
-    label: 'Existing Service Order',
-  },
-  // {
-  //   key: 'existingPhoneNumber',
-  //   type: 'text',
-  //   label: 'Existing Phone Number',
-  // },
-  {
-    key: 'caseStatus',
-    type: 'text',
-    label: 'Case Status',
+    label: 'Team',
   },
   {
-    key: 'createdDate',
+    key: 'status',
     type: 'text',
-    label: 'created_at',
+    label: 'Status',
+  },
+  {
+    key: 'activityName',
+    type: 'text',
+    label: 'Activity',
+  },
+  {
+    key: 'startDate',
+    type: 'date',
+    dateString: 'longDate',
+    label: 'Started at',
   },
   {
     key: 'actions',
     type: 'actions',
-    label: '',
+    actions: ['edit', 'delete'],
+    label: 'actions',
   },
 ];
 
@@ -78,7 +71,7 @@ const COLUMNS_SCHEMA = [
   templateUrl: './casses.component.html',
   styleUrls: ['./casses.component.scss'],
 })
-export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class CassesComponent implements OnInit, OnDestroy {
   form!: FormGroup;
   isLoading = true;
   totalRegisted = 0;
@@ -88,7 +81,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
   readonly CaseStatus = CaseStatus;
   readonly TaskCicle = TaskCicle;
 
-  getCasesSub!: Subscription;
+  getMilestonesSub!: Subscription;
   userSub!: Subscription;
   getAssigneeTasks!: Subscription;
   formChangesSub!: Subscription;
@@ -108,7 +101,7 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     public router: Router,
     public route: ActivatedRoute,
     private bannerDataService: BannerDataService,
-    public CasesService: CasesService,
+    public milestonesService: CasesService,
     protected dialogService: DialogService,
     public authService: AuthService,
     private cookieService: CookieService,
@@ -125,18 +118,15 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   dataSource = new MatTableDataSource<PeriodicElement>();
 
-  @ViewChild(MatSort)
-  sort!: MatSort;
-  @ViewChild(MatPaginator, { static: true })
-  paginator!: MatPaginator;
   disabled = false;
-
+  tableData!: any;
+  rowData!: any;
   ngOnInit() {
-    this.populateInsightsCards();
-    this.getCassesListing();
-    this.fetchAssigneeTasks();
+    // this.populateInsightsCards();
+    // this.fetchAssigneeTasks();
+    this.getMilestones();
+
     this.bannerDataService.updateData({ title: 'd2d_fraud_cases', text: '' });
-    this.dataSource.paginator = this.paginator;
 
     this.dataSource.filterPredicate = (data, filter) =>
       data.caseSerialNumber == filter;
@@ -145,70 +135,50 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     this.dialogService.modals = [];
   }
 
+  onPageIndexChange(pageNum: number) {
+    if (!this.pagesFetchedIndexes.includes(pageNum)) {
+      this.pagesFetchedIndexes.push(pageNum);
+      this.getMilestonesSub = this.milestonesService
+        .getMilestones()
+        .subscribe((res: any) => {
+          this.populateMilestones(res);
+        });
+    }
+  }
+
   // previousPageIndex!: number;
   // nextPageIndex!: number;
+
   pagesFetchedIndexes: number[] = [0];
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-    this.paginator.page.subscribe((pageRes) => {
-      const formCopy = this.form.value;
+  populateMilestones(res: any) {
+    console.log('THE RES', res);
+    this.isLoading = false;
+    this.casesPagesCount = res.totalElements;
+    this.tableData = res;
 
-      console.log('THE STAT', this.form.value);
-      // formCopy.status ? formCopy.status = formCopy.status.statusName : formCopy.status == undefined ? formCopy.status = '' : formCopy.status = ''
-
-      console.log('page res is :', pageRes);
-
-      if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
-        this.pagesFetchedIndexes.push(pageRes.pageIndex);
-        this.getCasesSub = this.CasesService.getCases({
-          page: pageRes.pageIndex,
-          ...formCopy,
-        }).subscribe((res: any) => {
-          this.populateCases(res);
-        });
-      }
-    });
+    // if (res.first) {
+    //   this.pagesFetchedIndexes = [0];
+    // } else {
+    //   this.tableData = [...this.dataSource.data, ...res.content];
+    // }
   }
 
   detailsNavigate(id: string | number) {
     this.router.navigate(['./case_details', id], { relativeTo: this.route });
   }
-  getCassesListing() {
-    this.getCasesSub = this.CasesService.getCases().subscribe((res: any) => {
-      this.populateCases(res);
-    });
-  }
 
-  populateCases(res: any) {
-    console.log('THE RES', res);
-    this.isLoading = false;
-    this.casesPagesCount = res.totalElements;
-
-    if (res.first) {
-      this.dataSource.data = res.content;
-      this.pagesFetchedIndexes = [0];
-    } else {
-      this.dataSource.data = [...this.dataSource.data, ...res.content];
+  tableAction(actionData: ActionEventData) {
+    if (actionData.actionType === 'edit') {
+      this.router.navigate([`./edit-milestone/${actionData.row?.id}`]);
+    } else if (actionData.actionType === 'delete') {
+      this.rowData = actionData.row;
+      this.dialogService.open('delete-modal');
     }
-
-    // this.totalRegisted = res.content.filter(
-    //   (d: any) => d.caseStatus === CaseStatus.registered
-    // ).length;
-    // this.totalInProgress = res.content.filter(
-    //   (d: any) => d.caseStatus === CaseStatus.inprogress
-    // ).length;
-    // this.totalPending = res.content.filter(
-    //   (d: any) => d.caseStatus === CaseStatus.pending
-    // ).length;
-    // this.totalClosed = res.content.filter(
-    //   (d: any) => d.caseStatus === CaseStatus.closed
-    // ).length;
   }
 
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
-
   populateInsightsCards() {
     this.dashboardService
       .getInsightsCards(
@@ -234,11 +204,15 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
         ? JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '')
         : this.authService.getLoggedInUser();
 
-      this.getAssigneeTasks = this.CasesService.getAssigneeTasks(
-        currentUser.email
-      ).subscribe((res: any) => {
-        this.allItems = this.utils.sorter(res.data, 'caseSerialNumber', 'DESC');
-      });
+      this.getAssigneeTasks = this.milestonesService
+        .getAssigneeTasks(currentUser.email)
+        .subscribe((res: any) => {
+          this.allItems = this.utils.sorter(
+            res.data,
+            'caseSerialNumber',
+            'DESC'
+          );
+        });
     });
   }
 
@@ -302,19 +276,19 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
         ?.value?.format('DD/MM/YYYY');
     }
 
-    this.getCasesSub = this.CasesService.getCases(formCopy).subscribe(
-      (res: any) => {
+    this.getMilestonesSub = this.milestonesService
+      .getMilestones()
+      .subscribe((res: any) => {
         this.dialogService.close();
         // this.isLoading = false;
         // this.dataSource.data = res.content;
-        this.populateCases(res);
-      }
-    );
+        this.populateMilestones(res);
+      });
   }
   clearFormFilter() {
     this.form.reset();
     this.dialogService.close();
-    this.getCassesListing();
+    this.getMilestones();
   }
 
   produceDate(month: string, day: string, year: string) {
@@ -344,8 +318,16 @@ export class CassesComponent implements OnInit, AfterViewInit, OnDestroy {
     return finalDate;
   }
 
+  getMilestones() {
+    this.getMilestonesSub = this.milestonesService
+      .getMilestones()
+      .subscribe((res: any) => {
+        this.populateMilestones(res);
+      });
+  }
+
   ngOnDestroy(): void {
-    this.getCasesSub?.unsubscribe();
+    this.getMilestonesSub?.unsubscribe();
     this.userSub?.unsubscribe();
     this.getAssigneeTasks?.unsubscribe();
     this.formChangesSub?.unsubscribe();

@@ -32,7 +32,6 @@ export interface Team {
 })
 export class CasesService {
   baseUrl = environment.apiUrl;
-  dtUrl = `${this.baseUrl}/dt-milestone-service`;
   adminUrl = `${this.baseUrl}/admin`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
 
@@ -79,46 +78,44 @@ export class CasesService {
   }
 
   createMilestone(data: any) {
-    return this.http.post(`${this.dtUrl}/milestones/add`, data);
+    return this.http.post(`${this.baseUrl}/milestones/add`, data);
   }
   addBulkData(data: FormData, relatedTeam: string) {
     const params = new HttpParams().set('relatedTeam', relatedTeam);
 
-    return this.http.post(`${this.dtUrl}/milestones/bulk/upload`, data, {
+    return this.http.post(`${this.baseUrl}/milestones/bulk/upload`, data, {
       params,
     });
   }
-  getCases(filterData?: any) {
-    return this.http.get(`${this.dtUrl}/d2dCase/search`, {
-      params: filterData,
-    });
+  getMilestones() {
+    return this.http.get(`${this.baseUrl}/milestones`);
   }
 
   getCase(id: string) {
     const options = {};
-    return this.http.get<Case>(`${this.dtUrl}/d2dCase/${id}`, options);
+    return this.http.get<Case>(`${this.baseUrl}/d2dCase/${id}`, options);
   }
 
   updateCase(id: string, data: any) {
     const options = {};
 
-    return this.http.put(`${this.dtUrl}/${id}`, data, options);
+    return this.http.put(`${this.baseUrl}/${id}`, data, options);
   }
 
   deleteCase(id: string) {
     const options = {};
-    return this.http.delete(`${this.dtUrl}/${id}`, options);
+    return this.http.delete(`${this.baseUrl}/${id}`, options);
   }
 
   getAssigneeTasks(userEmail: string) {
-    return this.http.get(`${this.dtUrl}/cwf/task/user/${userEmail}`);
+    return this.http.get(`${this.baseUrl}/cwf/task/user/${userEmail}`);
   }
 
   getTaskByCaseId(caseId: number) {
-    return this.http.get(`${this.dtUrl}/cwf/task/${caseId}`);
+    return this.http.get(`${this.baseUrl}/cwf/task/${caseId}`);
   }
   updateCaseTask(caseId: number, taskId: number, data: any) {
-    return this.http.post(`${this.dtUrl}/cwf/task/${caseId}/${taskId}`, data);
+    return this.http.post(`${this.baseUrl}/cwf/task/${caseId}/${taskId}`, data);
   }
 
   uploadFile(data: any) {
