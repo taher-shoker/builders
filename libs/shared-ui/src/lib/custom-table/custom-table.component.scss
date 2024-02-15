@@ -1,4 +1,10 @@
-@import '../../../../styles/src/scss/core/variables/colors';
+.edit-icon {
+  color: green;
+}
+
+.del-icon {
+  color: red;
+}
 
 table {
   td {
@@ -8,28 +14,37 @@ table {
       max-width: 200px;
     }
   }
-  .actions-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-  }
-  .btn {
-    &:focus {
-      border-color: transparent;
-      outline: unset;
-    }
-    i {
-      padding-inline-start: 0;
-    }
-    .edit {
-      i {
-        color: $greyColor;
-      }
-    }
-    .delete {
-      i {
-        color: $redColor;
-      }
-    }
-  }
 }
+// table {
+//   td {
+//     max-width: 140px;
+//     word-wrap: break-word;
+//     &.mat-column-actions {
+//       max-width: 200px;
+//     }
+//   }
+//   .actions-row {
+//     display: flex;
+//     align-items: center;
+//     justify-content: space-around;
+//   }
+//   .btn {
+//     &:focus {
+//       border-color: transparent;
+//       outline: unset;
+//     }
+//     i {
+//       padding-inline-start: 0;
+//     }
+//     .edit {
+//       i {
+//         color: var(--grey-color);
+//       }
+//     }
+//     .delete {
+//       i {
+//         color: var(--stc-red-color);
+//       }
+//     }
+//   }
+// }

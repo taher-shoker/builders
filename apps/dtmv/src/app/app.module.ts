@@ -27,13 +27,12 @@ import { AppRoutingModule } from './app-routing.module';
 
 import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
 import { HomeModule } from './views/home/home.module';
-import { LoginComponent } from './views/login/login.component';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
-import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
 import { environment } from '../environments/environment';
 import { CookieModule } from 'ngx-cookie';
 import { ReportingService } from './services/reporting.service';
 import { AppInitService } from './services/app-init.service';
+import { MatDialogModule } from '@angular/material/dialog';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -46,7 +45,7 @@ export function initializeApp(appInitService: AppInitService) {
 }
 
 @NgModule({
-  declarations: [AppComponent, LoginComponent, UnauthorizedPageComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
@@ -71,6 +70,7 @@ export function initializeApp(appInitService: AppInitService) {
     }),
     ToastrModule.forRoot(),
     CookieModule.withOptions(),
+    MatDialogModule
   ],
   providers: [
     AppInitService,
@@ -93,6 +93,6 @@ export function initializeApp(appInitService: AppInitService) {
     },
   ],
   bootstrap: [AppComponent],
-  exports: [UnauthorizedPageComponent],
+  exports: [],
 })
 export class AppModule {}
