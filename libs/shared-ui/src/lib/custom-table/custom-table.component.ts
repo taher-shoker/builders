@@ -4,8 +4,10 @@ import {
   Component,
   EventEmitter,
   Input,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
@@ -25,80 +27,71 @@ export interface ColumnsSchema {
   actions?: ('edit' | 'delete')[];
 }
 
-enum CaseStatus {
-  registered = <any>'Registered',
-  pending = <any>'Pending',
-  inprogress = <any>'In Progress',
-  closed = <any>'Closed',
-}
+// enum CaseStatus {
+//   registered = <any>'Registered',
+//   pending = <any>'Pending',
+//   inprogress = <any>'In Progress',
+//   closed = <any>'Closed',
+// }
 
 @Component({
   selector: 'stc-apps-custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
 })
-export class CustomTableComponent implements OnInit, AfterViewInit {
+export class CustomTableComponent implements OnInit, OnChanges {
   @Output() pageIndexChange: EventEmitter<number> = new EventEmitter<number>();
-  @Output() doAction: EventEmitter<ActionEventData> =
-    new EventEmitter<ActionEventData>();
+  @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
+    new EventEmitter<{ value: string; dataRow: any }>();
 
-  @Input({ required: true }) dataSource: MatTableDataSource<any> =
-    new MatTableDataSource<any>();
+  @Input({ required: true }) data: any;
+
   @Input({ required: true }) columnsSchema!: ColumnsSchema[];
   @Input() pagesFetchedIndexes: number[] = [0];
+  @Input() detailsRoute?: string;
 
+  dataSource!: MatTableDataSource<any>;
   isLoading = true;
 
   displayedColumns!: string[];
 
-  readonly caseStatus = CaseStatus;
+  // readonly caseStatus = CaseStatus;
 
   casesPagesCount: number = 0;
-  // @ViewChild(MatSort)
-  // sort!: MatSort;
-  // @ViewChild(MatPaginator, { static: true })
-  // paginator!: MatPaginator;
 
-  @ViewChild(MatSort, { static: true })
-  set sort(value: MatSort) {
-    if (value) this.dataSource.sort = value;
-  }
-
-  @ViewChild(MatPaginator, { static: true })
-  set paginator(value: MatPaginator) {
-    if (value) {
-      this.dataSource.paginator = value;
-    }
-  }
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data']) {
+      this.data = changes['data'].currentValue;
+      this.dataSource = new MatTableDataSource<any>(this.data);
+      this.dataSource.sort = this.sort;
+
+      this.dataSource.paginator = this.paginator;
+
+      if (this.paginator) {
+        this.paginator.page.subscribe((pageRes) => {
+          if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
+            this.pagesFetchedIndexes.push(pageRes.pageIndex);
+            this.pageIndexChange.emit(pageRes.pageIndex);
+          }
+        });
+      }
+    }
+  }
+
   ngOnInit(): void {
     this.displayedColumns = this.columnsSchema.map((col) => col.key);
-    // this.dataSource.paginator = this.paginator;
   }
 
-  // eslint-disable-next-line @angular-eslint/no-empty-lifecycle-method
-  ngAfterViewInit() {
-    //this.dataSource.sort = this.sort;
-    // this.paginator.page.subscribe((pageRes) => {
-    //   if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
-    //     this.pagesFetchedIndexes.push(pageRes.pageIndex);
-    //     this.pageIndexChange.emit(pageRes.pageIndex);
-    //   }
-    // });
-  }
-
-  getKeyByValue(obj: any, status: string) {
-    return Object.keys(obj)[Object.values(obj).indexOf(status)];
-  }
-
-  raiseAction(row: any, actionType: string) {
-    const data = { row, actionType };
-    this.doAction.emit(data);
+  raiseAction(value: string, dataRow: any) {
+    this.doAction.emit({ value, dataRow });
   }
 
   detailsNavigate(id: string | number) {
-    this.router.navigate(['./case_details', id], { relativeTo: this.route }); //TODO: Make it dynamic or globalize the details page among all apps to one known url string.
+    this.router.navigate([`./${this.detailsRoute}`, id], { relativeTo: this.route });
   }
 }

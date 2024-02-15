@@ -1,11 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouteReuseStrategy, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './views/home/home.component';
-import { LoginComponent } from './views/login/login.component';
-import { UnauthorizedPageComponent } from './views/unauthorized-page/unauthorized-page.component';
-import { AppRouteReuseStrategy } from './views/users-settings/AppRouteReuseStrategy';
-import { reportingGuard } from './services/guards/reporting.guard';
 
 // Import Containers
 
@@ -14,16 +10,6 @@ const routes: Routes = [
   {
     path: '',
     component: HomeComponent,
-  },
-  {
-    path: 'login',
-    component: LoginComponent,
-  },
-  {
-    path: 'unauthorized-page',
-    data: { breadcrumb: '' },
-    component: UnauthorizedPageComponent,
-    // canActivate: [AuthGuard],
   },
 ];
 @NgModule({
@@ -34,6 +20,6 @@ const routes: Routes = [
     }),
   ],
   exports: [RouterModule],
-  providers: [{ provide: RouteReuseStrategy, useClass: AppRouteReuseStrategy }],
+  providers: [],
 })
 export class AppRoutingModule {}

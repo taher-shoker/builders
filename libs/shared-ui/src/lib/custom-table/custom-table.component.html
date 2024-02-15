@@ -20,13 +20,27 @@
           </div>
         </div>
 
-        <div *ngIf="col.type === 'actions'">
-          <div class="actions-row">
-            <button mat-button class="btn details" *ngFor="let action of col.actions"
-              (click)="raiseAction(element,action)">
-              <span class="{{action}}" *ngIf="action === 'edit'"><i class="fas fa-pencil-alt"></i></span>
-              <span class="{{action}}" *ngIf="action === 'delete'"><i class="far fa-trash-alt"></i>
-              </span>
+        <div class="info-name" *ngIf="col.type === 'actions'">
+          <div class="actions-row d-flex">
+            <button
+              class="btn details p-1"
+              *ngFor="let action of col.actions"
+              (click)="raiseAction(action, element)"
+            >
+              @if(action === 'edit'){
+              <i class="ri-edit-box-line edit-icon"></i>
+              } @else if (action === 'delete') {
+              <i class="ri-delete-bin-line del-icon"></i>
+              }
+
+              <!-- <ng-container *ngIf="action === 'edit'">
+                <i class="ri-edit-box-line edit-icon p-1"></i>
+              </ng-container>
+
+              <ng-container *ngIf="action === 'delete'">
+                <i class="ri-delete-bin-line del-icon p-1"></i>
+              </ng-container> -->
+
             </button>
           </div>
         </div>
