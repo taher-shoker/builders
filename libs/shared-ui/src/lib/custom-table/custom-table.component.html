@@ -8,7 +8,10 @@
     </th>
     <td mat-cell *matCellDef="let element">
       <div>
-        <div class="info-name" *ngIf="col.type !== 'date' && col.type !== 'actions'">
+        <div
+          class="info-name"
+          *ngIf="col.type !== 'date' && col.type !== 'actions'"
+        >
           <div class="name">
             <p>{{ element[col.key] ?? '-' }}</p>
           </div>
@@ -22,41 +25,32 @@
 
         <div class="info-name" *ngIf="col.type === 'actions'">
           <div class="actions-row d-flex">
-            <button
-              class="btn details p-1"
-              *ngFor="let action of col.actions"
-              (click)="raiseAction(action, element)"
-            >
-              @if(action === 'edit'){
-              <i class="ri-edit-box-line edit-icon"></i>
-              } @else if (action === 'delete') {
-              <i class="ri-delete-bin-line del-icon"></i>
-              }
+            @if((col.actions ?? []).length > 2){
 
-              <!-- <ng-container *ngIf="action === 'edit'">
-                <i class="ri-edit-box-line edit-icon p-1"></i>
-              </ng-container>
+            <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
+              <i class="ri-more-2-fill"></i>
+            </span>
+            <mat-menu #menu="matMenu">
+              <div class="d-flex menu-btns-wrapper">
+                <ng-container
+                  *ngTemplateOutlet="
+                    btnsTemp;
+                    context: { col: col, element: element }
+                  "
+                ></ng-container>
+              </div>
+            </mat-menu>
 
-              <ng-container *ngIf="action === 'delete'">
-                <i class="ri-delete-bin-line del-icon p-1"></i>
-              </ng-container> -->
-
-            </button>
+            } @else {
+            <ng-container
+              *ngTemplateOutlet="
+                btnsTemp;
+                context: { col: col, element: element }
+              "
+            ></ng-container>
+            }
           </div>
         </div>
-
-        <!-- <div class="btns-action justify-content-end" *ngSwitchCase="'actions'">
-          <button
-            mat-button
-            class="btn details"
-            (click)="detailsNavigate(element.id)"
-          >
-            {{ 'show_details' | translate }}
-          </button>
-        </div> -->
-        <!-- <span class="cell-text" *ngSwitchDefault>
-          {{ element[col.key] }}
-        </span> -->
       </div>
     </td>
   </ng-container>
@@ -66,18 +60,31 @@
         <img src="assets/Group 590.png" alt="" />
         <h3>{{ 'no_cases_yet' | translate }}</h3>
         <p>{{ 'no_cases_msg' | translate }}</p>
-
-        <!-- <ng-container *ngIf="authService.getLoggedInUser()">
-          <stc-apps-button *ngIf="
-              authService.getLoggedInUser().roles.includes('CREATORS')
-            " [buttonText]="'Add new Case' | translate" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
-            (btnClick)="addCasseNavigate()"></stc-apps-button>
-        </ng-container> -->
       </div>
     </td>
   </tr>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
-<mat-paginator [length]="casesPagesCount" [pageSize]="10" [showFirstLastButtons]="true" [hidePageSize]="true">
+<mat-paginator
+  [length]="pagesCount"
+  [pageSize]="10"
+  [showFirstLastButtons]="true"
+  [hidePageSize]="true"
+>
 </mat-paginator>
+
+<ng-template #btnsTemp let-col="col" let-element="element">
+  @for(action of col?.actions; track action){
+
+  <span class="btn details p-1" (click)="raiseAction(action, element)">
+    @if(action === 'edit'){
+    <i class="ri-edit-box-line edit-icon"></i>
+    } @else if (action === 'delete') {
+    <i class="ri-delete-bin-line del-icon"></i>
+    }@else if(action === 'details'){
+      <i class="ri-arrow-right-up-line"></i>
+    }
+  </span>
+  }
+</ng-template>

@@ -47,6 +47,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from './environments/environment';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -109,6 +110,7 @@ const components = [
       },
     }),
     MatProgressSpinnerModule,
+    MatMenuModule
   ],
   declarations: [...components],
   exports: [...components, ...modules],

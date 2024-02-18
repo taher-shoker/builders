@@ -24,7 +24,7 @@ export interface ColumnsSchema {
   type: 'text' | 'date' | 'actions';
   label: string;
   dateString?: 'longDate';
-  actions?: ('edit' | 'delete')[];
+  actions?: ('edit' | 'delete' | 'details')[];
 }
 
 // enum CaseStatus {
@@ -48,6 +48,7 @@ export class CustomTableComponent implements OnInit, OnChanges {
 
   @Input({ required: true }) columnsSchema!: ColumnsSchema[];
   @Input() pagesFetchedIndexes: number[] = [0];
+  @Input() pagesCount!: number;
   @Input() detailsRoute?: string;
 
   dataSource!: MatTableDataSource<any>;
@@ -55,30 +56,42 @@ export class CustomTableComponent implements OnInit, OnChanges {
 
   displayedColumns!: string[];
 
-  // readonly caseStatus = CaseStatus;
-
-  casesPagesCount: number = 0;
-
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data']) {
-      this.data = changes['data'].currentValue;
-      this.dataSource = new MatTableDataSource<any>(this.data);
-      this.dataSource.sort = this.sort;
+  paginatorAndSortSet: boolean = false;
 
+  setPaginatorAndSortOnce(changesPagesCounts: number) {
+      this.dataSource.sort = this.sort;
       this.dataSource.paginator = this.paginator;
 
+      setTimeout(() => {
+        this.pagesCount = changesPagesCounts;
+      },1000)
+      
       if (this.paginator) {
         this.paginator.page.subscribe((pageRes) => {
+          console.log("Page flipped to num:",pageRes )
           if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
             this.pagesFetchedIndexes.push(pageRes.pageIndex);
             this.pageIndexChange.emit(pageRes.pageIndex);
           }
         });
+        this.paginatorAndSortSet = true;
+      }
+
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    console.log('changes', changes);
+
+    if (changes['data']) {
+      this.data = changes['data'].currentValue;
+      this.dataSource = new MatTableDataSource<any>(this.data);
+      if(!this.paginatorAndSortSet){
+        this.setPaginatorAndSortOnce(changes['pagesCount'].currentValue);
       }
     }
   }
@@ -92,6 +105,8 @@ export class CustomTableComponent implements OnInit, OnChanges {
   }
 
   detailsNavigate(id: string | number) {
-    this.router.navigate([`./${this.detailsRoute}`, id], { relativeTo: this.route });
+    this.router.navigate([`./${this.detailsRoute}`, id], {
+      relativeTo: this.route,
+    });
   }
 }

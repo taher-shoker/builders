@@ -82,8 +82,10 @@ export class MilestonesService {
       params,
     });
   }
-  getMilestones() {
-    return this.http.get(`${this.baseUrl}/milestones`);
+  getMilestones(filterData?: any) {
+    return this.http.get(`${this.baseUrl}/milestones`, {
+      params: filterData,
+    });
   }
 
   getMilestone(id: string) {
