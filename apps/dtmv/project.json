@@ -94,10 +94,10 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "dtmv:build:production"
+          "buildTarget": "dtmv:build:production"
         },
         "development": {
-          "browserTarget": "dtmv:build:development"
+          "buildTarget": "dtmv:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -105,7 +105,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "dtmv:build"
+        "buildTarget": "dtmv:build"
       }
     },
     "lint": {

@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -25,12 +25,20 @@ export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http);
 }
 
+export const provideTranslation = () => ({
+  defaultLanguage: 'en',
+  loader: {
+    provide: TranslateLoader,
+    useFactory: HttpLoaderFactory,
+    deps: [HttpClient],
+  },
+});
+
 export function initializeDTApp(appInitService: AppInitService) {
   return (): Promise<any> => {
     return appInitService.Init();
   };
 }
-
 
 @NgModule({
   declarations: [AppComponent, HomeComponent],
@@ -39,13 +47,7 @@ export function initializeDTApp(appInitService: AppInitService) {
     BrowserAnimationsModule,
     HttpClientModule,
     SharedUiModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
+    TranslateModule,
     ToastrModule.forRoot(),
     RouterModule.forRoot(appRoutes, { useHash: true }),
     CookieModule.withOptions(),
@@ -53,6 +55,10 @@ export function initializeDTApp(appInitService: AppInitService) {
   providers: [
     ReportingService,
     AppInitService,
+    importProvidersFrom([
+      HttpClientModule,
+      TranslateModule.forRoot(provideTranslation()),
+    ]),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,

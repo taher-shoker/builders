@@ -1,4 +1,4 @@
-import { APP_INITIALIZER, NgModule } from '@angular/core';
+import { APP_INITIALIZER, NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -37,7 +37,14 @@ import { MatDialogModule } from '@angular/material/dialog';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
-
+export const provideTranslation = () => ({
+  defaultLanguage: 'en',
+  loader: {
+    provide: TranslateLoader,
+    useFactory: HttpLoaderFactory,
+    deps: [HttpClient],
+  },
+});
 export function initializeApp(appInitService: AppInitService) {
   return (): Promise<any> => {
     return appInitService.Init();
@@ -61,20 +68,18 @@ export function initializeApp(appInitService: AppInitService) {
     MomentDateModule,
     MatMomentDateModule,
     HomeModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
+    TranslateModule,
     ToastrModule.forRoot(),
     CookieModule.withOptions(),
-    MatDialogModule
+    MatDialogModule,
   ],
   providers: [
     AppInitService,
     ReportingService,
+    importProvidersFrom([
+      HttpClientModule,
+      TranslateModule.forRoot(provideTranslation()),
+    ]),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,

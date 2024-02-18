@@ -1,5 +1,5 @@
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgModule } from '@angular/core';
+import { NgModule, importProvidersFrom } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -42,7 +42,7 @@ import { LocaleDatePipe } from './locale.date/locale.date.pipe';
 import { DonutChartComponent } from './donut-chart/donut-chart.component';
 import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.component';
 import { CounterCardComponent } from './counter-card/counter-card.component';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from './environments/environment';
 import { ItemsListComponent } from './items-list/items-list.component';
@@ -80,6 +80,14 @@ const components = [
   CustomTableComponent,
 ];
 
+export const provideTranslation = () => ({
+  defaultLanguage: 'en',
+  loader: {
+    provide: TranslateLoader,
+    useFactory: HttpLoaderFactory,
+    deps: [HttpClient],
+  },
+});
 @NgModule({
   imports: [
     CommonModule,
@@ -101,18 +109,18 @@ const components = [
     MatMomentDateModule,
     MatNativeDateModule,
     MatExpansionModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
+    TranslateModule,
     MatProgressSpinnerModule,
   ],
   declarations: [...components],
   exports: [...components, ...modules],
 
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  providers: [
+    importProvidersFrom([
+      HttpClientModule,
+      TranslateModule.forRoot(provideTranslation()),
+    ]),
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+  ],
 })
 export class SharedUiModule {}

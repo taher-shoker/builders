@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -39,6 +39,14 @@ export function HttpLoaderFactory(http: HttpClient) {
   );
 }
 
+export const provideTranslation = () => ({
+  defaultLanguage: 'en',
+  loader: {
+    provide: TranslateLoader,
+    useFactory: HttpLoaderFactory,
+    deps: [HttpClient],
+  },
+});
 @NgModule({
   declarations: [
     AppComponent,
@@ -61,17 +69,15 @@ export function HttpLoaderFactory(http: HttpClient) {
     HttpClientModule,
     SharedUiModule,
     UsersSettingsModule,
-    TranslateModule.forRoot({
-      loader: {
-        provide: TranslateLoader,
-        useFactory: HttpLoaderFactory,
-        deps: [HttpClient],
-      },
-    }),
+    TranslateModule,
     ToastrModule.forRoot(),
     CookieModule.withOptions(),
   ],
   providers: [
+    importProvidersFrom([
+      HttpClientModule,
+      TranslateModule.forRoot(provideTranslation()),
+    ]),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,

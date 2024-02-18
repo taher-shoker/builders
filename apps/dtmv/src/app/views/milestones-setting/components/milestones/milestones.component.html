@@ -35,16 +35,12 @@
         </div>
       </div>
 
-      <stc-apps-custom-table
-        [data]="tableData"
-        [columnsSchema]="columnsSchema"
-        [pagesFetchedIndexes]="pagesFetchedIndexes"
-        (pageIndexChange)="onPageIndexChange($event)"
-        (doAction)="tableAction($event)"
-      ></stc-apps-custom-table>
+      <stc-apps-custom-table [data]="tableData" [columnsSchema]="columnsSchema"
+        [pagesFetchedIndexes]="pagesFetchedIndexes" (pageIndexChange)="onPageIndexChange($event)"
+        (doAction)="tableAction($event)"></stc-apps-custom-table>
     </div>
     <div class="col-md-4">
-      <stc-apps-items-list [caption]="'pending_actions'" [items]="allItems"></stc-apps-items-list>
+      <stc-apps-items-list [caption]="'pending_actions' |translate" [items]="allItems"></stc-apps-items-list>
     </div>
   </div>
 </div>
