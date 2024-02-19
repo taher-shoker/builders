@@ -15,10 +15,6 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 
-export interface ActionEventData {
-  row: any;
-  actionType: string;
-}
 export interface ColumnsSchema {
   key: string;
   type: 'text' | 'date' | 'actions';
@@ -27,19 +23,15 @@ export interface ColumnsSchema {
   actions?: ('edit' | 'delete' | 'details')[];
 }
 
-// enum CaseStatus {
-//   registered = <any>'Registered',
-//   pending = <any>'Pending',
-//   inprogress = <any>'In Progress',
-//   closed = <any>'Closed',
-// }
-
 @Component({
   selector: 'stc-apps-custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
 })
 export class CustomTableComponent implements OnInit, OnChanges {
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort;
+  
   @Output() pageIndexChange: EventEmitter<number> = new EventEmitter<number>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
@@ -52,37 +44,21 @@ export class CustomTableComponent implements OnInit, OnChanges {
   @Input() detailsRoute?: string;
 
   dataSource!: MatTableDataSource<any>;
-  isLoading = true;
 
   displayedColumns!: string[];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  isLoading = true;
+  page = 1;
+  pageSize = 10;
+  totalCount = 0;
+
+
+
+  // pagesCountSet: boolean = false;
 
   constructor(private router: Router, private route: ActivatedRoute) {}
 
   paginatorAndSortSet: boolean = false;
-
-  setPaginatorAndSortOnce(changesPagesCounts: number) {
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
-
-      setTimeout(() => {
-        this.pagesCount = changesPagesCounts;
-      },1000)
-      
-      if (this.paginator) {
-        this.paginator.page.subscribe((pageRes) => {
-          console.log("Page flipped to num:",pageRes )
-          if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
-            this.pagesFetchedIndexes.push(pageRes.pageIndex);
-            this.pageIndexChange.emit(pageRes.pageIndex);
-          }
-        });
-        this.paginatorAndSortSet = true;
-      }
-
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
     console.log('changes', changes);
@@ -90,7 +66,8 @@ export class CustomTableComponent implements OnInit, OnChanges {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       this.dataSource = new MatTableDataSource<any>(this.data);
-      if(!this.paginatorAndSortSet){
+
+      if (!this.paginatorAndSortSet) {
         this.setPaginatorAndSortOnce(changes['pagesCount'].currentValue);
       }
     }
@@ -100,6 +77,28 @@ export class CustomTableComponent implements OnInit, OnChanges {
     this.displayedColumns = this.columnsSchema.map((col) => col.key);
   }
 
+  
+  setPaginatorAndSortOnce(changesPagesCounts: number) {
+    this.dataSource.sort = this.sort;
+    this.dataSource.paginator = this.paginator;
+
+    setTimeout(() => {
+      this.pagesCount = changesPagesCounts;
+    }, 1000);
+
+    if (this.paginator) {
+      this.paginator.page.subscribe((pageRes) => {
+        console.log('Page flipped to num:', pageRes);
+        if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
+          this.pagesFetchedIndexes.push(pageRes.pageIndex);
+          this.pageIndexChange.emit(pageRes.pageIndex);
+        }
+      });
+      this.paginatorAndSortSet = true;
+    }
+  }
+
+  
   raiseAction(value: string, dataRow: any) {
     this.doAction.emit({ value, dataRow });
   }

@@ -20,6 +20,7 @@ import {
   MilestonesService,
 } from '../../milestones.service';
 import { TranslateService } from '@ngx-translate/core';
+import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 
 export interface PeriodicElement {
   id: string;
@@ -108,7 +109,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     private cookieService: CookieService,
     public utils: UtilsService,
     private matDialog: MatDialog,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private utilities: UtilitiesService
   ) {}
 
   allItems!: Task[];
@@ -139,12 +141,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   onPageIndexChange(pageNum: number) {
-    const formCopy = this.form.value;
+    const filteredForm = this.utilities.filterObject(this.form.value);
 
     this.getMilestonesSub = this.milestonesService
       .getMilestones({
         page: pageNum,
-        ...formCopy,
+        ...filteredForm,
       })
       .subscribe((res: any) => {
         console.log('IN PARENT ID:', pageNum);
@@ -238,9 +240,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       relativeTo: this.route,
     });
   }
+
   toggleFilter() {
     this.dialogService.open('filter-Modal');
   }
+
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
@@ -266,31 +270,17 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const formCopy = this.form.value;
-    console.log('THE STAT', this.form.value);
-
-    // formCopy.status = formCopy.status.statusName;
-    // if (formCopy.status === undefined) {
-    //   formCopy.status = '';
-    // }
-
-    // if (formCopy.activationDate == undefined) {
-    //   formCopy.activationDate = '';
-    // } else if (formCopy.activationDate !== '') {
-    //   formCopy.activationDate = this.form
-    //     .get('activationDate')
-    //     ?.value?.format('DD/MM/YYYY');
-    // }
+    const filteredForm = this.utilities.filterObject(this.form.value);
+    console.log('filteredForm', filteredForm);
 
     this.getMilestonesSub = this.milestonesService
-      .getMilestones(this.form.value)
+      .getMilestones(filteredForm)
       .subscribe((res: any) => {
         this.dialogService.close();
-        // this.isLoading = false;
-        // this.dataSource.data = res.content;
         this.populateMilestones(res);
       });
   }
+
   clearFormFilter() {
     this.form.reset();
     this.dialogService.close();
