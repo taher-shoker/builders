@@ -3,4 +3,5 @@ export interface NavItem {
   url?: string;
   icon?: string;
   urlHome?: string;
+  isExtrnal?: boolean;
 }

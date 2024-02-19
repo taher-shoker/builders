@@ -11,10 +11,10 @@
             [inputId]="'activityName'" [inputName]="'Activity Name'" formControlName="activityName"></stc-apps-input>
         </div>
         <div class="col-md-4" *ngIf="!milestonesService.isDTDirector">
-          <!-- <stc-apps-select-drop-down [label]="'Related Team'" [options]="allTeams" formControlName="teamName"
-            [selectId]="selectedTeam || null"></stc-apps-select-drop-down> -->
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'relatedTeam'"
-            [inputName]="'Related Team'" formControlName="teamName"></stc-apps-input>
+          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Related Team'" [options]="allTeams"
+            [required]="true" formControlName="teamName" [outputValue]="'name'"></stc-apps-select-drop-down>
+          <!-- <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'relatedTeam'"
+            [inputName]="'Related Team'" formControlName="teamName"></stc-apps-input> -->
         </div>
 
       </div>

@@ -29,7 +29,7 @@ export class HeaderComponent {
   constructor(private renderer: Renderer2) {
     this.renderer.listen('window', 'click', (e: Event) => {
       if (e.target === this.menu.nativeElement) {
-        return;
+        this.showMenu = false;
       }
 
       if (e.target !== this.toggleButton.nativeElement) {

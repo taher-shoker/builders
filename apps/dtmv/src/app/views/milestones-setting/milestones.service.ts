@@ -33,6 +33,7 @@ export interface Team {
 export class MilestonesService {
   baseUrl = environment.apiUrl;
   adminUrl = `${this.baseUrl}/admin`;
+  dtUrl = `${this.baseUrl}/dt-milestone-service/milestones`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
 
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
@@ -42,6 +43,8 @@ export class MilestonesService {
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   isDTDirector!: boolean;
+  isDTAdmin!: boolean;
+
   getCurrentSystem(): string {
     return JSON.parse(this.cookieService.get('granted-systems') || '')[0];
   }
@@ -57,7 +60,7 @@ export class MilestonesService {
   }
   setUserTeam() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    return user.teams[0].name;
+    return user.teams[0]?.name;
   }
   getMilestoneUsersType() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
@@ -71,34 +74,44 @@ export class MilestonesService {
       this.isDTDirector = false;
     }
   }
+  checkIsAdmin() {
+    if (this.getMilestoneUsersType() === 'DI_Milestones_Admins') {
+      this.isDTAdmin = true;
+    } else {
+      this.isDTAdmin = false;
+      this.checkIsDirector;
+    }
+  }
 
   createMilestone(data: any) {
-    return this.http.post(`${this.baseUrl}/milestones/add`, data);
+    return this.http.post(`${this.dtUrl}/add`, data);
   }
   addBulkData(data: FormData, relatedTeam: string) {
     const params = new HttpParams().set('relatedTeam', relatedTeam);
 
-    return this.http.post(`${this.baseUrl}/milestones/bulk/upload`, data, {
+    return this.http.post(`${this.dtUrl}/bulk/upload`, data, {
       params,
     });
   }
-  getMilestones() {
-    return this.http.get(`${this.baseUrl}/milestones`);
+  getMilestones(filterData?: any) {
+    return this.http.get(`${this.dtUrl}`, {
+      params: filterData,
+    });
   }
 
   getMilestone(id: string) {
-    return this.http.get<Case>(`${this.baseUrl}/milestones/${id}`);
+    return this.http.get<Case>(`${this.dtUrl}/${id}`);
   }
 
   updateMilestone(id: string, data: any) {
-    return this.http.put(`${this.baseUrl}/milestones/update`, {
+    return this.http.put(`${this.dtUrl}/update`, {
       id: id,
       ...data,
     });
   }
 
   deleteMilestone(id: string) {
-    return this.http.delete(`${this.baseUrl}/milestones/${id}`);
+    return this.http.delete(`${this.dtUrl}/${id}`);
   }
 
   getAssigneeTasks(userEmail: string) {
