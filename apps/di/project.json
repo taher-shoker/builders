@@ -81,13 +81,13 @@
       "executor": "@angular-devkit/build-angular:dev-server",
       "configurations": {
         "production": {
-          "browserTarget": "di:build:production"
+          "buildTarget": "di:build:production"
         },
         "staging": {
-          "browserTarget": "di:build:staging"
+          "buildTarget": "di:build:staging"
         },
         "development": {
-          "browserTarget": "di:build:development"
+          "buildTarget": "di:build:development"
         }
       },
       "defaultConfiguration": "development"
@@ -95,7 +95,7 @@
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
       "options": {
-        "browserTarget": "di:build"
+        "buildTarget": "di:build"
       }
     },
     "lint": {

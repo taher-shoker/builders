@@ -127,7 +127,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     // this.populateInsightsCards();
     // this.fetchAssigneeTasks();
 
-  
     this.getMilestones();
 
     this.bannerDataService.updateData({ title: 'milestones', text: '' });
@@ -135,24 +134,23 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.dataSource.filterPredicate = (data, filter) =>
       data.caseSerialNumber == filter;
 
-    this.serchForm();
+    this.searchForm();
     this.dialogService.modals = [];
   }
 
   onPageIndexChange(pageNum: number) {
     const formCopy = this.form.value;
-    
-    
-      this.getMilestonesSub = this.milestonesService
-        .getMilestones({
-          page: pageNum,
-          ...formCopy,
-        })
-        .subscribe((res: any) => {
-          console.log("IN PARENT ID:", pageNum)
-    console.log("IN this.pagesFetchedIndexes :", this.pagesFetchedIndexes)
-          this.populateMilestones(res);
-        });
+
+    this.getMilestonesSub = this.milestonesService
+      .getMilestones({
+        page: pageNum,
+        ...formCopy,
+      })
+      .subscribe((res: any) => {
+        console.log('IN PARENT ID:', pageNum);
+        console.log('IN this.pagesFetchedIndexes :', this.pagesFetchedIndexes);
+        this.populateMilestones(res);
+      });
   }
 
   // previousPageIndex!: number;
@@ -171,11 +169,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     } else {
       this.tableData = [...this.tableData, ...res.content];
     }
-
   }
 
   detailsNavigate(id: string | number) {
-    this.router.navigate(['./milestone_details', id], { relativeTo: this.route });
+    this.router.navigate(['./milestone_details', id], {
+      relativeTo: this.route,
+    });
   }
 
   tableAction(event: { value: string; dataRow: any }) {
@@ -194,8 +193,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
             console.log('Deleted :', deletionRes);
           });
       });
-    }else if (event.value === 'details'){
-      this.detailsNavigate(event.dataRow.id)
+    } else if (event.value === 'details') {
+      this.detailsNavigate(event.dataRow.id);
     }
   }
 
@@ -216,23 +215,23 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
-  fetchAssigneeTasks() {
-    this.userSub = this.authService.user.subscribe((res) => {
-      const currentUser = this.cookieService.get('MODERN_SYSTEM_USER')
-        ? JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '')
-        : this.authService.getLoggedInUser();
+  // fetchAssigneeTasks() {
+  //   this.userSub = this.authService.user.subscribe((res) => {
+  //     const currentUser = this.cookieService.get('MODERN_SYSTEM_USER')
+  //       ? JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '')
+  //       : this.authService.getLoggedInUser();
 
-      this.getAssigneeTasks = this.milestonesService
-        .getAssigneeTasks(currentUser.email)
-        .subscribe((res: any) => {
-          this.allItems = this.utils.sorter(
-            res.data,
-            'caseSerialNumber',
-            'DESC'
-          );
-        });
-    });
-  }
+  //     this.getAssigneeTasks = this.milestonesService
+  //       .getAssigneeTasks(currentUser.email)
+  //       .subscribe((res: any) => {
+  //         this.allItems = this.utils.sorter(
+  //           res.data,
+  //           'caseSerialNumber',
+  //           'DESC'
+  //         );
+  //       });
+  //   });
+  // }
 
   navigateToTask(caseId: number) {
     this.router.navigate(['./case_details', caseId], {
@@ -242,7 +241,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   toggleFilter() {
     this.dialogService.open('filter-Modal');
   }
-  serchForm() {
+  searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
       milestoneName: ['', { nonNullable: true }],
