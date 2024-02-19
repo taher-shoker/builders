@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 
@@ -11,8 +11,8 @@ import { AppInitService } from './services/app-init.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
 })
-export class AppComponent {
-  title = 'd2d';
+export class AppComponent implements OnInit{
+  title = 'dtmv';
 
   constructor(
     private translate: TranslateService,
@@ -28,8 +28,14 @@ export class AppComponent {
       this.languageManagerService.getSavedLanguage() || 'en';
     this.translate.setDefaultLang('en');
 
+
     if (savedLanguage) {
       this.translate.use(savedLanguage);
     }
+  }
+
+  ngOnInit(): void {
+    this.translate.use('en');
+      
   }
 }

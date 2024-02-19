@@ -5,7 +5,7 @@
       <div class="f-box">
         <div class="row align-items-center">
           <div class="col-md-3">
-            <p class="table-title">{{ 'cases_list' | translate }}</p>
+            <p class="table-title">{{ 'milestones_list' | translate }}</p>
           </div>
           <div class="col-md-9">
             <div class="row">
@@ -36,8 +36,8 @@
       </div>
 
       <stc-apps-custom-table [data]="tableData" [columnsSchema]="columnsSchema"
-        [pagesFetchedIndexes]="pagesFetchedIndexes" (pageIndexChange)="onPageIndexChange($event)"
-        (doAction)="tableAction($event)"></stc-apps-custom-table>
+        [pagesFetchedIndexes]="pagesFetchedIndexes" [pagesCount]="milestonesPagesCount"
+        (pageIndexChange)="onPageIndexChange($event)" (doAction)="tableAction($event)"></stc-apps-custom-table>
     </div>
     <div class="col-md-4">
       <stc-apps-items-list [caption]="'pending_actions' |translate" [items]="allItems"></stc-apps-items-list>
@@ -50,62 +50,24 @@
     <div class="inputs">
       <div class="row">
         <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputId]="'customerName'"
-            [inputName]="'customer_name' | translate" formControlName="customerName"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputId]="'milestoneName'"
+            [inputName]="'milestone_name' | translate" formControlName="milestoneName"></stc-apps-input>
         </div>
         <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputId]="'city'" [inputName]="'city' | translate"
-            formControlName="city"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputId]="'team'" [inputName]="'team' | translate"
+            formControlName="team"></stc-apps-input>
         </div>
         <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'existingServiceOrder'"
-            [inputName]="'Existing Service Order' | translate" formControlName="existingServiceOrder"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'status'"
+            [inputName]="'status' | translate" formControlName="status"></stc-apps-input>
         </div>
         <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'serviceType'"
-            [inputName]="'service_type' | translate" formControlName="serviceType"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'month'"
+            [inputName]="'month' | translate" formControlName="month"></stc-apps-input>
         </div>
         <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'existingPlate'"
-            [inputName]="'existing_plate' | translate" formControlName="existingPlate"></stc-apps-input>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'existingPhoneNumber'"
-            [inputName]="'existing_phone_number' | translate" formControlName="existingPhoneNumber"></stc-apps-input>
-        </div>
-
-        <div class="col-md-3">
-          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
-            [inputName]="'activation_date' | translate" formControlName="activationDate">
-          </stc-apps-date-picker>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'WFMOrder'"
-            [inputName]="'wfm_order' | translate" formControlName="wfmOrder"></stc-apps-input>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'newPlate'"
-            [inputName]="'new_plate' | translate" formControlName="newPlate"></stc-apps-input>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'newServiceOrder'"
-            [inputName]="'new_service_order' | translate" formControlName="newServiceOrder"></stc-apps-input>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'newPhoneNumber'"
-            [inputName]="'new_phone_number' | translate" formControlName="newPhoneNumber"></stc-apps-input>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'contactNumber'"
-            [inputName]="'contact_number' | translate" formControlName="contactNumber"></stc-apps-input>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-select-drop-down [label]="'select_status' | translate" [options]="types" formControlName="status"
-            [labelName]="'statusName'" [outputValue]="'statusName'"></stc-apps-select-drop-down>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'type'"
-            [inputName]="'type' | translate" formControlName="type"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'year'"
+            [inputName]="'year' | translate" formControlName="year"></stc-apps-input>
         </div>
       </div>
     </div>

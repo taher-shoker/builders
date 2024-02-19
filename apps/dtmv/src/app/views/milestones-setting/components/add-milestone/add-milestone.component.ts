@@ -12,6 +12,9 @@ import { MilestonesService } from '../../milestones.service';
 })
 export class AddMilestoneComponent implements OnInit {
   form!: FormGroup;
+  allTeams: any;
+  selectTeam!: any;
+
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
   isLoading = false;
@@ -29,15 +32,34 @@ export class AddMilestoneComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.uploadForm();
+    this.getAllTeams();
+    this.milestonesService.checkIsAdmin();
+    this.setRelatedTeam();
     this.bannerDataService.updateData({
       title: 'Add new Milestone',
       text: 'Please add actual data and be sure to add all required data',
     });
   }
+  getAllTeams() {
+    this.milestonesService.setSystemTeams().subscribe((res) => {
+      this.allTeams = res;
+    });
+  }
+  setRelatedTeam() {
+    this.form
+      .get('teamName')
+      ?.setValue(this.milestonesService.setUserTeam(), { emitEvent: false });
+    this.selectTeam = this.milestonesService.setUserTeam();
+
+    if (!this.milestonesService.isDTAdmin) {
+      this.form.get('teamName')?.disable();
+    }
+  }
 
   uploadForm() {
     this.form = this.formBuilder.group({
       file: ['', Validators.required],
+      teamName: ['', Validators.required],
     });
   }
   onSubmit() {
@@ -55,7 +77,7 @@ export class AddMilestoneComponent implements OnInit {
     };
     if (this.form.valid) {
       this.milestonesService
-        .addBulkData(this.formData, this.milestonesService.setUserTeam())
+        .addBulkData(this.formData, this.form?.get('teamName')?.value)
         .subscribe(
           () => onSuccess('File has been uploaded successfully'),
           handleError

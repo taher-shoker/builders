@@ -19,6 +19,7 @@ import {
   Task,
   MilestonesService,
 } from '../../milestones.service';
+import { TranslateService } from '@ngx-translate/core';
 
 export interface PeriodicElement {
   id: string;
@@ -33,14 +34,14 @@ export interface PeriodicElement {
 
 const COLUMNS_SCHEMA: ColumnsSchema[] = [
   {
+    key: 'activityName',
+    type: 'text',
+    label: 'Activity',
+  },
+  {
     key: 'milestoneName',
     type: 'text',
     label: 'Milestone Name',
-  },
-  {
-    key: 'teamName',
-    type: 'text',
-    label: 'Team',
   },
   {
     key: 'status',
@@ -48,20 +49,20 @@ const COLUMNS_SCHEMA: ColumnsSchema[] = [
     label: 'Status',
   },
   {
-    key: 'activityName',
+    key: 'teamName',
     type: 'text',
-    label: 'Activity',
+    label: 'Team',
   },
+
   {
-    key: 'startDate',
-    type: 'date',
-    dateString: 'longDate',
-    label: 'Started at',
+    key: 'completionLevel',
+    type: 'text',
+    label: 'Completion Level',
   },
   {
     key: 'actions',
     type: 'actions',
-    actions: ['edit', 'delete'],
+    actions: ['edit', 'delete', 'details'],
     label: 'actions',
   },
 ];
@@ -87,7 +88,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   formChangesSub!: Subscription;
 
   // Props of the paginator :
-  casesPagesCount: number = 0;
+  milestonesPagesCount!: number;
 
   types: { statusName: string }[] = [
     { statusName: 'Registered' },
@@ -106,7 +107,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     public authService: AuthService,
     private cookieService: CookieService,
     public utils: UtilsService,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private translate: TranslateService
   ) {}
 
   allItems!: Task[];
@@ -124,9 +126,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     // this.populateInsightsCards();
     // this.fetchAssigneeTasks();
+
+  
     this.getMilestones();
 
-    this.bannerDataService.updateData({ title: 'd2d_fraud_cases', text: '' });
+    this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
     this.dataSource.filterPredicate = (data, filter) =>
       data.caseSerialNumber == filter;
@@ -136,29 +140,42 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   onPageIndexChange(pageNum: number) {
-    if (!this.pagesFetchedIndexes.includes(pageNum)) {
-      this.pagesFetchedIndexes.push(pageNum);
+    const formCopy = this.form.value;
+    
+    
       this.getMilestonesSub = this.milestonesService
-        .getMilestones()
+        .getMilestones({
+          page: pageNum,
+          ...formCopy,
+        })
         .subscribe((res: any) => {
+          console.log("IN PARENT ID:", pageNum)
+    console.log("IN this.pagesFetchedIndexes :", this.pagesFetchedIndexes)
           this.populateMilestones(res);
         });
-    }
   }
 
   // previousPageIndex!: number;
   // nextPageIndex!: number;
 
   pagesFetchedIndexes: number[] = [0];
-
   populateMilestones(res: any) {
     this.isLoading = false;
-    this.casesPagesCount = res.totalElements;
-    this.tableData = res;
+    this.milestonesPagesCount = res.totalElements;
+
+    // this.tableData = res.content;
+
+    if (res.first) {
+      this.tableData = res.content;
+      this.pagesFetchedIndexes = [0];
+    } else {
+      this.tableData = [...this.tableData, ...res.content];
+    }
+
   }
 
   detailsNavigate(id: string | number) {
-    this.router.navigate(['./case_details', id], { relativeTo: this.route });
+    this.router.navigate(['./milestone_details', id], { relativeTo: this.route });
   }
 
   tableAction(event: { value: string; dataRow: any }) {
@@ -177,6 +194,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
             console.log('Deleted :', deletionRes);
           });
       });
+    }else if (event.value === 'details'){
+      this.detailsNavigate(event.dataRow.id)
     }
   }
 
@@ -226,22 +245,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   serchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
-      customerName: ['', { nonNullable: true }],
-      city: ['', { nonNullable: true }],
-      existingServiceOrder: ['', { nonNullable: true }],
-      serviceType: ['', { nonNullable: true }],
-      existingPlate: ['', { nonNullable: true }],
-      existingPhoneNumber: ['', { nonNullable: true }],
-      activationDate: ['', { nonNullable: true }],
-      wfmOrder: ['', { nonNullable: true }],
-      newPlate: ['', { nonNullable: true }],
-      newServiceOrder: ['', { nonNullable: true }],
-      newPhoneNumber: ['', { nonNullable: true }],
-      contactNumber: ['', { nonNullable: true }],
-      caseLabel: ['', { nonNullable: true }],
-      description: ['', { nonNullable: true }],
+      milestoneName: ['', { nonNullable: true }],
+      team: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
-      type: ['', { nonNullable: true }],
+      month: ['', { nonNullable: true }],
+      year: ['', { nonNullable: true }],
     });
   }
 
@@ -262,21 +270,21 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     const formCopy = this.form.value;
     console.log('THE STAT', this.form.value);
 
-    formCopy.status = formCopy.status.statusName;
-    if (formCopy.status === undefined) {
-      formCopy.status = '';
-    }
+    // formCopy.status = formCopy.status.statusName;
+    // if (formCopy.status === undefined) {
+    //   formCopy.status = '';
+    // }
 
-    if (formCopy.activationDate == undefined) {
-      formCopy.activationDate = '';
-    } else if (formCopy.activationDate !== '') {
-      formCopy.activationDate = this.form
-        .get('activationDate')
-        ?.value?.format('DD/MM/YYYY');
-    }
+    // if (formCopy.activationDate == undefined) {
+    //   formCopy.activationDate = '';
+    // } else if (formCopy.activationDate !== '') {
+    //   formCopy.activationDate = this.form
+    //     .get('activationDate')
+    //     ?.value?.format('DD/MM/YYYY');
+    // }
 
     this.getMilestonesSub = this.milestonesService
-      .getMilestones()
+      .getMilestones(this.form.value)
       .subscribe((res: any) => {
         this.dialogService.close();
         // this.isLoading = false;

@@ -6,6 +6,10 @@
       <div class="p-50">
         <form class='upload-form' [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="row">
+            <div class="col-md-6">
+              <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Related Team'" [options]="allTeams"
+                [required]="true" formControlName="teamName" [outputValue]="'name'"></stc-apps-select-drop-down>
+            </div>
             <div class="col-12">
               <div>
                 <label for="">Upload File :</label>

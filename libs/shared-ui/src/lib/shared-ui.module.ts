@@ -42,15 +42,9 @@ import { LocaleDatePipe } from './locale.date/locale.date.pipe';
 import { DonutChartComponent } from './donut-chart/donut-chart.component';
 import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.component';
 import { CounterCardComponent } from './counter-card/counter-card.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { environment } from './environments/environment';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
-
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
-}
+import {MatMenuModule} from '@angular/material/menu';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -80,14 +74,6 @@ const components = [
   CustomTableComponent,
 ];
 
-export const provideTranslation = () => ({
-  defaultLanguage: 'en',
-  loader: {
-    provide: TranslateLoader,
-    useFactory: HttpLoaderFactory,
-    deps: [HttpClient],
-  },
-});
 @NgModule({
   imports: [
     CommonModule,
@@ -111,16 +97,11 @@ export const provideTranslation = () => ({
     MatExpansionModule,
     TranslateModule,
     MatProgressSpinnerModule,
+    MatMenuModule
   ],
   declarations: [...components],
   exports: [...components, ...modules],
 
-  providers: [
-    importProvidersFrom([
-      HttpClientModule,
-      TranslateModule.forRoot(provideTranslation()),
-    ]),
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-  ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class SharedUiModule {}

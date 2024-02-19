@@ -3,6 +3,7 @@ import { AuthService } from '../../shared/services/auth.service';
 import { CookieService } from 'ngx-cookie';
 import { Router } from '@angular/router';
 import { UsersService } from './users.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'stc-apps-users-settings',
@@ -26,6 +27,7 @@ export class UsersSettingsComponent implements OnInit {
       name: 'Users Setting',
       url: '/users-setting',
       icon: 'fa-user-cog',
+      isExtrnal: false,
     },
   ];
 
@@ -38,6 +40,14 @@ export class UsersSettingsComponent implements OnInit {
         name: 'Data Upload',
         url: '/data-upload',
         icon: 'fa-database',
+        isExtrnal: false,
+      });
+    } else if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+      this.navItems.push({
+        name: 'DT Milestones',
+        url: window.location.origin + environment.systems.di_milestones_system,
+        icon: 'fa-database',
+        isExtrnal: true,
       });
     }
 
