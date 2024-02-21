@@ -48,6 +48,8 @@ import { environment } from './environments/environment';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
 import {MatMenuModule} from '@angular/material/menu';
+import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
+import { PaginatorComponent } from './paginator/paginator.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -74,11 +76,13 @@ const components = [
   DatePickerRangeComponent,
   DatePickerWeeklyRangeComponent,
   LocaleDatePipe,
+  SafeHtmlPipe,
   DonutChartComponent,
   WeeklyLineChartComponent,
   CounterCardComponent,
   ItemsListComponent,
   CustomTableComponent,
+  PaginatorComponent
 ];
 
 export const provideTranslation = () => ({

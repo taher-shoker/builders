@@ -21,6 +21,7 @@ import {
 } from '../../milestones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
+import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 
 export interface PeriodicElement {
   id: string;
@@ -43,6 +44,13 @@ const COLUMNS_SCHEMA: ColumnsSchema[] = [
     key: 'milestoneName',
     type: 'text',
     label: 'Milestone Name',
+    // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
+    //   return `
+    //   <p>${item[header!.key]}</p>
+    //   <p>${item[header!.key]} mixed complex</p>
+    //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
+    //   `;
+    // },
   },
   {
     key: 'status',
@@ -68,6 +76,37 @@ const COLUMNS_SCHEMA: ColumnsSchema[] = [
   },
 ];
 
+const data = [
+  {
+    activityName: 'First activity name',
+    milestoneName: 'Milestonah',
+    status: 'perfect',
+    teamName: 'Real madrid',
+    completionLevel: 'Almost done',
+  },
+  {
+    activityName: 'second activity name',
+    milestoneName: 'Milestonah 2',
+    status: 'well done',
+    teamName: 'Blancos',
+    completionLevel: 'ferfet',
+  },
+  {
+    activityName: 'fourth',
+    milestoneName: 'Milestonah edited',
+    status: 'done',
+    teamName: 'champs',
+    completionLevel: 'undone',
+  },
+  {
+    activityName: 'wild',
+    milestoneName: 'Milestonah final',
+    status: 'into the net',
+    teamName: 'Campione',
+    completionLevel: 'starting',
+  },
+];
+
 @Component({
   selector: 'stc-apps-casses',
   templateUrl: './milestones.component.html',
@@ -82,6 +121,37 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   totalClosed = 0;
   readonly CaseStatus = CaseStatus;
   readonly TaskCicle = TaskCicle;
+  // data = [
+  //   {
+  //     activityName: 'First activity name',
+  //     milestoneName: 'Milestonah',
+  //     status: 'perfect',
+  //     teamName: 'Real madrid',
+  //     completionLevel: 'Almost done',
+  //   },
+  //   {
+  //     activityName: 'second activity name',
+  //     milestoneName: 'Milestonah 2',
+  //     status: 'well done',
+  //     teamName: 'Blancos',
+  //     completionLevel: 'ferfet',
+  //   },
+  //   {
+  //     activityName: 'fourth',
+  //     milestoneName: 'Milestonah edited',
+  //     status: 'done',
+  //     teamName: 'champs',
+  //     completionLevel: 'undone',
+  //   },
+  //   {
+  //     activityName: 'wild',
+  //     milestoneName: 'Milestonah final',
+  //     status: 'into the net',
+  //     teamName: 'Campione',
+  //     completionLevel: 'starting',
+  //   },
+  // ];
+
 
   getMilestonesSub!: Subscription;
   userSub!: Subscription;
@@ -140,9 +210,24 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.dialogService.modals = [];
   }
 
-  onPageIndexChange(pageNum: number) {
+  paginate(paginationEvent: PaginationEvent){
+    console.warn("El event", paginationEvent)
     const filteredForm = this.utilities.filterObject(this.form.value);
 
+    this.getMilestonesSub = this.milestonesService
+      .getMilestones({
+        page: paginationEvent.currentPage,
+        ...filteredForm,
+      })
+      .subscribe((res: any) => {
+        this.populateMilestones(res);
+      });
+  }
+
+  currentPage!: number;
+  onPageIndexChange(pageNum: number) {
+    const filteredForm = this.utilities.filterObject(this.form.value);
+    this.currentPage = pageNum;
     this.getMilestonesSub = this.milestonesService
       .getMilestones({
         page: pageNum,

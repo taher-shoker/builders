@@ -53,13 +53,23 @@
         </div>
       </div>
 
-      <stc-apps-custom-table
+      <!-- <stc-apps-custom-table
         [data]="tableData"
         [columnsSchema]="columnsSchema"
         [pagesFetchedIndexes]="pagesFetchedIndexes"
         [pagesCount]="milestonesPagesCount"
+        [pageChanged]="currentPage"
         (pageIndexChange)="onPageIndexChange($event)"
         (doAction)="tableAction($event)"
+      ></stc-apps-custom-table> -->
+
+      <stc-apps-custom-table
+        [items]="tableData"
+        [headers]="columnsSchema"
+        (doAction)="tableAction($event)"
+        [paginate]="true"
+        [paginationConfig]="{pageCount: 10, showTotal: false}"
+        (paginationEvent)="paginate($event)"
       ></stc-apps-custom-table>
     </div>
     <div class="col-md-4">

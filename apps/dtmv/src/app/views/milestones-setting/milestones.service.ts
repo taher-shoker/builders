@@ -88,7 +88,7 @@ export class MilestonesService {
     });
   }
 
-  getMilestone(id: string) {
+  getMilestone(id: number) {
     return this.http.get<Case>(`${this.baseUrl}/milestones/${id}`);
   }
 
