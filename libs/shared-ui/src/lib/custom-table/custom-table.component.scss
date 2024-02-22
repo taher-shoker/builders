@@ -10,6 +10,11 @@ table{
   }
 }
 
+td{
+  max-width: 150px;
+  word-wrap: break-word;
+}
+
 tr:not(.table-header){
   border-bottom: 1px solid #cbcbcb;
 
