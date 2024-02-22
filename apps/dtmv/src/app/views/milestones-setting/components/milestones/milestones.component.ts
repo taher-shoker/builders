@@ -8,7 +8,7 @@ import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { CookieService } from 'ngx-cookie';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -152,7 +152,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   //   },
   // ];
 
-
   getMilestonesSub!: Subscription;
   userSub!: Subscription;
   getAssigneeTasks!: Subscription;
@@ -210,52 +209,59 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.dialogService.modals = [];
   }
 
-  paginate(paginationEvent: PaginationEvent){
-    console.warn("El event", paginationEvent)
+  paginate(paginationEvent: PaginationEvent) {
     const filteredForm = this.utilities.filterObject(this.form.value);
 
-    this.getMilestonesSub = this.milestonesService
+    this.milestonesService
       .getMilestones({
         page: paginationEvent.currentPage,
         ...filteredForm,
       })
+      .pipe(take(1))
       .subscribe((res: any) => {
         this.populateMilestones(res);
       });
   }
 
-  currentPage!: number;
-  onPageIndexChange(pageNum: number) {
-    const filteredForm = this.utilities.filterObject(this.form.value);
-    this.currentPage = pageNum;
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones({
-        page: pageNum,
-        ...filteredForm,
-      })
-      .subscribe((res: any) => {
-        console.log('IN PARENT ID:', pageNum);
-        console.log('IN this.pagesFetchedIndexes :', this.pagesFetchedIndexes);
-        this.populateMilestones(res);
-      });
-  }
+  // currentPage!: number;
+  // onPageIndexChange(pageNum: number) {
+  //   const filteredForm = this.utilities.filterObject(this.form.value);
+  //   this.currentPage = pageNum;
+  //   this.getMilestonesSub = this.milestonesService
+  //     .getMilestones({
+  //       page: pageNum,
+  //       ...filteredForm,
+  //     })
+  //     .subscribe((res: any) => {
+  //       console.log('IN PARENT ID:', pageNum);
+  //       console.log('IN this.pagesFetchedIndexes :', this.pagesFetchedIndexes);
+  //       this.populateMilestones(res);
+  //     });
+  // }
 
   // previousPageIndex!: number;
   // nextPageIndex!: number;
 
-  pagesFetchedIndexes: number[] = [0];
+  // pagesFetchedIndexes: number[] = [0];
+
   populateMilestones(res: any) {
     this.isLoading = false;
-    this.milestonesPagesCount = res.totalElements;
+    // this.milestonesPagesCount = res.totalElements;
 
     // this.tableData = res.content;
 
-    if (res.first) {
-      this.tableData = res.content;
-      this.pagesFetchedIndexes = [0];
-    } else {
+    if (this.tableData?.length > 0) {
       this.tableData = [...this.tableData, ...res.content];
+    } else {
+      this.tableData = res.content;
     }
+
+    // if (res.first) {
+    //   this.tableData = res.content;
+    //   // this.pagesFetchedIndexes = [0];
+    // } else {
+    //   this.tableData = [...this.tableData, ...res.content];
+    // }
   }
 
   detailsNavigate(id: string | number) {
