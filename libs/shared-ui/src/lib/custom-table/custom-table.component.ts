@@ -120,6 +120,10 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
         this.onDataChange(this.items);
       }
     }
+
+    if(changes['length']){
+      this.length = changes['length'].currentValue;
+    }
   }
 
   handleSmartPageAddition(newPageNum: number) {
