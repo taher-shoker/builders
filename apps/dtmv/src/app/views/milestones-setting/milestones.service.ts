@@ -99,7 +99,7 @@ export class MilestonesService {
     });
   }
 
-  getMilestone(id: string) {
+  getMilestone(id: string | number) {
     return this.http.get<Case>(`${this.dtUrl}/${id}`);
   }
 

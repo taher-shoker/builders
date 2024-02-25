@@ -73,7 +73,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
       if(a[column].toLowerCase() > b[column].toLowerCase()){
         return (direction === 'desc') ? 1 : -1;
       }
-      if(a[column] < b[column]){
+      if(a[column].toLowerCase() < b[column].toLowerCase()){
         return (direction === 'desc') ? -1 : 1;
       }
       return 0;
