@@ -2,7 +2,17 @@
   <tbody>
     <tr class="table-header">
       @for(header of headers; track header){
-      <th (click)="changeCurrentSortingColumn(header.key)">{{ header.label }}</th>
+      <th (click)="changeCurrentSortingColumn(header.key)">
+        {{ header.label }}
+        @if (sort && header.key !== 'actions') {
+          <div class="arrows-holder">
+            <div>
+              <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{'active-arrow': (currentSortedByColumn$ |async) === header.key && sortingDirection === 'asc'}"></i>
+              <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{'active-arrow': (currentSortedByColumn$ |async) === header.key && sortingDirection === 'desc'}"></i>
+            </div>
+          </div>
+        }
+      </th>
       }
     </tr>
 

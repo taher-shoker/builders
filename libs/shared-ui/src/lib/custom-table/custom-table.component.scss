@@ -31,6 +31,20 @@ tr:not(.table-header){
   color: red;
 }
 
+.arrows-holder{
+  display: inline-block;
+  transform: rotate(90deg);
+  cursor: pointer;
+}
+
+.hashed-arrow{
+  opacity: .4;
+}
+
+.active-arrow{
+  opacity: 1;
+}
+
 // table {
 //   td {
 //     max-width: 140px;
