@@ -242,7 +242,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   // previousPageIndex!: number;
   // nextPageIndex!: number;
 
-  // pagesFetchedIndexes: number[] = [0];
+  
 
   populateMilestones(res: any) {
     this.isLoading = false;
@@ -250,19 +250,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
     this.tableData = res.content;
     console.warn(this.milestonesTotalCount)
-
-    // if (this.tableData?.length > 0) {
-    //   this.tableData = [...this.tableData, ...res.content];
-    // } else {
-    //   this.tableData = res.content;
-    // }
-
-    // if (res.first) {
-    //   this.tableData = res.content;
-    //   // this.pagesFetchedIndexes = [0];
-    // } else {
-    //   this.tableData = [...this.tableData, ...res.content];
-    // }
   }
 
   detailsNavigate(id: string | number) {
