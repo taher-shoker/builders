@@ -60,7 +60,8 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   startDate!: Date | null;
   endDate!: Date | null;
-
+  allTeams: any;
+  selectTeam!: any;
   constructor(
     private formBuilder: FormBuilder,
     protected dialogService: DialogService,
@@ -70,6 +71,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
+    console.log(changes);
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       if (this.data) {
@@ -80,8 +82,8 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.MilestoneForm();
-    this.milestonesService.checkIsDirector();
-    this.milestonesService.setUserTeam();
+    this.getAllTeams();
+    this.milestonesService.checkIsAdmin();
     this.setRelatedTeam();
   }
 
@@ -112,9 +114,14 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
 
   setRelatedTeam() {
     if (!this.isEditing) {
-      this.form.get('teamName')?.setValue(this.milestonesService.setUserTeam());
+      this.form
+        .get('teamName')
+        ?.setValue(this.milestonesService.setUserTeam(), { emitEvent: false });
+      this.selectTeam = this.milestonesService.setUserTeam();
     }
-    this.form.get('teamName')?.disable();
+    if (!this.milestonesService.isDTAdmin) {
+      this.form.get('teamName')?.disable();
+    }
   }
 
   FilterDate = (d: Date | null): boolean => {
@@ -151,10 +158,10 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   }
   onSubmit() {
     console.log(this.form.value);
+
     if (this.form.valid) {
       const finalData = {
         ...this.form.value,
-        teamName: this.milestonesService.setUserTeam(),
         weight: +this.form.get('weight')?.value,
       };
       if (this.isEditing) {
@@ -182,6 +189,11 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
         control?.markAsTouched({ onlySelf: true });
       });
     }
+  }
+  getAllTeams() {
+    this.milestonesService.setSystemTeams().subscribe((res) => {
+      this.allTeams = res;
+    });
   }
 
   cancel() {

@@ -42,19 +42,12 @@ import { LocaleDatePipe } from './locale.date/locale.date.pipe';
 import { DonutChartComponent } from './donut-chart/donut-chart.component';
 import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.component';
 import { CounterCardComponent } from './counter-card/counter-card.component';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { environment } from './environments/environment';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
 import {MatMenuModule} from '@angular/material/menu';
 import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SortableTableDirective } from './sorter/sorter.directive';
-
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
-}
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -87,14 +80,6 @@ const components = [
   SortableTableDirective
 ];
 
-export const provideTranslation = () => ({
-  defaultLanguage: 'en',
-  loader: {
-    provide: TranslateLoader,
-    useFactory: HttpLoaderFactory,
-    deps: [HttpClient],
-  },
-});
 @NgModule({
   imports: [
     CommonModule,
@@ -123,12 +108,6 @@ export const provideTranslation = () => ({
   declarations: [...components],
   exports: [...components, ...modules],
 
-  providers: [
-    importProvidersFrom([
-      HttpClientModule,
-      TranslateModule.forRoot(provideTranslation()),
-    ]),
-    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
-  ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
 })
 export class SharedUiModule {}
