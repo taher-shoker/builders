@@ -50,6 +50,7 @@ import { CustomTableComponent } from './custom-table/custom-table.component';
 import {MatMenuModule} from '@angular/material/menu';
 import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
+import { SortableTableDirective } from './sorter/sorter.directive';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -82,7 +83,8 @@ const components = [
   CounterCardComponent,
   ItemsListComponent,
   CustomTableComponent,
-  PaginatorComponent
+  PaginatorComponent,
+  SortableTableDirective
 ];
 
 export const provideTranslation = () => ({

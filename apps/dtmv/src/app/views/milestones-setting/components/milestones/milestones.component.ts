@@ -158,7 +158,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   formChangesSub!: Subscription;
 
   // Props of the paginator :
-  milestonesPagesCount!: number;
+  milestonesTotalCount!: number;
 
   types: { statusName: string }[] = [
     { statusName: 'Registered' },
@@ -246,15 +246,16 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
   populateMilestones(res: any) {
     this.isLoading = false;
-    // this.milestonesPagesCount = res.totalElements;
+    this.milestonesTotalCount = res.totalElements;
 
-    // this.tableData = res.content;
+    this.tableData = res.content;
+    console.warn(this.milestonesTotalCount)
 
-    if (this.tableData?.length > 0) {
-      this.tableData = [...this.tableData, ...res.content];
-    } else {
-      this.tableData = res.content;
-    }
+    // if (this.tableData?.length > 0) {
+    //   this.tableData = [...this.tableData, ...res.content];
+    // } else {
+    //   this.tableData = res.content;
+    // }
 
     // if (res.first) {
     //   this.tableData = res.content;

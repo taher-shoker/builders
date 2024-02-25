@@ -2,35 +2,26 @@
   <tbody>
     <tr class="table-header">
       @for(header of headers; track header){
-      <th>{{ header.label }}</th>
+      <th (click)="changeCurrentSortingColumn(header.key)">{{ header.label }}</th>
       }
     </tr>
 
-
     @if(itemsInView){
-      <ng-container
-      *ngTemplateOutlet="
-        tableBody;
-        context: { tableItems: itemsInView }
-      "
+    <ng-container
+      *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"
     ></ng-container>
     }@else {
-      <ng-container
-      *ngTemplateOutlet="
-        tableBody;
-        context: { tableItems: items }
-      "
+    <ng-container
+      *ngTemplateOutlet="tableBody; context: { tableItems: items }"
     ></ng-container>
     }
-
-
   </tbody>
 </table>
 
 @if(paginate){
 <stc-apps-paginator
-  [pageRows]="10"
-  [elementsLength]="61"
+  [pageRows]="paginationConfig.pageCount"
+  [elementsLength]="length"
   (paginationEvent)="raisePagination($event)"
 ></stc-apps-paginator>
 }
@@ -38,50 +29,47 @@
 <ng-template #tableBody let-tableItems="tableItems">
   @for(item of tableItems; track item){
 
-    <tr>
-      @for(header of headers; track header){ @if(header.type !== 'actions'){
-      @if(header.useCustomTemplate){
-      <td *ngIf="header.useCustomTemplate">
-        <div
-          [innerHTML]="header.useCustomTemplate(header, item) | safeHtml"
-        ></div>
-      </td>
-      }@else {
+  <tr>
+    @for(header of headers; track header){ @if(header.type !== 'actions'){
+    @if(header.useCustomTemplate){
+    <td *ngIf="header.useCustomTemplate">
+      <div
+        [innerHTML]="header.useCustomTemplate(header, item) | safeHtml"
+      ></div>
+    </td>
+    }@else {
 
-      <td>{{ item[header.key] }}</td>
-      } }@else if(header.type === 'actions') {
+    <td>{{ item[header.key] }}</td>
+    } }@else if(header.type === 'actions') {
 
-      <td>
-        <div class="actions-row d-flex">
-          @if((header.actions ?? []).length > 2){
+    <td>
+      <div class="actions-row d-flex">
+        @if((header.actions ?? []).length > 2){
 
-          <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
-            <i class="ri-more-2-fill"></i>
-          </span>
-          <mat-menu #menu="matMenu">
-            <div class="d-flex menu-btns-wrapper">
-              <ng-container
-                *ngTemplateOutlet="
-                  btnsTemp;
-                  context: { header: header, item: item }
-                "
-              ></ng-container>
-            </div>
-          </mat-menu>
+        <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
+          <i class="ri-more-2-fill"></i>
+        </span>
+        <mat-menu #menu="matMenu">
+          <div class="d-flex menu-btns-wrapper">
+            <ng-container
+              *ngTemplateOutlet="
+                btnsTemp;
+                context: { header: header, item: item }
+              "
+            ></ng-container>
+          </div>
+        </mat-menu>
 
-          } @else {
-          <ng-container
-            *ngTemplateOutlet="
-              btnsTemp;
-              context: { header: header, item: item }
-            "
-          ></ng-container>
-          }
-        </div>
-      </td>
-      } }
-    </tr>
-    }
+        } @else {
+        <ng-container
+          *ngTemplateOutlet="btnsTemp; context: { header: header, item: item }"
+        ></ng-container>
+        }
+      </div>
+    </td>
+    } }
+  </tr>
+  }
 </ng-template>
 
 <ng-template #btnsTemp let-header="header" let-item="item">
