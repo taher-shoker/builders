@@ -70,7 +70,7 @@ export const provideTranslation = () => ({
     SharedUiModule,
     UsersSettingsModule,
     TranslateModule,
-    ToastrModule.forRoot(),
+    ToastrModule.forRoot({ closeButton: true }),
     CookieModule.withOptions(),
   ],
   providers: [

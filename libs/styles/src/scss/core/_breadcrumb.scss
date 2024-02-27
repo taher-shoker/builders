@@ -1,5 +1,8 @@
 .breadcrumb-nav {
   text-transform: capitalize;
+  ol {
+    padding-inline: 40px;
+  }
   &.default {
     background-color: $stcLightGray;
   }

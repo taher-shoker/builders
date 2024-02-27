@@ -48,7 +48,7 @@
       </div>
       <div class="col-md-7">
         <div class="row">
-          <div class="col-md-5">
+          <div class="offset-md-1 col-md-5">
             <stc-apps-select-drop-down [label]="userService.translateText('privilege')"
               [selectType]="'filter-select-box'" [options]="privilege" [labelName]="'groupName'"
               (selectChange)="handleSelectChange($event, 'privilege')" [defaultAll]="true"></stc-apps-select-drop-down>
@@ -150,7 +150,8 @@
   <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]" [showFirstLastButtons]="true" [hidePageSize]="true">
   </mat-paginator>
 </div>
-<stc-apps-dialog id="delete-modal">
+<stc-apps-dialog id="delete-modal" [width]="'meduim'">
+  <h3 class="mb-4">Remove user</h3>
   <p class="text">
     <span>{{ 'You&lsquo;re about to Remove User ,' }} </span>
     <strong>{{ user?.name }}</strong>
@@ -168,7 +169,7 @@
           (btnClick)="dialogService.close()"></stc-apps-button>
 
         <div class="mx-3"></div>
-        <stc-apps-button [buttonText]="'delete user'" [buttonType]="'primary'"
+        <stc-apps-button [buttonText]="'delete user'" [buttonType]="'danger-outline'"
           (btnClick)="confirmDelete()"></stc-apps-button>
       </div>
     </div>

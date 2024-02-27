@@ -35,11 +35,11 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
 
   formData = new FormData();
 
-  casseId!: string;
+  milestoneId!: string;
   taskId!: number;
   caseSerial!: string;
   caseStatus!: string;
-  caseData: any;
+  milestoneDetails: any;
   allTasks!: TaskInDetails[];
   assigneeType = [
     { name: 'team', value: '1' },
@@ -57,51 +57,51 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
-    public CasesService: MilestonesService,
+    public milestonesService: MilestonesService,
     private languageManagerService: LanguageManagerService,
     public authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    this.casseId = this.route.snapshot.params['id'];
+    this.milestoneId = this.route.snapshot.params['id'];
 
     this.bannerDataService.updateData({
       title: '',
       text: '',
     });
 
-    // this.CasesService.getCase(this.casseId).subscribe((res) => {
+    // this.CasesService.getCase(this.milestoneId).subscribe((res) => {
     //   if (res) {
-    //     this.caseData = res;
+    //     this.milestoneDetails = res;
     //     this.caseSerial = res.caseSerialNumber;
     //     this.caseStatus = res.caseStatus;
     //     this.subscribeToLanguage();
-    //     this.handleTeam(this.caseData, this.teams);
+    //     this.handleTeam(this.milestoneDetails, this.teams);
     //   }
     // });
-    this.getCaseTasks(+this.casseId);
+    this.getMilestoneDetails(+this.milestoneId);
 
-    this.authService.loggedUserStream.subscribe((res) => {
-      if (res?.roles.includes('APPROVERS')) {
-        this.CasesService.setSystemTeams().subscribe((res) => {
-          this.teams = res;
-          this.teams = this.teams.filter(
-            (x: any) =>
-              x.groupName !== 'Fraud' && x.groupName !== 'Fraud Admins'
-          );
-          // this.handleTeam(this.caseData, this.teams);
-        });
+    // this.authService.loggedUserStream.subscribe((res) => {
+    //   if (res?.roles.includes('APPROVERS')) {
+    //     this.CasesService.setSystemTeams().subscribe((res) => {
+    //       this.teams = res;
+    //       this.teams = this.teams.filter(
+    //         (x: any) =>
+    //           x.groupName !== 'Fraud' && x.groupName !== 'Fraud Admins'
+    //       );
+    //       // this.handleTeam(this.milestoneDetails, this.teams);
+    //     });
 
-        // this.CasesService.setSystemUsers().subscribe((res) => {
-        //   this.users = res.filter(
-        //     (x: User) =>
-        //       this.getUserPrivilege(x) !== 'APPROVERS' &&
-        //       this.getUserPrivilege(x) !== 'ADMINS'
-        //   );
-        //   this.handleUser(this.caseData, this.users);
-        // });
-      }
-    });
+    //     // this.CasesService.setSystemUsers().subscribe((res) => {
+    //     //   this.users = res.filter(
+    //     //     (x: User) =>
+    //     //       this.getUserPrivilege(x) !== 'APPROVERS' &&
+    //     //       this.getUserPrivilege(x) !== 'ADMINS'
+    //     //   );
+    //     //   this.handleUser(this.milestoneDetails, this.users);
+    //     // });
+    //   }
+    // });
 
     this.closeForm = this.formBuilder.group({
       close_mail_content: [''],
@@ -126,9 +126,10 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
       second_escalate_content: ['', Validators.required],
     });
   }
-  getCaseTasks(id: number) {
-    this.CasesService.getTaskByCaseId(id).subscribe((res: any) => {
-      this.allTasks = res.data.filter((t: any) => t.assignedUser);
+  getMilestoneDetails(id: number) {
+    this.milestonesService.getMilestone(id).subscribe((res: any) => {
+      // this.allTasks = res.data.filter((t: any) => t.assignedUser);
+      this.milestoneDetails = res
     });
   }
 
@@ -141,7 +142,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
         const formData = new FormData();
         formData.append('file', files[i]);
         // this.formData.append('file', files[i]);
-        this.CasesService.uploadFile(formData).subscribe((res: any) => {
+        this.milestonesService.uploadFile(formData).subscribe((res: any) => {
           if (res) {
             this.uploadedFile.push(res);
             this.isLoading = false;
@@ -155,14 +156,14 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   }
 
   onDeleteFile(id: number) {
-    this.CasesService.deleteFile(id).subscribe((res: any) => {
+    this.milestonesService.deleteFile(id).subscribe((res: any) => {
       this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
       this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
     });
   }
 
   downloadFile(id: number, name: string) {
-    this.CasesService.getFile(id).subscribe((buffer) => {
+    this.milestonesService.getFile(id).subscribe((buffer) => {
       const data: Blob = new Blob([buffer], {
         type: 'text/csv;charset=utf-8',
       });
@@ -173,11 +174,11 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   }
   /** function to call fetching all tasks again and close any Modal if found **/
   refreshTasks(taskId: number, data: any) {
-    this.CasesService.updateCaseTask(+this.casseId, taskId, data).subscribe(
+    this.milestonesService.updateCaseTask(+this.milestoneId, taskId, data).subscribe(
       (res: any) => {
         this.caseStatus = res.caseStatus;
         this.dialogService.close();
-        this.getCaseTasks(+this.casseId);
+        this.getMilestoneDetails(+this.milestoneId);
       }
     );
   }
@@ -220,10 +221,10 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
 
   cancelCheck(taskId: number) {
     const data = { form: { info_needed: 0 } };
-    // this.CasesService
-    //   .updateCaseTask(+this.casseId, data)
+    // this.milestonesService
+    //   .updateCaseTask(+this.milestoneId, data)
     //   .subscribe((res: any) => {
-    //     this.getCaseTasks(+this.casseId);
+    //     this.getMilestoneDetails(+this.milestoneId);
     //   });
 
     this.refreshTasks(taskId, data);
@@ -383,18 +384,18 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  handleTeam(caseData?: Case, team?: any) {
-    if (caseData && team) {
+  handleTeam(milestoneDetails?: Case, team?: any) {
+    if (milestoneDetails && team) {
       this.selectedTeam = team.filter(
-        (t: any) => t.name === this.caseData?.creatorTeamName
+        (t: any) => t.name === this.milestoneDetails?.creatorTeamName
       )[0];
     }
   }
 
-  handleUser(caseData?: Case, users?: any) {
-    if (caseData && users) {
+  handleUser(milestoneDetails?: Case, users?: any) {
+    if (milestoneDetails && users) {
       this.selectedUser = users.filter(
-        (u: any) => u.email === this.caseData?.creatorEmail
+        (u: any) => u.email === this.milestoneDetails?.creatorEmail
       )[0];
     }
   }

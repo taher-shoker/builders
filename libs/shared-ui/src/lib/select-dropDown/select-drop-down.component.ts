@@ -46,7 +46,7 @@ export class SelectDropDownComponent<T>
   @Input() labelValue = 'id';
   @Input() groupName = 'groupName';
   @Input() groupOptions = 'roles';
-  @Input() labelSize: number = 16;
+  @Input() labelSize: number = 18;
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;

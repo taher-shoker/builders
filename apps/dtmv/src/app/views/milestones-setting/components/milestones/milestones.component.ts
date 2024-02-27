@@ -8,7 +8,7 @@ import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { CookieService } from 'ngx-cookie';
-import { Subscription } from 'rxjs';
+import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -20,6 +20,8 @@ import {
   MilestonesService,
 } from '../../milestones.service';
 import { TranslateService } from '@ngx-translate/core';
+import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
+import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 
 export interface PeriodicElement {
   id: string;
@@ -42,6 +44,13 @@ const COLUMNS_SCHEMA: ColumnsSchema[] = [
     key: 'milestoneName',
     type: 'text',
     label: 'Milestone Name',
+    // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
+    //   return `
+    //   <p>${item[header!.key]}</p>
+    //   <p>${item[header!.key]} mixed complex</p>
+    //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
+    //   `;
+    // },
   },
   {
     key: 'status',
@@ -67,6 +76,37 @@ const COLUMNS_SCHEMA: ColumnsSchema[] = [
   },
 ];
 
+const data = [
+  {
+    activityName: 'First activity name',
+    milestoneName: 'Milestonah',
+    status: 'perfect',
+    teamName: 'Real madrid',
+    completionLevel: 'Almost done',
+  },
+  {
+    activityName: 'second activity name',
+    milestoneName: 'Milestonah 2',
+    status: 'well done',
+    teamName: 'Blancos',
+    completionLevel: 'ferfet',
+  },
+  {
+    activityName: 'fourth',
+    milestoneName: 'Milestonah edited',
+    status: 'done',
+    teamName: 'champs',
+    completionLevel: 'undone',
+  },
+  {
+    activityName: 'wild',
+    milestoneName: 'Milestonah final',
+    status: 'into the net',
+    teamName: 'Campione',
+    completionLevel: 'starting',
+  },
+];
+
 @Component({
   selector: 'stc-apps-casses',
   templateUrl: './milestones.component.html',
@@ -81,6 +121,36 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   totalClosed = 0;
   readonly CaseStatus = CaseStatus;
   readonly TaskCicle = TaskCicle;
+  // data = [
+  //   {
+  //     activityName: 'First activity name',
+  //     milestoneName: 'Milestonah',
+  //     status: 'perfect',
+  //     teamName: 'Real madrid',
+  //     completionLevel: 'Almost done',
+  //   },
+  //   {
+  //     activityName: 'second activity name',
+  //     milestoneName: 'Milestonah 2',
+  //     status: 'well done',
+  //     teamName: 'Blancos',
+  //     completionLevel: 'ferfet',
+  //   },
+  //   {
+  //     activityName: 'fourth',
+  //     milestoneName: 'Milestonah edited',
+  //     status: 'done',
+  //     teamName: 'champs',
+  //     completionLevel: 'undone',
+  //   },
+  //   {
+  //     activityName: 'wild',
+  //     milestoneName: 'Milestonah final',
+  //     status: 'into the net',
+  //     teamName: 'Campione',
+  //     completionLevel: 'starting',
+  //   },
+  // ];
 
   getMilestonesSub!: Subscription;
   userSub!: Subscription;
@@ -88,7 +158,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   formChangesSub!: Subscription;
 
   // Props of the paginator :
-  milestonesPagesCount!: number;
+  milestonesTotalCount!: number;
 
   types: { statusName: string }[] = [
     { statusName: 'Registered' },
@@ -108,7 +178,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     private cookieService: CookieService,
     public utils: UtilsService,
     private matDialog: MatDialog,
-    private translate: TranslateService
+    private translate: TranslateService,
+    private utilities: UtilitiesService
   ) {}
 
   allItems!: Task[];
@@ -127,7 +198,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     // this.populateInsightsCards();
     // this.fetchAssigneeTasks();
 
-  
     this.getMilestones();
 
     this.bannerDataService.updateData({ title: 'milestones', text: '' });
@@ -135,47 +205,36 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.dataSource.filterPredicate = (data, filter) =>
       data.caseSerialNumber == filter;
 
-    this.serchForm();
+    this.searchForm();
     this.dialogService.modals = [];
   }
 
-  onPageIndexChange(pageNum: number) {
-    const formCopy = this.form.value;
-    
-    
-      this.getMilestonesSub = this.milestonesService
-        .getMilestones({
-          page: pageNum,
-          ...formCopy,
-        })
-        .subscribe((res: any) => {
-          console.log("IN PARENT ID:", pageNum)
-    console.log("IN this.pagesFetchedIndexes :", this.pagesFetchedIndexes)
-          this.populateMilestones(res);
-        });
+  paginate(paginationEvent: PaginationEvent) {
+    const filteredForm = this.utilities.filterObject(this.form.value);
+
+    this.milestonesService
+      .getMilestones({
+        page: paginationEvent.currentPage,
+        ...filteredForm,
+      })
+      .pipe(take(1))
+      .subscribe((res: any) => {
+        this.populateMilestones(res);
+      });
   }
-
-  // previousPageIndex!: number;
-  // nextPageIndex!: number;
-
-  pagesFetchedIndexes: number[] = [0];
+  
   populateMilestones(res: any) {
     this.isLoading = false;
-    this.milestonesPagesCount = res.totalElements;
+    this.milestonesTotalCount = res.totalElements;
 
-    // this.tableData = res.content;
-
-    if (res.first) {
-      this.tableData = res.content;
-      this.pagesFetchedIndexes = [0];
-    } else {
-      this.tableData = [...this.tableData, ...res.content];
-    }
-
+    this.tableData = res.content;
+    console.warn(this.milestonesTotalCount)
   }
 
   detailsNavigate(id: string | number) {
-    this.router.navigate(['./milestone_details', id], { relativeTo: this.route });
+    this.router.navigate(['./milestone_details', id], {
+      relativeTo: this.route,
+    });
   }
 
   tableAction(event: { value: string; dataRow: any }) {
@@ -194,8 +253,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
             console.log('Deleted :', deletionRes);
           });
       });
-    }else if (event.value === 'details'){
-      this.detailsNavigate(event.dataRow.id)
+    } else if (event.value === 'details') {
+      this.detailsNavigate(event.dataRow.id);
     }
   }
 
@@ -216,33 +275,17 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
-  fetchAssigneeTasks() {
-    this.userSub = this.authService.user.subscribe((res) => {
-      const currentUser = this.cookieService.get('MODERN_SYSTEM_USER')
-        ? JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '')
-        : this.authService.getLoggedInUser();
-
-      this.getAssigneeTasks = this.milestonesService
-        .getAssigneeTasks(currentUser.email)
-        .subscribe((res: any) => {
-          this.allItems = this.utils.sorter(
-            res.data,
-            'caseSerialNumber',
-            'DESC'
-          );
-        });
-    });
-  }
-
   navigateToTask(caseId: number) {
     this.router.navigate(['./case_details', caseId], {
       relativeTo: this.route,
     });
   }
+
   toggleFilter() {
     this.dialogService.open('filter-Modal');
   }
-  serchForm() {
+
+  searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
       milestoneName: ['', { nonNullable: true }],
@@ -267,31 +310,17 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   onSubmit() {
-    const formCopy = this.form.value;
-    console.log('THE STAT', this.form.value);
-
-    // formCopy.status = formCopy.status.statusName;
-    // if (formCopy.status === undefined) {
-    //   formCopy.status = '';
-    // }
-
-    // if (formCopy.activationDate == undefined) {
-    //   formCopy.activationDate = '';
-    // } else if (formCopy.activationDate !== '') {
-    //   formCopy.activationDate = this.form
-    //     .get('activationDate')
-    //     ?.value?.format('DD/MM/YYYY');
-    // }
+    const filteredForm = this.utilities.filterObject(this.form.value);
+    console.log('filteredForm', filteredForm);
 
     this.getMilestonesSub = this.milestonesService
-      .getMilestones(this.form.value)
+      .getMilestones(filteredForm)
       .subscribe((res: any) => {
         this.dialogService.close();
-        // this.isLoading = false;
-        // this.dataSource.data = res.content;
         this.populateMilestones(res);
       });
   }
+
   clearFormFilter() {
     this.form.reset();
     this.dialogService.close();
