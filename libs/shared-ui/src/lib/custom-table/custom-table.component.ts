@@ -58,28 +58,31 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   currentSortedByColumn$: Subject<string> = new Subject<string>();
 
+  sortingDirection: 'desc' | 'asc' = 'asc';
   changeCurrentSortingColumn(colName: string): void {
-    this.currentSortedByColumn$.next(colName)
+    this.currentSortedByColumn$.next(colName);
   }
 
-  setupSorting(){
+  setupSorting() {
     this.currentSortedByColumn$.subscribe((res: string) => {
       this.sortByColumn(this.itemsInView, res);
-    })
+    });
   }
 
-  sortByColumn(list: any[] | undefined, column:string, direction = 'desc'): any[] {
-    const sortedArray = (list || []).sort((a,b)=>{
-      if(a[column].toLowerCase() > b[column].toLowerCase()){
-        return (direction === 'desc') ? 1 : -1;
+  sortByColumn(list: any[] | undefined, column: string): void {
+    const sortedArray = (list || []).sort((a, b) => {
+      if (a[column]?.toLowerCase() > b[column]?.toLowerCase()) {
+        return this.sortingDirection === 'desc' ? 1 : -1;
       }
-      if(a[column].toLowerCase() < b[column].toLowerCase()){
-        return (direction === 'desc') ? -1 : 1;
+      if (a[column]?.toLowerCase() < b[column]?.toLowerCase()) {
+        return this.sortingDirection === 'desc' ? -1 : 1;
       }
       return 0;
-    })
-  return sortedArray;
-}
+    });
+    this.sortingDirection === 'asc'
+      ? (this.sortingDirection = 'desc')
+      : (this.sortingDirection = 'asc');
+  }
 
   ngOnInit(): void {
     if (this.paginate && this.paginationConfig.paginationIq !== 'smart') {
@@ -88,7 +91,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
     if (this.paginate && this.paginationConfig.paginationIq === 'smart') {
       this.setupSmartPagination();
     }
-    if(this.sort){
+    if (this.sort) {
       this.setupSorting();
     }
   }
@@ -116,6 +119,10 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
       if (this.paginationConfig.paginationIq === 'smart') {
         this.onDataChange(this.items);
       }
+    }
+
+    if(changes['length']){
+      this.length = changes['length'].currentValue;
     }
   }
 

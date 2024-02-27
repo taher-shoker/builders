@@ -222,28 +222,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         this.populateMilestones(res);
       });
   }
-
-  // currentPage!: number;
-  // onPageIndexChange(pageNum: number) {
-  //   const filteredForm = this.utilities.filterObject(this.form.value);
-  //   this.currentPage = pageNum;
-  //   this.getMilestonesSub = this.milestonesService
-  //     .getMilestones({
-  //       page: pageNum,
-  //       ...filteredForm,
-  //     })
-  //     .subscribe((res: any) => {
-  //       console.log('IN PARENT ID:', pageNum);
-  //       console.log('IN this.pagesFetchedIndexes :', this.pagesFetchedIndexes);
-  //       this.populateMilestones(res);
-  //     });
-  // }
-
-  // previousPageIndex!: number;
-  // nextPageIndex!: number;
-
   
-
   populateMilestones(res: any) {
     this.isLoading = false;
     this.milestonesTotalCount = res.totalElements;
@@ -295,24 +274,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
-
-  // fetchAssigneeTasks() {
-  //   this.userSub = this.authService.user.subscribe((res) => {
-  //     const currentUser = this.cookieService.get('MODERN_SYSTEM_USER')
-  //       ? JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '')
-  //       : this.authService.getLoggedInUser();
-
-  //     this.getAssigneeTasks = this.milestonesService
-  //       .getAssigneeTasks(currentUser.email)
-  //       .subscribe((res: any) => {
-  //         this.allItems = this.utils.sorter(
-  //           res.data,
-  //           'caseSerialNumber',
-  //           'DESC'
-  //         );
-  //       });
-  //   });
-  // }
 
   navigateToTask(caseId: number) {
     this.router.navigate(['./case_details', caseId], {

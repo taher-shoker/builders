@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 
 export interface PaginationConfig {
   pageCount: number;
@@ -17,7 +17,7 @@ export interface PaginationEvent {
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss'],
 })
-export class PaginatorComponent implements OnInit {
+export class PaginatorComponent implements OnInit, OnChanges {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
 
@@ -35,6 +35,14 @@ export class PaginatorComponent implements OnInit {
 
   ngOnInit(): void {
     this.setPagesCount();
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['elementsLength']) {
+      this.elementsLength = changes['elementsLength'].currentValue;
+      this.setPagesCount();
+      this.validate();
+    }
   }
 
   setPagesCount() {
