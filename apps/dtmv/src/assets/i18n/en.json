@@ -152,6 +152,25 @@
   "not_needed": "Not needed",
   "rejected": "Rejected",
   "approved": "Approved",
+
+  
+  "################THIS IS A COMMENT TO DIVIDE#################" : "#############THIS IS A COMMENT TO DIVIDE IN JSON############",
+
+
   "milestones": "Milestones",
-  "milestones_list": "MMMilestones List"
+  "milestones_list": "MMMilestones List",
+  "milestone_name": "Milestone Name",
+  "last_progress": "Last Progress",
+  "activity_name": "Activity Name",
+  "status": "Status",
+  "created_email": "Created by Email",
+  "team_name": "Team Name",
+  "created_name": "Created by Name",
+  "updated_email": "Updated by Email",
+  "deliverable": "Deliverable",
+  "updated_name": "Updated by Name",
+  "end_date": "End date",
+  "weight": "Weight",
+  "start_date": "Start Date"
+
 }

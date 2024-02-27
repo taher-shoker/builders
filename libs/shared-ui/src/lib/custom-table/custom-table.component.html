@@ -1,89 +1,96 @@
-<table mat-table [dataSource]="dataSource" matSort>
-  <div class="spinner-container" *ngIf="isLoading">
-    <mat-spinner></mat-spinner>
-  </div>
-  <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header>
-      {{ col.label | translate }}
-    </th>
-    <td mat-cell *matCellDef="let element">
-      <div>
-        <div
-          class="info-name"
-          *ngIf="col.type !== 'date' && col.type !== 'actions'"
-        >
-          <div class="name">
-            <p>{{ element[col.key] ?? '-' }}</p>
+<table cellpadding="10">
+  <tbody>
+    <tr class="table-header">
+      @for(header of headers; track header){
+      <th (click)="changeCurrentSortingColumn(header.key)">
+        {{ header.label }}
+        @if (sort && header.key !== 'actions') {
+          <div class="arrows-holder">
+            <div>
+              <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{'active-arrow': (currentSortedByColumn$ |async) === header.key && sortingDirection === 'asc'}"></i>
+              <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{'active-arrow': (currentSortedByColumn$ |async) === header.key && sortingDirection === 'desc'}"></i>
+            </div>
           </div>
-        </div>
+        }
+      </th>
+      }
+    </tr>
 
-        <div class="info-name" *ngIf="col.type === 'date'">
-          <div class="name">
-            <p>{{ (element[col.key] | date : col.dateString) ?? '-' }}</p>
-          </div>
-        </div>
+    @if(itemsInView){
+    <ng-container
+      *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"
+    ></ng-container>
+    }@else {
+    <ng-container
+      *ngTemplateOutlet="tableBody; context: { tableItems: items }"
+    ></ng-container>
+    }
+  </tbody>
+</table>
 
-        <div class="info-name" *ngIf="col.type === 'actions'">
-          <div class="actions-row d-flex">
-            @if((col.actions ?? []).length > 2){
+@if(paginate){
+<stc-apps-paginator
+  [pageRows]="paginationConfig.pageCount"
+  [elementsLength]="length"
+  (paginationEvent)="raisePagination($event)"
+></stc-apps-paginator>
+}
 
-            <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
-              <i class="ri-more-2-fill"></i>
-            </span>
-            <mat-menu #menu="matMenu">
-              <div class="d-flex menu-btns-wrapper">
-                <ng-container
-                  *ngTemplateOutlet="
-                    btnsTemp;
-                    context: { col: col, element: element }
-                  "
-                ></ng-container>
-              </div>
-            </mat-menu>
+<ng-template #tableBody let-tableItems="tableItems">
+  @for(item of tableItems; track item){
 
-            } @else {
+  <tr>
+    @for(header of headers; track header){ @if(header.type !== 'actions'){
+    @if(header.useCustomTemplate){
+    <td *ngIf="header.useCustomTemplate">
+      <div
+        [innerHTML]="header.useCustomTemplate(header, item) | safeHtml"
+      ></div>
+    </td>
+    }@else {
+
+    <td>{{ item[header.key] }}</td>
+    } }@else if(header.type === 'actions') {
+
+    <td>
+      <div class="actions-row d-flex">
+        @if((header.actions ?? []).length > 2){
+
+        <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
+          <i class="ri-more-2-fill"></i>
+        </span>
+        <mat-menu #menu="matMenu">
+          <div class="d-flex menu-btns-wrapper">
             <ng-container
               *ngTemplateOutlet="
                 btnsTemp;
-                context: { col: col, element: element }
+                context: { header: header, item: item }
               "
             ></ng-container>
-            }
           </div>
-        </div>
+        </mat-menu>
+
+        } @else {
+        <ng-container
+          *ngTemplateOutlet="btnsTemp; context: { header: header, item: item }"
+        ></ng-container>
+        }
       </div>
     </td>
-  </ng-container>
-  <tr class="mat-row" *matNoDataRow>
-    <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-      <div class="message-box">
-        <img src="assets/Group 590.png" alt="" />
-        <h3>{{ 'no_cases_yet' | translate }}</h3>
-        <p>{{ 'no_cases_msg' | translate }}</p>
-      </div>
-    </td>
+    } }
   </tr>
-  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-</table>
-<mat-paginator
-  [length]="pagesCount"
-  [pageSize]="10"
-  [showFirstLastButtons]="true"
-  [hidePageSize]="true"
->
-</mat-paginator>
+  }
+</ng-template>
 
-<ng-template #btnsTemp let-col="col" let-element="element">
-  @for(action of col?.actions; track action){
-
-  <span class="btn details p-1" (click)="raiseAction(action, element)">
+<ng-template #btnsTemp let-header="header" let-item="item">
+  @for(action of header?.actions; track action){
+  <span class="btn details p-1" (click)="raiseAction(action, item)">
     @if(action === 'edit'){
     <i class="ri-edit-box-line edit-icon"></i>
     } @else if (action === 'delete') {
     <i class="ri-delete-bin-line del-icon"></i>
     }@else if(action === 'details'){
-      <i class="ri-arrow-right-up-line"></i>
+    <i class="ri-arrow-right-up-line"></i>
     }
   </span>
   }

@@ -1,6 +1,7 @@
 .navbar {
   background-color: $whiteColor !important;
   color: var(--textColor);
+  padding-inline-start: 40px;
   .navbar-toggler {
     border: unset;
     padding-left: 0;

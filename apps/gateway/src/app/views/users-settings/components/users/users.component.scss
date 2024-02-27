@@ -1,9 +1,9 @@
 @import './scss/core/variables/colors';
 
 .users-settings {
-  margin-inline: 25px;
+  margin-inline: 50px;
   position: relative;
-  top: -60px;
+  top: -95px;
   table {
     td {
       max-width: 165px;
@@ -50,9 +50,13 @@
   .filter-box {
     border-radius: 5px;
     margin-block: 20px;
-    padding: 30px;
+    padding: 40px 30px;
     border: none;
     background-color: $whiteColor;
+    // min-height: 136px;
+    // display: flex;
+    // align-items: center;
+    // justify-content: space-between;
   }
 
   .f-box {
@@ -80,8 +84,7 @@
 }
 
 p.text {
-  width: 80%;
-  margin: 60px auto;
+  margin: 30px auto;
   line-height: 2;
 }
 

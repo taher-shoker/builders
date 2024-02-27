@@ -1,112 +1,170 @@
+/* eslint-disable for-direction */
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
-  AfterViewInit,
   Component,
   EventEmitter,
   Input,
   OnChanges,
+  OnDestroy,
   OnInit,
   Output,
   SimpleChanges,
-  ViewChild,
 } from '@angular/core';
-import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
-import { MatTableDataSource } from '@angular/material/table';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Subject } from 'rxjs';
+import { PaginationEvent } from '../paginator/paginator.component';
 
-export interface ActionEventData {
-  row: any;
-  actionType: string;
-}
 export interface ColumnsSchema {
   key: string;
   type: 'text' | 'date' | 'actions';
   label: string;
   dateString?: 'longDate';
   actions?: ('edit' | 'delete' | 'details')[];
+  useCustomTemplate?: (header?: ColumnsSchema, item?: any) => any;
 }
 
-// enum CaseStatus {
-//   registered = <any>'Registered',
-//   pending = <any>'Pending',
-//   inprogress = <any>'In Progress',
-//   closed = <any>'Closed',
-// }
+export interface PaginationConfig {
+  paginationIq?: 'dumb' | 'smart';
+  pageCount: number;
+  showTotal?: boolean;
+}
 
 @Component({
   selector: 'stc-apps-custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
 })
-export class CustomTableComponent implements OnInit, OnChanges {
-  @Output() pageIndexChange: EventEmitter<number> = new EventEmitter<number>();
+export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
+  @Output() paginationEvent: EventEmitter<PaginationEvent> =
+    new EventEmitter<PaginationEvent>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
 
-  @Input({ required: true }) data: any;
+  @Input({ required: true }) headers!: ColumnsSchema[];
 
-  @Input({ required: true }) columnsSchema!: ColumnsSchema[];
-  @Input() pagesFetchedIndexes: number[] = [0];
-  @Input() pagesCount!: number;
-  @Input() detailsRoute?: string;
+  @Input({ required: true }) items!: any[];
+  itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
 
-  dataSource!: MatTableDataSource<any>;
-  isLoading = true;
+  @Input() paginate: boolean = false;
+  @Input() paginationConfig!: PaginationConfig;
+  @Input() sort: boolean = true;
+  @Input() length!: number;
 
-  displayedColumns!: string[];
+  paginator$: Subject<PaginationEvent> = new Subject<PaginationEvent>();
+  currentPage: number = 1;
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort;
+  loadedPages: undefined | number[]; // should be defined in case of 'smart' paginationIq.
+  itemsMap = new Map<string, any[]>(); // should be used and set in case of 'smart' paginationIq.
 
-  constructor(private router: Router, private route: ActivatedRoute) {}
+  currentSortedByColumn$: Subject<string> = new Subject<string>();
 
-  paginatorAndSortSet: boolean = false;
+  sortingDirection: 'desc' | 'asc' = 'asc';
+  changeCurrentSortingColumn(colName: string): void {
+    this.currentSortedByColumn$.next(colName);
+  }
 
-  setPaginatorAndSortOnce(changesPagesCounts: number) {
-      this.dataSource.sort = this.sort;
-      this.dataSource.paginator = this.paginator;
+  setupSorting() {
+    this.currentSortedByColumn$.subscribe((res: string) => {
+      this.sortByColumn(this.itemsInView, res);
+    });
+  }
 
-      setTimeout(() => {
-        this.pagesCount = changesPagesCounts;
-      },1000)
-      
-      if (this.paginator) {
-        this.paginator.page.subscribe((pageRes) => {
-          console.log("Page flipped to num:",pageRes )
-          if (!this.pagesFetchedIndexes.includes(pageRes.pageIndex)) {
-            this.pagesFetchedIndexes.push(pageRes.pageIndex);
-            this.pageIndexChange.emit(pageRes.pageIndex);
-          }
-        });
-        this.paginatorAndSortSet = true;
+  sortByColumn(list: any[] | undefined, column: string): void {
+    const sortedArray = (list || []).sort((a, b) => {
+      if (a[column]?.toLowerCase() > b[column]?.toLowerCase()) {
+        return this.sortingDirection === 'desc' ? 1 : -1;
       }
+      if (a[column]?.toLowerCase() < b[column]?.toLowerCase()) {
+        return this.sortingDirection === 'desc' ? -1 : 1;
+      }
+      return 0;
+    });
+    this.sortingDirection === 'asc'
+      ? (this.sortingDirection = 'desc')
+      : (this.sortingDirection = 'asc');
+  }
 
+  ngOnInit(): void {
+    if (this.paginate && this.paginationConfig.paginationIq !== 'smart') {
+      this.setupDumbPaginator();
+    }
+    if (this.paginate && this.paginationConfig.paginationIq === 'smart') {
+      this.setupSmartPagination();
+    }
+    if (this.sort) {
+      this.setupSorting();
+    }
+  }
+
+  setupSmartPagination() {
+    this.loadedPages = [1]; // *in case of smart pagination, start tracking the pages with page number 1 on init already,
+    this.itemsMap.set('1', this.items); // *and assign the first set/chunk of items to first element.
+
+    this.paginator$.subscribe((res) => {
+      this.currentPage = res.currentPage;
+
+      if (!this.loadedPages?.includes(this.currentPage)) {
+        this.handleSmartPageAddition(this.currentPage);
+        this.paginationEvent.emit(res);
+      } else {
+        this.onDataChange();
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('changes', changes);
+    if (changes['items']) {
+      this.items = changes['items'].currentValue;
 
-    if (changes['data']) {
-      this.data = changes['data'].currentValue;
-      this.dataSource = new MatTableDataSource<any>(this.data);
-      if(!this.paginatorAndSortSet){
-        this.setPaginatorAndSortOnce(changes['pagesCount'].currentValue);
+      if (this.paginationConfig.paginationIq === 'smart') {
+        this.onDataChange(this.items);
+      }
+    }
+
+    if(changes['length']){
+      this.length = changes['length'].currentValue;
+    }
+  }
+
+  handleSmartPageAddition(newPageNum: number) {
+    if (this.loadedPages) {
+      for (let i = this.loadedPages.length - 1; i >= 0; i--) {
+        if (newPageNum > this.loadedPages[i]) {
+          // *this is to add the number in the right order, important for pagination harmony!
+          this.loadedPages.splice(i + 1, 0, newPageNum);
+          return;
+        }
       }
     }
   }
 
-  ngOnInit(): void {
-    this.displayedColumns = this.columnsSchema.map((col) => col.key);
+  setupDumbPaginator() {
+    this.paginator$.subscribe((res) => {
+      this.currentPage = res.currentPage;
+      this.paginationEvent.emit(res);
+    });
+  }
+
+  raisePagination(event: PaginationEvent) {
+    this.paginator$.next(event);
+  }
+
+  ngOnDestroy(): void {
+    this.paginator$.unsubscribe();
   }
 
   raiseAction(value: string, dataRow: any) {
     this.doAction.emit({ value, dataRow });
   }
 
-  detailsNavigate(id: string | number) {
-    this.router.navigate([`./${this.detailsRoute}`, id], {
-      relativeTo: this.route,
-    });
+  onDataChange(items?: any[]) {
+    if (items) {
+      this.setItemsMap(items);
+    }
+    this.itemsInView = this.itemsMap.get(this.currentPage.toString())!;
+  }
+
+  setItemsMap(items: any[]) {
+    this.itemsMap.set(this.currentPage.toString(), items);
   }
 }

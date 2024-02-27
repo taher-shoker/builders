@@ -17,14 +17,14 @@ export class EditMilestineComponent implements OnInit {
     public milestonesService: MilestonesService,
     public route: ActivatedRoute
   ) {}
-  getMilestone(id: string) {
+  getMilestone(id: number) {
     this.milestonesService.getMilestone(id).subscribe((res: any) => {
       this.milestoneData = res;
     });
   }
   ngOnInit(): void {
     this.milestoneId = this.route.snapshot.params['id'];
-    this.getMilestone(this.milestoneId);
+    this.getMilestone(+this.milestoneId);
     this.bannerDataService.updateData({
       title: '',
       text: '',

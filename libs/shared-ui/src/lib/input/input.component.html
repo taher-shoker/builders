@@ -6,6 +6,7 @@
     <input [type]="inputType" [id]="inputId" [name]="inputName" matInput
       [placeholder]="inputPlaceholder ? inputPlaceholder : ''" autocomplete="new-password" [formControl]="control"
       [readonly]="disabled" />
+    <!-- [autocomplete]="'off'" -->
     <mat-icon matSuffix *ngIf="inputId === 'password'" (click)="toggelPassword()"><i
         class="fas {{ showPassword  ? ' fa-eye' : '  fa-eye-slash' }}"></i></mat-icon>
 

@@ -16,6 +16,8 @@ import { DialogService } from './dialog.service';
 })
 export class DialogComponent implements OnInit, OnDestroy {
   @Input() id?: string;
+  @Input() width?: 'large' | 'meduim' | 'small' = 'large';
+
   isOpen = false;
   private element: any;
 
