@@ -19,10 +19,18 @@ stc-apps-dialog {
   .stc-modal-body {
     padding: 20px 50px;
     background: #fff;
-    width: 70vw;
     margin: 0 auto;
     border-radius: 10px;
     // min-height: 300px;
+    &.large {
+      width: 70vw;
+    }
+    &.meduim {
+      width: 50vw;
+    }
+    &.small {
+      width: 35vw;
+    }
   }
 }
 

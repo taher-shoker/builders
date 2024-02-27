@@ -3,6 +3,8 @@
   display: flex;
   flex-direction: column;
   flex: 1;
+  position: relative;
+  background-color: var(--stc-lightGrey-color);
   label {
     margin-bottom: 10px;
     text-transform: capitalize;
@@ -15,7 +17,20 @@
   }
   .inputs {
     padding: 50px;
-    background-color: #e8e9e9;
+    .top {
+      background-color: white;
+      position: absolute;
+      width: 93.5%;
+      top: -60px;
+      padding: 36px;
+      border-radius: 5px;
+    }
+    .bottom {
+      background-color: white;
+      padding: 36px;
+      margin-top: 105px;
+      border-radius: 5px;
+    }
   }
   .btn-form-action {
     display: flex;
@@ -24,6 +39,9 @@
     width: 100%;
     justify-content: flex-end;
     padding: 30px 50px;
+    margin-top: 70px;
+    padding-bottom: 0;
+    padding-inline-end: 0;
     button {
       margin-left: 20px;
     }
