@@ -31,6 +31,7 @@
 .custom-input {
   &.stc-input-group {
     margin-bottom: 0 !important;
+    height: 100%;
     input.stc-input {
       background-color: rgba($color: $shadowStc, $alpha: 0.1) !important;
       color: $shadowStc;

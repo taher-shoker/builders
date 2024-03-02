@@ -14,7 +14,7 @@
 .details {
   background-color: $whiteColor;
   padding: 20px;
-
+  border-radius: 7px;
   .title-holder {
     h3 {
       margin-bottom: 40px;
@@ -29,8 +29,6 @@
       }
     }
   }
-
-
 
   .cell-name {
     color: var(--grey-color);
@@ -125,7 +123,6 @@
       // min-height: 7rem;
 
       &:last-child {
-
         // overflow: hidden;
         & .order-track-status span:last-of-type {
           display: none;

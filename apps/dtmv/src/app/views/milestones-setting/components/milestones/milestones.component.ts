@@ -183,8 +183,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   ) {}
 
   allItems!: Task[];
-  addCasseNavigate(): void {
-    this.router.navigate(['./add_case'], { relativeTo: this.route });
+  addMilestoneNavigate(): void {
+    this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
   columnsSchema: any[] = COLUMNS_SCHEMA;
@@ -222,13 +222,13 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         this.populateMilestones(res);
       });
   }
-  
+
   populateMilestones(res: any) {
     this.isLoading = false;
     this.milestonesTotalCount = res.totalElements;
 
     this.tableData = res.content;
-    console.warn(this.milestonesTotalCount)
+    console.warn(this.milestonesTotalCount);
   }
 
   detailsNavigate(id: string | number) {
