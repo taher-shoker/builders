@@ -55,17 +55,25 @@
 
       @if(tableData){
 
-        <stc-apps-custom-table
-          [items]="tableData"
-          [headers]="columnsSchema"
-          [length]="milestonesTotalCount"
-          (doAction)="tableAction($event)"
-          [paginate]="true"
-          [paginationConfig]="{pageCount: 10, showTotal: false, paginationIq: 'smart'}"
-          (paginationEvent)="paginate($event)"
-        ></stc-apps-custom-table>
+      <stc-apps-custom-table
+        [items]="tableData"
+        [headers]="columnsSchema"
+        [length]="milestonesTotalCount"
+        (doAction)="tableAction($event)"
+        [paginate]="true"
+        [paginationConfig]="{
+          pageCount: 10,
+          showTotal: false,
+          paginationIq: 'smart'
+        }"
+        [complexView]="customTemplate"
+        (paginationEvent)="paginate($event)"
+      >
+      </stc-apps-custom-table>
+      <ng-template #customTemplate let-header="header" let-item="item">
+        <p class="custom-class-template">{{item[header.key]}}</p>
+      </ng-template>
       }
-      
     </div>
     <div class="col-md-4">
       <stc-apps-items-list

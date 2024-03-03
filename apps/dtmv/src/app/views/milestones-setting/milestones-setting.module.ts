@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -20,6 +21,8 @@ import { MilestoneFormComponent } from './components/milestone-form/milestone-fo
 import { MilestonesComponent } from './components/milestones/milestones.component';
 import { MiltestonesSettingRoutingModule } from './milestones-setting-routing.module';
 import { MilestonesSettingComponent } from './milestones-setting.component';
+import { UpdateProgressDialogComponent } from './components/updateProgressDialog/updateProgressDialog.component';
+import { CustomTemplateDirective } from 'libs/shared-ui/src/lib/custom-table/custom-template.directive';
 
 @NgModule({
   declarations: [
@@ -29,6 +32,8 @@ import { MilestonesSettingComponent } from './milestones-setting.component';
     AddMilestoneComponent,
     EditMilestineComponent,
     MilestoneDetailsComponent,
+    UpdateProgressDialogComponent,
+    CustomTemplateDirective
   ],
   imports: [
     CommonModule,

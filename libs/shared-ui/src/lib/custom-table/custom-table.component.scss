@@ -1,24 +1,24 @@
-table{
+table {
   width: 100%;
 }
 
-.table-header{
+.table-header {
   background-color: var(--stc-color-light);
 
-  th{
+  th {
     // padding: 10px 0;
   }
 }
 
-td{
+td {
   max-width: 150px;
   word-wrap: break-word;
 }
 
-tr:not(.table-header){
+tr:not(.table-header) {
   border-bottom: 1px solid #cbcbcb;
 
-  td{
+  td {
     padding: 20px 10px;
   }
 }
@@ -31,20 +31,33 @@ tr:not(.table-header){
   color: red;
 }
 
-.arrows-holder{
+.arrows-holder {
   display: inline-block;
   transform: rotate(90deg);
   cursor: pointer;
 }
 
-.hashed-arrow{
-  opacity: .4;
+.hashed-arrow {
+  opacity: 0.4;
 }
 
-.active-arrow{
+.active-arrow {
   opacity: 1;
 }
 
+.menu-btns-wrapper {
+  padding: 0px 10px;
+
+  .details{
+    cursor: pointer;
+  }
+}
+
+.liner {
+  background-color: #dddddd;
+  margin: 3px 0px;
+  height: 1px;
+}
 // table {
 //   td {
 //     max-width: 140px;

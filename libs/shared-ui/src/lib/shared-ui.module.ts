@@ -48,6 +48,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SortableTableDirective } from './sorter/sorter.directive';
+import { ActionsStepperComponent } from './actions-stepper/actions-stepper.component';
+import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -77,7 +79,9 @@ const components = [
   ItemsListComponent,
   CustomTableComponent,
   PaginatorComponent,
-  SortableTableDirective
+  SortableTableDirective,
+  ActionsStepperComponent,
+  InputFullWidthComponent
 ];
 
 @NgModule({

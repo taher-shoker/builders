@@ -108,7 +108,15 @@
       </div>
     </div>
     <div class="col-md-4">
-      <section class="tasks">
+
+      <stc-apps-actions-stepper [steps]="steps">
+        <ng-template let-step>
+          <p>
+            <span style="color: green;">Overall progress:</span> <span style="font-weight: bold;">90%</span>
+          </p>
+        </ng-template>
+      </stc-apps-actions-stepper>
+      <section class="tasks" *ngIf="false">
         <figure>
           <figcaption>
             <h4>{{ 'logs_of_cases' | translate }}</h4>

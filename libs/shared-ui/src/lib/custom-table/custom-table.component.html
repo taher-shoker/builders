@@ -5,12 +5,26 @@
       <th (click)="changeCurrentSortingColumn(header.key)">
         {{ header.label }}
         @if (sort && header.key !== 'actions') {
-          <div class="arrows-holder">
-            <div>
-              <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{'active-arrow': (currentSortedByColumn$ |async) === header.key && sortingDirection === 'asc'}"></i>
-              <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{'active-arrow': (currentSortedByColumn$ |async) === header.key && sortingDirection === 'desc'}"></i>
-            </div>
+        <div class="arrows-holder">
+          <div>
+            <i
+              class="ri-arrow-left-s-fill hashed-arrow"
+              [ngClass]="{
+                'active-arrow':
+                  (currentSortedByColumn$ | async) === header.key &&
+                  sortingDirection === 'asc'
+              }"
+            ></i>
+            <i
+              class="ri-arrow-right-s-fill hashed-arrow"
+              [ngClass]="{
+                'active-arrow':
+                  (currentSortedByColumn$ | async) === header.key &&
+                  sortingDirection === 'desc'
+              }"
+            ></i>
           </div>
+        </div>
         }
       </th>
       }
@@ -41,11 +55,12 @@
 
   <tr>
     @for(header of headers; track header){ @if(header.type !== 'actions'){
-    @if(header.useCustomTemplate){
-    <td *ngIf="header.useCustomTemplate">
-      <div
-        [innerHTML]="header.useCustomTemplate(header, item) | safeHtml"
-      ></div>
+      @if(header.complexView){
+      <td>
+        <ng-container *ngTemplateOutlet="complexView; context: { header: header, item: item }" ></ng-container>
+        <ng-template #customTemplate>
+          <ng-container *ngTemplateOutlet="getCustomTemplate(header.key, item)"></ng-container>
+        </ng-template>
     </td>
     }@else {
 
@@ -60,7 +75,7 @@
           <i class="ri-more-2-fill"></i>
         </span>
         <mat-menu #menu="matMenu">
-          <div class="d-flex menu-btns-wrapper">
+          <div class="menu-btns-wrapper">
             <ng-container
               *ngTemplateOutlet="
                 btnsTemp;
@@ -83,15 +98,37 @@
 </ng-template>
 
 <ng-template #btnsTemp let-header="header" let-item="item">
-  @for(action of header?.actions; track action){
-  <span class="btn details p-1" (click)="raiseAction(action, item)">
+  @for(action of header?.actions; track action; let i = $index){
+  <div class="details" (click)="raiseAction(action, item)">
     @if(action === 'edit'){
-    <i class="ri-edit-box-line edit-icon"></i>
+      <div>
+        <i class="ri-edit-box-line edit-icon"></i>
+        Edit
+      </div>
     } @else if (action === 'delete') {
-    <i class="ri-delete-bin-line del-icon"></i>
+
+      <div>
+        <i class="ri-delete-bin-line del-icon"></i>
+        Delete
+      </div>
     }@else if(action === 'details'){
-    <i class="ri-arrow-right-up-line"></i>
+
+      <div>
+        <i class="ri-arrow-right-up-line"></i>
+        Show Details
+      </div>
+    }@else if(action === 'updateProgress'){
+
+      <div>
+        <i class="ri-arrow-right-up-line"></i>
+        Update Progress
+      </div>
     }
-  </span>
+
+    @if(i !== header?.actions.length - 1){
+      <div class="liner"></div>
+    }
+
+  </div>
   }
 </ng-template>
