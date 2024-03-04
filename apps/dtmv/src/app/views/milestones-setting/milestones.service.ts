@@ -27,6 +27,23 @@ export interface Team {
   name: 'Filed Operation' | 'Customer Care' | 'Digital Care' | 'Fraud';
 }
 
+export interface RequestTask {
+  requestTaskId: 0;
+  status: string;
+  username: string;
+  userDisplayName: string;
+  requestTaskAttributes: [
+    {
+      id: number;
+      name: string;
+      value: string;
+    }
+  ];
+  completedDate: Date;
+  createdDate: Date;
+  lastModified: Date;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -137,6 +154,12 @@ export class MilestonesService {
     deliverable: string;
   }) {
     return this.http.patch(`${this.dtUrl}/updateProgress`, data);
+  }
+
+  getMilestoneTasks() {
+    return this.http.get(
+      `http://localhost:8061/api/ticket/requests/tasks/pending`
+    );
   }
 
   getFile(id: any) {

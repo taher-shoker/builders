@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { AfterContentInit, Component, ContentChild, Directive, Input, TemplateRef } from '@angular/core';
+import { AfterContentInit, Component, ContentChild, Directive, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
 
 export interface StepperConfig{
   axis?: "vertical" | "horizontal";
@@ -31,6 +31,8 @@ export class StepDirective {
 })
 export class ActionsStepperComponent implements AfterContentInit  {
   
+  @Output() stepperAction: EventEmitter<string> = new EventEmitter<string>();
+
   @Input({required: true}) steps!: Step[];
   @Input() stepperConfig!: StepperConfig;
 
@@ -40,4 +42,7 @@ export class ActionsStepperComponent implements AfterContentInit  {
       console.log("PROJECTEC:", this.stepTemplate)
   }
   
+  raiseAction(act: string){
+    this.stepperAction.emit(act)
+  }
 }

@@ -109,7 +109,7 @@
     </div>
     <div class="col-md-4">
 
-      <stc-apps-actions-stepper [steps]="steps">
+      <stc-apps-actions-stepper [steps]="steps" (stepperAction)="doStepAction($event)">
         <ng-template let-step>
           <p>
             <span style="color: green;">Overall progress:</span> <span style="font-weight: bold;">90%</span>

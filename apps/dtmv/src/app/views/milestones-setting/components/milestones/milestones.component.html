@@ -17,9 +17,9 @@
                     type="text"
                     matInput
                     #input
-                    placeholder="{{ 'Search for Case Serial' | translate }}"
+                    placeholder="{{ 'Search for Milestone' | translate }}"
                     class="form-control stc-input"
-                    (keyup)="searchFilter($event)"
+                    (keyup)="searchFilter(input)"
                   />
                 </div>
               </div>
@@ -61,6 +61,8 @@
         [length]="milestonesTotalCount"
         (doAction)="tableAction($event)"
         [paginate]="true"
+        [applyFilter]="true"
+        [filter]="filterString"
         [paginationConfig]="{
           pageCount: 10,
           showTotal: false,

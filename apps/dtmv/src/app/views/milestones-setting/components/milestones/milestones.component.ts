@@ -259,8 +259,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     });
   }
 
-  searchFilter(event: Event) {
-    console.log('event', event);
+  filterString: string = '';
+  searchFilter(inp: HTMLInputElement) {
+    console.log('event', inp.value);
+
+    this.filterString = inp.value;
+    
   }
 
   onSubmit() {

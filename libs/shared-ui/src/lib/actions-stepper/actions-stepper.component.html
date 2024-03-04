@@ -24,7 +24,7 @@
           @if(step.actions){
           <div class="d-flex">
             @for(action of step.actions; track action){
-            <button class="m-3 stc-btn">{{ action }}</button>
+            <button (click)="raiseAction(action)" class="m-3 stc-btn">{{ action }}</button>
             }
           </div>
           }
