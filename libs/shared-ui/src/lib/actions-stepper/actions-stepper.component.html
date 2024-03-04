@@ -1,0 +1,53 @@
+<div class="stepper-wrapper">
+  @for(step of steps; track step; let i = $index){
+  <div class="row">
+    <!-- {{step.caption}} -->
+
+    <div class="col">
+      <div class="row step">
+        <div class="col-1">
+          <div
+            class="step-head"
+            [ngClass]="{
+              'step-done': step.state === 'done',
+              'step-warning': step.state === 'warning'
+            }"
+          >
+            @if (step.state === 'done') {
+            <i class="ri-check-fill" style="color: white"></i>
+            }
+          </div>
+        </div>
+        <div class="col">
+          <div class="step-caption">{{ step.caption }}</div>
+
+          @if(step.actions){
+          <div class="d-flex">
+            @for(action of step.actions; track action){
+            <button (click)="raiseAction(action)" class="m-3 stc-btn">{{ action }}</button>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  @if (i !== steps.length - 1) {
+  <div class="liner">
+    <div class="line-holder">
+      <div class="line"></div>
+    </div>
+    @if (step.extraInfo) {
+    <!-- <div class="step-info">{{ step.extraInfo }}</div> -->
+    <!-- <ng-container
+      *ngTemplateOutlet="stepTemplate; context: { step: step }"
+    ></ng-container> -->
+
+    <ng-template
+      [ngTemplateOutlet]="stepTemplate"
+      [ngTemplateOutletContext]="{ $implicit: step }"
+    ></ng-template>
+    }
+  </div>
+  } }
+</div>

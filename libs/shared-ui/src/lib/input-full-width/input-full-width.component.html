@@ -1,0 +1,23 @@
+@if(type !== 'textarea'){
+<div>
+  <label>{{ label }}</label> <br />
+  <input
+    [type]="type"
+    [placeholder]="placeholder"
+    (input)="onValueChange(inp.value); sendInputTextToParent(inp.value)"
+    #inp
+    (click)="markAsTouched()"
+  />
+</div>
+} @if(type === 'textarea'){
+<label>{{ label }}</label> <br />
+
+<textarea
+  [placeholder]="placeholder"
+  (input)="
+    onValueChange(inp.value); sendInputTextToParent(inp.value); autoExpand()
+  "
+  #inp
+  (click)="markAsTouched()"
+></textarea>
+}

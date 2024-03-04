@@ -2,25 +2,33 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
+  AfterContentInit,
   Component,
+  ContentChild,
+  ContentChildren,
   EventEmitter,
   Input,
   OnChanges,
   OnDestroy,
   OnInit,
   Output,
+  QueryList,
   SimpleChanges,
+  TemplateRef,
 } from '@angular/core';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject, take } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
+import { CustomTemplateDirective } from './custom-template.directive';
 
 export interface ColumnsSchema {
   key: string;
   type: 'text' | 'date' | 'actions';
   label: string;
   dateString?: 'longDate';
-  actions?: ('edit' | 'delete' | 'details')[];
+  actions?: ('edit' | 'delete' | 'details' | 'updateProgress')[];
   useCustomTemplate?: (header?: ColumnsSchema, item?: any) => any;
+  complexView?: any;
+  complexViewTemp?: any;
 }
 
 export interface PaginationConfig {
@@ -34,7 +42,9 @@ export interface PaginationConfig {
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
 })
-export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
+export class CustomTableComponent
+  implements OnChanges, OnInit, OnDestroy, AfterContentInit
+{
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
@@ -45,10 +55,13 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input({ required: true }) items!: any[];
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
 
+  @Input() applyFilter: boolean = false;
+  @Input() filter: string = '';
   @Input() paginate: boolean = false;
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
   @Input() length!: number;
+  @Input() complexView!: TemplateRef<any>;
 
   paginator$: Subject<PaginationEvent> = new Subject<PaginationEvent>();
   currentPage: number = 1;
@@ -67,6 +80,12 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
     this.currentSortedByColumn$.subscribe((res: string) => {
       this.sortByColumn(this.itemsInView, res);
     });
+
+    this.paginator$.subscribe(() => {
+      this.currentSortedByColumn$.pipe(take(1)).subscribe((res: string) => {
+        this.sortByColumn(this.itemsInView, res);
+      });
+    });
   }
 
   sortByColumn(list: any[] | undefined, column: string): void {
@@ -84,6 +103,60 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
       : (this.sortingDirection = 'asc');
   }
 
+  @ContentChildren(CustomTemplateDirective)
+  customTemplates!: QueryList<CustomTemplateDirective>;
+
+  templateMap: Record<string, TemplateRef<any>> = {};
+
+  ngAfterContentInit() {
+    this.customTemplates.forEach((template) => {
+      this.templateMap[template.header] = template.templateRef;
+    });
+  }
+
+  getCustomTemplate(header: string, context: any): TemplateRef<any> {
+    return this.templateMap[header] || null;
+  }
+
+  private extractVariableName(template: TemplateRef<any>): string | null {
+    const variableName = template.elementRef.nativeElement.getAttribute('let');
+    return variableName || null;
+  }
+
+  filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  filtrationSubscriptionActivated: boolean = false;
+
+  setupFiltration() {
+    this.filtrationSubscriptionActivated = true;
+    this.filterSubject.subscribe((res) => {
+      console.log('In table filter:', res);
+      this.itemsInView = this.filterItems(res, this.items);
+    });
+
+    // if (this.paginate) {
+    //   this.paginator$.subscribe(() => {
+    //     this.filterSubject.subscribe((res) => {
+    //       this.itemsInView = this.filterItems(res, this.items);
+    //     });
+    //   });
+    // }
+  }
+
+  filterItems(filterStr: string, items: any[]) {
+    const searchFilter = filterStr.toLowerCase().trim();
+
+    const filteredArray = items.filter((item) => {
+      return Object.values(item).some((value) => {
+        if (typeof value === 'string') {
+          return value.toLowerCase().includes(searchFilter);
+        }
+        return false;
+      });
+    });
+
+    return filteredArray;
+  }
+
   ngOnInit(): void {
     if (this.paginate && this.paginationConfig.paginationIq !== 'smart') {
       this.setupDumbPaginator();
@@ -93,6 +166,9 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
     }
     if (this.sort) {
       this.setupSorting();
+    }
+    if (this.applyFilter) {
+      this.setupFiltration();
     }
   }
 
@@ -121,8 +197,12 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
       }
     }
 
-    if(changes['length']){
+    if (changes['length']) {
       this.length = changes['length'].currentValue;
+    }
+
+    if (changes['filter']) {
+      this.filterSubject.next(changes['filter'].currentValue);
     }
   }
 

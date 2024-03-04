@@ -27,6 +27,23 @@ export interface Team {
   name: 'Filed Operation' | 'Customer Care' | 'Digital Care' | 'Fraud';
 }
 
+export interface RequestTask {
+  requestTaskId: 0;
+  status: string;
+  username: string;
+  userDisplayName: string;
+  requestTaskAttributes: [
+    {
+      id: number;
+      name: string;
+      value: string;
+    }
+  ];
+  completedDate: Date;
+  createdDate: Date;
+  lastModified: Date;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -86,6 +103,7 @@ export class MilestonesService {
   createMilestone(data: any) {
     return this.http.post(`${this.dtUrl}/add`, data);
   }
+
   addBulkData(data: FormData, relatedTeam: string) {
     const params = new HttpParams().set('relatedTeam', relatedTeam);
 
@@ -93,6 +111,7 @@ export class MilestonesService {
       params,
     });
   }
+
   getMilestones(filterData?: any) {
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
@@ -128,14 +147,31 @@ export class MilestonesService {
   uploadFile(data: any) {
     return this.http.post(this.endpointAttachments, data);
   }
+
+  updateMilestoneProgress(data: {
+    milestoneId: number;
+    overallProgress: string;
+    deliverable: string;
+  }) {
+    return this.http.patch(`${this.dtUrl}/updateProgress`, data);
+  }
+
+  getMilestoneTasks() {
+    return this.http.get(
+      `http://localhost:8061/api/ticket/requests/tasks/pending`
+    );
+  }
+
   getFile(id: any) {
     return this.http.get(`${this.endpointAttachments}/${id}/download`, {
       responseType: 'blob',
     });
   }
+
   deleteFile(id: any) {
     return this.http.delete(`${this.endpointAttachments}/${id}`);
   }
+
   getKeyByValue(obj: any, status: string) {
     return Object.keys(obj)[Object.values(obj).indexOf(status)];
   }

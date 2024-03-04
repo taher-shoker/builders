@@ -44,10 +44,12 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
 import { CounterCardComponent } from './counter-card/counter-card.component';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SortableTableDirective } from './sorter/sorter.directive';
+import { ActionsStepperComponent } from './actions-stepper/actions-stepper.component';
+import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -77,7 +79,9 @@ const components = [
   ItemsListComponent,
   CustomTableComponent,
   PaginatorComponent,
-  SortableTableDirective
+  SortableTableDirective,
+  ActionsStepperComponent,
+  InputFullWidthComponent,
 ];
 
 @NgModule({
@@ -103,7 +107,7 @@ const components = [
     MatExpansionModule,
     TranslateModule,
     MatProgressSpinnerModule,
-    MatMenuModule
+    MatMenuModule,
   ],
   declarations: [...components],
   exports: [...components, ...modules],

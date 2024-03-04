@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
@@ -22,90 +22,16 @@ import {
 import { TranslateService } from '@ngx-translate/core';
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
+import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 
-export interface PeriodicElement {
-  id: string;
-  name: string;
-  city: string;
-  existingServiceOrder: string;
-  serviceType: string;
-  serviceNumber: string;
-  caseSerialNumber: string;
-  existingPhoneNumber: string;
+export interface Milestone {
+  activityName: string;
+  milestoneName: string;
+  status: string;
+  teamName: string;
+  completionLevel: string;
+  id: number;
 }
-
-const COLUMNS_SCHEMA: ColumnsSchema[] = [
-  {
-    key: 'activityName',
-    type: 'text',
-    label: 'Activity',
-  },
-  {
-    key: 'milestoneName',
-    type: 'text',
-    label: 'Milestone Name',
-    // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
-    //   return `
-    //   <p>${item[header!.key]}</p>
-    //   <p>${item[header!.key]} mixed complex</p>
-    //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
-    //   `;
-    // },
-  },
-  {
-    key: 'status',
-    type: 'text',
-    label: 'Status',
-  },
-  {
-    key: 'teamName',
-    type: 'text',
-    label: 'Team',
-  },
-
-  {
-    key: 'completionLevel',
-    type: 'text',
-    label: 'Completion Level',
-  },
-  {
-    key: 'actions',
-    type: 'actions',
-    actions: ['edit', 'delete', 'details'],
-    label: 'actions',
-  },
-];
-
-const data = [
-  {
-    activityName: 'First activity name',
-    milestoneName: 'Milestonah',
-    status: 'perfect',
-    teamName: 'Real madrid',
-    completionLevel: 'Almost done',
-  },
-  {
-    activityName: 'second activity name',
-    milestoneName: 'Milestonah 2',
-    status: 'well done',
-    teamName: 'Blancos',
-    completionLevel: 'ferfet',
-  },
-  {
-    activityName: 'fourth',
-    milestoneName: 'Milestonah edited',
-    status: 'done',
-    teamName: 'champs',
-    completionLevel: 'undone',
-  },
-  {
-    activityName: 'wild',
-    milestoneName: 'Milestonah final',
-    status: 'into the net',
-    teamName: 'Campione',
-    completionLevel: 'starting',
-  },
-];
 
 @Component({
   selector: 'stc-apps-casses',
@@ -113,6 +39,8 @@ const data = [
   styleUrls: ['./milestones.component.scss'],
 })
 export class MilestonesComponent implements OnInit, OnDestroy {
+  @ViewChild('customTemplate') customTemplate!: any;
+
   form!: FormGroup;
   isLoading = true;
   totalRegisted = 0;
@@ -175,10 +103,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     public milestonesService: MilestonesService,
     protected dialogService: DialogService,
     public authService: AuthService,
-    private cookieService: CookieService,
     public utils: UtilsService,
     private matDialog: MatDialog,
-    private translate: TranslateService,
     private utilities: UtilitiesService
   ) {}
 
@@ -186,10 +112,50 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   addMilestoneNavigate(): void {
     this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
-  displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
-  columnsSchema: any[] = COLUMNS_SCHEMA;
+  columnsSchema: ColumnsSchema[] = [
+    {
+      key: 'activityName',
+      type: 'text',
+      label: 'Activity',
+    },
+    {
+      key: 'milestoneName',
+      type: 'text',
+      label: 'Milestone Name',
+      // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
+      //   return `
+      //   <p>${item[header!.key]}</p>
+      //   <p>${item[header!.key]} mixed complex</p>
+      //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
+      //   `;
+      // },
+      complexView: true,
+      // complexViewTemp: this.customTemplate
+    },
+    {
+      key: 'status',
+      type: 'text',
+      label: 'Status',
+      complexView: true,
+    },
+    {
+      key: 'teamName',
+      type: 'text',
+      label: 'Team',
+    },
 
-  dataSource = new MatTableDataSource<PeriodicElement>();
+    {
+      key: 'completionLevel',
+      type: 'text',
+      label: 'Completion Level',
+    },
+    {
+      key: 'actions',
+      type: 'actions',
+      actions: ['edit', 'delete', 'details', 'updateProgress'],
+      label: 'actions',
+    },
+  ];
 
   disabled = false;
   tableData!: any;
@@ -201,9 +167,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.getMilestones();
 
     this.bannerDataService.updateData({ title: 'milestones', text: '' });
-
-    this.dataSource.filterPredicate = (data, filter) =>
-      data.caseSerialNumber == filter;
 
     this.searchForm();
     this.dialogService.modals = [];
@@ -255,7 +218,30 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       });
     } else if (event.value === 'details') {
       this.detailsNavigate(event.dataRow.id);
+    } else if (event.value === 'updateProgress') {
+      this.openProgressUpdateModal(event.dataRow.id);
     }
+  }
+
+  openProgressUpdateModal(rowId: Milestone['id']) {
+    const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
+      width: '500px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (!res) {
+        return;
+      }
+      this.milestonesService
+        .updateMilestoneProgress({
+          milestoneId: rowId,
+          deliverable: res.deliverable,
+          overallProgress: res.overallProgress,
+        })
+        .subscribe((res) => {
+          console.log('Got a res for updating progress: ', res);
+        });
+    });
   }
 
   MakeSureToDelete(name: string) {
@@ -302,11 +288,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     });
   }
 
-  searchFilter(event: Event) {
-    const searchVal = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
-    this.dataSource.filter = searchVal;
+  filterString: string = '';
+  searchFilter(inp: HTMLInputElement) {
+    console.log('event', inp.value);
+
+    this.filterString = inp.value;
   }
 
   onSubmit() {

@@ -1,0 +1,28 @@
+<div class="dialog">
+  <div class="dialog-body">
+    <div class="dialog-header">Milestone Progress Update| #DT ID</div>
+    <div class="body-holder">
+      <form [formGroup]="form">
+        <div class="my-2">
+          <stc-apps-input-full-width [label]="'Overall Progress %'" [type]="'text'" formControlName="overallProgress"></stc-apps-input-full-width>
+        </div>
+
+        <div class="my-2">
+          <stc-apps-input-full-width [label]="'Deliverable'" [type]="'textarea'" formControlName="deliverable"></stc-apps-input-full-width>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <hr class="liner-hr" />
+
+  <div class="dialog-actions">
+    <div class="actions-wrapper">
+      <button type="button" class="btn" (click)="update()">
+        Update Progress
+      </button>
+      <button type="button" class="btn" (click)="cancel()">Cancel</button>
+    </div>
+  </div>
+</div>

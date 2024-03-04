@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import * as _ from 'lodash';
@@ -16,6 +17,10 @@ import {
   TaskInDetails,
   User,
 } from '../../milestones.service';
+import {
+  Step,
+  StepDirective,
+} from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
 
 @Component({
   selector: 'stc-apps-milestone-details',
@@ -25,6 +30,24 @@ import {
 export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   readonly TaskCicle = TaskCicle;
   readonly CaseStatus = CaseStatus;
+
+  steps: Step[] = [
+    {
+      caption: 'fst cap',
+      state: 'done',
+      extraInfo: 'June 22, 2023',
+    },
+    {
+      caption: 'snd cap',
+      state: 'done',
+      extraInfo: 'June 22, 2023, Some extra more content',
+    },
+    {
+      caption: 'snd cap',
+      state: 'undone',
+      actions: ['fst act', 'snd act', 'thrd act'],
+    },
+  ];
 
   closeForm!: FormGroup;
   infoForm!: FormGroup;
@@ -80,28 +103,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     //   }
     // });
     this.getMilestoneDetails(+this.milestoneId);
-
-    // this.authService.loggedUserStream.subscribe((res) => {
-    //   if (res?.roles.includes('APPROVERS')) {
-    //     this.CasesService.setSystemTeams().subscribe((res) => {
-    //       this.teams = res;
-    //       this.teams = this.teams.filter(
-    //         (x: any) =>
-    //           x.groupName !== 'Fraud' && x.groupName !== 'Fraud Admins'
-    //       );
-    //       // this.handleTeam(this.milestoneDetails, this.teams);
-    //     });
-
-    //     // this.CasesService.setSystemUsers().subscribe((res) => {
-    //     //   this.users = res.filter(
-    //     //     (x: User) =>
-    //     //       this.getUserPrivilege(x) !== 'APPROVERS' &&
-    //     //       this.getUserPrivilege(x) !== 'ADMINS'
-    //     //   );
-    //     //   this.handleUser(this.milestoneDetails, this.users);
-    //     // });
-    //   }
-    // });
+    this.getMilestoneTasks();
 
     this.closeForm = this.formBuilder.group({
       close_mail_content: [''],
@@ -129,8 +131,18 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   getMilestoneDetails(id: number) {
     this.milestonesService.getMilestone(id).subscribe((res: any) => {
       // this.allTasks = res.data.filter((t: any) => t.assignedUser);
-      this.milestoneDetails = res
+      this.milestoneDetails = res;
     });
+  }
+
+  getMilestoneTasks() {
+    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+      console.log('tasks:', res);
+    });
+  }
+
+  doStepAction(actionStr: string) {
+    console.log('The action is :', actionStr);
   }
 
   isLoading = false;
@@ -174,13 +186,13 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   }
   /** function to call fetching all tasks again and close any Modal if found **/
   refreshTasks(taskId: number, data: any) {
-    this.milestonesService.updateCaseTask(+this.milestoneId, taskId, data).subscribe(
-      (res: any) => {
+    this.milestonesService
+      .updateCaseTask(+this.milestoneId, taskId, data)
+      .subscribe((res: any) => {
         this.caseStatus = res.caseStatus;
         this.dialogService.close();
         this.getMilestoneDetails(+this.milestoneId);
-      }
-    );
+      });
   }
 
   /** Actions with check case info (Request More Info) status **/

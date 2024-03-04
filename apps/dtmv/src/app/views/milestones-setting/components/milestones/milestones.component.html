@@ -1,22 +1,32 @@
 <div class="casses-settings">
   <div class="row ">
-    <div class="col-md-8">
-      <div class="f-box">
-        <div class="row align-items-center">
-          <!-- <div class="col-md-3">
+    <div class="row mt-4">
+      <div class="col-md-8">
+        <div class="f-box">
+          <div class="row align-items-center">
+            <!-- <div class="col-md-3">
             <p class="table-title">{{ 'milestones_list' | translate }}</p>
           </div> -->
-          <div class="col-md-12">
-            <div class="row">
-              <div class="col">
-                <div class="input-group stc-input-group custom-input mb-3">
+            <div class="col-md-12">
+              <div class="row">
+                <div class="col">
+                  <div class="input-group stc-input-group custom-input mb-3">
+                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                    <input type="text" matInput #input placeholder="{{ 'Search on milestone' }}"
+                      class="form-control stc-input" (keyup)="searchFilter($event)" />
+                  </div>
+                </div>
+
+                <div class="col-2">
+                  <stc-apps-button [buttonText]="'filter' | translate" [buttonType]="'gray-outline'"
+                    [buttonIcon]="'fa-filter'" (btnClick)="toggleFilter()"></stc-apps-button>
                   <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-                  <input type="text" matInput #input placeholder="{{ 'Search on milestone' }}"
-                    class="form-control stc-input" (keyup)="searchFilter($event)" />
+                  <input type="text" matInput #input placeholder="{{ 'Search for Milestone' | translate }}"
+                    class="form-control stc-input" (keyup)="searchFilter(input)" />
                 </div>
               </div>
 
-              <div class="col-2">
+              <div class="col-3">
                 <stc-apps-button [buttonText]="'filter' | translate" [buttonType]="'gray-outline'"
                   [buttonIcon]="'fa-filter'" (btnClick)="toggleFilter()"></stc-apps-button>
               </div>
@@ -28,26 +38,46 @@
                 <stc-apps-button [buttonText]="'Export' | translate" [buttonType]="'warn'"
                   (btnClick)="toggleFilter()"></stc-apps-button>
               </div>
-              <ng-container *ngIf="authService.getLoggedInUser()">
+              <!-- <ng-container *ngIf="authService.getLoggedInUser()">
                 <div class="col-md-4" *ngIf="
                     authService.getLoggedInUser().roles.includes('CREATORS')
+
                   ">
                   <stc-apps-button [buttonText]="'Add Milestone' | translate" [buttonType]="'primary'"
                     [buttonIcon]="' fa-plus-circle'" (btnClick)="addMilestoneNavigate()"></stc-apps-button>
+
+                  <stc-apps-button [buttonText]="'Add new Case' | translate" [buttonType]="'primary'"
+                    [buttonIcon]="' fa-plus-circle'" (btnClick)="addCasseNavigate()"></stc-apps-button>
+
                 </div>
-              </ng-container>
+              </ng-container> -->
             </div>
           </div>
         </div>
       </div>
 
       @if(tableData){
-
       <stc-apps-custom-table [items]="tableData" [headers]="columnsSchema" [length]="milestonesTotalCount"
         (doAction)="tableAction($event)" [paginate]="true"
         [paginationConfig]="{pageCount: 10, showTotal: false, paginationIq: 'smart'}"
         (paginationEvent)="paginate($event)"></stc-apps-custom-table>
       }
+
+    </div>
+    <div class="col-md-4">
+      <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems"></stc-apps-items-list>
+
+      <stc-apps-custom-table [items]="tableData" [headers]="columnsSchema" [length]="milestonesTotalCount"
+        (doAction)="tableAction($event)" [paginate]="true" [applyFilter]="true" [filter]="filterString"
+        [paginationConfig]="{
+          pageCount: 10,
+          showTotal: false,
+          paginationIq: 'smart'
+        }" [complexView]="customTemplate" (paginationEvent)="paginate($event)">
+      </stc-apps-custom-table>
+      <ng-template #customTemplate let-header="header" let-item="item">
+        <p class="custom-class-template">{{item[header.key]}}</p>
+      </ng-template>
 
     </div>
     <div class="col-md-4">
@@ -103,9 +133,8 @@
     <strong>#{{ rowData?.id }}</strong>
 
     <span>
-      {{
-      ' Kindly note you can&lsquo;t roll back this action. Are you sure?'
-      }}</span>
+
+      ' Kindly note you can&lsquo;t roll back this action. Are you sure?'</span>
   </p>
 
   <div class="row mt-4">
