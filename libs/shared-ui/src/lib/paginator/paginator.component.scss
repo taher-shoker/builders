@@ -1,20 +1,23 @@
-button{
+button {
   border: none;
   outline: none;
   background-color: white;
 }
-
-.paginator{
+.paginator-holder {
+  margin-top: 20px;
+}
+.paginator {
   display: flex;
 }
 
-.pages-holder{
+.pages-holder {
   display: flex;
   border: 1px solid gray;
-} 
+}
 
-.previous-btn, .next-btn{
-  button{
+.previous-btn,
+.next-btn {
+  button {
     font-weight: 600;
     color: var(--stc-color);
     border: 1px solid gray;
@@ -23,24 +26,24 @@ button{
   }
 }
 
-.previous-btn{
-  button{
+.previous-btn {
+  button {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: none;
   }
 }
 
-.next-btn{
-  button{
+.next-btn {
+  button {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left: none;
   }
 }
 
-.pages-holder{
-  button{
+.pages-holder {
+  button {
     padding: 11px 20px;
   }
 
@@ -49,13 +52,13 @@ button{
   }
 }
 
-.active{
+.active {
   background-color: var(--stc-color);
   color: white;
 }
 
-.disabled{
+.disabled {
   background-color: #ebebeb;
-  color: gray!important;
-  pointer-events:none;
+  color: gray !important;
+  pointer-events: none;
 }

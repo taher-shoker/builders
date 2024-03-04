@@ -1,10 +1,15 @@
-:root {
+@import './fonts';
+:root  {
   --stc-color: #4f008c;
   --grey-color: #8e9aa0;
   --stc-color-dark: #3c016a;
   --stc-red-color: #ff1a1a;
   --stc-lightGrey-color: #f8f8f8;
   --stc-pink-color: #ff375e;
+  --stc-font-base: 'stc forward-regular';
+  --stc-font-light: 'stc forward-light';
+  --stc-font-meduim: 'stc forward-medium';
+  --stc-font-bold: 'stc forward-bold';
 }
 
 // GMPO palette color
