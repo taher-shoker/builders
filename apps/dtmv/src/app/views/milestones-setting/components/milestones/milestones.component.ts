@@ -191,7 +191,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.milestonesTotalCount = res.totalElements;
 
     this.tableData = res.content;
-    console.warn(this.milestonesTotalCount);
+    //console.warn(this.milestonesTotalCount);
   }
 
   detailsNavigate(id: string | number) {
