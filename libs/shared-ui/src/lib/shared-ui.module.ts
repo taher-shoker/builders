@@ -50,6 +50,7 @@ import { PaginatorComponent } from './paginator/paginator.component';
 import { SortableTableDirective } from './sorter/sorter.directive';
 import { ActionsStepperComponent } from './actions-stepper/actions-stepper.component';
 import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
+import { FilterArrayPipe } from './filter-array/filter-array.pipe';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -81,7 +82,8 @@ const components = [
   PaginatorComponent,
   SortableTableDirective,
   ActionsStepperComponent,
-  InputFullWidthComponent
+  InputFullWidthComponent,
+  FilterArrayPipe
 ];
 
 @NgModule({

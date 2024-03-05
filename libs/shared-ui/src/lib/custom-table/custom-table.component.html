@@ -51,7 +51,7 @@
 }
 
 <ng-template #tableBody let-tableItems="tableItems">
-  @for(item of tableItems; track item){
+  @for(item of tableItems | filterArray: filterStrStored; track item){
 
   <tr>
     @for(header of headers; track header){ @if(header.type !== 'actions'){
