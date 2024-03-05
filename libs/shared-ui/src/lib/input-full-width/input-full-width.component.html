@@ -1,19 +1,26 @@
-@if(type !== 'textarea'){
+@if(type() !== 'textarea'){
 <div>
-  <label>{{ label }}</label> <br />
+  <label>{{ label() }}</label> <br />
   <input
     [type]="type"
-    [placeholder]="placeholder"
+    [placeholder]="placeholder()"
     (input)="onValueChange(inp.value); sendInputTextToParent(inp.value)"
     #inp
     (click)="markAsTouched()"
   />
 </div>
-} @if(type === 'textarea'){
-<label>{{ label }}</label> <br />
+} @if(type() === 'textarea'){
+<label
+  >{{ label() }}
+
+  @if (required()) {
+  <span class="required-start">*</span>
+  }
+</label>
+<br />
 
 <textarea
-  [placeholder]="placeholder"
+  [placeholder]="placeholder()"
   (input)="
     onValueChange(inp.value); sendInputTextToParent(inp.value); autoExpand()
   "

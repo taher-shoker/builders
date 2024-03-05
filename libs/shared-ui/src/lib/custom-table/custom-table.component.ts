@@ -15,6 +15,7 @@ import {
   QueryList,
   SimpleChanges,
   TemplateRef,
+  input
 } from '@angular/core';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
@@ -48,9 +49,11 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy, After
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
 
-  @Input({ required: true }) headers!: ColumnsSchema[];
+  // @Input({ required: true }) headers!: ColumnsSchema[];
+headers = input.required<ColumnsSchema[]>();
 
   @Input({ required: true }) items!: any[];
+  // items = input.required<any[]>();
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
 
   @Input() applyFilter: boolean = false;

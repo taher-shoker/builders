@@ -1,7 +1,7 @@
 <table cellpadding="10">
   <tbody>
     <tr class="table-header">
-      @for(header of headers; track header){
+      @for(header of headers(); track header){
       <th (click)="changeCurrentSortingColumn(header.key)">
         {{ header.label }}
         @if (sort && header.key !== 'actions') {
@@ -54,7 +54,7 @@
   @for(item of tableItems | filterArray: filterStrStored; track item){
 
   <tr>
-    @for(header of headers; track header){ @if(header.type !== 'actions'){
+    @for(header of headers(); track header){ @if(header.type !== 'actions'){
       @if(header.complexView){
       <td>
         <ng-container *ngTemplateOutlet="complexView; context: { header: header, item: item }" ></ng-container>

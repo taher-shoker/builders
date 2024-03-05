@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -17,10 +17,12 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class InputFullWidthComponent {
   @Output() currentText: EventEmitter<string> = new EventEmitter<string>();
-  @Input({ required: true }) label!: string;
 
-  @Input() placeholder: string = '';
-  @Input({ required: true }) type: string = 'text';
+  label = input.required();
+  placeholder = input('');
+
+  type = input('text');
+  required = input(false);
 
   value!: any;
   touched = false;

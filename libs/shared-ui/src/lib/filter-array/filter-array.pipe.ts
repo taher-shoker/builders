@@ -11,8 +11,8 @@ export class FilterArrayPipe implements PipeTransform {
 
     const searchFilter = filterStr.toLowerCase().trim();
 
-    return items.filter(item => {
-      return Object.values(item).some(value => {
+    return items.filter((item) => {
+      return Object.values(item).some((value) => {
         if (typeof value === 'string') {
           return value.toLowerCase().includes(searchFilter);
         }

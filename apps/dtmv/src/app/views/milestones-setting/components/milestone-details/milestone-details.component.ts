@@ -10,6 +10,7 @@ import { saveAs } from 'file-saver';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import {
+  Actions,
   Case,
   CaseStatus,
   MilestonesService,
@@ -17,7 +18,13 @@ import {
   TaskInDetails,
   User,
 } from '../../milestones.service';
-import { Step, StepDirective } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
+import {
+  Step,
+  StepDirective,
+} from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
+import { Milestone } from '../milestones/milestones.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-progress-dialog/update-milestone-progress-dialog.component';
 
 @Component({
   selector: 'stc-apps-milestone-details',
@@ -28,22 +35,17 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   readonly TaskCicle = TaskCicle;
   readonly CaseStatus = CaseStatus;
 
-
   steps: Step[] = [
     {
-      caption: 'fst cap',
+      caption: 'Milestone progress updated',
       state: 'done',
-      extraInfo: 'June 22, 2023',
+      // extraInfo: 'June 22, 2023',
     },
     {
-      caption: 'snd cap',
-      state: 'done',
-      extraInfo: 'June 22, 2023, Some extra more content',
-    },
-    {
-      caption: 'snd cap',
+      caption: 'Add Evidence',
       state: 'undone',
-      actions: ['fst act', 'snd act', 'thrd act'],
+      // extraInfo: 'June 22, 2023, Some extra more content',
+      actions: [Actions.addEvidence],
     },
   ];
 
@@ -80,7 +82,8 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public milestonesService: MilestonesService,
     private languageManagerService: LanguageManagerService,
-    public authService: AuthService
+    public authService: AuthService,
+    private matDialog: MatDialog
   ) {}
 
   ngOnInit(): void {
@@ -101,7 +104,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     //   }
     // });
     this.getMilestoneDetails(+this.milestoneId);
-    this.getMilestoneTasks();
+    // this.getMilestoneTasks();
 
     this.closeForm = this.formBuilder.group({
       close_mail_content: [''],
@@ -130,17 +133,64 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     this.milestonesService.getMilestone(id).subscribe((res: any) => {
       // this.allTasks = res.data.filter((t: any) => t.assignedUser);
       this.milestoneDetails = res;
+
+      this.milestonesService
+        .getMilesoneProgressWorkflow(res.latestWorkflowId)
+        .subscribe((res) => {
+          console.log('getMilesoneProgressWorkflow:', res);
+        });
     });
   }
 
-  getMilestoneTasks(){
-    this.milestonesService.getMilestoneTasks().subscribe(res => {
-      console.log("tasks:", res)
-    })
+  getMilestoneTasks() {
+    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+      console.log('tasks:', res);
+    });
   }
 
-  doStepAction(actionStr: string){
-    console.log("The action is :", actionStr)
+  doStepAction(actionStr: string) {
+    const type = actionStr as Actions
+    this.openMilestoneProgressModal(type);
+  }
+
+  openMilestoneProgressModal(type: Actions) {
+    const dialogRef = this.matDialog.open(
+      UpdateMilestoneProgressDialogComponent,
+      {
+        width: '500px',
+        data: {
+          milestoneName: 'dwsda',
+          type
+        }
+      }
+    );
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (!res) {
+        return;
+      }
+
+      console.log('The reso :', res);
+      console.log('The id :', this.milestoneId);
+    });
+  }
+
+  postEvidence(file: File, id: number, note: string) {
+    this.milestonesService.postEvidenceOrJustification(
+      file,
+      'EVIDENCE',
+      id,
+      note
+    );
+  }
+
+  postJustification(file: File, id: number, note: string) {
+    this.milestonesService.postEvidenceOrJustification(
+      file,
+      'JUSTIFICATION',
+      id,
+      note
+    );
   }
 
   isLoading = false;
