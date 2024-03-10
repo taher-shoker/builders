@@ -164,8 +164,13 @@ export class MilestonesService {
   getMilesoneProgressWorkflow(
     requestId: number
   ): Observable<MilestoneProgressWorkflow> {
+    // return this.http.get<MilestoneProgressWorkflow>(
+    //   `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
+    
+    // );
+
     return this.http.get<MilestoneProgressWorkflow>(
-      `http://localhost:8061/api/ticket/requests/tasks/${requestId}`
+      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}`
     );
   }
 
@@ -173,6 +178,12 @@ export class MilestonesService {
     return this.http.get(
       `http://localhost:8061/api/ticket/requests/tasks/pending`
     );
+  }
+
+  downloadAttachment(id: number){
+    return this.http.get(`http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}/download`, {
+      responseType: 'blob',
+    });
   }
 
   /**
@@ -223,7 +234,7 @@ export type MilestoneProgressWorkflow = MilestoneProgressWorkflowStep[];
 
 export interface MilestoneProgressWorkflowStep {
   requestTaskId: number;
-  status: 'PLANNED' | 'DELAYED' | 'AT_RISK' | 'ON_TRACK' | 'COMPLETED';
+  status: 'completed' | 'pending';
   username: string;
   userDisplayName: string;
   requestTaskAttributes: [
@@ -236,7 +247,15 @@ export interface MilestoneProgressWorkflowStep {
   completedDate: Date;
   createdDate: Date;
   lastModified: Date;
+  taskName: string
 }
+
+export type MilestoneStatus =
+  | 'PLANNED'
+  | 'DELAYED'
+  | 'AT_RISK'
+  | 'ON_TRACK'
+  | 'COMPLETED';
 
 // export interface File {
 //   id: string;

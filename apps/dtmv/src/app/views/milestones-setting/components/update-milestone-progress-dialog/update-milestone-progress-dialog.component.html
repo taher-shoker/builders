@@ -19,7 +19,16 @@
             [placeholder]="'Write your note'"
           ></stc-apps-input-full-width>
         </div>
+
+        <stc-apps-file-uploader [multiple]="false" [chooseLabel]="'add_attachment' | translate"
+        (onformchange)="onUploadFile($event)" [attachmentFiles]="
+          form.controls['attachment'].value
+        " formControlName="attachment" [isLoading]="isLoading"
+        (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
+
       </form>
+
+
     </div>
   </div>
 

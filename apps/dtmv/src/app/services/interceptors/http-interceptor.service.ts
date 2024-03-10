@@ -26,6 +26,7 @@ export class HttpInterceptorService implements HttpInterceptor {
           Authorization: `Bearer ${token}`,
           'Authorization-Generated': `Bearer ${gToken}`,
           'Access-Token-Type': type,
+          'System' : 'DI_Milestones'
         },
       });
     }

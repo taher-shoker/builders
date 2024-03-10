@@ -1,48 +1,63 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { AfterContentInit, Component, ContentChild, Directive, EventEmitter, Input, Output, TemplateRef } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ContentChild,
+  Directive,
+  EventEmitter,
+  Input,
+  Output,
+  TemplateRef,
+} from '@angular/core';
 
-export interface StepperConfig{
-  axis?: "vertical" | "horizontal";
-  direction?: "ltr" | "rtl";
+export interface StepperConfig {
+  axis?: 'vertical' | 'horizontal';
+  direction?: 'ltr' | 'rtl';
 }
 
-export interface Step{
-template?: string;
+export interface Step {
+  template?: string;
   caption: string;
-  state: "done" | "undone" | "warning";
+  state: 'done' | 'undone' | 'warning';
   actions?: string[];
-  extraInfo? : string
+  additionalTemp?: boolean;
+  extraInfo?: string[];
+  notes?: string;
+  attachments?: string[];
 }
 
 @Directive({
   selector: '[stcAppsStepView]',
-  standalone: true
+  standalone: true,
 })
 export class StepDirective {
-  constructor(private templateRef: TemplateRef<any>) {
-  }
+  constructor(private templateRef: TemplateRef<any>) {}
 }
-
 
 @Component({
   selector: 'stc-apps-actions-stepper',
   templateUrl: './actions-stepper.component.html',
   styleUrls: ['./actions-stepper.component.scss'],
 })
-export class ActionsStepperComponent implements AfterContentInit  {
-  
-  @Output() stepperAction: EventEmitter<string> = new EventEmitter<string>();
+export class ActionsStepperComponent implements AfterContentInit {
+  @Output() stepperAction: EventEmitter<string | { act: string; item: any }> =
+    new EventEmitter<string | { act: string; item: any }>();
 
-  @Input({required: true}) steps!: Step[];
+  @Input({ required: true }) steps!: Step[];
   @Input() stepperConfig!: StepperConfig;
 
   @ContentChild(TemplateRef) stepTemplate!: TemplateRef<any>;
 
   ngAfterContentInit(): void {
-      console.log("PROJECTEC:", this.stepTemplate)
+    console.log('PROJECTED to stepper:', this.stepTemplate);
+    console.log('steps:', this.steps);
   }
-  
-  raiseAction(act: string){
-    this.stepperAction.emit(act)
+
+  raiseAction(act: string, optionalItem?: any) {
+    if (optionalItem) {
+      this.stepperAction.emit({ act, item: optionalItem });
+    } else {
+      this.stepperAction.emit(act);
+    }
   }
 }

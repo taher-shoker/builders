@@ -2,7 +2,8 @@
 import { Component, Inject, Signal, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Actions } from '../../milestones.service';
+import { Actions, MilestonesService } from '../../milestones.service';
+import * as saveAs from 'file-saver';
 
 @Component({
   selector: 'stc-apps-update-milestone-progress-dialog',
@@ -10,10 +11,6 @@ import { Actions } from '../../milestones.service';
   styleUrl: './update-milestone-progress-dialog.component.scss',
 })
 export class UpdateMilestoneProgressDialogComponent {
-
-  // remarksCaption: string = 'You can add remarks optionally';
-  // justificationCaption: string = 'Please add justification';
-  // evidenceCaption: string = 'Please add Evidence';
 
   remarksHint: string = 'You can add remarks optionally';
   justificationHint: string = 'Please add justification';
@@ -42,7 +39,8 @@ export class UpdateMilestoneProgressDialogComponent {
 
   constructor(
     public dialogRef: MatDialogRef<UpdateMilestoneProgressDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { type: Actions, milestoneName: string }
+    @Inject(MAT_DIALOG_DATA) public data: { type: Actions, milestoneName: string },
+    private milestonesService: MilestonesService
   ) {
 
     this.milestoneName.set(data.milestoneName)
@@ -54,6 +52,47 @@ export class UpdateMilestoneProgressDialogComponent {
     } else {
       this.hint.set(this.remarksHint);
     }
+  }
+
+  isLoading = false;
+  uploadedFile: any[] = []; // turn to File later
+  onUploadFile(files: string | any[]) {
+    if (files) {
+      for (let i = 0; i < files?.length; i++) {
+        this.isLoading = true;
+        const formData = new FormData();
+        formData.append('file', files[i]);
+        // this.formData.append('file', files[i]);
+        //postEvidenceOrJustification
+        this.milestonesService.uploadFile(formData).subscribe((res: any) => {
+          if (res) {
+            this.uploadedFile.push(res);
+            this.isLoading = false;
+            this.form
+              .get('attachment')
+              ?.setValue(this.uploadedFile);
+          }
+        });
+      }
+    }
+  }
+
+  onDeleteFile(id: number) {
+    this.milestonesService.deleteFile(id).subscribe((res: any) => {
+      this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
+      this.form.get('attachment')?.setValue(this.uploadedFile);
+    });
+  }
+
+  downloadFile(id: number, name: string) {
+    this.milestonesService.getFile(id).subscribe((buffer) => {
+      const data: Blob = new Blob([buffer], {
+        type: 'text/csv;charset=utf-8',
+      });
+      // you may improve this code to customize the name
+      // of the export based on date or some other factors
+      saveAs(data, name);
+    });
   }
 
   update() {

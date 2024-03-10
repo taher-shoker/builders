@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -54,6 +54,6 @@ import { UpdateMilestoneProgressDialogComponent } from './components/update-mile
     MatTabsModule,
   ],
   exports: [],
-  providers: [],
+  providers: [DatePipe],
 })
 export class MilestonesSettingModule {}
