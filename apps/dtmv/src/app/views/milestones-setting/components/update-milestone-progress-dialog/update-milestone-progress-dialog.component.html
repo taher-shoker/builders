@@ -1,0 +1,45 @@
+<div class="dialog">
+  <div class="dialog-body">
+    <div class="dialog-header">
+      <p class="caption">
+        {{ dialogCaption() }}
+      </p>
+      <p class="hint">
+        {{ hint() }}
+      </p>
+    </div>
+    <div class="body-holder">
+      <form [formGroup]="form">
+        <div class="my-2">
+          <stc-apps-input-full-width
+            [required]="true"
+            [label]="'Add note'"
+            [type]="'textarea'"
+            formControlName="note"
+            [placeholder]="'Write your note'"
+          ></stc-apps-input-full-width>
+        </div>
+
+        <stc-apps-file-uploader [multiple]="false" [chooseLabel]="'add_attachment' | translate"
+        (onformchange)="onUploadFile($event)" [attachmentFiles]="
+          form.controls['attachment'].value
+        " formControlName="attachment" [isLoading]="isLoading"
+        (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
+
+      </form>
+
+
+    </div>
+  </div>
+
+  <hr class="liner-hr" />
+
+  <div class="dialog-actions">
+    <div class="actions-wrapper">
+      <button type="button" class="btn" (click)="update()">
+        {{data.type}}
+      </button>
+      <button type="button" class="btn" (click)="cancel()">Cancel</button>
+    </div>
+  </div>
+</div>

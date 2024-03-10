@@ -44,6 +44,11 @@ export interface RequestTask {
   lastModified: Date;
 }
 
+export enum Actions {
+  addEvidence = 'Add Evidence',
+  addJustification = 'Add Justification',
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -156,9 +161,57 @@ export class MilestonesService {
     return this.http.patch(`${this.dtUrl}/updateProgress`, data);
   }
 
+  getMilesoneProgressWorkflow(
+    requestId: number
+  ): Observable<MilestoneProgressWorkflow> {
+    // return this.http.get<MilestoneProgressWorkflow>(
+    //   `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
+    
+    // );
+
+    return this.http.get<MilestoneProgressWorkflow>(
+      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}`
+    );
+  }
+
   getMilestoneTasks() {
     return this.http.get(
       `http://localhost:8061/api/ticket/requests/tasks/pending`
+    );
+  }
+
+  downloadAttachment(id: number){
+    return this.http.get(`http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}/download`, {
+      responseType: 'blob',
+    });
+  }
+
+  /**
+   * @param file the full file of the attachment.
+   * @param type type of the attachment.
+   * @param milestoneId Milestone ID
+   * @param note The Comment if needed.
+   */
+
+  postEvidenceOrJustification(
+    file: File,
+    type: 'EVIDENCE' | 'JUSTIFICATION',
+    milestoneId: number,
+    note: string
+  ): Observable<number> {
+    let queryParams = new HttpParams();
+    queryParams = queryParams.append('attachmentType', type);
+    queryParams = queryParams.append('milestoneId', milestoneId);
+    queryParams = queryParams.append('note', note);
+
+    return this.http.post<number>(
+      'http://localhost:28054/api/v2/dt-milestone-service/attachments',
+      {
+        file,
+      },
+      {
+        params: queryParams,
+      }
     );
   }
 
@@ -177,12 +230,39 @@ export class MilestonesService {
   }
 }
 
-export interface File {
-  id: string;
-  fileName: string;
-  url: string;
-  label: string;
+export type MilestoneProgressWorkflow = MilestoneProgressWorkflowStep[];
+
+export interface MilestoneProgressWorkflowStep {
+  requestTaskId: number;
+  status: 'completed' | 'pending';
+  username: string;
+  userDisplayName: string;
+  requestTaskAttributes: [
+    {
+      id: number;
+      name: string;
+      value: string;
+    }
+  ];
+  completedDate: Date;
+  createdDate: Date;
+  lastModified: Date;
+  taskName: string
 }
+
+export type MilestoneStatus =
+  | 'PLANNED'
+  | 'DELAYED'
+  | 'AT_RISK'
+  | 'ON_TRACK'
+  | 'COMPLETED';
+
+// export interface File {
+//   id: string;
+//   fileName: string;
+//   url: string;
+//   label: string;
+// }
 
 export interface Task {
   caseTasksDto: {

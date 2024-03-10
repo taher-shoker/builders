@@ -15,6 +15,7 @@ import {
   QueryList,
   SimpleChanges,
   TemplateRef,
+  input
 } from '@angular/core';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
@@ -42,17 +43,17 @@ export interface PaginationConfig {
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
 })
-export class CustomTableComponent
-  implements OnChanges, OnInit, OnDestroy, AfterContentInit
-{
+export class CustomTableComponent implements OnChanges, OnInit, OnDestroy, AfterContentInit {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
 
-  @Input({ required: true }) headers!: ColumnsSchema[];
+  // @Input({ required: true }) headers!: ColumnsSchema[];
+headers = input.required<ColumnsSchema[]>();
 
   @Input({ required: true }) items!: any[];
+  // items = input.required<any[]>();
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
 
   @Input() applyFilter: boolean = false;
@@ -69,6 +70,8 @@ export class CustomTableComponent
   loadedPages: undefined | number[]; // should be defined in case of 'smart' paginationIq.
   itemsMap = new Map<string, any[]>(); // should be used and set in case of 'smart' paginationIq.
 
+  filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  filterStrStored : string = '';
   currentSortedByColumn$: Subject<string> = new Subject<string>();
 
   sortingDirection: 'desc' | 'asc' = 'asc';
@@ -103,8 +106,7 @@ export class CustomTableComponent
       : (this.sortingDirection = 'asc');
   }
 
-  @ContentChildren(CustomTemplateDirective)
-  customTemplates!: QueryList<CustomTemplateDirective>;
+  @ContentChildren(CustomTemplateDirective) customTemplates!: QueryList<CustomTemplateDirective>;
 
   templateMap: Record<string, TemplateRef<any>> = {};
 
@@ -123,38 +125,11 @@ export class CustomTableComponent
     return variableName || null;
   }
 
-  filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  filtrationSubscriptionActivated: boolean = false;
 
-  setupFiltration() {
-    this.filtrationSubscriptionActivated = true;
-    this.filterSubject.subscribe((res) => {
-      console.log('In table filter:', res);
-      this.itemsInView = this.filterItems(res, this.items);
-    });
-
-    // if (this.paginate) {
-    //   this.paginator$.subscribe(() => {
-    //     this.filterSubject.subscribe((res) => {
-    //       this.itemsInView = this.filterItems(res, this.items);
-    //     });
-    //   });
-    // }
-  }
-
-  filterItems(filterStr: string, items: any[]) {
-    const searchFilter = filterStr.toLowerCase().trim();
-
-    const filteredArray = items.filter((item) => {
-      return Object.values(item).some((value) => {
-        if (typeof value === 'string') {
-          return value.toLowerCase().includes(searchFilter);
-        }
-        return false;
-      });
-    });
-
-    return filteredArray;
+  setupFiltration(){
+    this.filterSubject.subscribe(res => {
+      this.filterStrStored = res
+    })
   }
 
   ngOnInit(): void {
@@ -167,7 +142,7 @@ export class CustomTableComponent
     if (this.sort) {
       this.setupSorting();
     }
-    if (this.applyFilter) {
+    if(this.applyFilter){
       this.setupFiltration();
     }
   }
@@ -202,7 +177,7 @@ export class CustomTableComponent
     }
 
     if (changes['filter']) {
-      this.filterSubject.next(changes['filter'].currentValue);
+      this.filterSubject.next(changes['filter'].currentValue)
     }
   }
 

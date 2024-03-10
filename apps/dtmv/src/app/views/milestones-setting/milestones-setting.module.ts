@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -23,6 +23,7 @@ import { MiltestonesSettingRoutingModule } from './milestones-setting-routing.mo
 import { MilestonesSettingComponent } from './milestones-setting.component';
 import { UpdateProgressDialogComponent } from './components/updateProgressDialog/updateProgressDialog.component';
 import { CustomTemplateDirective } from 'libs/shared-ui/src/lib/custom-table/custom-template.directive';
+import { UpdateMilestoneProgressDialogComponent } from './components/update-milestone-progress-dialog/update-milestone-progress-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { CustomTemplateDirective } from 'libs/shared-ui/src/lib/custom-table/cus
     EditMilestineComponent,
     MilestoneDetailsComponent,
     UpdateProgressDialogComponent,
-    CustomTemplateDirective
+    CustomTemplateDirective,
+    UpdateMilestoneProgressDialogComponent
   ],
   imports: [
     CommonModule,
@@ -52,6 +54,6 @@ import { CustomTemplateDirective } from 'libs/shared-ui/src/lib/custom-table/cus
     MatTabsModule,
   ],
   exports: [],
-  providers: [],
+  providers: [DatePipe],
 })
 export class MilestonesSettingModule {}

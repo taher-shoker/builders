@@ -1,7 +1,7 @@
 <table cellpadding="10">
   <tbody>
     <tr class="table-header">
-      @for(header of headers; track header){
+      @for(header of headers(); track header){
       <th (click)="changeCurrentSortingColumn(header.key)">
         {{ header.label }}
         @if (sort && header.key !== 'actions') {
@@ -38,10 +38,10 @@
 }
 
 <ng-template #tableBody let-tableItems="tableItems">
-  @for(item of tableItems; track item){
+  @for(item of tableItems | filterArray: filterStrStored; track item){
 
   <tr>
-    @for(header of headers; track header){ @if(header.type !== 'actions'){
+    @for(header of headers(); track header){ @if(header.type !== 'actions'){
     @if(header.complexView){
     <td>
       <ng-container *ngTemplateOutlet="complexView; context: { header: header, item: item }"></ng-container>
@@ -96,21 +96,28 @@
     </div>
     }@else if(action === 'details'){
 
-    <div>
+    <<<<<<< HEAD <div>
       <i class="ri-arrow-right-up-line"></i>
       Show Details
-    </div>
-    }@else if(action === 'updateProgress'){
+  </div>
+  }@else if(action === 'updateProgress'){
+  =======
+  <div>
+    <i class="ri-arrow-right-up-line"></i>
+    Show Details
+  </div>
+  }@else if(action === 'updateProgress' && !item.latestWorkflowId){
+  >>>>>>> cac90e04a8fa3d0de7b2b2d114fb0654e7ef5b0b
 
-    <div>
-      <i class="ri-arrow-right-up-line"></i>
-      Update Progress
-    </div>
-    }
+  <div>
+    <i class="ri-arrow-right-up-line"></i>
+    Update Progress
+  </div>
+  }
 
-    @if(i !== header?.actions.length - 1){
-    <div class="liner"></div>
-    }
+  @if(i !== header?.actions.length - 1){
+  <div class="liner"></div>
+  }
 
   </div>
   }

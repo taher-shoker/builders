@@ -21,13 +21,7 @@
         <div class="col">
           <div class="step-caption">{{ step.caption }}</div>
 
-          @if(step.actions){
-          <div class="d-flex">
-            @for(action of step.actions; track action){
-            <button (click)="raiseAction(action)" class="m-3 stc-btn">{{ action }}</button>
-            }
-          </div>
-          }
+
         </div>
       </div>
     </div>
@@ -37,17 +31,43 @@
     <div class="line-holder">
       <div class="line"></div>
     </div>
-    @if (step.extraInfo) {
-    <!-- <div class="step-info">{{ step.extraInfo }}</div> -->
-    <!-- <ng-container
-      *ngTemplateOutlet="stepTemplate; context: { step: step }"
-    ></ng-container> -->
+    <div>
+      @if ((step.extraInfo || []).length > 0) { @for (infoStr of step.extraInfo;
+      track infoStr) {
+      <div class="step-info">{{ infoStr }}</div>
+      } } @if(step.notes){
+      <div class="step-notes">notes> {{ step.notes }}</div>
+      } @if(step.attachments){
 
-    <ng-template
-      [ngTemplateOutlet]="stepTemplate"
-      [ngTemplateOutletContext]="{ $implicit: step }"
-    ></ng-template>
-    }
+      <div class="row">
+        @for(attachment of step.attachments; track attachment){
+        <div class="col-6">
+          <a
+            href="javascript:void(0);"
+            (click)="raiseAction('download', attachment)"
+            >{{ attachment }}</a
+          >
+        </div>
+        }
+      </div>
+      } @if(step.additionalTemp){
+      <ng-template
+        [ngTemplateOutlet]="stepTemplate"
+        [ngTemplateOutletContext]="{ $implicit: step }"
+      >
+      </ng-template>
+      }
+
+      @if(step.actions){
+        <div class="d-flex">
+          @for(action of step.actions; track action){
+          <button (click)="raiseAction(action)" class="m-3 stc-btn">
+            {{ action }}
+          </button>
+          }
+        </div>
+        }
+    </div>
   </div>
   } }
 </div>

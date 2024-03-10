@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+import { Milestone } from './../milestones/milestones.component';
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
@@ -10,8 +12,10 @@ import { saveAs } from 'file-saver';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import {
+  Actions,
   Case,
   CaseStatus,
+  MilestoneStatus,
   MilestonesService,
   TaskCicle,
   TaskInDetails,
@@ -21,6 +25,35 @@ import {
   Step,
   StepDirective,
 } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-progress-dialog/update-milestone-progress-dialog.component';
+import { DatePipe } from '@angular/common';
+
+export interface MilestoneDetails {
+  activityName: string | null;
+  createdByEmail: string | null;
+  createdByName: string | null;
+  deliverable: string | null;
+  endDate: Date | null;
+  id: number | null;
+  lastProgressUpdateDate: Date | null;
+  milestoneName: string | null;
+  startDate: Date | null;
+  status: MilestoneStatus | null;
+  teamName: string | null;
+  updatedByEmail: null | string;
+  updatedByName: null | string;
+  weight: number | null;
+  workingDays: number | null;
+  milestoneProgressUpdateDTO: {
+    deliverable: string | null;
+    isApproved: boolean | null;
+    milestoneId: number | null;
+    overallProgress: string | null;
+    progressUpdateDate: Date | null;
+    workflowId: number | null;
+  };
+}
 
 @Component({
   selector: 'stc-apps-milestone-details',
@@ -32,21 +65,12 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   readonly CaseStatus = CaseStatus;
 
   steps: Step[] = [
-    {
-      caption: 'fst cap',
-      state: 'done',
-      extraInfo: 'June 22, 2023',
-    },
-    {
-      caption: 'snd cap',
-      state: 'done',
-      extraInfo: 'June 22, 2023, Some extra more content',
-    },
-    {
-      caption: 'snd cap',
-      state: 'undone',
-      actions: ['fst act', 'snd act', 'thrd act'],
-    },
+    // {
+    //   caption: 'Add Evidence',
+    //   state: 'undone',
+    //   // extraInfo: 'June 22, 2023, Some extra more content',
+    //   actions: [Actions.addEvidence],
+    // },
   ];
 
   closeForm!: FormGroup;
@@ -62,7 +86,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   taskId!: number;
   caseSerial!: string;
   caseStatus!: string;
-  milestoneDetails: any;
+  milestoneDetails!: MilestoneDetails;
   allTasks!: TaskInDetails[];
   assigneeType = [
     { name: 'team', value: '1' },
@@ -82,7 +106,9 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     public milestonesService: MilestonesService,
     private languageManagerService: LanguageManagerService,
-    public authService: AuthService
+    public authService: AuthService,
+    private matDialog: MatDialog,
+    private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
@@ -93,6 +119,8 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
       text: '',
     });
 
+    this.getMilestoneDetails(+this.milestoneId);
+
     // this.CasesService.getCase(this.milestoneId).subscribe((res) => {
     //   if (res) {
     //     this.milestoneDetails = res;
@@ -102,8 +130,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     //     this.handleTeam(this.milestoneDetails, this.teams);
     //   }
     // });
-    this.getMilestoneDetails(+this.milestoneId);
-    this.getMilestoneTasks();
+    // this.getMilestoneTasks();
 
     this.closeForm = this.formBuilder.group({
       close_mail_content: [''],
@@ -128,10 +155,70 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
       second_escalate_content: ['', Validators.required],
     });
   }
+
+
+  progress! : string | null;
+  deliverable! : string | null;
+  progressDate!: string;
+
   getMilestoneDetails(id: number) {
     this.milestonesService.getMilestone(id).subscribe((res: any) => {
-      // this.allTasks = res.data.filter((t: any) => t.assignedUser);
       this.milestoneDetails = res;
+
+      console.log("details :", this.milestoneDetails)
+      this.progress = this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress
+      this.deliverable = this.milestoneDetails.milestoneProgressUpdateDTO.deliverable
+      this.progressDate = this.datePipe.transform(this.milestoneDetails.milestoneProgressUpdateDTO.progressUpdateDate, 'MMMM, d, y') || '';
+      const initialStep: Step = {
+        caption: 'Milestone progress updated',
+        state: 'done',
+        extraInfo: [`${this.progressDate}`],
+        additionalTemp: true
+      };
+
+      this.steps.unshift(initialStep) // Adding the first step statically in the array before looping the rest of tasks.
+
+      this.milestonesService
+        .getMilesoneProgressWorkflow(res.milestoneProgressUpdateDTO.workflowId)
+        .subscribe((res) => {
+          console.log('getMilesoneProgressWorkflow:', res);
+
+          for(let i = res.length - 1; i >= 0; i--){
+            console.log("El task", res[i])
+
+            const attachmentsIDs: string[] = [];
+            let notes: string = '';
+            const progressDate: string = this.datePipe.transform(res[i].createdDate, 'MMMM, d, y') || '';
+            const actions: string[] = [];
+
+            for(const taskAttribute of res[i].requestTaskAttributes){
+              if(taskAttribute.name === 'evidence_id' || taskAttribute.name === 'justification_id'){
+
+                attachmentsIDs.push(taskAttribute.value);
+              }else if(taskAttribute.name === 'notes'){
+                notes = taskAttribute.value
+              }
+            }
+
+            if(res[i].status === 'pending'){
+
+              if(res[i].taskName === "Review evidence"){
+                actions.push('Review Evidence')
+              }
+            }
+
+            const step: Step = {
+              caption: res[i].taskName,
+              state: res[i].status === 'completed' ? 'done' : 'undone',
+              notes: notes,
+              attachments: attachmentsIDs,
+              extraInfo: [`${progressDate}`],
+              actions: actions
+            }
+            this.steps.push(step)
+          }
+
+        });
     });
   }
 
@@ -141,8 +228,69 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  doStepAction(actionStr: string) {
-    console.log('The action is :', actionStr);
+  doStepAction(actionStr: string | {act: string, item: any}) {
+
+    if(typeof actionStr === 'string'){
+      const type = actionStr as Actions;
+      this.openMilestoneProgressModal(type);
+    }else if(actionStr.act === 'download'){
+
+      this.downloadFile(actionStr.item);
+      // this.milestonesService.downloadAttachment(actionStr.item).subscribe(res => {
+      //   console.log("Res of downloading attachment:", res)
+      // })
+    }
+  }
+
+  downloadFile(id: number, name: string = 'untitled') {
+    this.milestonesService.downloadAttachment(id).subscribe((buffer) => {
+      const data: Blob = new Blob([buffer], {
+        type: 'text/csv;charset=utf-8',
+      });
+      // you may improve this code to customize the name
+      // of the export based on date or some other factors
+      saveAs(data, name);
+    });
+  }
+
+  openMilestoneProgressModal(type: Actions) {
+    const dialogRef = this.matDialog.open(
+      UpdateMilestoneProgressDialogComponent,
+      {
+        width: '500px',
+        data: {
+          milestoneName: 'Static testing text',
+          type,
+        },
+      }
+    );
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (!res) {
+        return;
+      }
+
+      console.log('The reso :', res);
+      console.log('The id :', this.milestoneId);
+    });
+  }
+
+  postEvidence(file: File, id: number, note: string) {
+    this.milestonesService.postEvidenceOrJustification(
+      file,
+      'EVIDENCE',
+      id,
+      note
+    );
+  }
+
+  postJustification(file: File, id: number, note: string) {
+    this.milestonesService.postEvidenceOrJustification(
+      file,
+      'JUSTIFICATION',
+      id,
+      note
+    );
   }
 
   isLoading = false;
@@ -174,16 +322,6 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  downloadFile(id: number, name: string) {
-    this.milestonesService.getFile(id).subscribe((buffer) => {
-      const data: Blob = new Blob([buffer], {
-        type: 'text/csv;charset=utf-8',
-      });
-      // you may improve this code to customize the name
-      // of the export based on date or some other factors
-      saveAs(data, name);
-    });
-  }
   /** function to call fetching all tasks again and close any Modal if found **/
   refreshTasks(taskId: number, data: any) {
     this.milestonesService
@@ -396,21 +534,21 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     return false;
   }
 
-  handleTeam(milestoneDetails?: Case, team?: any) {
-    if (milestoneDetails && team) {
-      this.selectedTeam = team.filter(
-        (t: any) => t.name === this.milestoneDetails?.creatorTeamName
-      )[0];
-    }
-  }
+  // handleTeam(milestoneDetails?: Case, team?: any) {
+  //   if (milestoneDetails && team) {
+  //     this.selectedTeam = team.filter(
+  //       (t: any) => t.name === this.milestoneDetails?.creatorTeamName
+  //     )[0];
+  //   }
+  // }
 
-  handleUser(milestoneDetails?: Case, users?: any) {
-    if (milestoneDetails && users) {
-      this.selectedUser = users.filter(
-        (u: any) => u.email === this.milestoneDetails?.creatorEmail
-      )[0];
-    }
-  }
+  // handleUser(milestoneDetails?: Case, users?: any) {
+  //   if (milestoneDetails && users) {
+  //     this.selectedUser = users.filter(
+  //       (u: any) => u.email === this.milestoneDetails?.creatorEmail
+  //     )[0];
+  //   }
+  // }
 
   getUserPrivilege(user: User) {
     let x = '';
