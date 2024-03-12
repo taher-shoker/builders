@@ -94,18 +94,14 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
   onSubmit() {
     if (this.form.valid) {
+      console.log(this.form.value);
       let dataForm;
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         dataForm = {
           userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-          teams: this.form.get('teamDto')?.value.id
-            ? [
-                {
-                  id: this.form.get('teamDto')?.value.id,
-                },
-              ]
-            : null,
-
+          teams: this.form.get('teamDto')?.value.map((e: any) => {
+            return { id: e };
+          }),
           email: this.form.get('email')?.value,
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,

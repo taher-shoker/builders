@@ -52,7 +52,7 @@
 
           <div class="col-md-5" *ngIf="!hideDropdown">
             <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
-              [required]="true" [options]="teams" [selectId]="selectedTeam || null">
+              [required]="true" [options]="teams" [multi]="true" [selectId]="selectedTeam || null">
             </stc-apps-select-drop-down>
           </div>
         </div>
