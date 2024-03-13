@@ -37,7 +37,7 @@ export class AddMilestoneComponent implements OnInit {
     this.setRelatedTeam();
     this.bannerDataService.updateData({
       title: 'Add new Milestone',
-      text: 'Please add actual data and be sure to add all required data',
+      text: '',
     });
   }
   getAllTeams() {
@@ -63,7 +63,6 @@ export class AddMilestoneComponent implements OnInit {
     });
   }
   onSubmit() {
-    this.isLoading = true;
     const onSuccess = (message: string) => {
       this.isLoading = false;
       this.toastr.success(message);
@@ -76,6 +75,7 @@ export class AddMilestoneComponent implements OnInit {
       }
     };
     if (this.form.valid) {
+      this.isLoading = true;
       this.milestonesService
         .addBulkData(this.formData, this.form?.get('teamName')?.value)
         .subscribe(

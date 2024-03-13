@@ -157,10 +157,9 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
     this.form?.get('deliverable')?.setValue(data.deliverable);
   }
   onSubmit() {
-    console.log(this.form.value);
-
     if (this.form.valid) {
       const finalData = {
+        teamName: this.milestonesService.setUserTeam(),
         ...this.form.value,
         weight: +this.form.get('weight')?.value,
       };

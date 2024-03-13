@@ -30,6 +30,16 @@ body {
   background-color: #f8f8f8;
   color: var(--textColor) !important;
   direction: var(--direction);
+  font-family: var(--stc-font-base);
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  font-family: var(--stc-font-base);
 }
 
 ::-webkit-scrollbar {

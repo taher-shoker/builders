@@ -39,7 +39,6 @@ export interface Milestone {
   styleUrls: ['./milestones.component.scss'],
 })
 export class MilestonesComponent implements OnInit, OnDestroy {
-
   @ViewChild('customTemplate') customTemplate!: any;
 
   form!: FormGroup;
@@ -50,6 +49,36 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   totalClosed = 0;
   readonly CaseStatus = CaseStatus;
   readonly TaskCicle = TaskCicle;
+  // data = [
+  //   {
+  //     activityName: 'First activity name',
+  //     milestoneName: 'Milestonah',
+  //     status: 'perfect',
+  //     teamName: 'Real madrid',
+  //     completionLevel: 'Almost done',
+  //   },
+  //   {
+  //     activityName: 'second activity name',
+  //     milestoneName: 'Milestonah 2',
+  //     status: 'well done',
+  //     teamName: 'Blancos',
+  //     completionLevel: 'ferfet',
+  //   },
+  //   {
+  //     activityName: 'fourth',
+  //     milestoneName: 'Milestonah edited',
+  //     status: 'done',
+  //     teamName: 'champs',
+  //     completionLevel: 'undone',
+  //   },
+  //   {
+  //     activityName: 'wild',
+  //     milestoneName: 'Milestonah final',
+  //     status: 'into the net',
+  //     teamName: 'Campione',
+  //     completionLevel: 'starting',
+  //   },
+  // ];
 
   getMilestonesSub!: Subscription;
   userSub!: Subscription;
@@ -80,8 +109,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   ) {}
 
   allItems!: Task[];
-  addCasseNavigate(): void {
-    this.router.navigate(['./add_case'], { relativeTo: this.route });
+  addMilestoneNavigate(): void {
+    this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
   columnsSchema: ColumnsSchema[] = [
     {
@@ -114,7 +143,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       type: 'text',
       label: 'Team',
     },
-  
+
     {
       key: 'completionLevel',
       type: 'text',
@@ -162,7 +191,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.milestonesTotalCount = res.totalElements;
 
     this.tableData = res.content;
-    console.warn(this.milestonesTotalCount);
+    //console.warn(this.milestonesTotalCount);
   }
 
   detailsNavigate(id: string | number) {
@@ -264,7 +293,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     console.log('event', inp.value);
 
     this.filterString = inp.value;
-    
   }
 
   onSubmit() {

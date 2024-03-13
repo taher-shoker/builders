@@ -10,19 +10,16 @@
 }
 
 .casses-settings {
-  margin-inline: 25px;
-  position: relative;
-  top: -60px;
+  // margin-inline: 25px;
+  // position: relative;
+  // top: -95px;
 
   table {
-
     td {
       max-width: 165px;
       word-wrap: break-word;
       // text-align: center;
     }
-
-
   }
 
   .top-info {
@@ -118,6 +115,8 @@
   }
 
   .f-box {
+    border-radius: 7px;
+    margin-bottom: 16px;
     .table-title {
       font-weight: bold;
       color: $stcColor;
@@ -143,7 +142,7 @@
   .pending-tasks {
     background-color: white;
     height: 100%;
-
+    border-radius: 7px;
     .main-title {
       padding: 20px;
       border-bottom: 1px solid $greyColor;
@@ -158,7 +157,6 @@
     }
 
     .tasks {
-
       .row {
         margin: 0;
         padding: 0;
@@ -172,7 +170,6 @@
       max-height: inherit;
 
       li {
-
         .task {
           border-radius: 7px;
           overflow: hidden;
@@ -180,15 +177,17 @@
           cursor: pointer;
 
           .task-header {
-
             .row {
-              border-left: 5px solid #4F008C;
-              background: linear-gradient(to right, #4f008c91 0%, #9000ff1f 100%);
+              border-left: 5px solid #4f008c;
+              background: linear-gradient(
+                to right,
+                #4f008c91 0%,
+                #9000ff1f 100%
+              );
               height: 31px;
               align-content: center;
 
               overflow: auto;
-
 
               .left-col {
                 font-size: 14px;
@@ -208,13 +207,14 @@
             padding: 6px 10px;
             color: var(--grey-color);
             // overflow: auto;
-            .task-desc{
+            .task-desc {
               font-size: 0.9rem;
             }
           }
         }
-        .task:hover{
-          transform: translate(10px, 0px);        }
+        .task:hover {
+          transform: translate(10px, 0px);
+        }
       }
 
       // .task {
@@ -265,7 +265,7 @@ table {
   }
 
   .pending {
-    background-color:rgba($color: $stcCoralColor, $alpha: 0.2);
+    background-color: rgba($color: $stcCoralColor, $alpha: 0.2);
     color: $stcCoralColor;
   }
 
@@ -478,7 +478,8 @@ table {
   }
 }
 
-body.rtl {}
+body.rtl {
+}
 
 .btn.details {
   font-size: 0.85rem;
@@ -486,5 +487,5 @@ body.rtl {}
 
 .btn.details:hover {
   background-color: $stcColor;
-  color: #fff
+  color: #fff;
 }

@@ -1,11 +1,18 @@
 table {
   width: 100%;
+  background-color: white;
 }
 
 .table-header {
   background-color: var(--stc-color-light);
 
   th {
+    &:first-of-type {
+      border-radius: 7px 0 0 0px;
+    }
+    &:last-of-type {
+      border-radius: 0px 7px 0px 0px;
+    }
     // padding: 10px 0;
   }
 }
@@ -48,7 +55,7 @@ tr:not(.table-header) {
 .menu-btns-wrapper {
   padding: 0px 10px;
 
-  .details{
+  .details {
     cursor: pointer;
   }
 }
