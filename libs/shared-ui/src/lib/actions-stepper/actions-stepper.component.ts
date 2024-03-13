@@ -24,6 +24,7 @@ export interface Step {
   extraInfo?: string[];
   notes?: string;
   attachments?: string[];
+  stepObject?: any;
 }
 
 @Directive({
@@ -40,8 +41,8 @@ export class StepDirective {
   styleUrls: ['./actions-stepper.component.scss'],
 })
 export class ActionsStepperComponent implements AfterContentInit {
-  @Output() stepperAction: EventEmitter<string | { act: string; item: any }> =
-    new EventEmitter<string | { act: string; item: any }>();
+  @Output() stepperAction: EventEmitter<{ actionName: string; item: any }> =
+    new EventEmitter<{ actionName: string; item: any }>();
 
   @Input({ required: true }) steps!: Step[];
   @Input() stepperConfig!: StepperConfig;
@@ -53,11 +54,9 @@ export class ActionsStepperComponent implements AfterContentInit {
     console.log('steps:', this.steps);
   }
 
-  raiseAction(act: string, optionalItem?: any) {
-    if (optionalItem) {
-      this.stepperAction.emit({ act, item: optionalItem });
-    } else {
-      this.stepperAction.emit(act);
-    }
+  raiseAction(actionName: string, optionalItem?: any) {
+    console.log('THE OPT ITEM:', optionalItem);
+    console.log('THE actionName:', actionName);
+    this.stepperAction.emit({ actionName, item: optionalItem });
   }
 }

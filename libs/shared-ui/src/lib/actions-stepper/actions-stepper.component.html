@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-  @if (i !== steps.length - 1) {
+  @if (i !== steps.length - 1 || (step.actions || []).length > 0) {
   <div class="liner">
     <div class="line-holder">
       <div class="line"></div>
@@ -36,7 +36,7 @@
       track infoStr) {
       <div class="step-info">{{ infoStr }}</div>
       } } @if(step.notes){
-      <div class="step-notes">notes> {{ step.notes }}</div>
+      <div class="step-notes">{{ step.notes }}</div>
       } @if(step.attachments){
 
       <div class="row">
@@ -58,16 +58,19 @@
       </ng-template>
       }
 
-      @if(step.actions){
-        <div class="d-flex">
-          @for(action of step.actions; track action){
-          <button (click)="raiseAction(action)" class="m-3 stc-btn">
-            {{ action }}
-          </button>
-          }
-        </div>
-        }
+
     </div>
   </div>
+
+  @if(step.actions){
+    <div class="d-flex">
+      @for(action of step.actions; track action){
+      <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
+        {{ action }}
+      </button>
+      }
+    </div>
+    }
   } }
+  
 </div>
