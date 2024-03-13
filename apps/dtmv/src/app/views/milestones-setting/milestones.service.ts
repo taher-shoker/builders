@@ -67,6 +67,7 @@ export enum Actions {
   initiateUpdateProgress = 'Update progress',
   approveProgress = 'Approve progress',
   return = 'Return',
+  noNeed = 'No Need',
 }
 
 @Injectable({
@@ -209,9 +210,9 @@ export class MilestonesService {
     );
   }
 
-  getMilestoneTasks() {
-    return this.http.get(
-      `http://localhost:8061/api/ticket/requests/tasks/pending`
+  getMilestoneTasks(): Observable<PendingTask[]> {
+    return this.http.get<PendingTask[]>(
+      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
     );
   }
 
@@ -281,13 +282,16 @@ export interface MilestoneProgressWorkflowStep {
   status: 'completed' | 'pending';
   username: string;
   userDisplayName: string;
-  requestTaskAttributes: [
-    {
-      id: number;
-      name: string;
-      value: string;
-    }
-  ];
+  params: {
+    constraints: string[];
+    name: string;
+    type: string;
+  }[];
+  requestTaskAttributes: {
+    id: number;
+    name: string;
+    value: string;
+  }[];
   completedDate: Date;
   createdDate: Date;
   lastModified: Date;
@@ -308,6 +312,24 @@ export type MilestoneStatus =
 //   label: string;
 // }
 
+export interface PendingTask {
+  assignedUser: string;
+  createdDate: Date;
+  externalSystemId: number;
+  flowId: number;
+  id: number;
+  lastModified: Date;
+  params: { name: Actions; type: string; constraints: string[] }[];
+  requestParams: {
+    creator_username: string;
+    milestone_id: string | number;
+    milestone_progress_id: string | number;
+    team: string;
+    status: string;
+  };
+  taskName: 'Add Remarks';
+  taskStatus: 'pending';
+}
 export interface Task {
   caseTasksDto: {
     id: number;
