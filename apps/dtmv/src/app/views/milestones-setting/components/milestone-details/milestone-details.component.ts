@@ -202,6 +202,8 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
           console.log('getMilesoneProgressWorkflow:', res);
 
+          res.sort(function(a, b){return  b.requestTaskId - a.requestTaskId})
+
           for (let i = res.length - 1; i >= 0; i--) {
             console.log('El task', res[i]);
 
@@ -214,7 +216,8 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
             for (const taskAttribute of res[i].requestTaskAttributes) {
               if (
                 taskAttribute.name === 'evidence_id' ||
-                taskAttribute.name === 'justification_id'
+                taskAttribute.name === 'justification_id' ||
+                taskAttribute.name === 'remark_id'
               ) {
                 attachmentsIDs.push(taskAttribute.value);
               } else if (taskAttribute.name === 'notes') {
@@ -222,10 +225,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
               }
             }
 
-            if (
-              res[i].status === 'pending' &&
-              res[i].requestTaskAttributes.length > 0
-            ) {
+            if (res[i].status === 'pending' && res[i].params.length > 0) {
               //those two conditions are for a user to take action, otherwise it's not his task to handle.
               if (
                 res[i].taskName === 'Review Evidence' ||
@@ -255,6 +255,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
                 }
                 if (res[i].taskName === 'Add Remarks') {
                   actions.push(Actions.addOnTrack);
+                  actions.push(Actions.noNeed); // TODO: Loop over to check if a previous 'Add Remarks' Exists, if so remove noNeed.
                 }
               } else if (res[i].taskName === 'Update DT Record') {
                 actions.push(Actions.updateDTRecord);
@@ -295,15 +296,14 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   }
 
   doStepAction(action: { actionName: string; item: any }) {
-
-    if(action.actionName === Actions.initiateUpdateProgress){
+    if (action.actionName === Actions.initiateUpdateProgress) {
       this.openProgressUpdateModal(this.milestoneDetails.id || 0);
     }
 
-    if(
+    if (
       action.actionName === Actions.updateDTRecord ||
       action.actionName === Actions.approveProgress
-    ){
+    ) {
       this.milestonesService
         .updateMilestoneRecord(
           this.milestoneDetails.milestoneProgressUpdateDTO.workflowId || '',
@@ -320,7 +320,6 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
       action.actionName === Actions.reviewJustification ||
       action.actionName === Actions.reviewOnTrack
     ) {
-
       const params: {
         requestParams: { name: string; value: number | string | boolean }[];
       } = {
@@ -334,23 +333,17 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
           return;
         }
 
-        if (
-          action.item.taskName === 'Review Evidence'
-        ) {
+        if (action.item.taskName === 'Review Evidence') {
           params.requestParams.push({
             name: 'is_evidence_approved',
             value: true,
           });
-        } else if (
-          action.item.taskName === 'Review Justification'
-        ) {
+        } else if (action.item.taskName === 'Review Justification') {
           params.requestParams.push({
             name: 'is_justification_approved',
             value: true,
           });
-        } else if (
-          action.item.taskName === 'Review Remarks'
-        ) {
+        } else if (action.item.taskName === 'Review Remarks') {
           params.requestParams.push({
             name: 'is_remark_approved',
             value: true,
@@ -370,36 +363,57 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
       });
     }
 
-    if(action.actionName === Actions.return){
+    if (action.actionName === Actions.return) {
       this.openMilestoneWorkflowActionsModal(
         action.actionName as Actions,
         action.item
       );
     }
 
-    if(
+    if (
       action.actionName === Actions.addEvidence ||
-        action.actionName === Actions.addJustification ||
-        action.actionName === Actions.addOnTrack
-    )
-    {
+      action.actionName === Actions.addJustification ||
+      action.actionName === Actions.addOnTrack
+    ) {
       this.openMilestoneWorkflowActionsModal(
         action.actionName as Actions,
         action.item
       );
+    }
+
+    if (action.actionName === Actions.noNeed) {
+      const params: {
+        requestParams: { name: string; value: number | string | boolean }[];
+      } = {
+        requestParams: [],
+      };
+
+      // params.requestParams.push({
+      //   name: 'remark_id',
+      //   value: true,
+      // });
+
+      this.milestonesService
+        .completePendingTask(
+          this.milestoneDetails.milestoneProgressUpdateDTO.workflowId || '',
+          action.item.requestTaskId,
+          params
+        )
+        .subscribe((res) => {
+          console.log('Resp of completing approve task :', res); // This is done and works fine.
+          this.showMilestoneProgressWorkflow();
+        });
     }
 
     if (action.actionName === 'download') {
       this.downloadFile(action.item);
-    } 
-
-
+    }
 
     // if (
     //   action.actionName !== Actions.initiateUpdateProgress &&
     //   action.actionName !== Actions.approveProgress
     // ) {
-      
+
     //   if (
     //     action.actionName === Actions.reviewEvidence ||
     //     action.actionName === Actions.reviewJustification ||
@@ -517,34 +531,43 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
       } = {
         requestParams: [],
       };
-      params.requestParams.push({ name: 'notes', value: res.note });
 
       if (type === Actions.addEvidence) {
         params.requestParams.push({
           name: 'evidence_id',
           value: res.attachments,
         });
+        params.requestParams.push({ name: 'notes', value: res.note });
       } else if (type === Actions.addJustification) {
         params.requestParams.push({
           name: 'justification_id',
           value: res.attachments,
         });
+        params.requestParams.push({ name: 'notes', value: res.note });
       } else if (type === Actions.addOnTrack) {
         params.requestParams.push({
           name: 'remark_id',
           value: res.attachments,
         });
+        params.requestParams.push({ name: 'notes', value: res.note });
       } else if (type === Actions.return) {
         params.requestParams.push({
-          name: 'reason_of_rejection',
-          value: res.notes,
+          name: 'is_remark_approved',
+          value: false,
         });
-        params.requestParams.push({
-          name: 'attachment_id',
-          value: res.attachments,
-        });
-      }
 
+        params.requestParams.push({
+          name: 'reason_of_rejection',
+          value: res.note,
+        });
+
+        if(res.attachments){
+          params.requestParams.push({
+            name: 'attachment_id',
+            value: res.attachments,
+          });
+        }
+      }
 
       this.milestonesService
         .completePendingTask(

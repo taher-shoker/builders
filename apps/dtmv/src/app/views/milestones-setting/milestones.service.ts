@@ -66,7 +66,8 @@ export enum Actions {
   updateDTRecord = 'Update Record',
   initiateUpdateProgress = 'Update progress',
   approveProgress = 'Approve progress',
-  return = 'Return'
+  return = 'Return',
+  noNeed = 'No Need',
 }
 
 @Injectable({
@@ -81,11 +82,11 @@ export class MilestonesService {
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  
-  currentTeam: string = "";
+
+  currentTeam: string = '';
   constructor(private http: HttpClient, private cookieService: CookieService) {
     this.currentTeam = this.setUserTeam();
-    console.log("Dateam", this.currentTeam)
+    console.log('Dateam', this.currentTeam);
   }
 
   isDTDirector!: boolean;
@@ -142,11 +143,11 @@ export class MilestonesService {
   }
 
   getMilestones(filterData?: any) {
-    console.log("filterdata", filterData)
-    if(!filterData){
-      filterData = {}
+    console.log('filterdata', filterData);
+    if (!filterData) {
+      filterData = {};
     }
-    filterData["team"] = this.currentTeam
+    filterData['team'] = this.currentTeam;
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });
@@ -190,9 +191,9 @@ export class MilestonesService {
     overallProgress: string;
     deliverable: string;
   }) {
-    const headers = new HttpHeaders({"Accept": "text/plain"})
+    const headers = new HttpHeaders({ Accept: 'text/plain' });
     return this.http.patch(`${this.dtUrl}/updateProgress`, data, {
-      responseType: "text"
+      responseType: 'text',
     });
   }
 
@@ -209,9 +210,9 @@ export class MilestonesService {
     );
   }
 
-  getMilestoneTasks() {
-    return this.http.get(
-      `http://localhost:8061/api/ticket/requests/tasks/pending`
+  getMilestoneTasks() : Observable<PendingTask[]>{
+    return this.http.get<PendingTask[]>(
+      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
     );
   }
 
@@ -281,13 +282,16 @@ export interface MilestoneProgressWorkflowStep {
   status: 'completed' | 'pending';
   username: string;
   userDisplayName: string;
-  requestTaskAttributes: [
-    {
-      id: number;
-      name: string;
-      value: string;
-    }
-  ];
+  params: {
+    constraints: string[];
+    name: string;
+    type: string;
+  }[];
+  requestTaskAttributes: {
+    id: number;
+    name: string;
+    value: string;
+  }[];
   completedDate: Date;
   createdDate: Date;
   lastModified: Date;
@@ -308,6 +312,24 @@ export type MilestoneStatus =
 //   label: string;
 // }
 
+export interface PendingTask {
+  assignedUser: string;
+  createdDate: Date;
+  externalSystemId: number;
+  flowId: number;
+  id: number;
+  lastModified: Date;
+  params: { name: Actions; type: string; constraints: string[] }[];
+  requestParams: {
+    creator_username: string;
+    milestone_id: string | number;
+    milestone_progress_id: string | number;
+    team: string;
+    status: string;
+  };
+  taskName: 'Add Remarks';
+  taskStatus: 'pending';
+}
 export interface Task {
   caseTasksDto: {
     id: number;

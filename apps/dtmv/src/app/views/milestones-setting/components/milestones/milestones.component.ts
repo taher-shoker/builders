@@ -18,6 +18,7 @@ import {
   TaskCicle,
   Task,
   MilestonesService,
+  PendingTask,
 } from '../../milestones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
@@ -108,7 +109,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     private utilities: UtilitiesService
   ) {}
 
-  allItems!: Task[];
+  allItems!: PendingTask[];
   addMilestoneNavigate(): void {
     this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
@@ -165,11 +166,19 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     // this.fetchAssigneeTasks();
 
     this.getMilestones();
+    this.getPendingTasks();
 
     this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
     this.searchForm();
     this.dialogService.modals = [];
+  }
+
+  getPendingTasks(){
+    this.milestonesService.getMilestoneTasks().subscribe(res => {
+      console.log("Got those pending :", res)
+      this.allItems = res
+    })
   }
 
   paginate(paginationEvent: PaginationEvent) {
