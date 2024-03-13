@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
@@ -59,13 +59,14 @@ export interface RequestTask {
 export enum Actions {
   addEvidence = 'Add Evidence',
   addJustification = 'Add Justification',
-  addOnTrack = 'Add on Track',
+  addOnTrack = 'Add Remarks',
   reviewEvidence = 'Approve Evidence',
   reviewJustification = 'Approve Justification',
   reviewOnTrack = 'Approve on Track',
   updateDTRecord = 'Update Record',
   initiateUpdateProgress = 'Update progress',
-  approveProgress = 'Approve progress'
+  approveProgress = 'Approve progress',
+  return = 'Return'
 }
 
 @Injectable({
@@ -189,7 +190,10 @@ export class MilestonesService {
     overallProgress: string;
     deliverable: string;
   }) {
-    return this.http.patch(`${this.dtUrl}/updateProgress`, data);
+    const headers = new HttpHeaders({"Accept": "text/plain"})
+    return this.http.patch(`${this.dtUrl}/updateProgress`, data, {
+      responseType: "text"
+    });
   }
 
   getMilestoneProgressWorkflow(

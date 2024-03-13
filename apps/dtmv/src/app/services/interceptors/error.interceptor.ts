@@ -26,6 +26,10 @@ export class ErrorInterceptor implements HttpInterceptor {
     return next.handle(request).pipe(
       catchError((err) => {
         const error = err.message;
+        // if (err.status === 200) {
+        //   console.log('success!');
+        //   return null
+
         if (err.status === 401) {
           if (err.error.status === 'UNAUTHORIZED') {
             // this.router.navigate(['/unauthorized-page']);

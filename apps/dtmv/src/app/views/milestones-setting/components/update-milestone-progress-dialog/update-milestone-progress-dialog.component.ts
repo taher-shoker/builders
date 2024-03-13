@@ -51,7 +51,8 @@ export class UpdateMilestoneProgressDialogComponent {
     const hintPrefix = `You're about to`;
     const evidenceHintAction = 'approve evidence';
     const justificationHintAction = 'approve justification';
-    const trackHintAction = 'approve on track';
+    const trackHintAction = 'approve remarks';
+    const returnHintAction = 'return';
     const hintTail =
       "Kindly note you can't roll back this action, Are you sure?";
 
@@ -61,17 +62,25 @@ export class UpdateMilestoneProgressDialogComponent {
       this.hint.set(this.justificationHint);
     } else if (this.data.type === Actions.addOnTrack) {
       this.hint.set(this.remarksHint);
-    } else if (this.data.type === Actions.reviewEvidence) {
+    } 
+    
+    // else if (this.data.type === Actions.reviewEvidence) {
+    //   this.hint.set(
+    //     `${hintPrefix} ${evidenceHintAction} ${this.milestoneName()}, ${hintTail} `
+    //   );
+    // } else if (this.data.type === Actions.reviewJustification) {
+    //   this.hint.set(
+    //     `${hintPrefix} ${justificationHintAction} ${this.milestoneName()}, ${hintTail} `
+    //   );
+    // } else if (this.data.type === Actions.reviewOnTrack) {
+    //   this.hint.set(
+    //     `${hintPrefix} ${trackHintAction} ${this.milestoneName()}, ${hintTail} `
+    //   );
+    // } 
+    
+    else if (this.data.type === Actions.return) {
       this.hint.set(
-        `${hintPrefix} ${evidenceHintAction} ${this.milestoneName()}, ${hintTail} `
-      );
-    } else if (this.data.type === Actions.reviewJustification) {
-      this.hint.set(
-        `${hintPrefix} ${justificationHintAction} ${this.milestoneName()}, ${hintTail} `
-      );
-    } else if (this.data.type === Actions.reviewOnTrack) {
-      this.hint.set(
-        `${hintPrefix} ${trackHintAction} ${this.milestoneName()}, ${hintTail} `
+        `${hintPrefix} ${returnHintAction} ${this.milestoneName()}, ${hintTail} `
       );
     }
   }
@@ -157,7 +166,6 @@ export class UpdateMilestoneProgressDialogComponent {
   }
 
   update() {
-    console.warn("attachmentsCombinedString", this.attachmentsCombinedString)
     this.dialogRef.close({
       note: this.form.get('note')?.value,
       attachments: this.attachmentsCombinedString,

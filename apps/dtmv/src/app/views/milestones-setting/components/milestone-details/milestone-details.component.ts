@@ -165,15 +165,16 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
 
   askUserToInitiateUpdateProgress() {
     const initialStep: Step = {
-      caption: 'Update progress',
+      caption: Actions.initiateUpdateProgress,
       state: 'undone',
-      actions: ['Update progress'],
+      actions: [Actions.initiateUpdateProgress],
     };
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
   }
 
   showMilestoneProgressWorkflow() {
+    this.steps = [];
     console.log('details :', this.milestoneDetails);
     this.progress =
       this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress;
@@ -240,7 +241,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
                 if (res[i].taskName === 'Review Remarks') {
                   actions.push(Actions.reviewOnTrack);
                 }
-                actions.push('Return'); // Adding action 'Return' in all 3 cases.
+                actions.push(Actions.return); // Adding action 'Return' in all 3 cases.
               } else if (
                 res[i].taskName === 'Add Evidence' ||
                 res[i].taskName === 'Add Justification' ||
@@ -252,7 +253,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
                 if (res[i].taskName === 'Add Justification') {
                   actions.push(Actions.addJustification);
                 }
-                if (res[i].taskName === 'Add on track') {
+                if (res[i].taskName === 'Add Remarks') {
                   actions.push(Actions.addOnTrack);
                 }
               } else if (res[i].taskName === 'Update DT Record') {
@@ -294,84 +295,15 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   }
 
   doStepAction(action: { actionName: string; item: any }) {
-    if (
-      action.actionName !== Actions.initiateUpdateProgress &&
-      action.actionName !== Actions.approveProgress
-    ) {
-      if (
-        action.actionName === Actions.reviewEvidence ||
-        action.actionName === Actions.reviewJustification ||
-        action.actionName === Actions.reviewOnTrack
-      ) {
-        const params: {
-          requestParams: { name: string; value: number | string | boolean }[];
-        } = {
-          requestParams: [],
-        };
 
-        this.makeSureToApprove(
-          this.milestoneDetails.milestoneName || 'unnamed'
-        ).subscribe((res) => {
-          if (!res) {
-            return;
-          }
-
-          if (
-            action.item.taskName === 'Review evidence' ||
-            action.item.taskName === 'Review Evidence'
-          ) {
-            params.requestParams.push({
-              name: 'is_evidence_approved',
-              value: true,
-            });
-          } else if (
-            action.item.taskName === 'Review justification' ||
-            action.item.taskName === 'Review Justification'
-          ) {
-            params.requestParams.push({
-              name: 'is_justification_approved',
-              value: true,
-            });
-          } else if (
-            action.item.taskName === 'Review on track' ||
-            action.item.taskName === 'Review On Track'
-          ) {
-            params.requestParams.push({
-              name: 'is_on_track_approved',
-              value: true,
-            });
-          }
-
-          this.milestonesService
-            .completePendingTask(
-              this.milestoneDetails.milestoneProgressUpdateDTO.workflowId || '',
-              action.item.requestTaskId,
-              params
-            )
-            .subscribe((res) => {
-              console.log('Resp of completing approve evidence task :', res); // This is done and works fine.
-              this.showMilestoneProgressWorkflow();
-            });
-        });
-      } else {
-        this.openMilestoneWorkflowActionsModal(
-          action.actionName as Actions,
-          action.item
-        );
-      }
-    } else if (action.actionName === Actions.initiateUpdateProgress) {
+    if(action.actionName === Actions.initiateUpdateProgress){
       this.openProgressUpdateModal(this.milestoneDetails.id || 0);
     }
 
-    if (action.actionName === 'download') {
-      this.downloadFile(action.item);
-      // this.milestonesService.downloadAttachment(action.item).subscribe(res => {
-      //   console.log("Res of downloading attachment:", res)
-      // })
-    } else if (
+    if(
       action.actionName === Actions.updateDTRecord ||
       action.actionName === Actions.approveProgress
-    ) {
+    ){
       this.milestonesService
         .updateMilestoneRecord(
           this.milestoneDetails.milestoneProgressUpdateDTO.workflowId || '',
@@ -379,8 +311,176 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
         )
         .subscribe((res) => {
           console.log('Res of updating record:', res);
+          this.showMilestoneProgressWorkflow();
         });
     }
+
+    if (
+      action.actionName === Actions.reviewEvidence ||
+      action.actionName === Actions.reviewJustification ||
+      action.actionName === Actions.reviewOnTrack
+    ) {
+
+      const params: {
+        requestParams: { name: string; value: number | string | boolean }[];
+      } = {
+        requestParams: [],
+      };
+
+      this.makeSureToApprove(
+        this.milestoneDetails.milestoneName || 'unnamed'
+      ).subscribe((res) => {
+        if (!res) {
+          return;
+        }
+
+        if (
+          action.item.taskName === 'Review Evidence'
+        ) {
+          params.requestParams.push({
+            name: 'is_evidence_approved',
+            value: true,
+          });
+        } else if (
+          action.item.taskName === 'Review Justification'
+        ) {
+          params.requestParams.push({
+            name: 'is_justification_approved',
+            value: true,
+          });
+        } else if (
+          action.item.taskName === 'Review Remarks'
+        ) {
+          params.requestParams.push({
+            name: 'is_remark_approved',
+            value: true,
+          });
+        }
+
+        this.milestonesService
+          .completePendingTask(
+            this.milestoneDetails.milestoneProgressUpdateDTO.workflowId || '',
+            action.item.requestTaskId,
+            params
+          )
+          .subscribe((res) => {
+            console.log('Resp of completing approve task :', res); // This is done and works fine.
+            this.showMilestoneProgressWorkflow();
+          });
+      });
+    }
+
+    if(action.actionName === Actions.return){
+      this.openMilestoneWorkflowActionsModal(
+        action.actionName as Actions,
+        action.item
+      );
+    }
+
+    if(
+      action.actionName === Actions.addEvidence ||
+        action.actionName === Actions.addJustification ||
+        action.actionName === Actions.addOnTrack
+    )
+    {
+      this.openMilestoneWorkflowActionsModal(
+        action.actionName as Actions,
+        action.item
+      );
+    }
+
+    if (action.actionName === 'download') {
+      this.downloadFile(action.item);
+    } 
+
+
+
+    // if (
+    //   action.actionName !== Actions.initiateUpdateProgress &&
+    //   action.actionName !== Actions.approveProgress
+    // ) {
+      
+    //   if (
+    //     action.actionName === Actions.reviewEvidence ||
+    //     action.actionName === Actions.reviewJustification ||
+    //     action.actionName === Actions.reviewOnTrack
+    //   ) {
+
+    //     const params: {
+    //       requestParams: { name: string; value: number | string | boolean }[];
+    //     } = {
+    //       requestParams: [],
+    //     };
+
+    //     this.makeSureToApprove(
+    //       this.milestoneDetails.milestoneName || 'unnamed'
+    //     ).subscribe((res) => {
+    //       if (!res) {
+    //         return;
+    //       }
+
+    //       if (
+    //         action.item.taskName === 'Review evidence' ||
+    //         action.item.taskName === 'Review Evidence'
+    //       ) {
+    //         params.requestParams.push({
+    //           name: 'is_evidence_approved',
+    //           value: true,
+    //         });
+    //       } else if (
+    //         action.item.taskName === 'Review justification' ||
+    //         action.item.taskName === 'Review Justification'
+    //       ) {
+    //         params.requestParams.push({
+    //           name: 'is_justification_approved',
+    //           value: true,
+    //         });
+    //       } else if (
+    //         action.item.taskName === 'Review on track' ||
+    //         action.item.taskName === 'Review On Track'
+    //       ) {
+    //         params.requestParams.push({
+    //           name: 'is_on_track_approved',
+    //           value: true,
+    //         });
+    //       }
+
+    //       this.milestonesService
+    //         .completePendingTask(
+    //           this.milestoneDetails.milestoneProgressUpdateDTO.workflowId || '',
+    //           action.item.requestTaskId,
+    //           params
+    //         )
+    //         .subscribe((res) => {
+    //           console.log('Resp of completing approve evidence task :', res); // This is done and works fine.
+    //           this.showMilestoneProgressWorkflow();
+    //         });
+    //     });
+    //   } else {
+    //     this.openMilestoneWorkflowActionsModal(
+    //       action.actionName as Actions,
+    //       action.item
+    //     );
+    //   }
+    // } else if (action.actionName === Actions.initiateUpdateProgress) {
+    //   this.openProgressUpdateModal(this.milestoneDetails.id || 0);
+    // }
+
+    // if (action.actionName === 'download') {
+    //   this.downloadFile(action.item);
+    // } else if (
+    //   action.actionName === Actions.updateDTRecord ||
+    //   action.actionName === Actions.approveProgress
+    // ) {
+    //   this.milestonesService
+    //     .updateMilestoneRecord(
+    //       this.milestoneDetails.milestoneProgressUpdateDTO.workflowId || '',
+    //       action.item.requestTaskId
+    //     )
+    //     .subscribe((res) => {
+    //       console.log('Res of updating record:', res);
+    //     });
+    // }
   }
 
   downloadFile(id: number, name: string = 'untitled') {
@@ -431,10 +531,20 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
         });
       } else if (type === Actions.addOnTrack) {
         params.requestParams.push({
-          name: 'on_track_id',
+          name: 'remark_id',
+          value: res.attachments,
+        });
+      } else if (type === Actions.return) {
+        params.requestParams.push({
+          name: 'reason_of_rejection',
+          value: res.notes,
+        });
+        params.requestParams.push({
+          name: 'attachment_id',
           value: res.attachments,
         });
       }
+
 
       this.milestonesService
         .completePendingTask(
