@@ -134,27 +134,28 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       // complexViewTemp: this.customTemplate
     },
     {
-      key: 'status',
+      key: 'completionLevel',
       type: 'text',
-      label: 'Status',
-      complexView: true,
+      label: 'Completion Level',
     },
+
     {
       key: 'teamName',
       type: 'text',
       label: 'Team',
     },
-
     {
-      key: 'completionLevel',
+      key: 'status',
       type: 'text',
-      label: 'Completion Level',
+      label: 'Status',
+      complexView: true,
     },
+
     {
       key: 'actions',
       type: 'actions',
       actions: ['edit', 'delete', 'details', 'updateProgress'],
-      label: 'actions',
+      label: '',
     },
   ];
 
@@ -174,11 +175,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.dialogService.modals = [];
   }
 
-  getPendingTasks(){
-    this.milestonesService.getMilestoneTasks().subscribe(res => {
-      console.log("Got those pending :", res)
-      this.allItems = res
-    })
+  getPendingTasks() {
+    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+      console.log('Got those pending :', res);
+      this.allItems = res;
+    });
   }
 
   paginate(paginationEvent: PaginationEvent) {

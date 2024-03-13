@@ -21,7 +21,7 @@
       padding: 0;
     }
 
-    height: 580px;
+    height: 930px;
     padding: 0 20px;
     overflow: auto;
     border-radius: 5px 0 0 5px;
@@ -32,13 +32,13 @@
       .task {
         border-radius: 7px;
         overflow: hidden;
-        box-shadow: -3px 3px 3px -4px rgba(0, 0, 0, 0.75);
+        // box-shadow: -3px 3px 3px -4px rgba(0, 0, 0, 0.75);
         cursor: pointer;
 
         .task-header {
           .row {
-            border-left: 5px solid #4f008c;
-            background: linear-gradient(to right, #4f008c91 0%, #9000ff1f 100%);
+            // border-left: 5px solid #4f008c;
+            background: linear-gradient(to right, #4f008c36 0%, #9000ff1f 100%);
             height: 31px;
             align-content: center;
 
