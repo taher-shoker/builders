@@ -83,7 +83,7 @@ export class MilestonesService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  currentTeam: string = '';
+  currentTeam: {id: number, name:string, systemDto: {id: number, name: string}};
   constructor(private http: HttpClient, private cookieService: CookieService) {
     this.currentTeam = this.setUserTeams();
     console.log('Dateam', this.currentTeam);
@@ -143,11 +143,11 @@ export class MilestonesService {
   }
 
   getMilestones(filterData?: any) {
-    console.log('filterdata', filterData);
-    if (!filterData) {
-      filterData = {};
-    }
-    filterData['team'] = this.currentTeam;
+    // console.log('filterdata', filterData);
+    // if (!filterData) {
+    //   filterData = {};
+    // }
+    // filterData['team'] = this.currentTeam;
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });

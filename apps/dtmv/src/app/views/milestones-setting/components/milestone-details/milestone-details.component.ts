@@ -153,11 +153,13 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     });
   }
 
-  checkIfUserShouldSeeMilestone() {
-    if (this.milestoneDetails.teamName !== this.milestonesService.currentTeam) {
-      this.router.navigate(['/'], { relativeTo: this.route });
-    }
-  }
+  // checkIfUserShouldSeeMilestone() {
+  //   if (this.milestoneDetails.teamName !== this.milestonesService.currentTeam.name) {
+  //     console.log("checked", this.milestoneDetails.teamName, "++", this.milestonesService.currentTeam.name)
+  //     console.log("checked", this.milestoneDetails.teamName, "++", this.milestonesService.currentTeam)
+  //     this.router.navigate(['/'], { relativeTo: this.route });
+  //   }
+  // }
 
   progress!: string | null;
   deliverable!: string | null;
@@ -282,7 +284,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   getMilestoneDetails(id: number) {
     this.milestonesService.getMilestone(id).subscribe((res: any) => {
       this.milestoneDetails = res;
-      this.checkIfUserShouldSeeMilestone();
+      // this.checkIfUserShouldSeeMilestone();
 
       if (
         this.milestoneDetails.milestoneProgressUpdateDTO &&
