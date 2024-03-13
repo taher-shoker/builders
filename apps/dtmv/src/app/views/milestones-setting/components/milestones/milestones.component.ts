@@ -177,7 +177,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         relativeTo: this.route,
       });
     } else if (event.value === 'delete') {
-      this.MakeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
+      this.makeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
         if (!res) {
           return;
         }
@@ -215,7 +215,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     });
   }
 
-  MakeSureToDelete(name: string) {
+  makeSureToDelete(name: string) {
     {
       const dialogRef = this.matDialog.open(MessageDialogComponent, {
         height: '160px',

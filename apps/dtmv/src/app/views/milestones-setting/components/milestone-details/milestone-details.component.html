@@ -59,7 +59,7 @@
                   <p class="cell-name">{{ 'last_progress' | translate }}</p>
                   <ng-container *ngIf="milestoneDetails">
                     <p class="cell-value">
-                      {{ milestoneDetails.lastProgressUpdateDate ?? '-'}}
+                      {{ milestoneDetails.lastProgressUpdateDate ? (milestoneDetails.lastProgressUpdateDate | date:'yyyy-MM-dd') : '-'}}
                     </p>
                   </ng-container>
                 </div>

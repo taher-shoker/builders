@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -28,7 +29,7 @@ export interface Team {
 }
 
 export interface RequestTask {
-  requestTaskId: 0;
+  requestTaskId: number;
   status: string;
   username: string;
   userDisplayName: string;
@@ -42,11 +43,29 @@ export interface RequestTask {
   completedDate: Date;
   createdDate: Date;
   lastModified: Date;
+
+  params: {
+    name: string;
+    type: string;
+    constraints: [
+      {
+        name: string;
+        configuration: boolean;
+      }
+    ];
+  }[];
 }
 
 export enum Actions {
   addEvidence = 'Add Evidence',
   addJustification = 'Add Justification',
+  addOnTrack = 'Add on Track',
+  reviewEvidence = 'Approve Evidence',
+  reviewJustification = 'Approve Justification',
+  reviewOnTrack = 'Approve on Track',
+  updateDTRecord = 'Update Record',
+  initiateUpdateProgress = 'Update progress',
+  approveProgress = 'Approve progress'
 }
 
 @Injectable({
@@ -61,8 +80,12 @@ export class MilestonesService {
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-
-  constructor(private http: HttpClient, private cookieService: CookieService) {}
+  
+  currentTeam: string = "";
+  constructor(private http: HttpClient, private cookieService: CookieService) {
+    this.currentTeam = this.setUserTeam();
+    console.log("Dateam", this.currentTeam)
+  }
 
   isDTDirector!: boolean;
   isDTAdmin!: boolean;
@@ -118,6 +141,11 @@ export class MilestonesService {
   }
 
   getMilestones(filterData?: any) {
+    console.log("filterdata", filterData)
+    if(!filterData){
+      filterData = {}
+    }
+    filterData["team"] = this.currentTeam
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });
@@ -149,8 +177,11 @@ export class MilestonesService {
     return this.http.post(`${this.baseUrl}/cwf/task/${caseId}/${taskId}`, data);
   }
 
-  uploadFile(data: any) {
-    return this.http.post(this.endpointAttachments, data);
+  uploadFile(data: any, milestoneId: number | string): Observable<number> {
+    return this.http.post<number>(
+      `http://localhost:28054/api/v2/dt-milestone-service/attachments?milestoneId=${milestoneId}`,
+      data
+    );
   }
 
   updateMilestoneProgress(data: {
@@ -161,12 +192,12 @@ export class MilestonesService {
     return this.http.patch(`${this.dtUrl}/updateProgress`, data);
   }
 
-  getMilesoneProgressWorkflow(
+  getMilestoneProgressWorkflow(
     requestId: number
   ): Observable<MilestoneProgressWorkflow> {
     // return this.http.get<MilestoneProgressWorkflow>(
     //   `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
-    
+
     // );
 
     return this.http.get<MilestoneProgressWorkflow>(
@@ -180,37 +211,46 @@ export class MilestonesService {
     );
   }
 
-  downloadAttachment(id: number){
-    return this.http.get(`http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}/download`, {
-      responseType: 'blob',
-    });
+  downloadAttachment(id: number) {
+    return this.http.get(
+      `http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}/download`,
+      {
+        responseType: 'blob',
+      }
+    );
   }
 
   /**
-   * @param file the full file of the attachment.
-   * @param type type of the attachment.
-   * @param milestoneId Milestone ID
-   * @param note The Comment if needed.
+   * Complete a pending task for certain request in a workflow.
+   *
    */
 
-  postEvidenceOrJustification(
-    file: File,
-    type: 'EVIDENCE' | 'JUSTIFICATION',
-    milestoneId: number,
-    note: string
-  ): Observable<number> {
-    let queryParams = new HttpParams();
-    queryParams = queryParams.append('attachmentType', type);
-    queryParams = queryParams.append('milestoneId', milestoneId);
-    queryParams = queryParams.append('note', note);
+  completePendingTask(
+    requestId: string | number,
+    requestTaskId: string | number,
+    body: {
+      requestParams: { name: string; value: number | string | boolean }[];
+    }
+  ) {
+    console.warn(body);
+    return this.http.post(
+      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}/${requestTaskId}`,
+      body
+    );
+  }
 
-    return this.http.post<number>(
-      'http://localhost:28054/api/v2/dt-milestone-service/attachments',
+  /**
+   * Final step of approvals in the workflow done by the DT Director
+   */
+
+  updateMilestoneRecord(
+    requestId: string | number,
+    requestTaskId: string | number
+  ) {
+    return this.http.post(
+      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}/${requestTaskId}`,
       {
-        file,
-      },
-      {
-        params: queryParams,
+        requestParam: {}, //<< Agreed to send it as empty object
       }
     );
   }
@@ -247,7 +287,7 @@ export interface MilestoneProgressWorkflowStep {
   completedDate: Date;
   createdDate: Date;
   lastModified: Date;
-  taskName: string
+  taskName: string;
 }
 
 export type MilestoneStatus =
