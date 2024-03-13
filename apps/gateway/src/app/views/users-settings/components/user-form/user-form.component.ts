@@ -73,6 +73,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       if (this.data) {
+        console.log(this.data);
         this.restFormWithValue(this.data);
       }
     }
@@ -191,10 +192,8 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         if (this.data?.teams && this.data.teams.length > 0) {
-          const userTeam = this.data?.teams[0].id;
-          this.selectedTeam = this.teams.filter(
-            (p: any) => p.id === userTeam
-          )[0];
+          this.selectedGroup = this.data.teams.map((t: any) => t.id);
+          // this.selectedTeam = this.data?.teams;
         } else if (this.data.userGroups[0].groupName === 'DT_Director') {
           this.hideDropdown = true;
           this.form.get('teamDto')?.setValidators(null);

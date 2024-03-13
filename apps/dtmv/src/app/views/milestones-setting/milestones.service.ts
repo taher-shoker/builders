@@ -80,9 +80,9 @@ export class MilestonesService {
       params: this.setSystemParam(),
     });
   }
-  setUserTeam() {
+  setUserTeams() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    return user.teams[0]?.name;
+    return user.teams;
   }
   getMilestoneUsersType() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
@@ -166,7 +166,7 @@ export class MilestonesService {
   ): Observable<MilestoneProgressWorkflow> {
     // return this.http.get<MilestoneProgressWorkflow>(
     //   `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
-    
+
     // );
 
     return this.http.get<MilestoneProgressWorkflow>(
@@ -180,10 +180,13 @@ export class MilestonesService {
     );
   }
 
-  downloadAttachment(id: number){
-    return this.http.get(`http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}/download`, {
-      responseType: 'blob',
-    });
+  downloadAttachment(id: number) {
+    return this.http.get(
+      `http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}/download`,
+      {
+        responseType: 'blob',
+      }
+    );
   }
 
   /**
@@ -247,7 +250,7 @@ export interface MilestoneProgressWorkflowStep {
   completedDate: Date;
   createdDate: Date;
   lastModified: Date;
-  taskName: string
+  taskName: string;
 }
 
 export type MilestoneStatus =

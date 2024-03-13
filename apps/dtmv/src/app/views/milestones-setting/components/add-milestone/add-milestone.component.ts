@@ -32,7 +32,6 @@ export class AddMilestoneComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.uploadForm();
-    this.getAllTeams();
     this.milestonesService.checkIsAdmin();
     this.setRelatedTeam();
     this.bannerDataService.updateData({
@@ -46,13 +45,10 @@ export class AddMilestoneComponent implements OnInit {
     });
   }
   setRelatedTeam() {
-    this.form
-      .get('teamName')
-      ?.setValue(this.milestonesService.setUserTeam(), { emitEvent: false });
-    this.selectTeam = this.milestonesService.setUserTeam();
-
     if (!this.milestonesService.isDTAdmin) {
-      this.form.get('teamName')?.disable();
+      this.allTeams = this.milestonesService.setUserTeams();
+    } else {
+      this.getAllTeams();
     }
   }
 
