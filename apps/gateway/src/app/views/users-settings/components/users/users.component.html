@@ -68,7 +68,7 @@
         </div>
       </div>
       <div class="col-md-2">
-        <stc-apps-button [buttonText]="'Add New User'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+        <stc-apps-button [buttonText]="'Add new user'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
           (btnClick)="addUserNavigate()"></stc-apps-button>
       </div>
     </div>
@@ -115,7 +115,7 @@
           <img src="../../assets/Group 590.png" alt="" />
           <h3>{{ 'No users yet' }}</h3>
           <p>{{ 'You didn&lsquo;t add any user yet, let&lsquo;s add new user' }}</p>
-          <stc-apps-button [buttonText]="'Add New User'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
+          <stc-apps-button [buttonText]="'Add new user'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
             (btnClick)="addUserNavigate()"></stc-apps-button>
         </div>
       </td>
@@ -170,14 +170,17 @@
   </p>
 
   <div class="row mt-4">
-    <div class="col-md-4 offset-8">
-      <div class="d-flex justify-content-end">
-        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"></stc-apps-button>
-
-        <div class="mx-3"></div>
-        <stc-apps-button [buttonText]="'delete user'" [buttonType]="'danger-outline'"
-          (btnClick)="confirmDelete()"></stc-apps-button>
+    <div class="col-9 offset-3">
+      <div class="row mt-4">
+        <div class="col-md-2"></div>
+        <div class="col-md-5">
+          <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"></stc-apps-button>
+        </div>
+        <div class="col-md-5">
+          <stc-apps-button [buttonText]="'delete user'" [buttonType]="'danger-outline'"
+            (btnClick)="confirmDelete()"></stc-apps-button>
+        </div>
       </div>
     </div>
   </div>

@@ -66,7 +66,7 @@ export enum Actions {
   updateDTRecord = 'Update Record',
   initiateUpdateProgress = 'Update progress',
   approveProgress = 'Approve progress',
-  return = 'Return'
+  return = 'Return',
 }
 
 @Injectable({
@@ -81,11 +81,11 @@ export class MilestonesService {
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-  
-  currentTeam: string = "";
+
+  currentTeam: string = '';
   constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.currentTeam = this.setUserTeam();
-    console.log("Dateam", this.currentTeam)
+    this.currentTeam = this.setUserTeams();
+    console.log('Dateam', this.currentTeam);
   }
 
   isDTDirector!: boolean;
@@ -142,11 +142,11 @@ export class MilestonesService {
   }
 
   getMilestones(filterData?: any) {
-    console.log("filterdata", filterData)
-    if(!filterData){
-      filterData = {}
+    console.log('filterdata', filterData);
+    if (!filterData) {
+      filterData = {};
     }
-    filterData["team"] = this.currentTeam
+    filterData['team'] = this.currentTeam;
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });
@@ -190,9 +190,9 @@ export class MilestonesService {
     overallProgress: string;
     deliverable: string;
   }) {
-    const headers = new HttpHeaders({"Accept": "text/plain"})
+    const headers = new HttpHeaders({ Accept: 'text/plain' });
     return this.http.patch(`${this.dtUrl}/updateProgress`, data, {
-      responseType: "text"
+      responseType: 'text',
     });
   }
 

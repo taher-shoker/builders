@@ -1,6 +1,8 @@
 <div class="add-layout bg-white">
   <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
-    <mat-tab label="Fill the form"> <stc-apps-milestone-form></stc-apps-milestone-form></mat-tab>
+    @if (!milestonesService.isDTAdmin) {<mat-tab label="Fill the form">
+      <stc-apps-milestone-form></stc-apps-milestone-form></mat-tab>
+    }
     <mat-tab label="Upload Bulk file">
       <div class="p-50">
         <form class='upload-form' [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -59,7 +61,7 @@
               <div class="row">
                 <div class="col-4"></div>
                 <div class="col-4">
-                  <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+                  <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
                     (btnClick)="cancel()"></stc-apps-button>
                 </div>
                 <div class="col-4">

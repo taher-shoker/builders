@@ -22,7 +22,7 @@
                   </div>
                 </div>
                 <div class="col-3">
-                  <stc-apps-button [buttonText]="'filter' | translate" [buttonType]="'gray-outline'"
+                  <stc-apps-button [buttonText]="'Filter' | translate" [buttonType]="'gray-outline'"
                     [buttonIcon]="'fa-filter'" (btnClick)="toggleFilter()"></stc-apps-button>
                 </div>
                 <div class="col-3">
@@ -83,37 +83,52 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()" (blur)="(OnChangesForm)" class="p-3 pb-0">
     <div class="inputs">
       <div class="row">
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputId]="'milestoneName'"
-            [inputName]="'milestone_name' | translate" formControlName="milestoneName"></stc-apps-input>
+        <div class="col-md-4">
+          <stc-apps-input [className]="'custom-input'" [inputId]="'milestoneName'" [inputName]="'milestone name'"
+            formControlName="milestoneName"></stc-apps-input>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <stc-apps-input [className]="'custom-input'" [inputId]="'team'" [inputName]="'team' | translate"
             formControlName="team"></stc-apps-input>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-4">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'status'"
-            [inputName]="'status' | translate" formControlName="status"></stc-apps-input>
+            [inputName]="'status'" formControlName="status"></stc-apps-input>
         </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'month'"
-            [inputName]="'month' | translate" formControlName="month"></stc-apps-input>
+
+      </div>
+      <div class="row mt-4">
+
+        <div class="col-md-4">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'month'" [inputName]="'month'"
+            formControlName="month"></stc-apps-input>
+          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'endDate'"
+            [inputName]="'End Date'" formControlName="endDate">
+          </stc-apps-date-picker>
         </div>
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'year'"
-            [inputName]="'year' | translate" formControlName="year"></stc-apps-input>
+        <div class="col-md-4">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'year'" [inputName]="'year'"
+            formControlName="year"></stc-apps-input>
+        </div>
+        <div class="col-md-4">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'year'" [inputName]="'year'"
+            formControlName="year"></stc-apps-input>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-md-4 offset-8">
-        <div class="btn-form-action d-flex justify-content-end">
-          <stc-apps-button [buttonText]="'clear_filter' | translate" [buttonType]="'gray-outline'"
-            (btnClick)="clearFormFilter()"></stc-apps-button>
+    <div class="row mt-4">
+      <div class="col-12 ">
+        <div class="row mt-4">
+          <div class="col-md-3">
+            <stc-apps-button [buttonText]="'Clear'" [buttonType]="'gray-outline'"
+              (btnClick)="clearFormFilter()"></stc-apps-button>
+          </div>
+          <div class="col-md-6"></div>
 
-          <div class="mx-3"></div>
-          <stc-apps-button [buttonText]="'filter' | translate" [buttonType]="'primary'" [buttonDisable]="disabled"
-            (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+          <div class="col-md-3">
+            <stc-apps-button [buttonText]="'Apply filter' | translate" [buttonType]="'primary'"
+              [buttonDisable]="disabled" (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+          </div>
         </div>
       </div>
     </div>

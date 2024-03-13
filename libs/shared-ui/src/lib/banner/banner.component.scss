@@ -4,6 +4,8 @@
   min-height: 170px;
   max-height: 452px;
   background-color: $stcColor;
+  background-image: url('../../assets/bg-banner.png');
+  background-position: bottom;
   color: $whiteColor;
   position: relative;
   .top-banner {
@@ -13,7 +15,6 @@
     padding-inline: 40px;
 
     .welcome-msg {
-      text-transform: capitalize;
       p {
         color: $greyColor;
       }
@@ -28,7 +29,6 @@
     }
   }
   h1 {
-    text-transform: capitalize;
     color: $whiteColor;
   }
 }

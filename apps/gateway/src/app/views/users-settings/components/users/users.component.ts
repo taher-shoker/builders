@@ -249,7 +249,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.handleTeams();
 
     this.dataSource.paginator = this.paginator;
-    this.bannerDataService.updateData({ title: 'users setting', text: '' });
+    this.bannerDataService.updateData({ title: 'Users setting', text: '' });
     this.dataSource.filterPredicate = function (record, filter) {
       return (
         record.name?.toLocaleLowerCase().indexOf(filter) != -1 ||

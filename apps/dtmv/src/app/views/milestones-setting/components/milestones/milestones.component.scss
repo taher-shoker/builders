@@ -1,8 +1,9 @@
 @import './scss/core/variables/colors';
 
-.custom-class-template{
-  color: green;//For testing, Delete this css rule after testing
+.custom-class-template {
+  color: green; //For testing, Delete this css rule after testing
   font-weight: bold;
+  margin-bottom: 0;
 }
 
 * {

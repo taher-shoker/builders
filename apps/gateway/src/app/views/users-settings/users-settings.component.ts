@@ -17,7 +17,7 @@ export class UsersSettingsComponent implements OnInit {
     private cookieService: CookieService,
     private router: Router
   ) {}
-  title = 'users settings';
+  title = 'Users settings';
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';

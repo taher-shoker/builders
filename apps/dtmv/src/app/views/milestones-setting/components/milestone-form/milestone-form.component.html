@@ -48,12 +48,12 @@
         <div class="col-md-4 offset-md-8 ">
           <div class="row">
             <div class="col-md-6">
-              <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+              <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
                 (btnClick)="cancel()"></stc-apps-button>
             </div>
             <div class="col-md-6">
-              <stc-apps-button [buttonText]="'Add'" [buttonType]="'primary'" (btnClick)="onSubmit()"
-                [actionType]="'submit'"></stc-apps-button>
+              <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Add'" [buttonType]="'primary'"
+                (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
             </div>
           </div>
         </div>

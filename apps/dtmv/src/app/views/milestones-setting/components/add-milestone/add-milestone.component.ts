@@ -35,7 +35,7 @@ export class AddMilestoneComponent implements OnInit {
     this.milestonesService.checkIsAdmin();
     this.setRelatedTeam();
     this.bannerDataService.updateData({
-      title: 'Add new Milestone',
+      title: 'Add new milestone',
       text: '',
     });
   }
