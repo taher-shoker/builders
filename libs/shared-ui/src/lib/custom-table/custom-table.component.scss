@@ -4,9 +4,11 @@ table {
 }
 
 .table-header {
-  background-color: var(--stc-color-light);
+  background-color: #e7d6f4;
 
   th {
+    color: var(--stc-color);
+    font-weight: 400;
     &:first-of-type {
       border-radius: 7px 0 0 0px;
     }
@@ -20,6 +22,7 @@ table {
 td {
   max-width: 150px;
   word-wrap: break-word;
+  color: var(--grey-color);
 }
 
 tr:not(.table-header) {

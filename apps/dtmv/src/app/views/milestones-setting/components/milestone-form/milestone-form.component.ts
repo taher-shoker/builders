@@ -114,7 +114,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   setRelatedTeam() {
     if (!this.milestonesService.isDTAdmin) {
       this.allTeams = this.milestonesService.setUserTeams();
-      console.log(this.allTeams);
     } else {
       this.getAllTeams();
     }

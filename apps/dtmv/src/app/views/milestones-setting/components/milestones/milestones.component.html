@@ -73,7 +73,8 @@
         </div>
       </div>
       <div class="col-md-4">
-        <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems" (itemClicked)="detailsNavigate($event)"></stc-apps-items-list>
+        <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems"
+          (itemClicked)="detailsNavigate($event)"></stc-apps-items-list>
       </div>
     </div>
   </div>
@@ -88,31 +89,28 @@
             formControlName="milestoneName"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputId]="'team'" [inputName]="'team' | translate"
-            formControlName="team"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputId]="'team'" [inputName]="'milestone ID' | translate"
+            formControlName="milestoneId"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'status'"
-            [inputName]="'status'" formControlName="status"></stc-apps-input>
+          <stc-apps-select-drop-down [label]="'Team'" [options]="allTeams" formControlName="team"
+            [outputValue]="'name'"></stc-apps-select-drop-down>
         </div>
 
       </div>
       <div class="row mt-4">
 
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'month'" [inputName]="'month'"
-            formControlName="month"></stc-apps-input>
-          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'endDate'"
-            [inputName]="'End Date'" formControlName="endDate">
-          </stc-apps-date-picker>
+          <stc-apps-select-drop-down [label]="'Status'" [labelValue]="'value'" [options]="milestoneStatus"
+            formControlName="status" [outputValue]="'value'"></stc-apps-select-drop-down>
         </div>
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'year'" [inputName]="'year'"
-            formControlName="year"></stc-apps-input>
+          <stc-apps-select-drop-down [label]="'Month'" [options]="monthsArr" formControlName="month"
+            [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'year'" [inputName]="'year'"
-            formControlName="year"></stc-apps-input>
+          <stc-apps-select-drop-down [label]="'Year'" [options]="yearsArr" formControlName="year"
+            [outputValue]="'name'"></stc-apps-select-drop-down>
         </div>
       </div>
     </div>

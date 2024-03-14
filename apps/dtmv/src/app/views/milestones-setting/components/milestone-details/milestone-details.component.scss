@@ -7,6 +7,14 @@
   padding-block: 35px;
   border-radius: 7px;
 }
+
+.stepp-info {
+  p {
+    &:last-of-type {
+      width: 90%;
+    }
+  }
+}
 .order-date {
   color: var(--grey-color);
   font-size: var(--secondary-text);

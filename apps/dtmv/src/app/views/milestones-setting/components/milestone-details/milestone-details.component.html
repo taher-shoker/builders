@@ -113,13 +113,12 @@
       <div class="logs">
         <stc-apps-actions-stepper [steps]="steps" (stepperAction)="doStepAction($event)">
           <ng-template let-step>
-            <div>
-              <p class="m-1">
-                <span style="color: green;">Overall progress:</span> <span
-                  style="font-weight: bold;">{{progress}}%</span>
+            <div class="stepp-info">
+              <p class="mt-1">
+                <span>Overall progress: </span> <strong> {{progress}}%</strong>
               </p>
-              <p class="m-1">
-                <span style="color: green;">Deliverable:</span> <span style="font-weight: bold;">{{deliverable}}</span>
+              <p class="mt-1">
+                <span>Deliverable: </span> <strong> {{deliverable}}</strong>
               </p>
             </div>
           </ng-template>

@@ -19,6 +19,7 @@ import {
   Task,
   MilestonesService,
   PendingTask,
+  MilestoneStatus,
 } from '../../milestones.service';
 import { TranslateService } from '@ngx-translate/core';
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
@@ -48,7 +49,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   totalInProgress = 0;
   totalPending = 0;
   totalClosed = 0;
-  readonly CaseStatus = CaseStatus;
   readonly TaskCicle = TaskCicle;
   // data = [
   //   {
@@ -162,6 +162,17 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   disabled = false;
   tableData!: any;
   rowData!: any;
+  milestoneStatus: { value: string; name: string }[] = [
+    { value: 'Planned', name: 'Planned' },
+    { value: 'Delayed', name: 'Delayed' },
+    { value: 'At_Risk', name: 'At risk' },
+    { value: 'On_Track', name: 'On track' },
+    { value: 'Completed', name: 'Completed' },
+  ];
+  monthsArr: any = [];
+  yearsArr: any = [];
+  allTeams: any;
+
   ngOnInit() {
     // this.populateInsightsCards();
     // this.fetchAssigneeTasks();
@@ -173,6 +184,9 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
     this.searchForm();
     this.dialogService.modals = [];
+    this.getAllTeams();
+    this.monthsArrPopulator();
+    this.yearsArrPopulator();
   }
 
   getPendingTasks() {
@@ -202,6 +216,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
     this.tableData = res.content;
     //console.warn(this.milestonesTotalCount);
+  }
+
+  getAllTeams() {
+    this.milestonesService.setSystemTeams().subscribe((res) => {
+      this.allTeams = res;
+    });
   }
 
   detailsNavigate(id: string | number) {
@@ -285,6 +305,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
       milestoneName: ['', { nonNullable: true }],
+      milestoneId: ['', { nonNullable: true }],
       team: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
       month: ['', { nonNullable: true }],
@@ -323,6 +344,25 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.getMilestones();
   }
 
+  monthsArrPopulator() {
+    for (let i = 1; this.monthsArr.length < 12; i++) {
+      const date = new Date(2000, i - 1, 10); // 2009-11-10
+      const month = date.toLocaleString('default', { month: 'long' });
+
+      const monthObject = { name: month, id: i };
+      this.monthsArr.push(monthObject);
+    }
+  }
+  yearsArrPopulator() {
+    const currentYear = new Date().getFullYear();
+    for (
+      let i = 2023;
+      this.yearsArr[this.yearsArr.length - 1]?.name !== currentYear; // Check if the latest element's value equals the current year's value
+      i++
+    ) {
+      this.yearsArr.push({ name: i, id: i });
+    }
+  }
   produceDate(month: string, day: string, year: string) {
     let monthNum = 0;
     const monthsList = [
