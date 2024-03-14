@@ -1,10 +1,9 @@
 .btn {
-  text-transform: capitalize;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 13px 16px;
-  font-weight: 500;
+  font-family: var(--stc-font-meduim);
   font-size: 18px;
   border-radius: 10px;
   width: -webkit-fill-available;

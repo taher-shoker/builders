@@ -85,9 +85,9 @@ export class MilestonesService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  currentTeam: string = '';
+  currentTeam: {id: number, name:string, systemDto: {id: number, name: string}};
   constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.currentTeam = this.setUserTeam();
+    this.currentTeam = this.setUserTeams();
   }
 
   isDTDirector!: boolean;
@@ -106,9 +106,9 @@ export class MilestonesService {
       params: this.setSystemParam(),
     });
   }
-  setUserTeam() {
+  setUserTeams() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    return user.teams[0]?.name;
+    return user.teams;
   }
   getMilestoneUsersType() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
@@ -144,10 +144,6 @@ export class MilestonesService {
   }
 
   getMilestones(filterData?: any) {
-    if (!filterData) {
-      filterData = {};
-    }
-    filterData['team'] = this.currentTeam;
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });
@@ -210,7 +206,7 @@ export class MilestonesService {
     );
   }
 
-  getMilestoneTasks() : Observable<PendingTask[]>{
+  getMilestoneTasks(): Observable<PendingTask[]> {
     return this.http.get<PendingTask[]>(
       `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
     );

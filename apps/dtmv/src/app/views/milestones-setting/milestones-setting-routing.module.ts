@@ -34,7 +34,7 @@ const routes: Routes = [
         path: 'milestone_details/:id',
         component: MilestoneDetailsComponent,
         canActivate: [AuthGuard, reportingGuard],
-        data: { breadcrumb: `case-details` },
+        data: { breadcrumb: `milestone-details` },
       },
     ],
   },

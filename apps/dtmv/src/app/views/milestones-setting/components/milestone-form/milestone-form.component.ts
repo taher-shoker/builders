@@ -82,7 +82,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.MilestoneForm();
-    this.getAllTeams();
     this.milestonesService.checkIsAdmin();
     this.setRelatedTeam();
   }
@@ -113,14 +112,10 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   }
 
   setRelatedTeam() {
-    if (!this.isEditing) {
-      this.form
-        .get('teamName')
-        ?.setValue(this.milestonesService.setUserTeam(), { emitEvent: false });
-      this.selectTeam = this.milestonesService.setUserTeam();
-    }
     if (!this.milestonesService.isDTAdmin) {
-      this.form.get('teamName')?.disable();
+      this.allTeams = this.milestonesService.setUserTeams();
+    } else {
+      this.getAllTeams();
     }
   }
 
@@ -159,7 +154,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.form.valid) {
       const finalData = {
-        teamName: this.milestonesService.setUserTeam(),
         ...this.form.value,
         weight: +this.form.get('weight')?.value,
       };

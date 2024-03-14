@@ -111,12 +111,18 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.milestoneId = this.route.snapshot.params['id'];
 
-    this.bannerDataService.updateData({
-      title: '',
-      text: '',
-    });
-
     this.getMilestoneDetails();
+
+    // this.CasesService.getCase(this.milestoneId).subscribe((res) => {
+    //   if (res) {
+    //     this.milestoneDetails = res;
+    //     this.caseSerial = res.caseSerialNumber;
+    //     this.caseStatus = res.caseStatus;
+    //     this.subscribeToLanguage();
+    //     this.handleTeam(this.milestoneDetails, this.teams);
+    //   }
+    // });
+    // this.getMilestoneTasks();
 
     this.closeForm = this.formBuilder.group({
       close_mail_content: [''],
@@ -270,20 +276,21 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   }
 
   getMilestoneDetails() {
-    this.milestonesService
-      .getMilestone(this.milestoneId)
-      .subscribe((res: any) => {
-        this.milestoneDetails = res;
-
-        if (
-          this.milestoneDetails.milestoneProgressUpdateDTO &&
-          this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress
-        ) {
-          this.showMilestoneProgressWorkflow();
-        } else {
-          this.askUserToInitiateUpdateProgress();
-        }
+    this.milestonesService.getMilestone(this.milestoneId).subscribe((res: any) => {
+      this.milestoneDetails = res;
+      this.bannerDataService.updateData({
+        title: this.milestoneDetails.milestoneName + ' details',
+        text: '',
       });
+      if (
+        this.milestoneDetails.milestoneProgressUpdateDTO &&
+        this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress
+      ) {
+        this.showMilestoneProgressWorkflow();
+      } else {
+        this.askUserToInitiateUpdateProgress();
+      }
+    });
   }
 
   doStepAction(action: { actionName: string; item: any }) {

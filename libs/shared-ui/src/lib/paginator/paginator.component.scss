@@ -1,3 +1,9 @@
+.paginator-holder {
+  background-color: white;
+  background-color: white;
+  padding: 50px 65px;
+  min-height: 130px;
+}
 button {
   border: none;
   outline: none;
@@ -6,6 +12,7 @@ button {
 
 .paginator {
   display: flex;
+  float: right;
 }
 
 .pages-holder {

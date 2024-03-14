@@ -6,19 +6,16 @@
     <div class="col">
       <div class="row step">
         <div class="col-1">
-          <div
-            class="step-head"
-            [ngClass]="{
+          <div class="step-head" [ngClass]="{
               'step-done': step.state === 'done',
               'step-warning': step.state === 'warning'
-            }"
-          >
+            }">
             @if (step.state === 'done') {
             <i class="ri-check-fill" style="color: white"></i>
             }
           </div>
         </div>
-        <div class="col">
+        <div class="col p-0">
           <div class="step-caption">{{ step.caption }}</div>
 
 
@@ -41,19 +38,12 @@
       <div class="row">
         @for(attachment of step.attachments; track attachment){
         <div class="col-6">
-          <a
-            href="javascript:void(0);"
-            (click)="raiseAction('download', attachment)"
-            >{{ attachment }}</a
-          >
+          <a href="javascript:void(0);" (click)="raiseAction('download', attachment)">{{ attachment }}</a>
         </div>
         }
       </div>
       } @if(step.additionalTemp){
-      <ng-template
-        [ngTemplateOutlet]="stepTemplate"
-        [ngTemplateOutletContext]="{ $implicit: step }"
-      >
+      <ng-template [ngTemplateOutlet]="stepTemplate" [ngTemplateOutletContext]="{ $implicit: step }">
       </ng-template>
       }
 
@@ -62,14 +52,16 @@
   </div>
 
   @if(step.actions){
-    <div class="d-flex">
-      @for(action of step.actions; track action){
-      <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
-        {{ action }}
-      </button>
-      }
-    </div>
+  <div class="d-flex">
+    @for(action of step.actions; track action){
+    <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
+      {{ action }}
+    </button>
+    <!-- <stc-apps-button [buttonText]="action" [buttonType]="'primary'"
+      (btnClick)="raiseAction(action, step.stepObject)"></stc-apps-button> -->
     }
-  } 
-  
+  </div>
+  }
+  }
+
 </div>

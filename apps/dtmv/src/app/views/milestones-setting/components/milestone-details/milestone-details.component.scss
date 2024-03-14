@@ -1,5 +1,20 @@
 @import './scss/core/variables/colors';
 
+.logs {
+  height: 100%;
+  background-color: white;
+  padding-inline-start: 35px;
+  padding-block: 35px;
+  border-radius: 7px;
+}
+
+.stepp-info {
+  p {
+    &:last-of-type {
+      width: 90%;
+    }
+  }
+}
 .order-date {
   color: var(--grey-color);
   font-size: var(--secondary-text);
