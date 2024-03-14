@@ -1,4 +1,4 @@
-<div class="dialog">
+<div class="dialog ">
   <div class="dialog-body">
     <div class="body-holder">
       <p>{{ message }}</p>
@@ -8,9 +8,8 @@
   <hr class="liner-hr" />
 
   <div class="dialog-actions">
-    <div class="d-flex">
-      <button type="button" class="btn" (click)="approve()">Yes</button>
-      <button type="button" class="btn" (click)="cancel()">Close</button>
-    </div>
+    <button type="button" class="btn gray-outline" (click)="cancel()">Close</button>
+    <button type="button" class="btn primary" (click)="approve()">Yes</button>
+
   </div>
 </div>
