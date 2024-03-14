@@ -40,7 +40,7 @@ export class StepDirective {
   templateUrl: './actions-stepper.component.html',
   styleUrls: ['./actions-stepper.component.scss'],
 })
-export class ActionsStepperComponent implements AfterContentInit {
+export class ActionsStepperComponent {
   @Output() stepperAction: EventEmitter<{ actionName: string; item: any }> =
     new EventEmitter<{ actionName: string; item: any }>();
 
@@ -49,14 +49,7 @@ export class ActionsStepperComponent implements AfterContentInit {
 
   @ContentChild(TemplateRef) stepTemplate!: TemplateRef<any>;
 
-  ngAfterContentInit(): void {
-    console.log('PROJECTED to stepper:', this.stepTemplate);
-    console.log('steps:', this.steps);
-  }
-
   raiseAction(actionName: string, optionalItem?: any) {
-    console.log('THE OPT ITEM:', optionalItem);
-    console.log('THE actionName:', actionName);
     this.stepperAction.emit({ actionName, item: optionalItem });
   }
 }

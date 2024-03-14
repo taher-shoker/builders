@@ -66,7 +66,9 @@ export enum Actions {
   updateDTRecord = 'Update Record',
   initiateUpdateProgress = 'Update progress',
   approveProgress = 'Approve progress',
-  return = 'Return',
+  returnJustification = 'Return Justification',
+  returnEvidence = 'Return Evidence',
+  returnOnTrack = 'Return Remarks',
   noNeed = 'No Need',
 }
 
@@ -86,7 +88,6 @@ export class MilestonesService {
   currentTeam: string = '';
   constructor(private http: HttpClient, private cookieService: CookieService) {
     this.currentTeam = this.setUserTeam();
-    console.log('Dateam', this.currentTeam);
   }
 
   isDTDirector!: boolean;
@@ -143,7 +144,6 @@ export class MilestonesService {
   }
 
   getMilestones(filterData?: any) {
-    console.log('filterdata', filterData);
     if (!filterData) {
       filterData = {};
     }
@@ -237,7 +237,6 @@ export class MilestonesService {
       requestParams: { name: string; value: number | string | boolean }[];
     }
   ) {
-    console.warn(body);
     return this.http.post(
       `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}/${requestTaskId}`,
       body

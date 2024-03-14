@@ -49,9 +49,9 @@ export class UpdateMilestoneProgressDialogComponent {
   ) {
     this.milestoneName.set(data.milestoneName);
     const hintPrefix = `You're about to`;
-    const evidenceHintAction = 'approve evidence';
-    const justificationHintAction = 'approve justification';
-    const trackHintAction = 'approve remarks';
+    // const evidenceHintAction = 'approve evidence';
+    // const justificationHintAction = 'approve justification';
+    // const trackHintAction = 'approve remarks';
     const returnHintAction = 'return';
     const hintTail =
       "Kindly note you can't roll back this action, Are you sure?";
@@ -78,7 +78,10 @@ export class UpdateMilestoneProgressDialogComponent {
     //   );
     // } 
     
-    else if (this.data.type === Actions.return) {
+    else if (this.data.type === Actions.returnEvidence ||
+      this.data.type === Actions.returnOnTrack ||
+      this.data.type === Actions.returnJustification
+      ) {
       this.hint.set(
         `${hintPrefix} ${returnHintAction} ${this.milestoneName()}, ${hintTail} `
       );
