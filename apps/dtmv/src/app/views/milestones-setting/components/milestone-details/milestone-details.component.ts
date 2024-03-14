@@ -111,11 +111,6 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.milestoneId = this.route.snapshot.params['id'];
 
-    this.bannerDataService.updateData({
-      title: '',
-      text: '',
-    });
-
     this.getMilestoneDetails(+this.milestoneId);
 
     // this.CasesService.getCase(this.milestoneId).subscribe((res) => {
@@ -204,7 +199,9 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
         .subscribe((res) => {
           console.log('getMilesoneProgressWorkflow:', res);
 
-          res.sort(function(a, b){return  b.requestTaskId - a.requestTaskId})
+          res.sort(function (a, b) {
+            return b.requestTaskId - a.requestTaskId;
+          });
 
           for (let i = res.length - 1; i >= 0; i--) {
             console.log('El task', res[i]);
@@ -285,7 +282,10 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
     this.milestonesService.getMilestone(id).subscribe((res: any) => {
       this.milestoneDetails = res;
       // this.checkIfUserShouldSeeMilestone();
-
+      this.bannerDataService.updateData({
+        title: this.milestoneDetails.milestoneName + ' details',
+        text: '',
+      });
       if (
         this.milestoneDetails.milestoneProgressUpdateDTO &&
         this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress
@@ -563,7 +563,7 @@ export class MilestoneDetailsComponent implements OnInit, OnDestroy {
           value: res.note,
         });
 
-        if(res.attachments){
+        if (res.attachments) {
           params.requestParams.push({
             name: 'attachment_id',
             value: res.attachments,

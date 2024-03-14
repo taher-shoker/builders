@@ -24,7 +24,7 @@
   font-size: 13px;
 }
 
-.step-notes{
+.step-notes {
   background-color: #c3c3c3;
   padding: 0.4rem;
 }
@@ -32,7 +32,7 @@
 .liner {
   display: flex;
 
-  .line-holder{
+  .line-holder {
     flex-shrink: 0;
     flex-grow: 0;
     flex-basis: 30px;
@@ -40,7 +40,7 @@
     justify-content: center;
   }
 
-  .step-info{
+  .step-info {
     flex-grow: 1;
   }
 
@@ -52,12 +52,12 @@
   }
 }
 
-.line-holder{
+.line-holder {
   justify-content: center;
 }
 
 .step-done {
-  background-color: #00C48C;
+  background-color: #00c48c;
 }
 
 .stc-btn {

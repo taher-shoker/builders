@@ -15,7 +15,7 @@ export class HomeComponent implements OnInit {
     public router: Router
   ) {}
 
-  urlHome!: string;
+  urlHome = '/home';
   title = { title: 'home', text: '' };
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';

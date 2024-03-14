@@ -1,7 +1,7 @@
 {
   "home": "Home",
   "Add new Case": "Add New Case",
-  "case-details": "Case Details",
+  "milestone-details": "Milestone details",
   "add_case": "Add Case",
   "cancel": "cancel",
   "confirm": "confirm",
@@ -153,9 +153,7 @@
   "rejected": "Rejected",
   "approved": "Approved",
 
-  
-  "################THIS IS A COMMENT TO DIVIDE#################" : "#############THIS IS A COMMENT TO DIVIDE IN JSON############",
-
+  "################THIS IS A COMMENT TO DIVIDE#################": "#############THIS IS A COMMENT TO DIVIDE IN JSON############",
 
   "milestones": "Milestones",
   "milestones_list": "MMMilestones List",
@@ -172,5 +170,4 @@
   "end_date": "End date",
   "weight": "Weight",
   "start_date": "Start Date"
-
 }
