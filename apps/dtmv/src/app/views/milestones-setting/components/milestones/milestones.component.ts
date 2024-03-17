@@ -189,11 +189,10 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.yearsArrPopulator();
   }
 
-  getPendingTasks() {
-    this.milestonesService.getMilestoneTasks().subscribe((res) => {
-      console.log('Got those pending :', res);
-      this.allItems = res;
-    });
+  getPendingTasks(){
+    this.milestonesService.getMilestoneTasks().subscribe(res => {
+      this.allItems = res
+    })
   }
 
   paginate(paginationEvent: PaginationEvent) {
@@ -215,7 +214,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.milestonesTotalCount = res.totalElements;
 
     this.tableData = res.content;
-    //console.warn(this.milestonesTotalCount);
   }
 
   getAllTeams() {
@@ -243,7 +241,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         this.milestonesService
           .deleteMilestone(event.dataRow.id)
           .subscribe((deletionRes) => {
-            console.log('Deleted :', deletionRes);
+            //comment
           });
       });
     } else if (event.value === 'details') {
@@ -321,15 +319,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
   filterString: string = '';
   searchFilter(inp: HTMLInputElement) {
-    console.log('event', inp.value);
-
     this.filterString = inp.value;
   }
 
   onSubmit() {
     const filteredForm = this.utilities.filterObject(this.form.value);
-    console.log('filteredForm', filteredForm);
-
     this.getMilestonesSub = this.milestonesService
       .getMilestones(filteredForm)
       .subscribe((res: any) => {
