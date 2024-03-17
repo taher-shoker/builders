@@ -169,5 +169,6 @@
   "updated_name": "Updated by Name",
   "end_date": "End date",
   "weight": "Weight",
-  "start_date": "Start Date"
+  "start_date": "Start Date",
+  "working_days": "Working Days"
 }

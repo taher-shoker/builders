@@ -2,7 +2,7 @@
 import { Component, Inject, Signal, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Actions, MilestonesService } from '../../milestones.service';
+import { Actions, MilestoneAttachment, MilestonesService } from '../../milestones.service';
 import * as saveAs from 'file-saver';
 
 @Component({
@@ -48,10 +48,10 @@ export class UpdateMilestoneProgressDialogComponent {
     private milestonesService: MilestonesService
   ) {
     this.milestoneName.set(data.milestoneName);
-    const hintPrefix = `You're about to`;
     // const evidenceHintAction = 'approve evidence';
     // const justificationHintAction = 'approve justification';
     // const trackHintAction = 'approve remarks';
+    const hintPrefix = `You're about to`;
     const returnHintAction = 'return';
     const hintTail =
       "Kindly note you can't roll back this action, Are you sure?";
@@ -120,15 +120,15 @@ export class UpdateMilestoneProgressDialogComponent {
 
       const formData = new FormData();
       formData.append('file', file);
-      this.milestonesService.uploadFile(formData, this.data.milestoneId).subscribe((res: number) => {
+      this.milestonesService.uploadFile(formData, this.data.milestoneId).subscribe((res: MilestoneAttachment) => {
         this.uploadedFile.push(res);
         this.isLoading = false;
         this.form.get('attachment')?.setValue(this.uploadedFile);
 
         if(!this.attachmentsCombinedString){
-          this.attachmentsCombinedString = res.toString();
+          this.attachmentsCombinedString = res.id.toString();
         }else{
-          this.attachmentsCombinedString += `,${res}`
+          this.attachmentsCombinedString += `,${res.id}`
         }
       })
 

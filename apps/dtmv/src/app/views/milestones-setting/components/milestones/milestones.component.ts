@@ -1,27 +1,20 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
-import { CookieService } from 'ngx-cookie';
 import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import {
-  CaseStatus,
-  TaskCicle,
-  Task,
   MilestonesService,
   PendingTask,
-  MilestoneStatus,
 } from '../../milestones.service';
-import { TranslateService } from '@ngx-translate/core';
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
@@ -49,37 +42,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   totalInProgress = 0;
   totalPending = 0;
   totalClosed = 0;
-  readonly TaskCicle = TaskCicle;
-  // data = [
-  //   {
-  //     activityName: 'First activity name',
-  //     milestoneName: 'Milestonah',
-  //     status: 'perfect',
-  //     teamName: 'Real madrid',
-  //     completionLevel: 'Almost done',
-  //   },
-  //   {
-  //     activityName: 'second activity name',
-  //     milestoneName: 'Milestonah 2',
-  //     status: 'well done',
-  //     teamName: 'Blancos',
-  //     completionLevel: 'ferfet',
-  //   },
-  //   {
-  //     activityName: 'fourth',
-  //     milestoneName: 'Milestonah edited',
-  //     status: 'done',
-  //     teamName: 'champs',
-  //     completionLevel: 'undone',
-  //   },
-  //   {
-  //     activityName: 'wild',
-  //     milestoneName: 'Milestonah final',
-  //     status: 'into the net',
-  //     teamName: 'Campione',
-  //     completionLevel: 'starting',
-  //   },
-  // ];
 
   getMilestonesSub!: Subscription;
   userSub!: Subscription;

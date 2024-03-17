@@ -153,5 +153,10 @@
   "not_needed": "غير مطلوب",
   "rejected": "مرفوض",
   "approved": "موثق",
-  "d2d_fraud_cases": "حالات المسوقين لتأسيس الثابت"
+  "d2d_fraud_cases": "حالات المسوقين لتأسيس الثابت",
+
+
+  "################THIS IS A COMMENT TO DIVIDE#################": "#############THIS IS A COMMENT TO DIVIDE IN JSON############",
+
+  "working_days": "Working Days"
 }

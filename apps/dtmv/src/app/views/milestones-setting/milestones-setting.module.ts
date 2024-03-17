@@ -52,6 +52,7 @@ import { UpdateMilestoneProgressDialogComponent } from './components/update-mile
     MatProgressBarModule,
     MatSortModule,
     MatTabsModule,
+    
   ],
   exports: [],
   providers: [DatePipe],

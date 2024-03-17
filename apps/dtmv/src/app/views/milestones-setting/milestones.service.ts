@@ -56,6 +56,15 @@ export interface RequestTask {
   }[];
 }
 
+export interface MilestoneAttachment {
+  fileName: string;
+  id: number;
+  label: string;
+  milestone: MilestoneDetails;
+  uploadDate: string; // it is a Date in a format of : "2024-3-17"
+  url: string;
+}
+
 export enum Actions {
   addEvidence = 'Add Evidence',
   addJustification = 'Add Justification',
@@ -72,6 +81,34 @@ export enum Actions {
   noNeed = 'No Need',
 }
 
+export interface MilestoneDetails {
+  activityName: string | null;
+  createdByEmail: string | null;
+  createdByName: string | null;
+  deliverable: string | null;
+  endDate: Date | null;
+  id: number | null;
+  lastProgressUpdateDate: Date | null;
+  milestoneName: string | null;
+  startDate: Date | null;
+  status: MilestoneStatus | null;
+  teamName: string | null;
+  updatedByEmail: null | string;
+  updatedByName: null | string;
+  weight: number | null;
+  workingDays: number | null;
+  milestoneProgressUpdateDTO: {
+    deliverable: string | null;
+    isApproved: boolean | null;
+    milestoneId: number | null;
+    overallProgress: string | null;
+    progressUpdateDate: Date | null;
+    workflowId: number | null;
+    updatedBy: string;
+    status: string;
+  };
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -85,7 +122,11 @@ export class MilestonesService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  currentTeam: {id: number, name:string, systemDto: {id: number, name: string}};
+  currentTeam: {
+    id: number;
+    name: string;
+    systemDto: { id: number; name: string };
+  };
   constructor(private http: HttpClient, private cookieService: CookieService) {
     this.currentTeam = this.setUserTeams();
   }
@@ -175,8 +216,11 @@ export class MilestonesService {
     return this.http.post(`${this.baseUrl}/cwf/task/${caseId}/${taskId}`, data);
   }
 
-  uploadFile(data: any, milestoneId: number | string): Observable<number> {
-    return this.http.post<number>(
+  uploadFile(
+    data: FormData,
+    milestoneId: number | string
+  ): Observable<MilestoneAttachment> {
+    return this.http.post<MilestoneAttachment>(
       `http://localhost:28054/api/v2/dt-milestone-service/attachments?milestoneId=${milestoneId}`,
       data
     );

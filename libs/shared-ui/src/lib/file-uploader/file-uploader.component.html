@@ -3,7 +3,7 @@
     <i class="fas fa-link"></i>
     <span>{{ chooseLabel }}</span>
   </button>
-  <rp *ngIf="!required">{{"optional" | translate}}</rp>
+  <!-- <rp *ngIf="!required">{{"optional" | translate}}</rp> -->
   <input #fileUpload type="file" class="input_fileupload--hidden" (change)="onFileSelected($event)"
     [multiple]="multiple" accept="{{ this.accept }}" />
   <div class="file-validation">{{ this.invalidFileMessageDetail }}</div>
