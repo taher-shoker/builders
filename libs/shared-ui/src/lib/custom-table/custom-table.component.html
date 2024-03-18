@@ -54,7 +54,7 @@
   @for(item of tableItems | filterArray: filterStrStored; track item){
 
   <tr>
-    @for(header of headers(); track header){ @if(header.type !== 'actions'){
+    @for(header of headers(); track header){ @if(header.type !== 'actions' && header.type !== 'custom'){
     @if(header.complexView){
     <td>
       <ng-container
@@ -69,7 +69,13 @@
     }@else {
 
     <td>{{ item[header.key] }}</td>
-    } }@else if(header.type === 'actions') {
+    } 
+  
+  }@else if (header.type === 'custom') {
+    <td>{{ !item.latestWorkflowId ? "In Validation" : "Approved" }}</td>
+  }
+  
+  @else if(header.type === 'actions') {
 
     <td>
       <div class="actions-row d-flex">

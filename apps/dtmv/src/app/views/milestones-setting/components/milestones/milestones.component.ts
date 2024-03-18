@@ -102,11 +102,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       type: 'text',
       label: 'Completion Level',
     },
-    // {
-    //   key: 'latestWorkflowId',
-    //   type: 'text',
-    //   label: 'Validation Status',
-    // },
+    {
+      key: 'latestWorkflowId',
+      type: 'custom',
+      label: 'Validation Status',
+    },
     {
       key: 'teamName',
       type: 'text',

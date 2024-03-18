@@ -23,7 +23,7 @@ import { CustomTemplateDirective } from './custom-template.directive';
 
 export interface ColumnsSchema {
   key: string;
-  type: 'text' | 'date' | 'actions';
+  type: 'text' | 'date' | 'actions' | 'custom';
   label: string;
   dateString?: 'longDate';
   actions?: ('edit' | 'delete' | 'details' | 'updateProgress')[];
