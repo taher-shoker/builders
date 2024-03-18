@@ -41,6 +41,17 @@ tr:not(.table-header) {
   color: red;
 }
 
+.delete-option{
+  color: var(--stc-coral-color);
+}
+
+.action-option{
+  border-bottom: 1px solid #dddddd;
+  &:last-of-type{
+    border-bottom: unset;
+  }
+}
+
 .arrows-holder {
   display: inline-block;
   transform: rotate(90deg);
@@ -62,64 +73,3 @@ tr:not(.table-header) {
     cursor: pointer;
   }
 }
-
-.liner {
-  background-color: #dddddd;
-  margin: 3px 0px;
-  height: 1px;
-}
-// table {
-//   td {
-//     max-width: 140px;
-//     word-wrap: break-word;
-//     &.mat-column-actions {
-//       max-width: 200px;
-//     }
-//   }
-// }
-
-// .actions-span{
-
-//   cursor: pointer;
-// }
-
-// .menu-btns-wrapper{
-//   justify-content: space-evenly;
-
-//   *{
-//     padding: 0;
-//   }
-// }
-// table {
-//   td {
-//     max-width: 140px;
-//     word-wrap: break-word;
-//     &.mat-column-actions {
-//       max-width: 200px;
-//     }
-//   }
-//   .actions-row {
-//     display: flex;
-//     align-items: center;
-//     justify-content: space-around;
-//   }
-//   .btn {
-//     &:focus {
-//       border-color: transparent;
-//       outline: unset;
-//     }
-//     i {
-//       padding-inline-start: 0;
-//     }
-//     .edit {
-//       i {
-//         color: var(--grey-color);
-//       }
-//     }
-//     .delete {
-//       i {
-//         color: var(--stc-red-color);
-//       }
-//     }
-//   }
-// }

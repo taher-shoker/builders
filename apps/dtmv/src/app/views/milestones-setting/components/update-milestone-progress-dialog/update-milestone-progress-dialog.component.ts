@@ -77,7 +77,7 @@ export class UpdateMilestoneProgressDialogComponent {
 
   isLoading = false;
   uploadedFile: any[] = [];
-  attachmentsCombinedString: string = ""; // should be like 1,2,5,22 (comma separated)
+  attachmentsIDs: string[] = []; // should be like 1,2,5,22 (comma separated)
 
   onUploadFile(files: string | any[]) {
     this.isLoading = true;
@@ -92,20 +92,22 @@ export class UpdateMilestoneProgressDialogComponent {
         this.isLoading = false;
         this.form.get('attachment')?.setValue(this.uploadedFile);
 
-        if(!this.attachmentsCombinedString){
-          this.attachmentsCombinedString = res.id.toString();
-        }else{
-          this.attachmentsCombinedString += `,${res.id}`
-        }
+        this.attachmentsIDs.push(res.id.toString());
+        // if(this.attachmentsCombinedString.length > 0){
+        //   this.attachmentsCombinedString = res.id.toString();
+        // }else{
+        //   this.attachmentsCombinedString += `,${res.id}`
+        // }
       })
     }
   }
 
   onDeleteFile(id: number) {
-    this.milestonesService.deleteFile(id).subscribe((res: any) => {
-      this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
-      this.form.get('attachment')?.setValue(this.uploadedFile);
-    });
+    this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
+    this.attachmentsIDs = this.attachmentsIDs.filter((x: any) => x !== id.toString());
+    this.form.get('attachment')?.setValue(this.uploadedFile);
+    // this.milestonesService.deleteFile(id).subscribe((res: any) => {
+    // });
   }
 
   downloadFile(id: number, name: string) {
@@ -125,9 +127,10 @@ export class UpdateMilestoneProgressDialogComponent {
   }
 
   update() {
+    const attachmentsIDsToString = this.attachmentsIDs.join(",")
     this.dialogRef.close({
       note: this.form.get('note')?.value,
-      attachments: this.attachmentsCombinedString,
+      attachments: attachmentsIDsToString,
     });
   }
 

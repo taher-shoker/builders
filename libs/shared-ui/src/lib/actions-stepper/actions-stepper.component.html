@@ -13,7 +13,7 @@
             }
           </div>
         </div>
-        <div class="col p-0 ms-3">
+        <div class="col p-0 ms-1">
           <div class="step-caption">{{ step.caption }}</div>
 
 
@@ -50,7 +50,7 @@
   </div>
 
   @if(step.actions){
-  <div class="d-flex">
+  <div class="d-flex ms-3">
     @for(action of step.actions; track action){
     <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
       {{ action }}

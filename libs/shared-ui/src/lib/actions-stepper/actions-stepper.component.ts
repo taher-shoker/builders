@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { MilestoneAttachment } from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
 /* eslint-disable @typescript-eslint/no-inferrable-types */
+import { MilestoneAttachment } from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
 import {
   Component,
   ContentChild,

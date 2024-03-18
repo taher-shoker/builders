@@ -1,9 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BannerDataService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import { MilestonesService } from '../../milestones.service';
+import { BannerDataService } from '@stc-apps/shared-ui';
 
 @Component({
   selector: 'stc-apps-add-milestone',

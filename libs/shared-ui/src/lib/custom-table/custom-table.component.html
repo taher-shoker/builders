@@ -73,7 +73,7 @@
 
     <td>
       <div class="actions-row d-flex">
-        @if((header.actions ?? []).length > 2){
+        @if((header.actions ?? []).length > 0){
 
         <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
           <i class="ri-more-2-fill"></i>
@@ -89,11 +89,13 @@
           </div>
         </mat-menu>
 
-        } @else {
+        } 
+        
+        <!-- @else {
         <ng-container
           *ngTemplateOutlet="btnsTemp; context: { header: header, item: item }"
         ></ng-container>
-        }
+        } -->
       </div>
     </td>
     } }
@@ -102,34 +104,31 @@
 </ng-template>
 
 <ng-template #btnsTemp let-header="header" let-item="item">
-  @for(action of header?.actions; track action; let i = $index){
-  <div class="details" (click)="raiseAction(action, item)">
-    @if(action === 'edit'){
-    <div>
-      <i class="ri-edit-box-line edit-icon"></i>
-      Edit
-    </div>
-    } @else if (action === 'delete') {
+  <div class="details">
+    @for(action of header?.actions; track action; let i = $index){
+      @if(action === 'edit'){
+      <div class="edit-option action-option" (click)="raiseAction(action, item)">
+        <i class="ri-edit-box-line edit-icon"></i>
+        Edit
+      </div>
+      } @else if (action === 'delete') {
 
-    <div>
-      <i class="ri-delete-bin-line del-icon"></i>
-      Delete
-    </div>
-    }@else if(action === 'details'){
+      <div class="delete-option action-option" (click)="raiseAction(action, item)">
+        <i class="ri-delete-bin-line"></i>
+        Delete
+      </div>
+      }@else if(action === 'details'){
 
-    <div>
-      <i class="ri-arrow-right-up-line"></i>
-      Show Details
-    </div>
-    }@else if(action === 'updateProgress' && !item.latestWorkflowId){
-
-    <div>
-      <i class="ri-arrow-right-up-line"></i>
-      Update Progress
-    </div>
-    } @if(i !== header?.actions.length - 1){
-    <div class="liner"></div>
+      <div class="details-option action-option" (click)="raiseAction(action, item)">
+        <i class="ri-arrow-right-up-line"></i>
+        Show Details
+      </div>
+      }@else if(action === 'updateProgress' && !item.latestWorkflowId){
+      <div class="update-option action-option" (click)="raiseAction(action, item)">
+        <i class="ri-arrow-left-right-line"></i>
+        Update Progress
+      </div>
+      }
     }
   </div>
-  }
 </ng-template>

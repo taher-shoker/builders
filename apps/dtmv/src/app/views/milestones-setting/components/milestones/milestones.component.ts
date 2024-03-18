@@ -102,7 +102,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       type: 'text',
       label: 'Completion Level',
     },
-
+    // {
+    //   key: 'latestWorkflowId',
+    //   type: 'text',
+    //   label: 'Validation Status',
+    // },
     {
       key: 'teamName',
       type: 'text',
@@ -118,7 +122,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     {
       key: 'actions',
       type: 'actions',
-      actions: ['edit', 'delete', 'details', 'updateProgress'],
+      actions: this.milestonesService.checkIsBusinessSpoc() ? ['details', 'updateProgress'] : ['edit', 'delete', 'details', 'updateProgress'],
       label: '',
     },
   ];
@@ -140,7 +144,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.getMilestones();
     this.getPendingTasks();
-
     this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
     this.searchForm();
@@ -216,7 +219,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
   openProgressUpdateModal(rowId: Milestone['id']) {
     const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
-      width: '500px',
+      width: '800px',
     });
 
     dialogRef.afterClosed().subscribe((res) => {
@@ -242,7 +245,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     {
       const dialogRef = this.matDialog.open(MessageDialogComponent, {
         height: '160px',
-        width: '500px',
+        width: '800px',
         data: {
           msg: `You're about to Remove Milestone "${name}" Kindly note you can't roll back this action. Are you sure?`,
         },

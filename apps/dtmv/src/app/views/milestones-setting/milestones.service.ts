@@ -142,6 +142,7 @@ export class MilestonesService {
   }
 
   isDTDirector!: boolean;
+  isBusinessSpoc!: boolean;
   isDTAdmin!: boolean;
 
   getCurrentSystem(): string {
@@ -173,6 +174,17 @@ export class MilestonesService {
       this.isDTDirector = false;
     }
   }
+
+  checkIsBusinessSpoc() {
+    if (this.getMilestoneUsersType() === 'Business_SPOC') {
+      this.isBusinessSpoc = true;
+    } else {
+      this.isBusinessSpoc = false;
+    }
+
+    return this.isBusinessSpoc
+  }
+
   checkIsAdmin() {
     if (this.getMilestoneUsersType() === 'DI_Milestones_Admins') {
       this.isDTAdmin = true;

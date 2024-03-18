@@ -74,8 +74,7 @@ export class MilestoneDetailsComponent implements OnInit {
       this.milestoneDetails.milestoneProgressUpdateDTO.updatedBy;
     this.deliverable =
       this.milestoneDetails.milestoneProgressUpdateDTO.deliverable;
-      this.status =
-      this.milestoneDetails.milestoneProgressUpdateDTO.status;
+    this.status = this.milestoneDetails.milestoneProgressUpdateDTO.status;
     this.progressDate =
       this.datePipe.transform(
         this.milestoneDetails.milestoneProgressUpdateDTO.progressUpdateDate,
@@ -142,7 +141,8 @@ export class MilestoneDetailsComponent implements OnInit {
               if (
                 taskAttribute.name === 'evidence_id' ||
                 taskAttribute.name === 'justification_id' ||
-                taskAttribute.name === 'remark_id'
+                taskAttribute.name === 'remark_id' ||
+                taskAttribute.name === 'attachment_id'
               ) {
                 attachmentsIDs.push(taskAttribute.value);
               } else if (
@@ -153,10 +153,12 @@ export class MilestoneDetailsComponent implements OnInit {
               }
             }
 
-            for(const attachmentID of attachmentsIDs){
-              this.milestonesService.getAttachment(+attachmentID).subscribe(res => {
-                attachments.push(res)
-              })
+            for (const attachmentID of attachmentsIDs) {
+              this.milestonesService
+                .getAttachment(+attachmentID)
+                .subscribe((res) => {
+                  attachments.push(res);
+                });
             }
 
             if (res[i].status === 'pending' && res[i].params?.length > 0) {
@@ -241,7 +243,6 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   doStepAction(action: { actionName: string; item: any }) {
-
     if (action.actionName === Actions.initiateUpdateProgress) {
       this.openProgressUpdateModal(this.milestoneDetails.id || 0);
     }
@@ -297,7 +298,7 @@ export class MilestoneDetailsComponent implements OnInit {
           });
         }
 
-      this.isLoadingSteps = true;
+        this.isLoadingSteps = true;
 
         this.milestonesService
           .completePendingTask(
@@ -470,11 +471,10 @@ export class MilestoneDetailsComponent implements OnInit {
 
   openProgressUpdateModal(milestoneId: Milestone['id']) {
     const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
-      width: '500px',
+      width: '800px',
     });
 
     dialogRef.afterClosed().subscribe((res) => {
-
       if (!res) {
         return;
       }
@@ -497,8 +497,7 @@ export class MilestoneDetailsComponent implements OnInit {
   makeSureToApprove(name: string) {
     {
       const dialogRef = this.matDialog.open(MessageDialogComponent, {
-        height: '160px',
-        width: '500px',
+        width: '800px',
         data: {
           msg: `You're about to approve Milestone "${name}" Kindly note you can't roll back this action. Are you sure?`,
         },

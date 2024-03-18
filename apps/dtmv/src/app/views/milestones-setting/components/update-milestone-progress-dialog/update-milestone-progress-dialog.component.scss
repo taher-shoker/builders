@@ -12,9 +12,15 @@
 .actions-wrapper {
   justify-content: end;
   display: flex;
+  .btn {
+    width: 245px;
+    &:first-of-type {
+      margin-inline-end: 16px;
+    }
+  }
 }
 
 .hint {
-  color: #8E9AA0;
+  color: #8e9aa0;
   font-size: 13px;
 }
