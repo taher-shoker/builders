@@ -67,7 +67,6 @@ export class MilestoneDetailsComponent implements OnInit {
     this.isLoadingSteps = true;
 
     this.steps = [];
-    console.log('details :', this.milestoneDetails);
     this.progress =
       this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress;
     this.progressUpdatedBy =
@@ -89,137 +88,139 @@ export class MilestoneDetailsComponent implements OnInit {
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
 
-    if (this.milestoneDetails.milestoneProgressUpdateDTO.workflowId) {
-      this.milestonesService
-        .getMilestoneProgressWorkflow(
-          this.milestoneDetails.milestoneProgressUpdateDTO.workflowId
-        )
-        .subscribe((res) => {
-          this.isLoadingSteps = false;
-
-          res.sort(function (a, b) {
-            return b.requestTaskId - a.requestTaskId;
-          });
-
-          let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
-
-          for (let i = res.length - 1; i >= 0; i--) {
-            console.log(`El task num${i}`, res[i]);
-
-            if (
-              res[i].taskName === Actions.addOnTrack &&
-              foundAddRemarksOnce === null
-            ) {
-              foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
-            } else if (
-              res[i].taskName === Actions.addOnTrack &&
-              foundAddRemarksOnce === 'once'
-            ) {
-              foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
-            }
-
-            const attachmentsIDs: string[] = [];
-            const attachments: MilestoneAttachment[] = [];
-            let notes: string = '';
-
-            const displayDate = res[i].completedDate
-              ? res[i].completedDate
-              : res[i].createdDate;
-            const progressDate: string =
-              (this.datePipe.transform(displayDate, 'MMMM, d, y') || '') +
-                ' ' +
-                this.datePipe.transform(displayDate, 'h:mm:ss a') || '';
-
-            let byUser = '';
-            const actions: string[] = [];
-
-            for (const taskAttribute of res[i].requestTaskAttributes) {
-              if (res[i].status !== 'pending') {
-                byUser = `By ${res[i].username}`;
-              }
-
+    setTimeout(() => {
+      if (this.milestoneDetails.milestoneProgressUpdateDTO.workflowId) {
+        this.milestonesService
+          .getMilestoneProgressWorkflow(
+            this.milestoneDetails.milestoneProgressUpdateDTO.workflowId
+          )
+          .subscribe((res) => {
+            this.isLoadingSteps = false;
+  
+            res.sort(function (a, b) {
+              return b.requestTaskId - a.requestTaskId;
+            });
+  
+            let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
+  
+            for (let i = res.length - 1; i >= 0; i--) {
+  
               if (
-                taskAttribute.name === 'evidence_id' ||
-                taskAttribute.name === 'justification_id' ||
-                taskAttribute.name === 'remark_id' ||
-                taskAttribute.name === 'attachment_id'
+                res[i].taskName === Actions.addOnTrack &&
+                foundAddRemarksOnce === null
               ) {
-                attachmentsIDs.push(taskAttribute.value);
+                foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
               } else if (
-                taskAttribute.name === 'notes' ||
-                taskAttribute.name === 'reason_of_rejection'
+                res[i].taskName === Actions.addOnTrack &&
+                foundAddRemarksOnce === 'once'
               ) {
-                notes = taskAttribute.value;
+                foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
               }
-            }
-
-            for (const attachmentID of attachmentsIDs) {
-              this.milestonesService
-                .getAttachment(+attachmentID)
-                .subscribe((res) => {
-                  attachments.push(res);
-                });
-            }
-
-            if (res[i].status === 'pending' && res[i].params?.length > 0) {
-              //those two conditions are for a user to take action, otherwise it's not his task to handle.
-              if (
-                res[i].taskName === 'Review Evidence' ||
-                res[i].taskName === 'Review Justification' ||
-                res[i].taskName === 'Review Progress'
-              ) {
-                if (res[i].taskName === 'Review Evidence') {
-                  actions.push(Actions.reviewEvidence);
-                  actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
+  
+              const attachmentsIDs: string[] = [];
+              const attachments: MilestoneAttachment[] = [];
+              let notes: string = '';
+  
+              const displayDate = res[i].completedDate
+                ? res[i].completedDate
+                : res[i].createdDate;
+              const progressDate: string =
+                (this.datePipe.transform(displayDate, 'MMMM, d, y') || '') +
+                  ' ' +
+                  this.datePipe.transform(displayDate, 'h:mm:ss a') || '';
+  
+              let byUser = '';
+              const actions: string[] = [];
+  
+              for (const taskAttribute of res[i].requestTaskAttributes) {
+                if (res[i].status !== 'pending') {
+                  byUser = `By ${res[i].username}`;
                 }
-                if (res[i].taskName === 'Review Justification') {
-                  actions.push(Actions.reviewJustification);
-                  actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
+  
+                if (
+                  taskAttribute.name === 'evidence_id' ||
+                  taskAttribute.name === 'justification_id' ||
+                  taskAttribute.name === 'remark_id' ||
+                  taskAttribute.name === 'attachment_id'
+                ) {
+                  attachmentsIDs.push(taskAttribute.value);
+                } else if (
+                  taskAttribute.name === 'notes' ||
+                  taskAttribute.name === 'reason_of_rejection'
+                ) {
+                  notes = taskAttribute.value;
                 }
-                if (res[i].taskName === 'Review Progress') {
-                  actions.push(Actions.reviewOnTrack);
-                  actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
-                }
-              } else if (
-                res[i].taskName === Actions.addEvidence ||
-                res[i].taskName === Actions.addJustification ||
-                res[i].taskName === Actions.addOnTrack
-              ) {
-                if (res[i].taskName === Actions.addEvidence) {
-                  actions.push(Actions.addEvidence);
-                }
-                if (res[i].taskName === Actions.addJustification) {
-                  actions.push(Actions.addJustification);
-                }
-                if (res[i].taskName === Actions.addOnTrack) {
-                  actions.push(Actions.addOnTrack);
-                  if (foundAddRemarksOnce !== 'twice') {
-                    actions.push(Actions.noNeed); // TODO: Loop over to check if a previous 'Add Remarks' Exists, if so remove noNeed.
+              }
+  
+              for (const attachmentID of attachmentsIDs) {
+                this.milestonesService
+                  .getAttachment(+attachmentID)
+                  .subscribe((res) => {
+                    attachments.push(res);
+                  });
+              }
+  
+              if (res[i].status === 'pending' && res[i].params?.length > 0) {
+                //those two conditions are for a user to take action, otherwise it's not his task to handle.
+                if (
+                  res[i].taskName === 'Review Evidence' ||
+                  res[i].taskName === 'Review Justification' ||
+                  res[i].taskName === 'Review Progress'
+                ) {
+                  if (res[i].taskName === 'Review Evidence') {
+                    actions.push(Actions.reviewEvidence);
+                    actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
                   }
+                  if (res[i].taskName === 'Review Justification') {
+                    actions.push(Actions.reviewJustification);
+                    actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
+                  }
+                  if (res[i].taskName === 'Review Progress') {
+                    actions.push(Actions.reviewOnTrack);
+                    actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+                  }
+                } else if (
+                  res[i].taskName === Actions.addEvidence ||
+                  res[i].taskName === Actions.addJustification ||
+                  res[i].taskName === Actions.addOnTrack
+                ) {
+                  if (res[i].taskName === Actions.addEvidence) {
+                    actions.push(Actions.addEvidence);
+                  }
+                  if (res[i].taskName === Actions.addJustification) {
+                    actions.push(Actions.addJustification);
+                  }
+                  if (res[i].taskName === Actions.addOnTrack) {
+                    actions.push(Actions.addOnTrack);
+                    if (foundAddRemarksOnce !== 'twice') {
+                      actions.push(Actions.noNeed); // TODO: Loop over to check if a previous 'Add Remarks' Exists, if so remove noNeed.
+                    }
+                  }
+                } else if (res[i].taskName === 'Update DT Record') {
+                  // actions.push(Actions.updateDTRecord);
+                } else if (res[i].taskName === 'Approve Progress') {
+                  // actions.push(Actions.approveProgress);
                 }
-              } else if (res[i].taskName === 'Update DT Record') {
-                // actions.push(Actions.updateDTRecord);
-              } else if (res[i].taskName === 'Approve Progress') {
-                // actions.push(Actions.approveProgress);
               }
+  
+              const step: Step = {
+                caption:
+                  res[i].taskName === 'Review Remarks'
+                    ? 'Review Progress'
+                    : res[i].taskName,
+                state: res[i].status === 'completed' ? 'done' : 'undone',
+                notes: notes,
+                attachments: attachments,
+                extraInfo: [`${progressDate} ${byUser}`],
+                actions: actions,
+                stepObject: res[i],
+              };
+              this.steps.push(step);
             }
+          });
+      }
+    }, 5000)
 
-            const step: Step = {
-              caption:
-                res[i].taskName === 'Review Remarks'
-                  ? 'Review Progress'
-                  : res[i].taskName,
-              state: res[i].status === 'completed' ? 'done' : 'undone',
-              notes: notes,
-              attachments: attachments,
-              extraInfo: [`${progressDate} ${byUser}`],
-              actions: actions,
-              stepObject: res[i],
-            };
-            this.steps.push(step);
-          }
-        });
-    }
   }
 
   getMilestoneDetails() {
@@ -228,7 +229,7 @@ export class MilestoneDetailsComponent implements OnInit {
       .subscribe((res: any) => {
         this.milestoneDetails = res;
         this.bannerDataService.updateData({
-          title: this.milestoneDetails.milestoneName + ' details',
+          title: this.milestoneDetails.milestoneName || '',
           text: '',
         });
         if (
@@ -397,7 +398,6 @@ export class MilestoneDetailsComponent implements OnInit {
         });
         params.requestParams.push({ name: 'notes', value: res.note });
       } else if (type === Actions.addOnTrack) {
-        console.warn(res);
         params.requestParams.push({
           name: 'remark_id',
           value: res.attachments,

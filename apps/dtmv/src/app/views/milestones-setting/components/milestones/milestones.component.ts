@@ -181,9 +181,13 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   getAllTeams() {
-    this.milestonesService.setSystemTeams().subscribe((res) => {
-      this.allTeams = res;
-    });
+
+    this.allTeams = this.milestonesService.setUserTeams();
+    if(this.allTeams.length === 0 ){
+      this.milestonesService.setSystemTeams().subscribe((res) => {
+        this.allTeams = res;
+      });
+    }
   }
 
   detailsNavigate(id: string | number) {

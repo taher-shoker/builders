@@ -130,14 +130,6 @@
           ></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputId]="'team'"
-            [inputName]="'milestone ID' | translate"
-            formControlName="milestoneId"
-          ></stc-apps-input>
-        </div>
-        <div class="col-md-4">
           <stc-apps-select-drop-down
             [label]="'Team'"
             [options]="allTeams"
@@ -145,8 +137,6 @@
             [outputValue]="'name'"
           ></stc-apps-select-drop-down>
         </div>
-      </div>
-      <div class="row mt-4">
         <div class="col-md-4">
           <stc-apps-select-drop-down
             [label]="'Status'"
@@ -156,6 +146,9 @@
             [outputValue]="'value'"
           ></stc-apps-select-drop-down>
         </div>
+      </div>
+      <div class="row mt-4">
+
         <div class="col-md-4">
           <stc-apps-select-drop-down
             [label]="'Month'"

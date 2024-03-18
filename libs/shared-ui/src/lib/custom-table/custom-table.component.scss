@@ -33,24 +33,19 @@ tr:not(.table-header) {
   }
 }
 
-.edit-icon {
-  color: green;
-}
-
-.del-icon {
-  color: red;
+.action-option{
+  padding-block: 0.5rem;
+  color: grey;
+  border-bottom: 1px solid #dddddd;
+  &:last-of-type{
+    border-bottom: unset;
+  }
 }
 
 .delete-option{
   color: var(--stc-coral-color);
 }
 
-.action-option{
-  border-bottom: 1px solid #dddddd;
-  &:last-of-type{
-    border-bottom: unset;
-  }
-}
 
 .arrows-holder {
   display: inline-block;

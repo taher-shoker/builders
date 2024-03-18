@@ -59,6 +59,20 @@
                   {{ milestoneDetails.startDate ?? '-' }}
                 </p>
               </div>
+
+              <div class="col-12">
+                <p class="cell-name">Capped Completion Percentage</p>
+                <p class="cell-value">
+                  {{ milestoneDetails.milestoneProgressUpdateDTO.cappedCompletionPercentage ?? '-' }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">Target Completion Level</p>
+                <p class="cell-value">
+                  {{ milestoneDetails.milestoneProgressUpdateDTO.targetCompletionLevel ?? '-' }}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -122,6 +136,11 @@
               <div class="col-12">
                 <p class="cell-name">{{ 'working_days' | translate }}</p>
                 <p class="cell-value">{{ milestoneDetails.workingDays ?? '-' }}</p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">Completion Impact Rate</p>
+                <p class="cell-value">{{ milestoneDetails.milestoneProgressUpdateDTO.completionImpactRate ?? '-' }}</p>
               </div>
               <!-- <div class="col-12">
                   <p class="cell-name">{{ 'created_at' | translate }}</p>

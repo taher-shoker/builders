@@ -98,6 +98,9 @@ export interface MilestoneDetails {
   weight: number | null;
   workingDays: number | null;
   milestoneProgressUpdateDTO: {
+    completionImpactRate: string | null;
+    cappedCompletionPercentage: string | null;
+    targetCompletionLevel: string | null;
     deliverable: string | null;
     isApproved: boolean | null;
     milestoneId: number | null;
@@ -124,8 +127,9 @@ export interface MilestoneAttachment {
 })
 export class MilestonesService {
   baseUrl = environment.apiUrl;
-  adminUrl = `${this.baseUrl}/admin`;
-  dtUrl = `${this.baseUrl}/dt-milestone-service/milestones`;
+  adminUrl = `${this.baseUrl}v2/admin`;
+  dtUrl = `${this.baseUrl}v2/dt-milestone-service/milestones`;
+  ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
 
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
@@ -243,7 +247,7 @@ export class MilestonesService {
     milestoneId: number | string
   ): Observable<MilestoneAttachment> {
     return this.http.post<MilestoneAttachment>(
-      `http://localhost:28054/api/v2/dt-milestone-service/attachments?milestoneId=${milestoneId}`,
+      `${this.baseUrl}v2/dt-milestone-service/attachments?milestoneId=${milestoneId}`,
       data
     );
   }
@@ -262,25 +266,20 @@ export class MilestonesService {
   getMilestoneProgressWorkflow(
     requestId: number
   ): Observable<MilestoneProgressWorkflow> {
-    // return this.http.get<MilestoneProgressWorkflow>(
-    //   `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
-
-    // );
-
     return this.http.get<MilestoneProgressWorkflow>(
-      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}`
+      `${this.ticketUrl}${requestId}`
     );
   }
 
   getMilestoneTasks(): Observable<PendingTask[]> {
     return this.http.get<PendingTask[]>(
-      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/pending`
+      `${this.ticketUrl}pending`
     );
   }
 
   downloadAttachment(id: number) {
     return this.http.get(
-      `http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}/download`,
+      `${this.baseUrl}v2/dt-milestone-service/attachments/${id}/download`,
       {
         responseType: 'blob',
       }
@@ -289,7 +288,7 @@ export class MilestonesService {
 
   getAttachment(id: number) : Observable<MilestoneAttachment>{
     return this.http.get<MilestoneAttachment>(
-      `http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}`
+      `${this.baseUrl}v2/dt-milestone-service/attachments/${id}`
     );
   }
 
@@ -306,7 +305,7 @@ export class MilestonesService {
     }
   ) {
     return this.http.post(
-      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}/${requestTaskId}`,
+      `${this.ticketUrl}${requestId}/${requestTaskId}`,
       body
     );
   }
@@ -320,7 +319,7 @@ export class MilestonesService {
     requestTaskId: string | number
   ) {
     return this.http.post(
-      `http://localhost:9084/cem/reporting/apigateway/api/ticket/requests/tasks/${requestId}/${requestTaskId}`,
+      `${this.ticketUrl}${requestId}/${requestTaskId}`,
       {
         requestParam: {}, //<< Agreed to send it as empty object
       }
