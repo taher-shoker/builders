@@ -11,6 +11,12 @@
 }
 
 .actions-wrapper {
-  justify-content: end;
+  justify-content: space-between;
   display: flex;
+  .btn {
+    width: 245px;
+    &:first-of-type {
+      margin-inline-end: 16px;
+    }
+  }
 }
