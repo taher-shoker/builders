@@ -1,6 +1,7 @@
+/* eslint-disable @nx/enforce-module-boundaries */
+import { MilestoneAttachment } from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
-  AfterContentInit,
   Component,
   ContentChild,
   Directive,
@@ -23,16 +24,8 @@ export interface Step {
   additionalTemp?: boolean;
   extraInfo?: string[];
   notes?: string;
-  attachments?: string[];
+  attachments?: MilestoneAttachment[];
   stepObject?: any;
-}
-
-@Directive({
-  selector: '[stcAppsStepView]',
-  standalone: true,
-})
-export class StepDirective {
-  constructor(private templateRef: TemplateRef<any>) {}
 }
 
 @Component({

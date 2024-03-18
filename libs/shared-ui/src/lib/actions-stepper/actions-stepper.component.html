@@ -1,8 +1,6 @@
 <div class="stepper-wrapper">
   @for(step of steps; track step; let i = $index){
   <div class="row">
-    <!-- {{step.caption}} -->
-
     <div class="col">
       <div class="row step">
         <div class="col-1">
@@ -15,7 +13,7 @@
             }
           </div>
         </div>
-        <div class="col p-0">
+        <div class="col p-0 ms-3">
           <div class="step-caption">{{ step.caption }}</div>
 
 
@@ -27,7 +25,7 @@
     <div class="line-holder">
       <div class="line"></div>
     </div>
-    <div>
+    <div class="ms-3">
       @if ((step.extraInfo || []).length > 0) { @for (infoStr of step.extraInfo;
       track infoStr) {
       <div class="step-info">{{ infoStr }}</div>
@@ -38,7 +36,7 @@
       <div class="row">
         @for(attachment of step.attachments; track attachment){
         <div class="col-6">
-          <a href="javascript:void(0);" (click)="raiseAction('download', attachment)">{{ attachment }}</a>
+          <a href="javascript:void(0);" (click)="raiseAction('download', attachment.id)">{{ attachment.label }}</a>
         </div>
         }
       </div>
@@ -57,8 +55,6 @@
     <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
       {{ action }}
     </button>
-    <!-- <stc-apps-button [buttonText]="action" [buttonType]="'primary'"
-      (btnClick)="raiseAction(action, step.stepObject)"></stc-apps-button> -->
     }
   </div>
   }

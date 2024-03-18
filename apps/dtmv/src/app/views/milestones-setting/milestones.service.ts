@@ -109,6 +109,16 @@ export interface MilestoneDetails {
   };
 }
 
+export interface MilestoneAttachment {
+  id: number,
+  attachmentType: string,
+  fileName: string,
+  url: string,
+  label: string,
+  note: string,
+  uploadDate: string
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -262,6 +272,12 @@ export class MilestonesService {
       {
         responseType: 'blob',
       }
+    );
+  }
+
+  getAttachment(id: number) : Observable<MilestoneAttachment>{
+    return this.http.get<MilestoneAttachment>(
+      `http://localhost:28054/api/v2/dt-milestone-service/attachments/${id}`
     );
   }
 

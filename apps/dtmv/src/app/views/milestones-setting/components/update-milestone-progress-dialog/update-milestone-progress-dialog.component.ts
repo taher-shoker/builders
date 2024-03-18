@@ -21,7 +21,6 @@ export class UpdateMilestoneProgressDialogComponent {
   paramsName = signal('');
   paramsValue = signal('');
 
-
   dialogCaption: Signal<string> = computed(() => {
     let status;
     if (this.data.type === Actions.addEvidence) {
@@ -38,9 +37,10 @@ export class UpdateMilestoneProgressDialogComponent {
 
   form: FormGroup = new FormGroup({
     note: new FormControl('', Validators.required),
-    attachment: new FormControl('', Validators.required),
+    attachment: new FormControl(''),
   });
 
+  isRequired: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<UpdateMilestoneProgressDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
@@ -48,9 +48,10 @@ export class UpdateMilestoneProgressDialogComponent {
     private milestonesService: MilestonesService
   ) {
     this.milestoneName.set(data.milestoneName);
-    // const evidenceHintAction = 'approve evidence';
-    // const justificationHintAction = 'approve justification';
-    // const trackHintAction = 'approve remarks';
+    if(data.type === Actions.addEvidence){
+      this.requireFormControl();
+      this.isRequired = true;
+    }
     const hintPrefix = `You're about to`;
     const returnHintAction = 'return';
     const hintTail =
@@ -64,20 +65,6 @@ export class UpdateMilestoneProgressDialogComponent {
       this.hint.set(this.remarksHint);
     } 
     
-    // else if (this.data.type === Actions.reviewEvidence) {
-    //   this.hint.set(
-    //     `${hintPrefix} ${evidenceHintAction} ${this.milestoneName()}, ${hintTail} `
-    //   );
-    // } else if (this.data.type === Actions.reviewJustification) {
-    //   this.hint.set(
-    //     `${hintPrefix} ${justificationHintAction} ${this.milestoneName()}, ${hintTail} `
-    //   );
-    // } else if (this.data.type === Actions.reviewOnTrack) {
-    //   this.hint.set(
-    //     `${hintPrefix} ${trackHintAction} ${this.milestoneName()}, ${hintTail} `
-    //   );
-    // } 
-    
     else if (this.data.type === Actions.returnEvidence ||
       this.data.type === Actions.returnOnTrack ||
       this.data.type === Actions.returnJustification
@@ -89,27 +76,7 @@ export class UpdateMilestoneProgressDialogComponent {
   }
 
   isLoading = false;
-  uploadedFile: any[] = []; // turn to File later
-  onUploadFiles(files: string | any[]) {
-    if (files) {
-      for (let i = 0; i < files?.length; i++) {
-        this.isLoading = true;
-        const formData = new FormData();
-        formData.append('file', files[i]);
-        // this.formData.append('file', files[i]);
-        //postEvidenceOrJustification
-        this.milestonesService.uploadFile(formData, this.data.milestoneId).subscribe((res: any) => {
-          if (res) {
-            this.uploadedFile.push(res);
-            this.isLoading = false;
-            this.form.get('attachment')?.setValue(this.uploadedFile);
-          }
-        });
-      }
-    }
-  }
-
-
+  uploadedFile: any[] = [];
   attachmentsCombinedString: string = ""; // should be like 1,2,5,22 (comma separated)
 
   onUploadFile(files: string | any[]) {
@@ -131,22 +98,6 @@ export class UpdateMilestoneProgressDialogComponent {
           this.attachmentsCombinedString += `,${res.id}`
         }
       })
-
-
-      // for (let i = 0; i < files?.length; i++) {
-      //   this.isLoading = true;
-      //   const formData = new FormData();
-      //   formData.append('file', files[i]);
-      //   // this.formData.append('file', files[i]);
-      //   //postEvidenceOrJustification
-      //   this.milestonesService.uploadFile(formData, this.data.milestoneId).subscribe((res: any) => {
-      //     if (res) {
-      //       this.uploadedFile.push(res);
-      //       this.isLoading = false;
-      //       this.form.get('attachment')?.setValue(this.uploadedFile);
-      //     }
-      //   });
-      // }
     }
   }
 
@@ -166,6 +117,11 @@ export class UpdateMilestoneProgressDialogComponent {
       // of the export based on date or some other factors
       saveAs(data, name);
     });
+  }
+
+  requireFormControl(){
+    this.form.get('attachment')?.setValidators(Validators.required);
+    this.form.get('attachment')?.updateValueAndValidity();
   }
 
   update() {

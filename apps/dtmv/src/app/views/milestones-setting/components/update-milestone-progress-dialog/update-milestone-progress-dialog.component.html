@@ -24,6 +24,7 @@
         (onformchange)="onUploadFile($event)" [attachmentFiles]="
           form.controls['attachment'].value
         " formControlName="attachment" [isLoading]="isLoading"
+        [required]="isRequired"
         (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
 
       </form>
@@ -36,7 +37,7 @@
 
   <div class="dialog-actions">
     <div class="actions-wrapper">
-      <button type="button" class="btn" (click)="update()">
+      <button type="button" class="btn" (click)="update()" [disabled]="form.invalid">
         {{data.type}}
       </button>
       <button type="button" class="btn" (click)="cancel()">Cancel</button>

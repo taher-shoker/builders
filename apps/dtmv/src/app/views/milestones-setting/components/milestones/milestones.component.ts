@@ -18,6 +18,7 @@ import {
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
+import { ToastrService } from 'ngx-toastr';
 
 export interface Milestone {
   activityName: string;
@@ -68,7 +69,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     public authService: AuthService,
     public utils: UtilsService,
     private matDialog: MatDialog,
-    private utilities: UtilitiesService
+    private utilities: UtilitiesService,
+    private toastr: ToastrService
   ) {}
 
   allItems!: PendingTask[];
@@ -136,9 +138,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   allTeams: any;
 
   ngOnInit() {
-    // this.populateInsightsCards();
-    // this.fetchAssigneeTasks();
-
     this.getMilestones();
     this.getPendingTasks();
 
@@ -162,7 +161,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
     this.milestonesService
       .getMilestones({
-        page: paginationEvent.currentPage,
+        page: paginationEvent.currentPage - 1,
         ...filteredForm,
       })
       .pipe(take(1))
@@ -202,9 +201,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         }
         this.milestonesService
           .deleteMilestone(event.dataRow.id)
-          .subscribe((deletionRes) => {
-            //comment
-          });
+          .subscribe({next: () => {
+            this.toastr.success("Deleted successfully")
+          }, error: () => {
+            this.toastr.error("Something went wrong!")
+          }});
       });
     } else if (event.value === 'details') {
       this.detailsNavigate(event.dataRow.id);
@@ -228,9 +229,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
           deliverable: res.deliverable,
           overallProgress: res.overallProgress,
         })
-        .subscribe((res) => {
-          console.log('Got a res for updating progress: ', res);
-        });
+        .subscribe({next: () => {
+          this.toastr.success("Progress updated");
+          this.getMilestones();
+        }, error: () => {
+          this.toastr.error("Something went wrong!")
+        }});
     });
   }
 

@@ -9,6 +9,7 @@ import { saveAs } from 'file-saver';
 import { AuthService } from '../../../../services/auth.service';
 import {
   Actions,
+  MilestoneAttachment,
   MilestoneDetails,
   MilestonesService,
   RequestTask,
@@ -48,6 +49,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
   progress!: string | null;
   deliverable!: string | null;
+  status!: string | null;
   progressDate!: string;
   progressUpdatedBy!: string;
 
@@ -72,13 +74,15 @@ export class MilestoneDetailsComponent implements OnInit {
       this.milestoneDetails.milestoneProgressUpdateDTO.updatedBy;
     this.deliverable =
       this.milestoneDetails.milestoneProgressUpdateDTO.deliverable;
+      this.status =
+      this.milestoneDetails.milestoneProgressUpdateDTO.status;
     this.progressDate =
       this.datePipe.transform(
         this.milestoneDetails.milestoneProgressUpdateDTO.progressUpdateDate,
         'MMMM, d, y'
       ) || '';
     const initialStep: Step = {
-      caption: 'Milestone progress updated',
+      caption: `Milestone progress updated (${this.status})`,
       state: 'done',
       extraInfo: [`${this.progressDate} By ${this.progressUpdatedBy}`],
       additionalTemp: true,
@@ -116,6 +120,7 @@ export class MilestoneDetailsComponent implements OnInit {
             }
 
             const attachmentsIDs: string[] = [];
+            const attachments: MilestoneAttachment[] = [];
             let notes: string = '';
 
             const displayDate = res[i].completedDate
@@ -146,6 +151,12 @@ export class MilestoneDetailsComponent implements OnInit {
               ) {
                 notes = taskAttribute.value;
               }
+            }
+
+            for(const attachmentID of attachmentsIDs){
+              this.milestonesService.getAttachment(+attachmentID).subscribe(res => {
+                attachments.push(res)
+              })
             }
 
             if (res[i].status === 'pending' && res[i].params?.length > 0) {
@@ -198,7 +209,7 @@ export class MilestoneDetailsComponent implements OnInit {
                   : res[i].taskName,
               state: res[i].status === 'completed' ? 'done' : 'undone',
               notes: notes,
-              attachments: attachmentsIDs,
+              attachments: attachments,
               extraInfo: [`${progressDate} ${byUser}`],
               actions: actions,
               stepObject: res[i],
