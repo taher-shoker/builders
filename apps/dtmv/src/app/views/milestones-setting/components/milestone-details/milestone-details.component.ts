@@ -196,9 +196,9 @@ export class MilestoneDetailsComponent implements OnInit {
                   }
                 }
               } else if (res[i].taskName === 'Update DT Record') {
-                actions.push(Actions.updateDTRecord);
+                // actions.push(Actions.updateDTRecord);
               } else if (res[i].taskName === 'Approve Progress') {
-                actions.push(Actions.approveProgress);
+                // actions.push(Actions.approveProgress);
               }
             }
 
@@ -346,15 +346,13 @@ export class MilestoneDetailsComponent implements OnInit {
     }
 
     if (action.actionName === 'download') {
-      this.downloadFile(action.item);
+      this.downloadFile(action.item.id, action.item.label);
     }
   }
 
-  downloadFile(id: number, name: string = 'untitled') {
+  downloadFile(id: number, name: string = 'untitled.txt') {
     this.milestonesService.downloadAttachment(id).subscribe((buffer) => {
-      const data: Blob = new Blob([buffer], {
-        type: 'text/csv;charset=utf-8',
-      });
+      const data: Blob = new Blob([buffer]);
       // you may improve this code to customize the name
       // of the export based on date or some other factors
       saveAs(data, name);

@@ -36,7 +36,7 @@
       <div class="row">
         @for(attachment of step.attachments; track attachment){
         <div class="col-6">
-          <a href="javascript:void(0);" (click)="raiseAction('download', attachment.id)">{{ attachment.label }}</a>
+          <a href="javascript:void(0);" (click)="raiseAction('download', attachment)">{{ attachment.label }}</a>
         </div>
         }
       </div>
