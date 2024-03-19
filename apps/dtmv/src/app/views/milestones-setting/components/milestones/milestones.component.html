@@ -16,44 +16,23 @@
 
                 <div class="col">
                   <div class="input-group stc-input-group custom-input mb-3">
-                    <span class="input-group-text" id="basic-addon1"
-                      ><i class="fas fa-search"></i
-                    ></span>
-                    <input
-                      type="text"
-                      matInput
-                      #input
-                      placeholder="{{ 'Search on milestone' }}"
-                      class="form-control stc-input"
-                      (keyup)="searchFilter(input)"
-                    />
+                    <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                    <input type="text" matInput #input placeholder="{{ 'Search on milestone' }}"
+                      class="form-control stc-input" (keyup)="searchFilter(input)" />
                   </div>
                 </div>
                 <div class="col-3">
-                  <stc-apps-button
-                    [buttonText]="'Filter' | translate"
-                    [buttonType]="'gray-outline'"
-                    [buttonIcon]="'fa-filter'"
-                    (btnClick)="toggleFilter()"
-                  ></stc-apps-button>
+                  <stc-apps-button [buttonText]="'Filter' | translate" [buttonType]="'gray-outline'"
+                    [buttonIcon]="'fa-filter'" (btnClick)="toggleFilter()"></stc-apps-button>
                 </div>
-                <div
-                  class="col-3"
-                  *ngIf="!milestonesService.checkIsBusinessSpoc()"
-                >
-                  <stc-apps-button
-                    [buttonText]="'Add Milestone' | translate"
-                    [buttonType]="'primary'"
-                    [buttonIcon]="'fa-plus-circle'"
-                    (btnClick)="addMilestoneNavigate()"
-                  ></stc-apps-button>
+                <div class="col-3"
+                  *ngIf="!milestonesService.checkIsBusinessSpoc() && !milestonesService.checkIsDirector()">
+                  <stc-apps-button [buttonText]="'Add Milestone' | translate" [buttonType]="'primary'"
+                    [buttonIcon]="'fa-plus-circle'" (btnClick)="addMilestoneNavigate()"></stc-apps-button>
                 </div>
                 <div class="col-2">
-                  <stc-apps-button
-                    [buttonText]="'Export' | translate"
-                    [buttonType]="'warn'"
-                    (btnClick)="toggleFilter()"
-                  ></stc-apps-button>
+                  <stc-apps-button [buttonText]="'Export' | translate" [buttonType]="'warn'"
+                    (btnClick)="toggleFilter()"></stc-apps-button>
                 </div>
               </div>
 
@@ -76,22 +55,13 @@
         <div class="row">
           <div class="col-md-12">
             @if(tableData){
-            <stc-apps-custom-table
-              [items]="tableData"
-              [headers]="columnsSchema"
-              [length]="milestonesTotalCount"
-              (doAction)="tableAction($event)"
-              [paginate]="true"
-              [applyFilter]="true"
-              [filter]="filterString"
+            <stc-apps-custom-table [items]="tableData" [headers]="columnsSchema" [length]="milestonesTotalCount"
+              (doAction)="tableAction($event)" [paginate]="true" [applyFilter]="true" [filter]="filterString"
               [paginationConfig]="{
                 pageCount: 10,
                 showTotal: false,
                 paginationIq: 'smart'
-              }"
-              [complexView]="customTemplate"
-              (paginationEvent)="paginate($event)"
-            >
+              }" [complexView]="customTemplate" (paginationEvent)="paginate($event)">
             </stc-apps-custom-table>
             <ng-template #customTemplate let-header="header" let-item="item">
               <p class="custom-class-template">{{ item[header.key] }}</p>
@@ -102,68 +72,39 @@
         </div>
       </div>
       <div class="col-md-4">
-        <stc-apps-items-list
-          [caption]="'pending_actions' | translate"
-          [items]="allItems"
-          (itemClicked)="detailsNavigate($event)"
-        ></stc-apps-items-list>
+        <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems"
+          (itemClicked)="detailsNavigate($event)"></stc-apps-items-list>
       </div>
     </div>
   </div>
 </div>
 
 <stc-apps-dialog id="filter-Modal">
-  <form
-    [formGroup]="form"
-    (ngSubmit)="onSubmit()"
-    (blur)="(OnChangesForm)"
-    class="p-3 pb-0"
-  >
+  <form [formGroup]="form" (ngSubmit)="onSubmit()" (blur)="(OnChangesForm)" class="p-3 pb-0">
     <div class="inputs">
       <div class="row">
         <div class="col-md-4">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputId]="'milestoneName'"
-            [inputName]="'milestone name'"
-            formControlName="milestoneName"
-          ></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputId]="'milestoneName'" [inputName]="'milestone name'"
+            formControlName="milestoneName"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-select-drop-down
-            [label]="'Team'"
-            [options]="allTeams"
-            formControlName="team"
-            [outputValue]="'name'"
-          ></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down [label]="'Team'" [options]="allTeams" formControlName="team"
+            [outputValue]="'name'"></stc-apps-select-drop-down>
         </div>
         <div class="col-md-4">
-          <stc-apps-select-drop-down
-            [label]="'Status'"
-            [labelValue]="'value'"
-            [options]="milestoneStatus"
-            formControlName="status"
-            [outputValue]="'value'"
-          ></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down [label]="'Status'" [labelValue]="'value'" [options]="milestoneStatus"
+            formControlName="status" [outputValue]="'value'"></stc-apps-select-drop-down>
         </div>
       </div>
       <div class="row mt-4">
 
         <div class="col-md-4">
-          <stc-apps-select-drop-down
-            [label]="'Month'"
-            [options]="monthsArr"
-            formControlName="month"
-            [outputValue]="'id'"
-          ></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down [label]="'Month'" [options]="monthsArr" formControlName="month"
+            [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
         <div class="col-md-4">
-          <stc-apps-select-drop-down
-            [label]="'Year'"
-            [options]="yearsArr"
-            formControlName="year"
-            [outputValue]="'name'"
-          ></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down [label]="'Year'" [options]="yearsArr" formControlName="year"
+            [outputValue]="'name'"></stc-apps-select-drop-down>
         </div>
       </div>
     </div>
@@ -171,22 +112,14 @@
       <div class="col-12">
         <div class="row mt-4">
           <div class="col-md-3">
-            <stc-apps-button
-              [buttonText]="'Clear'"
-              [buttonType]="'gray-outline'"
-              (btnClick)="clearFormFilter()"
-            ></stc-apps-button>
+            <stc-apps-button [buttonText]="'Clear'" [buttonType]="'gray-outline'"
+              (btnClick)="clearFormFilter()"></stc-apps-button>
           </div>
           <div class="col-md-6"></div>
 
           <div class="col-md-3">
-            <stc-apps-button
-              [buttonText]="'Apply filter' | translate"
-              [buttonType]="'primary'"
-              [buttonDisable]="disabled"
-              (btnClick)="onSubmit()"
-              [actionType]="'submit'"
-            ></stc-apps-button>
+            <stc-apps-button [buttonText]="'Apply filter' | translate" [buttonType]="'primary'"
+              [buttonDisable]="disabled" (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
           </div>
         </div>
       </div>
@@ -200,18 +133,14 @@
     <strong>#{{ rowData?.id }}</strong>
 
     <span>
-      ' Kindly note you can&lsquo;t roll back this action. Are you sure?'</span
-    >
+      ' Kindly note you can&lsquo;t roll back this action. Are you sure?'</span>
   </p>
 
   <div class="row mt-4">
     <div class="col-md-4 offset-8">
       <div class="d-flex justify-content-end">
-        <stc-apps-button
-          [buttonText]="'cancel'"
-          [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"
-        ></stc-apps-button>
+        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"></stc-apps-button>
 
         <div class="mx-3"></div>
         <!-- <stc-apps-button [buttonText]="'delete user'" [buttonType]="'primary'"

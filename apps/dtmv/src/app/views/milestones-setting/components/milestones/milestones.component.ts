@@ -11,10 +11,7 @@ import { UtilsService } from '@stc-apps/lng-selector';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import {
-  MilestonesService,
-  PendingTask,
-} from '../../milestones.service';
+import { MilestonesService, PendingTask } from '../../milestones.service';
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
@@ -122,7 +119,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     {
       key: 'actions',
       type: 'actions',
-      actions: this.milestonesService.checkIsBusinessSpoc() ? ['details', 'updateProgress'] : ['edit', 'delete', 'details', 'updateProgress'],
+      actions: !this.milestonesService.checkIsAdmin()
+        ? this.milestonesService.checkIsBusinessSpoc() ||
+          this.milestonesService.checkIsDirector()
+          ? ['details', 'updateProgress']
+          : ['edit', 'details', 'updateProgress']
+        : ['edit', 'delete', 'details', 'updateProgress'],
       label: '',
     },
   ];
@@ -153,10 +155,10 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.yearsArrPopulator();
   }
 
-  getPendingTasks(){
-    this.milestonesService.getMilestoneTasks().subscribe(res => {
-      this.allItems = res
-    })
+  getPendingTasks() {
+    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+      this.allItems = res;
+    });
   }
 
   paginate(paginationEvent: PaginationEvent) {
@@ -181,9 +183,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   }
 
   getAllTeams() {
-
     this.allTeams = this.milestonesService.setUserTeams();
-    if(this.allTeams.length === 0 ){
+    if (this.allTeams.length === 0) {
       this.milestonesService.setSystemTeams().subscribe((res) => {
         this.allTeams = res;
       });
@@ -206,13 +207,14 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         if (!res) {
           return;
         }
-        this.milestonesService
-          .deleteMilestone(event.dataRow.id)
-          .subscribe({next: () => {
-            this.toastr.success("Deleted successfully")
-          }, error: () => {
-            this.toastr.error("Something went wrong!")
-          }});
+        this.milestonesService.deleteMilestone(event.dataRow.id).subscribe({
+          next: () => {
+            this.toastr.success('Deleted successfully');
+          },
+          error: () => {
+            this.toastr.error('Something went wrong!');
+          },
+        });
       });
     } else if (event.value === 'details') {
       this.detailsNavigate(event.dataRow.id);
@@ -236,19 +238,21 @@ export class MilestonesComponent implements OnInit, OnDestroy {
           deliverable: res.deliverable,
           overallProgress: res.overallProgress,
         })
-        .subscribe({next: () => {
-          this.toastr.success("Progress updated");
-          this.getMilestones();
-        }, error: () => {
-          this.toastr.error("Something went wrong!")
-        }});
+        .subscribe({
+          next: () => {
+            this.toastr.success('Progress updated');
+            this.getMilestones();
+          },
+          error: () => {
+            this.toastr.error('Something went wrong!');
+          },
+        });
     });
   }
 
   makeSureToDelete(name: string) {
     {
       const dialogRef = this.matDialog.open(MessageDialogComponent, {
-        height: '160px',
         width: '800px',
         data: {
           msg: `You're about to Remove Milestone "${name}" Kindly note you can't roll back this action. Are you sure?`,

@@ -7,6 +7,7 @@ import { EditMilestineComponent } from './components/edit-milestone/edit-milesto
 import { MilestoneDetailsComponent } from './components/milestone-details/milestone-details.component';
 import { MilestonesComponent } from './components/milestones/milestones.component';
 import { MilestonesSettingComponent } from './milestones-setting.component';
+import { dtDirectorGuard } from '../../services/guards/dt-director.guard';
 
 const routes: Routes = [
   {
@@ -23,7 +24,7 @@ const routes: Routes = [
         path: 'add_milestone',
         component: AddMilestoneComponent,
         data: { breadcrumb: 'Add new Milestones' },
-        canActivate: [AuthGuard, buSpocGuard],
+        canActivate: [AuthGuard, buSpocGuard, dtDirectorGuard],
       },
       {
         path: 'edit_milestone/:id',

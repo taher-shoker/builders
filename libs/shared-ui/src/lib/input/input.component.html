@@ -19,10 +19,10 @@
       translate }}
     </mat-error>
     <mat-error *ngIf="control.hasError('max') ">
-      {{ 'Please enter number less than ' + control.getError('max').max | translate }}
+      {{ 'Please enter number less than or equal ' + control.getError('max').max | translate }}
     </mat-error>
     <mat-error *ngIf="control.hasError('min') ">
-      {{ 'Please enter number greater than ' + control.getError('min').min | translate }}
+      {{ 'Please enter number greater than or equal ' + control.getError('min').min | translate }}
     </mat-error>
     <mat-error *ngIf="control.hasError('pattern')">
       {{ 'Please enter only numbers ' }}

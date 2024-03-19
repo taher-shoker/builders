@@ -113,13 +113,13 @@ export interface MilestoneDetails {
 }
 
 export interface MilestoneAttachment {
-  id: number,
-  attachmentType: string,
-  fileName: string,
-  url: string,
-  label: string,
-  note: string,
-  uploadDate: string
+  id: number;
+  attachmentType: string;
+  fileName: string;
+  url: string;
+  label: string;
+  note: string;
+  uploadDate: string;
 }
 
 @Injectable({
@@ -177,6 +177,7 @@ export class MilestonesService {
     } else {
       this.isDTDirector = false;
     }
+    return this.isDTDirector;
   }
 
   checkIsBusinessSpoc() {
@@ -186,7 +187,7 @@ export class MilestonesService {
       this.isBusinessSpoc = false;
     }
 
-    return this.isBusinessSpoc
+    return this.isBusinessSpoc;
   }
 
   checkIsAdmin() {
@@ -196,6 +197,7 @@ export class MilestonesService {
       this.isDTAdmin = false;
       this.checkIsDirector;
     }
+    return this.isDTAdmin;
   }
 
   createMilestone(data: any) {
@@ -272,9 +274,7 @@ export class MilestonesService {
   }
 
   getMilestoneTasks(): Observable<PendingTask[]> {
-    return this.http.get<PendingTask[]>(
-      `${this.ticketUrl}pending`
-    );
+    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`);
   }
 
   downloadAttachment(id: number) {
@@ -286,7 +286,7 @@ export class MilestonesService {
     );
   }
 
-  getAttachment(id: number) : Observable<MilestoneAttachment>{
+  getAttachment(id: number): Observable<MilestoneAttachment> {
     return this.http.get<MilestoneAttachment>(
       `${this.baseUrl}v2/dt-milestone-service/attachments/${id}`
     );
@@ -318,12 +318,9 @@ export class MilestonesService {
     requestId: string | number,
     requestTaskId: string | number
   ) {
-    return this.http.post(
-      `${this.ticketUrl}${requestId}/${requestTaskId}`,
-      {
-        requestParam: {}, //<< Agreed to send it as empty object
-      }
-    );
+    return this.http.post(`${this.ticketUrl}${requestId}/${requestTaskId}`, {
+      requestParam: {}, //<< Agreed to send it as empty object
+    });
   }
 
   getFile(id: any) {
