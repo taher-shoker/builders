@@ -23,7 +23,7 @@ export class AddMilestoneComponent implements OnInit {
   files: File[] = [];
   errorSize = false;
   errorType = false;
-  accept = '.xls,.xlsx';
+  accept = 'text/csv';
   constructor(
     private bannerDataService: BannerDataService,
     private formBuilder: FormBuilder,
@@ -120,10 +120,7 @@ export class AddMilestoneComponent implements OnInit {
 
       if (f.size > 20000000) {
         this.errorSize = true;
-      } else if (
-        f.type !==
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      ) {
+      } else if (f.type !== 'text/csv') {
         this.errorType = true;
       } else {
         this.formData.append('file', f);

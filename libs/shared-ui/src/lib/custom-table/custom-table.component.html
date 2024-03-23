@@ -7,22 +7,16 @@
         @if (sort && header.key !== 'actions') {
         <div class="arrows-holder">
           <div>
-            <i
-              class="ri-arrow-left-s-fill hashed-arrow"
-              [ngClass]="{
+            <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{
                 'active-arrow':
                   (currentSortedByColumn$ | async) === header.key &&
                   sortingDirection === 'asc'
-              }"
-            ></i>
-            <i
-              class="ri-arrow-right-s-fill hashed-arrow"
-              [ngClass]="{
+              }"></i>
+            <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{
                 'active-arrow':
                   (currentSortedByColumn$ | async) === header.key &&
                   sortingDirection === 'desc'
-              }"
-            ></i>
+              }"></i>
           </div>
         </div>
         }
@@ -31,23 +25,16 @@
     </tr>
 
     @if(itemsInView){
-    <ng-container
-      *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"></ng-container>
     }@else {
-    <ng-container
-      *ngTemplateOutlet="tableBody; context: { tableItems: items }"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: items }"></ng-container>
     }
   </tbody>
 </table>
 
-@if(paginate){
-<stc-apps-paginator
-  [pageRows]="paginationConfig.pageCount"
-  [elementsLength]="length"
-  (paginationEvent)="raisePagination($event)"
-></stc-apps-paginator>
+@if(paginate && length > 0){
+<stc-apps-paginator [pageRows]="paginationConfig.pageCount" [elementsLength]="length"
+  (paginationEvent)="raisePagination($event)"></stc-apps-paginator>
 }
 
 <ng-template #tableBody let-tableItems="tableItems">
@@ -57,25 +44,21 @@
     @for(header of headers(); track header){ @if(header.type !== 'actions' && header.type !== 'custom'){
     @if(header.complexView){
     <td>
-      <ng-container
-        *ngTemplateOutlet="complexView; context: { header: header, item: item }"
-      ></ng-container>
+      <ng-container *ngTemplateOutlet="complexView; context: { header: header, item: item }"></ng-container>
       <ng-template #customTemplate>
-        <ng-container
-          *ngTemplateOutlet="getCustomTemplate(header.key, item)"
-        ></ng-container>
+        <ng-container *ngTemplateOutlet="getCustomTemplate(header.key, item)"></ng-container>
       </ng-template>
     </td>
     }@else {
 
     <td>{{ item[header.key] }}</td>
-    } 
-  
-  }@else if (header.type === 'custom') {
+    }
+
+    }@else if (header.type === 'custom') {
     <td>{{ item.latestWorkflowId ? "In Validation" : "-" }}</td>
-  }
-  
-  @else if(header.type === 'actions') {
+    }
+
+    @else if(header.type === 'actions') {
 
     <td>
       <div class="actions-row d-flex">
@@ -86,17 +69,15 @@
         </span>
         <mat-menu #menu="matMenu">
           <div class="menu-btns-wrapper">
-            <ng-container
-              *ngTemplateOutlet="
+            <ng-container *ngTemplateOutlet="
                 btnsTemp;
                 context: { header: header, item: item }
-              "
-            ></ng-container>
+              "></ng-container>
           </div>
         </mat-menu>
 
-        } 
-        
+        }
+
         <!-- @else {
         <ng-container
           *ngTemplateOutlet="btnsTemp; context: { header: header, item: item }"
@@ -112,29 +93,29 @@
 <ng-template #btnsTemp let-header="header" let-item="item">
   <div class="details">
     @for(action of header?.actions; track action; let i = $index){
-      @if(action === 'edit'){
-      <div class="edit-option action-option" (click)="raiseAction(action, item)">
-        <i class="ri-edit-box-line edit-icon"></i>
-        Edit
-      </div>
-      } @else if (action === 'delete') {
+    @if(action === 'edit'){
+    <div class="edit-option action-option" (click)="raiseAction(action, item)">
+      <i class="ri-edit-box-line edit-icon"></i>
+      Edit
+    </div>
+    } @else if (action === 'delete') {
 
-      <div class="delete-option action-option" (click)="raiseAction(action, item)">
-        <i class="ri-delete-bin-line"></i>
-        Delete
-      </div>
-      }@else if(action === 'details'){
+    <div class="delete-option action-option" (click)="raiseAction(action, item)">
+      <i class="ri-delete-bin-line"></i>
+      Delete
+    </div>
+    }@else if(action === 'details'){
 
-      <div class="details-option action-option" (click)="raiseAction(action, item)">
-        <i class="ri-arrow-right-up-line"></i>
-        Show Details
-      </div>
-      }@else if(action === 'updateProgress' && !item.latestWorkflowId){
-      <div class="update-option action-option" (click)="raiseAction(action, item)">
-        <i class="ri-arrow-left-right-line"></i>
-        Update Progress
-      </div>
-      }
+    <div class="details-option action-option" (click)="raiseAction(action, item)">
+      <i class="ri-arrow-right-up-line"></i>
+      Show Details
+    </div>
+    }@else if(action === 'updateProgress' && !item.latestWorkflowId){
+    <div class="update-option action-option" (click)="raiseAction(action, item)">
+      <i class="ri-arrow-left-right-line"></i>
+      Update Progress
+    </div>
+    }
     }
   </div>
 </ng-template>

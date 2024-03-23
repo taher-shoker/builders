@@ -8,17 +8,15 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrl: './updateProgressDialog.component.scss',
 })
 export class UpdateProgressDialogComponent {
-
   form: FormGroup = new FormGroup({
     overallProgress: new FormControl('', Validators.required),
-    deliverable: new FormControl('', Validators.required),
-  })
+    deliverable: new FormControl(''),
+  });
 
   constructor(
     public dialogRef: MatDialogRef<UpdateProgressDialogComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { msg: string }
-  ) {
-  }
+  ) {}
 
   update() {
     this.dialogRef.close({
