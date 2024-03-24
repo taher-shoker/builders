@@ -19,6 +19,7 @@ import {
 } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import { MilestonesService } from '../../milestones.service';
@@ -162,7 +163,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
           .updateMilestone(this.data.id, finalData)
           .subscribe((res) => {
             if (res) {
-              this.toastr.success('Milesotne has been edited successfully');
+              this.toastr.success('Milestone has been edited successfully');
               this.form.reset();
               this.router.navigate(['./home']);
             }
@@ -170,7 +171,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
       } else {
         this.milestonesService.createMilestone(finalData).subscribe((res) => {
           if (res) {
-            this.toastr.success('Milesotne has been created successfully');
+            this.toastr.success('Milestone has been created successfully');
             this.form.reset();
             this.router.navigate(['./home']);
           }

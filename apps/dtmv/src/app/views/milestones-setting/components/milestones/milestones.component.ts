@@ -219,12 +219,13 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     } else if (event.value === 'details') {
       this.detailsNavigate(event.dataRow.id);
     } else if (event.value === 'updateProgress') {
-      this.openProgressUpdateModal(event.dataRow.id);
+      this.openProgressUpdateModal(event.dataRow);
     }
   }
 
-  openProgressUpdateModal(rowId: Milestone['id']) {
+  openProgressUpdateModal(rowData: Milestone) {
     const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
+      data: rowData.milestoneName,
       width: '800px',
     });
 
@@ -234,7 +235,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       }
       this.milestonesService
         .updateMilestoneProgress({
-          milestoneId: rowId,
+          milestoneId: rowData.id,
           deliverable: res.deliverable,
           overallProgress: res.overallProgress,
         })
