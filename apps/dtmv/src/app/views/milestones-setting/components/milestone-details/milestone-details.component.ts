@@ -197,9 +197,9 @@ export class MilestoneDetailsComponent implements OnInit {
                     }
                   }
                 } else if (res[i].taskName === 'Update DT Record') {
-                  // actions.push(Actions.updateDTRecord);
+                  actions.push(Actions.updateDTRecord);
                 } else if (res[i].taskName === 'Approve Progress') {
-                  // actions.push(Actions.approveProgress);
+                  actions.push(Actions.approveProgress);
                 }
               }
   
