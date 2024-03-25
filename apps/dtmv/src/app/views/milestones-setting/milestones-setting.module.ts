@@ -24,6 +24,7 @@ import { MilestonesSettingComponent } from './milestones-setting.component';
 import { UpdateProgressDialogComponent } from './components/updateProgressDialog/updateProgressDialog.component';
 import { CustomTemplateDirective } from 'libs/shared-ui/src/lib/custom-table/custom-template.directive';
 import { UpdateMilestoneProgressDialogComponent } from './components/update-milestone-progress-dialog/update-milestone-progress-dialog.component';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [
@@ -52,7 +53,7 @@ import { UpdateMilestoneProgressDialogComponent } from './components/update-mile
     MatProgressBarModule,
     MatSortModule,
     MatTabsModule,
-    
+    MatInputModule
   ],
   exports: [],
   providers: [DatePipe],

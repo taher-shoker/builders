@@ -9,8 +9,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class UpdateProgressDialogComponent {
   form: FormGroup = new FormGroup({
-    overallProgress: new FormControl('', Validators.required),
-    deliverable: new FormControl(''),
+    overallProgress: new FormControl('', [Validators.required, Validators.max(100), Validators.min(0), Validators.pattern('^[0-9]*$')]),
+    deliverable: new FormControl('', [Validators.required, Validators.maxLength(150)]),
   });
 
   constructor(

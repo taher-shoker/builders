@@ -6,12 +6,23 @@
         <div class="my-2">
           <stc-apps-input-full-width [label]="'Overall Progress %'" [type]="'text'"
             formControlName="overallProgress"></stc-apps-input-full-width>
+
+            @if(form.get('overallProgress')?.dirty){
+              <mat-error *ngIf="form.get('overallProgress')?.hasError('required')">
+                This Field Is Required
+              </mat-error>
+              <mat-error *ngIf="form.get('overallProgress')?.hasError('min') || form.get('overallProgress')?.hasError('max')">
+                Must be from 0 to 100
+              </mat-error>
+              <mat-error *ngIf="form.get('overallProgress')?.hasError('pattern') ">
+                Must be number
+              </mat-error>
+            }
         </div>
 
         <div class="my-2">
           <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'description'"
             [inputName]="'Deliverable'" formControlName="deliverable"></stc-apps-textarea>
-
         </div>
       </form>
     </div>

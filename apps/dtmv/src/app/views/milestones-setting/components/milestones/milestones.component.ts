@@ -210,6 +210,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         this.milestonesService.deleteMilestone(event.dataRow.id).subscribe({
           next: () => {
             this.toastr.success('Deleted successfully');
+            this.getMilestones();
           },
           error: () => {
             this.toastr.error('Something went wrong!');
@@ -242,7 +243,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.toastr.success('Progress updated');
-            this.getMilestones();
+            this.detailsNavigate(rowData.id);
           },
           error: () => {
             this.toastr.error('Something went wrong!');
@@ -266,12 +267,6 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
-
-  navigateToTask(caseId: number) {
-    this.router.navigate(['./case_details', caseId], {
-      relativeTo: this.route,
-    });
-  }
 
   toggleFilter() {
     this.dialogService.open('filter-Modal');
