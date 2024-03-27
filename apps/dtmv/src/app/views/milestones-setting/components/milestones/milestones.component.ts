@@ -16,6 +16,7 @@ import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { saveAs } from 'file-saver';
 
 export interface Milestone {
   activityName: string;
@@ -270,6 +271,16 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
   toggleFilter() {
     this.dialogService.open('filter-Modal');
+  }
+
+  onExporting() {
+    const filteredForm = this.utilities.filterObject(this.form.value);
+    this.milestonesService
+      .exportMilestones(filteredForm)
+      .subscribe((buffer) => {
+        const data: Blob = new Blob([buffer]);
+        saveAs(data, 'milestones.csv');
+      });
   }
 
   searchForm() {

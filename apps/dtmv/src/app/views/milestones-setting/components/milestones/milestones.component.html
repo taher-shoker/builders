@@ -31,7 +31,8 @@
                     [buttonIcon]="'fa-plus-circle'" (btnClick)="addMilestoneNavigate()"></stc-apps-button>
                 </div>
                 <div class="col-2">
-                  <stc-apps-button [buttonText]="'Export' | translate" [buttonType]="'warn'"></stc-apps-button>
+                  <stc-apps-button [buttonText]="'Export' | translate" [buttonType]="'warn'"
+                    (btnClick)="onExporting()"></stc-apps-button>
                 </div>
               </div>
 
