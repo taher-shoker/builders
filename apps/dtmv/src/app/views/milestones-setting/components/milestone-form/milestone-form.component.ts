@@ -72,7 +72,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       if (this.data) {

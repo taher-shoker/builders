@@ -61,7 +61,6 @@ export class MilestoneDetailsComponent implements OnInit {
     };
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
-    console.warn(this.steps);
   }
 
   showMilestoneProgressWorkflow() {

@@ -116,7 +116,6 @@ export class AddMilestoneComponent implements OnInit {
   uploadAndProgress(files: File[]) {
     this.files = files;
     files.forEach((f) => {
-      console.log(f.type);
 
       if (f.size > 20000000) {
         this.errorSize = true;

@@ -257,6 +257,12 @@ export class MilestonesService {
       params: filterData,
     });
   }
+  exportMilestones(filterData?: any) {
+    return this.http.get(`${this.dtUrl}/export`, {
+      params: filterData,
+      responseType: 'blob',
+    });
+  }
 
   getMilestone(id: string | number) {
     return this.http.get<Case>(`${this.dtUrl}/${id}`);
@@ -524,22 +530,3 @@ export type Attachment = {
   url: string;
   label: string;
 };
-
-export enum TaskCicle {
-  checkCase = 'Check Case Info',
-  fillMoreInfo = 'Fill More Info',
-  approveCase = 'Approve Case',
-  caseRejected = 'Case Rejected',
-  withinSlResponse = 'Within SL Response',
-  breanchingSlResponse = 'Breaching SL Response',
-  shouldEscalate = 'Should Escalate',
-  shouldReEscalate = 'Should Re-Escalate',
-  sendToClose = 'Send to Close',
-}
-
-export enum CaseStatus {
-  registered = <any>'Registered',
-  pending = <any>'Pending',
-  inprogress = <any>'In Progress',
-  closed = <any>'Closed',
-}
