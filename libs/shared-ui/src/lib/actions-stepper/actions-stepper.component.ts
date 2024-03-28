@@ -1,7 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { MilestoneAttachment } from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
+import { Actions, MilestoneAttachment } from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
 import {
+  AfterContentInit,
   Component,
   ContentChild,
   Directive,
@@ -19,8 +20,9 @@ export interface StepperConfig {
 export interface Step {
   template?: string;
   caption: string;
+  captionTemp?: boolean;
   state: 'done' | 'undone' | 'warning';
-  actions?: string[];
+  actions?: string[] | Actions[];
   additionalTemp?: boolean;
   extraInfo?: string[];
   notes?: string;
@@ -33,16 +35,24 @@ export interface Step {
   templateUrl: './actions-stepper.component.html',
   styleUrls: ['./actions-stepper.component.scss'],
 })
-export class ActionsStepperComponent {
-  @Output() stepperAction: EventEmitter<{ actionName: string; item: any }> =
-    new EventEmitter<{ actionName: string; item: any }>();
+export class ActionsStepperComponent implements AfterContentInit{
+  @Output() stepperAction: EventEmitter<{ actionObj: string | Actions; item: any }> =
+    new EventEmitter<{ actionObj: string | Actions; item: any }>();
 
   @Input({ required: true }) steps!: Step[];
   @Input() stepperConfig!: StepperConfig;
 
-  @ContentChild(TemplateRef) stepTemplate!: TemplateRef<any>;
+  @ContentChild('bodyTemplate') stepTemplate!: TemplateRef<any>;
+  @ContentChild('captionTemplate') stepCaptionTemplate!: TemplateRef<any>;
 
-  raiseAction(actionName: string, optionalItem?: any) {
-    this.stepperAction.emit({ actionName, item: optionalItem });
+  ngAfterContentInit(): void {
+      console.log("CONT1", this.stepTemplate)
+      console.log("CONT2", this.stepCaptionTemplate)
   }
+  raiseAction(actionObj: string | Actions, optionalItem?: any) {
+    console.log("El acti", actionObj)
+
+    this.stepperAction.emit({ actionObj, item: optionalItem });
+  }
+
 }

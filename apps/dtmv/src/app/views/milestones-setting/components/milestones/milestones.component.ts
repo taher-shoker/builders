@@ -16,6 +16,7 @@ import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 export interface Milestone {
   activityName: string;
@@ -67,7 +68,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     public utils: UtilsService,
     private matDialog: MatDialog,
     private utilities: UtilitiesService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) {}
 
   allItems!: PendingTask[];
@@ -234,6 +236,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       if (!res) {
         return;
       }
+      this.spinner.show();
+
       this.milestonesService
         .updateMilestoneProgress({
           milestoneId: rowData.id,
@@ -243,6 +247,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         .subscribe({
           next: () => {
             this.toastr.success('Progress updated');
+            this.spinner.hide();
+
             this.detailsNavigate(rowData.id);
           },
           error: () => {

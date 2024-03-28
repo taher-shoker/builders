@@ -7,8 +7,14 @@
       <div class="task" (click)="clickItem(item.externalSystemId)">
         <div class="task-header">
           <div class="row">
-            <div class="col left-col">
-              Milestone ID: <strong>#{{ item.externalSystemId }}</strong>
+            <div class="col-6 left-col">
+              <!-- Milestone ID: <strong>#{{ item.externalSystemId }}</strong> -->
+              <div class="text-wrapper">
+                <div class="left-text large-text">
+                  {{ item.requestParams.team }} -
+                  {{ item.requestParams.milestone_name || '' }}
+                </div>
+              </div>
             </div>
             <div class="col right-col">
               {{ item.createdDate | date : 'medium' }}
@@ -17,7 +23,9 @@
         </div>
         <div class="task-desc-holder">
           <p class="task-desc">
-            "Milestone's current progress status is :<strong>{{ item.taskName}}</strong>"
+            "Milestone's current pending action is :
+            <strong>{{ item.taskName }}</strong
+            >"
           </p>
         </div>
       </div>

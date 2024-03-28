@@ -25,6 +25,7 @@ import { UpdateProgressDialogComponent } from './components/updateProgressDialog
 import { CustomTemplateDirective } from 'libs/shared-ui/src/lib/custom-table/custom-template.directive';
 import { UpdateMilestoneProgressDialogComponent } from './components/update-milestone-progress-dialog/update-milestone-progress-dialog.component';
 import { MatInputModule } from '@angular/material/input';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -53,7 +54,8 @@ import { MatInputModule } from '@angular/material/input';
     MatProgressBarModule,
     MatSortModule,
     MatTabsModule,
-    MatInputModule
+    MatInputModule,
+    NgxSpinnerModule
   ],
   exports: [],
   providers: [DatePipe],

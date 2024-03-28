@@ -26,6 +26,7 @@
           (onformchange)="onUploadFile($event)" [attachmentFiles]="
           form.controls['attachment'].value
         " formControlName="attachment" [isLoading]="isLoading"
+        [accept]="acceptedExtensions"
         [required]="isRequired"
         (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
 

@@ -30,9 +30,9 @@
                   <stc-apps-button [buttonText]="'Add Milestone' | translate" [buttonType]="'primary'"
                     [buttonIcon]="'fa-plus-circle'" (btnClick)="addMilestoneNavigate()"></stc-apps-button>
                 </div>
-                <div class="col-2">
+                <!-- <div class="col-2">
                   <stc-apps-button [buttonText]="'Export' | translate" [buttonType]="'warn'"></stc-apps-button>
-                </div>
+                </div> -->
               </div>
 
               <!-- <ng-container *ngIf="authService.getLoggedInUser()">
@@ -148,3 +148,7 @@
     </div>
   </div>
 </stc-apps-dialog>
+
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ff375e" type="ball-scale-multiple" [fullScreen]="true">
+  <p style="color: white">Loading...</p>
+</ngx-spinner>

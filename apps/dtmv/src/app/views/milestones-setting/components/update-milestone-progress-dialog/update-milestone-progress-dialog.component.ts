@@ -23,11 +23,11 @@ export class UpdateMilestoneProgressDialogComponent {
 
   dialogCaption: Signal<string> = computed(() => {
     let status;
-    if (this.data.type === Actions.addEvidence) {
+    if (this.data.type === Actions.addEvidence.uniqueTitle) {
       status = 'status is completed !';
-    } else if (this.data.type === Actions.addJustification) {
+    } else if (this.data.type === Actions.addJustification.uniqueTitle) {
       status = 'status is delayed !';
-    } else if (this.data.type === Actions.addOnTrack) {
+    } else if (this.data.type === Actions.addOnTrack.uniqueTitle) {
       status = 'status is on track !';
     } else {
       return `Validation Confirmation | ${this.milestoneName()}`;
@@ -44,11 +44,11 @@ export class UpdateMilestoneProgressDialogComponent {
   constructor(
     public dialogRef: MatDialogRef<UpdateMilestoneProgressDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { type: Actions; milestoneName: string , milestoneId: number | string},
+    public data: { type: string; milestoneName: string , milestoneId: number | string},
     private milestonesService: MilestonesService
   ) {
     this.milestoneName.set(data.milestoneName);
-    if(data.type === Actions.addEvidence){
+    if(data.type === Actions.addEvidence.uniqueTitle){
       this.requireFormControl();
       this.isRequired = true;
     }
@@ -57,17 +57,17 @@ export class UpdateMilestoneProgressDialogComponent {
     const hintTail =
       "Kindly note you can't roll back this action, Are you sure?";
 
-    if (data.type === Actions.addEvidence) {
+    if (data.type === Actions.addEvidence.uniqueTitle) {
       this.hint.set(this.evidenceHint);
-    } else if (data.type === Actions.addJustification) {
+    } else if (data.type === Actions.addJustification.uniqueTitle) {
       this.hint.set(this.justificationHint);
-    } else if (this.data.type === Actions.addOnTrack) {
+    } else if (this.data.type === Actions.addOnTrack.uniqueTitle) {
       this.hint.set(this.remarksHint);
     } 
     
-    else if (this.data.type === Actions.returnEvidence ||
-      this.data.type === Actions.returnOnTrack ||
-      this.data.type === Actions.returnJustification
+    else if (this.data.type === Actions.returnEvidence.uniqueTitle ||
+      this.data.type === Actions.returnOnTrack.uniqueTitle ||
+      this.data.type === Actions.returnJustification.uniqueTitle
       ) {
       this.hint.set(
         `${hintPrefix} ${returnHintAction} ${this.milestoneName()}, ${hintTail} `
@@ -78,6 +78,16 @@ export class UpdateMilestoneProgressDialogComponent {
   isLoading = false;
   uploadedFile: any[] = [];
   attachmentsIDs: string[] = []; // should be like 1,2,5,22 (comma separated)
+
+  acceptedExtensions = [
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'application/pdf',
+    'text/csv',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+  ];
 
   onUploadFile(files: string | any[]) {
     this.isLoading = true;

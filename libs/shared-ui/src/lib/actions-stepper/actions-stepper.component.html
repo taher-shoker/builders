@@ -14,7 +14,12 @@
           </div>
         </div>
         <div class="col p-0 ms-1">
-          <div class="step-caption">{{ step.caption }}</div>
+          @if(step.captionTemp){
+            <ng-template [ngTemplateOutlet]="stepCaptionTemplate" [ngTemplateOutletContext]="{ $implicit: step }">
+            </ng-template>
+            }@else {
+              <div class="step-caption">{{ step.caption }}</div>
+            }
 
 
         </div>
@@ -25,7 +30,7 @@
     <div class="line-holder">
       <div class="line"></div>
     </div>
-    <div class="ms-3">
+    <div class="ms-3 pb-3">
       @if ((step.extraInfo || []).length > 0) { @for (infoStr of step.extraInfo;
       track infoStr) {
       <div class="step-info">{{ infoStr }}</div>
@@ -53,7 +58,7 @@
   <div class="d-flex ms-3">
     @for(action of step.actions; track action){
     <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
-      {{ action }}
+      {{ action | displayCaption }}
     </button>
     }
   </div>

@@ -51,6 +51,7 @@ import { SortableTableDirective } from './sorter/sorter.directive';
 import { ActionsStepperComponent } from './actions-stepper/actions-stepper.component';
 import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
 import { FilterArrayPipe } from './filter-array/filter-array.pipe';
+import { DisplayCaptionPipe } from './actions-stepper/action.pipe';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -84,6 +85,7 @@ const components = [
   ActionsStepperComponent,
   InputFullWidthComponent,
   FilterArrayPipe,
+  DisplayCaptionPipe
 ];
 
 @NgModule({

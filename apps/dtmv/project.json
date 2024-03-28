@@ -27,6 +27,7 @@
         "styles": [
           "libs/styles/src/index.scss",
           "node_modules/ngx-toastr/toastr.css",
+          "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
           "apps/dtmv/src/styles.scss"
         ],
         "stylePreprocessorOptions": {

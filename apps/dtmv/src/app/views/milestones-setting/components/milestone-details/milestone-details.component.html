@@ -63,14 +63,20 @@
               <div class="col-12">
                 <p class="cell-name">Capped Completion Percentage</p>
                 <p class="cell-value">
-                  {{ milestoneDetails.milestoneProgressUpdateDTO.cappedCompletionPercentage ?? '-' }}
+                  {{
+                    milestoneDetails.milestoneProgressUpdateDTO
+                      ?.cappedCompletionPercentage ?? '-'
+                  }}
                 </p>
               </div>
 
               <div class="col-12">
                 <p class="cell-name">Target Completion Level</p>
                 <p class="cell-value">
-                  {{ milestoneDetails.milestoneProgressUpdateDTO.targetCompletionLevel ?? '-' }}
+                  {{
+                    milestoneDetails.milestoneProgressUpdateDTO
+                      ?.targetCompletionLevel ?? '-'
+                  }}
                 </p>
               </div>
             </div>
@@ -135,12 +141,19 @@
 
               <div class="col-12">
                 <p class="cell-name">{{ 'working_days' | translate }}</p>
-                <p class="cell-value">{{ milestoneDetails.workingDays ?? '-' }}</p>
+                <p class="cell-value">
+                  {{ milestoneDetails.workingDays ?? '-' }}
+                </p>
               </div>
 
               <div class="col-12">
                 <p class="cell-name">Completion Impact Rate</p>
-                <p class="cell-value">{{ milestoneDetails.milestoneProgressUpdateDTO.completionImpactRate ?? '-' }}</p>
+                <p class="cell-value">
+                  {{
+                    milestoneDetails.milestoneProgressUpdateDTO
+                      ?.completionImpactRate ?? '-'
+                  }}
+                </p>
               </div>
               <!-- <div class="col-12">
                   <p class="cell-name">{{ 'created_at' | translate }}</p>
@@ -167,7 +180,7 @@
           (stepperAction)="doStepAction($event)"
           *ngIf="!isLoadingSteps"
         >
-          <ng-template let-step>
+          <ng-template #bodyTemplate let-step>
             <div class="stepp-info">
               <p class="mt-1">
                 <span>Overall progress: </span>
@@ -175,6 +188,25 @@
               </p>
               <p class="mt-1">
                 <span>Deliverable: </span> <strong> {{ deliverable }}</strong>
+              </p>
+            </div>
+          </ng-template>
+
+          <ng-template #captionTemplate let-step>
+            <div>
+              <p class="m-0" style="font-weight: bold">
+                Milestone progress updated
+                <span
+                  [ngStyle]="{
+                    color:
+                      status === 'Delayed'
+                        ? 'red'
+                        : status === 'Completed'
+                        ? 'green'
+                        : 'orange'
+                  }"
+                  >({{ status }})</span
+                >
               </p>
             </div>
           </ng-template>

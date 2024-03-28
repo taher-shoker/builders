@@ -65,21 +65,61 @@ export interface MilestoneAttachment {
   url: string;
 }
 
-export enum Actions {
-  addEvidence = 'Add Evidence',
-  addJustification = 'Add Justification',
-  addOnTrack = 'Add Remarks',
-  reviewEvidence = 'Approve Evidence',
-  reviewJustification = 'Approve Justification',
-  reviewOnTrack = 'Approve on Track',
-  updateDTRecord = 'Update Record',
-  initiateUpdateProgress = 'Update progress',
-  approveProgress = 'Approve progress',
-  returnJustification = 'Return Justification',
-  returnEvidence = 'Return Evidence',
-  returnOnTrack = 'Return Remarks',
-  noNeed = 'No Need',
+// export enum Actions {
+//   addEvidence = {uniqueTitle: 'Add Evidence', displayCaption: 'Add Evidence'},
+//   addJustification = {uniqueTitle: 'Add Justification', displayCaption: 'Add Justification'},
+//   addOnTrack = {uniqueTitle: 'Add Remarks', displayCaption: 'Add Remarks'},
+//   reviewEvidence = {uniqueTitle: 'Approve Evidence', displayCaption: 'Approve Evidence'},
+//   reviewJustification = {uniqueTitle: 'Approve Justification', displayCaption: 'Approve Justification'},
+//   reviewOnTrack = {uniqueTitle: 'Approve on Track', displayCaption: 'Approve on Track'},
+//   updateDTRecord = {uniqueTitle: 'Update Record', displayCaption: 'Update Record'},
+//   initiateUpdateProgress = {uniqueTitle: 'Update progress', displayCaption: 'Update progress'},
+//   approveProgress = {uniqueTitle: 'Approve progress', displayCaption: 'Approve progress'},
+//   returnJustification = {uniqueTitle: 'Return Justification', displayCaption: 'Return Justification'},
+//   returnEvidence = {uniqueTitle: 'Return Evidence', displayCaption: 'Return Evidence'},
+//   returnOnTrack = {uniqueTitle: 'Return Remarks', displayCaption: 'Return Remarks'},
+//   noNeed = {uniqueTitle: 'No Need', displayCaption: 'No Need'},
+// }
+
+export class Actions {
+  static readonly addEvidence = new Actions('Add Evidence', 'Add Evidence');
+  static readonly addJustification = new Actions('Add Justification', 'Add Justification');
+  static readonly addOnTrack = new Actions('Add Remarks', 'Add Remarks');
+  static readonly reviewEvidence = new Actions('Approve Evidence', 'Approve');
+  static readonly reviewJustification = new Actions('Approve Justification', 'Approve');
+  static readonly reviewOnTrack = new Actions('Approve on Track', 'Approve');
+  static readonly updateDTRecord = new Actions('Update Record', 'Update Record');
+  static readonly initiateUpdateProgress = new Actions('Update progress', 'Update progress');
+  static readonly approveProgress = new Actions('Approve progress', 'Approve progress');
+  static readonly returnJustification = new Actions('Return Justification', 'Return');
+  static readonly returnEvidence = new Actions('Return Evidence', 'Return');
+  static readonly returnOnTrack = new Actions('Return Remarks', 'Return');
+  static readonly noNeed = new Actions('No Need', 'No Need');
+
+  // private to disallow creating other instances of this type
+  private constructor(public readonly uniqueTitle: string, public readonly displayCaption: string) {
+  }
+
+  toString() {
+    return this.uniqueTitle;
+  }
 }
+
+// export enum Actions {
+//   addEvidence = {id: 1, action: 'Add Evidence'},
+//   addJustification = {id: 2, action: 'Add Justification'},
+//   addOnTrack = {id: 3, action: 'Add Remarks'},
+//   reviewEvidence = {id: 4, action: 'Approve Evidence'},
+//   reviewJustification = {id: 5, action: 'Approve Justification'},
+//   reviewOnTrack = {id: 6, action: 'Approve on Track'},
+//   updateDTRecord = {id: 7, action: 'Update Record'},
+//   initiateUpdateProgress = {id: 8, action: 'Update progress'},
+//   approveProgress = {id: 9, action: 'Approve progress'},
+//   returnJustification = {id: 10, action: 'Return Justification'},
+//   returnEvidence = {id: 11, action: 'Return Evidence'},
+//   returnOnTrack = {id: 12, action: 'Return Remarks'},
+//   noNeed = {id: 13, action: 'No Need'},
+// }
 
 export interface MilestoneDetails {
   activityName: string | null;
@@ -97,7 +137,7 @@ export interface MilestoneDetails {
   updatedByName: null | string;
   weight: number | null;
   workingDays: number | null;
-  milestoneProgressUpdateDTO: {
+  milestoneProgressUpdateDTO: null | {
     completionImpactRate: string | null;
     cappedCompletionPercentage: string | null;
     targetCompletionLevel: string | null;
@@ -316,11 +356,26 @@ export class MilestonesService {
 
   updateMilestoneRecord(
     requestId: string | number,
-    requestTaskId: string | number
+    requestTaskId: string | number,
+    isUpdateDTRecord: boolean = false
   ) {
-    return this.http.post(`${this.ticketUrl}${requestId}/${requestTaskId}`, {
-      requestParam: {}, //<< Agreed to send it as empty object
-    });
+    // return this.http.post(`${this.ticketUrl}${requestId}/${requestTaskId}`, {
+    //   requestParam: {}, //<< Agreed to send it as empty object
+    // });
+    let body: any = {
+      requestParam: {}
+    };
+    
+    if(isUpdateDTRecord){
+      body = {
+        requestParams: [{
+          name: "is_progress_approved",
+          value: true
+        }]//<< Agreed to send it as empty object
+      }
+    }
+    return this.http.post(`${this.ticketUrl}${requestId}/${requestTaskId}`, body);
+    
   }
 
   getFile(id: any) {

@@ -2,6 +2,7 @@
   background-color: white;
   height: 100%;
   border-radius: 7px;
+
   .main-title {
     padding: 20px;
     border-bottom: 1px solid var(--grey-color);
@@ -34,12 +35,12 @@
         overflow: hidden;
         // box-shadow: -3px 3px 3px -4px rgba(0, 0, 0, 0.75);
         cursor: pointer;
+        transition: all 0.3s;
 
         .task-header {
           .row {
             // border-left: 5px solid #4f008c;
             background: linear-gradient(to right, #4f008c36 0%, #9000ff1f 100%);
-            height: 31px;
             align-content: center;
 
             overflow: auto;
@@ -74,3 +75,26 @@
     }
   }
 }
+
+.text-wrapper {
+  width: 100%;
+  white-space: nowrap;
+
+  &:hover {
+    white-space: normal;
+
+    .large-text {
+      text-overflow: ellipsis;
+      width: 100%;
+      overflow: hidden;
+    }
+  }
+
+  .large-text {
+    text-overflow: ellipsis;
+    width: 85%;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+}
+
