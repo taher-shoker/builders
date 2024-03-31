@@ -25,6 +25,7 @@ import {
   UserTeam,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'stc-apps-user-form',
@@ -139,13 +140,22 @@ export class UserFormComponent implements OnInit, OnChanges {
             handleError
           );
       } else if (this.addGroups) {
+        let queryParams = new HttpParams();
+
+        if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+          queryParams = queryParams.set(
+            'teamId',
+            this.form.get('teamDto')?.value
+          );
+        }
         this.userService
           .addUserGroup(
             this.userId,
             this.userService.getCurrentSystem() === 'DI_Milestones'
               ? this.form.get('userGroups')?.value.id
               : this.form.get('teamDto')?.value.id,
-            {}
+            {},
+            queryParams
           )
           .subscribe(
             () => onSuccess('User Group is added successfully'),
@@ -172,7 +182,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.selectedPrivilege = this.privilages.filter(
-          (p) => p.id === this.data?.userGroups[0]?.id
+          (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
       } else {
         this.selectedPrivilege = this.privilages.filter(
@@ -181,7 +191,13 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
     }
   }
-
+  checkSystem(groups: UserGroup[]) {
+    return groups.find((group: UserGroup) => {
+      return group.roles.some((role: any) => {
+        return role.system.name === this.userService.getCurrentSystem();
+      });
+    });
+  }
   getTeams(userGroup: UserGroup) {
     this.teams =
       this.userService.getCurrentSystem() === 'DI_Milestones'

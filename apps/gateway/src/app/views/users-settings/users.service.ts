@@ -78,11 +78,13 @@ export class UsersService {
   addUserGroup(
     userId: number,
     groupId: number,
-    data?: Partial<UserGroup>
+    data?: Partial<UserGroup>,
+    params?: HttpParams
   ): Observable<User> {
     return this.http.patch<User>(
       `${this.endpoint}/users/groups/${userId}/${groupId}`,
-      data
+      data,
+      { params }
     );
   }
 
