@@ -2,7 +2,8 @@
   <label>{{ inputName }} <mat-error *ngIf="control.errors">* </mat-error></label>
   <mat-form-field class="">
     <textarea matInput rows="5" [id]="inputId" [name]="inputName"
-      [placeholder]="inputPlaceholder ? inputPlaceholder : ''" [formControl]="control"></textarea>
+      [placeholder]="inputPlaceholder ? inputPlaceholder : ''" [formControl]="control"
+      (keydown)="onKeyDown($event)"></textarea>
     <mat-error *ngIf="control.hasError('required')">{{ 'field_required' | translate }}
     </mat-error>
     <mat-error *ngIf="control.hasError('maxlength')">{{ 'Please enter text less than '+

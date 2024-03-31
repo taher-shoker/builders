@@ -183,6 +183,11 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
       });
     }
   }
+  preventComma(event: KeyboardEvent) {
+    if (event.key === ',') {
+      event.preventDefault();
+    }
+  }
   getAllTeams() {
     this.milestonesService.setSystemTeams().subscribe((res) => {
       this.allTeams = res;
