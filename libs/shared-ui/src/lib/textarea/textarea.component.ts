@@ -1,4 +1,10 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  forwardRef,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
@@ -21,4 +27,11 @@ export class TextareaComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputType: 'text' | 'password' = 'text';
   @Input() inputIcon!: string;
   @Input() required!: boolean;
+
+  @Output() valueKeyDown: EventEmitter<KeyboardEvent> =
+    new EventEmitter<KeyboardEvent>();
+
+  onKeyDown(event: KeyboardEvent) {
+    this.valueKeyDown.emit(event);
+  }
 }
