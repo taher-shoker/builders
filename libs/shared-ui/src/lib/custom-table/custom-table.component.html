@@ -98,7 +98,7 @@
       <i class="ri-edit-box-line edit-icon"></i>
       Edit
     </div>
-    } @else if (action === 'delete') {
+    } @else if (action === 'delete' && !item.latestWorkflowId) {
 
     <div class="delete-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-delete-bin-line"></i>
@@ -110,7 +110,7 @@
       <i class="ri-arrow-right-up-line"></i>
       Show Details
     </div>
-    }@else if(action === 'updateProgress' && !item.latestWorkflowId){
+    }@else if(action === 'updateProgress' && !item.latestWorkflowId && item.status !== 'Planned'){
     <div class="update-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-arrow-left-right-line"></i>
       Update Progress

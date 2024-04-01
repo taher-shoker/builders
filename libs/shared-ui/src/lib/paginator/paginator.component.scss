@@ -67,3 +67,27 @@ button {
   color: gray !important;
   pointer-events: none;
 }
+
+.more-btn{
+  position: relative;
+
+  .nums-holder{
+    position: absolute;
+    bottom: 45px;
+    left: 15%;
+    border: 1px solid black;
+    max-height: 350px;
+    overflow-y: auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column-reverse; /* Stack children on top of each other */
+    .num{
+      padding: 1rem;
+
+      &:hover{
+        background-color: var(--stc-color);
+        color: white;
+      }
+    }
+  }
+}

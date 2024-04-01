@@ -78,8 +78,7 @@ export class MilestoneDetailsComponent implements OnInit {
       this.progressDate =
         this.datePipe.transform(
           this.milestoneDetails.milestoneProgressUpdateDTO.progressUpdateDate,
-          'medium',
-          'UTC'
+          'medium'
         ) || '';
     }
     const initialStep: Step = {
@@ -132,7 +131,7 @@ export class MilestoneDetailsComponent implements OnInit {
                 ? res[i].completedDate
                 : res[i].createdDate;
               const progressDate: string =
-                this.datePipe.transform(displayDate, 'medium', 'UTC') || '';
+                this.datePipe.transform(displayDate, 'medium') || '';
 
               let byUser = '';
               const actions: Actions[] = [];
@@ -204,7 +203,7 @@ export class MilestoneDetailsComponent implements OnInit {
                     }
                   }
                 } else if (res[i].taskName === 'Approve Progress') {
-                  // actions.push(Actions.approveProgress);
+                  actions.push(Actions.approveProgress);
                 }
               }
 
@@ -213,7 +212,7 @@ export class MilestoneDetailsComponent implements OnInit {
                 res[i].params?.length === 0
               ) {
                 // This is to check if params is received but empty, that must indicate that the user can Update DT Record
-                // actions.push(Actions.updateDTRecord);
+                actions.push(Actions.updateDTRecord);
               }
 
               const step: Step = {
