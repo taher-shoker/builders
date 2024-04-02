@@ -52,6 +52,7 @@ export class PaginatorComponent implements OnInit, OnChanges {
     if (changes['elementsLength']) {
       this.elementsLength = changes['elementsLength'].currentValue;
       this.setPagesCount();
+      this.activePage = 1
       this.validate();
     }
   }
@@ -60,6 +61,8 @@ export class PaginatorComponent implements OnInit, OnChanges {
     this.pagesCount = Math.ceil(this.elementsLength / this.pageRows);
     if (this.pagesCount > this.pagesCountLimit) {
       this.pagesLimitExceeded = true;
+    }else{
+      this.pagesLimitExceeded = false;
     }
   }
 

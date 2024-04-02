@@ -74,7 +74,7 @@ button {
   .nums-holder{
     position: absolute;
     bottom: 45px;
-    left: 15%;
+    left: 0;
     border: 1px solid black;
     max-height: 350px;
     overflow-y: auto;
@@ -82,7 +82,7 @@ button {
     display: flex;
     flex-direction: column-reverse; /* Stack children on top of each other */
     .num{
-      padding: 1rem;
+      padding: 1.2rem;
 
       &:hover{
         background-color: var(--stc-color);
