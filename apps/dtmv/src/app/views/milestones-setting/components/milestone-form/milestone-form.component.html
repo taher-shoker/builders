@@ -16,13 +16,12 @@
       </div>
       <div class="row mt-7">
         <div class="col-md-6">
-          <stc-apps-date-picker [className]="'custom-input'" [myFilter]="FilterDate"
-            (selectChange)="handelChangeDate($event,'start')" [inputPlaceholder]="''" [inputId]="'startDate'"
-            [inputName]="'Start Date'" formControlName="startDate">
+          <stc-apps-date-picker [className]="'custom-input'" (selectChange)="handelChangeDate($event,'start')"
+            [inputPlaceholder]="''" [inputId]="'startDate'" [inputName]="'Start Date'" formControlName="startDate">
           </stc-apps-date-picker>
         </div>
         <div class="col-md-6">
-          <stc-apps-date-picker [myFilter]="FilterDate" [className]="'custom-input'" [inputPlaceholder]="''"
+          <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
             [inputId]="'endDate'" [inputName]="'End Date'" formControlName="endDate"
             (selectChange)="handelChangeDate($event,'end')">
           </stc-apps-date-picker>
@@ -35,7 +34,8 @@
         </div>
         <div class="col-md-6" *ngIf="!milestonesService.isDTDirector">
           <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Related Team'" [options]="allTeams"
-            [required]="true" formControlName="teamName" [outputValue]="'name'"></stc-apps-select-drop-down>
+            [required]="true" formControlName="teamName" [outputValue]="'name'"
+            [disabled]="true"></stc-apps-select-drop-down>
 
         </div>
       </div>
