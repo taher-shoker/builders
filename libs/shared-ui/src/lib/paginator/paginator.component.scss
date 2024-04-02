@@ -13,6 +13,12 @@ button {
 .paginator {
   display: flex;
   float: right;
+  align-items: baseline;
+}
+
+.aiding-text {
+  padding: 0.8rem;
+  font-size: 14px;
 }
 
 .pages-holder {
@@ -68,10 +74,10 @@ button {
   pointer-events: none;
 }
 
-.more-btn{
+.more-btn {
   position: relative;
 
-  .nums-holder{
+  .nums-holder {
     position: absolute;
     bottom: 45px;
     left: 0;
@@ -81,10 +87,10 @@ button {
     background-color: white;
     display: flex;
     flex-direction: column-reverse; /* Stack children on top of each other */
-    .num{
+    .num {
       padding: 1.2rem;
 
-      &:hover{
+      &:hover {
         background-color: var(--stc-color);
         color: white;
       }
