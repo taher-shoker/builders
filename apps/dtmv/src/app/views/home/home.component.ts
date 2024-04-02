@@ -28,13 +28,6 @@ export class HomeComponent implements OnInit {
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
     },
-    {
-      name: 'dashboard',
-      url: '/dashboard',
-      icon: 'fa-chart-line',
-      roles: ['APPROVERS'],
-      urlHome: '/home',
-    },
   ];
   ngOnInit() {
     this.authService.getUserData();
