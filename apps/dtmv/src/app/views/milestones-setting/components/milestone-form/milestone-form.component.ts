@@ -88,7 +88,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
 
   MilestoneForm() {
     this.form = this.formBuilder.group({
-      milestoneName: ['', [Validators.required, Validators.maxLength(150)]],
+      milestoneName: ['', [Validators.required, Validators.maxLength(100)]],
       activityName: ['', [Validators.required, Validators.maxLength(150)]],
       startDate: ['', Validators.required],
       endDate: ['', [Validators.required]],
@@ -119,22 +119,26 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
     }
   }
 
-  FilterDate = (d: Date | null): boolean => {
+  FilterStartDate = (d: Date | null): boolean => {
     if (d === null) return false;
     if (this.startDate) {
       const nextDays = new Date(this.startDate);
       return d >= nextDays;
-    } else if (this.endDate) {
-      const previousDays = new Date(this.endDate);
-      return d <= previousDays;
+    }
+    return true;
+  };
+  FilterEndDate = (d: Date | null): boolean => {
+    if (d === null) return false;
+    if (this.startDate) {
+      const previousDays = new Date(this.startDate);
+      return d >= previousDays;
     }
     return true;
   };
   handelChangeDate(event: MatDatepickerInputEvent<Date>, type: string) {
-    this.startDate = null;
-    this.endDate = null;
-
     if (type === 'start') {
+      this.startDate = null;
+      this.endDate = null;
       this.startDate = event.value;
       this.form.get('endDate')?.reset();
     } else {
@@ -146,6 +150,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
     this.form?.get('milestoneName')?.setValue(data?.milestoneName);
     this.form?.get('activityName')?.setValue(data.activityName);
     this.form?.get('teamName')?.setValue(data.teamName);
+    this.form?.get('teamName')?.disable();
     this.form?.get('startDate')?.setValue(data.startDate);
     this.form?.get('endDate')?.setValue(data.endDate);
     this.form?.get('weight')?.setValue(data.weight);
@@ -153,11 +158,12 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   }
   onSubmit() {
     if (this.form.valid) {
-      const finalData = {
+      let finalData = {
         ...this.form.value,
         weight: +this.form.get('weight')?.value,
       };
       if (this.isEditing) {
+        finalData = { ...finalData, teamName: this.data.teamName };
         this.milestonesService
           .updateMilestone(this.data.id, finalData)
           .subscribe((res) => {
