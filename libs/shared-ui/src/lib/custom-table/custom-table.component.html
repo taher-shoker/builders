@@ -93,7 +93,7 @@
 <ng-template #btnsTemp let-header="header" let-item="item">
   <div class="details">
     @for(action of header?.actions; track action; let i = $index){
-    @if(action === 'edit'){
+    @if(action === 'edit' && !item.latestWorkflowId){
     <div class="edit-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-edit-box-line edit-icon"></i>
       Edit
