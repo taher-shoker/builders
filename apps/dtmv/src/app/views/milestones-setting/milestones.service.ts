@@ -106,6 +106,8 @@ export class Actions {
     'Approve progress',
     'Approve progress'
   );
+  static readonly returnProgress = new Actions('Return progress', 'Return');
+
   static readonly returnJustification = new Actions(
     'Return Justification',
     'Return'
@@ -389,7 +391,8 @@ export class MilestonesService {
   updateMilestoneRecord(
     requestId: string | number,
     requestTaskId: string | number,
-    isUpdateDTRecord: boolean = false
+    isApproveProgress: boolean = false,
+    isApprove?: boolean
   ) {
     // return this.http.post(`${this.ticketUrl}${requestId}/${requestTaskId}`, {
     //   requestParam: {}, //<< Agreed to send it as empty object
@@ -398,12 +401,12 @@ export class MilestonesService {
       requestParam: {},
     };
 
-    if (isUpdateDTRecord) {
+    if (isApproveProgress) {
       body = {
         requestParams: [
           {
             name: 'is_progress_approved',
-            value: true,
+            value: isApprove,
           },
         ], //<< Agreed to send it as empty object
       };
