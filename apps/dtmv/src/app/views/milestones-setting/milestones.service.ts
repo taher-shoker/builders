@@ -83,22 +83,44 @@ export interface MilestoneAttachment {
 
 export class Actions {
   static readonly addEvidence = new Actions('Add Evidence', 'Add Evidence');
-  static readonly addJustification = new Actions('Add Justification', 'Add Justification');
+  static readonly addJustification = new Actions(
+    'Add Justification',
+    'Add Justification'
+  );
   static readonly addOnTrack = new Actions('Add Remarks', 'Add Remarks');
   static readonly reviewEvidence = new Actions('Approve Evidence', 'Approve');
-  static readonly reviewJustification = new Actions('Approve Justification', 'Approve');
+  static readonly reviewJustification = new Actions(
+    'Approve Justification',
+    'Approve'
+  );
   static readonly reviewOnTrack = new Actions('Approve on Track', 'Approve');
-  static readonly updateDTRecord = new Actions('Update Record', 'Update Record');
-  static readonly initiateUpdateProgress = new Actions('Update progress', 'Update progress');
-  static readonly approveProgress = new Actions('Approve progress', 'Approve progress');
-  static readonly returnJustification = new Actions('Return Justification', 'Return');
+  static readonly updateDTRecord = new Actions(
+    'Update Record',
+    'Update Record'
+  );
+  static readonly initiateUpdateProgress = new Actions(
+    'Update progress',
+    'Update progress'
+  );
+  static readonly approveProgress = new Actions(
+    'Approve progress',
+    'Approve progress'
+  );
+  static readonly returnProgress = new Actions('Return progress', 'Return');
+
+  static readonly returnJustification = new Actions(
+    'Return Justification',
+    'Return'
+  );
   static readonly returnEvidence = new Actions('Return Evidence', 'Return');
   static readonly returnOnTrack = new Actions('Return Remarks', 'Return');
   static readonly noNeed = new Actions('No Need', 'No Need');
 
   // private to disallow creating other instances of this type
-  private constructor(public readonly uniqueTitle: string, public readonly displayCaption: string) {
-  }
+  private constructor(
+    public readonly uniqueTitle: string,
+    public readonly displayCaption: string
+  ) {}
 
   toString() {
     return this.uniqueTitle;
@@ -363,25 +385,30 @@ export class MilestonesService {
   updateMilestoneRecord(
     requestId: string | number,
     requestTaskId: string | number,
-    isUpdateDTRecord: boolean = false
+    isApproveProgress: boolean = false,
+    isApprove?: boolean
   ) {
     // return this.http.post(`${this.ticketUrl}${requestId}/${requestTaskId}`, {
     //   requestParam: {}, //<< Agreed to send it as empty object
     // });
     let body: any = {
-      requestParam: {}
+      requestParam: {},
     };
-    
-    if(isUpdateDTRecord){
+
+    if (isApproveProgress) {
       body = {
-        requestParams: [{
-          name: "is_progress_approved",
-          value: true
-        }]//<< Agreed to send it as empty object
-      }
+        requestParams: [
+          {
+            name: 'is_progress_approved',
+            value: isApprove,
+          },
+        ], //<< Agreed to send it as empty object
+      };
     }
-    return this.http.post(`${this.ticketUrl}${requestId}/${requestTaskId}`, body);
-    
+    return this.http.post(
+      `${this.ticketUrl}${requestId}/${requestTaskId}`,
+      body
+    );
   }
 
   getFile(id: any) {

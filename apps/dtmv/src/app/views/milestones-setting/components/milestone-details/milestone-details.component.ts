@@ -59,7 +59,7 @@ export class MilestoneDetailsComponent implements OnInit {
       state: 'undone',
       actions: [Actions.initiateUpdateProgress],
     };
-
+    this.isLoadingSteps = false;
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
   }
 
@@ -86,8 +86,7 @@ export class MilestoneDetailsComponent implements OnInit {
       state: 'done',
       extraInfo: [`${this.progressDate} By ${this.progressUpdatedBy}`],
       additionalTemp: true,
-      captionTemp: true
-
+      captionTemp: true,
     };
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
@@ -204,6 +203,7 @@ export class MilestoneDetailsComponent implements OnInit {
                   }
                 } else if (res[i].taskName === 'Approve Progress') {
                   actions.push(Actions.approveProgress);
+                  actions.push(Actions.returnProgress);
                 }
               }
 
@@ -249,6 +249,7 @@ export class MilestoneDetailsComponent implements OnInit {
         ) {
           this.showMilestoneProgressWorkflow();
         } else {
+          this.steps = [];
           this.askUserToInitiateUpdateProgress();
         }
       });
@@ -265,11 +266,7 @@ export class MilestoneDetailsComponent implements OnInit {
       ) {
         this.openProgressUpdateModal(this.milestoneDetails.id || 0);
       }
-
-      if (
-        action.actionObj.uniqueTitle === Actions.updateDTRecord.uniqueTitle ||
-        action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
-      ) {
+      if (action.actionObj.uniqueTitle === Actions.updateDTRecord.uniqueTitle) {
         this.isLoadingSteps = true;
 
         this.milestonesService
@@ -280,6 +277,40 @@ export class MilestoneDetailsComponent implements OnInit {
           .subscribe(() => {
             this.getMilestoneDetails();
           });
+      }
+
+      if (
+        action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.returnProgress.uniqueTitle
+      ) {
+        const isApprove =
+          action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+            ? true
+            : false;
+        const popupMsg =
+          action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+            ? 'approve progess'
+            : 'return progress';
+        this.makeSureToApprove(
+          this.milestoneDetails.milestoneName || 'unnamed',
+          popupMsg
+        ).subscribe((res) => {
+          if (!res) {
+            return;
+          }
+          this.isLoadingSteps = true;
+          this.milestonesService
+            .updateMilestoneRecord(
+              this.milestoneDetails.milestoneProgressUpdateDTO?.workflowId ||
+                '',
+              action.item.requestTaskId,
+              true,
+              isApprove
+            )
+            .subscribe(() => {
+              this.getMilestoneDetails();
+            });
+        });
       }
 
       if (
@@ -523,12 +554,12 @@ export class MilestoneDetailsComponent implements OnInit {
     });
   }
 
-  makeSureToApprove(name: string) {
+  makeSureToApprove(name: string, reasonMsg: string = 'approve Milestone') {
     {
       const dialogRef = this.matDialog.open(MessageDialogComponent, {
         width: '800px',
         data: {
-          msg: `You're about to approve Milestone "${name}" Kindly note you can't roll back this action. Are you sure?`,
+          msg: `You're about to ${reasonMsg} "${name}" Kindly note you can't roll back this action. Are you sure?`,
         },
         disableClose: true,
       });
