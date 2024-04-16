@@ -52,6 +52,7 @@ import { ActionsStepperComponent } from './actions-stepper/actions-stepper.compo
 import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
 import { FilterArrayPipe } from './filter-array/filter-array.pipe';
 import { DisplayCaptionPipe } from './actions-stepper/action.pipe';
+import { NotificationsDropdownComponent } from './notifications-dropdown/notifications-dropdown.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -85,7 +86,8 @@ const components = [
   ActionsStepperComponent,
   InputFullWidthComponent,
   FilterArrayPipe,
-  DisplayCaptionPipe
+  DisplayCaptionPipe,
+  NotificationsDropdownComponent,
 ];
 
 @NgModule({

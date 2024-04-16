@@ -1,0 +1,15 @@
+<div class="dropdown">
+  <button class="btn dropdown-toggle notify-icon" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+    aria-expanded="false">
+    <i class="far fa-bell"></i>
+    <span class="count">22</span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end notify-list" aria-labelledby="dropdownMenuButton1">
+    <li *ngFor="let item of items">
+      <h4>{{item?.reminderTitle}}</h4>
+      <p>{{item?.reminderContent}}</p>
+      <span>{{item?.reminderUploadDate}}</span>
+    </li>
+
+  </ul>
+</div>

@@ -2,6 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import {
+  MilestonesService,
+  Reminders,
+} from '../milestones-setting/milestones.service';
 
 @Component({
   selector: 'stc-apps-home',
@@ -12,9 +16,11 @@ export class HomeComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
     private authService: AuthService,
+    public milestonesService: MilestonesService,
     public router: Router
   ) {}
 
+  remindersItems: Reminders[] = [];
   urlHome = '/home';
   title = { title: 'home', text: '' };
   userName = '';
@@ -31,7 +37,7 @@ export class HomeComponent implements OnInit {
   ];
   ngOnInit() {
     this.authService.getUserData();
-
+    this.getRemindersData();
     this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       this.userName = res?.name || '';
@@ -51,6 +57,12 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  getRemindersData() {
+    this.milestonesService.getReminders().subscribe((res) => {
+      console.log(res);
+      this.remindersItems = res;
+    });
+  }
   backToHome() {
     this.router.navigate([this.urlHome]);
   }

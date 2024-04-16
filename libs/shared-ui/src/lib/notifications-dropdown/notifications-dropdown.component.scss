@@ -1,0 +1,21 @@
+.notify-icon {
+  position: relative;
+  .count {
+    position: absolute;
+    color: white;
+    background-color: var(--stc-color);
+    font-size: 10px;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    top: 6px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+.notify-list {
+  width: 400px;
+  max-height: 300px;
+}

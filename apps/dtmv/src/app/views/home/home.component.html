@@ -1,5 +1,6 @@
 <stc-apps-header [userName]="userName" [logoSrc]="logoSrc" [allItems]="navItems" [sidebarLogoSrc]="sidebarLogoSrc"
-  (logOut)="logOut()" (backToHome)="backToHome()" [showLang]="false"></stc-apps-header>
+  (logOut)="logOut()" (backToHome)="backToHome()" [showLang]="false">
+  <stc-apps-notifications-dropdown [items]="remindersItems"></stc-apps-notifications-dropdown></stc-apps-header>
 <stc-apps-breadcrumb [bgColor]="'primary'"></stc-apps-breadcrumb>
 <stc-apps-banner> </stc-apps-banner>
 <router-outlet></router-outlet>

@@ -24,7 +24,9 @@ td {
   word-wrap: break-word;
   color: var(--grey-color);
 }
-
+.actions-span {
+  cursor: pointer;
+}
 tr:not(.table-header) {
   border-bottom: 1px solid #cbcbcb;
 
@@ -33,19 +35,18 @@ tr:not(.table-header) {
   }
 }
 
-.action-option{
+.action-option {
   padding-block: 0.5rem;
   color: grey;
   border-bottom: 1px solid #dddddd;
-  &:last-of-type{
+  &:last-of-type {
     border-bottom: unset;
   }
 }
 
-.delete-option{
+.delete-option {
   color: var(--stc-coral-color);
 }
-
 
 .arrows-holder {
   display: inline-block;
