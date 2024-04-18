@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   MilestonesService,
   Reminders,
@@ -17,7 +17,8 @@ export class HomeComponent implements OnInit {
     private cookieService: CookieService,
     private authService: AuthService,
     public milestonesService: MilestonesService,
-    public router: Router
+    public router: Router,
+    public route: ActivatedRoute
   ) {}
 
   remindersItems: Reminders[] = [];
@@ -59,8 +60,19 @@ export class HomeComponent implements OnInit {
 
   getRemindersData() {
     this.milestonesService.getReminders().subscribe((res) => {
-      console.log(res);
       this.remindersItems = res;
+    });
+  }
+  clickRemider(item: any) {
+    this.milestonesService.updateReminders(item?.id).subscribe((res) => {
+      this.detailsNavigate(item?.milestoneId);
+      this.getRemindersData();
+    });
+  }
+
+  detailsNavigate(id: string | number) {
+    this.router.navigate(['./home/milestone_details', id], {
+      relativeTo: this.route,
     });
   }
   backToHome() {

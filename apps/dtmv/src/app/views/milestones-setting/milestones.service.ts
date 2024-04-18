@@ -159,7 +159,20 @@ export interface MilestoneDetails {
   updatedByName: null | string;
   weight: number | null;
   workingDays: number | null;
-  milestoneProgressUpdateDTO: null | {
+  latestApprovedMilestoneProgressUpdate: null | {
+    completionImpactRate: string | null;
+    cappedCompletionPercentage: string | null;
+    targetCompletionLevel: string | null;
+    deliverable: string | null;
+    isApproved: boolean | null;
+    milestoneId: number | null;
+    overallProgress: string | null;
+    progressUpdateDate: Date | null;
+    workflowId: number | null;
+    updatedBy: string;
+    status: string;
+  };
+  currentMilestoneProgressUpdateDTO: null | {
     completionImpactRate: string | null;
     cappedCompletionPercentage: string | null;
     targetCompletionLevel: string | null;
@@ -192,6 +205,7 @@ export class MilestonesService {
   adminUrl = `${this.baseUrl}v2/admin`;
   dtUrl = `${this.baseUrl}v2/dt-milestone-service/milestones`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
+  requestUrl = `${this.baseUrl}ticket/requests/`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
 
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
@@ -332,7 +346,9 @@ export class MilestonesService {
       responseType: 'text',
     });
   }
-
+  getMilestoneProgress(id: number) {
+    return this.http.get(`${this.dtUrl}/progress/${id}`);
+  }
   getMilestoneProgressWorkflow(
     requestId: number
   ): Observable<MilestoneProgressWorkflow> {
@@ -364,6 +380,17 @@ export class MilestonesService {
     return this.http.get<Reminders[]>(
       `${this.baseUrl}v2/dt-milestone-service/reminders`
     );
+  }
+
+  updateReminders(id: number): Observable<any> {
+    return this.http.patch<any>(
+      `${this.baseUrl}v2/dt-milestone-service/reminders/read/${id}`,
+      {}
+    );
+  }
+
+  getMilestonesHistory(mielstoneId: number | null) {
+    return this.http.get<any>(`${this.requestUrl}history/${mielstoneId}`);
   }
 
   /**

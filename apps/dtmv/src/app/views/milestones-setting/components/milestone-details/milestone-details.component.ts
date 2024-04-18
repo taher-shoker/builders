@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Milestone } from './../milestones/milestones.component';
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { saveAs } from 'file-saver';
@@ -11,6 +11,7 @@ import {
   Actions,
   MilestoneAttachment,
   MilestoneDetails,
+  MilestoneProgressWorkflow,
   MilestonesService,
   RequestTask,
 } from '../../milestones.service';
@@ -28,23 +29,41 @@ import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/me
 })
 export class MilestoneDetailsComponent implements OnInit {
   steps: Step[] = [];
+  historySteps: Step[] = [];
   milestoneId!: string;
   milestoneDetails!: MilestoneDetails;
   isLoadingSteps: boolean = false;
+  panelOpenState = false;
+  filteredDataHistory!: any;
+  historyItemInitialStep: any = {
+    status: '',
+    overallProgress: '',
+    creatorName: '',
+    date: '',
+    deliverable: '',
+  };
 
   constructor(
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
+    public router: Router,
     public milestonesService: MilestonesService,
     public authService: AuthService,
     private matDialog: MatDialog,
     private datePipe: DatePipe
-  ) {}
+  ) {
+    router.events.subscribe((val) => {
+      console.log(val);
+    });
+  }
 
   ngOnInit(): void {
-    this.milestoneId = this.route.snapshot.params['id'];
-    this.getMilestoneDetails();
+    //this.milestoneId = this.route.snapshot.params['id'];
+    this.route.params.subscribe((params) => {
+      this.milestoneId = params['id'];
+      this.getMilestoneDetails();
+    });
   }
 
   progress!: string | null;
@@ -67,17 +86,34 @@ export class MilestoneDetailsComponent implements OnInit {
     this.isLoadingSteps = true;
 
     this.steps = [];
-    if (this.milestoneDetails.milestoneProgressUpdateDTO) {
+    if (this.milestoneDetails.currentMilestoneProgressUpdateDTO) {
       this.progress =
-        this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress;
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.overallProgress;
       this.progressUpdatedBy =
-        this.milestoneDetails.milestoneProgressUpdateDTO.updatedBy;
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.updatedBy;
       this.deliverable =
-        this.milestoneDetails.milestoneProgressUpdateDTO.deliverable;
-      this.status = this.milestoneDetails.milestoneProgressUpdateDTO.status;
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.deliverable;
+      this.status =
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.status;
       this.progressDate =
         this.datePipe.transform(
-          this.milestoneDetails.milestoneProgressUpdateDTO.progressUpdateDate,
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO
+            .progressUpdateDate,
+          'medium'
+        ) || '';
+    } else if (this.milestoneDetails.latestApprovedMilestoneProgressUpdate) {
+      this.progress =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.overallProgress;
+      this.progressUpdatedBy =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.updatedBy;
+      this.deliverable =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.deliverable;
+      this.status =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.status;
+      this.progressDate =
+        this.datePipe.transform(
+          this.milestoneDetails.latestApprovedMilestoneProgressUpdate
+            .progressUpdateDate,
           'medium'
         ) || '';
     }
@@ -90,15 +126,14 @@ export class MilestoneDetailsComponent implements OnInit {
     };
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
-
     setTimeout(() => {
       if (
-        this.milestoneDetails.milestoneProgressUpdateDTO &&
-        this.milestoneDetails.milestoneProgressUpdateDTO.workflowId
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO &&
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.workflowId
       ) {
         this.milestonesService
           .getMilestoneProgressWorkflow(
-            this.milestoneDetails.milestoneProgressUpdateDTO.workflowId
+            this.milestoneDetails.currentMilestoneProgressUpdateDTO.workflowId
           )
           .subscribe((res) => {
             this.isLoadingSteps = false;
@@ -231,7 +266,7 @@ export class MilestoneDetailsComponent implements OnInit {
             }
           });
       }
-    }, 5000);
+    }, 2000);
   }
 
   getMilestoneDetails() {
@@ -243,18 +278,183 @@ export class MilestoneDetailsComponent implements OnInit {
           title: this.milestoneDetails.milestoneName || '',
           text: '',
         });
+
         if (
-          this.milestoneDetails.milestoneProgressUpdateDTO &&
-          this.milestoneDetails.milestoneProgressUpdateDTO.overallProgress
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO &&
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO
+            .overallProgress
         ) {
           this.showMilestoneProgressWorkflow();
         } else {
           this.steps = [];
           this.askUserToInitiateUpdateProgress();
         }
+        this.getHistory(res);
       });
   }
 
+  getHistory(milestone: MilestoneDetails) {
+    this.milestonesService
+      .getMilestonesHistory(milestone?.id)
+      .subscribe((res) => {
+        if (res) {
+          this.removeParentArrayWithPendingTask(res);
+        }
+      });
+  }
+  removeParentArrayWithPendingTask(res: any): void {
+    this.filteredDataHistory = res.filter((requestObj: any) =>
+      requestObj.requestTasksHistory.every(
+        (task: any) => task.status !== 'pending'
+      )
+    );
+  }
+  getHistoryTasks(request: any) {
+    this.historySteps = [];
+    const item = request?.requestTasksHistory;
+    this.milestonesService
+      .getMilestoneProgress(request?.request?.requestParams[1].value)
+      .subscribe((res: any) => {
+        this.historyItemInitialStep = {
+          status: res?.status,
+          overallProgress: res?.overallProgress,
+          creatorName: res?.updatedBy,
+          date: res?.progressUpdateDate,
+          deliverable: res?.deliverable,
+        };
+        const initialStep: Step = {
+          caption: `Milestone progress updated (${res?.status})`,
+          state: 'done',
+          extraInfo: [`${res?.progressUpdateDate} By ${res?.updatedBy}`],
+          additionalTemp: true,
+          captionTemp: true,
+        };
+        this.historySteps.unshift(initialStep);
+      });
+
+    item.sort(function (a: any, b: any) {
+      return b.requestTaskId - a.requestTaskId;
+    });
+
+    let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
+
+    for (let i = item.length - 1; i >= 0; i--) {
+      if (
+        item[i].taskName === Actions.addOnTrack.uniqueTitle &&
+        foundAddRemarksOnce === null
+      ) {
+        foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
+      } else if (
+        item[i].taskName === Actions.addOnTrack.uniqueTitle &&
+        foundAddRemarksOnce === 'once'
+      ) {
+        foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
+      }
+
+      const attachmentsIDs: string[] = [];
+      const attachments: MilestoneAttachment[] = [];
+      let notes: string = '';
+
+      const displayDate = item[i].completedDate
+        ? item[i].completedDate
+        : item[i].createdDate;
+      const progressDate: string =
+        this.datePipe.transform(displayDate, 'medium') || '';
+
+      let byUser = '';
+      const actions: Actions[] = [];
+
+      for (const taskAttribute of item[i].requestTaskAttributes) {
+        if (item[i].status !== 'pending') {
+          byUser = `By ${item[i].username}`;
+        }
+
+        if (
+          taskAttribute.name === 'evidence_id' ||
+          taskAttribute.name === 'justification_id' ||
+          taskAttribute.name === 'remark_id' ||
+          taskAttribute.name === 'attachment_id'
+        ) {
+          attachmentsIDs.push(taskAttribute.value);
+        } else if (
+          taskAttribute.name === 'notes' ||
+          taskAttribute.name === 'reason_of_rejection'
+        ) {
+          notes = taskAttribute.value;
+        }
+      }
+
+      for (const attachmentID of attachmentsIDs) {
+        this.milestonesService.getAttachment(+attachmentID).subscribe((res) => {
+          attachments.push(res);
+        });
+      }
+
+      if (item[i].status === 'pending' && item[i].params?.length > 0) {
+        //those two conditions are for a user to take action, otherwise it's not his task to handle.
+        if (
+          item[i].taskName === 'Review Evidence' ||
+          item[i].taskName === 'Review Justification' ||
+          item[i].taskName === 'Review Progress'
+        ) {
+          if (item[i].taskName === 'Review Evidence') {
+            actions.push(Actions.reviewEvidence);
+            actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
+          }
+          if (item[i].taskName === 'Review Justification') {
+            actions.push(Actions.reviewJustification);
+            actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
+          }
+          if (item[i].taskName === 'Review Progress') {
+            actions.push(Actions.reviewOnTrack);
+            actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+          }
+        } else if (
+          item[i].taskName === Actions.addEvidence.uniqueTitle ||
+          item[i].taskName === Actions.addJustification.uniqueTitle ||
+          item[i].taskName === Actions.addOnTrack.uniqueTitle
+        ) {
+          if (item[i].taskName === Actions.addEvidence.uniqueTitle) {
+            actions.push(Actions.addEvidence);
+          }
+          if (item[i].taskName === Actions.addJustification.uniqueTitle) {
+            actions.push(Actions.addJustification);
+          }
+          if (item[i].taskName === Actions.addOnTrack.uniqueTitle) {
+            actions.push(Actions.addOnTrack);
+            if (foundAddRemarksOnce !== 'twice') {
+              actions.push(Actions.noNeed);
+            }
+          }
+        } else if (item[i].taskName === 'Approve Progress') {
+          actions.push(Actions.approveProgress);
+          actions.push(Actions.returnProgress);
+        }
+      }
+
+      if (
+        item[i].taskName === 'Update DT Record' &&
+        item[i].params?.length === 0
+      ) {
+        // This is to check if params is received but empty, that must indicate that the user can Update DT Record
+        actions.push(Actions.updateDTRecord);
+      }
+
+      const step: Step = {
+        caption:
+          item[i].taskName === 'Review Remarks'
+            ? 'Review Progress'
+            : item[i].taskName,
+        state: item[i].status === 'completed' ? 'done' : 'undone',
+        notes: notes,
+        attachments: attachments,
+        extraInfo: [`${progressDate} ${byUser}`],
+        actions: actions,
+        stepObject: item[i],
+      };
+      this.historySteps.push(step);
+    }
+  }
   doStepAction(action: { actionObj: Actions | string; item: any }) {
     if (
       typeof action.actionObj !== 'string' &&
@@ -271,7 +471,8 @@ export class MilestoneDetailsComponent implements OnInit {
 
         this.milestonesService
           .updateMilestoneRecord(
-            this.milestoneDetails.milestoneProgressUpdateDTO?.workflowId || '',
+            this.milestoneDetails.currentMilestoneProgressUpdateDTO
+              ?.workflowId || '',
             action.item.requestTaskId
           )
           .subscribe(() => {
@@ -301,8 +502,8 @@ export class MilestoneDetailsComponent implements OnInit {
           this.isLoadingSteps = true;
           this.milestonesService
             .updateMilestoneRecord(
-              this.milestoneDetails.milestoneProgressUpdateDTO?.workflowId ||
-                '',
+              this.milestoneDetails.currentMilestoneProgressUpdateDTO
+                ?.workflowId || '',
               action.item.requestTaskId,
               true,
               isApprove
@@ -353,8 +554,8 @@ export class MilestoneDetailsComponent implements OnInit {
 
           this.milestonesService
             .completePendingTask(
-              this.milestoneDetails.milestoneProgressUpdateDTO?.workflowId ||
-                '',
+              this.milestoneDetails.currentMilestoneProgressUpdateDTO
+                ?.workflowId || '',
               action.item.requestTaskId,
               params
             )
@@ -390,7 +591,8 @@ export class MilestoneDetailsComponent implements OnInit {
 
         this.milestonesService
           .completePendingTask(
-            this.milestoneDetails.milestoneProgressUpdateDTO?.workflowId || '',
+            this.milestoneDetails.currentMilestoneProgressUpdateDTO
+              ?.workflowId || '',
             action.item.requestTaskId,
             params
           )
@@ -519,7 +721,8 @@ export class MilestoneDetailsComponent implements OnInit {
       this.isLoadingSteps = true;
       this.milestonesService
         .completePendingTask(
-          this.milestoneDetails.milestoneProgressUpdateDTO?.workflowId || '',
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO?.workflowId ||
+            '',
           taskItem.requestTaskId,
           params
         )

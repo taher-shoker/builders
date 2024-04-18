@@ -1,4 +1,4 @@
-import { Component, Input, input } from '@angular/core';
+import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-notifications-dropdown',
@@ -7,4 +7,9 @@ import { Component, Input, input } from '@angular/core';
 })
 export class NotificationsDropdownComponent {
   @Input() items!: any[];
+  @Output() clickItem: EventEmitter<number> = new EventEmitter<number>();
+
+  onClickItem(id: number) {
+    this.clickItem.emit(id);
+  }
 }

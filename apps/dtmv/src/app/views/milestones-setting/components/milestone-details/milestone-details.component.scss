@@ -1,11 +1,14 @@
 @import './scss/core/variables/colors';
 
 .logs {
-  height: 100%;
   background-color: white;
   padding-inline-start: 35px;
   padding-block: 35px;
   border-radius: 7px;
+  height: 100%;
+  // &:last-of-type {
+  //   margin-top: 50px;
+  // }
 }
 
 .stepp-info {
@@ -241,4 +244,36 @@
 
 .spacer {
   width: 50%;
+}
+.history {
+  h4 {
+    margin-bottom: 0;
+    font-weight: 700;
+  }
+  .history-item {
+    cursor: pointer;
+    padding: 10px 0;
+    .header-item {
+      height: 100px;
+    }
+    .box-item {
+      width: 100%;
+    }
+    .title {
+      flex-direction: column;
+      align-items: start;
+    }
+    h5 {
+      font-weight: 700;
+    }
+    .info {
+      margin-top: 10px;
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+    }
+    span {
+      color: var(--grey-color);
+    }
+  }
 }
