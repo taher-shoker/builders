@@ -192,11 +192,11 @@
                     <div class="box-item py-4">
                       <h5> Update progress #{{i+1}}</h5>
                       <div class="info">
-                        @for (h of item.requestTasksHistory; track $index) {
-                        @if ($index === 0) {
+                        @for (h of item.requestTasksHistory; track h;let j = $index ) {
+                        @if (j === 0) {
                         <span class="date">Create Date: {{h?.createdDate |date:'medium'}}</span>
                         }
-                        @if ($index === item.requestTasksHistory.length -1) {
+                        @if (j === item.requestTasksHistory.length -1) {
                         <span class="date">End Date: {{h?.lastModified |date:'medium'}}</span>
                         }
                         }
