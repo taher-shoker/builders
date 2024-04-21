@@ -490,11 +490,10 @@ export interface MilestoneProgressWorkflowStep {
 }
 
 export type MilestoneStatus =
-  | 'PLANNED'
-  | 'DELAYED'
-  | 'AT_RISK'
-  | 'ON_TRACK'
-  | 'COMPLETED';
+  | 'Planned'
+  | 'Delayed'
+  | 'On Track'
+  | 'Completed';
 
 // export interface File {
 //   id: string;

@@ -34,11 +34,15 @@
       </button>
       }
 
-      <button type="button" class="more-btn" (click)="toggleRemainingPages()">
+      <button type="button" class="more-btn" (click)="toggleRemainingPages()"
+      [ngClass]="{ active: activePage > pagesCountLimit && activePage < pagesCount}"
+      >
         ... @if (remainingPagesShown) {
         <div class="nums-holder">
           @for (num of [].constructor(pagesCount - pagesCountLimit - 1); let i = $index;track num) {
-          <div class="num" (click)="goPageByNumber(i + 1 + pagesCountLimit)">{{ i + 1 + pagesCountLimit }}</div>
+          <div class="num" 
+          [ngClass]="{ active: activePage === i + 1 + pagesCountLimit}"
+          (click)="goPageByNumber(i + 1 + pagesCountLimit)">{{ i + 1 + pagesCountLimit }}</div>
           }
         </div>
         }

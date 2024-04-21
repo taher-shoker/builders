@@ -1,7 +1,7 @@
 <div class=" ">
   @if(milestoneDetails){
   <div class="row m-0 p-0">
-    <div class="col-md-7">
+    <div class="col">
       <div class="row details">
         <!-- <div class="col-12 title-holder">
             <h3>{{"case_details" | translate}}</h3>
@@ -64,11 +64,15 @@
                 <p class="cell-name">Capped Completion Percentage</p>
                 <p class="cell-value">
                   {{
-                  milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.cappedCompletionPercentage ? milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.cappedCompletionPercentage : milestoneDetails.latestApprovedMilestoneProgressUpdate
-                  ?.cappedCompletionPercentage
-                  ?milestoneDetails.latestApprovedMilestoneProgressUpdate?.cappedCompletionPercentage :'-'
+                    milestoneDetails.currentMilestoneProgressUpdateDTO
+                      ?.cappedCompletionPercentage
+                      ? milestoneDetails.currentMilestoneProgressUpdateDTO
+                          ?.cappedCompletionPercentage
+                      : milestoneDetails.latestApprovedMilestoneProgressUpdate
+                          ?.cappedCompletionPercentage
+                      ? milestoneDetails.latestApprovedMilestoneProgressUpdate
+                          ?.cappedCompletionPercentage
+                      : '-'
                   }}
                 </p>
               </div>
@@ -77,11 +81,15 @@
                 <p class="cell-name">Target Completion Level</p>
                 <p class="cell-value">
                   {{
-                  milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.targetCompletionLevel ? milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.targetCompletionLevel : milestoneDetails.latestApprovedMilestoneProgressUpdate
-                  ?.targetCompletionLevel
-                  ?milestoneDetails.latestApprovedMilestoneProgressUpdate?.targetCompletionLevel :'-'
+                    milestoneDetails.currentMilestoneProgressUpdateDTO
+                      ?.targetCompletionLevel
+                      ? milestoneDetails.currentMilestoneProgressUpdateDTO
+                          ?.targetCompletionLevel
+                      : milestoneDetails.latestApprovedMilestoneProgressUpdate
+                          ?.targetCompletionLevel
+                      ? milestoneDetails.latestApprovedMilestoneProgressUpdate
+                          ?.targetCompletionLevel
+                      : '-'
                   }}
                 </p>
               </div>
@@ -98,10 +106,10 @@
                 <ng-container *ngIf="milestoneDetails">
                   <p class="cell-value">
                     {{
-                    milestoneDetails.lastProgressUpdateDate
-                    ? (milestoneDetails.lastProgressUpdateDate
-                    | date : 'yyyy-MM-dd')
-                    : '-'
+                      milestoneDetails.lastProgressUpdateDate
+                        ? (milestoneDetails.lastProgressUpdateDate
+                          | date : 'yyyy-MM-dd')
+                        : '-'
                     }}
                   </p>
                 </ng-container>
@@ -156,11 +164,15 @@
                 <p class="cell-name">Completion Impact Rate</p>
                 <p class="cell-value">
                   {{
-                  milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.completionImpactRate ? milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.completionImpactRate : milestoneDetails.latestApprovedMilestoneProgressUpdate
-                  ?.completionImpactRate
-                  ?milestoneDetails.latestApprovedMilestoneProgressUpdate?.completionImpactRate :'-'
+                    milestoneDetails.currentMilestoneProgressUpdateDTO
+                      ?.completionImpactRate
+                      ? milestoneDetails.currentMilestoneProgressUpdateDTO
+                          ?.completionImpactRate
+                      : milestoneDetails.latestApprovedMilestoneProgressUpdate
+                          ?.completionImpactRate
+                      ? milestoneDetails.latestApprovedMilestoneProgressUpdate
+                          ?.completionImpactRate
+                      : '-'
                   }}
                 </p>
               </div>
@@ -173,48 +185,72 @@
             </div>
           </div>
         </div>
-
       </div>
       <div class="row">
-        <div class="col-md-12 mt-4 px-0 history" *ngIf="filteredDataHistory?.length > 0">
+        <div
+          class="col-md-12 mt-4 px-0 history"
+          *ngIf="filteredDataHistory?.length > 0"
+        >
           <mat-accordion class="">
-            <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   <h4>History</h4>
                 </mat-panel-title>
-
               </mat-expansion-panel-header>
-              <div class="history-item" *ngFor="let item of filteredDataHistory ; let i = index"
-                (click)="getHistoryTasks(item)">
-                <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+              <div
+                class="history-item"
+                *ngFor="let item of filteredDataHistory; let i = index"
+                (click)="getHistoryTasks(item)"
+              >
+                <mat-expansion-panel
+                  (opened)="panelOpenState = true"
+                  (closed)="panelOpenState = false"
+                >
                   <mat-expansion-panel-header class="header-item">
                     <div class="box-item py-4">
-                      <h5> Update progress #{{i+1}}</h5>
+                      <h5>Update progress #{{ i + 1 }}</h5>
                       <div class="info">
-                        @for (h of item.requestTasksHistory; track h;let j = $index ) {
-                        @if (j === 0) {
-                        <span class="date">Create Date: {{h?.createdDate |date:'medium'}}</span>
-                        }
-                        @if (j === item.requestTasksHistory.length -1) {
-                        <span class="date">End Date: {{h?.lastModified |date:'medium'}}</span>
-                        }
-                        }
+                        @for (h of item.requestTasksHistory; track h;let j =
+                        $index ) { @if (j === 0) {
+                        <span class="date"
+                          >Create Date:
+                          {{ h?.createdDate | date : 'medium' }}</span
+                        >
+                        } @if (j === item.requestTasksHistory.length -1) {
+                        <span class="date"
+                          >End Date:
+                          {{ h?.lastModified | date : 'medium' }}</span
+                        >
+                        } }
                       </div>
                     </div>
                   </mat-expansion-panel-header>
-                  <div class="logs ">
-
-                    <stc-apps-actions-stepper [steps]="historySteps" (stepperAction)="doStepAction($event)">
+                  <div class="logs">
+                    <stc-apps-actions-stepper
+                      [steps]="historySteps"
+                      (stepperAction)="doStepAction($event)"
+                    >
                       <ng-template #bodyTemplate let-step>
                         <div class="stepp-info">
                           <p class="mt-1">
                             <span>Overall progress: </span>
-                            <strong> {{ historyItemInitialStep?.overallProgress }}%</strong>
+                            <strong>
+                              {{
+                                historyItemInitialStep?.overallProgress
+                              }}%</strong
+                            >
                           </p>
                           <p class="mt-1">
-                            <span>Deliverable: </span> <strong> {{ historyItemInitialStep?.deliverable ?? '-'
-                              }}</strong>
+                            <span>Deliverable: </span>
+                            <strong>
+                              {{
+                                historyItemInitialStep?.deliverable ?? '-'
+                              }}</strong
+                            >
                           </p>
                         </div>
                       </ng-template>
@@ -223,67 +259,79 @@
                         <div>
                           <p class="m-0" style="font-weight: bold">
                             Milestone progress updated
-                            <span [ngStyle]="{
-                                          color:
-                                            historyItemInitialStep?.status === 'Delayed'
-                                              ? 'red'
-                                              : status === 'Completed'
-                                              ? 'green'
-                                              : 'orange'
-                                        }">({{ historyItemInitialStep?.status}})</span>
+                            <span
+                              [ngStyle]="{
+                                color:
+                                  historyItemInitialStep?.status === 'Delayed'
+                                    ? 'red'
+                                    : status === 'Completed'
+                                    ? 'green'
+                                    : 'orange'
+                              }"
+                              >({{ historyItemInitialStep?.status }})</span
+                            >
                           </p>
                         </div>
                       </ng-template>
-
                     </stc-apps-actions-stepper>
                   </div>
                 </mat-expansion-panel>
-
-
               </div>
             </mat-expansion-panel>
           </mat-accordion>
         </div>
       </div>
-
     </div>
-    <div class="col-md-5">
-      <div class="logs">
-        <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoadingSteps">
-          <span class="sr-only">Loading...</span>
+
+    @if (milestoneDetails.status !== 'Planned' && milestoneDetails.status !== 'Completed') {
+      <div class="col-md-5">
+        <div class="logs">
+          <div
+            class="spinner-border spinner-border-sm"
+            role="status"
+            *ngIf="isLoadingSteps"
+          >
+            <span class="sr-only">Loading...</span>
+          </div>
+          <stc-apps-actions-stepper
+            [steps]="steps"
+            (stepperAction)="doStepAction($event)"
+            *ngIf="!isLoadingSteps"
+          >
+            <ng-template #bodyTemplate let-step>
+              <div class="stepp-info">
+                <p class="mt-1">
+                  <span>Overall progress: </span>
+                  <strong> {{ progress }}%</strong>
+                </p>
+                <p class="mt-1">
+                  <span>Deliverable: </span>
+                  <strong> {{ deliverable ?? '-' }}</strong>
+                </p>
+              </div>
+            </ng-template>
+            <ng-template #captionTemplate let-step>
+              <div>
+                <p class="m-0" style="font-weight: bold">
+                  Milestone progress updated
+                  <span
+                    [ngStyle]="{
+                      color:
+                        status === 'Delayed'
+                          ? 'red'
+                          : status === 'Completed'
+                          ? 'green'
+                          : 'orange'
+                    }"
+                    >({{ status }})</span
+                  >
+                </p>
+              </div>
+            </ng-template>
+          </stc-apps-actions-stepper>
         </div>
-        <stc-apps-actions-stepper [steps]="steps" (stepperAction)="doStepAction($event)" *ngIf="!isLoadingSteps">
-          <ng-template #bodyTemplate let-step>
-            <div class="stepp-info">
-              <p class="mt-1">
-                <span>Overall progress: </span>
-                <strong> {{ progress }}%</strong>
-              </p>
-              <p class="mt-1">
-                <span>Deliverable: </span> <strong> {{ deliverable ?? '-' }}</strong>
-              </p>
-            </div>
-          </ng-template>
-          <ng-template #captionTemplate let-step>
-            <div>
-              <p class="m-0" style="font-weight: bold">
-                Milestone progress updated
-                <span [ngStyle]="{
-                                                                color:
-                                                                  status === 'Delayed'
-                                                                    ? 'red'
-                                                                    : status === 'Completed'
-                                                                    ? 'green'
-                                                                    : 'orange'
-                                                              }">({{ status }})</span>
-              </p>
-            </div>
-          </ng-template>
-        </stc-apps-actions-stepper>
       </div>
-
-    </div>
-
+    }
 
   </div>
   }

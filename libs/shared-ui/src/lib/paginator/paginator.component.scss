@@ -63,11 +63,6 @@ button {
   }
 }
 
-.active {
-  background-color: var(--stc-color);
-  color: white;
-}
-
 .disabled {
   background-color: #ebebeb;
   color: gray !important;
@@ -87,13 +82,22 @@ button {
     background-color: white;
     display: flex;
     flex-direction: column-reverse; /* Stack children on top of each other */
-    .num {
-      padding: 1.2rem;
 
-      &:hover {
-        background-color: var(--stc-color);
-        color: white;
-      }
-    }
   }
+}
+
+.num {
+  padding: 1.2rem;
+  background-color: white;
+  color: black;
+
+  &:hover {
+    background-color: var(--stc-color);
+    color: white;
+  }
+}
+
+.active {
+  background-color: var(--stc-color);
+  color: white;
 }
