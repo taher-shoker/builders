@@ -55,7 +55,7 @@
     }
 
     }@else if (header.type === 'custom') {
-    <td>{{ item.latestWorkflowId ? "In Validation" : "-" }}</td>
+    <td>{{ item.latestWorkflowId ? item.status === 'Completed' ? item.status :"In Validation" : "-" }}</td>
     }
 
     @else if(header.type === 'actions') {
@@ -110,7 +110,8 @@
       <i class="ri-arrow-right-up-line"></i>
       Show Details
     </div>
-    }@else if(action === 'updateProgress' && !item.latestWorkflowId && item.status !== 'Planned'){
+    }@else if(action === 'updateProgress' && !item.latestWorkflowId && item.status !== 'Planned' && item.status !==
+    'Completed'){
     <div class="update-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-arrow-left-right-line"></i>
       Update Progress

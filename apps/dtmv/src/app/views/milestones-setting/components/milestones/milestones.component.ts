@@ -127,7 +127,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
           this.milestonesService.checkIsDirector()
           ? ['details', 'updateProgress']
           : ['edit', 'details', 'updateProgress']
-        : ['edit', 'delete', 'details', 'updateProgress'],
+        : ['edit', 'delete', 'details'],
       label: '',
     },
   ];
