@@ -21,7 +21,6 @@ export class HomeComponent implements OnInit {
     public route: ActivatedRoute
   ) {}
 
-  remindersItems: Reminders[] = [];
   urlHome = '/home';
   title = { title: 'home', text: '' };
   userName = '';
@@ -38,7 +37,7 @@ export class HomeComponent implements OnInit {
   ];
   ngOnInit() {
     this.authService.getUserData();
-    this.getRemindersData();
+    this.milestonesService.getRemindersData();
     this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       this.userName = res?.name || '';
@@ -58,16 +57,8 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  getRemindersData() {
-    this.milestonesService.getReminders().subscribe((res) => {
-      this.remindersItems = res;
-    });
-  }
   clickRemider(item: any) {
-    this.milestonesService.updateReminders(item?.id).subscribe((res) => {
-      this.detailsNavigate(item?.milestoneId);
-      this.getRemindersData();
-    });
+    this.detailsNavigate(item?.milestoneId);
   }
 
   detailsNavigate(id: string | number) {
