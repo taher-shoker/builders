@@ -57,7 +57,14 @@
 }
 
 .step-done {
-  background-color: #00c48c;
+  background-color: var(--stc-oasis-color);
+}
+.step-warning {
+  background-color: var(--stc-sunset-color);
+}
+
+.comment-prefix{
+  color: grey;
 }
 
 .stc-btn {
