@@ -1,11 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Actions, MilestoneAttachment } from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
 import {
-  AfterContentInit,
+  Actions,
+  MilestoneAttachment,
+} from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
+import {
   Component,
   ContentChild,
-  Directive,
   EventEmitter,
   Input,
   Output,
@@ -35,9 +36,11 @@ export interface Step {
   templateUrl: './actions-stepper.component.html',
   styleUrls: ['./actions-stepper.component.scss'],
 })
-export class ActionsStepperComponent implements AfterContentInit{
-  @Output() stepperAction: EventEmitter<{ actionObj: string | Actions; item: any }> =
-    new EventEmitter<{ actionObj: string | Actions; item: any }>();
+export class ActionsStepperComponent {
+  @Output() stepperAction: EventEmitter<{
+    actionObj: string | Actions;
+    item: any;
+  }> = new EventEmitter<{ actionObj: string | Actions; item: any }>();
 
   @Input({ required: true }) steps!: Step[];
   @Input() stepperConfig!: StepperConfig;
@@ -45,14 +48,9 @@ export class ActionsStepperComponent implements AfterContentInit{
   @ContentChild('bodyTemplate') stepTemplate!: TemplateRef<any>;
   @ContentChild('captionTemplate') stepCaptionTemplate!: TemplateRef<any>;
 
-  ngAfterContentInit(): void {
-      console.log("CONT1", this.stepTemplate)
-      console.log("CONT2", this.stepCaptionTemplate)
-  }
   raiseAction(actionObj: string | Actions, optionalItem?: any) {
-    console.log("El acti", actionObj)
+    console.log('El acti', actionObj);
 
     this.stepperAction.emit({ actionObj, item: optionalItem });
   }
-
 }

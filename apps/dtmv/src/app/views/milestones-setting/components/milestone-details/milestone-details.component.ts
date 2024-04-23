@@ -327,32 +327,18 @@ export class MilestoneDetailsComponent implements OnInit {
         const initialStep: Step = {
           caption: `Milestone progress updated (${res?.status})`,
           state: 'done',
-          extraInfo: [`${res?.progressUpdateDate} By ${res?.updatedBy}`],
+          extraInfo: [
+            `${
+              this.datePipe.transform(res?.progressUpdateDate, 'medium') || ''
+            } |date:'me' By ${res?.updatedBy}`,
+          ],
           additionalTemp: true,
           captionTemp: true,
         };
         this.historySteps.unshift(initialStep);
       });
 
-    item.sort(function (a: any, b: any) {
-      return b.requestTaskId - a.requestTaskId;
-    });
-
-    let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
-
-    for (let i = item.length - 1; i >= 0; i--) {
-      if (
-        item[i].taskName === Actions.addOnTrack.uniqueTitle &&
-        foundAddRemarksOnce === null
-      ) {
-        foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
-      } else if (
-        item[i].taskName === Actions.addOnTrack.uniqueTitle &&
-        foundAddRemarksOnce === 'once'
-      ) {
-        foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
-      }
-
+    for (let i = 0; i <= item.length - 1; i++) {
       const attachmentsIDs: string[] = [];
       const attachments: MilestoneAttachment[] = [];
       let notes: string = '';
@@ -390,56 +376,6 @@ export class MilestoneDetailsComponent implements OnInit {
         this.milestonesService.getAttachment(+attachmentID).subscribe((res) => {
           attachments.push(res);
         });
-      }
-
-      if (item[i].status === 'pending' && item[i].params?.length > 0) {
-        //those two conditions are for a user to take action, otherwise it's not his task to handle.
-        if (
-          item[i].taskName === 'Review Evidence' ||
-          item[i].taskName === 'Review Justification' ||
-          item[i].taskName === 'Review Progress'
-        ) {
-          if (item[i].taskName === 'Review Evidence') {
-            actions.push(Actions.reviewEvidence);
-            actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
-          }
-          if (item[i].taskName === 'Review Justification') {
-            actions.push(Actions.reviewJustification);
-            actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
-          }
-          if (item[i].taskName === 'Review Progress') {
-            actions.push(Actions.reviewOnTrack);
-            actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
-          }
-        } else if (
-          item[i].taskName === Actions.addEvidence.uniqueTitle ||
-          item[i].taskName === Actions.addJustification.uniqueTitle ||
-          item[i].taskName === Actions.addOnTrack.uniqueTitle
-        ) {
-          if (item[i].taskName === Actions.addEvidence.uniqueTitle) {
-            actions.push(Actions.addEvidence);
-          }
-          if (item[i].taskName === Actions.addJustification.uniqueTitle) {
-            actions.push(Actions.addJustification);
-          }
-          if (item[i].taskName === Actions.addOnTrack.uniqueTitle) {
-            actions.push(Actions.addOnTrack);
-            if (foundAddRemarksOnce !== 'twice') {
-              actions.push(Actions.noNeed);
-            }
-          }
-        } else if (item[i].taskName === 'Approve Progress') {
-          actions.push(Actions.approveProgress);
-          actions.push(Actions.returnProgress);
-        }
-      }
-
-      if (
-        item[i].taskName === 'Update DT Record' &&
-        item[i].params?.length === 0
-      ) {
-        // This is to check if params is received but empty, that must indicate that the user can Update DT Record
-        actions.push(Actions.updateDTRecord);
       }
 
       const step: Step = {

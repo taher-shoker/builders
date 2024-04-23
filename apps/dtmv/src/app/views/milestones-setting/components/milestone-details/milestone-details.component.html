@@ -202,19 +202,20 @@
                     <div class="box-item py-4">
                       <h5>Update progress #{{ i + 1 }}</h5>
                       <div class="info">
-                        @for (h of item.requestTasksHistory; track h;let j =
-                        $index ) { @if (j === 0) {
-                        <span class="date">Create Date:
-                          {{ h?.createdDate | date : 'medium' }}</span>
-                        } @if (j === item.requestTasksHistory.length -1) {
-                        <span class="date">End Date:
-                          {{ h?.lastModified | date : 'medium' }}</span>
-                        } }
+                        <ng-container *ngFor="let h of item.requestTasksHistory; let j = index;">
+                          <ng-container *ngIf="j === 0">
+                            <span class="date">Create Date: {{ h?.createdDate | date : 'medium' }}</span>
+                          </ng-container>
+                          <ng-container *ngIf="j === item.requestTasksHistory.length - 1">
+                            <span class="date">End Date: {{ h?.lastModified | date : 'medium' }}</span>
+                          </ng-container>
+                        </ng-container>
                       </div>
+
                     </div>
                   </mat-expansion-panel-header>
-                  <div class="logs">
-                    <stc-apps-actions-stepper [steps]="historySteps" (stepperAction)="doStepAction($event)">
+                  <div class="logs" *ngIf="historySteps.length > 0">
+                    <stc-apps-actions-stepper [steps]="historySteps">
                       <ng-template #bodyTemplate let-step>
                         <div class="stepp-info">
                           <p class="mt-1">
