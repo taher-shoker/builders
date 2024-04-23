@@ -170,10 +170,16 @@ export class MilestoneDetailsComponent implements OnInit {
 
               let byUser = '';
               const actions: Actions[] = [];
+              let isWarningState: boolean = false;
 
               for (const taskAttribute of res[i].requestTaskAttributes) {
                 if (res[i].status !== 'pending') {
                   byUser = `By ${res[i].username}`;
+
+                  console.warn("THE taskAttribute:", taskAttribute)
+                  if(taskAttribute.name.includes("approved") && taskAttribute.value === "false"){ // Means it's approval (review) step and it's rejected.
+                    isWarningState = true
+                  }
                 }
 
                 if (
@@ -256,7 +262,7 @@ export class MilestoneDetailsComponent implements OnInit {
                   res[i].taskName === 'Review Remarks'
                     ? 'Review Progress'
                     : res[i].taskName,
-                state: res[i].status === 'completed' ? 'done' : 'undone',
+                state: isWarningState === true ? 'warning' : res[i].status === 'completed' ? 'done' : 'undone',
                 notes: notes,
                 attachments: attachments,
                 extraInfo: [`${progressDate} ${byUser}`],
@@ -267,7 +273,7 @@ export class MilestoneDetailsComponent implements OnInit {
             }
           });
       }
-    }, 2000);
+    }, 5000);
   }
 
   getMilestoneDetails() {
@@ -352,9 +358,17 @@ export class MilestoneDetailsComponent implements OnInit {
       let byUser = '';
       const actions: Actions[] = [];
 
+      let isWarningState: boolean = false;
+
       for (const taskAttribute of item[i].requestTaskAttributes) {
         if (item[i].status !== 'pending') {
           byUser = `By ${item[i].username}`;
+
+          console.warn("THE taskAttribute:", taskAttribute)
+          if(taskAttribute.name.includes("approved") && taskAttribute.value === "false"){ // Means it's approval (review) step and it's rejected.
+            isWarningState = true
+          }
+
         }
 
         if (
@@ -383,13 +397,14 @@ export class MilestoneDetailsComponent implements OnInit {
           item[i].taskName === 'Review Remarks'
             ? 'Review Progress'
             : item[i].taskName,
-        state: item[i].status === 'completed' ? 'done' : 'undone',
+        state: isWarningState === true ? 'warning' : item[i].status === 'completed' ? 'done' : 'undone',
         notes: notes,
         attachments: attachments,
         extraInfo: [`${progressDate} ${byUser}`],
         actions: actions,
         stepObject: item[i],
       };
+      
       this.historySteps.push(step);
     }
   }
