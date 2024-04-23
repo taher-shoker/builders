@@ -217,6 +217,8 @@ export class MilestonesService {
     name: string;
     systemDto: { id: number; name: string };
   };
+  remindersItems: Reminders[] = [];
+
   constructor(private http: HttpClient, private cookieService: CookieService) {
     this.currentTeam = this.setUserTeams();
   }
@@ -381,7 +383,11 @@ export class MilestonesService {
       `${this.baseUrl}v2/dt-milestone-service/reminders`
     );
   }
-
+  getRemindersData() {
+    this.getReminders().subscribe((res) => {
+      this.remindersItems = res;
+    });
+  }
   updateReminders(id: number): Observable<any> {
     return this.http.patch<any>(
       `${this.baseUrl}v2/dt-milestone-service/reminders/read/${id}`,
@@ -489,11 +495,7 @@ export interface MilestoneProgressWorkflowStep {
   taskName: string;
 }
 
-export type MilestoneStatus =
-  | 'Planned'
-  | 'Delayed'
-  | 'On Track'
-  | 'Completed';
+export type MilestoneStatus = 'Planned' | 'Delayed' | 'On Track' | 'Completed';
 
 // export interface File {
 //   id: string;

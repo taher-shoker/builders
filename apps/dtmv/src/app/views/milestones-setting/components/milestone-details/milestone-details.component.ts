@@ -60,6 +60,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
   ngOnInit(): void {
     //this.milestoneId = this.route.snapshot.params['id'];
+    this.milestonesService.checkIsAdmin();
     this.route.params.subscribe((params) => {
       this.milestoneId = params['id'];
       this.getMilestoneDetails();
@@ -279,6 +280,7 @@ export class MilestoneDetailsComponent implements OnInit {
     this.milestonesService
       .getMilestone(this.milestoneId)
       .subscribe((res: any) => {
+        this.milestonesService.getRemindersData();
         this.milestoneDetails = res;
         this.bannerDataService.updateData({
           title: this.milestoneDetails.milestoneName || '',
