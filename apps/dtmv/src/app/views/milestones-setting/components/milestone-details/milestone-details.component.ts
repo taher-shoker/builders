@@ -34,6 +34,7 @@ export class MilestoneDetailsComponent implements OnInit {
   milestoneDetails!: MilestoneDetails;
   isLoadingSteps: boolean = false;
   panelOpenState = false;
+  openPanel: number | null = null;
   filteredDataHistory!: any;
   historyItemInitialStep: any = {
     status: '',
@@ -176,9 +177,13 @@ export class MilestoneDetailsComponent implements OnInit {
                 if (res[i].status !== 'pending') {
                   byUser = `By ${res[i].username}`;
 
-                  console.warn("THE taskAttribute:", taskAttribute)
-                  if(taskAttribute.name.includes("approved") && taskAttribute.value === "false"){ // Means it's approval (review) step and it's rejected.
-                    isWarningState = true
+                  console.warn('THE taskAttribute:', taskAttribute);
+                  if (
+                    taskAttribute.name.includes('approved') &&
+                    taskAttribute.value === 'false'
+                  ) {
+                    // Means it's approval (review) step and it's rejected.
+                    isWarningState = true;
                   }
                 }
 
@@ -262,7 +267,12 @@ export class MilestoneDetailsComponent implements OnInit {
                   res[i].taskName === 'Review Remarks'
                     ? 'Review Progress'
                     : res[i].taskName,
-                state: isWarningState === true ? 'warning' : res[i].status === 'completed' ? 'done' : 'undone',
+                state:
+                  isWarningState === true
+                    ? 'warning'
+                    : res[i].status === 'completed'
+                    ? 'done'
+                    : 'undone',
                 notes: notes,
                 attachments: attachments,
                 extraInfo: [`${progressDate} ${byUser}`],
@@ -336,7 +346,7 @@ export class MilestoneDetailsComponent implements OnInit {
           extraInfo: [
             `${
               this.datePipe.transform(res?.progressUpdateDate, 'medium') || ''
-            } |date:'me' By ${res?.updatedBy}`,
+            } By ${res?.updatedBy}`,
           ],
           additionalTemp: true,
           captionTemp: true,
@@ -361,14 +371,13 @@ export class MilestoneDetailsComponent implements OnInit {
       let isWarningState: boolean = false;
 
       for (const taskAttribute of item[i].requestTaskAttributes) {
-        if (item[i].status !== 'pending') {
-          byUser = `By ${item[i].username}`;
-
-          console.warn("THE taskAttribute:", taskAttribute)
-          if(taskAttribute.name.includes("approved") && taskAttribute.value === "false"){ // Means it's approval (review) step and it's rejected.
-            isWarningState = true
-          }
-
+        console.warn('THE taskAttribute:', taskAttribute);
+        if (
+          taskAttribute.name.includes('approved') &&
+          taskAttribute.value === 'false'
+        ) {
+          // Means it's approval (review) step and it's rejected.
+          isWarningState = true;
         }
 
         if (
@@ -385,28 +394,41 @@ export class MilestoneDetailsComponent implements OnInit {
           notes = taskAttribute.value;
         }
       }
-
+      if (item[i].status !== 'pending') {
+        byUser = `By ${item[i].username}`;
+      }
       for (const attachmentID of attachmentsIDs) {
         this.milestonesService.getAttachment(+attachmentID).subscribe((res) => {
           attachments.push(res);
         });
       }
-
       const step: Step = {
         caption:
           item[i].taskName === 'Review Remarks'
             ? 'Review Progress'
             : item[i].taskName,
-        state: isWarningState === true ? 'warning' : item[i].status === 'completed' ? 'done' : 'undone',
+        state:
+          isWarningState === true
+            ? 'warning'
+            : item[i].status === 'completed'
+            ? 'done'
+            : 'undone',
         notes: notes,
         attachments: attachments,
         extraInfo: [`${progressDate} ${byUser}`],
         actions: actions,
         stepObject: item[i],
       };
-      
+
       this.historySteps.push(step);
     }
+  }
+  isPanelOpen(panelNumber: number): boolean {
+    return this.openPanel === panelNumber;
+  }
+
+  panelOpened(panelNumber: number): void {
+    this.openPanel = panelNumber;
   }
   doStepAction(action: { actionObj: Actions | string; item: any }) {
     if (
