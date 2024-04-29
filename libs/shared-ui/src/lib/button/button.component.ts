@@ -31,8 +31,7 @@ export class ButtonComponent implements OnInit {
   @Output() btnClick: EventEmitter<void> = new EventEmitter();
 
   ngOnInit(): void {
-
-    if(this.padding){
+    if (this.padding) {
       this.paddingX = this.padding;
       this.paddingY = this.padding;
     }

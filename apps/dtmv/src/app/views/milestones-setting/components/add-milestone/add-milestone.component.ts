@@ -1,9 +1,10 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { BannerDataService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import { MilestonesService } from '../../milestones.service';
+import { BannerDataService } from '@stc-apps/shared-ui';
 
 @Component({
   selector: 'stc-apps-add-milestone',
@@ -22,7 +23,7 @@ export class AddMilestoneComponent implements OnInit {
   files: File[] = [];
   errorSize = false;
   errorType = false;
-  accept = '.xls,.xlsx';
+  accept = 'text/csv';
   constructor(
     private bannerDataService: BannerDataService,
     private formBuilder: FormBuilder,
@@ -32,12 +33,11 @@ export class AddMilestoneComponent implements OnInit {
   ) {}
   ngOnInit(): void {
     this.uploadForm();
-    this.getAllTeams();
     this.milestonesService.checkIsAdmin();
     this.setRelatedTeam();
     this.bannerDataService.updateData({
-      title: 'Add new Milestone',
-      text: 'Please add actual data and be sure to add all required data',
+      title: 'Add new milestone',
+      text: '',
     });
   }
   getAllTeams() {
@@ -46,13 +46,10 @@ export class AddMilestoneComponent implements OnInit {
     });
   }
   setRelatedTeam() {
-    this.form
-      .get('teamName')
-      ?.setValue(this.milestonesService.setUserTeam(), { emitEvent: false });
-    this.selectTeam = this.milestonesService.setUserTeam();
-
     if (!this.milestonesService.isDTAdmin) {
-      this.form.get('teamName')?.disable();
+      this.allTeams = this.milestonesService.setUserTeams();
+    } else {
+      this.getAllTeams();
     }
   }
 
@@ -63,7 +60,6 @@ export class AddMilestoneComponent implements OnInit {
     });
   }
   onSubmit() {
-    this.isLoading = true;
     const onSuccess = (message: string) => {
       this.isLoading = false;
       this.toastr.success(message);
@@ -76,6 +72,7 @@ export class AddMilestoneComponent implements OnInit {
       }
     };
     if (this.form.valid) {
+      this.isLoading = true;
       this.milestonesService
         .addBulkData(this.formData, this.form?.get('teamName')?.value)
         .subscribe(
@@ -119,14 +116,10 @@ export class AddMilestoneComponent implements OnInit {
   uploadAndProgress(files: File[]) {
     this.files = files;
     files.forEach((f) => {
-      console.log(f.type);
 
       if (f.size > 20000000) {
         this.errorSize = true;
-      } else if (
-        f.type !==
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-      ) {
+      } else if (f.type !== 'text/csv') {
         this.errorType = true;
       } else {
         this.formData.append('file', f);

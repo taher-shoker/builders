@@ -1,3 +1,4 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 import { APP_INITIALIZER, NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -72,6 +73,7 @@ export function initializeApp(appInitService: AppInitService) {
     ToastrModule.forRoot(),
     CookieModule.withOptions(),
     MatDialogModule,
+    
   ],
   providers: [
     AppInitService,

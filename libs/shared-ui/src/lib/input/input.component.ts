@@ -1,4 +1,10 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  forwardRef,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 export interface FormFieldValue {
@@ -24,8 +30,14 @@ export class InputComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputIcon!: string;
   @Input() required!: boolean;
   @Input() disabled = false;
+  @Output() valueKeyDown: EventEmitter<KeyboardEvent> =
+    new EventEmitter<KeyboardEvent>();
+
   showPassword = false;
 
+  onKeyDown(event: KeyboardEvent) {
+    this.valueKeyDown.emit(event);
+  }
   toggelPassword(): void {
     this.showPassword = !this.showPassword;
     if (this.showPassword) {

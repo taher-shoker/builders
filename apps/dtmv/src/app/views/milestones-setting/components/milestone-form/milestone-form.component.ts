@@ -19,6 +19,7 @@ import {
 } from '@angular/material/core';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import { MilestonesService } from '../../milestones.service';
@@ -71,7 +72,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log(changes);
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       if (this.data) {
@@ -82,14 +82,13 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.MilestoneForm();
-    this.getAllTeams();
     this.milestonesService.checkIsAdmin();
     this.setRelatedTeam();
   }
 
   MilestoneForm() {
     this.form = this.formBuilder.group({
-      milestoneName: ['', [Validators.required, Validators.maxLength(150)]],
+      milestoneName: ['', [Validators.required, Validators.maxLength(100)]],
       activityName: ['', [Validators.required, Validators.maxLength(150)]],
       startDate: ['', Validators.required],
       endDate: ['', [Validators.required]],
@@ -113,33 +112,33 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   }
 
   setRelatedTeam() {
-    if (!this.isEditing) {
-      this.form
-        .get('teamName')
-        ?.setValue(this.milestonesService.setUserTeam(), { emitEvent: false });
-      this.selectTeam = this.milestonesService.setUserTeam();
-    }
     if (!this.milestonesService.isDTAdmin) {
-      this.form.get('teamName')?.disable();
+      this.allTeams = this.milestonesService.setUserTeams();
+    } else {
+      this.getAllTeams();
     }
   }
 
-  FilterDate = (d: Date | null): boolean => {
+  FilterStartDate = (d: Date | null): boolean => {
     if (d === null) return false;
     if (this.startDate) {
       const nextDays = new Date(this.startDate);
       return d >= nextDays;
-    } else if (this.endDate) {
-      const previousDays = new Date(this.endDate);
-      return d <= previousDays;
+    }
+    return true;
+  };
+  FilterEndDate = (d: Date | null): boolean => {
+    if (d === null) return false;
+    if (this.startDate) {
+      const previousDays = new Date(this.startDate);
+      return d >= previousDays;
     }
     return true;
   };
   handelChangeDate(event: MatDatepickerInputEvent<Date>, type: string) {
-    this.startDate = null;
-    this.endDate = null;
-
     if (type === 'start') {
+      this.startDate = null;
+      this.endDate = null;
       this.startDate = event.value;
       this.form.get('endDate')?.reset();
     } else {
@@ -151,25 +150,25 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
     this.form?.get('milestoneName')?.setValue(data?.milestoneName);
     this.form?.get('activityName')?.setValue(data.activityName);
     this.form?.get('teamName')?.setValue(data.teamName);
+    this.form?.get('teamName')?.disable();
     this.form?.get('startDate')?.setValue(data.startDate);
     this.form?.get('endDate')?.setValue(data.endDate);
     this.form?.get('weight')?.setValue(data.weight);
     this.form?.get('deliverable')?.setValue(data.deliverable);
   }
   onSubmit() {
-    console.log(this.form.value);
-
     if (this.form.valid) {
-      const finalData = {
+      let finalData = {
         ...this.form.value,
         weight: +this.form.get('weight')?.value,
       };
       if (this.isEditing) {
+        finalData = { ...finalData, teamName: this.data.teamName };
         this.milestonesService
           .updateMilestone(this.data.id, finalData)
           .subscribe((res) => {
             if (res) {
-              this.toastr.success('Milesotne has been edited successfully');
+              this.toastr.success('Milestone has been edited successfully');
               this.form.reset();
               this.router.navigate(['./home']);
             }
@@ -177,7 +176,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
       } else {
         this.milestonesService.createMilestone(finalData).subscribe((res) => {
           if (res) {
-            this.toastr.success('Milesotne has been created successfully');
+            this.toastr.success('Milestone has been created successfully');
             this.form.reset();
             this.router.navigate(['./home']);
           }
@@ -188,6 +187,11 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
         const control = this.form.get(field);
         control?.markAsTouched({ onlySelf: true });
       });
+    }
+  }
+  preventComma(event: KeyboardEvent) {
+    if (event.key === ',') {
+      event.preventDefault();
     }
   }
   getAllTeams() {

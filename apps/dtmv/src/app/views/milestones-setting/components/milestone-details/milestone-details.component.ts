@@ -1,415 +1,747 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import * as _ from 'lodash';
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+import { Milestone } from './../milestones/milestones.component';
+/* eslint-disable @nx/enforce-module-boundaries */
+import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { saveAs } from 'file-saver';
-import { Subscription } from 'rxjs';
 import { AuthService } from '../../../../services/auth.service';
 import {
-  Case,
-  CaseStatus,
+  Actions,
+  MilestoneAttachment,
+  MilestoneDetails,
+  MilestoneProgressWorkflow,
   MilestonesService,
-  TaskCicle,
-  TaskInDetails,
-  User,
+  RequestTask,
 } from '../../milestones.service';
+import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
+import { MatDialog } from '@angular/material/dialog';
+import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-progress-dialog/update-milestone-progress-dialog.component';
+import { DatePipe } from '@angular/common';
+import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
+import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 
 @Component({
   selector: 'stc-apps-milestone-details',
   templateUrl: './milestone-details.component.html',
   styleUrls: ['./milestone-details.component.scss'],
 })
-export class MilestoneDetailsComponent implements OnInit, OnDestroy {
-  readonly TaskCicle = TaskCicle;
-  readonly CaseStatus = CaseStatus;
-
-  closeForm!: FormGroup;
-  infoForm!: FormGroup;
-  rejectForm!: FormGroup;
-  replyForm!: FormGroup;
-  firstEscalateForm!: FormGroup;
-  secondEscalateForm!: FormGroup;
-
-  formData = new FormData();
-
+export class MilestoneDetailsComponent implements OnInit {
+  steps: Step[] = [];
+  historySteps: Step[] = [];
   milestoneId!: string;
-  taskId!: number;
-  caseSerial!: string;
-  caseStatus!: string;
-  milestoneDetails: any;
-  allTasks!: TaskInDetails[];
-  assigneeType = [
-    { name: 'team', value: '1' },
-    { name: 'users', value: '2' },
-  ];
-  users: any = [];
-  teams: any = [];
-  selectedTeam = {};
-  selectedUser = {};
-  langSub!: Subscription;
-  invalidFileMessageDetail!: string;
+  milestoneDetails!: MilestoneDetails;
+  isLoadingSteps: boolean = false;
+  panelOpenState = false;
+  openPanel: number | null = null;
+  filteredDataHistory!: any;
+  historyItemInitialStep: any = {
+    status: '',
+    overallProgress: '',
+    creatorName: '',
+    date: '',
+    deliverable: '',
+  };
 
   constructor(
-    private formBuilder: FormBuilder,
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
+    public router: Router,
     public milestonesService: MilestonesService,
-    private languageManagerService: LanguageManagerService,
-    public authService: AuthService
-  ) {}
+    public authService: AuthService,
+    private matDialog: MatDialog,
+    private datePipe: DatePipe
+  ) {
+    router.events.subscribe((val) => {
+      console.log(val);
+    });
+  }
 
   ngOnInit(): void {
-    this.milestoneId = this.route.snapshot.params['id'];
-
-    this.bannerDataService.updateData({
-      title: '',
-      text: '',
-    });
-
-    // this.CasesService.getCase(this.milestoneId).subscribe((res) => {
-    //   if (res) {
-    //     this.milestoneDetails = res;
-    //     this.caseSerial = res.caseSerialNumber;
-    //     this.caseStatus = res.caseStatus;
-    //     this.subscribeToLanguage();
-    //     this.handleTeam(this.milestoneDetails, this.teams);
-    //   }
-    // });
-    this.getMilestoneDetails(+this.milestoneId);
-
-    // this.authService.loggedUserStream.subscribe((res) => {
-    //   if (res?.roles.includes('APPROVERS')) {
-    //     this.CasesService.setSystemTeams().subscribe((res) => {
-    //       this.teams = res;
-    //       this.teams = this.teams.filter(
-    //         (x: any) =>
-    //           x.groupName !== 'Fraud' && x.groupName !== 'Fraud Admins'
-    //       );
-    //       // this.handleTeam(this.milestoneDetails, this.teams);
-    //     });
-
-    //     // this.CasesService.setSystemUsers().subscribe((res) => {
-    //     //   this.users = res.filter(
-    //     //     (x: User) =>
-    //     //       this.getUserPrivilege(x) !== 'APPROVERS' &&
-    //     //       this.getUserPrivilege(x) !== 'ADMINS'
-    //     //   );
-    //     //   this.handleUser(this.milestoneDetails, this.users);
-    //     // });
-    //   }
-    // });
-
-    this.closeForm = this.formBuilder.group({
-      close_mail_content: [''],
-    });
-    this.infoForm = this.formBuilder.group({
-      assignedTo: [this.assigneeType[1], Validators.required], //That makes the dropdown of team/users to have a *USER* option selected by default
-      selectedUser: ['', Validators.required],
-      message: ['', Validators.required],
-      check_case_attachment: [''],
-    });
-    this.rejectForm = this.formBuilder.group({
-      reject_note: [''],
-    });
-    this.replyForm = this.formBuilder.group({
-      message: ['', Validators.required],
-      check_case_attachment: [''],
-    });
-    this.firstEscalateForm = this.formBuilder.group({
-      first_escalate_content: ['', Validators.required],
-    });
-    this.secondEscalateForm = this.formBuilder.group({
-      second_escalate_content: ['', Validators.required],
-    });
-  }
-  getMilestoneDetails(id: number) {
-    this.milestonesService.getMilestone(id).subscribe((res: any) => {
-      // this.allTasks = res.data.filter((t: any) => t.assignedUser);
-      this.milestoneDetails = res
+    //this.milestoneId = this.route.snapshot.params['id'];
+    this.milestonesService.checkIsAdmin();
+    this.route.params.subscribe((params) => {
+      this.milestoneId = params['id'];
+      this.getMilestoneDetails();
     });
   }
 
-  isLoading = false;
-  uploadedFile: any[] = []; // turn to File later
-  onUploadFile(files: string | any[]) {
-    if (files) {
-      for (let i = 0; i < files?.length; i++) {
-        this.isLoading = true;
-        const formData = new FormData();
-        formData.append('file', files[i]);
-        // this.formData.append('file', files[i]);
-        this.milestonesService.uploadFile(formData).subscribe((res: any) => {
-          if (res) {
-            this.uploadedFile.push(res);
-            this.isLoading = false;
-            this.infoForm
-              .get('check_case_attachment')
-              ?.setValue(this.uploadedFile);
-          }
+  progress!: string | null;
+  deliverable!: string | null;
+  status!: string | null;
+  progressDate!: string;
+  progressUpdatedBy!: string;
+
+  askUserToInitiateUpdateProgress() {
+    const initialStep: Step = {
+      caption: Actions.initiateUpdateProgress.displayCaption,
+      state: 'undone',
+      actions: [Actions.initiateUpdateProgress],
+    };
+    this.isLoadingSteps = false;
+    this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
+  }
+
+  showMilestoneProgressWorkflow() {
+    this.isLoadingSteps = true;
+
+    this.steps = [];
+    if (this.milestoneDetails.currentMilestoneProgressUpdateDTO) {
+      this.progress =
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.overallProgress;
+      this.progressUpdatedBy =
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.updatedBy;
+      this.deliverable =
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.deliverable;
+      this.status =
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.status;
+      this.progressDate =
+        this.datePipe.transform(
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO
+            .progressUpdateDate,
+          'medium'
+        ) || '';
+    } else if (this.milestoneDetails.latestApprovedMilestoneProgressUpdate) {
+      this.progress =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.overallProgress;
+      this.progressUpdatedBy =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.updatedBy;
+      this.deliverable =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.deliverable;
+      this.status =
+        this.milestoneDetails.latestApprovedMilestoneProgressUpdate.status;
+      this.progressDate =
+        this.datePipe.transform(
+          this.milestoneDetails.latestApprovedMilestoneProgressUpdate
+            .progressUpdateDate,
+          'medium'
+        ) || '';
+    }
+    const initialStep: Step = {
+      caption: `Milestone progress updated (${this.status})`,
+      state: 'done',
+      extraInfo: [`${this.progressDate} By ${this.progressUpdatedBy}`],
+      additionalTemp: true,
+      captionTemp: true,
+    };
+
+    this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
+    setTimeout(() => {
+      if (
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO &&
+        this.milestoneDetails.currentMilestoneProgressUpdateDTO.workflowId
+      ) {
+        this.milestonesService
+          .getMilestoneProgressWorkflow(
+            this.milestoneDetails.currentMilestoneProgressUpdateDTO.workflowId
+          )
+          .subscribe((res) => {
+            this.isLoadingSteps = false;
+
+            res.sort(function (a, b) {
+              return b.requestTaskId - a.requestTaskId;
+            });
+
+            let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
+
+            for (let i = res.length - 1; i >= 0; i--) {
+              if (
+                res[i].taskName === Actions.addOnTrack.uniqueTitle &&
+                foundAddRemarksOnce === null
+              ) {
+                foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
+              } else if (
+                res[i].taskName === Actions.addOnTrack.uniqueTitle &&
+                foundAddRemarksOnce === 'once'
+              ) {
+                foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
+              }
+
+              const attachmentsIDs: string[] = [];
+              const attachments: MilestoneAttachment[] = [];
+              let notes: string = '';
+
+              const displayDate = res[i].completedDate
+                ? res[i].completedDate
+                : res[i].createdDate;
+              const progressDate: string =
+                this.datePipe.transform(displayDate, 'medium') || '';
+
+              let byUser = '';
+              const actions: Actions[] = [];
+              let isWarningState: boolean = false;
+
+              for (const taskAttribute of res[i].requestTaskAttributes) {
+                if (res[i].status !== 'pending') {
+                  byUser = `By ${res[i].username}`;
+
+                  console.warn('THE taskAttribute:', taskAttribute);
+                  if (
+                    taskAttribute.name.includes('approved') &&
+                    taskAttribute.value === 'false'
+                  ) {
+                    // Means it's approval (review) step and it's rejected.
+                    isWarningState = true;
+                  }
+                }
+
+                if (
+                  taskAttribute.name === 'evidence_id' ||
+                  taskAttribute.name === 'justification_id' ||
+                  taskAttribute.name === 'remark_id' ||
+                  taskAttribute.name === 'attachment_id'
+                ) {
+                  attachmentsIDs.push(taskAttribute.value);
+                } else if (
+                  taskAttribute.name === 'notes' ||
+                  taskAttribute.name === 'reason_of_rejection'
+                ) {
+                  notes = taskAttribute.value;
+                }
+              }
+
+              for (const attachmentID of attachmentsIDs) {
+                this.milestonesService
+                  .getAttachment(+attachmentID)
+                  .subscribe((res) => {
+                    attachments.push(res);
+                  });
+              }
+
+              if (res[i].status === 'pending' && res[i].params?.length > 0) {
+                //those two conditions are for a user to take action, otherwise it's not his task to handle.
+                if (
+                  res[i].taskName === 'Review Evidence' ||
+                  res[i].taskName === 'Review Justification' ||
+                  res[i].taskName === 'Review Progress'
+                ) {
+                  if (res[i].taskName === 'Review Evidence') {
+                    actions.push(Actions.reviewEvidence);
+                    actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
+                  }
+                  if (res[i].taskName === 'Review Justification') {
+                    actions.push(Actions.reviewJustification);
+                    actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
+                  }
+                  if (res[i].taskName === 'Review Progress') {
+                    actions.push(Actions.reviewOnTrack);
+                    actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+                  }
+                } else if (
+                  res[i].taskName === Actions.addEvidence.uniqueTitle ||
+                  res[i].taskName === Actions.addJustification.uniqueTitle ||
+                  res[i].taskName === Actions.addOnTrack.uniqueTitle
+                ) {
+                  if (res[i].taskName === Actions.addEvidence.uniqueTitle) {
+                    actions.push(Actions.addEvidence);
+                  }
+                  if (
+                    res[i].taskName === Actions.addJustification.uniqueTitle
+                  ) {
+                    actions.push(Actions.addJustification);
+                  }
+                  if (res[i].taskName === Actions.addOnTrack.uniqueTitle) {
+                    actions.push(Actions.addOnTrack);
+                    if (foundAddRemarksOnce !== 'twice') {
+                      actions.push(Actions.noNeed);
+                    }
+                  }
+                } else if (res[i].taskName === 'Approve Progress') {
+                  actions.push(Actions.approveProgress);
+                  actions.push(Actions.returnProgress);
+                }
+              }
+
+              if (
+                res[i].taskName === 'Update DT Record' &&
+                res[i].params?.length === 0
+              ) {
+                // This is to check if params is received but empty, that must indicate that the user can Update DT Record
+                actions.push(Actions.updateDTRecord);
+              }
+
+              const step: Step = {
+                caption:
+                  res[i].taskName === 'Review Remarks'
+                    ? 'Review Progress'
+                    : res[i].taskName,
+                state:
+                  isWarningState === true
+                    ? 'warning'
+                    : res[i].status === 'completed'
+                    ? 'done'
+                    : 'undone',
+                notes: notes,
+                attachments: attachments,
+                extraInfo: [`${progressDate} ${byUser}`],
+                actions: actions,
+                stepObject: res[i],
+              };
+              this.steps.push(step);
+            }
+          });
+      }
+    }, 5000);
+  }
+
+  getMilestoneDetails() {
+    this.milestonesService
+      .getMilestone(this.milestoneId)
+      .subscribe((res: any) => {
+        this.milestonesService.getRemindersData();
+        this.milestoneDetails = res;
+        this.bannerDataService.updateData({
+          title: this.milestoneDetails.milestoneName || '',
+          text: '',
+        });
+
+        if (
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO &&
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO
+            .overallProgress
+        ) {
+          this.showMilestoneProgressWorkflow();
+        } else {
+          this.steps = [];
+          this.askUserToInitiateUpdateProgress();
+        }
+        this.getHistory(res);
+      });
+  }
+
+  getHistory(milestone: MilestoneDetails) {
+    this.milestonesService
+      .getMilestonesHistory(milestone?.id)
+      .subscribe((res) => {
+        if (res) {
+          this.removeParentArrayWithPendingTask(res);
+        }
+      });
+  }
+  removeParentArrayWithPendingTask(res: any): void {
+    this.filteredDataHistory = res.filter((requestObj: any) =>
+      requestObj.requestTasksHistory.every(
+        (task: any) => task.status !== 'pending'
+      )
+    );
+  }
+  getHistoryTasks(request: any) {
+    this.historySteps = [];
+    const item = request?.requestTasksHistory;
+    this.milestonesService
+      .getMilestoneProgress(request?.request?.requestParams[1].value)
+      .subscribe((res: any) => {
+        this.historyItemInitialStep = {
+          status: res?.status,
+          overallProgress: res?.overallProgress,
+          creatorName: res?.updatedBy,
+          date: res?.progressUpdateDate,
+          deliverable: res?.deliverable,
+        };
+        const initialStep: Step = {
+          caption: `Milestone progress updated (${res?.status})`,
+          state: 'done',
+          extraInfo: [
+            `${
+              this.datePipe.transform(res?.progressUpdateDate, 'medium') || ''
+            } By ${res?.updatedBy}`,
+          ],
+          additionalTemp: true,
+          captionTemp: true,
+        };
+        this.historySteps.unshift(initialStep);
+      });
+
+    for (let i = 0; i <= item.length - 1; i++) {
+      const attachmentsIDs: string[] = [];
+      const attachments: MilestoneAttachment[] = [];
+      let notes: string = '';
+
+      const displayDate = item[i].completedDate
+        ? item[i].completedDate
+        : item[i].createdDate;
+      const progressDate: string =
+        this.datePipe.transform(displayDate, 'medium') || '';
+
+      let byUser = '';
+      const actions: Actions[] = [];
+
+      let isWarningState: boolean = false;
+
+      for (const taskAttribute of item[i].requestTaskAttributes) {
+        console.warn('THE taskAttribute:', taskAttribute);
+        if (
+          taskAttribute.name.includes('approved') &&
+          taskAttribute.value === 'false'
+        ) {
+          // Means it's approval (review) step and it's rejected.
+          isWarningState = true;
+        }
+
+        if (
+          taskAttribute.name === 'evidence_id' ||
+          taskAttribute.name === 'justification_id' ||
+          taskAttribute.name === 'remark_id' ||
+          taskAttribute.name === 'attachment_id'
+        ) {
+          attachmentsIDs.push(taskAttribute.value);
+        } else if (
+          taskAttribute.name === 'notes' ||
+          taskAttribute.name === 'reason_of_rejection'
+        ) {
+          notes = taskAttribute.value;
+        }
+      }
+      if (item[i].status !== 'pending') {
+        byUser = `By ${item[i].username}`;
+      }
+      for (const attachmentID of attachmentsIDs) {
+        this.milestonesService.getAttachment(+attachmentID).subscribe((res) => {
+          attachments.push(res);
         });
       }
+      const step: Step = {
+        caption:
+          item[i].taskName === 'Review Remarks'
+            ? 'Review Progress'
+            : item[i].taskName,
+        state:
+          isWarningState === true
+            ? 'warning'
+            : item[i].status === 'completed'
+            ? 'done'
+            : 'undone',
+        notes: notes,
+        attachments: attachments,
+        extraInfo: [`${progressDate} ${byUser}`],
+        actions: actions,
+        stepObject: item[i],
+      };
+
+      this.historySteps.push(step);
+    }
+  }
+  isPanelOpen(panelNumber: number): boolean {
+    return this.openPanel === panelNumber;
+  }
+
+  panelOpened(panelNumber: number): void {
+    this.openPanel = panelNumber;
+  }
+  doStepAction(action: { actionObj: Actions | string; item: any }) {
+    if (
+      typeof action.actionObj !== 'string' &&
+      'uniqueTitle' in action.actionObj
+    ) {
+      if (
+        action.actionObj.uniqueTitle ===
+        Actions.initiateUpdateProgress.uniqueTitle
+      ) {
+        this.openProgressUpdateModal(this.milestoneDetails.id || 0);
+      }
+      if (action.actionObj.uniqueTitle === Actions.updateDTRecord.uniqueTitle) {
+        this.isLoadingSteps = true;
+
+        this.milestonesService
+          .updateMilestoneRecord(
+            this.milestoneDetails.currentMilestoneProgressUpdateDTO
+              ?.workflowId || '',
+            action.item.requestTaskId
+          )
+          .subscribe(() => {
+            this.getMilestoneDetails();
+          });
+      }
+
+      if (
+        action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.returnProgress.uniqueTitle
+      ) {
+        const isApprove =
+          action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+            ? true
+            : false;
+        const popupMsg =
+          action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+            ? 'approve progess'
+            : 'return progress';
+        this.makeSureToApprove(
+          this.milestoneDetails.milestoneName || 'unnamed',
+          popupMsg
+        ).subscribe((res) => {
+          if (!res) {
+            return;
+          }
+          this.isLoadingSteps = true;
+          this.milestonesService
+            .updateMilestoneRecord(
+              this.milestoneDetails.currentMilestoneProgressUpdateDTO
+                ?.workflowId || '',
+              action.item.requestTaskId,
+              true,
+              isApprove
+            )
+            .subscribe(() => {
+              this.getMilestoneDetails();
+            });
+        });
+      }
+
+      if (
+        action.actionObj.uniqueTitle === Actions.reviewEvidence.uniqueTitle ||
+        action.actionObj.uniqueTitle ===
+          Actions.reviewJustification.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.reviewOnTrack.uniqueTitle
+      ) {
+        const params: {
+          requestParams: { name: string; value: number | string | boolean }[];
+        } = {
+          requestParams: [],
+        };
+
+        this.makeSureToApprove(
+          this.milestoneDetails.milestoneName || 'unnamed'
+        ).subscribe((res) => {
+          if (!res) {
+            return;
+          }
+
+          if (action.item.taskName === 'Review Evidence') {
+            params.requestParams.push({
+              name: 'is_evidence_approved',
+              value: true,
+            });
+          } else if (action.item.taskName === 'Review Justification') {
+            params.requestParams.push({
+              name: 'is_justification_approved',
+              value: true,
+            });
+          } else if (action.item.taskName === 'Review Progress') {
+            params.requestParams.push({
+              name: 'is_remark_approved',
+              value: true,
+            });
+          }
+
+          this.isLoadingSteps = true;
+
+          this.milestonesService
+            .completePendingTask(
+              this.milestoneDetails.currentMilestoneProgressUpdateDTO
+                ?.workflowId || '',
+              action.item.requestTaskId,
+              params
+            )
+            .subscribe(() => {
+              this.getMilestoneDetails();
+            });
+        });
+      }
+
+      if (
+        action.actionObj.uniqueTitle === Actions.returnEvidence.uniqueTitle ||
+        action.actionObj.uniqueTitle ===
+          Actions.returnJustification.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.returnOnTrack.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.addEvidence.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
+      ) {
+        this.openMilestoneWorkflowActionsModal(
+          action.actionObj.uniqueTitle,
+          action.item
+        );
+      }
+
+      if (action.actionObj.uniqueTitle === Actions.noNeed.uniqueTitle) {
+        const params: {
+          requestParams: { name: string; value: number | string | boolean }[];
+        } = {
+          requestParams: [],
+        };
+
+        this.isLoadingSteps = true;
+
+        this.milestonesService
+          .completePendingTask(
+            this.milestoneDetails.currentMilestoneProgressUpdateDTO
+              ?.workflowId || '',
+            action.item.requestTaskId,
+            params
+          )
+          .subscribe(() => {
+            this.getMilestoneDetails();
+          });
+      }
+    } else if (
+      typeof action.actionObj === 'string' &&
+      action.actionObj === 'download'
+    ) {
+      this.downloadFile(action.item.id, action.item.label);
     }
   }
 
-  onDeleteFile(id: number) {
-    this.milestonesService.deleteFile(id).subscribe((res: any) => {
-      this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
-      this.infoForm.get('check_case_attachment')?.setValue(this.uploadedFile);
-    });
-  }
-
-  downloadFile(id: number, name: string) {
-    this.milestonesService.getFile(id).subscribe((buffer) => {
-      const data: Blob = new Blob([buffer], {
-        type: 'text/csv;charset=utf-8',
-      });
+  downloadFile(id: number, name: string = 'untitled.txt') {
+    this.milestonesService.downloadAttachment(id).subscribe((buffer) => {
+      const data: Blob = new Blob([buffer]);
       // you may improve this code to customize the name
       // of the export based on date or some other factors
       saveAs(data, name);
     });
   }
-  /** function to call fetching all tasks again and close any Modal if found **/
-  refreshTasks(taskId: number, data: any) {
-    this.milestonesService.updateCaseTask(+this.milestoneId, taskId, data).subscribe(
-      (res: any) => {
-        this.caseStatus = res.caseStatus;
-        this.dialogService.close();
-        this.getMilestoneDetails(+this.milestoneId);
+
+  openMilestoneWorkflowActionsModal(type: string, taskItem: RequestTask) {
+    const dialogRef = this.matDialog.open(
+      UpdateMilestoneProgressDialogComponent,
+      {
+        width: '800px',
+        data: {
+          milestoneName: this.milestoneDetails.milestoneName,
+          type,
+          milestoneId: this.milestoneId,
+        },
       }
     );
-  }
 
-  /** Actions with check case info (Request More Info) status **/
-  onCheck(taskId: number) {
-    this.taskId = taskId;
-    this.dialogService.open('request-Info-Modal');
-  }
+    dialogRef.afterClosed().subscribe((res) => {
+      if (!res) {
+        return;
+      }
 
-  sendInfo() {
-    const idsArr = [];
-    for (const obj of this.uploadedFile) {
-      idsArr.push(obj.id);
-    }
+      const params: {
+        requestParams: { name: string; value: number | string | boolean }[];
+      } = {
+        requestParams: [],
+      };
 
-    const data = {
-      form: {
-        info_needed: 1,
-        form_assignee: this.infoForm.get('selectedUser')?.value.email
-          ? this.infoForm.get('selectedUser')?.value.email
-          : this.infoForm.get('selectedUser')?.value.name,
-        message: this.infoForm.get('message')?.value,
-        // check_case_attachment: this.infoForm.get('check_case_attachment')?.value
-        check_case_attachment: idsArr,
-      },
-    };
-
-    this.refreshTasks(this.taskId, data);
-
-    this.closeForm.reset();
-    this.infoForm.reset();
-    this.uploadedFile = [];
-
-    this.rejectForm.reset();
-    this.replyForm.reset();
-    this.firstEscalateForm.reset();
-    this.secondEscalateForm.reset();
-  }
-
-  cancelCheck(taskId: number) {
-    const data = { form: { info_needed: 0 } };
-    // this.milestonesService
-    //   .updateCaseTask(+this.milestoneId, data)
-    //   .subscribe((res: any) => {
-    //     this.getMilestoneDetails(+this.milestoneId);
-    //   });
-
-    this.refreshTasks(taskId, data);
-  }
-
-  /** Actions with Fill More Info status  **/
-  // getAssigneeValue(value: string) {
-  //   if (value === '2') {
-  //     this.users = [{ name: 'Demo', value: 'demo' }];
-  //   }
-  // }
-  confirmReply() {
-    const idsArr = [];
-    for (const obj of this.uploadedFile) {
-      idsArr.push(obj.id);
-    }
-
-    const data = {
-      form: {
-        message: this.replyForm.get('message')?.value,
-        reply_attachments: idsArr,
-      },
-    };
-
-    this.closeForm.reset();
-    this.infoForm.reset();
-    this.uploadedFile = [];
-
-    this.rejectForm.reset();
-    this.replyForm.reset();
-    this.firstEscalateForm.reset();
-    this.secondEscalateForm.reset();
-    this.refreshTasks(this.taskId, data);
-  }
-  replyfeed(taskId: number) {
-    this.taskId = taskId;
-    this.dialogService.open('replyFeeback-Modal');
-  }
-
-  /** Actions with Approve Casse status  **/
-
-  confirm(taskId: number) {
-    this.taskId = taskId;
-    this.dialogService.open('approve-Modal');
-  }
-
-  approvedTask() {
-    const data = { form: { case_approved: 1 } };
-    this.refreshTasks(this.taskId, data);
-  }
-  /** Actions with Reject status **/
-  reject(taskId: number) {
-    this.taskId = taskId;
-    this.dialogService.open('reject-Modal');
-  }
-  confirmReject() {
-    const data = {
-      form: {
-        case_approved: 0,
-        reject_note: this.rejectForm.get('reject_note')?.value,
-      },
-    };
-    this.refreshTasks(this.taskId, data);
-  }
-  /** Actions with Within Response Casse status  **/
-
-  withinResponse(taskId: number) {
-    const data = { form: {} };
-    this.refreshTasks(taskId, data);
-  }
-  /** Actions with Should First Escalate  Casse status  **/
-
-  shouldFirstEscalate(taskId: number) {
-    this.taskId = taskId;
-    this.dialogService.open('first-escalate-Modal');
-  }
-  notFirstEscalate(taskId: number) {
-    const data = { form: { should_first_escalate: 0 } };
-    this.refreshTasks(taskId, data);
-  }
-  confirmFirstEscalate() {
-    const data = {
-      form: {
-        should_first_escalate: 1,
-        first_escalate_content: this.firstEscalateForm.get(
-          'first_escalate_content'
-        )?.value,
-      },
-    };
-    this.refreshTasks(this.taskId, data);
-  }
-  /** Actions with Should Second Escalate  Casse status  **/
-
-  shouldSecondEscalate(taskId: number) {
-    this.taskId = taskId;
-    this.dialogService.open('second-escalate-Modal');
-  }
-  notSecondEscalate(taskId: number) {
-    const data = { form: { should_second_escalate: 0 } };
-    this.refreshTasks(taskId, data);
-  }
-  confirmSecondEscalate() {
-    const data = {
-      form: {
-        should_second_escalate: 1,
-        second_escalate_content: this.secondEscalateForm.get(
-          'second_escalate_content'
-        )?.value,
-      },
-    };
-    this.refreshTasks(this.taskId, data);
-  }
-  /** Actions with Send to Close  Casse status  **/
-
-  sendToClose(taskId: number) {
-    this.taskId = taskId;
-    this.dialogService.open('close-Modal');
-  }
-
-  confirmClose() {
-    const data = { form: this.closeForm.value };
-    this.closeForm.reset();
-    this.infoForm.reset();
-
-    this.rejectForm.reset();
-    this.replyForm.reset();
-    this.firstEscalateForm.reset();
-    this.secondEscalateForm.reset();
-    this.refreshTasks(this.taskId, data);
-  }
-
-  subscribeToLanguage() {
-    this.langSub = this.languageManagerService
-      .getSavedLanguageAsStream()
-      .subscribe((res) => {
-        const outputTitle =
-          this.languageManagerService.getSavedLanguage() === 'ar'
-            ? `تفاصيل حالة رقم : ${this.caseSerial} `
-            : `D2D Case ( ID: ${this.caseSerial} ) Details`;
-        this.bannerDataService.updateData({
-          title: outputTitle,
-          text: '',
+      if (type === Actions.addEvidence.uniqueTitle) {
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'evidence_id',
+            value: res.attachments,
+          });
+        }
+        params.requestParams.push({ name: 'notes', value: res.note });
+      } else if (type === Actions.addJustification.uniqueTitle) {
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'justification_id',
+            value: res.attachments,
+          });
+        }
+        params.requestParams.push({ name: 'notes', value: res.note });
+      } else if (type === Actions.addOnTrack.uniqueTitle) {
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'remark_id',
+            value: res.attachments,
+          });
+        }
+        params.requestParams.push({ name: 'notes', value: res.note });
+      } else if (type === Actions.returnEvidence.uniqueTitle) {
+        params.requestParams.push({
+          name: 'is_evidence_approved',
+          value: false,
         });
-      });
-  }
 
-  checkAssigne(item: any) {
-    if (item?.isAssigneeTeam) {
-      if (item?.assignedUser === this.authService.getLoggedInUser().teamName) {
-        return true;
+        params.requestParams.push({
+          name: 'reason_of_rejection',
+          value: res.note,
+        });
+
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'attachment_id',
+            value: res.attachments,
+          });
+        }
+      } else if (type === Actions.returnJustification.uniqueTitle) {
+        params.requestParams.push({
+          name: 'is_justification_approved',
+          value: false,
+        });
+
+        params.requestParams.push({
+          name: 'reason_of_rejection',
+          value: res.note,
+        });
+
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'attachment_id',
+            value: res.attachments,
+          });
+        }
+      } else if (type === Actions.returnOnTrack.uniqueTitle) {
+        params.requestParams.push({
+          name: 'is_remark_approved',
+          value: false,
+        });
+
+        params.requestParams.push({
+          name: 'reason_of_rejection',
+          value: res.note,
+        });
+
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'attachment_id',
+            value: res.attachments,
+          });
+        }
       }
-    } else {
-      if (item?.assignedUser === this.authService.getLoggedInUser().email) {
-        return true;
-      }
-    }
-    return false;
-  }
 
-  handleTeam(milestoneDetails?: Case, team?: any) {
-    if (milestoneDetails && team) {
-      this.selectedTeam = team.filter(
-        (t: any) => t.name === this.milestoneDetails?.creatorTeamName
-      )[0];
-    }
-  }
-
-  handleUser(milestoneDetails?: Case, users?: any) {
-    if (milestoneDetails && users) {
-      this.selectedUser = users.filter(
-        (u: any) => u.email === this.milestoneDetails?.creatorEmail
-      )[0];
-    }
-  }
-
-  getUserPrivilege(user: User) {
-    let x = '';
-    _.forEach(user.userGroups, (group: any) => {
-      if (group.roles[0].system.name === 'FRAUD_ManagementUsers') {
-        x = group.roles[0].roleName;
-      }
+      this.isLoadingSteps = true;
+      this.milestonesService
+        .completePendingTask(
+          this.milestoneDetails.currentMilestoneProgressUpdateDTO?.workflowId ||
+            '',
+          taskItem.requestTaskId,
+          params
+        )
+        .subscribe(() => {
+          this.getMilestoneDetails();
+        });
     });
-    return x;
   }
-  ngOnDestroy(): void {
-    this.langSub?.unsubscribe();
+
+  openProgressUpdateModal(milestoneId: Milestone['id']) {
+    const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
+      width: '800px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (!res) {
+        return;
+      }
+      this.isLoadingSteps = true;
+
+      this.milestonesService
+        .updateMilestoneProgress({
+          milestoneId: milestoneId,
+          deliverable: res.deliverable,
+          overallProgress: res.overallProgress,
+        })
+        .subscribe(() => {
+          setTimeout(() => {
+            this.getMilestoneDetails();
+          }, 7000);
+        });
+    });
+  }
+
+  makeSureToApprove(name: string, reasonMsg: string = 'approve Milestone') {
+    {
+      const dialogRef = this.matDialog.open(MessageDialogComponent, {
+        width: '800px',
+        data: {
+          msg: `You're about to ${reasonMsg} "${name}" Kindly note you can't roll back this action. Are you sure?`,
+        },
+        disableClose: true,
+      });
+      return dialogRef.afterClosed();
+    }
   }
 }

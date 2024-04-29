@@ -1,20 +1,34 @@
-button{
+.paginator-holder {
+  background-color: white;
+  background-color: white;
+  padding: 50px 65px;
+  min-height: 130px;
+}
+button {
   border: none;
   outline: none;
   background-color: white;
 }
 
-.paginator{
+.paginator {
   display: flex;
+  float: right;
+  align-items: baseline;
 }
 
-.pages-holder{
+.aiding-text {
+  padding: 0.8rem;
+  font-size: 14px;
+}
+
+.pages-holder {
   display: flex;
   border: 1px solid gray;
-} 
+}
 
-.previous-btn, .next-btn{
-  button{
+.previous-btn,
+.next-btn {
+  button {
     font-weight: 600;
     color: var(--stc-color);
     border: 1px solid gray;
@@ -23,24 +37,24 @@ button{
   }
 }
 
-.previous-btn{
-  button{
+.previous-btn {
+  button {
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
     border-right: none;
   }
 }
 
-.next-btn{
-  button{
+.next-btn {
+  button {
     border-top-left-radius: 0;
     border-bottom-left-radius: 0;
     border-left: none;
   }
 }
 
-.pages-holder{
-  button{
+.pages-holder {
+  button {
     padding: 11px 20px;
   }
 
@@ -49,13 +63,41 @@ button{
   }
 }
 
-.active{
-  background-color: var(--stc-color);
-  color: white;
+.disabled {
+  background-color: #ebebeb;
+  color: gray !important;
+  pointer-events: none;
 }
 
-.disabled{
-  background-color: #ebebeb;
-  color: gray!important;
-  pointer-events:none;
+.more-btn {
+  position: relative;
+
+  .nums-holder {
+    position: absolute;
+    bottom: 45px;
+    left: 0;
+    border: 1px solid black;
+    max-height: 350px;
+    overflow-y: auto;
+    background-color: white;
+    display: flex;
+    flex-direction: column-reverse; /* Stack children on top of each other */
+
+  }
+}
+
+.num {
+  padding: 1.2rem;
+  background-color: white;
+  color: black;
+
+  &:hover {
+    background-color: var(--stc-color);
+    color: white;
+  }
+}
+
+.active {
+  background-color: var(--stc-color);
+  color: white;
 }

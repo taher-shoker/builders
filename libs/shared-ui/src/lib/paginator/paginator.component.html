@@ -1,5 +1,9 @@
 <div class="paginator-holder">
+
   <div class="paginator">
+    <div class="aiding-text">
+      current page : {{activePage}}
+    </div>
     <div class="previous-btn">
       <button
         [ngClass]="{ disabled: onFirstPage }"
@@ -10,14 +14,46 @@
     </div>
 
     <div class="pages-holder">
-      @for(pageNum of [].constructor(pagesCount); let i = $index; track
-      pageNum){
+      @if(!pagesLimitExceeded){ @for(pageNum of [].constructor(pagesCount); let
+      i = $index; track pageNum){
       <button
         type="button"
         [ngClass]="{ active: activePage === i + 1 }"
         (click)="goPageByNumber(i + 1)"
       >
         {{ i + 1 }}
+      </button>
+      } }@else { @for(pageNum of [].constructor(pagesCountLimit); let i =
+      $index; track pageNum){
+      <button
+        type="button"
+        [ngClass]="{ active: activePage === i + 1 }"
+        (click)="goPageByNumber(i + 1)"
+      >
+        {{ i + 1 }}
+      </button>
+      }
+
+      <button type="button" class="more-btn" (click)="toggleRemainingPages()"
+      [ngClass]="{ active: activePage > pagesCountLimit && activePage < pagesCount}"
+      >
+        ... @if (remainingPagesShown) {
+        <div class="nums-holder">
+          @for (num of [].constructor(pagesCount - pagesCountLimit - 1); let i = $index;track num) {
+          <div class="num" 
+          [ngClass]="{ active: activePage === i + 1 + pagesCountLimit}"
+          (click)="goPageByNumber(i + 1 + pagesCountLimit)">{{ i + 1 + pagesCountLimit }}</div>
+          }
+        </div>
+        }
+      </button>
+
+      <button
+        type="button"
+        [ngClass]="{ active: activePage === pagesCount }"
+        (click)="goPageByNumber(pagesCount)"
+      >
+        {{ pagesCount }}
       </button>
       }
     </div>

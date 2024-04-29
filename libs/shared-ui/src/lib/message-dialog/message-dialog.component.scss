@@ -1,13 +1,18 @@
-
-.dialog{
-  padding: 20px;
-
+.dialog {
+  padding: 50px 50px 20px 50px;
 }
 
-.dialog-close{
+.dialog-close {
   cursor: pointer;
 }
 
-button{
+button {
   margin: 0 5px;
+  width: 245px;
+}
+
+.dialog-actions {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
 }

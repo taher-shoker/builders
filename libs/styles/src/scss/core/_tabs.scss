@@ -1,25 +1,21 @@
-.mat-mdc-tab-header {
-  padding-inline-start: 50px;
-}
 .mat-mdc-tab {
-  background-color: rgba($color: $shadowStc, $alpha: 0.5) !important;
-  //margin-inline: 16px;
-  //border-radius: 8px;
-  &:first-of-type {
-    border-radius: 8px 0 0 8px;
-  }
-  &:last-of-type {
-    border-radius: 0 8px 8px 0;
-  }
+  min-height: 60px !important;
   .mdc-tab__text-label {
-    color: #fff !important;
+    font-weight: 700;
+    font-size: 20px;
+    color: var(--stc-color) !important;
   }
   &.mdc-tab--active {
-    background-color: $stcColor !important;
+    background-color: rgba($color: $shadowStc, $alpha: 0.1) !important;
     border: unset;
   }
 }
 
-.mdc-tab-indicator {
-  display: none !important;
+.mat-mdc-tab-header {
+  padding-inline-start: 50px;
+}
+
+.mat-mdc-tab .mdc-tab-indicator__content--underline {
+  border: 3px solid !important;
+  border-color: var(--stc-pink-color) !important;
 }

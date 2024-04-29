@@ -1,23 +1,31 @@
 <div class="pending-tasks">
   <p class="main-title">
-    <i [class]="iconClass || 'far fa-clock'"></i> {{caption}}
+    <i [class]="iconClass || 'far fa-clock'"></i> {{ caption }}
   </p>
   <ul class="tasks">
     <li class="mt-3" *ngFor="let item of items">
-      <div class="task" (click)="clickItem(item)">
+      <div class="task" (click)="clickItem(item.externalSystemId)">
         <div class="task-header">
           <div class="row">
-            <div class="col left-col">
-              {{ 'case_id' | translate }}: #{{ item.caseSerialNumber }}
+            <div class="col-6 left-col">
+              <!-- Milestone ID: <strong>#{{ item.externalSystemId }}</strong> -->
+              <div class="text-wrapper">
+                <div class="left-text large-text">
+                  {{ item.requestParams.team }} -
+                  {{ item.requestParams.milestone_name || '' }}
+                </div>
+              </div>
             </div>
             <div class="col right-col">
-              {{ item.caseTasksDto.createdDate | date : 'medium' }}
+              {{ item.createdDate | date : 'medium' }}
             </div>
           </div>
         </div>
         <div class="task-desc-holder">
           <p class="task-desc">
-            {{ item.caseTasksDto.taskName + ' Desc' | translate }}
+            "Milestone's current pending action is :
+            <strong>{{ item.taskName }}</strong
+            >"
           </p>
         </div>
       </div>

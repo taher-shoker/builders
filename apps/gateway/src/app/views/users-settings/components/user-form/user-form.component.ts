@@ -25,6 +25,7 @@ import {
   UserTeam,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
+import { HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'stc-apps-user-form',
@@ -73,6 +74,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       if (this.data) {
+        console.log(this.data);
         this.restFormWithValue(this.data);
       }
     }
@@ -94,18 +96,14 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
   onSubmit() {
     if (this.form.valid) {
+      console.log(this.form.value);
       let dataForm;
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         dataForm = {
           userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-          teams: this.form.get('teamDto')?.value.id
-            ? [
-                {
-                  id: this.form.get('teamDto')?.value.id,
-                },
-              ]
-            : null,
-
+          teams: this.form.get('teamDto')?.value.map((e: any) => {
+            return { id: e };
+          }),
           email: this.form.get('email')?.value,
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,
@@ -142,13 +140,22 @@ export class UserFormComponent implements OnInit, OnChanges {
             handleError
           );
       } else if (this.addGroups) {
+        let queryParams = new HttpParams();
+
+        if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+          queryParams = queryParams.set(
+            'teamId',
+            this.form.get('teamDto')?.value
+          );
+        }
         this.userService
           .addUserGroup(
             this.userId,
             this.userService.getCurrentSystem() === 'DI_Milestones'
               ? this.form.get('userGroups')?.value.id
               : this.form.get('teamDto')?.value.id,
-            {}
+            {},
+            queryParams
           )
           .subscribe(
             () => onSuccess('User Group is added successfully'),
@@ -175,7 +182,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.selectedPrivilege = this.privilages.filter(
-          (p) => p.id === this.data?.userGroups[0]?.id
+          (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
       } else {
         this.selectedPrivilege = this.privilages.filter(
@@ -184,7 +191,13 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
     }
   }
-
+  checkSystem(groups: UserGroup[]) {
+    return groups.find((group: UserGroup) => {
+      return group.roles.some((role: any) => {
+        return role.system.name === this.userService.getCurrentSystem();
+      });
+    });
+  }
   getTeams(userGroup: UserGroup) {
     this.teams =
       this.userService.getCurrentSystem() === 'DI_Milestones'
@@ -195,10 +208,8 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         if (this.data?.teams && this.data.teams.length > 0) {
-          const userTeam = this.data?.teams[0].id;
-          this.selectedTeam = this.teams.filter(
-            (p: any) => p.id === userTeam
-          )[0];
+          this.selectedGroup = this.data.teams.map((t: any) => t.id);
+          // this.selectedTeam = this.data?.teams;
         } else if (this.data.userGroups[0].groupName === 'DT_Director') {
           this.hideDropdown = true;
           this.form.get('teamDto')?.setValidators(null);
@@ -218,7 +229,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   handleTeam(value: Role) {
     if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-      if (value.id === 29) {
+      if (value.groupName === 'DT_Director') {
         this.hideDropdown = true;
         this.form.get('teamDto')?.setValidators(null);
         this.form.get('teamDto')?.updateValueAndValidity();
