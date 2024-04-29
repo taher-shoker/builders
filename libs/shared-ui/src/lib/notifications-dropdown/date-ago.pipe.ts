@@ -8,7 +8,7 @@ export class DateAgoPipe implements PipeTransform {
   transform(value: any, args?: any): any {
     if (value) {
       const dateValue = new Date(value);
-      dateValue.setHours(dateValue.getHours() + 7); // Adding 6 hours
+      dateValue.setHours(dateValue.getHours() + 6); // Adding 6 hours
       const seconds = Math.floor((+new Date() - +dateValue) / 1000);
       if (seconds < 29)
         // less than 30 seconds ago will show as 'Just now'
