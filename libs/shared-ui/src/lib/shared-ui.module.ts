@@ -44,10 +44,16 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
 import { CounterCardComponent } from './counter-card/counter-card.component';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SortableTableDirective } from './sorter/sorter.directive';
+import { ActionsStepperComponent } from './actions-stepper/actions-stepper.component';
+import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
+import { FilterArrayPipe } from './filter-array/filter-array.pipe';
+import { DisplayCaptionPipe } from './actions-stepper/action.pipe';
+import { NotificationsDropdownComponent } from './notifications-dropdown/notifications-dropdown.component';
+import { DateAgoPipe } from "./notifications-dropdown/date-ago.pipe";
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -77,37 +83,42 @@ const components = [
   ItemsListComponent,
   CustomTableComponent,
   PaginatorComponent,
-  SortableTableDirective
+  SortableTableDirective,
+  ActionsStepperComponent,
+  InputFullWidthComponent,
+  FilterArrayPipe,
+  DisplayCaptionPipe,
+  NotificationsDropdownComponent,
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule,
-    // TranslateModule,
-    LngSelectorModule,
-    ModeToggleModule,
-    FormsModule,
-    ReactiveFormsModule,
-    MatSelectModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatCheckboxModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatDatepickerModule,
-    MatInputModule,
-    MomentDateModule,
-    MatMomentDateModule,
-    MatNativeDateModule,
-    MatExpansionModule,
-    TranslateModule,
-    MatProgressSpinnerModule,
-    MatMenuModule
-  ],
-  declarations: [...components],
-  exports: [...components, ...modules],
-
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+    declarations: [...components],
+    exports: [...components, ...modules],
+    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+    imports: [
+        CommonModule,
+        RouterModule,
+        // TranslateModule,
+        LngSelectorModule,
+        ModeToggleModule,
+        FormsModule,
+        ReactiveFormsModule,
+        MatSelectModule,
+        MatPaginatorModule,
+        MatTableModule,
+        MatCheckboxModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        MatInputModule,
+        MomentDateModule,
+        MatMomentDateModule,
+        MatNativeDateModule,
+        MatExpansionModule,
+        TranslateModule,
+        MatProgressSpinnerModule,
+        MatMenuModule,
+        DateAgoPipe
+    ]
 })
 export class SharedUiModule {}

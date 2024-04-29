@@ -1,0 +1,21 @@
+input {
+  background-color: #f3f5f5;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  padding: 3px 10px;
+}
+
+textarea{
+  width: 100%;
+  resize: none;
+  background-color: #f3f5f5;
+  border: none;
+  outline: none;
+  border-radius: 3px;
+  padding: 3px 10px;
+}
+
+.required-start{
+  color: red;
+}

@@ -1,14 +1,4 @@
-<div class="dialog">
-  <!-- <div class="dialog-header">
-    <div class="row">
-      <div class="col title">Add New Department</div>
-      <div class="col close-holder" (click)="closeDialog()">
-        <span class="dialog-close">X</span>
-      </div>
-    </div>
-  </div>
-  <hr class="liner-hr" /> -->
-
+<div class="dialog ">
   <div class="dialog-body">
     <div class="body-holder">
       <p>{{ message }}</p>
@@ -18,9 +8,8 @@
   <hr class="liner-hr" />
 
   <div class="dialog-actions">
-    <div class="d-flex">
-      <button type="button" class="btn" (click)="approve()">Yes</button>
-      <button type="button" class="btn" (click)="cancel()">Close</button>
-    </div>
+    <button type="button" class="btn gray-outline" (click)="cancel()">Close</button>
+    <button type="button" class="btn primary" (click)="approve()">Yes</button>
+
   </div>
 </div>

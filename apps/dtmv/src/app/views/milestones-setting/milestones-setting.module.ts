@@ -1,4 +1,5 @@
-import { CommonModule } from '@angular/common';
+/* eslint-disable @nx/enforce-module-boundaries */
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
@@ -20,6 +21,11 @@ import { MilestoneFormComponent } from './components/milestone-form/milestone-fo
 import { MilestonesComponent } from './components/milestones/milestones.component';
 import { MiltestonesSettingRoutingModule } from './milestones-setting-routing.module';
 import { MilestonesSettingComponent } from './milestones-setting.component';
+import { UpdateProgressDialogComponent } from './components/updateProgressDialog/updateProgressDialog.component';
+import { CustomTemplateDirective } from 'libs/shared-ui/src/lib/custom-table/custom-template.directive';
+import { UpdateMilestoneProgressDialogComponent } from './components/update-milestone-progress-dialog/update-milestone-progress-dialog.component';
+import { MatInputModule } from '@angular/material/input';
+import { NgxSpinnerModule } from "ngx-spinner";
 
 @NgModule({
   declarations: [
@@ -29,6 +35,9 @@ import { MilestonesSettingComponent } from './milestones-setting.component';
     AddMilestoneComponent,
     EditMilestineComponent,
     MilestoneDetailsComponent,
+    UpdateProgressDialogComponent,
+    CustomTemplateDirective,
+    UpdateMilestoneProgressDialogComponent
   ],
   imports: [
     CommonModule,
@@ -45,8 +54,10 @@ import { MilestonesSettingComponent } from './milestones-setting.component';
     MatProgressBarModule,
     MatSortModule,
     MatTabsModule,
+    MatInputModule,
+    NgxSpinnerModule
   ],
   exports: [],
-  providers: [],
+  providers: [DatePipe],
 })
 export class MilestonesSettingModule {}

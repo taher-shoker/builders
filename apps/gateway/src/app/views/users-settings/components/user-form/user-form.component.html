@@ -8,7 +8,7 @@
               [inputName]="'email'" formControlName="email"></stc-apps-input>
           </div>
           <div class="col-md-2 mt-1r">
-            <stc-apps-button *ngIf="!isEditing" [buttonIcon]="'fa-search'" [buttonText]="'Search On User'"
+            <stc-apps-button *ngIf="!isEditing" [buttonIcon]="'fa-search'" [buttonText]="'Search on user'"
               [buttonType]="'stc-color-outline'" (btnClick)="checkUserExist()"
               [buttonDisable]="form.get('email')?.value === ''"></stc-apps-button>
           </div>
@@ -52,7 +52,7 @@
 
           <div class="col-md-5" *ngIf="!hideDropdown">
             <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
-              [required]="true" [options]="teams" [selectId]="selectedTeam || null">
+              [required]="true" [options]="teams" [multi]="true" [selectId]="selectedGroup || null">
             </stc-apps-select-drop-down>
           </div>
         </div>
@@ -72,16 +72,23 @@
             </stc-apps-select-drop-down>
           </div>
         </div>
-        <div class="btn-form-action">
-          <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
-            (btnClick)="cancel()"></stc-apps-button>
-
-          <div class="mx-3"></div>
-          <stc-apps-button *ngIf="!isEditing && showInputs" [buttonText]="'Add User'" [buttonType]="'primary'"
-            (btnClick)="onSubmit()"></stc-apps-button>
-          <stc-apps-button *ngIf="isEditing" [buttonText]="'save'" [buttonType]="'primary'"
-            (btnClick)="onSubmit()"></stc-apps-button>
+        <div class="row mt-7 flex-row-reverse">
+          <div class="col-md-4 offset-md-8 ">
+            <div class="row">
+              <div class="col-md-6">
+                <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
+                  (btnClick)="cancel()"></stc-apps-button>
+              </div>
+              <div class="col-md-6">
+                <stc-apps-button *ngIf="!isEditing && showInputs" [buttonText]="'Add user'" [buttonType]="'primary'"
+                  (btnClick)="onSubmit()"></stc-apps-button>
+                <stc-apps-button *ngIf="isEditing" [buttonText]="'Save'" [buttonType]="'primary'"
+                  (btnClick)="onSubmit()"></stc-apps-button>
+              </div>
+            </div>
+          </div>
         </div>
+
       </div>
 
     </div>

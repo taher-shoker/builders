@@ -5,7 +5,7 @@
     <span class="input-group-text" id="basic-addon1" *ngIf="inputIcon"><i class="fas {{ inputIcon }}"></i></span>
     <input [type]="inputType" [id]="inputId" [name]="inputName" matInput
       [placeholder]="inputPlaceholder ? inputPlaceholder : ''" autocomplete="new-password" [formControl]="control"
-      [readonly]="disabled" />
+      [readonly]="disabled" (keydown)="onKeyDown($event)" />
     <!-- [autocomplete]="'off'" -->
     <mat-icon matSuffix *ngIf="inputId === 'password'" (click)="toggelPassword()"><i
         class="fas {{ showPassword  ? ' fa-eye' : '  fa-eye-slash' }}"></i></mat-icon>
@@ -19,10 +19,10 @@
       translate }}
     </mat-error>
     <mat-error *ngIf="control.hasError('max') ">
-      {{ 'Please enter number less than ' + control.getError('max').max | translate }}
+      {{ 'Please enter number less than or equal ' + control.getError('max').max | translate }}
     </mat-error>
     <mat-error *ngIf="control.hasError('min') ">
-      {{ 'Please enter number greater than ' + control.getError('min').min | translate }}
+      {{ 'Please enter number greater than or equal ' + control.getError('min').min | translate }}
     </mat-error>
     <mat-error *ngIf="control.hasError('pattern')">
       {{ 'Please enter only numbers ' }}

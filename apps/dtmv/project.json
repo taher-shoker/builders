@@ -27,6 +27,7 @@
         "styles": [
           "libs/styles/src/index.scss",
           "node_modules/ngx-toastr/toastr.css",
+          "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
           "apps/dtmv/src/styles.scss"
         ],
         "stylePreprocessorOptions": {
@@ -46,7 +47,7 @@
           "fileReplacements": [
             {
               "replace": "apps/dtmv/src/environments/environment.ts",
-              "with": "apps/dtmv/src/environments/environment.production.ts"
+              "with": "apps/dtmv/src/environments/environment.prod.ts"
             }
           ],
           "budgets": [
@@ -57,8 +58,8 @@
             },
             {
               "type": "anyComponentStyle",
-              "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "maximumWarning": "8kb",
+              "maximumError": "10kb"
             }
           ],
           "outputHashing": "all"

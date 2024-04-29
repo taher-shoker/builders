@@ -1,5 +1,13 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  OnChanges,
+  OnInit,
+  Output,
+  SimpleChanges,
+} from '@angular/core';
 
 export interface PaginationConfig {
   pageCount: number;
@@ -21,11 +29,14 @@ export class PaginatorComponent implements OnInit, OnChanges {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
 
-  @Input({ required: true }) pageRows!: number; // how many elements in one page should be.
-  @Input({ required: true }) elementsLength!: number; // how many elements in one page should be.
+  @Input({ required: true }) pageRows!: number;
+  @Input({ required: true }) elementsLength!: number;
   @Input() showTotal: boolean = false;
+  @Input() pagesCountLimit: number = 5;
 
   pagesCount!: number;
+  pagesLimitExceeded: boolean = false;
+  remainingPagesShown: boolean = false;
 
   activePage: number = 1;
   onLastPage: boolean = false;
@@ -41,12 +52,18 @@ export class PaginatorComponent implements OnInit, OnChanges {
     if (changes['elementsLength']) {
       this.elementsLength = changes['elementsLength'].currentValue;
       this.setPagesCount();
+      this.activePage = 1
       this.validate();
     }
   }
 
   setPagesCount() {
     this.pagesCount = Math.ceil(this.elementsLength / this.pageRows);
+    if (this.pagesCount > this.pagesCountLimit) {
+      this.pagesLimitExceeded = true;
+    }else{
+      this.pagesLimitExceeded = false;
+    }
   }
 
   goPageByNumber(num: number) {
@@ -88,5 +105,10 @@ export class PaginatorComponent implements OnInit, OnChanges {
       firstPage: this.onFirstPage,
       lastPage: this.onLastPage,
     });
+  }
+
+  protected toggleRemainingPages(){
+    this.remainingPagesShown = !this.remainingPagesShown;
+    console.log(this.remainingPagesShown)
   }
 }

@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../services/auth.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  MilestonesService,
+  Reminders,
+} from '../milestones-setting/milestones.service';
 
 @Component({
   selector: 'stc-apps-home',
@@ -12,10 +16,12 @@ export class HomeComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
     private authService: AuthService,
-    public router: Router
+    public milestonesService: MilestonesService,
+    public router: Router,
+    public route: ActivatedRoute
   ) {}
 
-  urlHome!: string;
+  urlHome = '/home';
   title = { title: 'home', text: '' };
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
@@ -28,17 +34,10 @@ export class HomeComponent implements OnInit {
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
     },
-    {
-      name: 'dashboard',
-      url: '/dashboard',
-      icon: 'fa-chart-line',
-      roles: ['APPROVERS'],
-      urlHome: '/home',
-    },
   ];
   ngOnInit() {
     this.authService.getUserData();
-
+    this.milestonesService.getRemindersData();
     this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       this.userName = res?.name || '';
@@ -58,6 +57,15 @@ export class HomeComponent implements OnInit {
     });
   }
 
+  clickRemider(item: any) {
+    this.detailsNavigate(item?.milestoneId);
+  }
+
+  detailsNavigate(id: string | number) {
+    this.router.navigate(['./home/milestone_details', id], {
+      relativeTo: this.route,
+    });
+  }
   backToHome() {
     this.router.navigate([this.urlHome]);
   }

@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../services/auth.guard';
-import { reportingGuard } from '../../services/guards/reporting.guard';
+import { buSpocGuard } from '../../services/guards/bu-spoc.guard';
 import { AddMilestoneComponent } from './components/add-milestone/add-milestone.component';
 import { EditMilestineComponent } from './components/edit-milestone/edit-milestone.component';
 import { MilestoneDetailsComponent } from './components/milestone-details/milestone-details.component';
 import { MilestonesComponent } from './components/milestones/milestones.component';
 import { MilestonesSettingComponent } from './milestones-setting.component';
+import { dtDirectorGuard } from '../../services/guards/dt-director.guard';
 
 const routes: Routes = [
   {
@@ -23,7 +24,7 @@ const routes: Routes = [
         path: 'add_milestone',
         component: AddMilestoneComponent,
         data: { breadcrumb: 'Add new Milestones' },
-        // canActivate: [AuthGuard, reportingGuard],
+        canActivate: [AuthGuard, buSpocGuard, dtDirectorGuard],
       },
       {
         path: 'edit_milestone/:id',
@@ -33,8 +34,8 @@ const routes: Routes = [
       {
         path: 'milestone_details/:id',
         component: MilestoneDetailsComponent,
-        canActivate: [AuthGuard, reportingGuard],
-        data: { breadcrumb: `case-details` },
+        canActivate: [AuthGuard],
+        data: { breadcrumb: `milestone-details` },
       },
     ],
   },

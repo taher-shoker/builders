@@ -1,111 +1,32 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
-import { CookieService } from 'ngx-cookie';
 import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import {
-  CaseStatus,
-  TaskCicle,
-  Task,
-  MilestonesService,
-} from '../../milestones.service';
-import { TranslateService } from '@ngx-translate/core';
+import { MilestonesService, PendingTask } from '../../milestones.service';
 import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
+import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
+import { ToastrService } from 'ngx-toastr';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { saveAs } from 'file-saver';
 
-export interface PeriodicElement {
-  id: string;
-  name: string;
-  city: string;
-  existingServiceOrder: string;
-  serviceType: string;
-  serviceNumber: string;
-  caseSerialNumber: string;
-  existingPhoneNumber: string;
+export interface Milestone {
+  activityName: string;
+  milestoneName: string;
+  status: string;
+  teamName: string;
+  completionLevel: string;
+  id: number;
 }
-
-const COLUMNS_SCHEMA: ColumnsSchema[] = [
-  {
-    key: 'activityName',
-    type: 'text',
-    label: 'Activity',
-  },
-  {
-    key: 'milestoneName',
-    type: 'text',
-    label: 'Milestone Name',
-    // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
-    //   return `
-    //   <p>${item[header!.key]}</p>
-    //   <p>${item[header!.key]} mixed complex</p>
-    //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
-    //   `;
-    // },
-  },
-  {
-    key: 'status',
-    type: 'text',
-    label: 'Status',
-  },
-  {
-    key: 'teamName',
-    type: 'text',
-    label: 'Team',
-  },
-
-  {
-    key: 'completionLevel',
-    type: 'text',
-    label: 'Completion Level',
-  },
-  {
-    key: 'actions',
-    type: 'actions',
-    actions: ['edit', 'delete', 'details'],
-    label: 'actions',
-  },
-];
-
-const data = [
-  {
-    activityName: 'First activity name',
-    milestoneName: 'Milestonah',
-    status: 'perfect',
-    teamName: 'Real madrid',
-    completionLevel: 'Almost done',
-  },
-  {
-    activityName: 'second activity name',
-    milestoneName: 'Milestonah 2',
-    status: 'well done',
-    teamName: 'Blancos',
-    completionLevel: 'ferfet',
-  },
-  {
-    activityName: 'fourth',
-    milestoneName: 'Milestonah edited',
-    status: 'done',
-    teamName: 'champs',
-    completionLevel: 'undone',
-  },
-  {
-    activityName: 'wild',
-    milestoneName: 'Milestonah final',
-    status: 'into the net',
-    teamName: 'Campione',
-    completionLevel: 'starting',
-  },
-];
 
 @Component({
   selector: 'stc-apps-casses',
@@ -113,44 +34,14 @@ const data = [
   styleUrls: ['./milestones.component.scss'],
 })
 export class MilestonesComponent implements OnInit, OnDestroy {
+  @ViewChild('customTemplate') customTemplate!: any;
+
   form!: FormGroup;
   isLoading = true;
   totalRegisted = 0;
   totalInProgress = 0;
   totalPending = 0;
   totalClosed = 0;
-  readonly CaseStatus = CaseStatus;
-  readonly TaskCicle = TaskCicle;
-  // data = [
-  //   {
-  //     activityName: 'First activity name',
-  //     milestoneName: 'Milestonah',
-  //     status: 'perfect',
-  //     teamName: 'Real madrid',
-  //     completionLevel: 'Almost done',
-  //   },
-  //   {
-  //     activityName: 'second activity name',
-  //     milestoneName: 'Milestonah 2',
-  //     status: 'well done',
-  //     teamName: 'Blancos',
-  //     completionLevel: 'ferfet',
-  //   },
-  //   {
-  //     activityName: 'fourth',
-  //     milestoneName: 'Milestonah edited',
-  //     status: 'done',
-  //     teamName: 'champs',
-  //     completionLevel: 'undone',
-  //   },
-  //   {
-  //     activityName: 'wild',
-  //     milestoneName: 'Milestonah final',
-  //     status: 'into the net',
-  //     teamName: 'Campione',
-  //     completionLevel: 'starting',
-  //   },
-  // ];
 
   getMilestonesSub!: Subscription;
   userSub!: Subscription;
@@ -175,38 +66,102 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     public milestonesService: MilestonesService,
     protected dialogService: DialogService,
     public authService: AuthService,
-    private cookieService: CookieService,
     public utils: UtilsService,
     private matDialog: MatDialog,
-    private translate: TranslateService,
-    private utilities: UtilitiesService
+    private utilities: UtilitiesService,
+    private toastr: ToastrService,
+    private spinner: NgxSpinnerService
   ) {}
 
-  allItems!: Task[];
-  addCasseNavigate(): void {
-    this.router.navigate(['./add_case'], { relativeTo: this.route });
+  allItems!: PendingTask[];
+  addMilestoneNavigate(): void {
+    this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
-  displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
-  columnsSchema: any[] = COLUMNS_SCHEMA;
+  columnsSchema: ColumnsSchema[] = [
+    {
+      key: 'activityName',
+      type: 'text',
+      label: 'Activity',
+    },
+    {
+      key: 'milestoneName',
+      type: 'text',
+      label: 'Milestone Name',
+      // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
+      //   return `
+      //   <p>${item[header!.key]}</p>
+      //   <p>${item[header!.key]} mixed complex</p>
+      //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
+      //   `;
+      // },
+      complexView: true,
+      // complexViewTemp: this.customTemplate
+    },
+    {
+      key: 'completionLevel',
+      type: 'text',
+      label: 'Completion Level',
+    },
+    {
+      key: 'latestWorkflowId',
+      type: 'custom',
+      label: 'Validation Status',
+    },
+    {
+      key: 'teamName',
+      type: 'text',
+      label: 'Team',
+    },
+    {
+      key: 'status',
+      type: 'text',
+      label: 'Status',
+      complexView: true,
+    },
 
-  dataSource = new MatTableDataSource<PeriodicElement>();
+    {
+      key: 'actions',
+      type: 'actions',
+      actions: !this.milestonesService.checkIsAdmin()
+        ? this.milestonesService.checkIsBusinessSpoc() ||
+          this.milestonesService.checkIsDirector()
+          ? ['details', 'updateProgress']
+          : ['edit', 'details', 'updateProgress']
+        : ['edit', 'delete', 'details'],
+      label: '',
+    },
+  ];
 
   disabled = false;
   tableData!: any;
   rowData!: any;
+  milestoneStatus: { value: string; name: string }[] = [
+    { value: 'Planned', name: 'Planned' },
+    { value: 'Delayed', name: 'Delayed' },
+    { value: 'At_Risk', name: 'At risk' },
+    { value: 'On_Track', name: 'On track' },
+    { value: 'Completed', name: 'Completed' },
+  ];
+  monthsArr: any = [];
+  yearsArr: any = [];
+  allTeams: any;
+
   ngOnInit() {
-    // this.populateInsightsCards();
-    // this.fetchAssigneeTasks();
-
     this.getMilestones();
-
+    this.getPendingTasks();
     this.bannerDataService.updateData({ title: 'milestones', text: '' });
-
-    this.dataSource.filterPredicate = (data, filter) =>
-      data.caseSerialNumber == filter;
 
     this.searchForm();
     this.dialogService.modals = [];
+    this.getAllTeams();
+    this.monthsArrPopulator();
+    this.yearsArrPopulator();
+  }
+
+  getPendingTasks() {
+    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+      this.allItems = res;
+    });
   }
 
   paginate(paginationEvent: PaginationEvent) {
@@ -214,7 +169,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
 
     this.milestonesService
       .getMilestones({
-        page: paginationEvent.currentPage,
+        page: paginationEvent.currentPage - 1,
         ...filteredForm,
       })
       .pipe(take(1))
@@ -222,13 +177,21 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         this.populateMilestones(res);
       });
   }
-  
+
   populateMilestones(res: any) {
     this.isLoading = false;
     this.milestonesTotalCount = res.totalElements;
 
     this.tableData = res.content;
-    console.warn(this.milestonesTotalCount)
+  }
+
+  getAllTeams() {
+    this.allTeams = this.milestonesService.setUserTeams();
+    if (this.allTeams.length === 0) {
+      this.milestonesService.setSystemTeams().subscribe((res) => {
+        this.allTeams = res;
+      });
+    }
   }
 
   detailsNavigate(id: string | number) {
@@ -243,26 +206,63 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         relativeTo: this.route,
       });
     } else if (event.value === 'delete') {
-      this.MakeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
+      this.makeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
         if (!res) {
           return;
         }
-        this.milestonesService
-          .deleteMilestone(event.dataRow.id)
-          .subscribe((deletionRes) => {
-            console.log('Deleted :', deletionRes);
-          });
+        this.milestonesService.deleteMilestone(event.dataRow.id).subscribe({
+          next: () => {
+            this.toastr.success('Deleted successfully');
+            this.getMilestones();
+          },
+          error: () => {
+            this.toastr.error('Something went wrong!');
+          },
+        });
       });
     } else if (event.value === 'details') {
       this.detailsNavigate(event.dataRow.id);
+    } else if (event.value === 'updateProgress') {
+      this.openProgressUpdateModal(event.dataRow);
     }
   }
 
-  MakeSureToDelete(name: string) {
+  openProgressUpdateModal(rowData: Milestone) {
+    const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
+      data: rowData.milestoneName,
+      width: '800px',
+    });
+
+    dialogRef.afterClosed().subscribe((res) => {
+      if (!res) {
+        return;
+      }
+      this.spinner.show();
+
+      this.milestonesService
+        .updateMilestoneProgress({
+          milestoneId: rowData.id,
+          deliverable: res.deliverable,
+          overallProgress: res.overallProgress,
+        })
+        .subscribe({
+          next: () => {
+            this.toastr.success('Progress updated');
+            this.spinner.hide();
+
+            this.detailsNavigate(rowData.id);
+          },
+          error: () => {
+            this.toastr.error('Something went wrong!');
+          },
+        });
+    });
+  }
+
+  makeSureToDelete(name: string) {
     {
       const dialogRef = this.matDialog.open(MessageDialogComponent, {
-        height: '160px',
-        width: '500px',
+        width: '800px',
         data: {
           msg: `You're about to Remove Milestone "${name}" Kindly note you can't roll back this action. Are you sure?`,
         },
@@ -275,20 +275,25 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
-  navigateToTask(caseId: number) {
-    this.router.navigate(['./case_details', caseId], {
-      relativeTo: this.route,
-    });
-  }
-
   toggleFilter() {
     this.dialogService.open('filter-Modal');
+  }
+
+  onExporting() {
+    const filteredForm = this.utilities.filterObject(this.form.value);
+    this.milestonesService
+      .exportMilestones(filteredForm)
+      .subscribe((buffer) => {
+        const data: Blob = new Blob([buffer]);
+        saveAs(data, 'milestones.csv');
+      });
   }
 
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
       milestoneName: ['', { nonNullable: true }],
+      milestoneId: ['', { nonNullable: true }],
       team: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
       month: ['', { nonNullable: true }],
@@ -302,17 +307,13 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     });
   }
 
-  searchFilter(event: Event) {
-    const searchVal = (event.target as HTMLInputElement).value
-      .trim()
-      .toLowerCase();
-    this.dataSource.filter = searchVal;
+  filterString: string = '';
+  searchFilter(inp: HTMLInputElement) {
+    this.filterString = inp.value;
   }
 
   onSubmit() {
     const filteredForm = this.utilities.filterObject(this.form.value);
-    console.log('filteredForm', filteredForm);
-
     this.getMilestonesSub = this.milestonesService
       .getMilestones(filteredForm)
       .subscribe((res: any) => {
@@ -327,6 +328,25 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.getMilestones();
   }
 
+  monthsArrPopulator() {
+    for (let i = 1; this.monthsArr.length < 12; i++) {
+      const date = new Date(2000, i - 1, 10); // 2009-11-10
+      const month = date.toLocaleString('default', { month: 'long' });
+
+      const monthObject = { name: month, id: i };
+      this.monthsArr.push(monthObject);
+    }
+  }
+  yearsArrPopulator() {
+    const currentYear = new Date().getFullYear();
+    for (
+      let i = 2023;
+      this.yearsArr[this.yearsArr.length - 1]?.name !== currentYear; // Check if the latest element's value equals the current year's value
+      i++
+    ) {
+      this.yearsArr.push({ name: i, id: i });
+    }
+  }
   produceDate(month: string, day: string, year: string) {
     let monthNum = 0;
     const monthsList = [

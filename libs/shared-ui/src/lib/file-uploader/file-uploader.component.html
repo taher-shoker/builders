@@ -1,9 +1,9 @@
 <div class="uploader-box">
   <button type="button" class="upload-btn" (click)="onClick($event)" [disabled]="disabled">
     <i class="fas fa-link"></i>
-    <span>{{ chooseLabel }}</span>
+    <span>{{ chooseLabel }}</span> <div *ngIf="required" style="color: red; display: inline;"> *</div>
   </button>
-  <rp *ngIf="!required">{{"optional" | translate}}</rp>
+  <!-- <rp *ngIf="!required">{{"optional" | translate}}</rp> -->
   <input #fileUpload type="file" class="input_fileupload--hidden" (change)="onFileSelected($event)"
     [multiple]="multiple" accept="{{ this.accept }}" />
   <div class="file-validation">{{ this.invalidFileMessageDetail }}</div>

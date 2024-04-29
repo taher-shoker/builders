@@ -1,0 +1,18 @@
+<div class="dropdown">
+  <button class="btn dropdown-toggle notify-icon" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+    aria-expanded="false">
+    <i class="far fa-bell"></i>
+    <span class="count" *ngIf="items.length > 0">{{items.length}}</span>
+  </button>
+
+  <ul class="dropdown-menu dropdown-menu-end notify-list" aria-labelledby="dropdownMenuButton1">
+    <h2>milestones reminders</h2>
+    <div class="list-note">
+      <li *ngFor="let item of items" (click)="onClickItem(item)">
+        <h4>{{item?.reminderTitle}}</h4>
+        <p>{{item?.reminderContent}}</p>
+        <span>{{item?.reminderUploadDate | dateAgo}}</span>
+      </li>
+    </div>
+  </ul>
+</div>
