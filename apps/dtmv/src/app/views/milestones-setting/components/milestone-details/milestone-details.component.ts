@@ -391,7 +391,8 @@ export class MilestoneDetailsComponent implements OnInit {
 
           if (
             taskAttribute.name.includes('approved') &&
-            taskAttribute.value === 'false'
+            (taskAttribute.value === 'false' ||
+              taskAttribute.value == '0')
           ) {
             // Means it's approval (review) step and it's rejected.
             isWarningState = true;
@@ -611,25 +612,6 @@ export class MilestoneDetailsComponent implements OnInit {
       ) {
         this.openMilestoneWorkflowActionsModal(action.actionObj.uniqueTitle);
       }
-      const step: Step = {
-        caption:
-          item[i].taskName === 'Review Remarks'
-            ? 'Review Progress'
-            : item[i].taskName,
-        state:
-          isWarningState === true
-            ? 'warning'
-            : item[i].status === 'completed'
-            ? 'done'
-            : 'undone',
-        notes: notes,
-        attachments: attachments,
-        extraInfo: [`${progressDate} ${byUser}`],
-        actions: actions,
-        stepObject: item[i],
-      };
-
-      this.historySteps.push(step);
     }
   }
   isPanelOpen(panelNumber: number): boolean {
