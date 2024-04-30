@@ -5,7 +5,20 @@
 
 .step {
   display: flex;
+  .left-part{
+    flex-shrink: 0;
+    flex-grow: 0;
+    flex-basis: 30px;
+    display: flex;
+    justify-content: center;
+  }
+  
+  .right-part{
+    padding-left: 10px;
+  }
 }
+
+
 .step-head {
   height: 30px;
   width: 30px;
@@ -26,7 +39,7 @@
 
 .step-notes {
   // background-color: #c3c3c3;
-  padding: 0.4rem;
+  // padding: 0.4rem;
 }
 
 .liner {

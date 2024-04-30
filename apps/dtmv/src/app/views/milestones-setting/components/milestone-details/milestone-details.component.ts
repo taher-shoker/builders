@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Milestone } from './../milestones/milestones.component';
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
@@ -11,7 +11,6 @@ import {
   Actions,
   MilestoneAttachment,
   MilestoneDetails,
-  MilestoneProgressWorkflow,
   MilestonesService,
   RequestTask,
 } from '../../milestones.service';
@@ -21,6 +20,8 @@ import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-prog
 import { DatePipe } from '@angular/common';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
+
+//TODO: Refactor the workflow of the stepper.
 
 @Component({
   selector: 'stc-apps-milestone-details',
@@ -43,6 +44,8 @@ export class MilestoneDetailsComponent implements OnInit {
     deliverable: '',
   };
 
+  taskItem!: RequestTask;
+
   constructor(
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
@@ -52,14 +55,9 @@ export class MilestoneDetailsComponent implements OnInit {
     public authService: AuthService,
     private matDialog: MatDialog,
     private datePipe: DatePipe
-  ) {
-    router.events.subscribe((val) => {
-      console.log(val);
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-    //this.milestoneId = this.route.snapshot.params['id'];
     this.milestonesService.checkIsAdmin();
     this.route.params.subscribe((params) => {
       this.milestoneId = params['id'];
@@ -87,18 +85,18 @@ export class MilestoneDetailsComponent implements OnInit {
     this.isLoadingSteps = true;
 
     this.steps = [];
-    if (this.milestoneDetails.currentMilestoneProgressUpdateDTO) {
+    if (this.milestoneDetails.currentMilestoneProgressUpdateDto) {
       this.progress =
-        this.milestoneDetails.currentMilestoneProgressUpdateDTO.overallProgress;
+        this.milestoneDetails.currentMilestoneProgressUpdateDto.overallProgress;
       this.progressUpdatedBy =
-        this.milestoneDetails.currentMilestoneProgressUpdateDTO.updatedBy;
+        this.milestoneDetails.currentMilestoneProgressUpdateDto.updatedBy;
       this.deliverable =
-        this.milestoneDetails.currentMilestoneProgressUpdateDTO.deliverable;
+        this.milestoneDetails.currentMilestoneProgressUpdateDto.deliverable;
       this.status =
-        this.milestoneDetails.currentMilestoneProgressUpdateDTO.status;
+        this.milestoneDetails.currentMilestoneProgressUpdateDto.status;
       this.progressDate =
         this.datePipe.transform(
-          this.milestoneDetails.currentMilestoneProgressUpdateDTO
+          this.milestoneDetails.currentMilestoneProgressUpdateDto
             .progressUpdateDate,
           'medium'
         ) || '';
@@ -128,152 +126,172 @@ export class MilestoneDetailsComponent implements OnInit {
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
     setTimeout(() => {
-      if (
-        this.milestoneDetails.currentMilestoneProgressUpdateDTO &&
-        this.milestoneDetails.currentMilestoneProgressUpdateDTO.workflowId
-      ) {
-        this.milestonesService
-          .getMilestoneProgressWorkflow(
-            this.milestoneDetails.currentMilestoneProgressUpdateDTO.workflowId
-          )
-          .subscribe((res) => {
-            this.isLoadingSteps = false;
-
-            res.sort(function (a, b) {
-              return b.requestTaskId - a.requestTaskId;
-            });
-
-            let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
-
-            for (let i = res.length - 1; i >= 0; i--) {
-              if (
-                res[i].taskName === Actions.addOnTrack.uniqueTitle &&
-                foundAddRemarksOnce === null
-              ) {
-                foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
-              } else if (
-                res[i].taskName === Actions.addOnTrack.uniqueTitle &&
-                foundAddRemarksOnce === 'once'
-              ) {
-                foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
-              }
-
-              const attachmentsIDs: string[] = [];
-              const attachments: MilestoneAttachment[] = [];
-              let notes: string = '';
-
-              const displayDate = res[i].completedDate
-                ? res[i].completedDate
-                : res[i].createdDate;
-              const progressDate: string =
-                this.datePipe.transform(displayDate, 'medium') || '';
-
-              let byUser = '';
-              const actions: Actions[] = [];
-              let isWarningState: boolean = false;
-
-              for (const taskAttribute of res[i].requestTaskAttributes) {
-                if (res[i].status !== 'pending') {
-                  byUser = `By ${res[i].username}`;
-
-                  console.warn("THE taskAttribute:", taskAttribute)
-                  if(taskAttribute.name.includes("approved") && taskAttribute.value === "false"){ // Means it's approval (review) step and it's rejected.
-                    isWarningState = true
-                  }
-                }
-
-                if (
-                  taskAttribute.name === 'evidence_id' ||
-                  taskAttribute.name === 'justification_id' ||
-                  taskAttribute.name === 'remark_id' ||
-                  taskAttribute.name === 'attachment_id'
-                ) {
-                  attachmentsIDs.push(taskAttribute.value);
-                } else if (
-                  taskAttribute.name === 'notes' ||
-                  taskAttribute.name === 'reason_of_rejection'
-                ) {
-                  notes = taskAttribute.value;
-                }
-              }
-
-              for (const attachmentID of attachmentsIDs) {
-                this.milestonesService
-                  .getAttachment(+attachmentID)
-                  .subscribe((res) => {
-                    attachments.push(res);
-                  });
-              }
-
-              if (res[i].status === 'pending' && res[i].params?.length > 0) {
-                //those two conditions are for a user to take action, otherwise it's not his task to handle.
-                if (
-                  res[i].taskName === 'Review Evidence' ||
-                  res[i].taskName === 'Review Justification' ||
-                  res[i].taskName === 'Review Progress'
-                ) {
-                  if (res[i].taskName === 'Review Evidence') {
-                    actions.push(Actions.reviewEvidence);
-                    actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
-                  }
-                  if (res[i].taskName === 'Review Justification') {
-                    actions.push(Actions.reviewJustification);
-                    actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
-                  }
-                  if (res[i].taskName === 'Review Progress') {
-                    actions.push(Actions.reviewOnTrack);
-                    actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
-                  }
-                } else if (
-                  res[i].taskName === Actions.addEvidence.uniqueTitle ||
-                  res[i].taskName === Actions.addJustification.uniqueTitle ||
-                  res[i].taskName === Actions.addOnTrack.uniqueTitle
-                ) {
-                  if (res[i].taskName === Actions.addEvidence.uniqueTitle) {
-                    actions.push(Actions.addEvidence);
-                  }
-                  if (
-                    res[i].taskName === Actions.addJustification.uniqueTitle
-                  ) {
-                    actions.push(Actions.addJustification);
-                  }
-                  if (res[i].taskName === Actions.addOnTrack.uniqueTitle) {
-                    actions.push(Actions.addOnTrack);
-                    if (foundAddRemarksOnce !== 'twice') {
-                      actions.push(Actions.noNeed);
-                    }
-                  }
-                } else if (res[i].taskName === 'Approve Progress') {
-                  actions.push(Actions.approveProgress);
-                  actions.push(Actions.returnProgress);
-                }
-              }
-
-              if (
-                res[i].taskName === 'Update DT Record' &&
-                res[i].params?.length === 0
-              ) {
-                // This is to check if params is received but empty, that must indicate that the user can Update DT Record
-                actions.push(Actions.updateDTRecord);
-              }
-
-              const step: Step = {
-                caption:
-                  res[i].taskName === 'Review Remarks'
-                    ? 'Review Progress'
-                    : res[i].taskName,
-                state: isWarningState === true ? 'warning' : res[i].status === 'completed' ? 'done' : 'undone',
-                notes: notes,
-                attachments: attachments,
-                extraInfo: [`${progressDate} ${byUser}`],
-                actions: actions,
-                stepObject: res[i],
-              };
-              this.steps.push(step);
-            }
-          });
-      }
+      this.getMilestoneProgressWorkflow();
     }, 5000);
+  }
+
+  getMilestoneProgressWorkflow() {
+    console.log('OUT getMilestoneProgressWorkflow');
+    console.log('this.milestoneDetails', this.milestoneDetails);
+
+    if (
+      this.milestoneDetails.currentMilestoneProgressUpdateDto &&
+      this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
+    ) {
+      console.log('IN getMilestoneProgressWorkflow');
+
+      this.milestonesService
+        .getMilestoneProgressWorkflow(
+          this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
+        )
+        .subscribe((res) => {
+          if (!this.isUpdateProgressOnHold) {
+            this.isLoadingSteps = false;
+          }
+
+          res.sort(function (a, b) {
+            return b.requestTaskId - a.requestTaskId;
+          });
+
+          let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
+
+          for (let i = res.length - 1; i >= 0; i--) {
+            if (
+              res[i].taskName === Actions.addOnTrack.uniqueTitle &&
+              foundAddRemarksOnce === null
+            ) {
+              foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
+            } else if (
+              res[i].taskName === Actions.addOnTrack.uniqueTitle &&
+              foundAddRemarksOnce === 'once'
+            ) {
+              foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
+            }
+
+            const attachmentsIDs: string[] = [];
+            const attachments: MilestoneAttachment[] = [];
+            let notes: string = '';
+
+            const displayDate = res[i].completedDate
+              ? res[i].completedDate
+              : res[i].createdDate;
+            const progressDate: string =
+              this.datePipe.transform(displayDate, 'medium') || '';
+
+            let byUser = '';
+            const actions: Actions[] = [];
+            let isWarningState: boolean = false;
+
+            for (const taskAttribute of res[i].requestTaskAttributes) {
+              if (res[i].status !== 'pending') {
+                byUser = `By ${res[i].username}`;
+
+                console.warn('THE taskAttribute:', taskAttribute);
+                if (
+                  taskAttribute.name.includes('approved') &&
+                  (taskAttribute.value === 'false' ||
+                    taskAttribute.value == '0')
+                ) {
+                  // Means it's approval (review) step and it's not approved.
+                  isWarningState = true;
+                }
+              }
+
+              if (
+                taskAttribute.name === 'evidence_id' ||
+                taskAttribute.name === 'justification_id' ||
+                taskAttribute.name === 'remark_id' ||
+                taskAttribute.name === 'attachment_id'
+              ) {
+                attachmentsIDs.push(taskAttribute.value);
+              } else if (
+                taskAttribute.name === 'notes' ||
+                taskAttribute.name === 'reason_of_rejection'
+              ) {
+                notes = taskAttribute.value;
+              }
+            }
+
+            for (const attachmentID of attachmentsIDs) {
+              this.milestonesService
+                .getAttachment(+attachmentID)
+                .subscribe((res) => {
+                  attachments.push(res);
+                });
+            }
+
+            if (res[i].status === 'pending' && res[i].params?.length > 0) {
+              //those two conditions are for a user to take action, otherwise it's not his task to handle.
+              if (
+                res[i].taskName === 'Review Evidence' ||
+                res[i].taskName === 'Review Justification' ||
+                res[i].taskName === 'Review Progress'
+              ) {
+                if (res[i].taskName === 'Review Evidence') {
+                  actions.push(Actions.reviewEvidence);
+                  actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
+                }
+                if (res[i].taskName === 'Review Justification') {
+                  actions.push(Actions.reviewJustification);
+                  actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
+                }
+                if (res[i].taskName === 'Review Progress') {
+                  actions.push(Actions.reviewOnTrack);
+                  actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+                }
+              } else if (
+                res[i].taskName === Actions.addEvidence.uniqueTitle ||
+                res[i].taskName === Actions.addJustification.uniqueTitle ||
+                res[i].taskName === Actions.addOnTrack.uniqueTitle
+              ) {
+                if (res[i].taskName === Actions.addEvidence.uniqueTitle) {
+                  actions.push(Actions.addEvidence);
+                }
+                if (res[i].taskName === Actions.addJustification.uniqueTitle) {
+                  actions.push(Actions.addJustification);
+                }
+                if (res[i].taskName === Actions.addOnTrack.uniqueTitle) {
+                  actions.push(Actions.addOnTrack);
+                  if (foundAddRemarksOnce !== 'twice') {
+                    actions.push(Actions.noNeed);
+                  }
+                }
+              } else if (res[i].taskName === 'Approve Progress') {
+                actions.push(Actions.approveProgress);
+                actions.push(Actions.returnProgress);
+              }
+            }
+
+            if (
+              res[i].taskName === 'Update DT Record' &&
+              res[i].params?.length === 0
+            ) {
+              // This is to check if params is received but empty, that must indicate that the user can Update DT Record
+              actions.push(Actions.updateDTRecord);
+            }
+
+            const step: Step = {
+              caption:
+                res[i].taskName === 'Review Remarks'
+                  ? 'Review Progress'
+                  : res[i].taskName +
+                    (isWarningState === true ? ' (Returned)' : ''),
+              state:
+                isWarningState === true
+                  ? 'warning'
+                  : res[i].status === 'completed'
+                  ? 'done'
+                  : 'undone',
+              notes: notes,
+              attachments: attachments,
+              extraInfo: [`${progressDate} ${byUser}`],
+              actions: actions,
+              stepObject: res[i],
+            };
+            this.steps.push(step);
+          }
+        });
+    }
   }
 
   getMilestoneDetails() {
@@ -288,17 +306,23 @@ export class MilestoneDetailsComponent implements OnInit {
         });
 
         if (
-          this.milestoneDetails.currentMilestoneProgressUpdateDTO &&
-          this.milestoneDetails.currentMilestoneProgressUpdateDTO
+          this.milestoneDetails.currentMilestoneProgressUpdateDto &&
+          this.milestoneDetails.currentMilestoneProgressUpdateDto
             .overallProgress
         ) {
+          console.log('in show');
           this.showMilestoneProgressWorkflow();
         } else {
+          console.log('in ask');
           this.steps = [];
           this.askUserToInitiateUpdateProgress();
         }
         this.getHistory(res);
       });
+  }
+
+  getMilestoneDetailsFirstAction() {
+    return this.milestonesService.getMilestone(this.milestoneId);
   }
 
   getHistory(milestone: MilestoneDetails) {
@@ -364,11 +388,13 @@ export class MilestoneDetailsComponent implements OnInit {
         if (item[i].status !== 'pending') {
           byUser = `By ${item[i].username}`;
 
-          console.warn("THE taskAttribute:", taskAttribute)
-          if(taskAttribute.name.includes("approved") && taskAttribute.value === "false"){ // Means it's approval (review) step and it's rejected.
-            isWarningState = true
+          if (
+            taskAttribute.name.includes('approved') &&
+            taskAttribute.value === 'false'
+          ) {
+            // Means it's approval (review) step and it's rejected.
+            isWarningState = true;
           }
-
         }
 
         if (
@@ -396,15 +422,20 @@ export class MilestoneDetailsComponent implements OnInit {
         caption:
           item[i].taskName === 'Review Remarks'
             ? 'Review Progress'
-            : item[i].taskName,
-        state: isWarningState === true ? 'warning' : item[i].status === 'completed' ? 'done' : 'undone',
+            : item[i].taskName + (isWarningState === true ? ' (Returned)' : ''),
+        state:
+          isWarningState === true
+            ? 'warning'
+            : item[i].status === 'completed'
+            ? 'done'
+            : 'undone',
         notes: notes,
         attachments: attachments,
         extraInfo: [`${progressDate} ${byUser}`],
         actions: actions,
         stepObject: item[i],
       };
-      
+
       this.historySteps.push(step);
     }
   }
@@ -424,7 +455,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
         this.milestonesService
           .updateMilestoneRecord(
-            this.milestoneDetails.currentMilestoneProgressUpdateDTO
+            this.milestoneDetails.currentMilestoneProgressUpdateDto
               ?.workflowId || '',
             action.item.requestTaskId
           )
@@ -455,7 +486,7 @@ export class MilestoneDetailsComponent implements OnInit {
           this.isLoadingSteps = true;
           this.milestonesService
             .updateMilestoneRecord(
-              this.milestoneDetails.currentMilestoneProgressUpdateDTO
+              this.milestoneDetails.currentMilestoneProgressUpdateDto
                 ?.workflowId || '',
               action.item.requestTaskId,
               true,
@@ -489,17 +520,17 @@ export class MilestoneDetailsComponent implements OnInit {
           if (action.item.taskName === 'Review Evidence') {
             params.requestParams.push({
               name: 'is_evidence_approved',
-              value: true,
+              value: 1, // 1 means approved.
             });
           } else if (action.item.taskName === 'Review Justification') {
             params.requestParams.push({
               name: 'is_justification_approved',
-              value: true,
+              value: 1, // 1 means approved.
             });
           } else if (action.item.taskName === 'Review Progress') {
             params.requestParams.push({
               name: 'is_remark_approved',
-              value: true,
+              value: 1, // 1 means approved.
             });
           }
 
@@ -507,7 +538,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
           this.milestonesService
             .completePendingTask(
-              this.milestoneDetails.currentMilestoneProgressUpdateDTO
+              this.milestoneDetails.currentMilestoneProgressUpdateDto
                 ?.workflowId || '',
               action.item.requestTaskId,
               params
@@ -527,6 +558,8 @@ export class MilestoneDetailsComponent implements OnInit {
         action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
         action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
       ) {
+        console.warn('EL REQ', action);
+
         this.openMilestoneWorkflowActionsModal(
           action.actionObj.uniqueTitle,
           action.item
@@ -544,7 +577,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
         this.milestonesService
           .completePendingTask(
-            this.milestoneDetails.currentMilestoneProgressUpdateDTO
+            this.milestoneDetails.currentMilestoneProgressUpdateDto
               ?.workflowId || '',
             action.item.requestTaskId,
             params
@@ -561,6 +594,25 @@ export class MilestoneDetailsComponent implements OnInit {
     }
   }
 
+  doSpecialStepAction(action: { actionObj: Actions | string }) {
+    if (
+      typeof action.actionObj !== 'string' &&
+      'uniqueTitle' in action.actionObj
+    ) {
+      if (
+        action.actionObj.uniqueTitle === Actions.returnEvidence.uniqueTitle ||
+        action.actionObj.uniqueTitle ===
+          Actions.returnJustification.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.returnOnTrack.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.addEvidence.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
+      ) {
+        this.openMilestoneWorkflowActionsModal(action.actionObj.uniqueTitle);
+      }
+    }
+  }
+
   downloadFile(id: number, name: string = 'untitled.txt') {
     this.milestonesService.downloadAttachment(id).subscribe((buffer) => {
       const data: Blob = new Blob([buffer]);
@@ -570,7 +622,7 @@ export class MilestoneDetailsComponent implements OnInit {
     });
   }
 
-  openMilestoneWorkflowActionsModal(type: string, taskItem: RequestTask) {
+  openMilestoneWorkflowActionsModal(type: string, item?: RequestTask) {
     const dialogRef = this.matDialog.open(
       UpdateMilestoneProgressDialogComponent,
       {
@@ -621,7 +673,7 @@ export class MilestoneDetailsComponent implements OnInit {
       } else if (type === Actions.returnEvidence.uniqueTitle) {
         params.requestParams.push({
           name: 'is_evidence_approved',
-          value: false,
+          value: 0, // 0 means not approved.
         });
 
         params.requestParams.push({
@@ -638,7 +690,7 @@ export class MilestoneDetailsComponent implements OnInit {
       } else if (type === Actions.returnJustification.uniqueTitle) {
         params.requestParams.push({
           name: 'is_justification_approved',
-          value: false,
+          value: 0, // 0 means not approved.
         });
 
         params.requestParams.push({
@@ -655,7 +707,7 @@ export class MilestoneDetailsComponent implements OnInit {
       } else if (type === Actions.returnOnTrack.uniqueTitle) {
         params.requestParams.push({
           name: 'is_remark_approved',
-          value: false,
+          value: 0, // 0 means not approved.
         });
 
         params.requestParams.push({
@@ -672,42 +724,146 @@ export class MilestoneDetailsComponent implements OnInit {
       }
 
       this.isLoadingSteps = true;
-      this.milestonesService
-        .completePendingTask(
-          this.milestoneDetails.currentMilestoneProgressUpdateDTO?.workflowId ||
-            '',
-          taskItem.requestTaskId,
-          params
-        )
-        .subscribe(() => {
-          this.getMilestoneDetails();
-        });
+      if (this.isUpdateProgressOnHold) {
+        console.warn('===========');
+        console.warn('EL TASK ITEM', this.taskItem);
+
+        this.sendAllRequests(params);
+        this.isUpdateProgressOnHold = false;
+      } else {
+        this.milestonesService
+          .completePendingTask(
+            this.milestoneDetails.currentMilestoneProgressUpdateDto
+              ?.workflowId || '',
+            Number(item?.requestTaskId),
+            params
+          )
+          .subscribe(() => {
+            this.getMilestoneDetails();
+          });
+      }
     });
   }
 
   openProgressUpdateModal(milestoneId: Milestone['id']) {
     const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
       width: '800px',
+      data: {
+        overallProgress:
+          this.milestoneDetails.latestApprovedMilestoneProgressUpdate
+            ?.overallProgress,
+        milestoneName: this.milestoneDetails.milestoneName,
+      },
     });
 
     dialogRef.afterClosed().subscribe((res) => {
       if (!res) {
         return;
       }
-      this.isLoadingSteps = true;
 
-      this.milestonesService
-        .updateMilestoneProgress({
-          milestoneId: milestoneId,
-          deliverable: res.deliverable,
-          overallProgress: res.overallProgress,
-        })
-        .subscribe(() => {
-          setTimeout(() => {
-            this.getMilestoneDetails();
-          }, 7000);
-        });
+      this.deliverableInMaking = res.deliverable;
+      this.overallProgressInMaking = res.overallProgress;
+      this.isLoadingSteps = true;
+      this.isUpdateProgressOnHold = true;
+      this.sendProgressToCalculate(milestoneId, this.overallProgressInMaking);
     });
+  }
+
+  deliverableInMaking: string = '';
+  overallProgressInMaking: string = '';
+  isUpdateProgressOnHold: boolean = false;
+
+  sendAllRequests(params: {
+    requestParams: {
+      name: string;
+      value: number | string | boolean;
+    }[];
+  }) {
+    this.updateProgress().subscribe(() => {
+      this.getMilestoneDetails();
+      setTimeout(() => {
+        this.isLoadingSteps = true;
+
+        this.pushWorkflowAction(params);
+      }, 6000);
+
+      // setTimeout(() => {
+      //   // this.pushWorkflowAction(taskItem, params);
+      //   setTimeout(()=>{
+      //     this.pushWorkflowAction(params);
+      //   }, 5000)
+      // }, 5000);
+    });
+  }
+
+  sendProgressToCalculate(milestoneId: number, progress: string) {
+    this.milestonesService
+      .calculateMilestoneProgress(milestoneId, progress)
+      .subscribe((res) => {
+        let actionObj: Actions;
+        if (res.status === 'Delayed') {
+          actionObj = Actions.addJustification;
+        } else if (res.status === 'Completed') {
+          actionObj = Actions.addEvidence;
+        } else {
+          actionObj = Actions.addOnTrack;
+        }
+
+        this.doSpecialStepAction({ actionObj });
+
+        // this.updateProgress().subscribe((res) => {
+        //   this.getMilestoneDetailsFirstAction().subscribe((res: any) => {
+        //     this.milestonesService.getRemindersData();
+        //     this.milestoneDetails = res;
+        //     if (
+        //       this.milestoneDetails.currentMilestoneProgressUpdateDto &&
+        //       this.milestoneDetails.currentMilestoneProgressUpdateDto
+        //         .overallProgress
+        //     ) {
+        //       this.showMilestoneProgressWorkflow();
+        //       console.warn('EL STEPS', this.steps);
+        //       setTimeout(()=>{
+        //         this.doStepAction({ actionObj, item: this.steps[1] });
+        //       }, 5500)
+        //     } else {
+        //       this.steps = [];
+        //       this.askUserToInitiateUpdateProgress();
+        //     }
+        //     this.getHistory(res);
+        //   });
+        // });
+      });
+  }
+
+  updateProgress() {
+    return this.milestonesService.updateMilestoneProgress({
+      milestoneId: this.milestoneDetails.id!,
+      deliverable: this.deliverableInMaking,
+      overallProgress: this.overallProgressInMaking,
+    });
+  }
+
+  pushWorkflowAction(params: {
+    requestParams: {
+      name: string;
+      value: number | string | boolean;
+    }[];
+  }) {
+    console.warn('this.steps', this.steps);
+    this.isLoadingSteps = true;
+
+    this.milestonesService
+      .completePendingTask(
+        this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId ||
+          '',
+        this.steps[1].stepObject.requestTaskId,
+        params
+      )
+      .subscribe(() => {
+        this.isLoadingSteps = true;
+
+        this.getMilestoneDetails();
+      });
   }
 
   makeSureToApprove(name: string, reasonMsg: string = 'approve Milestone') {

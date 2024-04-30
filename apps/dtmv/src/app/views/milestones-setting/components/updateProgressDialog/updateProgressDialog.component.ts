@@ -1,6 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { customValidator } from './invalidValue.validator';
 
 @Component({
   selector: 'stc-apps-update-progress-dialog',
@@ -8,15 +9,24 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrl: './updateProgressDialog.component.scss',
 })
 export class UpdateProgressDialogComponent {
-  form: FormGroup = new FormGroup({
-    overallProgress: new FormControl('', [Validators.required, Validators.max(100), Validators.min(1), Validators.pattern('^[0-9]+(.[0-9]+)?$')]),
-    deliverable: new FormControl('', [Validators.maxLength(150)]),
-  });
+
+  overallProgressFloor = 0;
+
+  form!: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<UpdateProgressDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { msg: string }
-  ) {}
+    @Inject(MAT_DIALOG_DATA) public data: { overallProgress: string, milestoneName: string }
+  ) {
+    if(data.overallProgress){
+      this.overallProgressFloor = Number(data.overallProgress) 
+    }
+
+    this.form = new FormGroup({
+      overallProgress: new FormControl('', [Validators.required, customValidator(this.overallProgressFloor), Validators.pattern('^[0-9]+(.[0-9]+)?$')]),
+      deliverable: new FormControl('', [Validators.maxLength(150)]),
+    })
+  }
 
   update() {
     this.dialogRef.close({

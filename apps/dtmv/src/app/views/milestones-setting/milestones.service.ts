@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
 
 export interface User {
@@ -172,7 +172,7 @@ export interface MilestoneDetails {
     updatedBy: string;
     status: string;
   };
-  currentMilestoneProgressUpdateDTO: null | {
+  currentMilestoneProgressUpdateDto: null | {
     completionImpactRate: string | null;
     cappedCompletionPercentage: string | null;
     targetCompletionLevel: string | null;
@@ -303,7 +303,7 @@ export class MilestonesService {
   }
 
   getMilestone(id: string | number) {
-    return this.http.get<Case>(`${this.dtUrl}/${id}`);
+    return this.http.get(`${this.dtUrl}/${id}`);
   }
 
   updateMilestone(id: string, data: any) {
@@ -344,7 +344,7 @@ export class MilestonesService {
     deliverable: string;
   }) {
     const headers = new HttpHeaders({ Accept: 'text/plain' });
-    return this.http.patch(`${this.dtUrl}/updateProgress`, data, {
+    return this.http.post(`${this.dtUrl}/updateProgress`, data, {
       responseType: 'text',
     });
   }
@@ -415,6 +415,15 @@ export class MilestonesService {
       `${this.ticketUrl}${requestId}/${requestTaskId}`,
       body
     );
+  }
+
+  /**
+   * Calculate the overall of a milestone without adding records to the database
+   */
+
+  calculateMilestoneProgress(milestoneId: number, progress: string): Observable<{milestoneProgressId: number, status: string}>{
+    return this.http.get<{milestoneProgressId: number, status: string}>(`${this.dtUrl}/status/${milestoneId}?overallProgress=${progress}`)
+    // return of({milestoneProgressId: 5000, status: "Delayed"})
   }
 
   /**
@@ -521,75 +530,6 @@ export interface PendingTask {
   };
   taskName: 'Add Remarks';
   taskStatus: 'pending';
-}
-export interface Task {
-  caseTasksDto: {
-    id: number;
-    taskName: string;
-    taskStatus: string;
-    assignedUser: string;
-    caseID: 0;
-    taskAttributes: [
-      {
-        attributeName: string;
-        attributeValue: string;
-        attributeType: string;
-        attributeLabel: string;
-      }
-    ];
-    completedDate: Date;
-    camundaTaskID: string;
-    createdDate: Date;
-    lastModifiedDate: Date;
-    attachments: Attachment[];
-  };
-  caseSerialNumber: string;
-}
-
-export interface TaskInDetails {
-  id: number;
-  taskName: string;
-  taskStatus: string;
-  assignedUser: string;
-  caseID: 0;
-  taskAttributes: [
-    {
-      attributeName: string;
-      attributeValue: string;
-      attributeType: string;
-      attributeLabel: string;
-    }
-  ];
-  completedDate: Date;
-  completedByName: string;
-  camundaTaskID: string;
-  createdDate: Date;
-  lastModifiedDate: Date;
-  attachments: Attachment[];
-  caseSerialNumber: string;
-}
-
-export interface Case {
-  id?: string;
-  customerName: string;
-  city: string;
-  existingServiceOrder: string;
-  serviceType: string;
-  existingPlate: string;
-  existingPhoneNumber: string;
-  activationDate: string;
-  wfmOrder: string;
-  newPlate: string;
-  newServiceOrder: string;
-  newPhoneNumber: string;
-  contactNumber: string;
-  caseLabel: string;
-  description: string;
-  attachments: Attachment[];
-  caseStatus: string;
-  caseSerialNumber: string;
-  type: string;
-  creatorTeamName: string;
 }
 
 export type Attachment = {

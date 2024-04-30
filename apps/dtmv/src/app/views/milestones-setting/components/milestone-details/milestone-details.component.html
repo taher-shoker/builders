@@ -6,6 +6,7 @@
         <!-- <div class="col-12 title-holder">
             <h3>{{"case_details" | translate}}</h3>
           </div> -->
+          <h4 class="section-title">Milestone Information</h4>
 
         <div class="row">
           <!-- Left Column -->
@@ -64,9 +65,9 @@
                 <p class="cell-name">Capped Completion Percentage</p>
                 <p class="cell-value">
                   {{
-                  milestoneDetails.currentMilestoneProgressUpdateDTO
+                  milestoneDetails.currentMilestoneProgressUpdateDto
                   ?.cappedCompletionPercentage
-                  ? milestoneDetails.currentMilestoneProgressUpdateDTO
+                  ? milestoneDetails.currentMilestoneProgressUpdateDto
                   ?.cappedCompletionPercentage
                   : milestoneDetails.latestApprovedMilestoneProgressUpdate
                   ?.cappedCompletionPercentage
@@ -77,22 +78,6 @@
                 </p>
               </div>
 
-              <div class="col-12">
-                <p class="cell-name">Target Completion Level</p>
-                <p class="cell-value">
-                  {{
-                  milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.targetCompletionLevel
-                  ? milestoneDetails.currentMilestoneProgressUpdateDTO
-                  ?.targetCompletionLevel
-                  : milestoneDetails.latestApprovedMilestoneProgressUpdate
-                  ?.targetCompletionLevel
-                  ? milestoneDetails.latestApprovedMilestoneProgressUpdate
-                  ?.targetCompletionLevel
-                  : '-'
-                  }}
-                </p>
-              </div>
             </div>
           </div>
 
@@ -102,13 +87,12 @@
           <div class="col right-col">
             <div class="row">
               <div class="col-12">
-                <p class="cell-name">{{ 'last_progress' | translate }}</p>
+                <p class="cell-name">Progress</p>
                 <ng-container *ngIf="milestoneDetails">
                   <p class="cell-value">
                     {{
-                    milestoneDetails.lastProgressUpdateDate
-                    ? (milestoneDetails.lastProgressUpdateDate
-                    | date : 'yyyy-MM-dd')
+                    milestoneDetails.latestApprovedMilestoneProgressUpdate?.overallProgress
+                    ? milestoneDetails.latestApprovedMilestoneProgressUpdate?.overallProgress
                     : '-'
                     }}
                   </p>
@@ -135,16 +119,10 @@
               </div>
 
               <div class="col-12">
-                <p class="cell-name">{{ 'updated_email' | translate }}</p>
+                <p class="cell-name">Updated By</p>
                 <p class="cell-value">
-                  {{ milestoneDetails.updatedByEmail ?? '-' }}
-                </p>
-              </div>
-
-              <div class="col-12">
-                <p class="cell-name">{{ 'updated_name' | translate }}</p>
-                <p class="cell-value">
-                  {{ milestoneDetails.updatedByName ?? '-' }}
+                  {{ milestoneDetails.latestApprovedMilestoneProgressUpdate?.updatedBy
+                    ?? '-' }}
                 </p>
               </div>
 
@@ -164,9 +142,9 @@
                 <p class="cell-name">Completion Impact Rate</p>
                 <p class="cell-value">
                   {{
-                  milestoneDetails.currentMilestoneProgressUpdateDTO
+                  milestoneDetails.currentMilestoneProgressUpdateDto
                   ?.completionImpactRate
-                  ? milestoneDetails.currentMilestoneProgressUpdateDTO
+                  ? milestoneDetails.currentMilestoneProgressUpdateDto
                   ?.completionImpactRate
                   : milestoneDetails.latestApprovedMilestoneProgressUpdate
                   ?.completionImpactRate
@@ -182,6 +160,23 @@
                     {{ milestoneDetails.createdDate | date : 'dd/MM/YYYY' }}
                   </p>
                 </div> -->
+                
+              <div class="col-12">
+                <p class="cell-name">Target Completion Level</p>
+                <p class="cell-value">
+                  {{
+                  milestoneDetails.currentMilestoneProgressUpdateDto
+                  ?.targetCompletionLevel
+                  ? milestoneDetails.currentMilestoneProgressUpdateDto
+                  ?.targetCompletionLevel
+                  : milestoneDetails.latestApprovedMilestoneProgressUpdate
+                  ?.targetCompletionLevel
+                  ? milestoneDetails.latestApprovedMilestoneProgressUpdate
+                  ?.targetCompletionLevel
+                  : '-'
+                  }}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -263,7 +258,10 @@
     @if (milestoneDetails.status !== 'Planned' && milestoneDetails.status !== 'Completed'
     ) {
     <div class="col-md-5">
+
       <div class="logs">
+      <h4 class="section-title">On Going Workflow</h4>
+
         <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoadingSteps">
           <span class="sr-only">Loading...</span>
         </div>
