@@ -229,7 +229,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   handleTeam(value: Role) {
     if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-      if (value.id === 29) {
+      if (value.groupName === 'DT_Director') {
         this.hideDropdown = true;
         this.form.get('teamDto')?.setValidators(null);
         this.form.get('teamDto')?.updateValueAndValidity();

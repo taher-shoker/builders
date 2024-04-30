@@ -35,6 +35,7 @@ export class MilestoneDetailsComponent implements OnInit {
   milestoneDetails!: MilestoneDetails;
   isLoadingSteps: boolean = false;
   panelOpenState = false;
+  openPanel: number | null = null;
   filteredDataHistory!: any;
   historyItemInitialStep: any = {
     status: '',
@@ -610,8 +611,186 @@ export class MilestoneDetailsComponent implements OnInit {
       ) {
         this.openMilestoneWorkflowActionsModal(action.actionObj.uniqueTitle);
       }
+      const step: Step = {
+        caption:
+          item[i].taskName === 'Review Remarks'
+            ? 'Review Progress'
+            : item[i].taskName,
+        state:
+          isWarningState === true
+            ? 'warning'
+            : item[i].status === 'completed'
+            ? 'done'
+            : 'undone',
+        notes: notes,
+        attachments: attachments,
+        extraInfo: [`${progressDate} ${byUser}`],
+        actions: actions,
+        stepObject: item[i],
+      };
+
+      this.historySteps.push(step);
     }
   }
+  isPanelOpen(panelNumber: number): boolean {
+    return this.openPanel === panelNumber;
+  }
+
+  panelOpened(panelNumber: number): void {
+    this.openPanel = panelNumber;
+  }
+  // doStepAction(action: { actionObj: Actions | string; item: any }) {
+  //   if (
+  //     typeof action.actionObj !== 'string' &&
+  //     'uniqueTitle' in action.actionObj
+  //   ) {
+  //     if (
+  //       action.actionObj.uniqueTitle ===
+  //       Actions.initiateUpdateProgress.uniqueTitle
+  //     ) {
+  //       this.openProgressUpdateModal(this.milestoneDetails.id || 0);
+  //     }
+  //     if (action.actionObj.uniqueTitle === Actions.updateDTRecord.uniqueTitle) {
+  //       this.isLoadingSteps = true;
+
+  //       this.milestonesService
+  //         .updateMilestoneRecord(
+  //           this.milestoneDetails.currentMilestoneProgressUpdateDTO
+  //             ?.workflowId || '',
+  //           action.item.requestTaskId
+  //         )
+  //         .subscribe(() => {
+  //           this.getMilestoneDetails();
+  //         });
+  //     }
+
+  //     if (
+  //       action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle ||
+  //       action.actionObj.uniqueTitle === Actions.returnProgress.uniqueTitle
+  //     ) {
+  //       const isApprove =
+  //         action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+  //           ? true
+  //           : false;
+  //       const popupMsg =
+  //         action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+  //           ? 'approve progess'
+  //           : 'return progress';
+  //       this.makeSureToApprove(
+  //         this.milestoneDetails.milestoneName || 'unnamed',
+  //         popupMsg
+  //       ).subscribe((res) => {
+  //         if (!res) {
+  //           return;
+  //         }
+  //         this.isLoadingSteps = true;
+  //         this.milestonesService
+  //           .updateMilestoneRecord(
+  //             this.milestoneDetails.currentMilestoneProgressUpdateDTO
+  //               ?.workflowId || '',
+  //             action.item.requestTaskId,
+  //             true,
+  //             isApprove
+  //           )
+  //           .subscribe(() => {
+  //             this.getMilestoneDetails();
+  //           });
+  //       });
+  //     }
+
+  //     if (
+  //       action.actionObj.uniqueTitle === Actions.reviewEvidence.uniqueTitle ||
+  //       action.actionObj.uniqueTitle ===
+  //         Actions.reviewJustification.uniqueTitle ||
+  //       action.actionObj.uniqueTitle === Actions.reviewOnTrack.uniqueTitle
+  //     ) {
+  //       const params: {
+  //         requestParams: { name: string; value: number | string | boolean }[];
+  //       } = {
+  //         requestParams: [],
+  //       };
+
+  //       this.makeSureToApprove(
+  //         this.milestoneDetails.milestoneName || 'unnamed'
+  //       ).subscribe((res) => {
+  //         if (!res) {
+  //           return;
+  //         }
+
+  //         if (action.item.taskName === 'Review Evidence') {
+  //           params.requestParams.push({
+  //             name: 'is_evidence_approved',
+  //             value: true,
+  //           });
+  //         } else if (action.item.taskName === 'Review Justification') {
+  //           params.requestParams.push({
+  //             name: 'is_justification_approved',
+  //             value: true,
+  //           });
+  //         } else if (action.item.taskName === 'Review Progress') {
+  //           params.requestParams.push({
+  //             name: 'is_remark_approved',
+  //             value: true,
+  //           });
+  //         }
+
+  //         this.isLoadingSteps = true;
+
+  //         this.milestonesService
+  //           .completePendingTask(
+  //             this.milestoneDetails.currentMilestoneProgressUpdateDTO
+  //               ?.workflowId || '',
+  //             action.item.requestTaskId,
+  //             params
+  //           )
+  //           .subscribe(() => {
+  //             this.getMilestoneDetails();
+  //           });
+  //       });
+  //     }
+
+  //     if (
+  //       action.actionObj.uniqueTitle === Actions.returnEvidence.uniqueTitle ||
+  //       action.actionObj.uniqueTitle ===
+  //         Actions.returnJustification.uniqueTitle ||
+  //       action.actionObj.uniqueTitle === Actions.returnOnTrack.uniqueTitle ||
+  //       action.actionObj.uniqueTitle === Actions.addEvidence.uniqueTitle ||
+  //       action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
+  //       action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
+  //     ) {
+  //       this.openMilestoneWorkflowActionsModal(
+  //         action.actionObj.uniqueTitle,
+  //         action.item
+  //       );
+  //     }
+
+  //     if (action.actionObj.uniqueTitle === Actions.noNeed.uniqueTitle) {
+  //       const params: {
+  //         requestParams: { name: string; value: number | string | boolean }[];
+  //       } = {
+  //         requestParams: [],
+  //       };
+
+  //       this.isLoadingSteps = true;
+
+  //       this.milestonesService
+  //         .completePendingTask(
+  //           this.milestoneDetails.currentMilestoneProgressUpdateDTO
+  //             ?.workflowId || '',
+  //           action.item.requestTaskId,
+  //           params
+  //         )
+  //         .subscribe(() => {
+  //           this.getMilestoneDetails();
+  //         });
+  //     }
+  //   } else if (
+  //     typeof action.actionObj === 'string' &&
+  //     action.actionObj === 'download'
+  //   ) {
+  //     this.downloadFile(action.item.id, action.item.label);
+  //   }
+  // }
 
   downloadFile(id: number, name: string = 'untitled.txt') {
     this.milestonesService.downloadAttachment(id).subscribe((buffer) => {
