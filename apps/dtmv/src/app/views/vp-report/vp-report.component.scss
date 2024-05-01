@@ -1,0 +1,178 @@
+@import url('../milestones-setting/milestones-setting.component.scss');
+
+.custom-layout {
+  .box {
+    top: 0 !important;
+    left: 1% !important;
+    padding-block: 24px;
+  }
+}
+
+.vp-report {
+  h3 {
+    font-size: 32px;
+    font-family: var(--stc-font-meduim);
+  }
+  h4 {
+    font-size: 20px;
+    font-family: var(--stc-font-bold);
+  }
+  .container-box {
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    height: 100%;
+    h5 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: left;
+      color: var(--stc-color);
+      font-family: var(--stc-font-meduim);
+    }
+    .progress-circule {
+      margin: 0 auto;
+    }
+  }
+  .teams {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    li {
+      border: 1px solid var(--stc-color);
+      border-radius: 8px;
+      margin: 10px;
+      padding: 8px 16px;
+      min-width: 100px;
+      text-align: center;
+      &:hover {
+        background-color: var(--stc-color);
+        color: white;
+        cursor: pointer;
+      }
+      &.active {
+        background-color: var(--stc-color);
+        color: white;
+      }
+    }
+  }
+
+  .progress-bar-box {
+    display: flex;
+    align-items: center;
+    padding: 30px;
+    height: 100%;
+
+    .bar {
+      flex-grow: 1;
+    }
+    .left-value,
+    .right-value {
+      margin-inline: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      p {
+        font-weight: bold;
+      }
+    }
+  }
+  .label {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: rgba($color: white, $alpha: 1) !important;
+  }
+}
+.mt-6 {
+  margin-top: 4rem;
+}
+/**Progress Circule **/
+
+@keyframes growProgressCircule {
+  0%,
+  33% {
+    --pgPercentage: 0;
+  }
+  100% {
+    --pgPercentage: var(--value);
+  }
+}
+
+@property --pgPercentage {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+
+div[role='progresscircule'] {
+  --size: 12rem;
+  --pgPercentage: var(--value);
+  animation: growProgressCircule 3s 1 forwards;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: radial-gradient(
+      closest-side,
+      white 80%,
+      transparent 0 99.9%,
+      white 0
+    ),
+    conic-gradient(
+      var(--stc-color) calc(var(--pgPercentage) * 1%),
+      var(--stc-lightGrey-color) 0
+    );
+  font-size: calc(var(--size) / 5);
+  color: var(--stc-color);
+}
+
+div[role='progresscircule']::before {
+  counter-reset: percentage var(--value);
+  content: counter(percentage) '%';
+}
+
+/******progress bar *******/
+@property --pgPercentageBar {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+.progress {
+  padding: 6px;
+  background: rgba(var(--stc-green-color), 0.1);
+  display: flex;
+  align-items: center;
+  height: 45px;
+  border-radius: 2px;
+}
+.bar .container {
+  width: 98%;
+  text-align: center;
+}
+.progress-bar {
+  height: 19px;
+  transition: 0.4s linear;
+  transition-property: width, background-color;
+}
+
+.progress-striped .progress-bar {
+  --pgPercentageBar: var(--value);
+  background-color: rgb(var(--stc-green-color));
+
+  width: 50%; //calc(var(--pgPercentageBar) * 1%);
+  animation: progressAnimationStrike 6s forwards;
+}
+
+@keyframes progressAnimationStrike {
+  from {
+    width: 0;
+  }
+  to {
+    width: calc(var(--value) * 1%);
+  }
+}

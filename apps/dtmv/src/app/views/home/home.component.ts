@@ -31,7 +31,14 @@ export class HomeComponent implements OnInit {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
-      roles: ['APPROVERS,CREATORS'],
+      roles: [],
+      urlHome: '/home',
+    },
+    {
+      name: 'Vp Report',
+      url: '/vp-report',
+      icon: 'fa-file-signature',
+      roles: [],
       urlHome: '/home',
     },
   ];
@@ -43,16 +50,19 @@ export class HomeComponent implements OnInit {
       this.userName = res?.name || '';
       if (res?.roles) {
         const items = [];
+
         for (let i = 0; i < this.navItems.length; i++) {
-          const similar = this.navItems[i].roles.filter((element) =>
-            element.includes(res.roles[0])
-          );
-          if (similar.length > 0) {
-            items.push(this.navItems[i]);
-            this.urlHome = this.navItems[i].urlHome;
+          if (this.navItems[i].roles.length > 0) {
+            const similar = this.navItems[i].roles.filter((element: string[]) =>
+              element?.includes(res.roles[0])
+            );
+            if (similar.length === 0) {
+              items.push(this.navItems[i]);
+              this.urlHome = this.navItems[i].urlHome;
+            }
+            this.navItems = items;
           }
         }
-        this.navItems = items;
       }
     });
   }

@@ -19,6 +19,12 @@ const routes: Routes = [
             (m) => m.MilestonesSettingModule
           ),
       },
+      {
+        path: 'vp-report',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('../vp-report/vp-report.module').then((m) => m.VpReportModule),
+      },
     ],
   },
 ];
