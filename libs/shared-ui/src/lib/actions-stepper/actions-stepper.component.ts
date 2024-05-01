@@ -49,8 +49,6 @@ export class ActionsStepperComponent {
   @ContentChild('captionTemplate') stepCaptionTemplate!: TemplateRef<any>;
 
   raiseAction(actionObj: string | Actions, optionalItem?: any) {
-    console.log('El acti', actionObj);
-
     this.stepperAction.emit({ actionObj, item: optionalItem });
   }
 }
