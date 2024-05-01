@@ -83,6 +83,7 @@ export interface MilestoneAttachment {
 
 export class Actions {
   static readonly addEvidence = new Actions('Add Evidence', 'Add Evidence');
+  static readonly addNewProgress = new Actions('Add New Progress', 'Add New Progress');
   static readonly addJustification = new Actions(
     'Add Justification',
     'Add Justification'
