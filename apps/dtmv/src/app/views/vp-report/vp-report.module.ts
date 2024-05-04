@@ -12,6 +12,7 @@ import { MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
 import { VpReportRoutingModule } from './vp-report-routing.module';
 import { VpReportComponent } from './vp-report.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { SharedUiModule } from '@stc-apps/shared-ui';
 
 @NgModule({

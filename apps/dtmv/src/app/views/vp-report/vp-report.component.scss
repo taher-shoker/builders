@@ -22,7 +22,6 @@
     background-color: white;
     border-radius: 10px;
     display: flex;
-    justify-content: center;
     flex-direction: column;
     height: 100%;
     h5 {
@@ -90,7 +89,151 @@
 .mt-6 {
   margin-top: 4rem;
 }
-/**Progress Circule **/
+.mt-70 {
+  margin-top: 70px;
+}
+
+/********** Gantt Sytles ************/
+.milestones-gantt {
+  min-height: 700px;
+  h2 {
+    font-size: 24px;
+    text-align: center;
+    color: white;
+    padding-block: 50px;
+  }
+  h6 {
+    font-size: 16px;
+    font-family: var(--stc-font-bold);
+    text-align: center;
+    color: white;
+    padding-block: 8px;
+  }
+  .col-md-1 {
+    h6 {
+      font-family: var(--stc-font-base);
+      text-transform: capitalize;
+    }
+  }
+}
+.bg-stc-color {
+  background-color: var(--stc-color);
+}
+.bg-light-grey-color {
+  background-color: var(--stc-lightGrey-color);
+}
+.bg-stc-color-dark-1 {
+  background-color: #410073;
+}
+.bg-stc-color-dark-2 {
+  background-color: #360060;
+}
+.bg-stc-color-dark-3 {
+  background-color: #130022;
+}
+.border-right {
+  border-right: 1px solid white;
+}
+.border-top-left {
+  border-radius: 10px 0px 0px 0px;
+}
+.border-top-right {
+  border-radius: 0px 10px 0px 0px;
+}
+.border-left {
+  border-left: 1px solid var(--grey-color);
+}
+.activites {
+  padding: 0;
+  li {
+    color: var(--grey-color);
+    margin-top: 70px;
+    font-size: 22px;
+    line-height: 35px;
+  }
+}
+.milestone-item {
+  cursor: pointer;
+  width: 90px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-top: 5px;
+  .status {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: red;
+  }
+  span {
+    margin-top: 5px;
+    font-size: 12px;
+  }
+  .info {
+    visibility: hidden;
+    width: max-content;
+    min-width: 250px;
+    background-color: rgb(255, 255, 255);
+    color: var(--stc-color);
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px;
+    position: absolute;
+    z-index: 1;
+    bottom: 106%;
+    left: 50%;
+    margin-left: -60px;
+    text-align: left;
+    border: 1px solid var(--grey-color);
+    ul {
+      padding-left: 10px;
+      li {
+        display: flex;
+        align-items: center;
+        color: var(--grey-color);
+        small {
+          display: inline-block;
+          white-space: nowrap;
+          max-width: 22em;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          margin-left: 10px;
+          color: var(--stc-color);
+        }
+      }
+    }
+  }
+
+  .info::after {
+    content: '';
+    position: absolute;
+    top: 100%;
+    left: 60px;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black transparent transparent transparent;
+  }
+
+  &:hover .info {
+    visibility: visible;
+  }
+}
+
+/******** highlight & impact styles **********/
+.highlight {
+  ul {
+    padding-left: 20px;
+    list-style: disc;
+    li {
+      line-height: 35px;
+      color: var(--grey-color);
+    }
+  }
+}
+
+/** Progress Circule **/
 
 @keyframes growProgressCircule {
   0%,

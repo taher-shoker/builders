@@ -13,7 +13,22 @@ import { FormControl, FormGroup } from '@angular/forms';
 export class VpReportComponent implements OnInit {
   allTeams: any[] = [];
   filterSelect!: FormGroup;
+  currentParams: any;
 
+  months = [
+    { id: 1, startDate: '', endDate: '', label: '' },
+    { id: 2, startDate: '', endDate: '', label: '' },
+    { id: 3, startDate: '', endDate: '', label: '' },
+    { id: 4, startDate: '', endDate: '', label: '' },
+    { id: 5, startDate: '', endDate: '', label: '' },
+    { id: 6, startDate: '', endDate: '', label: '' },
+    { id: 7, startDate: '', endDate: '', label: '' },
+    { id: 8, startDate: '', endDate: '', label: '' },
+    { id: 9, startDate: '', endDate: '', label: '' },
+    { id: 10, startDate: '', endDate: '', label: '' },
+    { id: 11, startDate: '', endDate: '', label: '' },
+    { id: 12, startDate: '', endDate: '', label: '' },
+  ];
   constructor(
     private cookieService: CookieService,
     private authService: AuthService,
@@ -38,23 +53,23 @@ export class VpReportComponent implements OnInit {
   }
   navigateWithQueryParam(query: string) {
     // Define your query parameters
-    const currentParams: any = { ...this.route.snapshot.queryParams };
+    this.currentParams = { ...this.route.snapshot.queryParams };
     // Check if the 'team' parameter already exists
-    if (currentParams.team === query) {
+    if (this.currentParams.team === query) {
       // If it exists and matches the provided value, remove it
-      delete currentParams.team;
+      this.currentParams = {};
+      this.router.navigate([], {
+        relativeTo: this.route,
+      });
     } else {
       // If it doesn't exist or doesn't match, add it
-      currentParams.team = query;
+      this.currentParams.team = query;
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: this.currentParams,
+        queryParamsHandling: 'merge', // Merge with existing query parameters
+      });
     }
-    console.log(currentParams);
-
-    // Update the query parameters of the current URL
-    this.router.navigate([], {
-      relativeTo: this.route,
-      queryParams: currentParams,
-      queryParamsHandling: 'merge', // Merge with existing query parameters
-    });
   }
   handleSelectChange(value: string) {
     console.log(value);

@@ -20,7 +20,8 @@
         </div>
         <div class="col-md-12">
           <ul class="teams">
-            <li *ngFor="let item of allTeams" (click)="toggleTeam(item.name)">{{item.name}}</li>
+            <li *ngFor="let item of allTeams" (click)="toggleTeam(item.name)"
+              [ngClass]="this.currentParams?.team === item.name ? 'active':''"> {{item.name}}</li>
           </ul>
         </div>
       </div>
@@ -52,6 +53,196 @@
                 <h6>EOY Target</h6>
                 <p>93%</p>
               </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      <div class="milestones-gantt">
+        <div class="row mt-6 ">
+          <div class="col-md-3 ">
+            <div class="row">
+              <div class="col-md-12 bg-stc-color border-top-left">
+                <h2>GCofStaff
+                  DT work streams
+                </h2>
+              </div>
+
+            </div>
+
+
+          </div>
+          <div class="col-md-9 border-left">
+            <div class="row">
+              <div class="col-md-12 bg-stc-color-dark-1 border-top-right">
+                <div class="row">
+                  <div class="col-md-12">
+                    <h6 class="">2023</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 bg-stc-color-dark-2">
+                <div class="row">
+                  <div class="col-md-3  border-right">
+                    <h6>Q1</h6>
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <h6>Q2</h6>
+                  </div>
+                  <div class="col-md-3 border-right">
+                    <h6>Q3</h6>
+                  </div>
+                  <div class="col-md-3 ">
+                    <h6>Q4</h6>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12  bg-stc-color-dark-3">
+                <div class="row">
+                  <div class="col-md-1">
+                    <h6>Jan</h6>
+                  </div>
+                  <div class="col-md-1 ">
+                    <h6>Feb</h6>
+                  </div>
+                  <div class="col-md-1  border-right">
+                    <h6>Mar</h6>
+                  </div>
+                  <div class="col-md-1 ">
+                    <h6>Apr</h6>
+                  </div>
+                  <div class="col-md-1  ">
+                    <h6>May</h6>
+                  </div>
+                  <div class="col-md-1  border-right">
+                    <h6>Jun</h6>
+                  </div>
+                  <div class="col-md-1 ">
+                    <h6>Jul </h6>
+                  </div>
+                  <div class="col-md-1 ">
+                    <h6>Aug</h6>
+                  </div>
+                  <div class="col-md-1  border-right">
+                    <h6>Sep</h6>
+                  </div>
+                  <div class="col-md-1 ">
+                    <h6>Oct</h6>
+                  </div>
+                  <div class="col-md-1 ">
+                    <h6>Nov</h6>
+                  </div>
+                  <div class="col-md-1 ">
+                    <h6>Dec</h6>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Data will binding here -->
+        <div class="row">
+          <div class="col-md-3 ">
+            <div class="row">
+              <div class="col-md-12 bg-light-grey-color">
+                <ul class="activites">
+                  <li>Digital Business Enablement</li>
+                  <li>Digital Business Enablement</li>
+
+                  <li>Digital Business Enablement</li>
+                  <li>Digital Business Enablement</li>
+
+                </ul>
+              </div>
+            </div>
+
+
+          </div>
+          <div class="col-md-9 border-left">
+            <div class="row bg-light-grey-color mt-701">
+              <div class="col-md-1 p-0">
+                <div class="d-flex flex-column">
+                  <div class="milestone-item">
+                    <div class="status"></div>
+                    <span>Detail plan</span>
+                    <div class="info">
+                      <ul>
+                        <li>name: <small>fgggggffffffffffffffffffffffffffffgggggf</small></li>
+                        <li>status: <small>Delayed</small></li>
+                        <li>startDate: <small>2024-04-20</small></li>
+                        <li>endDate: <small>2024-05-20</small></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="milestone-item">
+                    <div class="status"></div>
+                    <span>Detail plan</span>
+                    <div class="info">
+                      <ul>
+                        <li>name: <small>fgggggffffffffffffffffffffffffffffgggggf</small></li>
+                        <li>status: <small>Delayed</small></li>
+                        <li>startDate: <small>2024-04-20</small></li>
+                        <li>endDate: <small>2024-05-20</small></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+              <div class="col-md-1 p-1">
+                <div class="d-flex flex-column">
+                  <div class="milestone-item">
+                    <div class="status"></div>
+                    <span>Detail plan</span>
+                    <div class="info">
+                      <ul>
+                        <li>name: <small>fgggggffffffffffffffffffffffffffffgggggf</small></li>
+                        <li>status: <small>Delayed</small></li>
+                        <li>startDate: <small>2024-04-20</small></li>
+                        <li>endDate: <small>2024-05-20</small></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+      <div class="highlight">
+        <div class="row">
+          <div class="col-md-5">
+            <div class="container-box">
+              <h5>DT Program Highlight</h5>
+              <ul>
+                <li>Accelerate activation of utilization
+                  and impact this year</li>
+                <li>
+                  MMS : UI/UX milestone been
+                  escalated by the business to
+                  Application to provide an update
+                  and this delay will affect the overall program.
+                </li>
+              </ul>
+            </div>
+
+          </div>
+          <div class="col-md-7">
+            <div class="container-box">
+              <h5>Value / Impact</h5>
+              <ul>
+                <li>Digitize the activities for GCEO office.</li>
+                <li>Better alignment between GCEO, C level, and committees Executives experience in monitoring the KPIs
+                  and decision
+                  making</li>
+
+              </ul>
             </div>
 
           </div>
