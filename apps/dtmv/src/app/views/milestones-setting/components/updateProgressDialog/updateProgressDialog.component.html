@@ -1,6 +1,6 @@
 <div class="dialog p-4">
   <div class="dialog-body">
-    <div class="dialog-header">Milestone Progress Update | {{data}}</div>
+    <div class="dialog-header">Milestone Progress Update | {{data.milestoneName}}</div>
     <div class="body-holder">
       <form [formGroup]="form">
         <div class="my-2">
@@ -11,11 +11,18 @@
               <mat-error *ngIf="form.get('overallProgress')?.hasError('required')">
                 This Field Is Required
               </mat-error>
-              <mat-error *ngIf="form.get('overallProgress')?.hasError('min') || form.get('overallProgress')?.hasError('max')">
-                Must be from 1 to 100
+              <!-- <mat-error *ngIf="form.get('overallProgress')?.hasError('max')">
+                Can't be more than 100
               </mat-error>
+              <mat-error *ngIf="form.get('overallProgress')?.hasError('min')">
+                Should be greater than {{overallProgressFloor}}
+              </mat-error> -->
               <mat-error *ngIf="form.get('overallProgress')?.hasError('pattern') ">
                 Must be valid number
+              </mat-error>
+
+              <mat-error *ngIf="form.get('overallProgress')?.hasError('invalidValue')">
+                Value must be greater than {{overallProgressFloor}} and maximum 100.
               </mat-error>
             }
         </div>

@@ -125,8 +125,8 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       actions: !this.milestonesService.checkIsAdmin()
         ? this.milestonesService.checkIsBusinessSpoc() ||
           this.milestonesService.checkIsDirector()
-          ? ['details', 'updateProgress']
-          : ['edit', 'details', 'updateProgress']
+          ? ['details']
+          : ['edit', 'details']
         : ['edit', 'delete', 'details'],
       label: '',
     },
