@@ -54,18 +54,19 @@ export class MilestoneDetailsComponent implements OnInit {
   overallProgressInMaking: string = '';
   isUpdateProgressOnHold: boolean = false;
 
-  refinedProgressUpdate : {
-    workflowId: number | string,
-    requestTaskId: number | string,
-    deliverableInMaking: string,
-    overallProgressInMaking: string
-  }= {
+  refinedProgressUpdate: {
+    workflowId: number | string;
+    requestTaskId: number | string;
+    deliverableInMaking: string;
+    overallProgressInMaking: string;
+  } = {
     workflowId: 0,
     requestTaskId: 0,
-    deliverableInMaking: "",
-    overallProgressInMaking:""
-
+    deliverableInMaking: '',
+    overallProgressInMaking: '',
   };
+
+  globalLoad: boolean = false;
 
   constructor(
     protected dialogService: DialogService,
@@ -96,6 +97,8 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   showMilestoneProgressWorkflow() {
+    console.log('show milestone flow');
+
     this.isLoadingSteps = true;
 
     this.steps = [];
@@ -140,11 +143,15 @@ export class MilestoneDetailsComponent implements OnInit {
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
     setTimeout(() => {
+      console.log('getMilestoneProgressWorkflow flow');
+
       this.getMilestoneProgressWorkflow();
     }, 5000);
   }
-
+  counterMile: number = 0;
   getMilestoneProgressWorkflow() {
+    console.log('in getMilestoneProgressWorkflow');
+    ++this.counterMile;
     if (
       this.milestoneDetails.currentMilestoneProgressUpdateDto &&
       this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
@@ -154,7 +161,7 @@ export class MilestoneDetailsComponent implements OnInit {
           this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
         )
         .subscribe((res) => {
-          if (!this.isUpdateProgressOnHold) {
+          if (!this.isUpdateProgressOnHold && !this.globalLoad) {
             this.isLoadingSteps = false;
           }
 
@@ -198,7 +205,8 @@ export class MilestoneDetailsComponent implements OnInit {
                 if (
                   taskAttribute.name.includes('approved') &&
                   (taskAttribute.value === 'false' ||
-                    taskAttribute.value == '0')
+                    taskAttribute.value == '0' ||
+                    taskAttribute.value == '2')
                 ) {
                   // Means it's approval (review) step and it's not approved.
                   isWarningState = true;
@@ -303,14 +311,21 @@ export class MilestoneDetailsComponent implements OnInit {
             this.steps.push(step);
           }
         });
+
+      if (this.counterMile == 2 && this.globalLoad === true) {
+        this.isLoadingSteps = false;
+        this.globalLoad = false;
+      }
     }
   }
 
   getMilestoneDetails() {
+    console.log('getMilestoneDetails in function');
+
     this.milestonesService
       .getMilestone(this.milestoneId)
       .subscribe((res: any) => {
-        this.milestonesService.getRemindersData();
+        // this.milestonesService.getRemindersData();
         this.milestoneDetails = res;
         this.bannerDataService.updateData({
           title: this.milestoneDetails.milestoneName || '',
@@ -322,6 +337,8 @@ export class MilestoneDetailsComponent implements OnInit {
           this.milestoneDetails.currentMilestoneProgressUpdateDto
             .overallProgress
         ) {
+          console.log('overallProgress is found');
+
           this.showMilestoneProgressWorkflow();
         } else {
           this.steps = [];
@@ -396,7 +413,9 @@ export class MilestoneDetailsComponent implements OnInit {
 
           if (
             taskAttribute.name.includes('approved') &&
-            (taskAttribute.value === 'false' || taskAttribute.value == '0')
+            (taskAttribute.value === 'false' ||
+              taskAttribute.value == '0' ||
+              taskAttribute.value == '2')
           ) {
             // Means it's approval (review) step and it's rejected.
             isWarningState = true;
@@ -454,14 +473,12 @@ export class MilestoneDetailsComponent implements OnInit {
     ) {
       if (
         action.actionObj.uniqueTitle ===
-          Actions.initiateUpdateProgress.uniqueTitle
+        Actions.initiateUpdateProgress.uniqueTitle
       ) {
         this.openProgressUpdateModal(this.milestoneDetails.id || 0);
       }
-      if(
-        action.actionObj.uniqueTitle === Actions.addNewProgress.uniqueTitle
-      ){
-        this.refinedProgressUpdate.requestTaskId = action.item.requestTaskId
+      if (action.actionObj.uniqueTitle === Actions.addNewProgress.uniqueTitle) {
+        this.refinedProgressUpdate.requestTaskId = action.item.requestTaskId;
         this.openProgressUpdateModal(this.milestoneDetails.id || 0, false);
       }
 
@@ -607,7 +624,10 @@ export class MilestoneDetailsComponent implements OnInit {
     }
   }
 
-  doSpecialStepAction(action: { actionObj: Actions | string }, isFirstUpdateProgress: boolean = true) {
+  doSpecialStepAction(
+    action: { actionObj: Actions | string },
+    isFirstUpdateProgress: boolean = true
+  ) {
     if (
       typeof action.actionObj !== 'string' &&
       'uniqueTitle' in action.actionObj
@@ -621,7 +641,11 @@ export class MilestoneDetailsComponent implements OnInit {
         action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
         action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
       ) {
-        this.openMilestoneWorkflowActionsModal(action.actionObj.uniqueTitle, undefined,isFirstUpdateProgress);
+        this.openMilestoneWorkflowActionsModal(
+          action.actionObj.uniqueTitle,
+          undefined,
+          isFirstUpdateProgress
+        );
       }
     }
   }
@@ -642,7 +666,11 @@ export class MilestoneDetailsComponent implements OnInit {
     });
   }
 
-  openMilestoneWorkflowActionsModal(type: string, item?: RequestTask, isFirstUpdateProgress: boolean = true) {
+  openMilestoneWorkflowActionsModal(
+    type: string,
+    item?: RequestTask,
+    isFirstUpdateProgress: boolean = true
+  ) {
     const dialogRef = this.matDialog.open(
       UpdateMilestoneProgressDialogComponent,
       {
@@ -762,7 +790,10 @@ export class MilestoneDetailsComponent implements OnInit {
     });
   }
 
-  openProgressUpdateModal(milestoneId: Milestone['id'], isFirstUpdateProgress: boolean = true) {
+  openProgressUpdateModal(
+    milestoneId: Milestone['id'],
+    isFirstUpdateProgress: boolean = true
+  ) {
     const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
       width: '800px',
       data: {
@@ -781,48 +812,62 @@ export class MilestoneDetailsComponent implements OnInit {
       this.deliverableInMaking = res.deliverable;
       this.overallProgressInMaking = res.overallProgress;
 
-      this.refinedProgressUpdate.deliverableInMaking = res.deliverable
-      this.refinedProgressUpdate.overallProgressInMaking = res.overallProgress
-      
+      this.refinedProgressUpdate.deliverableInMaking = res.deliverable;
+      this.refinedProgressUpdate.overallProgressInMaking = res.overallProgress;
+
       this.isLoadingSteps = true;
       this.isUpdateProgressOnHold = true;
-      this.sendProgressToCalculate(milestoneId, this.overallProgressInMaking, isFirstUpdateProgress);
+      this.sendProgressToCalculate(
+        milestoneId,
+        this.overallProgressInMaking,
+        isFirstUpdateProgress
+      );
     });
   }
 
-  sendAllRequests(params: {
-    requestParams: {
-      name: string;
-      value: number | string | boolean;
-    }[];
-  }, isFirstUpdateProgress: boolean = true) {
-
-    if(isFirstUpdateProgress){
+  sendAllRequests(
+    params: {
+      requestParams: {
+        name: string;
+        value: number | string | boolean;
+      }[];
+    },
+    isFirstUpdateProgress: boolean = true
+  ) {
+    console.clear();
+    if (isFirstUpdateProgress) {
+      console.log('isFirstUpdateProgress', 'updateProgress subscription');
       this.updateProgress().subscribe(() => {
+        console.log('getMilestoneDetails subscription');
         this.getMilestoneDetails();
         setTimeout(() => {
           this.isLoadingSteps = true;
-  
+          console.log('pushWorkflowAction settimeout');
+
           this.pushWorkflowAction(params);
         }, 6000);
       });
-    }else{
+    } else {
+      console.log('not in isFirstUpdateProgress');
+      this.globalLoad = true;
+      this.counterMile = 0;
       this.updateNonInitialProgress().subscribe(() => {
-        setTimeout(()=> {
+        setTimeout(() => {
           this.getMilestoneDetails();
           this.isLoadingSteps = true;
           setTimeout(() => {
-    
             this.pushWorkflowAction(params);
           }, 15000);
         }, 10000);
-
-
-      })
+      });
     }
   }
 
-  sendProgressToCalculate(milestoneId: number, progress: string, isFirstUpdateProgress: boolean = true) {
+  sendProgressToCalculate(
+    milestoneId: number,
+    progress: string,
+    isFirstUpdateProgress: boolean = true
+  ) {
     this.milestonesService
       .calculateMilestoneProgress(milestoneId, progress)
       .subscribe((res) => {
@@ -851,23 +896,24 @@ export class MilestoneDetailsComponent implements OnInit {
     const params: {
       requestParams: { name: string; value: number | string | boolean }[];
     } = {
-      requestParams: [{
-        name: "overall_progress",
-        value: this.refinedProgressUpdate.overallProgressInMaking
-      },
-    
-      {
-        name: "deliverable",
-        value: this.refinedProgressUpdate.deliverableInMaking
-      }],
+      requestParams: [
+        {
+          name: 'overall_progress',
+          value: this.refinedProgressUpdate.overallProgressInMaking,
+        },
+
+        {
+          name: 'deliverable',
+          value: this.refinedProgressUpdate.deliverableInMaking,
+        },
+      ],
     };
 
     return this.milestonesService.completePendingTask(
-      this.milestoneDetails.currentMilestoneProgressUpdateDto
-        ?.workflowId || '',
-        this.refinedProgressUpdate.requestTaskId,
+      this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId || '',
+      this.refinedProgressUpdate.requestTaskId,
       params
-    )
+    );
   }
 
   pushWorkflowAction(params: {
@@ -876,9 +922,11 @@ export class MilestoneDetailsComponent implements OnInit {
       value: number | string | boolean;
     }[];
   }) {
+    console.log('in pushWorkflowAction');
+
     this.isLoadingSteps = true;
 
-    console.log("The step object", this.steps)
+    console.log('The step object', this.steps);
     this.milestonesService
       .completePendingTask(
         this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId ||
@@ -887,7 +935,10 @@ export class MilestoneDetailsComponent implements OnInit {
         params
       )
       .subscribe(() => {
+        console.log('after pushWorkflowAction subscription');
+
         this.isLoadingSteps = true;
+        console.log('getMilestoneDetails again');
 
         this.getMilestoneDetails();
       });
