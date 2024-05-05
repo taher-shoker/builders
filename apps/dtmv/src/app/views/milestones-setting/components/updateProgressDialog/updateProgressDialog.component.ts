@@ -23,7 +23,7 @@ export class UpdateProgressDialogComponent {
     }
 
     this.form = new FormGroup({
-      overallProgress: new FormControl('', [Validators.required, customValidator(this.overallProgressFloor), Validators.pattern('^[0-9]+(.[0-9]+)?$')]),
+      overallProgress: new FormControl('', [Validators.required, customValidator(this.overallProgressFloor), Validators.pattern('^(?!.*[a-zA-Z]).*[0-9]+(.[0-9]+)?$')]),
       deliverable: new FormControl('', [Validators.maxLength(150)]),
     })
   }
