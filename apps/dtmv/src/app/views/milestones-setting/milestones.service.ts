@@ -65,25 +65,12 @@ export interface MilestoneAttachment {
   url: string;
 }
 
-// export enum Actions {
-//   addEvidence = {uniqueTitle: 'Add Evidence', displayCaption: 'Add Evidence'},
-//   addJustification = {uniqueTitle: 'Add Justification', displayCaption: 'Add Justification'},
-//   addOnTrack = {uniqueTitle: 'Add Remarks', displayCaption: 'Add Remarks'},
-//   reviewEvidence = {uniqueTitle: 'Approve Evidence', displayCaption: 'Approve Evidence'},
-//   reviewJustification = {uniqueTitle: 'Approve Justification', displayCaption: 'Approve Justification'},
-//   reviewOnTrack = {uniqueTitle: 'Approve on Track', displayCaption: 'Approve on Track'},
-//   updateDTRecord = {uniqueTitle: 'Update Record', displayCaption: 'Update Record'},
-//   initiateUpdateProgress = {uniqueTitle: 'Update progress', displayCaption: 'Update progress'},
-//   approveProgress = {uniqueTitle: 'Approve progress', displayCaption: 'Approve progress'},
-//   returnJustification = {uniqueTitle: 'Return Justification', displayCaption: 'Return Justification'},
-//   returnEvidence = {uniqueTitle: 'Return Evidence', displayCaption: 'Return Evidence'},
-//   returnOnTrack = {uniqueTitle: 'Return Remarks', displayCaption: 'Return Remarks'},
-//   noNeed = {uniqueTitle: 'No Need', displayCaption: 'No Need'},
-// }
-
 export class Actions {
   static readonly addEvidence = new Actions('Add Evidence', 'Add Evidence');
-  static readonly addNewProgress = new Actions('Add New Progress', 'Add New Progress');
+  static readonly addNewProgress = new Actions(
+    'Add New Progress',
+    'Add New Progress'
+  );
   static readonly addJustification = new Actions(
     'Add Justification',
     'Add Justification'
@@ -127,22 +114,6 @@ export class Actions {
     return this.uniqueTitle;
   }
 }
-
-// export enum Actions {
-//   addEvidence = {id: 1, action: 'Add Evidence'},
-//   addJustification = {id: 2, action: 'Add Justification'},
-//   addOnTrack = {id: 3, action: 'Add Remarks'},
-//   reviewEvidence = {id: 4, action: 'Approve Evidence'},
-//   reviewJustification = {id: 5, action: 'Approve Justification'},
-//   reviewOnTrack = {id: 6, action: 'Approve on Track'},
-//   updateDTRecord = {id: 7, action: 'Update Record'},
-//   initiateUpdateProgress = {id: 8, action: 'Update progress'},
-//   approveProgress = {id: 9, action: 'Approve progress'},
-//   returnJustification = {id: 10, action: 'Return Justification'},
-//   returnEvidence = {id: 11, action: 'Return Evidence'},
-//   returnOnTrack = {id: 12, action: 'Return Remarks'},
-//   noNeed = {id: 13, action: 'No Need'},
-// }
 
 export interface MilestoneDetails {
   activityName: string | null;
@@ -422,8 +393,13 @@ export class MilestonesService {
    * Calculate the overall of a milestone without adding records to the database
    */
 
-  calculateMilestoneProgress(milestoneId: number, progress: string): Observable<{milestoneProgressId: number, status: string}>{
-    return this.http.get<{milestoneProgressId: number, status: string}>(`${this.dtUrl}/status/${milestoneId}?overallProgress=${progress}`)
+  calculateMilestoneProgress(
+    milestoneId: number,
+    progress: string
+  ): Observable<{ milestoneProgressId: number; status: string }> {
+    return this.http.get<{ milestoneProgressId: number; status: string }>(
+      `${this.dtUrl}/status/${milestoneId}?overallProgress=${progress}`
+    );
     // return of({milestoneProgressId: 5000, status: "Delayed"})
   }
 
@@ -538,4 +514,8 @@ export type Attachment = {
   fileName: string;
   url: string;
   label: string;
+};
+
+export type Params = {
+  requestParams: { name: string; value: number | string | boolean }[];
 };

@@ -12,6 +12,7 @@ import {
   MilestoneAttachment,
   MilestoneDetails,
   MilestonesService,
+  Params,
   RequestTask,
 } from '../../milestones.service';
 import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
@@ -66,7 +67,7 @@ export class MilestoneDetailsComponent implements OnInit {
     overallProgressInMaking: '',
   };
 
-  globalLoad: boolean = false;
+  needToPushWorkflowAction: boolean = false;
 
   constructor(
     protected dialogService: DialogService,
@@ -96,9 +97,7 @@ export class MilestoneDetailsComponent implements OnInit {
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
   }
 
-  showMilestoneProgressWorkflow() {
-    console.log('show milestone flow');
-
+  showMilestoneProgressWorkflow(params?: Params) {
     this.isLoadingSteps = true;
 
     this.steps = [];
@@ -142,16 +141,10 @@ export class MilestoneDetailsComponent implements OnInit {
     };
 
     this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
-    setTimeout(() => {
-      console.log('getMilestoneProgressWorkflow flow');
-
-      this.getMilestoneProgressWorkflow();
-    }, 5000);
+    this.getMilestoneProgressWorkflow(params);
   }
-  counterMile: number = 0;
-  getMilestoneProgressWorkflow() {
-    console.log('in getMilestoneProgressWorkflow');
-    ++this.counterMile;
+
+  getMilestoneProgressWorkflow(params?: Params) {
     if (
       this.milestoneDetails.currentMilestoneProgressUpdateDto &&
       this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
@@ -161,7 +154,7 @@ export class MilestoneDetailsComponent implements OnInit {
           this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
         )
         .subscribe((res) => {
-          if (!this.isUpdateProgressOnHold && !this.globalLoad) {
+          if (!this.isUpdateProgressOnHold) {
             this.isLoadingSteps = false;
           }
 
@@ -310,18 +303,14 @@ export class MilestoneDetailsComponent implements OnInit {
             };
             this.steps.push(step);
           }
+          if (this.needToPushWorkflowAction) {
+            this.pushWorkflowAction(params!);
+          }
         });
-
-      if (this.counterMile == 2 && this.globalLoad === true) {
-        this.isLoadingSteps = false;
-        this.globalLoad = false;
-      }
     }
   }
 
-  getMilestoneDetails() {
-    console.log('getMilestoneDetails in function');
-
+  getMilestoneDetails(params?: Params) {
     this.milestonesService
       .getMilestone(this.milestoneId)
       .subscribe((res: any) => {
@@ -337,9 +326,7 @@ export class MilestoneDetailsComponent implements OnInit {
           this.milestoneDetails.currentMilestoneProgressUpdateDto
             .overallProgress
         ) {
-          console.log('overallProgress is found');
-
-          this.showMilestoneProgressWorkflow();
+          this.showMilestoneProgressWorkflow(params);
         } else {
           this.steps = [];
           this.askUserToInitiateUpdateProgress();
@@ -364,6 +351,7 @@ export class MilestoneDetailsComponent implements OnInit {
       )
     );
   }
+
   getHistoryTasks(request: any) {
     this.historySteps = [];
     const item = request?.requestTasksHistory;
@@ -649,6 +637,7 @@ export class MilestoneDetailsComponent implements OnInit {
       }
     }
   }
+
   isPanelOpen(panelNumber: number): boolean {
     return this.openPanel === panelNumber;
   }
@@ -685,6 +674,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (!res) {
+        this.isLoadingSteps = false;
         return;
       }
 
@@ -769,6 +759,8 @@ export class MilestoneDetailsComponent implements OnInit {
             value: res.attachments,
           });
         }
+      } else if (type === Actions.noNeed.uniqueTitle) {
+        // no need action here.. not tested
       }
 
       this.isLoadingSteps = true;
@@ -834,31 +826,17 @@ export class MilestoneDetailsComponent implements OnInit {
     },
     isFirstUpdateProgress: boolean = true
   ) {
-    console.clear();
     if (isFirstUpdateProgress) {
-      console.log('isFirstUpdateProgress', 'updateProgress subscription');
       this.updateProgress().subscribe(() => {
-        console.log('getMilestoneDetails subscription');
-        this.getMilestoneDetails();
-        setTimeout(() => {
-          this.isLoadingSteps = true;
-          console.log('pushWorkflowAction settimeout');
-
-          this.pushWorkflowAction(params);
-        }, 6000);
+        this.isLoadingSteps = true;
+        this.needToPushWorkflowAction = true;
+        this.getMilestoneDetails(params);
       });
     } else {
-      console.log('not in isFirstUpdateProgress');
-      this.globalLoad = true;
-      this.counterMile = 0;
       this.updateNonInitialProgress().subscribe(() => {
-        setTimeout(() => {
-          this.getMilestoneDetails();
-          this.isLoadingSteps = true;
-          setTimeout(() => {
-            this.pushWorkflowAction(params);
-          }, 15000);
-        }, 10000);
+        this.needToPushWorkflowAction = true;
+        this.isLoadingSteps = true;
+        this.getMilestoneDetails(params);
       });
     }
   }
@@ -916,17 +894,9 @@ export class MilestoneDetailsComponent implements OnInit {
     );
   }
 
-  pushWorkflowAction(params: {
-    requestParams: {
-      name: string;
-      value: number | string | boolean;
-    }[];
-  }) {
-    console.log('in pushWorkflowAction');
-
+  pushWorkflowAction(params: Params) {
     this.isLoadingSteps = true;
 
-    console.log('The step object', this.steps);
     this.milestonesService
       .completePendingTask(
         this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId ||
@@ -935,11 +905,8 @@ export class MilestoneDetailsComponent implements OnInit {
         params
       )
       .subscribe(() => {
-        console.log('after pushWorkflowAction subscription');
-
         this.isLoadingSteps = true;
-        console.log('getMilestoneDetails again');
-
+        this.needToPushWorkflowAction = false;
         this.getMilestoneDetails();
       });
   }
