@@ -94,7 +94,9 @@ export class MilestoneDetailsComponent implements OnInit {
       actions: [Actions.initiateUpdateProgress],
     };
     this.isLoadingSteps = false;
-    this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
+    if (!this.isDirector()) {
+      this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
+    }
   }
 
   showMilestoneProgressWorkflow(params?: Params) {
@@ -320,6 +322,7 @@ export class MilestoneDetailsComponent implements OnInit {
           title: this.milestoneDetails.milestoneName || '',
           text: '',
         });
+        console.log(this.milestonesService.checkIsDirector());
 
         if (
           this.milestoneDetails.currentMilestoneProgressUpdateDto &&
@@ -327,6 +330,7 @@ export class MilestoneDetailsComponent implements OnInit {
             .overallProgress
         ) {
           this.showMilestoneProgressWorkflow(params);
+          console.log('here1');
         } else {
           this.steps = [];
           this.askUserToInitiateUpdateProgress();
@@ -922,5 +926,9 @@ export class MilestoneDetailsComponent implements OnInit {
       });
       return dialogRef.afterClosed();
     }
+  }
+
+  isDirector(): boolean {
+    return this.milestonesService.checkIsDirector();
   }
 }
