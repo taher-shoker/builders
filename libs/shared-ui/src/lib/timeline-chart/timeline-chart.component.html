@@ -1,0 +1,147 @@
+<div class="milestones-gantt">
+  <div class="row header">
+    <div class="col-md-3 name-col border-top-left">
+      <h2>
+        {{ dtStreamMutated().streamName }}
+      </h2>
+    </div>
+    <div class="col-md-9 border-left">
+      <div class="row timeline-row">
+        <div class="col-md-12 bg-stc-color-dark-1 border-top-right">
+          <div class="row">
+            <div class="col-md-12">
+              <h6 class="stream-year">{{ dtStreamMutated().year }}</h6>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 bg-stc-color-dark-2">
+          <div class="row">
+            <div class="col-md-3 border-right">
+              <h6>Q1</h6>
+            </div>
+            <div class="col-md-3 border-right">
+              <h6>Q2</h6>
+            </div>
+            <div class="col-md-3 border-right">
+              <h6>Q3</h6>
+            </div>
+            <div class="col-md-3">
+              <h6>Q4</h6>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-12 bg-stc-color-dark-3">
+          <div class="row">
+            <div class="col-md-1">
+              <h6>Jan</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>Feb</h6>
+            </div>
+            <div class="col-md-1 border-right">
+              <h6>Mar</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>Apr</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>May</h6>
+            </div>
+            <div class="col-md-1 border-right">
+              <h6>Jun</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>Jul</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>Aug</h6>
+            </div>
+            <div class="col-md-1 border-right">
+              <h6>Sep</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>Oct</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>Nov</h6>
+            </div>
+            <div class="col-md-1">
+              <h6>Dec</h6>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Data will binding here -->
+  @defer (on viewport(trigger)) {
+    <div class="row chart-body">
+      <div class="col">
+        <div class="row today-liner-row">
+          <div class="col-md-3"></div>
+          <div class="col today-liner-col">
+            <div
+              class="today-liner"
+              [ngStyle]="{ left: todayDate() + '%' }"
+            ></div>
+            <div class="today-text" [ngStyle]="{ left: todayDate() + '%' }">
+              Today
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
+            @for (activity of dtStreamMutated().activities; track activity) {
+            <ng-container
+              *ngTemplateOutlet="streamRow; context: { item: activity }"
+            ></ng-container>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  } @placeholder {
+    <h1 #trigger>trigger that never shows!</h1>
+  }
+</div>
+
+<ng-template #streamRow let-item="item">
+  <div class="row activity-row">
+    <div class="col-md-3 name-col">
+      {{ item.name }}
+    </div>
+    <div class="col-md-9 milestones-col">
+      <div class="dash-liner"></div>
+
+      @for (milestone of item.milestones; track milestone) {
+      <div
+        class="milestone"
+        [ngStyle]="{ left: milestone.timeSpan + '%' }"
+        [@slideIn]="
+          animateMilestones()
+            ? {
+                value: '',
+                params: { timeSpan: milestone.timeSpan, duration: 2500 }
+              }
+            : false
+        "
+      >
+        <span
+          class="circle"
+          [ngClass]="{
+            completed: milestone.status === 'Completed',
+            planned: milestone.status === 'Planned',
+            delayed: milestone.status === 'Delayed',
+            'on-track': milestone.status === 'On Track'
+          }"
+        >
+        </span>
+        <span class="name">
+          {{ milestone.name }}
+        </span>
+      </div>
+      }
+    </div>
+  </div>
+</ng-template>

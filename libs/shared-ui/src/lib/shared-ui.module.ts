@@ -54,6 +54,7 @@ import { FilterArrayPipe } from './filter-array/filter-array.pipe';
 import { DisplayCaptionPipe } from './actions-stepper/action.pipe';
 import { NotificationsDropdownComponent } from './notifications-dropdown/notifications-dropdown.component';
 import { DateAgoPipe } from "./notifications-dropdown/date-ago.pipe";
+import { TimelineChartComponent } from './timeline-chart/timeline-chart.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -89,6 +90,7 @@ const components = [
   FilterArrayPipe,
   DisplayCaptionPipe,
   NotificationsDropdownComponent,
+  TimelineChartComponent
 ];
 
 @NgModule({
