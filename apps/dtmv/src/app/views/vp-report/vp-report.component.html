@@ -3,19 +3,13 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-9">
-          <h3>G Chief of Staff DT Progress Report September 2023</h3>
+          <h3>G Chief of Staff DT Progress Report</h3>
         </div>
         <div class="col-md-3" [formGroup]="filterSelect">
-          <div class="d-flex align-items-center">
-            <span class="label">Filter By:</span>
-            <stc-apps-select-drop-down
-              formControlName="dateType"
-              [label]="''"
-              [options]="[]"
-              [labelName]="'groupName'"
-              (selectChange)="handleSelectChange($event)"
-              [defaultAll]="true"
-            ></stc-apps-select-drop-down>
+          <div class="d-flex flex-wrap align-items-center">
+            <span class="label">Year:</span>
+            <stc-apps-select-drop-down formControlName="dateType" [label]="''" [options]="yearsArr"
+              (selectChange)="handleSelectChange($event)" [outputValue]="'name'"></stc-apps-select-drop-down>
           </div>
         </div>
       </div>
@@ -25,11 +19,8 @@
         </div>
         <div class="col-md-12">
           <ul class="teams">
-            <li
-              *ngFor="let item of allTeams"
-              (click)="toggleTeam(item.name)"
-              [ngClass]="this.currentParams?.team === item.name ? 'active' : ''"
-            >
+            <li *ngFor="let item of allTeams" (click)="toggleTeam(item.name)"
+              [ngClass]="this.currentParams?.team === item.name ? 'active' : ''">
               {{ item.name }}
             </li>
           </ul>
@@ -39,14 +30,8 @@
         <div class="col-md-4">
           <div class="container-box">
             <h5>Milestone Progress</h5>
-            <div
-              class="progress-circule"
-              role="progresscircule"
-              aria-valuenow="87"
-              aria-valuemin="0"
-              aria-valuemax="100"
-              style="--value: 80"
-            ></div>
+            <div class="progress-circule" role="progresscircule" aria-valuenow="87" aria-valuemin="0"
+              aria-valuemax="100" style="--value: 80"></div>
           </div>
         </div>
         <div class="col-md-8">
@@ -59,13 +44,16 @@
               </div>
               <div class="bar">
                 <div class="container">
-                  <div class="progress progress-striped">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      aria-valuemax="100"
-                      style="--value: 10"
-                    ></div>
+                  <div class="progress ">
+                    <div class="progress-bar" role="progressbar" aria-valuemax="100" style="--value: 100"></div>
+                  </div>
+                </div>
+                <div class="container m-hide">
+                  <div class="progress prg-hide">
+                    <!-- Target Value Bar -->
+                    <div class="progress-bar-hide" role="progressbar-hide" aria-valuemax="100" style="--value: 28.50">
+                      <span>Target <p>28.50%</p></span>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -93,17 +81,15 @@
           <span class="legend-name legend-name-delayed ">Delayed</span>
         </div>
         @for (dtStream of dtStreams(); track dtStream; let i = $index) {
-          <div class="chart-holder">
-            <stc-apps-timeline-chart [dtStream]="dtStream" [animateMilestones]="true"></stc-apps-timeline-chart>
-          </div>
+        <div class="chart-holder">
+          <stc-apps-timeline-chart [dtStream]="dtStream" [animateMilestones]="true"></stc-apps-timeline-chart>
+        </div>
 
-          @if (i + 1 !== dtStreams().length) {
-            <div class="chart-liner"></div>
-          }
+        @if (i + 1 !== dtStreams().length) {
+        <div class="chart-liner"></div>
+        }
         }
       </div>
     </div>
   </div>
 </div>
-
-

@@ -60,7 +60,6 @@
 
   .progress-bar-box {
     display: flex;
-    align-items: center;
     padding: 30px;
     height: 100%;
 
@@ -93,7 +92,6 @@
   margin-top: 70px;
 }
 
-
 /** Progress Circule **/
 
 @keyframes growProgressCircule {
@@ -108,7 +106,7 @@
 
 @property --pgPercentage {
   syntax: '<number>';
-  inherits: false;
+  inherits: true;
   initial-value: 0;
 }
 
@@ -121,23 +119,29 @@ div[role='progresscircule'] {
   border-radius: 50%;
   display: grid;
   place-items: center;
-  background: radial-gradient(
-      closest-side,
-      white 80%,
-      transparent 0 99.9%,
-      white 0
-    ),
-    conic-gradient(
-      var(--stc-color) calc(var(--pgPercentage) * 1%),
-      var(--stc-lightGrey-color) 0
-    );
+  aspect-ratio: 1;
+  background: conic-gradient(
+    var(--stc-color) calc(var(--pgPercentage) * 1%),
+    var(--stc-lightGrey-color) 0
+  );
   font-size: calc(var(--size) / 5);
   color: var(--stc-color);
 }
-
+div[role='progresscircule']::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: calc(var(--size) - 2rem);
+  height: calc(var(--size) - 2rem);
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  box-shadow: inset 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+    inset -6px -6px 10px -1px rgba(0, 0, 0, 0.055);
+}
 div[role='progresscircule']::before {
   counter-reset: percentage var(--value);
   content: counter(percentage) '%';
+  z-index: 9999;
 }
 
 /******progress bar *******/
@@ -150,63 +154,120 @@ div[role='progresscircule']::before {
   padding: 6px;
   background: rgba(var(--stc-green-color), 0.1);
   display: flex;
-  align-items: center;
+  flex-direction: column;
   height: 45px;
   border-radius: 2px;
+  position: relative;
+}
+.prg-hide {
+  background-color: transparent;
+  height: 70px;
 }
 .bar .container {
   width: 98%;
   text-align: center;
 }
-.progress-bar {
+.progress-bar,
+.progress-bar-hide {
   height: 19px;
   transition: 0.4s linear;
   transition-property: width, background-color;
+  position: relative;
 }
 
-.progress-striped .progress-bar {
+.progress-bar {
   --pgPercentageBar: var(--value);
   background-color: rgb(var(--stc-green-color));
-
+  z-index: 2;
   width: 50%; //calc(var(--pgPercentageBar) * 1%);
   animation: progressAnimationStrike 6s forwards;
+  top: 20%;
+}
+.m-hide {
+  margin-top: -20px;
+}
+.progress-bar-hide {
+  --pgPercentTaregt: var(--value);
+  top: -30%;
+  height: 1px;
+  z-index: 1;
+  width: 50%;
+  animation: progressAnimationStrikeTarget 7s forwards;
+  span {
+    position: absolute;
+    top: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    right: 0;
+    &::after {
+      content: '';
+      position: absolute;
+      top: -18px;
+      height: 20px;
+      width: 2px;
+      background-color: var(--stc-color);
+    }
+    p {
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+}
+@keyframes progressAnimationStrike {
+  from {
+    width: 0;
+  }
+  to {
+    width: calc(var(--value) * 1%);
+  }
+}
+
+@keyframes progressAnimationStrikeTarget {
+  from {
+    width: 0;
+  }
+  to {
+    width: calc(var(--value) * 1%);
+  }
 }
 
 // Gantt chart styles
 
-.gantt-legend{
+.gantt-legend {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 
-  .legend-circle, .legend-name{
+  .legend-circle,
+  .legend-name {
     display: inline-block;
   }
-  
-  .legend-circle{
+
+  .legend-circle {
     height: 18px;
     width: 18px;
     border-radius: 50%;
     box-shadow: 0px 0px 8px -2px rgb(5, 170, 68);
   }
-  
-  .legend-circle-completed{
+
+  .legend-circle-completed {
     background-color: var(--stc-oasis-color);
   }
-  
-  .legend-circle-planned{
+
+  .legend-circle-planned {
     background-color: var(--grey-color);
   }
-  
-  .legend-circle-on-track{
+
+  .legend-circle-on-track {
     background-color: var(--stc-Sea-Color);
   }
-  
-  .legend-circle-delayed{
+
+  .legend-circle-delayed {
     background-color: var(--red-Color);
   }
-  
-  .legend-name{
+
+  .legend-name {
     margin-right: 10px;
     margin-left: 5px;
   }
@@ -228,19 +289,10 @@ div[role='progresscircule']::before {
   background-color: var(--stc-Silver-Color);
 }
 
-.chart-liner{
+.chart-liner {
   height: 3px;
-    background-color: var(--stc-Silver-Color);
-    width: 77%;
-    margin: auto;
-    margin-block: 50px;
-}
-
-@keyframes progressAnimationStrike {
-  from {
-    width: 0;
-  }
-  to {
-    width: calc(var(--value) * 1%);
-  }
+  background-color: var(--stc-Silver-Color);
+  width: 77%;
+  margin: auto;
+  margin-block: 50px;
 }

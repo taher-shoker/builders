@@ -20,24 +20,10 @@ import { FormControl, FormGroup } from '@angular/forms';
 })
 export class VpReportComponent implements OnInit {
   allTeams: any[] = [];
+  yearsArr: any = [];
+
   filterSelect!: FormGroup;
-
   currentParams: any;
-
-  // months = [
-  //   { id: 1, startDate: '', endDate: '', label: '' },
-  //   { id: 2, startDate: '', endDate: '', label: '' },
-  //   { id: 3, startDate: '', endDate: '', label: '' },
-  //   { id: 4, startDate: '', endDate: '', label: '' },
-  //   { id: 5, startDate: '', endDate: '', label: '' },
-  //   { id: 6, startDate: '', endDate: '', label: '' },
-  //   { id: 7, startDate: '', endDate: '', label: '' },
-  //   { id: 8, startDate: '', endDate: '', label: '' },
-  //   { id: 9, startDate: '', endDate: '', label: '' },
-  //   { id: 10, startDate: '', endDate: '', label: '' },
-  //   { id: 11, startDate: '', endDate: '', label: '' },
-  //   { id: 12, startDate: '', endDate: '', label: '' },
-  // ];
 
   dtStreams: WritableSignal<DTStream[]> = signal([]);
   // dtStreamsMutated: Signal<DTStream[]> = computed(() => {
@@ -63,16 +49,24 @@ export class VpReportComponent implements OnInit {
   ngOnInit(): void {
     this.getAllTeams();
     this.getDTStreams();
-
+    this.yearsArrPopulator();
 
     this.filterSelect = new FormGroup({
       dateType: new FormControl(''),
     });
+    this.setDefaultValues();
   }
 
+  setDefaultValues() {
+    this.filterSelect.get('dateType')?.setValue(new Date().getFullYear());
+    this.navigateWithQueryParams({
+      year: this.filterSelect.get('dateType')?.value,
+    });
+  }
   getAllTeams() {
     this.milestonesService.setSystemTeams().subscribe((res) => {
       this.allTeams = res;
+      this.navigateWithQueryParams({ team: res[0].name });
     });
   }
 
@@ -83,33 +77,101 @@ export class VpReportComponent implements OnInit {
   }
 
   toggleTeam(value: string) {
-    console.log(value);
-    this.navigateWithQueryParam(value);
+    if (this.currentParams?.team === value) {
+      this.navigateWithQueryParams({ team: null });
+    } else {
+      this.navigateWithQueryParams({ team: value });
+    }
   }
 
-  navigateWithQueryParam(query: string) {
-    // Define your query parameters
+  // navigateWithQueryParam(query: string) {
+  //   // Define your query parameters
+  //   this.currentParams = { ...this.route.snapshot.queryParams };
+  //   // Check if the 'team' parameter already exists
+  //   if (this.currentParams.team === query) {
+  //     // If it exists and matches the provided value, remove it
+  //     this.currentParams = {};
+  //     this.router.navigate([], {
+  //       relativeTo: this.route,
+  //     });
+  //   } else {
+  //     // If it doesn't exist or doesn't match, add it
+  //     this.currentParams.team = query;
+  //     this.router.navigate([], {
+  //       relativeTo: this.route,
+  //       queryParams: this.currentParams,
+  //       queryParamsHandling: 'merge', // Merge with existing query parameters
+  //     });
+  //   }
+  // }
+  // navigateWithQueryParams(queryParams: { [key: string]: any }) {
+  //   // Define your current query parameters
+  //   const currentParams = { ...this.route.snapshot.queryParams };
+
+  //   // Remove 'team' parameter if it exists
+  //   console.log(currentParams, queryParams);
+
+  //   console.log(currentParams);
+  //   // Update the current query parameters with the provided ones
+
+  //   if (currentParams['team'] === queryParams['team']) {
+  //     delete currentParams['team'];
+  //     this.router.navigate([], {
+  //       relativeTo: this.route,
+  //     });
+  //   } else {
+  //     Object.keys(queryParams).forEach((key) => {
+  //       const value = queryParams[key];
+  //       if (value !== undefined && value !== null) {
+  //         currentParams[key] = value;
+  //       } else {
+  //         delete currentParams[key];
+  //       }
+  //     });
+  //     console.log(currentParams);
+
+  //     // Navigate to the current route with updated query parameters
+  //     this.router.navigate([], {
+  //       relativeTo: this.route,
+  //       queryParams: currentParams,
+  //       queryParamsHandling: 'merge', // Merge with existing query parameters
+  //     });
+  //   }
+  // }
+  navigateWithQueryParams(queryParams: { [key: string]: any }) {
+    // Define your current query parameters
     this.currentParams = { ...this.route.snapshot.queryParams };
-    // Check if the 'team' parameter already exists
-    if (this.currentParams.team === query) {
-      // If it exists and matches the provided value, remove it
-      this.currentParams = {};
-      this.router.navigate([], {
-        relativeTo: this.route,
-      });
-    } else {
-      // If it doesn't exist or doesn't match, add it
-      this.currentParams.team = query;
-      this.router.navigate([], {
-        relativeTo: this.route,
-        queryParams: this.currentParams,
-        queryParamsHandling: 'merge', // Merge with existing query parameters
-      });
+    // Update the current query parameters with the provided ones
+    Object.keys(queryParams).forEach((key) => {
+      const value = queryParams[key];
+      if (value !== undefined && value !== null) {
+        this.currentParams[key] = value;
+      } else {
+        delete this.currentParams[key];
+      }
+    });
+
+    // Navigate to the current route with updated query parameters
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: this.currentParams,
+    });
+  }
+  yearsArrPopulator() {
+    const currentYear = new Date().getFullYear();
+    for (
+      let i = 2020;
+      this.yearsArr[this.yearsArr.length - 1]?.name !== currentYear; // Check if the latest element's value equals the current year's value
+      i++
+    ) {
+      this.yearsArr.push({ name: i, id: i });
     }
   }
 
   handleSelectChange(value: string) {
-    console.log(value);
+    this.navigateWithQueryParams({
+      year: value,
+    });
   }
 
   calculatePercentageOfDate(dateString: string): number {
@@ -152,6 +214,4 @@ export class VpReportComponent implements OnInit {
     // Return the percentage
     return percentage;
   }
-
-
 }

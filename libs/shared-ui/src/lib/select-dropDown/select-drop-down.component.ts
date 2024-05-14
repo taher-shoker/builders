@@ -56,8 +56,8 @@ export class SelectDropDownComponent<T>
 
   onChangeValue(value: any) {
     if (this.outputValue) {
-      this.selectChange.emit(value[this.outputValue]);
-      console.warn('Da values', value[this.outputValue]);
+      this.selectChange.emit(value[this.outputValue] || value);
+      console.warn('Da values', value[this.outputValue] || value);
     } else {
       this.selectChange.emit(value);
     }
