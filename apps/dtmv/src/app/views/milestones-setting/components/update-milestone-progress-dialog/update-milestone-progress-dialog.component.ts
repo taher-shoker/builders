@@ -146,7 +146,7 @@ export class UpdateMilestoneProgressDialogComponent {
   }
 
   update() {
-    const attachmentsIDsToString = this.attachmentsIDs.join(',');
+    const attachmentsIDsToString = this.attachmentsIDs.join('@#%@#%Z%#@%#@'); // !separator changed to fix the split of any note or rejection
     this.dialogRef.close({
       note: this.form.get('note')?.value,
       attachments: attachmentsIDsToString,
