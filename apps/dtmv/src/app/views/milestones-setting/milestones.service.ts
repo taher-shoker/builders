@@ -201,10 +201,10 @@ export interface MilestoneAttachment {
   uploadDate: string;
 }
 
-export interface StreamsResponse{
-  streams: DTStream[],
-  workStreamScore: number,
-  year: number
+export interface StreamsResponse {
+  streams: DTStream[];
+  workStreamScore: number;
+  year: number;
 }
 
 export interface DTStream {
@@ -220,7 +220,7 @@ export interface Activity {
     milestoneName: string;
     endDate: string;
     status: MilestoneStatus;
-    timeSpan?: number
+    timeSpan?: number;
   }[];
 }
 
@@ -322,6 +322,8 @@ export class MilestonesService {
 
   isDTDirector!: boolean;
   isBusinessSpoc!: boolean;
+  isVPViewer!: boolean;
+
   isDTAdmin!: boolean;
 
   getCurrentSystem(): string {
@@ -343,6 +345,11 @@ export class MilestonesService {
   }
   getMilestoneUsersType() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    if (user.userGroups.length > 1) {
+      this.isVPViewer = true;
+    } else {
+      this.isVPViewer = false;
+    }
     return user.userGroups[0].groupName;
   }
 
@@ -391,7 +398,9 @@ export class MilestonesService {
    * Returns all of the streams of the DTMV system.
    */
   getDTStreams(teamName: string, year: number): Observable<StreamsResponse> {
-    return this.http.get<StreamsResponse>(`${this.activitiesUrl}/vpDashboard/activities?teamName=${teamName}&year=${year}`);
+    return this.http.get<StreamsResponse>(
+      `${this.activitiesUrl}/vpDashboard/activities?teamName=${teamName}&year=${year}`
+    );
     // return of(this.tempDTStreams).pipe(delay(500))
   }
 

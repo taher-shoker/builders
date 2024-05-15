@@ -53,8 +53,9 @@ import { InputFullWidthComponent } from './input-full-width/input-full-width.com
 import { FilterArrayPipe } from './filter-array/filter-array.pipe';
 import { DisplayCaptionPipe } from './actions-stepper/action.pipe';
 import { NotificationsDropdownComponent } from './notifications-dropdown/notifications-dropdown.component';
-import { DateAgoPipe } from "./notifications-dropdown/date-ago.pipe";
+import { DateAgoPipe } from './notifications-dropdown/date-ago.pipe';
 import { TimelineChartComponent } from './timeline-chart/timeline-chart.component';
+import { CheckboxComponent } from './checkbox/checkbox.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -90,37 +91,38 @@ const components = [
   FilterArrayPipe,
   DisplayCaptionPipe,
   NotificationsDropdownComponent,
-  TimelineChartComponent
+  TimelineChartComponent,
+  CheckboxComponent,
 ];
 
 @NgModule({
-    declarations: [...components],
-    exports: [...components, ...modules],
-    providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
-    imports: [
-        CommonModule,
-        RouterModule,
-        // TranslateModule,
-        LngSelectorModule,
-        ModeToggleModule,
-        FormsModule,
-        ReactiveFormsModule,
-        MatSelectModule,
-        MatPaginatorModule,
-        MatTableModule,
-        MatCheckboxModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatDatepickerModule,
-        MatInputModule,
-        MomentDateModule,
-        MatMomentDateModule,
-        MatNativeDateModule,
-        MatExpansionModule,
-        TranslateModule,
-        MatProgressSpinnerModule,
-        MatMenuModule,
-        DateAgoPipe
-    ]
+  declarations: [...components],
+  exports: [...components, ...modules],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  imports: [
+    CommonModule,
+    RouterModule,
+    // TranslateModule,
+    LngSelectorModule,
+    ModeToggleModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatSelectModule,
+    MatPaginatorModule,
+    MatTableModule,
+    MatCheckboxModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatDatepickerModule,
+    MatInputModule,
+    MomentDateModule,
+    MatMomentDateModule,
+    MatNativeDateModule,
+    MatExpansionModule,
+    TranslateModule,
+    MatProgressSpinnerModule,
+    MatMenuModule,
+    DateAgoPipe,
+  ],
 })
 export class SharedUiModule {}

@@ -31,14 +31,14 @@ export class HomeComponent implements OnInit {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
-      roles: [],
+      roles: ['all'],
       urlHome: '/home',
     },
     {
       name: 'Vp Report',
       url: '/vp-report',
       icon: 'fa-file-signature',
-      roles: [],
+      roles: ['VP'],
       urlHome: '/home',
     },
   ];
@@ -50,19 +50,19 @@ export class HomeComponent implements OnInit {
       this.userName = res?.name || '';
       if (res?.roles) {
         const items = [];
-
         for (let i = 0; i < this.navItems.length; i++) {
-          if (this.navItems[i].roles.length > 0) {
-            const similar = this.navItems[i].roles.filter((element: string[]) =>
-              element?.includes(res.roles[0])
-            );
-            if (similar.length === 0) {
-              items.push(this.navItems[i]);
-              this.urlHome = this.navItems[i].urlHome;
-            }
-            this.navItems = items;
+          const item = this.navItems[i];
+          // Check if the item should be included based on roles
+          if (
+            item.roles.includes('all') ||
+            item.roles.some((role) => res.roles.includes(role))
+          ) {
+            items.push(item);
+            this.urlHome = item.urlHome;
           }
         }
+        // Update the navItems with the filtered list
+        this.navItems = items;
       }
     });
   }
