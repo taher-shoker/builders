@@ -138,11 +138,16 @@ div[role='progresscircule']::after {
   box-shadow: inset 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
     inset -6px -6px 10px -1px rgba(0, 0, 0, 0.055);
 }
-div[role='progresscircule']::before {
-  counter-reset: percentage var(--value);
-  content: counter(percentage) '%';
-  z-index: 9999;
+
+.circle-content {
+  position: absolute;
+  z-index: 3;
 }
+// div[role='progresscircule']::before {
+//   counter-reset: percentage var(--value);
+//   content: counter(percentage) '%';
+//   z-index: 9999;
+// }
 
 /******progress bar *******/
 @property --pgPercentageBar {
@@ -287,6 +292,10 @@ div[role='progresscircule']::before {
 
 .planned {
   background-color: var(--stc-Silver-Color);
+}
+
+.chart-holder {
+  margin-bottom: 5rem;
 }
 
 .chart-liner {

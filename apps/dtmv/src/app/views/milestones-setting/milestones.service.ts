@@ -201,6 +201,12 @@ export interface MilestoneAttachment {
   uploadDate: string;
 }
 
+export interface StreamsResponse{
+  streams: DTStream[],
+  workStreamScore: number,
+  year: number
+}
+
 export interface DTStream {
   streamName: string;
   year: number;
@@ -209,9 +215,9 @@ export interface DTStream {
 }
 
 export interface Activity {
-  name: string;
+  activityName: string;
   milestones: {
-    name: string;
+    milestoneName: string;
     endDate: string;
     status: MilestoneStatus;
     timeSpan?: number
@@ -224,6 +230,7 @@ export interface Activity {
 export class MilestonesService {
   baseUrl = environment.apiUrl;
   adminUrl = `${this.baseUrl}v2/admin`;
+  activitiesUrl = `${this.baseUrl}v2/dt-milestone-service`;
   dtUrl = `${this.baseUrl}v2/dt-milestone-service/milestones`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
@@ -233,74 +240,74 @@ export class MilestonesService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  tempDTStreams: DTStream[] = [
-    {
-      streamName: 'GCofStaff DT work streams',
-      month: 5,
-      year: 2024,
-      activities: [
-        {
-          name: 'ST One act 1',
-          milestones: [
-            { name: ' MS one keda', endDate: "2024-05-24", status: 'Completed' },
-            { name: ' MS two keda', endDate: "2024-06-14", status: 'Planned' },
-            { name: ' MS thr', endDate: "2024-07-24", status: 'Completed' },
-          ],
-        },
+  // tempDTStreams: DTStream[] = [
+  //   {
+  //     streamName: 'GCofStaff DT work streams',
+  //     month: 5,
+  //     year: 2024,
+  //     activities: [
+  //       {
+  //         name: 'ST One act 1',
+  //         milestones: [
+  //           { name: ' MS one keda', endDate: "2024-05-24", status: 'Completed' },
+  //           { name: ' MS two keda', endDate: "2024-06-14", status: 'Planned' },
+  //           { name: ' MS thr', endDate: "2024-07-24", status: 'Completed' },
+  //         ],
+  //       },
 
-        {
-          name: 'ST One act 2',
-          milestones: [
-            { name: ' MS one keda', endDate: "2024-01-20", status: 'Completed' },
-            { name: ' MS two keda', endDate: "2024-02-10", status: 'On Track' },
-          ],
-        },
+  //       {
+  //         name: 'ST One act 2',
+  //         milestones: [
+  //           { name: ' MS one keda', endDate: "2024-01-20", status: 'Completed' },
+  //           { name: ' MS two keda', endDate: "2024-02-10", status: 'On Track' },
+  //         ],
+  //       },
 
-        {
-          name: 'ST One act 3',
-          milestones: [
-            { name: ' MS one keda', endDate: "2024-01-5", status: 'Completed' },
-            { name: ' MS two keda', endDate: "2024-03-27", status: 'Completed' },
-            { name: ' MS thr', endDate: "2024-02-17", status: 'Completed' },
-            { name: ' MS frr', endDate: "2024-05-12", status: 'Delayed' },
-          ],
-        },
-      ],
-    },
-    {
-      streamName: 'GCofStaff DT work streams',
-      month: 5,
-      year: 2024,
-      activities: [
-        {
-          name: 'ST One act 1',
-          milestones: [
-            { name: ' MS one keda', endDate: "2024-05-24", status: 'Completed' },
-            { name: ' MS two keda', endDate: "2024-06-14", status: 'Planned' },
-            { name: ' MS thr', endDate: "2024-07-24", status: 'Completed' },
-          ],
-        },
+  //       {
+  //         name: 'ST One act 3',
+  //         milestones: [
+  //           { name: ' MS one keda', endDate: "2024-01-5", status: 'Completed' },
+  //           { name: ' MS two keda', endDate: "2024-03-27", status: 'Completed' },
+  //           { name: ' MS thr', endDate: "2024-02-17", status: 'Completed' },
+  //           { name: ' MS frr', endDate: "2024-05-12", status: 'Delayed' },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  //   {
+  //     streamName: 'GCofStaff DT work streams',
+  //     month: 5,
+  //     year: 2024,
+  //     activities: [
+  //       {
+  //         name: 'ST One act 1',
+  //         milestones: [
+  //           { name: ' MS one keda', endDate: "2024-05-24", status: 'Completed' },
+  //           { name: ' MS two keda', endDate: "2024-06-14", status: 'Planned' },
+  //           { name: ' MS thr', endDate: "2024-07-24", status: 'Completed' },
+  //         ],
+  //       },
 
-        {
-          name: 'ST One act 2',
-          milestones: [
-            { name: ' MS one keda', endDate: "2024-01-20", status: 'Completed' },
-            { name: ' MS two keda', endDate: "2024-02-10", status: 'On Track' },
-          ],
-        },
+  //       {
+  //         name: 'ST One act 2',
+  //         milestones: [
+  //           { name: ' MS one keda', endDate: "2024-01-20", status: 'Completed' },
+  //           { name: ' MS two keda', endDate: "2024-02-10", status: 'On Track' },
+  //         ],
+  //       },
 
-        {
-          name: 'ST One act 3',
-          milestones: [
-            { name: ' MS one keda', endDate: "2024-01-5", status: 'Completed' },
-            { name: ' MS two keda', endDate: "2024-03-27", status: 'Completed' },
-            { name: ' MS thr', endDate: "2024-02-17", status: 'Completed' },
-            { name: ' MS frr', endDate: "2024-05-12", status: 'Delayed' },
-          ],
-        },
-      ],
-    },
-  ];
+  //       {
+  //         name: 'ST One act 3',
+  //         milestones: [
+  //           { name: ' MS one keda', endDate: "2024-01-5", status: 'Completed' },
+  //           { name: ' MS two keda', endDate: "2024-03-27", status: 'Completed' },
+  //           { name: ' MS thr', endDate: "2024-02-17", status: 'Completed' },
+  //           { name: ' MS frr', endDate: "2024-05-12", status: 'Delayed' },
+  //         ],
+  //       },
+  //     ],
+  //   },
+  // ];
 
   currentTeam: {
     id: number;
@@ -383,8 +390,9 @@ export class MilestonesService {
   /**
    * Returns all of the streams of the DTMV system.
    */
-  getDTStreams(): Observable<DTStream[]> {
-    return of(this.tempDTStreams).pipe(delay(500))
+  getDTStreams(teamName: string, year: number): Observable<StreamsResponse> {
+    return this.http.get<StreamsResponse>(`${this.activitiesUrl}/vpDashboard/activities?teamName=${teamName}&year=${year}`);
+    // return of(this.tempDTStreams).pipe(delay(500))
   }
 
   getMilestones(filterData?: any) {

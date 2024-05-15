@@ -10,7 +10,7 @@
         <div class="col-md-12 bg-stc-color-dark-1 border-top-right">
           <div class="row">
             <div class="col-md-12">
-              <h6 class="stream-year">{{ dtStreamMutated().year }}</h6>
+              <h6 class="stream-year">{{ streamYear() }}</h6>
             </div>
           </div>
         </div>
@@ -109,7 +109,7 @@
 <ng-template #streamRow let-item="item">
   <div class="row activity-row">
     <div class="col-md-3 name-col">
-      {{ item.name }}
+      {{ item.activityName }}
     </div>
     <div class="col-md-9 milestones-col">
       <div class="dash-liner"></div>
@@ -122,13 +122,14 @@
           animateMilestones()
             ? {
                 value: '',
-                params: { timeSpan: milestone.timeSpan, duration: 2500 }
+                params: { timeSpan: milestone.timeSpan, duration: 2000 }
               }
             : false
         "
       >
         <span
           class="circle"
+          [title]="milestone.milestoneName"
           [ngClass]="{
             completed: milestone.status === 'Completed',
             planned: milestone.status === 'Planned',
@@ -138,7 +139,7 @@
         >
         </span>
         <span class="name">
-          {{ milestone.name }}
+          {{ milestone.milestoneName }}
         </span>
       </div>
       }

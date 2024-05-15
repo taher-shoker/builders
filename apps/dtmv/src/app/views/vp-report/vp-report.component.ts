@@ -1,11 +1,4 @@
-import {
-  Component,
-  OnInit,
-  Signal,
-  WritableSignal,
-  computed,
-  signal,
-} from '@angular/core';
+import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   DTStream,
@@ -23,22 +16,13 @@ export class VpReportComponent implements OnInit {
   yearsArr: any = [];
 
   filterSelect!: FormGroup;
-  currentParams: any;
 
   dtStreams: WritableSignal<DTStream[]> = signal([]);
-  // dtStreamsMutated: Signal<DTStream[]> = computed(() => {
-  //   const copiedStreams = this.dtStreams();
-  //   for (const stream of copiedStreams) {
-  //     for (const act of stream.activities) {
-  //       for (const milestone of act.milestones) {
-  //         milestone['timeSpan'] = this.calculatePercentageOfDate(
-  //           milestone.endDate
-  //         );
-  //       }
-  //     }
-  //   }
-  //   return copiedStreams;
-  // });
+  streamsYear: WritableSignal<number> = signal(0);
+  milestoneProgress: WritableSignal<number | null> = signal(null);
+
+  selectedYear: WritableSignal<number> = signal(0);
+  selectedTeam: WritableSignal<string> = signal('');
 
   constructor(
     public milestonesService: MilestonesService,
@@ -47,131 +31,93 @@ export class VpReportComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAllTeams();
-    this.getDTStreams();
     this.yearsArrPopulator();
-
     this.filterSelect = new FormGroup({
       dateType: new FormControl(''),
     });
-    this.setDefaultValues();
+    this.setDateInitiallyToCurrentYear();
+    this.getAllTeams();
   }
 
-  setDefaultValues() {
-    this.filterSelect.get('dateType')?.setValue(new Date().getFullYear());
-    this.navigateWithQueryParams({
-      year: this.filterSelect.get('dateType')?.value,
+  watchRoute() {
+    this.route.queryParams.subscribe((params) => {
+      this.selectedYear.set(params['year']);
+      this.selectedTeam.set(params['team']);
+
+      const currentYear = new Date().getFullYear();
+
+      if (!params['year']) {
+        this.selectedYear.set(currentYear);
+        this.updateRoute(this.allTeams[0].name, currentYear);
+      }
+
+      if (!params['team']) {
+        this.selectedTeam.set(this.allTeams[0].name);
+        this.updateRoute(this.allTeams[0].name, currentYear);
+      }
+
+      this.getDTStreams();
     });
   }
+
+  setDateInitiallyToCurrentYear() {
+    const currentYear = new Date().getFullYear();
+    this.filterSelect.get('dateType')?.setValue(currentYear);
+  }
+
   getAllTeams() {
-    this.milestonesService.setSystemTeams().subscribe((res) => {
-      this.allTeams = res;
-      this.navigateWithQueryParams({ team: res[0].name });
-    });
-  }
-
-  getDTStreams() {
-    this.milestonesService.getDTStreams().subscribe((res) => {
-      this.dtStreams.set(res);
-    });
-  }
-
-  toggleTeam(value: string) {
-    if (this.currentParams?.team === value) {
-      this.navigateWithQueryParams({ team: null });
+    if (this.milestonesService.checkIsDirector()) {
+      this.milestonesService.setSystemTeams().subscribe((res) => {
+        this.allTeams = res;
+        this.watchRoute();
+        this.selectedTeam.set(this.allTeams[0].name);
+      });
     } else {
-      this.navigateWithQueryParams({ team: value });
+      this.allTeams = this.milestonesService.setUserTeams();
+      this.watchRoute();
+      this.selectedTeam.set(this.allTeams[0].name);
     }
   }
 
-  // navigateWithQueryParam(query: string) {
-  //   // Define your query parameters
-  //   this.currentParams = { ...this.route.snapshot.queryParams };
-  //   // Check if the 'team' parameter already exists
-  //   if (this.currentParams.team === query) {
-  //     // If it exists and matches the provided value, remove it
-  //     this.currentParams = {};
-  //     this.router.navigate([], {
-  //       relativeTo: this.route,
-  //     });
-  //   } else {
-  //     // If it doesn't exist or doesn't match, add it
-  //     this.currentParams.team = query;
-  //     this.router.navigate([], {
-  //       relativeTo: this.route,
-  //       queryParams: this.currentParams,
-  //       queryParamsHandling: 'merge', // Merge with existing query parameters
-  //     });
-  //   }
-  // }
-  // navigateWithQueryParams(queryParams: { [key: string]: any }) {
-  //   // Define your current query parameters
-  //   const currentParams = { ...this.route.snapshot.queryParams };
+  getDTStreams() {
+    this.milestonesService
+      .getDTStreams(this.selectedTeam(), this.selectedYear())
+      .subscribe((res) => {
+        this.dtStreams.set(res.streams);
+        this.streamsYear.set(res.year);
+        this.milestoneProgress.set(res.workStreamScore);
+      });
+  }
 
-  //   // Remove 'team' parameter if it exists
-  //   console.log(currentParams, queryParams);
+  selectTeam(value: string) {
+    if (this.selectedTeam() !== value) {
+      this.selectedTeam.set(value);
+      this.updateRoute(value, this.selectedYear());
+    }
+  }
 
-  //   console.log(currentParams);
-  //   // Update the current query parameters with the provided ones
-
-  //   if (currentParams['team'] === queryParams['team']) {
-  //     delete currentParams['team'];
-  //     this.router.navigate([], {
-  //       relativeTo: this.route,
-  //     });
-  //   } else {
-  //     Object.keys(queryParams).forEach((key) => {
-  //       const value = queryParams[key];
-  //       if (value !== undefined && value !== null) {
-  //         currentParams[key] = value;
-  //       } else {
-  //         delete currentParams[key];
-  //       }
-  //     });
-  //     console.log(currentParams);
-
-  //     // Navigate to the current route with updated query parameters
-  //     this.router.navigate([], {
-  //       relativeTo: this.route,
-  //       queryParams: currentParams,
-  //       queryParamsHandling: 'merge', // Merge with existing query parameters
-  //     });
-  //   }
-  // }
-  navigateWithQueryParams(queryParams: { [key: string]: any }) {
-    // Define your current query parameters
-    this.currentParams = { ...this.route.snapshot.queryParams };
-    // Update the current query parameters with the provided ones
-    Object.keys(queryParams).forEach((key) => {
-      const value = queryParams[key];
-      if (value !== undefined && value !== null) {
-        this.currentParams[key] = value;
-      } else {
-        delete this.currentParams[key];
-      }
-    });
-
-    // Navigate to the current route with updated query parameters
+  updateRoute(team: string, year: number) {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: this.currentParams,
+      queryParams: { team, year },
+      queryParamsHandling: 'merge', // Merge with existing query parameters
     });
   }
+
+  handleSelectChange(value: string) {
+    this.selectedYear.set(Number(value));
+    this.updateRoute(this.selectedTeam(), Number(value));
+  }
+
   yearsArrPopulator() {
     const currentYear = new Date().getFullYear();
     for (
-      let i = 2020;
+      let i = 2024;
       this.yearsArr[this.yearsArr.length - 1]?.name !== currentYear; // Check if the latest element's value equals the current year's value
       i++
     ) {
       this.yearsArr.push({ name: i, id: i });
     }
-  }
-
-  handleSelectChange(value: string) {
-    this.navigateWithQueryParams({
-      year: value,
-    });
   }
 
   calculatePercentageOfDate(dateString: string): number {

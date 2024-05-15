@@ -28,6 +28,7 @@ import { DTStream } from 'apps/dtmv/src/app/views/milestones-setting/milestones.
 })
 export class TimelineChartComponent implements OnInit {
   dtStream = input.required<DTStream>();
+  streamYear = input.required<number>();
   animateMilestones = input.required<boolean>();
 
   todayDate: WritableSignal<number | null> = signal(null);
