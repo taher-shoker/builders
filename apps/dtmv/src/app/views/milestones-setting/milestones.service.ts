@@ -131,6 +131,7 @@ export interface MilestoneDetails {
   updatedByName: null | string;
   weight: number | null;
   workingDays: number | null;
+  workStream: string;
   latestApprovedMilestoneProgressUpdate: null | {
     completionImpactRate: string | null;
     cappedCompletionPercentage: string | null;

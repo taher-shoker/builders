@@ -45,6 +45,12 @@
             [inputName]="'deliverable' | translate" formControlName="deliverable"
             (valueKeyDown)="preventComma($event)"></stc-apps-textarea>
         </div>
+        <div class="col-md-6">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Work Stream'" [inputId]="'workStream'"
+            (valueKeyDown)="preventComma($event)" [inputName]="'Work Stream'"
+            formControlName="workStream"></stc-apps-input>
+        </div>
+
 
       </div>
       <div class="row">
