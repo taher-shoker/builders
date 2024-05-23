@@ -8,7 +8,7 @@ export const environment = {
     tp_system: '/cem/reporting/tp/',
     tp_admin_system: '/cem/reporting/tp/system-configurations',
     fraud_system: '/cem/reporting/fraudworkspace/',
-    di_system: '/cem/reporting/admin/system-configurations',
+    di_system: '/cem/reporting/dtworkspace',
     di_milestones_system: '/cem/reporting/dtmilestones/',
     jira_system: '/cem/reporting/jiradashboard/',
   },

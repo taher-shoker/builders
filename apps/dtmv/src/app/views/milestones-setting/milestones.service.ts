@@ -216,13 +216,15 @@ export class MilestonesService {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.teams;
   }
-  getMilestoneUsersType() {
+  getMilestoneUsersType(): Group[] {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    return user.userGroups[0].groupName;
+    return user.userGroups;
   }
 
   checkIsDirector() {
-    if (this.getMilestoneUsersType() === 'DT_Director') {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
+    ) {
       this.isDTDirector = true;
     } else {
       this.isDTDirector = false;
@@ -231,7 +233,9 @@ export class MilestonesService {
   }
 
   checkIsBusinessSpoc() {
-    if (this.getMilestoneUsersType() === 'Business_SPOC') {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'Business_SPOC')
+    ) {
       this.isBusinessSpoc = true;
     } else {
       this.isBusinessSpoc = false;
@@ -241,7 +245,11 @@ export class MilestonesService {
   }
 
   checkIsAdmin() {
-    if (this.getMilestoneUsersType() === 'DI_Milestones_Admins') {
+    if (
+      this.getMilestoneUsersType().find(
+        (x) => x.groupName === 'DI_Milestones_Admins'
+      )
+    ) {
       this.isDTAdmin = true;
     } else {
       this.isDTAdmin = false;
@@ -332,7 +340,12 @@ export class MilestonesService {
   }
 
   getMilestoneTasks(): Observable<PendingTask[]> {
-    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`);
+    return this.http.get<PendingTask[]>(
+      `${this.ticketUrl}pending`,
+      {
+        params: this.setSystemParam(),
+      }
+    );
   }
 
   downloadAttachment(id: number) {
@@ -368,7 +381,9 @@ export class MilestonesService {
   }
 
   getMilestonesHistory(mielstoneId: number | null) {
-    return this.http.get<any>(`${this.requestUrl}history/${mielstoneId}`);
+    return this.http.get<any>(`${this.requestUrl}history/${mielstoneId}`, {
+      params: this.setSystemParam(),
+    });
   }
 
   /**

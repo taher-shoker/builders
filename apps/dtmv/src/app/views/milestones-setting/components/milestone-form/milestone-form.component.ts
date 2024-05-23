@@ -90,6 +90,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
     this.form = this.formBuilder.group({
       milestoneName: ['', [Validators.required, Validators.maxLength(100)]],
       activityName: ['', [Validators.required, Validators.maxLength(150)]],
+      workStream: ['', [Validators.required, Validators.maxLength(150)]],
       startDate: ['', Validators.required],
       endDate: ['', [Validators.required]],
       weight: [
@@ -149,6 +150,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   restFormWithValue(data: any) {
     this.form?.get('milestoneName')?.setValue(data?.milestoneName);
     this.form?.get('activityName')?.setValue(data.activityName);
+    this.form?.get('workStream')?.setValue(data.workStream);
     this.form?.get('teamName')?.setValue(data.teamName);
     this.form?.get('teamName')?.disable();
     this.form?.get('startDate')?.setValue(data.startDate);
