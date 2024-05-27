@@ -494,6 +494,7 @@ export interface MilestoneProgressWorkflowStep {
   createdDate: Date;
   lastModified: Date;
   taskName: string;
+  completedByName: string;
 }
 
 export type MilestoneStatus = 'Planned' | 'Delayed' | 'On Track' | 'Completed';

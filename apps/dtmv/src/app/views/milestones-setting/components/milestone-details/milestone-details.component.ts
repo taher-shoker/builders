@@ -195,7 +195,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
             for (const taskAttribute of res[i].requestTaskAttributes) {
               if (res[i].status !== 'pending') {
-                byUser = `By ${res[i].username}`;
+                byUser = `By ${res[i].completedByName}`;
 
                 if (
                   taskAttribute.name.includes('approved') &&
@@ -401,7 +401,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
       for (const taskAttribute of item[i].requestTaskAttributes) {
         if (item[i].status !== 'pending') {
-          byUser = `By ${item[i].username}`;
+          byUser = `By ${item[i].completedByName}`;
 
           if (
             taskAttribute.name.includes('approved') &&
@@ -429,7 +429,7 @@ export class MilestoneDetailsComponent implements OnInit {
         }
       }
       if (item[i].status !== 'pending') {
-        byUser = `By ${item[i].username}`;
+        byUser = `By ${item[i].completedByName}`;
       }
       for (const attachmentID of attachmentsIDs) {
         this.milestonesService.getAttachment(+attachmentID).subscribe((res) => {
