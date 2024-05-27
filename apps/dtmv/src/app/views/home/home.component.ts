@@ -4,7 +4,6 @@ import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   MilestonesService,
-  Reminders,
 } from '../milestones-setting/milestones.service';
 
 @Component({

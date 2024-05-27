@@ -11,7 +11,7 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import { DTStream } from 'apps/dtmv/src/app/views/milestones-setting/milestones.service';
+import { DTStream } from 'apps/dtmv/src/app/services/models/milestones.models';
 
 @Component({
   selector: 'stc-apps-timeline-chart',

@@ -4,8 +4,9 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Observable, delay, of } from 'rxjs';
+import { BehaviorSubject, Observable, delay, map, of } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
+import {  StreamsResponse, HighlightImpactReport, MilestoneAttachment, MilestoneProgressWorkflow, PendingTask, HighlightImpartReportResponse, Reminders, ReportData, ReportDataWorkflow } from '../../services/models/milestones.models';
 
 export interface User {
   id: number;
@@ -28,201 +29,6 @@ export interface Team {
   name: 'Filed Operation' | 'Customer Care' | 'Digital Care' | 'Fraud';
 }
 
-export interface RequestTask {
-  requestTaskId: number;
-  status: string;
-  username: string;
-  userDisplayName: string;
-  requestTaskAttributes: [
-    {
-      id: number;
-      name: string;
-      value: string;
-    }
-  ];
-  completedDate: Date;
-  createdDate: Date;
-  lastModified: Date;
-
-  params: {
-    name: string;
-    type: string;
-    constraints: [
-      {
-        name: string;
-        configuration: boolean;
-      }
-    ];
-  }[];
-}
-
-export interface MilestoneAttachment {
-  fileName: string;
-  id: number;
-  label: string;
-  milestone: MilestoneDetails;
-  uploadDate: string; // it is a Date in a format of : "2024-3-17"
-  url: string;
-}
-
-// export enum Actions {
-//   addEvidence = {uniqueTitle: 'Add Evidence', displayCaption: 'Add Evidence'},
-//   addJustification = {uniqueTitle: 'Add Justification', displayCaption: 'Add Justification'},
-//   addOnTrack = {uniqueTitle: 'Add Remarks', displayCaption: 'Add Remarks'},
-//   reviewEvidence = {uniqueTitle: 'Approve Evidence', displayCaption: 'Approve Evidence'},
-//   reviewJustification = {uniqueTitle: 'Approve Justification', displayCaption: 'Approve Justification'},
-//   reviewOnTrack = {uniqueTitle: 'Approve on Track', displayCaption: 'Approve on Track'},
-//   updateDTRecord = {uniqueTitle: 'Update Record', displayCaption: 'Update Record'},
-//   initiateUpdateProgress = {uniqueTitle: 'Update progress', displayCaption: 'Update progress'},
-//   approveProgress = {uniqueTitle: 'Approve progress', displayCaption: 'Approve progress'},
-//   returnJustification = {uniqueTitle: 'Return Justification', displayCaption: 'Return Justification'},
-//   returnEvidence = {uniqueTitle: 'Return Evidence', displayCaption: 'Return Evidence'},
-//   returnOnTrack = {uniqueTitle: 'Return Remarks', displayCaption: 'Return Remarks'},
-//   noNeed = {uniqueTitle: 'No Need', displayCaption: 'No Need'},
-// }
-
-export class Actions {
-  static readonly addEvidence = new Actions('Add Evidence', 'Add Evidence');
-  static readonly addNewProgress = new Actions(
-    'Add New Progress',
-    'Add New Progress'
-  );
-  static readonly addJustification = new Actions(
-    'Add Justification',
-    'Add Justification'
-  );
-  static readonly addOnTrack = new Actions('Add Remarks', 'Add Remarks');
-  static readonly reviewEvidence = new Actions('Approve Evidence', 'Approve');
-  static readonly reviewJustification = new Actions(
-    'Approve Justification',
-    'Approve'
-  );
-  static readonly reviewOnTrack = new Actions('Approve on Track', 'Approve');
-  static readonly updateDTRecord = new Actions(
-    'Update Record',
-    'Update Record'
-  );
-  static readonly initiateUpdateProgress = new Actions(
-    'Update progress',
-    'Update progress'
-  );
-  static readonly approveProgress = new Actions(
-    'Approve progress',
-    'Approve progress'
-  );
-  static readonly returnProgress = new Actions('Return progress', 'Return');
-
-  static readonly returnJustification = new Actions(
-    'Return Justification',
-    'Return'
-  );
-  static readonly returnEvidence = new Actions('Return Evidence', 'Return');
-  static readonly returnOnTrack = new Actions('Return Remarks', 'Return');
-  static readonly noNeed = new Actions('No Need', 'No Need');
-
-  // private to disallow creating other instances of this type
-  private constructor(
-    public readonly uniqueTitle: string,
-    public readonly displayCaption: string
-  ) {}
-
-  toString() {
-    return this.uniqueTitle;
-  }
-}
-
-// export enum Actions {
-//   addEvidence = {id: 1, action: 'Add Evidence'},
-//   addJustification = {id: 2, action: 'Add Justification'},
-//   addOnTrack = {id: 3, action: 'Add Remarks'},
-//   reviewEvidence = {id: 4, action: 'Approve Evidence'},
-//   reviewJustification = {id: 5, action: 'Approve Justification'},
-//   reviewOnTrack = {id: 6, action: 'Approve on Track'},
-//   updateDTRecord = {id: 7, action: 'Update Record'},
-//   initiateUpdateProgress = {id: 8, action: 'Update progress'},
-//   approveProgress = {id: 9, action: 'Approve progress'},
-//   returnJustification = {id: 10, action: 'Return Justification'},
-//   returnEvidence = {id: 11, action: 'Return Evidence'},
-//   returnOnTrack = {id: 12, action: 'Return Remarks'},
-//   noNeed = {id: 13, action: 'No Need'},
-// }
-
-export interface MilestoneDetails {
-  activityName: string | null;
-  createdByEmail: string | null;
-  createdByName: string | null;
-  deliverable: string | null;
-  endDate: Date | null;
-  id: number | null;
-  lastProgressUpdateDate: Date | null;
-  milestoneName: string | null;
-  startDate: Date | null;
-  status: MilestoneStatus | null;
-  teamName: string | null;
-  updatedByEmail: null | string;
-  updatedByName: null | string;
-  weight: number | null;
-  workingDays: number | null;
-  latestApprovedMilestoneProgressUpdate: null | {
-    completionImpactRate: string | null;
-    cappedCompletionPercentage: string | null;
-    targetCompletionLevel: string | null;
-    deliverable: string | null;
-    isApproved: boolean | null;
-    milestoneId: number | null;
-    overallProgress: string | null;
-    progressUpdateDate: Date | null;
-    workflowId: number | null;
-    updatedBy: string;
-    status: string;
-  };
-  currentMilestoneProgressUpdateDto: null | {
-    completionImpactRate: string | null;
-    cappedCompletionPercentage: string | null;
-    targetCompletionLevel: string | null;
-    deliverable: string | null;
-    isApproved: boolean | null;
-    milestoneId: number | null;
-    overallProgress: string | null;
-    progressUpdateDate: Date | null;
-    workflowId: number | null;
-    updatedBy: string;
-    status: string;
-  };
-}
-
-export interface MilestoneAttachment {
-  id: number;
-  attachmentType: string;
-  fileName: string;
-  url: string;
-  label: string;
-  note: string;
-  uploadDate: string;
-}
-
-export interface StreamsResponse{
-  streams: DTStream[],
-  workStreamScore: number,
-  year: number
-}
-
-export interface DTStream {
-  streamName: string;
-  year: number;
-  month: number;
-  activities: Activity[];
-}
-
-export interface Activity {
-  activityName: string;
-  milestones: {
-    milestoneName: string;
-    endDate: string;
-    status: MilestoneStatus;
-    timeSpan?: number
-  }[];
-}
 
 @Injectable({
   providedIn: 'root',
@@ -230,7 +36,7 @@ export interface Activity {
 export class MilestonesService {
   baseUrl = environment.apiUrl;
   adminUrl = `${this.baseUrl}v2/admin`;
-  activitiesUrl = `${this.baseUrl}v2/dt-milestone-service`;
+  vpUrl = `${this.baseUrl}v2/dt-milestone-service/vpDashboard/`;
   dtUrl = `${this.baseUrl}v2/dt-milestone-service/milestones`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
@@ -239,75 +45,6 @@ export class MilestonesService {
   roles = ['CREATORS', 'APPROVERS', 'ADMINS']; // Current roles in the system
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
-
-  // tempDTStreams: DTStream[] = [
-  //   {
-  //     streamName: 'GCofStaff DT work streams',
-  //     month: 5,
-  //     year: 2024,
-  //     activities: [
-  //       {
-  //         name: 'ST One act 1',
-  //         milestones: [
-  //           { name: ' MS one keda', endDate: "2024-05-24", status: 'Completed' },
-  //           { name: ' MS two keda', endDate: "2024-06-14", status: 'Planned' },
-  //           { name: ' MS thr', endDate: "2024-07-24", status: 'Completed' },
-  //         ],
-  //       },
-
-  //       {
-  //         name: 'ST One act 2',
-  //         milestones: [
-  //           { name: ' MS one keda', endDate: "2024-01-20", status: 'Completed' },
-  //           { name: ' MS two keda', endDate: "2024-02-10", status: 'On Track' },
-  //         ],
-  //       },
-
-  //       {
-  //         name: 'ST One act 3',
-  //         milestones: [
-  //           { name: ' MS one keda', endDate: "2024-01-5", status: 'Completed' },
-  //           { name: ' MS two keda', endDate: "2024-03-27", status: 'Completed' },
-  //           { name: ' MS thr', endDate: "2024-02-17", status: 'Completed' },
-  //           { name: ' MS frr', endDate: "2024-05-12", status: 'Delayed' },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  //   {
-  //     streamName: 'GCofStaff DT work streams',
-  //     month: 5,
-  //     year: 2024,
-  //     activities: [
-  //       {
-  //         name: 'ST One act 1',
-  //         milestones: [
-  //           { name: ' MS one keda', endDate: "2024-05-24", status: 'Completed' },
-  //           { name: ' MS two keda', endDate: "2024-06-14", status: 'Planned' },
-  //           { name: ' MS thr', endDate: "2024-07-24", status: 'Completed' },
-  //         ],
-  //       },
-
-  //       {
-  //         name: 'ST One act 2',
-  //         milestones: [
-  //           { name: ' MS one keda', endDate: "2024-01-20", status: 'Completed' },
-  //           { name: ' MS two keda', endDate: "2024-02-10", status: 'On Track' },
-  //         ],
-  //       },
-
-  //       {
-  //         name: 'ST One act 3',
-  //         milestones: [
-  //           { name: ' MS one keda', endDate: "2024-01-5", status: 'Completed' },
-  //           { name: ' MS two keda', endDate: "2024-03-27", status: 'Completed' },
-  //           { name: ' MS thr', endDate: "2024-02-17", status: 'Completed' },
-  //           { name: ' MS frr', endDate: "2024-05-12", status: 'Delayed' },
-  //         ],
-  //       },
-  //     ],
-  //   },
-  // ];
 
   currentTeam: {
     id: number;
@@ -391,8 +128,36 @@ export class MilestonesService {
    * Returns all of the streams of the DTMV system.
    */
   getDTStreams(teamName: string, year: number): Observable<StreamsResponse> {
-    return this.http.get<StreamsResponse>(`${this.activitiesUrl}/vpDashboard/activities?teamName=${teamName}&year=${year}`);
+    return this.http.get<StreamsResponse>(
+      `${this.vpUrl}activities?teamName=${teamName}&year=${year}`
+    );
     // return of(this.tempDTStreams).pipe(delay(500))
+  }
+
+  /**
+   * 
+   * @param team Pass the required team if user has multi teams
+   * @param year pass the year of the filtration
+   * @returns the data of the report and extra related info.
+   */
+  getReportData(team: string, year: number): Observable<ReportData>{
+    
+    return this.http.get<ReportData>(
+      `${this.vpUrl}reportData/latest/${year}/${team}`
+    );
+  }
+
+  /**
+   * Posts the report data and gives back the BE response.
+   * @param reportData pass the required props.
+   */
+  postHighlightOrImpact(
+    reportData: HighlightImpactReport
+  ): Observable<HighlightImpartReportResponse> {
+    return this.http.post<HighlightImpartReportResponse>(
+      `${this.vpUrl}reportData`,
+      reportData
+    );
   }
 
   getMilestones(filterData?: any) {
@@ -456,11 +221,30 @@ export class MilestonesService {
   getMilestoneProgress(id: number) {
     return this.http.get(`${this.dtUrl}/progress/${id}`);
   }
+
+    /**
+   * @param requestId pass the workflow ID
+   * @returns the milestone workflow data and state
+   */
   getMilestoneProgressWorkflow(
     requestId: number
   ): Observable<MilestoneProgressWorkflow> {
     return this.http.get<MilestoneProgressWorkflow>(
       `${this.ticketUrl}${requestId}`
+    );
+  }
+
+  /**
+   * @param requestId pass the workflow ID
+   * @returns the workflow data and state
+   */
+  getVPReportWorkflow(
+    requestId: number
+  ): Observable<ReportDataWorkflow | undefined> {
+    return this.http.get<ReportDataWorkflow[]>(
+      `${this.ticketUrl}${requestId}`
+    ).pipe(
+      map((res: ReportDataWorkflow[]) => res.find(item => item.status === 'pending'))
     );
   }
 
@@ -583,68 +367,5 @@ export class MilestonesService {
     return Object.keys(obj)[Object.values(obj).indexOf(status)];
   }
 }
+export { HighlightImpactReport, PendingTask, MilestoneAttachment };
 
-export interface Reminders {
-  id: number;
-  reminderContent: string;
-  reminderTitle: string;
-  reminderUploadDate: string;
-}
-
-export type MilestoneProgressWorkflow = MilestoneProgressWorkflowStep[];
-
-export interface MilestoneProgressWorkflowStep {
-  requestTaskId: number;
-  status: 'completed' | 'pending';
-  username: string;
-  userDisplayName: string;
-  params: {
-    constraints: string[];
-    name: string;
-    type: string;
-  }[];
-  requestTaskAttributes: {
-    id: number;
-    name: string;
-    value: string;
-  }[];
-  completedDate: Date;
-  createdDate: Date;
-  lastModified: Date;
-  taskName: string;
-}
-
-export type MilestoneStatus = 'Planned' | 'Delayed' | 'On Track' | 'Completed';
-
-// export interface File {
-//   id: string;
-//   fileName: string;
-//   url: string;
-//   label: string;
-// }
-
-export interface PendingTask {
-  assignedUser: string;
-  createdDate: Date;
-  externalSystemId: number;
-  flowId: number;
-  id: number;
-  lastModified: Date;
-  params: { name: Actions; type: string; constraints: string[] }[];
-  requestParams: {
-    creator_username: string;
-    milestone_id: string | number;
-    milestone_progress_id: string | number;
-    team: string;
-    status: string;
-  };
-  taskName: 'Add Remarks';
-  taskStatus: 'pending';
-}
-
-export type Attachment = {
-  id: number;
-  fileName: string;
-  url: string;
-  label: string;
-};

@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
-  DTStream,
   MilestonesService,
 } from '../milestones-setting/milestones.service';
 import { FormControl, FormGroup } from '@angular/forms';
+import { DTStream } from '../../services/models/milestones.models';
 
 @Component({
   selector: 'stc-apps-vp-report',
@@ -24,6 +25,9 @@ export class VpReportComponent implements OnInit {
   selectedYear: WritableSignal<number> = signal(0);
   selectedTeam: WritableSignal<string> = signal('');
 
+  editorContent: string = '<p>This is the content you want to display.</p>';
+
+
   constructor(
     public milestonesService: MilestonesService,
     public router: Router,
@@ -39,7 +43,7 @@ export class VpReportComponent implements OnInit {
     this.getAllTeams();
   }
 
-  watchRoute() {
+  private watchRoute() {
     this.route.queryParams.subscribe((params) => {
       this.selectedYear.set(params['year']);
       this.selectedTeam.set(params['team']);
@@ -60,12 +64,12 @@ export class VpReportComponent implements OnInit {
     });
   }
 
-  setDateInitiallyToCurrentYear() {
+  private setDateInitiallyToCurrentYear() {
     const currentYear = new Date().getFullYear();
     this.filterSelect.get('dateType')?.setValue(currentYear);
   }
 
-  getAllTeams() {
+  private getAllTeams() {
     if (this.milestonesService.checkIsDirector()) {
       this.milestonesService.setSystemTeams().subscribe((res) => {
         this.allTeams = res;
@@ -79,7 +83,7 @@ export class VpReportComponent implements OnInit {
     }
   }
 
-  getDTStreams() {
+  private getDTStreams() {
     this.milestonesService
       .getDTStreams(this.selectedTeam(), this.selectedYear())
       .subscribe((res) => {
@@ -89,27 +93,28 @@ export class VpReportComponent implements OnInit {
       });
   }
 
-  selectTeam(value: string) {
+  protected selectTeam(value: string) {
     if (this.selectedTeam() !== value) {
       this.selectedTeam.set(value);
       this.updateRoute(value, this.selectedYear());
     }
   }
 
-  updateRoute(team: string, year: number) {
+  private updateRoute(team: string, year: number) {
     this.router.navigate([], {
       relativeTo: this.route,
       queryParams: { team, year },
-      queryParamsHandling: 'merge', // Merge with existing query parameters
+      queryParamsHandling: 'merge', // Merge with existing query parameters,
+      replaceUrl: true
     });
   }
 
-  handleSelectChange(value: string) {
+  protected handleSelectChange(value: string) {
     this.selectedYear.set(Number(value));
     this.updateRoute(this.selectedTeam(), Number(value));
   }
 
-  yearsArrPopulator() {
+  private yearsArrPopulator() {
     const currentYear = new Date().getFullYear();
     for (
       let i = 2024;
@@ -120,44 +125,8 @@ export class VpReportComponent implements OnInit {
     }
   }
 
-  calculatePercentageOfDate(dateString: string): number {
-    // Convert the date string to a Date object
-    const date = new Date(dateString);
-
-    // Get the day, month, and year from the date
-    const day = date.getDate();
-    const month = date.getMonth() + 1; // Months are zero-indexed, so we add 1
-    const year = date.getFullYear();
-
-    // Calculate the total number of days in the year
-    const isLeapYear = (year % 4 === 0 && year % 100 !== 0) || year % 400 === 0;
-    const totalDaysInYear = isLeapYear ? 366 : 365;
-
-    // Calculate the total number of days from the beginning of the year to the given date
-    let totalDaysToDate = 0;
-    const daysInMonth = [
-      31,
-      isLeapYear ? 29 : 28,
-      31,
-      30,
-      31,
-      30,
-      31,
-      31,
-      30,
-      31,
-      30,
-      31,
-    ];
-    for (let i = 0; i < month - 1; i++) {
-      totalDaysToDate += daysInMonth[i];
-    }
-    totalDaysToDate += day;
-
-    // Calculate the percentage
-    const percentage = (totalDaysToDate / totalDaysInYear) * 100;
-
-    // Return the percentage
-    return percentage;
+  protected goEditPage(){
+    // this.router.navigate(["vp-report/edit"], {queryParams: {his: "wefwef"}})
+    this.router.navigate(["vp-report/edit"])
   }
 }

@@ -1,0 +1,174 @@
+<!-- edit.component.html -->
+<div class="layout custom-layout">
+  <div class="box vp-report">
+    <div class="container-fluid">
+      <div>
+        <div class="row mt-6">
+          <div class="col-md-12">
+            <h4>Search with team</h4>
+          </div>
+          <div class="col-md-12">
+            <ul class="teams">
+              @for(team of allTeams; track team){
+              <li
+                (click)="selectTeam(team.name)"
+                [ngClass]="selectedTeam() === team.name ? 'active' : ''"
+              >
+                {{ team.name }}
+              </li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <form [formGroup]="form">
+          <div class="row mb-3">
+            <div class="col">
+              <stc-apps-input
+                [className]="'custom-input'"
+                [inputPlaceholder]="'Enter Actual'"
+                [inputId]="'actual'"
+                [inputName]="'Actual'"
+                formControlName="actual"
+              ></stc-apps-input>
+
+              @if (form.get('actual')?.invalid && form.get('actual')?.touched) {
+              <div class="text-danger">
+                <!-- Actual is required and must be less than or equal to 100. -->
+              </div>
+              }
+            </div>
+            <div class="col">
+              <stc-apps-input
+                [className]="'custom-input'"
+                [inputPlaceholder]="'Enter Baseline'"
+                [inputId]="'baseline'"
+                [inputName]="'Baseline'"
+                formControlName="baseline"
+              ></stc-apps-input>
+              @if (form.get('baseline')?.invalid &&
+              form.get('baseline')?.touched) {
+              <div class="text-danger">
+                <!-- Baseline is required and must be less than or equal to 100. -->
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col">
+              <stc-apps-input
+                [className]="'custom-input'"
+                [inputPlaceholder]="'Enter EOY Target'"
+                [inputId]="'targetEoy'"
+                [inputName]="'EOY Target'"
+                formControlName="targetEoy"
+              ></stc-apps-input>
+              @if ( form.get('targetEoy')?.invalid &&
+              form.get('targetEoy')?.touched ) {
+              <div class="text-danger">
+                <!-- EOY Target is required and must be less than or equal to 100. -->
+              </div>
+              }
+            </div>
+            <div class="col">
+              <stc-apps-input
+                [className]="'custom-input'"
+                [inputPlaceholder]="'Enter Target'"
+                [inputId]="'target'"
+                [inputName]="'Target'"
+                formControlName="target"
+              ></stc-apps-input>
+              @if ( form.get('target')?.invalid && form.get('target')?.touched )
+              {
+              <div class="text-danger">
+                <!-- Target is required and must be less than or equal to 100. -->
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="row quills-row">
+            <div class="col">
+              <label class="input-label">Highlight</label>
+
+              <stc-apps-text-editor-quill
+                [isReadOnly]="reviewMode()"
+                formControlName="highlight"
+              ></stc-apps-text-editor-quill>
+
+              @if ( form.get('highlight')?.invalid &&
+              form.get('highlight')?.touched ) {
+              <div class="text-danger">
+                <!-- Highlight is required and must be less than or equal to 100. -->
+              </div>
+              }
+            </div>
+            <div class="col">
+              <label class="input-label">Impact</label>
+              <stc-apps-text-editor-quill
+                [isReadOnly]="reviewMode()"
+                formControlName="valueImpact"
+              ></stc-apps-text-editor-quill>
+
+              @if ( form.get('valueImpact')?.invalid &&
+              form.get('valueImpact')?.touched ) {
+              <div class="text-danger">
+                <!-- valueImpact is required and must be less than or equal to 100.F -->
+              </div>
+              }
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-4 offset-md-8">
+              <div class="row">
+                <div class="col-md-4">
+                  <!-- <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
+                          (btnClick)="cancel()"></stc-apps-button> -->
+                  <stc-apps-button
+                    [buttonText]="'Go Back'"
+                    [buttonType]="'warn'"
+                    [actionType]="'button'"
+                    (btnClick)="navBack()"
+                  ></stc-apps-button>
+                </div>
+                @if(showSubmitBtn()){
+                  <div class="col-md-4">
+                    <stc-apps-button
+                      [buttonText]="'Submit'"
+                      [buttonType]="'primary'"
+                      [actionType]="'submit'"
+                      (btnClick)="submitForm()"
+                      [buttonDisable]="form.invalid"
+                    ></stc-apps-button>
+                  </div>
+                }
+                @if(showApproveBtn()){
+                  <div class="col-md-4">
+                    <stc-apps-button
+                      [buttonText]="'Approve'"
+                      [buttonType]="'primary'"
+                      [actionType]="'submit'"
+                      (btnClick)="submitForm()"
+                    ></stc-apps-button>
+                  </div>
+                }
+                @if(showRejectBtn()){
+                  <div class="col-md-4">
+                    <stc-apps-button
+                      [buttonText]="'Return'"
+                      [buttonType]="'primary'"
+                      [actionType]="'submit'"
+                      (btnClick)="submitForm()"
+                    ></stc-apps-button>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

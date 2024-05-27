@@ -35,9 +35,9 @@
           </ul>
         </div>
       </div>
+      @if ( milestoneProgress()) {
       <div class="row mt-6">
         <div class="col-md-4">
-          @if ( milestoneProgress()) {
           <div class="container-box">
             <h5>Milestone Progress</h5>
             <div
@@ -48,7 +48,6 @@
               <span class="circle-content">{{ milestoneProgress() }}%</span>
             </div>
           </div>
-          }
         </div>
         <div class="col-md-8">
           <div class="container-box">
@@ -94,7 +93,9 @@
           </div>
         </div>
       </div>
-
+      }@else {
+      <p class="no-data-text">No Data Found!</p>
+      } @if ( milestoneProgress()) {
       <div class="my-5">
         @for (dtStream of dtStreams(); track dtStream; let i = $index) {
         <div class="gantt-legend">
@@ -118,11 +119,38 @@
           ></stc-apps-timeline-chart>
         </div>
         <!-- 
-        @if (i + 1 !== dtStreams().length) {
-        <div class="chart-liner"></div>
-        } -->
+          @if (i + 1 !== dtStreams().length) {
+          <div class="chart-liner"></div>
+          } -->
         }
       </div>
+      }
+
+      <div class="row report-row">
+        <div class="col report-col">
+          <p class="highlight-title">
+            DT Program Highlight
+
+            <span class="edit-link" (click)="goEditPage()">Edit</span>
+          </p>
+          <!-- <quill-editor
+            [readOnly]="true"
+            [modules]="{ toolbar: false }"
+            [ngModel]="editorContent"
+          ></quill-editor> -->
+          <div [innerHTML]="editorContent"></div>
+        </div>
+        <div class="col report-col">
+          <p class="impact-title">Value / Impact
+
+            <span class="edit-link" (click)="goEditPage()">Edit</span>
+          </p>
+
+          <div [innerHTML]="editorContent"></div>
+
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

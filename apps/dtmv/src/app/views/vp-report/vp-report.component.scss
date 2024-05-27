@@ -305,3 +305,33 @@ div[role='progresscircule']::after {
   margin: auto;
   margin-block: 50px;
 }
+
+.no-data-text{
+  text-align: center;
+  padding: 50px;
+  font-weight: bold;
+}
+
+.report-row{
+  justify-content: space-between;
+
+  .report-col{
+    background-color: white;
+    padding: 20px;
+    margin-inline: 10px;
+  }
+}
+
+.highlight-title, .impact-title{
+  color: var(--stc-color);
+  font-weight: bold;
+  font-size: 1.3rem;
+
+}
+
+.edit-link{
+  font-size: 1rem;
+  cursor: pointer;
+  float: right;
+  text-decoration: underline;
+}

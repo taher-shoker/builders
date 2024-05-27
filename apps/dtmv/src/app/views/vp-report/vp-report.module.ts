@@ -14,9 +14,11 @@ import { VpReportRoutingModule } from './vp-report-routing.module';
 import { VpReportComponent } from './vp-report.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { SharedUiModule } from '@stc-apps/shared-ui';
+import { QuillModule } from 'ngx-quill';
+import { EditComponent } from './edit/edit.component';
 
 @NgModule({
-  declarations: [VpReportComponent],
+  declarations: [VpReportComponent, EditComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -31,6 +33,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
     MatProgressBarModule,
     MatSortModule,
     VpReportRoutingModule,
+    QuillModule.forRoot(), // Ensure QuillModule is imported and initialized
   ],
   exports: [],
   providers: [],
