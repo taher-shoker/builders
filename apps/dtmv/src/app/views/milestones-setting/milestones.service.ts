@@ -59,6 +59,8 @@ export class MilestonesService {
 
   isDTDirector!: boolean;
   isBusinessSpoc!: boolean;
+  isVPViewer!: boolean;
+
   isDTAdmin!: boolean;
 
   getCurrentSystem(): string {
@@ -80,6 +82,11 @@ export class MilestonesService {
   }
   getMilestoneUsersType() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    if (user.userGroups.length > 1) {
+      this.isVPViewer = true;
+    } else {
+      this.isVPViewer = false;
+    }
     return user.userGroups[0].groupName;
   }
 

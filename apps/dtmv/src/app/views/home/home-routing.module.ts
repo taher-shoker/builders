@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '../../services/auth.guard';
 import { HomeComponent } from './home.component';
+import { VpViewerGuard } from '../../services/guards/vp-viewer.guard';
 
 const routes: Routes = [
   {
@@ -21,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'vp-report',
-        canActivate: [AuthGuard],
+        canActivate: [AuthGuard, VpViewerGuard],
         loadChildren: () =>
           import('../vp-report/vp-report.module').then((m) => m.VpReportModule),
       },
