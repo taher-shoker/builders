@@ -28,7 +28,7 @@ export class ReportingService {
 
     const payload = {
       pageName: pageName,
-      systemName: 'DT Milestone',
+      systemName: 'DT Milestones',
       userName: user.username,
       userDisplayName: user.name,
       userJobTitle: user.jobTitle,

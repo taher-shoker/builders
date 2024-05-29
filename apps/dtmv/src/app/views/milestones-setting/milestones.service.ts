@@ -6,7 +6,17 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { BehaviorSubject, Observable, delay, map, of } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
-import {  StreamsResponse, HighlightImpactReport, MilestoneAttachment, MilestoneProgressWorkflow, PendingTask, HighlightImpartReportResponse, Reminders, ReportData, ReportDataWorkflow } from '../../services/models/milestones.models';
+import {
+  StreamsResponse,
+  HighlightImpactReport,
+  MilestoneAttachment,
+  MilestoneProgressWorkflow,
+  PendingTask,
+  HighlightImpartReportResponse,
+  Reminders,
+  ReportData,
+  ReportDataWorkflow,
+} from '../../services/models/milestones.models';
 
 export interface User {
   id: number;
@@ -28,7 +38,6 @@ export interface Team {
   id: number;
   name: 'Filed Operation' | 'Customer Care' | 'Digital Care' | 'Fraud';
 }
-
 
 @Injectable({
   providedIn: 'root',
@@ -80,18 +89,15 @@ export class MilestonesService {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.teams;
   }
-  getMilestoneUsersType() {
+  getMilestoneUsersType(): Group[] {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    if (user.userGroups.length > 1) {
-      this.isVPViewer = true;
-    } else {
-      this.isVPViewer = false;
-    }
-    return user.userGroups[0].groupName;
+    return user.userGroups;
   }
 
   checkIsDirector() {
-    if (this.getMilestoneUsersType() === 'DT_Director') {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
+    ) {
       this.isDTDirector = true;
     } else {
       this.isDTDirector = false;
@@ -100,7 +106,9 @@ export class MilestonesService {
   }
 
   checkIsBusinessSpoc() {
-    if (this.getMilestoneUsersType() === 'Business_SPOC') {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'Business_SPOC')
+    ) {
       this.isBusinessSpoc = true;
     } else {
       this.isBusinessSpoc = false;
@@ -110,7 +118,11 @@ export class MilestonesService {
   }
 
   checkIsAdmin() {
-    if (this.getMilestoneUsersType() === 'DI_Milestones_Admins') {
+    if (
+      this.getMilestoneUsersType().find(
+        (x) => x.groupName === 'DI_Milestones_Admins'
+      )
+    ) {
       this.isDTAdmin = true;
     } else {
       this.isDTAdmin = false;
@@ -142,13 +154,12 @@ export class MilestonesService {
   }
 
   /**
-   * 
+   *
    * @param team Pass the required team if user has multi teams
    * @param year pass the year of the filtration
    * @returns the data of the report and extra related info.
    */
-  getReportData(team: string, year: number): Observable<ReportData>{
-    
+  getReportData(team: string, year: number): Observable<ReportData> {
     return this.http.get<ReportData>(
       `${this.vpUrl}reportData/latest/${year}/${team}`
     );
@@ -229,7 +240,7 @@ export class MilestonesService {
     return this.http.get(`${this.dtUrl}/progress/${id}`);
   }
 
-    /**
+  /**
    * @param requestId pass the workflow ID
    * @returns the milestone workflow data and state
    */
@@ -248,15 +259,19 @@ export class MilestonesService {
   getVPReportWorkflow(
     requestId: number
   ): Observable<ReportDataWorkflow | undefined> {
-    return this.http.get<ReportDataWorkflow[]>(
-      `${this.ticketUrl}${requestId}`
-    ).pipe(
-      map((res: ReportDataWorkflow[]) => res?.find(item => item.status === 'pending'))
-    );
+    return this.http
+      .get<ReportDataWorkflow[]>(`${this.ticketUrl}${requestId}`)
+      .pipe(
+        map((res: ReportDataWorkflow[]) =>
+          res?.find((item) => item.status === 'pending')
+        )
+      );
   }
 
   getMilestoneTasks(): Observable<PendingTask[]> {
-    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`);
+    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`, {
+      params: this.setSystemParam(),
+    });
   }
 
   downloadAttachment(id: number) {
@@ -291,8 +306,10 @@ export class MilestonesService {
     );
   }
 
-  getMilestonesHistory(milestoneId: number | null) {
-    return this.http.get<any>(`${this.requestUrl}history/${milestoneId}`);
+  getMilestonesHistory(mielstoneId: number | null) {
+    return this.http.get<any>(`${this.requestUrl}history/${mielstoneId}`, {
+      params: this.setSystemParam(),
+    });
   }
 
   /**
@@ -375,4 +392,3 @@ export class MilestonesService {
   }
 }
 export { HighlightImpactReport, PendingTask, MilestoneAttachment };
-

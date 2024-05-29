@@ -22,7 +22,7 @@ const routes: Routes = [
       },
       {
         path: 'vp-report',
-        canActivate: [AuthGuard, VpViewerGuard],
+        canActivate: [AuthGuard],
         loadChildren: () =>
           import('../vp-report/vp-report.module').then((m) => m.VpReportModule),
       },

@@ -43,14 +43,19 @@ export class UpdateMilestoneProgressDialogComponent {
   });
 
   isRequired: boolean = false;
+  showNoNeed: boolean = false;
   constructor(
     public dialogRef: MatDialogRef<UpdateMilestoneProgressDialogComponent>,
     @Inject(MAT_DIALOG_DATA)
-    public data: { type: string; milestoneName: string , milestoneId: number | string},
+    public data: {
+      type: string;
+      milestoneName: string;
+      milestoneId: number | string;
+    },
     private milestonesService: MilestonesService
   ) {
     this.milestoneName.set(data.milestoneName);
-    if(data.type === Actions.addEvidence.uniqueTitle){
+    if (data.type === Actions.addEvidence.uniqueTitle) {
       this.requireFormControl();
       this.isRequired = true;
     }
@@ -65,12 +70,12 @@ export class UpdateMilestoneProgressDialogComponent {
       this.hint.set(this.justificationHint);
     } else if (this.data.type === Actions.addOnTrack.uniqueTitle) {
       this.hint.set(this.remarksHint);
-    } 
-    
-    else if (this.data.type === Actions.returnEvidence.uniqueTitle ||
+      this.showNoNeed = true;
+    } else if (
+      this.data.type === Actions.returnEvidence.uniqueTitle ||
       this.data.type === Actions.returnOnTrack.uniqueTitle ||
       this.data.type === Actions.returnJustification.uniqueTitle
-      ) {
+    ) {
       this.hint.set(
         `${hintPrefix} ${returnHintAction} ${this.milestoneName()}, ${hintTail} `
       );
@@ -99,24 +104,28 @@ export class UpdateMilestoneProgressDialogComponent {
 
       const formData = new FormData();
       formData.append('file', file);
-      this.milestonesService.uploadFile(formData, this.data.milestoneId).subscribe((res: MilestoneAttachment) => {
-        this.uploadedFile.push(res);
-        this.isLoading = false;
-        this.form.get('attachment')?.setValue(this.uploadedFile);
+      this.milestonesService
+        .uploadFile(formData, this.data.milestoneId)
+        .subscribe((res: MilestoneAttachment) => {
+          this.uploadedFile.push(res);
+          this.isLoading = false;
+          this.form.get('attachment')?.setValue(this.uploadedFile);
 
-        this.attachmentsIDs.push(res.id.toString());
-        // if(this.attachmentsCombinedString.length > 0){
-        //   this.attachmentsCombinedString = res.id.toString();
-        // }else{
-        //   this.attachmentsCombinedString += `,${res.id}`
-        // }
-      })
+          this.attachmentsIDs.push(res.id.toString());
+          // if(this.attachmentsCombinedString.length > 0){
+          //   this.attachmentsCombinedString = res.id.toString();
+          // }else{
+          //   this.attachmentsCombinedString += `,${res.id}`
+          // }
+        });
     }
   }
 
   onDeleteFile(id: number) {
     this.uploadedFile = this.uploadedFile.filter((x: any) => x.id !== id);
-    this.attachmentsIDs = this.attachmentsIDs.filter((x: any) => x !== id.toString());
+    this.attachmentsIDs = this.attachmentsIDs.filter(
+      (x: any) => x !== id.toString()
+    );
     this.form.get('attachment')?.setValue(this.uploadedFile);
     // this.milestonesService.deleteFile(id).subscribe((res: any) => {
     // });
@@ -133,13 +142,13 @@ export class UpdateMilestoneProgressDialogComponent {
     });
   }
 
-  requireFormControl(){
+  requireFormControl() {
     this.form.get('attachment')?.setValidators(Validators.required);
     this.form.get('attachment')?.updateValueAndValidity();
   }
 
   update() {
-    const attachmentsIDsToString = this.attachmentsIDs.join(",")
+    const attachmentsIDsToString = this.attachmentsIDs.join('@#%@#%Z%#@%#@'); // !separator changed to fix the split of any note or rejection
     this.dialogRef.close({
       note: this.form.get('note')?.value,
       attachments: attachmentsIDsToString,
@@ -149,4 +158,5 @@ export class UpdateMilestoneProgressDialogComponent {
   cancel() {
     this.dialogRef.close(undefined);
   }
+
 }
