@@ -251,7 +251,7 @@ export class MilestonesService {
     return this.http.get<ReportDataWorkflow[]>(
       `${this.ticketUrl}${requestId}`
     ).pipe(
-      map((res: ReportDataWorkflow[]) => res.find(item => item.status === 'pending'))
+      map((res: ReportDataWorkflow[]) => res?.find(item => item.status === 'pending'))
     );
   }
 
@@ -291,8 +291,8 @@ export class MilestonesService {
     );
   }
 
-  getMilestonesHistory(mielstoneId: number | null) {
-    return this.http.get<any>(`${this.requestUrl}history/${mielstoneId}`);
+  getMilestonesHistory(milestoneId: number | null) {
+    return this.http.get<any>(`${this.requestUrl}history/${milestoneId}`);
   }
 
   /**

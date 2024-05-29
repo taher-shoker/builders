@@ -150,7 +150,7 @@
                       [buttonText]="'Approve'"
                       [buttonType]="'primary'"
                       [actionType]="'submit'"
-                      (btnClick)="submitForm()"
+                      (btnClick)="approveFlow(true)"
                     ></stc-apps-button>
                   </div>
                 }
@@ -160,7 +160,7 @@
                       [buttonText]="'Return'"
                       [buttonType]="'primary'"
                       [actionType]="'submit'"
-                      (btnClick)="submitForm()"
+                      (btnClick)="approveFlow(false)"
                     ></stc-apps-button>
                   </div>
                 }

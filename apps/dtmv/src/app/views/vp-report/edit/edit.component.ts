@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -33,6 +34,9 @@ export class EditComponent implements OnInit {
       }
     | undefined
   > = signal(undefined);
+
+  workflowId: WritableSignal<number | undefined> = signal(undefined)
+  requestTaskId: WritableSignal<number | undefined> = signal(undefined)
 
   constructor(
     private router: Router,
@@ -87,11 +91,12 @@ export class EditComponent implements OnInit {
       .getReportData(this.selectedTeam(), 2024) // Check if year should be sent!
       .subscribe((res: ReportData) => {
         console.log('State res:', res);
-        if (!res.isApproved) {
-          this.handleUiState('approval-pending', res);
-          this.getWorkflow(res.workflowId);
-        } else {
-          this.handleUiState('edit-pending', res);
+        this.workflowId.set(res.workflowId)
+        if(res.isApproved === null || res.isApproved === true){
+          this.handleUiState('edit-pending', res); // DT User should Edit
+        }else{
+          this.handleUiState('approval-pending', res); // DT Director should approve/reject
+          this.getWorkflow();
         }
       });
   }
@@ -106,17 +111,24 @@ export class EditComponent implements OnInit {
     this.reviewMode.set(true);
   }
 
-  private getWorkflow(id: number) {
-    this.milestonesService.getVPReportWorkflow(id).subscribe((res) => {
-      console.log('Res', res);
-      if (res && res.params.length > 0) {
-        if(res.taskName === 'Edit Report Data'){
-          // this.setParamsForEditing()
-        }else{
-          // this.setParamsForApproval()
+  private getWorkflow() {
+    if(this.workflowId()){
+      this.milestonesService.getVPReportWorkflow(this.workflowId()!).subscribe((res) => {
+        console.log('Res', res);
+        
+        this.requestTaskId.set(
+          res?.requestTaskId
+        )
+        if (res && res.params.length > 0) {
+          if(res.taskName === 'Edit Report Data'){
+            // this.setParamsForEditing()
+          }else if(res.taskName === 'Approve Report Data'){
+            // this.setParamsForApproval()
+          }
         }
-      }
-    });
+      });
+    }
+
   }
 
   private setParamsForEditing(){
@@ -153,19 +165,9 @@ export class EditComponent implements OnInit {
     )
   }
 
-  private setParamsForApproval(isApproved: boolean){
-    this.requestParams.set(
-      {
-        requestParams: [
-          {
-            name: "is_report_data_approved",
-            value: isApproved,
-          },
-          
-        ]
-      }
-    )
-  }
+  // private setParamsForApproval(isApproved: boolean){
+
+  // }
 
   private handleUiState(
     state: 'edit-pending' | 'approval-pending',
@@ -175,6 +177,7 @@ export class EditComponent implements OnInit {
       this.showSubmitBtn.set(true);
       this.showApproveBtn.set(false);
       this.showRejectBtn.set(false);
+      this.populateForm(formData); // if not approved, means we need to populate the inputs as the the workflow needs a director approval
     } else {
       this.populateForm(formData); // if not approved, means we need to populate the inputs as the the workflow needs a director approval
       this.form.disable();
@@ -254,5 +257,30 @@ export class EditComponent implements OnInit {
       .subscribe((res) => {
         console.log('THE RES OF POSTING', res);
       });
+  }
+
+  protected approveFlow(isApproved: boolean){
+    this.requestParams.set(
+      {
+        requestParams: [
+          {
+            name: "is_report_data_approved",
+            value: isApproved,
+          },
+          
+        ]
+      }
+    )
+
+    const workflowId = this.workflowId();
+    const requestTaskId = this.requestTaskId();
+    const requestParams = this.requestParams();
+
+    if(workflowId && requestTaskId && requestParams){
+      this.milestonesService.completePendingTask(workflowId, requestTaskId, requestParams).subscribe(res => {
+        console.log("res of approving", res)
+      })
+
+    }
   }
 }
