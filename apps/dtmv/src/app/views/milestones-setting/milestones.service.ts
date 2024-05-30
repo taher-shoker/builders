@@ -247,13 +247,27 @@ export class MilestonesService {
    */
   getVPReportWorkflow(
     requestId: number
-  ): Observable<ReportDataWorkflow | undefined> {
+  ): Observable<ReportDataWorkflow[]> {
     return this.http.get<ReportDataWorkflow[]>(
       `${this.ticketUrl}${requestId}`
     ).pipe(
-      map((res: ReportDataWorkflow[]) => res?.find(item => item.status === 'pending'))
-    );
+      map((res: ReportDataWorkflow[]) => res.filter(item => item.status === 'completed'))
+    )
   }
+
+    /**
+   * @param requestId pass the workflow ID
+   * @returns the workflow data and state
+   */
+    getPendingVPReportWorkflowItem(
+      requestId: number
+    ): Observable<ReportDataWorkflow | undefined> {
+      return this.http.get<ReportDataWorkflow[]>(
+        `${this.ticketUrl}${requestId}`
+      ).pipe(
+        map((res: ReportDataWorkflow[]) => res?.find(item => item.status === 'pending'))
+      );
+    }
 
   getMilestoneTasks(): Observable<PendingTask[]> {
     return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`);

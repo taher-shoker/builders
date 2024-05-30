@@ -116,6 +116,16 @@
     font-weight: 400;
 }
 
+.action-btns-row{
+  align-items: center;
+  justify-content: end;
+}
+
 .quills-row{
     margin-bottom: 6rem;
+}
+
+.form-status{
+  text-decoration: underline;
+  color: grey;
 }

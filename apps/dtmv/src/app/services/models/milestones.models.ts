@@ -259,7 +259,7 @@ export interface ReportDataWorkflow {
   completedDate: null | Date;
   createdDate: Date;
   lastModified: Date;
-  requestTaskAttributes: [];
+  requestTaskAttributes: {id: number, name: string, value: string}[];
   requestTaskId: number;
   status: 'pending' | 'completed';
   taskName: 'Approve Report Data' | 'Edit Report Data';

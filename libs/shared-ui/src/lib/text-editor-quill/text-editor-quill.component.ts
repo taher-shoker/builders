@@ -26,14 +26,16 @@ export class TextEditorQuillComponent implements AfterViewInit, OnDestroy, Contr
   constructor() {
     this.editorId = `quill-editor-${TextEditorQuillComponent.nextId++}`;
 
-    effect(() => {
-      console.log("in child",this.isReadOnly())
-    })
+    // effect(() => {
+    //   console.log("in child",this.isReadOnly())
+    // })
   }
 
   ngAfterViewInit(): void {
-    this.quillEditor = new Quill(`#${this.editorId}`, {
+      console.log("in child ngAfterViewInit",this.isReadOnly())
+      this.quillEditor = new Quill(`#${this.editorId}`, {
       theme: 'snow',
+      readOnly: this.isReadOnly(),
       modules: {
         toolbar: this.isReadOnly() ? false : [
           // [{ header: [1, 2, false] }],
