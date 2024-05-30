@@ -19,13 +19,18 @@ export class UpdateProgressDialogComponent {
     @Inject(MAT_DIALOG_DATA) public data: { overallProgress: string, milestoneName: string }
   ) {
     if(data.overallProgress){
-      this.overallProgressFloor = Number(data.overallProgress) 
+      this.overallProgressFloor = Number(data.overallProgress)
     }
 
     this.form = new FormGroup({
-      overallProgress: new FormControl('', [Validators.required, customValidator(this.overallProgressFloor), Validators.pattern('^[0-9]+(.[0-9]+)?$')]),
+      overallProgress: new FormControl('', [
+        Validators.required,
+        customValidator(this.overallProgressFloor),
+        Validators.pattern('^[0-9]+$|^([0-9]+)\\.([0-9]+)$'),
+      ]),
+      // overallProgress: new FormControl('', [Validators.required, customValidator(this.overallProgressFloor), Validators.pattern('^(?!.*[a-zA-Z]).*[0-9]+(.[0-9]+)?$')]), // remove due to the special characters was a bug
       deliverable: new FormControl('', [Validators.maxLength(150)]),
-    })
+    });
   }
 
   update() {

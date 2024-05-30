@@ -18,21 +18,27 @@
             formControlName="note"
             [placeholder]="'Write your note'"
           ></stc-apps-input-full-width> -->
-          <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="'Write your note'"
-            [inputId]="'description'" [inputName]="'Add note'" formControlName="note"></stc-apps-textarea>
+          <stc-apps-textarea
+            [className]="'custom-input'"
+            [inputPlaceholder]="'Write your note'"
+            [inputId]="'description'"
+            [inputName]="'Add note'"
+            formControlName="note"
+          ></stc-apps-textarea>
         </div>
 
-        <stc-apps-file-uploader [multiple]="false" [chooseLabel]="'add_attachment' | translate"
-          (onformchange)="onUploadFile($event)" [attachmentFiles]="
-          form.controls['attachment'].value
-        " formControlName="attachment" [isLoading]="isLoading"
-        [accept]="acceptedExtensions"
-        [required]="isRequired"
-        (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
-
+        <stc-apps-file-uploader
+          [multiple]="false"
+          [chooseLabel]="'add_attachment' | translate"
+          (onformchange)="onUploadFile($event)"
+          [attachmentFiles]="form.controls['attachment'].value"
+          formControlName="attachment"
+          [isLoading]="isLoading"
+          [accept]="acceptedExtensions"
+          [required]="isRequired"
+          (ondelete)="onDeleteFile($event)"
+        ></stc-apps-file-uploader>
       </form>
-
-
     </div>
   </div>
 
@@ -40,10 +46,31 @@
 
   <div class="dialog-actions">
     <div class="actions-wrapper">
-      <button type="button" class="btn gray-outline " (click)="cancel()">Cancel</button>
-      <button type="button" class="btn primary" (click)="update()" [disabled]="form.invalid">
-        {{data.type}}
-      </button>
+      <div>
+        <button type="button" class="btn gray-outline" (click)="cancel()">
+          Cancel
+        </button>
+      </div>
+      <div>
+        @if (showNoNeed) {
+        <button
+          type="button"
+          class="btn primary"
+          (click)="update()"
+          [disabled]="!form.invalid"
+        >
+          No Need
+        </button>
+        }
+        <button
+          type="button"
+          class="btn primary"
+          (click)="update()"
+          [disabled]="form.invalid"
+        >
+          {{ data.type }}
+        </button>
+      </div>
     </div>
   </div>
 </div>

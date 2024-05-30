@@ -209,6 +209,7 @@ export interface MilestoneProgressWorkflowStep {
   createdDate: Date;
   lastModified: Date;
   taskName: string;
+  completedByName: string;
 }
 
 export type MilestoneStatus = 'Planned' | 'Delayed' | 'On Track' | 'Completed';
@@ -271,3 +272,6 @@ export interface ReportDataWorkflow {
     constraints: { name: string; configuration: string }[];
   }[];
 }
+export type Params = {
+  requestParams: { name: string; value: number | string | boolean }[];
+};
