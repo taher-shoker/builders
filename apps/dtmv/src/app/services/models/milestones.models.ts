@@ -140,6 +140,7 @@ export interface MilestoneAttachment {
 }
 
 export interface StreamsResponse {
+  reportData: ReportData;
   streams: DTStream[];
   workStreamScore: number;
   year: number;
@@ -260,7 +261,7 @@ export interface ReportDataWorkflow {
   completedDate: null | Date;
   createdDate: Date;
   lastModified: Date;
-  requestTaskAttributes: {id: number, name: string, value: string}[];
+  requestTaskAttributes: { id: number; name: string; value: string }[];
   requestTaskId: number;
   status: 'pending' | 'completed';
   taskName: 'Approve Report Data' | 'Edit Report Data';

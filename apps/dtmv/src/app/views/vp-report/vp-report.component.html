@@ -55,7 +55,7 @@
             <div class="progress-bar-box">
               <div class="left-value">
                 <h6>Baseline</h6>
-                <p>3.00%</p>
+                <p>{{reportData()?.baseline}}</p>
               </div>
               <div class="bar">
                 <div class="container">
@@ -75,11 +75,11 @@
                       class="progress-bar-hide"
                       role="progressbar-hide"
                       aria-valuemax="100"
-                      style="--value: 28.5"
+                      [style]="'--value:' + reportData()?.target"
                     >
                       <span
                         >Target
-                        <p>28.50%</p></span
+                        <p>{{reportData()?.target}}</p></span
                       >
                     </div>
                   </div>
@@ -87,7 +87,7 @@
               </div>
               <div class="right-value">
                 <h6>EOY Target</h6>
-                <p>93%</p>
+                <p>{{reportData()?.targetEoy}}</p>
               </div>
             </div>
           </div>

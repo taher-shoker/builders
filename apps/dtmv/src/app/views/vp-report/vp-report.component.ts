@@ -5,7 +5,7 @@ import {
   MilestonesService,
 } from '../milestones-setting/milestones.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DTStream } from '../../services/models/milestones.models';
+import { DTStream, ReportData } from '../../services/models/milestones.models';
 
 @Component({
   selector: 'stc-apps-vp-report',
@@ -25,6 +25,7 @@ export class VpReportComponent implements OnInit {
   selectedYear: WritableSignal<number> = signal(0);
   selectedTeam: WritableSignal<string> = signal('');
 
+  reportData: WritableSignal<ReportData | undefined> = signal(undefined);
   editorContent: string = '<p>This is the content you want to display.</p>';
 
 
@@ -90,6 +91,7 @@ export class VpReportComponent implements OnInit {
         this.dtStreams.set(res.streams);
         this.streamsYear.set(res.year);
         this.milestoneProgress.set(res.workStreamScore);
+        this.reportData.set(res.reportData);
       });
   }
 

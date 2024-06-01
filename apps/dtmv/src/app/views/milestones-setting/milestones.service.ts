@@ -147,10 +147,11 @@ export class MilestonesService {
    * Returns all of the streams of the DTMV system.
    */
   getDTStreams(teamName: string, year: number): Observable<StreamsResponse> {
-    return this.http.get<StreamsResponse>(
-      `${this.vpUrl}activities?teamName=${teamName}&year=${year}`
-    );
-    // return of(this.tempDTStreams).pipe(delay(500))
+    const params = new HttpParams()
+      .set('teamName', teamName)
+      .set('year', year.toString());
+
+    return this.http.get<StreamsResponse>(`${this.vpUrl}activities`, { params });
   }
 
   /**
