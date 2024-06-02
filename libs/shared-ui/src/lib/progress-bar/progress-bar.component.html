@@ -1,0 +1,48 @@
+<div class="progress-bar-holder">
+  <div class="bar-prefix">
+    <p class="title">{{ data().prefixText }}</p>
+    <p class="value">{{ data().prefixValue }}%</p>
+  </div>
+
+  <div class="bars-holder">
+    <div class="background-bar">
+      <div class="bar" [ngStyle]="{ width: data().progressValue + '%' }"></div>
+      <div class="invisible-bar">
+        @for (index of data().indexes; track index) {
+        <div
+          class="indexer"
+          [ngStyle]="{
+            left: '0',
+            top: index.position === 'up' ? '-85px' : null,
+            bottom: index.position === 'down' ? '-65px' : null
+          }"
+        >
+          <div
+            class="holder"
+            [ngStyle]="{
+              'padding-top': index.position === 'down' ? '12px' : null,
+              'padding-bottom': index.position === 'up' ? '12px' : ''
+            }"
+          >
+            <span class="index-info caption">{{ index.caption }}</span
+            ><br />
+            <span class="index-info value">{{ index.value }}%</span>
+            <span
+              class="index-info pointer"
+              [ngStyle]="{
+                top: index.position === 'down' ? '0' : '',
+                bottom: index.position === 'up' ? '0' : ''
+              }"
+            ></span>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+
+  <div class="bar-suffix">
+    <p class="title">{{ data().suffixText }}</p>
+    <p class="value">{{ data().suffixValue }}%</p>
+  </div>
+</div>

@@ -140,7 +140,7 @@ export class EditComponent implements OnInit {
             this.handleUiState('none-pending', res); // DT User should Edit
             this.showStatus.set(true);
             this.status.set('Waiting For Edit');
-            this.directorCanComment.set(false)
+            this.directorCanComment.set(false);
           }
         } else {
           this.handlePendingTask(res);
@@ -209,19 +209,15 @@ export class EditComponent implements OnInit {
     this.destroyQuillEditor();
     this.reviewMode.set(true);
     this.buildQuillEditor();
-
   }
 
-  destroyQuillEditor(){
-    this.showQuill.set(false)
+  destroyQuillEditor() {
+    this.showQuill.set(false);
   }
 
-  buildQuillEditor(){
-    this.showQuill.set(true)
-    // setTimeout(()=> {
-    // }, 0)
+  buildQuillEditor() {
+    this.showQuill.set(true);
   }
-
 
   private handleUiState(
     state:
@@ -273,14 +269,10 @@ export class EditComponent implements OnInit {
       this.milestonesService.setSystemTeams().subscribe((res) => {
         this.allTeams = res;
         this.watchRoute();
-        this.selectedTeam.set(this.allTeams[0].name);
-        this.getVpReportState();
       });
     } else {
       this.allTeams = this.milestonesService.setUserTeams();
       this.watchRoute();
-      this.selectedTeam.set(this.allTeams[0].name);
-      this.getVpReportState();
     }
   }
 
@@ -301,8 +293,7 @@ export class EditComponent implements OnInit {
         this.selectedTeam.set(this.allTeams[0].name);
         this.updateRoute(this.allTeams[0].name);
       }
-
-      // this.getDATA(); get backend data again after route changes
+      this.getVpReportState();
     });
   }
 

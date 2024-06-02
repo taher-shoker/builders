@@ -57,6 +57,7 @@ import { DateAgoPipe } from './notifications-dropdown/date-ago.pipe';
 import { TimelineChartComponent } from './timeline-chart/timeline-chart.component';
 import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -95,6 +96,7 @@ const components = [
   TimelineChartComponent,
   TextEditorQuillComponent,
   CheckboxComponent,
+  ProgressBarComponent
 ];
 
 @NgModule({
@@ -104,7 +106,6 @@ const components = [
   imports: [
     CommonModule,
     RouterModule,
-    // TranslateModule,
     LngSelectorModule,
     ModeToggleModule,
     FormsModule,

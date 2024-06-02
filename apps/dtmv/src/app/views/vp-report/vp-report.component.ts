@@ -1,11 +1,18 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, OnInit, WritableSignal, signal } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import {
-  MilestonesService,
-} from '../milestones-setting/milestones.service';
+  Component,
+  OnInit,
+  WritableSignal,
+  computed,
+  signal,
+} from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MilestonesService } from '../milestones-setting/milestones.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { DTStream, ReportData } from '../../services/models/milestones.models';
+import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
 
 @Component({
   selector: 'stc-apps-vp-report',
@@ -26,8 +33,35 @@ export class VpReportComponent implements OnInit {
   selectedTeam: WritableSignal<string> = signal('');
 
   reportData: WritableSignal<ReportData | undefined> = signal(undefined);
-  editorContent: string = '<p>This is the content you want to display.</p>';
 
+  progressBarData = computed(() => {
+    const reportData = this.reportData();
+    let data: ProgressInfo;
+    if (reportData) {
+      console.log('Data is true:', reportData);
+      data = {
+        prefixText: 'Baseline',
+        prefixValue: this.reportData()!.baseline,
+        suffixText: 'EOY Target',
+        suffixValue: this.reportData()!.targetEoy,
+        progressValue: this.reportData()!.actual,
+        indexes: [
+          { caption: 'Actual', value: this.reportData()!.actual , position: 'up' },
+          { caption: 'Target', value: this.reportData()!.target , position: 'down'},
+        ],
+      };
+    } else {
+      console.log('Data is null:', reportData);
+      data = {
+        prefixText: 'Baseline',
+        prefixValue: 0,
+        suffixText: 'EOY Target',
+        suffixValue: 0,
+        progressValue: 0,
+      };
+    }
+    return data;
+  });
 
   constructor(
     public milestonesService: MilestonesService,
@@ -75,12 +109,10 @@ export class VpReportComponent implements OnInit {
       this.milestonesService.setSystemTeams().subscribe((res) => {
         this.allTeams = res;
         this.watchRoute();
-        this.selectedTeam.set(this.allTeams[0].name);
       });
     } else {
       this.allTeams = this.milestonesService.setUserTeams();
       this.watchRoute();
-      this.selectedTeam.set(this.allTeams[0].name);
     }
   }
 
@@ -92,6 +124,7 @@ export class VpReportComponent implements OnInit {
         this.streamsYear.set(res.year);
         this.milestoneProgress.set(res.workStreamScore);
         this.reportData.set(res.reportData);
+        console.log('Hitting again', res.reportData);
       });
   }
 
@@ -107,7 +140,7 @@ export class VpReportComponent implements OnInit {
       relativeTo: this.route,
       queryParams: { team, year },
       queryParamsHandling: 'merge', // Merge with existing query parameters,
-      replaceUrl: true
+      replaceUrl: true,
     });
   }
 
@@ -127,8 +160,8 @@ export class VpReportComponent implements OnInit {
     }
   }
 
-  protected goEditPage(){
+  protected goEditPage() {
     // this.router.navigate(["vp-report/edit"], {queryParams: {his: "wefwef"}})
-    this.router.navigate(["vp-report/edit"])
+    this.router.navigate(['vp-report/edit']);
   }
 }

@@ -50,47 +50,7 @@
           </div>
         </div>
         <div class="col-md-8">
-          <div class="container-box">
-            <h5>GCoS DT Progress</h5>
-            <div class="progress-bar-box">
-              <div class="left-value">
-                <h6>Baseline</h6>
-                <p>{{reportData()?.baseline}}</p>
-              </div>
-              <div class="bar">
-                <div class="container">
-                  <div class="progress">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      aria-valuemax="100"
-                      style="--value: 100"
-                    ></div>
-                  </div>
-                </div>
-                <div class="container m-hide">
-                  <div class="progress prg-hide">
-                    <!-- Target Value Bar -->
-                    <div
-                      class="progress-bar-hide"
-                      role="progressbar-hide"
-                      aria-valuemax="100"
-                      [style]="'--value:' + reportData()?.target"
-                    >
-                      <span
-                        >Target
-                        <p>{{reportData()?.target}}</p></span
-                      >
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="right-value">
-                <h6>EOY Target</h6>
-                <p>{{reportData()?.targetEoy}}</p>
-              </div>
-            </div>
-          </div>
+          <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
         </div>
       </div>
       }@else {
@@ -138,7 +98,7 @@
             [modules]="{ toolbar: false }"
             [ngModel]="editorContent"
           ></quill-editor> -->
-          <div [innerHTML]="editorContent"></div>
+          <div [innerHTML]="reportData()?.highlight"></div>
         </div>
         <div class="col report-col">
           <p class="impact-title">Value / Impact
@@ -146,7 +106,7 @@
             <span class="edit-link" (click)="goEditPage()">Edit</span>
           </p>
 
-          <div [innerHTML]="editorContent"></div>
+          <div [innerHTML]="reportData()?.valueImpact"></div>
 
         </div>
       </div>
