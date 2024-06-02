@@ -1,0 +1,92 @@
+<div class="user-form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="inputs">
+      <div class="row">
+        <div class="col-md-4">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Milestone Name'"
+            [inputId]="'milestoneName'" (valueKeyDown)="preventComma($event)" [inputName]="'Milestone Name'"
+            formControlName="milestoneName"></stc-apps-input>
+        </div>
+        <div class="col-md-4">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Activity Name'"
+            [inputId]="'activityName'" (valueKeyDown)="preventComma($event)" [inputName]="'Activity Name'"
+            formControlName="activityName"></stc-apps-input>
+        </div>
+          <div class="col-md-4">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Work Stream Name'"
+            [inputId]="'workStream'" (valueKeyDown)="preventComma($event)" [inputName]="'Work Stream Name'"
+            formControlName="workStream"></stc-apps-input>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-date-picker [className]="'custom-input'" (selectChange)="handelChangeDate($event,'start')"
+            [inputPlaceholder]="''" [inputId]="'startDate'" [inputName]="'Start Date'" formControlName="startDate">
+          </stc-apps-date-picker>
+        </div>
+        <div class="col-md-6">
+          <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
+            [inputId]="'endDate'" [inputName]="'End Date'" formControlName="endDate"
+            (selectChange)="handelChangeDate($event,'end')">
+          </stc-apps-date-picker>
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Number'" [inputId]="'weight'"
+            [inputName]="'Weight'" formControlName="weight"></stc-apps-input>
+        </div>
+        <div class="col-md-6" *ngIf="!milestonesService.isDTDirector">
+          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Related Team'" [options]="allTeams"
+            [required]="true" formControlName="teamName" [outputValue]="'name'"
+            [disabled]="true"></stc-apps-select-drop-down>
+
+        </div>
+      </div>
+      <div class="row mt-7">
+        <div class="col-md-6">
+          <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'message'"
+            [inputName]="'deliverable' | translate" formControlName="deliverable"
+            (valueKeyDown)="preventComma($event)"></stc-apps-textarea>
+        </div>
+
+      </div>
+      <div class="row">
+        <div class="col-md-4 offset-md-8 ">
+          <div class="row">
+            <div class="col-md-6">
+              <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
+                (btnClick)="cancel()"></stc-apps-button>
+            </div>
+            <div class="col-md-6">
+              <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Add'" [buttonType]="'primary'"
+                (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="btn-form-action" *ngIf="!isSubmited">
+
+
+    </div> -->
+  </form>
+</div>
+
+<!-- <stc-apps-dialog id="add-case-modal">
+  <p>
+    {{ 'add_case_confirmation' | translate }}
+  </p>
+  <div class="row mt-4">
+    <div class="col-md-4 offset-8">
+      <div class="d-flex justify-content-end">
+        <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"></stc-apps-button>
+
+        <div class="mx-4"></div>
+        <stc-apps-button [buttonText]="'confirm' | translate" [buttonType]="'primary'"
+          (btnClick)="onSubmit()"></stc-apps-button>
+      </div>
+    </div>
+  </div>
+</stc-apps-dialog> -->

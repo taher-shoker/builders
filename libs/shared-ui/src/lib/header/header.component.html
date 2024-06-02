@@ -1,8 +1,9 @@
 <nav class="navbar navbar-light">
   <div class="container-fluid">
     <div class="left-box d-flex align-items-center">
-      <span role="button" aria-disabled="true" (click)="toggle()" class="additional-menu-btn-icon"
-        [ngClass]="{ open: showMenu }" (keyup.enter)="({})" #toggleButton><span></span></span>
+      <span *ngIf="allItems.length>0" role="button" aria-disabled="true" (click)="toggle()"
+        class="additional-menu-btn-icon" [ngClass]="{ open: showMenu }" (keyup.enter)="({})"
+        #toggleButton><span></span></span>
       <div role="button" class="brand ms-4" (click)="backToHome.emit()">
         <img src="{{ logoSrc }}" alt="logo" />
       </div>

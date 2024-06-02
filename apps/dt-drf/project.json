@@ -1,0 +1,130 @@
+{
+  "name": "dt-drf",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "stc-apps",
+  "sourceRoot": "apps/dt-drf/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/dt-drf",
+        "index": "apps/dt-drf/src/index.html",
+        "main": "apps/dt-drf/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/dt-drf/tsconfig.app.json",
+        "assets": [
+          "apps/dt-drf/src/favicon.ico",
+          "apps/dt-drf/src/assets",
+          {
+            "input": "libs/shared-ui/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          }
+        ],
+        "styles": [
+          "libs/styles/src/index.scss",
+          "node_modules/ngx-toastr/toastr.css",
+          "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
+          "apps/dt-drf/src/styles.scss"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/styles/src"]
+        },
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/dt-drf/src/environments/environment.ts",
+              "with": "apps/dt-drf/src/environments/environment.prod.ts"
+            }
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "8kb",
+              "maximumError": "10kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/dt-drf/src/environments/environment.ts",
+              "with": "apps/dt-drf/src/environments/environment.stage.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "dt-drf:build:production"
+        },
+        "development": {
+          "buildTarget": "dt-drf:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "dt-drf:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "outputs": ["{options.outputFile}"]
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/dt-drf/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "dt-drf:build"
+      }
+    }
+  }
+}
