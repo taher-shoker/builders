@@ -17,6 +17,7 @@ import { ReportData } from '../../../services/models/milestones.models';
 export class EditComponent implements OnInit {
   allTeams: any[] = [];
   selectedTeam: WritableSignal<string> = signal('');
+  selectedYear: WritableSignal<number> = signal(0);
   form!: FormGroup;
 
   reviewMode: WritableSignal<boolean> = signal(false);
@@ -68,31 +69,33 @@ export class EditComponent implements OnInit {
         actual: new FormControl('', [
           Validators.required,
           Validators.max(100),
+          Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         baseline: new FormControl('', [
           Validators.required,
           Validators.max(100),
+          Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         targetEoy: new FormControl('', [
           Validators.required,
           Validators.max(100),
+          Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         target: new FormControl('', [
           Validators.required,
           Validators.max(100),
+          Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         highlight: new FormControl('', [
           Validators.required,
-          Validators.max(100),
           quillContentValidator,
         ]),
         valueImpact: new FormControl('', [
           Validators.required,
-          Validators.max(100),
           quillContentValidator,
         ]),
       }),
@@ -125,19 +128,16 @@ export class EditComponent implements OnInit {
     this.resetStatus();
 
     this.milestonesService
-      .getReportData(
-        this.selectedTeam(),
-        Number(new Date().getFullYear().toString())
-      ) // Check if year should be sent!
+      .getReportData(this.selectedTeam(), this.selectedYear())
       .subscribe((res: ReportData) => {
         console.log('State res:', res);
         this.workflowId.set(res.workflowId);
 
         if (res.isApproved === null || res.isApproved === true) {
           if (!this.milestonesService.checkIsDirector()) {
-            this.handleUiState('edit-pending', res); // DT User should Edit
+            this.handleUiState('edit-pending', res);
           } else {
-            this.handleUiState('none-pending', res); // DT User should Edit
+            this.handleUiState('none-pending', res);
             this.showStatus.set(true);
             this.status.set('Waiting For Edit');
             this.directorCanComment.set(false);
@@ -192,6 +192,7 @@ export class EditComponent implements OnInit {
 
         this.lastCommentReceived.set(comments[comments.length - 1]);
         console.log('All comms', comments);
+        console.log('this.lastCommentReceived', this.lastCommentReceived());
       });
   }
 
@@ -238,11 +239,13 @@ export class EditComponent implements OnInit {
       this.showApproveBtn.set(false);
       this.showRejectBtn.set(false);
       this.showResubmitBtn.set(false);
+      this.form.get('dataForm')?.enable();
     } else if (state === 'resubmission-pending') {
       this.showSubmitBtn.set(false);
       this.showApproveBtn.set(false);
       this.showRejectBtn.set(false);
       this.showResubmitBtn.set(true);
+      this.form.get('dataForm')?.enable();
     } else if (state === 'none-pending') {
       this.showSubmitBtn.set(false);
       this.showApproveBtn.set(false);
@@ -261,6 +264,8 @@ export class EditComponent implements OnInit {
       this.showRejectBtn.set(false);
       this.showResubmitBtn.set(false);
       this.showSpinner.set(true);
+      this.directorCanComment.set(false);
+      this.form.get('dataForm')?.disable();
     }
   }
 
@@ -276,10 +281,10 @@ export class EditComponent implements OnInit {
     }
   }
 
-  private updateRoute(team: string) {
+  private updateRoute(team: string, year: number) {
     this.router.navigate([], {
       relativeTo: this.route,
-      queryParams: { team },
+      queryParams: { team, year },
       queryParamsHandling: 'merge', // Merge with existing query parameters,
       replaceUrl: true,
     });
@@ -288,10 +293,18 @@ export class EditComponent implements OnInit {
   private watchRoute() {
     this.route.queryParams.subscribe((params) => {
       this.selectedTeam.set(params['team']);
+      this.selectedYear.set(params['year']);
+
+      const currentYear = new Date().getFullYear();
+
+      if (!params['year']) {
+        this.selectedYear.set(currentYear);
+        this.updateRoute(this.allTeams[0].name, currentYear);
+      }
 
       if (!params['team']) {
         this.selectedTeam.set(this.allTeams[0].name);
-        this.updateRoute(this.allTeams[0].name);
+        this.updateRoute(this.allTeams[0].name, currentYear);
       }
       this.getVpReportState();
     });
@@ -300,8 +313,7 @@ export class EditComponent implements OnInit {
   protected selectTeam(value: string) {
     if (this.selectedTeam() !== value) {
       this.selectedTeam.set(value);
-      this.updateRoute(value);
-      this.getVpReportState();
+      this.updateRoute(value, this.selectedYear());
     }
   }
 
@@ -310,11 +322,11 @@ export class EditComponent implements OnInit {
   }
 
   protected submitForm() {
-    console.log('the form value:', this.form.value);
+    console.log('the form value:', this.form.value.dataForm);
     this.handleUiState('loading');
 
     const { actual, baseline, targetEoy, target, highlight, valueImpact } =
-      this.form.value;
+      this.form.get('dataForm')!.value;
     const editingData: HighlightImpactReport = {
       actual,
       baseline,
@@ -323,7 +335,7 @@ export class EditComponent implements OnInit {
       highlight,
       valueImpact,
       team: this.selectedTeam(),
-      year: 2024,
+      year: this.selectedYear(),
     };
 
     this.milestonesService

@@ -35,7 +35,6 @@
           </ul>
         </div>
       </div>
-      @if ( milestoneProgress()) {
       <div class="row mt-6">
         <div class="col-md-4">
           <div class="container-box">
@@ -45,17 +44,29 @@
               role="progresscircule"
               [style]="'--value:' + milestoneProgress()"
             >
-              <span class="circle-content">{{ milestoneProgress() }}%</span>
+              <span class="circle-content"
+                >{{ milestoneProgress() || 0 }}%</span
+              >
             </div>
           </div>
         </div>
         <div class="col-md-8">
-          <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
+          <div class="container-box">
+            <h5>GCoS DT Progress</h5>
+            <div class="bar-holder">
+              <stc-apps-progress-bar
+              [data]="progressBarData()"
+            ></stc-apps-progress-bar>
+            </div>
+          </div>
         </div>
       </div>
-      }@else {
+
+      <!-- @else {
       <p class="no-data-text">No Data Found!</p>
-      } @if ( milestoneProgress()) {
+      }  -->
+
+      @if ( dtStreams().length > 0) {
       <div class="my-5">
         @for (dtStream of dtStreams(); track dtStream; let i = $index) {
         <div class="gantt-legend">
@@ -70,6 +81,10 @@
 
           <div class="legend-circle legend-circle-delayed"></div>
           <span class="legend-name legend-name-delayed">Delayed</span>
+
+          
+          <div class="legend-circle legend-circle-at-risk"></div>
+          <span class="legend-name legend-name-at-risk">At Risk</span>
         </div>
         <div class="chart-holder">
           <stc-apps-timeline-chart
@@ -93,24 +108,27 @@
 
             <span class="edit-link" (click)="goEditPage()">Edit</span>
           </p>
-          <!-- <quill-editor
+          <quill-editor
             [readOnly]="true"
             [modules]="{ toolbar: false }"
-            [ngModel]="editorContent"
-          ></quill-editor> -->
-          <div [innerHTML]="reportData()?.highlight"></div>
+            [ngModel]="reportData()?.highlight || '&nbsp;'"
+          ></quill-editor>
+          <!-- <div [innerHTML]="reportData()?.highlight"></div> -->
         </div>
         <div class="col report-col">
-          <p class="impact-title">Value / Impact
+          <p class="impact-title">
+            Value / Impact
 
             <span class="edit-link" (click)="goEditPage()">Edit</span>
           </p>
-
-          <div [innerHTML]="reportData()?.valueImpact"></div>
-
+          <quill-editor
+            [readOnly]="true"
+            [modules]="{ toolbar: false }"
+            [ngModel]="reportData()?.valueImpact || '&nbsp;'"
+          ></quill-editor>
+          <!-- <div [innerHTML]="reportData()?.valueImpact"></div> -->
         </div>
       </div>
-
     </div>
   </div>
 </div>

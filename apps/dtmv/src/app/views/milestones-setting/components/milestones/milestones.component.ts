@@ -194,10 +194,17 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     }
   }
 
-  detailsNavigate(id: string | number) {
-    this.router.navigate(['./milestone_details', id], {
-      relativeTo: this.route,
-    });
+  detailsNavigate(item: any) {
+    if (item.flowName === 'DT_VP_Report_Data_Approval') {
+      this.router.navigate(['../vp-report/edit'], {
+        relativeTo: this.route,
+      });
+    } else {
+      const id = item.externalSystemId;
+      this.router.navigate(['./milestone_details', id], {
+        relativeTo: this.route,
+      });
+    }
   }
 
   tableAction(event: { value: string; dataRow: any }) {

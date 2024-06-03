@@ -25,11 +25,6 @@ interface Index {
 export class ProgressBarComponent {
   data = input.required<ProgressInfo>();
 
-  // dataWatcher = computed(() => {
-  //   console.log("El Data", this.data())
-  //   return this.data()
-  // })
-
   constructor() {
     effect(() => {
       console.log(this.data());

@@ -12,7 +12,7 @@
         <div
           class="indexer"
           [ngStyle]="{
-            left: '0',
+            left: index.value + '%',
             top: index.position === 'up' ? '-85px' : null,
             bottom: index.position === 'down' ? '-65px' : null
           }"
@@ -31,7 +31,8 @@
               class="index-info pointer"
               [ngStyle]="{
                 top: index.position === 'down' ? '0' : '',
-                bottom: index.position === 'up' ? '0' : ''
+                bottom: index.position === 'up' ? '0' : '',
+                
               }"
             ></span>
           </div>

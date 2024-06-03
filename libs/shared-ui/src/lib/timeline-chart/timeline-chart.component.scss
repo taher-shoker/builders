@@ -38,7 +38,6 @@
   }
 }
 
-
 .bg-light-grey-color {
   background-color: var(--stc-lightGrey-color);
 }
@@ -89,38 +88,38 @@
   }
 }
 
-
-.gantt-legend{
+.gantt-legend {
   display: flex;
 }
 
-.legend-circle, .legend-name{
+.legend-circle,
+.legend-name {
   display: inline-block;
 }
 
-.legend-circle{
+.legend-circle {
   height: 20px;
   width: 20px;
   border-radius: 50%;
 }
 
-.legend-circle-completed{
+.legend-circle-completed {
   background-color: var(--stc-oasis-color);
 }
 
-.legend-circle-planned{
+.legend-circle-planned {
   background-color: var(--grey-color);
 }
 
-.legend-circle-on-track{
+.legend-circle-on-track {
   background-color: var(--stc-Sea-Color);
 }
 
-.legend-circle-delayed{
+.legend-circle-delayed {
   background-color: var(--red-Color);
 }
 
-.legend-name{
+.legend-name {
   margin-right: 10px;
   margin-left: 5px;
   margin-bottom: 7px;
@@ -168,7 +167,6 @@
     text-align: center;
     background-color: var(--stc-color-very-light);
     margin-bottom: 2px;
-
   }
 
   .milestones-col {
@@ -223,6 +221,10 @@
   border-bottom: 1px dashed var(--grey-color);
   position: relative;
   top: 13px;
+}
+
+.at-risk {
+  background-color: var(--stc-sun-color);
 }
 
 .on-track {

@@ -126,7 +126,7 @@
             }
           </div>
 
-          @if (lastCommentReceived() !== '') {
+          @if (lastCommentReceived() !== '' && lastCommentReceived() !== undefined) {
 
           <p>Comment:</p>
           <p>{{ lastCommentReceived() }}</p>

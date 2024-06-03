@@ -58,6 +58,10 @@ export class VpReportComponent implements OnInit {
         suffixText: 'EOY Target',
         suffixValue: 0,
         progressValue: 0,
+        indexes: [
+          { caption: 'Actual', value: 0 , position: 'up' },
+          { caption: 'Target', value: 0 , position: 'down'},
+        ],
       };
     }
     return data;
@@ -124,7 +128,6 @@ export class VpReportComponent implements OnInit {
         this.streamsYear.set(res.year);
         this.milestoneProgress.set(res.workStreamScore);
         this.reportData.set(res.reportData);
-        console.log('Hitting again', res.reportData);
       });
   }
 
@@ -161,7 +164,6 @@ export class VpReportComponent implements OnInit {
   }
 
   protected goEditPage() {
-    // this.router.navigate(["vp-report/edit"], {queryParams: {his: "wefwef"}})
-    this.router.navigate(['vp-report/edit']);
+    this.router.navigate(['vp-report/edit'], {queryParams: {year: this.selectedYear(), team: this.selectedTeam()} });
   }
 }
