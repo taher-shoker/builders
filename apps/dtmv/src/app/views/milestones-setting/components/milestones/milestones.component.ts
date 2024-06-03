@@ -198,6 +198,10 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     if (item.flowName === 'DT_VP_Report_Data_Approval') {
       this.router.navigate(['../vp-report/edit'], {
         relativeTo: this.route,
+        queryParams: {
+          team: item.requestParams.team,
+          year: item.requestParams.year,
+        },
       });
     } else {
       const id = item.externalSystemId;

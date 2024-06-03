@@ -9,6 +9,8 @@ export interface ProgressInfo {
   suffixValue: number | string;
   progressValue: number;
   indexes?: Index[];
+  barColor?: string;
+  bgBarColor?: string
 }
 
 interface Index {

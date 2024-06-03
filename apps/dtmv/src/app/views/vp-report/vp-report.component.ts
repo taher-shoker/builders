@@ -49,6 +49,8 @@ export class VpReportComponent implements OnInit {
           { caption: 'Actual', value: this.reportData()!.actual , position: 'up' },
           { caption: 'Target', value: this.reportData()!.target , position: 'down'},
         ],
+        barColor: this.reportData()!.actual < this.reportData()!.target ? '#c82a27' : '#00c48c',
+        bgBarColor: this.reportData()!.actual < this.reportData()!.target ? '#c82a271a' : '#00c48c1a'
       };
     } else {
       console.log('Data is null:', reportData);

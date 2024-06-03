@@ -5,8 +5,8 @@
   </div>
 
   <div class="bars-holder">
-    <div class="background-bar">
-      <div class="bar" [ngStyle]="{ width: data().progressValue + '%' }"></div>
+    <div class="background-bar" [ngStyle]="{'background-color': data().bgBarColor}">
+      <div class="bar" [ngStyle]="{ width: data().progressValue + '%', 'background-color': data().barColor}"></div>
       <div class="invisible-bar">
         @for (index of data().indexes; track index) {
         <div
