@@ -11,6 +11,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { CookieModule } from 'ngx-cookie';
+import { HomeModule } from './views/home/home.module';
 import { ResultScoreComponent } from './shared/result-score/result-score.component';
 import { TopBannerComponent } from './views/top-banner/top-banner.component';
 
@@ -31,6 +32,7 @@ export const provideTranslation = () => ({
   declarations: [AppComponent, ResultScoreComponent, TopBannerComponent],
   imports: [
     BrowserModule, 
+    HomeModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
     SharedUiModule,
