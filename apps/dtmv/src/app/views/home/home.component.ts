@@ -4,7 +4,6 @@ import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   MilestonesService,
-  Reminders,
 } from '../milestones-setting/milestones.service';
 
 @Component({
@@ -31,7 +30,14 @@ export class HomeComponent implements OnInit {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
-      roles: ['APPROVERS,CREATORS'],
+      roles: ['all'],
+      urlHome: '/home',
+    },
+    {
+      name: 'Vp Report',
+      url: '/vp-report',
+      icon: 'fa-file-signature',
+      roles: ['VP'],
       urlHome: '/home',
     },
   ];
@@ -44,14 +50,17 @@ export class HomeComponent implements OnInit {
       if (res?.roles) {
         const items = [];
         for (let i = 0; i < this.navItems.length; i++) {
-          const similar = this.navItems[i].roles.filter((element) =>
-            element.includes(res.roles[0])
-          );
-          if (similar.length > 0) {
-            items.push(this.navItems[i]);
-            this.urlHome = this.navItems[i].urlHome;
+          const item = this.navItems[i];
+          // Check if the item should be included based on roles
+          if (
+            item.roles.includes('all') ||
+            item.roles.some((role) => res.roles.includes(role))
+          ) {
+            items.push(item);
+            this.urlHome = item.urlHome;
           }
         }
+        // Update the navItems with the filtered list
         this.navItems = items;
       }
     });

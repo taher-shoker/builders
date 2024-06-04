@@ -1,0 +1,131 @@
+@import url('../../milestones-setting/milestones-setting.component.scss');
+
+.custom-layout {
+  .box {
+    top: 0 !important;
+    left: 1% !important;
+    padding-block: 24px;
+  }
+}
+
+.vp-report {
+  h3 {
+    font-size: 32px;
+    font-family: var(--stc-font-meduim);
+  }
+  h4 {
+    font-size: 20px;
+    font-family: var(--stc-font-bold);
+  }
+  .container-box {
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    h5 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: left;
+      color: var(--stc-color);
+      font-family: var(--stc-font-meduim);
+    }
+    .progress-circule {
+      margin: 0 auto;
+    }
+  }
+  .teams {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    li {
+      border: 1px solid var(--stc-color);
+      border-radius: 8px;
+      margin: 10px;
+      padding: 8px 16px;
+      min-width: 100px;
+      text-align: center;
+      &:hover {
+        background-color: var(--stc-color);
+        color: white;
+        cursor: pointer;
+      }
+      &.active {
+        background-color: var(--stc-color);
+        color: white;
+      }
+    }
+  }
+
+  .progress-bar-box {
+    display: flex;
+    padding: 30px;
+    height: 100%;
+
+    .bar {
+      flex-grow: 1;
+    }
+    .left-value,
+    .right-value {
+      margin-inline: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      p {
+        font-weight: bold;
+      }
+    }
+  }
+  .label {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: rgba($color: white, $alpha: 1) !important;
+  }
+}
+
+.teams {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  li {
+    border: 1px solid var(--stc-color);
+    border-radius: 8px;
+    margin: 10px;
+    padding: 8px 16px;
+    min-width: 100px;
+    text-align: center;
+    &:hover {
+      background-color: var(--stc-color);
+      color: white;
+      cursor: pointer;
+    }
+    &.active {
+      background-color: var(--stc-color);
+      color: white;
+    }
+  }
+}
+
+.input-label{
+    margin-bottom: 8px;
+    text-transform: capitalize;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+.action-btns-row{
+  align-items: center;
+  justify-content: end;
+}
+
+.quills-row{
+    margin-bottom: 6rem;
+}
+
+.form-status{
+  text-decoration: underline;
+  color: grey;
+}

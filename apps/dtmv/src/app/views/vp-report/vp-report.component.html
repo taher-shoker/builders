@@ -1,0 +1,134 @@
+<div class="layout custom-layout">
+  <div class="box vp-report">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-9">
+          <h3>G Chief of Staff DT Progress Report</h3>
+        </div>
+        <div class="col-md-3" [formGroup]="filterSelect">
+          <div class="d-flex flex-wrap align-items-center">
+            <span class="label">Year:</span>
+            <stc-apps-select-drop-down
+              formControlName="dateType"
+              [label]="''"
+              [options]="yearsArr"
+              (selectChange)="handleSelectChange($event)"
+              [outputValue]="'name'"
+            ></stc-apps-select-drop-down>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-6">
+        <div class="col-md-12">
+          <h4>Search with team</h4>
+        </div>
+        <div class="col-md-12">
+          <ul class="teams">
+            @for(team of allTeams; track team){
+            <li
+              (click)="selectTeam(team.name)"
+              [ngClass]="selectedTeam() === team.name ? 'active' : ''"
+            >
+              {{ team.name }}
+            </li>
+            }
+          </ul>
+        </div>
+      </div>
+      <div class="row mt-6">
+        <div class="col-md-4">
+          <div class="container-box">
+            <h5>Milestone Progress</h5>
+            <div
+              class="progress-circule"
+              role="progresscircule"
+              [style]="'--value:' + milestoneProgress()"
+            >
+              <span class="circle-content"
+                >{{ milestoneProgress() || 0 }}%</span
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="container-box">
+            <h5>GCoS DT Progress</h5>
+            <div class="bar-holder">
+              <stc-apps-progress-bar
+              [data]="progressBarData()"
+            ></stc-apps-progress-bar>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- @else {
+      <p class="no-data-text">No Data Found!</p>
+      }  -->
+
+      @if ( dtStreams().length > 0) {
+      <div class="my-5">
+        @for (dtStream of dtStreams(); track dtStream; let i = $index) {
+        <div class="gantt-legend">
+          <div class="legend-circle legend-circle-completed"></div>
+          <span class="legend-name legend-name-completed">Completed</span>
+
+          <div class="legend-circle legend-circle-planned"></div>
+          <span class="legend-name legend-name-planned">Planned</span>
+
+          <div class="legend-circle legend-circle-on-track"></div>
+          <span class="legend-name legend-name-on-track">On Track</span>
+
+          <div class="legend-circle legend-circle-delayed"></div>
+          <span class="legend-name legend-name-delayed">Delayed</span>
+
+          
+          <div class="legend-circle legend-circle-at-risk"></div>
+          <span class="legend-name legend-name-at-risk">At Risk</span>
+        </div>
+        <div class="chart-holder">
+          <stc-apps-timeline-chart
+            [dtStream]="dtStream"
+            [streamYear]="streamsYear()"
+            [animateMilestones]="true"
+          ></stc-apps-timeline-chart>
+        </div>
+        <!-- 
+          @if (i + 1 !== dtStreams().length) {
+          <div class="chart-liner"></div>
+          } -->
+        }
+      </div>
+      }
+
+      <div class="row report-row">
+        <div class="col report-col">
+          <p class="highlight-title">
+            DT Program Highlight
+
+            <span class="edit-link" (click)="goEditPage()">Edit</span>
+          </p>
+          <quill-editor
+            [readOnly]="true"
+            [modules]="{ toolbar: false }"
+            [ngModel]="reportData()?.highlight || '&nbsp;'"
+          ></quill-editor>
+          <!-- <div [innerHTML]="reportData()?.highlight"></div> -->
+        </div>
+        <div class="col report-col">
+          <p class="impact-title">
+            Value / Impact
+
+            <span class="edit-link" (click)="goEditPage()">Edit</span>
+          </p>
+          <quill-editor
+            [readOnly]="true"
+            [modules]="{ toolbar: false }"
+            [ngModel]="reportData()?.valueImpact || '&nbsp;'"
+          ></quill-editor>
+          <!-- <div [innerHTML]="reportData()?.valueImpact"></div> -->
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

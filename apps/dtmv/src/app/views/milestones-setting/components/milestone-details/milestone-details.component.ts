@@ -8,12 +8,8 @@ import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { saveAs } from 'file-saver';
 import { AuthService } from '../../../../services/auth.service';
 import {
-  Actions,
   MilestoneAttachment,
-  MilestoneDetails,
   MilestonesService,
-  Params,
-  RequestTask,
 } from '../../milestones.service';
 import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -21,6 +17,12 @@ import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-prog
 import { DatePipe } from '@angular/common';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
+import {
+  MilestoneDetails,
+  Actions,
+  RequestTask,
+  Params,
+} from 'apps/dtmv/src/app/services/models/milestones.models';
 
 //TODO: Refactor the workflow of the stepper.
 
@@ -195,7 +197,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
             for (const taskAttribute of res[i].requestTaskAttributes) {
               if (res[i].status !== 'pending') {
-                byUser = `By ${res[i].username}`;
+                byUser = `By ${res[i].completedByName}`;
 
                 if (
                   taskAttribute.name.includes('approved') &&
@@ -401,7 +403,7 @@ export class MilestoneDetailsComponent implements OnInit {
 
       for (const taskAttribute of item[i].requestTaskAttributes) {
         if (item[i].status !== 'pending') {
-          byUser = `By ${item[i].username}`;
+          byUser = `By ${item[i].completedByName}`;
 
           if (
             taskAttribute.name.includes('approved') &&
@@ -429,7 +431,7 @@ export class MilestoneDetailsComponent implements OnInit {
         }
       }
       if (item[i].status !== 'pending') {
-        byUser = `By ${item[i].username}`;
+        byUser = `By ${item[i].completedByName}`;
       }
       for (const attachmentID of attachmentsIDs) {
         this.milestonesService.getAttachment(+attachmentID).subscribe((res) => {
