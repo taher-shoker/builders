@@ -18,10 +18,24 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/app-sector/src/favicon.ico",
-          "apps/app-sector/src/assets"
+          "apps/app-sector/src/assets",
+          {
+            "input": "libs/shared-ui/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          }
         ],
-        "styles": ["apps/app-sector/src/styles.scss"],
-        "scripts": []
+        "styles": [
+          "libs/styles/src/index.scss",
+          "node_modules/ngx-toastr/toastr.css",
+          "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
+          "node_modules/quill/dist/quill.snow.css",
+          "apps/app-sector/src/styles.scss"],
+          "stylePreprocessorOptions": {
+            "includePaths": ["libs/styles/src"]
+          },
+          "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
+
       },
       "configurations": {
         "production": {
