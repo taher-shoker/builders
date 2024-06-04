@@ -1,0 +1,32 @@
+@import '../../../../../../libs/styles/src/scss/core/variables/colors';
+
+.score {
+    background: $whiteColor;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+
+    &_content {
+        display: flex;
+        align-items: center;
+        margin-inline-end: 120px;
+
+        &_image {
+            margin-inline-end: 23px;
+            background: $lightPurbleColor;
+        }
+
+        &_result {
+            h3 {
+                font-family: var(--stc-font-meduim);
+                color: $darkPurbleColor;
+            }
+        }
+    }
+
+    &_chart {
+        h1 {
+            font-family: var(--stc-font-bold);
+        }
+    }
+}

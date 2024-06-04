@@ -158,5 +158,6 @@
 
   "################THIS IS A COMMENT TO DIVIDE#################": "#############THIS IS A COMMENT TO DIVIDE IN JSON############",
 
-  "working_days": "Working Days"
+  "working_days": "Working Days",
+  "scorecard_report": "Scorecard Report"
 }

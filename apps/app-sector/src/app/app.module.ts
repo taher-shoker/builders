@@ -11,6 +11,8 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { CookieModule } from 'ngx-cookie';
+import { ResultScoreComponent } from './shared/result-score/result-score.component';
+import { TopBannerComponent } from './views/top-banner/top-banner.component';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -26,7 +28,7 @@ export const provideTranslation = () => ({
 });
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ResultScoreComponent, TopBannerComponent],
   imports: [
     BrowserModule, 
     BrowserAnimationsModule,

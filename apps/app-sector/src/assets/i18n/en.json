@@ -34,7 +34,8 @@
   "statistics": "Statistics",
   "welcome": "Welcome",
   "strategic_projects": "Strategic Projects",
-  "welcome_back_msg": "Welcome Back! Here’s overview of GPMO Dashboard",
+  "welcome_back": "Welcome Back,",
+  "welcome_back_msg": "Here’s overview of scorecard report Dashboard ",
   "last_update": "Last Update",
   "registered_cases": "Registered Cases",
   "inProgress_cases": "In Progress Cases",
@@ -170,5 +171,7 @@
   "end_date": "End date",
   "weight": "Weight",
   "start_date": "Start Date",
-  "working_days": "Working Days"
+  "working_days": "Working Days",
+
+  "scorecard_report": "Scorecard Report"
 }
