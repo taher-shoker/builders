@@ -74,7 +74,6 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       if (this.data) {
-        console.log(this.data);
         this.restFormWithValue(this.data);
       }
     }
@@ -153,7 +152,7 @@ export class UserFormComponent implements OnInit, OnChanges {
             this.userId,
             this.userService.getCurrentSystem() === 'DI_Milestones'
               ? this.form.get('userGroups')?.value.id
-              : this.form.get('teamDto')?.value.id,
+              : this.form.get('teamDto')?.value,
             {},
             queryParams
           )
@@ -184,6 +183,10 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.selectedPrivilege = this.privilages.filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+      } else if (this.userService.getCurrentSystem() === 'DI_Management') {
+        this.selectedPrivilege = this.privilages.filter(
+          (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
+        )[0];
       } else {
         this.selectedPrivilege = this.privilages.filter(
           (p) => p.id === this.data?.userGroups[0]?.roles[0]?.id
@@ -205,16 +208,24 @@ export class UserFormComponent implements OnInit, OnChanges {
         : this.userService
             .getTeams()
             .filter((x) => x.roleName == userGroup?.roles[0].roleName);
+
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         if (this.data?.teams && this.data.teams.length > 0) {
           this.selectedGroup = this.data.teams.map((t: any) => t.id);
-          // this.selectedTeam = this.data?.teams;
         } else if (this.data.userGroups[0].groupName === 'DT_Director') {
           this.hideDropdown = true;
           this.form.get('teamDto')?.setValidators(null);
           this.form.get('teamDto')?.updateValueAndValidity();
         }
+      } else if (this.userService.getCurrentSystem() === 'DI_Management') {
+        this.teams = this.userService
+          .getTeams()
+          .filter(
+            (s) =>
+              s.roleName ===
+              this.checkSystem(this.data.userGroups)?.roles[0].roleName
+          );
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id
@@ -278,9 +289,9 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (!this.addGroups) {
       this.getTeams(data?.userGroups[0]);
       if (this.userService.getCurrentSystem() === 'DI_Management') {
-        this.selectedGroup = this.data.userGroups.map(
-          (group: UserGroup) => group.id
-        );
+        this.selectedGroup = this.data.userGroups
+          .filter((s) => s.roles[0].system.name === 'DI_Management')
+          .map((group: UserGroup) => group.id);
       }
     }
 

@@ -182,6 +182,7 @@ export class AuthService {
           }
 
           this.gratnedSystems = res.dto.systems;
+
           this.cookieService.put(
             'granted-systems',
             JSON.stringify(this.gratnedSystems)
@@ -212,6 +213,7 @@ export class AuthService {
         .subscribe(async (res: LoggedUser) => {
           this.loggedInUser = res;
           this.loggedUserStream.next(res);
+
           // this.cookieService.put('USER_FULLNAME', res.name);
           this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
 
