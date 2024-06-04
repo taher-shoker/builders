@@ -1,15 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
-
-
+import { ResultWeightCardComponent } from './components/result-weight-card.component';
 
 @NgModule({
-  declarations: [
-    HomeComponent
-  ],
-  imports: [
-    CommonModule
-  ]
+  declarations: [HomeComponent,ResultWeightCardComponent],
+  imports: [CommonModule],
+  exports: [HomeComponent, ResultWeightCardComponent]
 })
-export class HomeModule { }
+export class HomeModule {}

@@ -11,6 +11,7 @@ import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { CookieModule } from 'ngx-cookie';
+import { HomeModule } from './views/home/home.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -29,6 +30,7 @@ export const provideTranslation = () => ({
   declarations: [AppComponent],
   imports: [
     BrowserModule, 
+    HomeModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
     SharedUiModule,
