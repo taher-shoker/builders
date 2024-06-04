@@ -111,7 +111,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         if (this.form.get('viewer')?.value) {
           const viewerObj = this.userService
             .getRoles()
-            .filter((r) => r.groupName === 'DT_VP_Dasboard_Viewer')[0];
+            .filter((r) => r.groupName === 'DT_VP_Dashboard_User')[0];
           dataForm.userGroups.push({ id: viewerObj.id });
         }
       } else {
@@ -186,7 +186,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   getRoles() {
     this.privilages = this.userService
       .getRoles()
-      .filter((r) => r.groupName !== 'DT_VP_Dasboard_Viewer');
+      .filter((r) => r.groupName !== 'DT_VP_Dashboard_User');
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.selectedPrivilege = this.privilages.filter(
