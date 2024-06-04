@@ -92,6 +92,7 @@ export class UserFormComponent implements OnInit, OnChanges {
           : Validators.required
       ),
       teamDto: new FormControl([], Validators.required),
+      viewer: new FormControl(''),
     });
   }
   onSubmit() {
@@ -108,6 +109,12 @@ export class UserFormComponent implements OnInit, OnChanges {
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,
         };
+        if (this.form.get('viewer')?.value) {
+          const viewerObj = this.userService
+            .getRoles()
+            .filter((r) => r.groupName === 'DT_VP_Dasboard_Viewer')[0];
+          dataForm.userGroups.push({ id: viewerObj.id });
+        }
       } else {
         dataForm = {
           userGroups:
@@ -178,7 +185,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   getRoles() {
-    this.privilages = this.userService.getRoles();
+    this.privilages = this.userService
+      .getRoles()
+      .filter((r) => r.groupName !== 'DT_VP_Dasboard_Viewer');
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.selectedPrivilege = this.privilages.filter(
@@ -281,6 +290,10 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.selectedGroup = this.data.userGroups.map(
           (group: UserGroup) => group.id
         );
+      } else if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        if (this.data.userGroups.length > 1) {
+          this.form?.get('viewer')?.setValue(true);
+        }
       }
     }
 

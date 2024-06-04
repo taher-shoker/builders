@@ -55,6 +55,9 @@
               [required]="true" [options]="teams" [multi]="true" [selectId]="selectedGroup || null">
             </stc-apps-select-drop-down>
           </div>
+          <div class="col-md-5">
+            <stc-apps-checkbox [label]="'grant access to  VP report'" formControlName="viewer"></stc-apps-checkbox>
+          </div>
         </div>
         <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'DI_Management'">
           <div class="col-md-5">

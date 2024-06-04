@@ -16,10 +16,13 @@ export interface DatesQuery {
   providedIn: 'root',
 })
 export class ReportingService {
-  constructor(private http: HttpClient, private _cookieService:CookieService) {}
+  constructor(
+    private http: HttpClient,
+    private _cookieService: CookieService
+  ) {}
 
   postReport(pageName: string) {
-    const user= JSON.parse(
+    const user = JSON.parse(
       this._cookieService.get('MODERN_SYSTEM_USER') || ''
     );
 
