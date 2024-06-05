@@ -2,9 +2,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
-  AfterContentInit,
   Component,
-  ContentChild,
   ContentChildren,
   EventEmitter,
   Input,
@@ -15,7 +13,7 @@ import {
   QueryList,
   SimpleChanges,
   TemplateRef,
-  input
+  input,
 } from '@angular/core';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
@@ -27,8 +25,6 @@ export interface ColumnsSchema {
   label: string;
   dateString?: 'longDate';
   actions?: ('edit' | 'delete' | 'details' | 'updateProgress')[];
-  useCustomTemplate?: (header?: ColumnsSchema, item?: any) => any;
-  complexView?: any;
   complexViewTemp?: any;
 }
 
@@ -43,17 +39,15 @@ export interface PaginationConfig {
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
 })
-export class CustomTableComponent implements OnChanges, OnInit, OnDestroy, AfterContentInit {
+export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
 
-  // @Input({ required: true }) headers!: ColumnsSchema[];
-headers = input.required<ColumnsSchema[]>();
+  headers = input.required<ColumnsSchema[]>();
 
   @Input({ required: true }) items!: any[];
-  // items = input.required<any[]>();
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
 
   @Input() applyFilter: boolean = false;
@@ -62,7 +56,6 @@ headers = input.required<ColumnsSchema[]>();
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
   @Input() length!: number;
-  @Input() complexView!: TemplateRef<any>;
 
   paginator$: Subject<PaginationEvent> = new Subject<PaginationEvent>();
   currentPage: number = 1;
@@ -71,7 +64,7 @@ headers = input.required<ColumnsSchema[]>();
   itemsMap = new Map<string, any[]>(); // should be used and set in case of 'smart' paginationIq.
 
   filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
-  filterStrStored : string = '';
+  filterStrStored: string = '';
   currentSortedByColumn$: Subject<string> = new Subject<string>();
 
   sortingDirection: 'desc' | 'asc' = 'asc';
@@ -106,30 +99,19 @@ headers = input.required<ColumnsSchema[]>();
       : (this.sortingDirection = 'asc');
   }
 
-  @ContentChildren(CustomTemplateDirective) customTemplates!: QueryList<CustomTemplateDirective>;
+  @ContentChildren(CustomTemplateDirective)
+  customTemplates!: QueryList<CustomTemplateDirective>;
 
   templateMap: Record<string, TemplateRef<any>> = {};
-
-  ngAfterContentInit() {
-    this.customTemplates.forEach((template) => {
-      this.templateMap[template.header] = template.templateRef;
-    });
-  }
 
   getCustomTemplate(header: string, context: any): TemplateRef<any> {
     return this.templateMap[header] || null;
   }
 
-  private extractVariableName(template: TemplateRef<any>): string | null {
-    const variableName = template.elementRef.nativeElement.getAttribute('let');
-    return variableName || null;
-  }
-
-
-  setupFiltration(){
-    this.filterSubject.subscribe(res => {
-      this.filterStrStored = res
-    })
+  setupFiltration() {
+    this.filterSubject.subscribe((res) => {
+      this.filterStrStored = res;
+    });
   }
 
   ngOnInit(): void {
@@ -142,7 +124,7 @@ headers = input.required<ColumnsSchema[]>();
     if (this.sort) {
       this.setupSorting();
     }
-    if(this.applyFilter){
+    if (this.applyFilter) {
       this.setupFiltration();
     }
   }
@@ -177,7 +159,7 @@ headers = input.required<ColumnsSchema[]>();
     }
 
     if (changes['filter']) {
-      this.filterSubject.next(changes['filter'].currentValue)
+      this.filterSubject.next(changes['filter'].currentValue);
     }
   }
 

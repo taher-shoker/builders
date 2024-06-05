@@ -42,12 +42,12 @@
 
   <tr>
     @for(header of headers(); track header){ @if(header.type !== 'actions' && header.type !== 'custom'){
-    @if(header.complexView){
+    @if(header.complexViewTemp){
     <td>
-      <ng-container *ngTemplateOutlet="complexView; context: { header: header, item: item }"></ng-container>
-      <ng-template #customTemplate>
+      <ng-container *ngTemplateOutlet="header.complexViewTemp; context: { header: header, item: item }"></ng-container>
+      <!-- <ng-template #customTemplate>
         <ng-container *ngTemplateOutlet="getCustomTemplate(header.key, item)"></ng-container>
-      </ng-template>
+      </ng-template> -->
     </td>
     }@else {
 

@@ -4,6 +4,7 @@
   // color: green; //For testing, Delete this css rule after testing
   //font-weight: bold;
   margin-bottom: 0;
+  color: red;
 }
 
 * {
@@ -217,36 +218,6 @@
           transform: translate(10px, 0px);
         }
       }
-
-      // .task {
-      //   cursor: pointer;
-      //   display: flex;
-      //   padding: 20px 10px;
-
-      //   .task-info {
-      //     display: flex;
-      //     justify-content: space-between;
-      //     flex-direction: column;
-      //     margin-inline-start: 12px;
-      //   }
-      //   h5 {
-      //     display: block;
-      //     color: $stcColor;
-      //   }
-      //   span,
-      //   .date {
-      //     color: gray;
-      //   }
-      //   .progress-box {
-      //     display: flex;
-      //     justify-content: center;
-      //     align-items: center;
-      //     flex-direction: column;
-      //     span {
-      //       margin-bottom: 5px;
-      //     }
-      //   }
-      // }
     }
   }
 }
@@ -327,77 +298,6 @@ table {
   font-weight: 700;
   font-size: 0.8em;
 }
-
-/* color animation */
-
-/* 3rd progress bar */
-// .mask .fill {
-//   clip: rect(0px, 30px, 60px, 0px);
-//   background-color: $stcColor;
-// }
-
-// .task {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill ease-in-out 3s;
-//     transform: rotate(0deg);
-//   }
-// }
-// .checkCase {
-//   .mask.full,
-//   .circle .fill {
-//     transform: rotate(0deg);
-//   }
-// }
-// .fillMoreInfo {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill20 ease-in-out 3s;
-//     transform: rotate(20deg);
-//   }
-// }
-// .approveCase {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill35 ease-in-out 3s;
-//     transform: rotate(35deg);
-//   }
-// }
-// .withinSlResponse {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill80 ease-in-out 3s;
-//     transform: rotate(80deg);
-//   }
-// }
-// .breanchingSlResponse {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill100 ease-in-out 3s;
-//     transform: rotate(100deg);
-//   }
-// }
-// .shouldEscalate {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill130 ease-in-out 3s;
-//     transform: rotate(130deg);
-//   }
-// }
-// .shouldReEscalate {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill155 ease-in-out 3s;
-//     transform: rotate(155deg);
-//   }
-// }
-// .sendToClose {
-//   .mask.full,
-//   .circle .fill {
-//     animation: fill170 ease-in-out 3s;
-//     transform: rotate(170deg);
-//   }
-// }
 
 @keyframes fill {
   0% {
@@ -489,4 +389,16 @@ body.rtl {
 .btn.details:hover {
   background-color: $stcColor;
   color: #fff;
+}
+
+.completed-status{
+  color: var(--stc-oasis-color);
+}
+
+.delayed-status{
+  color: var(--stc-coral-color);
+}
+
+.on-track-status{
+  color: var(--stc-sun-color);
 }

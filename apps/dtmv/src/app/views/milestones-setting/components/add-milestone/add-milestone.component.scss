@@ -7,6 +7,13 @@
   padding: 50px;
 }
 
+.download-btn-holder {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
 .file-uploader {
   cursor: pointer;
   margin: 16px auto;

@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
@@ -33,7 +33,7 @@ export interface Milestone {
   templateUrl: './milestones.component.html',
   styleUrls: ['./milestones.component.scss'],
 })
-export class MilestonesComponent implements OnInit, OnDestroy {
+export class MilestonesComponent implements OnInit, AfterViewInit ,OnDestroy {
   @ViewChild('customTemplate') customTemplate!: any;
 
   form!: FormGroup;
@@ -77,60 +77,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   addMilestoneNavigate(): void {
     this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
-  columnsSchema: ColumnsSchema[] = [
-    {
-      key: 'activityName',
-      type: 'text',
-      label: 'Activity',
-    },
-    {
-      key: 'milestoneName',
-      type: 'text',
-      label: 'Milestone Name',
-      // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
-      //   return `
-      //   <p>${item[header!.key]}</p>
-      //   <p>${item[header!.key]} mixed complex</p>
-      //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
-      //   `;
-      // },
-      complexView: true,
-      // complexViewTemp: this.customTemplate
-    },
-    {
-      key: 'completionLevel',
-      type: 'text',
-      label: 'Completion Level',
-    },
-    {
-      key: 'latestWorkflowId',
-      type: 'custom',
-      label: 'Validation Status',
-    },
-    {
-      key: 'teamName',
-      type: 'text',
-      label: 'Team',
-    },
-    {
-      key: 'status',
-      type: 'text',
-      label: 'Status',
-      complexView: true,
-    },
-
-    {
-      key: 'actions',
-      type: 'actions',
-      actions: !this.milestonesService.checkIsAdmin()
-        ? this.milestonesService.checkIsBusinessSpoc() ||
-          this.milestonesService.checkIsDirector()
-          ? ['details']
-          : ['edit', 'details']
-        : ['edit', 'delete', 'details'],
-      label: '',
-    },
-  ];
+  columnsSchema: ColumnsSchema[] = [];
 
   disabled = false;
   tableData!: any;
@@ -156,6 +103,54 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+  }
+
+  ngAfterViewInit(): void {
+      this.columnsSchema = [
+        {
+          key: 'activityName',
+          type: 'text',
+          label: 'Activity',
+        },
+        {
+          key: 'milestoneName',
+          type: 'text',
+          label: 'Milestone Name',
+        },
+        {
+          key: 'completionLevel',
+          type: 'text',
+          label: 'Completion Level',
+        },
+        {
+          key: 'latestWorkflowId',
+          type: 'custom',
+          label: 'Validation Status',
+        },
+        {
+          key: 'teamName',
+          type: 'text',
+          label: 'Team',
+        },
+        {
+          key: 'status',
+          type: 'text',
+          label: 'Status',
+          complexViewTemp: this.customTemplate
+        },
+    
+        {
+          key: 'actions',
+          type: 'actions',
+          actions: !this.milestonesService.checkIsAdmin()
+            ? this.milestonesService.checkIsBusinessSpoc() ||
+              this.milestonesService.checkIsDirector()
+              ? ['details']
+              : ['edit', 'details']
+            : ['edit', 'delete', 'details'],
+          label: '',
+        },
+      ];
   }
 
   getPendingTasks() {
@@ -204,7 +199,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         },
       });
     } else {
-      const id = item.externalSystemId;
+      let id;
+      if(item.externalSystemId){
+        id = item.externalSystemId;
+      }else{
+        id = item
+      }
       this.router.navigate(['./milestone_details', id], {
         relativeTo: this.route,
       });
