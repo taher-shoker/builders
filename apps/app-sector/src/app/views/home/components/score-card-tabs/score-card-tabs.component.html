@@ -1,0 +1,13 @@
+<div class="p-4">
+  <stc-apps-tabs
+  (changeSelectValue)="handleChangeTab($event)">
+  <stc-apps-tab value="ApplicationSector">Application sector</stc-apps-tab>
+  <stc-apps-tab value="CorporatePriorities">Corporate priorities</stc-apps-tab>
+</stc-apps-tabs>
+</div>
+
+@if (selectedTab() == 'ApplicationSector') {
+  <h1>ApplicationSector</h1>
+} @else if (selectedTab() == 'CorporatePriorities') {
+  <h1>CorporatePriorities</h1>
+}

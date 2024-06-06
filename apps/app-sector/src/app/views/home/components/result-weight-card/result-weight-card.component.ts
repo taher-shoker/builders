@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { departmentModel } from '../../../shared/models/deparatment.model';
+import { departmentModel } from '../../../../shared/models/deparatment.model';
 
 @Component({
   selector: 'stc-apps-result-weight-card',
