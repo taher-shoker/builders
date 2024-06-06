@@ -1,4 +1,4 @@
-<div class="score px-3">
+<div class="score">
   <div class="score_content">
     <div class="score_content_image">
       <img src="assets/images/status-up.svg" />
@@ -10,7 +10,13 @@
     </div>
   </div>
 
-  <div class="score_chart">
+  <div class="score_percent">
     <h1>{{ percentage() | percent }}</h1>
+    <stc-apps-progress-circle
+    [progressValue]="percentage() || 0"
+    progressSize="5rem"
+    mainBgColor="var(--stc-sunset-color)"
+    [showProgress]="false"
+  ></stc-apps-progress-circle>
   </div>
 </div>

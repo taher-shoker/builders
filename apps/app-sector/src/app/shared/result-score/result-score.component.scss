@@ -5,11 +5,12 @@
     border-radius: 10px;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
 
     &_content {
         display: flex;
         align-items: center;
-        margin-inline-end: 120px;
 
         &_image {
             margin-inline-end: 23px;
@@ -24,9 +25,13 @@
         }
     }
 
-    &_chart {
+    &_percent {
+        display: flex;
+        align-items: center;
+
         h1 {
             font-family: var(--stc-font-bold);
+            margin-inline-end: 37px;
         }
     }
 }

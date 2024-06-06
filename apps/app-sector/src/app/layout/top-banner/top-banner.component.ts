@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, WritableSignal, signal } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./top-banner.component.scss']
 })
 export class TopBannerComponent {
+  milestoneProgress: WritableSignal<number | null> = signal(74.91);
 
 }
