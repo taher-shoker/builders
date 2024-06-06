@@ -2,6 +2,12 @@
 /* Colors pallet */
 
 :root{
+  --stc-font-base: 'stc forward-regular';
+  --stc-font-light: 'stc forward-light';
+  --stc-font-meduim: 'stc forward-medium';
+  --stc-font-bold: 'stc forward-bold';
+  --stc-color-very-light: #e3dde9;
+  
   --views-padding: 26px;
   --grey-color: #8e9aa0;
 
@@ -40,6 +46,8 @@
   --green-Color-dark: #2a8e18;
 
   --stc-color-light: #beacce;
+  --stc-grey-color: #EEEEEE;
+  --stc-lightGrey-color: #f8f8f8;
 
   // --secondaryColor: #FFE5CA;
   // --primaryColor: #FFF3E2;

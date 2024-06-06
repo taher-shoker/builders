@@ -4,7 +4,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
-import { SharedUiModule } from '@stc-apps/shared-ui';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
@@ -12,8 +11,8 @@ import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
 import { CookieModule } from 'ngx-cookie';
 import { HomeModule } from './views/home/home.module';
-import { ResultScoreComponent } from './shared/result-score/result-score.component';
-import { TopBannerComponent } from './views/top-banner/top-banner.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LayoutModule } from './layout/layout.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -29,24 +28,25 @@ export const provideTranslation = () => ({
 });
 
 @NgModule({
-  declarations: [AppComponent, ResultScoreComponent, TopBannerComponent],
+  declarations: [AppComponent],
   imports: [
-    BrowserModule, 
+    BrowserModule,
+    FormsModule,
+    ReactiveFormsModule,
     HomeModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
-    SharedUiModule,
     TranslateModule,
     ToastrModule.forRoot(),
     CookieModule.withOptions(),
+    LayoutModule,
   ],
-    providers: [
-      importProvidersFrom([
-        HttpClientModule,
-        TranslateModule.forRoot(provideTranslation()),
-      ]),
-     
-    ],
+  providers: [
+    importProvidersFrom([
+      HttpClientModule,
+      TranslateModule.forRoot(provideTranslation()),
+    ]),
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
