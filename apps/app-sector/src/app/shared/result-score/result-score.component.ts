@@ -8,4 +8,8 @@ import { Component, InputSignal, input } from '@angular/core';
 export class ResultScoreComponent {
   percentage: InputSignal<number> = input(0);
   title: InputSignal<string> = input('');
+
+  isIntegerNumber() {    
+    return Number.isInteger(this.percentage());
+  }
 }

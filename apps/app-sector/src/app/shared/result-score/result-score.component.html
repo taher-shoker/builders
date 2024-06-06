@@ -11,7 +11,7 @@
   </div>
 
   <div class="score_percent">
-    <h1>{{ percentage() | percent }}</h1>
+    <h1>{{ isIntegerNumber() ? percentage() : percentage() / 100 | percent:'1.2-2' }}</h1>
     <stc-apps-progress-circle
     [progressValue]="percentage() || 0"
     progressSize="5rem"
