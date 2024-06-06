@@ -6,5 +6,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./top-banner.component.scss']
 })
 export class TopBannerComponent {
+  title='Over all score';
 
 }
