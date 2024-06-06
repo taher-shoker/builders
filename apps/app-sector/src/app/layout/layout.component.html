@@ -1,0 +1,12 @@
+<stc-apps-header
+  [userName]="userName"
+  [logoSrc]="logoSrc"
+  [allItems]="navItems"
+  [sidebarLogoSrc]="sidebarLogoSrc"
+  (logOut)="logOut()"
+  (backToHome)="backToHome()"
+  [showLang]="false"
+></stc-apps-header>
+
+<stc-apps-top-banner></stc-apps-top-banner>
+<router-outlet></router-outlet>

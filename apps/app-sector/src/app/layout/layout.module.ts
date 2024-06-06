@@ -1,0 +1,18 @@
+import { NgModule } from '@angular/core';
+import { LayoutComponent } from './layout.component';
+import { TopBannerComponent } from './top-banner/top-banner.component';
+import { SharedModule } from '../shared/shared.module';
+import { HomeModule } from '../views/home/home.module';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { appRoutes } from '../app.routes';
+
+const components = [LayoutComponent, TopBannerComponent];
+const modules = [SharedModule, HomeModule, TranslateModule, RouterModule.forRoot(appRoutes)];
+
+@NgModule({
+  declarations: [...components],
+  imports: [...modules],
+  exports: [...components],
+})
+export class LayoutModule {}
