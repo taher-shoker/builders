@@ -58,6 +58,7 @@ import { TimelineChartComponent } from './timeline-chart/timeline-chart.componen
 import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -96,7 +97,8 @@ const components = [
   TimelineChartComponent,
   TextEditorQuillComponent,
   CheckboxComponent,
-  ProgressBarComponent
+  ProgressBarComponent,
+  ProgressCircleComponent
 ];
 
 @NgModule({

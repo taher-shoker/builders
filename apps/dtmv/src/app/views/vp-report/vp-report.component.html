@@ -39,14 +39,10 @@
         <div class="col-md-4">
           <div class="container-box">
             <h5>Milestone Progress</h5>
-            <div
-              class="progress-circule"
-              role="progresscircule"
-              [style]="'--value:' + milestoneProgress()"
-            >
-              <span class="circle-content"
-                >{{ milestoneProgress() || 0 }}%</span
-              >
+            <div class="d-flex justify-content-center">
+              <stc-apps-progress-circle
+                [progressValue]="milestoneProgress() || 0"
+              ></stc-apps-progress-circle>
             </div>
           </div>
         </div>
@@ -55,8 +51,8 @@
             <h5>GCoS DT Progress</h5>
             <div class="bar-holder">
               <stc-apps-progress-bar
-              [data]="progressBarData()"
-            ></stc-apps-progress-bar>
+                [data]="progressBarData()"
+              ></stc-apps-progress-bar>
             </div>
           </div>
         </div>
@@ -82,7 +78,6 @@
           <div class="legend-circle legend-circle-delayed"></div>
           <span class="legend-name legend-name-delayed">Delayed</span>
 
-          
           <div class="legend-circle legend-circle-at-risk"></div>
           <span class="legend-name legend-name-at-risk">At Risk</span>
         </div>
