@@ -3,7 +3,6 @@
 
 .expansion-panel {
   background-color: $whiteColor;
-  padding: 27px 35px;
 
   &>div {
     gap: 10px 0;
@@ -16,6 +15,8 @@
     background-color: $lighterGreyColor !important;
     border-radius: 10px !important;
     box-shadow: none !important;
+    padding: 23px 16px;
+
 
     .mat-expansion-panel-header {
       margin-left: 14px !important;

@@ -10,6 +10,7 @@ import { ExpansionPanelHeaderComponent } from './components/expansion-panel-head
 import { ExpansionPanelComponent } from './components/expansion-panel/expansion-panel.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ExpansionPanelBodyComponent } from './components/expansion-panel-body/expansion-panel-body.component';
+import { PanelsContainerComponent } from './components/panels-conatiner/panels-container.component';
 
 const components = [
   HomeComponent,
@@ -17,7 +18,8 @@ const components = [
   ScoreCardTabsComponent,
   ExpansionPanelHeaderComponent,
   ExpansionPanelComponent,
-  ExpansionPanelBodyComponent
+  ExpansionPanelBodyComponent,
+  PanelsContainerComponent,
 ];
 const modules = [
   FormsModule,

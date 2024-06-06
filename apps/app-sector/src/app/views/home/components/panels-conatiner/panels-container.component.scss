@@ -1,0 +1,40 @@
+@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
+
+.panels_container {
+  background-color: $whiteColor;
+  width: 100%;
+  padding: 24px 17px 24px 17px;
+  border-radius: 8px;
+  font-family: var(--stc-font-base);
+
+  &_title {
+    margin-bottom: 16px;
+
+    h4 {
+      font-weight: 600;
+      font-size: 24px;
+      color: $darkPurbleColor;
+    }
+
+    .title-desc {
+      p {
+        font-weight: 400;
+        font-size: 24px;
+        color: $darkPurpleColor;
+        margin-top: 12px;
+        position: relative;
+      }
+
+      p::after {
+        content: "";
+        background-color: $stcSunsetColor;
+        position: absolute;
+        top: 130%;
+        right: 0;
+        width: 100%;
+        height: 2px;
+      }
+
+    }
+  }
+}
