@@ -1,0 +1,21 @@
+@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
+::ng-deep {
+  .mat-expansion-panel {
+    background-color: $lighterGreyColor !important;
+    border-radius: 10px !important;
+    .mat-expansion-panel-header {
+      margin-left: 14px !important;
+      height: 210px !important ;
+      align-items: start !important;
+      padding: 0px 14px;
+      .mat-expansion-indicator {
+        margin-top: 16px;
+      }
+    }
+  }
+}
+::ng-deep
+  .mat-expansion-panel:not(.mat-expanded)
+  .mat-expansion-panel-header:not([aria-disabled='true']):hover {
+  background-color: transparent !important;
+}
