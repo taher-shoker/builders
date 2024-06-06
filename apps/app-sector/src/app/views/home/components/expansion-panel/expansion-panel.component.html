@@ -1,18 +1,15 @@
-<div class="row">
-  <div class="col-md-4 mx-md-4">
-    <mat-expansion-panel
-      (opened)="panelOpenState = true"
-      (closed)="panelOpenState = false"
-    >
-    
-      <mat-expansion-panel-header>
-        <!-- <mat-panel-title> Self aware panel </mat-panel-title>
+<mat-expansion-panel
+  (opened)="panelOpenState = true"
+  (closed)="panelOpenState = false"
+>
+  <mat-expansion-panel-header>
+    <!-- <mat-panel-title> Self aware panel </mat-panel-title>
         <mat-panel-description>
           Currently I am {{ panelOpenState ? 'open' : 'closed' }}
         </mat-panel-description> -->
-        <stc-apps-expansion-panel-header class="w-100"></stc-apps-expansion-panel-header>
-      </mat-expansion-panel-header>
-      <p>I'm visible because I am open</p>
-    </mat-expansion-panel>
-  </div>
-</div>
+    <stc-apps-expansion-panel-header
+      class="w-100"
+    ></stc-apps-expansion-panel-header>
+  </mat-expansion-panel-header>
+  <p>I'm visible because I am open</p>
+</mat-expansion-panel>

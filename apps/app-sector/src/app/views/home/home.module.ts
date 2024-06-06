@@ -9,6 +9,7 @@ import { appRoutes } from './home.routes';
 import { ExpansionPanelHeaderComponent } from './components/expansion-panel-header/expansion-panel-header.component';
 import { ExpansionPanelComponent } from './components/expansion-panel/expansion-panel.component';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { PanelsContainerComponent } from './components/panels-conatiner/panels-container.component';
 
 const components = [
   HomeComponent,
@@ -16,6 +17,7 @@ const components = [
   ScoreCardTabsComponent,
   ExpansionPanelHeaderComponent,
   ExpansionPanelComponent,
+  PanelsContainerComponent,
 ];
 const modules = [
   FormsModule,
