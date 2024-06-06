@@ -1,0 +1,58 @@
+@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
+@import '../../../../../../../../libs/styles/src/scss/core/variables/fonts';
+p {
+  margin: 0;
+}
+.ontrackBackground {
+  background-color: rgba(0, 196, 140, 0.15);
+}
+.delayedBackground {
+  background-color: rgba(255, 26, 26, 0.1);
+}
+.expansion_header {
+  width: 30%;
+  font-family: var(--stc-font-base);
+  &_title {
+    .kpis_code {
+      font-size: 12px;
+      font-weight: 300;
+      color: $stcColor;
+    }
+    h3 {
+      font-weight: 700;
+      font-size: 24px;
+      color: $grayColor;
+    }
+  }
+
+  &_status {
+    width: 25%;
+    border-radius: 6px;
+    padding: 6px 6px 6px 6px;
+    .ontrack {
+      color: $stcOasisColor;
+    }
+    .delayed {
+      color: $redColor;
+    }
+    p {
+      font-size: 16px;
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+  &_info {
+    margin-top: 17px;
+    .direction-holder,
+    .function-holder {
+      padding: 10px 10px 5px 10px;
+      border-radius: 6px;
+      background-color: rgba(113, 113, 113, 0.1);
+      p {
+        margin-right: 14px;
+        font-weight: 300;
+        font-size: 16px;
+      }
+    }
+  }
+}

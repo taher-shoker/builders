@@ -6,6 +6,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './home.routes';
+import { ExpansionPanelHeaderComponent } from './components/expansion-panel-header/expansion-panel-header.component';
 
 const components = [
   HomeComponent,
@@ -19,7 +20,7 @@ const modules = [
   RouterModule.forRoot(appRoutes),
 ];
 @NgModule({
-  declarations: [...components],
+  declarations: [...components, ExpansionPanelHeaderComponent],
   exports: [...components],
   imports: [...modules],
 })

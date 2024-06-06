@@ -1,10 +1,16 @@
-import { Component,  InputSignal,  WritableSignal, input, signal } from '@angular/core';
+import {
+  Component,
+  InputSignal,
+  WritableSignal,
+  input,
+  signal,
+} from '@angular/core';
 import { Subject } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-tab',
   templateUrl: './tab.component.html',
-  styleUrls: ['./tab.component.scss']
+  styleUrls: ['./tab.component.scss'],
 })
 export class TabComponent {
   active: WritableSignal<boolean> = signal(false);
