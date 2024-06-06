@@ -13,6 +13,7 @@ import { CookieModule } from 'ngx-cookie';
 import { HomeModule } from './views/home/home.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from './layout/layout.module';
+import { DetailsModule } from './views/details/details.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -34,6 +35,7 @@ export const provideTranslation = () => ({
     FormsModule,
     ReactiveFormsModule,
     HomeModule,
+    DetailsModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
     TranslateModule,

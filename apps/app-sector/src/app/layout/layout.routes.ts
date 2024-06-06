@@ -11,6 +11,11 @@ export const appRoutes: Route[] = [
         loadChildren: () =>
           import('../views/home/home.module').then((m) => m.HomeModule),
       },
+      {
+        path: 'details',
+        loadChildren: () =>
+          import('../views/details/details.module').then((m) => m.DetailsModule),
+      },
     ],
   },
 ];
