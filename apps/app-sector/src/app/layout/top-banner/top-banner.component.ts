@@ -8,4 +8,16 @@ import { Component, WritableSignal, signal } from '@angular/core';
 export class TopBannerComponent {
   milestoneProgress: WritableSignal<number | null> = signal(74.91);
   title = 'Over all score';
+  yearsArray: any = [
+    { name: 2020 },
+    { name: 2021 },
+    { name: 2022 },
+    { name: 2023 },
+  ];
+  quarterArray: any = [
+    { name: 'Quarter 1' },
+    { name: 'Quarter 2' },
+    { name: 'Quarter 3' },
+    { name: 'Quarter 4' },
+  ];
 }

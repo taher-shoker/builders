@@ -2,6 +2,7 @@
   <label [ngStyle]="{'font-size': labelSize + 'px'}">{{ label | translate }}<span>:</span><mat-error
       *ngIf="control.errors"> *</mat-error></label>
   <mat-form-field *ngIf="!group">
+    <mat-label>{{matLabel}}</mat-label>
     <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
       [(value)]="defaultAll ? options ? options[0] : '' : selectId" [multiple]="multi">
       <mat-option *ngFor="let option of options"

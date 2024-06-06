@@ -23,9 +23,8 @@
   }
 
   &_filter {
-    position: relative;
-    z-index: 1;
-    width: 50%;
+    display: flex;
+    justify-content: space-between;
 
     &::after {
       content: "";
@@ -39,6 +38,13 @@
       background-position: center;
       opacity: 0.15;
       z-index: -1;
+    }
+
+    stc-apps-select-drop-down {
+      width: 100%;
+      &:first-child {
+        margin-inline-end: 15px;
+      }
     }
   }
 }
