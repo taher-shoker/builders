@@ -1,0 +1,23 @@
+<div class="expansion-body">
+  <stc-apps-result-score [percentage]="percentage()"></stc-apps-result-score>
+  <div class="row">
+    @for (section of listItems; track $index) {
+    <div
+      class="col-sm-12"
+      [ngClass]="{ 'col-md-7': $index === 1, 'col-md-5': $index === 0 }"
+    >
+      <ul class="expansion-body_list">
+        @for (item of section.items; track $index) {
+        <li>
+          <label>{{ item.label }}</label>
+          <span>{{ item.value }}</span>
+        </li>
+        }
+      </ul>
+    </div>
+    }
+    <div class="expansion-body_details">
+      <a [routerLink]="['/details']">Details</a>
+    </div>
+  </div>
+</div>

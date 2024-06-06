@@ -7,4 +7,10 @@ import { Component } from '@angular/core';
 })
 export class ExpansionPanelComponent {
   panelOpenState = false;
+
+  items = [
+    { percent: 46 },
+    { percent: 23 },
+    { percent: 46 },
+  ];
 }
