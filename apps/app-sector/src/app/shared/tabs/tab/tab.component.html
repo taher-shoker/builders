@@ -1,0 +1,7 @@
+<button
+  (click)="handelChangeTab()"
+  class="tab"
+  [ngClass]="{ 'active': active() }"
+>
+  <ng-content></ng-content>
+</button>

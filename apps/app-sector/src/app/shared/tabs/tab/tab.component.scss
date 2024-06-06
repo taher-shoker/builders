@@ -1,0 +1,21 @@
+@import '../../../../styles/variables.scss';
+
+
+.tab {
+    flex: 1;
+    font-size: 24px;
+    padding: 18px;
+    display: block;
+    margin-inline-end: 25px;
+    border: none;
+    background-color: var(--stc-grey-color);
+    color: var(--grey-color);
+    font-family: var(--stc-font-base);
+    border-radius: 8px;
+
+    &.active {
+        background-color: var(--stc-coral-color);
+        color: var(--white);
+        font-weight: 500;
+    }
+}
