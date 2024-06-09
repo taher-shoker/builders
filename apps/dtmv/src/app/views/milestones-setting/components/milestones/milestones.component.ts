@@ -1,6 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { AfterViewInit, Component, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
@@ -33,8 +40,10 @@ export interface Milestone {
   templateUrl: './milestones.component.html',
   styleUrls: ['./milestones.component.scss'],
 })
-export class MilestonesComponent implements OnInit, AfterViewInit ,OnDestroy {
-  @ViewChild('customTemplate') customTemplate!: any;
+export class MilestonesComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
+  @ViewChild('validationCustomTemplate') validationCustomTemplate!: any;
+  @ViewChild('progressCustomTemplate') progressCustomTemplate!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -56,6 +65,12 @@ export class MilestonesComponent implements OnInit, AfterViewInit ,OnDestroy {
     { statusName: 'Pending' },
     { statusName: 'In Progress' },
     { statusName: 'Closed' },
+  ];
+
+  inValidationOption: { name: string; value: string }[] = [
+    { name: '-', value: '-' },
+    { name: 'Completed', value: 'Completed' },
+    { name: 'In-Validation', value: 'In-Validation' },
   ];
 
   constructor(
@@ -106,51 +121,68 @@ export class MilestonesComponent implements OnInit, AfterViewInit ,OnDestroy {
   }
 
   ngAfterViewInit(): void {
-      this.columnsSchema = [
-        {
-          key: 'activityName',
-          type: 'text',
-          label: 'Activity',
-        },
-        {
-          key: 'milestoneName',
-          type: 'text',
-          label: 'Milestone Name',
-        },
-        {
-          key: 'completionLevel',
-          type: 'text',
-          label: 'Completion Level',
-        },
-        {
-          key: 'latestWorkflowId',
-          type: 'custom',
-          label: 'Validation Status',
-        },
-        {
-          key: 'teamName',
-          type: 'text',
-          label: 'Team',
-        },
-        {
-          key: 'status',
-          type: 'text',
-          label: 'Status',
-          complexViewTemp: this.customTemplate
-        },
-    
-        {
-          key: 'actions',
-          type: 'actions',
-          actions: !this.milestonesService.checkIsAdmin()
-            ? this.milestonesService.checkIsBusinessSpoc() ||
-              this.milestonesService.checkIsDirector()
-              ? ['details']
-              : ['edit', 'details']
-            : ['edit', 'delete', 'details'],
-          label: '',
-        },
-      ];
+    this.columnsSchema = [
+      {
+        key: 'teamName',
+        type: 'text',
+        label: 'Team',
+      },
+      {
+        key: 'workStream',
+        type: 'text',
+        label: 'Work Stream',
+      },
+      {
+        key: 'milestoneName',
+        type: 'text',
+        label: 'Milestone Name',
+      },
+      {
+        key: 'completionLevel',
+        type: 'text',
+        label: 'Completion Level',
+      },
+      {
+        key: 'latestWorkflowId',
+        type: 'text',
+        label: 'Validation Status',
+        complexViewTemp: this.validationCustomTemplate,
+      },
+      {
+        key: 'lastApprovedProgress',
+        type: 'text',
+        label: 'Progress',
+        complexViewTemp: this.progressCustomTemplate,
+      },
+      {
+        key: 'startDate',
+        type: 'text',
+        label: 'Start Date',
+      },
+      {
+        key: 'endDate',
+        type: 'text',
+        label: 'End Date',
+      },
+      {
+        key: 'status',
+        type: 'text',
+        label: 'Status',
+        complexViewTemp: this.statusCustomTemplate,
+      },
+
+      {
+        key: 'actions',
+        type: 'actions',
+        actions: !this.milestonesService.checkIsAdmin()
+          ? this.milestonesService.checkIsBusinessSpoc() ||
+            this.milestonesService.checkIsDirector()
+            ? ['details']
+            : ['edit', 'details']
+          : ['edit', 'delete', 'details'],
+        label: '',
+      },
+    ];
   }
 
   getPendingTasks() {
@@ -200,10 +232,10 @@ export class MilestonesComponent implements OnInit, AfterViewInit ,OnDestroy {
       });
     } else {
       let id;
-      if(item.externalSystemId){
+      if (item.externalSystemId) {
         id = item.externalSystemId;
-      }else{
-        id = item
+      } else {
+        id = item;
       }
       this.router.navigate(['./milestone_details', id], {
         relativeTo: this.route,
@@ -305,10 +337,12 @@ export class MilestonesComponent implements OnInit, AfterViewInit ,OnDestroy {
     this.form = this.formBuilder.group({
       milestoneName: ['', { nonNullable: true }],
       milestoneId: ['', { nonNullable: true }],
-      team: ['', { nonNullable: true }],
+      teamName: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
       month: ['', { nonNullable: true }],
       year: ['', { nonNullable: true }],
+      workStream: ['', { nonNullable: true }],
+      validationStatus: ['', { nonNullable: true }],
     });
   }
 

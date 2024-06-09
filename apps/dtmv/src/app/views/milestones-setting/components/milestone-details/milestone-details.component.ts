@@ -238,7 +238,7 @@ export class MilestoneDetailsComponent implements OnInit {
               res[i].taskName === 'Review Evidence' ||
               res[i].taskName === 'Review Justification' ||
               res[i].taskName === 'Review Progress' ||
-              res[i].taskName === "Update DT Record"
+              res[i].taskName === 'Update DT Record'
             ) {
               userThatTaskIsPendingOn = 'DT User';
             }
@@ -247,8 +247,8 @@ export class MilestoneDetailsComponent implements OnInit {
               userThatTaskIsPendingOn = 'DT Director';
             }
 
-            if(res[i].taskName === "Add New Progress"){
-              userThatTaskIsPendingOn = res[i].username
+            if (res[i].taskName === 'Add New Progress') {
+              userThatTaskIsPendingOn = res[i].username;
             }
 
             if (res[i].status === 'pending' && res[i].params?.length > 0) {
@@ -513,41 +513,46 @@ export class MilestoneDetailsComponent implements OnInit {
         action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle ||
         action.actionObj.uniqueTitle === Actions.returnProgress.uniqueTitle
       ) {
-        console.warn("EH YO")
+        console.warn('EH YO');
 
-        // const isApprove =
-        //   action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
-        //     ? true
-        //     : false;
-        // const popupMsg =
-        //   action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
-        //     ? 'approve progress'
-        //     : 'return progress';
-        // this.makeSureToApprove(
-        //   this.milestoneDetails.milestoneName || 'unnamed',
-        //   popupMsg
-        // ).subscribe((res) => {
-        //   if (!res) {
-        //     return;
-        //   }
-        //   this.isLoadingSteps = true;
-        //   this.milestonesService
-        //     .updateMilestoneRecord(
-        //       this.milestoneDetails.currentMilestoneProgressUpdateDto
-        //         ?.workflowId || '',
-        //       action.item.requestTaskId,
-        //       true,
-        //       isApprove
-        //     )
-        //     .subscribe(() => {
-        //       this.getMilestoneDetails();
-        //     });
-        // });
+        const isApprove =
+          action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+            ? true
+            : false;
+        const popupMsg =
+          action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
+            ? 'approve progress'
+            : 'return progress';
 
-        this.openMilestoneWorkflowActionsModal(
-          action.actionObj.uniqueTitle,
-          action.item
-        );
+        if (!isApprove) {
+          this.openMilestoneWorkflowActionsModal(
+            action.actionObj.uniqueTitle,
+            action.item,
+            false,
+            false
+          );
+        } else {
+          this.makeSureToApprove(
+            this.milestoneDetails.milestoneName || 'unnamed',
+            popupMsg
+          ).subscribe((res) => {
+            if (!res) {
+              return;
+            }
+            this.isLoadingSteps = true;
+            this.milestonesService
+              .updateMilestoneRecord(
+                this.milestoneDetails.currentMilestoneProgressUpdateDto
+                  ?.workflowId || '',
+                action.item.requestTaskId,
+                true,
+                isApprove
+              )
+              .subscribe(() => {
+                this.getMilestoneDetails();
+              });
+          });
+        }
       }
 
       if (
@@ -556,7 +561,6 @@ export class MilestoneDetailsComponent implements OnInit {
           Actions.reviewJustification.uniqueTitle ||
         action.actionObj.uniqueTitle === Actions.reviewOnTrack.uniqueTitle
       ) {
-
         const params: {
           requestParams: { name: string; value: number | string | boolean }[];
         } = {
@@ -611,7 +615,7 @@ export class MilestoneDetailsComponent implements OnInit {
         action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
         action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
       ) {
-        console.warn("EH")
+        console.warn('EH');
 
         this.openMilestoneWorkflowActionsModal(
           action.actionObj.uniqueTitle,
@@ -693,7 +697,8 @@ export class MilestoneDetailsComponent implements OnInit {
   openMilestoneWorkflowActionsModal(
     type: string,
     item?: RequestTask,
-    isFirstUpdateProgress: boolean = true
+    isFirstUpdateProgress: boolean = true,
+    showAttachment: boolean = true
   ) {
     const dialogRef = this.matDialog.open(
       UpdateMilestoneProgressDialogComponent,
@@ -703,6 +708,7 @@ export class MilestoneDetailsComponent implements OnInit {
           milestoneName: this.milestoneDetails.milestoneName,
           type,
           milestoneId: this.milestoneId,
+          showAttachment,
         },
       }
     );
@@ -796,14 +802,12 @@ export class MilestoneDetailsComponent implements OnInit {
         }
       } else if (type === Actions.noNeed.uniqueTitle) {
         // no need action here.. not tested
-      } else if(type === Actions.approveProgress.uniqueTitle
-        ){
-          params.requestParams.push({
-            name: 'is_progress_approved',
-            value: true, // 2 means rejected.
-          });
-  
-      }else if(type === Actions.returnProgress.uniqueTitle){
+      } else if (type === Actions.approveProgress.uniqueTitle) {
+        params.requestParams.push({
+          name: 'is_progress_approved',
+          value: true, // 2 means rejected.
+        });
+      } else if (type === Actions.returnProgress.uniqueTitle) {
         params.requestParams.push({
           name: 'is_progress_approved',
           value: false, // 2 means rejected.

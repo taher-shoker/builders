@@ -97,18 +97,51 @@
             </stc-apps-custom-table>
 
             }
-            <ng-template #customTemplate let-header="header" let-item="item">
+            <ng-template
+              #statusCustomTemplate
+              let-header="header"
+              let-item="item"
+            >
               <p
                 class="custom-class-template"
                 [ngClass]="{
                   'completed-status': item[header.key] === 'Completed',
                   'delayed-status': item[header.key] === 'Delayed',
-                  'on-track-status': item[header.key] === 'On Track'
+                  'on-track-status': item[header.key] === 'On Track',
+                  'at-risk-status': item[header.key] === 'At Risk',
+                  'planned-status': item[header.key] === 'Planned'
                 }"
               >
                 {{ item[header.key] }}
               </p>
             </ng-template>
+
+            <ng-template
+              #validationCustomTemplate
+              let-header="header"
+              let-item="item"
+            >
+              <p>
+                {{
+                  item.latestWorkflowId
+                    ? item.status === 'Completed'
+                      ? item.status
+                      : 'In Validation'
+                    : '-'
+                }}
+              </p>
+            </ng-template>
+
+            <ng-template
+            #progressCustomTemplate
+            let-header="header"
+            let-item="item"
+          >
+            <p>
+              {{item.lastApprovedProgress || 0}}%
+            </p>
+          </ng-template>
+
           </div>
         </div>
       </div>
@@ -132,7 +165,7 @@
   >
     <div class="inputs">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-input
             [className]="'custom-input'"
             [inputId]="'milestoneName'"
@@ -140,11 +173,11 @@
             formControlName="milestoneName"
           ></stc-apps-input>
         </div>
-        <!-- <div class="col-md-4">
+        <!-- <div class="col-md-3">
           <stc-apps-select-drop-down [label]="'Team'" [options]="allTeams" formControlName="team"
             [outputValue]="'name'"></stc-apps-select-drop-down>
         </div> -->
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-select-drop-down
             [label]="'Status'"
             [labelValue]="'value'"
@@ -153,7 +186,7 @@
             [outputValue]="'value'"
           ></stc-apps-select-drop-down>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-select-drop-down
             [label]="'Month'"
             [options]="monthsArr"
@@ -161,14 +194,41 @@
             [outputValue]="'id'"
           ></stc-apps-select-drop-down>
         </div>
-      </div>
-      <div class="row mt-4">
-        <div class="col-md-4">
+
+        <div class="col-md-3">
           <stc-apps-select-drop-down
             [label]="'Year'"
             [options]="yearsArr"
             formControlName="year"
             [outputValue]="'name'"
+          ></stc-apps-select-drop-down>
+        </div>
+      </div>
+      <div class="row mt-4">
+        <div class="col-md-3">
+          <stc-apps-select-drop-down
+            [label]="'Team'"
+            [options]="allTeams"
+            formControlName="teamName"
+            [outputValue]="'name'"
+          ></stc-apps-select-drop-down>
+        </div>
+
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputId]="'workStream'"
+            [inputName]="'Work Stream'"
+            formControlName="workStream"
+          ></stc-apps-input>
+        </div>
+
+        <div class="col-md-3">
+          <stc-apps-select-drop-down
+            [label]="'Validation Status'"
+            [options]="inValidationOption"
+            formControlName="validationStatus"
+            [outputValue]="'value'"
           ></stc-apps-select-drop-down>
         </div>
       </div>

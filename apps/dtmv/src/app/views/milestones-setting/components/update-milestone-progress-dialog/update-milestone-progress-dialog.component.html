@@ -27,17 +27,19 @@
           ></stc-apps-textarea>
         </div>
 
-        <stc-apps-file-uploader
-          [multiple]="false"
-          [chooseLabel]="'add_attachment' | translate"
-          (onformchange)="onUploadFile($event)"
-          [attachmentFiles]="form.controls['attachment'].value"
-          formControlName="attachment"
-          [isLoading]="isLoading"
-          [accept]="acceptedExtensions"
-          [required]="isRequired"
-          (ondelete)="onDeleteFile($event)"
-        ></stc-apps-file-uploader>
+        @if (data.showAttachment) {
+          <stc-apps-file-uploader
+            [multiple]="false"
+            [chooseLabel]="'add_attachment' | translate"
+            (onformchange)="onUploadFile($event)"
+            [attachmentFiles]="form.controls['attachment'].value"
+            formControlName="attachment"
+            [isLoading]="isLoading"
+            [accept]="acceptedExtensions"
+            [required]="isRequired"
+            (ondelete)="onDeleteFile($event)"
+          ></stc-apps-file-uploader>
+        }
       </form>
     </div>
   </div>

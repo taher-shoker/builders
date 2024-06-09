@@ -109,7 +109,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
           : Validators.required,
       ],
       deliverable: ['', Validators.maxLength(300)],
-      workStream: ['', [Validators.required, Validators.maxLength(150)]],
     });
   }
 

@@ -45,17 +45,12 @@
     @if(header.complexViewTemp){
     <td>
       <ng-container *ngTemplateOutlet="header.complexViewTemp; context: { header: header, item: item }"></ng-container>
-      <!-- <ng-template #customTemplate>
-        <ng-container *ngTemplateOutlet="getCustomTemplate(header.key, item)"></ng-container>
-      </ng-template> -->
     </td>
     }@else {
 
     <td>{{ item[header.key] }}</td>
     }
 
-    }@else if (header.type === 'custom') {
-    <td>{{ item.latestWorkflowId ? item.status === 'Completed' ? item.status :"In Validation" : "-" }}</td>
     }
 
     @else if(header.type === 'actions') {

@@ -86,6 +86,7 @@ export class Actions {
 }
 
 export interface MilestoneDetails {
+  workStream: string;
   activityName: string | null;
   createdByEmail: string | null;
   createdByName: string | null;
