@@ -1,0 +1,28 @@
+@import '../../../../../../libs/styles/src/scss/core/variables/fonts';
+@import '../../../../../../libs/styles/src/scss/core/variables/colors';
+
+.details {
+    padding: 26px 28px;
+
+    &_title {
+        font-family: 'stc forward-bold';
+        font-size: 24px;
+        color: $grayColor;
+        margin-bottom: 15px;
+    }
+
+    &_content {
+        &_formula {
+            h4 {
+                color: $semiBlackColor;
+            }
+            ul {
+                padding: 0;
+                &:last-child {
+                    list-style: disc;
+                    padding: revert;
+                }
+            }
+        }
+    }
+}

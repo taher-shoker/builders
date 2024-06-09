@@ -1,1 +1,37 @@
-<p>details works!</p>
+<div class="details">
+  <h2 class="details_title">Details for STC KSA Epit</h2>
+
+  <div class="details_content">
+    <div class="row">
+      <div class="col-md-6 col-sm-12">
+        <div class="row row-gap-3">
+          <div *ngFor="let card of cards" [ngClass]="card.class" class="col">
+            <stc-apps-details-card
+              [title]="card.title"
+              [description]="card.description"
+            >
+              <div class="details_content_formula">
+                <ul>
+                    <li>A= B-C-D</li>
+                    <li>Where,</li>
+                    <li>A= stc KSA EBIT</li>
+                    <li>B= stc KSA Revenues</li>
+                    <li>C= stc KSA Cost of Goods Sold</li>
+                </ul>
+                <h4>Validation Notes :</h4>
+                <ul>
+                    <li>Finance team shall communicate the validated and approved figures for COM official reference.</li>
+                    <li>CPM shall not consider any target or actual received from sources other than the KPI custodian officially assigned by the fiance team</li>
+                    <li>KPI Target to subject to further revision based on the official input received from the finance team aligned with the approved budget</li>
+                </ul>
+              </div>
+            </stc-apps-details-card>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-sm-12">
+        <stc-apps-comments-form></stc-apps-comments-form>
+      </div>
+    </div>
+  </div>
+</div>
