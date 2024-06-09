@@ -1,35 +1,44 @@
 <div class="dialog p-4">
   <div class="dialog-body">
-    <div class="dialog-header">Milestone Progress Update | {{data.milestoneName}}</div>
+    <div class="dialog-header">
+      Milestone Progress Update | {{ data.milestoneName }}
+    </div>
     <div class="body-holder">
       <form [formGroup]="form">
         <div class="my-2">
-          <stc-apps-input-full-width [label]="'Overall Progress %'" [type]="'text'"
-            formControlName="overallProgress"></stc-apps-input-full-width>
+          <stc-apps-input-full-width
+            [label]="'Overall Progress %'"
+            [type]="'text'"
+            formControlName="overallProgress"
+          ></stc-apps-input-full-width>
 
-            @if(form.get('overallProgress')?.dirty){
-              <mat-error *ngIf="form.get('overallProgress')?.hasError('required')">
-                This Field Is Required
-              </mat-error>
-              <!-- <mat-error *ngIf="form.get('overallProgress')?.hasError('max')">
+          @if(form.get('overallProgress')?.dirty){
+          <mat-error *ngIf="form.get('overallProgress')?.hasError('required')">
+            This Field Is Required
+          </mat-error>
+          <!-- <mat-error *ngIf="form.get('overallProgress')?.hasError('max')">
                 Can't be more than 100
               </mat-error>
               <mat-error *ngIf="form.get('overallProgress')?.hasError('min')">
                 Should be greater than {{overallProgressFloor}}
               </mat-error> -->
-              <mat-error *ngIf="form.get('overallProgress')?.hasError('pattern') ">
-                Must be valid number
-              </mat-error>
-
-              <mat-error *ngIf="form.get('overallProgress')?.hasError('invalidValue')">
-                Value must be greater than {{overallProgressFloor}} and maximum 100.
-              </mat-error>
-            }
+          @if (form.get('overallProgress')?.hasError('pattern') ) {
+          <mat-error> Must be valid number </mat-error>
+          }@else if (form.get('overallProgress')?.hasError('invalidValue')) {
+          <mat-error>
+            Value must be {{ overallProgressFloor }} or higher, maximum 100.
+          </mat-error>
+          } }
         </div>
 
         <div class="my-2">
-          <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'description'"
-            [inputName]="'Deliverable'" formControlName="deliverable"></stc-apps-textarea>
+          <stc-apps-textarea
+            [className]="'custom-input'"
+            [inputPlaceholder]="''"
+            [inputId]="'description'"
+            [inputName]="'Deliverable'"
+            formControlName="deliverable"
+          ></stc-apps-textarea>
         </div>
       </form>
     </div>
@@ -38,10 +47,16 @@
   <hr class="liner-hr" />
 
   <div class="dialog-actions">
-
     <div class="actions-wrapper">
-      <button type="button" class="btn gray-outline " (click)="cancel()">Cancel</button>
-      <button type="button" class="btn primary" (click)="update()" [disabled]="form.invalid">
+      <button type="button" class="btn gray-outline" (click)="cancel()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn primary"
+        (click)="update()"
+        [disabled]="form.invalid"
+      >
         Update Progress
       </button>
     </div>
