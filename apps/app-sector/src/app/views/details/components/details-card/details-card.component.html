@@ -1,0 +1,10 @@
+<div class="card">
+  <h3 class="card_title">{{ title() }}</h3>
+  <div class="card_description">
+    @if (isDescriptionString()) {
+    {{ description() }}
+    } @else {
+    <ng-content></ng-content>
+    }
+  </div>
+</div>
