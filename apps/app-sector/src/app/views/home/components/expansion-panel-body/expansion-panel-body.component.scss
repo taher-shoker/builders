@@ -1,0 +1,44 @@
+@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
+@import '../../../../../../../../libs/styles/src/scss/core/variables/fonts';
+
+.expansion-body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &_list {
+        list-style: none;
+        padding: 24px;
+        background-color: $whiteColor;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+
+        li {
+            display: flex;
+            justify-content: space-between;
+            font-size: 16px;
+
+            label {
+                color: var(--grey-color);
+                font-family: 'stc forward-regular';
+            }
+
+            span {
+                color: $grayColor;
+                font-family: 'stc forward-medium';
+            }
+        }
+    }
+
+    &_details {
+        display: flex;
+        justify-content: end;
+        a {
+            text-decoration: underline;
+            cursor: pointer;
+            color: var(--stc-color);
+            font-size: 16px;
+        }
+    }
+}
