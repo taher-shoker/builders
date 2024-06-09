@@ -8,6 +8,7 @@
 
     &_list {
         list-style: none;
+        border-radius:10px ;
         padding: 24px;
         background-color: $whiteColor;
         display: flex;
@@ -29,6 +30,9 @@
                 font-family: 'stc forward-medium';
             }
         }
+    }
+    &_bar{
+        margin: 60px 0px;
     }
 
     &_details {
