@@ -1,4 +1,4 @@
-<div class="p-4">
+<div class="score-card-tabs py-4">
   <stc-apps-tabs
   (changeSelectValue)="handleChangeTab($event)">
   <stc-apps-tab value="ApplicationSector">Application sector</stc-apps-tab>
@@ -7,7 +7,7 @@
 </div>
 
 @if (selectedTab() == 'ApplicationSector') {
-  <!-- <h1>ApplicationSector</h1> -->
+  <stc-apps-expansion-panel></stc-apps-expansion-panel> 
 } @else if (selectedTab() == 'CorporatePriorities') {
-  <!-- <h1>CorporatePriorities</h1> -->
+  <h1>CorporatePriorities</h1>
 }

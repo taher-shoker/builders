@@ -1,7 +1,9 @@
 <div class="expansion-panel">
   <div class="row">
+    <div class="col-12">
+      <stc-apps-panels-container></stc-apps-panels-container>
+    </div>
     @for (item of items; track $index) {
-
     <div class="col-md-4 col-sm-12">
       <mat-expansion-panel
         (opened)="panelOpenState = true"

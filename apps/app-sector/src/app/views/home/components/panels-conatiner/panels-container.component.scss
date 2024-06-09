@@ -3,13 +3,11 @@
 .panels_container {
   background-color: $whiteColor;
   width: 100%;
-  padding: 24px 17px 24px 17px;
+  padding: 16px;
   border-radius: 8px;
   font-family: var(--stc-font-base);
 
   &_title {
-    margin-bottom: 16px;
-
     h4 {
       font-weight: 600;
       font-size: 24px;
