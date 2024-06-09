@@ -28,7 +28,7 @@ p {
   &_status {
     width: 25%;
     border-radius: 6px;
-    padding: 6px 6px 6px 6px;
+    padding: 6px;
     .ontrack {
       color: $stcOasisColor;
     }
@@ -45,11 +45,11 @@ p {
     margin-top: 17px;
     .direction-holder,
     .function-holder {
-      padding: 10px 6px;
-      border-radius: 6px;
+      padding: 6px 10px;
+      border-radius: 10px;
       background-color: rgba(113, 113, 113, 0.1);
       p {
-        margin-right: 14px;
+        //  margin-right: 14px;
         font-weight: 300;
         font-size: 16px;
       }

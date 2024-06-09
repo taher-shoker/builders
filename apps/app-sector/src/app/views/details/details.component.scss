@@ -3,7 +3,9 @@
 
 .details {
     padding: 26px 28px;
-
+    position: relative;
+    z-index: 99;
+    
     &_title {
         font-family: 'stc forward-bold';
         font-size: 24px;

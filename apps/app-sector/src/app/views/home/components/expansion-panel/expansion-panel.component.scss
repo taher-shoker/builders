@@ -12,23 +12,39 @@
 
 ::ng-deep {
 
+  // .mat-expansion-panel-header .mat-expansion-indicator {
+  //   border-radius: 50%;
+  //   background-color: #ccc;
+  //   padding:0px 5px;
+  //   transition: transform 0.3s;
+  // }
+  // .mat-expansion-panel-header.mat-expanded .mat-expansion-indicator:after {
+  //  // content: "\25B2"; /* Unicode character for the arrow */
+  //   color: #fff;
+  //   //font-size: 20px;
+  // }
   .mat-expansion-panel {
     background-color: $lighterGreyColor !important;
     border-radius: 10px !important;
     box-shadow: none !important;
-    padding: 23px 16px;
+    padding: 16px 0px 16px 8px;
 
 
     .mat-expansion-panel-header {
-      margin-left: 14px !important;
+     // margin-left: 14px !important;
       height: 210px !important;
       align-items: start !important;
       padding: 0px 14px;
 
       .mat-expansion-indicator {
         margin-top: 16px;
+        margin-right: 8px;
       }
     }
+  }
+  .mat-expansion-panel-body{
+    padding: 0px !important;
+    margin: 0px 17px !important;
   }
 }
 
