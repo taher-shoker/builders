@@ -1,13 +1,13 @@
 <div class="expansion-body">
   <stc-apps-result-score [percentage]="percentage()"></stc-apps-result-score>
   <div class="row">
-    @for (section of listItems; track $index) {
+    @for (section of listItems; track section) {
     <div
       class="col-sm-12"
       [ngClass]="{ 'col-md-7': $index === 1, 'col-md-5': $index === 0 }"
     >
       <ul class="expansion-body_list">
-        @for (item of section.items; track $index) {
+        @for (item of section.items; track item) {
         <li>
           <label>{{ item.label }}</label>
           <span>{{ item.value }}</span>

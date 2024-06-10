@@ -2,11 +2,11 @@
   <h2 class="details_title">Details for STC KSA Epit</h2>
 
   <div class="details_content">
-    <div class="row">
-      <div class="col-md-6 col-sm-12">
+    <div class="row row-gap-3">
+      <div class="col-lg-6 col-md-12">
         <div class="row row-gap-3">
-          @for (card of cards; track $index) {
-          <div [ngClass]="card.class" class="col">
+          @for (card of cards; track card) {
+          <div [ngClass]="card.class">
             <stc-apps-details-card
               [title]="card.title"
               [description]="card.description"
@@ -42,7 +42,7 @@
           }
         </div>
       </div>
-      <div class="col-md-6 col-sm-12">
+      <div class="col-lg-6 col-md-12">
         <stc-apps-comments-form></stc-apps-comments-form>
       </div>
     </div>

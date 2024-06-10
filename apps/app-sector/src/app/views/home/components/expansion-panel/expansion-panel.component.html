@@ -3,8 +3,8 @@
     <div class="col-12">
       <stc-apps-panels-container></stc-apps-panels-container>
     </div>
-    @for (item of items; track $index) {
-    <div class="col-md-4 col-sm-12">
+    @for (item of items; track item) {
+    <div class="col-lg-4 col-md-6 col-sm-12">
       <mat-expansion-panel
         (opened)="panelOpenState = true"
         (closed)="panelOpenState = false"
