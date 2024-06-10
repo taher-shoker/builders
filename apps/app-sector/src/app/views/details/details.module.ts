@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { DetailsCardComponent } from './components/details-card/details-card.component';
 import { CommentsFormComponent } from './components/comments-form/comments-form.component';
 
-const components = [DetailsComponent];
+const components = [DetailsComponent,CommentsFormComponent,DetailsCardComponent];
 const modules = [SharedModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
