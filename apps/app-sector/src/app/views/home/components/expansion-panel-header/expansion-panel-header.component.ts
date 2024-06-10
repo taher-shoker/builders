@@ -9,4 +9,7 @@ export class ExpansionPanelHeaderComponent {
   status: InputSignal<any> = input('On track');
   kpisCode: InputSignal<any> = input('KPI Code : APS 1-2023');
   projectHeader: InputSignal<any> = input('STC KSA Epit');
+  direction: InputSignal<any> = input('Increasing');
+  function: InputSignal<any> = input('Linear 2X');
+
 }

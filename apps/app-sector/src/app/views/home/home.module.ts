@@ -26,7 +26,7 @@ const modules = [
   ReactiveFormsModule,
   SharedModule,
   MatExpansionModule,
-  RouterModule.forRoot(appRoutes),
+  RouterModule.forChild(appRoutes),
 ];
 @NgModule({
   declarations: [...components],

@@ -1,0 +1,129 @@
+@import '../../../../../../libs/styles/src/scss/core/variables/colors';
+p {
+  margin: 0;
+}
+.welcome-part {
+  position: relative;
+  background-image: url('/assets/images/welcome-bg.svg');
+  background-size: cover;
+  background-position: center center;
+  height: 100vh;
+  width: 50%;
+  &_container {
+    height: 100%;
+    margin-bottom: 60px;
+  }
+  &_content {
+    text-align: center;
+    h3 {
+      color: $whiteColor;
+      font-weight: 300;
+      font-size: 24px;
+    }
+    h1 {
+      font-weight: 700;
+      padding-bottom: 20px;
+      font-size: 40px;
+      color: $whiteColor;
+    }
+    p {
+      font-weight: 400;
+
+      font-size: 20px;
+      color: $whiteColor;
+    }
+
+    img {
+      margin-bottom: 80px;
+    }
+  }
+  &_stc-logo {
+    position: absolute;
+    bottom: 40px;
+    left: 40px;
+    img {
+      width: 80%;
+    }
+  }
+}
+.score-card-options {
+  width: 50%;
+
+  &_header {
+    p {
+      color: $fontGreyColor;
+      margin-bottom: 30px;
+    }
+    h2 {
+      color: $originalBalck;
+      font-weight: 700;
+      font-size: 30px;
+      margin-bottom: 20px;
+    }
+  }
+  &_item {
+    cursor: pointer;
+    background-color: $whiteColor;
+    width: 437px;
+    padding: 18px;
+    transform: scale(1);
+    transition: transform ease-in-out 0.2s;
+    border-radius: 6px;
+    box-shadow: 0px 4px rgba(0, 0, 0, 0.04);
+    p {
+      margin: 12px 0px 0px 15px;
+    }
+    .icon-bg {
+      width: 53px;
+      height: 53px;
+      border-radius: 50%;
+      background-color: $greyIconBg;
+    }
+    .icon-img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-left: 4px;
+      .first-img{
+        filter: invert(1);
+      }
+    }
+    .second-img{
+      padding: 0;
+    }
+    .item-arrow {
+      margin: 12px 15px 0px 0px;
+      color: $fontGreyColor;
+    }
+    .list-item-desc {
+      margin:4px 0px 0px 12px;
+      font-size: 14px;
+      font-weight: 400;
+      color: $fontGreyColor;
+    }
+  }
+  &_item:hover {
+    transform: scale(1.02);
+    border: 1px solid $seaBlue;
+    background-color: $lightBlue;
+    .icon-bg {
+      .icon-img{
+        img{
+          filter: invert(1);
+        }
+        .first-img{
+          filter: none;
+        }
+      }
+      background-color: $purpleIconBg;
+    }
+    
+    .item-arrow {
+      margin-top: 24px;
+      color: $purpleIconBg;
+    }
+  }
+}

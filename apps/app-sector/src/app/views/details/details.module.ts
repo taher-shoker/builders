@@ -9,7 +9,7 @@ import { CommentsFormComponent } from './components/comments-form/comments-form.
 import { ReactiveFormsModule } from '@angular/forms';
 
 const components = [DetailsComponent, DetailsCardComponent, CommentsFormComponent];
-const modules = [SharedModule, ReactiveFormsModule, RouterModule.forRoot(appRoutes)];
+const modules = [SharedModule, ReactiveFormsModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
   declarations: [...components],

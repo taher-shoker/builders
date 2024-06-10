@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { appRoutes } from '../app.routes';
 
 const components = [LayoutComponent, TopBannerComponent];
-const modules = [SharedModule, HomeModule, TranslateModule, RouterModule.forRoot(appRoutes)];
+const modules = [SharedModule, HomeModule, TranslateModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
   declarations: [...components],
