@@ -123,25 +123,20 @@
             >
               <p>
                 {{
-                  item.latestWorkflowId
-                    ? item.status === 'Completed'
-                      ? item.status
-                      : 'In Validation'
-                    : '-'
+                  item.validationStatus === 'In-Validation'
+                    ? 'In Validation'
+                    : item.validationStatus
                 }}
               </p>
             </ng-template>
 
             <ng-template
-            #progressCustomTemplate
-            let-header="header"
-            let-item="item"
-          >
-            <p>
-              {{item.lastApprovedProgress || 0}}%
-            </p>
-          </ng-template>
-
+              #progressCustomTemplate
+              let-header="header"
+              let-item="item"
+            >
+              <p>{{ item.lastApprovedProgress || 0 }}%</p>
+            </ng-template>
           </div>
         </div>
       </div>

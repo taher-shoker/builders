@@ -294,14 +294,13 @@
             <div>
               <p class="m-0" style="font-weight: bold">
                 Milestone progress updated
-                <span [ngStyle]="{
-                    color:
-                      status === 'Delayed'
-                        ? 'red'
-                        : status === 'Completed'
-                        ? 'green'
-                        : 'orange'
-                  }">({{ status }})</span>
+                <span [ngClass]="{
+                  'completed-status': status === 'Completed',
+                  'delayed-status': status === 'Delayed',
+                  'on-track-status': status === 'On Track',
+                  'at-risk-status': status === 'At Risk',
+                  'planned-status': status === 'Planned'
+                }">({{ status }})</span>
               </p>
             </div>
           </ng-template>
