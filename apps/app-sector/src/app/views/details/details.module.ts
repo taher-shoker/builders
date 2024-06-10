@@ -6,9 +6,10 @@ import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { DetailsCardComponent } from './components/details-card/details-card.component';
 import { CommentsFormComponent } from './components/comments-form/comments-form.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 const components = [DetailsComponent, DetailsCardComponent, CommentsFormComponent];
-const modules = [SharedModule, RouterModule.forRoot(appRoutes)];
+const modules = [SharedModule, ReactiveFormsModule, RouterModule.forRoot(appRoutes)];
 
 @NgModule({
   declarations: [...components],
