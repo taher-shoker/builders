@@ -87,6 +87,12 @@ p {
       align-items: center;
       justify-content: center;
       padding-left: 4px;
+      .first-img{
+        filter: invert(1);
+      }
+    }
+    .second-img{
+      padding: 0;
     }
     .item-arrow {
       margin: 12px 15px 0px 0px;
@@ -106,7 +112,10 @@ p {
     .icon-bg {
       .icon-img{
         img{
-          fill: $whiteColor;
+          filter: invert(1);
+        }
+        .first-img{
+          filter: none;
         }
       }
       background-color: $purpleIconBg;
