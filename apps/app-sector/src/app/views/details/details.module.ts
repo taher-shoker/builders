@@ -6,7 +6,7 @@ import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 
 const components = [DetailsComponent];
-const modules = [SharedModule, RouterModule.forRoot(appRoutes)];
+const modules = [SharedModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
   declarations: [...components],

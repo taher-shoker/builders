@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 
@@ -7,7 +7,7 @@ import { CookieService } from 'ngx-cookie';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
-export class LayoutComponent {
+export class LayoutComponent implements OnInit{
   constructor(
     private cookieService: CookieService,
     public router: Router
@@ -24,14 +24,14 @@ export class LayoutComponent {
       icon: 'fa-home',
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
-    },
-    {
-      name: 'dashboard',
-      url: '/dashboard',
-      icon: 'fa-chart-line',
-      roles: ['APPROVERS'],
-      urlHome: '/home',
-    },
+    }
+    // {
+    //   name: 'dashboard',
+    //   url: '/dashboard',
+    //   icon: 'fa-chart-line',
+    //   roles: ['APPROVERS'],
+    //   urlHome: '/home',
+    // },
   ];
 
   ngOnInit() {
