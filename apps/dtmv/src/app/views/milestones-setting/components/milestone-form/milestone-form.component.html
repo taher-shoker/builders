@@ -2,21 +2,17 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="inputs">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Milestone Name'"
             [inputId]="'milestoneName'" (valueKeyDown)="preventComma($event)" [inputName]="'Milestone Name'"
             formControlName="milestoneName"></stc-apps-input>
         </div>
-        <div class="col-md-4">
+        <div class="col-md">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Activity Name'"
             [inputId]="'activityName'" (valueKeyDown)="preventComma($event)" [inputName]="'Activity Name'"
             formControlName="activityName"></stc-apps-input>
         </div>
-          <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Work Stream Name'"
-            [inputId]="'workStream'" (valueKeyDown)="preventComma($event)" [inputName]="'Work Stream Name'"
-            formControlName="workStream"></stc-apps-input>
-        </div>
+
       </div>
       <div class="row mt-7">
         <div class="col-md-6">

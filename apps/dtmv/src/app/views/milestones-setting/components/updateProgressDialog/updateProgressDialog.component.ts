@@ -10,7 +10,7 @@ import { customValidator } from './invalidValue.validator';
 })
 export class UpdateProgressDialogComponent {
 
-  overallProgressFloor = 1;
+  overallProgressFloor = 0;
 
   form!: FormGroup;
 
