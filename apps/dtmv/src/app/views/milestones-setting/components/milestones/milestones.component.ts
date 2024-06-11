@@ -69,7 +69,6 @@ export class MilestonesComponent implements OnInit, AfterViewInit, OnDestroy {
 
   inValidationOption: { name: string; value: string }[] = [
     { name: '-', value: '-' },
-    { name: 'Completed', value: 'Completed' },
     { name: 'In Validation', value: 'In-Validation' },
   ];
 
