@@ -1,9 +1,14 @@
 <div class="banner row px-4 pt-5 pb-4">
-  <div class="banner_background"></div> 
+  <div class="banner_background"></div>
   <div class="col-md-6 col-sm-12">
     <div class="banner_content">
       <div class="welcome-msg">
-        <h4>{{ 'welcome_back' | translate }}</h4>
+        <div class="d-flex">
+          <h4>{{ 'welcome_back' | translate }}</h4>
+          <p class="userName">{{ userName() }}</p>
+          <img src="assets/images/Waving Hand.svg" alt="">
+        </div>
+
         <p>{{ 'welcome_back_msg' | translate }}</p>
       </div>
       <h1 class="py-2">{{ 'scorecard_report' | translate }}</h1>
@@ -23,7 +28,7 @@
         [options]="yearsArray"
         [outputValue]="'name'"
       ></stc-apps-select-drop-down>
-      
+
       <stc-apps-select-drop-down
         formControlName="quarter"
         [label]="''"

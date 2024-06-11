@@ -1,4 +1,4 @@
-import { Component, WritableSignal, signal } from '@angular/core';
+import { Component, InputSignal, WritableSignal, input, signal } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -8,6 +8,8 @@ import { Component, WritableSignal, signal } from '@angular/core';
 export class TopBannerComponent {
   milestoneProgress: WritableSignal<number | null> = signal(74.91);
   title = 'Over all score';
+  userName: InputSignal<string> = input('');
+
   yearsArray: any = [
     { name: 2020 },
     { name: 2021 },

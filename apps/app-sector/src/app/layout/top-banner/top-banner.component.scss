@@ -30,6 +30,16 @@
         color: $lightGreyColor;
         margin: 0;
       }
+      img{
+        margin: 0px 0px 6px 6px;
+      }
+      .userName{
+        font-size: 24px;
+        font-weight: 500;
+        font-size: 22px;
+        color: $whiteColor;
+        padding-left: 6px;
+      }
     }
 
     h1 {

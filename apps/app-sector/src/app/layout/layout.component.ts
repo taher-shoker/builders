@@ -1,16 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
+import { AuthService } from '../shared/services/auth.service';
 
 @Component({
   selector: 'stc-apps-layout',
   templateUrl: './layout.component.html',
-  styleUrls: ['./layout.component.scss']
+  styleUrls: ['./layout.component.scss'],
 })
-export class LayoutComponent implements OnInit{
+export class LayoutComponent implements OnInit {
   constructor(
     private cookieService: CookieService,
-    public router: Router
+    public router: Router,
+    private authService: AuthService
   ) {}
 
   urlHome = '/home';
@@ -24,7 +26,7 @@ export class LayoutComponent implements OnInit{
       icon: 'fa-home',
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
-    }
+    },
     // {
     //   name: 'dashboard',
     //   url: '/dashboard',
@@ -35,7 +37,14 @@ export class LayoutComponent implements OnInit{
   ];
 
   ngOnInit() {
+    //this.userName='Habiba';
     this.userName = this.cookieService.get('USER_FULLNAME') || '';
+    this.authService.getUserData();
+    this.authService.loggedUserStream.subscribe((res) => {
+      this.userName = res?.name || '';
+    });
+   
+    console.log(this.userName, 'hi');
   }
 
   backToHome() {
@@ -43,5 +52,5 @@ export class LayoutComponent implements OnInit{
   }
   logOut() {
     //apply logout action
-    }
+  }
 }
