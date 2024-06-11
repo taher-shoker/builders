@@ -1,5 +1,7 @@
 <div class="expansion-body">
-  <stc-apps-result-score [percentage]="percentage()"></stc-apps-result-score>
+  <div class="expansion-body_score">
+    <stc-apps-result-score [percentage]="percentage()"></stc-apps-result-score>
+  </div>
   <div class="row">
     @for (section of listItems; track section) {
     <div
@@ -17,9 +19,7 @@
     </div>
     }
     <div class="expansion-body_bar">
-      <stc-apps-progress-bar
-        [data]="progressBarData()"
-      ></stc-apps-progress-bar>
+      <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
     </div>
     <div class="expansion-body_details">
       <a [routerLink]="['/details']">Details</a>

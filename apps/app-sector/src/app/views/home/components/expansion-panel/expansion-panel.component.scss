@@ -1,17 +1,15 @@
 @import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
 
-
 .expansion-panel {
   background-color: $whiteColor;
   padding: 15px 39px;
 
-  &>div {
+  & > div {
     gap: 10px 0;
   }
 }
 
 ::ng-deep {
-
   // .mat-expansion-panel-header .mat-expansion-indicator {
   //   border-radius: 50%;
   //   background-color: #ccc;
@@ -23,27 +21,36 @@
   //   color: #fff;
   //   //font-size: 20px;
   // }
+  stc-apps-expansion-panel-header {
+    margin-right: 20px;
+  }
   .mat-expansion-panel {
     background-color: $lighterGreyColor !important;
     border-radius: 10px !important;
     box-shadow: none !important;
     padding: 16px 0px 16px 8px;
 
-
     .mat-expansion-panel-header {
-     // margin-left: 14px !important;
+      // margin-right: 14px !important;
       min-height: 220px !important;
       height: 100%;
       align-items: start !important;
       padding: 0px 14px;
     }
   }
-  .mat-expansion-panel-body{
+  .mat-expansion-panel-body {
     padding: 0px !important;
     margin: 0px 17px !important;
   }
 }
 
-.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:not([aria-disabled='true']):hover {
+.mat-expansion-panel:not(.mat-expanded)
+  .mat-expansion-panel-header:not([aria-disabled='true']):hover {
   background-color: transparent !important;
+}
+
+@media screen and (max-width: 1120px) {
+  ::ng-deep .mat-expansion-panel-body {
+    margin-top: 30px !important;
+  }
 }
