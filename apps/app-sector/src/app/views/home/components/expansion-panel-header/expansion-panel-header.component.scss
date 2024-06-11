@@ -26,7 +26,7 @@ p {
   }
 
   &_status {
-    width: 25%;
+    // width: 25%;
     border-radius: 6px;
     padding: 6px;
     .ontrack {
@@ -42,7 +42,14 @@ p {
     }
   }
   &_info {
+    
     margin-top: 17px;
+    .direction-holder {
+      width: 53%;
+    }
+    .function-holder {
+      width: 42%;
+    }
     .direction-holder,
     .function-holder {
       padding: 6px 10px;
@@ -51,7 +58,7 @@ p {
       p {
         //  margin-right: 14px;
         font-weight: 300;
-        font-size: 16px;
+        font-size: 15px;
       }
     }
   }
@@ -66,24 +73,29 @@ p {
     align-items: center;
   }
 
-  .mat-expansion-panel.mat-expanded .mat-expansion-panel-header .mat-expansion-indicator {
+  .mat-expansion-panel.mat-expanded
+    .mat-expansion-panel-header
+    .mat-expansion-indicator {
     border-color: $pinkColor;
     background-color: $pinkColor;
     color: $whiteColor;
-  
-   &::after {
+
+    &::after {
       color: $whiteColor;
     }
   }
 }
-// @media screen and (max-width: 1480px) {
-//   #expansion-header-info {
-//     display: block !important;
-//     .direction-holder {
-//       margin-bottom: 0.5rem !important;
-//     }
-//     .function-holder {
-//       margin-bottom: 0.5rem !important;
-//     }
-//   }
-// }
+
+@media screen and (max-width: 1120px) {
+  #expansion-header-info {
+    display: block !important;
+    .direction-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    .function-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
