@@ -5,8 +5,13 @@
   <div class="row">
     @for (section of listItems; track section) {
     <div
-      class="col-sm-12"
-      [ngClass]="{ 'col-md-7': $index === 1, 'col-md-5': $index === 0 }"
+      class="col-sm-12 col-lg-12"
+      [ngClass]="{
+        'col-md-7': $index === 1,
+        'col-md-5': $index === 0,
+        'col-xl-7': $index === 1,
+        'col-xl-5': $index === 0
+      }"
     >
       <ul class="expansion-body_list">
         @for (item of section.items; track item) {
@@ -21,7 +26,7 @@
     <div class="expansion-body_bar">
       <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
     </div>
-    <div class="expansion-body_details">
+    <div class="expansion-body_details mt-3">
       <a [routerLink]="['/details']">Details</a>
     </div>
   </div>

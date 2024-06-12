@@ -42,13 +42,12 @@ p {
     }
   }
   &_info {
-    
     margin-top: 17px;
     .direction-holder {
       width: 53%;
     }
     .function-holder {
-      width: 42%;
+      width: 43%;
     }
     .direction-holder,
     .function-holder {
@@ -59,6 +58,7 @@ p {
         //  margin-right: 14px;
         font-weight: 300;
         font-size: 15px;
+        
       }
     }
   }
@@ -71,14 +71,13 @@ p {
     right: 30px;
     border: 1.6px solid $darkerPurbleColor;
     border-radius: 50%;
-    padding: 4px 6px 8px 6px;
+    padding: 4px 6px 7px 6px;
     display: flex;
     align-items: center;
     &::after {
       color: $darkerPurbleColor;
       padding: 2.6px;
     }
-
   }
 
   .mat-expansion-panel.mat-expanded
@@ -94,8 +93,35 @@ p {
     }
   }
 }
+@media screen and (max-width: 576px) {
+  #expansion-header-info {
+    display: block !important;
+    .direction-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+    .function-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
 
-@media screen and (max-width: 1120px) {
+@media screen and (max-width: 768px) and (min-width: 576px) {
+  #expansion-header-info {
+    display: flex !important;
+    .direction-holder {
+      width: 53%;
+      margin-bottom: 0.5rem;
+    }
+    .function-holder {
+      width: 43%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1120px) and (min-width: 768px) {
   #expansion-header-info {
     display: block !important;
     .direction-holder {
