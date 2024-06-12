@@ -38,12 +38,16 @@ export class LayoutComponent implements OnInit {
 
   ngOnInit() {
     //this.userName='Habiba';
-    this.userName = this.cookieService.get('USER_FULLNAME') || '';
-    this.authService.getUserData();
-    this.authService.loggedUserStream.subscribe((res) => {
-      this.userName = res?.name || '';
-    });
-   
+    if (
+      this.cookieService.get('MODERN_SYSTEM_USER') &&
+      this.cookieService.get('token')
+    ) {
+      this.userName = this.cookieService.get('USER_FULLNAME') || '';
+      this.authService.getUserData();
+      this.authService.loggedUserStream.subscribe((res) => {
+        this.userName = res?.name || '';
+      });
+    }
     console.log(this.userName, 'hi');
   }
 
