@@ -78,6 +78,14 @@ p {
       color: $darkerPurbleColor;
       padding: 2.6px;
     }
+
+    &:hover {
+      border-color: $pinkColor;
+      background-color: $pinkColor;
+      &::after {
+        color: $whiteColor;
+      }
+    }
   }
 
   .mat-expansion-panel.mat-expanded
