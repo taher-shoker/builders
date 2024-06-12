@@ -1,6 +1,8 @@
-<div class="card">
+<div class="card" >
   <h3 class="card_title">{{ title() }}</h3>
-  <div class="card_description">
+  <div class="card_description"
+  [ngClass]="checkForPrecentage()?'puprleColor':''" 
+  >
     @if (isDescriptionString()) {
     {{ description() }}
     } @else {
