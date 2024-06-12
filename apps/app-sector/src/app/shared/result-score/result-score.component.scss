@@ -28,10 +28,17 @@
     &_percent {
         display: flex;
         align-items: center;
+        justify-content: end;
 
         h1 {
             font-family: var(--stc-font-bold);
             margin-inline-end: 37px;
+        }
+    }
+
+    @media screen and (max-width: 1250px) and (min-width: 767px) {
+        >div {
+            width: 100%;
         }
     }
 }
