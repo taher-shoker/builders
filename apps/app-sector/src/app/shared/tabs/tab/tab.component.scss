@@ -17,4 +17,10 @@
     color: var(--white);
     font-weight: 500;
   }
+
+  &:hover {
+    background-color: var(--stc-coral-color);
+    color: var(--white);
+    font-weight: 500;
+  }
 }
