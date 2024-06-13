@@ -95,6 +95,7 @@ export class MilestonesService {
   }
 
   checkIsDirector() {
+    console.warn(this.getMilestoneUsersType())
     if (
       this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
     ) {
@@ -103,6 +104,16 @@ export class MilestonesService {
       this.isDTDirector = false;
     }
     return this.isDTDirector;
+  }
+
+  /**
+   * 
+   * @param role Pass a groupName like ['DT_Director', 'Business_SPOC', 'DT_User', 'DT_VP_Dashboard_Viewer', 'DT_VP_Dashboard_Editor', 'PMO']
+   * @returns True if the groupName is assigned to the user.
+   */
+
+  userInGroup(role: string) : boolean{
+    return this.getMilestoneUsersType().find((x) => x.groupName === role) ? true : false;
   }
 
   checkIsBusinessSpoc() {

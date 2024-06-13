@@ -24,16 +24,21 @@ export class EditComponent implements OnInit {
   showSubmitBtn: WritableSignal<boolean> = signal(false);
   showResubmitBtn: WritableSignal<boolean> = signal(false);
 
-  showApproveBtn: WritableSignal<boolean> = signal(false);
-  showRejectBtn: WritableSignal<boolean> = signal(false);
+  showPMOApprovalBtn: WritableSignal<boolean> = signal(false);
+  showPMORejectBtn: WritableSignal<boolean> = signal(false);
+
+  showDirectorApproveBtn: WritableSignal<boolean> = signal(false);
+  showDirectorRejectBtn: WritableSignal<boolean> = signal(false);
   showStatus: WritableSignal<boolean> = signal(false);
 
   status: WritableSignal<string> = signal('');
   commentText: WritableSignal<string> = signal('');
   commentCheckbox: WritableSignal<boolean> = signal(false);
-  directorCanComment: WritableSignal<boolean> = signal(false);
+  directorOrPMOCanComment: WritableSignal<boolean> = signal(false);
 
-  lastCommentReceived: WritableSignal<string> = signal('');
+  lastCommentReceivedFromPMO: WritableSignal<string> = signal('');
+  lastCommentReceivedFromDirector: WritableSignal<string> = signal('');
+
   showSpinner: WritableSignal<boolean> = signal(false);
   requestParams: WritableSignal<
     | {
@@ -121,7 +126,8 @@ export class EditComponent implements OnInit {
   private resetStatus() {
     this.showStatus.set(false);
     this.status.set('');
-    this.lastCommentReceived.set('');
+    this.lastCommentReceivedFromDirector.set('');
+    this.lastCommentReceivedFromPMO.set('');
   }
 
   private getVpReportState() {
@@ -130,69 +136,92 @@ export class EditComponent implements OnInit {
     this.milestonesService
       .getReportData(this.selectedTeam(), this.selectedYear())
       .subscribe((res: ReportData) => {
-        console.log('State res:', res);
         this.workflowId.set(res.workflowId);
 
-        if (res.isApproved === null || res.isApproved === true) {
-          if (!this.milestonesService.checkIsDirector()) {
-            this.handleUiState('edit-pending', res);
+        this.populateForm(res);
+
+        if (res.isApproved === null || res.isApproved === true) { // Is Approved true or null, means a flow is closed and a DT User with role "Editor" can submit again
+          if (
+            this.milestonesService.userInGroup('DT_User') &&
+            this.milestonesService.userInGroup('DT_VP_Dashboard_Editor')
+          ) {
+            this.handleUiState('edit-pending'); // prepare the UI state for dt user to edit data.
           } else {
-            this.handleUiState('none-pending', res);
+            this.handleUiState('none-pending'); // prepare the UI state to prevent any actions.
             this.showStatus.set(true);
             this.status.set('Waiting For Edit');
-            this.directorCanComment.set(false);
+            this.directorOrPMOCanComment.set(false);
           }
         } else {
-          this.handlePendingTask(res);
+          this.handlePendingTask(); // Is approved false, means it doesn't belong to DT user edits, it needs a PMO or Director, and we need to hit another API to find out.
           this.handleCommentsOfAllTasks();
         }
       });
   }
 
-  private handlePendingTask(res: ReportData) {
+  private handlePendingTask() {
     this.milestonesService
       .getPendingVPReportWorkflowItem(this.workflowId()!)
       .subscribe((workflowRes) => {
         this.requestTaskId.set(workflowRes?.requestTaskId);
 
         if (workflowRes?.taskName === 'Edit Report Data') {
-          if (!this.milestonesService.checkIsDirector()) {
-            this.handleUiState('resubmission-pending', res);
+          if (
+            this.milestonesService.userInGroup('DT_User') &&
+            this.milestonesService.userInGroup('DT_VP_Dashboard_Editor')
+          ) {
+            this.handleUiState('resubmission-pending');
           } else {
-            this.handleUiState('none-pending', res);
+            this.handleUiState('none-pending');
             this.showStatus.set(true);
             this.status.set('Waiting For Resubmission');
           }
+        } else if (workflowRes?.taskName === 'Approve Report Data PMO') {
+          if (
+            this.milestonesService.userInGroup('DT_User') &&
+            this.milestonesService.userInGroup('PMO')
+          ) {
+            this.directorOrPMOCanComment.set(true);
+            this.handleUiState('pmo-approval-pending');
+          } else {
+            this.handleUiState('none-pending');
+            this.showStatus.set(true);
+            this.status.set('Waiting For PMO approval');
+          }
         } else {
           if (this.milestonesService.checkIsDirector()) {
-            this.handleUiState('approval-pending', res); // DT Director should approve/reject
-            this.directorCanComment.set(true);
+            this.handleUiState('director-approval-pending'); // DT Director should approve/reject
+            this.directorOrPMOCanComment.set(true);
           } else {
-            this.handleUiState('none-pending', res);
+            this.handleUiState('none-pending');
             this.showStatus.set(true);
-            this.status.set('Waiting For Approval');
+            this.status.set('Waiting For Director Approval');
           }
         }
       });
   }
 
   private handleCommentsOfAllTasks() {
-    const comments: string[] = [];
+    const PMOsComments : string [] = [];
+    const directorsComments : string [] = [];
 
     this.milestonesService
       .getVPReportWorkflow(this.workflowId()!)
       .subscribe((workflowRes) => {
         for (const item of workflowRes) {
           for (const taskAttr of item.requestTaskAttributes) {
-            if (taskAttr.name === 'reason_of_rejection') {
-              comments.push(taskAttr.value);
+            if (taskAttr.name === 'reason_of_rejection' && item.taskName === 'Approve Report Data PMO') { // comments of PMO
+              PMOsComments.push(taskAttr.value);
+            }
+
+            if (taskAttr.name === 'reason_of_rejection' && item.taskName === 'Approve Report Data Director') { // comments of Director
+              directorsComments.push(taskAttr.value);
             }
           }
         }
 
-        this.lastCommentReceived.set(comments[comments.length - 1]);
-        console.log('All comms', comments);
-        console.log('this.lastCommentReceived', this.lastCommentReceived());
+        this.lastCommentReceivedFromDirector.set(directorsComments[directorsComments.length - 1]);
+        this.lastCommentReceivedFromPMO.set(PMOsComments[PMOsComments.length - 1]);
       });
   }
 
@@ -223,48 +252,63 @@ export class EditComponent implements OnInit {
   private handleUiState(
     state:
       | 'edit-pending'
-      | 'approval-pending'
+      | 'director-approval-pending'
       | 'resubmission-pending'
+      | 'pmo-approval-pending'
       | 'none-pending'
-      | 'loading',
-    formData?: ReportData
+      | 'loading'
   ) {
-    if (formData) {
-      this.populateForm(formData); // if not approved, means we need to populate the inputs as the the workflow needs a director approval
-    }
     this.showSpinner.set(false);
 
     if (state === 'edit-pending') {
       this.showSubmitBtn.set(true);
-      this.showApproveBtn.set(false);
-      this.showRejectBtn.set(false);
+      this.showPMOApprovalBtn.set(false);
+      this.showPMORejectBtn.set(false);
+      this.showDirectorApproveBtn.set(false);
+      this.showDirectorRejectBtn.set(false);
       this.showResubmitBtn.set(false);
       this.form.get('dataForm')?.enable();
     } else if (state === 'resubmission-pending') {
+      this.showPMOApprovalBtn.set(false);
+      this.showPMORejectBtn.set(false);
       this.showSubmitBtn.set(false);
-      this.showApproveBtn.set(false);
-      this.showRejectBtn.set(false);
+      this.showDirectorApproveBtn.set(false);
+      this.showDirectorRejectBtn.set(false);
       this.showResubmitBtn.set(true);
       this.form.get('dataForm')?.enable();
     } else if (state === 'none-pending') {
+      this.showPMOApprovalBtn.set(false);
+      this.showPMORejectBtn.set(false);
       this.showSubmitBtn.set(false);
-      this.showApproveBtn.set(false);
-      this.showRejectBtn.set(false);
+      this.showDirectorApproveBtn.set(false);
+      this.showDirectorRejectBtn.set(false);
       this.showResubmitBtn.set(false);
       this.form.get('dataForm')?.disable();
-    } else if (state === 'approval-pending') {
+    } else if (state === 'director-approval-pending') {
       this.form.get('dataForm')?.disable();
+      this.showPMOApprovalBtn.set(false);
+      this.showPMORejectBtn.set(false);
       this.showSubmitBtn.set(false);
-      this.showApproveBtn.set(true);
-      this.showRejectBtn.set(true);
+      this.showDirectorApproveBtn.set(true);
+      this.showDirectorRejectBtn.set(true);
+      this.showResubmitBtn.set(false);
+    } else if (state === 'pmo-approval-pending') {
+      this.form.get('dataForm')?.disable();
+      this.showPMOApprovalBtn.set(true);
+      this.showPMORejectBtn.set(true);
+      this.showSubmitBtn.set(false);
+      this.showDirectorApproveBtn.set(false);
+      this.showDirectorRejectBtn.set(false);
       this.showResubmitBtn.set(false);
     } else if (state === 'loading') {
+      this.showPMOApprovalBtn.set(false);
+      this.showPMORejectBtn.set(false);
       this.showSubmitBtn.set(false);
-      this.showApproveBtn.set(false);
-      this.showRejectBtn.set(false);
+      this.showDirectorApproveBtn.set(false);
+      this.showDirectorRejectBtn.set(false);
       this.showResubmitBtn.set(false);
       this.showSpinner.set(true);
-      this.directorCanComment.set(false);
+      this.directorOrPMOCanComment.set(false);
       this.form.get('dataForm')?.disable();
     }
   }
@@ -322,7 +366,6 @@ export class EditComponent implements OnInit {
   }
 
   protected submitForm() {
-    console.log('the form value:', this.form.value.dataForm);
     this.handleUiState('loading');
 
     const { actual, baseline, targetEoy, target, highlight, valueImpact } =
@@ -340,8 +383,7 @@ export class EditComponent implements OnInit {
 
     this.milestonesService
       .postHighlightOrImpact(editingData)
-      .subscribe((res) => {
-        console.log('THE RES OF POSTING', res);
+      .subscribe(() => {
         this.getVpReportState();
       });
   }
@@ -384,21 +426,16 @@ export class EditComponent implements OnInit {
     const requestTaskId = this.requestTaskId();
     const requestParams = this.requestParams();
 
-    console.log('workflowId', workflowId);
-    console.log('requestTaskId', requestTaskId);
-    console.log('requestParams', requestParams);
-
     if (workflowId && requestTaskId && requestParams) {
       this.milestonesService
         .completePendingTask(workflowId, requestTaskId, requestParams)
         .subscribe((res) => {
-          console.log('res of editing back again for approval', res);
           this.getVpReportState();
         });
     }
   }
 
-  protected approveFlow(isApproved: boolean) {
+  protected approveDirectorFlow(isApproved: boolean) {
     this.handleUiState('loading');
 
     if (!isApproved && this.commentCheckbox() === true) {
@@ -440,7 +477,46 @@ export class EditComponent implements OnInit {
     }
   }
 
-  protected alterCommentArea(val: boolean) {
-    console.log('Val:', val);
+  protected approvePMO(isApproved: boolean) {
+    this.handleUiState('loading');
+
+    if (!isApproved && this.commentCheckbox() === true) {
+      this.requestParams.set({
+        requestParams: [
+          {
+            name: 'is_report_data_approved',
+            value: isApproved,
+          },
+          {
+            name: 'reason_of_rejection',
+            value: this.form.get('commentForm')?.get('comment')?.value,
+          },
+        ],
+      });
+    } else {
+      this.requestParams.set({
+        requestParams: [
+          {
+            name: 'is_report_data_approved',
+            value: isApproved,
+          },
+        ],
+      });
+    }
+
+    const workflowId = this.workflowId();
+    const requestTaskId = this.requestTaskId();
+    const requestParams = this.requestParams();
+
+    if (workflowId && requestTaskId && requestParams) {
+      this.milestonesService
+        .completePendingTask(workflowId, requestTaskId, requestParams)
+        .subscribe((res) => {
+          console.log('res of approving', res);
+
+          this.getVpReportState();
+        });
+    }
   }
+
 }

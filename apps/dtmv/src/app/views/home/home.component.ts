@@ -37,7 +37,7 @@ export class HomeComponent implements OnInit {
       name: 'Vp Report',
       url: '/vp-report',
       icon: 'fa-file-signature',
-      roles: ['VP'],
+      roles: ['VP_VIEWER', 'VP_EDITOR'],
       urlHome: '/home',
     },
   ];
@@ -46,6 +46,7 @@ export class HomeComponent implements OnInit {
     this.milestonesService.getRemindersData();
     this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
+      console.log("El user stream:", res)
       this.userName = res?.name || '';
       if (res?.roles) {
         const items = [];
@@ -66,7 +67,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  clickRemider(item: any) {
+  clickReminder(item: any) {
     this.detailsNavigate(item?.milestoneId);
   }
 

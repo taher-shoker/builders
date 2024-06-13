@@ -1,6 +1,6 @@
 <stc-apps-header [userName]="userName" [logoSrc]="logoSrc" [allItems]="navItems" [sidebarLogoSrc]="sidebarLogoSrc"
   (logOut)="logOut()" (backToHome)="backToHome()" [showLang]="false">
   <stc-apps-notifications-dropdown *ngIf="milestonesService.remindersItems.length > 0"
-    (clickItem)="clickRemider($event)"
+    (clickItem)="clickReminder($event)"
     [items]="milestonesService.remindersItems"></stc-apps-notifications-dropdown></stc-apps-header>
 <router-outlet></router-outlet>

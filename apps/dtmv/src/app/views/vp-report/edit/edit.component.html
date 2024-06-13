@@ -5,7 +5,7 @@
       <div>
         <div class="row mt-6">
           <div class="col-md-12">
-            <h4>Search with team</h4>
+            <h4>Select a Charter</h4>
           </div>
           <div class="col-md-12">
             <ul class="teams">
@@ -126,11 +126,21 @@
             }
           </div>
 
-          @if (lastCommentReceived() !== '' && lastCommentReceived() !== undefined) {
+          @if (lastCommentReceivedFromDirector() !== '' && lastCommentReceivedFromDirector() !==
+          undefined) {
 
-          <p>Comment:</p>
-          <p>{{ lastCommentReceived() }}</p>
-          } @if (directorCanComment()) {
+          <p class="director-pmo-comment">Director's Comment:</p>
+          <p>"{{ lastCommentReceivedFromDirector() }}"</p>
+          } 
+
+          @if (lastCommentReceivedFromPMO() !== '' && lastCommentReceivedFromPMO() !==
+          undefined) {
+
+          <p class="director-pmo-comment">PMO's Comment:</p>
+          <p>"{{ lastCommentReceivedFromPMO() }}"</p>
+          } 
+          
+          @if (directorOrPMOCanComment()) {
           <div formGroupName="commentForm">
             <div class="row">
               <div class="col">
@@ -198,25 +208,47 @@
                     [buttonDisable]="form.invalid"
                   ></stc-apps-button>
                 </div>
-                } @if(showApproveBtn() && !commentCheckbox()){
-                <div class="col-md-4">
-                  <stc-apps-button
-                    [buttonText]="'Approve'"
-                    [buttonType]="'primary'"
-                    [actionType]="'submit'"
-                    (btnClick)="approveFlow(true)"
-                  ></stc-apps-button>
-                </div>
-                } @if(showRejectBtn()){
+                } @if(showPMORejectBtn()){
                 <div class="col-md-4">
                   <stc-apps-button
                     [buttonText]="'Return'"
                     [buttonType]="'primary'"
                     [actionType]="'submit'"
-                    (btnClick)="approveFlow(false)"
+                    (btnClick)="approvePMO(false)"
+                    [buttonDisable]="form.invalid"
+                  ></stc-apps-button>
+                </div>
+                } @if(showPMOApprovalBtn() && !commentCheckbox()){
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Approve'"
+                    [buttonType]="'primary'"
+                    [actionType]="'submit'"
+                    (btnClick)="approvePMO(true)"
+                    [buttonDisable]="form.invalid"
+                  ></stc-apps-button>
+                </div>
+                }@if(showDirectorRejectBtn()){
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Return'"
+                    [buttonType]="'primary'"
+                    [actionType]="'submit'"
+                    (btnClick)="approveDirectorFlow(false)"
                   ></stc-apps-button>
                 </div>
                 }
+
+                @if(showDirectorApproveBtn() && !commentCheckbox()){
+                  <div class="col-md-4">
+                    <stc-apps-button
+                      [buttonText]="'Approve'"
+                      [buttonType]="'primary'"
+                      [actionType]="'submit'"
+                      (btnClick)="approveDirectorFlow(true)"
+                    ></stc-apps-button>
+                  </div>
+                  } 
               </div>
             </div>
           </div>
