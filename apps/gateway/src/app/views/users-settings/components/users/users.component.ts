@@ -94,6 +94,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.router.navigate(['./add-user'], { relativeTo: this.route });
   }
 
+  // Fetch the user list from the service
   getUsersListing() {
     this.userService.getUsers().subscribe((res) => {
       this.list = res.filter(
@@ -113,11 +114,12 @@ export class UsersComponent implements OnInit, AfterViewInit {
       this.getApproverUsersLength(res);
     });
   }
+
   searchFilter(event: Event) {
     const searchVal = (event.target as HTMLInputElement).value;
     this.dataSource.filter = searchVal.trim().toLowerCase();
   }
-
+  // Count the number of users with 'CREATORS' role
   getCreatorUsersLength(users: User[]) {
     const sys = this.userService.getCurrentSystem();
     const list: UserGroup[] = [];
@@ -131,6 +133,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.creatorUsers = list.length;
   }
 
+  // Count the number of users with 'APPROVERS' role
   getApproverUsersLength(users: User[]) {
     const sys = this.userService.getCurrentSystem();
     const list: UserGroup[] = [];
@@ -161,13 +164,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
     }
   }
 
+  // Handle the team dropdown change
   private handleTeamDropdownChange(value: Team | Role) {
     const isAllSelected = value.id.toString() === 'all';
     if (isAllSelected) {
       this.handleAllSelectedForTeamDropdown();
     } else {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-        console.log(this.selectedPrivilege);
         if (this.selectedPrivilege.id !== 0) {
           this.dataSource.data = this.list
             .filter((x) =>
@@ -193,10 +196,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   private handleAllSelectedForTeamDropdown() {
     if (this.selectedPrivilege.id !== 0) {
-      this.dataSource.data = this.list.filter(
-        (x) =>
-          this.userService.getUserPrivilege(x) ===
-          this.selectedPrivilege.groupName
+      this.dataSource.data = this.list.filter((x) =>
+        this.userService
+          .getUserPrivilege(x)
+          .includes(this.selectedPrivilege.groupName)
       );
     } else {
       this.dataSource.data = this.list;
@@ -232,9 +235,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
           .filter((x) => x.roleName == (value as Role).groupName);
       }
 
-      this.dataSource.data = this.list.filter(
-        (x) =>
-          this.userService.getUserPrivilege(x) === (value as Role)?.groupName
+      this.dataSource.data = this.list.filter((x) =>
+        this.userService
+          .getUserPrivilege(x)
+          .includes((value as Role)?.groupName)
       );
     }
   }

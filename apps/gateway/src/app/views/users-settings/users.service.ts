@@ -20,7 +20,7 @@ import {
 export class UsersService {
   endpoint = environment.apiUrl;
   allGroups: UserGroup[] = [];
-  allTeams: any[] = [];
+  allTeams: Team[] = [];
   labels: { label: string; text: string }[] = [];
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
@@ -69,8 +69,8 @@ export class UsersService {
       params: this.setSystemParam(),
     });
   }
-  getAllTeams(): Observable<UserGroup[]> {
-    return this.http.get<UserGroup[]>(`${this.endpoint}/teams`, {
+  getAllTeams(): Observable<Team[]> {
+    return this.http.get<Team[]>(`${this.endpoint}/teams`, {
       params: this.setSystemParam(),
     });
   }
@@ -142,12 +142,13 @@ export class UsersService {
   }
 
   // functions using in table to get columns data
-  getUserPrivilege(user: User): string {
+  getUserPrivilege(user: User): string[] {
     const sys = this.getCurrentSystem();
-    let privilege = '';
+    const privilege: string[] = [];
+
     _.forEach(user.userGroups, (group) => {
       if (group.roles[0].system.name === sys) {
-        privilege = group.roles[0].roleName;
+        privilege.push(group.roles[0].roleName);
       }
     });
     return privilege;
@@ -169,6 +170,13 @@ export class UsersService {
 
     return x;
   }
+
+  /**
+   * Finds the key in the provided object whose value matches the specified status.
+   * @param obj The object to search for the key-value pair.
+   * @param status The value to search for in the object's values.
+   * @returns The key associated with the matching value, or undefined if not found.
+   */
   getKeyByValue(
     obj: Record<string, string>,
     status: string

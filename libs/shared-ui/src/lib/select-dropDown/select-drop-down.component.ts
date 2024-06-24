@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
   Component,
   ContentChildren,
@@ -10,7 +9,7 @@ import {
   SimpleChanges,
   forwardRef,
 } from '@angular/core';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
@@ -36,9 +35,11 @@ export class SelectDropDownComponent<T>
   implements OnChanges
 {
   @ContentChildren(MatOption) queryOptions!: QueryList<MatOption>;
-  yet!: boolean;
 
   @Output() selectChange = new EventEmitter<any>();
+
+  yet!: boolean;
+
   @Input({ required: true }) label!: string;
   @Input() selectType: 'filter-select-box' | 'default' = 'default';
   @Input() options: any[] = [];
@@ -46,62 +47,36 @@ export class SelectDropDownComponent<T>
   @Input() labelValue = 'id';
   @Input() groupName = 'groupName';
   @Input() groupOptions = 'roles';
-  @Input() labelSize: number = 18;
+  @Input() labelSize = 18;
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;
   @Input() outputValue!: string; // if passed, the component should output this value from the object
   @Input() group = false;
   @Input() multi = false;
-
-  onChangeValue(value: any) {
-    if (this.outputValue) {
-      this.selectChange.emit(value[this.outputValue] || value);
-    } else {
-      this.selectChange.emit(value);
-    }
-  }
-  // pokemonGroups: any[] = [
-  //   {
-  //     name: 'Grass',
-  //     pokemon: [
-  //       { value: 'bulbasaur-0', viewValue: 'Bulbasaur' },
-  //       { value: 'oddish-1', viewValue: 'Oddish' },
-  //       { value: 'bellsprout-2', viewValue: 'Bellsprout' },
-  //     ],
-  //   },
-  //   {
-  //     name: 'Water',
-  //     pokemon: [
-  //       { value: 'squirtle-3', viewValue: 'Squirtle' },
-  //       { value: 'psyduck-4', viewValue: 'Psyduck' },
-  //       { value: 'horsea-5', viewValue: 'Horsea' },
-  //     ],
-  //   },
-  //   {
-  //     name: 'Fire',
-  //     disabled: true,
-  //     pokemon: [
-  //       { value: 'charmander-6', viewValue: 'Charmander' },
-  //       { value: 'vulpix-7', viewValue: 'Vulpix' },
-  //       { value: 'flareon-8', viewValue: 'Flareon' },
-  //     ],
-  //   },
-  //   {
-  //     name: 'Psychic',
-  //     pokemon: [
-  //       { value: 'mew-9', viewValue: 'Mew' },
-  //       { value: 'mewtwo-10', viewValue: 'Mewtwo' },
-  //     ],
-  //   },
-  // ];
+  override control = new FormControl();
+  selectedValue: any;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options']) {
-      this.options = changes['options'].currentValue;
+      this.options = changes['options'].currentValue || [];
       if (this.defaultAll) {
-        this.options?.unshift({ id: 'all', [this.labelName]: '-' });
+        this.options.unshift({
+          id: 'all',
+          [this.labelName]: '-',
+        } as unknown as Option);
       }
     }
+    if (this.defaultAll && this.options.length > 0) {
+      this.selectedValue = this.options[0][this.labelValue];
+    } else {
+      this.selectedValue = this.selectId;
+    }
+  }
+
+  onChangeValue(value: any): void {
+    const output = this.outputValue ? value[this.outputValue] || value : value;
+    this.selectChange.emit(output);
+    this.selectedValue = value;
   }
 }

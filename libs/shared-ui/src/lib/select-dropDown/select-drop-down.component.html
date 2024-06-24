@@ -3,7 +3,7 @@
       *ngIf="control.errors"> *</mat-error></label>
   <mat-form-field *ngIf="!group">
     <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
-      [(value)]="defaultAll ? options ? options[0] : '' : selectId" [multiple]="multi">
+      [(value)]="selectedValue" [multiple]="multi">
       <mat-option *ngFor="let option of options"
         [value]="multi ? option[labelValue]: outputValue ? option[outputValue]: option">
         {{ option[labelName] }}
