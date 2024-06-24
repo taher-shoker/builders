@@ -19,36 +19,40 @@ export class HomeComponent implements OnInit {
     private agentService: AgentService
   ) {}
   ngOnInit(): void {
-    if (this.cookieService.get('granted-systems')) {
-      if (
-        (JSON.parse(this.cookieService.get('granted-systems') || '').length ==
-          0 ||
-          this.apps.length == 0) &&
-        !this.authService.isAdminUser()
-      ) {
-        this.authService.getUserData();
-      }
-    } else {
-      this.authService.getUserData();
-    }
-
+    this.checkAndFetchUserData();
     this.getGrantedSystems();
   }
 
-  getGrantedSystems() {
-    if (this.apps.length == 0 && this.isGrantedSystemSettled()) {
-      this.apps = this.authService.handleUserSystems();
-      if (this.agentService.isAgentFromMobileDevice()) {
-        this.apps = this.apps.filter(
-          (x) =>
-            !x.displayName?.includes('DT') && !x.displayName?.includes('Fraud')
-        );
-      }
+  private checkAndFetchUserData(): void {
+    const grantedSystemsExist = this.cookieService.get('granted-systems');
+    const isAdminUser = this.authService.isAdminUser();
+
+    if (!grantedSystemsExist || (grantedSystemsExist && !isAdminUser)) {
+      this.authService.getUserData();
     }
-    return this.isGrantedSystemSettled();
   }
 
-  isGrantedSystemSettled(): boolean {
-    return this.cookieService.get('granted-systems') != undefined;
+  getGrantedSystems(): void {
+    const grantedSystemsExist = this.cookieService.get('granted-systems');
+
+    if (this.apps.length === 0 && grantedSystemsExist) {
+      this.apps = this.authService.handleUserSystems();
+
+      if (this.agentService.isAgentFromMobileDevice()) {
+        this.filterAppsForMobile();
+      }
+    }
+  }
+
+  private filterAppsForMobile(): void {
+    this.apps = this.apps.filter(
+      (app) =>
+        !app.displayName?.includes('DT') && !app.displayName?.includes('Fraud')
+    );
+    console.log(this.apps);
+  }
+
+  public isGrantedSystemSettled(): boolean {
+    return !!this.cookieService.get('granted-systems');
   }
 }

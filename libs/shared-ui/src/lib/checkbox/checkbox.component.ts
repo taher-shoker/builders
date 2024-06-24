@@ -1,4 +1,10 @@
-import { Component, Input, forwardRef } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  forwardRef,
+} from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
@@ -18,8 +24,10 @@ export class CheckboxComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() label!: string;
   @Input() required!: boolean;
   @Input() disabled = false;
+  @Input({ required: true }) name!: string;
+  @Output() selectChange = new EventEmitter<any>();
 
   onChangeValue(value: any) {
-    console.log(value);
+    this.selectChange.emit({ name: value.source.name, value: value.checked });
   }
 }
