@@ -16,7 +16,7 @@ import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.c
 })
 export class ExpansionPanelBodyComponent {
   percentage: InputSignal<number> = input(0);
-
+  kpiCode: InputSignal<string> = input('');
   listItems = [
     {
       section: 'left',

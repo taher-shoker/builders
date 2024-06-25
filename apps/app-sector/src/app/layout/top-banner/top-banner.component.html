@@ -6,19 +6,21 @@
         <div class="d-flex">
           <h4>{{ 'welcome_back' | translate }}</h4>
           <p class="userName">{{ userName() }}</p>
-          <img src="assets/images/Waving Hand.svg" alt="">
+          <img src="assets/images/Waving Hand.svg" alt="" />
         </div>
 
         <p>{{ 'welcome_back_msg' | translate }}</p>
       </div>
+      @if (showScorecard) {
       <h1 class="py-2">{{ 'scorecard_report' | translate }}</h1>
       <stc-apps-result-score
         [percentage]="74.91"
         [title]="title"
       ></stc-apps-result-score>
+      }
     </div>
   </div>
-
+  @if (showScorecard) {
   <div class="col-md-6 col-sm-12">
     <div class="banner_filter">
       <stc-apps-select-drop-down
@@ -38,4 +40,5 @@
       ></stc-apps-select-drop-down>
     </div>
   </div>
+  }
 </div>
