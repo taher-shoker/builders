@@ -148,7 +148,14 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   getRoles() {
-    this.privilege = this.userService.getRoles();
+    this.privilege = this.userService
+      .getRoles()
+      .filter(
+        (r) =>
+          r.groupName !== 'DT_VP_Dashboard_Viewer' &&
+          r.groupName !== 'DT_VP_Dashboard_Editor' &&
+          r.groupName !== 'PMO'
+      );
   }
 
   getTeams() {

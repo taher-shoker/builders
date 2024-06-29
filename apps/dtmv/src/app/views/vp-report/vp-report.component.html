@@ -8,13 +8,8 @@
         <div class="col-md-3" [formGroup]="filterSelect">
           <div class="d-flex flex-wrap align-items-center">
             <span class="label">Year:</span>
-            <stc-apps-select-drop-down
-              formControlName="dateType"
-              [label]="''"
-              [options]="yearsArr"
-              (selectChange)="handleSelectChange($event)"
-              [outputValue]="'name'"
-            ></stc-apps-select-drop-down>
+            <stc-apps-select-drop-down formControlName="dateType" [label]="''" [options]="yearsArr"
+              (selectChange)="handleSelectChange($event)" [outputValue]="'name'"></stc-apps-select-drop-down>
           </div>
         </div>
       </div>
@@ -25,10 +20,7 @@
         <div class="col-md-12">
           <ul class="teams">
             @for(team of allTeams; track team){
-            <li
-              (click)="selectTeam(team.name)"
-              [ngClass]="selectedTeam() === team.name ? 'active' : ''"
-            >
+            <li (click)="selectTeam(team.name)" [ngClass]="selectedTeam() === team.name ? 'active' : ''">
               {{ team.name }}
             </li>
             }
@@ -39,14 +31,8 @@
         <div class="col-md-4">
           <div class="container-box">
             <h5>Milestone Progress</h5>
-            <div
-              class="progress-circule"
-              role="progresscircule"
-              [style]="'--value:' + milestoneProgress()"
-            >
-              <span class="circle-content"
-                >{{ milestoneProgress() || 0 }}%</span
-              >
+            <div class="progress-circule" role="progresscircule" [style]="'--value:' + milestoneProgress()">
+              <span class="circle-content">{{ milestoneProgress() || 0 }}%</span>
             </div>
           </div>
         </div>
@@ -54,9 +40,7 @@
           <div class="container-box">
             <h5>GCoS DT Progress</h5>
             <div class="bar-holder">
-              <stc-apps-progress-bar
-              [data]="progressBarData()"
-            ></stc-apps-progress-bar>
+              <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
             </div>
           </div>
         </div>
@@ -82,18 +66,15 @@
           <div class="legend-circle legend-circle-delayed"></div>
           <span class="legend-name legend-name-delayed">Delayed</span>
 
-          
+
           <div class="legend-circle legend-circle-at-risk"></div>
           <span class="legend-name legend-name-at-risk">At Risk</span>
         </div>
         <div class="chart-holder">
-          <stc-apps-timeline-chart
-            [dtStream]="dtStream"
-            [streamYear]="streamsYear()"
-            [animateMilestones]="true"
-          ></stc-apps-timeline-chart>
+          <stc-apps-timeline-chart [dtStream]="dtStream" [streamYear]="streamsYear()"
+            [animateMilestones]="true"></stc-apps-timeline-chart>
         </div>
-        <!-- 
+        <!--
           @if (i + 1 !== dtStreams().length) {
           <div class="chart-liner"></div>
           } -->
@@ -106,26 +87,20 @@
           <p class="highlight-title">
             DT Program Highlight
 
-            <span class="edit-link" (click)="goEditPage()">Edit</span>
+            <span class="edit-link" *ngIf="!milestonesService.isBusinessSpoc" (click)="goEditPage()">Edit</span>
           </p>
-          <quill-editor
-            [readOnly]="true"
-            [modules]="{ toolbar: false }"
-            [ngModel]="reportData()?.highlight || '&nbsp;'"
-          ></quill-editor>
+          <quill-editor [readOnly]="true" [modules]="{ toolbar: false }"
+            [ngModel]="reportData()?.highlight || '&nbsp;'"></quill-editor>
           <!-- <div [innerHTML]="reportData()?.highlight"></div> -->
         </div>
         <div class="col report-col">
           <p class="impact-title">
             Value / Impact
 
-            <span class="edit-link" (click)="goEditPage()">Edit</span>
+            <span class="edit-link" *ngIf="!milestonesService.isBusinessSpoc" (click)="goEditPage()">Edit</span>
           </p>
-          <quill-editor
-            [readOnly]="true"
-            [modules]="{ toolbar: false }"
-            [ngModel]="reportData()?.valueImpact || '&nbsp;'"
-          ></quill-editor>
+          <quill-editor [readOnly]="true" [modules]="{ toolbar: false }"
+            [ngModel]="reportData()?.valueImpact || '&nbsp;'"></quill-editor>
           <!-- <div [innerHTML]="reportData()?.valueImpact"></div> -->
         </div>
       </div>

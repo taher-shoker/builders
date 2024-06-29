@@ -32,9 +32,8 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  getGrantedSystems(): void {
+  getGrantedSystems() {
     const grantedSystemsExist = this.cookieService.get('granted-systems');
-
     if (this.apps.length === 0 && grantedSystemsExist) {
       this.apps = this.authService.handleUserSystems();
 
@@ -42,6 +41,7 @@ export class HomeComponent implements OnInit {
         this.filterAppsForMobile();
       }
     }
+    return this.isGrantedSystemSettled();
   }
 
   private filterAppsForMobile(): void {
@@ -49,7 +49,6 @@ export class HomeComponent implements OnInit {
       (app) =>
         !app.displayName?.includes('DT') && !app.displayName?.includes('Fraud')
     );
-    console.log(this.apps);
   }
 
   public isGrantedSystemSettled(): boolean {
