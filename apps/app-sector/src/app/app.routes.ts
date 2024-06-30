@@ -3,19 +3,18 @@ import { WelcomePageComponent } from './views/welcome-page/welcome-page.componen
 import { LayoutComponent } from './layout/layout.component';
 
 export const appRoutes: Route[] = [
-   { path: '', redirectTo: 'home', pathMatch: 'full' },
+  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
     path: '',
     component: LayoutComponent,
     children: [
-
       {
         path: 'home',
         loadChildren: () =>
           import('./views/home/home.module').then((m) => m.HomeModule),
       },
       {
-        path: 'details',
+        path: 'details/:kpiCode',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
       },

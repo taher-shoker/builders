@@ -6,10 +6,9 @@ import { Component, InputSignal, input } from '@angular/core';
   styleUrl: './expansion-panel-header.component.scss',
 })
 export class ExpansionPanelHeaderComponent {
-  status: InputSignal<any> = input('On track');
-  kpisCode: InputSignal<any> = input('KPI Code : APS 1-2023');
-  projectHeader: InputSignal<any> = input('STC KSA Epit');
-  direction: InputSignal<any> = input('Increasing');
-  function: InputSignal<any> = input('Linear 2X');
-
+  status: InputSignal<any> = input('');
+  kpisCode: InputSignal<any> = input('');
+  projectHeader: InputSignal<any> = input('');
+  direction: InputSignal<any> = input('');
+  function: InputSignal<any> = input('');
 }

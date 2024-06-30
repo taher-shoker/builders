@@ -3,6 +3,7 @@
 .card {
   border: 1px solid rgba($blackColor, 0.1);
   padding: 12px 16px;
+  background-color: $whiteColor;
 
   &_title {
     color: rgba($blackColor, 0.4);
