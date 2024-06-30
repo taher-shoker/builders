@@ -1,0 +1,29 @@
+<div class="comments">
+  <div class="comments_form">
+    <div class="comments_form_header">
+      <h3>{{ title() }}</h3>
+      <img src="assets/images/chat.svg" />
+    </div>
+    <div class="comments_form_content">
+      <div
+        #contentEditable
+        contenteditable="true"
+        class="comments_form_editor"
+        (input)="onInput($event)"
+        (keyup)="onKeyUp($event)"
+      ></div>
+    </div>
+  </div>
+  @if (showDropdown) {
+  <ul #mentionList class="comments_mentions">
+    @for (item of filteredList; track item; let index = $index) {
+    <li
+      (click)="addMention(item)"
+      [ngClass]="{ active: index === activeMentionIndex }"
+    >
+      {{ item }}
+    </li>
+    }
+  </ul>
+  }
+</div>
