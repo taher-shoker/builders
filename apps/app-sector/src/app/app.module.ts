@@ -15,6 +15,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from './layout/layout.module';
 import { DetailsModule } from './views/details/details.module';
 import { WelcomePageModule } from './views/welcome-page/welcome-page.module';
+import { DatePipe } from '@angular/common';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -43,13 +44,15 @@ export const provideTranslation = () => ({
     ToastrModule.forRoot(),
     CookieModule.withOptions(),
     LayoutModule,
-    WelcomePageModule
+    WelcomePageModule,
   ],
   providers: [
     importProvidersFrom([
       HttpClientModule,
       TranslateModule.forRoot(provideTranslation()),
+     
     ]),
+    DatePipe,
   ],
   bootstrap: [AppComponent],
 })

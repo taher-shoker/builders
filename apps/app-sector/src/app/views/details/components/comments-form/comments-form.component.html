@@ -1,4 +1,5 @@
 <div class="comments">
+  <stc-apps-replies-section></stc-apps-replies-section>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="comments_form">
       <div class="comments_form_header">
@@ -6,7 +7,11 @@
         <!-- <img src="assets/images/chat.svg" /> -->
       </div>
       <div class="comments_form_content">
-        <textarea formControlName="comment" placeholder="Enter Comment Here..." rows="16.5"></textarea>
+        <textarea
+          formControlName="comment"
+          placeholder="Enter Comment Here..."
+          rows="16.5"
+        ></textarea>
       </div>
     </div>
     <div class="comments_actions">
@@ -16,7 +21,7 @@
         Add Attachment
       </button>
     </div>
-  
+
     <input
       type="file"
       #fileInput
@@ -24,4 +29,5 @@
       style="display: none"
     />
   </form>
+ 
 </div>

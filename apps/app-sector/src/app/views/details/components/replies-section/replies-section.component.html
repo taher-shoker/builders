@@ -1,0 +1,37 @@
+<section class="replies-section">
+  <div class="replies-section_totalComments">{{ totalComments }} Comments</div>
+  @if(totalComments!==0){
+  <div class="replies-section_holder">
+    @for (comment of commentsList; let parentLoop=$index;track parentLoop;) {
+    <stc-apps-profile
+      [name]="comment.name"
+      [comment]="comment.comment"
+      [time]="comment.time"
+      [lastItem]="parentLoop === commentsList.length - 1 ? true : false"
+      [hasReplies]="comment.replies ? true : false"
+      [reply]="false"
+      (commentActionName)="handleCommentActions($event, parentLoop)"
+    ></stc-apps-profile>
+    <div *ngIf="comment.replies && comment.replies.length > 0">
+      <div class="replies">
+        @for (reply of comment.replies; track $index) {
+        <stc-apps-profile
+          [name]="reply.name"
+          [comment]="reply.comment"
+          [time]="reply.time"
+          [lastItem]="
+            $index === comment.replies.length - 1 &&
+            parentLoop === commentsList.length - 1
+              ? true
+              : false
+          "
+          [reply]="true"
+          (replyActionName)="handleReplyActions($event, parentLoop, $index)"
+        ></stc-apps-profile>
+        }
+      </div>
+    </div>
+    }
+  </div>
+  }
+</section>
