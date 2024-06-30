@@ -114,13 +114,6 @@
                 <p class="cell-value">{{ milestoneDetails.status ?? '-' }}</p>
               </div>
 
-              <!-- <div class="col-12">
-                  <p class="cell-name">{{ 'last_update' | translate }}</p>
-                  <p class="cell-value">
-                    {{ milestoneDetails.lastModifiedDate | date : 'dd/MM/YY?? '-'YY' }}
-                  </p>
-                </div> -->
-
               <div class="col-12">
                 <p class="cell-name">{{ 'team_name' | translate }}</p>
                 <p class="cell-value">{{ milestoneDetails.teamName ?? '-' }}</p>
@@ -164,12 +157,6 @@
                   }}
                 </p>
               </div>
-              <!-- <div class="col-12">
-                  <p class="cell-name">{{ 'created_at' | translate }}</p>
-                  <p class="cell-value">
-                    {{ milestoneDetails.createdDate | date : 'dd/MM/YYYY' }}
-                  </p>
-                </div> -->
 
               <div class="col-12">
                 <p class="cell-name">Target Completion Level</p>
@@ -247,14 +234,13 @@
                         <div>
                           <p class="m-0" style="font-weight: bold">
                             Milestone progress updated
-                            <span [ngStyle]="{
-                                color:
-                                  historyItemInitialStep?.status === 'Delayed'
-                                    ? 'red'
-                                    : status === 'Completed'
-                                    ? 'green'
-                                    : 'orange'
-                              }">({{ historyItemInitialStep?.status }})</span>
+                            <span [ngClass]="{
+                              'completed-status': status === 'Completed',
+                              'delayed-status': status === 'Delayed',
+                              'on-track-status': status === 'On Track',
+                              'at-risk-status': status === 'At Risk',
+                              'planned-status': status === 'Planned'
+                            }">({{ historyItemInitialStep?.status }})</span>
                           </p>
                         </div>
                       </ng-template>
