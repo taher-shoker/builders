@@ -8,7 +8,25 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class CommentsFormComponent implements OnInit {
   @ViewChild('fileInput') fileInput!: ElementRef;
+  @ViewChild('contenteditableDiv')
+  contenteditableDiv!: ElementRef<HTMLDivElement>;
+  @ViewChild('mentionList') mentionList!: ElementRef<HTMLUListElement>;
+
   form: FormGroup = new FormGroup({});
+  uploadedFiles: File[] = [];
+  accept = [
+    'image/png',
+    'image/jpeg',
+    'image/jpg',
+    'application/pdf',
+    'text/csv',
+    'text/plain',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    'application/vnd.ms-excel',
+  ];
+
+  mentions: string[] = ['John', 'Jane', 'Doe', 'Smith'];
+  placeholder = 'Enter text here...';
 
   constructor(private fb: FormBuilder) {}
 
@@ -19,7 +37,7 @@ export class CommentsFormComponent implements OnInit {
   handleForm() {
     this.form = this.fb.group({
       comment: this.fb.control('', [Validators.required]),
-      attachment: this.fb.control([], [Validators.required]),
+      attachments: this.fb.control([], [Validators.required]),
     });
   }
 
@@ -30,15 +48,62 @@ export class CommentsFormComponent implements OnInit {
   onFileSelected(event: Event) {
     const input = event.target as HTMLInputElement;
     if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      console.log('Selected file:', file);
+      const filesArray = Array.from(input.files);
+      const existingFileNames = new Set(
+        this.uploadedFiles.map((file) => file.name)
+      );
+      const uniqueFiles = filesArray.filter(
+        (file) => !existingFileNames.has(file.name)
+      );
+
+      this.uploadedFiles = this.uploadedFiles.concat(uniqueFiles);
+
+      // console.log('Selected files:', this.uploadedFiles);
       this.form.patchValue({
-        attachment: file,
+        attachments: this.uploadedFiles,
       });
+      input.value = '';
     }
   }
 
+  downloadFile(file: any) {
+    const url = URL.createObjectURL(file);
+    const anchor = document.createElement('a');
+    anchor.href = url;
+    anchor.download = file.name;
+    document.body.appendChild(anchor);
+    anchor.click();
+    document.body.removeChild(anchor);
+    URL.revokeObjectURL(url);
+  }
+
+  deleteFile(index: number) {
+    this.uploadedFiles?.splice(index, 1);
+  }
+
+  // onDeleteFile(id: number) {
+  //   this.uploadedFiles = this.uploadedFiles.filter((x: any) => x.id !== id);
+  //   this.form.get('attachments')?.setValue(this.uploadedFiles);
+  // }
+
+  onContentChange(content: string) {
+    const mentionsArray = this.extractMentions(content);
+    this.form.get('comment')?.setValue(content.trim());
+    // console.log('Mentions:', mentionsArray);
+    // console.log('Content:', content);
+  }
+
+  extractMentions(text: string): string[] {
+    const mentionPattern = /@(\w+)/g;
+    const mentions: string[] = [];
+    let match;
+    while ((match = mentionPattern.exec(text)) !== null) {
+      mentions.push(match[1]);
+    }
+    return mentions;
+  }
+
   onSubmit() {
-    console.log('Form Data:', this.form.value);
+    // console.log('Form Data:', this.form.value);
   }
 }

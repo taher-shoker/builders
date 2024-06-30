@@ -1,34 +1,7 @@
 @import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
+@import '../../../../../../../../libs/styles/src/scss/core/variables/fonts';
 
 .comments {
-    &_form {
-        border: 1px solid rgba($blackColor, 0.1);
-        padding: 20px 16px;
-        display: flex;
-        flex-direction: column;
-        gap: 24px;
-
-        &_header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid $semiGreyColor;
-            padding-bottom: 20px;
-        }
-
-        &_content {
-            textarea {
-                width: 100%;
-                background: transparent;
-                border: none;
-
-                &:focus-visible {
-                    outline: none;
-                }
-            }
-        }
-
-    }
-
     &_actions {
         display: flex;
         justify-content: space-between;
@@ -44,14 +17,53 @@
                 background: $stcCoralColor;
                 color: $whiteColor;
                 border-radius: 8px;
+
                 &:disabled {
                     opacity: 0.4;
                 }
             }
 
-           img {
-            margin-inline-end: 9px;
-           }
+            img {
+                margin-inline-end: 9px;
+            }
         }
+    }
+
+    &_attachments {
+        margin-top: 2rem;
+
+        &_item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid var(--stc-color);
+
+            span {
+                font-family: 'stc forward-light';
+                font-size: 15px;
+                display: inline-block;
+                max-width: 10rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-inline-end: 8px;
+            }
+
+            button {
+                width: auto;
+                max-width: 1rem;
+
+                &:active {
+                    border: none;
+                }
+
+                i {
+                    &:focus-visible {
+                        outline: none;
+                    }
+                }
+            }
+        }
+
     }
 }

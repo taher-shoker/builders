@@ -1,27 +1,56 @@
 <div class="comments">
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
-    <div class="comments_form">
-      <div class="comments_form_header">
-        <h3>Add Your Comments</h3>
-        <img src="assets/images/chat.svg" />
-      </div>
-      <div class="comments_form_content">
-        <textarea formControlName="comment" placeholder="Enter Text Here..." rows="16.5"></textarea>
-      </div>
-    </div>
+    <stc-apps-comment-editor
+      formControlName="comment"
+      [placeholder]="placeholder"
+      title="Add Your Comments"
+      [mentions]="mentions"
+      (contentChange)="onContentChange($event)"
+    ></stc-apps-comment-editor>
+
     <div class="comments_actions">
-      <button [disabled]="form.invalid">Submit</button>
+      <button [disabled]="form.controls['comment'].hasError('required')">
+        Submit
+      </button>
+      <!-- <stc-apps-file-uploader [multiple]="true" [chooseLabel]="'add_attachment'"
+      (onformchange)="onUploadFile($event)" [attachmentFiles]="this.form.controls['attachments'].value"
+      formControlName="attachments" [isLoading]="isLoading"
+      (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader> -->
       <button (click)="triggerFileInput()">
         <img src="assets/images/attach-square.svg" />
         Add Attachment
       </button>
     </div>
-  
+
+    <div class="comments_attachments">
+      <div class="row row-gap-3">
+        @for(file of uploadedFiles; track file; let index = $index) {
+        <div class="col-lg-3 col-md-4 col-sm-6">
+          <div class="comments_attachments_item px-2">
+            <span>
+              {{ file.name }}
+            </span>
+            <div class="d-flex">
+              <button class="btn" (click)="downloadFile(file)">
+                <i class="fas fa-arrow-alt-circle-down"></i>
+              </button>
+              <button class="btn" (click)="deleteFile(index)">
+                <i class="fas fa-times-circle"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
     <input
       type="file"
       #fileInput
       (change)="onFileSelected($event)"
       style="display: none"
+      [accept]="accept"
+      multiple
     />
   </form>
 </div>
