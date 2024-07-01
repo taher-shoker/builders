@@ -26,7 +26,7 @@ export class CommentsFormComponent implements OnInit {
   ];
 
   mentions: string[] = ['John', 'Jane', 'Doe', 'Smith'];
-  placeholder = 'Enter text here...';
+  placeholder = 'Enter Comment Here...';
 
   constructor(private fb: FormBuilder) {}
 

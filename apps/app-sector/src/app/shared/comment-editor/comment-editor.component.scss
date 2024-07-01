@@ -34,6 +34,11 @@
       white-space: pre-wrap;
       word-wrap: break-word;
 
+      &:empty:before {
+        content: attr(data-placeholder);
+        color: $darkGreyColor;
+      }
+
       &:focus-visible {
         outline: none;
       }

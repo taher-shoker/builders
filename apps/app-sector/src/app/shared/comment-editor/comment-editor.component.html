@@ -8,6 +8,7 @@
       <div
         #contentEditable
         contenteditable="true"
+        [attr.data-placeholder]="placeholder()"
         class="comments_form_editor"
         (input)="onInput($event)"
         (keyup)="onKeyUp($event)"
