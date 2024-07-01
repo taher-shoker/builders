@@ -81,7 +81,7 @@ export class CommentEditorComponent implements AfterViewInit {
 
     if (mentionIndex > -1) {
       const query = textBeforeCursor.slice(mentionIndex + 1).toLowerCase();
-      this.filteredList = this.mentions().filter((mention: string) =>
+      this.filteredList = this.mentions().filter((mention:any) =>
         mention.toLowerCase().includes(query)
       );
       if (this.filteredList.length > 0) {
@@ -187,7 +187,7 @@ export class CommentEditorComponent implements AfterViewInit {
         filter((query) => query !== null)
       )
       .subscribe((query) => {
-        this.filteredList = this.mentions().filter((mention: string) =>
+        this.filteredList = this.mentions().filter((mention: any) =>
           mention.toLowerCase().includes(query!)
         );
       });

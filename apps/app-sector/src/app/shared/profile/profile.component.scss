@@ -1,0 +1,59 @@
+@import '../../../../../../libs/styles/src/scss/core/variables/fonts';
+@import '../../../../../../libs/styles/src/scss/core/variables/colors';
+
+.profile-content {
+  &_avatar {
+    width: 15%;
+  }
+  &_name {
+    margin-left: 10px;
+    font-family: 'stc forward-regular';
+    color: $darkerPurbleColor;
+    font-weight: 600;
+    font-size: 18px;
+  }
+  &_desc {
+    padding: 6px 0px 0px 12px;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  &_line {
+    border: 1px solid $mediumGrey;
+    margin: 12px 0px 12px 12px;
+  }
+  &_line-reply {
+    border: 1px solid $mediumGrey;
+    margin: 12px 0px 12px 120px;
+  }
+  &_time {
+    text-align: end;
+    padding: 12px 24px 0px 0px;
+    color: $mediumGrey;
+    font-weight: 400;
+    font-size: 14px;
+  }
+  .actions-holder {
+    margin-left: 60px;
+    .action-btns {
+      margin-right: 12px;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 24px;
+      color: $mediumGrey;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+  }
+  .actions-reply-holder {
+    margin-left: 170px;
+    .action-btns {
+      margin-right: 12px;
+      font-weight: 400;
+      font-size: 14px;
+      line-height: 24px;
+      color: $mediumGrey;
+      margin-top: 12px;
+      cursor: pointer;
+    }
+  }
+}

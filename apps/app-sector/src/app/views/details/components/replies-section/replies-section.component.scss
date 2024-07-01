@@ -1,0 +1,17 @@
+@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
+.replies-section {
+  &_totalComments {
+    font-weight: 600;
+    font-size: 20px;
+    margin-bottom: 28px;
+    line-height: 20px;
+    color: $semiBlackColor;
+  }
+  &_holder {
+    border: 1px solid $semiGreyColor;
+    border-radius: 6px;
+    margin-bottom: 28px;
+    max-height: 380px;
+    overflow: auto;
+  }
+}

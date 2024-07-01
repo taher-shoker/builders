@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-
 import { appRoutes } from './details.routes';
 import { DetailsComponent } from './details.component';
 import { SharedModule } from '../../shared/shared.module';
@@ -8,11 +7,31 @@ import { DetailsCardComponent } from './components/details-card/details-card.com
 import { CommentsFormComponent } from './components/comments-form/comments-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
 
-const components = [DetailsComponent, DetailsCardComponent, CommentsFormComponent];
-const modules = [SharedModule, ReactiveFormsModule, RouterModule.forChild(appRoutes)];
+import { RepliesSectionComponent } from './components/replies-section/replies-section.component';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialogeComponent } from './components/mat-dialoge/mat-dialoge.component';
+
+const components = [
+  DetailsComponent,
+  DetailsCardComponent,
+  CommentsFormComponent,
+  MatDialogeComponent,
+  RepliesSectionComponent,
+];
+const modules = [
+  MatDialogTitle,
+  MatDialogClose,
+  MatDialogActions,
+  MatDialogContent,
+  MatButtonModule,
+  SharedModule,
+  ReactiveFormsModule,
+  RouterModule.forChild(appRoutes),
+];
 
 @NgModule({
-  declarations: [...components],
+  declarations: [...components ],
   imports: [...modules],
 })
 export class DetailsModule {}

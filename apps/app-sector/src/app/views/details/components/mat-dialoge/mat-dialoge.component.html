@@ -1,0 +1,8 @@
+<div class="mat-dialoge">
+    <h2 mat-dialog-title>Delete Comment</h2>
+    <mat-dialog-content> Would you like to delete this comment? </mat-dialog-content>
+    <mat-dialog-actions class="justify-content-end">
+      <button mat-button mat-dialog-close>Cancel</button>
+      <button mat-button  (click)="delete()" cdkFocusInitial>Confirm</button>
+    </mat-dialog-actions>
+  </div>
