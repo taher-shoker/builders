@@ -1,6 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
@@ -33,8 +40,10 @@ export interface Milestone {
   templateUrl: './milestones.component.html',
   styleUrls: ['./milestones.component.scss'],
 })
-export class MilestonesComponent implements OnInit, OnDestroy {
-  @ViewChild('customTemplate') customTemplate!: any;
+export class MilestonesComponent implements OnInit, AfterViewInit, OnDestroy {
+  @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
+  @ViewChild('validationCustomTemplate') validationCustomTemplate!: any;
+  @ViewChild('progressCustomTemplate') progressCustomTemplate!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -58,6 +67,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     { statusName: 'Closed' },
   ];
 
+  inValidationOption: { name: string; value: string }[] = [
+    { name: '-', value: '-' },
+    { name: 'In Validation', value: 'In-Validation' },
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -77,60 +91,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   addMilestoneNavigate(): void {
     this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
-  columnsSchema: ColumnsSchema[] = [
-    {
-      key: 'activityName',
-      type: 'text',
-      label: 'Activity',
-    },
-    {
-      key: 'milestoneName',
-      type: 'text',
-      label: 'Milestone Name',
-      // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
-      //   return `
-      //   <p>${item[header!.key]}</p>
-      //   <p>${item[header!.key]} mixed complex</p>
-      //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
-      //   `;
-      // },
-      complexView: true,
-      // complexViewTemp: this.customTemplate
-    },
-    {
-      key: 'completionLevel',
-      type: 'text',
-      label: 'Completion Level',
-    },
-    {
-      key: 'latestWorkflowId',
-      type: 'custom',
-      label: 'Validation Status',
-    },
-    {
-      key: 'teamName',
-      type: 'text',
-      label: 'Team',
-    },
-    {
-      key: 'status',
-      type: 'text',
-      label: 'Status',
-      complexView: true,
-    },
-
-    {
-      key: 'actions',
-      type: 'actions',
-      actions: !this.milestonesService.checkIsAdmin()
-        ? this.milestonesService.checkIsBusinessSpoc() ||
-          this.milestonesService.checkIsDirector()
-          ? ['details']
-          : ['edit', 'details']
-        : ['edit', 'delete', 'details'],
-      label: '',
-    },
-  ];
+  columnsSchema: ColumnsSchema[] = [];
 
   disabled = false;
   tableData!: any;
@@ -156,6 +117,71 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+  }
+
+  ngAfterViewInit(): void {
+    this.columnsSchema = [
+      {
+        key: 'teamName',
+        type: 'text',
+        label: 'Team',
+      },
+      {
+        key: 'workStream',
+        type: 'text',
+        label: 'Work Stream',
+      },
+      {
+        key: 'milestoneName',
+        type: 'text',
+        label: 'Milestone Name',
+      },
+      {
+        key: 'completionLevel',
+        type: 'text',
+        label: 'Completion Level',
+      },
+      {
+        key: 'validationStatus',
+        type: 'text',
+        label: 'Validation Status',
+        complexViewTemp: this.validationCustomTemplate,
+      },
+      {
+        key: 'lastApprovedProgress',
+        type: 'text',
+        label: 'Progress',
+        complexViewTemp: this.progressCustomTemplate,
+      },
+      {
+        key: 'startDate',
+        type: 'text',
+        label: 'Start Date',
+      },
+      {
+        key: 'endDate',
+        type: 'text',
+        label: 'End Date',
+      },
+      {
+        key: 'status',
+        type: 'text',
+        label: 'Status',
+        complexViewTemp: this.statusCustomTemplate,
+      },
+
+      {
+        key: 'actions',
+        type: 'actions',
+        actions: !this.milestonesService.checkIsAdmin()
+          ? this.milestonesService.checkIsBusinessSpoc() ||
+            this.milestonesService.checkIsDirector()
+            ? ['details']
+            : ['edit', 'details']
+          : ['edit', 'delete', 'details'],
+        label: '',
+      },
+    ];
   }
 
   getPendingTasks() {
@@ -194,10 +220,26 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     }
   }
 
-  detailsNavigate(id: string | number) {
-    this.router.navigate(['./milestone_details', id], {
-      relativeTo: this.route,
-    });
+  detailsNavigate(item: any) {
+    if (item.flowName === 'DT_VP_Report_Data_Approval') {
+      this.router.navigate(['../vp-report/edit'], {
+        relativeTo: this.route,
+        queryParams: {
+          team: item.requestParams.team,
+          year: item.requestParams.year,
+        },
+      });
+    } else {
+      let id;
+      if (item.externalSystemId) {
+        id = item.externalSystemId;
+      } else {
+        id = item;
+      }
+      this.router.navigate(['./milestone_details', id], {
+        relativeTo: this.route,
+      });
+    }
   }
 
   tableAction(event: { value: string; dataRow: any }) {
@@ -294,10 +336,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       milestoneName: ['', { nonNullable: true }],
       milestoneId: ['', { nonNullable: true }],
-      team: ['', { nonNullable: true }],
+      teamName: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
       month: ['', { nonNullable: true }],
       year: ['', { nonNullable: true }],
+      workStream: ['', { nonNullable: true }],
+      validationStatus: ['', { nonNullable: true }],
     });
   }
 

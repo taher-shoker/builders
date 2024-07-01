@@ -1,0 +1,359 @@
+@import url('../milestones-setting/milestones-setting.component.scss');
+
+.custom-layout {
+  .box {
+    top: 0 !important;
+    left: 1% !important;
+    padding-block: 24px;
+  }
+}
+
+.vp-report {
+  h3 {
+    font-size: 32px;
+    font-family: var(--stc-font-meduim);
+  }
+  h4 {
+    font-size: 20px;
+    font-family: var(--stc-font-bold);
+  }
+  .container-box {
+    padding: 20px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    h5 {
+      font-size: 24px;
+      margin-bottom: 20px;
+      text-align: left;
+      color: var(--stc-color);
+      font-family: var(--stc-font-meduim);
+    }
+    .progress-circule {
+      margin: 0 auto;
+    }
+  }
+  .teams {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    li {
+      border: 1px solid var(--stc-color);
+      border-radius: 8px;
+      margin: 10px;
+      padding: 8px 16px;
+      min-width: 100px;
+      text-align: center;
+      &:hover {
+        background-color: var(--stc-color);
+        color: white;
+        cursor: pointer;
+      }
+      &.active {
+        background-color: var(--stc-color);
+        color: white;
+      }
+    }
+  }
+
+  .progress-bar-box {
+    display: flex;
+    padding: 30px;
+    height: 100%;
+
+    .bar {
+      flex-grow: 1;
+    }
+    .left-value,
+    .right-value {
+      margin-inline: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      p {
+        font-weight: bold;
+      }
+    }
+  }
+  .label {
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+    background-color: rgba($color: white, $alpha: 1) !important;
+  }
+}
+.mt-6 {
+  margin-top: 4rem;
+}
+.mt-70 {
+  margin-top: 70px;
+}
+
+/** Progress Circule **/
+
+@keyframes growProgressCircule {
+  0%,
+  33% {
+    --pgPercentage: 0;
+  }
+  100% {
+    --pgPercentage: var(--value);
+  }
+}
+
+@property --pgPercentage {
+  syntax: '<number>';
+  inherits: true;
+  initial-value: 0;
+}
+
+div[role='progresscircule'] {
+  --size: 12rem;
+  --pgPercentage: var(--value);
+  animation: growProgressCircule 3s 1 forwards;
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  aspect-ratio: 1;
+  background: conic-gradient(
+    var(--stc-color) calc(var(--pgPercentage) * 1%),
+    var(--stc-lightGrey-color) 0
+  );
+  font-size: calc(var(--size) / 5);
+  color: var(--stc-color);
+}
+div[role='progresscircule']::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  width: calc(var(--size) - 2rem);
+  height: calc(var(--size) - 2rem);
+  background-color: rgb(255, 255, 255);
+  border-radius: 50%;
+  box-shadow: inset 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+    inset -6px -6px 10px -1px rgba(0, 0, 0, 0.055);
+}
+
+.circle-content {
+  position: absolute;
+  z-index: 3;
+}
+// div[role='progresscircule']::before {
+//   counter-reset: percentage var(--value);
+//   content: counter(percentage) '%';
+//   z-index: 9999;
+// }
+
+/******progress bar *******/
+@property --pgPercentageBar {
+  syntax: '<number>';
+  inherits: false;
+  initial-value: 0;
+}
+.progress {
+  padding: 6px;
+  background: rgba(var(--stc-green-color), 0.1);
+  display: flex;
+  flex-direction: column;
+  height: 45px;
+  border-radius: 2px;
+  position: relative;
+}
+.prg-hide {
+  background-color: transparent;
+  height: 70px;
+}
+.bar .container {
+  width: 98%;
+  text-align: center;
+}
+.progress-bar,
+.progress-bar-hide {
+  height: 19px;
+  transition: 0.4s linear;
+  transition-property: width, background-color;
+  position: relative;
+}
+
+.progress-bar {
+  --pgPercentageBar: var(--value);
+  background-color: rgb(var(--stc-green-color));
+  z-index: 2;
+  width: 50%; //calc(var(--pgPercentageBar) * 1%);
+  animation: progressAnimationStrike 6s forwards;
+  top: 20%;
+}
+.m-hide {
+  margin-top: -20px;
+}
+.progress-bar-hide {
+  --pgPercentTaregt: var(--value);
+  top: -30%;
+  height: 1px;
+  z-index: 1;
+  width: 50%;
+  animation: progressAnimationStrikeTarget 7s forwards;
+  span {
+    position: absolute;
+    top: 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    right: 0;
+    &::after {
+      content: '';
+      position: absolute;
+      top: -18px;
+      height: 20px;
+      width: 2px;
+      background-color: var(--stc-color);
+    }
+    p {
+      font-weight: bold;
+      font-size: 16px;
+    }
+  }
+}
+@keyframes progressAnimationStrike {
+  from {
+    width: 0;
+  }
+  to {
+    width: calc(var(--value) * 1%);
+  }
+}
+
+@keyframes progressAnimationStrikeTarget {
+  from {
+    width: 0;
+  }
+  to {
+    width: calc(var(--value) * 1%);
+  }
+}
+
+.bar-holder{
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+// Gantt chart styles
+
+.gantt-legend {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .legend-circle,
+  .legend-name {
+    display: inline-block;
+  }
+
+  .legend-circle {
+    height: 18px;
+    width: 18px;
+    border-radius: 50%;
+    box-shadow: 0px 0px 8px -2px rgb(5, 170, 68);
+  }
+
+  .legend-circle-completed {
+    background-color: var(--stc-oasis-color);
+  }
+
+  .legend-circle-planned {
+    background-color: var(--grey-color);
+  }
+
+  .legend-circle-on-track {
+    background-color: var(--stc-Sea-Color);
+  }
+
+  .legend-circle-at-risk {
+    background-color: var(--stc-sun-color);
+  }
+
+  .legend-circle-delayed {
+    background-color: var(--red-Color);
+  }
+
+  .legend-name {
+    margin-right: 10px;
+    margin-left: 5px;
+  }
+}
+
+.at-risk {
+  background-color: var(--stc-sun-color);
+}
+
+.on-track {
+  background-color: var(--stc-Sea-Color);
+}
+
+.delayed {
+  background-color: var(--red-Color);
+}
+
+.completed {
+  background-color: var(--stc-oasis-color);
+}
+
+.planned {
+  background-color: var(--stc-Silver-Color);
+}
+
+.chart-holder {
+  margin-bottom: 5rem;
+}
+
+.chart-liner {
+  height: 3px;
+  background-color: var(--stc-Silver-Color);
+  width: 77%;
+  margin: auto;
+  margin-block: 50px;
+}
+
+.no-data-text{
+  text-align: center;
+  padding: 50px;
+  font-weight: bold;
+}
+
+.report-row{
+  justify-content: space-between;
+
+  .report-col{
+    background-color: white;
+    padding: 20px;
+    margin-inline: 10px;
+  }
+}
+
+.highlight-title, .impact-title{
+  color: var(--stc-color);
+  font-weight: bold;
+  font-size: 1.3rem;
+
+}
+
+.edit-link{
+  font-size: 1rem;
+  cursor: pointer;
+  float: right;
+  text-decoration: underline;
+}
+
+quill-editor{
+  width: 100%;
+
+  ::ng-deep .ql-container.ql-snow {
+    border: none!important;
+  }
+}

@@ -1,0 +1,4 @@
+<div *ngIf="control">
+  <mat-checkbox class="example-margin" color="primary" [name]="name" [formControl]="control"
+    (change)="onChangeValue($event)"> <span class="label">{{label}}</span></mat-checkbox>
+</div>

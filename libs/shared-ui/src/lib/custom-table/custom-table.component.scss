@@ -9,6 +9,11 @@ table {
   th {
     color: var(--stc-color);
     font-weight: 400;
+
+    .header-cell-holder{
+      display: flex;
+    }
+    
     &:first-of-type {
       border-radius: 7px 0 0 0px;
     }

@@ -1,3 +1,54 @@
+interface UserRole {
+  id: number;
+  environmentName: string;
+}
+
+// interface GroupedMenu {
+//   id: number;
+//   menuItemDefinitionDto: string | number | null;
+//   groupedMenuName: string;
+//   userGroupedMenus: string | number | null;
+//   systemName: string;
+// }
+// interface UserGroupedMenuDTO {
+//   id: number;
+//   createdDate: Date | null;
+//   modifiedDate: Date | null;
+//   createdBy: string | null;
+//   modifiedBy: string | null;
+//   assigneeUsername: string | null;
+//   assigneeUser: string | null;
+//   groupedMenu: GroupedMenu;
+//   environment: string | null;
+// }
+
+interface DTO {
+  passwordEncrypted: boolean;
+  username: string;
+  password: string;
+  displayName: string;
+  userTeam: string | null;
+  source: string;
+  userRole: UserRole;
+  adminTechnical: boolean;
+  adminEnvironment: boolean;
+  adminOnHisEnvironment: boolean;
+  canAddUserEnvironment: boolean;
+  canDefinedMenu: boolean;
+  canCreateGroupedMenu: boolean;
+  id: number;
+  lastUsedToken: string;
+  activeAccount: boolean;
+  systems: string[];
+  userGroupedMenusDTO: UserGroup[];
+}
+
+export interface UserData {
+  code: string;
+  result: string;
+  dto: DTO;
+}
+
 export interface User {
   id?: number | undefined;
   name: string;

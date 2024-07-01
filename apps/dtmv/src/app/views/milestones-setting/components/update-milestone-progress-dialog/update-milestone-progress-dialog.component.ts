@@ -1,9 +1,11 @@
+/* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, Inject, Signal, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Actions, MilestoneAttachment, MilestonesService } from '../../milestones.service';
+import {  MilestoneAttachment, MilestonesService } from '../../milestones.service';
 import * as saveAs from 'file-saver';
+import { Actions } from 'apps/dtmv/src/app/services/models/milestones.models';
 
 @Component({
   selector: 'stc-apps-update-milestone-progress-dialog',
@@ -49,6 +51,7 @@ export class UpdateMilestoneProgressDialogComponent {
       type: string;
       milestoneName: string;
       milestoneId: number | string;
+      showAttachment: boolean
     },
     private milestonesService: MilestonesService
   ) {

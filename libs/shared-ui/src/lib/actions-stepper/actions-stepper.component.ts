@@ -1,7 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
+import { Actions } from 'apps/dtmv/src/app/services/models/milestones.models';
 import {
-  Actions,
   MilestoneAttachment,
 } from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
 import {

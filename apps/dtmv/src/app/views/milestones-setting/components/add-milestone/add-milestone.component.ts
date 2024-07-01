@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { MilestonesService } from '../../milestones.service';
 import { BannerDataService } from '@stc-apps/shared-ui';
+import { DownloadService } from 'apps/dtmv/src/app/services/download.service';
 
 @Component({
   selector: 'stc-apps-add-milestone',
@@ -29,7 +30,8 @@ export class AddMilestoneComponent implements OnInit {
     private formBuilder: FormBuilder,
     public milestonesService: MilestonesService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    private downloadService: DownloadService
   ) {}
   ngOnInit(): void {
     this.uploadForm();
@@ -89,6 +91,13 @@ export class AddMilestoneComponent implements OnInit {
   cancel() {
     this.router.navigate(['../']);
   }
+
+  downloadTemplate() {
+    const fileUrl = 'assets/files/milestone-temp.csv';
+    const fileName = 'Bulk Template.csv';
+    this.downloadService.downloadFile(fileUrl, fileName);
+  }
+
   /** Uploader functions **/
 
   uploadClick() {
@@ -116,7 +125,6 @@ export class AddMilestoneComponent implements OnInit {
   uploadAndProgress(files: File[]) {
     this.files = files;
     files.forEach((f) => {
-
       if (f.size > 20000000) {
         this.errorSize = true;
       } else if (f.type !== 'text/csv') {

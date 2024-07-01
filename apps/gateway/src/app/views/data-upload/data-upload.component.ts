@@ -5,7 +5,6 @@ import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
-import * as _ from 'lodash';
 import { DataUploadService } from './data-upload.service';
 import { UploadedFile } from '../../shared/models/data-upload.model';
 
@@ -97,12 +96,9 @@ export class DataUploadComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = searchVal.trim().toLowerCase();
   }
 
-  /** filters functions for dropDown  **/
-
   ngOnInit() {
     this.bannerDataService.updateData({ title: 'Data Upload', text: '' });
     this.getDataListing();
-
     this.dataSource.paginator = this.paginator;
   }
 

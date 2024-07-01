@@ -1,0 +1,259 @@
+<!-- edit.component.html -->
+<div class="layout custom-layout">
+  <div class="box vp-report">
+    <div class="container-fluid">
+      <div>
+        <div class="row mt-6">
+          <div class="col-md-12">
+            <h4>Select a Charter</h4>
+          </div>
+          <div class="col-md-12">
+            <ul class="teams">
+              @for(team of allTeams; track team){
+              <li
+                (click)="selectTeam(team.name)"
+                [ngClass]="selectedTeam() === team.name ? 'active' : ''"
+              >
+                {{ team.name }}
+              </li>
+              }
+            </ul>
+          </div>
+        </div>
+
+        <form [formGroup]="form">
+          <div formGroupName="dataForm">
+            <div class="row mb-3">
+              <div class="col">
+                <stc-apps-input
+                  [className]="'custom-input'"
+                  [inputPlaceholder]="'Enter Actual'"
+                  [inputId]="'actual'"
+                  [inputName]="'Actual'"
+                  formControlName="actual"
+                ></stc-apps-input>
+
+                @if (form.get('actual')?.invalid && form.get('actual')?.touched)
+                {
+                <div class="text-danger">
+                  <!-- Actual is required and must be less than or equal to 100. -->
+                </div>
+                }
+              </div>
+              <div class="col">
+                <stc-apps-input
+                  [className]="'custom-input'"
+                  [inputPlaceholder]="'Enter Baseline'"
+                  [inputId]="'baseline'"
+                  [inputName]="'Baseline'"
+                  formControlName="baseline"
+                ></stc-apps-input>
+                @if (form.get('baseline')?.invalid &&
+                form.get('baseline')?.touched) {
+                <div class="text-danger">
+                  <!-- Baseline is required and must be less than or equal to 100. -->
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col">
+                <stc-apps-input
+                  [className]="'custom-input'"
+                  [inputPlaceholder]="'Enter EOY Target'"
+                  [inputId]="'targetEoy'"
+                  [inputName]="'EOY Target'"
+                  formControlName="targetEoy"
+                ></stc-apps-input>
+                @if ( form.get('targetEoy')?.invalid &&
+                form.get('targetEoy')?.touched ) {
+                <div class="text-danger">
+                  <!-- EOY Target is required and must be less than or equal to 100. -->
+                </div>
+                }
+              </div>
+              <div class="col">
+                <stc-apps-input
+                  [className]="'custom-input'"
+                  [inputPlaceholder]="'Enter Target'"
+                  [inputId]="'target'"
+                  [inputName]="'Target'"
+                  formControlName="target"
+                ></stc-apps-input>
+                @if ( form.get('target')?.invalid && form.get('target')?.touched
+                ) {
+                <div class="text-danger">
+                  <!-- Target is required and must be less than or equal to 100. -->
+                </div>
+                }
+              </div>
+            </div>
+
+            @if (showQuill()) {
+            <div class="row quills-row">
+              <div class="col">
+                <label class="input-label">Highlight</label>
+
+                <stc-apps-text-editor-quill
+                  [isReadOnly]="reviewMode()"
+                  formControlName="highlight"
+                ></stc-apps-text-editor-quill>
+
+                @if ( form.get('highlight')?.invalid &&
+                form.get('highlight')?.touched ) {
+                <div class="text-danger">
+                  <!-- Highlight is required and must be less than or equal to 100. -->
+                </div>
+                }
+              </div>
+              <div class="col">
+                <label class="input-label">Impact</label>
+                <stc-apps-text-editor-quill
+                  [isReadOnly]="reviewMode()"
+                  formControlName="valueImpact"
+                ></stc-apps-text-editor-quill>
+
+                @if ( form.get('valueImpact')?.invalid &&
+                form.get('valueImpact')?.touched ) {
+                <div class="text-danger">
+                  <!-- valueImpact is required and must be less than or equal to 100.F -->
+                </div>
+                }
+              </div>
+            </div>
+
+            }
+          </div>
+
+          @if (lastCommentReceivedFromDirector() !== '' && lastCommentReceivedFromDirector() !==
+          undefined) {
+
+          <p class="director-pmo-comment">Director's Comment:</p>
+          <p>"{{ lastCommentReceivedFromDirector() }}"</p>
+          } 
+
+          @if (lastCommentReceivedFromPMO() !== '' && lastCommentReceivedFromPMO() !==
+          undefined) {
+
+          <p class="director-pmo-comment">PMO's Comment:</p>
+          <p>"{{ lastCommentReceivedFromPMO() }}"</p>
+          } 
+          
+          @if (directorOrPMOCanComment()) {
+          <div formGroupName="commentForm">
+            <div class="row">
+              <div class="col">
+                <div>
+                  <label>
+                    <input type="checkbox" formControlName="commentCheckbox" />
+                    Add comment
+                  </label>
+                </div>
+              </div>
+            </div>
+            @if (commentCheckbox()) {
+            <div class="row comment-textarea-row">
+              <div class="col">
+                <stc-apps-textarea
+                  [className]="'custom-input'"
+                  [inputPlaceholder]="''"
+                  formControlName="comment"
+                ></stc-apps-textarea>
+              </div>
+            </div>
+            }
+          </div>
+          }
+
+          <div class="row">
+            <div class="col-md-4 offset-md-8">
+              <div class="row action-btns-row">
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Go Back'"
+                    [buttonType]="'warn'"
+                    [actionType]="'button'"
+                    (btnClick)="navBack()"
+                  ></stc-apps-button>
+                </div>
+
+                @if (showSpinner()) {
+                <div class="spinner-border spinner-border-sm" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                } @if(showStatus()){
+                <div class="col-md-4">
+                  <span class="form-status">
+                    {{ status() }}
+                  </span>
+                </div>
+                } @if(showSubmitBtn()){
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Submit'"
+                    [buttonType]="'primary'"
+                    [actionType]="'submit'"
+                    (btnClick)="submitForm()"
+                    [buttonDisable]="isDataFormInvalid"
+                  ></stc-apps-button>
+                </div>
+                } @if(showResubmitBtn()){
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Reply'"
+                    [buttonType]="'primary'"
+                    [actionType]="'submit'"
+                    (btnClick)="resubmitForm()"
+                    [buttonDisable]="form.invalid"
+                  ></stc-apps-button>
+                </div>
+                } @if(showPMORejectBtn()){
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Return'"
+                    [buttonType]="'primary'"
+                    [actionType]="'submit'"
+                    (btnClick)="approvePMO(false)"
+                    [buttonDisable]="form.invalid"
+                  ></stc-apps-button>
+                </div>
+                } @if(showPMOApprovalBtn() && !commentCheckbox()){
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Approve'"
+                    [buttonType]="'primary'"
+                    [actionType]="'submit'"
+                    (btnClick)="approvePMO(true)"
+                    [buttonDisable]="form.invalid"
+                  ></stc-apps-button>
+                </div>
+                }@if(showDirectorRejectBtn()){
+                <div class="col-md-4">
+                  <stc-apps-button
+                    [buttonText]="'Return'"
+                    [buttonType]="'primary'"
+                    [actionType]="'submit'"
+                    (btnClick)="approveDirectorFlow(false)"
+                  ></stc-apps-button>
+                </div>
+                }
+
+                @if(showDirectorApproveBtn() && !commentCheckbox()){
+                  <div class="col-md-4">
+                    <stc-apps-button
+                      [buttonText]="'Approve'"
+                      [buttonType]="'primary'"
+                      [actionType]="'submit'"
+                      (btnClick)="approveDirectorFlow(true)"
+                    ></stc-apps-button>
+                  </div>
+                  } 
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

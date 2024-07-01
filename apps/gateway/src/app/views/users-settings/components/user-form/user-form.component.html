@@ -4,7 +4,7 @@
       <div class="top">
         <div class="row align-items-center">
           <div class="col-md-4">
-            <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Example@stc.net'" [inputId]="'email'"
+            <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Example@stc.com.sa'" [inputId]="'email'"
               [inputName]="'email'" formControlName="email"></stc-apps-input>
           </div>
           <div class="col-md-2 mt-1r">
@@ -55,6 +55,21 @@
               [required]="true" [options]="teams" [multi]="true" [selectId]="selectedGroup || null">
             </stc-apps-select-drop-down>
           </div>
+          <div class="col-md-5">
+            <stc-apps-checkbox [label]="'grant access to  VP report'" formControlName="viewer"
+              [name]="'viewer'"></stc-apps-checkbox>
+          </div>
+          <div class="row" *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User'">
+            <div class="col-md-12">
+              <stc-apps-checkbox [label]="'Grant Edit for VP Report'" formControlName="editor" [name]="'editor'"
+                (selectChange)="oncheckBoxSelect($event)"></stc-apps-checkbox>
+            </div>
+            <div class="col-md-12">
+              <stc-apps-checkbox [label]="'Grant access as DT PMO for VP Report'" formControlName="pmo" [name]="'pmo'"
+                (selectChange)="oncheckBoxSelect($event)"></stc-apps-checkbox>
+            </div>
+          </div>
+
         </div>
         <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'DI_Management'">
           <div class="col-md-5">
