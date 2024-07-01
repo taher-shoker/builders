@@ -28,7 +28,7 @@ export class CommentsFormComponent implements OnInit {
   mentions: string[] = ['John', 'Jane', 'Doe', 'Smith'];
   placeholder = 'Enter Comment Here...';
   mentions2 = [
-    { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
+    { name: 'Assem Khalifa Ahmed', comment: 'UI/UX Designer' },
     { name: 'Assem Ahmed', comment: 'Business Analyst' },
     { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
   ];
@@ -99,11 +99,11 @@ export class CommentsFormComponent implements OnInit {
   }
 
   extractMentions(text: string): string[] {
-    const mentionPattern = /@(\w+)/g;
+    const mentionPattern = /@([\w\s]+)/g;
     const mentions: string[] = [];
     let match;
     while ((match = mentionPattern.exec(text)) !== null) {
-      mentions.push(match[1]);
+      mentions.push(match[1].trim());
     }
     return mentions;
   }

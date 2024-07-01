@@ -36,12 +36,13 @@ export class CommentEditorComponent implements AfterViewInit {
 
   placeholder: InputSignal<string> = input('');
   title: InputSignal<string> = input('');
+  mentionProperty: InputSignal<string> = input('name');
   mentions: InputSignal<any> = input([]);
   @Output() contentChange = new EventEmitter<string>();
 
   content = '';
   showDropdown = false;
-  filteredList: string[] = [];
+  filteredList: any[] = [];
   value: string | undefined;
   activeMentionIndex = -1;
 
@@ -81,8 +82,8 @@ export class CommentEditorComponent implements AfterViewInit {
 
     if (mentionIndex > -1) {
       const query = textBeforeCursor.slice(mentionIndex + 1).toLowerCase();
-      this.filteredList = this.mentions().filter((mention:any) =>
-        mention.toLowerCase().includes(query)
+      this.filteredList = this.mentions().filter((mention: any) =>
+        mention[this.mentionProperty()].toLowerCase().includes(query)
       );
       if (this.filteredList.length > 0) {
         if (!this.showDropdown) {
@@ -118,7 +119,9 @@ export class CommentEditorComponent implements AfterViewInit {
 
         case 'Enter': {
           if (this.activeMentionIndex > -1) {
-            this.addMention(this.filteredList[this.activeMentionIndex]);
+            this.addMention(
+              this.filteredList[this.activeMentionIndex][this.mentionProperty()]
+            );
             this.showDropdown = false;
             event.preventDefault();
           }
@@ -188,15 +191,18 @@ export class CommentEditorComponent implements AfterViewInit {
       )
       .subscribe((query) => {
         this.filteredList = this.mentions().filter((mention: any) =>
-          mention.toLowerCase().includes(query!)
+          mention[this.mentionProperty()].toLowerCase().includes(query!)
         );
       });
   }
 
   highlightMentions(text: string): string {
     let highlightedText = text;
-    this.mentions().forEach((mention: string) => {
-      const mentionPattern = new RegExp(`(@${mention})(\\s|$)`, 'gi');
+    this.mentions().forEach((mention: any) => {
+      const mentionPattern = new RegExp(
+        `(@${mention[this.mentionProperty()]})(\\s|$)`,
+        'gi'
+      );
       highlightedText = highlightedText.replace(
         mentionPattern,
         '<span class="mention">$1</span>$2'
