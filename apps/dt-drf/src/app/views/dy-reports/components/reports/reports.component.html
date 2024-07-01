@@ -60,7 +60,7 @@
                 pageCount: 10,
                 showTotal: false,
                 paginationIq: 'smart'
-              }" [complexView]="customTemplate" (paginationEvent)="paginate($event)">
+              }">
             </stc-apps-custom-table>
             <ng-template #customTemplate let-header="header" let-item="item">
               <p class="custom-class-template">{{ item[header.key] }}</p>

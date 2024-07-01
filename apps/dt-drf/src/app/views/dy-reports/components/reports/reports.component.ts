@@ -93,7 +93,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
       //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
       //   `;
       // },
-      complexView: true,
+      //complexView: true,
       // complexViewTemp: this.customTemplate
     },
     {
@@ -115,7 +115,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
       key: 'status',
       type: 'text',
       label: 'Status',
-      complexView: true,
+      //complexView: true,
     },
 
     {
