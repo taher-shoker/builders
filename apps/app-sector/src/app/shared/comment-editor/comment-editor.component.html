@@ -17,6 +17,14 @@
   @if (showDropdown) {
   <ul #mentionList class="comments_mentions">
     @for (item of filteredList; track item; let index = $index) {
+      
+    <!-- <stc-apps-profile
+      [name]="item.name"
+      [comment]="item.comment"
+      [lastItem]="index === filteredList.length - 1 ? true : false"
+      (click)="addMention(item.name)"
+      [ngClass]="{ active: index === activeMentionIndex }"
+    ></stc-apps-profile> -->
     <li
       (click)="addMention(item)"
       [ngClass]="{ active: index === activeMentionIndex }"

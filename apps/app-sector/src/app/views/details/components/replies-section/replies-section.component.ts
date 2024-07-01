@@ -72,11 +72,13 @@ export class RepliesSectionComponent {
     });
     dialogRef.afterClosed().subscribe((data) => {
       console.log('Dialog output:', data);
-      if (this.deleteCommentFlag) {
-        this.deleteComment(commentIndex);
-      } else if (this.deleteReplyFlag) {
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        this.deleteReply(commentIndex, replyIndex!);
+      if (data == 'confirmed') {
+        if (this.deleteCommentFlag) {
+          this.deleteComment(commentIndex);
+        } else if (this.deleteReplyFlag) {
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+          this.deleteReply(commentIndex, replyIndex!);
+        }
       }
     });
   }

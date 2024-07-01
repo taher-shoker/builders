@@ -26,6 +26,11 @@ export class CommentsFormComponent implements OnInit {
   ];
 
   mentions: string[] = ['John', 'Jane', 'Doe', 'Smith'];
+  mentions2 = [
+    { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
+    { name: 'Assem Ahmed', comment: 'Business Analyst' },
+    { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
+  ];
   placeholder = 'Enter text here...';
 
   constructor(private fb: FormBuilder) {}
