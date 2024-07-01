@@ -4,8 +4,9 @@ import { ResultScoreComponent } from './result-score/result-score.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { TabComponent } from './tabs/tab/tab.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
+import { CommentEditorComponent } from './comment-editor/comment-editor.component';
 
-const components = [ResultScoreComponent, TabsComponent, TabComponent];
+const components = [ResultScoreComponent, TabsComponent, TabComponent, CommentEditorComponent];
 const modules = [CommonModule, SharedUiModule];
 
 @NgModule({
