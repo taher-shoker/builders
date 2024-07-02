@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatDialogeComponent } from '../mat-dialoge/mat-dialoge.component';
 import { DatePipe } from '@angular/common';
@@ -8,6 +8,7 @@ import { DatePipe } from '@angular/common';
   styleUrl: './replies-section.component.scss',
 })
 export class RepliesSectionComponent {
+  @Output() editComment = new EventEmitter<string>();
   totalComments = 0;
   deleteCommentFlag = false;
   deleteReplyFlag = false;
@@ -113,12 +114,26 @@ export class RepliesSectionComponent {
     if (e === 'Delete') {
       this.deleteCommentFlag = true;
       this.openDialog('0ms', '0ms', commentIndex);
+    } else if (e === 'Edit') {
+      this.handlEditComment(commentIndex);
     }
   }
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {
     if (e === 'Delete') {
       this.deleteReplyFlag = true;
       this.openDialog('0ms', '0ms', commentIndex, replyIndex);
+    } else if (e === 'Edit') {
+      this.handleEditReply(commentIndex, replyIndex);
     }
+  }
+
+  handlEditComment(commentIndex: number) {
+    const comment = this.commentsList[commentIndex].comment;
+    this.editComment.emit(comment);
+  }
+
+  handleEditReply(commentIndex: number, replyIndex: number) {
+    const reply = this.commentsList[commentIndex].replies![replyIndex].comment;
+    this.editComment.emit(reply);
   }
 }

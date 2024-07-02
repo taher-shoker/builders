@@ -15,7 +15,7 @@
       ></div>
     </div>
   </div>
-  @if (showDropdown) {
+  @if (showDropdown && content) {
   <ul #mentionList class="comments_mentions">
     @for (item of filteredList; track item; let index = $index) {
 
