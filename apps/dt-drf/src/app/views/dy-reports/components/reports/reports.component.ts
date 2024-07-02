@@ -187,8 +187,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
     }
   }
 
-  detailsNavigate(id: string | number) {
-    this.router.navigate(['./milestone_details', id], {
+  detailsNavigate(item: PendingTask) {
+    this.router.navigate(['./report_details', item.id], {
       relativeTo: this.route,
     });
   }
