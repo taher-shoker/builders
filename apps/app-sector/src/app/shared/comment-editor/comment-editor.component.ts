@@ -3,6 +3,7 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  Input,
   InputSignal,
   Output,
   ViewChild,
@@ -17,6 +18,7 @@ import {
   fromEvent,
   map,
 } from 'rxjs';
+import { mentionRegexService } from '../services/mentionRegex.service';
 
 @Component({
   selector: 'stc-apps-comment-editor',
@@ -37,14 +39,16 @@ export class CommentEditorComponent implements AfterViewInit {
   placeholder: InputSignal<string> = input('');
   title: InputSignal<string> = input('');
   mentionProperty: InputSignal<string> = input('name');
+  editedText: InputSignal<string> = input('');
   mentions: InputSignal<any> = input([]);
   @Output() contentChange = new EventEmitter<string>();
-
   content = '';
   showDropdown = false;
   filteredList: any[] = [];
   value: string | undefined;
   activeMentionIndex = -1;
+  mentions2 = ['Naden Draz', 'Habiba'];
+  constructor(private mentionsService: mentionRegexService) {}
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
@@ -54,7 +58,6 @@ export class CommentEditorComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.setupMentionListener();
   }
-
   writeValue(value: string): void {
     this.content = value;
   }
@@ -79,7 +82,7 @@ export class CommentEditorComponent implements AfterViewInit {
     const cursorPosition = this.getCaretPosition(input);
     const textBeforeCursor = input.textContent!.slice(0, cursorPosition);
     const mentionIndex = textBeforeCursor.lastIndexOf('@');
-
+    console.log('mentionIndex', mentionIndex, this.mentionProperty());
     if (mentionIndex > -1) {
       const query = textBeforeCursor.slice(mentionIndex + 1).toLowerCase();
       this.filteredList = this.mentions().filter((mention: any) =>

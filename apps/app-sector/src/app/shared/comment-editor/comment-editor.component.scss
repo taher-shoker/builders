@@ -22,6 +22,9 @@
         .mention {
           color: $stcCoralColor !important;
         }
+        span {
+          color: $stcCoralColor !important;
+        }
       }
     }
 
@@ -44,7 +47,6 @@
         outline: none;
       }
     }
-
   }
 
   &_mentions {

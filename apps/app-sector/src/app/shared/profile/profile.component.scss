@@ -3,7 +3,7 @@
 
 .profile-content {
   &_avatar {
-    width: 15%;
+    width: 45px;
   }
   &_name {
     margin-left: 10px;
@@ -16,6 +16,11 @@
     padding: 6px 0px 0px 12px;
     font-weight: 400;
     font-size: 14px;
+    ::ng-deep {
+      span {
+        color: $stcCoralColor !important;
+      }
+    }
   }
   &_line {
     border: 1px solid $mediumGrey;
@@ -45,7 +50,7 @@
     }
   }
   .actions-reply-holder {
-    margin-left: 170px;
+    margin-left: 155px;
     .action-btns {
       margin-right: 12px;
       font-weight: 400;

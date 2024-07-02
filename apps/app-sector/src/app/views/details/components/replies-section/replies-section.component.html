@@ -8,10 +8,35 @@
       [comment]="comment.comment"
       [time]="comment.time"
       [lastItem]="parentLoop === commentsList.length - 1 ? true : false"
-      [hasReplies]="comment.replies ? true : false"
+      [hasReplies]="comment.replies.length !== 0 ? true : false"
       [reply]="false"
+      [mentions]="comment.mentions"
       (commentActionName)="handleCommentActions($event, parentLoop)"
     ></stc-apps-profile>
+
+    @if(showCommentTextArea && parentLoop==commentIndex){
+    <form [formGroup]="form">
+      <stc-apps-comment-editor
+        class="replies-section_add-reply"
+        formControlName="comment"
+        [placeholder]="placeholder"
+        [mentions]="mentions"
+        [editedText]="editedText"
+        (contentChange)="onContentChange($event)"
+      ></stc-apps-comment-editor>
+
+      <div class="replies-section_add-reply-actions">
+        <button class="cancel-btn" (click)="cancel()">Cancel</button>
+        <button
+          (click)="save()"
+          [disabled]="form.controls['comment'].hasError('required')"
+        >
+          {{ commentActionBtn }}
+        </button>
+      </div>
+    </form>
+    }
+
     <div *ngIf="comment.replies && comment.replies.length > 0">
       <div class="replies">
         @for (reply of comment.replies; track $index) {
@@ -19,6 +44,7 @@
           [name]="reply.name"
           [comment]="reply.comment"
           [time]="reply.time"
+          [mentions]="reply.mentions"
           [lastItem]="
             $index === comment.replies.length - 1 &&
             parentLoop === commentsList.length - 1
@@ -28,7 +54,28 @@
           [reply]="true"
           (replyActionName)="handleReplyActions($event, parentLoop, $index)"
         ></stc-apps-profile>
-        }
+        @if(editReplyTextArea && parentLoop==commentIndex &&
+        $index===replyIndex){
+        <form [formGroup]="form">
+          <stc-apps-comment-editor
+            class="replies-section_add-reply"
+            formControlName="comment"
+            [placeholder]="placeholder"
+            [mentions]="mentions"
+            [editedText]="editedText"
+            (contentChange)="onContentChange($event)"
+          ></stc-apps-comment-editor>
+          <div class="replies-section_add-reply-actions">
+            <button class="cancel-btn" (click)="cancelReply()">Cancel</button>
+            <button
+              (click)="editReply()"
+              [disabled]="form.controls['comment'].hasError('required')"
+            >
+              Update
+            </button>
+          </div>
+        </form>
+        } }
       </div>
     </div>
     }

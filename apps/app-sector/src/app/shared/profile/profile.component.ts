@@ -1,12 +1,13 @@
-import { DatePipe } from '@angular/common';
 import {
   Component,
   EventEmitter,
+  Input,
   InputSignal,
   Output,
   effect,
   input,
 } from '@angular/core';
+import { mentionRegexService } from '../services/mentionRegex.service';
 
 @Component({
   selector: 'stc-apps-profile',
@@ -22,10 +23,12 @@ export class ProfileComponent {
   reply: InputSignal<boolean> = input(false);
   parentLoop: InputSignal<number> = input(0);
   hasReplies: InputSignal<boolean> = input(false);
+  @Input() mentions!: string[];
+
   @Output() commentActionName = new EventEmitter<string>();
   @Output() replyActionName = new EventEmitter<string>();
   actionsList = [''];
-  constructor(private datePipe: DatePipe) {
+  constructor(private mentionsService: mentionRegexService) {
     effect(() => {
       console.log(this.reply(), this.comment(), this.hasReplies());
       if (this.reply() == true) {
@@ -37,38 +40,15 @@ export class ProfileComponent {
       }
     });
   }
-  // openDialog(
-  //   enterAnimationDuration: string,
-  //   exitAnimationDuration: string
-  // ): void {
-  //   const dialogConfig = new MatDialogConfig();
+  generateRegex() {
+    return this.mentionsService.generateRegex(this.mentions);
+  }
 
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.autoFocus = true;
-  //   const dialogRef = this.dialog.open(MatDialogeComponent, {
-  //     width: '450px',
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //   });
-  //   dialogRef.afterClosed().subscribe((data) => {
-  //     console.log('Dialog output:', data);
-  //     if (data === 'confirmed' && !this.reply()) {
-  //       this.deleteComment.emit('deleteComment');
-  //     } else if (data === 'confirmed' && this.reply()) {
-  //       this.deletereply.emit('deleteComment');
-  //     }
-  //   });
-  // }
   actionsClick(actionName: string) {
     if (this.reply()) {
       this.replyActionName.emit(actionName);
     } else {
       this.commentActionName.emit(actionName);
     }
-    // if (actionName == 'Delete') {
-    //   this.openDialog('0ms', '0ms');
-    // }
   }
-
-
 }

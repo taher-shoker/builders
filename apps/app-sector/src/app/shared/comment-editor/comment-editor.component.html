@@ -1,11 +1,15 @@
 <div class="comments">
   <div class="comments_form">
+    @if(title()){
     <div class="comments_form_header">
       <h3>{{ title() }}</h3>
       <img src="assets/images/chat.svg" />
     </div>
+    }
+
     <div class="comments_form_content">
       <div
+        [innerHTML]="editedText()"
         #contentEditable
         contenteditable="true"
         [attr.data-placeholder]="placeholder()"
