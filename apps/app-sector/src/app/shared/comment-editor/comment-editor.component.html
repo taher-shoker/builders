@@ -27,7 +27,7 @@
       [ngClass]="{ active: index === activeMentionIndex }"
     ></stc-apps-profile> -->
     <li
-      (click)="addMention(item)"
+      (click)="addMention(item[mentionProperty()])"
       [ngClass]="{ active: index === activeMentionIndex }"
     >
       <stc-apps-profile
