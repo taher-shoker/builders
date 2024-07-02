@@ -6,7 +6,7 @@
   </button>
 
   <ul class="dropdown-menu dropdown-menu-end notify-list" aria-labelledby="dropdownMenuButton1">
-    <h2>milestones reminders</h2>
+    <h2>{{notificationsTitle()}}</h2>
     <div class="list-note">
       <li *ngFor="let item of items" (click)="onClickItem(item)">
         <h4>{{item?.reminderTitle}}</h4>

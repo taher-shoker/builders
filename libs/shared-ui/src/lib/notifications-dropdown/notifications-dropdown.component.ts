@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 export class NotificationsDropdownComponent {
   @Input() items!: any[];
   @Output() clickItem: EventEmitter<number> = new EventEmitter<number>();
+  notificationsTitle = input.required<string>();
 
   onClickItem(id: number) {
     this.clickItem.emit(id);

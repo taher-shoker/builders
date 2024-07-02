@@ -80,44 +80,38 @@ export class ReportsComponent implements OnInit, OnDestroy {
     {
       key: 'activityName',
       type: 'text',
-      label: 'Activity',
+      label: 'Name',
     },
     {
       key: 'milestoneName',
       type: 'text',
-      label: 'Milestone Name',
-      // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
-      //   return `
-      //   <p>${item[header!.key]}</p>
-      //   <p>${item[header!.key]} mixed complex</p>
-      //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
-      //   `;
-      // },
-      //complexView: true,
-      // complexViewTemp: this.customTemplate
+      label: 'Category',
     },
     {
       key: 'completionLevel',
       type: 'text',
-      label: 'Completion Level',
+      label: 'With SLA/Not',
     },
     {
       key: 'latestWorkflowId',
       type: 'custom',
-      label: 'Validation Status',
+      label: 'No of Remaining Approvals',
     },
     {
       key: 'teamName',
       type: 'text',
-      label: 'Team',
+      label: 'Initiator Name',
+    },
+    {
+      key: 'status',
+      type: 'text',
+      label: 'Last Action Date',
     },
     {
       key: 'status',
       type: 'text',
       label: 'Status',
-      //complexView: true,
     },
-
     {
       key: 'actions',
       type: 'actions',
