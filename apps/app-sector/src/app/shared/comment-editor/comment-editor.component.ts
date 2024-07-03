@@ -64,10 +64,12 @@ export class CommentEditorComponent implements AfterViewInit {
       this.contentEditable.nativeElement.innerHTML = this.highlightMentions(
         this.content
       );
-      this.setCaretPosition(
-        this.contentEditable.nativeElement,
-        this.content.length
-      );
+      if (this.content) {
+        this.setCaretPosition(
+          this.contentEditable.nativeElement,
+          this.content.length
+        );
+      }
     }
   }
 
@@ -215,15 +217,18 @@ export class CommentEditorComponent implements AfterViewInit {
 
   highlightMentions(text: string): string {
     let highlightedText = text;
+    console.log('highlighted text', highlightedText);
     this.mentions().forEach((mention: any) => {
       const mentionPattern = new RegExp(
         `(@${mention[this.mentionProperty()]})(\\s|$)`,
         'gi'
       );
-      highlightedText = highlightedText.replace(
-        mentionPattern,
-        '<span class="mention">$1</span>$2'
-      );
+      if (highlightedText) {
+        highlightedText = highlightedText.replace(
+          mentionPattern,
+          '<span class="mention">$1</span>$2'
+        );
+      }
     });
     return highlightedText;
   }

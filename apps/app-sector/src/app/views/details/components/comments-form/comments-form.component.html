@@ -1,7 +1,5 @@
 <div class="comments">
-  <stc-apps-replies-section
-    (editComment)="onEditComment($event)"
-  ></stc-apps-replies-section>
+  <stc-apps-replies-section></stc-apps-replies-section>
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <stc-apps-comment-editor
       formControlName="comment"
