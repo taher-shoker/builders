@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatDialogeComponent } from '../mat-dialoge/mat-dialoge.component';
 import { DatePipe } from '@angular/common';
@@ -13,9 +13,8 @@ import { CookieService } from 'ngx-cookie';
   templateUrl: './replies-section.component.html',
   styleUrl: './replies-section.component.scss',
 })
-export class RepliesSectionComponent implements OnInit {
-  @ViewChild('target') targetElement!: ElementRef;
-
+export class RepliesSectionComponent implements OnInit{
+  @Output() editComment = new EventEmitter<string>();
   totalComments = 0;
   deleteCommentFlag = false;
   deleteReplyFlag = false;
@@ -199,7 +198,7 @@ export class RepliesSectionComponent implements OnInit {
     if (this.commentActionBtn === 'Save') {
       this.saveReply();
     } else {
-      this.editComment();
+      //this.editComment();
     }
   }
   saveReply() {
@@ -214,7 +213,7 @@ export class RepliesSectionComponent implements OnInit {
     this.editedText = '';
     this.showCommentTextArea = false;
   }
-  editComment() {
+  editCommentt() {
     this.commentsList[this.commentIndex].comment =
       this.form.get('comment')?.value;
     console.log('new comments', this.commentsList);
@@ -239,14 +238,18 @@ export class RepliesSectionComponent implements OnInit {
       this.editedText = '';
       this.showCommentTextArea = true;
       this.commentActionBtn = 'Save';
-    } else if (e === 'Edit') {
-      this.commentActionBtn = 'Update';
-      this.showCommentTextArea = true;
-      this.form
-        .get('comment')
-        ?.setValue(this.commentsList[commentIndex].comment);
-      this.editedText = this.commentsList[commentIndex].comment;
-      console.log(this.form.get('comment')?.value);
+     }
+    // else if (e === 'Edit') {
+    //   this.commentActionBtn = 'Update';
+    //   this.showCommentTextArea = true;
+    //   this.form
+    //     .get('comment')
+    //     ?.setValue(this.commentsList[commentIndex].comment);
+    //   this.editedText = this.commentsList[commentIndex].comment;
+    //   console.log(this.form.get('comment')?.value);
+    // }
+     else if (e === 'Edit') {
+      this.handlEditComment(commentIndex);
     }
   }
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {
@@ -255,14 +258,26 @@ export class RepliesSectionComponent implements OnInit {
     if (e === 'Delete') {
       this.deleteReplyFlag = true;
       this.openDialog('0ms', '0ms', commentIndex, replyIndex);
+    } else if (e === 'Edit') {
+      this.handleEditReply(commentIndex, replyIndex);
     }
-    if (e === 'Edit') {
-      this.editReplyTextArea = true;
-      this.form
-        .get('comment')
-        ?.setValue(this.commentsList[commentIndex].replies[replyIndex].comment);
-      this.editedText =
-        this.commentsList[commentIndex].replies[replyIndex].comment;
-    }
+    // if (e === 'Edit') {
+    //   this.editReplyTextArea = true;
+    //   this.form
+    //     .get('comment')
+    //     ?.setValue(this.commentsList[commentIndex].replies[replyIndex].comment);
+    //   this.editedText =
+    //     this.commentsList[commentIndex].replies[replyIndex].comment;
+    // }
+  }
+
+  handlEditComment(commentIndex: number) {
+    const comment = this.commentsList[commentIndex].comment;
+    this.editComment.emit(comment);
+  }
+
+  handleEditReply(commentIndex: number, replyIndex: number) {
+    const reply = this.commentsList[commentIndex].replies![replyIndex].comment;
+    this.editComment.emit(reply);
   }
 }

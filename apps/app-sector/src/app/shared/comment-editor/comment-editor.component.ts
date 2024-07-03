@@ -60,6 +60,15 @@ export class CommentEditorComponent implements AfterViewInit {
   }
   writeValue(value: string): void {
     this.content = value;
+    if (this.contentEditable && this.contentEditable.nativeElement) {
+      this.contentEditable.nativeElement.innerHTML = this.highlightMentions(
+        this.content
+      );
+      this.setCaretPosition(
+        this.contentEditable.nativeElement,
+        this.content.length
+      );
+    }
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -68,6 +77,11 @@ export class CommentEditorComponent implements AfterViewInit {
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
+  }
+
+  setValue(content: string): void {
+    this.content = content;
+    this.contentEditable.nativeElement.innerText = content;
   }
 
   onInput(event: Event): void {

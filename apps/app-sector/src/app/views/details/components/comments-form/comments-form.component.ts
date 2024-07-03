@@ -93,7 +93,7 @@ export class CommentsFormComponent implements OnInit {
 
   onContentChange(content: string) {
     const mentionsArray = this.extractMentions(content);
-    this.form.get('comment')?.setValue(content.trim());
+    this.form.get('comment')?.setValue(content);
     // console.log('Mentions:', mentionsArray);
     // console.log('Content:', content);
   }
@@ -103,12 +103,16 @@ export class CommentsFormComponent implements OnInit {
     const mentions: string[] = [];
     let match;
     while ((match = mentionPattern.exec(text)) !== null) {
-      mentions.push(match[1].trim());
+      mentions.push(match[0].trim());
     }
     return mentions;
   }
 
   onSubmit() {
     // console.log('Form Data:', this.form.value);
+  }
+  onEditComment(content: string) {
+    // console.log(content);
+    this.form.get('comment')?.setValue(content);
   }
 }
