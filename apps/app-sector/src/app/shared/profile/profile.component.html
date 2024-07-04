@@ -34,7 +34,7 @@
   </div>
   }
   <hr
-    *ngIf="!lastItem()"
+    *ngIf="!lastItem() || hasReplies()"
     [class]="
       !hasReplies() && !reply()
         ? 'profile-content_line'

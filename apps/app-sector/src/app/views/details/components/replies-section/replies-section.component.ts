@@ -14,7 +14,7 @@ import { CookieService } from 'ngx-cookie';
   styleUrl: './replies-section.component.scss',
 })
 export class RepliesSectionComponent implements OnInit {
- // @Output() editComment = new EventEmitter<string>();
+  // @Output() editComment = new EventEmitter<string>();
   totalComments = 0;
   deleteCommentFlag = false;
   deleteReplyFlag = false;
@@ -216,6 +216,7 @@ export class RepliesSectionComponent implements OnInit {
   editCommentt() {
     this.commentsList[this.commentIndex].comment =
       this.form.get('comment')?.value;
+    this.commentsList[this.commentIndex].mentions = this.mentionsArray;
     console.log('new comments', this.commentsList);
     this.form.reset();
     this.editedText = '';
@@ -224,6 +225,8 @@ export class RepliesSectionComponent implements OnInit {
   editReply() {
     this.commentsList[this.commentIndex].replies[this.replyIndex].comment =
       this.form.get('comment')?.value;
+    this.commentsList[this.commentIndex].replies[this.replyIndex].mentions =
+      this.mentionsArray;
     console.log('new comments', this.commentsList);
     this.form.reset();
     this.editReplyTextArea = false;
