@@ -187,10 +187,12 @@ export class UserFormComponent implements OnInit, OnChanges {
         let queryParams = new HttpParams();
 
         if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-          queryParams = queryParams.set(
-            'teamId',
-            this.form.get('teamDto')?.value
-          );
+          if (this.form.get('teamDto')?.value?.length > 0) {
+            queryParams = queryParams.set(
+              'teamId',
+              this.form.get('teamDto')?.value
+            );
+          }
         }
         this.userService
           .addUserGroup(
@@ -366,10 +368,9 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (this.userService.getCurrentSystem() === 'DI_Milestones') {
       this.form.get('viewer')?.enable();
       this.form.get('viewer')?.setValue(false);
-
+      this.form.get('teamDto')?.setValue([]);
       if (value.groupName === 'DT_Director') {
         this.hideDropdown = true;
-        this.form.get('teamDto')?.setValue([]);
         this.form.get('teamDto')?.setValidators(null);
         this.form.get('teamDto')?.updateValueAndValidity();
       } else {
