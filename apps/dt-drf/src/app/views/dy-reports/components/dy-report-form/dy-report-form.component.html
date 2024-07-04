@@ -3,53 +3,145 @@
     <div class="inputs">
       <div class="row">
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Milestone Name'"
-            [inputId]="'milestoneName'" (valueKeyDown)="preventComma($event)" [inputName]="'Milestone Name'"
-            formControlName="milestoneName"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Report Name'" [inputId]="'reportName'"
+            (valueKeyDown)="preventComma($event)" [inputName]="'Report Name'"
+            formControlName="reportName"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Activity Name'"
-            [inputId]="'activityName'" (valueKeyDown)="preventComma($event)" [inputName]="'Activity Name'"
-            formControlName="activityName"></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Description'"
+            [inputId]="'description'" (valueKeyDown)="preventComma($event)" [inputName]="'Description'"
+            formControlName="description"></stc-apps-input>
         </div>
-          <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Work Stream Name'"
-            [inputId]="'workStream'" (valueKeyDown)="preventComma($event)" [inputName]="'Work Stream Name'"
-            formControlName="workStream"></stc-apps-input>
-        </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
-          <stc-apps-date-picker [className]="'custom-input'" (selectChange)="handelChangeDate($event,'start')"
-            [inputPlaceholder]="''" [inputId]="'startDate'" [inputName]="'Start Date'" formControlName="startDate">
-          </stc-apps-date-picker>
-        </div>
-        <div class="col-md-6">
-          <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
-            [inputId]="'endDate'" [inputName]="'End Date'" formControlName="endDate"
-            (selectChange)="handelChangeDate($event,'end')">
-          </stc-apps-date-picker>
-        </div>
-      </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Number'" [inputId]="'weight'"
-            [inputName]="'Weight'" formControlName="weight"></stc-apps-input>
-        </div>
-        <div class="col-md-6" *ngIf="!milestonesService.isDTDirector">
-          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Related Team'" [options]="allTeams"
-            [required]="true" formControlName="teamName" [outputValue]="'name'"
+        <div class="col-md-4">
+          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Category'" [options]="allTeams"
+            [required]="true" formControlName="category" [outputValue]="'name'"
             [disabled]="true"></stc-apps-select-drop-down>
 
         </div>
       </div>
-      <div class="row mt-7">
-        <div class="col-md-6">
-          <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'message'"
-            [inputName]="'deliverable' | translate" formControlName="deliverable"
-            (valueKeyDown)="preventComma($event)"></stc-apps-textarea>
+      <div class="row mt-7 align-items-center">
+        <div class="col-md-2 ">
+          <stc-apps-checkbox [label]="'With SLA'" formControlName="sla" [name]="'sla'"></stc-apps-checkbox>
         </div>
+        <div class="col-md-2">
+          <stc-apps-checkbox [label]="'is Creator '" formControlName="isCreator"
+            [name]="'isCreator'"></stc-apps-checkbox>
+        </div>
+        <div class="col-md-8">
+          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Creator Name'" [options]="allTeams"
+            [required]="true" formControlName="creatorName" [outputValue]="'name'"
+            [disabled]="true"></stc-apps-select-drop-down>
 
+        </div>
+      </div>
+
+      <div class="row mt-7">
+        <div class="col-12">
+          <div>
+            <label for="">Upload File :</label>
+            <div *ngIf="files.length === 0 || errorSize || errorType" class="file-uploader" [ngClass]="
+                        form.controls['file'].invalid &&
+                        (form.controls['file'].dirty ||
+                          form.controls['file'].touched)
+                          ? 'error'
+                          : ''
+                      " (click)="uploadClick()">
+              <input #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)" name="file" hidden
+                accept="{{ accept }}" />
+              @if (errorType || errorSize) {
+              <div class="text-center">
+                <img src="assets/images/file-uploader-error.png" alt="upload" />
+                <h4 class="error-file">Sorry !</h4>
+                @if (errorType) {
+                <p>
+                  Please ensure your file is in a supported format(csv)."
+                </p>
+                } @else {
+                <p>Please ensure your file is less than 20M. "</p>
+
+                }
+              </div>
+              } @else {
+              <div class="text-center">
+                <img src="assets/images/file-uploader.png" alt="upload" />
+                <h4>Upload file,</h4>
+                <p>
+                  be sure that the file
+                  format is csv file
+                </p>
+              </div>
+              }
+            </div>
+
+            <div class="error-file" *ngIf="
+                        form.controls['file'].invalid &&
+                        (form.controls['file'].dirty ||
+                          form.controls['file'].touched)
+                      ">
+              This Field Is Required
+            </div>
+          </div>
+          <div class="file-box" *ngIf="files && files.length > 0 && !errorSize && !errorType">
+            <div class="file">
+              <span><i class="pi pi-file-o"></i> {{ files[0].name }}</span>
+
+              <i role="button" class="fa fa-times-circle" (click)="clearInputElement()"></i>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="row mt-7" *ngIf="isEditing">
+        <div class="col-md-12 mt-4">
+          <div class="steps-flow">
+            <div class="row">
+              <div class="col-md-12 mb-4">
+                <div class="d-flex justify-content-between align-items-center">
+                  <h5 class="mainTitle ">Approval Flow</h5>
+                  <!-- <button type="button" *ngIf="!isEditing" class="add-btn" mat-raised-button (click)="addNewStep()">
+                    <mat-icon>add </mat-icon> add new approval
+                  </button> -->
+                  <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Add'" [buttonType]="'primary'"
+                    (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+                </div>
+              </div>
+            </div>
+            <ul class="p-0">
+
+              <li *ngFor="let item of t ;let i = index">
+                <div class="select-box filter-select-box select-dropDwon custom-select-box mb-4 required"
+                  [formGroup]="item">
+                  <label>Approval{{i + 1}}#:</label>
+
+                  <mat-form-field>
+                    <mat-select required formControlName='username' (selectionChange)="onSelectionChange($event,i)"
+                      appScrollTop>
+                      <input class="search-select" placeholder="search" formControlName='input'>
+                      <option *ngFor="let user of filteredOptions[i] | async" [value]="user.username">{{
+                        user.name
+                        }}</option>
+                    </mat-select>
+
+                    <!-- <mat-error *ngIf="item?.controls?.['username'].errors">{{
+                      'Required Field'
+                      }}</mat-error> -->
+                  </mat-form-field>
+
+                </div>
+                <!-- <div class="ml-3 mb-4" *ngIf=" isEditing&& formData?.requestApprovals[i]?.status !== 'pending'">
+                  <i class="pi pi-check"></i>
+
+                </div>
+                <div class="ml-3 mb-4" *ngIf="loadingUser">
+                  <i class="pi pi-spin pi-spinner"></i>
+
+                </div> -->
+                <button type="button" *ngIf="i !==0 &&  !isEditing" pButton pRipple icon="pi pi-trash"
+                  class="p-button p-button-danger ml-3 mb-4" (click)="removeStep(i)"></button>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
       <div class="row">
         <div class="col-md-4 offset-md-8 ">
@@ -66,27 +158,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="btn-form-action" *ngIf="!isSubmited">
 
-
-    </div> -->
   </form>
 </div>
-
-<!-- <stc-apps-dialog id="add-case-modal">
-  <p>
-    {{ 'add_case_confirmation' | translate }}
-  </p>
-  <div class="row mt-4">
-    <div class="col-md-4 offset-8">
-      <div class="d-flex justify-content-end">
-        <stc-apps-button [buttonText]="'cancel' | translate" [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"></stc-apps-button>
-
-        <div class="mx-4"></div>
-        <stc-apps-button [buttonText]="'confirm' | translate" [buttonType]="'primary'"
-          (btnClick)="onSubmit()"></stc-apps-button>
-      </div>
-    </div>
-  </div>
-</stc-apps-dialog> -->

@@ -1,46 +1,32 @@
 import {
   Component,
+  ElementRef,
   EventEmitter,
   Input,
   OnChanges,
   OnInit,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
 } from '@angular/material-moment-adapter';
-import {
-  DateAdapter,
-  MAT_DATE_FORMATS,
-  MAT_DATE_LOCALE,
-} from '@angular/material/core';
-import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
 import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { MilestonesService } from '../../dy-reports.service';
+import { MilestonesService, User } from '../../dy-reports.service';
+import { startWith, map, Observable } from 'rxjs';
 
-export const APP_DATE_FORMATS = {
-  parse: {
-    dateInput: 'DD/MM/YYYY',
-  },
-  display: {
-    dateInput: 'DD/MM/YYYY',
-    monthYearLabel: 'MMMM YYYY',
-    dateA11yLabel: 'LL',
-    monthYearA11yLabel: 'MMMM YYYY',
-  },
-};
 @Component({
   selector: 'stc-apps-dy-report-form',
   templateUrl: './dy-report-form.component.html',
   styleUrls: ['./dy-report-form.component.scss'],
   providers: [
-    { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },
     {
       provide: DateAdapter,
       useClass: MomentDateAdapter,
@@ -52,19 +38,32 @@ export const APP_DATE_FORMATS = {
 export class DyReportFormComponent implements OnInit, OnChanges {
   @Input() isEditing!: boolean;
   @Input() data!: any;
-
   @Input() readOnly!: boolean;
   @Input() isSubmited!: boolean;
   @Input() casseId!: string;
+
   @Output() caseStatus = new EventEmitter<string>();
 
+  @ViewChild('fileUpload') fileUpload!: ElementRef;
+
   form!: FormGroup;
-  startDate!: Date | null;
-  endDate!: Date | null;
+  users!: [];
+  files: File[] = [];
+  formData = new FormData();
+  isLoading = false;
+  errorSize = false;
+  errorType = false;
+  disableSaveBtn = true;
+  filteredOptions: Observable<any[]>[] = [];
+
+  accept = 'text/csv';
   allTeams: any;
   selectTeam!: any;
+  stepCounter = 1;
+  selectedOptions = [];
+
   constructor(
-    private formBuilder: FormBuilder,
+    private _formBuilder: FormBuilder,
     protected dialogService: DialogService,
     public milestonesService: MilestonesService,
     private toastr: ToastrService,
@@ -81,82 +80,35 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.MilestoneForm();
-    this.milestonesService.checkIsAdmin();
-    this.setRelatedTeam();
+    this.initReportForm();
+    //this.ManageUserNameControl(0);
   }
 
-  MilestoneForm() {
-    this.form = this.formBuilder.group({
-      milestoneName: ['', [Validators.required, Validators.maxLength(100)]],
-      activityName: ['', [Validators.required, Validators.maxLength(150)]],
-      workStream: ['', [Validators.required, Validators.maxLength(150)]],
-      startDate: ['', Validators.required],
-      endDate: ['', [Validators.required]],
-      weight: [
-        '',
-        [
-          Validators.required,
-          Validators.min(1),
-          Validators.max(100),
-          Validators.pattern(/^[+]?([0-9]+\.?[0-9]*|\.[0-9]+)$/),
-        ],
-      ],
-      teamName: [
-        '',
-        this.milestonesService.isDTDirector
-          ? Validators.nullValidator
-          : Validators.required,
-      ],
-      deliverable: ['', Validators.maxLength(300)],
+  initReportForm() {
+    this.form = this._formBuilder.group({
+      reportName: ['', [Validators.required, Validators.maxLength(100)]],
+      description: ['', [Validators.maxLength(150)]],
+      category: ['', Validators.required],
+      sla: [''],
+      isCreator: [''],
+      creatorName: [''],
+      file: ['', Validators.required],
+      requestApprovals: this._formBuilder.array(
+        !this.isEditing
+          ? [
+              this._formBuilder.group({
+                username: ['', Validators.required],
+                sequence: [1],
+                input: [''],
+              }),
+            ]
+          : []
+      ),
     });
   }
 
-  setRelatedTeam() {
-    if (!this.milestonesService.isDTAdmin) {
-      this.allTeams = this.milestonesService.setUserTeams();
-    } else {
-      this.getAllTeams();
-    }
-  }
-
-  FilterStartDate = (d: Date | null): boolean => {
-    if (d === null) return false;
-    if (this.startDate) {
-      const nextDays = new Date(this.startDate);
-      return d >= nextDays;
-    }
-    return true;
-  };
-  FilterEndDate = (d: Date | null): boolean => {
-    if (d === null) return false;
-    if (this.startDate) {
-      const previousDays = new Date(this.startDate);
-      return d >= previousDays;
-    }
-    return true;
-  };
-  handelChangeDate(event: MatDatepickerInputEvent<Date>, type: string) {
-    if (type === 'start') {
-      this.startDate = null;
-      this.endDate = null;
-      this.startDate = event.value;
-      this.form.get('endDate')?.reset();
-    } else {
-      this.endDate = event.value;
-    }
-  }
-
   restFormWithValue(data: any) {
-    this.form?.get('milestoneName')?.setValue(data?.milestoneName);
-    this.form?.get('activityName')?.setValue(data.activityName);
-    this.form?.get('workStream')?.setValue(data.workStream);
-    this.form?.get('teamName')?.setValue(data.teamName);
-    this.form?.get('teamName')?.disable();
-    this.form?.get('startDate')?.setValue(data.startDate);
-    this.form?.get('endDate')?.setValue(data.endDate);
-    this.form?.get('weight')?.setValue(data.weight);
-    this.form?.get('deliverable')?.setValue(data.deliverable);
+    console.log(data);
   }
   onSubmit() {
     if (this.form.valid) {
@@ -205,4 +157,171 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   cancel() {
     this.router.navigate(['../']);
   }
+
+  /** Uploader functions **/
+
+  uploadClick() {
+    if (this.fileUpload) {
+      this.fileUpload.nativeElement.click();
+    }
+  }
+
+  clearInputElement() {
+    this.errorSize = false;
+    this.errorType = false;
+    this.formData.delete('file');
+    this.files = [];
+  }
+
+  handleUploadChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const files = Array.from(inputElement.files || []);
+    if (files.length > 0) {
+      this.clearInputElement();
+      this.uploadAndProgress(files);
+    }
+  }
+
+  uploadAndProgress(files: File[]) {
+    this.files = files;
+    files.forEach((f) => {
+      if (f.size > 20000000) {
+        this.errorSize = true;
+      } else if (f.type !== 'text/csv') {
+        this.errorType = true;
+      } else {
+        this.formData.append('file', f);
+        this.form.get('file')?.setValue(this.formData);
+      }
+    });
+  }
+
+  // convenience getters for easy access to form fields
+  get f() {
+    return this.form.controls;
+  }
+  get t() {
+    return (this.f['requestApprovals'] as FormArray).controls as FormGroup[];
+  }
+  /** setps flow functions **/
+
+  addNewStep() {
+    this.stepCounter += 1;
+    if (this.t.length < this.stepCounter) {
+      for (let i = this.t.length; i < this.stepCounter; i++) {
+        this.t.push(
+          this._formBuilder.group({
+            username: ['', Validators.required],
+            sequence: [''],
+            input: [''],
+          })
+        );
+        //  this.t.at(i).patchValue({ sequence: this.stepCounter });
+        //this.ManageUserNameControl(i);
+      }
+    }
+  }
+  removeStep(item: number) {
+    this.selectedOptions.splice(item, 1);
+  }
+  // triggerEvent(event: boolean, item: number) {
+  //   if (!event) {
+  //     this.t.at(item).patchValue({ input: '' });
+  //   } else {
+  //     this.t.at(item).get('input').markAsTouched();
+  //   }
+  // }
+  onSelectionChange(event: any, i: number) {
+    //this.disableSaveBtn = false;
+    const value = event.source.value.toLowerCase();
+
+    // if (
+    //   this.isEditing &&
+    //   (value ===
+    //     this.formData?.requestApprovals[
+    //       this.formData?.requestApprovals?.length - 1
+    //     ].username ||
+    //     value === this.authService.getCurrentUserName())
+    // ) {
+    //   this.disableSaveBtn = true;
+    // }
+    // this.selectedOptions.splice(i, 1);
+
+    // if (!this.selectedOptions.includes(value)) {
+    //   this.selectedOptions.splice(i, 0, value);
+    // }
+    //this.ManageUserNameControl(i);
+  }
+
+  // ManageUserNameControl(index: number) {
+  //   if (this.t.at(index).get('input').touched) {
+  //     this.filteredOptions[index] = this.t
+  //       .at(index)
+  //       ?.get('input')
+  //       .valueChanges.pipe(
+  //         startWith<string | User>(''),
+  //         map((value) => (typeof value === 'string' ? value : value.username)),
+  //         map((name) => {
+  //           const copySelected = this.selectedOptions.slice();
+  //           copySelected.splice(index, 1);
+  //           return name
+  //             ? this._filter(name)
+  //             : this.selectedOptions.length === 1
+  //             ? this.users
+  //             : this.users?.filter((x) => {
+  //                 return !copySelected.includes(x.username.toLowerCase());
+  //               });
+  //         })
+  //       );
+  //     this.filteredOptions[index + 1] = this.t
+  //       .at(index + 1)
+  //       ?.get('input')
+  //       .valueChanges.pipe(
+  //         startWith<string | User>(''),
+  //         map((value) => (typeof value === 'string' ? value : value.username)),
+  //         map((name) => {
+  //           return name
+  //             ? this._filter(name)
+  //             : this.users?.filter(
+  //                 (x) =>
+  //                   !this.selectedOptions.includes(x.username.toLowerCase())
+  //               );
+  //         })
+  //       );
+  //   } else {
+  //     this.filteredOptions[index] = this.t
+  //       .at(index)
+  //       ?.get('input')
+  //       .valueChanges.pipe(
+  //         startWith<string | User>(''),
+  //         map((value) => (typeof value === 'string' ? value : value.username)),
+  //         map((name) => {
+  //           return name
+  //             ? this._filter(name)
+  //             : this.formMode === 'edit'
+  //             ? this.users
+  //             : this.users?.filter(
+  //                 (x) =>
+  //                   !this.selectedOptions.includes(x.username.toLowerCase())
+  //               );
+  //         })
+  //       );
+  //   }
+  // }
+  // private _filter(name: string): User[] {
+  //   const filterValue = name.toLowerCase();
+  //   if (this.selectedOptions.length > 0) {
+  //     return this.users
+  //       ?.filter(
+  //         (option) => option?.name.toLowerCase().indexOf(filterValue) === 0
+  //       )
+  //       .filter(
+  //         (x) => !this.selectedOptions.includes(x.username.toLowerCase())
+  //       );
+  //   } else {
+  //     return this.users?.filter(
+  //       (option) => option.name.toLowerCase().indexOf(filterValue) === 0
+  //     );
+  //   }
+  // }
 }

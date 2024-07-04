@@ -1,0 +1,5 @@
+{
+  "apiUrl": "https://api.example.com",
+  "featureToggle": true,
+  "version": "1.0.0"
+}

@@ -34,3 +34,47 @@
     padding: 30px 50px;
   }
 }
+
+.file-uploader {
+  cursor: pointer;
+  margin: 16px auto;
+  border: 1px dashed blue;
+  padding: 24px 16px;
+  color: var(--grey-color);
+  border-radius: 10px;
+  &.error {
+    border-color: red;
+  }
+  img {
+    margin-bottom: 10px;
+    width: 150px;
+    height: 150px;
+    object-fit: contain;
+  }
+  p {
+    font-weight: 300;
+  }
+}
+
+.file {
+  background-color: lightgrey;
+  color: blue;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 16px;
+  margin-top: 30px;
+
+  i.pi-times {
+    color: red;
+  }
+  i.pi-download {
+    color: gray;
+  }
+}
+
+.error-file {
+  margin: 5px auto;
+  color: red;
+  padding-left: 10px;
+}

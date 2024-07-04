@@ -1,5 +1,5 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { NgModule, importProvidersFrom } from '@angular/core';
+import { APP_INITIALIZER, NgModule, importProvidersFrom } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
@@ -33,6 +33,7 @@ import { environment } from '../environments/environment';
 import { CookieModule } from 'ngx-cookie';
 import { ReportingService } from './services/reporting.service';
 import { MatDialogModule } from '@angular/material/dialog';
+import { ConfigService } from './services/config.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -82,6 +83,14 @@ export const provideTranslation = () => ({
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,
+      multi: true,
+    },
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configService: ConfigService) => () =>
+        configService.loadConfig(),
+      deps: [ConfigService],
       multi: true,
     },
   ],
