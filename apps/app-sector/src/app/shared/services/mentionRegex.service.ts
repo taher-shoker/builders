@@ -5,7 +5,7 @@ export class mentionRegexService {
   generateRegex(mentions: string[]) {
     if (mentions) {
       const usernamesRegex = mentions
-        .map((username: string) => `@${this.escapeRegExp(username)}`)
+        .map((username: string) => `${this.escapeRegExp(username)}`)
         .join('|');
       return new RegExp(`(${usernamesRegex})`, 'g');
     }
