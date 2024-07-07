@@ -70,6 +70,15 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
 
   ngAfterViewInit(): void {
     this.setupMentionListener();
+    this.preventScrollOnFocusLoss();
+  }
+
+  preventScrollOnFocusLoss(): void {
+    fromEvent<Event>(this.contentEditable.nativeElement, 'focusout').subscribe(
+      (event) => {
+        event.preventDefault();
+      }
+    );
   }
 
   writeValue(value: string): void {
@@ -165,7 +174,7 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
           event.preventDefault();
           break;
 
-        case 'Enter': {
+        case 'Enter':
           if (this.activeMentionIndex > -1) {
             this.addMention(
               this.filteredList[this.activeMentionIndex][this.mentionProperty()]
@@ -174,7 +183,6 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
             event.preventDefault();
           }
           break;
-        }
       }
     }
   }
@@ -242,6 +250,60 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
           mention[this.mentionProperty()].toLowerCase().includes(query!)
         );
       });
+
+    fromEvent<KeyboardEvent>(input, 'keydown')
+      .pipe(filter((event) => event.key === 'Backspace'))
+      .subscribe((event) => this.onBackspace(event));
+  }
+
+  onBackspace(event: KeyboardEvent): void {
+    const input = this.contentEditable.nativeElement;
+    const caretPosition = this.getCaretPosition(input);
+
+    // Get the text before and after the caret
+    const textBeforeCaret = input.textContent!.slice(0, caretPosition);
+    const textAfterCaret = input.textContent!.slice(caretPosition);
+
+    // Check if there's a mention at the position before the caret
+    const mention = this.getMentionAtPosition(caretPosition - 1);
+
+    if (mention) {
+      // If the caret is immediately after a mention, delete the mention
+      this.deleteMention(mention);
+      event.preventDefault();
+    } else if (textBeforeCaret.endsWith(' ')) {
+      // If there's an extra space before the caret, delete the space
+      const newText = textBeforeCaret.slice(0, -1) + textAfterCaret;
+      this.writeValue(newText);
+      this.setCaretPosition(input, caretPosition - 1);
+      this.contentChange.emit(newText);
+      this.showDropdown = false; // Hide dropdown after deletion
+      event.preventDefault();
+    } else if (textAfterCaret === '') {
+      // If the text after the caret is empty, hide the dropdown list
+      this.showDropdown = false;
+    }
+  }
+
+  getMentionAtPosition(position: number): any | null {
+    const mentions = this.extractMentions(this.content);
+    for (const mention of mentions) {
+      const start = this.content.indexOf(`@${mention}`);
+      const end = start + mention.length + 1; // +1 for the '@' symbol
+      // Adjust to check if the position is right after the mention
+      if (position === end) {
+        return { name: mention, start, end };
+      }
+    }
+    return null;
+  }
+
+  deleteMention(mention: any): void {
+    const newText =
+      this.content.substring(0, mention.start) +
+      this.content.substring(mention.end);
+    this.writeValue(newText);
+    this.contentChange.emit(newText);
   }
 
   highlightMentions(text: string): string {
