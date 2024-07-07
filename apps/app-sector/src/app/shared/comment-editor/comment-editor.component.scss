@@ -1,4 +1,6 @@
 .comments {
+  position: relative;
+
   &_form {
     border: 1px solid rgba(var(--blackColor), 0.1);
     padding: 20px 16px;
@@ -49,18 +51,20 @@
   }
 
   &_mentions {
-    max-height: 15rem;
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    max-height: 20rem;
     overflow-y: auto;
     background: var(--whiteColor);
     z-index: 1000;
     list-style: none;
-    padding: 0;
-    width: auto;
+    width: 90%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: 6px;
 
     li {
-      padding: 10px;
       cursor: pointer;
 
       &:hover {
