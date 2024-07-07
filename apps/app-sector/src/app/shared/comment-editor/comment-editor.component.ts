@@ -84,10 +84,12 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
           this.addMention(mention);
         });
       } else {
-        this.setCaretPosition(
-          this.contentEditable.nativeElement,
-          this.content.length
-        );
+        if (this.content) {
+          this.setCaretPosition(
+            this.contentEditable.nativeElement,
+            this.content.length
+          );
+        }
       }
     }
   }

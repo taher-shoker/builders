@@ -5,6 +5,7 @@ import {
   input,
   InputSignal,
   OnInit,
+  Renderer2,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -25,7 +26,7 @@ import { newComment } from '../../../models/newComment';
 })
 export class RepliesSectionComponent implements OnInit {
   // @Output() editComment = new EventEmitter<string>();
-  @ViewChild('textArea') textArea?: ElementRef;
+  @ViewChild('targetElement') textArea?: ElementRef;
   newComment: InputSignal<newComment> = input({} as newComment);
   totalComments = 0;
   deleteCommentFlag = false;
@@ -89,7 +90,8 @@ export class RepliesSectionComponent implements OnInit {
     private fb: FormBuilder,
     private cookieService: CookieService,
     public router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    private renderer: Renderer2
   ) {
     effect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -265,56 +267,58 @@ export class RepliesSectionComponent implements OnInit {
   handleCommentActions(e: string, commentIndex: number) {
     this.commentIndex = commentIndex;
     console.log(e, commentIndex);
-    if (e === 'Delete') {
-      this.deleteCommentFlag = true;
-      this.openDialog('0ms', '0ms', commentIndex);
-    } else if (e === 'Reply') {
-      this.editedText.set('');
-      this.showCommentTextArea = true;
-      this.commentActionBtn = 'Save';
-      // setTimeout(() => {
-      //   this.scrollIntoView();
-      // });
-    } else if (e === 'Edit') {
-      this.commentActionBtn = 'Update';
-      this.showCommentTextArea = true;
-      const comment = this.commentsList[commentIndex].comment;
-      this.form.get('comment')?.setValue(comment);
-      this.editedText.set(comment);
+    if (!this.showCommentTextArea) {
+      if (e === 'Delete') {
+        this.deleteCommentFlag = true;
+        this.openDialog('0ms', '0ms', commentIndex);
+      } else if (e === 'Reply') {
+        this.editedText.set('');
+        this.showCommentTextArea = true;
+        this.commentActionBtn = 'Save';
+        setTimeout(() => {
+          this.scrollIntoView();
+        });
+      } else if (e === 'Edit') {
+        this.commentActionBtn = 'Update';
+        setTimeout(() => {
+          this.scrollIntoView();
+        });
+        this.showCommentTextArea = true;
+        const comment = this.commentsList[commentIndex].comment;
+        this.form.get('comment')?.setValue(comment);
+        this.editedText.set(comment);
+      }
     }
   }
   scrollIntoView() {
-    console.log(this.textArea);
+    console.log(this.textArea?.nativeElement);
     if (this.textArea?.nativeElement) {
       console.log('scrolll 2');
+      // window.scrollBy({ top: 300, behavior: 'smooth' });
       this.textArea.nativeElement.scrollIntoView({
         behavior: 'smooth',
-        block: 'start',
+        block: 'nearest',
+        inline: 'start',
       });
     }
   }
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {
     this.commentIndex = commentIndex;
     this.replyIndex = replyIndex;
-    if (e === 'Delete') {
-      this.deleteReplyFlag = true;
-      this.openDialog('0ms', '0ms', commentIndex, replyIndex);
-    }
-    if (e === 'Edit') {
-      this.editReplyTextArea = true;
-      const reply = this.commentsList[commentIndex].replies[replyIndex].comment;
-      this.form.get('comment')?.setValue(reply);
-      this.editedText.set(reply);
+    if (!this.editReplyTextArea) {
+      if (e === 'Delete') {
+        this.deleteReplyFlag = true;
+        this.openDialog('0ms', '0ms', commentIndex, replyIndex);
+      } else if (e === 'Edit') {
+        this.editReplyTextArea = true;
+        const reply =
+          this.commentsList[commentIndex].replies[replyIndex].comment;
+        this.form.get('comment')?.setValue(reply);
+        this.editedText.set(reply);
+        setTimeout(() => {
+          this.scrollIntoView();
+        });
+      }
     }
   }
-
-  // handlEditComment(commentIndex: number) {
-  //   const comment = this.commentsList[commentIndex].comment;
-  //   this.editComment.emit(comment);
-  // }
-
-  // handleEditReply(commentIndex: number, replyIndex: number) {
-  //   const reply = this.commentsList[commentIndex].replies![replyIndex].comment;
-  //   this.editComment.emit(reply);
-  // }
 }

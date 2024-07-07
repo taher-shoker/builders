@@ -1,11 +1,11 @@
 <div class="comments">
   <div class="comments_form">
-    @if(title()){
+    <!-- @if(title()){
     <div class="comments_form_header">
       <h3>{{ title() }}</h3>
       <img src="assets/images/chat.svg" />
     </div>
-    }
+    } -->
 
     <div class="comments_form_content">
       <div
@@ -20,17 +20,17 @@
     </div>
   </div>
   @if (showDropdown && content) {
-  <ul #mentionList class="comments_mentions">
+  <div #mentionList class="comments_mentions">
     @for (item of filteredList; track item; let index = $index) {
+    <a class="dropdown-item" (click)="addMention(item[mentionProperty()])">
+      <stc-apps-profile
+        [name]="item[mentionProperty()]"
+        [comment]="item.comment"
+        [lastItem]="index === filteredList.length - 1"
+      ></stc-apps-profile>
+    </a>
 
-    <!-- <stc-apps-profile
-      [name]="item.name"
-      [comment]="item.comment"
-      [lastItem]="index === filteredList.length - 1 ? true : false"
-      (click)="addMention(item.name)"
-      [ngClass]="{ active: index === activeMentionIndex }"
-    ></stc-apps-profile> -->
-    <li
+    <!-- <li
       (click)="addMention(item[mentionProperty()])"
       [ngClass]="{ active: index === activeMentionIndex }"
     >
@@ -39,8 +39,8 @@
         [comment]="item.comment"
         [lastItem]="index === filteredList.length - 1"
       ></stc-apps-profile>
-    </li>
+    </li> -->
     }
-  </ul>
+  </div>
   }
 </div>

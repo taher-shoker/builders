@@ -1,6 +1,7 @@
 @import '../../../../../../libs/styles/src/scss/core/variables/colors';
 
 .comments {
+  position: relative;
   &_form {
     border: 1px solid rgba($blackColor, 0.1);
     padding: 20px 16px;
@@ -51,18 +52,20 @@
   }
 
   &_mentions {
-    max-height: 15rem;
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    max-height: 20rem;
     overflow-y: auto;
     background: #fff;
     z-index: 1000;
     list-style: none;
-    padding: 0;
-    width: auto;
+    padding: 12px;
+    width: 90%;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
+    border-radius: 6px;
 
-    li {
-      padding: 10px;
+    a {
       cursor: pointer;
 
       &:hover {
