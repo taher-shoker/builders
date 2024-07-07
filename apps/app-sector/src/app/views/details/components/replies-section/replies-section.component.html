@@ -21,7 +21,7 @@
         formControlName="comment"
         [placeholder]="placeholder"
         [mentions]="mentions"
-        [editedText]="editedText"
+        [editedText]="editedText()"
         (contentChange)="onContentChange($event)"
       ></stc-apps-comment-editor>
 
@@ -47,7 +47,7 @@
           [mentions]="reply.mentions"
           [lastItem]="
             $index === comment.replies.length - 1 &&
-            parentLoop === commentsList.length - 1 
+            parentLoop === commentsList.length - 1
               ? true
               : false
           "
@@ -62,7 +62,7 @@
             formControlName="comment"
             [placeholder]="placeholder"
             [mentions]="mentions"
-            [editedText]="editedText"
+            [editedText]="editedText()"
             (contentChange)="onContentChange($event)"
           ></stc-apps-comment-editor>
           <div class="replies-section_add-reply-actions">

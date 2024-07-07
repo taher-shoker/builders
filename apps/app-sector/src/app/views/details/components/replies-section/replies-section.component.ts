@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatDialogeComponent } from '../mat-dialoge/mat-dialoge.component';
 import { DatePipe } from '@angular/common';
@@ -26,11 +26,13 @@ export class RepliesSectionComponent implements OnInit {
   commentIndex = 0;
   replyIndex = 0;
   loggedUser = '';
-  editedText = '';
+  editedText = signal('');
   mentions = [
     { name: 'Assem Khalifa Ahmed', comment: 'UI/UX Designer' },
     { name: 'Assem Ahmed', comment: 'Business Analyst' },
     { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
+    { name: 'Naden Draz', comment: 'UI/UX Designer' },
+    { name: 'Habiba mohamed', comment: 'UI/UX Designer' },
   ];
   mentionsArray: string[] = [];
   commentsList = [
@@ -99,14 +101,16 @@ export class RepliesSectionComponent implements OnInit {
       comment: this.fb.control('', [Validators.required]),
     });
   }
-  onContentChange(content: string) {
-    console.log('habiba');
-    this.mentionsArray = this.extractMentions(content);
+  onContentChange(content: any): void {
+    console.log('onContentChange');
+    this.mentionsArray = this.extractMentions(this.form.value.comment);
 
-    console.log('form', this.form.get('comment')?.value);
+    console.log('Form Value:', this.form.get('comment')?.value);
     console.log('Mentions:', this.mentionsArray);
     console.log('Content:', content);
+    console.log('editedText:', this.editedText());
   }
+
   extractMentions(text: string): string[] {
     const mentionPattern = /@(\w+)/g;
     const mentions: string[] = [];
@@ -210,23 +214,20 @@ export class RepliesSectionComponent implements OnInit {
     });
     console.log('new comments', this.commentsList);
     this.form.reset();
-    this.editedText = '';
+    this.editedText.set('');
     this.showCommentTextArea = false;
   }
   editCommentt() {
     this.commentsList[this.commentIndex].comment =
       this.form.get('comment')?.value;
-    this.commentsList[this.commentIndex].mentions = this.mentionsArray;
     console.log('new comments', this.commentsList);
     this.form.reset();
-    this.editedText = '';
+    this.editedText.set('');
     this.showCommentTextArea = false;
   }
   editReply() {
     this.commentsList[this.commentIndex].replies[this.replyIndex].comment =
       this.form.get('comment')?.value;
-    this.commentsList[this.commentIndex].replies[this.replyIndex].mentions =
-      this.mentionsArray;
     console.log('new comments', this.commentsList);
     this.form.reset();
     this.editReplyTextArea = false;
@@ -238,21 +239,16 @@ export class RepliesSectionComponent implements OnInit {
       this.deleteCommentFlag = true;
       this.openDialog('0ms', '0ms', commentIndex);
     } else if (e === 'Reply') {
-      this.editedText = '';
+      this.editedText.set('');
       this.showCommentTextArea = true;
       this.commentActionBtn = 'Save';
     } else if (e === 'Edit') {
       this.commentActionBtn = 'Update';
       this.showCommentTextArea = true;
-      this.form
-        .get('comment')
-        ?.setValue(this.commentsList[commentIndex].comment);
-      this.editedText = this.commentsList[commentIndex].comment;
-      console.log(this.form.get('comment')?.value);
+      const comment = this.commentsList[commentIndex].comment;
+      this.form.get('comment')?.setValue(comment);
+      this.editedText.set(comment);
     }
-    //  else if (e === 'Edit') {
-    //   this.handlEditComment(commentIndex);
-    // }
   }
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {
     this.commentIndex = commentIndex;
@@ -263,15 +259,10 @@ export class RepliesSectionComponent implements OnInit {
     }
     if (e === 'Edit') {
       this.editReplyTextArea = true;
-      this.form
-        .get('comment')
-        ?.setValue(this.commentsList[commentIndex].replies[replyIndex].comment);
-      this.editedText =
-        this.commentsList[commentIndex].replies[replyIndex].comment;
+      const reply = this.commentsList[commentIndex].replies[replyIndex].comment;
+      this.form.get('comment')?.setValue(reply);
+      this.editedText.set(reply);
     }
-    // else if (e === 'Edit') {
-    //   this.handleEditReply(commentIndex, replyIndex);
-    // }
   }
 
   // handlEditComment(commentIndex: number) {

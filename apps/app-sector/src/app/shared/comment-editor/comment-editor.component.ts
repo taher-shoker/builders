@@ -1,11 +1,14 @@
 import {
   AfterViewInit,
+  ChangeDetectorRef,
   Component,
   ElementRef,
   EventEmitter,
   Input,
   InputSignal,
+  OnChanges,
   Output,
+  SimpleChanges,
   ViewChild,
   forwardRef,
   input,
@@ -32,8 +35,9 @@ import { mentionRegexService } from '../services/mentionRegex.service';
     },
   ],
 })
-export class CommentEditorComponent implements AfterViewInit {
-  @ViewChild('contentEditable') contentEditable!: ElementRef<HTMLDivElement>;
+export class CommentEditorComponent implements AfterViewInit, OnChanges {
+  @ViewChild('contentEditable', { static: true })
+  contentEditable!: ElementRef<HTMLDivElement>;
   @ViewChild('mentionList') mentionList!: ElementRef<HTMLUListElement>;
 
   placeholder: InputSignal<string> = input('');
@@ -47,8 +51,17 @@ export class CommentEditorComponent implements AfterViewInit {
   filteredList: any[] = [];
   value: string | undefined;
   activeMentionIndex = -1;
-  mentions2 = ['Naden Draz', 'Habiba'];
-  constructor(private mentionsService: mentionRegexService) {}
+
+  constructor(
+    private mentionsService: mentionRegexService,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['editedText']) {
+      this.setValue(this.editedText());
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
@@ -58,19 +71,35 @@ export class CommentEditorComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     this.setupMentionListener();
   }
+
   writeValue(value: string): void {
     this.content = value;
     if (this.contentEditable && this.contentEditable.nativeElement) {
       this.contentEditable.nativeElement.innerHTML = this.highlightMentions(
         this.content
       );
-      if (this.content) {
+
+      if (this.editedText()) {
+        this.extractMentions(this.content).forEach((mention) => {
+          this.addMention(mention);
+        });
+      } else {
         this.setCaretPosition(
           this.contentEditable.nativeElement,
           this.content.length
         );
       }
     }
+  }
+
+  extractMentions(text: string): string[] {
+    const mentionPattern = /@([\w\s]+)/g;
+    const mentions: string[] = [];
+    let match;
+    while ((match = mentionPattern.exec(text)) !== null) {
+      mentions.push(match[1].trim());
+    }
+    return mentions;
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -80,10 +109,10 @@ export class CommentEditorComponent implements AfterViewInit {
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-
   setValue(content: string): void {
     this.content = content;
     this.contentEditable.nativeElement.innerText = content;
+    this.cdr.detectChanges();
   }
 
   onInput(event: Event): void {
@@ -98,7 +127,7 @@ export class CommentEditorComponent implements AfterViewInit {
     const cursorPosition = this.getCaretPosition(input);
     const textBeforeCursor = input.textContent!.slice(0, cursorPosition);
     const mentionIndex = textBeforeCursor.lastIndexOf('@');
-    console.log('mentionIndex', mentionIndex, this.mentionProperty());
+
     if (mentionIndex > -1) {
       const query = textBeforeCursor.slice(mentionIndex + 1).toLowerCase();
       this.filteredList = this.mentions().filter((mention: any) =>
@@ -175,9 +204,9 @@ export class CommentEditorComponent implements AfterViewInit {
     const value = input.textContent || '';
     const mentionIndex = value.lastIndexOf('@');
     const textBeforeMention = value.slice(0, mentionIndex);
-    const textAfterMention = value
-      .slice(mentionIndex + 1)
-      .replace(/\s*\S*/, '');
+    const textAfterMention = this.editedText()
+      ? ''
+      : value.slice(mentionIndex + 1).replace(/\s*\S*/, '');
     const newText = `${textBeforeMention}<span class="mention">@${mention}</span> ${textAfterMention}`;
 
     input.innerHTML = this.highlightMentions(newText);
@@ -217,7 +246,6 @@ export class CommentEditorComponent implements AfterViewInit {
 
   highlightMentions(text: string): string {
     let highlightedText = text;
-    console.log('highlighted text', highlightedText);
     this.mentions().forEach((mention: any) => {
       const mentionPattern = new RegExp(
         `(@${mention[this.mentionProperty()]})(\\s|$)`,
