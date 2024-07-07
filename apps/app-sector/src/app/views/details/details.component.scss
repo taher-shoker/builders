@@ -14,17 +14,14 @@
   }
 
   &_content {
-    .comments-section {
-      background-color: $whiteColor;
-      border-radius: 8px;
-      padding: 24px 32px;
-    }
     &_formula {
       h4 {
         color: $semiBlackColor;
       }
+
       ul {
         padding: 0;
+
         &:last-child {
           list-style: disc;
           padding: revert;

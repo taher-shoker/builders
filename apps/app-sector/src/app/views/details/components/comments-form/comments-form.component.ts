@@ -15,6 +15,7 @@ export class CommentsFormComponent implements OnInit {
   newComment: newComment = {} as newComment;
   form: FormGroup = new FormGroup({});
   uploadedFiles: File[] = [];
+  displayedFiles: { file: File; formattedUploadDate: string }[] = [];
   accept = [
     'image/png',
     'image/jpeg',
@@ -63,13 +64,28 @@ export class CommentsFormComponent implements OnInit {
       );
 
       this.uploadedFiles = this.uploadedFiles.concat(uniqueFiles);
+      this.displayedFiles = this.displayedFiles.concat(
+        uniqueFiles.map((file) => ({
+          file,
+          formattedUploadDate: this.formatDate(new Date()),
+        }))
+      );
 
-      // console.log('Selected files:', this.uploadedFiles);
+      console.log('Selected files:', this.uploadedFiles);
       this.form.patchValue({
         attachments: this.uploadedFiles,
       });
       input.value = '';
     }
+  }
+
+  formatDate(date: Date): string {
+    const options: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+    };
+    return `Uploaded at ${date.toLocaleDateString('en-US', options)}`;
   }
 
   downloadFile(file: any) {
