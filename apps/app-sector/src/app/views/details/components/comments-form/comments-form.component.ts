@@ -101,6 +101,7 @@ export class CommentsFormComponent implements OnInit {
 
   deleteFile(index: number) {
     this.uploadedFiles?.splice(index, 1);
+    this.displayedFiles?.splice(index, 1);
   }
 
   // onDeleteFile(id: number) {
