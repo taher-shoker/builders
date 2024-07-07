@@ -1,4 +1,13 @@
-import { Component, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  input,
+  InputSignal,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatDialogeComponent } from '../mat-dialoge/mat-dialoge.component';
 import { DatePipe } from '@angular/common';
@@ -7,6 +16,7 @@ import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { AuthService } from 'apps/app-sector/src/app/shared/services/auth.service';
 import { CookieService } from 'ngx-cookie';
+import { newComment } from '../../../models/newComment';
 
 @Component({
   selector: 'stc-apps-replies-section',
@@ -15,6 +25,8 @@ import { CookieService } from 'ngx-cookie';
 })
 export class RepliesSectionComponent implements OnInit {
   // @Output() editComment = new EventEmitter<string>();
+  @ViewChild('textArea') textArea?: ElementRef;
+  newComment: InputSignal<newComment> = input({} as newComment);
   totalComments = 0;
   deleteCommentFlag = false;
   deleteReplyFlag = false;
@@ -38,7 +50,7 @@ export class RepliesSectionComponent implements OnInit {
   commentsList = [
     {
       name: 'Assem Khalifa',
-      mentions: ['Naden Draz', 'Habiba mohamed'],
+      mentions: ['@Naden Draz', '@Habiba mohamed'],
       comment: 'Test comment @Naden Draz test @Habiba mohamed',
       time: 'Few Seconds ago',
       replies: [
@@ -58,7 +70,7 @@ export class RepliesSectionComponent implements OnInit {
     },
     {
       name: 'Assem Ahmed',
-      mentions: ['Habiab Mohamed Nagiub'],
+      mentions: ['@Habiab Mohamed Nagiub'],
       comment: 'Test Comment 2 @Habiab Mohamed Nagiub',
       time: 'Few Seconds ago',
       replies: [],
@@ -79,6 +91,22 @@ export class RepliesSectionComponent implements OnInit {
     public router: Router,
     private authService: AuthService
   ) {
+    effect(() => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      console.log('in replies', this.newComment());
+      if (this.newComment().name) {
+        const newObj = {
+          name: 'Assem Khalifa',
+          mentions: this.newComment().mentions,
+          comment: this.newComment().name,
+          time: 'Few Seconds ago',
+          replies: [],
+        };
+        this.commentsList.unshift(newObj);
+        this.commentsCount();
+      }
+      console.log('array', this.commentsList);
+    });
     this.handleForm();
     this.commentsCount();
   }
@@ -112,14 +140,15 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   extractMentions(text: string): string[] {
-    const mentionPattern = /@(\w+)/g;
+    const mentionPattern = /@([\w\s]+)/g;
     const mentions: string[] = [];
     let match;
     while ((match = mentionPattern.exec(text)) !== null) {
-      mentions.push(match[1]);
+      mentions.push(match[0].trim());
     }
     return mentions;
   }
+
   commentsCount() {
     this.totalComments = 0;
     this.commentsList.map((comment) => {
@@ -206,6 +235,7 @@ export class RepliesSectionComponent implements OnInit {
     }
   }
   saveReply() {
+    console.log('inside save');
     this.commentsList[this.commentIndex].replies?.unshift({
       name: this.loggedUser,
       comment: this.form.get('comment')?.value,
@@ -242,12 +272,25 @@ export class RepliesSectionComponent implements OnInit {
       this.editedText.set('');
       this.showCommentTextArea = true;
       this.commentActionBtn = 'Save';
+      // setTimeout(() => {
+      //   this.scrollIntoView();
+      // });
     } else if (e === 'Edit') {
       this.commentActionBtn = 'Update';
       this.showCommentTextArea = true;
       const comment = this.commentsList[commentIndex].comment;
       this.form.get('comment')?.setValue(comment);
       this.editedText.set(comment);
+    }
+  }
+  scrollIntoView() {
+    console.log(this.textArea);
+    if (this.textArea?.nativeElement) {
+      console.log('scrolll 2');
+      this.textArea.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     }
   }
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {

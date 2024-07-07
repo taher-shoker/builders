@@ -30,7 +30,7 @@ export class ProfileComponent {
   actionsList = [''];
   constructor(private mentionsService: mentionRegexService) {
     effect(() => {
-      console.log(this.reply(), this.comment(), this.hasReplies());
+      console.log(this.reply(), this.comment(), this.hasReplies(),this.mentions);
       if (this.reply() == true) {
         this.replyClass = true;
         this.actionsList = ['Edit', 'Delete'];

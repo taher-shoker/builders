@@ -48,6 +48,9 @@
       margin-top: 12px;
       cursor: pointer;
     }
+    .action-btns:hover{
+      color: $stcCoralColor;
+    }
   }
   .actions-reply-holder {
     margin-left: 155px;
@@ -59,6 +62,9 @@
       color: $mediumGrey;
       margin-top: 12px;
       cursor: pointer;
+    }
+    .action-btns:hover{
+      color: $stcCoralColor;
     }
   }
 }

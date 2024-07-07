@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { newComment } from '../../../models/newComment';
 
 @Component({
   selector: 'stc-apps-comments-form',
@@ -11,7 +12,7 @@ export class CommentsFormComponent implements OnInit {
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('mentionList') mentionList!: ElementRef<HTMLUListElement>;
-
+  newComment: newComment = {} as newComment;
   form: FormGroup = new FormGroup({});
   uploadedFiles: File[] = [];
   accept = [
@@ -32,7 +33,7 @@ export class CommentsFormComponent implements OnInit {
     { name: 'Assem Ahmed', comment: 'Business Analyst' },
     { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
   ];
-
+  mentionsArray: string[] = [''];
   constructor(private fb: FormBuilder) {}
 
   ngOnInit(): void {
@@ -93,8 +94,9 @@ export class CommentsFormComponent implements OnInit {
 
   onContentChange(content: string) {
     const mentionsArray = this.extractMentions(content);
+    this.mentionsArray = mentionsArray;
     this.form.get('comment')?.setValue(content);
-    // console.log('Mentions:', mentionsArray);
+    console.log('Mentions:', mentionsArray);
     // console.log('Content:', content);
   }
 
@@ -109,7 +111,14 @@ export class CommentsFormComponent implements OnInit {
   }
 
   onSubmit() {
-    // console.log('Form Data:', this.form.value);
+    console.log('Form Data:', this.form.value);
+    this.newComment = {
+      name: this.form.value.comment,
+      mentions: this.mentionsArray,
+    };
+
+    console.log('this', this.newComment);
+    this.form.reset();
   }
   onEditComment(content: string) {
     // console.log(content);

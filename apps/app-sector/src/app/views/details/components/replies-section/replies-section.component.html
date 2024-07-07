@@ -15,26 +15,29 @@
     ></stc-apps-profile>
 
     @if(showCommentTextArea && parentLoop==commentIndex){
-    <form [formGroup]="form">
-      <stc-apps-comment-editor
-        class="replies-section_add-reply"
-        formControlName="comment"
-        [placeholder]="placeholder"
-        [mentions]="mentions"
-        [editedText]="editedText()"
-        (contentChange)="onContentChange($event)"
-      ></stc-apps-comment-editor>
+    <div #textArea>
+      <form [formGroup]="form">
+        <stc-apps-comment-editor
+          class="replies-section_add-reply"
+          formControlName="comment"
+          [placeholder]="placeholder"
+          [mentions]="mentions"
+          [editedText]="editedText()"
+          (contentChange)="onContentChange($event)"
+        ></stc-apps-comment-editor>
 
-      <div class="replies-section_add-reply-actions">
-        <button class="cancel-btn" (click)="cancel()">Cancel</button>
-        <button
-          (click)="save()"
-          [disabled]="form.controls['comment'].hasError('required')"
-        >
-          {{ commentActionBtn }}
-        </button>
-      </div>
-    </form>
+        <div class="replies-section_add-reply-actions">
+          <button class="cancel-btn" (click)="cancel()">Cancel</button>
+          <button
+            (click)="save()"
+            [disabled]="form.controls['comment'].hasError('required')"
+          >
+            {{ commentActionBtn }}
+          </button>
+        </div>
+      </form>
+    </div>
+
     }
 
     <div *ngIf="comment.replies && comment.replies.length > 0">
