@@ -1,7 +1,6 @@
-@import '../../../../../../libs/styles/src/scss/core/variables/colors';
 
 .score {
-    background: $whiteColor;
+    background: var(--whiteColor);
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -14,13 +13,13 @@
 
         &_image {
             margin-inline-end: 23px;
-            background: $lightPurbleColor;
+            background: var(--lightPurpleColor);
         }
 
         &_result {
             h3 {
                 font-family: var(--stc-font-meduim);
-                color: $darkPurbleColor;
+                color: var(--darkPurpleColor);
             }
         }
     }

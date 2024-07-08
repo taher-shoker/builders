@@ -16,7 +16,7 @@
     list-style: none;
     border-radius: 10px;
     padding: 24px;
-    background-color: $whiteColor;
+    background-color: var(--whiteColor);
     display: flex;
     flex-direction: column;
     gap: 20px;
@@ -32,7 +32,7 @@
       }
 
       span {
-        color: $grayColor;
+        color: var(--grayColor);
         font-family: 'stc forward-medium';
       }
     }
@@ -57,7 +57,7 @@
   ::ng-deep {
     stc-apps-result-score .score {
       @media screen and (max-width: 766px) and (min-width: 482px) {
-        >div {
+        > div {
           width: 50%;
         }
       }
