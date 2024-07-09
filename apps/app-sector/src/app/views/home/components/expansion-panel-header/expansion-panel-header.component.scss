@@ -38,7 +38,7 @@ p {
     }
 
     .delayed {
-      color: var(--redColor);
+      color: var(--stc-red-color);
     }
 
     p {
@@ -80,20 +80,20 @@ p {
     position: absolute;
     top: 20px;
     right: 30px;
-    border: 1.6px solid var(--darkerPurbleColor);
+    border: 1.6px solid var(--darkPurpleColor);
     border-radius: 50%;
     padding: 4px 6px 7px 6px;
     display: flex;
     align-items: center;
 
     &::after {
-      color: var(--darkerPurbleColor);
+      color: var(--darkPurpleColor);
       padding: 2.6px;
     }
 
     &:hover {
-      border-color: var(--pinkColor);
-      background-color: var(--pinkColor);
+      border-color: var(--stc-pink-color);
+      background-color: var(--stc-pink-color);
 
       &::after {
         color: var(--whiteColor);
@@ -102,8 +102,8 @@ p {
   }
 
   .mat-expansion-panel.mat-expanded .mat-expansion-panel-header .mat-expansion-indicator {
-    border-color: var(--pinkColor);
-    background-color: var(--pinkColor);
+    border-color: var(--stc-pink-color);
+    background-color: var(--stc-pink-color);
     color: var(--whiteColor);
 
     &::after {
