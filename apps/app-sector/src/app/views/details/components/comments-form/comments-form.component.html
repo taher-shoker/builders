@@ -35,12 +35,14 @@
         <div class="col-12">
           <div class="attachments_files_item px-2">
             <div>
-              <span> {{ fileObj.file.name }} </span>
+              <span (click)="openDialog('download', index, fileObj.file)">
+                {{ fileObj.file.name }}
+              </span>
               <div class="d-flex">
                 <!-- <button class="btn" (click)="downloadFile(file)">
       <i class="fas fa-arrow-alt-circle-down"></i>
     </button> -->
-                <button class="btn" (click)="deleteFile(index)">
+                <button class="btn" (click)="openDialog('delete', index)">
                   <img src="assets/images/trash.svg" />
                 </button>
               </div>

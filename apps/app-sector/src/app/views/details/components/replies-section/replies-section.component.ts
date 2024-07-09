@@ -5,12 +5,10 @@ import {
   input,
   InputSignal,
   OnInit,
-  Renderer2,
   signal,
   ViewChild,
 } from '@angular/core';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-import { MatDialogeComponent } from '../mat-dialoge/mat-dialoge.component';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -18,6 +16,10 @@ import { Router } from '@angular/router';
 import { AuthService } from 'apps/app-sector/src/app/shared/services/auth.service';
 import { CookieService } from 'ngx-cookie';
 import { newComment } from '../../../models/newComment';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ConfirmationDialogeComponent } from 'apps/app-sector/src/app/shared/confirmation-dialoge/confirmationDialoge.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
 
 @Component({
   selector: 'stc-apps-replies-section',
@@ -84,6 +86,7 @@ export class RepliesSectionComponent implements OnInit {
       replies: [],
     },
   ];
+  confirmationBtnDesc = 'Confirm';
   constructor(
     private dialog: MatDialog,
     private datePipe: DatePipe,
@@ -91,7 +94,7 @@ export class RepliesSectionComponent implements OnInit {
     private cookieService: CookieService,
     public router: Router,
     private authService: AuthService,
-    private renderer: Renderer2
+    private dialogeService: dialogeService
   ) {
     effect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -167,33 +170,15 @@ export class RepliesSectionComponent implements OnInit {
     this.commentsList[commentIndex].replies?.splice(replyIndex, 1);
     this.commentsCount();
   }
-  openDialog(
-    enterAnimationDuration: string,
-    exitAnimationDuration: string,
-    commentIndex: number,
-    replyIndex?: number
-  ): void {
-    const dialogConfig = new MatDialogConfig();
-
-    dialogConfig.disableClose = true;
-    dialogConfig.autoFocus = true;
-    const dialogRef = this.dialog.open(MatDialogeComponent, {
-      width: '450px',
-      enterAnimationDuration,
-      exitAnimationDuration,
-    });
-    dialogRef.afterClosed().subscribe((data) => {
-      console.log('Dialog output:', data);
-      if (data == 'confirmed') {
-        if (this.deleteCommentFlag) {
-          this.deleteComment(commentIndex);
-        } else if (this.deleteReplyFlag) {
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          this.deleteReply(commentIndex, replyIndex!);
-        }
-      }
-    });
+  confirm() {
+    if (this.deleteCommentFlag) {
+      this.deleteComment(this.commentIndex);
+    } else if (this.deleteReplyFlag) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.deleteReply(this.commentIndex, this.replyIndex!);
+    }
   }
+
   getTimeAgo(date: any) {
     const now: any = new Date();
     date = new Date(date);
@@ -264,13 +249,34 @@ export class RepliesSectionComponent implements OnInit {
     this.form.reset();
     this.editReplyTextArea = false;
   }
+  scrollIntoView() {
+    console.log(this.textArea?.nativeElement);
+    if (this.textArea?.nativeElement) {
+      console.log('scrolll 2');
+      // window.scrollBy({ top: 300, behavior: 'smooth' });
+      this.textArea.nativeElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'start',
+      });
+    }
+  }
   handleCommentActions(e: string, commentIndex: number) {
     this.commentIndex = commentIndex;
+    this.deleteReplyFlag = false;
     console.log(e, commentIndex);
     if (!this.showCommentTextArea) {
       if (e === 'Delete') {
         this.deleteCommentFlag = true;
-        this.openDialog('0ms', '0ms', commentIndex);
+        const dialogeDesc = 'Are you sure you want to delete this comment?';
+        this.dialogeService.openDialog(
+          '0ms',
+          '0ms',
+          dialogeDesc,
+          this.confirmationBtnDesc,
+          this.confirm.bind(this)
+        );
+        // this.openDialog('0ms', '0ms', commentIndex);
       } else if (e === 'Reply') {
         this.editedText.set('');
         this.showCommentTextArea = true;
@@ -290,25 +296,22 @@ export class RepliesSectionComponent implements OnInit {
       }
     }
   }
-  scrollIntoView() {
-    console.log(this.textArea?.nativeElement);
-    if (this.textArea?.nativeElement) {
-      console.log('scrolll 2');
-      // window.scrollBy({ top: 300, behavior: 'smooth' });
-      this.textArea.nativeElement.scrollIntoView({
-        behavior: 'smooth',
-        block: 'nearest',
-        inline: 'start',
-      });
-    }
-  }
+
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {
     this.commentIndex = commentIndex;
     this.replyIndex = replyIndex;
+    this.deleteCommentFlag = false;
     if (!this.editReplyTextArea) {
       if (e === 'Delete') {
         this.deleteReplyFlag = true;
-        this.openDialog('0ms', '0ms', commentIndex, replyIndex);
+        const dialogeDesc = 'Are you sure you want to delete this reply?';
+        this.dialogeService.openDialog(
+          '0ms',
+          '0ms',
+          dialogeDesc,
+          this.confirmationBtnDesc,
+          this.confirm.bind(this)
+        );
       } else if (e === 'Edit') {
         this.editReplyTextArea = true;
         const reply =

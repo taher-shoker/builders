@@ -6,17 +6,19 @@ import { RouterModule } from '@angular/router';
 import { DetailsCardComponent } from './components/details-card/details-card.component';
 import { CommentsFormComponent } from './components/comments-form/comments-form.component';
 import { ReactiveFormsModule } from '@angular/forms';
-
 import { RepliesSectionComponent } from './components/replies-section/replies-section.component';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDialogActions, MatDialogClose, MatDialogContent, MatDialogTitle } from '@angular/material/dialog';
-import { MatDialogeComponent } from './components/mat-dialoge/mat-dialoge.component';
+import {
+  MatDialogActions,
+  MatDialogClose,
+  MatDialogContent,
+  MatDialogTitle,
+} from '@angular/material/dialog';
 
 const components = [
   DetailsComponent,
   DetailsCardComponent,
   CommentsFormComponent,
-  MatDialogeComponent,
   RepliesSectionComponent,
 ];
 const modules = [
@@ -31,7 +33,7 @@ const modules = [
 ];
 
 @NgModule({
-  declarations: [...components ],
+  declarations: [...components],
   imports: [...modules],
 })
 export class DetailsModule {}
