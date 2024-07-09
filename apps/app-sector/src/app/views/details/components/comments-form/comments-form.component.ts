@@ -1,6 +1,11 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newComment } from '../../../models/newComment';
+import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ConfirmationDialogeComponent } from 'apps/app-sector/src/app/shared/confirmation-dialoge/confirmationDialoge.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
 
 @Component({
   selector: 'stc-apps-comments-form',
@@ -35,7 +40,11 @@ export class CommentsFormComponent implements OnInit {
     { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
   ];
   mentionsArray: string[] = [''];
-  constructor(private fb: FormBuilder) {}
+  constructor(
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    private dialogeService: dialogeService
+  ) {}
 
   ngOnInit(): void {
     this.handleForm();
@@ -103,6 +112,74 @@ export class CommentsFormComponent implements OnInit {
     this.uploadedFiles?.splice(index, 1);
     this.displayedFiles?.splice(index, 1);
   }
+  index = 0;
+  file: any;
+  confirmdDownload() {
+    this.downloadFile(this.file);
+  }
+  confirmDelete() {
+    this.deleteFile(this.index);
+  }
+  openDialog(downloadOrDeleteFlag: string, index: number, file?: any) {
+    this.index = index;
+    if (downloadOrDeleteFlag == 'delete') {
+      const dialogeDesc = 'Are you sure you want to delete this attachment?';
+      const confirmationBtnDesc = 'Confirm';
+      this.dialogeService.openDialog(
+        '0ms',
+        '0ms',
+        dialogeDesc,
+        confirmationBtnDesc,
+        this.confirmDelete.bind(this)
+      );
+    } else {
+      this.file = file;
+      const dialogeDesc = `Do you want to download file ${file.name}?`;
+      const confirmationBtnDesc = 'Download';
+      this.dialogeService.openDialog(
+        '0ms',
+        '0ms',
+        dialogeDesc,
+        confirmationBtnDesc,
+        this.confirmdDownload.bind(this)
+      );
+    }
+  }
+
+  // openDialog(
+  //   enterAnimationDuration: string,
+  //   exitAnimationDuration: string,
+  //   index: number,
+  //   deleteOrDownloadFlag: string,
+  //   file?: any
+  // ): void {
+  //   const dialogConfig = new MatDialogConfig();
+  //   dialogConfig.disableClose = true;
+  //   dialogConfig.autoFocus = true;
+  //   const dialogRef = this.dialog.open(ConfirmationDialogeComponent, {
+  //     width: '750px',
+  //     enterAnimationDuration,
+  //     exitAnimationDuration,
+  //   });
+  //   // eslint-disable-next-line prefer-const
+  //   let instance = dialogRef.componentInstance;
+  //   if (deleteOrDownloadFlag == 'delete') {
+  //     instance.dialogeDesc = 'Are you sure you want to delete this attachment?';
+  //     instance.confirmationBtnDesc = 'Confirm';
+  //   } else if (deleteOrDownloadFlag == 'download') {
+  //     instance.dialogeDesc = `Do you want to download file ${file.name}?`;
+  //     instance.confirmationBtnDesc = 'Download';
+  //   }
+
+  //   dialogRef.afterClosed().subscribe((data) => {
+  //     console.log('Dialog output:', data);
+  //     if (data == 'confirmed' && deleteOrDownloadFlag == 'delete') {
+  //       this.deleteFile(index);
+  //     } else if (data == 'confirmed' && deleteOrDownloadFlag == 'download') {
+  //       this.downloadFile(file);
+  //     }
+  //   });
+  // }
 
   // onDeleteFile(id: number) {
   //   this.uploadedFiles = this.uploadedFiles.filter((x: any) => x.id !== id);

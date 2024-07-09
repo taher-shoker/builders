@@ -1,0 +1,18 @@
+<div class="mat-dialoge">
+  <mat-dialog-content>
+    {{ dialogeDesc }}
+  </mat-dialog-content>
+  <mat-dialog-actions class="justify-content-end">
+    <button mat-button mat-dialog-close class="mat-dialoge-close">
+      Cancel
+    </button>
+    <button
+      mat-button
+      class="mat-dialog-confirm"
+      (click)="delete()"
+      cdkFocusInitial
+    >
+      {{ confirmationBtnDesc }}
+    </button>
+  </mat-dialog-actions>
+</div>
