@@ -118,13 +118,20 @@ export class CommentsFormComponent implements OnInit {
   }
 
   extractMentions(text: string): string[] {
-    const mentionPattern = /@([\w\s]+)/g;
-    const mentions: string[] = [];
+    const mentions: string[] = this.mentions2.map((mention: any) => {
+      return `@${mention.name}`;
+    });
+
+    const mentionPattern = new RegExp(mentions.join('|'), 'gi');
+    const extractedMentions: string[] = [];
     let match;
+
     while ((match = mentionPattern.exec(text)) !== null) {
-      mentions.push(match[0].trim());
+      extractedMentions.push(match[0]);
     }
-    return mentions;
+
+    console.log('Extracted mentions:', extractedMentions);
+    return extractedMentions;
   }
 
   onSubmit() {

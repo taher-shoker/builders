@@ -132,8 +132,10 @@ export class RepliesSectionComponent implements OnInit {
     });
   }
   onContentChange(content: any): void {
-    console.log('onContentChange');
-    this.mentionsArray = this.extractMentions(this.form.value.comment);
+    // console.log('onContentChange');
+    // this.mentionsArray = this.extractMentions(this.form.value.comment);
+    const mentionsArray = this.extractMentions(content);
+    this.mentionsArray = mentionsArray;
 
     console.log('Form Value:', this.form.get('comment')?.value);
     console.log('Mentions:', this.mentionsArray);
@@ -142,13 +144,20 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   extractMentions(text: string): string[] {
-    const mentionPattern = /@([\w\s]+)/g;
-    const mentions: string[] = [];
+    const mentions: string[] = this.mentions.map((mention: any) => {
+      return `@${mention.name}`;
+    });
+
+    const mentionPattern = new RegExp(mentions.join('|'), 'gi');
+    const extractedMentions: string[] = [];
     let match;
+
     while ((match = mentionPattern.exec(text)) !== null) {
-      mentions.push(match[0].trim());
+      extractedMentions.push(match[0]);
     }
-    return mentions;
+
+    console.log('Extracted mentions:', extractedMentions);
+    return extractedMentions;
   }
 
   commentsCount() {
@@ -250,8 +259,9 @@ export class RepliesSectionComponent implements OnInit {
     this.showCommentTextArea = false;
   }
   editCommentt() {
-    this.commentsList[this.commentIndex].comment =
-      this.form.get('comment')?.value;
+    const commentText = this.form.get('comment')?.value;
+    this.commentsList[this.commentIndex].comment = commentText;
+    this.commentsList[this.commentIndex].mentions = this.mentionsArray;
     console.log('new comments', this.commentsList);
     this.form.reset();
     this.editedText.set('');
@@ -287,6 +297,7 @@ export class RepliesSectionComponent implements OnInit {
         const comment = this.commentsList[commentIndex].comment;
         this.form.get('comment')?.setValue(comment);
         this.editedText.set(comment);
+        this.mentionsArray = this.commentsList[commentIndex].mentions;
       }
     }
   }
