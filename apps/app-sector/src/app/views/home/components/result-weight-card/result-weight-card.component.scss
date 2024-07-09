@@ -1,10 +1,12 @@
-.row > * {
+.row>* {
   padding-left: 0 !important;
 }
+
 .card-holder {
   margin-top: 20px;
-  background-color: #ffffff;
+  background-color: var(--whiteColor);
   border-radius: 10px;
+
   .header-container {
     h5 {
       color: var(--stc-color-darker);
@@ -13,24 +15,29 @@
       margin-top: 17px;
       margin-left: 17px;
     }
+
     img {
       width: 25%;
     }
   }
+
   .res-we-container {
     padding: 25px 0px 25px 0px;
+
     .res-container,
     .we-container {
       padding: 25px 27px 10px 27px;
       width: 45%;
       background-color: rgba(79, 0, 140, 0.1);
       border-radius: 10px;
+
       .we-value,
       .res-value {
         color: var(--stc-color-dark);
         font-weight: 700;
         font-size: 24px;
       }
+
       .we-p,
       .res-p {
         font-weight: 400;
@@ -40,14 +47,17 @@
     }
   }
 }
+
 @media screen and (max-width: 880px) and (min-width: 768px) {
   .res-we-container {
     display: block !important;
+
     .res-container,
     .we-container {
       width: 90% !important;
       margin: 0px 20px;
     }
+
     .res-container {
       margin-bottom: 20px;
     }

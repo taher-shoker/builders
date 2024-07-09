@@ -1,7 +1,5 @@
-@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
-
 .panels_container {
-  background-color: $whiteColor;
+  background-color: var(--whiteColor);
   width: 100%;
   padding: 16px;
   border-radius: 8px;
@@ -11,21 +9,21 @@
     h4 {
       font-weight: 600;
       font-size: 21px;
-      color: $darkPurbleColor;
+      color: var(--darkPurbleColor);
     }
 
     .title-desc {
       p {
         font-weight: 400;
         font-size: 21px;
-        color: $darkPurpleColor;
+        color: var(--darkPurbleColor);
         margin-top: 12px;
         position: relative;
       }
 
       p::after {
         content: "";
-        background-color: $stcSunsetColor;
+        background-color: var(--stcSunsetColor);
         position: absolute;
         top: 130%;
         right: 0;
@@ -34,11 +32,12 @@
       }
 
     }
+
     .arrow {
-        position: absolute;
-        top: 50%;
-        left: 0;
-      
-      }
+      position: absolute;
+      top: 50%;
+      left: 0;
+
+    }
   }
 }

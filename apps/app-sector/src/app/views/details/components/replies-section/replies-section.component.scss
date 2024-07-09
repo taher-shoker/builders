@@ -1,13 +1,10 @@
-@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
-@import '../../../../../../../../libs/styles/src/scss/core/variables/fonts';
-
 .replies-section {
   &_totalComments {
     font-size: 20px;
     font-family: var(--stc-font-meduim);
     margin-bottom: 28px;
     line-height: 20px;
-    color: $semiBlackColor;
+    color: var(--semiBlackColor);
   }
 
   &_add-reply {
@@ -17,7 +14,7 @@
   }
 
   &_holder {
-    border: 1px solid $semiGreyColor;
+    border: 1px solid var(--semiGreyColor);
     border-radius: 6px;
     margin-bottom: 28px;
     max-height: 410px;
@@ -35,15 +32,15 @@
       padding: 8px 20px;
       border-radius: 3px;
       display: flex;
-      color: $whiteColor;
+      color: var(--whiteColor);
 
       &:first-child {
-        background: $backgroundGrey;
+        background: var(--backgroundGrey);
       }
 
       &:last-child {
         margin-left: 12px;
-        background: $stcCoralColor;
+        background: var(--stcCoralColor);
 
         &:disabled {
           opacity: 0.4;

@@ -1,21 +1,20 @@
-@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
-
 .card {
-  border: 1px solid rgba($blackColor, 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   padding: 12px 16px;
-  background-color: $whiteColor;
+  background-color: var(--whiteColor);
 
   &_title {
-    color: rgba($blackColor, 0.4);
+    color: rgba(0, 0, 0, 0.4);
     font-size: 12px;
   }
 
   &_description {
     font-size: 14px;
-    color: $semiBlackColor;
+    color: var(--semiBlackColor);
   }
+
   .puprleColor {
-    color: $stcColor;
+    color: var(--stc-color);
     font-weight: 700;
   }
 }
