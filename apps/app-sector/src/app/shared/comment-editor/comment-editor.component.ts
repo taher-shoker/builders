@@ -87,7 +87,6 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
       this.contentEditable.nativeElement.innerHTML = this.highlightMentions(
         this.content
       );
-
       if (this.editedText()) {
         this.extractMentions(this.content).forEach((mention) => {
           this.addMention(mention);
@@ -129,6 +128,7 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   onInput(event: Event): void {
     const input = event.target as HTMLDivElement;
     this.content = input.textContent || '';
+
     this.onChange(this.content);
     this.contentChange.emit(this.content);
   }
@@ -139,16 +139,15 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
     const textBeforeCursor = input.textContent!.slice(0, cursorPosition);
     const mentionIndex = textBeforeCursor.lastIndexOf('@');
 
-    if (mentionIndex > -1) {
+    if (mentionIndex > -1 && event.key === '@') {
       const query = textBeforeCursor.slice(mentionIndex + 1).toLowerCase();
       this.filteredList = this.mentions().filter((mention: any) =>
         mention[this.mentionProperty()].toLowerCase().includes(query)
       );
+
       if (this.filteredList.length > 0) {
-        if (!this.showDropdown) {
-          this.activeMentionIndex = 0;
-          this.showDropdown = true;
-        }
+        this.activeMentionIndex = 0;
+        this.showDropdown = true;
       } else {
         this.activeMentionIndex = -1;
         this.showDropdown = false;
@@ -212,22 +211,33 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   addMention(mention: string): void {
     const input = this.contentEditable.nativeElement;
     const value = input.textContent || '';
-    const mentionIndex = value.lastIndexOf('@');
-    const textBeforeMention = value.slice(0, mentionIndex);
+    const mentionStartIndex = value.lastIndexOf('@');
+
+    const textBeforeMention = value.slice(0, mentionStartIndex);
     const textAfterMention = this.editedText()
       ? ''
-      : value.slice(mentionIndex + 1).replace(/\s*\S*/, '');
-    const newText = `${textBeforeMention}<span class="mention">@${mention}</span> ${textAfterMention}`;
+      : value.slice(mentionStartIndex + 1).replace(/\s*\S*/, '');
 
+    const mentionSpan = document.createElement('span');
+    mentionSpan.className = 'mention';
+    mentionSpan.textContent = `@${mention}`;
+
+    input.innerHTML = '';
+    input.appendChild(document.createTextNode(textBeforeMention));
+    input.appendChild(mentionSpan);
+
+    input.innerHTML += ' ';
+
+    // input.appendChild(document.createTextNode(textAfterMention));
+
+    const newText = `${textBeforeMention}${mentionSpan.textContent} ${textAfterMention}`;
     input.innerHTML = this.highlightMentions(newText);
     this.content = input.textContent || '';
-
     if (input.textContent !== null && input.textContent !== undefined) {
       // Set the caret position at the end of the contenteditable div
       this.setCaretPosition(input, input.textContent.length);
     }
     input.focus();
-
     this.showDropdown = false;
     this.onChange(this.content);
     this.contentChange.emit(this.content);
@@ -252,7 +262,6 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
           mention[this.mentionProperty()].toLowerCase().includes(query!)
         );
       });
-
     fromEvent<KeyboardEvent>(input, 'keydown')
       .pipe(filter((event) => event.key === 'Backspace'))
       .subscribe((event) => this.onBackspace(event));
@@ -262,67 +271,103 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
     const input = this.contentEditable.nativeElement;
     const caretPosition = this.getCaretPosition(input);
 
-    // Get the text before and after the caret
-    const textBeforeCaret = input.textContent!.slice(0, caretPosition);
-    const textAfterCaret = input.textContent!.slice(caretPosition);
+    if (caretPosition === 0) {
+      this.showDropdown = false;
+      return; // No action needed if caret is at the beginning
+    }
 
-    // Check if there's a mention at the position before the caret
-    const mention = this.getMentionAtPosition(caretPosition - 1);
+    const mention = this.getMentionAtCaretPosition(input, caretPosition);
 
     if (mention) {
       // If the caret is immediately after a mention, delete the mention
       this.deleteMention(mention);
       event.preventDefault();
-    } else if (textBeforeCaret.endsWith(' ')) {
-      // If there's an extra space before the caret, delete the space
-      const newText = textBeforeCaret.slice(0, -1) + textAfterCaret;
-      this.writeValue(newText);
-      this.setCaretPosition(input, caretPosition - 1);
-      this.contentChange.emit(newText);
+    } else {
+      // Delete a single character before the caret
+      const textContent = input.textContent || '';
+      const textBeforeCaret = textContent.slice(0, caretPosition - 1);
+      const textAfterCaret = textContent.slice(caretPosition);
+      const newText = textBeforeCaret + textAfterCaret;
+
+      input.textContent = ''; // Clear existing content
+      input.innerHTML = this.highlightMentions(newText); // Update HTML content
+      this.content = input.textContent || ''; // Update content
+      this.setCaretPosition(input, caretPosition - 1); // Adjust caret position
+      this.contentChange.emit(this.content); // Emit content change event
       this.showDropdown = false; // Hide dropdown after deletion
       event.preventDefault();
-    } else if (textAfterCaret === '') {
-      // If the text after the caret is empty, hide the dropdown list
-      this.showDropdown = false;
     }
   }
 
-  getMentionAtPosition(position: number): any | null {
-    const mentions = this.extractMentions(this.content);
-    for (const mention of mentions) {
-      const start = this.content.indexOf(`@${mention}`);
-      const end = start + mention.length + 1; // +1 for the '@' symbol
-      // Adjust to check if the position is right after the mention
-      if (position === end) {
-        return { name: mention, start, end };
+  getMentionAtCaretPosition(
+    element: HTMLElement,
+    caretPosition: number
+  ): any | null {
+    const mentionElements = element.querySelectorAll('.mention');
+    let mention = null;
+    mentionElements.forEach((mentionElement: Element) => {
+      const range = document.createRange();
+      range.selectNodeContents(mentionElement);
+      const start = this.getRangeOffset(range, element);
+      const end = start + mentionElement.textContent!.length;
+      if (caretPosition > start && caretPosition <= end) {
+        mention = { name: mentionElement.textContent!.slice(1), start, end }; // remove '@' from name
       }
-    }
-    return null;
+    });
+    return mention;
+  }
+
+  getRangeOffset(range: Range, root: Node): number {
+    const preCaretRange = range.cloneRange();
+    preCaretRange.selectNodeContents(root);
+    preCaretRange.setEnd(range.startContainer, range.startOffset);
+    return preCaretRange.toString().length;
   }
 
   deleteMention(mention: any): void {
-    const newText =
-      this.content.substring(0, mention.start) +
-      this.content.substring(mention.end);
-    this.writeValue(newText);
-    this.contentChange.emit(newText);
+    const input = this.contentEditable.nativeElement;
+    const content = input.innerHTML;
+    const mentionHtml = `<span class="mention">@${mention.name}</span>`;
+    const mentionIndex = content.indexOf(mentionHtml);
+
+    if (mentionIndex !== -1) {
+      const newText =
+        content.slice(0, mentionIndex) +
+        content.slice(mentionIndex + mentionHtml.length);
+
+      input.innerHTML = this.highlightMentions(newText);
+      this.content = input.textContent || '';
+      this.onChange(this.content);
+      this.contentChange.emit(this.content);
+
+      // Adjust caret position after mention deletion
+      const caretPosition = mention.start;
+      this.setCaretPosition(input, caretPosition);
+      this.showDropdown = false; // Hide the dropdown after deletion
+    }
   }
 
-  highlightMentions(text: string): string {
-    let highlightedText = text;
-    this.mentions().forEach((mention: any) => {
-      const mentionPattern = new RegExp(
-        `(@${mention[this.mentionProperty()]})(\\s|$)`,
-        'gi'
-      );
-      if (highlightedText) {
-        highlightedText = highlightedText.replace(
-          mentionPattern,
-          '<span class="mention">$1</span>$2'
-        );
+  highlightMentions(content: string): string {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+
+    const mentions = this.mentions().map((mention: any) => `@${mention.name}`);
+    const mentionRegex = new RegExp(mentions.join('|'), 'gi');
+
+    // Convert NodeList to array to use forEach
+    Array.from(tempDiv.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        let textContent = node.textContent || '';
+        textContent = textContent.replace(mentionRegex, (match) => {
+          return `<span class="mention">${match}</span>`;
+        });
+        const newSpan = document.createElement('span');
+        newSpan.innerHTML = textContent;
+        node.replaceWith(...Array.from(newSpan.childNodes));
       }
     });
-    return highlightedText;
+
+    return tempDiv.innerHTML;
   }
 
   getCaretPosition(element: HTMLElement): number {

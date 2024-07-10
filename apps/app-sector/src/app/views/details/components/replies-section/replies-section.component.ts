@@ -48,6 +48,7 @@ export class RepliesSectionComponent implements OnInit {
     { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
     { name: 'Naden Draz', comment: 'UI/UX Designer' },
     { name: 'Habiba mohamed', comment: 'UI/UX Designer' },
+    { name: 'Habiab Mohamed Nagiub', comment: 'UI/UX Designer' },
   ];
   mentionsArray: string[] = [];
   commentsList = [
