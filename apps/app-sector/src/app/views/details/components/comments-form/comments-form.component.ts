@@ -124,7 +124,7 @@ export class CommentsFormComponent implements OnInit {
     this.index = index;
     if (downloadOrDeleteFlag == 'delete') {
       const dialogeDesc = 'Are you sure you want to delete this attachment?';
-      const confirmationBtnDesc = 'Confirm';
+      const confirmationBtnDesc = 'Delete';
       this.dialogeService.openDialog(
         '0ms',
         '0ms',

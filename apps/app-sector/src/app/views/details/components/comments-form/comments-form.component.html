@@ -29,6 +29,9 @@
         Add Attachment
       </button>
     </div>
+    @if (displayedFiles.length==0) {
+      <div class="attachments_empty">There's no attachaments yet</div>
+    }
     <div class="attachments_files">
       <div class="row row-gap-3">
         @for(fileObj of displayedFiles; track fileObj; let index = $index) {
