@@ -20,6 +20,7 @@ import { newComment } from '../../../models/newComment';
 import { ConfirmationDialogeComponent } from 'apps/app-sector/src/app/shared/confirmation-dialoge/confirmationDialoge.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
+import { comment } from '../../models/commentsModel';
 
 @Component({
   selector: 'stc-apps-replies-section',
@@ -50,7 +51,7 @@ export class RepliesSectionComponent implements OnInit {
     { name: 'Habiba mohamed', comment: 'UI/UX Designer' },
   ];
   mentionsArray: string[] = [];
-  commentsList = [
+  commentsList: comment[] = [
     {
       name: 'Assem Khalifa',
       mentions: ['@Naden Draz', '@Habiba mohamed'],
@@ -86,7 +87,7 @@ export class RepliesSectionComponent implements OnInit {
       replies: [],
     },
   ];
-  confirmationBtnDesc = 'Confirm';
+  confirmationBtnDesc = 'Delete';
   constructor(
     private dialog: MatDialog,
     private datePipe: DatePipe,
@@ -100,7 +101,7 @@ export class RepliesSectionComponent implements OnInit {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       console.log('in replies', this.newComment());
       if (this.newComment().name) {
-        const newObj = {
+        const newObj: comment = {
           name: 'Assem Khalifa',
           mentions: this.newComment().mentions,
           comment: this.newComment().name,
