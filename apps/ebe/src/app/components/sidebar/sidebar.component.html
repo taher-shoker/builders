@@ -1,0 +1,24 @@
+<section class="sidebar-section" [class.no-username]="!usernameImage && !userName">
+  <div class="sidebar-section-main-image">
+    <img [src]="logoSrc" alt="">
+  </div>
+  <div class="sidebar-section-links">
+    <ul>
+      @for (link of sidebarLinks; track link.id) {
+        <li>
+          <a routerLinkActive="activeLink" [routerLink]="link.url">{{link.name}}</a>
+        </li>
+      }
+    </ul>
+  </div>
+  @if (usernameImage && userName) {
+    <div class="sidebar-section-username">
+      <div class="sidebar-section-username-image">
+        <img [src]="usernameImage" alt="">
+      </div>
+      <div class="sidebar-section-username-name">
+        <span>{{userName}}</span>
+      </div>
+    </div>
+  }
+</section>

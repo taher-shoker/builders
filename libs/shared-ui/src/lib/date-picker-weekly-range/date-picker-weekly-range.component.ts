@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import * as moment from 'moment';
+import moment from 'moment';
 import { YearRangeObj, YearObj } from '../date-picker-weekly/date-picker-weekly.component';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 
@@ -17,7 +17,7 @@ export class DatePickerWeeklyRangeComponent implements OnInit{
 
   isFirst: boolean = true;
   showCalendar: boolean = false;
-  langDirection: string | null= localStorage.getItem("language");;
+  langDirection: string | null= localStorage.getItem("language");
 
   showYearsView: boolean = true;
   showWeeksView: boolean = false;

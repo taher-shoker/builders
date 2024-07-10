@@ -17,8 +17,13 @@
         "tsConfig": "apps/ebe/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
         "assets": ["apps/ebe/src/favicon.ico", "apps/ebe/src/assets"],
-        "styles": ["apps/ebe/src/styles.scss"],
-        "scripts": []
+        "styles": [
+          "node_modules/bootstrap/dist/css/bootstrap.min.css",
+          "apps/ebe/src/styles.scss"
+        ],
+        "scripts": [
+          "node_modules/bootstrap/dist/js/bootstrap.min.js"
+        ]
       },
       "configurations": {
         "production": {

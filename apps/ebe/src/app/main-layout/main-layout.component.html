@@ -1,0 +1,24 @@
+<!-- <stc-apps-header></stc-apps-header> -->
+<!-- <stc-apps-header
+  [logoSrc]="logoSrc"
+  [userName]="userName"
+  [allItems]="navItems"
+  [sidebarLogoSrc]="userNameLogo"
+  [showLang]="false"
+  [isTranslated]="false"
+></stc-apps-header> -->
+<section class="main-layout">
+  <div class="main-layout-content">
+    <div class="main-layout-content-sidebar">
+      <stc-apps-sidebar
+        [logoSrc]="logoSrc"
+        [sidebarLinks]="navItems"
+        [usernameImage]="userNameLogo"
+        [userName]="userName"
+      ></stc-apps-sidebar>
+    </div>
+    <div class="main-layout-content-page">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</section>
