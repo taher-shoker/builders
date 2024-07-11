@@ -1,0 +1,72 @@
+//font-family: mediunPoppins;
+//font-family: boldPoppins;
+.scored-card-section
+{
+  padding:20px 30px;
+  &-welcome-text
+  {
+    text-transform: capitalize;
+    font-size: 19px;
+    span
+    {
+      font-family: mediunPoppins;
+      font-size: 22px;
+    }
+    img
+    {
+      display: inline-block;
+      margin-left: 10px;
+      position: relative;
+      top:-3px;
+    }
+  }
+  &-header
+  {
+    display: flex;
+    justify-content: space-between;
+    .hands-img
+    {
+      position: relative;
+      top:13px;
+    }
+  }
+  &-title
+  {
+    font-size: 24px;
+    text-transform: capitalize;
+    font-weight: normal;
+    span
+    {
+      font-size: 27px;
+      font-family: blackPoppins;
+    }
+  }
+  &-taps
+  {
+    display: flex;
+    gap:30px;
+    &-tap
+    {
+      text-transform: capitalize;
+      font-size: 18px;
+      background-color: var(--stc-white-light-color);
+      cursor: pointer;
+      padding:7px 15px;
+      border-radius: 5px;
+      &.clickedTap
+      {
+        background-color: var(--stc-pink-color);
+      }
+    }
+  }
+  &-tap-details
+  {
+    background-color: var(--stc-white-color);
+    border-radius:20px;
+    padding:20px;
+    z-index: 9999999;
+    position: relative;
+    // margin-top:30px;
+    color:#000;
+  }
+}

@@ -1,2 +1,14 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./styles/variables.scss";
+@font-face {
+  font-family: boldPoppins;
+  src: url(./assets/fonts/Poppins-SemiBold.ttf);
+}
+@font-face {
+  font-family: blackPoppins;
+  src: url(./assets/fonts/Poppins-Black.ttf);
+}
+@font-face {
+  font-family: mediunPoppins;
+  src: url(./assets/fonts/Poppins-Medium.ttf);
+}

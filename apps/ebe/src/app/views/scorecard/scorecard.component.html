@@ -1,1 +1,33 @@
-<p>scorecard works!</p>
+<section class="scored-card-section">
+  <div class = "scored-card-section-header">
+    <div>
+      <p class="scored-card-section-welcome-text">
+        welcome back,
+        <span>fahad awan</span>
+        <img src="assets/images/Waving-Hand.svg" alt="">
+      </p>
+      <div class="scored-card-section-title">
+        <p>
+          <span>N-2 Scorecards 2023</span>
+          - corporate analytics & data sector
+        </p>
+      </div>
+      <div class = "scored-card-section-taps">
+        @for (tap of scorecardsTaps; track tap.id;let index = $index){
+          <div
+            class="scored-card-section-taps-tap"
+            [class.clickedTap]="currentClickedTapIndex === index"
+            (click)="toggleTaps(index , tap)"
+          >
+            <span>{{tap.name}}</span>
+          </div>
+        }
+      </div>
+    </div>
+    <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+  </div>
+  <div class="scored-card-section-tap-details">
+    {{currentClickedTapData.id}}
+    {{currentClickedTapData.name}}
+  </div>
+</section>
