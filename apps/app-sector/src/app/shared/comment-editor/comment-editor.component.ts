@@ -284,18 +284,20 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
       event.preventDefault();
     } else {
       // Delete a single character before the caret
-      const textContent = input.textContent || '';
-      const textBeforeCaret = textContent.slice(0, caretPosition - 1);
-      const textAfterCaret = textContent.slice(caretPosition);
-      const newText = textBeforeCaret + textAfterCaret;
+      setTimeout(() => {
+        const textContent = input.textContent || '';
+        const textBeforeCaret = textContent.slice(0, caretPosition - 1);
+        const textAfterCaret = textContent.slice(caretPosition);
+        const newText = textBeforeCaret + textAfterCaret;
 
-      input.textContent = ''; // Clear existing content
-      input.innerHTML = this.highlightMentions(newText); // Update HTML content
-      this.content = input.textContent || ''; // Update content
-      this.setCaretPosition(input, caretPosition - 1); // Adjust caret position
-      this.contentChange.emit(this.content); // Emit content change event
-      this.showDropdown = false; // Hide dropdown after deletion
-      event.preventDefault();
+        input.textContent = ''; // Clear existing content
+        input.innerHTML = this.highlightMentions(newText); // Update HTML content
+        this.content = input.textContent || ''; // Update content
+        this.setCaretPosition(input, caretPosition - 1); // Adjust caret position
+        this.contentChange.emit(this.content); // Emit content change event
+        this.showDropdown = false; // Hide dropdown after deletion
+        // event.preventDefault();
+      }, 0);
     }
   }
 
@@ -327,23 +329,48 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   deleteMention(mention: any): void {
     const input = this.contentEditable.nativeElement;
     const content = input.innerHTML;
-    const mentionHtml = `<span class="mention">@${mention.name}</span>`;
-    const mentionIndex = content.indexOf(mentionHtml);
 
-    if (mentionIndex !== -1) {
-      const newText =
-        content.slice(0, mentionIndex) +
-        content.slice(mentionIndex + mentionHtml.length);
+    // Query all .mention elements within input
+    const mentionElements = input.querySelectorAll('.mention');
 
-      input.innerHTML = this.highlightMentions(newText);
-      this.content = input.textContent || '';
-      this.onChange(this.content);
-      this.contentChange.emit(this.content);
+    // Convert NodeList to array for easier manipulation
+    const mentionArray = Array.from(mentionElements);
 
-      // Adjust caret position after mention deletion
-      const caretPosition = mention.start;
-      this.setCaretPosition(input, caretPosition);
-      this.showDropdown = false; // Hide the dropdown after deletion
+    // Find the correct mention element to delete
+    let mentionToDelete: HTMLElement | null = null;
+    let mentionStartIndex = -1;
+
+    mentionArray.forEach((element) => {
+      const elementText = (element as HTMLElement).textContent;
+      if (elementText === `@${mention.name}`) {
+        const range = document.createRange();
+        range.selectNodeContents(element);
+        const start = this.getRangeOffset(range, input);
+        if (start === mention.start) {
+          mentionToDelete = element as HTMLElement;
+          mentionStartIndex = start;
+        }
+      }
+    });
+
+    if (mentionToDelete) {
+      const mentionHtml = (mentionToDelete as HTMLElement).outerHTML;
+      const mentionIndex = content.indexOf(mentionHtml, mentionStartIndex);
+
+      if (mentionIndex !== -1) {
+        const newText =
+          content.slice(0, mentionIndex) +
+          content.slice(mentionIndex + mentionHtml.length);
+
+        input.innerHTML = this.highlightMentions(newText);
+        this.content = input.textContent || '';
+        this.onChange(this.content);
+        this.contentChange.emit(this.content);
+
+        // Adjust caret position after mention deletion
+        this.setCaretPosition(input, mentionStartIndex);
+        this.showDropdown = false; // Hide the dropdown after deletion
+      }
     }
   }
 
