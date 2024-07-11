@@ -1,0 +1,37 @@
+<div class="financial-scorecard-costs-card">
+  <p class = "financial-scorecard-costs-card-title">{{costData.title}}</p>
+  <div class="financial-scorecard-costs-card-statuses">
+    @for (status of costData.costStatus; track status.id) {
+      <div
+        [class.achieved]="status.id === 'achieved'"
+        [class.not-achieved]="status.id === 'not-achieved'"
+        [class.actual]="status.id === 'actual'"
+      >{{status.title}} <span *ngIf="status.value">: {{status.value}}</span></div>
+    }
+  </div>
+  <div class="financial-scorecard-costs-card-cards">
+    <div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-12">
+      <div class="financial-scorecard-costs-card-cards-weight">
+        <ul>
+          <li>
+            weight : <span>{{costData.weight}}</span>
+          </li>
+          <li>
+            unit : <span>{{costData.unit}}</span>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+
+    </div>
+    <div class="col-lg-6 col-md-6 col-sm-12">
+
+    </div>
+    </div>
+  </div>
+</div>

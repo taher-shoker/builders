@@ -33,16 +33,24 @@
         />
       }
       @case (2) {
-        <stc-apps-strategic-scorecard />
+        <stc-apps-strategic-scorecard
+          [strategicScorcardData]="strategicScorcardData"
+        />
       }
       @case (3) {
-        <stc-apps-relational-scorecard />
+        <stc-apps-relational-scorecard
+          [relationalScorecardData]="relationalScorcardData"
+        />
       }
       @case (4) {
-        <stc-apps-operational-scorecard />
+        <stc-apps-operational-scorecard
+          [operationalScorcardData]="operationalScorcardData"
+        />
       }
       @case (5) {
-        <stc-apps-priorities-scorecard />
+        <stc-apps-priorities-scorecard
+          [prioritiesScorcardData]="prioritiesScorcardData"
+        />
       }
     }
   </div>

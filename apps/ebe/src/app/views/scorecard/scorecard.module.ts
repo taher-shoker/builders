@@ -9,6 +9,7 @@ import { PrioritiesScorecardComponent } from './components/prioritiesScorecard/p
 import { RelationalScorecardComponent } from './components/relationalScorecard/relational-scorecard.component';
 import { OperationalScorecardComponent } from './components/operationalScorecard/operational-scorecard.component';
 import { ScorecardService } from '../../services/scorecard.service';
+import { CostCardComponent } from '../../components/costCard/cost-card.component';
 const routes: Route[] = [
   {
     path : '',
@@ -22,7 +23,8 @@ const routes: Route[] = [
     StrategicScorecardComponent,
     PrioritiesScorecardComponent,
     RelationalScorecardComponent,
-    OperationalScorecardComponent
+    OperationalScorecardComponent,
+    CostCardComponent
   ],
   imports : [SharedUiModule , RouterModule.forChild(routes) , CommonModule],
   providers: [ScorecardService],

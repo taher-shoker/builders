@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FinancialScorecardModel, ScorecardTaps } from '../../models/scorecard.model';
+import { FinancialScorecardModel, OperationalScorecardModel, PrioritiesScorecardModel, RelationalScorecardModel, ScorecardTaps, StrategicScorecardModel } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-scorecard',
@@ -10,6 +10,10 @@ import { ScorecardService } from '../../services/scorecard.service';
 export class ScorecardComponent implements OnInit{
   currentClickedTapIndex = 0;
   financialScorcardData!:FinancialScorecardModel;
+  strategicScorcardData!:StrategicScorecardModel;
+  relationalScorcardData!:RelationalScorecardModel;
+  operationalScorcardData!:OperationalScorecardModel;
+  prioritiesScorcardData!:PrioritiesScorecardModel;
   currentClickedTapData:ScorecardTaps;
   scorecardsTaps:ScorecardTaps[] = [
     {
@@ -40,6 +44,10 @@ export class ScorecardComponent implements OnInit{
   }
   ngOnInit(): void {
     this.financialScorcardData = this.scorecardService.financialScorcardData;
+    this.strategicScorcardData = this.scorecardService.strategicScorcardData;
+    this.relationalScorcardData = this.scorecardService.rationalScorcardData;
+    this.operationalScorcardData = this.scorecardService.operationalScorcardData;
+    this.prioritiesScorcardData = this.scorecardService.prioritieslScorcardData;
   }
   getClickedTap(clickedTap:ScorecardTaps)
   {
