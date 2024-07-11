@@ -13,24 +13,43 @@
     <div class="row">
     <div class="col-lg-6 col-md-6 col-sm-12">
       <div class="financial-scorecard-costs-card-cards-weight">
-        <ul>
-          <li>
-            weight : <span>{{costData.weight}}</span>
-          </li>
-          <li>
-            unit : <span>{{costData.unit}}</span>
-          </li>
-        </ul>
+        <div class = "weight-card">
+          <p class = "weight2">weight</p>
+          <span>:</span>
+          <p class = "weight-val">{{costData.weight}}</p>
+        </div>
+        <div class = "weight-card">
+          <p class = "weight2">unit</p>
+          <span>:</span>
+          <p class = "weight-val">{{costData.unit}}</p>
+        </div>
       </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
-
+      <div class="financial-scorecard-costs-card-cards-weight">
+        <div class = "weight-card">
+          <p class = "weight2">baseline</p>
+          <span>:</span>
+          <p class = "weight-val">{{costData.baseline}}</p>
+        </div>
+        <div class = "weight-card">
+          <p class = "weight2">target</p>
+          <span>:</span>
+          <p class = "weight-val">{{costData.target}}</p>
+        </div>
+      </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
-
+      <div class="financial-scorecard-costs-card-cards-ceiling">
+        <p>ceiling</p>
+        <span>{{costData.ceiling}}</span>
+      </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
-
+      <div class="financial-scorecard-costs-card-cards-ceiling">
+        <p>threshold</p>
+        <span>{{costData.threshold}}</span>
+      </div>
     </div>
     </div>
   </div>

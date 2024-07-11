@@ -53,8 +53,49 @@ export class ScorecardService {
           unit:'%',
           baseline:'145.68%',
           target:'100%',
-          ceiling:'110%',
-          threshold:'85%'
+          ceiling:'90%',
+          threshold:'55%'
+        },
+        {
+          id:3,
+          title : "CAD business 123",
+          costStatus : [
+            {
+              id : "achieved",
+              title : "over achieved"
+            },
+            {
+              id : "not-achieved",
+              title : "linear"
+            }
+          ],
+          weight:'20%',
+          unit:'%',
+          baseline:'145.68%',
+          target:'100%',
+          ceiling:'90%',
+          threshold:'55%'
+        },
+        {
+          id:4,
+          title : "CAD business test",
+          costStatus : [
+            {
+              id : "achieved",
+              title : "over achieved"
+            },
+            {
+              id : "actual",
+              title : "Actual",
+              value : "50%"
+            },
+          ],
+          weight:'20%',
+          unit:'%',
+          baseline:'145.68%',
+          target:'100%',
+          ceiling:'90%',
+          threshold:'55%'
         },
       ]
     }
