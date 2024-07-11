@@ -13,21 +13,37 @@
         </p>
       </div>
       <div class = "scored-card-section-taps">
-        @for (tap of scorecardsTaps; track tap.id;let index = $index){
-          <div
-            class="scored-card-section-taps-tap"
-            [class.clickedTap]="currentClickedTapIndex === index"
-            (click)="toggleTaps(index , tap)"
-          >
-            <span>{{tap.name}}</span>
-          </div>
-        }
+        <stc-apps-tabview
+          [tabsData]="scorecardsTaps"
+          [tabColor]="'#ffffff'"
+          [clickedtabColor]="'#ffffff'"
+          [tabBackground]="'#FFFFFF0D'"
+          [clickedtabBackground]="'#FF375E'"
+          (clickedTap)="getClickedTap($event)"
+        />
       </div>
     </div>
     <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
   </div>
   <div class="scored-card-section-tap-details">
-    {{currentClickedTapData.id}}
-    {{currentClickedTapData.name}}
+    @switch (currentClickedTapData.id){
+      @case (1) {
+        <stc-apps-financial-scorecard
+          [financialScorcardData]="financialScorcardData"
+        />
+      }
+      @case (2) {
+        <stc-apps-strategic-scorecard />
+      }
+      @case (3) {
+        <stc-apps-relational-scorecard />
+      }
+      @case (4) {
+        <stc-apps-operational-scorecard />
+      }
+      @case (5) {
+        <stc-apps-priorities-scorecard />
+      }
+    }
   </div>
 </section>

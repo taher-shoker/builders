@@ -1,16 +1,15 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ScorecardTaps } from '../../models/scorecard.model';
-
+import { Component, OnInit } from '@angular/core';
+import { FinancialScorecardModel, ScorecardTaps } from '../../models/scorecard.model';
+import { ScorecardService } from '../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-scorecard',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
 })
-export class ScorecardComponent {
+export class ScorecardComponent implements OnInit{
   currentClickedTapIndex = 0;
+  financialScorcardData!:FinancialScorecardModel;
   currentClickedTapData:ScorecardTaps;
   scorecardsTaps:ScorecardTaps[] = [
     {
@@ -34,12 +33,16 @@ export class ScorecardComponent {
       name : "corporate priorities"
     },
   ];
-  constructor(){
+  constructor(
+    private scorecardService:ScorecardService
+  ){
     this.currentClickedTapData = this.scorecardsTaps[0];
   }
-  toggleTaps(index:number , tap:ScorecardTaps)
+  ngOnInit(): void {
+    this.financialScorcardData = this.scorecardService.financialScorcardData;
+  }
+  getClickedTap(clickedTap:ScorecardTaps)
   {
-    this.currentClickedTapIndex = index;
-    this.currentClickedTapData = tap;
+    this.currentClickedTapData = clickedTap;
   }
 }

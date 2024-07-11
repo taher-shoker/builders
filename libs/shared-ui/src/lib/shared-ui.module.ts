@@ -58,11 +58,13 @@ import { TimelineChartComponent } from './timeline-chart/timeline-chart.componen
 import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { TabviewComponent } from './tabview/tabview.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
   ButtonComponent,
+  TabviewComponent,
   HeaderComponent,
   InputComponent,
   BannerComponent,
@@ -126,6 +128,7 @@ const components = [
     MatProgressSpinnerModule,
     MatMenuModule,
     DateAgoPipe,
+
   ],
 })
 export class SharedUiModule {}

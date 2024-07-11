@@ -1,0 +1,13 @@
+.tabs-view-section
+{
+    display: flex;
+    gap:30px;
+    .scored-card-section-taps-tap
+    {
+      text-transform: capitalize;
+      font-size: 18px;
+      cursor: pointer;
+      padding:7px 15px;
+      border-radius: 5px;
+    }
+}
