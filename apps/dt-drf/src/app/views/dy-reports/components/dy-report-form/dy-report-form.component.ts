@@ -9,7 +9,13 @@ import {
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  Validators,
+} from '@angular/forms';
 import {
   MAT_MOMENT_DATE_ADAPTER_OPTIONS,
   MomentDateAdapter,
@@ -19,8 +25,11 @@ import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { MilestonesService, User } from '../../dy-reports.service';
-import { startWith, map, Observable } from 'rxjs';
+import { map, Observable, startWith } from 'rxjs';
+import { ConfigService } from '../../../../services/config.service';
+import { Report } from '../../../../services/models/report-flow.model';
+import { User } from '../../../../services/models/user';
+import { MilestonesService } from '../../dy-reports.service';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
@@ -37,51 +46,116 @@ import { startWith, map, Observable } from 'rxjs';
 })
 export class DyReportFormComponent implements OnInit, OnChanges {
   @Input() isEditing!: boolean;
-  @Input() data!: any;
+  @Input()
+  reportData!: Report;
   @Input() readOnly!: boolean;
-  @Input() isSubmited!: boolean;
-  @Input() casseId!: string;
 
   @Output() caseStatus = new EventEmitter<string>();
 
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
   form!: FormGroup;
-  users!: [];
+  users: User[] = [
+    {
+      id: 466,
+      username: 'mohfibrahim.c@stc.com.sa',
+      name: 'Fawzy',
+      email: 'mohfibrahim.c@stc.com.sa',
+      jobTitle: 'Developer',
+    },
+    {
+      id: 379,
+      username: 'omarr',
+      name: 'omar.ali',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+    {
+      id: 39,
+      username: 'rr',
+      name: 'rr',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+    {
+      id: 79,
+      username: 'tt',
+      name: 'tt',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+    {
+      id: 30,
+      username: 'cvc',
+      name: 'cvd',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+    {
+      id: 379,
+      username: 'omarr',
+      name: 'omar.ali',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+    {
+      id: 379,
+      username: 'omarr',
+      name: 'omar.ali',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+    {
+      id: 379,
+      username: 'omarr',
+      name: 'omar.ali',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+    {
+      id: 379,
+      username: 'nnnnn',
+      name: 'nnnnn',
+      email: 'omarli.c@stc.com.sa',
+      jobTitle: 'Tester',
+    },
+  ];
+
   files: File[] = [];
   formData = new FormData();
   isLoading = false;
   errorSize = false;
   errorType = false;
   disableSaveBtn = true;
-  filteredOptions: Observable<any[]>[] = [];
+  filteredOptions: Observable<User[]>[] = [];
 
-  accept = 'text/csv';
   allTeams: any;
   selectTeam!: any;
   stepCounter = 1;
-  selectedOptions = [];
-
+  selectedOptions: any = [];
+  customRangeSLA: { name: number; id: number }[] = [];
   constructor(
     private _formBuilder: FormBuilder,
     protected dialogService: DialogService,
     public milestonesService: MilestonesService,
     private toastr: ToastrService,
-    private router: Router
+    private router: Router,
+    public config_service: ConfigService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
-      this.data = changes['data'].currentValue;
-      if (this.data) {
-        this.restFormWithValue(this.data);
+      this.reportData = changes['data'].currentValue;
+      if (this.reportData) {
+        this.restFormWithValue(this.reportData);
       }
     }
   }
 
   ngOnInit(): void {
     this.initReportForm();
-    //this.ManageUserNameControl(0);
+    this.ManageUserNameControl(0);
+    this.customSLAPopulator();
   }
 
   initReportForm() {
@@ -90,21 +164,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       description: ['', [Validators.maxLength(150)]],
       category: ['', Validators.required],
       sla: [''],
+      customSLA: ['', Validators.required],
       isCreator: [''],
       creatorName: [''],
       file: ['', Validators.required],
-      requestApprovals: this._formBuilder.array(
-        !this.isEditing
-          ? [
-              this._formBuilder.group({
-                username: ['', Validators.required],
-                sequence: [1],
-                input: [''],
-              }),
-            ]
-          : []
-      ),
+      requestApprovals: this._formBuilder.array([]),
     });
+    this.addNewStep();
   }
 
   restFormWithValue(data: any) {
@@ -117,9 +183,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         weight: +this.form.get('weight')?.value,
       };
       if (this.isEditing) {
-        finalData = { ...finalData, teamName: this.data.teamName };
+        finalData = { ...finalData, teamName: '4' };
         this.milestonesService
-          .updateMilestone(this.data.id, finalData)
+          .updateMilestone('1', finalData)
           .subscribe((res) => {
             if (res) {
               this.toastr.success('Milestone has been edited successfully');
@@ -154,6 +220,16 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
 
+  customSLAPopulator() {
+    const min = +this.config_service.getConfig().rangeForSLA.min;
+    const max = +this.config_service.getConfig().rangeForSLA.max;
+
+    for (let i = min; i <= max; i++) {
+      const obj = { name: i, id: i };
+      this.customRangeSLA.push(obj);
+    }
+  }
+
   cancel() {
     this.router.navigate(['../']);
   }
@@ -185,9 +261,18 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   uploadAndProgress(files: File[]) {
     this.files = files;
     files.forEach((f) => {
-      if (f.size > 20000000) {
+      if (
+        f.size >
+        +this.config_service.getConfig().fileValidation.sizeWithMegaBytes *
+          1000000
+      ) {
         this.errorSize = true;
-      } else if (f.type !== 'text/csv') {
+      } else if (
+        !this.config_service
+          .getConfig()
+          .fileValidation.acceptType.split(',')
+          .includes(f.type)
+      ) {
         this.errorType = true;
       } else {
         this.formData.append('file', f);
@@ -197,49 +282,45 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   // convenience getters for easy access to form fields
-  get f() {
+  get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
-  get t() {
-    return (this.f['requestApprovals'] as FormArray).controls as FormGroup[];
+
+  get t(): FormArray {
+    return this.f['requestApprovals'] as FormArray;
   }
+
   /** setps flow functions **/
 
   addNewStep() {
-    this.stepCounter += 1;
-    if (this.t.length < this.stepCounter) {
-      for (let i = this.t.length; i < this.stepCounter; i++) {
-        this.t.push(
-          this._formBuilder.group({
-            username: ['', Validators.required],
-            sequence: [''],
-            input: [''],
-          })
-        );
-        //  this.t.at(i).patchValue({ sequence: this.stepCounter });
-        //this.ManageUserNameControl(i);
-      }
+    const newGroup = this._formBuilder.group({
+      username: ['', Validators.required],
+      sequence: [this.stepCounter++],
+      input: [''],
+    });
+    this.t.push(newGroup);
+    this.ManageUserNameControl(this.t.length - 1);
+  }
+  removeStep(index: number) {
+    this.t.removeAt(index);
+    this.selectedOptions.splice(index, 1);
+  }
+  triggerEvent(event: any, item: number) {
+    if (!event) {
+      this.t.at(item).patchValue({ input: '' });
+    } else {
+      this.t?.at(item)?.get('input')?.markAsTouched();
     }
   }
-  removeStep(item: number) {
-    this.selectedOptions.splice(item, 1);
-  }
-  // triggerEvent(event: boolean, item: number) {
-  //   if (!event) {
-  //     this.t.at(item).patchValue({ input: '' });
-  //   } else {
-  //     this.t.at(item).get('input').markAsTouched();
-  //   }
-  // }
   onSelectionChange(event: any, i: number) {
-    //this.disableSaveBtn = false;
+    this.disableSaveBtn = false;
     const value = event.source.value.toLowerCase();
 
     // if (
     //   this.isEditing &&
     //   (value ===
-    //     this.formData?.requestApprovals[
-    //       this.formData?.requestApprovals?.length - 1
+    //     this.reportData?.requestApprovals[
+    //       this.reportData?.requestApprovals?.length - 1
     //     ].username ||
     //     value === this.authService.getCurrentUserName())
     // ) {
@@ -250,78 +331,69 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     // if (!this.selectedOptions.includes(value)) {
     //   this.selectedOptions.splice(i, 0, value);
     // }
-    //this.ManageUserNameControl(i);
+    this.ManageUserNameControl(i);
   }
-
-  // ManageUserNameControl(index: number) {
-  //   if (this.t.at(index).get('input').touched) {
-  //     this.filteredOptions[index] = this.t
-  //       .at(index)
-  //       ?.get('input')
-  //       .valueChanges.pipe(
-  //         startWith<string | User>(''),
-  //         map((value) => (typeof value === 'string' ? value : value.username)),
-  //         map((name) => {
-  //           const copySelected = this.selectedOptions.slice();
-  //           copySelected.splice(index, 1);
-  //           return name
-  //             ? this._filter(name)
-  //             : this.selectedOptions.length === 1
-  //             ? this.users
-  //             : this.users?.filter((x) => {
-  //                 return !copySelected.includes(x.username.toLowerCase());
-  //               });
-  //         })
-  //       );
-  //     this.filteredOptions[index + 1] = this.t
-  //       .at(index + 1)
-  //       ?.get('input')
-  //       .valueChanges.pipe(
-  //         startWith<string | User>(''),
-  //         map((value) => (typeof value === 'string' ? value : value.username)),
-  //         map((name) => {
-  //           return name
-  //             ? this._filter(name)
-  //             : this.users?.filter(
-  //                 (x) =>
-  //                   !this.selectedOptions.includes(x.username.toLowerCase())
-  //               );
-  //         })
-  //       );
-  //   } else {
-  //     this.filteredOptions[index] = this.t
-  //       .at(index)
-  //       ?.get('input')
-  //       .valueChanges.pipe(
-  //         startWith<string | User>(''),
-  //         map((value) => (typeof value === 'string' ? value : value.username)),
-  //         map((name) => {
-  //           return name
-  //             ? this._filter(name)
-  //             : this.formMode === 'edit'
-  //             ? this.users
-  //             : this.users?.filter(
-  //                 (x) =>
-  //                   !this.selectedOptions.includes(x.username.toLowerCase())
-  //               );
-  //         })
-  //       );
-  //   }
-  // }
-  // private _filter(name: string): User[] {
-  //   const filterValue = name.toLowerCase();
-  //   if (this.selectedOptions.length > 0) {
-  //     return this.users
-  //       ?.filter(
-  //         (option) => option?.name.toLowerCase().indexOf(filterValue) === 0
-  //       )
-  //       .filter(
-  //         (x) => !this.selectedOptions.includes(x.username.toLowerCase())
-  //       );
-  //   } else {
-  //     return this.users?.filter(
-  //       (option) => option.name.toLowerCase().indexOf(filterValue) === 0
-  //     );
-  //   }
-  // }
+  ManageUserNameControl(index: number) {
+    const control = this.t.at(index).get('input');
+    if (control) {
+      if (this.t.at(index).get('input')?.touched) {
+        this.filteredOptions[index] = control.valueChanges.pipe(
+          startWith<string | User>(''),
+          map((value) => (typeof value === 'string' ? value : value.username)),
+          map((name) => {
+            const copySelected = this.selectedOptions.slice();
+            copySelected.splice(index, 1);
+            return name
+              ? this._filter(name)
+              : this.selectedOptions.length === 1
+              ? this.users
+              : this.users?.filter((x) => {
+                  return !copySelected.includes(x.username.toLowerCase());
+                });
+          })
+        );
+        this.filteredOptions[index + 1] = control.valueChanges.pipe(
+          startWith<string | User>(''),
+          map((value) => (typeof value === 'string' ? value : value.username)),
+          map((name) => {
+            return name
+              ? this._filter(name)
+              : this.users?.filter(
+                  (x) =>
+                    !this.selectedOptions.includes(x.username.toLowerCase())
+                );
+          })
+        );
+      } else {
+        this.filteredOptions[index] = control.valueChanges.pipe(
+          startWith<string | User>(''),
+          map((value) => (typeof value === 'string' ? value : value.username)),
+          map((name) => {
+            return name
+              ? this._filter(name)
+              : this.isEditing
+              ? this.users
+              : this.users?.filter(
+                  (x) =>
+                    !this.selectedOptions.includes(x.username.toLowerCase())
+                );
+          })
+        );
+      }
+    }
+  }
+  private _filter(name: string) {
+    const filterValue = name.toLowerCase();
+    if (this.selectedOptions.length > 0) {
+      return this.users
+        ?.filter(
+          (option) => option?.name.toLowerCase().indexOf(filterValue) === 0
+        )
+        .filter((x) => !this.selectedOptions.includes(x?.username));
+    } else {
+      return this.users?.filter(
+        (option) => option.name.toLowerCase().indexOf(filterValue) === 0
+      );
+    }
+  }
 }

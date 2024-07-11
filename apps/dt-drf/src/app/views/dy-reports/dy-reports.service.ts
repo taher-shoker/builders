@@ -15,6 +15,7 @@ export interface User {
   roles?: string[];
   teamName?: null | string;
   userGroups: Group[];
+  username: string;
 }
 
 interface Group {

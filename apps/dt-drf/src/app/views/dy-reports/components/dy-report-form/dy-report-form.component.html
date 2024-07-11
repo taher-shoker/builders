@@ -13,27 +13,24 @@
             formControlName="description"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Category'" [options]="allTeams"
-            [required]="true" formControlName="category" [outputValue]="'name'"
+          <stc-apps-select-drop-down [searchMode]="true" [selectId]="selectTeam || null" [label]="'Category'"
+            [options]="users" [required]="true" formControlName="category" [outputValue]="'name'"
             [disabled]="true"></stc-apps-select-drop-down>
 
         </div>
       </div>
       <div class="row mt-7 align-items-center">
         <div class="col-md-2 ">
-          <stc-apps-checkbox [label]="'With SLA'" formControlName="sla" [name]="'sla'"></stc-apps-checkbox>
+          <stc-apps-checkbox [label]="'Without SLA'" formControlName="sla" [name]="'sla'"></stc-apps-checkbox>
         </div>
-        <div class="col-md-2">
-          <stc-apps-checkbox [label]="'is Creator '" formControlName="isCreator"
-            [name]="'isCreator'"></stc-apps-checkbox>
-        </div>
-        <div class="col-md-8">
-          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Creator Name'" [options]="allTeams"
-            [required]="true" formControlName="creatorName" [outputValue]="'name'"
-            [disabled]="true"></stc-apps-select-drop-down>
+        <div class="col-md-10">
+          <stc-apps-select-drop-down [label]="'Custom SLA '" [options]="customRangeSLA" [required]="true"
+            formControlName="customSLA" [outputValue]="'name'" [disabled]="true"></stc-apps-select-drop-down>
 
         </div>
+
       </div>
+
 
       <div class="row mt-7">
         <div class="col-12">
@@ -47,7 +44,7 @@
                           : ''
                       " (click)="uploadClick()">
               <input #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)" name="file" hidden
-                accept="{{ accept }}" />
+                accept="{{ config_service.getConfig().fileValidation.acceptType }}" />
               @if (errorType || errorSize) {
               <div class="text-center">
                 <img src="assets/images/file-uploader-error.png" alt="upload" />
@@ -90,8 +87,20 @@
           </div>
         </div>
       </div>
+      <div class="row mt-7 align-items-center">
 
-      <div class="row mt-7" *ngIf="isEditing">
+        <div class="col-md-2">
+          <stc-apps-checkbox [label]="'is Creator '" formControlName="isCreator"
+            [name]="'isCreator'"></stc-apps-checkbox>
+        </div>
+        <div class="col-md-10" *ngIf="form.get('isCreator')?.value">
+          <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Creator Name'" [options]="users"
+            [required]="true" formControlName="creatorName" [outputValue]="'name'"
+            [disabled]="true"></stc-apps-select-drop-down>
+
+        </div>
+      </div>
+      <div class="row mt-7">
         <div class="col-md-12 mt-4">
           <div class="steps-flow">
             <div class="row">
@@ -101,44 +110,47 @@
                   <!-- <button type="button" *ngIf="!isEditing" class="add-btn" mat-raised-button (click)="addNewStep()">
                     <mat-icon>add </mat-icon> add new approval
                   </button> -->
-                  <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Add'" [buttonType]="'primary'"
-                    (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+                  <stc-apps-button [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'"
+                    [buttonType]="'primary'" (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
                 </div>
               </div>
             </div>
             <ul class="p-0">
 
-              <li *ngFor="let item of t ;let i = index">
-                <div class="select-box filter-select-box select-dropDwon custom-select-box mb-4 required"
-                  [formGroup]="item">
-                  <label>Approval{{i + 1}}#:</label>
+              <li *ngFor="let item of t.controls; let i = index" [formGroup]="item">
+                <div class="select-box filter-select-box select-dropDwon custom-select-box mb-4 required">
+                  <label>Approval {{i + 1}}#:</label>
 
                   <mat-form-field>
-                    <mat-select required formControlName='username' (selectionChange)="onSelectionChange($event,i)"
-                      appScrollTop>
-                      <input class="search-select" placeholder="search" formControlName='input'>
-                      <option *ngFor="let user of filteredOptions[i] | async" [value]="user.username">{{
-                        user.name
-                        }}</option>
+                    <mat-select required formControlName="username" (selectionChange)="onSelectionChange($event, i)"
+                      (openedChange)="triggerEvent($event, i)" appScrollTop>
+                      <input matInput class="search-select" placeholder="search" formControlName="input">
+                      <mat-option *ngFor="let user of filteredOptions[i] | async" [value]="user.username">
+                        {{ user.name }}
+                      </mat-option>
                     </mat-select>
 
-                    <!-- <mat-error *ngIf="item?.controls?.['username'].errors">{{
-                      'Required Field'
-                      }}</mat-error> -->
+                    <!-- <mat-error *ngIf="item?.controls?.username.errors">
+                Required Field
+              </mat-error> -->
                   </mat-form-field>
-
                 </div>
-                <!-- <div class="ml-3 mb-4" *ngIf=" isEditing&& formData?.requestApprovals[i]?.status !== 'pending'">
+
+                <div class="ml-3 mb-4" *ngIf="isEditing && reportData.requestApprovals[i]?.status !== 'pending'">
                   <i class="pi pi-check"></i>
-
                 </div>
-                <div class="ml-3 mb-4" *ngIf="loadingUser">
-                  <i class="pi pi-spin pi-spinner"></i>
 
-                </div> -->
-                <button type="button" *ngIf="i !==0 &&  !isEditing" pButton pRipple icon="pi pi-trash"
-                  class="p-button p-button-danger ml-3 mb-4" (click)="removeStep(i)"></button>
+                <!-- Uncomment this div if loadingUser functionality is needed -->
+                <!--
+              <div class="ml-3 mb-4" *ngIf="loadingUser">
+                <i class="pi pi-spin pi-spinner"></i>
+              </div>
+              -->
+
+                <div *ngIf="i !== 0 && !isEditing" class=" mb-4" (click)="removeStep(i)"><i
+                    class="ri-delete-bin-line"></i></div>
               </li>
+
             </ul>
           </div>
         </div>
@@ -151,7 +163,7 @@
                 (btnClick)="cancel()"></stc-apps-button>
             </div>
             <div class="col-md-6">
-              <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Add'" [buttonType]="'primary'"
+              <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Submit'" [buttonType]="'primary'"
                 (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
             </div>
           </div>

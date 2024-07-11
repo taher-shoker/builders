@@ -1,5 +1,14 @@
 {
-  "apiUrl": "https://api.example.com",
-  "featureToggle": true,
-  "version": "1.0.0"
+  "fileValidation": {
+    "acceptType": ".docx.,doc,.xlsx,.xls,.csv,.ppt,.pptx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,image/jpg",
+    "sizeWithMegaBytes": "50"
+  },
+  "characterLimit": {
+    "descriptionLength": "1000",
+    "nameLength": "100"
+  },
+  "rangeForSLA": {
+    "min": "1",
+    "max": "7"
+  }
 }

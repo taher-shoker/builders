@@ -4,9 +4,9 @@ import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
 
 interface Config {
-  apiUrl: string;
-  featureToggle: boolean;
-  version: string;
+  fileValidation: { acceptType: string; sizeWithMegaBytes: string };
+  characterLimit: { descriptionLength: string; nameLength: string };
+  rangeForSLA: { min: string; max: string };
 }
 
 @Injectable({

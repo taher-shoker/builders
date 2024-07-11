@@ -38,12 +38,12 @@
 .file-uploader {
   cursor: pointer;
   margin: 16px auto;
-  border: 1px dashed blue;
+  border: 1px dashed var(--stc-color);
   padding: 24px 16px;
   color: var(--grey-color);
   border-radius: 10px;
   &.error {
-    border-color: red;
+    border-color: var(--stc-red-color);
   }
   img {
     margin-bottom: 10px;
@@ -58,7 +58,7 @@
 
 .file {
   background-color: lightgrey;
-  color: blue;
+  color: var(--stc-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -66,15 +66,55 @@
   margin-top: 30px;
 
   i.pi-times {
-    color: red;
+    color: var(--stc-red-color);
   }
   i.pi-download {
-    color: gray;
+    color: var(--grey-color);
   }
 }
 
 .error-file {
   margin: 5px auto;
-  color: red;
+  color: var(--stc-red-color);
   padding-left: 10px;
+}
+
+.steps-flow {
+  i {
+    font-size: 20px;
+  }
+  ul {
+    list-style: none;
+    margin-top: 16px;
+    li {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+    }
+  }
+  .custom-select-box {
+    width: 500px;
+    margin-right: 16px;
+    ::ng-deep .mat-select-panel {
+      height: 250px !important;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+      }
+      &::-webkit-scrollbar-track {
+        background: #f1f1f1;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 10px;
+      }
+      &::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+    }
+  }
+  .ri-delete-bin-line {
+    color: var(--stc-red-color);
+    cursor: pointer;
+  }
 }

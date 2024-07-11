@@ -24,6 +24,7 @@ import { EditDyReportComponent } from './components/edit-dy-report/edit-dy-repor
 import { ReportsComponent } from './components/reports/reports.component';
 import { DyReportsComponent } from './dy-reports.component';
 import { DyReportDetailsComponent } from './components/dy-report-details/dy-report-details.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { DyReportDetailsComponent } from './components/dy-report-details/dy-repo
     MatInputModule,
     NgxSpinnerModule,
     DyReportsRoutingModule,
+    MatSelectModule,
   ],
   exports: [],
   providers: [DatePipe],

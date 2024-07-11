@@ -14,6 +14,9 @@
   "include": [],
   "references": [
     {
+      "path": "./src/assets/config.json"
+    },
+    {
       "path": "./tsconfig.app.json"
     },
     {
@@ -28,6 +31,6 @@
     "enableI18nLegacyMessageIdFormat": false,
     "strictInjectionParameters": true,
     "strictInputAccessModifiers": true,
-    "strictTemplates": true
+    "strictTemplates": false
   }
 }
