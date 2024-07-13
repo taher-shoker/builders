@@ -44,13 +44,29 @@ export class ScorecardComponent implements OnInit{
   }
   ngOnInit(): void {
     this.financialScorcardData = this.scorecardService.financialScorcardData;
-    this.strategicScorcardData = this.scorecardService.strategicScorcardData;
-    this.relationalScorcardData = this.scorecardService.rationalScorcardData;
-    this.operationalScorcardData = this.scorecardService.operationalScorcardData;
-    this.prioritiesScorcardData = this.scorecardService.prioritieslScorcardData;
   }
   getClickedTap(clickedTap:ScorecardTaps)
   {
     this.currentClickedTapData = clickedTap;
+    if(clickedTap.id === 1)
+    {
+      this.financialScorcardData = this.scorecardService.financialScorcardData;
+    }
+    else if(clickedTap.id === 2)
+    {
+      this.strategicScorcardData = this.scorecardService.strategicScorcardData;
+    }
+    else if(clickedTap.id === 3)
+    {
+      this.relationalScorcardData = this.scorecardService.rationalScorcardData;
+    }
+    else if(clickedTap.id === 4)
+    {
+      this.operationalScorcardData = this.scorecardService.operationalScorcardData;
+    }
+    else if(clickedTap.id === 5)
+    {
+      this.prioritiesScorcardData = this.scorecardService.prioritieslScorcardData;
+    }
   }
 }

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, input , Output } from '@angular/core';
 import { TabsDataModel } from './tabsData.model';
 @Component({
   selector: 'stc-apps-tabview',
@@ -7,11 +7,15 @@ import { TabsDataModel } from './tabsData.model';
   styleUrl: './tabview.component.scss',
 })
 export class TabviewComponent {
-  @Input({required : true}) tabsData!:TabsDataModel[];
-  @Input() tabColor!:string;
-  @Input() clickedtabColor!:string;
-  @Input() clickedtabBackground!:string;
-  @Input() tabBackground!:string;
+  // @Input({required : true}) tabsData!:TabsDataModel[];
+  tabsData = input.required<TabsDataModel[]>()
+  tabColor = input<string>()
+  fontFamily = input<string>()
+  onHover = false;
+  hoveredTap = 0;
+  clickedtabColor = input<string>()
+  clickedtabBackground = input<string>()
+  tabBackground = input<string>()
   @Output() clickedTap:EventEmitter<TabsDataModel> = new EventEmitter()
   currentClickedTapIndex = 0;
   toggleTaps(index:number , tap:TabsDataModel)

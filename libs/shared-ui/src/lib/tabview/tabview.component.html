@@ -1,13 +1,16 @@
 <div class="tabs-view-section">
-  @for (tap of tabsData; track tap.id;let index = $index){
+  @for (tap of tabsData(); track tap.id;let index = $index){
     <div
       class="scored-card-section-taps-tap"
       [class.clickedTap]="currentClickedTapIndex === index"
       (click)="toggleTaps(index , tap)"
       [ngStyle]="{
-        'color' : currentClickedTapIndex === index ? clickedtabColor : tabColor ,
-        'background' : currentClickedTapIndex === index ? clickedtabBackground : tabBackground
+        'color' : (currentClickedTapIndex === index) || (onHover && hoveredTap === index) ? clickedtabColor() : tabColor() ,
+        'background' : currentClickedTapIndex === index || (onHover && hoveredTap === index) ? clickedtabBackground() : tabBackground(),
+        'font-family' : fontFamily() ? fontFamily() : 'Poppins'
       }"
+      (mouseenter)="onHover = true;hoveredTap = index"
+      (mouseleave)="onHover = false"
     >
       <span>{{tap.name}}</span>
     </div>

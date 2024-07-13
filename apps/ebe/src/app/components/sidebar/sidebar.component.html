@@ -1,23 +1,23 @@
 <section class="sidebar-section" [class.no-username]="!usernameImage && !userName">
   <div class="sidebar-section-main-image">
-    <img [src]="logoSrc" alt="">
+    <img [src]="logoSrc()" alt="">
   </div>
   <div class="sidebar-section-links">
     <ul>
-      @for (link of sidebarLinks; track link.id) {
+      @for (link of sidebarLinks(); track link.id) {
         <li>
           <a routerLinkActive="activeLink" [routerLink]="link.url">{{link.name}}</a>
         </li>
       }
     </ul>
   </div>
-  @if (usernameImage && userName) {
+  @if (usernameImage() && userName()) {
     <div class="sidebar-section-username">
       <div class="sidebar-section-username-image">
-        <img [src]="usernameImage" alt="">
+        <img [src]="usernameImage()" alt="">
       </div>
       <div class="sidebar-section-username-name">
-        <span>{{userName}}</span>
+        <span>{{userName()}}</span>
       </div>
     </div>
   }

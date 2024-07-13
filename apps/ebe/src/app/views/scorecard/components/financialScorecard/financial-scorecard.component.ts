@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FinancialScorecardModel } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-financial-scorecard',
@@ -7,5 +7,6 @@ import { FinancialScorecardModel } from '../../../../models/scorecard.model';
   styleUrl: './financial-scorecard.component.scss',
 })
 export class FinancialScorecardComponent {
-  @Input({required : true}) financialScorcardData!:FinancialScorecardModel;
+  // @Input({required : true}) financialScorcardData!:FinancialScorecardModel;
+  financialScorcardData = input.required<FinancialScorecardModel>();
 }

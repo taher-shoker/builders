@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { SidebarLinksModel } from './sidebarLinks.model';
@@ -11,8 +11,9 @@ import { SidebarLinksModel } from './sidebarLinks.model';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent {
-  @Input({required : true}) logoSrc!:string;
-  @Input() usernameImage?:string;
-  @Input() userName?:string;
-  @Input({required : true}) sidebarLinks!:SidebarLinksModel[];
+  // @Input({required : true}) logoSrc!:string;
+  logoSrc = input.required<string>({alias : 'logoSrc'})
+  usernameImage = input<string>()
+  userName = input<string>()
+  sidebarLinks = input.required<SidebarLinksModel[]>()
 }

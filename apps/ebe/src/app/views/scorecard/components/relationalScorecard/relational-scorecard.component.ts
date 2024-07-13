@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { RelationalScorecardModel } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-relational-scorecard',
@@ -7,5 +7,6 @@ import { RelationalScorecardModel } from '../../../../models/scorecard.model';
   styleUrl: './relational-scorecard.component.scss',
 })
 export class RelationalScorecardComponent {
-  @Input({required : true}) relationalScorecardData!:RelationalScorecardModel;
+  // @Input({required : true}) relationalScorecardData!:RelationalScorecardModel;
+  relationalScorecardData = input.required<RelationalScorecardModel>();
 }

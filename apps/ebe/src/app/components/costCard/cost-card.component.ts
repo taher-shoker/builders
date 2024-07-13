@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CostModel } from '../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-cost-card',
@@ -7,5 +7,6 @@ import { CostModel } from '../../models/scorecard.model';
   styleUrl: './cost-card.component.scss',
 })
 export class CostCardComponent {
-  @Input({required:true}) costData!:CostModel;
+  // @Input({required:true}) costData!:CostModel;
+  costData = input.required<CostModel>();
 }

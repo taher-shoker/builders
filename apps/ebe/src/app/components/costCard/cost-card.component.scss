@@ -1,3 +1,4 @@
+@import '../../../styles/fonts';
 .financial-scorecard-costs
 {
   &-card
@@ -8,7 +9,7 @@
     &-title
     {
       text-transform: capitalize;
-      font-family: boldPoppins;
+      @extend .boldPoppins;
       color:var(--stc-purple-light-color);
       font-size: 18px;
       margin: 0;
@@ -26,6 +27,7 @@
         font-weight: 500;
         padding:10px 15px;
         border-radius:10px;
+        @extend .stcFont;
         &.achieved
         {
           color:var(--stc-green-dark-color);
@@ -51,6 +53,7 @@
         background-color: var(--stc-white-color);
         padding:10px 0;
         border-radius: 10px;
+        @extend .stcFont;
         .weight-card
         {
           display: grid;

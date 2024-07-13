@@ -1,7 +1,7 @@
 <div class="financial-scorecard-costs-card">
-  <p class = "financial-scorecard-costs-card-title">{{costData.title}}</p>
+  <p class = "financial-scorecard-costs-card-title">{{costData().title}}</p>
   <div class="financial-scorecard-costs-card-statuses">
-    @for (status of costData.costStatus; track status.id) {
+    @for (status of costData().costStatus; track status.id) {
       <div
         [class.achieved]="status.id === 'achieved'"
         [class.not-achieved]="status.id === 'not-achieved'"
@@ -16,12 +16,12 @@
         <div class = "weight-card">
           <p class = "weight2">weight</p>
           <span>:</span>
-          <p class = "weight-val">{{costData.weight}}</p>
+          <p class = "weight-val">{{costData().weight}}</p>
         </div>
         <div class = "weight-card">
           <p class = "weight2">unit</p>
           <span>:</span>
-          <p class = "weight-val">{{costData.unit}}</p>
+          <p class = "weight-val">{{costData().unit}}</p>
         </div>
       </div>
     </div>
@@ -30,25 +30,25 @@
         <div class = "weight-card">
           <p class = "weight2">baseline</p>
           <span>:</span>
-          <p class = "weight-val">{{costData.baseline}}</p>
+          <p class = "weight-val">{{costData().baseline}}</p>
         </div>
         <div class = "weight-card">
           <p class = "weight2">target</p>
           <span>:</span>
-          <p class = "weight-val">{{costData.target}}</p>
+          <p class = "weight-val">{{costData().target}}</p>
         </div>
       </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
       <div class="financial-scorecard-costs-card-cards-ceiling">
         <p>ceiling</p>
-        <span>{{costData.ceiling}}</span>
+        <span>{{costData().ceiling}}</span>
       </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
       <div class="financial-scorecard-costs-card-cards-ceiling">
         <p>threshold</p>
-        <span>{{costData.threshold}}</span>
+        <span>{{costData().threshold}}</span>
       </div>
     </div>
     </div>
