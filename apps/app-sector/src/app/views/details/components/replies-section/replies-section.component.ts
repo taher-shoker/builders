@@ -63,13 +63,13 @@ export class RepliesSectionComponent implements OnInit {
           name: 'Assem Ahmed',
           comment: 'Reply 1',
           time: 'Few Seconds ago',
-          mentions: [''],
+          mentions: [],
         },
         {
           name: 'Mohamed Fawzy Ahmed',
           comment: 'Reply 2',
           time: 'Few Seconds ago',
-          mentions: [''],
+          mentions: [],
         },
       ],
     },
@@ -257,6 +257,8 @@ export class RepliesSectionComponent implements OnInit {
   editReply() {
     this.commentsList[this.commentIndex].replies[this.replyIndex].comment =
       this.form.get('comment')?.value;
+    this.commentsList[this.commentIndex].replies[this.replyIndex].mentions =
+      this.mentionsArray;
     console.log('new comments', this.commentsList);
     this.form.reset();
     this.editReplyTextArea = false;
