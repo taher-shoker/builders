@@ -1,7 +1,8 @@
 .comments {
   background: var(--whiteColor);
   padding: 15px;
-  border: 1px solid rgba($color: var(--blackColor), $alpha: 0.1);
+  // border: 1px solid rgba($color: var(--blackColor), $alpha: 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
   height: 695.6px;
 
@@ -39,7 +40,8 @@
   margin-top: 10px;
   background: var(--whiteColor);
   padding: 15px;
-  border: 1px solid rgba($color: var(--blackColor), $alpha: 0.1);
+  // border: 1px solid rgba($color: var(--blackColor), $alpha: 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
   border-radius: 8px;
 
   &_summary {
@@ -64,6 +66,7 @@
       }
     }
   }
+
   &_empty {
     display: flex;
     justify-content: center;
@@ -77,7 +80,7 @@
     margin-top: 37px;
 
     &_item {
-      & > div {
+      &>div {
         display: flex;
         justify-content: space-between;
         align-items: center;
