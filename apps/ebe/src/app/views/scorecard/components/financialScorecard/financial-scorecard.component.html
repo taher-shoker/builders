@@ -1,11 +1,25 @@
 <section class="financial-scorecard">
-  <p class = 'financial-scorecard-title'>{{financialScorcardData().title}}</p>
+  <div class="financial-scorecard-header">
+    <p class = 'financial-scorecard-header-title'>{{financialScorcardData().title}}</p>
+    <div class="financial-scorecard-header-dropdowns">
+        <select class="form-select" aria-label="Default select example" [(ngModel)]="currentMonth" name="month">
+          @for (month of months(); track month) {
+            <option>{{month}}</option>
+          }
+        </select>
+        <select class="form-select" aria-label="Default select example" [(ngModel)]="currentYear" name = 'year'>
+          @for (year of years(); track year) {
+            <option [value]="year">{{year}}</option>
+          }
+        </select>
+    </div>
+  </div>
   <div class="financial-scorecard-costs">
     <div class="row">
-      @for (cost of financialScorcardData().costsData; track cost.id) {
+      @for (kpi of financialScorcardData().costsData; track kpi.id) {
         <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
           <stc-apps-cost-card
-            [costData]="cost"
+            [kpi]="kpi"
           />
         </div>
       }

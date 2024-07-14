@@ -1,19 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { FinancialScorecardModel, OperationalScorecardModel, PrioritiesScorecardModel, RelationalScorecardModel, ScorecardTaps, StrategicScorecardModel } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
+import { FinancialScorecardComponent } from './components/financialScorecard/financial-scorecard.component';
+import { SharedUiModule } from '@stc-apps/shared-ui';
 @Component({
   selector: 'stc-apps-scorecard',
-  standalone: false,
+  standalone: true,
+  imports : [FinancialScorecardComponent , SharedUiModule],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
 })
 export class ScorecardComponent implements OnInit{
   currentClickedTapIndex = 0;
-  financialScorcardData!:FinancialScorecardModel;
-  strategicScorcardData!:StrategicScorecardModel;
-  relationalScorcardData!:RelationalScorecardModel;
-  operationalScorcardData!:OperationalScorecardModel;
-  prioritiesScorcardData!:PrioritiesScorecardModel;
+  kpisData!:FinancialScorecardModel | StrategicScorecardModel | RelationalScorecardModel | PrioritiesScorecardModel | OperationalScorecardModel;
   currentClickedTapData:ScorecardTaps;
   scorecardsTaps:ScorecardTaps[] = [
     {
@@ -43,30 +42,30 @@ export class ScorecardComponent implements OnInit{
     this.currentClickedTapData = this.scorecardsTaps[0];
   }
   ngOnInit(): void {
-    this.financialScorcardData = this.scorecardService.financialScorcardData;
+    this.kpisData = this.scorecardService.financialScorcardData;
   }
   getClickedTap(clickedTap:ScorecardTaps)
   {
     this.currentClickedTapData = clickedTap;
     if(clickedTap.id === 1)
     {
-      this.financialScorcardData = this.scorecardService.financialScorcardData;
+      this.kpisData = this.scorecardService.financialScorcardData;
     }
     else if(clickedTap.id === 2)
     {
-      this.strategicScorcardData = this.scorecardService.strategicScorcardData;
+      this.kpisData = this.scorecardService.strategicScorcardData;
     }
     else if(clickedTap.id === 3)
     {
-      this.relationalScorcardData = this.scorecardService.rationalScorcardData;
+      this.kpisData = this.scorecardService.rationalScorcardData;
     }
     else if(clickedTap.id === 4)
     {
-      this.operationalScorcardData = this.scorecardService.operationalScorcardData;
+      this.kpisData = this.scorecardService.operationalScorcardData;
     }
     else if(clickedTap.id === 5)
     {
-      this.prioritiesScorcardData = this.scorecardService.prioritieslScorcardData;
+      this.kpisData = this.scorecardService.prioritieslScorcardData;
     }
   }
 }

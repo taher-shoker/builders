@@ -1,7 +1,4 @@
 import { Route } from '@angular/router';
-import { StrategyProgramComponent } from './views/strategyProgram/strategyProgram.component';
-import { RaqamiComponent } from './views/raqami/raqami.component';
-import { PSRComponent } from './views/PSR/PSR.component';
 export const appRoutes: Route[] = [
   {
     path : "",
@@ -10,21 +7,30 @@ export const appRoutes: Route[] = [
   },
   {
     path : "scorecard",
-    loadChildren: () =>
-      import('./views/scorecard/scorecard.module').then(
-        (m) => m.ScorecardModule
+    loadComponent: () =>
+      import('./views/scorecard/scorecard.component').then(
+        (m) => m.ScorecardComponent
       ),
   },
   {
     path : "strategy-program",
-    component : StrategyProgramComponent
+    loadComponent: () =>
+      import('./views/strategyProgram/strategyProgram.component').then(
+        (m) => m.StrategyProgramComponent
+      ),
   },
   {
     path : "raqami",
-    component : RaqamiComponent
+    loadComponent: () =>
+      import('./views/raqami/raqami.component').then(
+        (m) => m.RaqamiComponent
+      ),
   },
   {
     path : "psr",
-    component : PSRComponent
+    loadComponent: () =>
+      import('./views/PSR/PSR.component').then(
+        (m) => m.PSRComponent
+      ),
   }
 ];

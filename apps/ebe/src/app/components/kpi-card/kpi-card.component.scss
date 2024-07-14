@@ -20,6 +20,7 @@
       align-items: center;
       gap:25px;
       margin-top: 20px;
+      flex-wrap: wrap;
       div
       {
         text-transform: capitalize;
@@ -32,6 +33,13 @@
         {
           color:var(--stc-green-dark-color);
           background-color:var(--stc-green-light-color);
+          img
+          {
+            position: relative;
+            top: -3px;
+            left: 4px;
+            width: 12px;
+          }
         }
         &.not-achieved
         {
@@ -109,3 +117,23 @@
     }
   }
 }
+// .arrow {
+//   opacity: 0;
+//   // width: 0;
+//   // height: 0;
+//   // border-left: 20px solid transparent;
+//   // border-right: 20px solid transparent;
+//   // border-top: 20px solid #000; /* Adjust color and size as needed */
+//   animation: slideFromBottom 1s ease infinite; /* CSS animation to slide from bottom */
+// }
+
+// @keyframes slideFromBottom {
+//   0% {
+//     opacity: 0;
+//     transform: translate(-50%, 100%);
+//   }
+//   100% {
+//     opacity: 1;
+//     transform: translate(-50%, 0);
+//   }
+// }

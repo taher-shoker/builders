@@ -7,9 +7,10 @@ import { NxWelcomeComponent } from './nx-welcome.component';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 // import { SharedUiModule } from '@stc-apps/shared-ui';
 import { SidebarComponent } from './components/sidebar/sidebar.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent, MainLayoutComponent],
-  imports: [BrowserModule, RouterModule.forRoot(appRoutes) , SidebarComponent],
+  imports: [BrowserModule, RouterModule.forRoot(appRoutes) , SidebarComponent , BrowserAnimationsModule],
   providers: [],
   bootstrap: [AppComponent],
 })

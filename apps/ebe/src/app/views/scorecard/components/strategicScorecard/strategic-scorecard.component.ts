@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { StrategicScorecardModel } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-strategic-scorecard',
-  standalone: false,
+  standalone: true,
   templateUrl: './strategic-scorecard.component.html',
   styleUrl: './strategic-scorecard.component.scss',
 })

@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { PrioritiesScorecardModel } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-priorities-scorecard',
-  standalone: false,
+  standalone: true,
   templateUrl: './priorities-scorecard.component.html',
   styleUrl: './priorities-scorecard.component.scss',
 })

@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { RelationalScorecardModel } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-relational-scorecard',
-  standalone: false,
+  standalone: true,
   templateUrl: './relational-scorecard.component.html',
   styleUrl: './relational-scorecard.component.scss',
 })

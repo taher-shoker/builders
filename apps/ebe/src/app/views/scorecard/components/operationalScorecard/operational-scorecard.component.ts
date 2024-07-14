@@ -2,7 +2,7 @@ import { Component, input } from '@angular/core';
 import { OperationalScorecardModel } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-operational-scorecard',
-  standalone: false,
+  standalone: true,
   templateUrl: './operational-scorecard.component.html',
   styleUrl: './operational-scorecard.component.scss',
 })

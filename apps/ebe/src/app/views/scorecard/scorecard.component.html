@@ -26,33 +26,11 @@
     </div>
     <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
   </div>
-  <div class="scored-card-section-tap-details">
-    @switch (currentClickedTapData.id){
-      @case (1) {
-        <stc-apps-financial-scorecard
-          [financialScorcardData]="financialScorcardData"
-        />
-      }
-      @case (2) {
-        <stc-apps-strategic-scorecard
-          [strategicScorcardData]="strategicScorcardData"
-        />
-      }
-      @case (3) {
-        <stc-apps-relational-scorecard
-          [relationalScorecardData]="relationalScorcardData"
-        />
-      }
-      @case (4) {
-        <stc-apps-operational-scorecard
-          [operationalScorcardData]="operationalScorcardData"
-        />
-      }
-      @case (5) {
-        <stc-apps-priorities-scorecard
-          [prioritiesScorcardData]="prioritiesScorcardData"
-        />
-      }
-    }
-  </div>
+  @if (kpisData) {
+    <div class="scored-card-section-tap-details">
+      <stc-apps-financial-scorecard
+        [financialScorcardData]="kpisData"
+      />
+    </div>
+  }
 </section>
