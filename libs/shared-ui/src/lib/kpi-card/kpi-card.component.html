@@ -2,17 +2,9 @@
   <p class = "financial-scorecard-costs-card-title">{{kpiData().title}}</p>
   <div class="financial-scorecard-costs-card-statuses">
     @for (status of kpiData().costStatus; track status.id) {
-      <div
-        [class.achieved]="status.id === 'achieved'"
-        [class.not-achieved]="status.id === 'not-achieved'"
-        [class.actual]="status.id === 'actual'"
-      >
-        {{status.title}}
-        @if(status.value){<span>: {{status.value}}</span>}
-        @if(status.id === 'achieved'){
-          <img class = 'arrow' src = "assets/images/arrow-up-solid.svg"/>
-        }
-      </div>
+      <stc-apps-kpi-status-card
+        [kpiStatus]="status"
+      />
     }
   </div>
   <div class="financial-scorecard-costs-card-cards">
@@ -22,7 +14,7 @@
         <div class = "weight-card">
           <p class = "weight2">weight</p>
           <span>:</span>
-          <p class = "weight-val">{{kpiData().weight}}</p>
+          <p class = "weight-val">{{kpiData().weight}}%</p>
         </div>
         <div class = "weight-card">
           <p class = "weight2">unit</p>
@@ -36,25 +28,39 @@
         <div class = "weight-card">
           <p class = "weight2">baseline</p>
           <span>:</span>
-          <p class = "weight-val">{{kpiData().baseline}}</p>
+          <p class = "weight-val">
+            @if (kpiData().baseline) {
+              {{kpiData().baseline}}
+            } @else {
+              N/A
+            }
+            @if (kpiData().unit === '%') {
+              %
+            }
+          </p>
         </div>
         <div class = "weight-card">
           <p class = "weight2">target</p>
           <span>:</span>
-          <p class = "weight-val">{{kpiData().target}}</p>
+          <p class = "weight-val">
+            {{kpiData().target}}
+            @if (kpiData().unit === '%') {
+              %
+            }
+          </p>
         </div>
       </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
       <div class="financial-scorecard-costs-card-cards-ceiling">
         <p>ceiling</p>
-        <span>{{kpiData().ceiling}}</span>
+        <span>{{kpiData().ceiling}}%</span>
       </div>
     </div>
     <div class="col-lg-6 col-md-6 col-sm-12">
       <div class="financial-scorecard-costs-card-cards-ceiling">
         <p>threshold</p>
-        <span>{{kpiData().threshold}}</span>
+        <span>{{kpiData().threshold}}%</span>
       </div>
     </div>
     </div>

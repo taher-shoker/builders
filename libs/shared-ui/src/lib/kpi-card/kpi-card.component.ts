@@ -1,11 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
-import { KpiModel } from '../../models/scorecard.model';
+import { KpiModel } from './kpi.model';
 // import { trigger, state, style, animate, transition } from '@angular/animations';
 @Component({
-  selector: 'stc-apps-cost-card',
-  standalone: true,
-  imports : [CommonModule],
+  selector: 'stc-apps-kpi-card',
+  standalone: false,
   templateUrl: './kpi-card.component.html',
   styleUrl: './kpi-card.component.scss'
 })

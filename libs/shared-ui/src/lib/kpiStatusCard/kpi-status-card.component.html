@@ -1,0 +1,11 @@
+<div
+  [class.achieved]="kpiStatus().id === 'achieved'"
+  [class.not-achieved]="kpiStatus().id === 'not-achieved'"
+  [class.actual]="kpiStatus().id === 'actual'"
+>
+  {{ kpiStatus().title }}
+  @if(kpiStatus().value){<span>: {{ kpiStatus().value }}</span>}
+  @if(kpiStatus().id === 'achieved'){
+  <img class="arrow" src="assets/images/arrow-up-solid.svg" />
+  }
+</div>

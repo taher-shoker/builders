@@ -17,12 +17,12 @@ export interface KpiModel
     title:string;
     value?:string;
   }[];
-  weight:string;
+  weight:number;
   unit:string;
-  baseline:string;
-  target:string;
-  ceiling:string;
-  threshold:string;
+  baseline:number | null;
+  target:number;
+  ceiling:number;
+  threshold:number;
 }
 export interface StrategicScorecardModel
 {

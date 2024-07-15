@@ -1,9 +1,9 @@
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgModule, importProvidersFrom } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -59,12 +59,16 @@ import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { TabviewComponent } from './tabview/tabview.component';
+import { KpiCardComponent } from './kpi-card/kpi-card.component';
+import { KpiStatusCardComponent } from './kpiStatusCard/kpi-status-card.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
   ButtonComponent,
   TabviewComponent,
+  KpiCardComponent,
+  KpiStatusCardComponent,
   HeaderComponent,
   InputComponent,
   BannerComponent,

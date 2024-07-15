@@ -29,12 +29,12 @@ export class ScorecardService {
               value : "99.89%"
             },
           ],
-          weight:'5%',
+          weight:5,
           unit:'SR Bn',
-          baseline:'12738',
-          target:'12537',
-          ceiling:'110%',
-          threshold:'85%'
+          baseline:null,
+          target:12537,
+          ceiling:110,
+          threshold:85
         },
         {
           id:2,
@@ -49,12 +49,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:3,
@@ -69,12 +69,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:4,
@@ -90,12 +90,12 @@ export class ScorecardService {
               value : "50%"
             },
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
       ]
     }
@@ -120,12 +120,12 @@ export class ScorecardService {
               value : "99.89%"
             },
           ],
-          weight:'5%',
+          weight:5,
           unit:'SR Bn',
-          baseline:'12738',
-          target:'12537',
-          ceiling:'110%',
-          threshold:'85%'
+          baseline:12738,
+          target:12537,
+          ceiling:110,
+          threshold:85
         },
         {
           id:2,
@@ -140,12 +140,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:3,
@@ -160,12 +160,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         }
       ]
     }
@@ -190,12 +190,12 @@ export class ScorecardService {
               value : "99.89%"
             },
           ],
-          weight:'5%',
+          weight:5,
           unit:'SR Bn',
-          baseline:'12738',
-          target:'12537',
-          ceiling:'110%',
-          threshold:'85%'
+          baseline:12738,
+          target:12537,
+          ceiling:110,
+          threshold:85
         },
         {
           id:2,
@@ -210,12 +210,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:3,
@@ -230,12 +230,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:4,
@@ -251,12 +251,12 @@ export class ScorecardService {
               value : "50%"
             },
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
       ]
     }
@@ -281,12 +281,12 @@ export class ScorecardService {
               value : "99.89%"
             },
           ],
-          weight:'5%',
+          weight:5,
           unit:'SR Bn',
-          baseline:'12738',
-          target:'12537',
-          ceiling:'110%',
-          threshold:'85%'
+          baseline:12738,
+          target:12537,
+          ceiling:110,
+          threshold:85
         },
         {
           id:2,
@@ -301,12 +301,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:3,
@@ -321,12 +321,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:4,
@@ -342,12 +342,12 @@ export class ScorecardService {
               value : "50%"
             },
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
       ]
     }
@@ -372,12 +372,12 @@ export class ScorecardService {
               value : "99.89%"
             },
           ],
-          weight:'5%',
+          weight:5,
           unit:'SR Bn',
-          baseline:'12738',
-          target:'12537',
-          ceiling:'110%',
-          threshold:'85%'
+          baseline:12738,
+          target:12537,
+          ceiling:110,
+          threshold:85
         },
         {
           id:2,
@@ -392,12 +392,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:3,
@@ -412,12 +412,12 @@ export class ScorecardService {
               title : "linear"
             }
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
         {
           id:4,
@@ -433,12 +433,12 @@ export class ScorecardService {
               value : "50%"
             },
           ],
-          weight:'20%',
+          weight:20,
           unit:'%',
-          baseline:'145.68%',
-          target:'100%',
-          ceiling:'90%',
-          threshold:'55%'
+          baseline:145.68,
+          target:100,
+          ceiling:90,
+          threshold:55
         },
       ]
     }

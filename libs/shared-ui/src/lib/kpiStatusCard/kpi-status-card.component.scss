@@ -1,0 +1,32 @@
+@import '../../../../../apps/ebe/src/styles/fonts.scss';
+div
+{
+  text-transform: capitalize;
+  font-size: 15px;
+  font-weight: 600;
+  padding:10px 15px;
+  border-radius:10px;
+  @extend .stcFont;
+  &.achieved
+  {
+    color:var(--stc-green-dark-color);
+    background-color:var(--stc-green-light-color);
+    img
+    {
+      position: relative;
+      top: -3px;
+      left: 4px;
+      width: 12px;
+    }
+  }
+  &.not-achieved
+  {
+    color:var(--stc-red-dark-color);
+    background-color:var(--stc-red-light-color);
+  }
+  &.actual
+  {
+    color:var(--stc-purple-light-color);
+    background-color:var(--stc-blue-light-color);
+  }
+}
