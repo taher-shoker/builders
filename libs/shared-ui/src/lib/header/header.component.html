@@ -1,9 +1,17 @@
 <nav class="navbar navbar-light">
   <div class="container-fluid">
     <div class="left-box d-flex align-items-center">
-      <span *ngIf="allItems.length>0" role="button" aria-disabled="true" (click)="toggle()"
-        class="additional-menu-btn-icon" [ngClass]="{ open: showMenu }" (keyup.enter)="({})"
-        #toggleButton><span></span></span>
+      <span
+        *ngIf="allItems.length > 0"
+        role="button"
+        aria-disabled="true"
+        (click)="toggle()"
+        class="additional-menu-btn-icon"
+        [ngClass]="{ open: showMenu }"
+        (keyup.enter)="({})"
+        #toggleButton
+        ><span></span
+      ></span>
       <div role="button" class="brand ms-4" (click)="backToHome.emit()">
         <img src="{{ logoSrc }}" alt="logo" />
       </div>
@@ -12,32 +20,58 @@
       <!-- <stc-apps-mode-toggle></stc-apps-mode-toggle> -->
       <ng-content></ng-content>
       <div class="dropdown">
-        <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
-          aria-expanded="false">
-          <span class="user-name" title="{{userName}}">{{ userName }}</span>
+        <button
+          class="btn dropdown-toggle"
+          type="button"
+          id="dropdownMenuButton1"
+          data-bs-toggle="dropdown"
+          aria-expanded="false"
+        >
+          <span class="user-name" title="{{ userName }}">{{ userName }}</span>
           <i class="fas fa-chevron-down ml-2"></i>
         </button>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton1">
+        <ul
+          class="dropdown-menu dropdown-menu-end"
+          aria-labelledby="dropdownMenuButton1"
+        >
           <a class="dropdown-item" href="javascript:void(0)" *ngIf="showLang">
             <stc-apps-language-selector></stc-apps-language-selector>
           </a>
           <div class="dropdown-divider" *ngIf="showLang"></div>
           <a role="button" class="dropdown-item" (click)="handleLogout()">{{
             'logout' | translate
-            }}</a>
+          }}</a>
+
+          <a role="button" class="dropdown-item" (click)="handleUserDelegation()" *ngIf="showDelegate">Delegate a User</a>
         </ul>
       </div>
     </div>
   </div>
 </nav>
-<nav [ngClass]="{ open: showMenu }" class="additional-navigation js-additional-nav" #menu>
-  <span #toggleButton role="button" aria-disabled="true" (click)="toggle()" class="additional-menu-btn-icon"
-    [ngClass]="{ open: showMenu }" (keyup.enter)="({})"><span></span></span>
+<nav
+  [ngClass]="{ open: showMenu }"
+  class="additional-navigation js-additional-nav"
+  #menu
+>
+  <span
+    #toggleButton
+    role="button"
+    aria-disabled="true"
+    (click)="toggle()"
+    class="additional-menu-btn-icon"
+    [ngClass]="{ open: showMenu }"
+    (keyup.enter)="({})"
+    ><span></span
+  ></span>
 
   <ul id="secondary-menu" class="secondary-menu clear">
     <img src="{{ sidebarLogoSrc }}" alt="logo" />
     <li class="menu-item" *ngFor="let item of allItems">
-      <a *ngIf="item.isExtrnal; else internalLink" [href]="item.url" target="_blank">
+      <a
+        *ngIf="item.isExtrnal; else internalLink"
+        [href]="item.url"
+        target="_blank"
+      >
         <i class="px-2 fas {{ item.icon }}"></i>{{ item.name | translate }}
       </a>
 
@@ -45,7 +79,6 @@
         <a [routerLink]="['/' + item.url]" routerLinkActive="active">
           <i class="px-2 fas {{ item.icon }}"></i>{{ item.name | translate }}
         </a>
-
       </ng-template>
     </li>
     <!-- <li class="menu-item mt-3">

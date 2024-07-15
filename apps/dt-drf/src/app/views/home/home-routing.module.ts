@@ -19,6 +19,14 @@ const routes: Routes = [
             (m) => m.DyReportsModule
           ),
       },
+      {
+        path: 'category',
+        data: { breadcrumb: 'category' },
+        loadChildren: () =>
+          import('../../views/category/category.module').then(
+            (m) => m.CategoryModule
+          ),
+      },
     ],
   },
 ];

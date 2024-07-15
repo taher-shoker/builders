@@ -1,0 +1,30 @@
+<div class="dialog p-4">
+  <div class="dialog-body">
+    <div class="dialog-header">
+      Milestone Progress Update | {{ data.milestoneName }}
+    </div>
+    <div class="body-holder">
+      <form >
+        
+      </form>
+    </div>
+  </div>
+
+  <hr class="liner-hr" />
+
+  <div class="dialog-actions">
+    <div class="actions-wrapper">
+      <button type="button" class="btn gray-outline" (click)="cancel()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn primary"
+        (click)="update()"
+        [disabled]="form.invalid"
+      >
+        Update Progress
+      </button>
+    </div>
+  </div>
+</div>

@@ -18,8 +18,10 @@ export class HeaderComponent {
   @Input() userName: string | undefined;
   @Input() logoSrc: string | undefined;
   @Input() showLang = true;
+  @Input() showDelegate = false;
   @Input({ required: true }) sidebarLogoSrc: string | undefined;
   @Output() logOut: EventEmitter<void> = new EventEmitter();
+  @Output() delegateUser: EventEmitter<void> = new EventEmitter();
   @Output() backToHome: EventEmitter<void> = new EventEmitter();
 
   @Input({ required: true })
@@ -42,7 +44,12 @@ export class HeaderComponent {
   toggle(): void {
     this.showMenu = !this.showMenu;
   }
+
   handleLogout() {
     this.logOut.emit();
+  }
+
+  handleUserDelegation(){
+    this.delegateUser.emit();
   }
 }

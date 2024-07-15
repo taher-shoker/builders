@@ -1,0 +1,321 @@
+@import './scss/core/variables/colors';
+
+.section-title {
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.logs {
+  background-color: white;
+  padding-inline-start: 35px;
+  padding-block: 20px;
+  border-radius: 7px;
+  height: 100%;
+  // &:last-of-type {
+  //   margin-top: 50px;
+  // }
+}
+
+.stepp-info {
+  p {
+    &:last-of-type {
+      width: 90%;
+    }
+  }
+}
+
+.order-date {
+  color: var(--grey-color);
+  font-size: var(--secondary-text);
+}
+
+.item-msg {
+  color: var(--grey-color);
+  font-size: var(--secondary-big-text);
+  padding-top: 5px;
+}
+
+.details {
+  background-color: $whiteColor;
+  padding: 20px;
+  border-radius: 7px;
+
+  .title-holder {
+    h3 {
+      margin-bottom: 40px;
+    }
+  }
+
+  .left-col,
+  .right-col {
+    .row {
+      .col-12 {
+        margin-bottom: 20px;
+      }
+    }
+  }
+
+  .cell-name {
+    color: var(--grey-color);
+    font-size: var(--side-title);
+  }
+
+  .cell-value {
+    margin-left: 15px;
+    font-weight: 500;
+  }
+
+  .val {
+    display: flex;
+    align-items: center;
+    margin: 30px auto;
+
+    &-title {
+      text-transform: capitalize;
+      padding-inline: 10px;
+      color: rgba($color: $shadowStc, $alpha: 0.5);
+    }
+
+    &-vlue {
+      color: $stcColor;
+      font-size: 18px;
+      font-weight: bold;
+      text-transform: capitalize;
+    }
+  }
+
+  .file {
+    background-color: rgba($color: $shadowStc, $alpha: 0.2);
+    margin: 10px 0;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 5px;
+    cursor: pointer;
+
+    i {
+      font-size: 22px;
+      color: $stcColor;
+    }
+  }
+}
+
+.tasks {
+  padding: 3rem 1.5rem;
+  border-radius: 5px;
+  box-shadow: 0 2rem 6rem rgba(0, 0, 0, 0.1);
+  background-color: $whiteColor;
+  max-height: 1040px;
+  overflow-y: scroll;
+
+  .actions {
+    width: 100%;
+    padding-top: 20px;
+  }
+
+  stc-apps-button:first-child {
+    margin-inline-end: 10px;
+  }
+
+  figure {
+    display: flex;
+
+    & figcaption {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+
+      & h4 {
+        font-size: 1.4rem;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .order-track {
+    margin-top: 2rem;
+    padding: 0 1rem;
+    border-top: 1px solid $greyColor;
+    padding-top: 2.5rem;
+    display: flex;
+    flex-direction: column;
+
+    &-step {
+      display: flex;
+      min-height: 6rem;
+      // min-height: 7rem;
+
+      &:last-child {
+
+        // overflow: hidden;
+        & .order-track-status span:last-of-type {
+          display: none;
+        }
+      }
+    }
+
+    &-status {
+      margin-inline-end: 1.5rem;
+      position: relative;
+
+      &-dot {
+        display: block;
+        width: 2.2rem;
+        height: 2.2rem;
+        border-radius: 50%;
+        background: $greenColor;
+        text-align: center;
+        line-height: 2;
+
+        i {
+          color: $whiteColor;
+        }
+      }
+
+      &-line {
+        display: block;
+        margin: 0 auto;
+        width: 2px;
+        // height: 7rem;
+        height: 100%;
+        background: $greenColor;
+      }
+    }
+
+    &-pending {
+      &-dot {
+        background: $greyColor;
+      }
+
+      &-line {
+        background: $greyColor;
+      }
+    }
+
+    &-text {
+      width: 100%;
+
+      &-stat {
+        font-size: 1rem;
+        font-weight: 500;
+        margin-bottom: 3px;
+      }
+
+      &-sub {
+        font-size: 1rem;
+        font-weight: 300;
+      }
+    }
+  }
+
+  .order-track {
+    transition: all 0.3s height 0.3s;
+    transform-origin: top center;
+  }
+
+  .case-status {
+    padding: 8px 12px;
+    border-radius: 12px;
+    word-break: keep-all;
+    font-weight: 400;
+  }
+
+  .registered {
+    background-color: rgba($color: $stcMoonLightColor, $alpha: 0.2);
+    color: $stcMoonLightColor;
+  }
+
+  .pending {
+    background-color: rgba($color: $stcCoralColor, $alpha: 0.2);
+    color: $stcCoralColor;
+  }
+
+  .inprogress {
+    background-color: rgba($color: $stcSeaColor, $alpha: 0.2);
+    color: $stcSeaColor;
+  }
+
+  .closed {
+    background-color: rgba($color: $stcGreenColor, $alpha: 0.2);
+    color: $stcGreenColor;
+  }
+}
+
+.item-task-attachment {
+  text-decoration: underline;
+  cursor: pointer;
+  color: var(--stcColor);
+  font-weight: 500;
+}
+
+.spacer {
+  width: 50%;
+}
+
+.history {
+  h4 {
+    margin-bottom: 0;
+    font-weight: 700;
+  }
+
+  .history-item {
+    cursor: pointer;
+    padding: 10px 0;
+
+    .header-item {
+      height: 70px;
+    }
+
+    .box-item {
+      width: 100%;
+    }
+
+    .title {
+      flex-direction: column;
+      align-items: start;
+    }
+
+    h5 {
+      font-weight: 700;
+    }
+
+    .info {
+      margin-top: 10px;
+      width: 90%;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    span {
+      color: var(--grey-color);
+    }
+  }
+}
+
+.no-ongoning-workflow {
+  color: var(--grey-color);
+  font-style: italic;
+  font-size: 1rem;
+}
+
+.completed-status {
+  color: var(--stc-oasis-color);
+}
+
+.delayed-status {
+  color: var(--stc-coral-color);
+}
+
+.on-track-status {
+  color: var(--stc-sky-blue-color);
+}
+
+.at-risk-status {
+  color: var(--stc-sun-color);
+}
+
+.planned-status {
+  color: var(--grey-color);
+}
