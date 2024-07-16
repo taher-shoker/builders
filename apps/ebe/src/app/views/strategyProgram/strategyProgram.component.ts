@@ -4,11 +4,12 @@ import { PageHeaderComponent } from '../../components/pageHeader/page-header.com
 import { StrategyProgramService } from '../../services/strategy-program.service';
 import { StrategyProgramModel } from '../../models/strategy-program.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
+import { StrategyKpiCardComponent } from './components/strategy-kpi-card/strategy-kpi-card.component';
 
 @Component({
   selector: 'stc-apps-strategy-program',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , SharedUiModule],
+  imports: [CommonModule , PageHeaderComponent , SharedUiModule , StrategyKpiCardComponent],
   templateUrl: './strategyProgram.component.html',
   styleUrl: './strategyProgram.component.scss',
 })

@@ -10,18 +10,41 @@
     <p class = "strategy-program-section-details-title">{{strategyProgramData.title}}</p>
     <div class="row">
       <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="strategy-program-section-details-progress-card">
+        <div class="strategy-program-section-details-progress-card" style = "padding:9px 20px;">
           <div class = "info">
             <img src="assets/images/overall-progress.svg" alt="">
             <p>overall progress</p>
           </div>
           <stc-apps-circular-progress-bar
-            [percentVal]="50"
+            [percentVal]="60"
+            [innerCircleColor]="'#e7e8ea'"
+            [outerCircleColor]="'#40036E'"
+            [titleColor]="'#121212'"
+            [radius]="40"
+            [titleFontSize]="25"
+            [outerStrokeRadius]="7"
+            [innerStrokeRadius]="7"
           />
         </div>
       </div>
+      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+        <div class="strategy-program-section-details-progress-card">
+          <div class = "info">
+            <img src="assets/images/total-investments.svg" alt="">
+            <p>total investments</p>
+          </div>
+          <div class="amount">295 M</div>
+        </div>
+      </div>
       <div class="col-lg-6 col-md-6 col-sm-12">
-
+        <div class="strategy-program-section-details-progress-card">
+          <stc-apps-strategy-kpi-card />
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="strategy-program-section-details-progress-card">
+          <stc-apps-strategy-kpi-card />
+        </div>
       </div>
     </div>
   </div>
