@@ -14,7 +14,7 @@ export class ScorecardService {
         {
           id:1,
           title : "stc KSA EBIT",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -39,7 +39,7 @@ export class ScorecardService {
         {
           id:2,
           title : "CAD business efficiency OPEX savings",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -59,7 +59,7 @@ export class ScorecardService {
         {
           id:3,
           title : "CAD business 123",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -79,7 +79,7 @@ export class ScorecardService {
         {
           id:4,
           title : "CAD business test",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -105,7 +105,7 @@ export class ScorecardService {
         {
           id:1,
           title : "stc KSA EBIT",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -130,7 +130,7 @@ export class ScorecardService {
         {
           id:2,
           title : "CAD business efficiency OPEX savings",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -150,7 +150,7 @@ export class ScorecardService {
         {
           id:3,
           title : "CAD business 123",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -175,7 +175,7 @@ export class ScorecardService {
         {
           id:1,
           title : "stc KSA EBIT",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -200,7 +200,7 @@ export class ScorecardService {
         {
           id:2,
           title : "CAD business efficiency OPEX savings",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -220,7 +220,7 @@ export class ScorecardService {
         {
           id:3,
           title : "CAD business 123",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -240,7 +240,7 @@ export class ScorecardService {
         {
           id:4,
           title : "CAD business test",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -266,7 +266,7 @@ export class ScorecardService {
         {
           id:1,
           title : "stc KSA EBIT",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -291,7 +291,7 @@ export class ScorecardService {
         {
           id:2,
           title : "CAD business efficiency OPEX savings",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -311,7 +311,7 @@ export class ScorecardService {
         {
           id:3,
           title : "CAD business 123",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -331,7 +331,7 @@ export class ScorecardService {
         {
           id:4,
           title : "CAD business test",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -357,7 +357,7 @@ export class ScorecardService {
         {
           id:1,
           title : "stc KSA EBIT",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -382,7 +382,7 @@ export class ScorecardService {
         {
           id:2,
           title : "CAD business efficiency OPEX savings",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -402,7 +402,7 @@ export class ScorecardService {
         {
           id:3,
           title : "CAD business 123",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"
@@ -422,7 +422,7 @@ export class ScorecardService {
         {
           id:4,
           title : "CAD business test",
-          costStatus : [
+          kpiStatus : [
             {
               id : "achieved",
               title : "over achieved"

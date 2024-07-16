@@ -1,7 +1,7 @@
 <div class="financial-scorecard-costs-card">
   <p class = "financial-scorecard-costs-card-title">{{kpiData().title}}</p>
   <div class="financial-scorecard-costs-card-statuses">
-    @for (status of kpiData().costStatus; track status.id) {
+    @for (status of kpiData().kpiStatus; track status.id) {
       <stc-apps-kpi-status-card
         [kpiStatus]="status"
       />

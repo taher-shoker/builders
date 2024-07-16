@@ -1,5 +1,5 @@
 @import '../../../../../styles/fonts';
-.financial-scorecard
+::ng-deep .financial-scorecard
 {
   &-header
   {
@@ -20,6 +20,42 @@
       display: flex;
       align-items: center;
       gap: 20px;
+      position: relative;
+      top: 10px;
+      .mat-mdc-form-field
+      {
+        width:100px !important;
+        height:60px !important;
+        .mat-mdc-text-field-wrapper
+        {
+          border-radius: 5px !important;
+        }
+        .mdc-line-ripple
+        {
+          display: none !important;
+        }
+        .mat-mdc-select-arrow
+        {
+          color:var(--stc-purple-color);
+        }
+        .mat-mdc-select-min-line
+        {
+          color:var(--stc-black-color);
+          @extend .stcFont;
+        }
+        .mat-mdc-select-trigger
+        {
+          position: relative !important;
+          top:-8px !important;
+        }
+      }
     }
   }
 }
+// .form-select-input
+// {
+//   option
+//   {
+
+//   }
+// }

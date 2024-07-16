@@ -2,7 +2,7 @@ export interface KpiModel
 {
   id:number;
   title:string;
-  costStatus:KpiStatusModel[];
+  kpiStatus:KpiStatusModel[];
   weight:number;
   unit:string;
   baseline:number | null;

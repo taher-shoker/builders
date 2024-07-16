@@ -12,7 +12,7 @@ export interface KpiModel
 {
   id:number;
   title:string;
-  costStatus:{
+  kpiStatus:{
     id:string;
     title:string;
     value?:string;

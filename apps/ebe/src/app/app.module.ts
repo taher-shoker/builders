@@ -6,12 +6,12 @@ import { appRoutes } from './app.routes';
 import { NxWelcomeComponent } from './nx-welcome.component';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 // import { SharedUiModule } from '@stc-apps/shared-ui';
-import { SidebarComponent } from './components/sidebar/sidebar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
+import { SharedUiModule } from '@stc-apps/shared-ui';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
@@ -25,7 +25,7 @@ export const provideTranslation = () => ({
 });
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent, MainLayoutComponent],
-  imports: [BrowserModule, RouterModule.forRoot(appRoutes) , SidebarComponent , BrowserAnimationsModule],
+  imports: [BrowserModule, RouterModule.forRoot(appRoutes) , BrowserAnimationsModule , SharedUiModule],
   providers: [
     importProvidersFrom([
       HttpClientModule,

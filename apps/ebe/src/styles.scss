@@ -1,6 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
 @import "./styles/variables";
 @import "./styles/fonts";
+// @import '~@angular/material/prebuilt-themes/indigo-pink.css';
+@import '../../../node_modules/@angular/material/prebuilt-themes/indigo-pink.css';
+@import 'bootstrap/scss/bootstrap';
 @font-face {
   font-family: boldPoppins;
   src: url(./assets/fonts/Poppins-SemiBold.ttf);
@@ -16,4 +19,25 @@
 @font-face {
   font-family: STCForwardFont;
   src: url(./assets/fonts/STC_Forward.ttf);
+}
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: var(--stc-purple-color);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

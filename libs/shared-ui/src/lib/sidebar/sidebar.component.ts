@@ -1,12 +1,9 @@
 import { Component, input } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { SidebarLinksModel } from './sidebarLinks.model';
 
 @Component({
   selector: 'stc-apps-sidebar',
-  standalone: true,
-  imports: [CommonModule , RouterModule],
+  standalone: false,
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
