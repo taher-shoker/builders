@@ -1,11 +1,13 @@
-<div class="select-box" [class]="selectType" *ngIf="control">
+<div class="select-box input-group " [class]="selectType" *ngIf="control">
   <label [ngStyle]="{'font-size': labelSize + 'px'}">{{ label | translate }}<span>:</span><mat-error
       *ngIf="control.errors"> *</mat-error></label>
   <mat-form-field *ngIf="!group">
     <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
       [(value)]="selectedValue" [multiple]="multi">
-      <mat-option *ngIf="searchMode">
-        <input matInput [formControl]="searchControl" placeholder="Search" (click)="stopDropdownClose($event)">
+      <mat-option *ngIf="searchMode" class="searchInput">
+        <span class="" id="basic-addon1"><i class="fas fa-search"></i></span>
+        <input type="text" [formControl]="searchControl" [placeholder]="'Search...'"
+          (click)="stopDropdownClose($event)">
       </mat-option>
       <mat-option *ngFor="let option of filteredOptions"
         [value]="multi ? option[labelValue]: outputValue ? option[outputValue]: option">
@@ -19,8 +21,9 @@
   <mat-form-field *ngIf="group">
     <mat-select [formControl]="control" [multiple]="multi" [(value)]="selectId"
       (selectionChange)="onChangeValue($event.value)">
-      <mat-option *ngIf="searchMode">
-        <input matInput [formControl]="searchControl" placeholder="Search" (click)="stopDropdownClose($event)">
+      <mat-option *ngIf="searchMode" class="searchInput">
+        <span class="" id="basic-addon1"><i class="fas fa-search"></i></span>
+        <input [formControl]="searchControl" [placeholder]="'Search...'" (click)="stopDropdownClose($event)">
       </mat-option>
       <mat-optgroup *ngFor="let group of options" [label]="group[groupName]" [disabled]="group.disabled">
         <mat-option *ngFor="let option of group[groupOptions]" [value]="option.id">

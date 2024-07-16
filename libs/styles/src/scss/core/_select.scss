@@ -67,3 +67,28 @@
 .mat-mdc-select-trigger {
   height: 100%;
 }
+.searchInput {
+  border: 1px solid var(--grey-color) !important;
+  width: 98% !important;
+  margin: 0 auto;
+  border-radius: 3px;
+  &:hover {
+    background-color: unset !important;
+  }
+  .mdc-list-item__primary-text {
+    width: 100%;
+    display: flex;
+    i {
+      margin-right: 5px;
+    }
+    input {
+      width: 100%;
+      border: none;
+      background-color: transparent;
+      &:focus-visible {
+        border: none;
+        outline: none;
+      }
+    }
+  }
+}

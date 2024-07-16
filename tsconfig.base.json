@@ -21,7 +21,8 @@
       "@stc-apps/shared/assets": ["libs/shared/assets/src/index.ts"],
       "@stc-apps/shared/ui": ["libs/shared/ui/src/index.ts"],
       "@stc-apps/styles": ["libs/styles/src/index.ts"]
-    }
+    },
+    "allowSyntheticDefaultImports": true
   },
   "exclude": ["node_modules", "tmp"]
 }
