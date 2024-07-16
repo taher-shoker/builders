@@ -1,0 +1,48 @@
+@import '../../../styles/fonts';
+.strategy-program-section
+{
+  padding:20px 30px;
+  &-details
+  {
+    background-color: var(--stc-grey-lighter-color);
+    border-radius:20px;
+    padding:20px;
+    // z-index: 9999999;
+    position: relative;
+    // margin-top:30px;
+    color:#000;
+    &-title
+    {
+      color:var(--stc-purple-light-color);
+      text-transform: capitalize;
+      font-weight: 600;
+      @extend .blackPoppins;
+      font-size: 22px;
+    }
+    &-progress-card
+    {
+      background-color: var(--stc-white-color);
+      // background-color:grey;
+      border-radius: 15px;
+      padding:20px;
+      box-shadow: 0px 0px 24px 0px #0000000F;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .info
+      {
+        display: flex;
+        align-items: center;
+        gap:20px;
+        p
+        {
+          margin: 0;
+          @extend .stcFont;
+          text-transform: capitalize;
+          color:var(--stc-black-color);
+          font-size: 20px;
+        }
+      }
+    }
+  }
+}

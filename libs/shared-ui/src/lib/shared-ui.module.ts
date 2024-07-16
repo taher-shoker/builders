@@ -62,6 +62,7 @@ import { TabviewComponent } from './tabview/tabview.component';
 import { KpiCardComponent } from './kpi-card/kpi-card.component';
 import { KpiStatusCardComponent } from './kpiStatusCard/kpi-status-card.component';
 import { SidebarComponent } from './sidebar/sidebar.component';
+import { CircularProgressBarComponent } from './curcular-progress-bar/circular-progress-bar.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -104,7 +105,8 @@ const components = [
   TextEditorQuillComponent,
   CheckboxComponent,
   ProgressBarComponent,
-  SidebarComponent
+  SidebarComponent,
+  CircularProgressBarComponent
 ];
 
 @NgModule({

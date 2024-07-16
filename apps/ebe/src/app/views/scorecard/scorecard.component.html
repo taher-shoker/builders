@@ -1,17 +1,10 @@
 <section class="scored-card-section">
   <div class = "scored-card-section-header">
     <div>
-      <p class="scored-card-section-welcome-text">
-        welcome back,
-        <span>fahad awan</span>
-        <img src="assets/images/Waving-Hand.svg" alt="">
-      </p>
-      <div class="scored-card-section-title">
-        <p>
-          <span>N-2 Scorecards 2023</span>
-          - corporate analytics & data sector
-        </p>
-      </div>
+      <stc-apps-page-header
+        [mainTitle]="'N-2 Scorecards 2023'"
+        [secondaryTitle]="'- corporate analytics & data sector'"
+      />
       <div class = "scored-card-section-taps">
         <stc-apps-tabview
           [tabsData]="scorecardsTaps"

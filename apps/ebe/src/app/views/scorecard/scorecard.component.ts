@@ -3,10 +3,11 @@ import { FinancialScorecardModel, OperationalScorecardModel, PrioritiesScorecard
 import { ScorecardService } from '../../services/scorecard.service';
 import { FinancialScorecardComponent } from './components/financialScorecard/financial-scorecard.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
+import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 @Component({
   selector: 'stc-apps-scorecard',
   standalone: true,
-  imports : [FinancialScorecardComponent , SharedUiModule],
+  imports : [FinancialScorecardComponent , SharedUiModule , PageHeaderComponent],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
 })
