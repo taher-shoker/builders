@@ -66,6 +66,7 @@ import { CircularProgressBarComponent } from './curcular-progress-bar/circular-p
 import { NgCircleProgressModule } from 'ng-circle-progress';
 import { MillionPipe } from './million.pipe';
 import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-bar.component';
+import { ProjectCardComponent } from './project-card/project-card.component';
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
@@ -110,7 +111,8 @@ const components = [
   SidebarComponent,
   CircularProgressBarComponent,
   MillionPipe,
-  SolidCircularBarComponent
+  SolidCircularBarComponent,
+  ProjectCardComponent
 ];
 
 @NgModule({

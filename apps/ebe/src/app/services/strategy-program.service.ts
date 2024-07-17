@@ -48,21 +48,50 @@ export class StrategyProgramService {
       description:'introduce stc brain as an innovation hub to act as accelerator of new businesses and partnerships',
       weight:10,
       formula:'in progress',
-      actualStatus:3.5
+      actualStatus:3.5,
+      projects : [
+        {
+          id:1,
+          title : "ML-Ops activation plan maturity level",
+          actualValue : 20,
+          plannedValue : 100
+        },
+        {
+          id:2,
+          title : "ML-Ops activation plan maturity level",
+          actualValue : 50,
+          plannedValue : 100
+        },
+        {
+          id:3,
+          title : "ML-Ops activation plan maturity level",
+          actualValue : 50,
+          plannedValue : 100
+        },
+      ]
     },
     {
       id:2,
       description:'introduce stc brain as an innovation hub to act as accelerator of new businesses and partnerships',
       weight:10,
       formula:'in progress',
-      actualStatus:3.5
+      actualStatus:3.5,
+      projects : [
+        {
+          id:1,
+          title : "ML-Ops activation plan maturity level",
+          actualValue : 20,
+          plannedValue : 100
+        }
+      ]
     },
     {
       id:3,
       description:'introduce stc brain as an innovation hub to act as accelerator of new businesses and partnerships',
       weight:10,
       formula:'in progress',
-      actualStatus:3.5
+      actualStatus:3.5,
+      projects : []
     },
   ]
   getStrategyProgramDaya():StrategyProgramModel

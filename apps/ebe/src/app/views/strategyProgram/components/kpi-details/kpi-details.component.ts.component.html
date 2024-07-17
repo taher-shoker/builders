@@ -21,19 +21,50 @@
                 {{kpi.description}}
               </p>
               <div class="accordion-statuses">
-                <stc-apps-kpi-status-card
-                [kpiStatus]="kpi.weight"
-                />
-                <stc-apps-kpi-status-card
-                  [kpiStatus]="kpi.actualStatus"
-                />
-                <stc-apps-kpi-status-card
-                  [kpiStatus]="kpi.formula"
-                />
+                @if(kpi.weight)
+                {
+                  <stc-apps-kpi-status-card
+                    [kpiStatus]="kpi.weight"
+                    [kpiType]="'weight'"
+                  />
+                }
+                @if(kpi.formula)
+                {
+                  <stc-apps-kpi-status-card
+                    [kpiStatus]="kpi.formula"
+                    [kpiType]="'in-progress'"
+                  />
+                }
+                @if(kpi.actualStatus)
+                {
+                  <stc-apps-kpi-status-card
+                    [kpiStatus]="kpi.actualStatus"
+                    [kpiType]="'actualStatus'"
+                  />
+                }
               </div>
             </div>
           </ng-template>
-          <p>Lorem ipsum dolor sit amet...</p>
+          <p class="accordion-container-title mb-0">projects/initiatives</p>
+          <div class="accordion-container">
+            @if(kpi.projects.length !== 0)
+            {
+              <div class="row">
+                @for (project of kpi.projects; track project.id) {
+                  <div class="col-lg-4 col-md-6 col-sm-12">
+                    <stc-apps-project-card
+                      [projectData]="project"
+                    />
+                  </div>
+                }
+              </div>
+            } @else {
+              <div class="no-projects-content">
+                <img src="assets/images/no-projects.svg" alt="">
+                <p>no projects</p>
+              </div>
+            }
+          </div>
         </p-accordionTab>
       }
     </p-accordion>

@@ -1,16 +1,31 @@
 <div
-  [class.achieved]="kpiStatus() === 1"
-  [class.not-achieved]="isString"
-  [class.actual]="isNumber"
+  [class.achieved]="kpiType() === 'achieved'"
+  [class.not-achieved]="kpiType() === 'not-achieved'"
+  [class.actual]="kpiType() === 'actual'"
+  [class.weight]="kpiType() === 'weight'"
+  [class.in-progress]="kpiType() === 'in-progress'"
+  [class.actualStatus]="kpiType() === 'actualStatus'"
 >
-  @if(kpiStatus() === 1){
+  @if(kpiType() === 'achieved'){
     Over Achieved
     <img class="arrow" src="assets/images/arrow-up-solid.svg" />
   }
-  @if(isString){
+  @if(kpiType() === 'not-achieved'){
     {{kpiStatus()}}
   }
-  @if(isNumber){
+  @if(kpiType() === 'not-achieved'){
+    {{kpiStatus()}}
+  }
+  @if(kpiType() === 'actual'){
     Actual : {{kpiStatus()}}%
+  }
+  @if(kpiType() === 'weight'){
+    weight : {{kpiStatus()}}%
+  }
+  @if(kpiType() === 'in-progress'){
+    {{kpiStatus()}}
+  }
+  @if(kpiType() === 'actualStatus'){
+    ActualStatus : {{kpiStatus()}}%
   }
 </div>

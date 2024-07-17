@@ -1,0 +1,18 @@
+@import '../../../../../apps/ebe/src/styles/fonts';
+.project-card
+{
+  background-color: #fff;
+  border-radius:10px;
+  text-align: left;
+  padding:15px;
+  &-title
+  {
+    margin: 0;
+    @extend .stcFont;
+    color: #4F008C;
+    text-transform: capitalize;
+    font-weight: 500;
+    font-size: 16px;
+    text-decoration: underline;
+  }
+}
