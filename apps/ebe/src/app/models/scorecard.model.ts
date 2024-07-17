@@ -6,17 +6,15 @@ export interface ScorecardTaps
 export interface FinancialScorecardModel
 {
   title:string;
-  costsData:KpiModel[]
+  kpisData:KpiModel[]
 }
 export interface KpiModel
 {
   id:number;
   title:string;
-  kpiStatus:{
-    id:string;
-    title:string;
-    value?:string;
-  }[];
+  achievedStatus?:number;
+  formula?:string;
+  actual?:number;
   weight:number;
   unit:string;
   baseline:number | null;
@@ -27,20 +25,20 @@ export interface KpiModel
 export interface StrategicScorecardModel
 {
   title:string,
-  costsData:KpiModel[]
+  kpisData:KpiModel[]
 }
 export interface RelationalScorecardModel
 {
   title:string,
-  costsData:KpiModel[]
+  kpisData:KpiModel[]
 }
 export interface OperationalScorecardModel
 {
   title:string,
-  costsData:KpiModel[]
+  kpisData:KpiModel[]
 }
 export interface PrioritiesScorecardModel
 {
   title:string,
-  costsData:KpiModel[]
+  kpisData:KpiModel[]
 }

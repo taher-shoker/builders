@@ -1,0 +1,41 @@
+<section class="strategy-program-section">
+  <div class="strategy-program-section-header">
+    <div>
+      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'" />
+    </div>
+  </div>
+  <div class="strategy-program-section-details">
+    <p class="strategy-program-section-details-title">
+      strategic objective KPIs mapping and assessment
+    </p>
+    <p-accordion>
+      @for (kpi of StrategyProgramData; track kpi.id;let index = $index) {
+        <p-accordionTab>
+          <ng-template pTemplate="header">
+            <div class="accordion-header-details">
+              <div class="accordion-title">
+                <span class="number-text">{{index + 1}}</span>
+                <p>Key result</p>
+              </div>
+              <p class = "accordion-desc">
+                {{kpi.description}}
+              </p>
+              <div class="accordion-statuses">
+                <stc-apps-kpi-status-card
+                [kpiStatus]="kpi.weight"
+                />
+                <stc-apps-kpi-status-card
+                  [kpiStatus]="kpi.actualStatus"
+                />
+                <stc-apps-kpi-status-card
+                  [kpiStatus]="kpi.formula"
+                />
+              </div>
+            </div>
+          </ng-template>
+          <p>Lorem ipsum dolor sit amet...</p>
+        </p-accordionTab>
+      }
+    </p-accordion>
+  </div>
+</section>

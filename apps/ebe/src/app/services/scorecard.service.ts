@@ -1,446 +1,369 @@
 import { Injectable } from '@angular/core';
-import { FinancialScorecardModel, OperationalScorecardModel, PrioritiesScorecardModel, RelationalScorecardModel, StrategicScorecardModel } from '../models/scorecard.model';
+import {
+  FinancialScorecardModel,
+  OperationalScorecardModel,
+  PrioritiesScorecardModel,
+  RelationalScorecardModel,
+  StrategicScorecardModel,
+} from '../models/scorecard.model';
 @Injectable({ providedIn: 'root' })
 export class ScorecardService {
-  financialScorcardData!:FinancialScorecardModel;
-  strategicScorcardData!:StrategicScorecardModel;
-  rationalScorcardData!:RelationalScorecardModel;
-  operationalScorcardData!:OperationalScorecardModel;
-  prioritieslScorcardData!:PrioritiesScorecardModel;
+  financialScorcardData!: FinancialScorecardModel[];
+  strategicScorcardData!: StrategicScorecardModel[];
+  rationalScorcardData!: RelationalScorecardModel[];
+  operationalScorcardData!: OperationalScorecardModel[];
+  prioritieslScorcardData!: PrioritiesScorecardModel[];
   constructor() {
-    this.financialScorcardData = {
-      title : "transforming costs to maximize value",
-      costsData : [
-        {
-          id:1,
-          title : "stc KSA EBIT",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "99.89%"
-            },
-          ],
-          weight:5,
-          unit:'SR Bn',
-          baseline:null,
-          target:12537,
-          ceiling:110,
-          threshold:85
-        },
-        {
-          id:2,
-          title : "CAD business efficiency OPEX savings",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:3,
-          title : "CAD business 123",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:4,
-          title : "CAD business test",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "50%"
-            },
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-      ]
-    }
-    this.strategicScorcardData = {
-      title : "execute strategy right",
-      costsData : [
-        {
-          id:1,
-          title : "stc KSA EBIT",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "99.89%"
-            },
-          ],
-          weight:5,
-          unit:'SR Bn',
-          baseline:12738,
-          target:12537,
-          ceiling:110,
-          threshold:85
-        },
-        {
-          id:2,
-          title : "CAD business efficiency OPEX savings",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:3,
-          title : "CAD business 123",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        }
-      ]
-    }
-    this.rationalScorcardData = {
-      title : "delivered unparalleled CEX",
-      costsData : [
-        {
-          id:1,
-          title : "stc KSA EBIT",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "99.89%"
-            },
-          ],
-          weight:5,
-          unit:'SR Bn',
-          baseline:12738,
-          target:12537,
-          ceiling:110,
-          threshold:85
-        },
-        {
-          id:2,
-          title : "CAD business efficiency OPEX savings",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:3,
-          title : "CAD business 123",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:4,
-          title : "CAD business test",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "50%"
-            },
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-      ]
-    }
-    this.operationalScorcardData = {
-      title : "unlock analytics capabilities",
-      costsData : [
-        {
-          id:1,
-          title : "stc KSA EBIT",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "99.89%"
-            },
-          ],
-          weight:5,
-          unit:'SR Bn',
-          baseline:12738,
-          target:12537,
-          ceiling:110,
-          threshold:85
-        },
-        {
-          id:2,
-          title : "CAD business efficiency OPEX savings",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:3,
-          title : "CAD business 123",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:4,
-          title : "CAD business test",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "50%"
-            },
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-      ]
-    }
-    this.prioritieslScorcardData = {
-      title : "corporate priorities",
-      costsData : [
-        {
-          id:1,
-          title : "stc KSA EBIT",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "99.89%"
-            },
-          ],
-          weight:5,
-          unit:'SR Bn',
-          baseline:12738,
-          target:12537,
-          ceiling:110,
-          threshold:85
-        },
-        {
-          id:2,
-          title : "CAD business efficiency OPEX savings",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:3,
-          title : "CAD business 123",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "not-achieved",
-              title : "linear"
-            }
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-        {
-          id:4,
-          title : "CAD business test",
-          kpiStatus : [
-            {
-              id : "achieved",
-              title : "over achieved"
-            },
-            {
-              id : "actual",
-              title : "Actual",
-              value : "50%"
-            },
-          ],
-          weight:20,
-          unit:'%',
-          baseline:145.68,
-          target:100,
-          ceiling:90,
-          threshold:55
-        },
-      ]
-    }
+    // this.financialScorcardData = [
+    //   {
+    //     title: 'transforming costs to maximize ',
+    //     kpisData: [
+    //       {
+    //         id: 1,
+    //         title: 'stc KSA EBIT',
+    //         achievedStatus: 1,
+    //         formula: 'linear',
+    //         actual: 99.99,
+    //         weight: 5,
+    //         unit: 'SR Bn',
+    //         baseline: null,
+    //         target: 12537,
+    //         ceiling: 110,
+    //         threshold: 85,
+    //       },
+    //     ],
+    //   },
+    // ];
+    this.financialScorcardData = [
+      {
+        title: 'transforming costs to maximize value',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            achievedStatus: 1,
+            formula: 'linear',
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: null,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 4,
+            title: 'CAD business test',
+            achievedStatus: 1,
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+    ];
+    this.strategicScorcardData = [
+      {
+        title: 'execute strategy right',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: 12738,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            achievedStatus: 1,
+            formula: 'linear',
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+    ];
+    this.rationalScorcardData = [
+      {
+        title: 'delivered unparalleled CEX',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            actual: 99.99,
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: 12738,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 4,
+            title: 'CAD business test',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+    ];
+    this.operationalScorcardData = [
+      {
+        title: 'unlock analytics capabilities',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: 12738,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 50,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 4,
+            title: 'CAD business test',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+      {
+        title: 'execute technology right',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: 12738,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 4,
+            title: 'CAD business test',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+    ];
+    this.prioritieslScorcardData = [
+      {
+        title: 'corporate priorities',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: 12738,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            achievedStatus: 1,
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 4,
+            title: 'CAD business test',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+    ];
   }
 }

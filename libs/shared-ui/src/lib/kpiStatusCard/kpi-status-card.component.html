@@ -1,11 +1,16 @@
 <div
-  [class.achieved]="kpiStatus().id === 'achieved'"
-  [class.not-achieved]="kpiStatus().id === 'not-achieved'"
-  [class.actual]="kpiStatus().id === 'actual'"
+  [class.achieved]="kpiStatus() === 1"
+  [class.not-achieved]="isString"
+  [class.actual]="isNumber"
 >
-  {{ kpiStatus().title }}
-  @if(kpiStatus().value){<span>: {{ kpiStatus().value }}</span>}
-  @if(kpiStatus().id === 'achieved'){
-  <img class="arrow" src="assets/images/arrow-up-solid.svg" />
+  @if(kpiStatus() === 1){
+    Over Achieved
+    <img class="arrow" src="assets/images/arrow-up-solid.svg" />
+  }
+  @if(isString){
+    {{kpiStatus()}}
+  }
+  @if(isNumber){
+    Actual : {{kpiStatus()}}%
   }
 </div>

@@ -13,7 +13,7 @@ import { PageHeaderComponent } from '../../components/pageHeader/page-header.com
 })
 export class ScorecardComponent implements OnInit{
   currentClickedTapIndex = 0;
-  kpisData!:FinancialScorecardModel | StrategicScorecardModel | RelationalScorecardModel | PrioritiesScorecardModel | OperationalScorecardModel;
+  kpisData!:FinancialScorecardModel[] | StrategicScorecardModel[] | RelationalScorecardModel[] | PrioritiesScorecardModel[] | OperationalScorecardModel[];
   currentClickedTapData:ScorecardTaps;
   scorecardsTaps:ScorecardTaps[] = [
     {

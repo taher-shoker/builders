@@ -1,0 +1,72 @@
+@import '../../../../../styles/fonts.scss';
+::ng-deep .strategy-program-section
+{
+  padding:20px 30px;
+  &-details
+  {
+    background-color: var(--stc-grey-lighter-color);
+    border-radius:20px;
+    padding:20px;
+    // z-index: 9999999;
+    position: relative;
+    // margin-top:30px;
+    color:#000;
+    &-title
+    {
+      color:var(--stc-purple-light-color);
+      text-transform: capitalize;
+      font-weight: 600;
+      @extend .blackPoppins;
+      font-size: 22px;
+    }
+    .p-accordion-header-link
+    {
+      display: flex;
+      justify-content: space-between !important;
+      flex-direction: row-reverse !important;
+      text-decoration: none !important;
+      color:#000 !important;
+    }
+    .accordion-title
+    {
+      display: flex;
+      align-items: center;
+      // justify-content: center;
+      .number-text
+      {
+        background-color:var(--stc-pink-color);
+        color:var(--stc-white-color);
+        width: 20px;
+        text-align: center;
+        font-size: 14px;
+        @extend .stcFont;
+        border-radius: 3px;
+      }
+      p
+      {
+        margin: 0;
+        margin-left: 10px;
+        @extend .stcFont;
+        color:var(--stc-grey-dark-color);
+        font-size: 15px;
+        font-weight: 400;
+      }
+    }
+    .accordion-desc
+    {
+      @extend .stcFont;
+      color:var(--stc-dark-grey-color);
+      font-size: 17px;
+      margin-top: 20px;
+      text-transform: capitalize;
+      max-width:700px;
+      font-weight: 500;
+    }
+    .accordion-statuses
+    {
+      display: flex;
+      align-items: center;
+      gap:20px;
+    }
+  }
+}

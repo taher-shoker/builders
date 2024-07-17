@@ -64,6 +64,8 @@ import { KpiStatusCardComponent } from './kpiStatusCard/kpi-status-card.componen
 import { SidebarComponent } from './sidebar/sidebar.component';
 import { CircularProgressBarComponent } from './curcular-progress-bar/circular-progress-bar.component';
 import { NgCircleProgressModule } from 'ng-circle-progress';
+import { MillionPipe } from './million.pipe';
+import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-bar.component';
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
@@ -106,7 +108,9 @@ const components = [
   CheckboxComponent,
   ProgressBarComponent,
   SidebarComponent,
-  CircularProgressBarComponent
+  CircularProgressBarComponent,
+  MillionPipe,
+  SolidCircularBarComponent
 ];
 
 @NgModule({

@@ -6,7 +6,7 @@
     <ul>
       @for (link of sidebarLinks(); track link.id) {
         <li>
-          <a routerLinkActive="activeLink" [routerLink]="link.url">{{link.name}}</a>
+          <a routerLinkActive="activeLink" [routerLinkActiveOptions]="{exact: true}" [routerLink]="link.url">{{link.name}}</a>
         </li>
       }
     </ul>

@@ -16,16 +16,6 @@ import { StrategyKpiCardComponent } from './components/strategy-kpi-card/strateg
 export class StrategyProgramComponent implements OnInit {
   strategyProgramService = inject(StrategyProgramService);
   strategyProgramData!:StrategyProgramModel;
-  // export interface ProgressInfo {
-  //   prefixText: string;
-  //   prefixValue: number | string;
-  //   suffixText: string;
-  //   suffixValue: number | string;
-  //   progressValue: number;
-  //   indexes?: Index[];
-  //   barColor?: string;
-  //   bgBarColor?: string
-  // }
   ngOnInit()
   {
     this.strategyProgramData = this.strategyProgramService.getStrategyProgramDaya();

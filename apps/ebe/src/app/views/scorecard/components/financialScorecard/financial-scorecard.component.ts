@@ -26,7 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 })
 export class FinancialScorecardComponent implements OnInit {
   // @Input({required : true}) financialScorcardData!:FinancialScorecardModel;
-  financialScorcardData: InputSignal<FinancialScorecardModel> = input.required<FinancialScorecardModel>();
+  financialScorcardData: InputSignal<FinancialScorecardModel[]> = input.required<FinancialScorecardModel[]>();
   monthsArr: { name: string; id: number }[] = [];
   years: WritableSignal<{ name:string , id:number }[]> = signal<{ name:string , id:number }[]>([]);
   selected = 'option2';

@@ -20,6 +20,13 @@ export const appRoutes: Route[] = [
       ),
   },
   {
+    path : "strategy-program/:kpiId",
+    loadComponent: () =>
+      import('./views/strategyProgram/components/kpi-details/kpi-details.component.ts.component').then(
+        (m) => m.KpiDetailsComponentTsComponent
+      ),
+  },
+  {
     path : "raqami",
     loadComponent: () =>
       import('./views/raqami/raqami.component').then(

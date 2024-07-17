@@ -16,7 +16,7 @@
             <p>overall progress</p>
           </div>
           <stc-apps-circular-progress-bar
-            [percentVal]="60"
+            [percentVal]="strategyProgramData.overallProgress"
             [innerCircleColor]="'#e7e8ea'"
             [outerCircleColor]="'#40036E'"
             [titleColor]="'#121212'"
@@ -27,25 +27,24 @@
           />
         </div>
       </div>
-      <div class="col-lg-6 col-md-6 col-sm-12 mb-4">
+      <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="strategy-program-section-details-progress-card">
           <div class = "info">
             <img src="assets/images/total-investments.svg" alt="">
             <p>total investments</p>
           </div>
-          <div class="amount">295 M</div>
+          <div class="amount">{{strategyProgramData.totalInvestments | million}}</div>
         </div>
       </div>
-      <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="strategy-program-section-details-progress-card">
-          <stc-apps-strategy-kpi-card />
+      @for (strategyProgramKpi of strategyProgramData.strategyProgramKpiModel; track strategyProgramKpi.id){
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+          <div class="strategy-program-section-details-progress-card d-block">
+            <stc-apps-strategy-kpi-card
+              [strategyKpiCard]="strategyProgramKpi"
+            />
+          </div>
         </div>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="strategy-program-section-details-progress-card">
-          <stc-apps-strategy-kpi-card />
-        </div>
-      </div>
+      }
     </div>
   </div>
 </section>

@@ -1,0 +1,12 @@
+<div
+  class="strategy-kpi-card-status-circle"
+  [ngStyle]="{
+    'background' : circleBackground() ? circleBackground() : 'linear-gradient(152.45deg, #00C48C -4.88%, #026A4C 131.8%)'
+  }"
+>
+  <span class = "progress-number">{{percentVal()}}%</span>
+  @if(subTitle())
+  {
+    <span class = "text">{{subTitle()}}</span>
+  }
+</div>

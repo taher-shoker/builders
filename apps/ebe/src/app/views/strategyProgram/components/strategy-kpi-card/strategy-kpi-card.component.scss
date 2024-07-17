@@ -1,0 +1,79 @@
+@import '../../../../../styles/fonts.scss';
+.strategy-kpi-card
+{
+  text-align: center;
+  &-title
+  {
+    color:var(--stc-dark-grey-color);
+    text-transform: capitalize;
+    font-weight: 600;
+    font-size: 22px;
+  }
+  &-cards
+  {
+    display: flex;
+    align-items: center;
+    gap:20px;
+    justify-content: center;
+    &-weight-card , &-investment-card
+    {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap:5px;
+      padding:10px 15px;
+      border-radius: 5px;
+      @extend .stcFont;
+      text-transform: capitalize;
+      font-weight: 500;
+      font-size: 18px;
+      span
+      {
+        font-weight: 600;
+      }
+      p
+      {
+        margin: 0;
+      }
+    }
+    &-weight-card
+    {
+      background:var(--stc-purple-lighter-color);
+      color:var(--stc-purple-light-color);
+    }
+    &-investment-card
+    {
+      background:var(--stc-green-lighter-color);
+      color:var(--stc-green-dark-color);
+    }
+  }
+  &-description
+  {
+    @extend .stcFont;
+    color:var(--stc-grey-dark-color);
+    text-transform: capitalize;
+    font-size: 18px;
+    margin-top: 30px;
+  }
+  &-details-btn
+  {
+    a
+    {
+      text-decoration: none;
+      cursor: pointer;
+      color:var(--stc-purple-color);
+      text-transform: capitalize;
+      @extend .stcFont;
+      font-size: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap:5px;
+      span
+      {
+        position: relative;
+        top:1px;
+      }
+    }
+  }
+}

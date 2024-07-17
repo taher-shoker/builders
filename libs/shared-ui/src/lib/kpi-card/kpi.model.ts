@@ -2,7 +2,9 @@ export interface KpiModel
 {
   id:number;
   title:string;
-  kpiStatus:KpiStatusModel[];
+  achievedStatus?:number;
+  formula?:string;
+  actual?:number;
   weight:number;
   unit:string;
   baseline:number | null;

@@ -1,9 +1,22 @@
 <div class="financial-scorecard-costs-card">
   <p class = "financial-scorecard-costs-card-title">{{kpiData().title}}</p>
   <div class="financial-scorecard-costs-card-statuses">
-    @for (status of kpiData().kpiStatus; track status.id) {
+    @if(kpiData() && kpiData().achievedStatus)
+    {
       <stc-apps-kpi-status-card
-        [kpiStatus]="status"
+        [kpiStatus]="kpiData().achievedStatus!"
+      />
+    }
+    @if(kpiData() && kpiData().formula)
+    {
+      <stc-apps-kpi-status-card
+        [kpiStatus]="kpiData().formula!"
+      />
+    }
+    @if(kpiData() && kpiData().actual)
+    {
+      <stc-apps-kpi-status-card
+        [kpiStatus]="kpiData().actual!"
       />
     }
   </div>

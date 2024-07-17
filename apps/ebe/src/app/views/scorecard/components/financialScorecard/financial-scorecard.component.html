@@ -1,7 +1,7 @@
 <section class="financial-scorecard">
   <div class="financial-scorecard-header">
     <p class="financial-scorecard-header-title">
-      {{ financialScorcardData().title }}
+      {{ financialScorcardData()[0].title }}
     </p>
     <form class="financial-scorecard-header-dropdowns" [formGroup]="filtersForm">
         <stc-apps-select-drop-down
@@ -22,10 +22,27 @@
   </div>
   <div class="financial-scorecard-costs">
     <div class="row">
-      @for (kpi of financialScorcardData().costsData; track kpi.id) {
+      @for (kpi of financialScorcardData()[0].kpisData; track kpi.id) {
       <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
         <stc-apps-kpi-card [kpi]="kpi" />
       </div>
+      }
+    </div>
+  </div>
+  <div class="financial-scorecard-header">
+    <p class="financial-scorecard-header-title mt-4">
+      {{ financialScorcardData()[1] && financialScorcardData()[1].title ? financialScorcardData()[1].title : '' }}
+    </p>
+  </div>
+  <div class="financial-scorecard-costs">
+    <div class="row">
+      @if(financialScorcardData()[1] && financialScorcardData()[1].kpisData)
+      {
+        @for (kpi of financialScorcardData()[1].kpisData; track kpi.id) {
+        <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+          <stc-apps-kpi-card [kpi]="kpi" />
+        </div>
+        }
       }
     </div>
   </div>

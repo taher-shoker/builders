@@ -1,1 +1,28 @@
-<p>strategy-kpi-card works!</p>
+<section class="strategy-kpi-card">
+  <p class = "strategy-kpi-card-title">{{strategyKpiCard().title}}</p>
+  <div class="strategy-kpi-card-status">
+    <stc-apps-solid-circular-bar
+      [percentVal]="strategyKpiCard().currentProgress"
+      [subTitle]="'current progress'"
+    />
+  </div>
+  <div class="strategy-kpi-card-cards mt-4">
+    <div class="strategy-kpi-card-cards-weight-card">
+      <p>total weight : </p>
+      <span>{{strategyKpiCard().totalWeight}}%</span>
+    </div>
+    <div class="strategy-kpi-card-cards-investment-card">
+      <p>total investment : </p>
+      <span>{{strategyKpiCard().totalInvestments | million}}</span>
+    </div>
+  </div>
+  <div class="strategy-kpi-card-description">
+    <p>{{strategyKpiCard().description}}</p>
+  </div>
+  <div class="strategy-kpi-card-details-btn mt-5 mb-3">
+    <a [routerLink]="['/strategy-program/' , strategyKpiCard().id]">
+      <span>more details</span>
+      <img src="assets/images/arrow-right.svg" alt="">
+    </a>
+  </div>
+</section>
