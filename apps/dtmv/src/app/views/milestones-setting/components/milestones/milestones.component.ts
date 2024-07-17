@@ -1,6 +1,7 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
+  AfterContentChecked,
   AfterViewInit,
   Component,
   OnDestroy,
@@ -25,6 +26,13 @@ import { UpdateProgressDialogComponent } from '../updateProgressDialog/updatePro
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { saveAs } from 'file-saver';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 
 export interface Milestone {
   activityName: string;
@@ -39,8 +47,28 @@ export interface Milestone {
   selector: 'stc-apps-casses',
   templateUrl: './milestones.component.html',
   styleUrls: ['./milestones.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      state(
+        'in',
+        style({
+          right: '0',
+        })
+      ),
+      state(
+        'out',
+        style({
+          right: '-500px',
+        })
+      ),
+      transition('out => in', [animate('300ms ease-in')]),
+      transition('in => out', [animate('300ms ease-out')]),
+    ]),
+  ],
 })
-export class MilestonesComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MilestonesComponent
+  implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy
+{
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
   @ViewChild('validationCustomTemplate') validationCustomTemplate!: any;
   @ViewChild('progressCustomTemplate') progressCustomTemplate!: any;
@@ -182,6 +210,10 @@ export class MilestonesComponent implements OnInit, AfterViewInit, OnDestroy {
         label: '',
       },
     ];
+  }
+
+  ngAfterContentChecked(): void {
+    this.handlePendingActionsList(window.innerWidth);
   }
 
   getPendingTasks() {
@@ -424,6 +456,39 @@ export class MilestonesComponent implements OnInit, AfterViewInit, OnDestroy {
       .subscribe((res: any) => {
         this.populateMilestones(res);
       });
+  }
+
+  // resize(event: UIEvent) {
+  //   const mutatedEvent = event.target as Window;
+  //   this.handlePendingActionsList(mutatedEvent.innerWidth);
+  // }
+
+  showPendingActionsBtn: boolean = false;
+
+  pendingActionsShown: 'in' | 'out' = 'in';
+  tableCols: number = 8;
+  pendingActionsListCols: string = 'col-md-4';
+
+  isPendingListClosable: boolean = false;
+
+  toggleAnimation() {
+    this.pendingActionsShown =
+      this.pendingActionsShown === 'out' ? 'in' : 'out';
+  }
+
+  handlePendingActionsList(width: number) {
+    if (width < 1630) {
+      this.tableCols = 12;
+      this.pendingActionsListCols = 'd-none';
+      this.showPendingActionsBtn = true;
+      this.isPendingListClosable = true;
+      // this.pendingActionsShown = "out";
+    } else if (width > 1630) {
+      this.showPendingActionsBtn = false;
+      this.isPendingListClosable = false;
+      this.tableCols = 8;
+      this.pendingActionsListCols = 'col-md-4';
+    }
   }
 
   ngOnDestroy(): void {

@@ -1,7 +1,7 @@
-<div class="casses-settings">
+<div class="milestones-settings">
   <div class="row">
     <div class="row mt-4">
-      <div class="col-md-8">
+      <div class="col-md-{{ tableCols }}">
         <div class="f-box">
           <div class="row align-items-center">
             <div class="col-md-12">
@@ -56,6 +56,14 @@
                     [buttonText]="'Export' | translate"
                     [buttonType]="'warn'"
                     (btnClick)="onExporting()"
+                  ></stc-apps-button>
+                </div>
+
+                <div class="col-2" *ngIf="showPendingActionsBtn">
+                  <stc-apps-button
+                    [buttonText]="'Pending actions'"
+                    [buttonType]="'primary'"
+                    (btnClick)="toggleAnimation()"
                   ></stc-apps-button>
                 </div>
               </div>
@@ -140,11 +148,13 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div [@slideInOut]="pendingActionsShown" class="pending-list-holder" [ngClass]="{'widen-list': isPendingListClosable}">
         <stc-apps-items-list
           [caption]="'pending_actions' | translate"
           [items]="allItems"
+          [closable]="isPendingListClosable"
           (itemClicked)="detailsNavigate($event)"
+          (closeClicked)="toggleAnimation()"
         ></stc-apps-items-list>
       </div>
     </div>
