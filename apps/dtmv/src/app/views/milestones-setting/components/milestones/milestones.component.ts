@@ -467,7 +467,6 @@ export class MilestonesComponent
 
   pendingActionsShown: 'in' | 'out' = 'in';
   tableCols: number = 8;
-  pendingActionsListCols: string = 'col-md-4';
 
   isPendingListClosable: boolean = false;
 
@@ -479,15 +478,12 @@ export class MilestonesComponent
   handlePendingActionsList(width: number) {
     if (width < 1630) {
       this.tableCols = 12;
-      this.pendingActionsListCols = 'd-none';
       this.showPendingActionsBtn = true;
       this.isPendingListClosable = true;
-      // this.pendingActionsShown = "out";
     } else if (width > 1630) {
       this.showPendingActionsBtn = false;
       this.isPendingListClosable = false;
       this.tableCols = 8;
-      this.pendingActionsListCols = 'col-md-4';
     }
   }
 
