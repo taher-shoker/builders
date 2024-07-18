@@ -1,8 +1,11 @@
-<div class="progress-bar-holder">
-  <div class="bar-prefix">
-    <p class="title">{{ data().prefixText }}</p>
-    <p class="value">{{ data().prefixValue }}%</p>
-  </div>
+<div class="progress-bar-holder" [class.isProject]="isProject()">
+  @if(data().prefixText || +data().prefixValue > 0)
+  {
+    <div class="bar-prefix">
+      <p class="title">{{ data().prefixText }}</p>
+      <p class="value">{{ data().prefixValue }}%</p>
+    </div>
+  }
 
   <div class="bars-holder">
     <div class="background-bar" [ngStyle]="{'background-color': data().bgBarColor}">
@@ -32,7 +35,7 @@
               [ngStyle]="{
                 top: index.position === 'down' ? '0' : '',
                 bottom: index.position === 'up' ? '0' : '',
-                
+
               }"
             ></span>
           </div>
@@ -41,9 +44,11 @@
       </div>
     </div>
   </div>
-
-  <div class="bar-suffix">
-    <p class="title">{{ data().suffixText }}</p>
-    <p class="value">{{ data().suffixValue }}%</p>
-  </div>
+  @if(data().suffixText || +data().suffixValue > 0)
+  {
+    <div class="bar-suffix">
+      <p class="title">{{ data().suffixText }}</p>
+      <p class="value">{{ data().suffixValue }}%</p>
+    </div>
+  }
 </div>

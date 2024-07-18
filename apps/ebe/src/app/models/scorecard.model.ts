@@ -5,6 +5,7 @@ export interface ScorecardTaps
 }
 export interface FinancialScorecardModel
 {
+  id:number;
   title:string;
   kpisData:KpiModel[]
 }
@@ -24,21 +25,25 @@ export interface KpiModel
 }
 export interface StrategicScorecardModel
 {
+  id:number;
   title:string,
   kpisData:KpiModel[]
 }
 export interface RelationalScorecardModel
 {
+  id:number;
   title:string,
   kpisData:KpiModel[]
 }
 export interface OperationalScorecardModel
 {
+  id:number;
   title:string,
   kpisData:KpiModel[]
 }
 export interface PrioritiesScorecardModel
 {
+  id:number;
   title:string,
   kpisData:KpiModel[]
 }

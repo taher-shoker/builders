@@ -1,3 +1,11 @@
 <div class="project-card mt-4">
   <p class = "project-card-title">{{projectData().title}}</p>
+  <div>
+    <div class="project-card-bar">
+      <stc-apps-progress-bar
+        [data]="data"
+        [isProject]="true"
+      />
+    </div>
+  </div>
 </div>

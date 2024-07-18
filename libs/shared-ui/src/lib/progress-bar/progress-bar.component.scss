@@ -2,7 +2,6 @@
   display: flex;
   width: 100%; /* Ensure the holder takes the full width of its container */
 }
-
 .bar-prefix,
 .bar-suffix {
   flex: 1; /* 1 part of the 6 parts */
@@ -66,4 +65,14 @@
 .index-info {
   position: relative;
   word-break: keep-all;
+}
+.isProject
+{
+  align-items: center;
+  height:100%;
+  .index-info
+  {
+    height:35px !important;
+    bottom:-32px !important;
+  }
 }

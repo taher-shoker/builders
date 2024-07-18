@@ -25,11 +25,9 @@ import { MatSelectModule } from '@angular/material/select';
   styleUrl: './financial-scorecard.component.scss',
 })
 export class FinancialScorecardComponent implements OnInit {
-  // @Input({required : true}) financialScorcardData!:FinancialScorecardModel;
   financialScorcardData: InputSignal<FinancialScorecardModel[]> = input.required<FinancialScorecardModel[]>();
   monthsArr: { name: string; id: number }[] = [];
   years: WritableSignal<{ name:string , id:number }[]> = signal<{ name:string , id:number }[]>([]);
-  selected = 'option2';
   filtersForm:FormGroup = new FormGroup({
     month : new FormControl(new Date().getMonth() + 1),
     year : new FormControl(new Date().getFullYear())
@@ -51,12 +49,22 @@ export class FinancialScorecardComponent implements OnInit {
     this.years.set(yearsArr);
     this.monthsArrPopulator();
   }
-  selectYear(e:number)
+  get monthValue()
   {
-    console.log(e);
+    return this.filtersForm.get("month");
   }
-  selectMonth(e:number)
+  get yearValue()
   {
-    console.log(e);
+    return this.filtersForm.get("year");
+  }
+  selectYear()
+  {
+    console.log("month value => " , this.monthValue?.value);
+    console.log("year value => " , this.yearValue?.value);
+  }
+  selectMonth()
+  {
+    console.log("month value => " , this.monthValue?.value);
+    console.log("year value => " , this.yearValue?.value);
   }
 }

@@ -14,29 +14,122 @@ export class ScorecardService {
   operationalScorcardData!: OperationalScorecardModel[];
   prioritieslScorcardData!: PrioritiesScorecardModel[];
   constructor() {
-    // this.financialScorcardData = [
-    //   {
-    //     title: 'transforming costs to maximize ',
-    //     kpisData: [
-    //       {
-    //         id: 1,
-    //         title: 'stc KSA EBIT',
-    //         achievedStatus: 1,
-    //         formula: 'linear',
-    //         actual: 99.99,
-    //         weight: 5,
-    //         unit: 'SR Bn',
-    //         baseline: null,
-    //         target: 12537,
-    //         ceiling: 110,
-    //         threshold: 85,
-    //       },
-    //     ],
-    //   },
-    // ];
     this.financialScorcardData = [
       {
+        id:1,
         title: 'transforming costs to maximize value',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            achievedStatus: 1,
+            formula: 'linear',
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: null,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 4,
+            title: 'CAD business test',
+            achievedStatus: 1,
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+      {
+        id:2,
+        title: 'transforming costs to maximize value11',
+        kpisData: [
+          {
+            id: 1,
+            title: 'stc KSA EBIT',
+            achievedStatus: 1,
+            formula: 'linear',
+            weight: 5,
+            unit: 'SR Bn',
+            baseline: null,
+            target: 12537,
+            ceiling: 110,
+            threshold: 85,
+          },
+          {
+            id: 2,
+            title: 'CAD business efficiency OPEX savings',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 3,
+            title: 'CAD business 123',
+            achievedStatus: 1,
+            formula: 'linear',
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+          {
+            id: 4,
+            title: 'CAD business test',
+            achievedStatus: 1,
+            actual: 99.99,
+            weight: 20,
+            unit: '%',
+            baseline: 145.68,
+            target: 100,
+            ceiling: 90,
+            threshold: 55,
+          },
+        ],
+      },
+      {
+        id:3,
+        title: 'transforming costs to maximize value1133',
         kpisData: [
           {
             id: 1,
@@ -93,6 +186,7 @@ export class ScorecardService {
     ];
     this.strategicScorcardData = [
       {
+        id:1,
         title: 'execute strategy right',
         kpisData: [
           {
@@ -137,6 +231,7 @@ export class ScorecardService {
     ];
     this.rationalScorcardData = [
       {
+        id:1,
         title: 'delivered unparalleled CEX',
         kpisData: [
           {
@@ -193,6 +288,7 @@ export class ScorecardService {
     ];
     this.operationalScorcardData = [
       {
+        id:1,
         title: 'unlock analytics capabilities',
         kpisData: [
           {
@@ -250,6 +346,7 @@ export class ScorecardService {
         ],
       },
       {
+        id:2,
         title: 'execute technology right',
         kpisData: [
           {
@@ -309,6 +406,7 @@ export class ScorecardService {
     ];
     this.prioritieslScorcardData = [
       {
+        id:1,
         title: 'corporate priorities',
         kpisData: [
           {
