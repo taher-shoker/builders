@@ -41,6 +41,21 @@
             </stc-apps-select-drop-down>
           </div>
         </div>
+        <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'Dynamic_Report_Flow'">
+          <div class="col-md-5">
+            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
+              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
+              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-md-2"></div>
+
+          <div class="col-md-5">
+            <stc-apps-select-drop-down [label]="'User Delegates'" [multi]="true" formControlName="userDelegates"
+              [options]="allUsers" [selectId]="selectedTeam || null">
+            </stc-apps-select-drop-down>
+          </div>
+        </div>
         <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'DI_Milestones'">
           <div class="col-md-5">
             <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"

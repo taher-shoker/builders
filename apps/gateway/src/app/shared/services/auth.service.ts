@@ -140,7 +140,8 @@ export class AuthService {
     } else if (
       res.dto.systems.includes('FRAUD_ManagementUsers') ||
       res.dto.systems.includes('DI_Management') ||
-      res.dto.systems.includes('DI_Milestones')
+      res.dto.systems.includes('DI_Milestones') ||
+      res.dto.systems.includes('Dynamic_Report_Flow')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -173,6 +174,7 @@ export class AuthService {
       res.dto.systems.includes('FRAUD_ManagementUsers') ||
       res.dto.systems.includes('DI_Management') ||
       res.dto.systems.includes('DI_Milestones') ||
+      res.dto.systems.includes('Dynamic_Report_Flow') ||
       res.dto.systems.includes('Jira_Dahsboard')
     ) {
       this.setLoggedInUser();
@@ -198,6 +200,9 @@ export class AuthService {
     }
     if (res.dto.systems.includes('DI_Milestones')) {
       this.gratnedSystems.push('DI_Milestones');
+    }
+    if (res.dto.systems.includes('Dynamic_Report_Flow')) {
+      this.gratnedSystems.push('Dynamic_Report_Flow');
     }
     if (res.dto.systems.includes('Jira_Dahsboard')) {
       this.gratnedSystems.push('Jira_Dahsboard');
@@ -232,7 +237,11 @@ export class AuthService {
    */
   private handleSingleGrantedSystem(res: LoggedUser) {
     if (this.gratnedSystems.length == 1) {
-      if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
+      console.log(res.userGroups[0].roles[0].roleName);
+      if (
+        res.userGroups[0].roles[0].roleName === 'ADMINS' ||
+        res.userGroups[0].roles[0].roleName === 'BUSINESS_USER'
+      ) {
         this.router.navigate(['users-setting']);
       } else {
         this.navigateToSystem(this.gratnedSystems[0]);
@@ -251,6 +260,7 @@ export class AuthService {
       DI_Management: environment.systems.di_system,
       FRAUD_ManagementUsers: environment.systems.fraud_system,
       DI_Milestones: environment.systems.di_milestones_system,
+      Dynamic_Report_Flow: environment.systems.dynamic_rf_system,
     };
     const url = systemUrls[system];
     if (url) {
@@ -403,6 +413,16 @@ export class AuthService {
                   environment.systems.di_milestones_system,
                 name: 'DT Milestones Validation',
                 displayName: 'DT Milestones Validation',
+              });
+              break;
+            case 'Dynamic_Report_Flow':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin +
+                  environment.systems.dynamic_rf_system,
+                name: 'Dynamic Report Flow',
+                displayName: 'Dynamic Report Flow',
               });
               break;
             case 'Jira_Dahsboard':
