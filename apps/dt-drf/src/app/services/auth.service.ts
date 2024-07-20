@@ -45,12 +45,12 @@ export class AuthService {
   getUserData() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     const roles = user.userGroups
-      .filter((g: any) => g.roles[0].system.name === 'FRAUD_ManagementUsers')
+      .filter((g: any) => g.roles[0].system.name === 'Dynamic_Report_Flow')
       .map((t: any) => {
         return t.roles[0].roleName;
       });
     const teamName = user.userGroups
-      .filter((g: any) => g.roles[0].system.name === 'FRAUD_ManagementUsers')
+      .filter((g: any) => g.roles[0].system.name === 'Dynamic_Report_Flow')
       .map((t: any) => {
         return t.groupName;
       })[0];
