@@ -172,7 +172,7 @@ export interface MilestoneAttachment {
 @Injectable({
   providedIn: 'root',
 })
-export class MilestonesService {
+export class ReportsService {
   baseUrl = environment.apiUrl;
   adminUrl = `${this.baseUrl}v2/admin`;
   dtUrl = `${this.baseUrl}v2/dt-milestone-service/milestones`;
@@ -268,7 +268,7 @@ export class MilestonesService {
     });
   }
 
-  getMilestones(filterData?: any) {
+  getReports(filterData?: any) {
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });

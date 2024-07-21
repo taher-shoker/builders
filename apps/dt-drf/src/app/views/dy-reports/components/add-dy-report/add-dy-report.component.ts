@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { BannerDataService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { MilestonesService } from '../../dy-reports.service';
+import { ReportsService } from '../../dy-reports.service';
 
 @Component({
   selector: 'stc-apps-add-dy-report',
@@ -27,13 +27,13 @@ export class AddDyReportComponent implements OnInit {
   constructor(
     private bannerDataService: BannerDataService,
     private formBuilder: FormBuilder,
-    public milestonesService: MilestonesService,
+    public reportsService: ReportsService,
     private toastr: ToastrService,
     private router: Router
   ) {}
   ngOnInit(): void {
     this.uploadForm();
-    this.milestonesService.checkIsAdmin();
+    this.reportsService.checkIsAdmin();
     this.setRelatedTeam();
     this.bannerDataService.updateData({
       title: 'Add new report',
@@ -41,13 +41,13 @@ export class AddDyReportComponent implements OnInit {
     });
   }
   getAllTeams() {
-    this.milestonesService.setSystemTeams().subscribe((res) => {
+    this.reportsService.setSystemTeams().subscribe((res: any) => {
       this.allTeams = res;
     });
   }
   setRelatedTeam() {
-    if (!this.milestonesService.isDTAdmin) {
-      this.allTeams = this.milestonesService.setUserTeams();
+    if (!this.reportsService.isDTAdmin) {
+      this.allTeams = this.reportsService.setUserTeams();
     } else {
       this.getAllTeams();
     }
@@ -73,7 +73,7 @@ export class AddDyReportComponent implements OnInit {
     };
     if (this.form.valid) {
       this.isLoading = true;
-      this.milestonesService
+      this.reportsService
         .addBulkData(this.formData, this.form?.get('teamName')?.value)
         .subscribe(
           () => onSuccess('File has been uploaded successfully'),

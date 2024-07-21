@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription, take } from 'rxjs';
 import { MessageDialogComponent } from '../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
-import { MilestonesService, PendingTask } from '../../dy-reports.service';
+import { ReportsService, PendingTask } from '../../dy-reports.service';
 
 export interface Milestone {
   activityName: string;
@@ -62,7 +62,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     public router: Router,
     public route: ActivatedRoute,
     private bannerDataService: BannerDataService,
-    public milestonesService: MilestonesService,
+    public reportsService: ReportsService,
     protected dialogService: DialogService,
     public authService: AuthService,
     public utils: UtilsService,
@@ -115,9 +115,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
     {
       key: 'actions',
       type: 'actions',
-      actions: !this.milestonesService.checkIsAdmin()
-        ? this.milestonesService.checkIsBusinessSpoc() ||
-          this.milestonesService.checkIsDirector()
+      actions: !this.reportsService.checkIsAdmin()
+        ? this.reportsService.checkIsBusinessSpoc() ||
+          this.reportsService.checkIsDirector()
           ? ['details']
           : ['edit', 'details']
         : ['edit', 'delete', 'details'],
@@ -140,7 +140,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   allTeams: any;
 
   ngOnInit() {
-    this.getMilestones();
+    this.getReports();
     this.getPendingTasks();
     this.bannerDataService.updateData({ title: 'Dynamic Reports', text: '' });
 
@@ -152,7 +152,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   getPendingTasks() {
-    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+    this.reportsService.getMilestoneTasks().subscribe((res) => {
       this.allItems = res;
     });
   }
@@ -160,8 +160,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
   paginate(paginationEvent: PaginationEvent) {
     const filteredForm = this.utilities.filterObject(this.form.value);
 
-    this.milestonesService
-      .getMilestones({
+    this.reportsService
+      .getReports({
         page: paginationEvent.currentPage - 1,
         ...filteredForm,
       })
@@ -179,9 +179,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   getAllTeams() {
-    this.allTeams = this.milestonesService.setUserTeams();
+    this.allTeams = this.reportsService.setUserTeams();
     if (this.allTeams.length === 0) {
-      this.milestonesService.setSystemTeams().subscribe((res) => {
+      this.reportsService.setSystemTeams().subscribe((res) => {
         this.allTeams = res;
       });
     }
@@ -203,10 +203,10 @@ export class ReportsComponent implements OnInit, OnDestroy {
         if (!res) {
           return;
         }
-        this.milestonesService.deleteMilestone(event.dataRow.id).subscribe({
+        this.reportsService.deleteMilestone(event.dataRow.id).subscribe({
           next: () => {
             this.toastr.success('Deleted successfully');
-            this.getMilestones();
+            this.getReports();
           },
           error: () => {
             this.toastr.error('Something went wrong!');
@@ -246,7 +246,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   onExporting() {
     const filteredForm = this.utilities.filterObject(this.form.value);
-    this.milestonesService
+    this.reportsService
       .exportMilestones(filteredForm)
       .subscribe((buffer) => {
         const data: Blob = new Blob([buffer]);
@@ -279,8 +279,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     const filteredForm = this.utilities.filterObject(this.form.value);
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones(filteredForm)
+    this.getMilestonesSub = this.reportsService
+      .getReports(filteredForm)
       .subscribe((res: any) => {
         this.dialogService.close();
         this.populateMilestones(res);
@@ -290,7 +290,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   clearFormFilter() {
     this.form.reset();
     this.dialogService.close();
-    this.getMilestones();
+    this.getReports();
   }
 
   monthsArrPopulator() {
@@ -339,9 +339,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
     return finalDate;
   }
 
-  getMilestones() {
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones()
+  getReports() {
+    this.getMilestonesSub = this.reportsService
+      .getReports()
       .subscribe((res: any) => {
         this.populateMilestones(res);
       });

@@ -6,7 +6,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params } from '@angular/router';
 import { DialogService, BannerDataService } from '@stc-apps/shared-ui';
 import saveAs from 'file-saver';
-import { MilestoneDetails, MilestonesService, Actions, MilestoneAttachment, RequestTask } from '../../dy-reports.service';
+import { MilestoneDetails, ReportsService, Actions, MilestoneAttachment, RequestTask } from '../../dy-reports.service';
 import { Milestone } from '../reports/reports.component';
 import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-progress-dialog/update-milestone-progress-dialog.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
@@ -63,14 +63,14 @@ export class DyReportDetailsComponent implements OnInit {
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
-    public milestonesService: MilestonesService,
+    public reportsService: ReportsService,
     public authService: AuthService,
     private matDialog: MatDialog,
     private datePipe: DatePipe
   ) {}
 
   ngOnInit(): void {
-    this.milestonesService.checkIsAdmin();
+    this.reportsService.checkIsAdmin();
     this.route.params.subscribe((params) => {
       this.milestoneId = params['id'];
       this.getMilestoneDetails();
@@ -141,7 +141,7 @@ export class DyReportDetailsComponent implements OnInit {
       this.milestoneDetails.currentMilestoneProgressUpdateDto &&
       this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
     ) {
-      this.milestonesService
+      this.reportsService
         .getMilestoneProgressWorkflow(
           this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
         )
@@ -215,7 +215,7 @@ export class DyReportDetailsComponent implements OnInit {
             }
 
             for (const attachmentID of attachmentsIDs) {
-              this.milestonesService
+              this.reportsService
                 .getAttachment(+attachmentID)
                 .subscribe((res) => {
                   attachments.push(res);
@@ -324,10 +324,10 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   getMilestoneDetails(params?: Params) {
-    this.milestonesService
+    this.reportsService
       .getMilestone(this.milestoneId)
       .subscribe((res: any) => {
-        // this.milestonesService.getRemindersData();
+        // this.reportsService.getRemindersData();
         this.milestoneDetails = res;
         this.bannerDataService.updateData({
           title: this.milestoneDetails.milestoneName || '',
@@ -349,7 +349,7 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   getHistory(milestone: MilestoneDetails) {
-    this.milestonesService
+    this.reportsService
       .getMilestonesHistory(milestone?.id)
       .subscribe((res) => {
         if (res) {
@@ -368,7 +368,7 @@ export class DyReportDetailsComponent implements OnInit {
   getHistoryTasks(request: any) {
     this.historySteps = [];
     const item = request?.requestTasksHistory;
-    this.milestonesService
+    this.reportsService
       .getMilestoneProgress(request?.request?.requestParams[1].value)
       .subscribe((res: any) => {
         this.historyItemInitialStep = {
@@ -441,7 +441,7 @@ export class DyReportDetailsComponent implements OnInit {
         byUser = `By ${item[i].completedByName}`;
       }
       for (const attachmentID of attachmentsIDs) {
-        this.milestonesService.getAttachment(+attachmentID).subscribe((res) => {
+        this.reportsService.getAttachment(+attachmentID).subscribe((res) => {
           attachments.push(res);
         });
       }
@@ -486,7 +486,7 @@ export class DyReportDetailsComponent implements OnInit {
       if (action.actionObj.uniqueTitle === Actions.updateDTRecord.uniqueTitle) {
         this.isLoadingSteps = true;
 
-        this.milestonesService
+        this.reportsService
           .updateMilestoneRecord(
             this.milestoneDetails.currentMilestoneProgressUpdateDto
               ?.workflowId || '',
@@ -528,7 +528,7 @@ export class DyReportDetailsComponent implements OnInit {
               return;
             }
             this.isLoadingSteps = true;
-            this.milestonesService
+            this.reportsService
               .updateMilestoneRecord(
                 this.milestoneDetails.currentMilestoneProgressUpdateDto
                   ?.workflowId || '',
@@ -581,7 +581,7 @@ export class DyReportDetailsComponent implements OnInit {
 
           this.isLoadingSteps = true;
 
-          this.milestonesService
+          this.reportsService
             .completePendingTask(
               this.milestoneDetails.currentMilestoneProgressUpdateDto
                 ?.workflowId || '',
@@ -620,7 +620,7 @@ export class DyReportDetailsComponent implements OnInit {
 
         this.isLoadingSteps = true;
 
-        this.milestonesService
+        this.reportsService
           .completePendingTask(
             this.milestoneDetails.currentMilestoneProgressUpdateDto
               ?.workflowId || '',
@@ -674,7 +674,7 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   downloadFile(id: number, name: string = 'untitled.txt') {
-    this.milestonesService.downloadAttachment(id).subscribe((buffer) => {
+    this.reportsService.downloadAttachment(id).subscribe((buffer) => {
       const data: Blob = new Blob([buffer]);
       // you may improve this code to customize the name
       // of the export based on date or some other factors
@@ -812,7 +812,7 @@ export class DyReportDetailsComponent implements OnInit {
         this.sendAllRequests(params, isFirstUpdateProgress);
         this.isUpdateProgressOnHold = false;
       } else {
-        this.milestonesService
+        this.reportsService
           .completePendingTask(
             this.milestoneDetails.currentMilestoneProgressUpdateDto
               ?.workflowId || '',
@@ -890,9 +890,9 @@ export class DyReportDetailsComponent implements OnInit {
     progress: string,
     isFirstUpdateProgress: boolean = true
   ) {
-    this.milestonesService
+    this.reportsService
       .calculateMilestoneProgress(milestoneId, progress)
-      .subscribe((res) => {
+      .subscribe((res: any) => {
         let actionObj: Actions;
         if (res.status === 'Delayed') {
           actionObj = Actions.addJustification;
@@ -907,7 +907,7 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   updateProgress() {
-    return this.milestonesService.updateMilestoneProgress({
+    return this.reportsService.updateMilestoneProgress({
       milestoneId: this.milestoneDetails.id!,
       deliverable: this.deliverableInMaking,
       overallProgress: this.overallProgressInMaking,
@@ -931,7 +931,7 @@ export class DyReportDetailsComponent implements OnInit {
       ],
     };
 
-    return this.milestonesService.completePendingTask(
+    return this.reportsService.completePendingTask(
       this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId || '',
       this.refinedProgressUpdate.requestTaskId,
       params
@@ -941,7 +941,7 @@ export class DyReportDetailsComponent implements OnInit {
   pushWorkflowAction(params: Params) {
     // this.isLoadingSteps = true;
 
-    // this.milestonesService
+    // this.reportsService
     //   .completePendingTask(
     //     this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId ||
     //       '',
@@ -969,6 +969,6 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   isDirector(): boolean {
-    return this.milestonesService.checkIsDirector();
+    return this.reportsService.checkIsDirector();
   }
 }

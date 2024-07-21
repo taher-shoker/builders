@@ -22,7 +22,7 @@ import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { MilestonesService } from '../../dy-reports.service';
+import { ReportsService } from '../../dy-reports.service';
 
 export const APP_DATE_FORMATS = {
   parse: {
@@ -66,7 +66,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   constructor(
     private formBuilder: FormBuilder,
     protected dialogService: DialogService,
-    public milestonesService: MilestonesService,
+    public reportsService: ReportsService,
     private toastr: ToastrService,
     private router: Router
   ) {}
@@ -82,7 +82,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.MilestoneForm();
-    this.milestonesService.checkIsAdmin();
+    this.reportsService.checkIsAdmin();
     this.setRelatedTeam();
   }
 
@@ -104,7 +104,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       ],
       teamName: [
         '',
-        this.milestonesService.isDTDirector
+        this.reportsService.isDTDirector
           ? Validators.nullValidator
           : Validators.required,
       ],
@@ -113,8 +113,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   setRelatedTeam() {
-    if (!this.milestonesService.isDTAdmin) {
-      this.allTeams = this.milestonesService.setUserTeams();
+    if (!this.reportsService.isDTAdmin) {
+      this.allTeams = this.reportsService.setUserTeams();
     } else {
       this.getAllTeams();
     }
@@ -166,7 +166,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       };
       if (this.isEditing) {
         finalData = { ...finalData, teamName: this.data.teamName };
-        this.milestonesService
+        this.reportsService
           .updateMilestone(this.data.id, finalData)
           .subscribe((res) => {
             if (res) {
@@ -176,7 +176,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
             }
           });
       } else {
-        this.milestonesService.createMilestone(finalData).subscribe((res) => {
+        this.reportsService.createMilestone(finalData).subscribe((res) => {
           if (res) {
             this.toastr.success('Milestone has been created successfully');
             this.form.reset();
@@ -197,7 +197,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     }
   }
   getAllTeams() {
-    this.milestonesService.setSystemTeams().subscribe((res) => {
+    this.reportsService.setSystemTeams().subscribe((res: any) => {
       this.allTeams = res;
     });
   }

@@ -4,7 +4,7 @@ import { Component, Inject, Signal, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Actions } from 'apps/dtmv/src/app/services/models/milestones.models';
-import { MilestonesService } from '../../dy-reports.service';
+import { ReportsService } from '../../dy-reports.service';
 
 @Component({
   selector: 'stc-apps-update-milestone-progress-dialog',
@@ -52,7 +52,7 @@ export class UpdateMilestoneProgressDialogComponent {
       milestoneId: number | string;
       showAttachment: boolean
     },
-    private milestonesService: MilestonesService
+    private reportsService: ReportsService
   ) {
     this.milestoneName.set(data.milestoneName);
     if (data.type === Actions.addEvidence.uniqueTitle) {
@@ -110,12 +110,11 @@ export class UpdateMilestoneProgressDialogComponent {
       (x: any) => x !== id.toString()
     );
     this.form.get('attachment')?.setValue(this.uploadedFile);
-    // this.milestonesService.deleteFile(id).subscribe((res: any) => {
-    // });
+
   }
 
   downloadFile(id: number, name: string) {
-    this.milestonesService.getFile(id).subscribe((buffer) => {
+    this.reportsService.getFile(id).subscribe((buffer: any) => {
       const data: Blob = new Blob([buffer], {
         type: 'text/csv;charset=utf-8',
       });
