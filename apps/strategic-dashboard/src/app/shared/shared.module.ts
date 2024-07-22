@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HeaderComponent } from './header/header.component';
+import { SharedUiModule } from '@stc-apps/shared-ui';
+import { TopBannerComponent } from './top-banner/top-banner.component';
 
-const components = [HeaderComponent];
-const modules = [CommonModule];
+const components = [TopBannerComponent];
+const modules = [CommonModule, SharedUiModule];
 
 @NgModule({
   declarations: [...components],
