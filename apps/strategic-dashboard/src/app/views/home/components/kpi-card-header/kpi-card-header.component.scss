@@ -1,0 +1,26 @@
+.card-header {
+  background-color: var(--stc-extra-purple);
+  height: auto;
+  border-radius: 7px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--whiteColor);
+  font-weight: 600;
+  width: 300px;
+  &_letter {
+    font-size: 36px;
+    border-right: solid 3px var(--stcSunsetColor);
+    padding: 15px;
+  }
+  &_title {
+    font-size: 20px;
+    padding: 12px;
+    .title-1 {
+      margin-bottom: 12px;
+    }
+  }
+  &_icon {
+    margin-right: 12px;
+  }
+}

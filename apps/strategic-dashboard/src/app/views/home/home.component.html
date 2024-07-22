@@ -1,2 +1,11 @@
 <stc-apps-header></stc-apps-header>
-<p>home works!</p>
+<div class="kpis-card-holder row">
+  @for(kpi of kpis;track kpi){
+  <div class="col-md-3">
+    <stc-apps-kpi-card-header
+      [kpiTitle]="kpi.title"
+      [iconPath]="kpi.iconPath"
+    ></stc-apps-kpi-card-header>
+  </div>
+  }
+</div>
