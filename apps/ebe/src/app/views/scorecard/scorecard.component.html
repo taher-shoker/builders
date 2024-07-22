@@ -1,11 +1,11 @@
 <section class="scored-card-section">
-  <div class = "scored-card-section-header">
+  <div class="scored-card-section-header">
     <div>
       <stc-apps-page-header
         [mainTitle]="'N-2 Scorecards 2023'"
         [secondaryTitle]="'- corporate analytics & data sector'"
       />
-      <div class = "scored-card-section-taps">
+      <div class="scored-card-section-taps">
         <stc-apps-tabview
           [tabsData]="scorecardsTaps"
           [tabColor]="'#ffffff'"
@@ -17,13 +17,20 @@
         />
       </div>
     </div>
-    <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+    <!-- <img class = "hands-img" src="assets/images/hands-img.svg" alt=""> -->
   </div>
-  @if (kpisData) {
-    <div class="scored-card-section-tap-details">
-      <stc-apps-financial-scorecard
-        [financialScorcardData]="kpisData"
-      />
+  @if(currentMode === 'editMode')
+  {
+    <div style = "height:200px;">
+      testtt
     </div>
   }
+  <div class="scored-card-section-tap-details">
+    <div class="images">
+      <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
+    </div>
+    @if (kpisData()) {
+      <stc-apps-financial-scorecard [financialScorcardData]="kpisData()" />
+    }
+  </div>
 </section>

@@ -6,8 +6,10 @@ import {
   RelationalScorecardModel,
   StrategicScorecardModel,
 } from '../models/scorecard.model';
+import { BehaviorSubject } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class ScorecardService {
+  private currMode:BehaviorSubject<'editMode' | 'viewMode'> = new BehaviorSubject<'editMode' | 'viewMode'>('viewMode')
   financialScorcardData!: FinancialScorecardModel[];
   strategicScorcardData!: StrategicScorecardModel[];
   rationalScorcardData!: RelationalScorecardModel[];
@@ -463,5 +465,13 @@ export class ScorecardService {
         ],
       },
     ];
+  }
+  setEditMode(mode:'editMode' | 'viewMode')
+  {
+    this.currMode.next(mode);
+  }
+  getEditMode():BehaviorSubject<'editMode' | 'viewMode'>
+  {
+    return this.currMode
   }
 }

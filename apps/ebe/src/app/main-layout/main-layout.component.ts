@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { ScorecardService } from '../services/scorecard.service';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -9,6 +10,7 @@ export class MainLayoutComponent implements OnInit{
   logoSrc!:string;
   userName!:string;
   userNameLogo!:string;
+  scorecardService = inject(ScorecardService);
   navItems = [
     {
       id : 1,
@@ -35,6 +37,9 @@ export class MainLayoutComponent implements OnInit{
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.userName = "fahad awan";
-
+  }
+  getCurrentMode(mode:'editMode' | 'viewMode')
+  {
+    this.scorecardService.setEditMode(mode);
   }
 }

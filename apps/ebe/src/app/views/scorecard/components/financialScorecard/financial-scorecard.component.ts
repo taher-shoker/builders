@@ -1,5 +1,6 @@
 import {
   Component,
+  inject,
   input,
   InputSignal,
   OnInit,
@@ -11,6 +12,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { ScorecardService } from '../../../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-financial-scorecard',
   standalone: true,
@@ -32,6 +34,7 @@ export class FinancialScorecardComponent implements OnInit {
     month : new FormControl(new Date().getMonth() + 1),
     year : new FormControl(new Date().getFullYear())
   })
+  scorecardService = inject(ScorecardService)
   monthsArrPopulator() {
     for (let i = 1; this.monthsArr.length < 12; i++) {
       const date = new Date(2000, i - 1, 10); // 2009-11-10

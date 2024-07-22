@@ -15,7 +15,8 @@
         [sidebarLinks]="navItems"
         [usernameImage]="userNameLogo"
         [userName]="userName"
-      ></stc-apps-sidebar>
+        (currentMode)="getCurrentMode($event)"
+      />
     </div>
     <div class="main-layout-content-page">
       <router-outlet></router-outlet>
