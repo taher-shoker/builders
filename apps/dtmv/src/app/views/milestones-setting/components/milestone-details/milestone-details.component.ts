@@ -192,6 +192,7 @@ export class MilestoneDetailsComponent implements OnInit {
               this.datePipe.transform(displayDate, 'medium') || '';
 
             let byUser = '';
+            let userThatTaskIsPendingOn = '';
             const actions: Actions[] = [];
             let isWarningState: boolean = false;
 
@@ -233,8 +234,26 @@ export class MilestoneDetailsComponent implements OnInit {
                 });
             }
 
+            if (
+              res[i].taskName === 'Review Evidence' ||
+              res[i].taskName === 'Review Justification' ||
+              res[i].taskName === 'Review Progress' ||
+              res[i].taskName === 'Update DT Record'
+            ) {
+              userThatTaskIsPendingOn = 'DT User';
+            }
+
+            if (res[i].taskName === 'Approve Progress') {
+              userThatTaskIsPendingOn = 'DT Director';
+            }
+
+            if (res[i].taskName === 'Add New Progress') {
+              userThatTaskIsPendingOn = res[i].username;
+            }
+
             if (res[i].status === 'pending' && res[i].params?.length > 0) {
               //those two conditions are for a user to take action, otherwise it's not his task to handle.
+
               if (res[i].taskName === 'Add New Progress') {
                 actions.push(Actions.addNewProgress);
               }
@@ -301,7 +320,9 @@ export class MilestoneDetailsComponent implements OnInit {
                   : 'undone',
               notes: notes,
               attachments: attachments,
-              extraInfo: [`${progressDate} ${byUser}`],
+              extraInfo: [
+                `${progressDate} ${byUser || 'By ' + userThatTaskIsPendingOn}`,
+              ],
               actions: actions,
               stepObject: res[i],
             };
@@ -324,7 +345,6 @@ export class MilestoneDetailsComponent implements OnInit {
           title: this.milestoneDetails.milestoneName || '',
           text: '',
         });
-        console.log(this.milestonesService.checkIsDirector());
 
         if (
           this.milestoneDetails.currentMilestoneProgressUpdateDto &&
@@ -332,7 +352,6 @@ export class MilestoneDetailsComponent implements OnInit {
             .overallProgress
         ) {
           this.showMilestoneProgressWorkflow(params);
-          console.log('here1');
         } else {
           this.steps = [];
           this.askUserToInitiateUpdateProgress();
@@ -494,6 +513,8 @@ export class MilestoneDetailsComponent implements OnInit {
         action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle ||
         action.actionObj.uniqueTitle === Actions.returnProgress.uniqueTitle
       ) {
+        console.warn('EH YO');
+
         const isApprove =
           action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
             ? true
@@ -502,26 +523,36 @@ export class MilestoneDetailsComponent implements OnInit {
           action.actionObj.uniqueTitle === Actions.approveProgress.uniqueTitle
             ? 'approve progress'
             : 'return progress';
-        this.makeSureToApprove(
-          this.milestoneDetails.milestoneName || 'unnamed',
-          popupMsg
-        ).subscribe((res) => {
-          if (!res) {
-            return;
-          }
-          this.isLoadingSteps = true;
-          this.milestonesService
-            .updateMilestoneRecord(
-              this.milestoneDetails.currentMilestoneProgressUpdateDto
-                ?.workflowId || '',
-              action.item.requestTaskId,
-              true,
-              isApprove
-            )
-            .subscribe(() => {
-              this.getMilestoneDetails();
-            });
-        });
+
+        if (!isApprove) {
+          this.openMilestoneWorkflowActionsModal(
+            action.actionObj.uniqueTitle,
+            action.item,
+            false,
+            false
+          );
+        } else {
+          this.makeSureToApprove(
+            this.milestoneDetails.milestoneName || 'unnamed',
+            popupMsg
+          ).subscribe((res) => {
+            if (!res) {
+              return;
+            }
+            this.isLoadingSteps = true;
+            this.milestonesService
+              .updateMilestoneRecord(
+                this.milestoneDetails.currentMilestoneProgressUpdateDto
+                  ?.workflowId || '',
+                action.item.requestTaskId,
+                true,
+                isApprove
+              )
+              .subscribe(() => {
+                this.getMilestoneDetails();
+              });
+          });
+        }
       }
 
       if (
@@ -584,6 +615,8 @@ export class MilestoneDetailsComponent implements OnInit {
         action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
         action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
       ) {
+        console.warn('EH');
+
         this.openMilestoneWorkflowActionsModal(
           action.actionObj.uniqueTitle,
           action.item
@@ -664,7 +697,8 @@ export class MilestoneDetailsComponent implements OnInit {
   openMilestoneWorkflowActionsModal(
     type: string,
     item?: RequestTask,
-    isFirstUpdateProgress: boolean = true
+    isFirstUpdateProgress: boolean = true,
+    showAttachment: boolean = true
   ) {
     const dialogRef = this.matDialog.open(
       UpdateMilestoneProgressDialogComponent,
@@ -674,6 +708,7 @@ export class MilestoneDetailsComponent implements OnInit {
           milestoneName: this.milestoneDetails.milestoneName,
           type,
           milestoneId: this.milestoneId,
+          showAttachment,
         },
       }
     );
@@ -767,6 +802,21 @@ export class MilestoneDetailsComponent implements OnInit {
         }
       } else if (type === Actions.noNeed.uniqueTitle) {
         // no need action here.. not tested
+      } else if (type === Actions.approveProgress.uniqueTitle) {
+        params.requestParams.push({
+          name: 'is_progress_approved',
+          value: true, // 2 means rejected.
+        });
+      } else if (type === Actions.returnProgress.uniqueTitle) {
+        params.requestParams.push({
+          name: 'is_progress_approved',
+          value: false, // 2 means rejected.
+        });
+
+        params.requestParams.push({
+          name: 'reason_of_rejection',
+          value: res.note,
+        });
       }
 
       this.isLoadingSteps = true;

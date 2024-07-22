@@ -1,6 +1,9 @@
-<div class="pending-tasks">
+<div class="pending-tasks" [ngClass]="{'hovering-list': closable}">
   <p class="main-title">
     <i [class]="iconClass || 'far fa-clock'"></i> {{ caption }}
+    @if(closable){
+      <span class="x-btn" (click)="notifyParent()">X</span>
+    }
   </p>
   <ul class="tasks">
     <li class="mt-3" *ngFor="let item of items">

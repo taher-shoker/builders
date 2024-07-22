@@ -299,3 +299,23 @@
   font-style: italic;
   font-size: 1rem;
 }
+
+.completed-status {
+  color: var(--stc-oasis-color);
+}
+
+.delayed-status {
+  color: var(--stc-coral-color);
+}
+
+.on-track-status {
+  color: var(--stc-sky-blue-color);
+}
+
+.at-risk-status {
+  color: var(--stc-sun-color);
+}
+
+.planned-status {
+  color: var(--grey-color);
+}

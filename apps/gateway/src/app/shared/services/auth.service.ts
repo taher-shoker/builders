@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
 import { TPUserModel } from '../models/TP/TPUserModel';
-import { UserGroup } from '../models/users-settings.model';
+import { UserData, UserGroup } from '../models/users-settings.model';
 import { AuthResponseData, LoggedUser, System } from '../models/auth.model';
 
 @Injectable({
@@ -43,15 +43,7 @@ export class AuthService {
     private router: Router,
     private toastr: ToastrService,
     private http: HttpClient
-  ) {
-    // const token = this.cookieService.get('token')
-    //   ? this.cookieService.get('token')
-    //   : '';
-    // this._isLoggedIn$.next(!!token);
-    // if (token) {
-    //   this.getUserData();
-    // }
-  }
+  ) {}
 
   getLoggedInUser(): BehaviorSubject<LoggedUser | null> {
     return this.loggedUserStream;
@@ -66,14 +58,15 @@ export class AuthService {
     }
   }
 
+  /**
+   * Authenticates the user with the given username and password.
+   * @param data - Object containing username and password
+   * @returns An Observable of the authentication response data
+   */
   login(data: { username: string; password: string }) {
     this.availableSystems = [];
     return this.http
-      .post<AuthResponseData>(
-        `${this.loginTPUrl}/user/authenticate`,
-        // .post<AuthResponseData>(`http://localhost:9084/cem/reporting-api/user/authenticate`,
-        data
-      )
+      .post<AuthResponseData>(`${this.loginTPUrl}/user/authenticate`, data)
       .pipe(
         tap((resData: AuthResponseData) => {
           this.handleAuthentication(resData.displayName, resData.token);
@@ -82,6 +75,10 @@ export class AuthService {
       );
   }
 
+  /**
+   * Checks if the current user has admin role.
+   * @returns True if the user has an admin role, otherwise false
+   */
   isAdminUser() {
     const user =
       this.getLoggedInUser().getValue() || this.cookieService.get('token');
@@ -103,93 +100,20 @@ export class AuthService {
     this._isLoggedIn$.next(!!token);
   }
   setCurrentLoggedInUser = false;
+
+  /**
+   * Retrieves the current user data and handles access to various systems.
+   */
   getUserData() {
     const headers = new HttpHeaders().set('content-type', 'application/json');
     this.gratnedSystems = [];
     this.http
-      .get<any>(`${this.loginTPUrl}/user/getCurrentUserData`, {
-        headers: headers,
-      })
-      .subscribe((res: any) => {
+      .get<UserData>(`${this.loginTPUrl}/user/getCurrentUserData`, { headers })
+      .subscribe((res: UserData) => {
         if (res.dto.systems.length == 1) {
-          if (res.dto.systems.includes('TP_DashboardUsers')) {
-            // checking if the user has TP access to handle the needs
-            this.handleTPSysNeeds(res);
-            this.gratnedSystems.push('TP_DashboardUsers');
-            this.cookieService.put(
-              'granted-systems',
-              JSON.stringify(this.gratnedSystems)
-            );
-            this.router.navigate(['/apps']);
-          }
-
-          if (res.dto.systems.includes('CEO_DashboardUsers')) {
-            this.cookieService.put('ceo-username', res.dto.username);
-            this.gratnedSystems.push('CEO_DashboardUsers');
-
-            this.cookieService.put(
-              'granted-systems',
-              JSON.stringify(this.gratnedSystems)
-            );
-            this.router.navigate(['/apps', res]);
-          }
-
-          if (
-            res.dto.systems.includes('FRAUD_ManagementUsers') ||
-            res.dto.systems.includes('DI_Management') ||
-            res.dto.systems.includes('DI_Milestones')
-          ) {
-            // checking if the user has fraud or DI access to handle the needs
-            if (res.dto.systems.includes('FRAUD_ManagementUsers')) {
-              this.gratnedSystems.push('FRAUD_ManagementUsers');
-            }
-            if (res.dto.systems.includes('DI_Management')) {
-              this.gratnedSystems.push('DI_Management');
-            }
-            if (res.dto.systems.includes('DI_Milestones')) {
-              this.gratnedSystems.push('DI_Milestones');
-            }
-            if (res.dto.systems.includes('Jira_Dahsboard')) {
-              this.gratnedSystems.push('Jira_Dahsboard');
-            }
-            this.setLoggedInUser();
-          }
-
-          // this.handleUserSystems();
+          this.handleSingleSystemAccess(res);
         } else if (res.dto.systems.length > 1) {
-          this.loggedInUser = {
-            name: res.dto.displayName,
-            id: res.dto.id,
-            email: res.dto.username,
-            username: res.dto.username,
-            jobTitle: '',
-            userGroups: res.dto.userGroupedMenusDTO,
-          };
-          if (res.dto.systems.includes('TP_DashboardUsers')) {
-            this.handleTPSysNeeds(res);
-          }
-          if (res.dto.systems.includes('CEO_DashboardUsers')) {
-            this.cookieService.put('ceo-username', res.dto.username);
-          }
-
-          if (
-            res.dto.systems.includes('FRAUD_ManagementUsers') ||
-            res.dto.systems.includes('DI_Management') ||
-            res.dto.systems.includes('DI_Milestones') ||
-            res.dto.systems.includes('Jira_Dahsboard')
-          ) {
-            this.setLoggedInUser();
-          }
-
-          this.gratnedSystems = res.dto.systems;
-          this.cookieService.put(
-            'granted-systems',
-            JSON.stringify(this.gratnedSystems)
-          );
-          this.router.navigate(['/apps']);
-
-          //  this.setLoggedInUser();
-          // this.handleUserSystems();
+          this.handleMultipleSystemAccess(res);
         } else {
           this.cookieService.removeAll();
           this.toastr.error(
@@ -200,8 +124,92 @@ export class AuthService {
       });
   }
 
+  /**
+   * Handles access for users with a single system.
+   * @param res - User data response
+   */
+  private handleSingleSystemAccess(res: UserData) {
+    if (res.dto.systems.includes('TP_DashboardUsers')) {
+      this.handleTPSysNeeds(res);
+      this.gratnedSystems.push('TP_DashboardUsers');
+      this.router.navigate(['/apps']);
+    } else if (res.dto.systems.includes('CEO_DashboardUsers')) {
+      this.cookieService.put('ceo-username', res.dto.username);
+      this.gratnedSystems.push('CEO_DashboardUsers');
+      this.router.navigate(['/apps', res]);
+    } else if (
+      res.dto.systems.includes('FRAUD_ManagementUsers') ||
+      res.dto.systems.includes('DI_Management') ||
+      res.dto.systems.includes('DI_Milestones')
+    ) {
+      this.handleFraudOrDIManagementAccess(res);
+    }
+    this.cookieService.put(
+      'granted-systems',
+      JSON.stringify(this.gratnedSystems)
+    );
+  }
+
+  /**
+   * Handles access for users with multiple systems.
+   * @param res - User data response
+   */
+  private handleMultipleSystemAccess(res: UserData) {
+    this.loggedInUser = {
+      name: res.dto.displayName,
+      id: res.dto.id,
+      email: res.dto.username,
+      username: res.dto.username,
+      jobTitle: '',
+      userGroups: res.dto.userGroupedMenusDTO,
+    };
+    if (res.dto.systems.includes('TP_DashboardUsers')) {
+      this.handleTPSysNeeds(res);
+    }
+    if (res.dto.systems.includes('CEO_DashboardUsers')) {
+      this.cookieService.put('ceo-username', res.dto.username);
+    }
+    if (
+      res.dto.systems.includes('FRAUD_ManagementUsers') ||
+      res.dto.systems.includes('DI_Management') ||
+      res.dto.systems.includes('DI_Milestones') ||
+      res.dto.systems.includes('Jira_Dahsboard')
+    ) {
+      this.setLoggedInUser();
+    }
+    this.gratnedSystems = res.dto.systems;
+    this.cookieService.put(
+      'granted-systems',
+      JSON.stringify(this.gratnedSystems)
+    );
+    this.router.navigate(['/apps']);
+  }
+
+  /**
+   * Handles access to Fraud or DI Management systems.
+   * @param res - User data response
+   */
+  private handleFraudOrDIManagementAccess(res: UserData) {
+    if (res.dto.systems.includes('FRAUD_ManagementUsers')) {
+      this.gratnedSystems.push('FRAUD_ManagementUsers');
+    }
+    if (res.dto.systems.includes('DI_Management')) {
+      this.gratnedSystems.push('DI_Management');
+    }
+    if (res.dto.systems.includes('DI_Milestones')) {
+      this.gratnedSystems.push('DI_Milestones');
+    }
+    if (res.dto.systems.includes('Jira_Dahsboard')) {
+      this.gratnedSystems.push('Jira_Dahsboard');
+    }
+    this.setLoggedInUser();
+  }
+
+  /**
+   * Sets the logged-in user details.
+   */
   setLoggedInUser(): void {
-    if (this.setCurrentLoggedInUser == false) {
+    if (!this.setCurrentLoggedInUser) {
       this.setCurrentLoggedInUser = true;
       this.cookieService.put(
         'granted-systems',
@@ -212,40 +220,59 @@ export class AuthService {
         .subscribe(async (res: LoggedUser) => {
           this.loggedInUser = res;
           this.loggedUserStream.next(res);
-          // this.cookieService.put('USER_FULLNAME', res.name);
           this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
-
-          if (this.gratnedSystems.length == 1) {
-            if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
-              this.router.navigate(['users-setting']);
-            } else {
-              if (this.gratnedSystems[0] == 'DI_Management') {
-                window.location.href =
-                  window.location.origin + environment.systems.di_system;
-              } else if (this.gratnedSystems[0] == 'FRAUD_ManagementUsers') {
-                window.location.href =
-                  window.location.origin + environment.systems.fraud_system;
-              } else if (this.gratnedSystems[0] == 'DI_Milestones') {
-                window.location.href =
-                  window.location.origin +
-                  environment.systems.di_milestones_system;
-              } else {
-                console.log('not handled system');
-              }
-            }
-          } else {
-            this.router.navigate(['/apps']);
-          }
+          this.handleSingleGrantedSystem(res);
         });
     }
   }
 
+  /**
+   * Handles navigation for a single granted system.
+   * @param res - Logged user response
+   */
+  private handleSingleGrantedSystem(res: LoggedUser) {
+    if (this.gratnedSystems.length == 1) {
+      if (res.userGroups[0].roles[0].roleName === 'ADMINS') {
+        this.router.navigate(['users-setting']);
+      } else {
+        this.navigateToSystem(this.gratnedSystems[0]);
+      }
+    } else {
+      this.router.navigate(['/apps']);
+    }
+  }
+
+  /**
+   * Navigates to the specified system.
+   * @param system - System name
+   */
+  private navigateToSystem(system: string) {
+    const systemUrls: Record<string, string> = {
+      DI_Management: environment.systems.di_system,
+      FRAUD_ManagementUsers: environment.systems.fraud_system,
+      DI_Milestones: environment.systems.di_milestones_system,
+    };
+    const url = systemUrls[system];
+    if (url) {
+      window.location.href = window.location.origin + url;
+    } else {
+      console.log('not handled system');
+    }
+  }
+
+  /**
+   * Retrieves all systems available to the user.
+   * @returns An Observable of the available systems
+   */
   getAllSystem() {
     return this.http.get<System[]>(`${this.baseUrl}/users/systems`);
   }
 
-  // function to handle TP
-  handleTPSysNeeds(res: any) {
+  /**
+   * Handles the needs for TP system access.
+   * @param res - User data response
+   */
+  handleTPSysNeeds(res: UserData) {
     const TPUserMode: TPUserModel = {
       username: res.dto.username,
       token: this.cookieService.get('token') || '',
@@ -260,37 +287,6 @@ export class AuthService {
 
     this.cookieService.put('tp-role', res.dto.userRole.environmentName);
   }
-
-  // function to handle Fraud Management System
-  // function to handle navigate Fraud Management System
-  // navigateToLFraudPages() {
-  //   if (
-  //     this.loggedUserStream?.getValue()?.userGroups[0].roles[0].roleName ===
-  //     'ADMINS'
-  //   ) {
-  //     this.router.navigate(['users-setting']);
-  //   } else {
-  //     window.location.href = this.availableSystems[0]?.systemUrl
-  //       ? this.availableSystems[0]?.systemUrl
-  //       : 'http://localhost:51635/#/home';
-  //   }
-  // }
-
-  // function to handle DI Dashboard System
-
-  // function to handle navigate DI System
-  // navigateToLDIPages() {
-  //   if (
-  //     this.loggedUserStream?.getValue()?.userGroups[0].roles[0].roleName ===
-  //     'ADMINS'
-  //   ) {
-  //     this.router.navigate(['users-setting']);
-  //   } else {
-  //     window.location.href = this.availableSystems[0]?.systemUrl
-  //       ? this.availableSystems[0]?.systemUrl
-  //       : 'http://localhost:51635/#/home';
-  //   }
-  // }
 
   // function to Filter All system according to loged user Fraud
   filterSys(allSys: System[], res: LoggedUser) {

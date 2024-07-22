@@ -38,7 +38,6 @@ export class VpReportComponent implements OnInit {
     const reportData = this.reportData();
     let data: ProgressInfo;
     if (reportData) {
-      console.log('Data is true:', reportData);
       data = {
         prefixText: 'Baseline',
         prefixValue: this.reportData()!.baseline,
@@ -46,11 +45,25 @@ export class VpReportComponent implements OnInit {
         suffixValue: this.reportData()!.targetEoy,
         progressValue: this.reportData()!.actual,
         indexes: [
-          { caption: 'Actual', value: this.reportData()!.actual , position: 'up' },
-          { caption: 'Target', value: this.reportData()!.target , position: 'down'},
+          {
+            caption: 'Actual',
+            value: this.reportData()!.actual,
+            position: 'up',
+          },
+          {
+            caption: `${this.getCurrentQuarter()} Target`,
+            value: this.reportData()!.target,
+            position: 'down',
+          },
         ],
-        barColor: this.reportData()!.actual < this.reportData()!.target ? '#c82a27' : '#00c48c',
-        bgBarColor: this.reportData()!.actual < this.reportData()!.target ? '#c82a271a' : '#00c48c1a'
+        barColor:
+          this.reportData()!.actual < this.reportData()!.target
+            ? '#c82a27'
+            : '#00c48c',
+        bgBarColor:
+          this.reportData()!.actual < this.reportData()!.target
+            ? '#c82a271a'
+            : '#00c48c1a',
       };
     } else {
       console.log('Data is null:', reportData);
@@ -61,8 +74,8 @@ export class VpReportComponent implements OnInit {
         suffixValue: 0,
         progressValue: 0,
         indexes: [
-          { caption: 'Actual', value: 0 , position: 'up' },
-          { caption: 'Target', value: 0 , position: 'down'},
+          { caption: 'Actual', value: 0, position: 'up' },
+          { caption: 'Target', value: 0, position: 'down' },
         ],
       };
     }
@@ -76,6 +89,7 @@ export class VpReportComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.milestonesService.checkIsBusinessSpoc();
     this.yearsArrPopulator();
     this.filterSelect = new FormGroup({
       dateType: new FormControl(''),
@@ -166,6 +180,15 @@ export class VpReportComponent implements OnInit {
   }
 
   protected goEditPage() {
-    this.router.navigate(['vp-report/edit'], {queryParams: {year: this.selectedYear(), team: this.selectedTeam()} });
+    this.router.navigate(['vp-report/edit'], {
+      queryParams: { year: this.selectedYear(), team: this.selectedTeam() },
+    });
+  }
+
+  getCurrentQuarter(): string {
+    const today = new Date();
+    const month = today.getMonth();
+    const quarter = Math.floor(month / 3) + 1;
+    return `Q${quarter}`;
   }
 }

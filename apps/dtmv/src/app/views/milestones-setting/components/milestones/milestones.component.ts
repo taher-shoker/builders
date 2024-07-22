@@ -1,6 +1,14 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterContentChecked,
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
@@ -18,6 +26,13 @@ import { UpdateProgressDialogComponent } from '../updateProgressDialog/updatePro
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { saveAs } from 'file-saver';
+import {
+  trigger,
+  state,
+  style,
+  transition,
+  animate,
+} from '@angular/animations';
 
 export interface Milestone {
   activityName: string;
@@ -32,9 +47,31 @@ export interface Milestone {
   selector: 'stc-apps-casses',
   templateUrl: './milestones.component.html',
   styleUrls: ['./milestones.component.scss'],
+  animations: [
+    trigger('slideInOut', [
+      state(
+        'in',
+        style({
+          right: '0',
+        })
+      ),
+      state(
+        'out',
+        style({
+          right: '-500px',
+        })
+      ),
+      transition('out => in', [animate('300ms ease-in')]),
+      transition('in => out', [animate('300ms ease-out')]),
+    ]),
+  ],
 })
-export class MilestonesComponent implements OnInit, OnDestroy {
-  @ViewChild('customTemplate') customTemplate!: any;
+export class MilestonesComponent
+  implements OnInit, AfterViewInit, AfterContentChecked, OnDestroy
+{
+  @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
+  @ViewChild('validationCustomTemplate') validationCustomTemplate!: any;
+  @ViewChild('progressCustomTemplate') progressCustomTemplate!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -58,6 +95,11 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     { statusName: 'Closed' },
   ];
 
+  inValidationOption: { name: string; value: string }[] = [
+    { name: '-', value: '-' },
+    { name: 'In Validation', value: 'In-Validation' },
+  ];
+
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -77,60 +119,7 @@ export class MilestonesComponent implements OnInit, OnDestroy {
   addMilestoneNavigate(): void {
     this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
-  columnsSchema: ColumnsSchema[] = [
-    {
-      key: 'activityName',
-      type: 'text',
-      label: 'Activity',
-    },
-    {
-      key: 'milestoneName',
-      type: 'text',
-      label: 'Milestone Name',
-      // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
-      //   return `
-      //   <p>${item[header!.key]}</p>
-      //   <p>${item[header!.key]} mixed complex</p>
-      //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
-      //   `;
-      // },
-      complexView: true,
-      // complexViewTemp: this.customTemplate
-    },
-    {
-      key: 'completionLevel',
-      type: 'text',
-      label: 'Completion Level',
-    },
-    {
-      key: 'latestWorkflowId',
-      type: 'custom',
-      label: 'Validation Status',
-    },
-    {
-      key: 'teamName',
-      type: 'text',
-      label: 'Team',
-    },
-    {
-      key: 'status',
-      type: 'text',
-      label: 'Status',
-      complexView: true,
-    },
-
-    {
-      key: 'actions',
-      type: 'actions',
-      actions: !this.milestonesService.checkIsAdmin()
-        ? this.milestonesService.checkIsBusinessSpoc() ||
-          this.milestonesService.checkIsDirector()
-          ? ['details']
-          : ['edit', 'details']
-        : ['edit', 'delete', 'details'],
-      label: '',
-    },
-  ];
+  columnsSchema: ColumnsSchema[] = [];
 
   disabled = false;
   tableData!: any;
@@ -156,6 +145,75 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+  }
+
+  ngAfterViewInit(): void {
+    this.columnsSchema = [
+      {
+        key: 'teamName',
+        type: 'text',
+        label: 'Team',
+      },
+      {
+        key: 'workStream',
+        type: 'text',
+        label: 'Work Stream',
+      },
+      {
+        key: 'milestoneName',
+        type: 'text',
+        label: 'Milestone Name',
+      },
+      {
+        key: 'completionLevel',
+        type: 'text',
+        label: 'Completion Level',
+      },
+      {
+        key: 'validationStatus',
+        type: 'text',
+        label: 'Validation Status',
+        complexViewTemp: this.validationCustomTemplate,
+      },
+      {
+        key: 'lastApprovedProgress',
+        type: 'text',
+        label: 'Progress',
+        complexViewTemp: this.progressCustomTemplate,
+      },
+      {
+        key: 'startDate',
+        type: 'text',
+        label: 'Start Date',
+      },
+      {
+        key: 'endDate',
+        type: 'text',
+        label: 'End Date',
+      },
+      {
+        key: 'status',
+        type: 'text',
+        label: 'Status',
+        complexViewTemp: this.statusCustomTemplate,
+      },
+
+      {
+        key: 'actions',
+        type: 'actions',
+        actions: !this.milestonesService.checkIsAdmin()
+          ? this.milestonesService.checkIsBusinessSpoc() ||
+            this.milestonesService.checkIsDirector()
+            ? ['details']
+            : ['edit', 'details']
+          : ['edit', 'delete', 'details'],
+        label: '',
+      },
+    ];
+  }
+
+  ngAfterContentChecked(): void {
+    this.handlePendingActionsList(window.innerWidth);
   }
 
   getPendingTasks() {
@@ -204,7 +262,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
         },
       });
     } else {
-      const id = item.externalSystemId;
+      let id;
+      if (item.externalSystemId) {
+        id = item.externalSystemId;
+      } else {
+        id = item;
+      }
       this.router.navigate(['./milestone_details', id], {
         relativeTo: this.route,
       });
@@ -305,10 +368,12 @@ export class MilestonesComponent implements OnInit, OnDestroy {
     this.form = this.formBuilder.group({
       milestoneName: ['', { nonNullable: true }],
       milestoneId: ['', { nonNullable: true }],
-      team: ['', { nonNullable: true }],
+      teamName: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
       month: ['', { nonNullable: true }],
       year: ['', { nonNullable: true }],
+      workStream: ['', { nonNullable: true }],
+      validationStatus: ['', { nonNullable: true }],
     });
   }
 
@@ -391,6 +456,35 @@ export class MilestonesComponent implements OnInit, OnDestroy {
       .subscribe((res: any) => {
         this.populateMilestones(res);
       });
+  }
+
+  // resize(event: UIEvent) {
+  //   const mutatedEvent = event.target as Window;
+  //   this.handlePendingActionsList(mutatedEvent.innerWidth);
+  // }
+
+  showPendingActionsBtn: boolean = false;
+
+  pendingActionsShown: 'in' | 'out' = 'in';
+  tableCols: number = 8;
+
+  isPendingListClosable: boolean = false;
+
+  toggleAnimation() {
+    this.pendingActionsShown =
+      this.pendingActionsShown === 'out' ? 'in' : 'out';
+  }
+
+  handlePendingActionsList(width: number) {
+    if (width < 1630) {
+      this.tableCols = 12;
+      this.showPendingActionsBtn = true;
+      this.isPendingListClosable = true;
+    } else if (width > 1630) {
+      this.showPendingActionsBtn = false;
+      this.isPendingListClosable = false;
+      this.tableCols = 8;
+    }
   }
 
   ngOnDestroy(): void {

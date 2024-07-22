@@ -51,6 +51,7 @@ export class UpdateMilestoneProgressDialogComponent {
       type: string;
       milestoneName: string;
       milestoneId: number | string;
+      showAttachment: boolean
     },
     private milestonesService: MilestonesService
   ) {

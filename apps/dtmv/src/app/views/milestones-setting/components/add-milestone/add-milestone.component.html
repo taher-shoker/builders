@@ -1,57 +1,114 @@
 <div class="add-layout bg-white">
-  <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="start" animationDuration="0ms">
+  <mat-tab-group
+    mat-stretch-tabs="false"
+    mat-align-tabs="start"
+    animationDuration="0ms"
+  >
     @if (!milestonesService.isDTAdmin) {<mat-tab label="Fill the form">
-      <stc-apps-milestone-form></stc-apps-milestone-form></mat-tab>
+      <stc-apps-milestone-form></stc-apps-milestone-form
+    ></mat-tab>
     }
     <mat-tab label="Upload Bulk file">
       <div class="p-50">
-        <form class='upload-form' [formGroup]="form" (ngSubmit)="onSubmit()">
+        <form class="upload-form" [formGroup]="form" (ngSubmit)="onSubmit()">
           <div class="row">
             <div class="col-md-6">
-              <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Related Team'" [options]="allTeams"
-                [required]="true" formControlName="teamName" [outputValue]="'name'"></stc-apps-select-drop-down>
+              <stc-apps-select-drop-down
+                [selectId]="selectTeam || null"
+                [label]="'Related Team'"
+                [options]="allTeams"
+                [required]="true"
+                formControlName="teamName"
+                [outputValue]="'name'"
+              ></stc-apps-select-drop-down>
             </div>
+
+            <div class="col-md-6">
+              <div class="download-btn-holder">
+                <stc-apps-button
+                  [buttonText]="'Download Template'"
+                  [buttonType]="'primary'"
+                  [actionType]="'button'"
+                  (btnClick)="downloadTemplate()"
+                ></stc-apps-button>
+              </div>
+            </div>
+
             <div class="col-12">
               <div>
                 <label for="">Upload File :</label>
-                <div *ngIf="files.length === 0 || errorSize || errorType " class='file-uploader' [ngClass]="form.controls['file'].invalid &&
-                                                      (form.controls['file'].dirty ||
-                                                        form.controls['file'].touched) ? 'error' : ''"
-                  (click)='uploadClick()'>
-                  <input #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)" name="file"
-                    hidden accept="{{accept}}">
+                <div
+                  *ngIf="files.length === 0 || errorSize || errorType"
+                  class="file-uploader"
+                  [ngClass]="
+                    form.controls['file'].invalid &&
+                    (form.controls['file'].dirty ||
+                      form.controls['file'].touched)
+                      ? 'error'
+                      : ''
+                  "
+                  (click)="uploadClick()"
+                >
+                  <input
+                    #fileUpload
+                    class="file-input"
+                    type="file"
+                    (change)="handleUploadChange($event)"
+                    name="file"
+                    hidden
+                    accept="{{ accept }}"
+                  />
                   @if (errorType || errorSize) {
-                  <div class='text-center'>
-                    <img src="assets/images/file-uploader-error.png" alt="upload" />
-                    <h4 class="error-file">Sorry !
-                    </h4>
-                    @if (errorType) {<p>Please ensure your file is in a supported format(csv)."</p>
-                    }
-                    @else {
+                  <div class="text-center">
+                    <img
+                      src="assets/images/file-uploader-error.png"
+                      alt="upload"
+                    />
+                    <h4 class="error-file">Sorry !</h4>
+                    @if (errorType) {
+                    <p>
+                      Please ensure your file is in a supported format(csv)."
+                    </p>
+                    } @else {
                     <p>Please ensure your file is less than 20M. "</p>
 
                     }
-                  </div>}
-                  @else {<div class='text-center'>
+                  </div>
+                  } @else {
+                  <div class="text-center">
                     <img src="assets/images/file-uploader.png" alt="upload" />
-                    <h4>Upload Bulk file,
-                    </h4>
-                    <p>be sure that the file contain all required data and file format is csv file</p>
-                  </div>}
+                    <h4>Upload Bulk file,</h4>
+                    <p>
+                      be sure that the file contain all required data and file
+                      format is csv file
+                    </p>
+                  </div>
+                  }
                 </div>
 
-                <div class="error-file" *ngIf="  form.controls['file'].invalid &&
-                                                      (form.controls['file'].dirty ||
-                                                        form.controls['file'].touched)">This Field Is Required</div>
-
+                <div
+                  class="error-file"
+                  *ngIf="
+                    form.controls['file'].invalid &&
+                    (form.controls['file'].dirty ||
+                      form.controls['file'].touched)
+                  "
+                >
+                  This Field Is Required
+                </div>
               </div>
-              <div class='file-box' *ngIf='files && files.length >  0 && !errorSize && !errorType'>
+              <div
+                class="file-box"
+                *ngIf="files && files.length > 0 && !errorSize && !errorType"
+              >
                 <div class="file">
-                  <span><i class="pi pi-file-o"></i>
-                    {{ files[0].name }}</span>
+                  <span><i class="pi pi-file-o"></i> {{ files[0].name }}</span>
 
-                  <i role="button" class="fa fa-times-circle " (click)="clearInputElement()"></i>
-
+                  <i
+                    role="button"
+                    class="fa fa-times-circle"
+                    (click)="clearInputElement()"
+                  ></i>
                 </div>
               </div>
             </div>
@@ -61,13 +118,21 @@
               <div class="row">
                 <div class="col-4"></div>
                 <div class="col-4">
-                  <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
-                    (btnClick)="cancel()"></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'Cancel'"
+                    [buttonType]="'gray-outline'"
+                    (btnClick)="cancel()"
+                  ></stc-apps-button>
                 </div>
                 <div class="col-4">
-                  <stc-apps-button [buttonText]="'Upload'" [buttonType]="'primary'" [loading]="isLoading "
-                    (btnClick)="onSubmit()" [buttonDisable]=" errorSize || errorType"
-                    [actionType]="'submit'"></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'Upload'"
+                    [buttonType]="'primary'"
+                    [loading]="isLoading"
+                    (btnClick)="onSubmit()"
+                    [buttonDisable]="errorSize || errorType"
+                    [actionType]="'submit'"
+                  ></stc-apps-button>
                 </div>
               </div>
             </div>

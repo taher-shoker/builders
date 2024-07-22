@@ -2,9 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  MilestonesService,
-} from '../milestones-setting/milestones.service';
+import { MilestonesService } from '../milestones-setting/milestones.service';
 
 @Component({
   selector: 'stc-apps-home',
@@ -37,7 +35,7 @@ export class HomeComponent implements OnInit {
       name: 'Vp Report',
       url: '/vp-report',
       icon: 'fa-file-signature',
-      roles: ['VP'],
+      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO'],
       urlHome: '/home',
     },
   ];
@@ -66,7 +64,7 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  clickRemider(item: any) {
+  clickReminder(item: any) {
     this.detailsNavigate(item?.milestoneId);
   }
 

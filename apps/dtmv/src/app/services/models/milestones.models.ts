@@ -86,6 +86,7 @@ export class Actions {
 }
 
 export interface MilestoneDetails {
+  workStream: string;
   activityName: string | null;
   createdByEmail: string | null;
   createdByName: string | null;
@@ -264,7 +265,11 @@ export interface ReportDataWorkflow {
   requestTaskAttributes: { id: number; name: string; value: string }[];
   requestTaskId: number;
   status: 'pending' | 'completed';
-  taskName: 'Approve Report Data' | 'Edit Report Data';
+  taskName:
+    | 'Approve Report Data'
+    | 'Edit Report Data'
+    | 'Approve Report Data PMO'
+    | 'Approve Report Data Director';
   userDisplayName: string | null;
   username: string | null;
   params: {

@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-9">
-          <h3>G Chief of Staff DT Progress Report</h3>
+          <h3>{{ selectedTeam() }} DT Progress Report</h3>
         </div>
         <div class="col-md-3" [formGroup]="filterSelect">
           <div class="d-flex flex-wrap align-items-center">
@@ -20,7 +20,7 @@
       </div>
       <div class="row mt-6">
         <div class="col-md-12">
-          <h4>Search with team</h4>
+          <h4>Select a Charter</h4>
         </div>
         <div class="col-md-12">
           <ul class="teams">
@@ -48,7 +48,7 @@
         </div>
         <div class="col-md-8">
           <div class="container-box">
-            <h5>GCoS DT Progress</h5>
+            <h5>{{ selectedTeam() }} DT Progress</h5>
             <div class="bar-holder">
               <stc-apps-progress-bar
                 [data]="progressBarData()"
@@ -88,7 +88,7 @@
             [animateMilestones]="true"
           ></stc-apps-timeline-chart>
         </div>
-        <!-- 
+        <!--
           @if (i + 1 !== dtStreams().length) {
           <div class="chart-liner"></div>
           } -->
@@ -101,7 +101,12 @@
           <p class="highlight-title">
             DT Program Highlight
 
-            <span class="edit-link" (click)="goEditPage()">Edit</span>
+            <span
+              class="edit-link"
+              *ngIf="!milestonesService.isBusinessSpoc"
+              (click)="goEditPage()"
+              >Edit</span
+            >
           </p>
           <quill-editor
             [readOnly]="true"
@@ -114,7 +119,12 @@
           <p class="impact-title">
             Value / Impact
 
-            <span class="edit-link" (click)="goEditPage()">Edit</span>
+            <span
+              class="edit-link"
+              *ngIf="!milestonesService.isBusinessSpoc"
+              (click)="goEditPage()"
+              >Edit</span
+            >
           </p>
           <quill-editor
             [readOnly]="true"
