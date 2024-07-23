@@ -1,14 +1,21 @@
 <div class="home-page">
   <stc-apps-top-banner></stc-apps-top-banner>
   <div class="kpis-card-holder row">
-    @for(kpi of kpis;track kpi){
+    @for(kpi of kpis;track kpi; let index = $index ){
     <div class="col-md-6 col-lg-3">
       <stc-apps-kpi-card-header
         class="card-header position-relative"
         [kpiTitle]="kpi.title"
         [iconPath]="kpi.iconPath"
       ></stc-apps-kpi-card-header>
-      <stc-apps-kpi-card> </stc-apps-kpi-card>
+      <stc-apps-kpi-card
+        [currentContents]="getCurrentContents(index)"
+        [kpiTitle]="kpi.title"
+        [activeIndex]="activeIndex"
+        (mouseover)="onCardHover(index)"
+        (mouseleave)="onCardLeave()"
+      >
+      </stc-apps-kpi-card>
     </div>
     }
   </div>
