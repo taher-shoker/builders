@@ -10,7 +10,7 @@
     position: absolute;
     top: 12px;
   }
-  &_content-holder{
+  &_content-holder {
     margin-top: 40px;
   }
   &_content {
@@ -23,19 +23,22 @@
     border-bottom: 1px solid var(--borderGreyColor);
   }
   &_footer {
-    transition: transform ease-in-out 0.4s;
-    cursor: pointer;
+   
     display: flex;
     font-weight: 300;
     font-size: 18px;
-    height: 42%;
+    height: 48%;
     font-family: var(--stc-font-light);
     justify-content: center;
     text-decoration: underline;
     align-items: end;
     color: var(--stc-color);
   }
-  &_footer:hover{
+  &_footer-content {
+    transition: transform ease-in-out 0.4s;
+    cursor: pointer;
+  }
+  &_footer-content:hover {
     transform: translateX(5px);
   }
 }
