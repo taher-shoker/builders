@@ -176,7 +176,7 @@ export interface MilestoneAttachment {
 export class MilestonesService {
   baseUrl = environment.apiUrl;
   adminUrl = `${this.baseUrl}v2/admin`;
-  dtUrl = `${this.baseUrl}v2/dt-milestone-service/milestones`;
+  dtUrl = `${this.baseUrl}v2/report-flow-service/requests`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
@@ -203,11 +203,16 @@ export class MilestonesService {
   }
 
   setSystemParam(): HttpParams {
-    return new HttpParams().set('system', 'DI_Milestones');
+    return new HttpParams().set('system', 'Dynamic_Report_Flow');
   }
 
   setSystemTeams(): Observable<any[]> {
     return this.http.get<any[]>(`${this.adminUrl}/teams`, {
+      params: this.setSystemParam(),
+    });
+  }
+  getUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.adminUrl}/users`, {
       params: this.setSystemParam(),
     });
   }
@@ -257,8 +262,8 @@ export class MilestonesService {
     return this.isDTAdmin;
   }
 
-  createMilestone(data: any) {
-    return this.http.post(`${this.dtUrl}/add`, data);
+  createReportFlow(data: any) {
+    return this.http.post(`${this.dtUrl}`, data);
   }
 
   addBulkData(data: FormData, relatedTeam: string) {
@@ -285,7 +290,7 @@ export class MilestonesService {
     return this.http.get(`${this.dtUrl}/${id}`);
   }
 
-  updateMilestone(id: string, data: any) {
+  updateReportFlow(id: string, data: any) {
     return this.http.put(`${this.dtUrl}/update`, {
       id: id,
       ...data,

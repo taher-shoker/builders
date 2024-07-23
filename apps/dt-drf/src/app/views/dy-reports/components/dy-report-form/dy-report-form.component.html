@@ -14,14 +14,15 @@
         </div>
         <div class="col-md-4">
           <stc-apps-select-drop-down [searchMode]="true" [selectId]="selectTeam || null" [label]="'Category'"
-            [options]="users" [required]="true" formControlName="category" [outputValue]="'name'"
+            [options]="users" [required]="true" formControlName="requestCategoryId" [outputValue]="'id'"
             [disabled]="true"></stc-apps-select-drop-down>
 
         </div>
       </div>
       <div class="row mt-7 align-items-center">
         <div class="col-md-2 ">
-          <stc-apps-checkbox [label]="'Custom SLA'" formControlName="sla" [name]="'sla'"></stc-apps-checkbox>
+          <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Custom SLA'" formControlName="sla"
+            [name]="'sla'"></stc-apps-checkbox>
         </div>
         <div class="col-md-4" *ngIf="form.get('sla')?.value">
           <stc-apps-select-drop-down [label]="'Custom SLA '" [options]="customRangeSLA" [required]="true"
@@ -30,12 +31,12 @@
         </div>
 
         <div class="col-md-2">
-          <stc-apps-checkbox [label]="'Assign Creator '" formControlName="isCreator"
-            [name]="'isCreator'"></stc-apps-checkbox>
+          <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
+            formControlName="needMoreDataFromCreator" [name]="'needMoreDataFromCreator'"></stc-apps-checkbox>
         </div>
-        <div class="col-md-4" *ngIf="form.get('isCreator')?.value">
+        <div class="col-md-4" *ngIf="form.get('needMoreDataFromCreator')?.value">
           <stc-apps-select-drop-down [selectId]="selectTeam || null" [label]="'Creator Name'" [options]="users"
-            [required]="true" formControlName="creatorName" [outputValue]="'name'"
+            [required]="true" [searchMode]="true" formControlName="creatorName"
             [disabled]="true"></stc-apps-select-drop-down>
 
         </div>
@@ -47,14 +48,14 @@
           <div>
             <label for="">Upload File :</label>
             <div *ngIf="files.length === 0 || errorSize || errorType" class="file-uploader" [ngClass]="
-                        form.controls['file'].invalid &&
-                        (form.controls['file'].dirty ||
-                          form.controls['file'].touched)
+                        form.controls['attachments'].invalid &&
+                        (form.controls['attachments'].dirty ||
+                          form.controls['attachments'].touched)
                           ? 'error'
                           : ''
                       " (click)="uploadClick()">
-              <input #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)" name="file" hidden
-                accept="{{ config_service.getConfig().fileValidation.acceptType }}" />
+              <input #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)" name="attachments"
+                hidden accept="{{ config_service.getConfig().fileValidation.acceptType }}" />
               @if (errorType || errorSize) {
               <div class="text-center">
                 <img src="assets/images/file-uploader-error.png" alt="upload" />
@@ -81,9 +82,9 @@
             </div>
 
             <div class="error-file" *ngIf="
-                        form.controls['file'].invalid &&
-                        (form.controls['file'].dirty ||
-                          form.controls['file'].touched)
+                        form.controls['attachments'].invalid &&
+                        (form.controls['attachments'].dirty ||
+                          form.controls['attachments'].touched)
                       ">
               This Field Is Required
             </div>
@@ -135,9 +136,8 @@
                                         Required Field
                                       </mat-error>
                                           </mat-form-field> -->
-                    <stc-apps-select-drop-down [searchMode]="true" [selectId]="selectTeam || null" [options]="users"
-                      [required]="true" formControlName="username" [outputValue]="'name'"
-                      [disabled]="true"></stc-apps-select-drop-down>
+                    <stc-apps-select-drop-down [searchMode]="true" [selectId]="selectTeam || null" [options]="approvers"
+                      formControlName="username" [disabled]="true"></stc-apps-select-drop-down>
 
                   </div>
                   <div class="col-md-1">

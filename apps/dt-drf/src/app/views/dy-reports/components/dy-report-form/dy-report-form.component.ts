@@ -13,6 +13,7 @@ import {
   AbstractControl,
   FormArray,
   FormBuilder,
+  FormControl,
   FormGroup,
   Validators,
 } from '@angular/forms';
@@ -55,72 +56,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
   form!: FormGroup;
-  users: User[] = [
-    {
-      id: 466,
-      username: 'mohfibrahim.c@stc.com.sa',
-      name: 'Fawzy',
-      email: 'mohfibrahim.c@stc.com.sa',
-      jobTitle: 'Developer',
-    },
-    {
-      id: 379,
-      username: 'omarr',
-      name: 'omar.ali',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-    {
-      id: 39,
-      username: 'rr',
-      name: 'rr',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-    {
-      id: 79,
-      username: 'tt',
-      name: 'tt',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-    {
-      id: 30,
-      username: 'cvc',
-      name: 'cvd',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-    {
-      id: 379,
-      username: 'omarr',
-      name: 'omar.ali',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-    {
-      id: 379,
-      username: 'omarr',
-      name: 'omar.ali',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-    {
-      id: 379,
-      username: 'omarr',
-      name: 'omar.ali',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-    {
-      id: 379,
-      username: 'nnnnn',
-      name: 'nnnnn',
-      email: 'omarli.c@stc.com.sa',
-      jobTitle: 'Tester',
-    },
-  ];
-
+  users: User[] = [];
+  approvers: User[] = [];
   files: File[] = [];
   formData = new FormData();
   isLoading = false;
@@ -156,18 +93,19 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.initReportForm();
     this.ManageUserNameControl(0);
     this.customSLAPopulator();
+    this.getUsersListing();
   }
 
   initReportForm() {
     this.form = this._formBuilder.group({
       reportName: ['', [Validators.required, Validators.maxLength(100)]],
       description: ['', [Validators.maxLength(150)]],
-      category: ['', Validators.required],
+      requestCategoryId: ['', Validators.required],
       sla: [''],
-      customSLA: ['', Validators.required],
-      isCreator: [''],
+      customSLA: [''],
+      needMoreDataFromCreator: [false],
       creatorName: [''],
-      file: ['', Validators.required],
+      attachments: [[]],
       requestApprovals: this._formBuilder.array([]),
     });
     this.addNewStep();
@@ -177,37 +115,48 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     console.log(data);
   }
   onSubmit() {
+    // console.log(this.form.value);
+
     if (this.form.valid) {
-      let finalData = {
-        ...this.form.value,
-        weight: +this.form.get('weight')?.value,
-      };
-      if (this.isEditing) {
-        finalData = { ...finalData, teamName: '4' };
-        this.milestonesService
-          .updateMilestone('1', finalData)
-          .subscribe((res) => {
-            if (res) {
-              this.toastr.success('Milestone has been edited successfully');
-              this.form.reset();
-              this.router.navigate(['./home']);
-            }
-          });
-      } else {
-        this.milestonesService.createMilestone(finalData).subscribe((res) => {
-          if (res) {
-            this.toastr.success('Milestone has been created successfully');
-            this.form.reset();
-            this.router.navigate(['./home']);
-          }
-        });
-      }
+      console.log(this.form.value);
+      // let finalData = {
+      //   ...this.form.value,
+      //   weight: +this.form.get('weight')?.value,
+      // };
+      // if (this.isEditing) {
+      //   finalData = { ...finalData, teamName: '4' };
+      //   this.milestonesService
+      //     .updateReportFlow('1', finalData)
+      //     .subscribe((res) => {
+      //       if (res) {
+      //         this.toastr.success('Milestone has been edited successfully');
+      //         this.form.reset();
+      //         this.router.navigate(['./home']);
+      //       }
+      //     });
+      // } else {
+      //   this.milestonesService.createReportFlow(finalData).subscribe((res) => {
+      //     if (res) {
+      //       this.toastr.success('Milestone has been created successfully');
+      //       this.form.reset();
+      //       this.router.navigate(['./home']);
+      //     }
+      //   });
+      // }
     } else {
-      Object.keys(this.form.controls).forEach((field) => {
-        const control = this.form.get(field);
-        control?.markAsTouched({ onlySelf: true });
-      });
+      // Mark all fields as touched to show validation errors
+      this.markFormGroupTouched(this.form);
     }
+  }
+  private markFormGroupTouched(formGroup: FormGroup | FormArray) {
+    Object.keys(formGroup.controls).forEach((field) => {
+      const control = formGroup.get(field);
+      if (control instanceof FormControl) {
+        control.markAsTouched({ onlySelf: true });
+      } else if (control instanceof FormGroup || control instanceof FormArray) {
+        this.markFormGroupTouched(control);
+      }
+    });
   }
   preventComma(event: KeyboardEvent) {
     if (event.key === ',') {
@@ -220,6 +169,14 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
 
+  getUsersListing() {
+    this.milestonesService.getUsers().subscribe((res) => {
+      this.users = res.filter(
+        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
+      );
+      this.approvers = this.users;
+    });
+  }
   customSLAPopulator() {
     const min = +this.config_service.getConfig().rangeForSLA.min;
     const max = +this.config_service.getConfig().rangeForSLA.max;
@@ -234,6 +191,29 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.router.navigate(['../']);
   }
 
+  handleCheck(v: { name: string; value: string }) {
+    const { name, value } = v;
+    if (name === 'needMoreDataFromCreator') {
+      if (value) {
+        this.form
+          .get('needMoreDataFromCreator')
+          ?.setValidators(Validators.required);
+        this.form.get('attachments')?.setValidators(Validators.required);
+      } else {
+        this.form.get('needMoreDataFromCreator')?.clearValidators();
+        this.form.get('attachments')?.clearValidators();
+      }
+      this.form.get('needMoreDataFromCreator')?.updateValueAndValidity();
+      this.form.get('attachments')?.updateValueAndValidity();
+    } else if (name === 'sla') {
+      if (value) {
+        this.form.get('customSLA')?.setValidators(Validators.required);
+      } else {
+        this.form.get('customSLA')?.clearValidators();
+      }
+      this.form.get('customSLA')?.updateValueAndValidity();
+    }
+  }
   /** Uploader functions **/
 
   uploadClick() {
@@ -296,7 +276,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     const newGroup = this._formBuilder.group({
       username: ['', Validators.required],
       sequence: [this.stepCounter++],
-      input: [''],
     });
     this.t.push(newGroup);
     this.ManageUserNameControl(this.t.length - 1);
