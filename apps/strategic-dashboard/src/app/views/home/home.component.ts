@@ -108,6 +108,10 @@ export class HomeComponent {
       ],
     },
   ];
+  details = [
+    'Instill digital mindset and unlock the potential of digital and analytics capabilities',
+    'Transform into agile technology company and embrace new ways of working',
+  ];
   title = 'Digitize STC';
   iconPath = 'assets/images/interaction-icon.svg';
   currentKpi = this.kpis[0];

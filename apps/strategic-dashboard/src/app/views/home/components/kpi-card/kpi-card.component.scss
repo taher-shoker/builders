@@ -10,6 +10,7 @@
   display: flex;
   flex-direction: column;
 
+
   &_header {
     position: absolute;
     top: 12px;
@@ -103,9 +104,8 @@
     font-size: 18px;
     // height: 48%;
     font-family: var(--stc-font-light);
-    justify-content: center;
+    text-align: center;
     text-decoration: underline;
-    align-items: end;
     color: var(--stc-color);
     position: absolute;
     margin-top: 16px;
@@ -122,6 +122,10 @@
 
   &_footer-content:hover {
     transform: translateX(5px);
+  }
+
+  .content-border {
+    border-bottom: 1px solid var(--borderGreyColor);
   }
 
 
