@@ -1,12 +1,33 @@
 <div class="kpi-card">
   <div class="kpi-card_content-holder">
-    <div class="kpi-card_content">
-      Instill digital mindset and unlock the potential of digital and analytics
-      capabilities
+    @if (!isStringContent) {
+    <h4 class="kpi-card_title">{{ kpiTitle() }}</h4>
+    } @for (content of currentContents; track content; let index = $index) {
+    <div
+      class="kpi-card_content"
+      [ngClass]="{  'with-full-border': !isStringContent, 'with-bottom-border': isStringContent, } "
+    >
+      @if (isStringContent) {
+      {{ content }}
+      } @else {
+      <div class="kpi-card_details">
+        <div>
+          <p class="kpi-card_details_title">{{ content.title }}</p>
+          <span
+            class="kpi-card_details_percentage"
+            [ngClass]="getPercentageClass(content.percentage)"
+            >{{ content.percentage }}</span
+          >
+        </div>
+        <img
+          class="kpi-card_details_progress"
+          src="assets/images/progress.svg"
+          [ngClass]="getPercentageClass(content.percentage)"
+        />
+      </div>
+      }
     </div>
-    <div class="kpi-card_content">
-      Transform into agile technology company and embrace new ways of working
-    </div>
+    }
   </div>
   <div class="kpi-card_footer">
     <div class="kpi-card_footer-content">
