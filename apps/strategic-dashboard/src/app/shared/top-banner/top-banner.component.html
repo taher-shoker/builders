@@ -7,3 +7,27 @@
   (backToHome)="backToHome()"
   [showLang]="false"
 ></stc-apps-header>
+
+<div class="banner row row-gap-3">
+  <div class="banner_background_large"></div>
+  <div class="banner_background_small"></div>
+  <div class="col-md-10 col-sm-12">
+    <div class="banner_content">
+      <h1>Strategic Performance Report</h1>
+      <p>
+        Provide overview of strategic KPIs and tracks progress on DARE strategy
+      </p>
+    </div>
+  </div>
+
+  <div class="col-md-2 col-sm-12">
+    <div class="banner_filter">
+      <stc-apps-select-drop-down
+        formControlName="dateType"
+        [label]="'Select FY Year'"
+        [options]="yearsArray"
+        [outputValue]="'name'"
+      ></stc-apps-select-drop-down>
+    </div>
+  </div>
+</div>
