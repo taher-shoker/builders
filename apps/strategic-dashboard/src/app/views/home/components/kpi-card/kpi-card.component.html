@@ -1,12 +1,13 @@
 <div class="kpi-card">
   <div class="kpi-card_content-holder">
-    <div class="kpi-card_content">
-      Instill digital mindset and unlock the potential of digital and analytics
-      capabilities
+    @for(cardDetail of cardDetails();track $index){
+    <div
+      [class]="$index === cardDetails().length - 1 ? '' : 'content-border'"
+      class="kpi-card_content"
+    >
+      {{ cardDetail }}
     </div>
-    <div class="kpi-card_content">
-      Transform into agile technology company and embrace new ways of working
-    </div>
+    }
   </div>
   <div class="kpi-card_footer">
     <div class="kpi-card_footer-content">

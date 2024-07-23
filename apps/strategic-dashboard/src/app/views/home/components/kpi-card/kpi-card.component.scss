@@ -6,32 +6,26 @@
   overflow: auto;
   background-color: var(--whiteColor);
   padding: 0px 14px;
-  &_header {
-    position: absolute;
-    top: 12px;
-  }
   &_content-holder {
-    margin-top: 40px;
+    margin-top: 60px;
   }
   &_content {
-    padding: 40px 12px 20px 12px;
+    padding: 20px 12px;
     font-size: 16px;
     text-align: center;
     color: var(--grey-color);
     font-weight: 400;
     line-height: 25px;
-    border-bottom: 1px solid var(--borderGreyColor);
   }
   &_footer {
-   
-    display: flex;
+    position: absolute;
+    top: 92%;
+    left: 32%;
     font-weight: 300;
     font-size: 18px;
-    height: 48%;
     font-family: var(--stc-font-light);
-    justify-content: center;
+    text-align: center;
     text-decoration: underline;
-    align-items: end;
     color: var(--stc-color);
   }
   &_footer-content {
@@ -40,5 +34,8 @@
   }
   &_footer-content:hover {
     transform: translateX(5px);
+  }
+  .content-border {
+    border-bottom: 1px solid var(--borderGreyColor);
   }
 }
