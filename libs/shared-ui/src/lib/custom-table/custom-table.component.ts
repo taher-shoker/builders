@@ -115,11 +115,13 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    if (this.paginate && this.paginationConfig.paginationIq !== 'smart') {
-      this.setupDumbPaginator();
-    }
-    if (this.paginate && this.paginationConfig.paginationIq === 'smart') {
-      this.setupSmartPagination();
+    if (this.paginationConfig) {
+      if (this.paginate && this.paginationConfig.paginationIq !== 'smart') {
+        this.setupDumbPaginator();
+      }
+      if (this.paginate && this.paginationConfig.paginationIq === 'smart') {
+        this.setupSmartPagination();
+      }
     }
     if (this.sort) {
       this.setupSorting();
@@ -149,8 +151,10 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
     if (changes['items']) {
       this.items = changes['items'].currentValue;
 
-      if (this.paginationConfig.paginationIq === 'smart') {
-        this.onDataChange(this.items);
+      if (this.paginationConfig) {
+        if (this.paginationConfig.paginationIq === 'smart') {
+          this.onDataChange(this.items);
+        }
       }
     }
 

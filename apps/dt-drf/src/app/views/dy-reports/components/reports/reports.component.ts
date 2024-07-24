@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription, take } from 'rxjs';
 import { MessageDialogComponent } from '../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
-import { MilestonesService, PendingTask } from '../../dy-reports.service';
+import { ReportsService, PendingTask, Category } from '../../dy-reports.service';
 
 export interface Milestone {
   activityName: string;
@@ -37,18 +37,13 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   form!: FormGroup;
   isLoading = true;
-  totalRegisted = 0;
-  totalInProgress = 0;
-  totalPending = 0;
-  totalClosed = 0;
 
   getMilestonesSub!: Subscription;
   userSub!: Subscription;
   getAssigneeTasks!: Subscription;
   formChangesSub!: Subscription;
 
-  // Props of the paginator :
-  milestonesTotalCount!: number;
+  reportsTotalCount!: number;
 
   types: { statusName: string }[] = [
     { statusName: 'Registered' },
@@ -62,7 +57,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     public router: Router,
     public route: ActivatedRoute,
     private bannerDataService: BannerDataService,
-    public milestonesService: MilestonesService,
+    protected reportsService: ReportsService,
     protected dialogService: DialogService,
     public authService: AuthService,
     public utils: UtilsService,
@@ -78,55 +73,44 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
   columnsSchema: ColumnsSchema[] = [
     {
-      key: 'activityName',
+      key: 'reportName',
       type: 'text',
-      label: 'Activity',
+      label: 'Name',
     },
     {
-      key: 'milestoneName',
+      key: 'requestCategoryName',
       type: 'text',
-      label: 'Milestone Name',
-      // useCustomTemplate: (header?: ColumnsSchema, item?: any) => {
-      //   return `
-      //   <p>${item[header!.key]}</p>
-      //   <p>${item[header!.key]} mixed complex</p>
-      //   <p style="color:red"> ${item[header!.key]} mixed complex</p>
-      //   `;
-      // },
-      //complexView: true,
-      // complexViewTemp: this.customTemplate
+      label: 'Category',
     },
     {
-      key: 'completionLevel',
+      key: 'requestCategorySla',
       type: 'text',
-      label: 'Completion Level',
+      label: 'With SLA/Not',
     },
     {
-      key: 'latestWorkflowId',
-      type: 'custom',
-      label: 'Validation Status',
-    },
-    {
-      key: 'teamName',
+      key: 'remainingSteps',
       type: 'text',
-      label: 'Team',
+      label: 'No of Remaining Approvals',
     },
     {
-      key: 'status',
+      key: 'initiatorDisplayName',
+      type: 'text',
+      label: 'Initiator Name',
+    },
+    {
+      key: 'lastModifiedDate',
+      type: 'date',
+      label: 'Last Action Date',
+    },
+    {
+      key: 'reportFlowStatus',
       type: 'text',
       label: 'Status',
-      //complexView: true,
     },
-
     {
       key: 'actions',
       type: 'actions',
-      actions: !this.milestonesService.checkIsAdmin()
-        ? this.milestonesService.checkIsBusinessSpoc() ||
-          this.milestonesService.checkIsDirector()
-          ? ['details']
-          : ['edit', 'details']
-        : ['edit', 'delete', 'details'],
+      actions: ['details', 'edit'],
       label: '',
     },
   ];
@@ -146,7 +130,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   allTeams: any;
 
   ngOnInit() {
-    this.getMilestones();
+    this.getReports();
     this.getPendingTasks();
     this.bannerDataService.updateData({ title: 'Dynamic Reports', text: '' });
 
@@ -158,7 +142,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   getPendingTasks() {
-    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+    this.reportsService.getMilestoneTasks().subscribe((res) => {
       this.allItems = res;
     });
   }
@@ -166,35 +150,36 @@ export class ReportsComponent implements OnInit, OnDestroy {
   paginate(paginationEvent: PaginationEvent) {
     const filteredForm = this.utilities.filterObject(this.form.value);
 
-    this.milestonesService
-      .getMilestones({
+    this.reportsService
+      .getReports({
         page: paginationEvent.currentPage - 1,
         ...filteredForm,
       })
       .pipe(take(1))
       .subscribe((res: any) => {
-        this.populateMilestones(res);
+        this.populateReports(res);
       });
   }
 
-  populateMilestones(res: any) {
+  populateReports(res: any) {
     this.isLoading = false;
-    this.milestonesTotalCount = res.totalElements;
+    this.reportsTotalCount = res.totalElements;
 
     this.tableData = res.content;
   }
 
   getAllTeams() {
-    this.allTeams = this.milestonesService.setUserTeams();
+    this.allTeams = this.reportsService.setUserTeams();
     if (this.allTeams.length === 0) {
-      this.milestonesService.setSystemTeams().subscribe((res) => {
+      this.reportsService.setSystemTeams().subscribe((res) => {
         this.allTeams = res;
       });
     }
   }
 
-  detailsNavigate(id: string | number) {
-    this.router.navigate(['./milestone_details', id], {
+  detailsNavigate(item: PendingTask) {
+    const id = item.externalSystemId ? item.externalSystemId : item.id
+    this.router.navigate(['./report_details', id], {
       relativeTo: this.route,
     });
   }
@@ -209,10 +194,10 @@ export class ReportsComponent implements OnInit, OnDestroy {
         if (!res) {
           return;
         }
-        this.milestonesService.deleteMilestone(event.dataRow.id).subscribe({
+        this.reportsService.deleteMilestone(event.dataRow.id).subscribe({
           next: () => {
             this.toastr.success('Deleted successfully');
-            this.getMilestones();
+            this.getReports();
           },
           error: () => {
             this.toastr.error('Something went wrong!');
@@ -220,7 +205,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
         });
       });
     } else if (event.value === 'details') {
-      this.detailsNavigate(event.dataRow.id);
+      this.detailsNavigate(event.dataRow);
     } else if (event.value === 'updateProgress') {
       this.openProgressUpdateModal(event.dataRow);
     }
@@ -246,13 +231,18 @@ export class ReportsComponent implements OnInit, OnDestroy {
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
+  categories!: Category[];
+
   toggleFilter() {
+    this.reportsService.getCategories().subscribe(res => {
+      this.categories = res
+    })
     this.dialogService.open('filter-Modal');
   }
 
   onExporting() {
     const filteredForm = this.utilities.filterObject(this.form.value);
-    this.milestonesService
+    this.reportsService
       .exportMilestones(filteredForm)
       .subscribe((buffer) => {
         const data: Blob = new Blob([buffer]);
@@ -263,12 +253,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
-      milestoneName: ['', { nonNullable: true }],
-      milestoneId: ['', { nonNullable: true }],
-      team: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
-      month: ['', { nonNullable: true }],
-      year: ['', { nonNullable: true }],
+      category: ['', { nonNullable: true }],
+
     });
   }
 
@@ -285,18 +272,18 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   onSubmit() {
     const filteredForm = this.utilities.filterObject(this.form.value);
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones(filteredForm)
+    this.getMilestonesSub = this.reportsService
+      .getReports(filteredForm)
       .subscribe((res: any) => {
         this.dialogService.close();
-        this.populateMilestones(res);
+        this.populateReports(res);
       });
   }
 
   clearFormFilter() {
     this.form.reset();
     this.dialogService.close();
-    this.getMilestones();
+    this.getReports();
   }
 
   monthsArrPopulator() {
@@ -345,11 +332,11 @@ export class ReportsComponent implements OnInit, OnDestroy {
     return finalDate;
   }
 
-  getMilestones() {
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones()
+  getReports() {
+    this.getMilestonesSub = this.reportsService
+      .getReports()
       .subscribe((res: any) => {
-        this.populateMilestones(res);
+        this.populateReports(res);
       });
   }
 

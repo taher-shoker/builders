@@ -2,7 +2,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { BannerDataService } from '@stc-apps/shared-ui';
-import { MilestonesService } from '../../dy-reports.service';
+import { ReportsService } from '../../dy-reports.service';
 
 @Component({
   selector: 'stc-apps-edit-dy-report',
@@ -15,11 +15,11 @@ export class EditDyReportComponent implements OnInit {
 
   constructor(
     private bannerDataService: BannerDataService,
-    public milestonesService: MilestonesService,
+    public reportsService: ReportsService,
     public route: ActivatedRoute
   ) {}
   getMilestone(id: number) {
-    this.milestonesService.getMilestone(id).subscribe((res: any) => {
+    this.reportsService.getReport(id).subscribe((res: any) => {
       this.milestoneData = res;
     });
   }

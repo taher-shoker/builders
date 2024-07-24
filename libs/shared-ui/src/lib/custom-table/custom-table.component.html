@@ -68,7 +68,7 @@
     </td>
     }@else {
 
-    <td>{{ item[header.key] }}</td>
+    <td>{{ header.type !== 'date' ?  item[header.key] :  item[header.key] | date }}</td>
     } } @else if(header.type === 'actions') {
 
     <td>

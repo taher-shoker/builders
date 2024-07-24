@@ -30,7 +30,7 @@ import { map, Observable, startWith } from 'rxjs';
 import { ConfigService } from '../../../../services/config.service';
 import { Report } from '../../../../services/models/report-flow.model';
 import { User } from '../../../../services/models/user';
-import { MilestonesService } from '../../dy-reports.service';
+import { ReportsService } from '../../dy-reports.service';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
@@ -74,7 +74,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   constructor(
     private _formBuilder: FormBuilder,
     protected dialogService: DialogService,
-    public milestonesService: MilestonesService,
+    public reportsService: ReportsService,
     private toastr: ToastrService,
     private router: Router,
     public config_service: ConfigService
@@ -164,13 +164,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     }
   }
   getAllTeams() {
-    this.milestonesService.setSystemTeams().subscribe((res) => {
+    this.reportsService.setSystemTeams().subscribe((res: any) => {
       this.allTeams = res;
     });
   }
 
   getUsersListing() {
-    this.milestonesService.getUsers().subscribe((res) => {
+    this.reportsService.getUsers().subscribe((res) => {
       this.users = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );

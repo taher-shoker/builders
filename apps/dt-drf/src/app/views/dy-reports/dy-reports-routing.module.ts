@@ -34,7 +34,7 @@ const routes: Routes = [
         path: 'report_details/:id',
         component: DyReportDetailsComponent,
         canActivate: [AuthGuard],
-        data: { breadcrumb: `milestone-details` },
+        data: { breadcrumb: `report-details` },
       },
     ],
   },

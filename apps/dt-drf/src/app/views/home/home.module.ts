@@ -14,9 +14,10 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { DyReportsModule } from '../dy-reports/dy-reports.module';
+import { DelegationDialogComponent } from './delegationDialog/delegationDialog.component';
 
 @NgModule({
-  declarations: [HomeComponent],
+  declarations: [HomeComponent, DelegationDialogComponent],
   imports: [
     CommonModule,
     SharedUiModule,

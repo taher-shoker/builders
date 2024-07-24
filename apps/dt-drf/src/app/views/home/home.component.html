@@ -1,8 +1,19 @@
-<stc-apps-header [userName]="userName" [logoSrc]="logoSrc" [allItems]="navItems" [sidebarLogoSrc]="sidebarLogoSrc"
-  (logOut)="logOut()" (backToHome)="backToHome()" [showLang]="false">
-  <!-- <stc-apps-notifications-dropdown *ngIf="milestonesService.remindersItems.length > 0"
+<stc-apps-header
+  [userName]="userName"
+  [logoSrc]="logoSrc"
+  [allItems]="navItems"
+  [sidebarLogoSrc]="sidebarLogoSrc"
+  [showDelegate]="true"
+  (logOut)="logOut()"
+  (delegateUser)="delegateUser()"
+  (backToHome)="backToHome()"
+  [showLang]="false"
+>
+  <stc-apps-notifications-dropdown
     (clickItem)="clickRemider($event)"
-    [items]="milestonesService.remindersItems"></stc-apps-notifications-dropdown> -->
+    [items]="[]"
+    [notificationsTitle]="'Reports Notifications'"
+  ></stc-apps-notifications-dropdown>
 </stc-apps-header>
 <stc-apps-breadcrumb [bgColor]="'primary'"></stc-apps-breadcrumb>
 <stc-apps-banner> </stc-apps-banner>
