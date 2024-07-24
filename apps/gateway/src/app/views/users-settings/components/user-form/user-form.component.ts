@@ -42,6 +42,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   allUsers: User[] = [];
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
+  selectedDelegates: any;
   selectedGroup: number[] = [];
   addGroups = false;
   showInputs = true;
@@ -169,7 +170,12 @@ export class UserFormComponent implements OnInit, OnChanges {
           email: this.form.get('email')?.value,
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,
-          userDelegates: this.form.get('userDelegates')?.value,
+          userDelegates: [
+            {
+              delegateName: this.form.get('userDelegates')?.value.email,
+              systemName: this.userService.getCurrentSystem(),
+            },
+          ],
         };
       } else {
         dataForm = {
@@ -368,6 +374,17 @@ export class UserFormComponent implements OnInit, OnChanges {
               s.roleName ===
               this.checkSystem(this.data.userGroups)?.roles[0].roleName
           );
+      } else if (
+        this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' &&
+        this.data?.userDelegates
+      ) {
+        const delegateEmail = this.data?.userDelegates?.[0].delegateName ?? '';
+        this.selectedDelegates =
+          this.allUsers.find((p: User) => p.email === delegateEmail) ?? null;
+
+        // this.selectedDelegates = this.allUsers.filter(
+        //   (p: User) => p.email === this.data?.userDelegates[0].delegateName
+        // )[0];
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id
