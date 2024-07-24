@@ -7,6 +7,7 @@ import { CategoryRoutingModule } from './category-routing.module';
 import { CategoryComponent } from './category.component';
 import { DyReportsModule } from '../dy-reports/dy-reports.module';
 import { CategoryDialogComponent } from './categoryDialog/categoryDialog.component';
+import { MatInputModule } from '@angular/material/input';
 
 @NgModule({
   declarations: [CategoryComponent, CategoryDialogComponent],
@@ -17,6 +18,7 @@ import { CategoryDialogComponent } from './categoryDialog/categoryDialog.compone
     ReactiveFormsModule,
     CategoryRoutingModule,
     DyReportsModule,
+    MatInputModule
   ],
   exports: [],
   providers: [],

@@ -4,7 +4,7 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Observable, of } from 'rxjs';
+import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
 
 export interface User {
@@ -60,7 +60,7 @@ export interface MilestoneAttachment {
   fileName: string;
   id: number;
   label: string;
-  milestone: MilestoneDetails;
+  milestone: ReportDetails;
   uploadDate: string; // it is a Date in a format of : "2024-3-17"
   url: string;
 }
@@ -115,48 +115,38 @@ export class Actions {
   }
 }
 
-export interface MilestoneDetails {
-  activityName: string | null;
-  createdByEmail: string | null;
-  createdByName: string | null;
-  deliverable: string | null;
-  endDate: Date | null;
-  id: number | null;
-  lastProgressUpdateDate: Date | null;
-  milestoneName: string | null;
-  startDate: Date | null;
-  status: MilestoneStatus | null;
-  teamName: string | null;
-  updatedByEmail: null | string;
-  updatedByName: null | string;
-  weight: number | null;
-  workingDays: number | null;
-  latestApprovedMilestoneProgressUpdate: null | {
-    completionImpactRate: string | null;
-    cappedCompletionPercentage: string | null;
-    targetCompletionLevel: string | null;
-    deliverable: string | null;
-    isApproved: boolean | null;
-    milestoneId: number | null;
-    overallProgress: string | null;
-    progressUpdateDate: Date | null;
-    workflowId: number | null;
-    updatedBy: string;
-    status: string;
-  };
-  currentMilestoneProgressUpdateDto: null | {
-    completionImpactRate: string | null;
-    cappedCompletionPercentage: string | null;
-    targetCompletionLevel: string | null;
-    deliverable: string | null;
-    isApproved: boolean | null;
-    milestoneId: number | null;
-    overallProgress: string | null;
-    progressUpdateDate: Date | null;
-    workflowId: number | null;
-    updatedBy: string;
-    status: string;
-  };
+export interface ReportDetails {
+  id: number;
+  creatorEmail: string;
+  initiatorEmail: string;
+  creatorDisplayName: string;
+  initiatorDisplayName: string;
+  flowId: number;
+  reportFlowStatus: string;
+  attachments: Attachment[];
+  requestCategory: Category;
+  requestApprovals: [
+    {
+      id: number;
+      username: string;
+      sequence: number;
+      status: string;
+      userDisplayName: string;
+      requestTaskId: number;
+      requestTaskAttributes: {
+        name: string;
+        value: any;
+      }[];
+      completedDate: Date;
+      createdDate: Date;
+      lastModified: Date;
+    }
+  ];
+  createdDate: Date;
+  lastModifiedDate: Date;
+  remainingSteps: number;
+  serialNumber: string;
+  reportName: string;
 }
 
 export interface MilestoneAttachment {
@@ -169,13 +159,49 @@ export interface MilestoneAttachment {
   uploadDate: string;
 }
 
+export interface PaginatedRecords {
+  last: boolean;
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
+export interface Requests extends PaginatedRecords {
+  content: {
+    id: number;
+    creatorEmail: string;
+    initiatorEmail: string;
+    initiatorDisplayName: string;
+    creatorDisplayName: string;
+    reportFlowStatus: string;
+    reportName: string;
+    serialNumber: string;
+    attachments: Attachment[];
+    requestCategory: Category;
+    lastModifiedDate: Date;
+    remainingSteps: number;
+    flowId: number;
+  }[];
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  slaDuration: number;
+  isDeletable: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
 export class ReportsService {
   baseUrl = environment.apiUrl;
   adminUrl = `${this.baseUrl}v2/admin`;
-  dtUrl = `${this.baseUrl}v2/dt-milestone-service/milestones`;
+  dtUrl = `${this.baseUrl}v2/report-flow-service/`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
   endpointAttachments = `${this.baseUrl}/fm/attachment`;
@@ -202,7 +228,7 @@ export class ReportsService {
   }
 
   setSystemParam(): HttpParams {
-    return new HttpParams().set('system', 'DI_Milestones');
+    return new HttpParams().set('system', 'Dynamic_Report_Flow');
   }
 
   setSystemTeams(): Observable<any[]> {
@@ -268,20 +294,83 @@ export class ReportsService {
     });
   }
 
-  getReports(filterData?: any) {
-    return this.http.get(`${this.dtUrl}`, {
-      params: filterData,
-    });
+  /**
+   *
+   * @param filterData Filtration data of the search request
+   * @returns Reports either filtered or none if no filters passed.
+   */
+
+  getReports(filterData?: any): Observable<Requests> {
+    return this.http
+      .get<Requests>(`${this.dtUrl}requests/search`, {
+        params: filterData,
+      })
+      .pipe(map((res: Requests) => this.flattenRequestCategory(res)));
   }
+
+  private flattenRequestCategory(data: Requests): Requests {
+    return {
+      ...data,
+      content: data.content.map((item) => ({
+        ...item,
+        requestCategoryName: item.requestCategory.name,
+        requestCategorySla: item.requestCategory.slaDuration ? 'Yes' : 'No',
+      })),
+    };
+  }
+
+  /**
+   *
+   * @param id of the requested report
+   * @returns report details
+   */
+  getReport(id: string | number) {
+    return this.http.get(`${this.dtUrl}requests/${id}`);
+  }
+
+  /**
+   * Fetches all categories, send a boolean for SLA filtration
+   */
+  getCategories(withSla?: boolean): Observable<Category[]> {
+    if (withSla === undefined) {
+      return this.http.get<Category[]>(`${this.dtUrl}requests-category`);
+    } else {
+      return this.http.get<Category[]>(`${this.dtUrl}requests-category`, {
+        params: { withSla },
+      });
+    }
+  }
+
+  /**
+   *
+   * @param category pass valid category object to create a new one
+   */
+  postCategory(category: Category) {
+    return this.http.post(`${this.dtUrl}requests-category`, category);
+  }
+
+  /**
+   *
+   * @param category pass valid category object with its ID in the object to edit it
+   */
+  editCategory(category: Category) {
+    return this.http.patch(`${this.dtUrl}requests-category`, category);
+  }
+
+  /**
+   *
+   * @param categoryId pass valid category id to delete it
+   */
+
+  deleteCategory(categoryId: Category['id']) {
+    return this.http.delete(`${this.dtUrl}requests-category/${categoryId}`);
+  }
+
   exportMilestones(filterData?: any) {
     return this.http.get(`${this.dtUrl}/export`, {
       params: filterData,
       responseType: 'blob',
     });
-  }
-
-  getMilestone(id: string | number) {
-    return this.http.get(`${this.dtUrl}/${id}`);
   }
 
   updateMilestone(id: string, data: any) {
@@ -308,16 +397,16 @@ export class ReportsService {
 
   uploadFile(
     data: FormData,
-    milestoneId: number | string
+    reportId: number | string
   ): Observable<MilestoneAttachment> {
     return this.http.post<MilestoneAttachment>(
-      `${this.baseUrl}v2/dt-milestone-service/attachments?milestoneId=${milestoneId}`,
+      `${this.baseUrl}v2/dt-milestone-service/attachments?reportId=${reportId}`,
       data
     );
   }
 
   updateMilestoneProgress(data: {
-    milestoneId: number;
+    reportId: number;
     overallProgress: string;
     deliverable: string;
   }) {
@@ -404,11 +493,11 @@ export class ReportsService {
    */
 
   calculateMilestoneProgress(
-    milestoneId: number,
+    reportId: number,
     progress: string
   ): Observable<{ milestoneProgressId: number; status: string }> {
     return this.http.get<{ milestoneProgressId: number; status: string }>(
-      `${this.dtUrl}/status/${milestoneId}?overallProgress=${progress}`
+      `${this.dtUrl}/status/${reportId}?overallProgress=${progress}`
     );
     // return of({milestoneProgressId: 5000, status: "Delayed"})
   }

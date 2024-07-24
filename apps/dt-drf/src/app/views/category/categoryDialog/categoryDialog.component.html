@@ -1,7 +1,11 @@
 <div class="dialog p-4">
   <div class="dialog-body">
     <div class="dialog-header">
-      {{ data.state === 'add' ? 'Create a Category' : 'Edit ' + data.category.categoryName }}
+      {{
+        data.state === 'add'
+          ? 'Create a Category'
+          : 'Edit ' + data.category?.name
+      }}
     </div>
     <div class="body-holder">
       <form [formGroup]="form">
@@ -17,8 +21,12 @@
             <stc-apps-input-full-width
               [label]="'SLA'"
               [type]="'text'"
-              formControlName="sla"
+              formControlName="slaDuration"
             ></stc-apps-input-full-width>
+
+            @if (form.get('slaDuration')?.hasError('pattern') ) {
+            <mat-error> Must be valid number </mat-error>
+            }
           </div>
         </div>
       </form>
@@ -35,7 +43,7 @@
       <button
         type="button"
         class="btn primary"
-        (click)="update()"
+        (click)="save()"
         [disabled]="form.invalid"
       >
         {{ data.state === 'add' ? 'Create' : 'Edit' }}

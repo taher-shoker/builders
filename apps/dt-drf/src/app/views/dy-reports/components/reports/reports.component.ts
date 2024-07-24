@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription, take } from 'rxjs';
 import { MessageDialogComponent } from '../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
-import { ReportsService, PendingTask } from '../../dy-reports.service';
+import { ReportsService, PendingTask, Category } from '../../dy-reports.service';
 
 export interface Milestone {
   activityName: string;
@@ -37,18 +37,13 @@ export class ReportsComponent implements OnInit, OnDestroy {
 
   form!: FormGroup;
   isLoading = true;
-  totalRegisted = 0;
-  totalInProgress = 0;
-  totalPending = 0;
-  totalClosed = 0;
 
   getMilestonesSub!: Subscription;
   userSub!: Subscription;
   getAssigneeTasks!: Subscription;
   formChangesSub!: Subscription;
 
-  // Props of the paginator :
-  milestonesTotalCount!: number;
+  reportsTotalCount!: number;
 
   types: { statusName: string }[] = [
     { statusName: 'Registered' },
@@ -62,7 +57,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     public router: Router,
     public route: ActivatedRoute,
     private bannerDataService: BannerDataService,
-    public reportsService: ReportsService,
+    protected reportsService: ReportsService,
     protected dialogService: DialogService,
     public authService: AuthService,
     public utils: UtilsService,
@@ -78,49 +73,44 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
   columnsSchema: ColumnsSchema[] = [
     {
-      key: 'activityName',
+      key: 'reportName',
       type: 'text',
       label: 'Name',
     },
     {
-      key: 'milestoneName',
+      key: 'requestCategoryName',
       type: 'text',
       label: 'Category',
     },
     {
-      key: 'completionLevel',
+      key: 'requestCategorySla',
       type: 'text',
       label: 'With SLA/Not',
     },
     {
-      key: 'latestWorkflowId',
-      type: 'custom',
+      key: 'remainingSteps',
+      type: 'text',
       label: 'No of Remaining Approvals',
     },
     {
-      key: 'teamName',
+      key: 'initiatorDisplayName',
       type: 'text',
       label: 'Initiator Name',
     },
     {
-      key: 'status',
-      type: 'text',
+      key: 'lastModifiedDate',
+      type: 'date',
       label: 'Last Action Date',
     },
     {
-      key: 'status',
+      key: 'reportFlowStatus',
       type: 'text',
       label: 'Status',
     },
     {
       key: 'actions',
       type: 'actions',
-      actions: !this.reportsService.checkIsAdmin()
-        ? this.reportsService.checkIsBusinessSpoc() ||
-          this.reportsService.checkIsDirector()
-          ? ['details']
-          : ['edit', 'details']
-        : ['edit', 'delete', 'details'],
+      actions: ['details', 'edit'],
       label: '',
     },
   ];
@@ -167,13 +157,13 @@ export class ReportsComponent implements OnInit, OnDestroy {
       })
       .pipe(take(1))
       .subscribe((res: any) => {
-        this.populateMilestones(res);
+        this.populateReports(res);
       });
   }
 
-  populateMilestones(res: any) {
+  populateReports(res: any) {
     this.isLoading = false;
-    this.milestonesTotalCount = res.totalElements;
+    this.reportsTotalCount = res.totalElements;
 
     this.tableData = res.content;
   }
@@ -188,7 +178,8 @@ export class ReportsComponent implements OnInit, OnDestroy {
   }
 
   detailsNavigate(item: PendingTask) {
-    this.router.navigate(['./report_details', item.id], {
+    const id = item.externalSystemId ? item.externalSystemId : item.id
+    this.router.navigate(['./report_details', id], {
       relativeTo: this.route,
     });
   }
@@ -214,7 +205,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
         });
       });
     } else if (event.value === 'details') {
-      this.detailsNavigate(event.dataRow.id);
+      this.detailsNavigate(event.dataRow);
     } else if (event.value === 'updateProgress') {
       this.openProgressUpdateModal(event.dataRow);
     }
@@ -240,7 +231,12 @@ export class ReportsComponent implements OnInit, OnDestroy {
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
+  categories!: Category[];
+
   toggleFilter() {
+    this.reportsService.getCategories().subscribe(res => {
+      this.categories = res
+    })
     this.dialogService.open('filter-Modal');
   }
 
@@ -257,12 +253,9 @@ export class ReportsComponent implements OnInit, OnDestroy {
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
-      milestoneName: ['', { nonNullable: true }],
-      milestoneId: ['', { nonNullable: true }],
-      team: ['', { nonNullable: true }],
       status: ['', { nonNullable: true }],
-      month: ['', { nonNullable: true }],
-      year: ['', { nonNullable: true }],
+      category: ['', { nonNullable: true }],
+
     });
   }
 
@@ -283,7 +276,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
       .getReports(filteredForm)
       .subscribe((res: any) => {
         this.dialogService.close();
-        this.populateMilestones(res);
+        this.populateReports(res);
       });
   }
 
@@ -343,7 +336,7 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.getMilestonesSub = this.reportsService
       .getReports()
       .subscribe((res: any) => {
-        this.populateMilestones(res);
+        this.populateReports(res);
       });
   }
 

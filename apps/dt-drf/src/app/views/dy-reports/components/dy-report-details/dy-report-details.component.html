@@ -1,12 +1,12 @@
 <div>
-    @if(milestoneDetails){
+    @if(reportsDetails){
     <div class="row m-0 p-0">
       <div class="col">
         <div class="row details">
           <!-- <div class="col-12 title-holder">
               <h3>{{"case_details" | translate}}</h3>
             </div> -->
-          <h4 class="section-title">Milestone Information</h4>
+          <h4 class="section-title">Report Information</h4>
   
           <div class="row">
             <!-- Left Column -->
@@ -15,14 +15,14 @@
                 <div class="col-12">
                   <p class="cell-name">Name</p>
                   <p class="cell-value">
-                    {{ milestoneDetails.milestoneName ?? '-' }}
+                    {{ reportsDetails.reportName ?? '-' }}
                   </p>
                 </div>
   
                 <div class="col-12">
                   <p class="cell-name">With SLA/Not</p>
                   <p class="cell-value">
-                    {{ milestoneDetails.activityName ?? '-' }}
+                    {{ reportsDetails.requestCategory.slaDuration ? "Yes" : "No" }}
                   </p>
                 </div>
   
@@ -31,14 +31,14 @@
                     Initiator Name
                   </p>
                   <p class="cell-value">
-                    {{ milestoneDetails.createdByEmail ?? '-' }}
+                    {{ reportsDetails.initiatorDisplayName ?? '-' }}
                   </p>
                 </div>
   
                 <div class="col-12">
                   <p class="cell-name">Status</p>
                   <p class="cell-value">
-                    {{ milestoneDetails.createdByName ?? '-' }}
+                    {{ reportsDetails.reportFlowStatus ?? '-' }}
                   </p>
                 </div>
               </div>
@@ -51,29 +51,21 @@
               <div class="row">
                 <div class="col-12">
                   <p class="cell-name">Category</p>
-                  <ng-container *ngIf="milestoneDetails">
                     <p class="cell-value">
-                      {{
-                      milestoneDetails.latestApprovedMilestoneProgressUpdate
-                      ?.overallProgress
-                      ? milestoneDetails.latestApprovedMilestoneProgressUpdate
-                      ?.overallProgress
-                      : '-'
-                      }}
+                    {{ reportsDetails.requestCategory.name ?? '-' }}
                     </p>
-                  </ng-container>
                 </div>
   
                 <div class="col-12">
                   <p class="cell-name">
                     No of Remaining Approvals
                   </p>
-                  <p class="cell-value">{{ milestoneDetails.status ?? '-' }}</p>
+                  <p class="cell-value">{{ reportsDetails.remainingSteps ?? '-' }}</p>
                 </div>
   
                 <div class="col-12">
                   <p class="cell-name">Last Action Date</p>
-                  <p class="cell-value">{{ milestoneDetails.teamName ?? '-' }}</p>
+                  <p class="cell-value">{{ (reportsDetails.lastModifiedDate ?? '-') | date }}</p>
                 </div>
               </div>
             </div>
@@ -154,8 +146,6 @@
           </div>
         </div>
       </div>
-      @if(!reportsService.isDTAdmin){ @if (milestoneDetails.status !==
-      'Planned' && milestoneDetails.status !== 'Completed') {
       <div class="col-md-5">
         <div class="logs">
           <h4 class="section-title">On Going Workflow</h4>
@@ -199,7 +189,6 @@
           }
         </div>
       </div>
-      } }
     </div>
     }
   </div>

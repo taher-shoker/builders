@@ -19,7 +19,7 @@ export class EditDyReportComponent implements OnInit {
     public route: ActivatedRoute
   ) {}
   getMilestone(id: number) {
-    this.reportsService.getMilestone(id).subscribe((res: any) => {
+    this.reportsService.getReport(id).subscribe((res: any) => {
       this.milestoneData = res;
     });
   }

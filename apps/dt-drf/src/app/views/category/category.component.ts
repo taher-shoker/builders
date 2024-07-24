@@ -6,6 +6,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { CategoryDialogComponent } from './categoryDialog/categoryDialog.component';
 import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
+import { Category, ReportsService } from '../dy-reports/dy-reports.service';
 
 @Component({
   selector: 'stc-apps-category',
@@ -16,12 +17,12 @@ export class CategoryComponent implements OnInit {
   tableData!: any;
   columnsSchema: ColumnsSchema[] = [
     {
-      key: 'categoryName',
+      key: 'name',
       type: 'text',
       label: 'Category Name',
     },
     {
-      key: 'sla',
+      key: 'slaDuration',
       type: 'text',
       label: 'SLA',
     },
@@ -39,50 +40,76 @@ export class CategoryComponent implements OnInit {
   constructor(
     public router: Router,
     public route: ActivatedRoute,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    private reportsService: ReportsService
   ) {}
 
   ngOnInit(): void {
-    this.tableData = [
-      { categoryName: 'First category', sla: 8 },
-      { categoryName: 'Sec category', sla: 2 },
-      { categoryName: 'Thr category', sla: 4 },
-    ];
+    this.getCategories();
+  }
+
+  getCategories() {
+    this.reportsService.getCategories().subscribe((res) => {
+      this.tableData = res;
+    });
   }
 
   tableAction(event: { value: string; dataRow: any }) {
-    console.log("EL EV", event)
     if (event.value === 'edit') {
       this.editCategory(event.dataRow);
     } else {
       // Do Delete
-      this.deleteCategory(event.dataRow.categoryName)
+      this.deleteCategory(event.dataRow);
     }
   }
 
-  editCategory(category: any) {
+  editCategory(category: Category) {
     const dialogRef = this.matDialog.open(CategoryDialogComponent, {
       width: '800px',
       data: { state: 'edit', category },
     });
 
-    dialogRef.afterClosed().subscribe((res) => {
+    dialogRef.afterClosed().subscribe((res: Category) => {
       if (!res) {
         return;
       }
+
+      const editObj: Category = {
+        name: res.name,
+        id: category.id,
+        isDeletable: category.isDeletable,
+        slaDuration: res.slaDuration,
+      };
+      this.reportsService.editCategory(editObj).subscribe({
+        next: () => {
+          this.getCategories();
+        },
+        error: (err) => {
+          console.log('Err trying to edit the category:', err);
+        },
+      });
     });
   }
 
-  deleteCategory(name: string){
+  deleteCategory(category: Category) {
     const dialogRef = this.matDialog.open(MessageDialogComponent, {
       width: '800px',
-      data: {msg: `Are you sure to delete "${name}" category ?`}
-    })
+      data: { msg: `Are you sure to delete "${category.name}" category ?` },
+    });
 
     dialogRef.afterClosed().subscribe((res) => {
       if (!res) {
         return;
       }
+
+      this.reportsService.deleteCategory(category.id).subscribe({
+        next: () => {
+          this.getCategories();
+        },
+        error: (err) => {
+          console.log('Err trying to delete the category:', err);
+        },
+      });
     });
   }
 
@@ -92,10 +119,15 @@ export class CategoryComponent implements OnInit {
       data: { state: 'add' },
     });
 
-    dialogRef.afterClosed().subscribe((res) => {
+    dialogRef.afterClosed().subscribe((res: Category) => {
       if (!res) {
         return;
       }
+
+      this.reportsService.postCategory(res).subscribe((postRes) => {
+        console.log('Got', postRes);
+        this.getCategories();
+      });
     });
   }
 }

@@ -47,7 +47,7 @@
             <stc-apps-custom-table
               [items]="tableData"
               [headers]="columnsSchema"
-              [length]="milestonesTotalCount"
+              [length]="reportsTotalCount"
               (doAction)="tableAction($event)"
               [paginate]="true"
               [applyFilter]="true"
@@ -57,6 +57,7 @@
                 showTotal: false,
                 paginationIq: 'smart'
               }"
+              (paginationEvent)="paginate($event)"
             >
             </stc-apps-custom-table>
             <ng-template #customTemplate let-header="header" let-item="item">
@@ -99,8 +100,8 @@
         <div class="col-md-4">
           <stc-apps-select-drop-down
             [label]="'Category'"
-            [options]="monthsArr"
-            formControlName="month"
+            [options]="categories"
+            formControlName="category"
             [outputValue]="'id'"
           ></stc-apps-select-drop-down>
         </div>
@@ -131,31 +132,6 @@
       </div>
     </div>
   </form>
-</stc-apps-dialog>
-
-<stc-apps-dialog id="delete-modal">
-  <p class="text">
-    <span>{{ 'You&lsquo;re about to Remove Milestone , ' }} </span>
-    <strong>#{{ rowData?.id }}</strong>
-
-    <span>
-      ' Kindly note you can&lsquo;t roll back this action. Are you sure?'</span
-    >
-  </p>
-
-  <div class="row mt-4">
-    <div class="col-md-4 offset-8">
-      <div class="d-flex justify-content-end">
-        <stc-apps-button
-          [buttonText]="'cancel'"
-          [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"
-        ></stc-apps-button>
-
-        <div class="mx-3"></div>
-      </div>
-    </div>
-  </div>
 </stc-apps-dialog>
 
 <ngx-spinner

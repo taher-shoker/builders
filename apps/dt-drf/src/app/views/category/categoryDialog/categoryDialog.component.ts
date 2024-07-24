@@ -1,33 +1,37 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Category } from '../../dy-reports/dy-reports.service';
 
 @Component({
   selector: 'stc-apps-category-dialog',
   templateUrl: './categoryDialog.component.html',
   styleUrl: './categoryDialog.component.scss',
 })
-export class CategoryDialogComponent implements OnInit{
-
+export class CategoryDialogComponent implements OnInit {
   form!: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<CategoryDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { state: 'edit' | 'add', category? : any }
-  )
-  {}
+    @Inject(MAT_DIALOG_DATA)
+    public data: { state: 'edit' | 'add'; category?: Category }
+  ) {}
 
   ngOnInit(): void {
+    console.log("El data", this.data)
     this.form = new FormGroup({
-      name: new FormControl(''),
-      sla: new FormControl(''),
-    })
+      name: new FormControl(this.data.category?.name ?? '', Validators.required),
+      slaDuration: new FormControl(this.data.category?.slaDuration ?? '', [
+        Validators.pattern('^[0-9]+$'),
+        Validators.required,
+      ]),
+    });
   }
 
-  update() {
+  save() {
     this.dialogRef.close({
-      overallProgress: this.form.get('overallProgress')?.value,
-      deliverable: this.form.get('deliverable')?.value,
+      name: this.form.get('name')?.value,
+      slaDuration: this.form.get('slaDuration')?.value,
     });
   }
 
