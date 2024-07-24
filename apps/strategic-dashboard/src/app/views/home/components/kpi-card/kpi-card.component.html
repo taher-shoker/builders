@@ -5,7 +5,7 @@
     } @for (content of currentContents; track content; let index = $index) {
     <div
       class="kpi-card_content"
-      [ngClass]="{  'with-full-border': !isStringContent, 'with-bottom-border': isStringContent, } "
+      [ngClass]="{  'with-full-border': !isStringContent, 'with-bottom-border': (isStringContent&&index!==currentContents.length-1), } "
     >
       @if (isStringContent) {
       {{ content }}
@@ -30,7 +30,7 @@
     }
   </div>
   <div class="kpi-card_footer">
-    <div class="kpi-card_footer-content">
+    <div [routerLink]="['/details', kpiTitle()]" class="kpi-card_footer-content">
       More details
       <img src="assets/images/arrow-right.svg" alt="" />
     </div>

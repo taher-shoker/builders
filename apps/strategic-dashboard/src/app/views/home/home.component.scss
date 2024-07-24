@@ -3,7 +3,6 @@
 
   &_cardHolder {
     margin-left: 24px;
-
     .kpis-card {
       &_header {
         z-index: 999;
@@ -12,7 +11,6 @@
       }
     }
   }
-
   &_footer {
     position: relative;
     top: -70px;
@@ -21,6 +19,15 @@
     .inverted {
       margin-right: 48px;
       transform: scaleX(-1);
+    }
+  }
+}
+@media screen and (max-width: 1500px) and (min-width: 1150px) {
+  .home-page_cardHolder {
+    display: flex;
+    justify-content: space-around;
+    .kpis-card {
+      width: 33.333%;
     }
   }
 }

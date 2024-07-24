@@ -46,7 +46,9 @@ export class HomeComponent {
       iconPath: 'assets/images/performance-icon.svg',
       firstContents: [
         'Instill digital mindset and unlock the potential of digital and analytics capabilities',
-        'Transform into agile technology company and embrace new ways of working',
+        'Instill digital mindset and unlock the potential of digital and analytics capabilities',
+        'Instill digital mindset and unlock the potential of digital and analytics capabilities',
+        'Instill digital mindset and unlock the potential of digital and analytics capabilities',
       ],
       secondContents: [
         {

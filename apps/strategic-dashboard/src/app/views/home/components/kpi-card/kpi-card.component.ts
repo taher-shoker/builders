@@ -15,7 +15,9 @@ import {
 export class KpiCardComponent implements OnChanges {
   title = 'Digitize STC';
   iconPath = 'assets/images/interaction-icon.svg';
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() currentContents: any[] = [];
+  kpiName='preformance';
   // currentContents: WritableSignal<any> = signal([]);
   kpiTitle: InputSignal<string> = input('');
   // activeIndex: InputSignal<number | any> = input(null);
