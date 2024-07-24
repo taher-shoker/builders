@@ -1,0 +1,64 @@
+.details-page {
+  &_header {
+    position: relative;
+    > div {
+      position: absolute;
+      margin: 0;
+      top: 37%;
+      left: 15%;
+    }
+    img {
+      margin-bottom: 16px;
+      margin-left: 12px;
+    }
+  }
+  &_title {
+    margin: 0px 34px;
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+
+    h3 {
+      color: var(--stc-color);
+      font-weight: 700;
+      font-size: 28px;
+      margin-top: 40px;
+      font-family: var(--stc-font-bold);
+    }
+    .filter {
+      font-weight: 600;
+      color: var(--semiBlueColor);
+      font-size: 16px;
+      font-family: var(--stc-font-light);
+      p {
+        margin: 0;
+      }
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        background-color: var(--whiteColor);
+        border: 1px solid var(--darkGreyColor);
+        border-radius: 4px;
+        margin: 0 !important;
+      }
+    }
+  }
+  &_progress-overview {
+    margin: 0px 34px;
+    display: flex;
+    p {
+      margin: 0;
+      padding-left: 12px;
+      padding-top: 6px;
+      color: var(--grey-color);
+      font-weight: 400;
+      font-size: 16px;
+    }
+  }
+  &_cards {
+    display: flex;
+    justify-content: space-between;
+    margin: 44px 40px;
+    .card-holder {
+      width: 15%;
+    }
+  }
+}

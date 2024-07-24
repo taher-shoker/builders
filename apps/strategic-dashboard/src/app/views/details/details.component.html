@@ -1,1 +1,46 @@
-<p>details works!</p>
+<div class="details-page">
+  <div class="details-page_header">
+    <stc-apps-header
+      [userName]="userName"
+      [logoSrc]="logoSrc"
+      [allItems]="navItems"
+      [sidebarLogoSrc]="sidebarLogoSrc"
+      [showLang]="false"
+    ></stc-apps-header>
+    <div class="details-page_headerWelcom d-flex">
+      <p>Welcome Back , Assem khalifa</p>
+      <img src="assets/images/Waving Hand.svg" alt="" />
+    </div>
+  </div>
+  <div class="details-page_title">
+    <h3>{{ pageTitle }}</h3>
+    <div class="filter">
+      <p>Select FY Year</p>
+      <stc-apps-select-drop-down
+        formControlName="dateType"
+        [label]="''"
+        [options]="yearsArray"
+        [outputValue]="'name'"
+      ></stc-apps-select-drop-down>
+    </div>
+  </div>
+  <div class="d-flex justify-content-between">
+    @for(progress of progressInfo; track progress; let index=$index){
+    <div class="details-page_progress-overview">
+      <img [src]="progress.iconPath" alt="" />
+      <p>{{ progress.progressDesc }}</p>
+    </div>
+    }
+  </div>
+  <div class="details-page_cards">
+    @for (cardInfo of cardsInfo; track $index) {
+    <div class="card-holder">
+      <stc-apps-progress-card
+        [title]="cardInfo.title"
+        [precentage]="cardInfo.percentage"
+        [status]="cardInfo.status"
+      ></stc-apps-progress-card>
+    </div>
+    }
+  </div>
+</div>

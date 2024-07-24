@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DetailsComponent } from './details.component';
+import { SharedModule } from '../../shared/shared.module';
+import { appRoutes } from './details.routes';
+import { RouterModule } from '@angular/router';
+import { ProgressCardComponent } from './progress-card/progress-card.component';
 
+const components = [DetailsComponent, ProgressCardComponent];
 
-
+const modules = [SharedModule, RouterModule.forChild(appRoutes)];
 @NgModule({
-  declarations: [
-    DetailsComponent
-  ],
-  imports: [
-    CommonModule
-  ]
+  declarations: [...components],
+  imports: [...modules],
+  exports: [...components],
 })
-export class DetailsModule { }
+export class DetailsModule {}
