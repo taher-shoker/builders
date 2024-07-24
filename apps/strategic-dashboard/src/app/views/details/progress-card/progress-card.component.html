@@ -1,0 +1,13 @@
+<div class="progress-card" [ngStyle]="{ 'background-color': color }">
+ 
+    <div class="progress-card_title">{{ title() }}</div>
+    <div class="progress-card_percent-holder d-flex justify-content-between">
+      <div class="progress-card_precantage" [ngStyle]="{ color: precentColor }">
+        {{ precentage() }}
+      </div>
+      <div class="progress-card_icon">
+        <img [src]="iconPath" alt="" />
+      </div>
+    </div>
+  
+</div>

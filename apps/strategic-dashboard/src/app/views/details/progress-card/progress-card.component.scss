@@ -1,0 +1,22 @@
+.progress-card {
+  padding: 30px 20px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 168px;
+  &_title {
+    margin-bottom: 5%;
+    font-weight: 500;
+    font-size: 16px;
+    color: var(--grayColor);
+  }
+  &_percent-holder{
+    margin-top: auto;
+  }
+  &_precantage {
+    font-weight: 700;
+    color: var(--stcCoralColor);
+    font-size: 24px;
+    font-family: var(--stc-font-bold);
+  }
+}
