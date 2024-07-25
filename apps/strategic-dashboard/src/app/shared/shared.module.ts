@@ -2,8 +2,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { TopBannerComponent } from './top-banner/top-banner.component';
+import { TabComponent } from './tabs/tab/tab.component';
+import { TabsComponent } from './tabs/tabs.component';
+import { ProgressPercentageComponent } from './progress-percentage/progress-percentage.component';
 
-const components = [TopBannerComponent];
+const components = [
+  TopBannerComponent,
+  TabsComponent,
+  TabComponent,
+  ProgressPercentageComponent,
+];
 const modules = [CommonModule, SharedUiModule];
 
 @NgModule({

@@ -1,0 +1,25 @@
+@import '../../../../styles/variables.scss';
+
+.tab {
+  flex: 1;
+  font-size: 14px;
+  padding: 10px 15px;
+  display: block;
+  border: none;
+  background-color: var(--stc-grey-color);
+  color: var(--grey-color);
+  font-family: var(--stc-font-base);
+  border-radius: 2px;
+
+  &.active {
+    background-color: var(--stc-color);
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  &:hover {
+    background-color: var(--stc-color);
+    color: var(--white);
+    font-weight: 500;
+  }
+}
