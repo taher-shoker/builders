@@ -19,18 +19,24 @@
             >{{ content.percentage }}</span
           >
         </div>
-        <img
+        <!-- <img
           class="kpi-card_details_progress"
           src="assets/images/progress.svg"
           [ngClass]="getPercentageClass(content.percentage)"
-        />
+        /> -->
+        <stc-apps-progress-percentage
+          [percentage]="content.percentage"
+        ></stc-apps-progress-percentage>
       </div>
       }
     </div>
     }
   </div>
   <div class="kpi-card_footer">
-    <div [routerLink]="['/details', kpiTitle()]" class="kpi-card_footer-content">
+    <div
+      [routerLink]="['/details', kpiTitle()]"
+      class="kpi-card_footer-content"
+    >
       More details
       <img src="assets/images/arrow-right.svg" alt="" />
     </div>

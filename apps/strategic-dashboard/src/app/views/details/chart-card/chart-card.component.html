@@ -1,0 +1,31 @@
+<div class="charts">
+  <div class="charts_card">
+    <div class="charts_card_title">
+      <stc-apps-progress-percentage></stc-apps-progress-percentage>
+      <h3>{{ title() }}</h3>
+    </div>
+    <div class="charts_card_tabs">
+      <stc-apps-tabs (changeSelectValue)="handleChangeTab($event)">
+        <stc-apps-tab value="ColumnChart">Column chart</stc-apps-tab>
+        <stc-apps-tab value="LineChart">Line chart</stc-apps-tab>
+      </stc-apps-tabs>
+    </div>
+  </div>
+  <div class="charts_card_body">
+    @if (selectedTab() == 'ColumnChart') {
+    <h3>ColumnChart</h3>
+    } @else if (selectedTab() == 'LineChart') {
+    <div class="line-chart">
+      <ng-container [ngTemplateOutlet]="lineChart"></ng-container>
+    </div>
+    }
+  </div>
+</div>
+
+<ng-template #lineChart>
+  <stc-apps-line-chart
+    [trendModuleState]="true"
+    [chartData]="lineChartData"
+    [colors]="lineChartColors"
+  ></stc-apps-line-chart>
+</ng-template>
