@@ -5,11 +5,13 @@ import { appRoutes } from './details.routes';
 import { RouterModule } from '@angular/router';
 import { ProgressCardComponent } from './progress-card/progress-card.component';
 import { ChartCardComponent } from './chart-card/chart-card.component';
+import { XYChartComponent } from './XY-Chart/XY-chart.component';
 
 const components = [
   DetailsComponent,
   ProgressCardComponent,
   ChartCardComponent,
+  XYChartComponent,
 ];
 
 const modules = [SharedModule, RouterModule.forChild(appRoutes)];
