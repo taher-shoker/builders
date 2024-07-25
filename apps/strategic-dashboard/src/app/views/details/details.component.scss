@@ -41,8 +41,16 @@
       }
     }
   }
+  &_progressHolder {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    
+    margin: 0px 24px;
+  }
   &_progress-overview {
-    margin: 0px 34px;
+    width: 33.333%;
+    
     display: flex;
     p {
       margin: 0;
@@ -52,13 +60,61 @@
       font-weight: 400;
       font-size: 16px;
     }
+    img{
+      width: 40px;
+    }
   }
   &_cards {
     display: flex;
     justify-content: space-between;
+    flex-wrap: wrap;
     margin: 44px 40px;
     .card-holder {
+      margin-bottom: 24px;
       width: 15%;
+    }
+  }
+}
+@media screen and (max-width: 1405px) and (min-width: 900px) {
+  .details-page_cards {
+    .card-holder {
+      width: 23% !important;
+    }
+  }
+  .details-page_progress-overview{
+    width: 49% !important;
+  }
+}
+@media screen and (max-width: 900px) and (min-width: 660px) {
+  .details-page_cards {
+    .card-holder {
+      width: 32.33% !important;
+    }
+  }
+  .details-page_progress-overview{
+    width: 99% !important;
+  }
+  .details-page_header{
+    > div{
+      margin-left: 20%;
+    }
+  }
+}
+@media screen and (max-width: 660px) {
+  .details-page_cards {
+    .card-holder {
+      width: 49% !important;
+    }
+  }
+  .details-page_progress-overview{
+    width: 99% !important;
+  }
+  .details-page_title{
+    display: block !important;
+  }
+  .details-page_header{
+    > div{
+      margin-left: 20%;
     }
   }
 }
