@@ -1,6 +1,5 @@
 .kpi-card {
   position: relative;
-  width: 360px;
   height: 683px;
   border-radius: 10px;
   // overflow: auto;
@@ -104,7 +103,7 @@
     color: var(--stc-color);
     position: absolute;
     z-index: 999;
-    left: 32%;
+    left: 34%;
     bottom: 12px;
     margin-top: 16px;
     background-color: var(--whiteColor);
