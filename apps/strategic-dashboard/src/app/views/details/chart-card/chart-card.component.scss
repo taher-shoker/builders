@@ -1,32 +1,32 @@
 .charts {
-    background: var(--whiteColor);
-    box-shadow: 0px 0px 20px 0px #00000014;
+  background: var(--whiteColor);
+  box-shadow: 0px 0px 20px 0px #00000014;
+  border-radius: 12px;
+  height: 100%;
+
+  &_card {
+    display: flex;
+    justify-content: space-between;
+    padding: 25px 30px;
+
+    &_title {
+      display: flex;
+      align-items: center;
 
 
-    &_card {
-        display: flex;
-        justify-content: space-between;
-        padding: 25px 30px;
+      h3 {
+        margin-inline-start: 5px;
+      }
 
 
-        &_title {
-            display: flex;
-            align-items: center;
 
+      &_body {
+        height: 300px;
 
-            h3 {
-                margin-inline-start: 5px;
-            }
+        .line-chart {
+          height: 300px;
         }
-
-
-
-        &_body {
-            height: 200px;
-
-            .line-chart {
-                height: 200px;
-            }
-        }
+      }
     }
+  }
 }

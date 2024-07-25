@@ -24,7 +24,7 @@ export class ChartCardComponent {
   //Hold the line of the data
   chartData: { name: string; data: LineChartData[] }[] = [
     {
-      name: 'Line 1',
+      name: 'Target',
       data: [
         { category: new Date(2022, 0, 1), value: 10 },
         { category: new Date(2023, 1, 2), value: 60 },
@@ -33,7 +33,7 @@ export class ChartCardComponent {
       ],
     },
     {
-      name: 'Line 2',
+      name: 'Actual',
       data: [
         { category: new Date(2022, 0, 1), value: 30 },
         { category: new Date(2023, 1, 2), value: 55 },
@@ -61,5 +61,5 @@ export class ChartCardComponent {
     { category: new Date(2023, 2, 1), value: 75 },
   ];
 
-  lineChartColors = ['#8E9AA0', '#45006F'];
+  lineChartColors = ['#D2D7D9', '#45006F'];
 }

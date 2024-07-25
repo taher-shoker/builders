@@ -6,12 +6,14 @@ import { RouterModule } from '@angular/router';
 import { ProgressCardComponent } from './progress-card/progress-card.component';
 import { ChartCardComponent } from './chart-card/chart-card.component';
 import { CustomLineChartComponent } from './custom-line-chart/custom-line-chart.component';
+import { XYChartComponent } from './XY-Chart/XY-chart.component';
 
 const components = [
   DetailsComponent,
   ProgressCardComponent,
   ChartCardComponent,
   CustomLineChartComponent,
+  XYChartComponent,
 ];
 
 const modules = [SharedModule, RouterModule.forChild(appRoutes)];

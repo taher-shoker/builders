@@ -106,8 +106,8 @@ export class CustomLineChartComponent
     const allColors: am5.Color[] = [];
     this.colors.forEach((color: string) => {
       allColors.push(am5.color(color));
-      chart.get('colors')?.set('colors', allColors);
     });
+    chart.get('colors')?.set('colors', allColors);
 
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(this.root, {
@@ -127,9 +127,9 @@ export class CustomLineChartComponent
         tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
-    this.root.numberFormatter.set('numberFormat', '#');
+    // this.root.numberFormatter.set('numberFormat', '#');
 
-    chart.gridContainer.dispose();
+    // chart.gridContainer.dispose();
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(this.root, {
@@ -144,27 +144,72 @@ export class CustomLineChartComponent
       })
     );
 
-    const xRenderer = xAxis.get('renderer');
-    const yRenderer = yAxis.get('renderer');
-    xRenderer.ticks.template.setAll({
-      stroke: am5.color('#8e9aa0'),
-      visible: true,
-      strokeWidth: 1,
-      height: 30,
-    });
-    xRenderer.labels.template.setAll({
-      fill: am5.color(0x000000),
-      fontSize: '1em',
-      paddingTop: 20,
-      direction: this.direction == 'ar' ? 'rtl' : 'ltr',
-    });
+    // const xRenderer = xAxis.get('renderer');
+    // const yRenderer = yAxis.get('renderer');
+    // xRenderer.ticks.template.setAll({
+    //   stroke: am5.color('#8e9aa0'),
+    //   visible: true,
+    //   strokeWidth: 1,
+    //   height: 30,
+    // });
+    // xRenderer.labels.template.setAll({
+    //   fill: am5.color(0x000000),
+    //   fontSize: '1em',
+    //   paddingTop: 20,
+    //   direction: this.direction == 'ar' ? 'rtl' : 'ltr',
+    // });
 
-    yRenderer.labels.template.setAll({
-      fill: am5.color(0x000000),
-      fontSize: '1em',
-      direction: this.direction == 'ar' ? 'rtl' : 'ltr',
-    });
+    // yRenderer.labels.template.setAll({
+    //   fill: am5.color(0x000000),
+    //   fontSize: '1em',
+    //   direction: this.direction == 'ar' ? 'rtl' : 'ltr',
+    // });
 
+    const makeSeries = (name: string, data: LineChartData[], color: string) => {
+      const series = chart.series.push(
+        am5xy.LineSeries.new(this.root, {
+          name: name,
+          minBulletDistance: 10,
+          xAxis: xAxis,
+          yAxis: yAxis,
+          valueYField: 'value',
+          valueXField: 'category',
+          tooltip: am5.Tooltip.new(this.root, {
+            pointerOrientation: 'horizontal',
+            labelText: '{valueY}',
+          }),
+        })
+      );
+
+      series.data.processor = am5.DataProcessor.new(this.root, {
+        dateFormat: 'yyyy-MM-dd',
+        dateFields: ['category'],
+      });
+
+      series.data.setAll(data);
+
+      series.strokes.template.setAll({
+        strokeWidth: 2,
+        stroke: am5.color(color),
+      });
+
+      series.bullets.push(() => {
+        const circle = am5.Circle.new(this.root, {
+          radius: 4,
+          fill: am5.color(color), // Match the fill color to the line color
+          stroke: this.root.interfaceColors.get('background'),
+          strokeWidth: 2,
+        });
+
+        return am5.Bullet.new(this.root, {
+          sprite: circle,
+        });
+      });
+
+      series.appear(1000, 100);
+      return series;
+    };
+    const seriesList: am5xy.LineSeries[] = [];
     this.multiChartData.forEach((seriesData, index) => {
       const series = chart.series.push(
         am5xy.LineSeries.new(this.root, {
@@ -185,18 +230,17 @@ export class CustomLineChartComponent
         dateFormat: 'yyyy-MM-dd',
         dateFields: ['category'],
       });
-
       series.data.setAll(seriesData.data);
-
       series.strokes.template.setAll({
         strokeWidth: 2,
+        stroke: am5.color(this.colors[index] || '#000000'),
         strokeDasharray: undefined,
       });
 
       series.bullets.push(() => {
         const circle = am5.Circle.new(this.root, {
           radius: 4,
-          fill: am5.color(this.colors[index]),
+          fill: am5.color(this.colors[index] || '#000000'), // custom color for target
           stroke: this.root.interfaceColors.get('background'),
           strokeWidth: 2,
         });
@@ -205,11 +249,10 @@ export class CustomLineChartComponent
           sprite: circle,
         });
       });
-
       series.appear(1000, 100);
+      seriesList.push(series);
     });
 
-    // Adding targetData series
     if (this.targetData) {
       const targetSeries = chart.series.push(
         am5xy.LineSeries.new(this.root, {
@@ -223,10 +266,9 @@ export class CustomLineChartComponent
             pointerOrientation: 'horizontal',
             labelText: '{valueY}',
           }),
-          stroke: am5.color('#FF0000'), // custom color for target
+          stroke: am5.color('#FF0000'),
         })
       );
-
       targetSeries.data.processor = am5.DataProcessor.new(this.root, {
         dateFormat: 'yyyy-MM-dd',
         dateFields: ['category'],
@@ -236,13 +278,12 @@ export class CustomLineChartComponent
 
       targetSeries.strokes.template.setAll({
         strokeWidth: 2,
-        strokeDasharray: undefined,
       });
 
       targetSeries.bullets.push(() => {
         const circle = am5.Circle.new(this.root, {
           radius: 4,
-          fill: am5.color('#FF0000'), // custom color for target
+          fill: am5.color('#FF0000'),
           stroke: this.root.interfaceColors.get('background'),
           strokeWidth: 2,
         });
@@ -253,13 +294,14 @@ export class CustomLineChartComponent
       });
 
       targetSeries.appear(1000, 100);
+      seriesList.push(targetSeries);
     }
 
     // Adding target2Data series
     if (this.target2Data) {
       const target2Series = chart.series.push(
         am5xy.LineSeries.new(this.root, {
-          name: 'Target 2',
+          name: 'Actual',
           minBulletDistance: 10,
           xAxis: xAxis,
           yAxis: yAxis,
@@ -269,7 +311,7 @@ export class CustomLineChartComponent
             pointerOrientation: 'horizontal',
             labelText: '{valueY}',
           }),
-          stroke: am5.color('#0000FF'), // custom color for target2
+          stroke: am5.color('#0000FF'),
         })
       );
 
@@ -282,13 +324,12 @@ export class CustomLineChartComponent
 
       target2Series.strokes.template.setAll({
         strokeWidth: 2,
-        strokeDasharray: undefined,
       });
 
       target2Series.bullets.push(() => {
         const circle = am5.Circle.new(this.root, {
           radius: 4,
-          fill: am5.color('#0000FF'), // custom color for target2
+          fill: am5.color('#0000FF'),
           stroke: this.root.interfaceColors.get('background'),
           strokeWidth: 2,
         });
@@ -299,7 +340,37 @@ export class CustomLineChartComponent
       });
 
       target2Series.appear(1000, 100);
+      seriesList.push(target2Series);
     }
+
+    // Add legend at the bottom
+    const legend = chart.children.push(
+      am5.Legend.new(this.root, {
+        nameField: 'name',
+        fillField: 'color',
+        strokeField: 'color',
+        centerX: am5.percent(50),
+        x: am5.percent(50),
+        marginTop: 20,
+      })
+    );
+    legend.data.setAll([
+      {
+        name: 'Actual',
+        color: am5.color('#45006F'),
+      },
+      {
+        name: 'Target',
+        color: am5.color('#D2D7D9'),
+      },
+    ]);
+
+    legend.markerRectangles.template.setAll({
+      cornerRadiusTL: 10,
+      cornerRadiusTR: 10,
+      cornerRadiusBL: 10,
+      cornerRadiusBR: 10,
+    });
 
     const cursor = chart.set(
       'cursor',
@@ -308,7 +379,6 @@ export class CustomLineChartComponent
       })
     );
     cursor.lineY.set('visible', false);
-
     chart.appear(1000, 100);
   }
 
