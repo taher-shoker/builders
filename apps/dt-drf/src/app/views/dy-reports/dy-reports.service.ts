@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
-import { environment } from '../../../environments/environment';
-import { BehaviorSubject, map, Observable, of } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface User {
   id: number;
@@ -205,7 +205,7 @@ export class ReportsService {
   dtUrl = `${this.baseUrl}v2/report-flow-service/`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
-  endpointAttachments = `${this.baseUrl}/fm/attachment`;
+  endpointAttachments = `${this.baseUrl}v2/report-flow-service/attachments`;
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
@@ -289,15 +289,7 @@ export class ReportsService {
   }
 
   createReportFlow(data: any) {
-    return this.http.post(`${this.dtUrl}`, data);
-  }
-
-  addBulkData(data: FormData, relatedTeam: string) {
-    const params = new HttpParams().set('relatedTeam', relatedTeam);
-
-    return this.http.post(`${this.dtUrl}/bulk/upload`, data, {
-      params,
-    });
+    return this.http.post(`${this.dtUrl}requests`, data);
   }
 
   /**
@@ -545,6 +537,10 @@ export class ReportsService {
     );
   }
 
+  addFile(data: FormData): Observable<UploadResponse> {
+    return this.http.post<UploadResponse>(`${this.endpointAttachments}`, data);
+  }
+
   getFile(id: any) {
     return this.http.get(`${this.endpointAttachments}/${id}/download`, {
       responseType: 'blob',
@@ -560,6 +556,13 @@ export class ReportsService {
   }
 }
 
+export interface UploadResponse {
+  id: number;
+  label: string;
+  fileName: string;
+  url: string;
+  uploadDate: string;
+}
 export interface Reminders {
   id: number;
   reminderContent: string;

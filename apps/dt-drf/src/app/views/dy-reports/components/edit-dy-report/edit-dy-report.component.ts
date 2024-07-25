@@ -10,22 +10,22 @@ import { ReportsService } from '../../dy-reports.service';
   styleUrls: ['./edit-dy-report.component.scss'],
 })
 export class EditDyReportComponent implements OnInit {
-  milestoneId!: string;
-  milestoneData!: any;
+  reportId!: string;
+  reportData!: any;
 
   constructor(
     private bannerDataService: BannerDataService,
     public reportsService: ReportsService,
     public route: ActivatedRoute
   ) {}
-  getMilestone(id: number) {
+  getReport(id: number) {
     this.reportsService.getReport(id).subscribe((res: any) => {
-      this.milestoneData = res;
+      this.reportData = res;
     });
   }
   ngOnInit(): void {
-    this.milestoneId = this.route.snapshot.params['id'];
-    this.getMilestone(+this.milestoneId);
+    this.reportId = this.route.snapshot.params['id'];
+    this.getReport(+this.reportId);
     this.bannerDataService.updateData({
       title: '',
       text: '',

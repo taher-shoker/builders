@@ -26,11 +26,11 @@ import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
 import { ConfigService } from '../../../../services/config.service';
 import { Report } from '../../../../services/models/report-flow.model';
 import { User } from '../../../../services/models/user';
-import { ReportsService } from '../../dy-reports.service';
+import { ReportsService, UploadResponse } from '../../dy-reports.service';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
@@ -51,26 +51,29 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   reportData!: Report;
   @Input() readOnly!: boolean;
 
-  @Output() caseStatus = new EventEmitter<string>();
-
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
   form!: FormGroup;
   users: User[] = [];
   approvers: User[] = [];
-  files: File[] = [];
-  formData = new FormData();
+  filteredApprovers: any[][] = []; // Array of filtered options for each dropdown
+
+  uploadedFiles: BehaviorSubject<{ id: number; label: string }[]> =
+    new BehaviorSubject<{ id: number; label: string }[]>([]);
+
   isLoading = false;
+  isSubmitLoading = false;
+
   errorSize = false;
   errorType = false;
   disableSaveBtn = true;
   filteredOptions: Observable<User[]>[] = [];
 
-  allTeams: any;
   selectTeam!: any;
   stepCounter = 1;
   selectedOptions: any = [];
   customRangeSLA: { name: number; id: number }[] = [];
+  categories: any;
   constructor(
     private _formBuilder: FormBuilder,
     protected dialogService: DialogService,
@@ -81,8 +84,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data']) {
-      this.reportData = changes['data'].currentValue;
+    if (changes['reportData']) {
+      this.reportData = changes['reportData'].currentValue;
       if (this.reportData) {
         this.restFormWithValue(this.reportData);
       }
@@ -94,6 +97,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.ManageUserNameControl(0);
     this.customSLAPopulator();
     this.getUsersListing();
+    this.getCategories();
   }
 
   initReportForm() {
@@ -103,46 +107,58 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       requestCategoryId: ['', Validators.required],
       sla: [''],
       customSLA: [''],
-      needMoreDataFromCreator: [false],
-      creatorName: [''],
-      attachments: [[]],
+      needMoreDataFromCreator: [0],
+      initiatorShouldApprove: [0],
+      creatorEmail: [''],
+      attachments: [[], Validators.required],
       requestApprovals: this._formBuilder.array([]),
     });
     this.addNewStep();
   }
 
   restFormWithValue(data: any) {
-    console.log(data);
+    this.form?.get('reportName')?.setValue(data?.reportName);
+    this.form?.get('description')?.setValue(data.description);
+    this.form?.get('requestCategoryId')?.setValue(data.requestCategory.id);
+    this.uploadedFiles.next(data?.attachments);
+    if (data?.creatorEmail) {
+      this.form?.get('needMoreDataFromCreator')?.setValue(true);
+      this.form?.get('creatorEmail')?.setValue(data.creatorEmail);
+    }
   }
   onSubmit() {
-    // console.log(this.form.value);
-
     if (this.form.valid) {
-      console.log(this.form.value);
-      // let finalData = {
-      //   ...this.form.value,
-      //   weight: +this.form.get('weight')?.value,
-      // };
-      // if (this.isEditing) {
-      //   finalData = { ...finalData, teamName: '4' };
-      //   this.milestonesService
-      //     .updateReportFlow('1', finalData)
-      //     .subscribe((res) => {
-      //       if (res) {
-      //         this.toastr.success('Milestone has been edited successfully');
-      //         this.form.reset();
-      //         this.router.navigate(['./home']);
-      //       }
-      //     });
-      // } else {
-      //   this.milestonesService.createReportFlow(finalData).subscribe((res) => {
-      //     if (res) {
-      //       this.toastr.success('Milestone has been created successfully');
-      //       this.form.reset();
-      //       this.router.navigate(['./home']);
-      //     }
-      //   });
-      // }
+      this.isSubmitLoading = true;
+      let finalData = {
+        ...this.form.value,
+        initiatorShouldApprove: this.form.get('initiatorShouldApprove')?.value
+          ? 1
+          : 0,
+        needMoreDataFromCreator: this.form.get('needMoreDataFromCreator')?.value
+          ? 1
+          : 0,
+      };
+      if (this.isEditing) {
+        finalData = { ...finalData };
+        // this.reportsService
+        //   .updateReportFlow('1', finalData)
+        //   .subscribe((res) => {
+        //     if (res) {
+        //       this.toastr.success('Milestone has been edited successfully');
+        //       this.form.reset();
+        //       this.router.navigate(['./home']);
+        //     }
+        //   });
+      } else {
+        this.reportsService.createReportFlow(finalData).subscribe((res) => {
+          if (res) {
+            this.isSubmitLoading = false;
+            this.toastr.success('Report has been created successfully');
+            this.form.reset();
+            this.router.navigate(['./home']);
+          }
+        });
+      }
     } else {
       // Mark all fields as touched to show validation errors
       this.markFormGroupTouched(this.form);
@@ -163,11 +179,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       event.preventDefault();
     }
   }
-  getAllTeams() {
-    this.reportsService.setSystemTeams().subscribe((res: any) => {
-      this.allTeams = res;
-    });
-  }
 
   getUsersListing() {
     this.reportsService.getUsers().subscribe((res) => {
@@ -175,6 +186,11 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
       this.approvers = this.users;
+    });
+  }
+  getCategories() {
+    this.reportsService.getCategories().subscribe((res) => {
+      this.categories = res;
     });
   }
   customSLAPopulator() {
@@ -195,15 +211,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     const { name, value } = v;
     if (name === 'needMoreDataFromCreator') {
       if (value) {
-        this.form
-          .get('needMoreDataFromCreator')
-          ?.setValidators(Validators.required);
-        this.form.get('attachments')?.setValidators(Validators.required);
-      } else {
-        this.form.get('needMoreDataFromCreator')?.clearValidators();
+        this.form.get('creatorEmail')?.setValidators(Validators.required);
         this.form.get('attachments')?.clearValidators();
+      } else {
+        this.form.get('creatorEmail')?.clearValidators();
+        this.form.get('attachments')?.setValidators(Validators.required);
       }
-      this.form.get('needMoreDataFromCreator')?.updateValueAndValidity();
+      this.form.get('creatorEmail')?.updateValueAndValidity();
       this.form.get('attachments')?.updateValueAndValidity();
     } else if (name === 'sla') {
       if (value) {
@@ -225,24 +239,24 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   clearInputElement() {
     this.errorSize = false;
     this.errorType = false;
-    this.formData.delete('file');
-    this.files = [];
+    //this.files = [];
   }
 
   handleUploadChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const files = Array.from(inputElement.files || []);
     if (files.length > 0) {
-      this.clearInputElement();
       this.uploadAndProgress(files);
     }
   }
-
   uploadAndProgress(files: File[]) {
-    this.files = files;
-    files.forEach((f) => {
+    // Track the number of files processed
+    let filesProcessed = 0;
+    const totalFiles = files.length;
+
+    files.forEach((file) => {
       if (
-        f.size >
+        file.size >
         +this.config_service.getConfig().fileValidation.sizeWithMegaBytes *
           1000000
       ) {
@@ -251,14 +265,52 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         !this.config_service
           .getConfig()
           .fileValidation.acceptType.split(',')
-          .includes(f.type)
+          .includes(file.type)
       ) {
         this.errorType = true;
       } else {
-        this.formData.append('file', f);
-        this.form.get('file')?.setValue(this.formData);
+        // Create a new FormData object for each file
+        const formData = new FormData();
+        formData.append('file', file);
+
+        this.reportsService.addFile(formData).subscribe({
+          next: (res: UploadResponse) => {
+            console.log(res);
+            // Update the BehaviorSubject with new file data
+            this.uploadedFiles.next([
+              ...this.uploadedFiles.value,
+              { id: res.id, label: res.label },
+            ]);
+
+            // Increment the count of processed files
+            filesProcessed++;
+
+            // Check if all files have been processed
+            if (filesProcessed === totalFiles) {
+              // Update the form control value after all files have been processed
+              this.form
+                .get('attachments')
+                ?.setValue(
+                  this.uploadedFiles.value.map((file) => ({ id: file.id }))
+                );
+            }
+          },
+          error: (err) => {
+            console.error(err);
+            // Handle error if needed
+          },
+        });
       }
     });
+  }
+
+  removeFile(index: number) {
+    const currentFiles = this.uploadedFiles.value;
+    currentFiles.splice(index, 1); // Remove the file at the specified index
+    this.uploadedFiles.next(currentFiles); // Update the BehaviorSubject with the new list
+    this.form
+      .get('attachments')
+      ?.setValue(this.uploadedFiles.value.map((file) => ({ id: file.id })));
   }
 
   // convenience getters for easy access to form fields
@@ -291,9 +343,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       this.t?.at(item)?.get('input')?.markAsTouched();
     }
   }
-  onSelectionChange(event: any, i: number) {
+  onSelectionChange(v: any, i: number) {
     this.disableSaveBtn = false;
-    const value = event.source.value.toLowerCase();
+    //const value = event.source.value.toLowerCase();
 
     // if (
     //   this.isEditing &&
@@ -305,11 +357,11 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     // ) {
     //   this.disableSaveBtn = true;
     // }
-    // this.selectedOptions.splice(i, 1);
+    this.selectedOptions.splice(i, 1);
 
-    // if (!this.selectedOptions.includes(value)) {
-    //   this.selectedOptions.splice(i, 0, value);
-    // }
+    if (!this.selectedOptions.includes(v)) {
+      this.selectedOptions.splice(i, 0, v);
+    }
     this.ManageUserNameControl(i);
   }
   ManageUserNameControl(index: number) {

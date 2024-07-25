@@ -12,6 +12,7 @@ import { DelegationDialogComponent } from './delegationDialog/delegationDialog.c
 })
 export class HomeComponent implements OnInit {
   constructor(
+    private cookieService: CookieService,
     private authService: AuthService,
     public router: Router,
     public route: ActivatedRoute,
@@ -28,36 +29,39 @@ export class HomeComponent implements OnInit {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
-      roles: ['APPROVERS,CREATORS'],
+      roles: ['all'],
       urlHome: '/home',
     },
     {
       name: 'Category',
       url: '/category',
       icon: 'fa-home',
-      // roles: ['APPROVERS,CREATORS'],
+      roles: ['all'],
       urlHome: '/home',
     },
   ];
   ngOnInit() {
-    // this.authService.getUserData();
-    // this.userName = this.cookieService.get('USER_FULLNAME') || '';
-    // this.authService.loggedUserStream.subscribe((res) => {
-    //   this.userName = res?.name || '';
-    //   if (res?.roles) {
-    //     const items = [];
-    //     for (let i = 0; i < this.navItems.length; i++) {
-    //       const similar = this.navItems[i].roles.filter((element) =>
-    //         element.includes(res.roles[0])
-    //       );
-    //       if (similar.length > 0) {
-    //         items.push(this.navItems[i]);
-    //         this.urlHome = this.navItems[i].urlHome;
-    //       }
-    //     }
-    //     this.navItems = items;
-    //   }
-    // });
+    this.authService.getUserData();
+    this.userName = this.cookieService.get('USER_FULLNAME') || '';
+    this.authService.loggedUserStream.subscribe((res) => {
+      this.userName = res?.name || '';
+      if (res?.roles) {
+        const items = [];
+        for (let i = 0; i < this.navItems.length; i++) {
+          const item = this.navItems[i];
+          // Check if the item should be included based on roles
+          if (
+            item.roles.includes('all') ||
+            item.roles.some((role) => res.roles.includes(role))
+          ) {
+            items.push(item);
+            this.urlHome = item.urlHome;
+          }
+        }
+        // Update the navItems with the filtered list
+        this.navItems = items;
+      }
+    });
   }
 
   clickRemider(item: any) {
@@ -73,8 +77,7 @@ export class HomeComponent implements OnInit {
     this.router.navigate([this.urlHome]);
   }
 
-  delegateUser(
-  ) {
+  delegateUser() {
     const dialogRef = this.matDialog.open(DelegationDialogComponent, {
       width: '800px',
     });
@@ -83,8 +86,6 @@ export class HomeComponent implements OnInit {
       if (!res) {
         return;
       }
-
-      
     });
   }
 

@@ -111,7 +111,6 @@ export class SelectDropDownComponent<T>
           : ''
         ).includes(searchTerm.toLowerCase())
       );
-      console.log(this.filteredOptions);
     }
   }
 
