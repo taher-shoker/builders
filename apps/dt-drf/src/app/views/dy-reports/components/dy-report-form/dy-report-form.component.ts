@@ -1,11 +1,9 @@
 import {
   Component,
   ElementRef,
-  EventEmitter,
   Input,
   OnChanges,
   OnInit,
-  Output,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -17,11 +15,7 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-import {
-  MAT_MOMENT_DATE_ADAPTER_OPTIONS,
-  MomentDateAdapter,
-} from '@angular/material-moment-adapter';
-import { DateAdapter, MAT_DATE_LOCALE } from '@angular/material/core';
+
 import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
@@ -30,20 +24,16 @@ import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
 import { ConfigService } from '../../../../services/config.service';
 import { Report } from '../../../../services/models/report-flow.model';
 import { User } from '../../../../services/models/user';
-import { ReportsService, UploadResponse } from '../../dy-reports.service';
+import {
+  Category,
+  ReportsService,
+  UploadResponse,
+} from '../../dy-reports.service';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
   templateUrl: './dy-report-form.component.html',
   styleUrls: ['./dy-report-form.component.scss'],
-  providers: [
-    {
-      provide: DateAdapter,
-      useClass: MomentDateAdapter,
-      deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS],
-    },
-    { provide: MAT_MOMENT_DATE_ADAPTER_OPTIONS, useValue: { useUtc: true } },
-  ],
 })
 export class DyReportFormComponent implements OnInit, OnChanges {
   @Input() isEditing!: boolean;
@@ -56,7 +46,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   users: User[] = [];
   approvers: User[] = [];
-  filteredApprovers: any[][] = []; // Array of filtered options for each dropdown
 
   uploadedFiles: BehaviorSubject<{ id: number; label: string }[]> =
     new BehaviorSubject<{ id: number; label: string }[]>([]);
@@ -73,7 +62,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   stepCounter = 1;
   selectedOptions: any = [];
   customRangeSLA: { name: number; id: number }[] = [];
-  categories: any;
+  categories!: Category[];
+
   constructor(
     private _formBuilder: FormBuilder,
     protected dialogService: DialogService,
@@ -116,7 +106,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.addNewStep();
   }
 
-  restFormWithValue(data: any) {
+  restFormWithValue(data: Report) {
     this.form?.get('reportName')?.setValue(data?.reportName);
     this.form?.get('description')?.setValue(data.description);
     this.form?.get('requestCategoryId')?.setValue(data.requestCategory.id);
@@ -125,45 +115,70 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       this.form?.get('needMoreDataFromCreator')?.setValue(true);
       this.form?.get('creatorEmail')?.setValue(data.creatorEmail);
     }
+    this.form?.get('description')?.disable();
+    this.form?.get('requestCategoryId')?.disable();
+    this.form?.get('needMoreDataFromCreator')?.disable();
+    this.form?.get('creatorEmail')?.disable();
+    this.form?.get('initiatorShouldApprove')?.disable();
+    this.form?.get('attachments')?.disable();
+    this.form?.get('requestApprovals')?.disable();
   }
   onSubmit() {
-    if (this.form.valid) {
-      this.isSubmitLoading = true;
-      let finalData = {
-        ...this.form.value,
-        initiatorShouldApprove: this.form.get('initiatorShouldApprove')?.value
-          ? 1
-          : 0,
-        needMoreDataFromCreator: this.form.get('needMoreDataFromCreator')?.value
-          ? 1
-          : 0,
-      };
-      if (this.isEditing) {
-        finalData = { ...finalData };
-        // this.reportsService
-        //   .updateReportFlow('1', finalData)
-        //   .subscribe((res) => {
-        //     if (res) {
-        //       this.toastr.success('Milestone has been edited successfully');
-        //       this.form.reset();
-        //       this.router.navigate(['./home']);
-        //     }
-        //   });
-      } else {
-        this.reportsService.createReportFlow(finalData).subscribe((res) => {
-          if (res) {
-            this.isSubmitLoading = false;
-            this.toastr.success('Report has been created successfully');
-            this.form.reset();
-            this.router.navigate(['./home']);
-          }
-        });
-      }
-    } else {
-      // Mark all fields as touched to show validation errors
+    if (!this.form.valid) {
       this.markFormGroupTouched(this.form);
+      return;
+    }
+
+    this.isSubmitLoading = true;
+
+    const finalData = {
+      ...this.form.value,
+      initiatorShouldApprove: this.form.get('initiatorShouldApprove')?.value
+        ? 1
+        : 0,
+      needMoreDataFromCreator: this.form.get('needMoreDataFromCreator')?.value
+        ? 1
+        : 0,
+    };
+
+    const handleSuccess = (message: string) => {
+      this.toastr.success(message);
+      this.form.reset();
+      this.router.navigate(['./home']);
+      this.isSubmitLoading = false;
+    };
+
+    const handleError = () => {
+      this.isSubmitLoading = false;
+      //  this.toastr.error('An error occurred while processing your request.');
+    };
+
+    if (this.isEditing) {
+      const id = this.reportData?.id;
+      this.reportsService.updateReportFlow(id, finalData).subscribe(
+        (res) => {
+          if (res) {
+            handleSuccess('Report has been edited successfully');
+          } else {
+            handleError();
+          }
+        },
+        () => handleError()
+      );
+    } else {
+      this.reportsService.createReportFlow(finalData).subscribe(
+        (res) => {
+          if (res) {
+            handleSuccess('Report has been created successfully');
+          } else {
+            handleError();
+          }
+        },
+        () => handleError()
+      );
     }
   }
+
   private markFormGroupTouched(formGroup: FormGroup | FormArray) {
     Object.keys(formGroup.controls).forEach((field) => {
       const control = formGroup.get(field);

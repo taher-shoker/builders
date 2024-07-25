@@ -375,11 +375,11 @@ export class ReportsService {
     return this.http.get(`${this.dtUrl}/${id}`);
   }
 
-  updateReportFlow(id: string, data: any) {
-    return this.http.put(`${this.dtUrl}/update`, {
-      id: id,
-      ...data,
-    });
+  updateReportFlow(id: number, reportName: string) {
+    const options = {
+      params: new HttpParams().set('reportName', reportName),
+    };
+    return this.http.patch(`${this.dtUrl}requests/${id}`, {}, options);
   }
 
   deleteMilestone(id: string) {

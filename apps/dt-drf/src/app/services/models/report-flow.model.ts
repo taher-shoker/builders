@@ -49,23 +49,42 @@ export interface ReportsResponse {
 }
 
 export interface Attachment {
-  fileLabel: string;
-  fileName: string;
   id: number;
+  fileName: string;
+  label: string;
 }
 
 export interface Report {
-  attachment: Attachment;
-  creatorDisplayName: string;
-  creatorEmail: string;
-  flowId: number;
+  attachments: Attachment[];
   id: number;
-  lastModifiedDate: Date;
-  remainingSteps: number;
-  reportFlowStatus: string;
-  reportName: string;
-  serialNumber: string;
+  requestCategory: RequestCategory;
   requestApprovals: RequestApproval[];
+  creatorEmail: string;
+  initiatorEmail: string;
+  creatorDisplayName: string;
+  flowId: number;
+  reportFlowStatus: string;
+  currentAssignee: CurrentAssignee[];
+  createdDate: string;
+  lastModifiedDate: string;
+  remainingSteps: number;
+  serialNumber: string;
+  reportName: string;
+  description: string | null;
+}
+export interface CurrentAssignee {
+  username: string;
+  status: string;
+  userDisplayName: string;
+  requestTaskId: number;
+  createdDate: string;
+  lastModified: string;
+}
+export interface RequestCategory {
+  id: number;
+  name: string;
+  slaDuration: number;
+  isDeletable: boolean | null;
 }
 export interface RequestApproval {
   completedDate: Date;

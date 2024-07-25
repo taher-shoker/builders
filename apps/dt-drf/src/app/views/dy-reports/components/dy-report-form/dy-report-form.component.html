@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="row mt-7 align-items-center">
-        <div class="col-md-2 ">
+        <!-- <div class="col-md-2 ">
           <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Custom SLA'" formControlName="sla"
             [name]="'sla'"></stc-apps-checkbox>
         </div>
@@ -27,7 +27,7 @@
           <stc-apps-select-drop-down [label]="'Custom SLA '" [options]="customRangeSLA" [required]="true"
             formControlName="customSLA" [outputValue]="'name'" [disabled]="true"></stc-apps-select-drop-down>
 
-        </div>
+        </div> -->
 
         <div class="col-md-2">
           <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
@@ -45,7 +45,7 @@
       </div>
 
 
-      <div class="row mt-7">
+      <div class="row mt-7" *ngIf="!isEditing">
         <div class="col-12">
           <div>
             <label for="">Upload File :</label>
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <div class="row mt-7">
+      <div class="row mt-7" *ngIf="!isEditing">
         <div class="col-md-12 mt-4">
           <div class="steps-flow">
             <div class="row">
