@@ -2,12 +2,17 @@
   background-color: var(--stc-lightGrey-color);
 
   &_cardHolder {
-    margin-left: 24px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    margin: 0px 24px;
     .kpis-card {
+      width: 24%;
       &_header {
+        display: flex;
+        justify-content: center;
         z-index: 999;
         top: 30px;
-        left: 30px;
       }
     }
   }
@@ -22,12 +27,24 @@
     }
   }
 }
-@media screen and (max-width: 1500px) and (min-width: 1150px) {
+@media screen and (max-width: 1570px) and (min-width: 1180px) {
   .home-page_cardHolder {
-    display: flex;
-    justify-content: space-around;
     .kpis-card {
-      width: 33.333%;
+      width: 32.333% !important;
+    }
+  }
+}
+@media screen and (max-width: 1180px) and (min-width: 790px) {
+  .home-page_cardHolder {
+    .kpis-card {
+      width: 49% !important;
+    }
+  }
+}
+@media screen and (max-width: 790px) {
+  .home-page_cardHolder {
+    .kpis-card {
+      width: 99% !important;
     }
   }
 }
