@@ -23,9 +23,9 @@
 </div>
 
 <ng-template #lineChart>
-  <stc-apps-line-chart
+  <stc-apps-custom-line-chart
+    [multiChartData]="chartData"
     [trendModuleState]="true"
-    [chartData]="lineChartData"
     [colors]="lineChartColors"
-  ></stc-apps-line-chart>
+  ></stc-apps-custom-line-chart>
 </ng-template>
