@@ -227,7 +227,9 @@ export class ReportsService {
   getCurrentSystem(): string {
     return JSON.parse(this.cookieService.get('granted-systems') || '')[0];
   }
-
+  getCurrentUser(): User {
+    return JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+  }
   setSystemParam(): HttpParams {
     return new HttpParams().set('system', 'Dynamic_Report_Flow');
   }

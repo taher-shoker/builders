@@ -50,17 +50,17 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   uploadedFiles: BehaviorSubject<{ id: number; label: string }[]> =
     new BehaviorSubject<{ id: number; label: string }[]>([]);
 
-  isLoading = false;
   isSubmitLoading = false;
 
+  isLoading = false;
   errorSize = false;
   errorType = false;
   disableSaveBtn = true;
-  filteredOptions: Observable<User[]>[] = [];
 
-  selectTeam!: any;
-  stepCounter = 1;
+  filteredOptions: Observable<User[]>[] = [];
   selectedOptions: any = [];
+
+  stepCounter = 1;
   customRangeSLA: { name: number; id: number }[] = [];
   categories!: Category[];
 
@@ -200,7 +200,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       this.users = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
-      this.approvers = this.users;
+      this.approvers = this.users.filter(
+        (u: User) => u.email !== this.reportsService.getCurrentUser().email
+      );
     });
   }
   getCategories() {
@@ -358,27 +360,27 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       this.t?.at(item)?.get('input')?.markAsTouched();
     }
   }
-  onSelectionChange(v: any, i: number) {
-    this.disableSaveBtn = false;
-    //const value = event.source.value.toLowerCase();
+  // onSelectionChange(v: any, i: number) {
+  //   this.disableSaveBtn = false;
+  //   const value = event.source.value.toLowerCase();
 
-    // if (
-    //   this.isEditing &&
-    //   (value ===
-    //     this.reportData?.requestApprovals[
-    //       this.reportData?.requestApprovals?.length - 1
-    //     ].username ||
-    //     value === this.authService.getCurrentUserName())
-    // ) {
-    //   this.disableSaveBtn = true;
-    // }
-    this.selectedOptions.splice(i, 1);
+  //   if (
+  //     this.isEditing &&
+  //     (value ===
+  //       this.reportData?.requestApprovals[
+  //         this.reportData?.requestApprovals?.length - 1
+  //       ].username ||
+  //       value === this.authService.getCurrentUserName())
+  //   ) {
+  //     this.disableSaveBtn = true;
+  //   }
+  //   this.selectedOptions.splice(i, 1);
 
-    if (!this.selectedOptions.includes(v)) {
-      this.selectedOptions.splice(i, 0, v);
-    }
-    this.ManageUserNameControl(i);
-  }
+  //   if (!this.selectedOptions.includes(v)) {
+  //     this.selectedOptions.splice(i, 0, v);
+  //   }
+  //   this.ManageUserNameControl(i);
+  // }
   ManageUserNameControl(index: number) {
     const control = this.t.at(index).get('input');
     if (control) {
