@@ -129,88 +129,17 @@ export class CustomLineChartComponent
         tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
-    // this.root.numberFormatter.set('numberFormat', '#');
-
-    // chart.gridContainer.dispose();
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(this.root, {
         min: 0,
         max: 100,
         maxDeviation: 0.1,
-        strictMinMax: true,
         renderer: am5xy.AxisRendererY.new(this.root, {}),
-        tooltip: am5.Tooltip.new(this.root, {
-          labelText: '{valueY}',
-        }),
+        tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
 
-    // const xRenderer = xAxis.get('renderer');
-    // const yRenderer = yAxis.get('renderer');
-    // xRenderer.ticks.template.setAll({
-    //   stroke: am5.color('#8e9aa0'),
-    //   visible: true,
-    //   strokeWidth: 1,
-    //   height: 30,
-    // });
-    // xRenderer.labels.template.setAll({
-    //   fill: am5.color(0x000000),
-    //   fontSize: '1em',
-    //   paddingTop: 20,
-    //   direction: this.direction == 'ar' ? 'rtl' : 'ltr',
-    // });
-
-    // yRenderer.labels.template.setAll({
-    //   fill: am5.color(0x000000),
-    //   fontSize: '1em',
-    //   direction: this.direction == 'ar' ? 'rtl' : 'ltr',
-    // });
-
-    const makeSeries = (name: string, data: LineChartData[], color: string) => {
-      const series = chart.series.push(
-        am5xy.LineSeries.new(this.root, {
-          name: name,
-          minBulletDistance: 10,
-          xAxis: xAxis,
-          yAxis: yAxis,
-          valueYField: 'value',
-          valueXField: 'category',
-          tooltip: am5.Tooltip.new(this.root, {
-            pointerOrientation: 'horizontal',
-            labelText: '{valueY}',
-          }),
-        })
-      );
-
-      series.data.processor = am5.DataProcessor.new(this.root, {
-        dateFormat: 'yyyy-MM-dd',
-        dateFields: ['category'],
-      });
-
-      series.data.setAll(data);
-
-      series.strokes.template.setAll({
-        strokeWidth: 2,
-        stroke: am5.color(color),
-      });
-
-      series.bullets.push(() => {
-        const circle = am5.Circle.new(this.root, {
-          radius: 4,
-          fill: am5.color(color), // Match the fill color to the line color
-          stroke: this.root.interfaceColors.get('background'),
-          strokeWidth: 2,
-        });
-
-        return am5.Bullet.new(this.root, {
-          sprite: circle,
-        });
-      });
-
-      series.appear(1000, 100);
-      return series;
-    };
     const seriesList: am5xy.LineSeries[] = [];
     this.multiChartData.forEach((seriesData, index) => {
       const series = chart.series.push(
@@ -380,7 +309,6 @@ export class CustomLineChartComponent
         xAxis: xAxis,
       })
     );
-    cursor.lineY.set('visible', false);
     chart.appear(1000, 100);
   }
 
