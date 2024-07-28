@@ -10,15 +10,13 @@
     padding: 25px 30px;
 
     &_title {
+      width: 60%;
       display: flex;
       align-items: center;
-
 
       h3 {
         margin-inline-start: 5px;
       }
-
-
 
       &_body {
         height: 300px;
@@ -27,6 +25,41 @@
           height: 300px;
         }
       }
+    }
+    &_tabs {
+      width: 60%;
+      display: flex;
+      justify-content: end;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .charts_card {
+    display: block;
+    &_title {
+      width: 100%;
+    }
+    &_tabs {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      margin-top: 12px;
+    }
+  }
+}
+
+@media screen and (max-width: 1200px) and (min-width: 990px) {
+  .charts_card {
+    display: block;
+    &_title {
+      width: 100%;
+    }
+    &_tabs {
+      width: 100%;
+      display: flex;
+      justify-content: end;
+      margin-top: 12px;
     }
   }
 }

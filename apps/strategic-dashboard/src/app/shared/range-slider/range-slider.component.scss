@@ -1,0 +1,39 @@
+mat-slider {
+  width: 400px;
+}
+.custom-slider .mat-slider-thumb-container {
+  width: 24px; /* Adjust to match image width */
+  height: 24px; /* Adjust to match image height */
+}
+::ng-deep .mat-mdc-slider .mdc-slider__track--inactive {
+  background-color: var(--Extra-ligh-greyColor) !important;
+  opacity: 1 !important;
+  height: 90% !important;
+}
+::ng-deep .mat-mdc-slider .mdc-slider__track--active_fill {
+  border-color: var(--stc-color) !important;
+}
+
+::ng-deep .mat-mdc-slider .mdc-slider__thumb {
+  background-image: url('/assets/images/brand/Vector.png');
+  width: 23px !important;
+  height: 23px !important;
+  left: -12px !important;
+  top: 10px !important;
+  z-index: 9999 !important;
+  background-size: cover !important;
+  border-radius: 0px !important;
+}
+::ng-deep .mat-mdc-slider .mdc-slider__thumb-knob {
+  border-radius: 0px !important;
+  width: 0px !important;
+  height: 0px !important;
+  border-style: none !important;
+  border-width: 0px !important;
+  background-color: red !important;
+  border-color: transparent !important;
+}
+::ng-deep .mat-mdc-slider-visual-thumb .mat-ripple {
+  width: 0px !important;
+  height: 0px !important;
+}

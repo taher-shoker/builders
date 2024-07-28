@@ -19,6 +19,7 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
   chartdiv_id = '';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() chartData: any[] = [];
+  @Input() colors: string[] = [];
   ngAfterViewInit(): void {
     this.columnChart();
   }
@@ -147,9 +148,10 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
         cornerRadiusBR: 10,
       });
     };
+    
 
-    makeSeries('Actual (SAR Bn)', 'Actual', '#4F008C');
-    makeSeries('Target (SAR Bn)', 'Target', '#EEEEEE');
+    makeSeries('Actual (SAR Bn)', 'Actual', this.colors[1]);
+    makeSeries('Target (SAR Bn)', 'Target', this.colors[0]);
     // Make stuff animate on load
     // https://www.amcharts.com/docs/v5/concepts/animations/
     chart.appear(1000, 100);

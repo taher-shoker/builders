@@ -2,7 +2,7 @@
   &_header {
     position: relative;
 
-    >div {
+    > div {
       position: absolute;
       margin: 0;
       top: 37%;
@@ -86,10 +86,11 @@
       width: 15%;
     }
   }
-
+  &_range {
+    margin-left: 23px;
+  }
   &_charts {
     margin: 16px 40px;
-
   }
 }
 
@@ -117,7 +118,7 @@
   }
 
   .details-page_header {
-    >div {
+    > div {
       margin-left: 20%;
     }
   }
@@ -139,7 +140,7 @@
   }
 
   .details-page_header {
-    >div {
+    > div {
       margin-left: 20%;
     }
   }

@@ -32,6 +32,7 @@
     </div>
     }
   </div>
+
   <div class="details-page_cards">
     @for (cardInfo of cardsInfo; track $index) {
     <div class="card-holder">
@@ -44,7 +45,9 @@
     }
   </div>
 </div>
-
+<div class="details-page_range">
+  <stc-apps-range-slider></stc-apps-range-slider>
+</div>
 <div class="details-page_charts row row-gap-3">
   @for (item of cardsInfo; track $index) {
   <div class="details-page_charts_item col-lg-6 col-md-12 col-sm-12">

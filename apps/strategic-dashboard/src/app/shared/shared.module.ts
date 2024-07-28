@@ -6,15 +6,18 @@ import { TabComponent } from './tabs/tab/tab.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { ProgressPercentageComponent } from './progress-percentage/progress-percentage.component';
 import { ColumnChartComponent } from './column-chart/column-chart.component';
+import { RangeSliderComponent } from './range-slider/range-slider.component';
+import {MatSliderModule} from '@angular/material/slider';
 
 const components = [
   TopBannerComponent,
   TabsComponent,
   TabComponent,
   ProgressPercentageComponent,
-  ColumnChartComponent
+  ColumnChartComponent,
+  RangeSliderComponent,
 ];
-const modules = [CommonModule, SharedUiModule];
+const modules = [CommonModule,MatSliderModule, SharedUiModule];
 
 @NgModule({
   declarations: [...components],
