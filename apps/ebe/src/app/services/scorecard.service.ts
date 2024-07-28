@@ -49,7 +49,7 @@ export class ScorecardService {
           {
             id: 3,
             title: 'CAD business 123',
-            achievedStatus: 1,
+            // achievedStatus: 1,
             formula: 'linear',
             actual: 99.99,
             weight: 20,

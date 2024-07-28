@@ -8,13 +8,13 @@ import {
   StrategicScorecardModel,
 } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
-import { FinancialScorecardComponent } from './components/financialScorecard/financial-scorecard.component';
+import { TapDetailsComponent } from './components/tap-details/tap-details.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 @Component({
   selector: 'stc-apps-scorecard',
   standalone: true,
-  imports: [FinancialScorecardComponent, SharedUiModule, PageHeaderComponent],
+  imports: [TapDetailsComponent, SharedUiModule, PageHeaderComponent],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
 })

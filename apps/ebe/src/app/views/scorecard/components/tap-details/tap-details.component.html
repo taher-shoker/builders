@@ -1,8 +1,8 @@
 <section class="financial-scorecard">
-  @for (item of financialScorcardData(); track item.id;let first = $first) {
+  @for (scorecard of financialScorcardData(); track scorecard.id;let first = $first) {
   <div class="financial-scorecard-header">
     <p class="financial-scorecard-header-title" [class.mt-4]="!first">
-      {{ item.title }}
+      {{ scorecard.title }}
     </p>
     @if(first){
     <form
@@ -28,7 +28,7 @@
   </div>
   <div class="financial-scorecard-costs">
     <div class="row">
-      @for (kpi of item.kpisData; track kpi.id) {
+      @for (kpi of scorecard.kpisData; track kpi.id) {
       <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
         <stc-apps-kpi-card [kpi]="kpi" />
       </div>

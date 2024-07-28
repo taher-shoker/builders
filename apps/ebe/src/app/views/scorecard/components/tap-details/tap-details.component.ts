@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ScorecardService } from '../../../../services/scorecard.service';
 @Component({
-  selector: 'stc-apps-financial-scorecard',
+  selector: 'stc-apps-tap-details',
   standalone: true,
   imports: [
     SharedUiModule,
@@ -23,10 +23,10 @@ import { ScorecardService } from '../../../../services/scorecard.service';
     MatFormFieldModule,
     MatSelectModule
   ],
-  templateUrl: './financial-scorecard.component.html',
-  styleUrl: './financial-scorecard.component.scss',
+  templateUrl: './tap-details.component.html',
+  styleUrl: './tap-details.component.scss',
 })
-export class FinancialScorecardComponent implements OnInit {
+export class TapDetailsComponent implements OnInit {
   financialScorcardData: InputSignal<FinancialScorecardModel[]> = input.required<FinancialScorecardModel[]>();
   monthsArr: { name: string; id: number }[] = [];
   years: WritableSignal<{ name:string , id:number }[]> = signal<{ name:string , id:number }[]>([]);
