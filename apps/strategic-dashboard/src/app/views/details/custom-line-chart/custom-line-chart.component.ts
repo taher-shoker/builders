@@ -35,7 +35,9 @@ export class CustomLineChartComponent
   @Input() targetData!: LineChartData[];
   @Input() target2Data!: LineChartData[];
   @Input() colors: string[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   @Input() bulletCirclesColor: string = '#ff6a39';
+  // eslint-disable-next-line @typescript-eslint/no-inferrable-types
   @Input() trendModuleState: boolean = false;
 
   direction: string | null = '';
