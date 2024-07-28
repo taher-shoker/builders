@@ -50,9 +50,12 @@
   &-username
   {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding:30px 15px;
+    // align-items: center;
+    // justify-content: space-between;
+    flex-direction: column;
+    align-items: baseline;
+    gap: 20px;
+    padding:20px 30px;
     .username-info
     {
       display: flex;
@@ -61,6 +64,13 @@
     }
     .edit-mode-switch-btn
     {
+      display: flex;
+      align-items: center;
+      gap:30px;
+      span
+      {
+        @extend .stcFont;
+      }
       .form-check
       {
         margin-bottom: 0;

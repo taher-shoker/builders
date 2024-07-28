@@ -17,20 +17,15 @@
         />
       </div>
     </div>
-    <!-- <img class = "hands-img" src="assets/images/hands-img.svg" alt=""> -->
+    <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
   </div>
-  @if(currentMode === 'editMode')
-  {
-    <div style = "height:200px;">
-      testtt
-    </div>
-  }
   <div class="scored-card-section-tap-details">
-    <div class="images">
-      <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
-    </div>
     @if (kpisData()) {
-      <stc-apps-tap-details [financialScorcardData]="kpisData()" />
+      <stc-apps-tap-details 
+        [financialScorcardData]="kpisData()" 
+        [currentMode]="currentMode"
+        [currentClickedTap]="currentClickedTapData"
+      />
     }
   </div>
 </section>

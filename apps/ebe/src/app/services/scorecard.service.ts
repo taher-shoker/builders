@@ -470,7 +470,7 @@ export class ScorecardService {
   {
     this.currMode.next(mode);
   }
-  getEditMode():BehaviorSubject<'editMode' | 'viewMode'>
+  getCurrentMode():BehaviorSubject<'editMode' | 'viewMode'>
   {
     return this.currMode
   }

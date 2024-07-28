@@ -55,13 +55,14 @@ export class ScorecardComponent implements OnInit {
   }
   ngOnInit(): void {
     this.kpisData.set(this.scorecardService.financialScorcardData);
-    this.scorecardService.getEditMode().subscribe({
-      next : (res) => {
+    this.scorecardService.getCurrentMode().subscribe({
+      next : (res:'editMode' | 'viewMode') => {
         this.currentMode = res;
       }
     })
   }
   getClickedTap(clickedTap: ScorecardTaps) {
+    // this.scorecardService.setEditMode('viewMode');
     this.currentClickedTapData = clickedTap;
     if (clickedTap.id === 1) {
       this.kpisData.set(this.scorecardService.financialScorcardData)

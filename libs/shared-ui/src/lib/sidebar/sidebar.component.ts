@@ -12,6 +12,7 @@ export class SidebarComponent implements OnInit{
   logoSrc = input.required<string>({alias : 'logoSrc'})
   usernameImage = input<string>()
   userName = input<string>()
+  // isEditModeChecked = input<boolean>()
   sidebarLinks = input.required<SidebarLinksModel[]>()
   activeMode:'editMode' | 'viewMode' = 'viewMode';
   @Output() currentMode:EventEmitter<'editMode' | 'viewMode'> = new EventEmitter();
@@ -19,6 +20,11 @@ export class SidebarComponent implements OnInit{
   {
     this.currentMode.emit(this.activeMode);
   }
+  // ngOnDestory()
+  // {
+  //   this.activeMode = 'viewMode';
+  //   this.editModeChecked = false;
+  // }
   switchEditMode()
   {
     if(this.editModeChecked === true)
