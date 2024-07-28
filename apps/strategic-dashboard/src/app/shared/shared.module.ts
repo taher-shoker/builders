@@ -7,7 +7,8 @@ import { TabsComponent } from './tabs/tabs.component';
 import { ProgressPercentageComponent } from './progress-percentage/progress-percentage.component';
 import { ColumnChartComponent } from './column-chart/column-chart.component';
 import { RangeSliderComponent } from './range-slider/range-slider.component';
-import {MatSliderModule} from '@angular/material/slider';
+import { MatSliderModule } from '@angular/material/slider';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const components = [
   TopBannerComponent,
@@ -17,7 +18,13 @@ const components = [
   ColumnChartComponent,
   RangeSliderComponent,
 ];
-const modules = [CommonModule,MatSliderModule, SharedUiModule];
+const modules = [
+  CommonModule,
+  MatSliderModule,
+  ReactiveFormsModule,
+  FormsModule,
+  SharedUiModule,
+];
 
 @NgModule({
   declarations: [...components],
