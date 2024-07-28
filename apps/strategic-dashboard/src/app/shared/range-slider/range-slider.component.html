@@ -1,6 +1,18 @@
-<mat-slider
- 
->
-  <input matSliderStartThumb />
-  <input matSliderEndThumb />
-</mat-slider>
+<div class="range-slider">
+  <label class="range-slider_label"> {{ slider.min }} </label>
+
+  <mat-slider
+    #slider
+    thumbLabel
+    [min]="0"
+    [max]="3000"
+    [step]="1"
+    [displayWith]="formatLabel"
+    tickInterval="100"
+    [discrete]="true"
+  >
+    <input [ngModel]="startValue()" matSliderStartThumb thumbLabel />
+    <input [ngModel]="endValue()" matSliderEndThumb thumbLabel />
+  </mat-slider>
+  <label class="range-slider_label"> {{ slider.max }} </label>
+</div>
