@@ -14,7 +14,7 @@
   <div class="charts_card_body">
     @if (selectedTab() == 'ColumnChart') {
     <div class="XY-Chart">
-      <ng-container [ngTemplateOutlet]="XYChart"></ng-container>
+      <ng-container [ngTemplateOutlet]="columnChart"></ng-container>
     </div>
     } @else if (selectedTab() == 'LineChart') {
     <div class="line-chart">
@@ -31,6 +31,7 @@
     [colors]="lineChartColors"
   ></stc-apps-custom-line-chart>
 </ng-template>
-<ng-template #XYChart>
-  <stc-apps-xy-chart></stc-apps-xy-chart>
+<ng-template #columnChart>
+ <stc-apps-column-chart
+ [chartData]="columnChartData"></stc-apps-column-chart>
 </ng-template>

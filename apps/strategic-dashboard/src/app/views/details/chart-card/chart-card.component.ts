@@ -42,6 +42,28 @@ export class ChartCardComponent {
       ],
     },
   ];
+  columnChartData = [
+    {
+      year: '2022',
+      Actual: 50,
+      Target: 20,
+    },
+    {
+      year: '2023',
+      Actual: 70,
+      Target: 70,
+    },
+    {
+      year: '2024',
+      Actual: 20,
+      Target: 60,
+    },
+    {
+      year: '2025',
+      Actual: 0,
+      Target: 0,
+    },
+  ];
 
   targetData: LineChartData[] = [
     { category: '2024-07-01', value: 15 },
