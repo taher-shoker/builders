@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { XYChartComponent } from './XY-chart.component';
+import { ColumnChartComponent } from './column-chart.component';
 
-describe('XYChartComponent', () => {
-  let component: XYChartComponent;
-  let fixture: ComponentFixture<XYChartComponent>;
+describe('ColumnChartComponent', () => {
+  let component: ColumnChartComponent;
+  let fixture: ComponentFixture<ColumnChartComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [XYChartComponent],
+      declarations: [ColumnChartComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(XYChartComponent);
+    fixture = TestBed.createComponent(ColumnChartComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
