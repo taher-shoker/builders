@@ -19,14 +19,16 @@ import { PageHeaderComponent } from '../../components/pageHeader/page-header.com
   styleUrl: './scorecard.component.scss',
 })
 export class ScorecardComponent implements OnInit {
-  currentClickedTapIndex = 0;
-  currentMode!:'editMode' | 'viewMode';
-  kpisData:WritableSignal<
-  | FinancialScorecardModel[]
-  | StrategicScorecardModel[]
-  | RelationalScorecardModel[]
-  | PrioritiesScorecardModel[]
-  | OperationalScorecardModel[]> = signal([]);
+  // @ViewChild(SidebarComponent) child?: TimesheetTableComponent;
+  // currentClickedTapIndex = 0;
+  currentMode!: 'editMode' | 'viewMode';
+  kpisData: WritableSignal<
+    | FinancialScorecardModel[]
+    | StrategicScorecardModel[]
+    | RelationalScorecardModel[]
+    | PrioritiesScorecardModel[]
+    | OperationalScorecardModel[]
+  > = signal([]);
   currentClickedTapData: ScorecardTaps;
   scorecardsTaps: ScorecardTaps[] = [
     {
@@ -56,24 +58,42 @@ export class ScorecardComponent implements OnInit {
   ngOnInit(): void {
     this.kpisData.set(this.scorecardService.financialScorcardData);
     this.scorecardService.getCurrentMode().subscribe({
-      next : (res:'editMode' | 'viewMode') => {
+      next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
-      }
-    })
+      },
+    });
   }
   getClickedTap(clickedTap: ScorecardTaps) {
-    // this.scorecardService.setEditMode('viewMode');
     this.currentClickedTapData = clickedTap;
-    if (clickedTap.id === 1) {
-      this.kpisData.set(this.scorecardService.financialScorcardData)
-    } else if (clickedTap.id === 2) {
-      this.kpisData.set(this.scorecardService.strategicScorcardData)
-    } else if (clickedTap.id === 3) {
-      this.kpisData.set(this.scorecardService.rationalScorcardData)
-    } else if (clickedTap.id === 4) {
-      this.kpisData.set(this.scorecardService.operationalScorcardData)
-    } else if (clickedTap.id === 5) {
-      this.kpisData.set(this.scorecardService.prioritieslScorcardData)
+    switch (clickedTap.id) {
+      case 1:
+        this.kpisData.set(this.scorecardService.financialScorcardData);
+        break;
+      case 2:
+        this.kpisData.set(this.scorecardService.strategicScorcardData);
+        break;
+      case 3:
+        this.kpisData.set(this.scorecardService.rationalScorcardData);
+        break;
+      case 4:
+        this.kpisData.set(this.scorecardService.operationalScorcardData);
+        break;
+      case 5:
+        this.kpisData.set(this.scorecardService.prioritieslScorcardData);
+        break;
+      default:
+        this.kpisData.set(this.scorecardService.financialScorcardData);
     }
+    // if (clickedTap.id === 1) {
+    //   this.kpisData.set(this.scorecardService.financialScorcardData)
+    // } else if (clickedTap.id === 2) {
+    //   this.kpisData.set(this.scorecardService.strategicScorcardData)
+    // } else if (clickedTap.id === 3) {
+    //   this.kpisData.set(this.scorecardService.rationalScorcardData)
+    // } else if (clickedTap.id === 4) {
+    //   this.kpisData.set(this.scorecardService.operationalScorcardData)
+    // } else if (clickedTap.id === 5) {
+    //   this.kpisData.set(this.scorecardService.prioritieslScorcardData)
+    // }
   }
 }

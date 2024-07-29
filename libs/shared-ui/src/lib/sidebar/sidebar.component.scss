@@ -55,18 +55,22 @@
     flex-direction: column;
     align-items: baseline;
     gap: 20px;
-    padding:20px 30px;
+    padding:20px 0px;
     .username-info
     {
       display: flex;
       align-items: center;
       gap:20px;
+      padding:0 30px;
     }
     .edit-mode-switch-btn
     {
       display: flex;
       align-items: center;
       gap:30px;
+      background-color: var(--stc-light-sky-color);
+      width: 100%;
+      padding:10px 30px;
       span
       {
         @extend .stcFont;
@@ -74,6 +78,8 @@
       .form-check
       {
         margin-bottom: 0;
+        position: relative;
+        top: -2px;
         input
         {
           width: 40px;

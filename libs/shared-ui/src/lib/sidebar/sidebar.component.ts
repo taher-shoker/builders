@@ -7,11 +7,11 @@ import { SidebarLinksModel } from './sidebarLinks.model';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit{
-  // @Input({required : true}) logoSrc!:string;
   editModeChecked = false;
   logoSrc = input.required<string>({alias : 'logoSrc'})
   usernameImage = input<string>()
   userName = input<string>()
+  // tabChanged = input<boolean>()
   // isEditModeChecked = input<boolean>()
   sidebarLinks = input.required<SidebarLinksModel[]>()
   activeMode:'editMode' | 'viewMode' = 'viewMode';

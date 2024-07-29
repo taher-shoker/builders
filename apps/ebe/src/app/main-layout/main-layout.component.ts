@@ -10,6 +10,7 @@ export class MainLayoutComponent implements OnInit{
   logoSrc!:string;
   userName!:string;
   userNameLogo!:string;
+  isChanged = false;
   scorecardService = inject(ScorecardService);
   navItems = [
     {

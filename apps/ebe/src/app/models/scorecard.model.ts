@@ -3,6 +3,15 @@ export interface ScorecardTaps
   id : number;
   name : string;
 }
+export interface FileModel
+{
+  lastModified:number;
+  name:string;
+  size:number;
+  lastModifiedDate?:Date;
+  webkitRelativePath:string;
+  type:string;
+}
 export interface FinancialScorecardModel
 {
   id:number;

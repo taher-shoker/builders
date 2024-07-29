@@ -8,6 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import {
+  FileModel,
   FinancialScorecardModel,
   ScorecardTaps,
 } from '../../../../models/scorecard.model';
@@ -21,7 +22,8 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { FileUploadModule } from 'primeng/fileupload';
+import { DialogModule } from 'primeng/dialog';
+import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
 
 @Component({
   selector: 'stc-apps-tap-details',
@@ -32,7 +34,8 @@ import { FileUploadModule } from 'primeng/fileupload';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    FileUploadModule,
+    DialogModule,
+    FileUploadInputComponent
   ],
   templateUrl: './tap-details.component.html',
   styleUrl: './tap-details.component.scss',
@@ -43,6 +46,8 @@ export class TapDetailsComponent implements OnInit {
   currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<
     'editMode' | 'viewMode'
   >();
+  visible = false;
+  selectedFile!:FileModel | null;
   currentClickedTap: InputSignal<ScorecardTaps> =
     input.required<ScorecardTaps>();
   monthsArr: { name: string; id: number }[] = [];
@@ -62,10 +67,10 @@ export class TapDetailsComponent implements OnInit {
       this.monthsArr.push(monthObject);
     }
   }
-  ngOnInit(): void {
+  ngOnInit(): void {    
     const yearsArr: { name: string; id: number }[] = [];
     const currYear: number = new Date().getFullYear();
-    for (let index = currYear; index >= 2020; index--) {
+    for (let index = 2024; index <= currYear; index++) {
       yearsArr.push({ name: index.toString(), id: index });
     }
     this.years.set(yearsArr);
@@ -85,12 +90,31 @@ export class TapDetailsComponent implements OnInit {
     console.log('month value => ', this.monthValue?.value);
     console.log('year value => ', this.yearValue?.value);
   }
-  getUploadedFile(e: Event) {
-    if (e.target && (e.target as HTMLInputElement).files) {
-      const files = (e.target as HTMLInputElement).files;
-      if (files) {
-        console.log(files);
-      }
-    }
+  getUploadedFile(e:FileModel | null) {
+    console.log(e);
+    this.selectedFile = e;
+    // if (e.target && (e.target as HTMLInputElement).files) {
+    //   const files = (e.target as HTMLInputElement).files;
+    //   if (files) {
+    //     console.log(files);
+    //   }
+    // }
+  }
+  isHidden = false;
+  hideDialog()
+  {
+    this.isHidden = true;
+  }
+  showDialog2()
+  {
+    this.isHidden = false;
+  }
+  showDialog()
+  {
+    this.visible = true;
+  }
+  importData()
+  {
+    console.log(this.selectedFile);
   }
 }
