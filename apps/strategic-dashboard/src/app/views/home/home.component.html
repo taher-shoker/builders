@@ -4,7 +4,7 @@
     @for(kpi of kpis;track kpi; let index = $index ){
     <div class="kpis-card">
       <stc-apps-kpi-card-header
-        class="kpis-card_header position-relative"
+        class="kpis-card_header"
         [kpiTitle]="kpi.title"
         [iconPath]="kpi.iconPath"
       ></stc-apps-kpi-card-header>
@@ -19,8 +19,8 @@
     </div>
     }
   </div>
-  <div class="home-page_footer d-flex justify-content-between">
+  <!-- <div class="home-page_footer d-flex justify-content-between">
     <img src="assets/images/Rectangle.svg" alt="" />
     <img class="inverted" src="assets/images/Rectangle.svg" alt="" />
-  </div>
+  </div> -->
 </div>

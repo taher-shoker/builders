@@ -5,17 +5,77 @@
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
-    margin: 0px 24px;
+    row-gap: 2.5rem;
+    margin: 50px 24px;
+
     .kpis-card {
       width: 24%;
+      position: relative;
+      height: 100%;
+
+
+
       &_header {
         display: flex;
         justify-content: center;
         z-index: 999;
         top: 30px;
+
+
+      }
+
+
+    }
+
+    :first-child {
+      ::before {
+        content: "";
+        position: absolute;
+        height: 12%;
+        width: 30%;
+        border-left: 5px solid var(--stcSunsetColor);
+        bottom: -16px;
+        left: -10.5px;
+        border-bottom-left-radius: 12px;
+      }
+
+      ::after {
+        content: "";
+        position: absolute;
+        height: 25%;
+        width: 29%;
+        border-bottom: 5px solid var(--stcSunsetColor);
+        bottom: -20.5px;
+        left: -8px;
+        border-bottom-left-radius: 12px;
+      }
+    }
+
+    :last-child {
+      ::before {
+        content: "";
+        position: absolute;
+        height: 15%;
+        width: 30%;
+        border-right: 5px solid var(--stcSunsetColor);
+        bottom: -16px;
+        right: -10.5px;
+        border-bottom-right-radius: 12px;
+      }
+
+      ::after {
+        content: "";
+        position: absolute;
+        height: 15%;
+        width: 30%;
+        border-bottom: 5px solid var(--stcSunsetColor);
+        bottom: -20.5px;
+        right: -8px;
+        border-bottom-right-radius: 12px;
       }
     }
   }
+
   &_footer {
     position: relative;
     top: -70px;
@@ -27,6 +87,7 @@
     }
   }
 }
+
 @media screen and (max-width: 1570px) and (min-width: 1180px) {
   .home-page_cardHolder {
     .kpis-card {
@@ -34,6 +95,7 @@
     }
   }
 }
+
 @media screen and (max-width: 1180px) and (min-width: 790px) {
   .home-page_cardHolder {
     .kpis-card {
@@ -41,6 +103,7 @@
     }
   }
 }
+
 @media screen and (max-width: 790px) {
   .home-page_cardHolder {
     .kpis-card {
