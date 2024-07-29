@@ -2,7 +2,7 @@
   &_header {
     position: relative;
 
-    >div {
+    > div {
       position: absolute;
       margin: 0;
       top: 37%;
@@ -89,6 +89,21 @@
 
   &_range {
     margin: 0px 34px;
+    background-color: var(--whiteColor);
+    border-radius: 10px;
+    padding: 24px 24px 24px 34px;
+    .range-title {
+      font-size: 18px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: var(--semiBlueColor);
+    }
+    .range-holder {
+      padding: 30px 24px 20px 24px;
+      border-radius: 8px;
+      
+      border: 1px solid var(--stcLightGreyColor);
+    }
   }
 
   &_charts {
@@ -120,7 +135,7 @@
   }
 
   .details-page_header {
-    >div {
+    > div {
       margin-left: 20%;
     }
   }
@@ -142,7 +157,7 @@
   }
 
   .details-page_header {
-    >div {
+    > div {
       margin-left: 20%;
     }
   }
