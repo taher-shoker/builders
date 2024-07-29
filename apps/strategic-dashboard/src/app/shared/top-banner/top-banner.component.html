@@ -17,13 +17,13 @@
       <p>
         Provide overview of strategic KPIs and tracks progress on DARE strategy
       </p>
+      <button class="btn" [routerLink]="['/allPrograms']">All Programs</button>
     </div>
   </div>
 
   <div class="col-md-2 col-sm-12">
     <div class="banner_filter">
       <stc-apps-select-drop-down
-        formControlName="dateType"
         [label]="'Select FY Year'"
         [options]="yearsArray"
         [outputValue]="'name'"

@@ -9,6 +9,7 @@ import { ColumnChartComponent } from './column-chart/column-chart.component';
 import { RangeSliderComponent } from './range-slider/range-slider.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
 
 const components = [
   TopBannerComponent,
@@ -22,6 +23,7 @@ const modules = [
   CommonModule,
   MatSliderModule,
   ReactiveFormsModule,
+  RouterModule,
   FormsModule,
   SharedUiModule,
 ];

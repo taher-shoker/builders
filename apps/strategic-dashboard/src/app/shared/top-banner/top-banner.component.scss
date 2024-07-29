@@ -31,11 +31,13 @@
     }
 
     &_content {
+        display: flex;
+        flex-direction: column;
+        row-gap: 25px;
+
         h2 {
             color: var(--whiteColor);
             font-family: 'stc forward-bold';
-            margin-bottom: 27px;
-            
         }
 
         p {
@@ -45,9 +47,23 @@
             font-size: 18px;
             margin: 0;
         }
+
+        button {
+            position: relative;
+            background: var(--stcSunsetColor);
+            width: fit-content;
+            color: var(--whiteColor);
+        }
     }
 
     &_filter {
+        height: 100%;
         color: var(--semiBlueColor);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+
+
+
     }
 }
