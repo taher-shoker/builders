@@ -48,6 +48,7 @@ export class FileUploadInputComponent implements OnChanges , OnInit{
     {
       this.selectedFile = null
       this.uploadedFile.emit(this.selectedFile);
+      this.fileSizeNum = 0;
     }
   }
   removeFile()
