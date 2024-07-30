@@ -6,15 +6,19 @@ import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './home.routes';
 import { KpiCardComponent } from './components/kpi-card/kpi-card.component';
+import { BannerComponent } from './components/banner/banner.component';
 
-
-const components = [HomeComponent, KpiCardHeaderComponent, KpiCardComponent];
+const components = [
+  HomeComponent,
+  KpiCardHeaderComponent,
+  KpiCardComponent,
+  BannerComponent,
+];
 
 const modules = [SharedModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
   declarations: [...components],
   imports: [...modules],
-  exports: [...components],
 })
 export class HomeModule {}
