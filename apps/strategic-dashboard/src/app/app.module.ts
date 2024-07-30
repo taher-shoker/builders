@@ -11,6 +11,7 @@ import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { LayoutModule } from './layout/layout.module';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -31,6 +32,7 @@ const modules = [
   FormsModule,
   ReactiveFormsModule,
   HomeModule,
+  LayoutModule,
   BrowserAnimationsModule,
   RouterModule.forRoot(appRoutes),
   TranslateModule,
