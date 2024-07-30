@@ -1,0 +1,49 @@
+.program-details {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+
+    &_header {
+        display: flex;
+        align-items: center;
+        padding-bottom: 33px;
+
+        h2 {
+            font-family: 'poppins-bold';
+            text-transform: capitalize;
+        }
+
+
+    }
+
+    &_slider {
+
+        h4 {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: var(--semiBlueColor);
+        }
+    }
+
+    &_filter {
+        flex: 0.5;
+        color: var(--semiBlueColor);
+    }
+
+    &_kpis {
+        background-color: var(--whiteColor);
+        box-shadow: 0px 0px 20px 0px #00000014;
+        border: none;
+        padding: 24px 30px;
+
+
+        h3 {
+            color: var(--stc-color);
+            margin-bottom: 34px;
+            text-transform: capitalize;
+            font-family: 'poppins-regular';
+        }
+    }
+
+
+}

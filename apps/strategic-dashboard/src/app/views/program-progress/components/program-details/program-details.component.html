@@ -1,0 +1,46 @@
+<div class="program-details">
+  <!-- <stc-apps-breadcrumb [bgColor]="'transparent'"></stc-apps-breadcrumb> -->
+
+  <div class="program-details_header row">
+    <div class="col-md-4 col-sm-12">
+      <h2>{{ title() }}</h2>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="program-details_slider">
+        <h4>Range Historical Trend</h4>
+        <stc-apps-range-slider
+          [startValue]="200"
+          [endValue]="750"
+        ></stc-apps-range-slider>
+      </div>
+    </div>
+    <div class="col-md-4 col-sm-12">
+      <div class="program-details_filter">
+        <stc-apps-select-drop-down
+          [label]="'Select FY Year'"
+          [options]="yearsArray"
+          [outputValue]="'name'"
+        ></stc-apps-select-drop-down>
+      </div>
+    </div>
+  </div>
+
+  <div class="program-details_cards row row-gap-3">
+    @for (card of cardItems; track card; let index = $index) {
+    <div class="col-md-6 col-sm-12">
+      <stc-apps-program-details-card
+        [title]="card.title"
+        [chartType]="card.chartType"
+        [progressValue]="card.progress || []"
+      ></stc-apps-program-details-card>
+    </div>
+    }
+  </div>
+
+  <div class="program-details_kpis">
+    <h3>List of all KPIs</h3>
+    @for (kpi of kpisItems; track kpi) {
+    <stc-apps-kpis-card [title]="kpi.title" [id]="kpi.id"></stc-apps-kpis-card>
+    }
+  </div>
+</div>
