@@ -25,7 +25,7 @@ export const appRoutes: Route[] = [
             (m) => m.ProgramProgressModule
           ),
       },
-      { path: '', component: AllProgramsComponent },
+      
     ],
   },
 ];
