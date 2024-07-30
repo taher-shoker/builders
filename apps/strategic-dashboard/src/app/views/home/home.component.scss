@@ -55,7 +55,7 @@
       ::before {
         content: "";
         position: absolute;
-        height: 15%;
+        height: 12%;
         width: 30%;
         border-right: 5px solid var(--stcSunsetColor);
         bottom: -16px;
@@ -66,8 +66,8 @@
       ::after {
         content: "";
         position: absolute;
-        height: 15%;
-        width: 30%;
+        height: 25%;
+        width: 29%;
         border-bottom: 5px solid var(--stcSunsetColor);
         bottom: -20.5px;
         right: -8px;
