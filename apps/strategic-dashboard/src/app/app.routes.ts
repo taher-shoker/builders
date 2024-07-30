@@ -2,6 +2,8 @@ import { Route } from '@angular/router';
 import { HomeComponent } from './views/home/home.component';
 import { DetailsComponent } from './views/details/details.component';
 import { ProgramProgressComponent } from './views/program-progress/program-progress.component';
+import { AllProgramsComponent } from './views/program-progress/all-programs/all-programs.component';
+
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -34,8 +36,11 @@ export const appRoutes: Route[] = [
       {
         path: 'allPrograms',
         loadChildren: () =>
-          import('./views/program-progress/program-progress.module').then((m) => m.ProgramProgressModule),
+          import('./views/program-progress/program-progress.module').then(
+            (m) => m.ProgramProgressModule
+          ),
       },
+      { path: '', component: AllProgramsComponent },
     ],
   },
 ];
