@@ -1,8 +1,6 @@
 import { Route } from '@angular/router';
-import { HomeComponent } from './views/home/home.component';
-import { DetailsComponent } from './views/details/details.component';
-import { ProgramProgressComponent } from './views/program-progress/program-progress.component';
 import { LayoutComponent } from './layout/layout.component';
+import { AllProgramsComponent } from './views/program-progress/all-programs/all-programs.component';
 
 export const appRoutes: Route[] = [
   { path: '', redirectTo: 'home', pathMatch: 'full' },
@@ -27,6 +25,7 @@ export const appRoutes: Route[] = [
             (m) => m.ProgramProgressModule
           ),
       },
+      
     ],
   },
 ];

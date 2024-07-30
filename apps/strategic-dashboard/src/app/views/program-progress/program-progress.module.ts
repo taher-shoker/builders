@@ -8,18 +8,24 @@ import { SharedModule } from '../../shared/shared.module';
 import { ProgramDetailsCardComponent } from './components/program-details-card/program-details-card.component';
 import { DetailsModule } from '../details/details.module';
 import { KpisCardComponent } from './components/kpis-card/kpis-card.component';
+import { ProgramProgressCardComponent } from './program-progress-card/program-progress-card.component';
+import { AllProgramsComponent } from './all-programs/all-programs.component';
+import { KpiDetailsComponent } from './kpi-details/kpi-details.component';
 
 const components = [
   ProgramProgressComponent,
   ProgramDetailsComponent,
   ProgramDetailsCardComponent,
   KpisCardComponent,
+  ProgramProgressComponent,
+  ProgramProgressCardComponent,
+  AllProgramsComponent,
+  KpiDetailsComponent,
 ];
 const modules = [
   CommonModule,
   SharedModule,
   DetailsModule,
-  RouterModule,
   RouterModule.forChild(appRoutes),
 ];
 
