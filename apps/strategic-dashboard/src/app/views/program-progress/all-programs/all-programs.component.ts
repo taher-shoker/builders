@@ -9,7 +9,18 @@ import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.c
 })
 export class AllProgramsComponent {
   searchTerm = '';
-
+  userName = '';
+  logoSrc = 'assets/images/brand/stc-logo.png';
+  sidebarLogoSrc = '';
+  navItems = [
+    {
+      name: 'home',
+      url: '/home',
+      icon: 'fa-home',
+      roles: ['APPROVERS,CREATORS'],
+      urlHome: '/home',
+    },
+  ];
   progarmsProgress = [
     {
       programName: 'STC group EBTDA',
