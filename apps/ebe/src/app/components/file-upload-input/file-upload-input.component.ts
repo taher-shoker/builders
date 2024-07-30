@@ -23,7 +23,7 @@ export class FileUploadInputComponent implements OnChanges , OnInit{
         const fileSize = this.selectedFile.size;
         this.fileSizeNum = fileSize / (1024 * 1024);
         this.fileSize = this.formatBytes(fileSize);
-        if(this.fileSizeNum < 3)
+        if(this.fileSizeNum < 50)
         {
           this.uploadedFile.emit(this.selectedFile);
         }
