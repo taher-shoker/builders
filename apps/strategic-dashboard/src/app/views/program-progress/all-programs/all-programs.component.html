@@ -1,0 +1,33 @@
+<div class="allPrograms-holder">
+  <div class="allPrograms-holder_header">
+    <stc-apps-pages-header></stc-apps-pages-header>
+  </div>
+  <div class="allPrograms-holder_content">
+    <div class="allPrograms-holder_title">All strategic program progress</div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="allPrograms-holder_search">
+          <img src="assets/images/brand/search-normal.svg" />
+          <input
+            class="search-input"
+            type="text"
+            placeholder="Search for program..."
+            [(ngModel)]="searchTerm"
+            (input)="search(searchTerm)"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      @for (program of filteredItems; track $index) {
+      <div class="allPrograms-holder_card col-lg-6">
+        <stc-apps-program-progress-card
+          [programTitle]="program.programName"
+          [barData]="program.barData"
+        >
+        </stc-apps-program-progress-card>
+      </div>
+      }
+    </div>
+  </div>
+</div>
