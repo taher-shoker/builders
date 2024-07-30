@@ -1,0 +1,81 @@
+.kpi-details {
+  color: var(--stc-color);
+  padding: 34px;
+  &_programInfo {
+    font-size: 18px;
+    font-family: var(--stc-font-light);
+    color: var(--darkGreyColor);
+    font-weight: 400;
+    .program-name {
+      font-weight: 600;
+      font-family: var(--stc-font-bold);
+      color: var(--stc-color);
+    }
+  }
+  &_kpiName {
+    margin: 24px 0px;
+    font-size: 32px;
+    font-family: var(--stc-font-bold);
+    font-weight: 700;
+    line-height: 48px;
+  }
+  &_kpiCode {
+    font-size: 18px;
+    font-weight: 600;
+    font-family: var(--stc-font-bold);
+    line-height: 40px;
+  }
+  &_kpiOverview {
+    .kpi-overview-holder {
+      padding: 16px 0px 8px 0px;
+      margin: 24px 12px;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 500;
+      font-family: var(--stc-font-bold);
+      text-align: center;
+    }
+  }
+  &_kpiDahsboard {
+    display: flex;
+    .column-chart {
+      width: 48%;
+      box-shadow: 0px 0px 20px 0px #00000014;
+      padding: 23px 12px;
+      background-color: var(--whiteColor);
+      border-radius: 12px;
+      margin-right: 24px;
+      &_title {
+        font-size: 24px;
+        font-weight: 500;
+        margin: 0px 0px 12px 32px;
+        font-family: var(--stc-font-bold);
+      }
+    }
+    .progress-chart {
+      width: 48%;
+      box-shadow: 0px 0px 20px 0px #00000014;
+      padding: 23px 12px;
+      background-color: var(--whiteColor);
+      border-radius: 12px;
+      &_title {
+        font-size: 24px;
+        font-weight: 500;
+        margin: 0px 0px 0px 32px;
+        font-family: var(--stc-font-bold);
+      }
+    }
+  }
+}
+@media screen and (max-width: 1200px) {
+  .kpi-details_kpiDahsboard {
+    display: block !important;
+    .column-chart {
+      width: 100% !important;
+      margin-bottom: 24px !important;
+    }
+    .progress-chart {
+      width: 100% !important;
+    }
+  }
+}

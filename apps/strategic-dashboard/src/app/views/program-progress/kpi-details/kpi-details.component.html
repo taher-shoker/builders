@@ -1,0 +1,51 @@
+<div class="kpi-details">
+  <div class="kpi-details_programInfo">
+    <span class="program-name">Dashboard / Business efficiency program/ </span>
+    Kpi details
+  </div>
+  <div class="kpi-details_kpiName">% Completion of External Assessment</div>
+  <div class="kpi-details_kpiCode">KPI code : {{ kpiCode }}</div>
+  <div class="row kpi-details_kpiOverview">
+    @for (item of kpiInfo; track $index) {
+    <div
+      class="kpi-overview-holder col-md-3 col-lg-3 col-xl-2"
+      [ngStyle]="{
+        'background-color': item.backgroundColor,
+        color: item.color
+      }"
+    >
+      {{ item.overView }}{{ item.overViewDesc }}
+      <img *ngIf="!item.overView" src="assets/images/arrow-up.svg" alt="" />
+    </div>
+    }
+  </div>
+  <div class="kpi-details_kpiDahsboard">
+    <div class="column-chart">
+      <div class="column-chart_title">
+        <img src="assets/images/arrow-up.svg" alt="" />
+        FY Target
+      </div>
+      <stc-apps-column-chart
+        [chartData]="columnChartData"
+        [colors]="lineChartColors"
+      ></stc-apps-column-chart>
+    </div>
+    <div class="progress-chart">
+      <div class="progress-chart_title">
+        <img src="assets/images/arrow-up.svg" alt="" />
+        Status of the kpi
+      </div>
+      <div class="d-flex justify-content-around align-items-center h-100">
+        @for (precentage of precentagesKpis; track $index) {
+        <stc-apps-progress-circle
+          class="circle"
+          [progressValue]="precentage.percentage || 0"
+          progressSize="10rem"
+          [mainBgColor]="precentage.color"
+          [showProgress]="true"
+        ></stc-apps-progress-circle>
+        }
+      </div>
+    </div>
+  </div>
+</div>
