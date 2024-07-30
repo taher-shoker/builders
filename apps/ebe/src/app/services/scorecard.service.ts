@@ -18,11 +18,11 @@ export class ScorecardService {
   constructor() {
     this.financialScorcardData = [
       {
-        id:1,
+        // id:1,
         title: 'transforming costs to maximize value',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             achievedStatus: 1,
             formula: 'linear',
@@ -34,7 +34,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             achievedStatus: 1,
             formula: 'linear',
@@ -47,7 +47,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             // achievedStatus: 1,
             formula: 'linear',
@@ -60,7 +60,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 4,
+            // id: 4,
             title: 'CAD business test',
             achievedStatus: 1,
             actual: 99.99,
@@ -74,11 +74,11 @@ export class ScorecardService {
         ],
       },
       {
-        id:2,
+        // id:2,
         title: 'transforming costs to maximize value11',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             achievedStatus: 1,
             formula: 'linear',
@@ -90,7 +90,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             achievedStatus: 1,
             formula: 'linear',
@@ -103,7 +103,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             achievedStatus: 1,
             formula: 'linear',
@@ -116,7 +116,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 4,
+            // id: 4,
             title: 'CAD business test',
             achievedStatus: 1,
             actual: 99.99,
@@ -130,11 +130,11 @@ export class ScorecardService {
         ],
       },
       {
-        id:3,
+        // id:3,
         title: 'transforming costs to maximize value1133',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             achievedStatus: 1,
             formula: 'linear',
@@ -146,7 +146,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             achievedStatus: 1,
             formula: 'linear',
@@ -159,7 +159,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             achievedStatus: 1,
             formula: 'linear',
@@ -172,7 +172,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 4,
+            // id: 4,
             title: 'CAD business test',
             achievedStatus: 1,
             actual: 99.99,
@@ -188,11 +188,11 @@ export class ScorecardService {
     ];
     this.strategicScorcardData = [
       {
-        id:1,
+        // id:1,
         title: 'execute strategy right',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             achievedStatus: 1,
             formula: 'linear',
@@ -205,7 +205,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             achievedStatus: 1,
             formula: 'linear',
@@ -217,7 +217,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             formula: 'linear',
             actual: 99.99,
@@ -233,11 +233,11 @@ export class ScorecardService {
     ];
     this.rationalScorcardData = [
       {
-        id:1,
+        // id:1,
         title: 'delivered unparalleled CEX',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             actual: 99.99,
             weight: 5,
@@ -248,7 +248,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             formula: 'linear',
             actual: 99.99,
@@ -260,7 +260,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             achievedStatus: 1,
             formula: 'linear',
@@ -273,7 +273,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 4,
+            // id: 4,
             title: 'CAD business test',
             achievedStatus: 1,
             formula: 'linear',
@@ -290,11 +290,11 @@ export class ScorecardService {
     ];
     this.operationalScorcardData = [
       {
-        id:1,
+        // id:1,
         title: 'unlock analytics capabilities',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             achievedStatus: 1,
             formula: 'linear',
@@ -307,7 +307,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             achievedStatus: 1,
             formula: 'linear',
@@ -320,7 +320,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             achievedStatus: 1,
             formula: 'linear',
@@ -333,7 +333,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 4,
+            // id: 4,
             title: 'CAD business test',
             achievedStatus: 1,
             formula: 'linear',
@@ -348,11 +348,11 @@ export class ScorecardService {
         ],
       },
       {
-        id:2,
+        // id:2,
         title: 'execute technology right',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             achievedStatus: 1,
             formula: 'linear',
@@ -365,7 +365,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             achievedStatus: 1,
             formula: 'linear',
@@ -378,7 +378,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             achievedStatus: 1,
             formula: 'linear',
@@ -391,7 +391,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 4,
+            // id: 4,
             title: 'CAD business test',
             achievedStatus: 1,
             formula: 'linear',
@@ -408,11 +408,11 @@ export class ScorecardService {
     ];
     this.prioritieslScorcardData = [
       {
-        id:1,
+        // id:1,
         title: 'corporate priorities',
         kpisData: [
           {
-            id: 1,
+            // id: 1,
             title: 'stc KSA EBIT',
             achievedStatus: 1,
             formula: 'linear',
@@ -425,7 +425,7 @@ export class ScorecardService {
             threshold: 85,
           },
           {
-            id: 2,
+            // id: 2,
             title: 'CAD business efficiency OPEX savings',
             achievedStatus: 1,
             formula: 'linear',
@@ -438,7 +438,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 3,
+            // id: 3,
             title: 'CAD business 123',
             achievedStatus: 1,
             actual: 99.99,
@@ -450,7 +450,7 @@ export class ScorecardService {
             threshold: 55,
           },
           {
-            id: 4,
+            // id: 4,
             title: 'CAD business test',
             achievedStatus: 1,
             formula: 'linear',

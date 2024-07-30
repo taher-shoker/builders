@@ -14,13 +14,13 @@ export interface FileModel
 }
 export interface FinancialScorecardModel
 {
-  id:number;
+  // id:number;
   title:string;
   kpisData:KpiModel[]
 }
 export interface KpiModel
 {
-  id:number;
+  // id:number;
   title:string;
   achievedStatus?:number;
   formula?:string;
@@ -34,25 +34,25 @@ export interface KpiModel
 }
 export interface StrategicScorecardModel
 {
-  id:number;
+  // id:number;
   title:string,
   kpisData:KpiModel[]
 }
 export interface RelationalScorecardModel
 {
-  id:number;
+  // id:number;
   title:string,
   kpisData:KpiModel[]
 }
 export interface OperationalScorecardModel
 {
-  id:number;
+  // id:number;
   title:string,
   kpisData:KpiModel[]
 }
 export interface PrioritiesScorecardModel
 {
-  id:number;
+  // id:number;
   title:string,
   kpisData:KpiModel[]
 }

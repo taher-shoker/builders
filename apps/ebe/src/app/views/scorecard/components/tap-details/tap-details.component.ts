@@ -41,19 +41,13 @@ import { FileUploadInputComponent } from '../../../../components/file-upload-inp
   styleUrl: './tap-details.component.scss',
 })
 export class TapDetailsComponent implements OnInit {
-  financialScorcardData: InputSignal<FinancialScorecardModel[]> =
-    input.required<FinancialScorecardModel[]>();
-  currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<
-    'editMode' | 'viewMode'
-  >();
+  financialScorcardData: InputSignal<FinancialScorecardModel[]> = input.required<FinancialScorecardModel[]>();
+  currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
   visible = false;
   selectedFile!:FileModel | null;
-  currentClickedTap: InputSignal<ScorecardTaps> =
-    input.required<ScorecardTaps>();
+  currentClickedTap: InputSignal<ScorecardTaps> = input.required<ScorecardTaps>();
   monthsArr: { name: string; id: number }[] = [];
-  years: WritableSignal<{ name: string; id: number }[]> = signal<
-    { name: string; id: number }[]
-  >([]);
+  years: WritableSignal<{ name: string; id: number }[]> = signal<{ name: string; id: number }[]>([]);
   filtersForm: FormGroup = new FormGroup({
     month: new FormControl(new Date().getMonth() + 1),
     year: new FormControl(new Date().getFullYear()),
@@ -91,7 +85,7 @@ export class TapDetailsComponent implements OnInit {
     console.log('year value => ', this.yearValue?.value);
   }
   getUploadedFile(e:FileModel | null) {
-    console.log(e);
+    // console.log(e);
     this.selectedFile = e;
     // if (e.target && (e.target as HTMLInputElement).files) {
     //   const files = (e.target as HTMLInputElement).files;

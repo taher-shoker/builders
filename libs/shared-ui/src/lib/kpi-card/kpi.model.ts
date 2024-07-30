@@ -1,6 +1,6 @@
 export interface KpiModel
 {
-  id:number;
+  // id:number;
   title:string;
   achievedStatus?:number;
   formula?:string;
