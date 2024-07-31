@@ -22,8 +22,10 @@ export class DelegationDialogComponent implements OnInit{
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      users: new FormControl('')
+      user: new FormControl('')
     })
+
+    this.getUsersListing();
   }
 
   getUsersListing() {
