@@ -11,6 +11,7 @@ export const environment = {
     di_system: '/cem/reporting/dtworkspace',
     di_milestones_system: '/cem/reporting/dtmilestones/',
     jira_system: '/cem/reporting/jiradashboard/',
+    dynamic_rf_system: '/cem/reporting/dynamic-rf-workspace/',
   },
   sso_url: '/reporting-api/saml/saml/login',
   languageFilesPath: '/cem/reporting/assets/i18n/',

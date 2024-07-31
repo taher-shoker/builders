@@ -23,43 +23,43 @@ export interface ColumnsSchema {
   label: string;
 }
 
-const COLUMNS_SCHEMA = [
-  {
-    key: 'name',
-    type: 'text',
-    label: 'Name',
-  },
-
-  {
-    key: 'userGroups',
-    type: 'text',
-    label: 'privilege',
-  },
-  {
-    key: 'teamDto',
-    type: 'text',
-    label: 'team',
-  },
-  {
-    key: 'jobTitle',
-    type: 'text',
-    label: 'job Title',
-  },
-  {
-    key: 'actions',
-    type: 'actions',
-    label: '',
-  },
-];
-
 @Component({
   selector: 'stc-apps-users',
   templateUrl: './users.component.html',
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit, AfterViewInit {
-  displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
-  columnsSchema: ColumnsSchema[] = COLUMNS_SCHEMA;
+  COLUMNS_SCHEMA = [
+    {
+      key: 'name',
+      type: 'text',
+      label: 'Name',
+    },
+
+    {
+      key: 'userGroups',
+      type: 'text',
+      label: 'privilege',
+    },
+    {
+      key: 'teamDto',
+      type: 'text',
+      label: 'team',
+    },
+    {
+      key: 'jobTitle',
+      type: 'text',
+      label: 'job Title',
+    },
+    {
+      key: 'actions',
+      type: 'actions',
+      label: '',
+    },
+  ];
+
+  displayedColumns: string[] = this.COLUMNS_SCHEMA.map((col) => col.key);
+  columnsSchema: ColumnsSchema[] = this.COLUMNS_SCHEMA;
   dataSource = new MatTableDataSource<User>();
   dataSourceFilters = new MatTableDataSource<User>();
 

@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import moment from 'moment';
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+import * as moment from 'moment';
+
 import {
   YearRangeObj,
   YearObj,
