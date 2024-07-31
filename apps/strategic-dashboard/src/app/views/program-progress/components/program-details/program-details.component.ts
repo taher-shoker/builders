@@ -32,20 +32,26 @@ export class ProgramDetailsComponent {
 
   kpisItems = [
     {
-      id: Math.random(),
+      id: '1',
       title:
         '% of analytics capabilities implemented in alignment with northstar to-be architecture analytics roadmap',
     },
-    { id: Math.random(), title: ' #self-service capability enabled for BU/FU' },
     {
-      id: Math.random(),
+      id: '2',
+      title: ' #self-service capability enabled for BU/FU',
+    },
+    {
+      id: '3',
       title:
         ' % implementation of data lake first principle “store everything on the lake first”',
     },
-    { id: Math.random(), title: 'stc TRUST Maturity Score' },
-    { id: Math.random(), title: ' #self-service capability enabled for BU/FU' },
+    { id: '4', title: 'stc TRUST Maturity Score' },
     {
-      id: Math.random(),
+      id: '5',
+      title: ' #self-service capability enabled for BU/FU',
+    },
+    {
+      id: '6',
       title:
         '% of analytics capabilities implemented in alignment with northstar to-be architecture analytics roadmap',
     },

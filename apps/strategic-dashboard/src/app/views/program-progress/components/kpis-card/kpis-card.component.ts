@@ -7,5 +7,5 @@ import { Component, input, InputSignal } from '@angular/core';
 })
 export class KpisCardComponent {
   title: InputSignal<string> = input('');
-  id: InputSignal<number> = input(0);
+  kpiCode: InputSignal<string> = input('1');
 }

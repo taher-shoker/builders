@@ -40,7 +40,10 @@
   <div class="program-details_kpis">
     <h3>List of all KPIs</h3>
     @for (kpi of kpisItems; track kpi) {
-    <stc-apps-kpis-card [title]="kpi.title" [id]="kpi.id"></stc-apps-kpis-card>
+    <stc-apps-kpis-card
+      [title]="kpi.title"
+      [kpiCode]="kpi.id"
+    ></stc-apps-kpis-card>
     }
   </div>
 </div>
