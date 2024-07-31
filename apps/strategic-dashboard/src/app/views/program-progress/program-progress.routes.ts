@@ -28,7 +28,7 @@ export const appRoutes: Route[] = [
         component: ProgramDetailsComponent,
       },
       {
-        path: 'kpi-details/:kpiCode',
+        path: 'kpi-details',
         component: KpiDetailsComponent,
       },
     ],

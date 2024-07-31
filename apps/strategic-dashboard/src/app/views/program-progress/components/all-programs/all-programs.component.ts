@@ -1,7 +1,6 @@
-import { Component, computed } from '@angular/core';
+import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
-
 @Component({
   selector: 'stc-apps-all-programs',
   templateUrl: './all-programs.component.html',
@@ -121,12 +120,18 @@ export class AllProgramsComponent {
   ];
   filteredItems: any[] = [];
 
-  constructor() {
+  constructor(private router: Router) {
     this.filteredItems = this.progarmsProgress;
   }
   search(value: string) {
     this.filteredItems = this.progarmsProgress.filter((progarm) =>
       progarm.programName.toLowerCase().includes(value.toLowerCase())
     );
+  }
+
+  navigateToProgramDetails(program: any): void {
+    this.router.navigate(['/programs/program-details'], {
+      state: { program: program },
+    });
   }
 }

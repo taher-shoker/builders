@@ -13,7 +13,7 @@ export const appRoutes: Route[] = [
           import('./views/home/home.module').then((m) => m.HomeModule),
       },
       {
-        path: 'details/:kpiName',
+        path: 'details',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
       },

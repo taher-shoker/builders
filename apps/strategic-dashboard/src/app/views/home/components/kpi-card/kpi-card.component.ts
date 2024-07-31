@@ -6,6 +6,7 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'stc-apps-kpi-card',
@@ -17,10 +18,11 @@ export class KpiCardComponent implements OnChanges {
   iconPath = 'assets/images/interaction-icon.svg';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() currentContents: any[] = [];
-  kpiName='preformance';
+  kpiName = 'preformance';
   // currentContents: WritableSignal<any> = signal([]);
   kpiTitle: InputSignal<string> = input('');
   // activeIndex: InputSignal<number | any> = input(null);
+  constructor(private router: Router) {}
 
   ngOnChanges(changes: SimpleChanges) {
     if (changes['currentContents']) {
@@ -41,5 +43,10 @@ export class KpiCardComponent implements OnChanges {
     } else {
       return 'greater-than-100';
     }
+  }
+  navigateToCardDetails() {
+    this.router.navigate(['/details'], {
+      state: { title: this.kpiTitle() },
+    });
   }
 }

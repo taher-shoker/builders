@@ -17,7 +17,10 @@
     </div>
     <div class="row">
       @for (program of filteredItems; track $index) {
-      <div class="allPrograms-holder_card col-lg-6">
+      <div
+        class="allPrograms-holder_card col-lg-6"
+        (click)="navigateToProgramDetails(program)"
+      >
         <stc-apps-program-progress-card
           [programTitle]="program.programName"
           [barData]="program.barData"

@@ -3,8 +3,8 @@
     <span class="program-name">Dashboard / Business efficiency program/ </span>
     Kpi details
   </div>
-  <div class="kpi-details_kpiName">% Completion of External Assessment</div>
-  <div class="kpi-details_kpiCode">KPI code : {{ kpiCode }}</div>
+  <div class="kpi-details_kpiName">{{ kpiData.title }}</div>
+  <div class="kpi-details_kpiCode">KPI code : {{ kpiData.code }}</div>
   <div class="row kpi-details_kpiOverview">
     @for (item of kpiInfo; track $index) {
     <div

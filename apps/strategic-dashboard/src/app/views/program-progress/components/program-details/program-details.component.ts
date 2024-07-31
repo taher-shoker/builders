@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, OnInit } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-program-details',
@@ -7,6 +7,7 @@ import { Component, input, InputSignal } from '@angular/core';
 })
 export class ProgramDetailsComponent {
   title: InputSignal<string> = input('Business efficiency program');
+  programData = window.history.state.program;
 
   yearsArray: any = [
     { name: 2020 },

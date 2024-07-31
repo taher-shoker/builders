@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./details.component.scss'],
 })
 export class DetailsComponent implements OnInit {
+  titleData = window.history.state.title;
+
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = '';
@@ -45,32 +47,32 @@ export class DetailsComponent implements OnInit {
     {
       title: 'STC Group EBTDA',
       percentage: '130 %',
-      status:'onTrack'
+      status: 'onTrack',
     },
     {
       title: '% Next-Gen Teck Roll-Out',
       percentage: '121 %',
-      status:'onTrack'
+      status: 'onTrack',
     },
     {
       title: 'STC Group ROCE',
       percentage: '120 %',
-      status:'onTrack'
+      status: 'onTrack',
     },
     {
       title: 'Sustainability Score',
       percentage: '23 %',
-      status:'delayed'
+      status: 'delayed',
     },
     {
       title: '% of Strategic Roles and Capabilities Filled',
       percentage: '23 %',
-      status:'delayed'
+      status: 'delayed',
     },
     {
       title: 'Employee Experience Score',
       percentage: '92 %',
-      status:'onHold'
+      status: 'onHold',
     },
   ];
   constructor(private activeRoute: ActivatedRoute) {}

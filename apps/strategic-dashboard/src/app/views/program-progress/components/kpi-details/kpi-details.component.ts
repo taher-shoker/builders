@@ -7,6 +7,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './kpi-details.component.scss',
 })
 export class KpiDetailsComponent implements OnInit {
+  kpiData = window.history.state.kpi;
+
   kpiInfo = [
     {
       overView: '',
@@ -68,8 +70,10 @@ export class KpiDetailsComponent implements OnInit {
   kpiCode = '';
   constructor(private activeRouter: ActivatedRoute) {}
   ngOnInit(): void {
-    this.activeRouter.paramMap.subscribe((paramMap) => {
-      this.kpiCode = String(paramMap.get('kpiCode'));
-    });
+    console.log(this.kpiData);
+
+    // this.activeRouter.paramMap.subscribe((paramMap) => {
+    //   this.kpiCode = String(paramMap.get('kpiCode'));
+    // });
   }
 }
