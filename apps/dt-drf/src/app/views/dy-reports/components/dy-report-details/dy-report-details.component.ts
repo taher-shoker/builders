@@ -3,7 +3,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { DialogService, BannerDataService } from '@stc-apps/shared-ui';
 import saveAs from 'file-saver';
 import {
@@ -11,14 +11,15 @@ import {
   ReportsService,
   Actions,
   MilestoneAttachment,
+  ReportWorkflow,
+  ReportFlowStatus,
   RequestTask,
+  RequestTaskAttributes,
 } from '../../dy-reports.service';
-import { Milestone } from '../reports/reports.component';
-import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-progress-dialog/update-milestone-progress-dialog.component';
-import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 import { AuthService } from 'apps/dt-drf/src/app/services/auth.service';
 import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
 import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
+import { UpdateReportDialogComponent } from '../update-milestone-progress-dialog/update-report-dialog.component';
 
 @Component({
   selector: 'stc-apps-dy-report-details',
@@ -72,7 +73,8 @@ export class DyReportDetailsComponent implements OnInit {
     public reportsService: ReportsService,
     public authService: AuthService,
     private matDialog: MatDialog,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -81,234 +83,6 @@ export class DyReportDetailsComponent implements OnInit {
       this.reportId = params['id'];
       this.getReportDetails();
     });
-  }
-
-  askUserToInitiateUpdateProgress() {
-    const initialStep: Step = {
-      caption: Actions.initiateUpdateProgress.displayCaption,
-      state: 'undone',
-      actions: [Actions.initiateUpdateProgress],
-    };
-    this.isLoadingSteps = false;
-    if (!this.isDirector()) {
-      this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
-    }
-  }
-
-  showMilestoneProgressWorkflow(params?: Params) {
-    this.isLoadingSteps = true;
-
-    // this.steps = [];
-    // if (this.reportsDetails.currentMilestoneProgressUpdateDto) {
-    //   this.progress =
-    //     this.reportsDetails.currentMilestoneProgressUpdateDto.overallProgress;
-    //   this.progressUpdatedBy =
-    //     this.reportsDetails.currentMilestoneProgressUpdateDto.updatedBy;
-    //   this.deliverable =
-    //     this.reportsDetails.currentMilestoneProgressUpdateDto.deliverable;
-    //   this.status =
-    //     this.reportsDetails.currentMilestoneProgressUpdateDto.status;
-    //   this.progressDate =
-    //     this.datePipe.transform(
-    //       this.reportsDetails.currentMilestoneProgressUpdateDto
-    //         .progressUpdateDate,
-    //       'medium'
-    //     ) || '';
-    // } else if (this.reportsDetails.latestApprovedMilestoneProgressUpdate) {
-    //   this.progress =
-    //     this.reportsDetails.latestApprovedMilestoneProgressUpdate.overallProgress;
-    //   this.progressUpdatedBy =
-    //     this.reportsDetails.latestApprovedMilestoneProgressUpdate.updatedBy;
-    //   this.deliverable =
-    //     this.reportsDetails.latestApprovedMilestoneProgressUpdate.deliverable;
-    //   this.status =
-    //     this.reportsDetails.latestApprovedMilestoneProgressUpdate.status;
-    //   this.progressDate =
-    //     this.datePipe.transform(
-    //       this.reportsDetails.latestApprovedMilestoneProgressUpdate
-    //         .progressUpdateDate,
-    //       'medium'
-    //     ) || '';
-    // }
-    const initialStep: Step = {
-      caption: `Milestone progress updated (${this.status})`,
-      state: 'done',
-      extraInfo: [`${this.progressDate} By ${this.progressUpdatedBy}`],
-      additionalTemp: true,
-      captionTemp: true,
-    };
-
-    this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
-    this.getMilestoneProgressWorkflow(params);
-  }
-
-  getMilestoneProgressWorkflow(params?: Params) {
-    // if (
-    //   this.reportsDetails.currentMilestoneProgressUpdateDto &&
-    //   this.reportsDetails.currentMilestoneProgressUpdateDto.workflowId
-    // ) {
-    //   this.reportsService
-    //     .getMilestoneProgressWorkflow(
-    //       this.reportsDetails.currentMilestoneProgressUpdateDto.workflowId
-    //     )
-    //     .subscribe((res) => {
-    //       if (!this.isUpdateProgressOnHold) {
-    //         this.isLoadingSteps = false;
-    //       }
-    //       res.sort(function (a, b) {
-    //         return b.requestTaskId - a.requestTaskId;
-    //       });
-    //       let foundAddRemarksOnce: 'once' | 'twice' | null = null; // to show or hide the noNeed action in the loop.
-    //       for (let i = res.length - 1; i >= 0; i--) {
-    //         if (
-    //           res[i].taskName === Actions.addOnTrack.uniqueTitle &&
-    //           foundAddRemarksOnce === null
-    //         ) {
-    //           foundAddRemarksOnce = 'once'; // Once means show "No Need" btn cuz it's one instance
-    //         } else if (
-    //           res[i].taskName === Actions.addOnTrack.uniqueTitle &&
-    //           foundAddRemarksOnce === 'once'
-    //         ) {
-    //           foundAddRemarksOnce = 'twice'; // Twice means hide the "No Need" btn
-    //         }
-    //         const attachmentsIDs: string[] = [];
-    //         const attachments: MilestoneAttachment[] = [];
-    //         let notes: string = '';
-    //         const displayDate = res[i].completedDate
-    //           ? res[i].completedDate
-    //           : res[i].createdDate;
-    //         const progressDate: string =
-    //           this.datePipe.transform(displayDate, 'medium') || '';
-    //         let byUser = '';
-    //         let userThatTaskIsPendingOn = '';
-    //         const actions: Actions[] = [];
-    //         let isWarningState: boolean = false;
-    //         for (const taskAttribute of res[i].requestTaskAttributes) {
-    //           if (res[i].status !== 'pending') {
-    //             byUser = `By ${res[i].completedByName}`;
-    //             if (
-    //               taskAttribute.name.includes('approved') &&
-    //               (taskAttribute.value === 'false' ||
-    //                 taskAttribute.value == '0' ||
-    //                 taskAttribute.value == '2')
-    //             ) {
-    //               // Means it's approval (review) step and it's not approved.
-    //               isWarningState = true;
-    //             }
-    //           }
-    //           if (
-    //             taskAttribute.name === 'evidence_id' ||
-    //             taskAttribute.name === 'justification_id' ||
-    //             taskAttribute.name === 'remark_id' ||
-    //             taskAttribute.name === 'attachment_id'
-    //           ) {
-    //             attachmentsIDs.push(taskAttribute.value);
-    //           } else if (
-    //             taskAttribute.name === 'notes' ||
-    //             taskAttribute.name === 'reason_of_rejection'
-    //           ) {
-    //             notes = taskAttribute.value;
-    //           }
-    //         }
-    //         for (const attachmentID of attachmentsIDs) {
-    //           this.reportsService
-    //             .getAttachment(+attachmentID)
-    //             .subscribe((res) => {
-    //               attachments.push(res);
-    //             });
-    //         }
-    //         if (
-    //           res[i].taskName === 'Review Evidence' ||
-    //           res[i].taskName === 'Review Justification' ||
-    //           res[i].taskName === 'Review Progress' ||
-    //           res[i].taskName === 'Update DT Record'
-    //         ) {
-    //           userThatTaskIsPendingOn = 'DT User';
-    //         }
-    //         if (res[i].taskName === 'Approve Progress') {
-    //           userThatTaskIsPendingOn = 'DT Director';
-    //         }
-    //         if (res[i].taskName === 'Add New Progress') {
-    //           userThatTaskIsPendingOn = res[i].username;
-    //         }
-    //         if (res[i].status === 'pending' && res[i].params?.length > 0) {
-    //           //those two conditions are for a user to take action, otherwise it's not his task to handle.
-    //           if (res[i].taskName === 'Add New Progress') {
-    //             actions.push(Actions.addNewProgress);
-    //           }
-    //           if (
-    //             res[i].taskName === 'Review Evidence' ||
-    //             res[i].taskName === 'Review Justification' ||
-    //             res[i].taskName === 'Review Progress'
-    //           ) {
-    //             if (res[i].taskName === 'Review Evidence') {
-    //               actions.push(Actions.reviewEvidence);
-    //               actions.push(Actions.returnEvidence); // Adding action 'Return' in all 3 cases.
-    //             }
-    //             if (res[i].taskName === 'Review Justification') {
-    //               actions.push(Actions.reviewJustification);
-    //               actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
-    //             }
-    //             if (res[i].taskName === 'Review Progress') {
-    //               actions.push(Actions.reviewOnTrack);
-    //               actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
-    //             }
-    //           } else if (
-    //             res[i].taskName === Actions.addEvidence.uniqueTitle ||
-    //             res[i].taskName === Actions.addJustification.uniqueTitle ||
-    //             res[i].taskName === Actions.addOnTrack.uniqueTitle
-    //           ) {
-    //             if (res[i].taskName === Actions.addEvidence.uniqueTitle) {
-    //               actions.push(Actions.addEvidence);
-    //             }
-    //             if (res[i].taskName === Actions.addJustification.uniqueTitle) {
-    //               actions.push(Actions.addJustification);
-    //             }
-    //             if (res[i].taskName === Actions.addOnTrack.uniqueTitle) {
-    //               actions.push(Actions.addOnTrack);
-    //               if (foundAddRemarksOnce !== 'twice') {
-    //                 actions.push(Actions.noNeed);
-    //               }
-    //             }
-    //           } else if (res[i].taskName === 'Approve Progress') {
-    //             actions.push(Actions.approveProgress);
-    //             actions.push(Actions.returnProgress);
-    //           }
-    //         }
-    //         if (
-    //           res[i].taskName === 'Update DT Record' &&
-    //           res[i].params?.length === 0
-    //         ) {
-    //           // This is to check if params is received but empty, that must indicate that the user can Update DT Record
-    //           actions.push(Actions.updateDTRecord);
-    //         }
-    //         const step: Step = {
-    //           caption:
-    //             res[i].taskName === 'Review Remarks'
-    //               ? 'Review Progress'
-    //               : res[i].taskName +
-    //                 (isWarningState === true ? ' (Returned)' : ''),
-    //           state:
-    //             isWarningState === true
-    //               ? 'warning'
-    //               : res[i].status === 'completed'
-    //               ? 'done'
-    //               : 'undone',
-    //           notes: notes,
-    //           // attachments: attachments,
-    //           extraInfo: [
-    //             `${progressDate} ${byUser || 'By ' + userThatTaskIsPendingOn}`,
-    //           ],
-    //           actions: actions,
-    //           stepObject: res[i],
-    //         };
-    //         this.steps.push(step);
-    //       }
-    //       if (this.needToPushWorkflowAction) {
-    //         this.pushWorkflowAction(params!);
-    //       }
-    //     });
-    // }
   }
 
   getReportDetails(params?: Params) {
@@ -320,18 +94,104 @@ export class DyReportDetailsComponent implements OnInit {
         text: '',
       });
 
-      // if (
-      //   this.reportsDetails.currentMilestoneProgressUpdateDto &&
-      //   this.reportsDetails.currentMilestoneProgressUpdateDto
-      //     .overallProgress
-      // ) {
-      //   this.showMilestoneProgressWorkflow(params);
-      // } else {
-      //   this.steps = [];
-      //   this.askUserToInitiateUpdateProgress();
-      // }
-      // this.getHistory(res);
+      if (this.reportsDetails.flowId) {
+        this.showReportWorkflow();
+      }
+
     });
+  }
+
+  showReportWorkflow() {
+    this.isLoadingSteps = true;
+    this.steps = [];
+    this.reportsService
+      .getReportWorkflow(this.reportsDetails.flowId)
+      .subscribe((res: ReportWorkflow) => {
+        console.log('Res is ::', res);
+        this.isLoadingSteps = false;
+
+        res.sort(function (a, b) {
+          return b.requestTaskId - a.requestTaskId;
+        });
+
+        for (let i = res.length - 1; i >= 0; i--) {
+          let notes: string = '';
+
+          const displayDate = res[i].completedDate
+            ? res[i].completedDate
+            : res[i].createdDate;
+          const progressDate: string =
+            this.datePipe.transform(displayDate, 'medium') || '';
+
+          let byUser = '';
+          const userThatTaskIsPendingOn = res[i].userDisplayName;
+          const actions: Actions[] = [];
+          if (res[i].status !== 'pending') {
+            byUser = `By ${res[i].completedByName}`;
+          }
+
+          for (const taskAttribute of res[i].requestTaskAttributes) {
+            if (taskAttribute.name === 'comment') {
+              notes = taskAttribute.value;
+              break;
+            }
+          }
+
+          if (res[i].status === 'pending' && res[i].params?.length > 0) {
+            if (res[i].taskName === 'User Approve SLA') {
+              actions.push(Actions.approveSLA);
+              actions.push(Actions.rejectSLA);
+            }
+
+            if (res[i].taskName === 'User Approve') {
+              actions.push(Actions.approve);
+              actions.push(Actions.reject);
+            }
+
+            if(res[i].taskName === 'Edit or Delete Report Data'){
+              actions.push(Actions.editReport);
+              actions.push(Actions.deleteReport);
+            }
+
+            if(res[i].taskName === 'Initiator Approve'){
+              actions.push(Actions.initiatorApprove);
+              actions.push(Actions.initiatorReject);
+            }
+
+            if(res[i].taskName === 'Add Data'){
+              actions.push(Actions.addData);
+            }
+
+          }
+
+          const step: Step = {
+            caption: res[i].taskName,
+            state: this.getStepStatus(res[i].status),
+            notes: notes,
+            // attachments: attachments,
+            extraInfo: [
+              `${progressDate} ${
+                byUser || 'Pending on ' + userThatTaskIsPendingOn
+              }`,
+            ],
+            actions: actions,
+            stepObject: res[i],
+          };
+          this.steps.push(step);
+        }
+      });
+  }
+
+  getStepStatus(status: ReportFlowStatus): 'warning' | 'done' | 'undone' {
+    const statusMap: {
+      [key in ReportFlowStatus]: 'warning' | 'done' | 'undone';
+    } = {
+      breached: 'warning',
+      rejected: 'warning',
+      completed: 'done',
+      pending: 'undone',
+    };
+    return statusMap[status];
   }
 
   getHistory(report: ReportDetails) {
@@ -453,6 +313,17 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   doStepAction(action: { actionObj: Actions | string; item: any }) {
+    if (action) {
+      console.log('El ACT:', action);
+    }
+
+    if (
+      typeof action.actionObj !== 'string' &&
+      'uniqueTitle' in action.actionObj
+    ) {
+      this.handleStepperAction(action.actionObj.uniqueTitle, action.item);
+    }
+
     // if (
     //   typeof action.actionObj !== 'string' &&
     //   'uniqueTitle' in action.actionObj
@@ -609,39 +480,286 @@ export class DyReportDetailsComponent implements OnInit {
     // }
   }
 
-  doSpecialStepAction(
-    action: { actionObj: Actions | string },
-    isFirstUpdateProgress: boolean = true
-  ) {
-    if (
-      typeof action.actionObj !== 'string' &&
-      'uniqueTitle' in action.actionObj
-    ) {
-      if (
-        action.actionObj.uniqueTitle === Actions.returnEvidence.uniqueTitle ||
-        action.actionObj.uniqueTitle ===
-          Actions.returnJustification.uniqueTitle ||
-        action.actionObj.uniqueTitle === Actions.returnOnTrack.uniqueTitle ||
-        action.actionObj.uniqueTitle === Actions.addEvidence.uniqueTitle ||
-        action.actionObj.uniqueTitle === Actions.addJustification.uniqueTitle ||
-        action.actionObj.uniqueTitle === Actions.addOnTrack.uniqueTitle
-      ) {
-        this.openMilestoneWorkflowActionsModal(
-          action.actionObj.uniqueTitle,
-          undefined,
-          isFirstUpdateProgress
-        );
-      }
+  handleStepperAction(action: string, item: RequestTask) {
+    if (action === 'Approve' || action === 'Approve SLA') {
+      this.approveStep(item);
+    }
+
+    if (action === 'Reject' || action === 'Reject SLA') {
+      this.rejectStep(item);
+    }
+
+    if(action === 'Edit Report'){
+      this.router.navigate(['/home/add_report'], {queryParams: {mode: 'edit_report', id: this.reportsDetails.id}})
+    }
+
+    if(action === 'Delete Report'){
+
+      const msg = `You're about to delete the report flow,  Kindly note you can't roll back this action. Are you sure?`
+      this.confirmAction(msg).subscribe(res => {
+        if(!res){
+          return
+        }
+
+        this.deleteFlowStep(item);
+      })
+    }
+
+    if(action === 'Add Data'){
+      this.addDataStep(item)
+    }
+
+    if(action === 'Initiator Approve'){
+      this.approveInitiatorStep(item)
+    }
+
+    if(action === 'Initiator Reject'){
+      this.rejectInitiatorStep(item)
     }
   }
 
-  isPanelOpen(panelNumber: number): boolean {
-    return this.openPanel === panelNumber;
+  approveInitiatorStep(item: RequestTask){
+    const msg = `Are you sure to approve current state?`
+    this.confirmAction(msg).subscribe(res => {
+      if(!res){
+        return
+      }
+
+      this.approveInitiator(item);
+    })
   }
 
-  panelOpened(panelNumber: number): void {
-    this.openPanel = panelNumber;
+  rejectInitiatorStep(item: RequestTask){
+    const msg = `Are you sure to reject current state?`
+    this.confirmAction(msg).subscribe(res => {
+      if(!res){
+        return
+      }
+
+      this.approveInitiator(item);
+    })
   }
+
+  rejectInitiator(item: RequestTask){
+    const params: RequestTaskAttributes = {
+      requestParams: [{name: 'is_approved_by_initiator', value: false}],
+    };
+
+    this.reportsService
+    .completePendingTask(
+      this.reportsDetails.flowId,
+      item.requestTaskId,
+      params
+    )
+    .subscribe((res) => {
+      console.log('The res of complete task:', res);
+      this.isLoadingSteps = false;
+      this.getReportDetails();
+    });
+  }
+
+  approveInitiator(item: RequestTask){
+    const params: RequestTaskAttributes = {
+      requestParams: [{name: 'is_approved_by_initiator', value: true}],
+    };
+
+    this.reportsService
+    .completePendingTask(
+      this.reportsDetails.flowId,
+      item.requestTaskId,
+      params
+    )
+    .subscribe((res) => {
+      console.log('The res of complete task:', res);
+      this.isLoadingSteps = false;
+      this.getReportDetails();
+    });
+  }
+
+  addDataStep(item: RequestTask){
+    const params: RequestTaskAttributes = {
+      requestParams: [],
+    };
+
+    this.openAddDataForReportModal(item).subscribe(
+      (res: { comment: string; attachments: string }) => {
+        console.log('The res of dialog:', res);
+        if(!res){
+          return
+        }
+
+        this.isLoadingSteps = true;
+
+        if (res.comment) {
+          params.requestParams.push({ name: 'creator_description', value: res.comment });
+        }
+
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'creator_attachments',
+            value: res.attachments,
+          });
+        }
+
+        this.reportsService
+          .completePendingTask(
+            this.reportsDetails.flowId,
+            item.requestTaskId,
+            params
+          )
+          .subscribe((res) => {
+            console.log('The res of complete task:', res);
+            this.isLoadingSteps = false;
+            this.getReportDetails();
+          });
+      }
+    );
+  }
+
+  confirmAction(msg: string)    {
+    const dialogRef = this.matDialog.open(MessageDialogComponent, {
+      width: '800px',
+      data: {
+        msg,
+      },
+      disableClose: true,
+    });
+    return dialogRef.afterClosed();
+  }
+
+  approveStep(item: RequestTask) {
+    const params: RequestTaskAttributes = {
+      requestParams: [{ name: 'isApproved', value: true }],
+    };
+
+    this.openReportStepApprovalModal(item, true).subscribe(
+      (res: { comment: string; attachments: string }) => {
+        console.log('The res of dialog:', res);
+        if(!res){
+          return
+        }
+
+        this.isLoadingSteps = true;
+
+        if (res.comment) {
+          params.requestParams.push({ name: 'comment', value: res.comment });
+        }
+
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'attachments',
+            value: res.attachments,
+          });
+        }
+
+        this.reportsService
+          .completePendingTask(
+            this.reportsDetails.flowId,
+            item.requestTaskId,
+            params
+          )
+          .subscribe((res) => {
+            console.log('The res of complete task:', res);
+            this.isLoadingSteps = false;
+            this.getReportDetails();
+          });
+      }
+    );
+  }
+
+  rejectStep(item: RequestTask) {
+    const params: RequestTaskAttributes = {
+      requestParams: [{ name: 'isApproved', value: false }],
+    };
+
+    this.openReportStepApprovalModal(item, false).subscribe(
+      (res: { comment: any; attachments: any }) => {
+        console.log('The res of dialog:', res);
+        if(!res){
+          return
+        }
+
+        this.isLoadingSteps = true;
+
+        if (res.comment) {
+          params.requestParams.push({ name: 'comment', value: res.comment });
+        }
+
+        if (res.attachments) {
+          params.requestParams.push({
+            name: 'attachments',
+            value: res.attachments,
+          });
+        }
+        this.reportsService
+          .completePendingTask(
+            this.reportsDetails.flowId,
+            item.requestTaskId,
+            params
+          )
+          .subscribe((res) => {
+            console.log('The res of complete task:', res);
+            this.isLoadingSteps = false;
+            this.getReportDetails();
+          });
+      }
+    );
+  }
+
+  deleteFlowStep(item: RequestTask){
+    const params: RequestTaskAttributes = {
+      requestParams: [{ name: "delete", value: true }],
+    };
+
+    
+    this.reportsService
+    .completePendingTask(
+      this.reportsDetails.flowId,
+      item.requestTaskId,
+      params
+    )
+    .subscribe((res) => {
+      console.log('The res of complete task:', res);
+      this.isLoadingSteps = false;
+      this.getReportDetails();
+    });
+  }
+
+  openReportStepApprovalModal(item: RequestTask, isApprove: boolean) {
+    const dialogRef = this.matDialog.open(UpdateReportDialogComponent, {
+      width: '800px',
+      data: {
+        item,
+        report: this.reportsDetails,
+        showAttachment: false,
+        approvalState: isApprove ? 'approval' : 'rejection', // Please leave it strings, not boolean, since client changes his mind frequently
+      },
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+  openAddDataForReportModal(item: RequestTask) {
+    const dialogRef = this.matDialog.open(UpdateReportDialogComponent, {
+      width: '800px',
+      data: {
+        item,
+        report: this.reportsDetails,
+        showAttachment: true,
+        approvalState: 'Add Data', // Please leave it strings, not boolean, since client changes his mind frequently
+      },
+    });
+
+    return dialogRef.afterClosed();
+  }
+
+  // isPanelOpen(panelNumber: number): boolean {
+  //   return this.openPanel === panelNumber;
+  // }
+
+  // panelOpened(panelNumber: number): void {
+  //   this.openPanel = panelNumber;
+  // }
 
   downloadFile(id: number, name: string = 'untitled.txt') {
     this.reportsService.downloadAttachment(id).subscribe((buffer) => {
@@ -652,184 +770,184 @@ export class DyReportDetailsComponent implements OnInit {
     });
   }
 
-  openMilestoneWorkflowActionsModal(
-    type: string,
-    item?: RequestTask,
-    isFirstUpdateProgress: boolean = true,
-    showAttachment: boolean = true
-  ) {
-    const dialogRef = this.matDialog.open(
-      UpdateMilestoneProgressDialogComponent,
-      {
-        width: '800px',
-        data: {
-          milestoneName: this.reportsDetails.reportName,
-          type,
-          reportId: this.reportId,
-          showAttachment,
-        },
-      }
-    );
+  // openMilestoneWorkflowActionsModal(
+  //   type: string,
+  //   item?: RequestTask,
+  //   isFirstUpdateProgress: boolean = true,
+  //   showAttachment: boolean = true
+  // ) {
+  //   const dialogRef = this.matDialog.open(
+  //     UpdateMilestoneProgressDialogComponent,
+  //     {
+  //       width: '800px',
+  //       data: {
+  //         milestoneName: this.reportsDetails.reportName,
+  //         type,
+  //         reportId: this.reportId,
+  //         showAttachment,
+  //       },
+  //     }
+  //   );
 
-    dialogRef.afterClosed().subscribe((res) => {
-      if (!res) {
-        this.isLoadingSteps = false;
-        return;
-      }
+  //   dialogRef.afterClosed().subscribe((res) => {
+  //     if (!res) {
+  //       this.isLoadingSteps = false;
+  //       return;
+  //     }
 
-      const params: {
-        requestParams: { name: string; value: number | string | boolean }[];
-      } = {
-        requestParams: [],
-      };
+  //     const params: {
+  //       requestParams: { name: string; value: number | string | boolean }[];
+  //     } = {
+  //       requestParams: [],
+  //     };
 
-      if (type === Actions.addEvidence.uniqueTitle) {
-        if (res.attachments) {
-          params.requestParams.push({
-            name: 'evidence_id',
-            value: res.attachments,
-          });
-        }
-        params.requestParams.push({ name: 'notes', value: res.note });
-      } else if (type === Actions.addJustification.uniqueTitle) {
-        if (res.attachments) {
-          params.requestParams.push({
-            name: 'justification_id',
-            value: res.attachments,
-          });
-        }
-        params.requestParams.push({ name: 'notes', value: res.note });
-      } else if (type === Actions.addOnTrack.uniqueTitle) {
-        if (res.attachments) {
-          params.requestParams.push({
-            name: 'remark_id',
-            value: res.attachments,
-          });
-        }
-        params.requestParams.push({ name: 'notes', value: res.note });
-      } else if (type === Actions.returnEvidence.uniqueTitle) {
-        params.requestParams.push({
-          name: 'is_evidence_approved',
-          value: 2, // 2 means rejected.
-        });
+  //     if (type === Actions.addEvidence.uniqueTitle) {
+  //       if (res.attachments) {
+  //         params.requestParams.push({
+  //           name: 'evidence_id',
+  //           value: res.attachments,
+  //         });
+  //       }
+  //       params.requestParams.push({ name: 'notes', value: res.note });
+  //     } else if (type === Actions.addJustification.uniqueTitle) {
+  //       if (res.attachments) {
+  //         params.requestParams.push({
+  //           name: 'justification_id',
+  //           value: res.attachments,
+  //         });
+  //       }
+  //       params.requestParams.push({ name: 'notes', value: res.note });
+  //     } else if (type === Actions.addOnTrack.uniqueTitle) {
+  //       if (res.attachments) {
+  //         params.requestParams.push({
+  //           name: 'remark_id',
+  //           value: res.attachments,
+  //         });
+  //       }
+  //       params.requestParams.push({ name: 'notes', value: res.note });
+  //     } else if (type === Actions.returnEvidence.uniqueTitle) {
+  //       params.requestParams.push({
+  //         name: 'is_evidence_approved',
+  //         value: 2, // 2 means rejected.
+  //       });
 
-        params.requestParams.push({
-          name: 'reason_of_rejection',
-          value: res.note,
-        });
+  //       params.requestParams.push({
+  //         name: 'reason_of_rejection',
+  //         value: res.note,
+  //       });
 
-        if (res.attachments) {
-          params.requestParams.push({
-            name: 'attachment_id',
-            value: res.attachments,
-          });
-        }
-      } else if (type === Actions.returnJustification.uniqueTitle) {
-        params.requestParams.push({
-          name: 'is_justification_approved',
-          value: 2, // 2 means rejected.
-        });
+  //       if (res.attachments) {
+  //         params.requestParams.push({
+  //           name: 'attachment_id',
+  //           value: res.attachments,
+  //         });
+  //       }
+  //     } else if (type === Actions.returnJustification.uniqueTitle) {
+  //       params.requestParams.push({
+  //         name: 'is_justification_approved',
+  //         value: 2, // 2 means rejected.
+  //       });
 
-        params.requestParams.push({
-          name: 'reason_of_rejection',
-          value: res.note,
-        });
+  //       params.requestParams.push({
+  //         name: 'reason_of_rejection',
+  //         value: res.note,
+  //       });
 
-        if (res.attachments) {
-          params.requestParams.push({
-            name: 'attachment_id',
-            value: res.attachments,
-          });
-        }
-      } else if (type === Actions.returnOnTrack.uniqueTitle) {
-        params.requestParams.push({
-          name: 'is_remark_approved',
-          value: 2, // 2 means rejected.
-        });
+  //       if (res.attachments) {
+  //         params.requestParams.push({
+  //           name: 'attachment_id',
+  //           value: res.attachments,
+  //         });
+  //       }
+  //     } else if (type === Actions.returnOnTrack.uniqueTitle) {
+  //       params.requestParams.push({
+  //         name: 'is_remark_approved',
+  //         value: 2, // 2 means rejected.
+  //       });
 
-        params.requestParams.push({
-          name: 'reason_of_rejection',
-          value: res.note,
-        });
+  //       params.requestParams.push({
+  //         name: 'reason_of_rejection',
+  //         value: res.note,
+  //       });
 
-        if (res.attachments) {
-          params.requestParams.push({
-            name: 'attachment_id',
-            value: res.attachments,
-          });
-        }
-      } else if (type === Actions.noNeed.uniqueTitle) {
-        // no need action here.. not tested
-      } else if (type === Actions.approveProgress.uniqueTitle) {
-        params.requestParams.push({
-          name: 'is_progress_approved',
-          value: true, // 2 means rejected.
-        });
-      } else if (type === Actions.returnProgress.uniqueTitle) {
-        params.requestParams.push({
-          name: 'is_progress_approved',
-          value: false, // 2 means rejected.
-        });
+  //       if (res.attachments) {
+  //         params.requestParams.push({
+  //           name: 'attachment_id',
+  //           value: res.attachments,
+  //         });
+  //       }
+  //     } else if (type === Actions.noNeed.uniqueTitle) {
+  //       // no need action here.. not tested
+  //     } else if (type === Actions.approveProgress.uniqueTitle) {
+  //       params.requestParams.push({
+  //         name: 'is_progress_approved',
+  //         value: true, // 2 means rejected.
+  //       });
+  //     } else if (type === Actions.returnProgress.uniqueTitle) {
+  //       params.requestParams.push({
+  //         name: 'is_progress_approved',
+  //         value: false, // 2 means rejected.
+  //       });
 
-        params.requestParams.push({
-          name: 'reason_of_rejection',
-          value: res.note,
-        });
-      }
+  //       params.requestParams.push({
+  //         name: 'reason_of_rejection',
+  //         value: res.note,
+  //       });
+  //     }
 
-      this.isLoadingSteps = true;
-      // if (this.isUpdateProgressOnHold) {
-      //   this.sendAllRequests(params, isFirstUpdateProgress);
-      //   this.isUpdateProgressOnHold = false;
-      // } else {
-      //   this.reportsService
-      //     .completePendingTask(
-      //       this.reportsDetails.currentMilestoneProgressUpdateDto
-      //         ?.workflowId || '',
-      //       Number(item?.requestTaskId),
-      //       params
-      //     )
-      //     .subscribe(() => {
-      //       this.getReportDetails();
-      //     });
-      // }
-    });
-  }
+  //     this.isLoadingSteps = true;
+  //     // if (this.isUpdateProgressOnHold) {
+  //     //   this.sendAllRequests(params, isFirstUpdateProgress);
+  //     //   this.isUpdateProgressOnHold = false;
+  //     // } else {
+  //     //   this.reportsService
+  //     //     .completePendingTask(
+  //     //       this.reportsDetails.currentMilestoneProgressUpdateDto
+  //     //         ?.workflowId || '',
+  //     //       Number(item?.requestTaskId),
+  //     //       params
+  //     //     )
+  //     //     .subscribe(() => {
+  //     //       this.getReportDetails();
+  //     //     });
+  //     // }
+  //   });
+  // }
 
-  openProgressUpdateModal(
-    reportId: Milestone['id'],
-    isFirstUpdateProgress: boolean = true
-  ) {
-    const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
-      width: '800px',
-      data: {
-        // overallProgress:
-        //   this.reportsDetails.
-        //     ?.overallProgress,
-        // reportName: this.reportsDetails.reportName,
-      },
-    });
+  // openProgressUpdateModal(
+  //   reportId: Milestone['id'],
+  //   isFirstUpdateProgress: boolean = true
+  // ) {
+  //   const dialogRef = this.matDialog.open(UpdateProgressDialogComponent, {
+  //     width: '800px',
+  //     data: {
+  //       // overallProgress:
+  //       //   this.reportsDetails.
+  //       //     ?.overallProgress,
+  //       // reportName: this.reportsDetails.reportName,
+  //     },
+  //   });
 
-    dialogRef.afterClosed().subscribe((res) => {
-      if (!res) {
-        return;
-      }
+  //   dialogRef.afterClosed().subscribe((res) => {
+  //     if (!res) {
+  //       return;
+  //     }
 
-      this.deliverableInMaking = res.deliverable;
-      this.overallProgressInMaking = res.overallProgress;
+  //     this.deliverableInMaking = res.deliverable;
+  //     this.overallProgressInMaking = res.overallProgress;
 
-      this.refinedProgressUpdate.deliverableInMaking = res.deliverable;
-      this.refinedProgressUpdate.overallProgressInMaking = res.overallProgress;
+  //     this.refinedProgressUpdate.deliverableInMaking = res.deliverable;
+  //     this.refinedProgressUpdate.overallProgressInMaking = res.overallProgress;
 
-      this.isLoadingSteps = true;
-      this.isUpdateProgressOnHold = true;
-      this.sendProgressToCalculate(
-        reportId,
-        this.overallProgressInMaking,
-        isFirstUpdateProgress
-      );
-    });
-  }
+  //     this.isLoadingSteps = true;
+  //     this.isUpdateProgressOnHold = true;
+  //     // this.sendProgressToCalculate(
+  //     //   reportId,
+  //     //   this.overallProgressInMaking,
+  //     //   isFirstUpdateProgress
+  //     // );
+  //   });
+  // }
 
   sendAllRequests(
     params: {
@@ -853,27 +971,6 @@ export class DyReportDetailsComponent implements OnInit {
       //   this.getReportDetails(params);
       // });
     }
-  }
-
-  sendProgressToCalculate(
-    reportId: number,
-    progress: string,
-    isFirstUpdateProgress: boolean = true
-  ) {
-    this.reportsService
-      .calculateMilestoneProgress(reportId, progress)
-      .subscribe((res: any) => {
-        let actionObj: Actions;
-        if (res.status === 'Delayed') {
-          actionObj = Actions.addJustification;
-        } else if (res.status === 'Completed') {
-          actionObj = Actions.addEvidence;
-        } else {
-          actionObj = Actions.addOnTrack;
-        }
-
-        this.doSpecialStepAction({ actionObj }, isFirstUpdateProgress);
-      });
   }
 
   updateProgress() {

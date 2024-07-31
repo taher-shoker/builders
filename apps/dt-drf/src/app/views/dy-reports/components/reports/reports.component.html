@@ -60,8 +60,19 @@
               (paginationEvent)="paginate($event)"
             >
             </stc-apps-custom-table>
-            <ng-template #customTemplate let-header="header" let-item="item">
-              <p class="custom-class-template">{{ item[header.key] }}</p>
+            <ng-template
+              #statusCustomTemplate
+              let-header="header"
+              let-item="item"
+            >
+              <p
+                class="custom-class-template"
+                [ngClass]="{
+                  'completed-status': item[header.key] === 'Completed',
+                }"
+              >
+                {{ item[header.key] }}5555
+              </p>
             </ng-template>
 
             }
@@ -92,7 +103,7 @@
           <stc-apps-select-drop-down
             [label]="'Status'"
             [labelValue]="'value'"
-            [options]="milestoneStatus"
+            [options]="reportStatus"
             formControlName="status"
             [outputValue]="'value'"
           ></stc-apps-select-drop-down>

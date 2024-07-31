@@ -41,6 +41,13 @@
                     {{ reportsDetails.reportFlowStatus ?? '-' }}
                   </p>
                 </div>
+
+                <div class="col-12">
+                  <p class="cell-name">Description</p>
+                  <p class="cell-value">
+                    {{ reportsDetails.description ?? '-' }}
+                  </p>
+                </div>
               </div>
             </div>
   
@@ -67,7 +74,21 @@
                   <p class="cell-name">Last Action Date</p>
                   <p class="cell-value">{{ (reportsDetails.lastModifiedDate ?? '-') | date }}</p>
                 </div>
+
+                <div class="col-12">
+                  <p class="cell-name">Creator name</p>
+                  <p class="cell-value">{{ reportsDetails.creatorDisplayName ?? '-' }}</p>
+                </div>
               </div>
+            </div>
+          </div>
+
+          <div class="row">
+            <div class="col-12">
+              <p class="cell-name">Attachments</p>
+              <p class="cell-value">
+                {{ reportsDetails.reportName ?? '-' }}
+              </p>
             </div>
           </div>
         </div>

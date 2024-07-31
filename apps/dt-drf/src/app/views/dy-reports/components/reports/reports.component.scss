@@ -211,8 +211,6 @@
           transform: translate(10px, 0px);
         }
       }
-
-      
     }
   }
 }
@@ -292,6 +290,10 @@ table {
   z-index: 100;
   font-weight: 700;
   font-size: 0.8em;
+}
+
+.completed-status {
+  color: var(--stc-oasis-color);
 }
 
 @keyframes fill {

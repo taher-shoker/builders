@@ -4,11 +4,9 @@
     <div class="body-holder">
       <form [formGroup]="form">
         <div class="my-2">
-          <stc-apps-input-full-width
-            [label]="'Pick user'"
-            [type]="'text'"
-            formControlName="user"
-          ></stc-apps-input-full-width>
+          <stc-apps-select-drop-down [label]="'Pick User'" [options]="users" [required]="true" [searchMode]="true"
+            formControlName="creatorEmail" [outputValue]="'email'" [disabled]="true"></stc-apps-select-drop-down>
+
         </div>
       </form>
     </div>

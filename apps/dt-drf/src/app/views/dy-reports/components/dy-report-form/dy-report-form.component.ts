@@ -16,7 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
@@ -26,6 +26,7 @@ import { Report } from '../../../../services/models/report-flow.model';
 import { User } from '../../../../services/models/user';
 import {
   Category,
+  ReportDetails,
   ReportsService,
   UploadResponse,
 } from '../../dy-reports.service';
@@ -70,6 +71,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     public reportsService: ReportsService,
     private toastr: ToastrService,
     private router: Router,
+    private route: ActivatedRoute,
     public config_service: ConfigService
   ) {}
 
@@ -88,6 +90,27 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.customSLAPopulator();
     this.getUsersListing();
     this.getCategories();
+  }
+
+  fetchDataOfReportAndEditIfExists(): void {
+
+    this.route.queryParams.subscribe((params) => {
+      const id = params['id'];
+      const mode = params['mode'];
+      if(mode === 'edit_report'){
+        // Turn Edit mode to true
+      }
+      if (id) {
+        this.reportsService.getReport(id).subscribe({
+          next: (res) => {
+            console.log(res);
+          },
+          error: (err) => {
+            console.log(err);
+          },
+        });
+      }
+    });
   }
 
   initReportForm() {

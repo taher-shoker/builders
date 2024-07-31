@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
@@ -32,8 +32,8 @@ export interface Milestone {
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
 })
-export class ReportsComponent implements OnInit, OnDestroy {
-  @ViewChild('customTemplate') customTemplate!: any;
+export class ReportsComponent implements OnInit, AfterViewInit , OnDestroy {
+  @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -71,63 +71,19 @@ export class ReportsComponent implements OnInit, OnDestroy {
   addReportNavigate(): void {
     this.router.navigate(['./add_report'], { relativeTo: this.route });
   }
-  columnsSchema: ColumnsSchema[] = [
-    {
-      key: 'reportName',
-      type: 'text',
-      label: 'Name',
-    },
-    {
-      key: 'requestCategoryName',
-      type: 'text',
-      label: 'Category',
-    },
-    {
-      key: 'requestCategorySla',
-      type: 'text',
-      label: 'With SLA/Not',
-    },
-    {
-      key: 'remainingSteps',
-      type: 'text',
-      label: 'No of Remaining Approvals',
-    },
-    {
-      key: 'initiatorDisplayName',
-      type: 'text',
-      label: 'Initiator Name',
-    },
-    {
-      key: 'lastModifiedDate',
-      type: 'date',
-      label: 'Last Action Date',
-    },
-    {
-      key: 'reportFlowStatus',
-      type: 'text',
-      label: 'Status',
-    },
-    {
-      key: 'actions',
-      type: 'actions',
-      actions: ['details', 'edit'],
-      label: '',
-    },
-  ];
+
 
   disabled = false;
   tableData!: any;
   rowData!: any;
-  milestoneStatus: { value: string; name: string }[] = [
-    { value: 'Planned', name: 'Planned' },
-    { value: 'Delayed', name: 'Delayed' },
-    { value: 'At_Risk', name: 'At risk' },
-    { value: 'On_Track', name: 'On track' },
-    { value: 'Completed', name: 'Completed' },
+  reportStatus: { value: string; name: string }[] = [
+    { value: 'planned', name: 'Planned' },
+    { value: 'completed', name: 'Completed' },
   ];
   monthsArr: any = [];
   yearsArr: any = [];
   allTeams: any;
+  columnsSchema?: ColumnsSchema[] = undefined;
 
   ngOnInit() {
     this.getReports();
@@ -139,6 +95,53 @@ export class ReportsComponent implements OnInit, OnDestroy {
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+  }
+
+  ngAfterViewInit(): void {
+    this.columnsSchema = [
+      {
+        key: 'reportName',
+        type: 'text',
+        label: 'Name',
+      },
+      {
+        key: 'requestCategoryName',
+        type: 'text',
+        label: 'Category',
+      },
+      {
+        key: 'requestCategorySla',
+        type: 'text',
+        label: 'With SLA/Not',
+      },
+      {
+        key: 'remainingSteps',
+        type: 'text',
+        label: 'No of Remaining Approvals',
+      },
+      {
+        key: 'initiatorDisplayName',
+        type: 'text',
+        label: 'Initiator Name',
+      },
+      {
+        key: 'lastModifiedDate',
+        type: 'date',
+        label: 'Last Action Date',
+      },
+      {
+        key: 'reportFlowStatus',
+        type: 'text',
+        label: 'Status',
+        complexViewTemp: this.statusCustomTemplate,
+      },
+      {
+        key: 'actions',
+        type: 'actions',
+        actions: ['details', 'edit'],
+        label: '',
+      },
+    ];
   }
 
   getPendingTasks() {

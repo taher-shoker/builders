@@ -25,6 +25,7 @@ import { ReportsComponent } from './components/reports/reports.component';
 import { DyReportsComponent } from './dy-reports.component';
 import { DyReportDetailsComponent } from './components/dy-report-details/dy-report-details.component';
 import { MatSelectModule } from '@angular/material/select';
+import { UpdateReportDialogComponent } from './components/update-milestone-progress-dialog/update-report-dialog.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { MatSelectModule } from '@angular/material/select';
     EditDyReportComponent,
     DyReportDetailsComponent,
     CustomTemplateDirective,
+    UpdateReportDialogComponent
   ],
   imports: [
     CommonModule,

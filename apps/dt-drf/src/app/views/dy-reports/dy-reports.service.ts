@@ -34,27 +34,28 @@ export interface RequestTask {
   status: string;
   username: string;
   userDisplayName: string;
-  requestTaskAttributes: [
-    {
-      id: number;
-      name: string;
-      value: string;
-    }
-  ];
+  requestTaskAttributes: RequestTaskAttributes[];
   completedDate: Date;
   createdDate: Date;
   lastModified: Date;
+  params: RequestTaskParam[];
+}
 
-  params: {
+export interface RequestTaskAttributes {
+  requestParams: RequestTaskParam[];
+}
+
+export interface RequestTaskParamOriginal {
+  name: string;
+  type?: string;
+  constraints?: {
     name: string;
-    type: string;
-    constraints: [
-      {
-        name: string;
-        configuration: boolean;
-      }
-    ];
+    configuration: boolean;
   }[];
+}
+
+export interface RequestTaskParam extends RequestTaskParamOriginal {
+  value: string | boolean;
 }
 
 export interface MilestoneAttachment {
@@ -67,43 +68,19 @@ export interface MilestoneAttachment {
 }
 
 export class Actions {
-  static readonly addEvidence = new Actions('Add Evidence', 'Add Evidence');
-  static readonly addNewProgress = new Actions(
-    'Add New Progress',
-    'Add New Progress'
-  );
-  static readonly addJustification = new Actions(
-    'Add Justification',
-    'Add Justification'
-  );
-  static readonly addOnTrack = new Actions('Add Remarks', 'Add Remarks');
-  static readonly reviewEvidence = new Actions('Approve Evidence', 'Approve');
-  static readonly reviewJustification = new Actions(
-    'Approve Justification',
-    'Approve'
-  );
-  static readonly reviewOnTrack = new Actions('Approve on Track', 'Approve');
-  static readonly updateDTRecord = new Actions(
-    'Update Record',
-    'Update Record'
-  );
-  static readonly initiateUpdateProgress = new Actions(
-    'Update progress',
-    'Update progress'
-  );
-  static readonly approveProgress = new Actions(
-    'Approve progress',
-    'Approve progress'
-  );
-  static readonly returnProgress = new Actions('Return progress', 'Return');
+  static readonly approveSLA = new Actions('Approve SLA', 'Approve SLA');
+  static readonly rejectSLA = new Actions('Reject SLA', 'Reject SLA');
 
-  static readonly returnJustification = new Actions(
-    'Return Justification',
-    'Return'
-  );
-  static readonly returnEvidence = new Actions('Return Evidence', 'Return');
-  static readonly returnOnTrack = new Actions('Return Remarks', 'Return');
-  static readonly noNeed = new Actions('No Need', 'No Need');
+  static readonly approve = new Actions('Approve', 'Approve');
+  static readonly reject = new Actions('Reject', 'Reject');
+
+  static readonly initiatorApprove = new Actions('Initiator Approve', 'Approve');
+  static readonly initiatorReject = new Actions('Initiator Reject', 'Reject');
+
+  static readonly addData = new Actions('Add Data', 'Add Data');
+
+  static readonly editReport = new Actions('Edit Report', 'Edit Report');
+  static readonly deleteReport = new Actions('Delete Report', 'Delete Report');
 
   // private to disallow creating other instances of this type
   private constructor(
@@ -148,6 +125,7 @@ export interface ReportDetails {
   remainingSteps: number;
   serialNumber: string;
   reportName: string;
+  description: string;
 }
 
 export interface MilestoneAttachment {
@@ -404,7 +382,7 @@ export class ReportsService {
     reportId: number | string
   ): Observable<MilestoneAttachment> {
     return this.http.post<MilestoneAttachment>(
-      `${this.baseUrl}v2/dt-milestone-service/attachments?reportId=${reportId}`,
+      `${this.endpointAttachments}?reportId=${reportId}`,
       data
     );
   }
@@ -422,12 +400,8 @@ export class ReportsService {
   getMilestoneProgress(id: number) {
     return this.http.get(`${this.dtUrl}/progress/${id}`);
   }
-  getMilestoneProgressWorkflow(
-    requestId: number
-  ): Observable<MilestoneProgressWorkflow> {
-    return this.http.get<MilestoneProgressWorkflow>(
-      `${this.ticketUrl}${requestId}`
-    );
+  getReportWorkflow(requestId: number): Observable<ReportWorkflow> {
+    return this.http.get<ReportWorkflow>(`${this.ticketUrl}${requestId}`);
   }
 
   getMilestoneTasks(): Observable<PendingTask[]> {
@@ -482,9 +456,7 @@ export class ReportsService {
   completePendingTask(
     requestId: string | number,
     requestTaskId: string | number,
-    body: {
-      requestParams: { name: string; value: number | string | boolean }[];
-    }
+    body: RequestTaskAttributes
   ) {
     return this.http.post(
       `${this.ticketUrl}${requestId}/${requestTaskId}`,
@@ -572,11 +544,11 @@ export interface Reminders {
   reminderUploadDate: string;
 }
 
-export type MilestoneProgressWorkflow = MilestoneProgressWorkflowStep[];
+export type ReportWorkflow = ReportWorkflowStep[];
 
-export interface MilestoneProgressWorkflowStep {
+export interface ReportWorkflowStep {
   requestTaskId: number;
-  status: 'completed' | 'pending';
+  status: ReportFlowStatus;
   username: string;
   userDisplayName: string;
   params: {
@@ -589,14 +561,23 @@ export interface MilestoneProgressWorkflowStep {
     name: string;
     value: string;
   }[];
-  completedDate: Date;
+  completedDate: Date | null;
+  completedByName: string | null;
   createdDate: Date;
   lastModified: Date;
-  taskName: string;
-  completedByName: string;
+  taskName:
+    | 'Add Data'
+    | 'Initiator Approve'
+    | 'User Approve SLA'
+    | 'User Approve'
+    | 'Edit or Delete Report Data';
 }
 
-export type MilestoneStatus = 'Planned' | 'Delayed' | 'On Track' | 'Completed';
+export type ReportFlowStatus =
+  | 'completed'
+  | 'pending'
+  | 'breached'
+  | 'rejected';
 
 // export interface File {
 //   id: string;
