@@ -15,12 +15,11 @@ import {
   FormGroup,
   Validators,
 } from '@angular/forms';
-
 import { Router } from '@angular/router';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
-import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
 import { ConfigService } from '../../../../services/config.service';
 import { Report } from '../../../../services/models/report-flow.model';
 import { User } from '../../../../services/models/user';
@@ -37,157 +36,179 @@ import {
 })
 export class DyReportFormComponent implements OnInit, OnChanges {
   @Input() isEditing!: boolean;
-  @Input()
-  reportData!: Report;
+  @Input() reportData!: Report;
   @Input() readOnly!: boolean;
-
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
   form!: FormGroup;
   users: User[] = [];
   approvers: User[] = [];
-
-  uploadedFiles: BehaviorSubject<{ id: number; label: string }[]> =
-    new BehaviorSubject<{ id: number; label: string }[]>([]);
-
+  uploadedFiles = new BehaviorSubject<{ id: number; label: string }[]>([]);
   isSubmitLoading = false;
-
-  isLoading = false;
-  errorSize = false;
-  errorType = false;
-  disableSaveBtn = true;
-
   filteredOptions: Observable<User[]>[] = [];
-  selectedOptions: any = [];
-
-  stepCounter = 1;
+  selectedOptions: string[] = [];
   customRangeSLA: { name: number; id: number }[] = [];
   categories!: Category[];
 
   constructor(
-    private _formBuilder: FormBuilder,
-    protected dialogService: DialogService,
-    public reportsService: ReportsService,
+    private formBuilder: FormBuilder,
+    private reportsService: ReportsService,
     private toastr: ToastrService,
     private router: Router,
-    public config_service: ConfigService
+    private configService: ConfigService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['reportData']) {
-      this.reportData = changes['reportData'].currentValue;
-      if (this.reportData) {
-        this.restFormWithValue(this.reportData);
-      }
+    if (changes['reportData'] && this.reportData) {
+      this.resetFormWithValue(this.reportData);
     }
   }
 
   ngOnInit(): void {
-    this.initReportForm();
-    this.ManageUserNameControl(0);
-    this.customSLAPopulator();
-    this.getUsersListing();
+    this.initForm();
+    this.loadInitialData();
+  }
+
+  private initForm() {
+    this.form = this.formBuilder.group({
+      reportName: ['', [Validators.required, Validators.maxLength(100)]],
+      description: [
+        { value: '', disabled: this.readOnly },
+        [
+          Validators.maxLength(
+            this.configService.getConfig().characterLimit.descriptionLength
+          ),
+        ],
+      ],
+      requestCategoryId: [
+        { value: '', disabled: this.readOnly },
+        Validators.required,
+      ],
+      slaDurationInDays: [
+        '',
+        [
+          Validators.pattern('^[0-9]+$'),
+          Validators.max(this.configService.getConfig().rangeForSLA.max),
+        ],
+      ],
+      needMoreDataFromCreator: [0],
+      initiatorShouldApprove: [0],
+      creatorEmail: [{ value: '', disabled: this.readOnly }],
+      attachments: [[], Validators.required],
+      requestApprovals: this.formBuilder.array([]),
+    });
+  }
+
+  private loadInitialData() {
+    this.getUsers();
+    this.populateCustomSLA();
     this.getCategories();
   }
 
-  initReportForm() {
-    this.form = this._formBuilder.group({
-      reportName: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(150)]],
-      requestCategoryId: ['', Validators.required],
-      sla: [''],
-      customSLA: [''],
-      needMoreDataFromCreator: [0],
-      initiatorShouldApprove: [0],
-      creatorEmail: [''],
-      attachments: [[], Validators.required],
-      requestApprovals: this._formBuilder.array([]),
+  private resetFormWithValue(data: Report) {
+    this.form.patchValue({
+      reportName: data.reportName,
+      description: data.description,
+      requestCategoryId: data.requestCategory.id,
+      needMoreDataFromCreator: !!data.creatorEmail,
+      creatorEmail: data.creatorEmail || '',
+      slaDurationInDays: data.requestCategory.slaDuration || 0,
     });
-    this.addNewStep();
+    this.uploadedFiles.next(data.attachments);
+    this.form.get('description')?.disable();
+    this.form.get('requestCategoryId')?.disable();
+    this.form.get('needMoreDataFromCreator')?.disable();
+    this.form.get('creatorEmail')?.disable();
+    this.form.get('initiatorShouldApprove')?.disable();
+    this.form.get('attachments')?.disable();
+    this.form.get('requestApprovals')?.disable();
+    this.form.get('slaDurationInDays')?.disable();
   }
 
-  restFormWithValue(data: Report) {
-    this.form?.get('reportName')?.setValue(data?.reportName);
-    this.form?.get('description')?.setValue(data.description);
-    this.form?.get('requestCategoryId')?.setValue(data.requestCategory.id);
-    this.uploadedFiles.next(data?.attachments);
-    if (data?.creatorEmail) {
-      this.form?.get('needMoreDataFromCreator')?.setValue(true);
-      this.form?.get('creatorEmail')?.setValue(data.creatorEmail);
-    }
-    this.form?.get('description')?.disable();
-    this.form?.get('requestCategoryId')?.disable();
-    this.form?.get('needMoreDataFromCreator')?.disable();
-    this.form?.get('creatorEmail')?.disable();
-    this.form?.get('initiatorShouldApprove')?.disable();
-    this.form?.get('attachments')?.disable();
-    this.form?.get('requestApprovals')?.disable();
-  }
   onSubmit() {
-    if (!this.form.valid) {
+    if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
       return;
     }
 
     this.isSubmitLoading = true;
-
     const finalData = {
       ...this.form.value,
-      initiatorShouldApprove: this.form.get('initiatorShouldApprove')?.value
-        ? 1
-        : 0,
-      needMoreDataFromCreator: this.form.get('needMoreDataFromCreator')?.value
-        ? 1
-        : 0,
+      initiatorShouldApprove: this.form.value.initiatorShouldApprove ? 1 : 0,
+      needMoreDataFromCreator: this.form.value.needMoreDataFromCreator ? 1 : 0,
     };
 
     const handleSuccess = (message: string) => {
       this.toastr.success(message);
-      this.form.reset();
       this.router.navigate(['./home']);
-      this.isSubmitLoading = false;
     };
 
     const handleError = () => {
-      this.isSubmitLoading = false;
-      //  this.toastr.error('An error occurred while processing your request.');
+      this.toastr.error('An error occurred while processing your request.');
     };
 
     if (this.isEditing) {
-      const id = this.reportData?.id;
-      this.reportsService.updateReportFlow(id, finalData).subscribe(
-        (res) => {
-          if (res) {
-            handleSuccess('Report has been edited successfully');
-          } else {
-            handleError();
-          }
-        },
-        () => handleError()
-      );
+      this.reportsService
+        .updateReportFlow(this.reportData.id, finalData)
+        .subscribe({
+          next: () => handleSuccess('Report has been edited successfully'),
+          error: handleError,
+          complete: () => (this.isSubmitLoading = false),
+        });
     } else {
-      this.reportsService.createReportFlow(finalData).subscribe(
-        (res) => {
-          if (res) {
-            handleSuccess('Report has been created successfully');
-          } else {
-            handleError();
-          }
-        },
-        () => handleError()
-      );
+      this.reportsService.createReportFlow(finalData).subscribe({
+        next: () => handleSuccess('Report has been created successfully'),
+        error: handleError,
+        complete: () => (this.isSubmitLoading = false),
+      });
     }
   }
 
   private markFormGroupTouched(formGroup: FormGroup | FormArray) {
-    Object.keys(formGroup.controls).forEach((field) => {
-      const control = formGroup.get(field);
+    Object.values(formGroup.controls).forEach((control) => {
       if (control instanceof FormControl) {
-        control.markAsTouched({ onlySelf: true });
+        control.markAsTouched();
       } else if (control instanceof FormGroup || control instanceof FormArray) {
         this.markFormGroupTouched(control);
       }
     });
+  }
+  handleGategory(item: number) {
+    const selectedCategory = this.categories.find(
+      (c: Category) => c?.slaDuration === item
+    );
+    // Set the form control value to the found category's slaDuration or default to 0
+    this.form
+      .get('slaDurationInDays')
+      ?.setValue(selectedCategory?.slaDuration ?? 0);
+  }
+  private getUsers() {
+    this.reportsService.getUsers().subscribe((res) => {
+      this.users = res.filter(
+        (user) => user.userGroups[0].roles[0].roleName !== 'ADMINS'
+      );
+      this.approvers = this.users.filter(
+        (user) => user.email !== this.reportsService.getCurrentUser().email
+      );
+      this.addNewStep();
+    });
+  }
+
+  private getCategories() {
+    this.reportsService.getCategories().subscribe((res) => {
+      this.categories = res;
+    });
+  }
+
+  private populateCustomSLA() {
+    const { min, max } = this.configService.getConfig().rangeForSLA;
+    this.customRangeSLA = Array.from({ length: max - min + 1 }, (_, i) => ({
+      name: min + i,
+      id: min + i,
+    }));
+  }
+  cancel() {
+    this.router.navigate(['../']);
   }
   preventComma(event: KeyboardEvent) {
     if (event.key === ',') {
@@ -195,37 +216,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     }
   }
 
-  getUsersListing() {
-    this.reportsService.getUsers().subscribe((res) => {
-      this.users = res.filter(
-        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
-      );
-      this.approvers = this.users.filter(
-        (u: User) => u.email !== this.reportsService.getCurrentUser().email
-      );
-    });
-  }
-  getCategories() {
-    this.reportsService.getCategories().subscribe((res) => {
-      this.categories = res;
-    });
-  }
-  customSLAPopulator() {
-    const min = +this.config_service.getConfig().rangeForSLA.min;
-    const max = +this.config_service.getConfig().rangeForSLA.max;
-
-    for (let i = min; i <= max; i++) {
-      const obj = { name: i, id: i };
-      this.customRangeSLA.push(obj);
-    }
-  }
-
-  cancel() {
-    this.router.navigate(['../']);
-  }
-
-  handleCheck(v: { name: string; value: string }) {
-    const { name, value } = v;
+  handleCheck({ name, value }: { name: string; value: string }) {
     if (name === 'needMoreDataFromCreator') {
       if (value) {
         this.form.get('creatorEmail')?.setValidators(Validators.required);
@@ -237,100 +228,72 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       this.form.get('creatorEmail')?.updateValueAndValidity();
       this.form.get('attachments')?.updateValueAndValidity();
     } else if (name === 'sla') {
-      if (value) {
-        this.form.get('customSLA')?.setValidators(Validators.required);
-      } else {
-        this.form.get('customSLA')?.clearValidators();
-      }
+      this.form
+        .get('customSLA')
+        ?.setValidators(value ? Validators.required : null);
       this.form.get('customSLA')?.updateValueAndValidity();
     }
   }
-  /** Uploader functions **/
-
   uploadClick() {
-    if (this.fileUpload) {
-      this.fileUpload.nativeElement.click();
-    }
-  }
-
-  clearInputElement() {
-    this.errorSize = false;
-    this.errorType = false;
-    //this.files = [];
+    this.fileUpload.nativeElement.click();
   }
 
   handleUploadChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement;
     const files = Array.from(inputElement.files || []);
-    if (files.length > 0) {
+    if (files.length) {
       this.uploadAndProgress(files);
     }
   }
-  uploadAndProgress(files: File[]) {
-    // Track the number of files processed
+
+  private uploadAndProgress(files: File[]) {
     let filesProcessed = 0;
-    const totalFiles = files.length;
 
     files.forEach((file) => {
-      if (
-        file.size >
-        +this.config_service.getConfig().fileValidation.sizeWithMegaBytes *
-          1000000
-      ) {
-        this.errorSize = true;
-      } else if (
-        !this.config_service
-          .getConfig()
-          .fileValidation.acceptType.split(',')
-          .includes(file.type)
-      ) {
-        this.errorType = true;
-      } else {
-        // Create a new FormData object for each file
+      if (this.isFileValid(file)) {
         const formData = new FormData();
         formData.append('file', file);
 
         this.reportsService.addFile(formData).subscribe({
           next: (res: UploadResponse) => {
-            console.log(res);
-            // Update the BehaviorSubject with new file data
             this.uploadedFiles.next([
               ...this.uploadedFiles.value,
               { id: res.id, label: res.label },
             ]);
-
-            // Increment the count of processed files
             filesProcessed++;
-
-            // Check if all files have been processed
-            if (filesProcessed === totalFiles) {
-              // Update the form control value after all files have been processed
+            if (filesProcessed === files.length) {
               this.form
                 .get('attachments')
-                ?.setValue(
-                  this.uploadedFiles.value.map((file) => ({ id: file.id }))
-                );
+                ?.setValue(this.uploadedFiles.value.map(({ id }) => ({ id })));
             }
           },
-          error: (err) => {
-            console.error(err);
-            // Handle error if needed
-          },
+          error: (err) => console.error(err),
         });
       }
     });
   }
 
-  removeFile(index: number) {
-    const currentFiles = this.uploadedFiles.value;
-    currentFiles.splice(index, 1); // Remove the file at the specified index
-    this.uploadedFiles.next(currentFiles); // Update the BehaviorSubject with the new list
-    this.form
-      .get('attachments')
-      ?.setValue(this.uploadedFiles.value.map((file) => ({ id: file.id })));
+  private isFileValid(file: File): boolean {
+    const config = this.configService.getConfig().fileValidation;
+    if (file.size > config.sizeWithMegaBytes * 1_000_000) {
+      this.toastr.error('File size exceeds the allowed limit.');
+      return false;
+    } else if (!config.acceptType.includes(file.type)) {
+      this.toastr.error('File type is not allowed.');
+      return false;
+    }
+    return true;
   }
 
-  // convenience getters for easy access to form fields
+  removeFile(index: number) {
+    const currentFiles = [...this.uploadedFiles.value];
+    currentFiles.splice(index, 1);
+    this.uploadedFiles.next(currentFiles);
+    this.form
+      .get('attachments')
+      ?.setValue(currentFiles.map(({ id }) => ({ id })));
+  }
+
   get f(): { [key: string]: AbstractControl } {
     return this.form.controls;
   }
@@ -339,109 +302,63 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return this.f['requestApprovals'] as FormArray;
   }
 
-  /** setps flow functions **/
-
   addNewStep() {
-    const newGroup = this._formBuilder.group({
+    const newGroup = this.formBuilder.group({
       username: ['', Validators.required],
-      sequence: [this.stepCounter++],
+      sequence: [this.t.length + 1],
     });
     this.t.push(newGroup);
-    this.ManageUserNameControl(this.t.length - 1);
+    this.manageUserNameControl(this.t.length - 1);
   }
+
   removeStep(index: number) {
     this.t.removeAt(index);
     this.selectedOptions.splice(index, 1);
+    this.updateFilteredOptions();
   }
-  triggerEvent(event: any, item: number) {
-    if (!event) {
-      this.t.at(item).patchValue({ input: '' });
-    } else {
-      this.t?.at(item)?.get('input')?.markAsTouched();
-    }
-  }
-  // onSelectionChange(v: any, i: number) {
-  //   this.disableSaveBtn = false;
-  //   const value = event.source.value.toLowerCase();
 
-  //   if (
-  //     this.isEditing &&
-  //     (value ===
-  //       this.reportData?.requestApprovals[
-  //         this.reportData?.requestApprovals?.length - 1
-  //       ].username ||
-  //       value === this.authService.getCurrentUserName())
-  //   ) {
-  //     this.disableSaveBtn = true;
-  //   }
-  //   this.selectedOptions.splice(i, 1);
-
-  //   if (!this.selectedOptions.includes(v)) {
-  //     this.selectedOptions.splice(i, 0, v);
-  //   }
-  //   this.ManageUserNameControl(i);
-  // }
-  ManageUserNameControl(index: number) {
-    const control = this.t.at(index).get('input');
+  manageUserNameControl(index: number) {
+    const control = this.t.at(index).get('username');
     if (control) {
-      if (this.t.at(index).get('input')?.touched) {
-        this.filteredOptions[index] = control.valueChanges.pipe(
-          startWith<string | User>(''),
-          map((value) => (typeof value === 'string' ? value : value.username)),
-          map((name) => {
-            const copySelected = this.selectedOptions.slice();
-            copySelected.splice(index, 1);
-            return name
-              ? this._filter(name)
-              : this.selectedOptions.length === 1
-              ? this.users
-              : this.users?.filter((x) => {
-                  return !copySelected.includes(x.username.toLowerCase());
-                });
-          })
-        );
-        this.filteredOptions[index + 1] = control.valueChanges.pipe(
-          startWith<string | User>(''),
-          map((value) => (typeof value === 'string' ? value : value.username)),
-          map((name) => {
-            return name
-              ? this._filter(name)
-              : this.users?.filter(
-                  (x) =>
-                    !this.selectedOptions.includes(x.username.toLowerCase())
-                );
-          })
-        );
-      } else {
-        this.filteredOptions[index] = control.valueChanges.pipe(
-          startWith<string | User>(''),
-          map((value) => (typeof value === 'string' ? value : value.username)),
-          map((name) => {
-            return name
-              ? this._filter(name)
-              : this.isEditing
-              ? this.users
-              : this.users?.filter(
-                  (x) =>
-                    !this.selectedOptions.includes(x.username.toLowerCase())
-                );
-          })
-        );
-      }
-    }
-  }
-  private _filter(name: string) {
-    const filterValue = name.toLowerCase();
-    if (this.selectedOptions.length > 0) {
-      return this.users
-        ?.filter(
-          (option) => option?.name.toLowerCase().indexOf(filterValue) === 0
-        )
-        .filter((x) => !this.selectedOptions.includes(x?.username));
-    } else {
-      return this.users?.filter(
-        (option) => option.name.toLowerCase().indexOf(filterValue) === 0
+      this.filteredOptions[index] = control.valueChanges.pipe(
+        startWith<string | User>(''),
+        map((value) => (typeof value === 'string' ? value : value.email)),
+        map((name) => {
+          const copySelected = this.selectedOptions.slice();
+          copySelected.splice(index, 1);
+          return name
+            ? this.filterUsers(name)
+            : this.approvers?.filter((x) => {
+                return !copySelected.includes(x.email.toLowerCase());
+              });
+        })
       );
     }
+  }
+
+  private filterUsers(name: string): User[] {
+    const filterValue = name.toLowerCase();
+    let filteredUsers = this.approvers.filter((option) =>
+      option.email.toLowerCase().includes(filterValue)
+    );
+
+    if (this.selectedOptions.length > 0) {
+      filteredUsers = filteredUsers.filter(
+        (user) => !this.selectedOptions.includes(user.email.toLowerCase())
+      );
+    }
+
+    return filteredUsers;
+  }
+
+  onSelectionChange(option: string, index: number) {
+    this.selectedOptions[index] = option.toLocaleLowerCase();
+    this.updateFilteredOptions();
+  }
+
+  private updateFilteredOptions() {
+    this.selectedOptions.forEach((_, i) => {
+      this.manageUserNameControl(i);
+    });
   }
 }
