@@ -16,12 +16,10 @@ import {
   UserGroup,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
-
-export interface ColumnsSchema {
-  key: string;
-  type: string;
-  label: string;
-}
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 
 @Component({
   selector: 'stc-apps-users',
@@ -29,37 +27,97 @@ export interface ColumnsSchema {
   styleUrls: ['./users.component.scss'],
 })
 export class UsersComponent implements OnInit, AfterViewInit {
-  COLUMNS_SCHEMA = [
-    {
-      key: 'name',
-      type: 'text',
-      label: 'Name',
-    },
+  tableData!: any;
+  reportsTotalCount!: number;
+  filterString = '';
+  columnsSchema!: ColumnsSchema[];
 
-    {
-      key: 'userGroups',
-      type: 'text',
-      label: 'privilege',
-    },
-    {
-      key: 'teamDto',
-      type: 'text',
-      label: 'team',
-    },
-    {
-      key: 'jobTitle',
-      type: 'text',
-      label: 'job Title',
-    },
-    {
-      key: 'actions',
-      type: 'actions',
-      label: '',
-    },
-  ];
+  //  columnsSchema: { key: string; type: string; label: string }[];
 
-  displayedColumns: string[] = this.COLUMNS_SCHEMA.map((col) => col.key);
-  columnsSchema: ColumnsSchema[] = this.COLUMNS_SCHEMA;
+  tableAction(event: { value: string; dataRow: any }) {
+    // if (event.value === 'edit') {
+    //   this.router.navigate(['./edit_report', event.dataRow.id], {
+    //     relativeTo: this.route,
+    //   });
+    // } else if (event.value === 'delete') {
+    //   this.makeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
+    //     if (!res) {
+    //       return;
+    //     }
+    //     this.reportsService.deleteMilestone(event.dataRow.id).subscribe({
+    //       next: () => {
+    //         this.toastr.success('Deleted successfully');
+    //         this.getReports();
+    //       },
+    //       error: () => {
+    //         this.toastr.error('Something went wrong!');
+    //       },
+    //     });
+    //   });
+    // } else if (event.value === 'details') {
+    //   this.detailsNavigate(event.dataRow);
+    // } else if (event.value === 'updateProgress') {
+    //   this.openProgressUpdateModal(event.dataRow);
+    // }
+  }
+
+  paginate(paginationEvent: PaginationEvent) {
+    // const filteredForm = this.utilities.filterObject(this.form.value);
+    // this.reportsService
+    //   .getReports({
+    //     page: paginationEvent.currentPage - 1,
+    //     ...filteredForm,
+    //   })
+    //   .pipe(take(1))
+    //   .subscribe((res: any) => {
+    //     this.populateReports(res);
+    //   });
+  }
+  ngAfterViewInit(): void {
+    this.columnsSchema = [
+      {
+        key: 'name',
+        type: 'text',
+        label: 'Name',
+      },
+
+      {
+        key: 'userGroups',
+        type: 'text',
+        label: 'privilege',
+      },
+      {
+        key: 'teamDto',
+        type: 'text',
+        label: 'team',
+      },
+      {
+        key: 'jobTitle',
+        type: 'text',
+        label: 'job Title',
+      },
+      {
+        key: 'actions',
+        type: 'actions',
+        label: '',
+      },
+    ];
+
+    // Ensure columnsSchema is not undefined before using map
+    this.displayedColumns = (this.columnsSchema ?? []).map((col) => col.key);
+
+    // Assign columnsSchema to columnssSchema if needed
+    this.columnssSchema = this.columnsSchema;
+    if (this.userService.getCurrentSystem() === 'Dynamic_Report_Flow') {
+      // this.columnssSchema = th;
+      this.displayedColumns = (this.columnsSchema ?? [])
+        .filter((c) => c.label !== 'team')
+        .map((c) => c.key);
+    }
+  }
+
+  displayedColumns: string[] | undefined;
+  columnssSchema: ColumnsSchema[] | undefined;
   dataSource = new MatTableDataSource<User>();
   dataSourceFilters = new MatTableDataSource<User>();
 
@@ -97,9 +155,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
   // Fetch the user list from the service
   getUsersListing() {
     this.userService.getUsers().subscribe((res) => {
+      console.log(res);
+
       this.list = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
+      this.tableData = this.list;
+
       this.dataSource.data = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
@@ -285,9 +347,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
     });
   }
 
-  ngAfterViewInit() {
-    this.dataSource.sort = this.sort;
-  }
   deleteItem(id: number) {
     this.userId = id;
     this.user = this.dataSource.data.filter((u) => u.id === id)[0];

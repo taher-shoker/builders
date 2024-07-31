@@ -57,7 +57,7 @@
 
 .cdk-global-overlay-wrapper,
 .cdk-overlay-container {
-  z-index: 99999 !important;
+  z-index: 1000 !important;
 }
 .mat-mdc-optgroup-label {
   font-weight: 600;

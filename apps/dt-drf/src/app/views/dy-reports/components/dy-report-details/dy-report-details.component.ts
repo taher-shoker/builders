@@ -4,22 +4,22 @@ import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { DialogService, BannerDataService } from '@stc-apps/shared-ui';
+import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
+import { AuthService } from 'apps/dt-drf/src/app/services/auth.service';
 import saveAs from 'file-saver';
+import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
+import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import {
-  ReportDetails,
-  ReportsService,
   Actions,
   MilestoneAttachment,
-  ReportWorkflow,
+  ReportDetails,
   ReportFlowStatus,
+  ReportsService,
+  ReportWorkflow,
   RequestTask,
   RequestTaskAttributes,
 } from '../../dy-reports.service';
-import { AuthService } from 'apps/dt-drf/src/app/services/auth.service';
-import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
-import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import { UpdateReportDialogComponent } from '../update-milestone-progress-dialog/update-report-dialog.component';
+import { UpdateReportDialogComponent } from '../update-dy-report-progress-dialog/update-report-dialog.component';
 
 @Component({
   selector: 'stc-apps-dy-report-details',
@@ -97,7 +97,6 @@ export class DyReportDetailsComponent implements OnInit {
       if (this.reportsDetails.flowId) {
         this.showReportWorkflow();
       }
-
     });
   }
 
@@ -148,20 +147,19 @@ export class DyReportDetailsComponent implements OnInit {
               actions.push(Actions.reject);
             }
 
-            if(res[i].taskName === 'Edit or Delete Report Data'){
+            if (res[i].taskName === 'Edit or Delete Report Data') {
               actions.push(Actions.editReport);
               actions.push(Actions.deleteReport);
             }
 
-            if(res[i].taskName === 'Initiator Approve'){
+            if (res[i].taskName === 'Initiator Approve') {
               actions.push(Actions.initiatorApprove);
               actions.push(Actions.initiatorReject);
             }
 
-            if(res[i].taskName === 'Add Data'){
+            if (res[i].taskName === 'Add Data') {
               actions.push(Actions.addData);
             }
-
           }
 
           const step: Step = {
@@ -489,94 +487,95 @@ export class DyReportDetailsComponent implements OnInit {
       this.rejectStep(item);
     }
 
-    if(action === 'Edit Report'){
-      this.router.navigate(['/home/add_report'], {queryParams: {mode: 'edit_report', id: this.reportsDetails.id}})
+    if (action === 'Edit Report') {
+      this.router.navigate(['/home/add_report'], {
+        queryParams: { mode: 'edit_report', id: this.reportsDetails.id },
+      });
     }
 
-    if(action === 'Delete Report'){
-
-      const msg = `You're about to delete the report flow,  Kindly note you can't roll back this action. Are you sure?`
-      this.confirmAction(msg).subscribe(res => {
-        if(!res){
-          return
+    if (action === 'Delete Report') {
+      const msg = `You're about to delete the report flow,  Kindly note you can't roll back this action. Are you sure?`;
+      this.confirmAction(msg).subscribe((res) => {
+        if (!res) {
+          return;
         }
 
         this.deleteFlowStep(item);
-      })
+      });
     }
 
-    if(action === 'Add Data'){
-      this.addDataStep(item)
+    if (action === 'Add Data') {
+      this.addDataStep(item);
     }
 
-    if(action === 'Initiator Approve'){
-      this.approveInitiatorStep(item)
+    if (action === 'Initiator Approve') {
+      this.approveInitiatorStep(item);
     }
 
-    if(action === 'Initiator Reject'){
-      this.rejectInitiatorStep(item)
+    if (action === 'Initiator Reject') {
+      this.rejectInitiatorStep(item);
     }
   }
 
-  approveInitiatorStep(item: RequestTask){
-    const msg = `Are you sure to approve current state?`
-    this.confirmAction(msg).subscribe(res => {
-      if(!res){
-        return
+  approveInitiatorStep(item: RequestTask) {
+    const msg = `Are you sure to approve current state?`;
+    this.confirmAction(msg).subscribe((res) => {
+      if (!res) {
+        return;
       }
 
       this.approveInitiator(item);
-    })
+    });
   }
 
-  rejectInitiatorStep(item: RequestTask){
-    const msg = `Are you sure to reject current state?`
-    this.confirmAction(msg).subscribe(res => {
-      if(!res){
-        return
+  rejectInitiatorStep(item: RequestTask) {
+    const msg = `Are you sure to reject current state?`;
+    this.confirmAction(msg).subscribe((res) => {
+      if (!res) {
+        return;
       }
 
       this.approveInitiator(item);
-    })
-  }
-
-  rejectInitiator(item: RequestTask){
-    const params: RequestTaskAttributes = {
-      requestParams: [{name: 'is_approved_by_initiator', value: false}],
-    };
-
-    this.reportsService
-    .completePendingTask(
-      this.reportsDetails.flowId,
-      item.requestTaskId,
-      params
-    )
-    .subscribe((res) => {
-      console.log('The res of complete task:', res);
-      this.isLoadingSteps = false;
-      this.getReportDetails();
     });
   }
 
-  approveInitiator(item: RequestTask){
+  rejectInitiator(item: RequestTask) {
     const params: RequestTaskAttributes = {
-      requestParams: [{name: 'is_approved_by_initiator', value: true}],
+      requestParams: [{ name: 'is_approved_by_initiator', value: false }],
     };
 
     this.reportsService
-    .completePendingTask(
-      this.reportsDetails.flowId,
-      item.requestTaskId,
-      params
-    )
-    .subscribe((res) => {
-      console.log('The res of complete task:', res);
-      this.isLoadingSteps = false;
-      this.getReportDetails();
-    });
+      .completePendingTask(
+        this.reportsDetails.flowId,
+        item.requestTaskId,
+        params
+      )
+      .subscribe((res) => {
+        console.log('The res of complete task:', res);
+        this.isLoadingSteps = false;
+        this.getReportDetails();
+      });
   }
 
-  addDataStep(item: RequestTask){
+  approveInitiator(item: RequestTask) {
+    const params: RequestTaskAttributes = {
+      requestParams: [{ name: 'is_approved_by_initiator', value: true }],
+    };
+
+    this.reportsService
+      .completePendingTask(
+        this.reportsDetails.flowId,
+        item.requestTaskId,
+        params
+      )
+      .subscribe((res) => {
+        console.log('The res of complete task:', res);
+        this.isLoadingSteps = false;
+        this.getReportDetails();
+      });
+  }
+
+  addDataStep(item: RequestTask) {
     const params: RequestTaskAttributes = {
       requestParams: [],
     };
@@ -584,14 +583,17 @@ export class DyReportDetailsComponent implements OnInit {
     this.openAddDataForReportModal(item).subscribe(
       (res: { comment: string; attachments: string }) => {
         console.log('The res of dialog:', res);
-        if(!res){
-          return
+        if (!res) {
+          return;
         }
 
         this.isLoadingSteps = true;
 
         if (res.comment) {
-          params.requestParams.push({ name: 'creator_description', value: res.comment });
+          params.requestParams.push({
+            name: 'creator_description',
+            value: res.comment,
+          });
         }
 
         if (res.attachments) {
@@ -616,7 +618,7 @@ export class DyReportDetailsComponent implements OnInit {
     );
   }
 
-  confirmAction(msg: string)    {
+  confirmAction(msg: string) {
     const dialogRef = this.matDialog.open(MessageDialogComponent, {
       width: '800px',
       data: {
@@ -635,8 +637,8 @@ export class DyReportDetailsComponent implements OnInit {
     this.openReportStepApprovalModal(item, true).subscribe(
       (res: { comment: string; attachments: string }) => {
         console.log('The res of dialog:', res);
-        if(!res){
-          return
+        if (!res) {
+          return;
         }
 
         this.isLoadingSteps = true;
@@ -675,8 +677,8 @@ export class DyReportDetailsComponent implements OnInit {
     this.openReportStepApprovalModal(item, false).subscribe(
       (res: { comment: any; attachments: any }) => {
         console.log('The res of dialog:', res);
-        if(!res){
-          return
+        if (!res) {
+          return;
         }
 
         this.isLoadingSteps = true;
@@ -706,23 +708,22 @@ export class DyReportDetailsComponent implements OnInit {
     );
   }
 
-  deleteFlowStep(item: RequestTask){
+  deleteFlowStep(item: RequestTask) {
     const params: RequestTaskAttributes = {
-      requestParams: [{ name: "delete", value: true }],
+      requestParams: [{ name: 'delete', value: true }],
     };
 
-    
     this.reportsService
-    .completePendingTask(
-      this.reportsDetails.flowId,
-      item.requestTaskId,
-      params
-    )
-    .subscribe((res) => {
-      console.log('The res of complete task:', res);
-      this.isLoadingSteps = false;
-      this.getReportDetails();
-    });
+      .completePendingTask(
+        this.reportsDetails.flowId,
+        item.requestTaskId,
+        params
+      )
+      .subscribe((res) => {
+        console.log('The res of complete task:', res);
+        this.isLoadingSteps = false;
+        this.getReportDetails();
+      });
   }
 
   openReportStepApprovalModal(item: RequestTask, isApprove: boolean) {

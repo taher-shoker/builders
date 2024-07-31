@@ -171,8 +171,6 @@ export class UsersService {
         }
       });
     }
-    console.log(x);
-
     return x || '-';
   }
 

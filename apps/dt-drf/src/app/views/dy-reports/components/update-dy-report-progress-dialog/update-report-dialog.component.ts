@@ -9,6 +9,7 @@ import {
   ReportsService,
   RequestTask,
 } from '../../dy-reports.service';
+import { ConfigService } from 'apps/dt-drf/src/app/services/config.service';
 
 @Component({
   selector: 'stc-apps-update-report-dialog',
@@ -58,7 +59,8 @@ export class UpdateReportDialogComponent {
       approvalState: 'approval' | 'rejection' | 'Add Data';
       report: ReportDetails;
     },
-    private reportsService: ReportsService
+    private reportsService: ReportsService,
+    public configService: ConfigService
   ) {
     this.initForm(data.approvalState);
     // this.milestoneName.set(data.milestoneName);
@@ -90,31 +92,46 @@ export class UpdateReportDialogComponent {
   uploadedFile: any[] = [];
   attachmentsIDs: string[] = []; // should be like 1,2,5,22 (comma separated)
 
-  acceptedExtensions = [
-    'image/png',
-    'image/jpeg',
-    'image/jpg',
-    'application/pdf',
-    'text/csv',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-excel',
-  ];
+  // acceptedExtensions = [
+  //   'image/png',
+  //   'image/jpeg',
+  //   'image/jpg',
+  //   'application/pdf',
+  //   'text/csv',
+  //   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  //   'application/vnd.ms-excel',
+  // ];
 
   initForm(approvalState: 'approval' | 'rejection' | 'Add Data') {
     if (approvalState === 'approval') {
       this.form = new FormGroup({
-        comment: new FormControl(''),
+        comment: new FormControl(
+          '',
+          Validators.maxLength(
+            this.configService.getConfig()?.characterLimit.descriptionLength
+          )
+        ),
       });
       this.showAttachment = false;
     } else if (approvalState === 'rejection') {
       this.form = new FormGroup({
-        comment: new FormControl('', Validators.required),
+        comment: new FormControl('', [
+          Validators.required,
+          Validators.maxLength(
+            this.configService.getConfig()?.characterLimit.descriptionLength
+          ),
+        ]),
         attachment: new FormControl(''),
       });
       this.showAttachment = true;
     } else {
       this.form = new FormGroup({
-        comment: new FormControl('', Validators.required),
+        comment: new FormControl('', [
+          Validators.required,
+          Validators.maxLength(
+            this.configService.getConfig()?.characterLimit.descriptionLength
+          ),
+        ]),
         attachment: new FormControl('', Validators.required),
       });
       this.showAttachment = true;
