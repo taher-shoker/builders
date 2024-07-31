@@ -16,6 +16,8 @@ import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpLoadingInterceptor } from './interceptors/http-loader.interceptor';
 import { HttpInterceptorService } from './interceptors/http-header.interceptor';
 import { CookieModule } from 'ngx-cookie';
+import { ToastrModule } from 'ngx-toastr';
+import { ErrorInterceptor } from './interceptors/errors-handler.interceptor';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
@@ -36,6 +38,7 @@ export const provideTranslation = () => ({
     SharedUiModule,
     NgxSpinnerModule.forRoot({type : "ball-spin"}),
     CookieModule.withOptions(),
+    ToastrModule.forRoot()
   ],
   providers: [
     importProvidersFrom([
@@ -51,7 +54,12 @@ export const provideTranslation = () => ({
       provide: HTTP_INTERCEPTORS,
       useClass: HttpLoadingInterceptor,
       multi: true,
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })

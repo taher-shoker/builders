@@ -17,7 +17,6 @@ export class HttpInterceptorService implements HttpInterceptor {
     const token = this.cookieService.get('token') || null;
     const gToken = this.cookieService.get('tokenGenerated') || null;
     const type = this.cookieService.get('tokenType') || '';
-    console.log(token);
     if (token) {
       request = request.clone({
         setHeaders: {

@@ -36,9 +36,9 @@ export class ScorecardService {
   {
     return this.scorecardsTaps;
   }
-  getScorecardData(group:string , month:number , year:number):Observable<ScorecardModel[]>
+  getScorecardData(groupName:string , month:number , year:number):Observable<ScorecardModel[]>
   {
-    return this.http.get<ScorecardModel[]>(`${environment.apiUrl}/business-excellence/scorecards?month=${month}&year=${year}&group=${group}`)
+    return this.http.get<ScorecardModel[]>(`${environment.apiUrl}/business-excellence/scorecards?month=${month}&year=${year}&group=${groupName}`)
   }
   setEditMode(mode:'editMode' | 'viewMode')
   {
