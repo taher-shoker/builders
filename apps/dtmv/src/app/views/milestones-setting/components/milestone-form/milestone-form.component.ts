@@ -157,7 +157,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
     this.form?.get('endDate')?.setValue(data.endDate);
     this.form?.get('weight')?.setValue(data.weight);
     this.form?.get('deliverable')?.setValue(data.deliverable);
-    this.form?.get('workStream')?.setValue(data.workStream);
   }
   onSubmit() {
     if (this.form.valid) {

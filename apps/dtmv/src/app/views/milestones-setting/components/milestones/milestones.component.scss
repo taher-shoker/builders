@@ -11,7 +11,7 @@
   word-break: keep-all;
 }
 
-.casses-settings {
+.milestones-settings {
   // margin-inline: 25px;
   // position: relative;
   // top: -95px;
@@ -251,6 +251,15 @@ table {
     color: $stcGreenColor;
   }
 }
+
+.pending-list-holder{
+  position: absolute;
+  width: 500px;
+}
+
+// .widen-list{
+//   width: 600px;
+// }
 
 .mat-expansion-panel {
   box-shadow: unset;

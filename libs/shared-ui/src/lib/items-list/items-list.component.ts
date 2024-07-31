@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 
@@ -8,13 +9,19 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 })
 export class ItemsListComponent {
   @Output() itemClicked : EventEmitter<any> = new EventEmitter<any>();
+  @Output() closeClicked : EventEmitter<void> = new EventEmitter<void>();
 
   @Input({required: true}) caption = "";
   @Input() iconClass = "";
+  @Input() closable: boolean = false;
 
   @Input({required: true}) items: any[] = [];
 
   clickItem(item: any){
     this.itemClicked.emit(item)
+  }
+
+  notifyParent(){
+    this.closeClicked.emit();
   }
 }
