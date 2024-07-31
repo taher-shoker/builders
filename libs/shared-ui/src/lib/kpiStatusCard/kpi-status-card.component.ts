@@ -6,6 +6,6 @@ import { Component, input, InputSignal } from '@angular/core';
   styleUrl: './kpi-status-card.component.scss',
 })
 export class KpiStatusCardComponent{
-  kpiStatus:InputSignal<number | string> = input.required<number | string>();
+  kpiStatus:InputSignal<number | string | boolean> = input.required<number | string | boolean>();
   kpiType:InputSignal<string> = input.required<string>();
 }

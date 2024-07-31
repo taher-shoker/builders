@@ -2,7 +2,7 @@ export interface KpiModel
 {
   // id:number;
   title:string;
-  achievedStatus?:number;
+  achievedStatus?:boolean;
   formula?:string;
   actual?:number;
   weight:number;

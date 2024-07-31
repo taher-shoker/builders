@@ -7,11 +7,15 @@ import { NxWelcomeComponent } from './nx-welcome.component';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 // import { SharedUiModule } from '@stc-apps/shared-ui';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { SharedUiModule } from '@stc-apps/shared-ui';
+import { NgxSpinnerModule } from 'ngx-spinner';
+import { HttpLoadingInterceptor } from './interceptors/http-loader.interceptor';
+import { HttpInterceptorService } from './interceptors/http-header.interceptor';
+import { CookieModule } from 'ngx-cookie';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
@@ -25,12 +29,29 @@ export const provideTranslation = () => ({
 });
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent, MainLayoutComponent],
-  imports: [BrowserModule, RouterModule.forRoot(appRoutes) , BrowserAnimationsModule , SharedUiModule],
+  imports: [
+    BrowserModule,
+    RouterModule.forRoot(appRoutes),
+    BrowserAnimationsModule,
+    SharedUiModule,
+    NgxSpinnerModule.forRoot({type : "ball-spin"}),
+    CookieModule.withOptions(),
+  ],
   providers: [
     importProvidersFrom([
       HttpClientModule,
       TranslateModule.forRoot(provideTranslation()),
     ]),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpLoadingInterceptor,
+      multi: true,
+    }
   ],
   bootstrap: [AppComponent],
 })

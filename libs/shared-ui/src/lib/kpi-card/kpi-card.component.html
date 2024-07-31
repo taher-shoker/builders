@@ -47,11 +47,11 @@
           <p class = "weight-val">
             @if (kpiData().baseline) {
               {{kpiData().baseline}}
+              @if (kpiData().unit === '%') {
+                %
+              }
             } @else {
               N/A
-            }
-            @if (kpiData().unit === '%') {
-              %
             }
           </p>
         </div>

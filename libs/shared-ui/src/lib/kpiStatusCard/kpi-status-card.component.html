@@ -10,19 +10,13 @@
     Over Achieved
     <img class="arrow" src="assets/images/arrow-up-solid.svg" />
   }
-  @if(kpiType() === 'not-achieved'){
-    {{kpiStatus()}}
-  }
-  @if(kpiType() === 'not-achieved'){
-    {{kpiStatus()}}
-  }
   @if(kpiType() === 'actual'){
     Actual : {{kpiStatus()}}%
   }
   @if(kpiType() === 'weight'){
     weight : {{kpiStatus()}}%
   }
-  @if(kpiType() === 'in-progress'){
+  @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved'){
     {{kpiStatus()}}
   }
   @if(kpiType() === 'actualStatus'){

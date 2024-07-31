@@ -12,17 +12,17 @@ export interface FileModel
   webkitRelativePath:string;
   type:string;
 }
-export interface FinancialScorecardModel
+export interface ScorecardModel
 {
   // id:number;
   title:string;
-  kpisData:KpiModel[]
+  kpiDataDTO:KpiModel[]
 }
 export interface KpiModel
 {
   // id:number;
   title:string;
-  achievedStatus?:number;
+  achievedStatus?:boolean;
   formula?:string;
   actual?:number;
   weight:number;
@@ -36,23 +36,23 @@ export interface StrategicScorecardModel
 {
   // id:number;
   title:string,
-  kpisData:KpiModel[]
+  kpiDataDTO:KpiModel[]
 }
 export interface RelationalScorecardModel
 {
   // id:number;
   title:string,
-  kpisData:KpiModel[]
+  kpiDataDTO:KpiModel[]
 }
 export interface OperationalScorecardModel
 {
   // id:number;
   title:string,
-  kpisData:KpiModel[]
+  kpiDataDTO:KpiModel[]
 }
 export interface PrioritiesScorecardModel
 {
   // id:number;
   title:string,
-  kpisData:KpiModel[]
+  kpiDataDTO:KpiModel[]
 }

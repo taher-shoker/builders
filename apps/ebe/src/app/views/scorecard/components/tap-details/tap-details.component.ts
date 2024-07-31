@@ -4,12 +4,14 @@ import {
   input,
   InputSignal,
   OnInit,
+  Output,
   signal,
   WritableSignal,
+  EventEmitter
 } from '@angular/core';
 import {
   FileModel,
-  FinancialScorecardModel,
+  ScorecardModel,
   ScorecardTaps,
 } from '../../../../models/scorecard.model';
 import {
@@ -24,7 +26,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
-
+interface filterOption
+{
+  month:number;
+  year:number;
+}
 @Component({
   selector: 'stc-apps-tap-details',
   standalone: true,
@@ -41,17 +47,19 @@ import { FileUploadInputComponent } from '../../../../components/file-upload-inp
   styleUrl: './tap-details.component.scss',
 })
 export class TapDetailsComponent implements OnInit {
-  financialScorcardData: InputSignal<FinancialScorecardModel[]> = input.required<FinancialScorecardModel[]>();
+  scorcardData: InputSignal<ScorecardModel[]> = input.required<ScorecardModel[]>();
   currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
   visible = false;
   selectedFile!:FileModel | null;
   currentClickedTap: InputSignal<ScorecardTaps> = input.required<ScorecardTaps>();
+  isEmpty: InputSignal<boolean> = input.required<boolean>();
   monthsArr: { name: string; id: number }[] = [];
   years: WritableSignal<{ name: string; id: number }[]> = signal<{ name: string; id: number }[]>([]);
   filtersForm: FormGroup = new FormGroup({
     month: new FormControl(new Date().getMonth() + 1),
     year: new FormControl(new Date().getFullYear()),
   });
+  @Output() filterOptions:EventEmitter<filterOption> = new EventEmitter();
   scorecardService = inject(ScorecardService);
   monthsArrPopulator() {
     for (let i = 1; this.monthsArr.length < 12; i++) {
@@ -69,6 +77,7 @@ export class TapDetailsComponent implements OnInit {
     }
     this.years.set(yearsArr);
     this.monthsArrPopulator();
+    this.filterOptions.emit(this.filtersForm.value);
   }
   get monthValue() {
     return this.filtersForm.get('month');
@@ -79,10 +88,12 @@ export class TapDetailsComponent implements OnInit {
   selectYear() {
     console.log('month value => ', this.monthValue?.value);
     console.log('year value => ', this.yearValue?.value);
+    this.filterOptions.emit(this.filtersForm.value);
   }
   selectMonth() {
     console.log('month value => ', this.monthValue?.value);
     console.log('year value => ', this.yearValue?.value);
+    this.filterOptions.emit(this.filtersForm.value);
   }
   getUploadedFile(e:FileModel | null) {
     // console.log(e);

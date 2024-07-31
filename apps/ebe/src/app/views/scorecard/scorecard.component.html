@@ -20,12 +20,12 @@
     <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
   </div>
   <div class="scored-card-section-tap-details">
-    @if (kpisData()) {
       <stc-apps-tap-details 
-        [financialScorcardData]="kpisData()" 
+        [scorcardData]="kpisData()" 
         [currentMode]="currentMode"
         [currentClickedTap]="currentClickedTapData"
+        (filterOptions)="getFiltersOptions($event)"
+        [isEmpty]="isEmpty"
       />
-    }
   </div>
 </section>

@@ -1,16 +1,18 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
 import {
-  FinancialScorecardModel,
-  OperationalScorecardModel,
-  PrioritiesScorecardModel,
-  RelationalScorecardModel,
+  ScorecardModel,
   ScorecardTaps,
-  StrategicScorecardModel,
 } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { TapDetailsComponent } from './components/tap-details/tap-details.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
+interface FilteredOptions
+{
+  month:number;
+  year:number;
+}
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'stc-apps-scorecard',
   standalone: true,
@@ -18,82 +20,49 @@ import { PageHeaderComponent } from '../../components/pageHeader/page-header.com
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
 })
-export class ScorecardComponent implements OnInit {
-  // @ViewChild(SidebarComponent) child?: TimesheetTableComponent;
-  // currentClickedTapIndex = 0;
+export class ScorecardComponent implements OnInit , OnDestroy{
   currentMode!: 'editMode' | 'viewMode';
-  kpisData: WritableSignal<
-    | FinancialScorecardModel[]
-    | StrategicScorecardModel[]
-    | RelationalScorecardModel[]
-    | PrioritiesScorecardModel[]
-    | OperationalScorecardModel[]
-  > = signal([]);
-  currentClickedTapData: ScorecardTaps;
-  scorecardsTaps: ScorecardTaps[] = [
-    {
-      id: 1,
-      name: 'financial',
-    },
-    {
-      id: 2,
-      name: 'strategic',
-    },
-    {
-      id: 3,
-      name: 'relational',
-    },
-    {
-      id: 4,
-      name: 'operational',
-    },
-    {
-      id: 5,
-      name: 'corporate priorities',
-    },
-  ];
-  constructor(private scorecardService: ScorecardService) {
-    this.currentClickedTapData = this.scorecardsTaps[0];
-  }
+  endSubs$:Subject<ScorecardModel[]> = new Subject();
+  kpisData: WritableSignal<ScorecardModel[]> = signal([]);
+  currentClickedTapData!: ScorecardTaps;
+  scorecardsTaps!: ScorecardTaps[];
+  isEmpty = false;
+  filtersOptions!:FilteredOptions;
+  scorecardService = inject(ScorecardService);
   ngOnInit(): void {
-    this.kpisData.set(this.scorecardService.financialScorcardData);
+    this.scorecardsTaps = this.scorecardService.getScorecardsTaps();
+    this.currentClickedTapData = this.scorecardsTaps[0];
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
       },
     });
   }
+  private getScorecardData(tapName:string , month:number , year:number)
+  {
+    this.scorecardService.getScorecardData(tapName , month , year).pipe(takeUntil(this.endSubs$)).subscribe({
+      next : (scorecards:ScorecardModel[]) => {
+        if(scorecards.length === 0)
+          {
+            this.isEmpty = true;
+          } else {
+          this.kpisData.set(scorecards)
+          this.isEmpty = false;
+        }
+      }
+    })
+  }
+  ngOnDestroy()
+  {
+    this.endSubs$.complete()
+  }
   getClickedTap(clickedTap: ScorecardTaps) {
     this.currentClickedTapData = clickedTap;
-    switch (clickedTap.id) {
-      case 1:
-        this.kpisData.set(this.scorecardService.financialScorcardData);
-        break;
-      case 2:
-        this.kpisData.set(this.scorecardService.strategicScorcardData);
-        break;
-      case 3:
-        this.kpisData.set(this.scorecardService.rationalScorcardData);
-        break;
-      case 4:
-        this.kpisData.set(this.scorecardService.operationalScorcardData);
-        break;
-      case 5:
-        this.kpisData.set(this.scorecardService.prioritieslScorcardData);
-        break;
-      default:
-        this.kpisData.set(this.scorecardService.financialScorcardData);
-    }
-    // if (clickedTap.id === 1) {
-    //   this.kpisData.set(this.scorecardService.financialScorcardData)
-    // } else if (clickedTap.id === 2) {
-    //   this.kpisData.set(this.scorecardService.strategicScorcardData)
-    // } else if (clickedTap.id === 3) {
-    //   this.kpisData.set(this.scorecardService.rationalScorcardData)
-    // } else if (clickedTap.id === 4) {
-    //   this.kpisData.set(this.scorecardService.operationalScorcardData)
-    // } else if (clickedTap.id === 5) {
-    //   this.kpisData.set(this.scorecardService.prioritieslScorcardData)
-    // }
+    this.getScorecardData(clickedTap.name , this.filtersOptions.month , this.filtersOptions.year)
+  }
+  getFiltersOptions(options:FilteredOptions)
+  {
+    this.filtersOptions = options;
+    this.getScorecardData(this.currentClickedTapData.name , options.month , options.year);
   }
 }
