@@ -1,14 +1,14 @@
 {
   "fileValidation": {
     "acceptType": ".docx.,doc,.xlsx,.xls,.csv,.ppt,.pptx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/pdf,image/png,image/jpeg,image/jpg",
-    "sizeWithMegaBytes": "50"
+    "sizeWithMegaBytes": 50
   },
   "characterLimit": {
-    "descriptionLength": "1000",
-    "nameLength": "100"
+    "descriptionLength": 1000,
+    "nameLength": 100
   },
   "rangeForSLA": {
-    "min": "1",
-    "max": "7"
+    "min": 1,
+    "max": 14
   }
 }

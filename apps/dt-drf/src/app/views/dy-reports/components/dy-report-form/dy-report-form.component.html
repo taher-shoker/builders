@@ -13,21 +13,18 @@
             formControlName="description"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-select-drop-down [searchMode]="true" [label]="'Category'" [options]="categories" [required]="true"
-            formControlName="requestCategoryId" [outputValue]="'id'" [disabled]="true"></stc-apps-select-drop-down>
-
+          <stc-apps-select-drop-down (selectChange)="handleGategory($event)" [searchMode]="true" [label]="'Category'"
+            [options]="categories" [outputValue]="'id'" [required]="true"
+            formControlName="requestCategoryId"></stc-apps-select-drop-down>
         </div>
       </div>
       <div class="row mt-7 align-items-center">
-        <!-- <div class="col-md-2 ">
-          <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Custom SLA'" formControlName="sla"
-            [name]="'sla'"></stc-apps-checkbox>
+        <div class="col-md-4 ">
+          <stc-apps-input [className]="'custom-input'" [inputId]="'slaDurationInDays'"
+            (valueKeyDown)="preventComma($event)" [inputName]="'SLA Duration In Days'"
+            formControlName="slaDurationInDays"></stc-apps-input>
         </div>
-        <div class="col-md-3" *ngIf="form.get('sla')?.value">
-          <stc-apps-select-drop-down [label]="'Custom SLA '" [options]="customRangeSLA" [required]="true"
-            formControlName="customSLA" [outputValue]="'name'" [disabled]="true"></stc-apps-select-drop-down>
 
-        </div> -->
 
         <div class="col-md-2">
           <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
@@ -37,7 +34,7 @@
           <stc-apps-checkbox *ngIf="form.get('needMoreDataFromCreator')?.value" [label]="'Should Approve'"
             formControlName="initiatorShouldApprove" [name]="'initiatorShouldApprove'"></stc-apps-checkbox>
         </div>
-        <div class="col-md-3" *ngIf="form.get('needMoreDataFromCreator')?.value">
+        <div class="col-md-4" *ngIf="form.get('needMoreDataFromCreator')?.value">
           <stc-apps-select-drop-down [label]="'Creator Name'" [options]="users" [required]="true" [searchMode]="true"
             formControlName="creatorEmail" [outputValue]="'email'" [disabled]="true"></stc-apps-select-drop-down>
 
@@ -57,7 +54,7 @@
                           : ''
                       " (click)="uploadClick()">
               <input [multiple]="true" #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)"
-                name="attachments" hidden accept="{{ config_service.getConfig().fileValidation.acceptType }}" />
+                name="attachments" hidden accept="{{ configService.getConfig().fileValidation.acceptType }}" />
               @if (errorType || errorSize) {
               <div class="text-center">
                 <img src="assets/images/file-uploader-error.png" alt="upload" />
@@ -112,8 +109,9 @@
                   <!-- <button type="button" *ngIf="!isEditing" class="add-btn" mat-raised-button (click)="addNewStep()">
                     <mat-icon>add </mat-icon> add new approval
                   </button> -->
-                  <stc-apps-button [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'"
-                    [buttonType]="'primary'" (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
+                  <stc-apps-button [buttonDisable]="selectedOptions.length < t.controls.length"
+                    [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'" [buttonType]="'primary'"
+                    (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
                 </div>
               </div>
             </div>
@@ -125,7 +123,7 @@
                   </div>
                   <div class="col-md-5">
                     <stc-apps-select-drop-down (selectChange)="onSelectionChange($event,i)" [searchMode]="true"
-                      [options]="approvers" formControlName="username" [disabled]="true"
+                      [options]="filteredOptions[i] | async" formControlName="username" [disabled]="true"
                       [outputValue]="'email'"></stc-apps-select-drop-down>
 
                   </div>
@@ -139,18 +137,6 @@
                     </div>
                   </div> -->
                 </div>
-
-
-
-
-                <!-- Uncomment this div if loadingUser functionality is needed -->
-                <!--
-              <div class="ml-3 mb-4" *ngIf="loadingUser">
-                <i class="pi pi-spin pi-spinner"></i>
-              </div>
-              -->
-
-
               </li>
 
             </ul>

@@ -70,6 +70,7 @@ export interface Report {
   remainingSteps: number;
   serialNumber: string;
   reportName: string;
+  slaDurationInDays: number;
   description: string | null;
 }
 export interface CurrentAssignee {
