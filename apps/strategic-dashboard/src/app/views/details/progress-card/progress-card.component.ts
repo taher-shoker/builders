@@ -17,12 +17,15 @@ export class ProgressCardComponent {
       console.log('hi');
       if (this.status() == 'delayed') {
         this.color = 'var(--light-pink)';
-        this.precentColor = 'var(--stcCoralColor)';
+        this.precentColor = 'var(--stc-red-color)';
         this.iconPath = 'assets/images/arrow-down-delayed.svg';
       } else if (this.status() == 'onHold') {
         this.color = 'var(--light-stc-orangeColor)';
         this.precentColor = 'var(--stcSunsetColor)';
         this.iconPath = 'assets/images/arrow-down.svg';
+      } else if (this.status() == 'onTrack') {
+        this.color = 'rgb(194, 252, 221)';
+        this.precentColor = 'var(--stcOasisColor)';
       }
     });
   }

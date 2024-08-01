@@ -33,14 +33,17 @@ export class DetailsComponent implements OnInit {
     {
       iconPath: 'assets/images/arrow-up.svg',
       progressDesc: 'Actual performance above target(>=100%)',
+      percantage:'120'
     },
     {
       iconPath: 'assets/images/arrow-down.svg',
       progressDesc: 'Actual performance below target(>=90% and < 100%)',
+      percantage:'99'
     },
     {
       iconPath: 'assets/images/arrow-down-delayed.svg',
       progressDesc: 'Actual performance below target(< 96%)',
+      percantage:'80'
     },
   ];
   cardsInfo = [
