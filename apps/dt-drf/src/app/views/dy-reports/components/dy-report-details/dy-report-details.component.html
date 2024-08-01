@@ -1,215 +1,272 @@
 <div>
-    @if(reportsDetails){
-    <div class="row m-0 p-0">
-      <div class="col">
-        <div class="row details">
-          <!-- <div class="col-12 title-holder">
+  @if(reportsDetails){
+  <div class="row m-0 p-0">
+    <div class="col">
+      <div class="row details">
+        <!-- <div class="col-12 title-holder">
               <h3>{{"case_details" | translate}}</h3>
             </div> -->
-          <h4 class="section-title">Report Information</h4>
-  
-          <div class="row">
-            <!-- Left Column -->
-            <div class="col left-col">
-              <div class="row">
-                <div class="col-12">
-                  <p class="cell-name">Name</p>
-                  <p class="cell-value">
-                    {{ reportsDetails.reportName ?? '-' }}
-                  </p>
-                </div>
-  
-                <div class="col-12">
-                  <p class="cell-name">With SLA/Not</p>
-                  <p class="cell-value">
-                    {{ reportsDetails.requestCategory.slaDuration ? "Yes" : "No" }}
-                  </p>
-                </div>
-  
-                <div class="col-12">
-                  <p class="cell-name">
-                    Initiator Name
-                  </p>
-                  <p class="cell-value">
-                    {{ reportsDetails.initiatorDisplayName ?? '-' }}
-                  </p>
-                </div>
-  
-                <div class="col-12">
-                  <p class="cell-name">Status</p>
-                  <p class="cell-value">
-                    {{ reportsDetails.reportFlowStatus ?? '-' }}
-                  </p>
-                </div>
+        <h4 class="section-title">Report Information</h4>
 
-                <div class="col-12">
-                  <p class="cell-name">Description</p>
-                  <p class="cell-value">
-                    {{ reportsDetails.description ?? '-' }}
-                  </p>
-                </div>
+        <div class="row">
+          <!-- Left Column -->
+          <div class="col left-col">
+            <div class="row">
+              <div class="col-12">
+                <p class="cell-name">Name</p>
+                <p class="cell-value">
+                  {{ reportsDetails.reportName ?? '-' }}
+                </p>
               </div>
-            </div>
-  
-            <!-- Mid Column -->
-            <div class="col-5"></div>
-            <!-- Right Column -->
-            <div class="col right-col">
-              <div class="row">
-                <div class="col-12">
-                  <p class="cell-name">Category</p>
-                    <p class="cell-value">
-                    {{ reportsDetails.requestCategory.name ?? '-' }}
-                    </p>
-                </div>
-  
-                <div class="col-12">
-                  <p class="cell-name">
-                    No of Remaining Approvals
-                  </p>
-                  <p class="cell-value">{{ reportsDetails.remainingSteps ?? '-' }}</p>
-                </div>
-  
-                <div class="col-12">
-                  <p class="cell-name">Last Action Date</p>
-                  <p class="cell-value">{{ (reportsDetails.lastModifiedDate ?? '-') | date }}</p>
-                </div>
 
-                <div class="col-12">
-                  <p class="cell-name">Creator name</p>
-                  <p class="cell-value">{{ reportsDetails.creatorDisplayName ?? '-' }}</p>
-                </div>
+              <div class="col-12">
+                <p class="cell-name">With SLA/Not</p>
+                <p class="cell-value">
+                  {{
+                    reportsDetails.requestCategory.slaDuration ? 'Yes' : 'No'
+                  }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">Initiator Name</p>
+                <p class="cell-value">
+                  {{ reportsDetails.initiatorDisplayName ?? '-' }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">Status</p>
+                <p class="cell-value">
+                  {{ reportsDetails.reportFlowStatus ?? '-' }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">Description</p>
+                <p class="cell-value">
+                  {{ reportsDetails.description ?? '-' }}
+                </p>
               </div>
             </div>
           </div>
 
-          <div class="row">
-            <div class="col-12">
-              <p class="cell-name">Attachments</p>
-              <p class="cell-value">
-                {{ reportsDetails.reportName ?? '-' }}
-              </p>
+          <!-- Mid Column -->
+          <div class="col-5"></div>
+          <!-- Right Column -->
+          <div class="col right-col">
+            <div class="row">
+              <div class="col-12">
+                <p class="cell-name">Category</p>
+                <p class="cell-value">
+                  {{ reportsDetails.requestCategory.name ?? '-' }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">No of Remaining Approvals</p>
+                <p class="cell-value">
+                  {{ reportsDetails.remainingSteps ?? '-' }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">Last Action Date</p>
+                <p class="cell-value">
+                  {{ reportsDetails.lastModifiedDate ?? '-' | date }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <p class="cell-name">Creator name</p>
+                <p class="cell-value">
+                  {{ reportsDetails.creatorDisplayName ?? '-' }}
+                </p>
+              </div>
+
+              <div class="col-12">
+                <form [formGroup]="slaForm">
+                  <stc-apps-select-drop-down
+                    [label]="'SLA'"
+                    [options]="[
+                      { name: '1', value: 1 },
+                      { name: '2', value: 2 },
+                      { name: '3', value: 3 },
+                      { name: '4', value: 4 },
+                      { name: '5', value: 5 }
+                    ]"
+                    formControlName="sla"
+                    [outputValue]="'value'"
+                  ></stc-apps-select-drop-down>
+                </form>
+              </div>
             </div>
           </div>
         </div>
+
         <div class="row">
-          <div class="col-md-12 mt-4 px-0 history" *ngIf="filteredDataHistory?.length > 0">
-            <mat-accordion class="">
-              <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
-                <mat-expansion-panel-header>
-                  <mat-panel-title>
-                    <h4>History</h4>
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <div class="history-item" *ngFor="let item of filteredDataHistory; let i = index"
-                  (click)="getHistoryTasks(item)">
-                  <mat-expansion-panel (opened)="panelOpened(i)" [expanded]="isPanelOpen(i)">
-                    <mat-expansion-panel-header class="header-item">
-                      <div class="box-item py-4">
-                        <h5>Update progress #{{ i + 1 }}</h5>
-                      </div>
-                    </mat-expansion-panel-header>
-                    <div class="info">
-                      <ng-container *ngFor="let h of item.requestTasksHistory; let j = index">
-                        <ng-container *ngIf="j === 0">
-                          <span class="date">Create Date:
-                            {{
-                            historyItemInitialStep?.date | date : 'medium'
-                            }}</span>
-                        </ng-container>
-                        <ng-container *ngIf="j === item.requestTasksHistory.length - 1">
-                          <span class="date">End Date:
-                            {{ h?.completedDate | date : 'medium' }}</span>
-                        </ng-container>
-                      </ng-container>
+          <div class="col-12">
+            <p class="cell-name">Attachments</p>
+            <p class="cell-value">
+              {{ reportsDetails.reportName ?? '-' }}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div
+          class="col-md-12 mt-4 px-0 history"
+          *ngIf="filteredDataHistory?.length > 0"
+        >
+          <mat-accordion class="">
+            <mat-expansion-panel
+              (opened)="panelOpenState = true"
+              (closed)="panelOpenState = false"
+            >
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  <h4>History</h4>
+                </mat-panel-title>
+              </mat-expansion-panel-header>
+              <div
+                class="history-item"
+                *ngFor="let item of filteredDataHistory; let i = index"
+                (click)="getHistoryTasks(item)"
+              >
+                <mat-expansion-panel
+                  (opened)="panelOpened(i)"
+                  [expanded]="isPanelOpen(i)"
+                >
+                  <mat-expansion-panel-header class="header-item">
+                    <div class="box-item py-4">
+                      <h5>Update progress #{{ i + 1 }}</h5>
                     </div>
-                    <div class="logs" *ngIf="historySteps.length > 0">
-                      <stc-apps-actions-stepper [steps]="historySteps">
-                        <ng-template #bodyTemplate let-step>
-                          <div class="stepp-info">
-                            <p class="mt-1">
-                              <span>Overall progress: </span>
-                              <strong>
-                                {{
+                  </mat-expansion-panel-header>
+                  <div class="info">
+                    <ng-container
+                      *ngFor="let h of item.requestTasksHistory; let j = index"
+                    >
+                      <ng-container *ngIf="j === 0">
+                        <span class="date"
+                          >Create Date:
+                          {{
+                            historyItemInitialStep?.date | date : 'medium'
+                          }}</span
+                        >
+                      </ng-container>
+                      <ng-container
+                        *ngIf="j === item.requestTasksHistory.length - 1"
+                      >
+                        <span class="date"
+                          >End Date:
+                          {{ h?.completedDate | date : 'medium' }}</span
+                        >
+                      </ng-container>
+                    </ng-container>
+                  </div>
+                  <div class="logs" *ngIf="historySteps.length > 0">
+                    <stc-apps-actions-stepper [steps]="historySteps">
+                      <ng-template #bodyTemplate let-step>
+                        <div class="stepp-info">
+                          <p class="mt-1">
+                            <span>Overall progress: </span>
+                            <strong>
+                              {{
                                 historyItemInitialStep?.overallProgress
-                                }}%</strong>
-                            </p>
-                            <p class="mt-1">
-                              <span>Deliverable: </span>
-                              <strong>
-                                {{
+                              }}%</strong
+                            >
+                          </p>
+                          <p class="mt-1">
+                            <span>Deliverable: </span>
+                            <strong>
+                              {{
                                 historyItemInitialStep?.deliverable ?? '-'
-                                }}</strong>
-                            </p>
-                          </div>
-                        </ng-template>
-  
-                        <ng-template #captionTemplate let-step>
-                          <div>
-                            <p class="m-0" style="font-weight: bold">
-                              Milestone progress updated
-                              <span [ngClass]="{
+                              }}</strong
+                            >
+                          </p>
+                        </div>
+                      </ng-template>
+
+                      <ng-template #captionTemplate let-step>
+                        <div>
+                          <p class="m-0" style="font-weight: bold">
+                            Milestone progress updated
+                            <span
+                              [ngClass]="{
                                 'completed-status': status === 'Completed',
                                 'delayed-status': status === 'Delayed',
                                 'on-track-status': status === 'On Track',
                                 'at-risk-status': status === 'At Risk',
                                 'planned-status': status === 'Planned'
-                              }">({{ historyItemInitialStep?.status }})</span>
-                            </p>
-                          </div>
-                        </ng-template>
-                      </stc-apps-actions-stepper>
-                    </div>
-                  </mat-expansion-panel>
-                </div>
-              </mat-expansion-panel>
-            </mat-accordion>
-          </div>
+                              }"
+                              >({{ historyItemInitialStep?.status }})</span
+                            >
+                          </p>
+                        </div>
+                      </ng-template>
+                    </stc-apps-actions-stepper>
+                  </div>
+                </mat-expansion-panel>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
         </div>
       </div>
-      <div class="col-md-5">
-        <div class="logs">
-          <h4 class="section-title">On Going Workflow</h4>
-  
-          <div class="spinner-border spinner-border-sm" role="status" *ngIf="isLoadingSteps">
-            <span class="sr-only">Loading...</span>
-          </div>
-          @if(steps.length){
-          <stc-apps-actions-stepper [steps]="steps" (stepperAction)="doStepAction($event)" *ngIf="!isLoadingSteps">
-            <ng-template #bodyTemplate let-step>
-              <div class="stepp-info">
-                <p class="mt-1">
-                  <span>Overall progress: </span>
-                  <strong> {{ progress }}%</strong>
-                </p>
-                <p class="mt-1">
-                  <span>Deliverable: </span>
-                  <strong> {{ deliverable ?? '-' }}</strong>
-                </p>
-              </div>
-            </ng-template>
-            <ng-template #captionTemplate let-step>
-              <div>
-                <p class="m-0" style="font-weight: bold">
-                  Milestone progress updated
-                  <span [ngClass]="{
+    </div>
+    <div class="col-md-5">
+      <div class="logs">
+        <h4 class="section-title">{{isWorkflowComplete ? 'Complete' : 'On Going'}} Workflow</h4>
+
+        <div
+          class="spinner-border spinner-border-sm"
+          role="status"
+          *ngIf="isLoadingSteps"
+        >
+          <span class="sr-only">Loading...</span>
+        </div>
+        @if(steps.length){
+        <stc-apps-actions-stepper
+          [steps]="steps"
+          (stepperAction)="doStepAction($event)"
+          *ngIf="!isLoadingSteps"
+        >
+          <ng-template #bodyTemplate let-step>
+            <div class="stepp-info">
+              <p class="mt-1">
+                <span>Overall progress: </span>
+                <strong> {{ progress }}%</strong>
+              </p>
+              <p class="mt-1">
+                <span>Deliverable: </span>
+                <strong> {{ deliverable ?? '-' }}</strong>
+              </p>
+            </div>
+          </ng-template>
+          <ng-template #captionTemplate let-step>
+            <div>
+              <p class="m-0" style="font-weight: bold">
+                Milestone progress updated
+                <span
+                  [ngClass]="{
                     'completed-status': status === 'Completed',
                     'delayed-status': status === 'Delayed',
                     'on-track-status': status === 'On Track',
                     'at-risk-status': status === 'At Risk',
                     'planned-status': status === 'Planned'
-                  }">({{ status }})</span>
-                </p>
-              </div>
-            </ng-template>
-          </stc-apps-actions-stepper>
-          } @else {
-          <div class="no-ongoning-workflow">
-            There are currently no active workflows.
-          </div>
-          }
+                  }"
+                  >({{ status }})</span
+                >
+              </p>
+            </div>
+          </ng-template>
+        </stc-apps-actions-stepper>
+        } @else {
+        <div class="no-ongoning-workflow">
+          There are currently no active workflows.
         </div>
+        }
       </div>
     </div>
-    }
   </div>
+  }
+</div>

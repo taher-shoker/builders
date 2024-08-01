@@ -109,7 +109,7 @@
                   <!-- <button type="button" *ngIf="!isEditing" class="add-btn" mat-raised-button (click)="addNewStep()">
                     <mat-icon>add </mat-icon> add new approval
                   </button> -->
-                  <stc-apps-button [buttonDisable]="selectedOptions.length < t.controls.length"
+                  <stc-apps-button 
                     [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'" [buttonType]="'primary'"
                     (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
                 </div>

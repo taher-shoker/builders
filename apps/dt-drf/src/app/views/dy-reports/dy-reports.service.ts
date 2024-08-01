@@ -6,6 +6,7 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { Report } from '../../services/models/report-flow.model';
 
 export interface User {
   id: number;
@@ -272,6 +273,10 @@ export class ReportsService {
     return this.http.post(`${this.dtUrl}requests`, data);
   }
 
+  addReportSLA(reportId: number, sla: number){
+    return this.http.patch(`${this.dtUrl}requests/sla/${reportId}?slaDuration=${sla}`, {});
+  }
+
   /**
    *
    * @param filterData Filtration data of the search request
@@ -302,8 +307,8 @@ export class ReportsService {
    * @param id of the requested report
    * @returns report details
    */
-  getReport(id: string | number) {
-    return this.http.get(`${this.dtUrl}requests/${id}`);
+  getReport(id: string | number): Observable<Report> {
+    return this.http.get<Report>(`${this.dtUrl}requests/${id}`);
   }
 
   /**

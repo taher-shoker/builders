@@ -77,8 +77,9 @@ export class ReportsComponent implements OnInit, AfterViewInit , OnDestroy {
   tableData!: any;
   rowData!: any;
   reportStatus: { value: string; name: string }[] = [
-    { value: 'planned', name: 'Planned' },
+    { value: 'pending', name: 'Pending' },
     { value: 'completed', name: 'Completed' },
+    { value: 'breached', name: 'Breached' },
   ];
   monthsArr: any = [];
   yearsArr: any = [];

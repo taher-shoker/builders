@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
   Component,
   ElementRef,
@@ -26,8 +27,8 @@ import { Report } from '../../../../services/models/report-flow.model';
 import { User } from '../../../../services/models/user';
 import {
   Category,
-  ReportDetails,
   ReportsService,
+  RequestTaskAttributes,
   UploadResponse,
 } from '../../dy-reports.service';
 
@@ -42,6 +43,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   @Input() readOnly!: boolean;
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
+  mode: 'add' | 'edit_report_step' | 'edit' = 'add';
   form!: FormGroup;
   users: User[] = [];
   approvers: User[] = [];
@@ -70,6 +72,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.initForm();
     this.loadInitialData();
+    this.fetchDataOfReportAndEditIfExists();
   }
 
   private initForm() {
@@ -103,23 +106,36 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private loadInitialData() {
-    this.getUsers();
+    this.getUsers().subscribe(() => {
+      this.setupInitialFilteredOptions();
+    });
     this.populateCustomSLA();
     this.getCategories();
   }
 
-  fetchDataOfReportAndEditIfExists(): void {
+  private setupInitialFilteredOptions() {
+    // Setup filtered options for each approval step
+    this.t.controls.forEach((control, index) => {
+      this.manageUserNameControl(index);
+    });
+  }
 
+  paramsId!: string;
+  paramsMode!: string;
+  paramsRequestTaskId!: string;
+
+  fetchDataOfReportAndEditIfExists(): void {
     this.route.queryParams.subscribe((params) => {
-      const id = params['id'];
-      const mode = params['mode'];
-      if(mode === 'edit_report'){
-        // Turn Edit mode to true
-      }
-      if (id) {
-        this.reportsService.getReport(id).subscribe({
+      this.paramsId = params['id'];
+      this.paramsMode = params['mode'];
+      this.paramsRequestTaskId = params['requestTaskId'];
+
+      if (this.paramsMode === 'edit_report_step' && this.paramsId) {
+        this.paramsMode = 'edit_report_step';
+        this.reportsService.getReport(this.paramsId).subscribe({
           next: (res) => {
             console.log(res);
+            this.resetFormWithValueForEditStep(res);
           },
           error: (err) => {
             console.log(err);
@@ -128,21 +144,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       }
     });
   }
-
-  initReportForm() {
-    this.form = this._formBuilder.group({
-      reportName: ['', [Validators.required, Validators.maxLength(100)]],
-      description: ['', [Validators.maxLength(150)]],
-      requestCategoryId: ['', Validators.required],
-      sla: [''],
-      customSLA: [''],
-      needMoreDataFromCreator: [0],
-      initiatorShouldApprove: [0],
-      creatorEmail: [''],
-      attachments: [[], Validators.required],
-      requestApprovals: this._formBuilder.array([]),
-
-    })}
 
   private resetFormWithValue(data: Report) {
     this.form.patchValue({
@@ -164,6 +165,48 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.form.get('slaDurationInDays')?.disable();
   }
 
+  private resetFormWithValueForEditStep(data: Report) {
+    this.form.patchValue({
+      reportName: data.reportName,
+      description: data.description,
+      requestCategoryId: data.requestCategory.id,
+      needMoreDataFromCreator: !!data.creatorEmail,
+      creatorEmail: data.creatorEmail || '',
+      slaDurationInDays: data.requestCategory.slaDuration || 0,
+    });
+
+    // Clear existing array and add new controls
+    const requestApprovalsArray = this.form.get(
+      'requestApprovals'
+    ) as FormArray;
+    requestApprovalsArray.clear();
+    data.requestApprovals.forEach((approval) => {
+      requestApprovalsArray.push(this.createApprovalControl(approval));
+    });
+
+    this.uploadedFiles.next(data.attachments);
+
+    // Disable certain form controls if needed
+    this.form.get('description');
+    this.form.get('requestCategoryId');
+    this.form.get('needMoreDataFromCreator');
+    this.form.get('creatorEmail');
+    this.form.get('initiatorShouldApprove');
+    this.form.get('attachments');
+    this.form.get('requestApprovals');
+    this.form.get('slaDurationInDays');
+  }
+
+  private createApprovalControl(approval: any): FormGroup {
+    return this._formBuilder.group({
+      id: [approval.id],
+      username: [approval.username],
+      sequence: [approval.sequence],
+      status: [approval.status],
+      userDisplayName: [approval.userDisplayName],
+    });
+  }
+
   onSubmit() {
     if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
@@ -182,9 +225,65 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       this.router.navigate(['./home']);
     };
 
+    const handleSuccessStepEdit = (message: string) => {
+      this.toastr.success(message);
+      this.router.navigate(['../']);
+    };
+
     const handleError = () => {
       this.toastr.error('An error occurred while processing your request.');
+      this.isSubmitLoading = false;
     };
+
+    if (this.paramsMode === 'edit_report_step') {
+      console.log('Req Approvals', this.form.get('requestApprovals')?.value);
+
+      const params: RequestTaskAttributes = {
+        requestParams: [
+          { name: 'delete', value: false },
+          { name: 'description', value: this.form.get('description')?.value },
+          {
+            name: 'attachment',
+            value: this.idsJoiner(this.form.get('attachments')?.value),
+          },
+          {
+            name: 'request_approvals',
+            value: this.usernamesJoiner(
+              this.form.get('requestApprovals')?.value
+            ),
+          },
+          {
+            name: 'needs_creator_to_add_data',
+            value: this.form.get('needMoreDataFromCreator')?.value,
+          },
+          {
+            name: 'creator_email',
+            value: this.form.get('creatorEmail')?.value,
+          },
+          {
+            name: 'initiator_should_approve',
+            value: this.form.get('initiatorShouldApprove')?.value,
+          },
+          {
+            name: 'request_category',
+            value: this.form.get('requestCategoryId')?.value,
+          },
+          {
+            name: 'sla_duration',
+            value: this.form.get('slaDurationInDays')?.value,
+          },
+        ],
+      };
+      this.reportsService
+        .completePendingTask(this.paramsId, this.paramsRequestTaskId, params)
+        .subscribe({
+          next: () => handleSuccessStepEdit('Edit Step is success'),
+          error: handleError,
+          complete: () => (this.isSubmitLoading = false),
+        });
+
+      return;
+    }
 
     if (this.isEditing) {
       this.reportsService
@@ -201,6 +300,16 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         complete: () => (this.isSubmitLoading = false),
       });
     }
+  }
+
+  private idsJoiner(arrOfObjs: { id: string }[]) {
+    const newArr = arrOfObjs.map((x) => x.id);
+    return newArr.join('@#%@#%Z%#@%#@');
+  }
+
+  private usernamesJoiner(arrOfObjs: { username: string }[]) {
+    const newArr = arrOfObjs.map((x) => x.username);
+    return newArr.join('@#%@#%Z%#@%#@');
   }
 
   private markFormGroupTouched(formGroup: FormGroup | FormArray) {
@@ -221,16 +330,18 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       .get('slaDurationInDays')
       ?.setValue(selectedCategory?.slaDuration ?? 0);
   }
-  private getUsers() {
-    this.reportsService.getUsers().subscribe((res) => {
-      this.users = res.filter(
-        (user) => user.userGroups[0].roles[0].roleName !== 'ADMINS'
-      );
-      this.approvers = this.users.filter(
-        (user) => user.email !== this.reportsService.getCurrentUser().email
-      );
-      this.addNewStep();
-    });
+  private getUsers(): Observable<User[]> {
+    return this.reportsService.getUsers().pipe(
+      map((res) => {
+        this.users = res.filter(
+          (user) => user.userGroups[0].roles[0].roleName !== 'ADMINS'
+        );
+        this.approvers = this.users.filter(
+          (user) => user.email !== this.reportsService.getCurrentUser().email
+        );
+        return this.users;
+      })
+    );
   }
 
   private getCategories() {
@@ -363,13 +474,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         startWith<string | User>(''),
         map((value) => (typeof value === 'string' ? value : value.email)),
         map((name) => {
-          const copySelected = this.selectedOptions.slice();
+          const copySelected = [...this.selectedOptions];
           copySelected.splice(index, 1);
           return name
             ? this.filterUsers(name)
-            : this.approvers?.filter((x) => {
-                return !copySelected.includes(x.email.toLowerCase());
-              });
+            : this.approvers.filter(
+                (x) => !copySelected.includes(x.email.toLowerCase())
+              );
         })
       );
     }
@@ -391,7 +502,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   onSelectionChange(option: string, index: number) {
-    this.selectedOptions[index] = option.toLocaleLowerCase();
+    this.selectedOptions[index] = option.toLowerCase();
     this.updateFilteredOptions();
   }
 
