@@ -60,7 +60,7 @@
               [selectType]="'filter-select-box'" [options]="privilege" [labelName]="'groupName'"
               (selectChange)="handleSelectChange($event, 'privilege')" [defaultAll]="true"></stc-apps-select-drop-down>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-5" *ngIf="userService.getCurrentSystem() !== 'Dynamic_Report_Flow'">
             <stc-apps-select-drop-down [label]="userService.translateText('team')" [selectType]="'filter-select-box'"
               [options]="teams" (selectChange)="handleSelectChange($event, 'team')" [defaultAll]="true"
               formControlName="teamSelect"></stc-apps-select-drop-down>
@@ -73,9 +73,9 @@
       </div>
     </div>
   </div>
-
+  @if(tableData){
   <table mat-table [dataSource]="dataSource" matSort>
-    <ng-container [matColumnDef]="col.key" *ngFor="let col of columnsSchema">
+    <ng-container [matColumnDef]="col.key" *ngFor="let col of columnssSchema">
       <th mat-header-cell *matHeaderCellDef>
         {{ userService.translateText(col.label)}}
       </th>
@@ -110,7 +110,7 @@
       </td>
     </ng-container>
     <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+      <td class="mat-cell" [attr.colspan]="displayedColumns?.length">
         <div class="message-box">
           <img src="../../assets/Group 590.png" alt="" />
           <h3>{{ 'No users yet' }}</h3>
@@ -120,42 +120,36 @@
         </div>
       </td>
     </tr>
-    <!-- <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-        <div class="message-box">
-          <img src="../../assets/Group 597.png" alt="" />
-          <h3>Sorry !</h3>
-          <p>there are no data that match your search, please try again</p>
-          <stc-apps-button
-            [buttonText]="'Try another data sets'"
-            [buttonType]="'warn'"
-          ></stc-apps-button>
-        </div>
-      </td>
-    </tr> -->
-    <!-- <tr class="mat-row" *matNoDataRow>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-        <div class="message-box">
-          <img src="../../assets/Group 598.png" alt="" />
-          <h3>No network connection !</h3>
-          <p>Please connect to the network and try again</p>
-          <stc-apps-button
-            [buttonText]="'Try again'"
-            [buttonType]="'warn'"
-          ></stc-apps-button>
-        </div>
-      </td>
-    </tr> -->
-    <!-- <tr class="mat-row" *matError>
-      <td class="mat-cell" [attr.colspan]="displayedColumns.length">
-        No data matching the filter.
-      </td>
-    </tr> -->
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
+  }
+
   <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]" [showFirstLastButtons]="true" [hidePageSize]="true">
   </mat-paginator>
+  <!-- <div class="row">
+    <div class="col-md-12">
+      @if(tableData){
+      <stc-apps-custom-table [items]="tableData" [headers]="columnsSchema" [length]="totalUsers"
+        (doAction)="tableAction($event)" [paginate]="true" [applyFilter]="true" [filter]="filterString"
+        [paginationConfig]="{
+                    pageCount: 10,
+                    showTotal: false,
+                    paginationIq: 'smart'
+                  }" (paginationEvent)="paginate($event)">
+      </stc-apps-custom-table>
+      <ng-template #statusCustomTemplate let-header="header" let-item="item">
+        <p class="custom-class-template" [ngClass]="{
+                      'completed-status': item[header.key] === 'Completed',
+                    }">
+          cccccc
+        </p>
+      </ng-template>
+
+      }
+    </div>
+  </div> -->
 </div>
 <stc-apps-dialog id="delete-modal" [width]="'meduim'">
   <h3 class="mb-4">Remove user</h3>

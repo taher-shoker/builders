@@ -39,8 +39,10 @@ export class UserFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   privilages: Role[] = [];
   teams: Team[] = [];
+  allUsers: User[] = [];
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
+  selectedDelegates: any;
   selectedGroup: number[] = [];
   addGroups = false;
   showInputs = true;
@@ -77,6 +79,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.showInputs = false;
     }
     this.handleGrouping();
+    this.getusersList();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
@@ -98,7 +101,13 @@ export class UserFormComponent implements OnInit, OnChanges {
           ? Validators.nullValidator
           : Validators.required
       ),
-      teamDto: new FormControl([], Validators.required),
+      teamDto: new FormControl(
+        [],
+        this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
+          ? Validators.nullValidator
+          : Validators.required
+      ),
+      userDelegates: new FormControl([]),
       viewer: new FormControl(''),
       editor: new FormControl(''),
       pmo: new FormControl(''),
@@ -153,6 +162,21 @@ export class UserFormComponent implements OnInit, OnChanges {
             dataForm.userGroups.push({ id: pmoObj.id });
           }
         }
+      } else if (
+        this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
+      ) {
+        dataForm = {
+          userGroups: [{ id: this.form.get('userGroups')?.value.id }],
+          email: this.form.get('email')?.value,
+          name: this.form.get('name')?.value,
+          jobTitle: this.form.get('jobTitle')?.value,
+          userDelegates: [
+            {
+              delegateName: this.form.get('userDelegates')?.value.email,
+              systemName: this.userService.getCurrentSystem(),
+            },
+          ],
+        };
       } else {
         dataForm = {
           userGroups:
@@ -297,7 +321,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         )[0];
       } else {
         this.selectedPrivilege = this.privilages.filter(
-          (p) => p.id === this.data?.userGroups[0]?.roles[0]?.id
+          (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
       }
     }
@@ -352,6 +376,17 @@ export class UserFormComponent implements OnInit, OnChanges {
               s.roleName ===
               this.checkSystem(this.data.userGroups)?.roles[0].roleName
           );
+      } else if (
+        this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' &&
+        this.data?.userDelegates
+      ) {
+        const delegateEmail = this.data?.userDelegates?.[0].delegateName ?? '';
+        this.selectedDelegates =
+          this.allUsers.find((p: User) => p.email === delegateEmail) ?? null;
+
+        // this.selectedDelegates = this.allUsers.filter(
+        //   (p: User) => p.email === this.data?.userDelegates[0].delegateName
+        // )[0];
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id
@@ -513,6 +548,13 @@ export class UserFormComponent implements OnInit, OnChanges {
           );
         }
       }
+    });
+  }
+  getusersList() {
+    this.userService.getUsers().subscribe((res) => {
+      this.allUsers = res.filter(
+        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
+      );
     });
   }
 }

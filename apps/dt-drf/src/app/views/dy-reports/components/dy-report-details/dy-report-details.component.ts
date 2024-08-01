@@ -5,21 +5,22 @@ import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DialogService, BannerDataService } from '@stc-apps/shared-ui';
+import { AuthService } from 'apps/dt-drf/src/app/services/auth.service';
 import saveAs from 'file-saver';
 import {
-  ReportDetails,
-  ReportsService,
   Actions,
-  ReportWorkflow,
+  ReportDetails,
   ReportFlowStatus,
+  ReportsService,
+  ReportWorkflow,
   RequestTask,
   RequestTaskAttributes,
 } from '../../dy-reports.service';
-import { AuthService } from 'apps/dt-drf/src/app/services/auth.service';
 import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
 import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import { UpdateReportDialogComponent } from '../update-milestone-progress-dialog/update-report-dialog.component';
 import { FormControl, FormGroup } from '@angular/forms';
+import { UpdateReportDialogComponent } from '../update-dy-report-progress-dialog/update-report-dialog.component';
+import { ConfigService } from 'apps/dt-drf/src/app/services/config.service';
 
 @Component({
   selector: 'stc-apps-dy-report-details',
@@ -81,7 +82,9 @@ export class DyReportDetailsComponent implements OnInit {
     public authService: AuthService,
     private matDialog: MatDialog,
     private datePipe: DatePipe,
-    private router: Router
+    private router: Router,
+    private configService: ConfigService
+
   ) {}
 
   ngOnInit(): void {
@@ -92,6 +95,7 @@ export class DyReportDetailsComponent implements OnInit {
     });
 
     this.watchSlaChanges();
+    this.populateCustomSLA();
   }
 
   addReportSLA(sla: number){
@@ -206,6 +210,15 @@ export class DyReportDetailsComponent implements OnInit {
           this.steps.push(step);
         }
       });
+  }
+
+  customRangeSLA: { name: number; id: number }[] = [];
+  private populateCustomSLA() {
+    const { min, max } = this.configService.getConfig().rangeForSLA;
+    this.customRangeSLA = Array.from({ length: max - min + 1 }, (_, i) => ({
+      name: min + i,
+      id: min + i,
+    }));
   }
 
   getStepStatus(status: ReportFlowStatus): 'warning' | 'done' | 'undone' {

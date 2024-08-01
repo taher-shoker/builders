@@ -75,7 +75,10 @@ export class Actions {
   static readonly approve = new Actions('Approve', 'Approve');
   static readonly reject = new Actions('Reject', 'Reject');
 
-  static readonly initiatorApprove = new Actions('Initiator Approve', 'Approve');
+  static readonly initiatorApprove = new Actions(
+    'Initiator Approve',
+    'Approve'
+  );
   static readonly initiatorReject = new Actions('Initiator Reject', 'Reject');
 
   static readonly addData = new Actions('Add Data', 'Add Data');
@@ -222,6 +225,15 @@ export class ReportsService {
     return this.http.get<User[]>(`${this.adminUrl}/users`, {
       params: this.setSystemParam(),
     });
+  }
+  updateUsersDelegates(userId: number | undefined, data: string[]) {
+    return this.http.patch(
+      `${this.adminUrl}/users/delegates/${userId}`,
+      { newDelegates: data },
+      {
+        params: this.setSystemParam(),
+      }
+    );
   }
   setUserTeams() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');

@@ -57,6 +57,11 @@ export interface User {
   username: string;
   userGroups: UserGroup[];
   teams?: UserTeam[];
+  userDelegates?: UserDelegates[];
+}
+export interface UserDelegates {
+  delegateName: string;
+  systemName: string;
 }
 export interface RequestUser {
   id?: number | undefined;

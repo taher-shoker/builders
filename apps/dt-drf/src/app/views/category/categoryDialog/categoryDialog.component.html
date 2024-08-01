@@ -2,31 +2,24 @@
   <div class="dialog-body">
     <div class="dialog-header">
       {{
-        data.state === 'add'
-          ? 'Create a Category'
-          : 'Edit ' + data.category?.name
+      data.state === 'add'
+      ? 'Create a Category'
+      : 'Edit ' + data.category?.name
       }}
     </div>
     <div class="body-holder">
       <form [formGroup]="form">
         <div class="row my-2">
           <div class="col">
-            <stc-apps-input-full-width
-              [label]="'Category name'"
-              [type]="'text'"
-              formControlName="name"
-            ></stc-apps-input-full-width>
+
+            <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Category Name'" [inputId]="'name'"
+              [inputName]="'Category name'" formControlName="name"></stc-apps-input>
           </div>
           <div class="col">
-            <stc-apps-input-full-width
-              [label]="'SLA'"
-              [type]="'text'"
-              formControlName="slaDuration"
-            ></stc-apps-input-full-width>
 
-            @if (form.get('slaDuration')?.hasError('pattern') ) {
-            <mat-error> Must be valid number </mat-error>
-            }
+            <stc-apps-select-drop-down [label]="'SLA'" [options]="customRangeSLA" [outputValue]="'id'" [required]="true"
+              formControlName="slaDuration"></stc-apps-select-drop-down>
+
           </div>
         </div>
       </form>
@@ -40,12 +33,7 @@
       <button type="button" class="btn gray-outline" (click)="cancel()">
         Cancel
       </button>
-      <button
-        type="button"
-        class="btn primary"
-        (click)="save()"
-        [disabled]="form.invalid"
-      >
+      <button type="button" class="btn primary" (click)="save()" [disabled]="form.invalid">
         {{ data.state === 'add' ? 'Create' : 'Edit' }}
       </button>
     </div>

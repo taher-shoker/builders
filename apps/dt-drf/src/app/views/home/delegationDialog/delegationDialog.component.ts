@@ -1,6 +1,6 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { FormControl, FormGroup } from '@angular/forms';
 import { ReportsService } from '../../dy-reports/dy-reports.service';
 import { User } from '../../../services/models/user';
 
@@ -9,21 +9,19 @@ import { User } from '../../../services/models/user';
   templateUrl: './delegationDialog.component.html',
   styleUrl: './delegationDialog.component.scss',
 })
-export class DelegationDialogComponent implements OnInit{
-
+export class DelegationDialogComponent implements OnInit {
   users!: User[];
   form!: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<DelegationDialogComponent>,
-    private reportsService: ReportsService
-  ) // @Inject(MAT_DIALOG_DATA) public data: { overallProgress: string, milestoneName: string }
-  {}
+    private reportsService: ReportsService // @Inject(MAT_DIALOG_DATA) public data: { overallProgress: string, milestoneName: string }
+  ) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      user: new FormControl('')
-    })
+      user: new FormControl(''),
+    });
 
     this.getUsersListing();
   }
@@ -38,8 +36,7 @@ export class DelegationDialogComponent implements OnInit{
 
   update() {
     this.dialogRef.close({
-      user: this.form.get('users')?.value,
-      deliverable: this.form.get('deliverable')?.value,
+      user: this.form.get('user')?.value,
     });
   }
 

@@ -130,6 +130,8 @@ export class UsersService {
         .map((t) => {
           return { id: t.id, groupName: t.groupName };
         });
+    } else if (this.getCurrentSystem() === 'Dynamic_Report_Flow') {
+      allRoles = this.allGroups.filter((g) => g.roles[0].roleName !== 'ADMINS');
     } else {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')
@@ -160,6 +162,8 @@ export class UsersService {
       _.forEach(user.teams, (team) => {
         x.push(team.name);
       });
+    } else if (this.getCurrentSystem() === 'Dynamic_Report_Flow') {
+      x.push('-');
     } else {
       _.forEach(user.userGroups, (group) => {
         if (group.roles[0].system.name === sys) {
@@ -167,8 +171,7 @@ export class UsersService {
         }
       });
     }
-
-    return x;
+    return x || '-';
   }
 
   /**
