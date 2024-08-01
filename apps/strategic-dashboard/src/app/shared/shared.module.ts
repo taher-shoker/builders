@@ -9,6 +9,7 @@ import { RangeSliderComponent } from './range-slider/range-slider.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
+import { CustomLineChartComponent } from './custom-line-chart/custom-line-chart.component';
 
 const components = [
   TabsComponent,
@@ -16,6 +17,7 @@ const components = [
   ProgressPercentageComponent,
   ColumnChartComponent,
   RangeSliderComponent,
+  CustomLineChartComponent,
 ];
 const modules = [
   CommonModule,

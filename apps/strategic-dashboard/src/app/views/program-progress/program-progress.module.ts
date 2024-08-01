@@ -6,7 +6,6 @@ import { appRoutes } from './program-progress.routes';
 import { ProgramDetailsComponent } from './components/program-details/program-details.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ProgramDetailsCardComponent } from './components/program-details-card/program-details-card.component';
-import { DetailsModule } from '../details/details.module';
 import { KpisCardComponent } from './components/kpis-card/kpis-card.component';
 import { ProgramProgressCardComponent } from './components/program-progress-card/program-progress-card.component';
 import { AllProgramsComponent } from './components/all-programs/all-programs.component';
@@ -22,12 +21,7 @@ const components = [
   AllProgramsComponent,
   KpiDetailsComponent,
 ];
-const modules = [
-  CommonModule,
-  SharedModule,
-  DetailsModule,
-  RouterModule.forChild(appRoutes),
-];
+const modules = [CommonModule, SharedModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
   declarations: [components],

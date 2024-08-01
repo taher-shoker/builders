@@ -6,7 +6,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { LineChartData } from '@stc-apps/shared-ui';
-import { LineSeriesData } from '../custom-line-chart/custom-line-chart.component';
+import { LineSeriesData } from '../../../shared/custom-line-chart/custom-line-chart.component';
 
 @Component({
   selector: 'stc-apps-chart-card',

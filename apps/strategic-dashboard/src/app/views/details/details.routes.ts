@@ -1,7 +1,7 @@
 import { Route } from '@angular/router';
 import { DetailsComponent } from './details.component';
 
-export const appRoutes: Route[] = [
+export const detailsRoutes: Route[] = [
   {
     path: '',
     component: DetailsComponent,

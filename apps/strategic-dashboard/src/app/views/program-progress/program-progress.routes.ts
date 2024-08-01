@@ -7,11 +7,6 @@ import { KpiDetailsComponent } from './components/kpi-details/kpi-details.compon
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'allPrograms',
-    pathMatch: 'full',
-  },
-  {
-    path: '',
     component: ProgramProgressComponent,
     children: [
       {
