@@ -86,20 +86,20 @@
 
               <div class="col-12">
                 @if (processAdminUser) {
-                  <form [formGroup]="slaForm">
-                    <stc-apps-select-drop-down
-                      [label]="'SLA'"
-                      [options]="customRangeSLA"
-                      formControlName="sla"
-                      [outputValue]="'id'"
-                    ></stc-apps-select-drop-down>
-                  </form>
+                <form [formGroup]="slaForm">
+                  <stc-apps-select-drop-down
+                    [label]="'SLA'"
+                    [options]="customRangeSLA"
+                    formControlName="sla"
+                    [outputValue]="'id'"
+                  ></stc-apps-select-drop-down>
+                </form>
 
                 }@else {
-                  <p class="cell-name">SLA</p>
-                  <p class="cell-value">
-                    {{ reportsDetails.reportSlaDuration || 0 }}
-                  </p>
+                <p class="cell-name">SLA</p>
+                <p class="cell-value">
+                  {{ reportsDetails.reportSlaDuration || 0 }}
+                </p>
                 }
               </div>
             </div>
@@ -109,9 +109,11 @@
         <div class="row">
           <div class="col-12">
             <p class="cell-name">Attachments</p>
-            <p class="cell-value">
-              {{ reportsDetails.reportName ?? '-' }}
-            </p>
+            @for (attachment of reportsDetails.attachments; track attachment) {
+              <div class="cell-value">
+                <p class="link">{{ attachment.label ?? '-' }}</p>
+              </div>
+            }
           </div>
         </div>
       </div>
@@ -217,7 +219,9 @@
     </div>
     <div class="col-md-5">
       <div class="logs">
-        <h4 class="section-title">{{isWorkflowComplete ? 'Complete' : 'On Going'}} Workflow</h4>
+        <h4 class="section-title">
+          {{ isWorkflowComplete ? 'Complete' : 'On Going' }} Workflow
+        </h4>
 
         <div
           class="spinner-border spinner-border-sm"

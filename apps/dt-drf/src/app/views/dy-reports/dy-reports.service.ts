@@ -188,7 +188,7 @@ export class ReportsService {
   dtUrl = `${this.baseUrl}v2/report-flow-service/`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
-  endpointAttachments = `${this.baseUrl}v2/report-flow-service/attachments`;
+  endpointAttachments = `${this.baseUrl}v2/report-flow-service/attachments/`;
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
@@ -445,7 +445,7 @@ export class ReportsService {
 
   downloadAttachment(id: number) {
     return this.http.get(
-      `${this.baseUrl}v2/dt-milestone-service/attachments/${id}/download`,
+      `${this.endpointAttachments}${id}/download`,
       {
         responseType: 'blob',
       }

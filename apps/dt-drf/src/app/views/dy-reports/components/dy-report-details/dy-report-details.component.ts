@@ -402,6 +402,10 @@ export class DyReportDetailsComponent implements OnInit {
     );
   }
 
+  // downloadAttachment(id: number){
+  //   this.reportsService.downloadAttachment(id)
+  // }
+
   confirmAction(msg: string) {
     const dialogRef = this.matDialog.open(MessageDialogComponent, {
       width: '800px',

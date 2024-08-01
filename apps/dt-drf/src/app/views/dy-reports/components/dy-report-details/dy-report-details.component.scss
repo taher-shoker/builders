@@ -16,6 +16,12 @@
   // }
 }
 
+.link{
+  color: blue;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 .stepp-info {
   p {
     &:last-of-type {
