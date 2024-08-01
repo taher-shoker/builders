@@ -122,12 +122,14 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   paramsId!: string;
   paramsMode!: string;
+  paramsflowId!: string;
   paramsRequestTaskId!: string;
 
   fetchDataOfReportAndEditIfExists(): void {
     this.route.queryParams.subscribe((params) => {
       this.paramsId = params['id'];
       this.paramsMode = params['mode'];
+      this.paramsflowId = params['flowId'];
       this.paramsRequestTaskId = params['requestTaskId'];
 
       if (this.paramsMode === 'edit_report_step' && this.paramsId) {
@@ -254,7 +256,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           {
             name: 'needs_creator_to_add_data',
-            value: this.form.get('needMoreDataFromCreator')?.value,
+            value: this.form.get('needMoreDataFromCreator')?.value === false ? 0 : 1,
           },
           {
             name: 'creator_email',
@@ -275,7 +277,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         ],
       };
       this.reportsService
-        .completePendingTask(this.paramsId, this.paramsRequestTaskId, params)
+        .completePendingTask(this.paramsflowId, this.paramsRequestTaskId, params)
         .subscribe({
           next: () => handleSuccessStepEdit('Edit Step is success'),
           error: handleError,

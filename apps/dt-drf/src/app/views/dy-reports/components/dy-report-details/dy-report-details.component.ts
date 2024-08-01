@@ -69,8 +69,8 @@ export class DyReportDetailsComponent implements OnInit {
   globalItem!: any;
 
   slaForm: FormGroup = new FormGroup({
-    sla: new FormControl('')
-  })
+    sla: new FormControl(''),
+  });
 
   isWorkflowComplete: boolean = true;
 
@@ -84,7 +84,6 @@ export class DyReportDetailsComponent implements OnInit {
     private datePipe: DatePipe,
     private router: Router,
     private configService: ConfigService
-
   ) {}
 
   ngOnInit(): void {
@@ -96,20 +95,22 @@ export class DyReportDetailsComponent implements OnInit {
 
     this.watchSlaChanges();
     this.populateCustomSLA();
+    this.isUserProcessAdmin();
   }
 
-  addReportSLA(sla: number){
-    this.reportsService.addReportSLA(this.reportsDetails.id, sla).subscribe(res => {
-      console.log("rez:", res)
-      this.getReportDetails();
-    })
+  addReportSLA(sla: number) {
+    this.reportsService
+      .addReportSLA(this.reportsDetails.id, sla)
+      .subscribe((res) => {
+        console.log('rez:', res);
+        this.getReportDetails();
+      });
   }
 
-  watchSlaChanges(){
-    this.slaForm.get('sla')?.valueChanges.subscribe(value => {
+  watchSlaChanges() {
+    this.slaForm.get('sla')?.valueChanges.subscribe((value) => {
       console.log('Name changed to:', value);
-      if(value)
-      this.addReportSLA(value)
+      if (value) this.addReportSLA(value);
     });
   }
 
@@ -213,6 +214,15 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   customRangeSLA: { name: number; id: number }[] = [];
+  processAdminUser: boolean = false;
+  isUserProcessAdmin() {
+    //  "roleName":"PROCESS_ADMIN",
+    //  "groupName":"System_Process_Admin"
+    this.processAdminUser = this.reportsService.userInGroup(
+      'System_Process_Admin'
+    );
+  }
+
   private populateCustomSLA() {
     const { min, max } = this.configService.getConfig().rangeForSLA;
     this.customRangeSLA = Array.from({ length: max - min + 1 }, (_, i) => ({
@@ -261,6 +271,7 @@ export class DyReportDetailsComponent implements OnInit {
         queryParams: {
           mode: 'edit_report_step',
           id: this.reportsDetails.id,
+          flowId: this.reportsDetails.flowId,
           requestTaskId: this.globalItem.requestTaskId,
         },
       });
