@@ -7,7 +7,8 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './kpi-details.component.scss',
 })
 export class KpiDetailsComponent implements OnInit {
-  kpiData = window.history.state.kpi;
+  kpiDataRoute = window.history.state.kpi;
+  chunkedTitles: any[][] = [];
 
   kpiInfo = [
     {
@@ -29,51 +30,100 @@ export class KpiDetailsComponent implements OnInit {
       color: 'var(--stc-terqouiseColor)',
     },
   ];
-  precentagesKpis = [
+  cardItems = [
     {
-      percentage: 97,
-      color: 'var(--stcOasisColor)',
+      title: 'FY Target',
+      chartType: 'column',
+      chartData: [
+        {
+          year: '2022',
+          Actual: 50,
+          Target: 0,
+        },
+        {
+          year: '2023',
+          Actual: 70,
+          Target: 0,
+        },
+        {
+          year: '2024',
+          Actual: 20,
+          Target: 0,
+        },
+        {
+          year: '2025',
+          Actual: 0,
+          Target: 0,
+        },
+      ],
     },
     {
-      percentage: 100,
-      color: 'var(--stc-color)',
-    },
-    {
-      percentage: 87,
-      color: 'var(--stc-pink-color)',
+      title: 'Status of the KPI',
+      chartType: 'donut',
+      progress: [
+        { value: 97, label: 'Baseline', bgColor: 'var(--stcOasisColor)' },
+        { value: 100, label: 'Celing', bgColor: 'var(--stc-color)' },
+        { value: 87, label: 'Target', bgColor: 'var(--stc-pink-color)' },
+      ],
     },
   ];
-  columnChartData = [
-    {
-      year: '2022',
-      Actual: 50,
-      Target: 0,
-    },
-    {
-      year: '2023',
-      Actual: 70,
-      Target: 0,
-    },
-    {
-      year: '2024',
-      Actual: 20,
-      Target: 0,
-    },
-    {
-      year: '2025',
-      Actual: 0,
-      Target: 0,
-    },
-  ];
-  lineChartColors = ['#D2D7D9', '#45006F'];
 
+  kpiData = [
+    {
+      title: 'Strategic objective',
+      desc: 'Strategic objective',
+    },
+    {
+      title: 'Strategic objective relative',
+      desc: 'Strategic objective relative',
+    },
+    {
+      title: 'Activation period',
+      desc: '3 months',
+    },
+    {
+      title: 'Reporting frequency',
+      desc: 'Reporting frequency',
+    },
+    {
+      title: 'Data source',
+      desc: 'Data source',
+    },
+    {
+      title: 'Validation Authority',
+      desc: 'Validation Authority',
+    },
+    {
+      title: 'Custodian email',
+      desc: 'Custodian email',
+    },
+    {
+      title: 'Custodian Title',
+      desc: 'Custodian Title',
+    },
+  ];
   kpiCode = '';
+  kpiDefinition = `This KPI will measure the completion of External assessment, market study,
+best practices to get a grip of global digital transformation
+priorities of top digital services enterprises This KPI will measure the completion of External assessment, market study,
+best practices to get a grip of global digital transformation
+priorities of top digital services enterprises`;
+  kpiFormula = `This KPI will measure the completion of External assessment, market study,
+best practices to get a grip of global digital transformation
+priorities of top digital services enterprises This KPI will measure the completion of External assessment, market study,
+best practices to get a grip of global digital transformation
+priorities of top digital services enterprises`;
   constructor(private activeRouter: ActivatedRoute) {}
   ngOnInit(): void {
-    console.log(this.kpiData);
-
-    // this.activeRouter.paramMap.subscribe((paramMap) => {
-    //   this.kpiCode = String(paramMap.get('kpiCode'));
-    // });
+    this.chunkedTitles = this.chunkArray(this.kpiData, 4);
+    console.log(this.chunkedTitles);
+  }
+  private chunkArray(array: any[], size: number): any[][] {
+    // eslint-disable-next-line prefer-const
+    let chunkedArray = [];
+    for (let i = 0; i < array.length; i += size) {
+      chunkedArray.push(array.slice(i, i + size));
+    }
+    return chunkedArray;
   }
 }

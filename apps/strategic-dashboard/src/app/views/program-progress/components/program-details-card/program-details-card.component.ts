@@ -1,11 +1,17 @@
 import { Component, computed, input, InputSignal } from '@angular/core';
 import { LineChartData } from '@stc-apps/shared-ui';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
 
 interface Progress {
   value: number;
   label: string;
   bgColor: string;
+}
+interface columnChartData {
+  year: string;
+  Actual: number;
+  Target: number;
 }
 
 @Component({
@@ -17,6 +23,7 @@ export class ProgramDetailsCardComponent {
   title: InputSignal<string> = input('');
   chartType: InputSignal<string> = input('');
   progressValue: InputSignal<Progress[]> = input<Progress[]>([]);
+  columnChartData: InputSignal<columnChartData[]> = input<columnChartData[]>([]);
 
   lineChartColors = ['#D2D7D9', '#45006F'];
   lineChartData: { name: string; data: LineChartData[] }[] = [

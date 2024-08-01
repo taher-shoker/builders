@@ -1,10 +1,12 @@
 <div class="kpi-details">
   <div class="kpi-details_programInfo">
-    <span class="program-name">Dashboard / Business efficiency program/ </span>
+    <span class="program-name"
+      >Dashboard / {{ kpiDataRoute.programName }}/
+    </span>
     Kpi details
   </div>
-  <div class="kpi-details_kpiName">{{ kpiData.title }}</div>
-  <div class="kpi-details_kpiCode">KPI code : {{ kpiData.code }}</div>
+  <div class="kpi-details_kpiName">{{ kpiDataRoute.title }}</div>
+  <div class="kpi-details_kpiCode">KPI code : {{ kpiDataRoute.code }}</div>
   <div class="row kpi-details_kpiOverview">
     @for (item of kpiInfo; track $index) {
     <div
@@ -19,33 +21,39 @@
     </div>
     }
   </div>
-  <div class="kpi-details_kpiDahsboard">
-    <div class="column-chart">
-      <div class="column-chart_title">
-        <img src="assets/images/arrow-up.svg" alt="" />
-        FY Target
-      </div>
-      <stc-apps-column-chart
-        [chartData]="columnChartData"
-        [colors]="lineChartColors"
-      ></stc-apps-column-chart>
+  <div class="kpi-details_kpiDahsboard row row-gap-3">
+    @for (card of cardItems; track card; let index = $index) {
+    <div class="col-lg-6 col-md-12 col-sm-12">
+      <stc-apps-program-details-card
+        class="chart"
+        [title]="card.title"
+        [chartType]="card.chartType"
+        [progressValue]="card.progress || []"
+        [columnChartData]="card.chartData || []"
+      ></stc-apps-program-details-card>
     </div>
-    <div class="progress-chart">
-      <div class="progress-chart_title">
-        <img src="assets/images/arrow-up.svg" alt="" />
-        Status of the kpi
+    }
+  </div>
+  @for (chunk  of chunkedTitles; track $index) {
+    <div class="kpi-details_info row">
+      @for (kpi of chunk; track $index) {
+      <div class="info-holder col-lg-3 col-md-6 col-sm-12">
+        <div class="info-title">{{ kpi.title }}</div>
+        <div class="info-desc">{{ kpi.desc }}</div>
       </div>
-      <div class="d-flex justify-content-around align-items-center h-100">
-        @for (precentage of precentagesKpis; track $index) {
-        <stc-apps-progress-circle
-          class="circle"
-          [progressValue]="precentage.percentage || 0"
-          progressSize="10rem"
-          [mainBgColor]="precentage.color"
-          [showProgress]="true"
-        ></stc-apps-progress-circle>
-        }
-      </div>
+      
+      }
+    </div>
+  }
+ 
+  <div class="def-formula d-flex justify-content-between">
+    <div class="kpi-details_definition">
+      <div class="title">Definition</div>
+      <p>{{ kpiDefinition }}</p>
+    </div>
+    <div class="kpi-details_formula">
+      <div class="title">Formula</div>
+      <p>{{ kpiDefinition }}</p>
     </div>
   </div>
 </div>
