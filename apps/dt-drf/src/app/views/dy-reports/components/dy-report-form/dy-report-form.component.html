@@ -35,8 +35,9 @@
             formControlName="initiatorShouldApprove" [name]="'initiatorShouldApprove'"></stc-apps-checkbox>
         </div>
         <div class="col-md-4" *ngIf="form.get('needMoreDataFromCreator')?.value">
-          <stc-apps-select-drop-down [label]="'Creator Name'" [options]="users" [required]="true" [searchMode]="true"
-            formControlName="creatorEmail" [outputValue]="'email'" [disabled]="true"></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down [label]="'Creator Name'" [options]="approvers" [required]="true"
+            [searchMode]="true" formControlName="creatorEmail" [outputValue]="'email'"
+            [disabled]="true"></stc-apps-select-drop-down>
 
         </div>
       </div>
@@ -109,9 +110,8 @@
                   <!-- <button type="button" *ngIf="!isEditing" class="add-btn" mat-raised-button (click)="addNewStep()">
                     <mat-icon>add </mat-icon> add new approval
                   </button> -->
-                  <stc-apps-button 
-                    [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'" [buttonType]="'primary'"
-                    (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
+                  <stc-apps-button [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'"
+                    [buttonType]="'primary'" (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
                 </div>
               </div>
             </div>

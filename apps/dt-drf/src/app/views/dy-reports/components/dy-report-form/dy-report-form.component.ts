@@ -324,9 +324,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
   handleGategory(item: number) {
-    const selectedCategory = this.categories.find(
-      (c: Category) => c?.slaDuration === item
-    );
+    const selectedCategory = this.categories.filter(
+      (c: Category) => c?.id === item
+    )[0];
     // Set the form control value to the found category's slaDuration or default to 0
     this.form
       .get('slaDurationInDays')

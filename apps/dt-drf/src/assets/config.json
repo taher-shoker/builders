@@ -8,7 +8,7 @@
     "nameLength": 100
   },
   "rangeForSLA": {
-    "min": 1,
+    "min": 0,
     "max": 14
   }
 }
