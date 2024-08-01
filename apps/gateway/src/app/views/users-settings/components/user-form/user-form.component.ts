@@ -170,12 +170,14 @@ export class UserFormComponent implements OnInit, OnChanges {
           email: this.form.get('email')?.value,
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,
-          userDelegates: [
-            {
-              delegateName: this.form.get('userDelegates')?.value.email,
-              systemName: this.userService.getCurrentSystem(),
-            },
-          ],
+          userDelegates: this.form.get('userDelegates')?.value.email
+            ? [
+                {
+                  delegateName: this.form.get('userDelegates')?.value.email,
+                  systemName: this.userService.getCurrentSystem(),
+                },
+              ]
+            : [],
         };
       } else {
         dataForm = {
