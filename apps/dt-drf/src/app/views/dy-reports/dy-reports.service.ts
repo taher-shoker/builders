@@ -130,6 +130,7 @@ export interface ReportDetails {
   serialNumber: string;
   reportName: string;
   description: string;
+  reportSlaDuration: number;
 }
 
 export interface MilestoneAttachment {
@@ -244,6 +245,18 @@ export class ReportsService {
     return user.userGroups;
   }
 
+  /**
+   *
+   * @param role Pass a groupName like ['DT_Director', 'Business_SPOC', 'DT_User', 'DT_VP_Dashboard_Viewer', 'DT_VP_Dashboard_Editor', 'PMO']
+   * @returns True if the groupName is assigned to the user.
+   */
+
+  userInGroup(role: string): boolean {
+    return this.getMilestoneUsersType().find((x) => x.groupName === role)
+      ? true
+      : false;
+  }
+
   checkIsDirector() {
     if (
       this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
@@ -285,8 +298,11 @@ export class ReportsService {
     return this.http.post(`${this.dtUrl}requests`, data);
   }
 
-  addReportSLA(reportId: number, sla: number){
-    return this.http.patch(`${this.dtUrl}requests/sla/${reportId}?slaDuration=${sla}`, {});
+  addReportSLA(reportId: number, sla: number) {
+    return this.http.patch(
+      `${this.dtUrl}requests/sla/${reportId}?slaDuration=${sla}`,
+      {}
+    );
   }
 
   /**

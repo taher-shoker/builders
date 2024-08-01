@@ -85,14 +85,22 @@
               </div>
 
               <div class="col-12">
-                <form [formGroup]="slaForm">
-                  <stc-apps-select-drop-down
-                    [label]="'SLA'"
-                    [options]="customRangeSLA"
-                    formControlName="sla"
-                    [outputValue]="'id'"
-                  ></stc-apps-select-drop-down>
-                </form>
+                @if (processAdminUser) {
+                  <form [formGroup]="slaForm">
+                    <stc-apps-select-drop-down
+                      [label]="'SLA'"
+                      [options]="customRangeSLA"
+                      formControlName="sla"
+                      [outputValue]="'id'"
+                    ></stc-apps-select-drop-down>
+                  </form>
+
+                }@else {
+                  <p class="cell-name">SLA</p>
+                  <p class="cell-value">
+                    {{ reportsDetails.reportSlaDuration || 0 }}
+                  </p>
+                }
               </div>
             </div>
           </div>
