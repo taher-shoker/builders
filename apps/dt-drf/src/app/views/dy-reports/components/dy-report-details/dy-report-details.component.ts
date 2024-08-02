@@ -346,6 +346,7 @@ export class DyReportDetailsComponent implements OnInit {
       requestParams: [{ name: 'is_approved_by_initiator', value: true }],
     };
 
+    this.isLoadingSteps = true
     this.reportsService
       .completePendingTask(
         this.reportsDetails.flowId,

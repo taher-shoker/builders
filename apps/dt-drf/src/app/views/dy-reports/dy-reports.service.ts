@@ -69,8 +69,8 @@ export interface MilestoneAttachment {
 }
 
 export class Actions {
-  static readonly approveSLA = new Actions('Approve SLA', 'Approve SLA');
-  static readonly rejectSLA = new Actions('Reject SLA', 'Reject SLA');
+  static readonly approveSLA = new Actions('Approve SLA', 'Approve');
+  static readonly rejectSLA = new Actions('Reject SLA', 'Reject');
 
   static readonly approve = new Actions('Approve', 'Approve');
   static readonly reject = new Actions('Reject', 'Reject');
@@ -188,7 +188,7 @@ export class ReportsService {
   dtUrl = `${this.baseUrl}v2/report-flow-service/`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
-  endpointAttachments = `${this.baseUrl}v2/report-flow-service/attachments/`;
+  endpointAttachments = `${this.baseUrl}v2/report-flow-service/attachments`;
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
@@ -415,7 +415,7 @@ export class ReportsService {
     reportId: number | string
   ): Observable<MilestoneAttachment> {
     return this.http.post<MilestoneAttachment>(
-      `${this.endpointAttachments}?reportId=${reportId}`,
+      `${this.endpointAttachments}`,
       data
     );
   }
