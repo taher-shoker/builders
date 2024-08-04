@@ -40,6 +40,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   privilages: Role[] = [];
   teams: Team[] = [];
   allUsers: User[] = [];
+  userDelegate: User[] = [];
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   selectedDelegates: any;
@@ -170,7 +171,7 @@ export class UserFormComponent implements OnInit, OnChanges {
           email: this.form.get('email')?.value,
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,
-          userDelegates: this.form.get('userDelegates')?.value.email
+          userDelegates: this.form.get('userDelegates')?.value?.email
             ? [
                 {
                   delegateName: this.form.get('userDelegates')?.value.email,
@@ -258,7 +259,6 @@ export class UserFormComponent implements OnInit, OnChanges {
    * Adds user group.
    */
   addUserGroup(
-    dataForm: any,
     onSuccess: (message: string) => void,
     handleError: (error: unknown) => void
   ) {
@@ -385,10 +385,6 @@ export class UserFormComponent implements OnInit, OnChanges {
         const delegateEmail = this.data?.userDelegates?.[0]?.delegateName ?? '';
         this.selectedDelegates =
           this.allUsers.find((p: User) => p.email === delegateEmail) ?? null;
-
-        // this.selectedDelegates = this.allUsers.filter(
-        //   (p: User) => p.email === this.data?.userDelegates[0].delegateName
-        // )[0];
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id
@@ -557,6 +553,11 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.allUsers = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
+      if (this.isEditing) {
+        this.userDelegate = this.allUsers.filter(
+          (l) => l.email !== this.data?.email
+        );
+      }
     });
   }
 }
