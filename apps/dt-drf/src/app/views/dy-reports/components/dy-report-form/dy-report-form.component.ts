@@ -27,6 +27,7 @@ import { Report } from '../../../../services/models/report-flow.model';
 import { User } from '../../../../services/models/user';
 import {
   Category,
+  ReportDetails,
   ReportsService,
   RequestTaskAttributes,
   UploadResponse,
@@ -167,7 +168,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.form.get('slaDurationInDays')?.disable();
   }
 
-  private resetFormWithValueForEditStep(data: Report) {
+  private resetFormWithValueForEditStep(data: ReportDetails) {
     this.form.patchValue({
       reportName: data.reportName,
       description: data.description,

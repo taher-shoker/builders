@@ -107,23 +107,21 @@ export interface ReportDetails {
   reportFlowStatus: string;
   attachments: Attachment[];
   requestCategory: Category;
-  requestApprovals: [
-    {
-      id: number;
-      username: string;
-      sequence: number;
-      status: string;
-      userDisplayName: string;
-      requestTaskId: number;
-      requestTaskAttributes: {
-        name: string;
-        value: any;
-      }[];
-      completedDate: Date;
-      createdDate: Date;
-      lastModified: Date;
-    }
-  ];
+  requestApprovals: {
+    id: number;
+    username: string;
+    sequence: number;
+    status: string;
+    userDisplayName: string;
+    requestTaskId: number;
+    requestTaskAttributes: {
+      name: string;
+      value: any;
+    }[];
+    completedDate: Date;
+    createdDate: Date;
+    lastModified: Date;
+  }[];
   createdDate: Date;
   lastModifiedDate: Date;
   remainingSteps: number;
@@ -335,8 +333,8 @@ export class ReportsService {
    * @param id of the requested report
    * @returns report details
    */
-  getReport(id: string | number): Observable<Report> {
-    return this.http.get<Report>(`${this.dtUrl}requests/${id}`);
+  getReport(id: string | number): Observable<ReportDetails> {
+    return this.http.get<ReportDetails>(`${this.dtUrl}requests/${id}`);
   }
 
   /**
@@ -444,12 +442,9 @@ export class ReportsService {
   }
 
   downloadAttachment(id: number) {
-    return this.http.get(
-      `${this.endpointAttachments}${id}/download`,
-      {
-        responseType: 'blob',
-      }
-    );
+    return this.http.get(`${this.endpointAttachments}${id}/download`, {
+      responseType: 'blob',
+    });
   }
 
   getAttachment(id: number): Observable<MilestoneAttachment> {

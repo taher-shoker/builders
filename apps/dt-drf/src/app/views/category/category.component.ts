@@ -50,6 +50,9 @@ export class CategoryComponent implements OnInit {
 
   getCategories() {
     this.reportsService.getCategories().subscribe((res) => {
+      res.sort(function (a, b) {
+        return b.id - a.id;
+      });
       this.tableData = res;
     });
   }
