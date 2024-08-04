@@ -7,10 +7,7 @@ import { NxWelcomeComponent } from './nx-welcome.component';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 // import { SharedUiModule } from '@stc-apps/shared-ui';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslateHttpLoader } from '@ngx-translate/http-loader';
-import { environment } from '../environments/environment';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpLoadingInterceptor } from './interceptors/http-loader.interceptor';
@@ -18,17 +15,18 @@ import { HttpInterceptorService } from './interceptors/http-header.interceptor';
 import { CookieModule } from 'ngx-cookie';
 import { ToastrModule } from 'ngx-toastr';
 import { ErrorInterceptor } from './interceptors/errors-handler.interceptor';
-export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
-}
-export const provideTranslation = () => ({
-  defaultLanguage: 'en',
-  loader: {
-    provide: TranslateLoader,
-    useFactory: HttpLoaderFactory,
-    deps: [HttpClient],
-  },
-});
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+// export function HttpLoaderFactory(http: HttpClient) {
+//   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
+// }
+// export const provideTranslation = () => ({
+//   defaultLanguage: 'en',
+//   loader: {
+//     provide: TranslateLoader,
+//     useFactory: HttpLoaderFactory,
+//     deps: [HttpClient],
+//   },
+// });
 @NgModule({
   declarations: [AppComponent, NxWelcomeComponent, MainLayoutComponent],
   imports: [
@@ -42,8 +40,7 @@ export const provideTranslation = () => ({
   ],
   providers: [
     importProvidersFrom([
-      HttpClientModule,
-      TranslateModule.forRoot(provideTranslation()),
+      HttpClientModule
     ]),
     {
       provide: HTTP_INTERCEPTORS,
@@ -60,6 +57,10 @@ export const provideTranslation = () => ({
       useClass: ErrorInterceptor,
       multi: true,
     },
+    {
+      provide: LocationStrategy,
+      useClass: HashLocationStrategy
+    }
   ],
   bootstrap: [AppComponent],
 })
