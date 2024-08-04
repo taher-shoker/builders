@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import {
+  NavLinks,
   ScorecardModel,
   ScorecardTaps
 } from '../models/scorecard.model';
@@ -32,9 +33,35 @@ export class ScorecardService {
       name: 'corporate priorities',
     },
   ];
+  private readonly navItems:NavLinks[] = [
+    {
+      id : 1,
+      name: 'scorecard',
+      url: '/scorecard',
+    },
+    {
+      id : 2,
+      name: 'CAD strategy program',
+      url: '/strategy-program',
+    },
+    {
+      id : 3,
+      name: 'raqami',
+      url: '/raqami',
+    },
+    {
+      id : 4,
+      name: 'PSR',
+      url: '/psr',
+    },
+  ];
   getScorecardsTaps():ScorecardTaps[]
   {
     return this.scorecardsTaps;
+  }
+  getNavLinks():NavLinks[]
+  {
+    return this.navItems;
   }
   getScorecardData(groupName:string , month:number , year:number):Observable<ScorecardModel[]>
   {

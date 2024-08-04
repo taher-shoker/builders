@@ -16,6 +16,7 @@ import { CookieModule } from 'ngx-cookie';
 import { ToastrModule } from 'ngx-toastr';
 import { ErrorInterceptor } from './interceptors/errors-handler.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+// import { HttpUrlInterceptor } from './interceptors/http.interceptor';
 // export function HttpLoaderFactory(http: HttpClient) {
 //   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 // }
@@ -42,6 +43,11 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     importProvidersFrom([
       HttpClientModule
     ]),
+    // {
+    //   provide: HTTP_INTERCEPTORS,
+    //   useClass: HttpUrlInterceptor,
+    //   multi: true,
+    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,

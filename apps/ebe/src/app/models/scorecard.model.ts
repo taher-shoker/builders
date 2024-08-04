@@ -3,6 +3,12 @@ export interface ScorecardTaps
   id : number;
   name : string;
 }
+export interface NavLinks
+{
+  id : number;
+  name : string;
+  url : string;
+}
 export interface FileModel
 {
   lastModified:number;
@@ -32,27 +38,4 @@ export interface KpiModel
   ceiling:number;
   threshold:number;
 }
-export interface StrategicScorecardModel
-{
-  // id:number;
-  title:string,
-  kpiDataDTO:KpiModel[]
-}
-export interface RelationalScorecardModel
-{
-  // id:number;
-  title:string,
-  kpiDataDTO:KpiModel[]
-}
-export interface OperationalScorecardModel
-{
-  // id:number;
-  title:string,
-  kpiDataDTO:KpiModel[]
-}
-export interface PrioritiesScorecardModel
-{
-  // id:number;
-  title:string,
-  kpiDataDTO:KpiModel[]
-}
+

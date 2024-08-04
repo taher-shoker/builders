@@ -1,6 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
 import { CookieService } from 'ngx-cookie';
+import { NavLinks } from '../models/scorecard.model';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -14,31 +15,11 @@ export class MainLayoutComponent implements OnInit{
   isChanged = false;
   scorecardService = inject(ScorecardService);
   cookieService = inject(CookieService)
-  navItems = [
-    {
-      id : 1,
-      name: 'scorecard',
-      url: '/scorecard',
-    },
-    {
-      id : 2,
-      name: 'CAD strategy program',
-      url: '/strategy-program',
-    },
-    {
-      id : 3,
-      name: 'raqami',
-      url: '/raqami',
-    },
-    {
-      id : 4,
-      name: 'PSR',
-      url: '/psr',
-    },
-  ];
+  navItems!:NavLinks[];
   ngOnInit(): void {
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
+    this.navItems = this.scorecardService.getNavLinks();
     // this.userName = this.cookieService.get('USER_FULLNAME') || '';
     console.log(this.userName);
     const token = this.cookieService.get("token")
