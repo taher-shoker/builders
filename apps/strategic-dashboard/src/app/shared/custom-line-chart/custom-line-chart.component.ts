@@ -277,24 +277,13 @@ export class CustomLineChartComponent
     // Add legend at the bottom
     const legend = chart.children.push(
       am5.Legend.new(this.root, {
-        nameField: 'name',
-        fillField: 'color',
-        strokeField: 'color',
         centerX: am5.percent(50),
         x: am5.percent(50),
         marginTop: 20,
+        useDefaultMarker: true,
       })
     );
-    legend.data.setAll([
-      {
-        name: 'Actual',
-        color: am5.color('#45006F'),
-      },
-      {
-        name: 'Target',
-        color: am5.color('#D2D7D9'),
-      },
-    ]);
+    legend.data.setAll(chart.series.values);
 
     legend.markerRectangles.template.setAll({
       cornerRadiusTL: 10,
