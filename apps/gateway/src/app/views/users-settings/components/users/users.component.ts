@@ -34,45 +34,45 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
   //  columnsSchema: { key: string; type: string; label: string }[];
 
-  tableAction(event: { value: string; dataRow: any }) {
-    // if (event.value === 'edit') {
-    //   this.router.navigate(['./edit_report', event.dataRow.id], {
-    //     relativeTo: this.route,
-    //   });
-    // } else if (event.value === 'delete') {
-    //   this.makeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
-    //     if (!res) {
-    //       return;
-    //     }
-    //     this.reportsService.deleteMilestone(event.dataRow.id).subscribe({
-    //       next: () => {
-    //         this.toastr.success('Deleted successfully');
-    //         this.getReports();
-    //       },
-    //       error: () => {
-    //         this.toastr.error('Something went wrong!');
-    //       },
-    //     });
-    //   });
-    // } else if (event.value === 'details') {
-    //   this.detailsNavigate(event.dataRow);
-    // } else if (event.value === 'updateProgress') {
-    //   this.openProgressUpdateModal(event.dataRow);
-    // }
-  }
+  // tableAction(event: { value: string; dataRow: any }) {
+  //   if (event.value === 'edit') {
+  //     this.router.navigate(['./edit_report', event.dataRow.id], {
+  //       relativeTo: this.route,
+  //     });
+  //   } else if (event.value === 'delete') {
+  //     this.makeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
+  //       if (!res) {
+  //         return;
+  //       }
+  //       this.reportsService.deleteMilestone(event.dataRow.id).subscribe({
+  //         next: () => {
+  //           this.toastr.success('Deleted successfully');
+  //           this.getReports();
+  //         },
+  //         error: () => {
+  //           this.toastr.error('Something went wrong!');
+  //         },
+  //       });
+  //     });
+  //   } else if (event.value === 'details') {
+  //     this.detailsNavigate(event.dataRow);
+  //   } else if (event.value === 'updateProgress') {
+  //     this.openProgressUpdateModal(event.dataRow);
+  //   }
+  // }
 
-  paginate(paginationEvent: PaginationEvent) {
-    // const filteredForm = this.utilities.filterObject(this.form.value);
-    // this.reportsService
-    //   .getReports({
-    //     page: paginationEvent.currentPage - 1,
-    //     ...filteredForm,
-    //   })
-    //   .pipe(take(1))
-    //   .subscribe((res: any) => {
-    //     this.populateReports(res);
-    //   });
-  }
+  // paginate(paginationEvent: PaginationEvent) {
+  //   const filteredForm = this.utilities.filterObject(this.form.value);
+  //   this.reportsService
+  //     .getReports({
+  //       page: paginationEvent.currentPage - 1,
+  //       ...filteredForm,
+  //     })
+  //     .pipe(take(1))
+  //     .subscribe((res: any) => {
+  //       this.populateReports(res);
+  //     });
+  // }
   ngAfterViewInit(): void {
     this.columnsSchema = [
       {
@@ -155,8 +155,6 @@ export class UsersComponent implements OnInit, AfterViewInit {
   // Fetch the user list from the service
   getUsersListing() {
     this.userService.getUsers().subscribe((res) => {
-      console.log(res);
-
       this.list = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
@@ -218,6 +216,19 @@ export class UsersComponent implements OnInit, AfterViewInit {
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
           r.groupName !== 'PMO'
       );
+    if (this.userService.getCurrentSystem() === 'Dynamic_Report_Flow') {
+      this.privilege = this.userService.allGroups
+        .filter(
+          (item: UserGroup) =>
+            item.roles &&
+            item.roles.length > 0 &&
+            item.roles[0].roleName !== 'ADMINS'
+        )
+        .map((item: UserGroup) => ({
+          id: item.roles[0].id,
+          groupName: item.roles[0].roleName,
+        }));
+    }
   }
 
   getTeams() {
@@ -293,7 +304,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     } else {
       this.selectedPrivilege = value as Role; // Assuming 'Role' is a subtype of 'Team'
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-        if (this.selectedPrivilege.id === 29) {
+        if (this.selectedPrivilege.groupName === 'DT_Director') {
           this.teams = [];
         } else {
           this.teams = this.userService.getTeams();
