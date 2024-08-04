@@ -74,8 +74,8 @@ export interface MilestoneAttachment {
 }
 
 export class Actions {
-  static readonly approveSLA = new Actions('Approve SLA', 'Approve SLA');
-  static readonly rejectSLA = new Actions('Reject SLA', 'Reject SLA');
+  static readonly approveSLA = new Actions('Approve SLA', 'Approve');
+  static readonly rejectSLA = new Actions('Reject SLA', 'Reject');
 
   static readonly approve = new Actions('Approve', 'Approve');
   static readonly reject = new Actions('Reject', 'Reject');
@@ -112,23 +112,21 @@ export interface ReportDetails {
   reportFlowStatus: string;
   attachments: Attachment[];
   requestCategory: Category;
-  requestApprovals: [
-    {
-      id: number;
-      username: string;
-      sequence: number;
-      status: string;
-      userDisplayName: string;
-      requestTaskId: number;
-      requestTaskAttributes: {
-        name: string;
-        value: any;
-      }[];
-      completedDate: Date;
-      createdDate: Date;
-      lastModified: Date;
-    }
-  ];
+  requestApprovals: {
+    id: number;
+    username: string;
+    sequence: number;
+    status: string;
+    userDisplayName: string;
+    requestTaskId: number;
+    requestTaskAttributes: {
+      name: string;
+      value: any;
+    }[];
+    completedDate: Date;
+    createdDate: Date;
+    lastModified: Date;
+  }[];
   createdDate: Date;
   lastModifiedDate: Date;
   remainingSteps: number;
@@ -193,7 +191,7 @@ export class ReportsService {
   dtUrl = `${this.baseUrl}v2/report-flow-service/`;
   ticketUrl = `${this.baseUrl}ticket/requests/tasks/`;
   requestUrl = `${this.baseUrl}ticket/requests/`;
-  endpointAttachments = `${this.baseUrl}v2/report-flow-service/attachments/`;
+  endpointAttachments = `${this.baseUrl}v2/report-flow-service/attachments`;
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
@@ -343,8 +341,8 @@ export class ReportsService {
    * @param id of the requested report
    * @returns report details
    */
-  getReport(id: string | number): Observable<Report> {
-    return this.http.get<Report>(`${this.dtUrl}requests/${id}`);
+  getReport(id: string | number): Observable<ReportDetails> {
+    return this.http.get<ReportDetails>(`${this.dtUrl}requests/${id}`);
   }
 
   /**
@@ -423,7 +421,7 @@ export class ReportsService {
     reportId: number | string
   ): Observable<MilestoneAttachment> {
     return this.http.post<MilestoneAttachment>(
-      `${this.endpointAttachments}?reportId=${reportId}`,
+      `${this.endpointAttachments}`,
       data
     );
   }

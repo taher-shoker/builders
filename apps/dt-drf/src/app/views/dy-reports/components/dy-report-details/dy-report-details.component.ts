@@ -89,7 +89,7 @@ export class DyReportDetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.reportsService.checkIsAdmin();
+    // this.reportsService.checkIsAdmin();
     this.route.params.subscribe((params) => {
       this.reportId = params['id'];
       this.getReportDetails();
@@ -121,7 +121,7 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   getReportDetails() {
-    this.reportsService.getReport(this.reportId).subscribe((res: any) => {
+    this.reportsService.getReport(this.reportId).subscribe((res) => {
       // this.reportsService.getRemindersData();
       this.reportsDetails = res;
       this.bannerDataService.updateData({
@@ -145,79 +145,152 @@ export class DyReportDetailsComponent implements OnInit {
         console.log('Res is ::', res);
         this.isLoadingSteps = false;
 
-        res.sort(function (a, b) {
-          return b.requestTaskId - a.requestTaskId;
-        });
+        this.steps = this.mergeTwoArraysAndDistinguishPendingObject(
+          res,
+          this.reportsDetails.requestApprovals
+        );
 
-        for (let i = res.length - 1; i >= 0; i--) {
-          let notes: string = '';
-
-          const displayDate = res[i].completedDate
-            ? res[i].completedDate
-            : res[i].createdDate;
-          const progressDate: string =
-            this.datePipe.transform(displayDate, 'medium') || '';
-
-          let byUser = '';
-          const userThatTaskIsPendingOn = res[i].userDisplayName;
-          const actions: Actions[] = [];
-          if (res[i].status !== 'pending') {
-            byUser = `By ${res[i].completedByName}`;
-          }
-
-          if (res[i].status === 'pending') {
-            this.isWorkflowComplete = false;
-          }
-
-          for (const taskAttribute of res[i].requestTaskAttributes) {
-            if (taskAttribute.name === 'comment') {
-              notes = taskAttribute.value;
-              break;
-            }
-          }
-
-          if (res[i].status === 'pending' && res[i].params?.length > 0) {
-            if (res[i].taskName === 'User Approve SLA') {
-              actions.push(Actions.approveSLA);
-              actions.push(Actions.rejectSLA);
-            }
-
-            if (res[i].taskName === 'User Approve') {
-              actions.push(Actions.approve);
-              actions.push(Actions.reject);
-            }
-
-            if (res[i].taskName === 'Edit or Delete Report Data') {
-              actions.push(Actions.editReport);
-              actions.push(Actions.deleteReport);
-            }
-
-            if (res[i].taskName === 'Initiator Approve') {
-              actions.push(Actions.initiatorApprove);
-              actions.push(Actions.initiatorReject);
-            }
-
-            if (res[i].taskName === 'Add Data') {
-              actions.push(Actions.addData);
-            }
-          }
-
-          const step: Step = {
-            caption: res[i].taskName,
-            state: this.getStepStatus(res[i].status),
-            notes: notes,
-            // attachments: attachments,
-            extraInfo: [
-              `${progressDate} ${
-                byUser || 'Pending on ' + userThatTaskIsPendingOn
-              }`,
-            ],
-            actions: actions,
-            stepObject: res[i],
-          };
-          this.steps.push(step);
-        }
+        console.log('this.steps', this.steps);
       });
+  }
+
+  extractRequestApprovalsSteps(arr: ReportDetails['requestApprovals']) {
+    const steps: Step[] = [];
+
+    for (let i = 0; i < arr.length; i++) {
+      const step: Step = {
+        caption: 'Pending approval',
+        state: 'undone',
+        extraInfo: [`Pending on : ${arr[i].userDisplayName}`],
+        stepObject: arr[i],
+      };
+      steps.push(step);
+    }
+    return steps;
+  }
+
+  extractRequestTasksSteps(res: ReportWorkflow): Step[] {
+    const steps: Step[] = [];
+
+    res.sort(function (a, b) {
+      return b.requestTaskId - a.requestTaskId;
+    });
+
+    for (let i = res.length - 1; i >= 0; i--) {
+      let notes: string = '';
+
+      const displayDate = res[i].completedDate
+        ? res[i].completedDate
+        : res[i].createdDate;
+      const progressDate: string =
+        this.datePipe.transform(displayDate, 'medium') || '';
+
+      let byUser = '';
+      const userThatTaskIsPendingOn = res[i].userDisplayName;
+      const actions: Actions[] = [];
+      if (res[i].status !== 'pending') {
+        byUser = `By ${res[i].completedByName}`;
+      }
+
+      if (res[i].status === 'pending') {
+        this.isWorkflowComplete = false;
+      }
+
+      for (const taskAttribute of res[i].requestTaskAttributes) {
+        if (taskAttribute.name === 'comment') {
+          notes = taskAttribute.value;
+          break;
+        }
+      }
+
+      if (res[i].status === 'pending' && res[i].params?.length > 0) {
+        if (res[i].taskName === 'User Approve SLA') {
+          actions.push(Actions.approveSLA);
+          actions.push(Actions.rejectSLA);
+        }
+
+        if (res[i].taskName === 'User Approve') {
+          actions.push(Actions.approve);
+          actions.push(Actions.reject);
+        }
+
+        if (res[i].taskName === 'Edit or Delete Report Data') {
+          actions.push(Actions.editReport);
+          actions.push(Actions.deleteReport);
+        }
+
+        if (res[i].taskName === 'Initiator Approve') {
+          actions.push(Actions.initiatorApprove);
+          actions.push(Actions.initiatorReject);
+        }
+
+        if (res[i].taskName === 'Add Data') {
+          actions.push(Actions.addData);
+        }
+      }
+
+      const step: Step = {
+        caption: res[i].taskName,
+        state: this.getStepStatus(res[i].status),
+        notes: notes,
+        // attachments: attachments,
+        extraInfo: [
+          `${progressDate} ${
+            byUser || 'Pending on ' + userThatTaskIsPendingOn
+          }`,
+        ],
+        actions: actions,
+        stepObject: res[i],
+      };
+      steps.push(step);
+    }
+
+    return steps;
+  }
+
+  mergeTwoArraysAndDistinguishPendingObject(
+    requestTasks: ReportWorkflow,
+    requestApprovals: ReportDetails['requestApprovals']
+  ): Step[] {
+    let steps: Step[] = [];
+    let reqTasksSteps: Step[] = [];
+    let reqApprovalSteps: Step[] = [];
+
+    reqTasksSteps = this.extractRequestTasksSteps(requestTasks);
+    reqApprovalSteps = this.distinguishRequestApprovalSteps(
+      requestApprovals,
+      requestTasks
+    );
+    steps = [...reqTasksSteps, ...reqApprovalSteps];
+
+    console.log('reqTasksSteps:', reqTasksSteps);
+    console.log('reqApprovalSteps:', reqApprovalSteps);
+    console.log('El steps:', steps);
+
+    return steps;
+  }
+
+  distinguishRequestApprovalSteps(
+    requestApprovals: ReportDetails['requestApprovals'],
+    requestTasks: ReportWorkflow
+  ): Step[] {
+    const tempArr: any[] = [];
+
+    const taskUsernames = new Set(requestTasks.map((task) => task.username));
+
+    requestApprovals.forEach((approval) => {
+      if (!taskUsernames.has(approval.username)) {
+        if (!tempArr.some((item) => item.username === approval.username)) {
+          tempArr.push(approval);
+        }
+      }
+    });
+
+    const distinguishedElements: Step[] =
+      this.extractRequestApprovalsSteps(tempArr);
+    console.log('tempArr', tempArr);
+
+    return distinguishedElements;
   }
 
   customRangeSLA: { name: number; id: number }[] = [];
@@ -353,6 +426,7 @@ export class DyReportDetailsComponent implements OnInit {
       requestParams: [{ name: 'is_approved_by_initiator', value: true }],
     };
 
+    this.isLoadingSteps = true;
     this.reportsService
       .completePendingTask(
         this.reportsDetails.flowId,
