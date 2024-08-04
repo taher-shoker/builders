@@ -16,7 +16,7 @@ export class ProcessAdminGuard implements CanActivate {
         if (user && user.roles.includes('PROCESS_ADMIN')) {
           return true;
         } else {
-          this.router.navigate(['not-authorized']); // Redirect to not authorized page
+          this.router.navigate(['../']); // Redirect to not authorized page
           return false;
         }
       })
