@@ -41,7 +41,7 @@ export class HomeComponent implements OnInit {
       name: 'Category',
       url: '/category',
       icon: 'fa-home',
-      roles: ['all'],
+      roles: ["PROCESS_ADMIN"],
       urlHome: '/home',
     },
   ];
@@ -52,6 +52,7 @@ export class HomeComponent implements OnInit {
         this.user = res;
         if (res?.roles) {
           const items = [];
+          console.warn("ROLES", res.roles)
           for (let i = 0; i < this.navItems.length; i++) {
             const item = this.navItems[i];
             // Check if the item should be included based on roles
@@ -68,6 +69,10 @@ export class HomeComponent implements OnInit {
         }
       }
     });
+    
+    // if(this.reportsService.userInGroup("System_Process_Admin")){
+    //   this.navItems[1] // For Category module
+    // }
   }
 
   clickRemider(item: any) {

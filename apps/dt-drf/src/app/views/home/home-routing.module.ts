@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../../services/auth.guard';
+import { ProcessAdminGuard } from '../../services/process-admin.guard';
 
 const routes: Routes = [
   {
@@ -22,6 +23,7 @@ const routes: Routes = [
       {
         path: 'category',
         data: { breadcrumb: 'category' },
+        canActivate: [ProcessAdminGuard], // Apply ProcessAdminGuard here
         loadChildren: () =>
           import('../../views/category/category.module').then(
             (m) => m.CategoryModule

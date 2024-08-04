@@ -104,7 +104,6 @@ export class DyReportDetailsComponent implements OnInit {
     this.reportsService
       .addReportSLA(this.reportsDetails.id, sla)
       .subscribe((res) => {
-        console.log('rez:', res);
         this.loadingSla = false;
         this.toastr.success('SLA has been updated successfully');
         this.getReportDetails();
