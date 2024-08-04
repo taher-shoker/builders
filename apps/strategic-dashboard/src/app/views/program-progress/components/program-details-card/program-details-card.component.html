@@ -23,6 +23,7 @@
     @for (progress of progressValue(); track $index) {
     <div class="donut_content col-xl-4 col-lg-12 col-md-12">
       <stc-apps-progress-circle
+        [strategicFlag]="true"
         progressSize="10rem"
         [progressValue]="progress.value"
         [mainBgColor]="progress.bgColor"
