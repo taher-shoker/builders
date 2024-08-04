@@ -1,9 +1,13 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ReportsService } from '../../dy-reports/dy-reports.service';
 import { User } from '../../../services/models/user';
 
+interface UserDelegate {
+  delegateName: string;
+  systemName: string;
+}
 @Component({
   selector: 'stc-apps-delegation-dialog',
   templateUrl: './delegationDialog.component.html',
@@ -12,6 +16,7 @@ import { User } from '../../../services/models/user';
 export class DelegationDialogComponent implements OnInit {
   users!: User[];
   form!: FormGroup;
+  userDelegate!: UserDelegate;
 
   constructor(
     public dialogRef: MatDialogRef<DelegationDialogComponent>,
@@ -28,6 +33,7 @@ export class DelegationDialogComponent implements OnInit {
 
   getUsersListing() {
     this.reportsService.getUsers().subscribe((res) => {
+      this.getUser();
       this.users = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
@@ -39,7 +45,10 @@ export class DelegationDialogComponent implements OnInit {
       user: this.form.get('user')?.value,
     });
   }
-
+  getUser() {
+    const userDelegate = this.reportsService.getCurrentUser()?.userDelegates[0];
+    this.form.get('user')?.setValue(userDelegate?.delegateName);
+  }
   cancel() {
     this.dialogRef.close(undefined);
   }

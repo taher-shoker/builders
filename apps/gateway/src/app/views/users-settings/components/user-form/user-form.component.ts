@@ -382,7 +382,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' &&
         this.data?.userDelegates
       ) {
-        const delegateEmail = this.data?.userDelegates?.[0].delegateName ?? '';
+        const delegateEmail = this.data?.userDelegates?.[0]?.delegateName ?? '';
         this.selectedDelegates =
           this.allUsers.find((p: User) => p.email === delegateEmail) ?? null;
 

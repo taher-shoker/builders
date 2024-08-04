@@ -4,11 +4,13 @@
   <mat-form-field *ngIf="!group">
     <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
       [(value)]="selectedValue" [multiple]="multi">
+
       <mat-option *ngIf="searchMode" class="searchInput">
         <span class="" id="basic-addon1"><i class="fas fa-search"></i></span>
         <input type="text" [formControl]="searchControl" [placeholder]="'Search...'"
           (click)="stopDropdownClose($event)">
       </mat-option>
+      <mat-option *ngIf="Resetting">None</mat-option>
       <mat-option *ngFor="let option of filteredOptions"
         [value]="multi ? option[labelValue]: outputValue ? option[outputValue]: option">
         {{ option[labelName] }}

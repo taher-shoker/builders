@@ -5,8 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { DelegationDialogComponent } from './delegationDialog/delegationDialog.component';
 import { ReportsService } from '../dy-reports/dy-reports.service';
-import { User } from '../../services/models/user';
 import { ToastrService } from 'ngx-toastr';
+import { User } from '../../services/models/user';
 
 @Component({
   selector: 'stc-apps-home',
@@ -20,7 +20,8 @@ export class HomeComponent implements OnInit {
     public route: ActivatedRoute,
     private matDialog: MatDialog,
     private reportsService: ReportsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private cookieService: CookieService
   ) {}
 
   urlHome = '/home';
@@ -89,13 +90,13 @@ export class HomeComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe((res) => {
       if (res) {
-        const newDelegates = [res.user];
+        const newDelegates = res.user != null ? [res.user] : [];
         const userId = this.user?.id;
         this.reportsService
           .updateUsersDelegates(userId, newDelegates)
-          .subscribe((res) => {
+          .subscribe((res: User) => {
             if (res) {
-              console.log(res);
+              this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
               this.toastr.success('User delegates has been added successfully');
             }
           });

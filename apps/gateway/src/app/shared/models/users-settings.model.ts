@@ -57,6 +57,7 @@ export interface User {
   username: string;
   userGroups: UserGroup[];
   teams?: UserTeam[];
+  roles?: string[];
   userDelegates?: UserDelegates[];
 }
 export interface UserDelegates {

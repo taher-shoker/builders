@@ -1,6 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { AfterViewInit, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
@@ -16,7 +22,11 @@ import { ToastrService } from 'ngx-toastr';
 import { Subscription, take } from 'rxjs';
 import { MessageDialogComponent } from '../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
-import { ReportsService, PendingTask, Category } from '../../dy-reports.service';
+import {
+  ReportsService,
+  PendingTask,
+  Category,
+} from '../../dy-reports.service';
 
 export interface Milestone {
   activityName: string;
@@ -32,7 +42,7 @@ export interface Milestone {
   templateUrl: './reports.component.html',
   styleUrls: ['./reports.component.scss'],
 })
-export class ReportsComponent implements OnInit, AfterViewInit , OnDestroy {
+export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
 
   form!: FormGroup;
@@ -72,7 +82,6 @@ export class ReportsComponent implements OnInit, AfterViewInit , OnDestroy {
     this.router.navigate(['./add_report'], { relativeTo: this.route });
   }
 
-
   disabled = false;
   tableData!: any;
   rowData!: any;
@@ -80,6 +89,7 @@ export class ReportsComponent implements OnInit, AfterViewInit , OnDestroy {
     { value: 'pending', name: 'Pending' },
     { value: 'completed', name: 'Completed' },
     { value: 'breached', name: 'Breached' },
+    { value: 'deleted', name: 'Deleted' },
   ];
   monthsArr: any = [];
   yearsArr: any = [];
@@ -182,7 +192,7 @@ export class ReportsComponent implements OnInit, AfterViewInit , OnDestroy {
   }
 
   detailsNavigate(item: PendingTask) {
-    const id = item.externalSystemId ? item.externalSystemId : item.id
+    const id = item.externalSystemId ? item.externalSystemId : item.id;
     this.router.navigate(['./report_details', id], {
       relativeTo: this.route,
     });
@@ -238,28 +248,25 @@ export class ReportsComponent implements OnInit, AfterViewInit , OnDestroy {
   categories!: Category[];
 
   toggleFilter() {
-    this.reportsService.getCategories().subscribe(res => {
-      this.categories = res
-    })
+    this.reportsService.getCategories().subscribe((res) => {
+      this.categories = res;
+    });
     this.dialogService.open('filter-Modal');
   }
 
   onExporting() {
     const filteredForm = this.utilities.filterObject(this.form.value);
-    this.reportsService
-      .exportMilestones(filteredForm)
-      .subscribe((buffer) => {
-        const data: Blob = new Blob([buffer]);
-        saveAs(data, 'milestones.csv');
-      });
+    this.reportsService.exportMilestones(filteredForm).subscribe((buffer) => {
+      const data: Blob = new Blob([buffer]);
+      saveAs(data, 'milestones.csv');
+    });
   }
 
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
-      status: ['', { nonNullable: true }],
-      category: ['', { nonNullable: true }],
-
+      requestStatus: ['', { nonNullable: true }],
+      categoryId: ['', { nonNullable: true }],
     });
   }
 

@@ -4,6 +4,7 @@
   // color: green; //For testing, Delete this css rule after testing
   //font-weight: bold;
   margin-bottom: 0;
+  text-transform: capitalize;
 }
 
 * {
@@ -294,6 +295,15 @@ table {
 
 .completed-status {
   color: var(--stc-oasis-color);
+}
+.pending-status {
+  color: var(--stc-sunset-color);
+}
+.breached-status {
+  color: var(--stc-Silver-Colo);
+}
+.deleted-status {
+  color: var(--red-Color);
 }
 
 @keyframes fill {

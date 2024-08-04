@@ -4,8 +4,8 @@
     <div class="body-holder">
       <form [formGroup]="form">
         <div class="my-2">
-          <stc-apps-select-drop-down [label]="'Pick User'" [options]="users" [required]="true" [searchMode]="true"
-            formControlName="user" [outputValue]="'email'" [disabled]="true"></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down [Resetting]="true" [label]="'Pick User'" [options]="users" [searchMode]="true"
+            formControlName="user" [outputValue]="'email'"></stc-apps-select-drop-down>
 
         </div>
       </form>
@@ -19,13 +19,8 @@
       <button type="button" class="btn gray-outline" (click)="cancel()">
         Cancel
       </button>
-      <button
-        type="button"
-        class="btn primary"
-        (click)="update()"
-        [disabled]="form.invalid"
-      >
-        Delegate
+      <button type="button" class="btn primary" (click)="update()" [disabled]="form.invalid">
+        Save
       </button>
     </div>
   </div>

@@ -17,8 +17,13 @@ export interface User {
   teamName?: null | string;
   userGroups: Group[];
   username: string;
+  userDelegates: UserDelegate[];
 }
 
+export interface UserDelegate {
+  delegateName: string;
+  systemName: string;
+}
 interface Group {
   id: number;
   groupName: string;
@@ -227,8 +232,11 @@ export class ReportsService {
       params: this.setSystemParam(),
     });
   }
-  updateUsersDelegates(userId: number | undefined, data: string[]) {
-    return this.http.patch(
+  updateUsersDelegates(
+    userId: number | undefined,
+    data: UserDelegate[]
+  ): Observable<User> {
+    return this.http.patch<User>(
       `${this.adminUrl}/users/delegates/${userId}`,
       { newDelegates: data },
       {
@@ -444,12 +452,9 @@ export class ReportsService {
   }
 
   downloadAttachment(id: number) {
-    return this.http.get(
-      `${this.endpointAttachments}${id}/download`,
-      {
-        responseType: 'blob',
-      }
-    );
+    return this.http.get(`${this.endpointAttachments}${id}/download`, {
+      responseType: 'blob',
+    });
   }
 
   getAttachment(id: number): Observable<MilestoneAttachment> {

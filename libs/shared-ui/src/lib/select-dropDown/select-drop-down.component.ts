@@ -56,6 +56,7 @@ export class SelectDropDownComponent<T>
   @Input() group = false;
   @Input() multi = false;
   @Input() searchMode = false;
+  @Input() Resetting = false;
   override control = new FormControl();
   searchControl = new FormControl();
 
@@ -86,9 +87,13 @@ export class SelectDropDownComponent<T>
   }
 
   onChangeValue(value: any): void {
-    const output = this.outputValue ? value[this.outputValue] || value : value;
-    this.selectChange.emit(output);
-    this.selectedValue = value;
+    if (value) {
+      const output = this.outputValue
+        ? value[this.outputValue] || value
+        : value;
+      this.selectChange.emit(output);
+      this.selectedValue = value;
+    }
   }
   filterOptions(searchTerm = ''): void {
     if (this.group) {

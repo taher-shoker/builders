@@ -21,6 +21,7 @@ import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/me
 import { FormControl, FormGroup } from '@angular/forms';
 import { UpdateReportDialogComponent } from '../update-dy-report-progress-dialog/update-report-dialog.component';
 import { ConfigService } from 'apps/dt-drf/src/app/services/config.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'stc-apps-dy-report-details',
@@ -73,7 +74,7 @@ export class DyReportDetailsComponent implements OnInit {
   });
 
   isWorkflowComplete: boolean = true;
-
+  loadingSla = false;
   constructor(
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
@@ -83,7 +84,8 @@ export class DyReportDetailsComponent implements OnInit {
     private matDialog: MatDialog,
     private datePipe: DatePipe,
     private router: Router,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -93,7 +95,7 @@ export class DyReportDetailsComponent implements OnInit {
       this.getReportDetails();
     });
 
-    this.watchSlaChanges();
+    // this.watchSlaChanges();
     this.populateCustomSLA();
     this.isUserProcessAdmin();
   }
@@ -103,15 +105,19 @@ export class DyReportDetailsComponent implements OnInit {
       .addReportSLA(this.reportsDetails.id, sla)
       .subscribe((res) => {
         console.log('rez:', res);
+        this.loadingSla = false;
+        this.toastr.success('SLA has been updated successfully');
         this.getReportDetails();
       });
   }
 
-  watchSlaChanges() {
-    this.slaForm.get('sla')?.valueChanges.subscribe((value) => {
-      console.log('Name changed to:', value);
-      if (value) this.addReportSLA(value);
-    });
+  watchSlaChanges(value: number) {
+    // this.slaForm.get('sla')?.valueChanges.subscribe((value) => {
+    //   console.log('Name changed to:', value);
+    //   if (value) this.addReportSLA(value);
+    // });
+    this.loadingSla = true;
+    this.addReportSLA(value);
   }
 
   getReportDetails() {
@@ -122,6 +128,7 @@ export class DyReportDetailsComponent implements OnInit {
         title: this.reportsDetails.reportName || '',
         text: '',
       });
+      this.slaForm.get('sla')?.setValue(this.reportsDetails.reportSlaDuration);
 
       if (this.reportsDetails.flowId) {
         this.showReportWorkflow();

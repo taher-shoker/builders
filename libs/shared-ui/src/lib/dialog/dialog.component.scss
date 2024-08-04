@@ -7,7 +7,7 @@ stc-apps-dialog {
     inset: 0;
 
     /* z-index must be higher than everything else on the page */
-    z-index: 10000;
+    z-index: 100;
 
     /* semi-transparent black background exposed by padding */
     background-color: rgba(0, 0, 0, 0.5);

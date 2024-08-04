@@ -16,7 +16,7 @@
   // }
 }
 
-.link{
+.link {
   color: blue;
   text-decoration: underline;
   cursor: pointer;
@@ -154,7 +154,6 @@
       // min-height: 7rem;
 
       &:last-child {
-
         // overflow: hidden;
         & .order-track-status span:last-of-type {
           display: none;
@@ -305,23 +304,26 @@
   font-style: italic;
   font-size: 1rem;
 }
-
+.status {
+  text-transform: capitalize;
+}
 .completed-status {
   color: var(--stc-oasis-color);
 }
-
-.delayed-status {
-  color: var(--stc-coral-color);
+.pending-status {
+  color: var(--stc-sunset-color);
 }
-
-.on-track-status {
-  color: var(--stc-sky-blue-color);
+.breached-status {
+  color: var(--stc-Silver-Colo);
 }
-
-.at-risk-status {
-  color: var(--stc-sun-color);
+.deleted-status {
+  color: var(--red-Color);
 }
-
-.planned-status {
-  color: var(--grey-color);
+form {
+  display: flex;
+  align-items: center;
+  .loading {
+    width: 20px;
+    height: 20px;
+  }
 }
