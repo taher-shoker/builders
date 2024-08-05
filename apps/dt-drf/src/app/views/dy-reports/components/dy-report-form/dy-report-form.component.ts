@@ -48,6 +48,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   users: User[] = [];
   approvers: User[] = [];
+  creators: User[] = [];
   uploadedFiles = new BehaviorSubject<{ id: number; label: string }[]>([]);
   isSubmitLoading = false;
   filteredOptions: Observable<User[]>[] = [];
@@ -80,17 +81,15 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.form = this._formBuilder.group({
       reportName: ['', [Validators.required, Validators.maxLength(100)]],
       description: [
-        { value: '', disabled: this.readOnly },
+        '',
         [
+          Validators.required,
           Validators.maxLength(
             this.configService.getConfig().characterLimit.descriptionLength
           ),
         ],
       ],
-      requestCategoryId: [
-        { value: '', disabled: this.readOnly },
-        Validators.required,
-      ],
+      requestCategoryId: ['', Validators.required],
       slaDurationInDays: [
         '',
         [
@@ -100,7 +99,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       ],
       needMoreDataFromCreator: [0],
       initiatorShouldApprove: [0],
-      creatorEmail: [{ value: '', disabled: this.readOnly }],
+      creatorEmail: [''],
       attachments: [[], Validators.required],
       requestApprovals: this._formBuilder.array([]),
     });
@@ -209,7 +208,17 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       userDisplayName: [approval.userDisplayName],
     });
   }
-
+  handelCreator(value: string) {
+    this.approvers = this.creators.filter((a: User) => a.email !== value);
+    // Find and remove the selected value from the FormArray
+    this.t.controls.forEach((control, index) => {
+      if (control.get('username')?.value === value) {
+        this.t.removeAt(index);
+      }
+    });
+    this.selectedOptions = this.selectedOptions.filter((s) => s !== value);
+    this.updateFilteredOptions();
+  }
   onSubmit() {
     if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
@@ -257,7 +266,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           {
             name: 'needs_creator_to_add_data',
-            value: this.form.get('needMoreDataFromCreator')?.value === false ? 0 : 1,
+            value:
+              this.form.get('needMoreDataFromCreator')?.value === false ? 0 : 1,
           },
           {
             name: 'creator_email',
@@ -278,7 +288,11 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         ],
       };
       this.reportsService
-        .completePendingTask(this.paramsflowId, this.paramsRequestTaskId, params)
+        .completePendingTask(
+          this.paramsflowId,
+          this.paramsRequestTaskId,
+          params
+        )
         .subscribe({
           next: () => handleSuccessStepEdit('Edit Step is success'),
           error: handleError,
@@ -342,6 +356,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         this.approvers = this.users.filter(
           (user) => user.email !== this.reportsService.getCurrentUser().email
         );
+        this.creators = this.approvers;
         return this.users;
       })
     );
