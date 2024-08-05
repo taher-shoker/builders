@@ -10,7 +10,7 @@
         <input type="text" [formControl]="searchControl" [placeholder]="'Search...'"
           (click)="stopDropdownClose($event)">
       </mat-option>
-      <mat-option *ngIf="Resetting">None</mat-option>
+      <mat-option *ngIf="Resetting && options.length > 0">None</mat-option>
       <mat-option *ngFor="let option of filteredOptions"
         [value]="multi ? option[labelValue]: outputValue ? option[outputValue]: option">
         {{ option[labelName] }}

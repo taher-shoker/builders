@@ -35,7 +35,9 @@ export class DelegationDialogComponent implements OnInit {
     this.reportsService.getUsers().subscribe((res) => {
       this.getUser();
       this.users = res.filter(
-        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
+        (l) =>
+          l.userGroups[0].roles[0].roleName !== 'ADMINS' &&
+          l.email !== this.reportsService.getCurrentUser().email
       );
     });
   }

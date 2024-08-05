@@ -383,8 +383,11 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.data?.userDelegates
       ) {
         const delegateEmail = this.data?.userDelegates?.[0]?.delegateName ?? '';
-        this.selectedDelegates =
-          this.allUsers.find((p: User) => p.email === delegateEmail) ?? null;
+        console.log(this.data);
+        this.selectedDelegates = this.allUsers.find(
+          (p: User) => p.email === delegateEmail
+        );
+        console.log(this.selectedDelegates);
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id
@@ -553,10 +556,13 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.allUsers = res.filter(
         (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
       );
-      if (this.isEditing) {
+
+      if (this.isEditing && this.data) {
         this.userDelegate = this.allUsers.filter(
           (l) => l.email !== this.data?.email
         );
+      } else {
+        this.userDelegate = this.allUsers;
       }
     });
   }
