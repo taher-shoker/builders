@@ -13,7 +13,9 @@ export class ItemsListComponent {
 
   @Input({required: true}) caption = "";
   @Input() iconClass = "";
+
   @Input() closable: boolean = false;
+  @Input() itemMsg: string = "Milestone's current pending action is :";
 
   @Input({required: true}) items: any[] = [];
 
