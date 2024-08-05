@@ -13,6 +13,7 @@ import {
   ReportFlowStatus,
   ReportsService,
   ReportWorkflow,
+  ReportWorkflowStep,
   RequestTask,
   RequestTaskAttributes,
 } from '../../dy-reports.service';
@@ -111,10 +112,6 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   watchSlaChanges(value: number) {
-    // this.slaForm.get('sla')?.valueChanges.subscribe((value) => {
-    //   console.log('Name changed to:', value);
-    //   if (value) this.addReportSLA(value);
-    // });
     this.loadingSla = true;
     this.addReportSLA(value);
   }
@@ -141,15 +138,12 @@ export class DyReportDetailsComponent implements OnInit {
     this.reportsService
       .getReportWorkflow(this.reportsDetails.flowId)
       .subscribe((res: ReportWorkflow) => {
-        console.log('Res is ::', res);
         this.isLoadingSteps = false;
 
         this.steps = this.mergeTwoArraysAndDistinguishPendingObject(
           res,
           this.reportsDetails.requestApprovals
         );
-
-        console.log('this.steps', this.steps);
       });
   }
 
@@ -160,7 +154,7 @@ export class DyReportDetailsComponent implements OnInit {
       const step: Step = {
         caption: 'Pending approval',
         state: 'undone',
-        extraInfo: [`Pending on : ${arr[i].userDisplayName}`],
+        extraInfo: [`Pending on : ${arr[i].username}`],
         stepObject: arr[i],
       };
       steps.push(step);
@@ -185,7 +179,7 @@ export class DyReportDetailsComponent implements OnInit {
         this.datePipe.transform(displayDate, 'medium') || '';
 
       let byUser = '';
-      const userThatTaskIsPendingOn = res[i].userDisplayName;
+      const userThatTaskIsPendingOn = res[i].username;
       const actions: Actions[] = [];
       if (res[i].status !== 'pending') {
         byUser = `By ${res[i].completedByName}`;
@@ -229,7 +223,7 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       const step: Step = {
-        caption: res[i].taskName,
+        caption: this.handleRequestTaskName(res[i].taskName, res[i].status, res[i]) ,
         state: this.getStepStatus(res[i].status),
         notes: notes,
         // attachments: attachments,
@@ -247,6 +241,31 @@ export class DyReportDetailsComponent implements OnInit {
     return steps;
   }
 
+  handleRequestTaskName(taskName: string, status: string, task: ReportWorkflowStep): string{
+
+    let finalStr = '';
+
+    if(taskName === 'Edit or Delete Report Data' && status !== 'pending'){
+      if(task.requestTaskAttributes.length > 0){
+        for(const reqTask of task.requestTaskAttributes){
+          if(reqTask.name === 'delete' && reqTask.value === "false"){
+            finalStr = 'Edited'
+            break;
+          }
+
+          if(reqTask.name === 'delete' && reqTask.value === "true"){
+            finalStr = 'Deleted'
+            break;
+          }
+        }
+      }
+    }else{
+      finalStr = taskName
+    }
+
+    return finalStr
+  }
+
   mergeTwoArraysAndDistinguishPendingObject(
     requestTasks: ReportWorkflow,
     requestApprovals: ReportDetails['requestApprovals']
@@ -261,10 +280,6 @@ export class DyReportDetailsComponent implements OnInit {
       requestTasks
     );
     steps = [...reqTasksSteps, ...reqApprovalSteps];
-
-    console.log('reqTasksSteps:', reqTasksSteps);
-    console.log('reqApprovalSteps:', reqApprovalSteps);
-    console.log('El steps:', steps);
 
     return steps;
   }
@@ -581,6 +596,7 @@ export class DyReportDetailsComponent implements OnInit {
       requestParams: [{ name: 'delete', value: true }],
     };
 
+    this.isLoadingSteps = true;
     this.reportsService
       .completePendingTask(
         this.reportsDetails.flowId,

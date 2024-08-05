@@ -14,7 +14,7 @@
               <!-- Milestone ID: <strong>#{{ item.externalSystemId }}</strong> -->
               <div class="text-wrapper">
                 <div class="left-text large-text">
-                  {{ item.requestParams.team }} -
+                  {{ item.requestParams.team || item.taskStatus}} -
                   {{ item.requestParams.milestone_name || item.taskName || '' }}
                 </div>
               </div>
