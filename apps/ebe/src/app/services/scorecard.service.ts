@@ -75,4 +75,10 @@ export class ScorecardService {
   {
     return this.currMode
   }
+  uploadFile(selectedFile:any):Observable<any>
+  {
+    const formData = new FormData();
+    formData.append('multipartFile', selectedFile, selectedFile.name);
+    return this.http.post<any>(`${environment.apiUrl}/business-excellence/scorecards/upload` , formData)
+  }
 }

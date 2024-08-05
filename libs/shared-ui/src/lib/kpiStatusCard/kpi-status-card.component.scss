@@ -15,13 +15,6 @@ div
   {
     color:var(--stc-green-dark-color);
     background-color:var(--stc-green-light-color);
-    img
-    {
-      position: relative;
-      top: -2px;
-      left: 4px;
-      width: 12px;
-    }
   }
   &.not-achieved
   {
@@ -54,5 +47,5 @@ div
 {
   width: 30px;
   position: relative;
-  top: -6px;
+  top: -5px;
 }

@@ -1,5 +1,5 @@
-import { Component, inject, OnDestroy, OnInit, signal, WritableSignal } from '@angular/core';
-import {ScorecardModel,ScorecardTaps} from '../../models/scorecard.model';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
+import {FileModel, ScorecardModel,ScorecardTaps} from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { TapDetailsComponent } from './components/tap-details/tap-details.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -26,6 +26,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   isEmpty = false;
   filtersOptions!:FilteredOptions;
   scorecardService = inject(ScorecardService);
+  @ViewChild(TapDetailsComponent) child?: TapDetailsComponent;
   ngOnInit(): void {
     this.scorecardsTaps = this.scorecardService.getScorecardsTaps();
     this.currentClickedTapData = this.scorecardsTaps[0];
@@ -61,5 +62,26 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   {
     this.filtersOptions = options;
     this.getScorecardData(this.currentClickedTapData.name , options.month , options.year);
+  }
+  getImportedFile(e:FileModel)
+  {
+    if(e)
+    {
+      this.scorecardService.uploadFile(e).subscribe({
+        next : () => {
+          if(this.child)
+          {
+            this.getScorecardData(this.currentClickedTapData.name , this.filtersOptions.month , this.filtersOptions.year)
+            this.child.visible = false;
+          }
+        },
+        error : () => {
+          if(this.child)
+          {
+            this.child.visible = false;
+          }
+        }
+      })
+    }
   }
 }

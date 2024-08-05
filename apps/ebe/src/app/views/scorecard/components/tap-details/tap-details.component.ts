@@ -60,6 +60,7 @@ export class TapDetailsComponent implements OnInit {
     year: new FormControl(new Date().getFullYear()),
   });
   @Output() filterOptions:EventEmitter<filterOption> = new EventEmitter();
+  @Output() ImportedFile:EventEmitter<FileModel> = new EventEmitter();
   scorecardService = inject(ScorecardService);
   monthsArrPopulator() {
     for (let i = 1; this.monthsArr.length < 12; i++) {
@@ -96,7 +97,6 @@ export class TapDetailsComponent implements OnInit {
     this.filterOptions.emit(this.filtersForm.value);
   }
   getUploadedFile(e:FileModel | null) {
-    // console.log(e);
     this.selectedFile = e;
     // if (e.target && (e.target as HTMLInputElement).files) {
     //   const files = (e.target as HTMLInputElement).files;
@@ -121,5 +121,9 @@ export class TapDetailsComponent implements OnInit {
   importData()
   {
     console.log(this.selectedFile);
+    if(this.selectedFile)
+    {
+      this.ImportedFile.emit(this.selectedFile);
+    }
   }
 }
