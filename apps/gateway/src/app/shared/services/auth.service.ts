@@ -239,8 +239,8 @@ export class AuthService {
     if (this.gratnedSystems.length == 1) {
       console.log(res.userGroups[0].roles[0].roleName);
       if (
-        res.userGroups[0].roles[0].roleName === 'ADMINS' ||
-        res.userGroups[0].roles[0].roleName === 'BUSINESS_USER'
+        res.userGroups[0].roles[0].roleName === 'ADMINS'
+        // res.userGroups[0].roles[0].roleName === 'BUSINESS_USER'
       ) {
         this.router.navigate(['users-setting']);
       } else {
