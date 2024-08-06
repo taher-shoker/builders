@@ -5,7 +5,7 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
@@ -16,6 +16,8 @@ import { LayoutModule } from './layout/layout.module';
 import { DetailsModule } from './views/details/details.module';
 import { WelcomePageModule } from './views/welcome-page/welcome-page.module';
 import { DatePipe } from '@angular/common';
+import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
+import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -52,6 +54,16 @@ export const provideTranslation = () => ({
       TranslateModule.forRoot(provideTranslation()),
      
     ]),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
     DatePipe,
   ],
   bootstrap: [AppComponent],
