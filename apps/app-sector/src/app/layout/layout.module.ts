@@ -6,9 +6,17 @@ import { HomeModule } from '../views/home/home.module';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { appRoutes } from '../app.routes';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 const components = [LayoutComponent, TopBannerComponent];
-const modules = [SharedModule, HomeModule, TranslateModule, RouterModule.forChild(appRoutes)];
+const modules = [
+  SharedModule,
+  HomeModule,
+  TranslateModule,
+  FormsModule,
+  ReactiveFormsModule,
+  RouterModule.forChild(appRoutes),
+];
 
 @NgModule({
   declarations: [...components],

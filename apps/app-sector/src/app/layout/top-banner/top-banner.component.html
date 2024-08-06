@@ -14,20 +14,19 @@
       @if (showScorecard) {
       <h1 class="py-2">{{ 'scorecard_report' | translate }}</h1>
       <stc-apps-result-score
-        [percentage]="74.91"
-        [title]="title"
+        [percentage]="overallScore?.score ?? 74.91"
+        [title]="overallScore?.scorecardTitle ?? title"
       ></stc-apps-result-score>
-      }
-      @else {
-        <h2 class="details-title">Details for STC KSA Epit</h2>
+      } @else {
+      <h2 class="details-title">Details for STC KSA Epit</h2>
       }
     </div>
   </div>
   @if (showScorecard) {
   <div class="col-md-6 col-sm-12">
-    <div class="banner_filter">
+    <div class="banner_filter" [formGroup]="form">
       <stc-apps-select-drop-down
-        formControlName="dateType"
+        formControlName="year"
         [label]="''"
         [matLabel]="'Select Year'"
         [options]="yearsArray"
