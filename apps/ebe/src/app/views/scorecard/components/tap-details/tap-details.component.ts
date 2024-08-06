@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
+import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
 interface filterOption
 {
   month:number;
@@ -41,7 +42,8 @@ interface filterOption
     MatFormFieldModule,
     MatSelectModule,
     DialogModule,
-    FileUploadInputComponent
+    FileUploadInputComponent,
+    EditModeViewComponent
   ],
   templateUrl: './tap-details.component.html',
   styleUrl: './tap-details.component.scss',
@@ -125,5 +127,25 @@ export class TapDetailsComponent implements OnInit {
     {
       this.ImportedFile.emit(this.selectedFile);
     }
+  }
+  downloadTemplate()
+  {
+    const tabName = this.currentClickedTap().name;
+    const month = this.monthValue?.value;
+    const year = this.yearValue?.value;
+    this.scorecardService.downloadTemplate(tabName , month , year).subscribe({
+      next : (response) => {
+        this.downloadFile(response, `${tabName}.csv`);
+      }
+    })
+  }
+  downloadFile(data: string, filename: string) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }

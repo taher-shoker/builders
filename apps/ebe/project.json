@@ -43,6 +43,28 @@
               "maximumError": "4kb"
             }
           ],
+          "fileReplacements": [
+            {
+              "replace": "apps/ebe/src/environments/environment.ts",
+              "with": "apps/ebe/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/ebe/src/environments/environment.ts",
+              "with": "apps/ebe/src/environments/environment.stage.ts"
+            }
+          ],
           "outputHashing": "all"
         },
         "development": {

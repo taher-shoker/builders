@@ -1,21 +1,9 @@
 <section class="financial-scorecard">
   @if(currentMode() === 'editMode') {
-  <div class="financial-scorecard-edit-mode">
-    <!-- <input type="file" hidden #uploader (change)="getUploadedFile($event)" /> -->
-    <button
-      class="financial-scorecard-edit-mode-button import-btn"
-      (click)="showDialog()"
-    >
-      <!-- (click)="uploader.click()" -->
-      <img src="assets/images/upload-solid.svg" />
-      <span>import</span>
-    </button>
-    <button class="financial-scorecard-edit-mode-button">
-      <img src="assets/images/download-solid.svg" />
-      <span>export</span>
-    </button>
-    <!-- {{currentClickedTap().name}} -->
-  </div>
+    <stc-apps-edit-mode-view 
+      (import)="showDialog()"
+      (export)="downloadTemplate()"
+    />
   } 
   <form
   class="financial-scorecard-header-dropdowns justify-content-end"

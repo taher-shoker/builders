@@ -2,16 +2,17 @@ import { inject, Injectable } from '@angular/core';
 import {
   NavLinks,
   ScorecardModel,
-  ScorecardTaps
+  ScorecardTaps,
 } from '../models/scorecard.model';
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class ScorecardService {
-  private currMode:BehaviorSubject<'editMode' | 'viewMode'> = new BehaviorSubject<'editMode' | 'viewMode'>('viewMode')
+  private currMode: BehaviorSubject<'editMode' | 'viewMode'> =
+    new BehaviorSubject<'editMode' | 'viewMode'>('viewMode');
   http = inject(HttpClient);
-  private readonly scorecardsTaps:ScorecardTaps[] = [
+  private readonly scorecardsTaps: ScorecardTaps[] = [
     {
       id: 1,
       name: 'financial',
@@ -33,52 +34,57 @@ export class ScorecardService {
       name: 'corporate priorities',
     },
   ];
-  private readonly navItems:NavLinks[] = [
+  private readonly navItems: NavLinks[] = [
     {
-      id : 1,
+      id: 1,
       name: 'scorecard',
       url: '/scorecard',
     },
     {
-      id : 2,
+      id: 2,
       name: 'CAD strategy program',
       url: '/strategy-program',
     },
     {
-      id : 3,
+      id: 3,
       name: 'raqami',
       url: '/raqami',
     },
     {
-      id : 4,
+      id: 4,
       name: 'PSR',
       url: '/psr',
     },
   ];
-  getScorecardsTaps():ScorecardTaps[]
-  {
+  getScorecardsTaps(): ScorecardTaps[] {
     return this.scorecardsTaps;
   }
-  getNavLinks():NavLinks[]
-  {
+  getNavLinks(): NavLinks[] {
     return this.navItems;
   }
-  getScorecardData(groupName:string , month:number , year:number):Observable<ScorecardModel[]>
-  {
-    return this.http.get<ScorecardModel[]>(`${environment.apiUrl}/business-excellence/scorecards?month=${month}&year=${year}&group=${groupName}`)
+  getScorecardData(groupName: string, month: number, year: number): Observable<ScorecardModel[]> {
+    return this.http.get<ScorecardModel[]>(
+      `${environment.apiUrl}/business-excellence/scorecards?month=${month}&year=${year}&group=${groupName}`
+    );
   }
-  setEditMode(mode:'editMode' | 'viewMode')
-  {
+  setEditMode(mode: 'editMode' | 'viewMode') {
     this.currMode.next(mode);
   }
-  getCurrentMode():BehaviorSubject<'editMode' | 'viewMode'>
-  {
-    return this.currMode
+  getCurrentMode(): BehaviorSubject<'editMode' | 'viewMode'> {
+    return this.currMode;
   }
-  uploadFile(selectedFile:any):Observable<any>
-  {
+  uploadFile(selectedFile: any): Observable<any> {
     const formData = new FormData();
     formData.append('multipartFile', selectedFile, selectedFile.name);
-    return this.http.post<any>(`${environment.apiUrl}/business-excellence/scorecards/upload` , formData)
+    return this.http.post<any>(
+      `${environment.apiUrl}/business-excellence/scorecards/upload`,
+      formData
+    );
+  }
+  downloadTemplate(tabName: string , month:number , year:number): Observable<string> { //scoreCard
+    return this.http.get<string>(
+      `${environment.apiUrl}/business-excellence/scorecards/download?month=${month}&year=${year}&group=${tabName}`,
+      { observe: 'body', responseType: 'text' as 'json' }
+    );
   }
 }
