@@ -223,7 +223,11 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       const step: Step = {
-        caption: this.handleRequestTaskName(res[i].taskName, res[i].status, res[i]) ,
+        caption: this.handleRequestTaskName(
+          res[i].taskName,
+          res[i].status,
+          res[i]
+        ),
         state: this.getStepStatus(res[i].status),
         notes: notes,
         // attachments: attachments,
@@ -241,29 +245,32 @@ export class DyReportDetailsComponent implements OnInit {
     return steps;
   }
 
-  handleRequestTaskName(taskName: string, status: string, task: ReportWorkflowStep): string{
-
+  handleRequestTaskName(
+    taskName: string,
+    status: string,
+    task: ReportWorkflowStep
+  ): string {
     let finalStr = '';
 
-    if(taskName === 'Edit or Delete Report Data' && status !== 'pending'){
-      if(task.requestTaskAttributes.length > 0){
-        for(const reqTask of task.requestTaskAttributes){
-          if(reqTask.name === 'delete' && reqTask.value === "false"){
-            finalStr = 'Edited'
+    if (taskName === 'Edit or Delete Report Data' && status !== 'pending') {
+      if (task.requestTaskAttributes.length > 0) {
+        for (const reqTask of task.requestTaskAttributes) {
+          if (reqTask.name === 'delete' && reqTask.value === 'false') {
+            finalStr = 'Edited';
             break;
           }
 
-          if(reqTask.name === 'delete' && reqTask.value === "true"){
-            finalStr = 'Deleted'
+          if (reqTask.name === 'delete' && reqTask.value === 'true') {
+            finalStr = 'Deleted';
             break;
           }
         }
       }
-    }else{
-      finalStr = taskName
+    } else {
+      finalStr = taskName;
     }
 
-    return finalStr
+    return finalStr;
   }
 
   mergeTwoArraysAndDistinguishPendingObject(
@@ -658,9 +665,5 @@ export class DyReportDetailsComponent implements OnInit {
       });
       return dialogRef.afterClosed();
     }
-  }
-
-  isDirector(): boolean {
-    return this.reportsService.checkIsDirector();
   }
 }

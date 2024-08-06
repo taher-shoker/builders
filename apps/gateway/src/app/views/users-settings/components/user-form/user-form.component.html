@@ -52,7 +52,8 @@
 
           <div class="col-md-5">
             <stc-apps-select-drop-down [Resetting]="true" [searchMode]="true" [label]="'User Delegate'"
-              formControlName="userDelegates" [options]="userDelegate" [selectId]="selectedDelegates || null">
+              formControlName="userDelegates" (selectChange)="updateUserDelegate($event)" [options]="userDelegate"
+              [selectId]="selectedDelegates || null">
             </stc-apps-select-drop-down>
           </div>
         </div>

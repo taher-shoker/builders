@@ -131,9 +131,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   onSubmit() {
     if (this.form.valid) {
-      console.log(this.form.value);
       let dataForm;
-
       // Check the current system
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         dataForm = {
@@ -224,7 +222,8 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.userService
           .addUserGroup(
             this.userId,
-            this.userService.getCurrentSystem() === 'DI_Milestones'
+            this.userService.getCurrentSystem() === 'DI_Milestones' ||
+              this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
               ? this.form.get('userGroups')?.value.id
               : this.form.get('teamDto')?.value,
             {},
@@ -254,31 +253,21 @@ export class UserFormComponent implements OnInit, OnChanges {
       .updateUser({ id: this.data.id, ...dataForm })
       .subscribe(() => onSuccess('User is edited successfully'), handleError);
   }
-
   /**
-   * Adds user group.
+   * Updates the user Delegate.
    */
-  addUserGroup(
-    onSuccess: (message: string) => void,
-    handleError: (error: unknown) => void
-  ) {
-    let queryParams = new HttpParams();
-    if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-      queryParams = queryParams.set('teamId', this.form.get('teamDto')?.value);
+  updateUserDelegate(value: User) {
+    if (this.addGroups) {
+      const delegates = [value.email];
+      this.userService
+        .updateUserDelegate(this.userId, delegates)
+        .subscribe((res) => {
+          if (!res) {
+            return;
+          }
+          // Additional logic can be added here if needed
+        });
     }
-    this.userService
-      .addUserGroup(
-        this.userId,
-        this.userService.getCurrentSystem() === 'DI_Milestones'
-          ? this.form.get('userGroups')?.value.id
-          : this.form.get('teamDto')?.value,
-        {},
-        queryParams
-      )
-      .subscribe(
-        () => onSuccess('User Group is added successfully'),
-        handleError
-      );
   }
 
   /**
@@ -383,11 +372,9 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.data?.userDelegates
       ) {
         const delegateEmail = this.data?.userDelegates?.[0]?.delegateName ?? '';
-        console.log(this.data);
         this.selectedDelegates = this.allUsers.find(
           (p: User) => p.email === delegateEmail
         );
-        console.log(this.selectedDelegates);
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id

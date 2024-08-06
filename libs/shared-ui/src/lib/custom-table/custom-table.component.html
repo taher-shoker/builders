@@ -8,22 +8,16 @@
           @if (sort && header.key !== 'actions') {
           <div class="arrows-holder">
             <div>
-              <i
-                class="ri-arrow-left-s-fill hashed-arrow"
-                [ngClass]="{
+              <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{
                   'active-arrow':
                     (currentSortedByColumn$ | async) === header.key &&
                     sortingDirection === 'asc'
-                }"
-              ></i>
-              <i
-                class="ri-arrow-right-s-fill hashed-arrow"
-                [ngClass]="{
+                }"></i>
+              <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{
                   'active-arrow':
                     (currentSortedByColumn$ | async) === header.key &&
                     sortingDirection === 'desc'
-                }"
-              ></i>
+                }"></i>
             </div>
           </div>
           }
@@ -33,23 +27,16 @@
     </tr>
 
     @if(itemsInView){
-    <ng-container
-      *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"></ng-container>
     }@else {
-    <ng-container
-      *ngTemplateOutlet="tableBody; context: { tableItems: items }"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: items }"></ng-container>
     }
   </tbody>
 </table>
 
 @if(paginate && length > 0){
-<stc-apps-paginator
-  [pageRows]="paginationConfig.pageCount"
-  [elementsLength]="length"
-  (paginationEvent)="raisePagination($event)"
-></stc-apps-paginator>
+<stc-apps-paginator [pageRows]="paginationConfig.pageCount" [elementsLength]="length"
+  (paginationEvent)="raisePagination($event)"></stc-apps-paginator>
 }
 
 <ng-template #tableBody let-tableItems="tableItems">
@@ -59,16 +46,14 @@
     @for(header of headers(); track header){ @if(header.type !== 'actions' &&
     header.type !== 'custom'){ @if(header.complexViewTemp){
     <td>
-      <ng-container
-        *ngTemplateOutlet="
+      <ng-container *ngTemplateOutlet="
           header.complexViewTemp;
           context: { header: header, item: item }
-        "
-      ></ng-container>
+        "></ng-container>
     </td>
     }@else {
 
-    <td>{{ header.type !== 'date' ?  item[header.key] :  item[header.key] | date }}</td>
+    <td>{{ header.type !== 'date' ? item[header.key] : item[header.key] | date }}</td>
     } } @else if(header.type === 'actions') {
 
     <td>
@@ -80,12 +65,13 @@
         </span>
         <mat-menu #menu="matMenu">
           <div class="menu-btns-wrapper">
-            <ng-container
-              *ngTemplateOutlet="
+
+            <ng-container *ngTemplateOutlet="
                 btnsTemp;
                 context: { header: header, item: item }
-              "
-            ></ng-container>
+              "></ng-container>
+
+
           </div>
         </mat-menu>
 
@@ -105,39 +91,46 @@
 
 <ng-template #btnsTemp let-header="header" let-item="item">
   <div class="details">
-    @for(action of header?.actions; track action; let i = $index){ @if(action
+    @if(header.complexViewTemp){
+    <ng-container *ngTemplateOutlet="
+            header.complexViewTemp;
+            context: { header: header, item: item }
+          "></ng-container>
+
+    }
+    @else {
+    @for(action of header?.actions; track action; let i = $index){
+
+    @if(action
     === 'edit' && !item.latestWorkflowId){
     <div class="edit-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-edit-box-line edit-icon"></i>
       Edit
     </div>
-    } @else if (action === 'delete' && !item.latestWorkflowId) {
+    }
+    @else if (action === 'delete' && !item.latestWorkflowId) {
 
-    <div
-      class="delete-option action-option"
-      (click)="raiseAction(action, item)"
-    >
+    <div class="delete-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-delete-bin-line"></i>
       Delete
     </div>
-    }@else if(action === 'details'){
+    }
+    @else if(action === 'details'){
 
-    <div
-      class="details-option action-option"
-      (click)="raiseAction(action, item)"
-    >
+    <div class="details-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-arrow-right-up-line"></i>
       Show Details
     </div>
-    }@else if(action === 'updateProgress' && !item.latestWorkflowId &&
+    }
+    @else if(action === 'updateProgress' && !item.latestWorkflowId &&
     item.status !== 'Planned' && item.status !== 'Completed'){
-    <div
-      class="update-option action-option"
-      (click)="raiseAction(action, item)"
-    >
+    <div class="update-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-arrow-left-right-line"></i>
       Update Progress
     </div>
-    } }
+    }
+    }
+
+    }
   </div>
 </ng-template>

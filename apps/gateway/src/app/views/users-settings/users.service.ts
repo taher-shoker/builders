@@ -58,6 +58,16 @@ export class UsersService {
     return this.http.put<User>(`${this.endpoint}/users`, data);
   }
 
+  updateUserDelegate(userId: number, data: string[]): Observable<User> {
+    return this.http.patch<User>(
+      `${this.endpoint}/users/delegates/${userId}`,
+      {
+        newDelegates: data,
+      },
+      { params: this.setSystemParam() }
+    );
+  }
+
   deleteUser(id: number): Observable<number> {
     return this.http.delete<number>(`${this.endpoint}/users/${id}`, {
       params: this.setSystemParam(),

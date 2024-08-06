@@ -26,6 +26,7 @@ import {
   ReportsService,
   PendingTask,
   Category,
+  ReportDetails,
 } from '../../dy-reports.service';
 
 export interface Milestone {
@@ -44,6 +45,7 @@ export interface Milestone {
 })
 export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
+  @ViewChild('actionsCustomTemplate') actionsCustomTemplate!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -149,8 +151,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
       {
         key: 'actions',
         type: 'actions',
-        actions: ['details', 'edit'],
+        actions: ['details', 'edit', 'delete'],
         label: '',
+        complexViewTemp: this.actionsCustomTemplate,
       },
     ];
   }
@@ -198,43 +201,33 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  tableAction(event: { value: string; dataRow: any }) {
-    if (event.value === 'edit') {
-      this.router.navigate(['./edit_report', event.dataRow.id], {
-        relativeTo: this.route,
-      });
-    } else if (event.value === 'delete') {
-      this.makeSureToDelete(event.dataRow.milestoneName).subscribe((res) => {
-        if (!res) {
-          return;
-        }
-        this.reportsService.deleteMilestone(event.dataRow.id).subscribe({
-          next: () => {
-            this.toastr.success('Deleted successfully');
-            this.getReports();
-          },
-          error: () => {
-            this.toastr.error('Something went wrong!');
-          },
-        });
-      });
-    } else if (event.value === 'details') {
-      this.detailsNavigate(event.dataRow);
-    } else if (event.value === 'updateProgress') {
-      this.openProgressUpdateModal(event.dataRow);
-    }
+  handelEditReport(id: number) {
+    this.router.navigate(['./edit_report', id], {
+      relativeTo: this.route,
+    });
   }
-
-  openProgressUpdateModal(rowData: Milestone) {
-    console.log('fd');
+  handelDeletReport(dataRow: ReportDetails) {
+    this.makeSureToDelete(dataRow.reportName).subscribe((res) => {
+      if (!res) {
+        return;
+      }
+      this.reportsService.deleteReport(dataRow.id).subscribe({
+        next: () => {
+          this.toastr.success('Deleted successfully');
+          this.getReports();
+        },
+        error: () => {
+          this.toastr.error('Something went wrong!');
+        },
+      });
+    });
   }
-
   makeSureToDelete(name: string) {
     {
       const dialogRef = this.matDialog.open(MessageDialogComponent, {
         width: '800px',
         data: {
-          msg: `You're about to Remove Milestone "${name}" Kindly note you can't roll back this action. Are you sure?`,
+          msg: `You're about to Remove Report "${name}" Kindly note you can't roll back this action. Are you sure?`,
         },
         disableClose: true,
       });
