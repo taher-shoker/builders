@@ -13,7 +13,6 @@ import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { AuthService } from 'apps/app-sector/src/app/shared/services/auth.service';
 import { CookieService } from 'ngx-cookie';
 import { newComment } from '../../../models/newComment';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -21,6 +20,7 @@ import { ConfirmationDialogeComponent } from 'apps/app-sector/src/app/shared/con
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
 import { comment } from '../../models/commentsModel';
+import { AuthService } from 'apps/app-sector/src/app/services/auth.service';
 
 @Component({
   selector: 'stc-apps-replies-section',
