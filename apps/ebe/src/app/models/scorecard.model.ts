@@ -38,4 +38,31 @@ export interface KpiModel
   ceiling:number;
   threshold:number;
 }
-
+export interface UserModel
+{
+  code:string;
+  result:string;
+  dto:{
+    passwordEncrypted:boolean;
+    username:string;
+    password:string;
+    displayName:string;
+    userTeam:string | null;
+    source:string;
+    userRole:{
+      id:number;
+      environmentName:string;
+    };
+    adminTechnical:boolean;
+    adminEnvironment:boolean;
+    adminOnHisEnvironment:boolean;
+    canAddUserEnvironment:boolean;
+    canDefinedMenu:boolean;
+    canCreateGroupedMenu:boolean;
+    id:number;
+    lastUsedToken:string;
+    activeAccount:boolean;
+    systems:[];
+    userGroupedMenusDTO:[];
+  }
+}

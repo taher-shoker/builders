@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
 import { CookieService } from 'ngx-cookie';
-import { NavLinks } from '../models/scorecard.model';
+import { NavLinks, UserModel } from '../models/scorecard.model';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -20,14 +20,25 @@ export class MainLayoutComponent implements OnInit{
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.navItems = this.scorecardService.getNavLinks();
+    this.getUserDetails()
     // this.userName = this.cookieService.get('USER_FULLNAME') || '';
     console.log(this.userName);
-    const token = this.cookieService.get("token")
-    if(token)
-    {
-      const username = this.decodeToken(token);
-      this.userName = username.sub;
-    }
+    // const token = this.cookieService.get("token")
+    // if(token)
+    // {
+    //   const username = this.decodeToken(token);
+    //   console.log(username)
+    //   this.userName = username.sub;
+    // }
+  }
+  private getUserDetails()
+  {
+    this.scorecardService.getCurrentUserInfo().subscribe({
+      next :(res:UserModel) => {
+        this.userName = res.dto.username;
+        this.scorecardService.setUsername(res.dto.displayName);
+      }
+    })
   }
   getCurrentMode(mode:'editMode' | 'viewMode')
   {

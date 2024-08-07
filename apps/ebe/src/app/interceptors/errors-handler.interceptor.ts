@@ -28,6 +28,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         if (err.status === 401) {
           if (err.error.status === 'UNAUTHORIZED') {
             // this.router.navigate(['/unauthorized-page']);
+            this.toastr.error(err?.error?.message);
           } else {
             // auto logout if 401 response returned from api
             this.cookieService.remove('token');

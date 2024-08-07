@@ -10,5 +10,6 @@ import { CommonModule } from '@angular/common';
 })
 export class PageHeaderComponent {
   mainTitle = input.required<string>();
+  username = input<string>();
   secondaryTitle = input<string>();
 }
