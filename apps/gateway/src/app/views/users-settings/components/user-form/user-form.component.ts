@@ -229,10 +229,14 @@ export class UserFormComponent implements OnInit, OnChanges {
             {},
             queryParams
           )
-          .subscribe(
-            () => onSuccess('User Group is added successfully'),
-            handleError
-          );
+          .subscribe(() => {
+            const email = this.form.get('userDelegates')?.value?.email;
+
+            if (email) {
+              this.updateUserDelegate(email);
+            }
+            onSuccess('User Group is added successfully');
+          }, handleError);
       } else {
         this.createUser(dataForm, onSuccess, handleError);
       }
@@ -256,9 +260,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   /**
    * Updates the user Delegate.
    */
-  updateUserDelegate(value: User) {
+  updateUserDelegate(value: string) {
     if (this.addGroups) {
-      const delegates = [value.email];
+      const delegates = [value];
       this.userService
         .updateUserDelegate(this.userId, delegates)
         .subscribe((res) => {
