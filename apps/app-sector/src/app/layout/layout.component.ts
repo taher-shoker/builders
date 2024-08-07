@@ -9,11 +9,14 @@ import { AuthService } from '../services/auth.service';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent implements OnInit {
+  scoreCardName = window.history.state.scoreCardName;
   constructor(
     private cookieService: CookieService,
     public router: Router,
     private authService: AuthService
-  ) {}
+  ) {
+    console.log('layout name', this.scoreCardName);
+  }
 
   urlHome = '/home';
   userName = '';

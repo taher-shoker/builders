@@ -9,7 +9,7 @@ export class WelcomePageService {
   constructor(private http: HttpClient) {}
   getUserSectors(): Observable<sectorsList> {
     return this.http.get<sectorsList>(
-      `${environment.apiUrl}v2/scrs/dashboard/sectors`
+      `${environment.apiUrl}v2/scrs/dashboard/user/sectors`
     );
   }
 }

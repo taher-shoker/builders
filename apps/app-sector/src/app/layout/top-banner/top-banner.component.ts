@@ -21,6 +21,7 @@ export class TopBannerComponent {
   kpiCode = '';
   currentUrl = '';
   userName: InputSignal<string> = input('');
+  scoreCardName: InputSignal<string> = input('');
   constructor(private activatedRoute: ActivatedRoute, private router: Router) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -28,9 +29,8 @@ export class TopBannerComponent {
         console.log('Current URL:', this.router.url);
         if (this.router.url.includes('/details')) {
           this.showScorecard = false;
-        }
-        else{
-          this.showScorecard=true;
+        } else {
+          this.showScorecard = true;
         }
       });
   }

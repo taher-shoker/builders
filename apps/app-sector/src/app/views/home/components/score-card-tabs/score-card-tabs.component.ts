@@ -8,7 +8,7 @@ import { Component, InputSignal, WritableSignal, input, signal } from '@angular/
 export class ScoreCardTabsComponent {
 
   selectedTab: WritableSignal<string> = signal('ApplicationSector');
-
+  scoreCardName: InputSignal<string> = input('');
   handleChangeTab(value: any) {
     this.selectedTab.set(value);
   }
