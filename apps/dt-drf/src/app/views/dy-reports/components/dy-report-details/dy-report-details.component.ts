@@ -9,6 +9,7 @@ import { AuthService } from 'apps/dt-drf/src/app/services/auth.service';
 import saveAs from 'file-saver';
 import {
   Actions,
+  MilestoneAttachment,
   ReportDetails,
   ReportFlowStatus,
   ReportsService,
@@ -179,8 +180,12 @@ export class DyReportDetailsComponent implements OnInit {
         this.datePipe.transform(displayDate, 'medium') || '';
 
       let byUser = '';
-      const userThatTaskIsPendingOn = res[i].username;
+      const userThatTaskIsPendingOn = res[i].userDisplayName;
       const actions: Actions[] = [];
+      let stepCustomState: 'danger' | 'edit' | '' = '';
+      const attachmentsIDs: string[] = [];
+      const attachments: MilestoneAttachment[] = [];
+
       if (res[i].status !== 'pending') {
         byUser = `By ${res[i].completedByName}`;
       }
@@ -190,10 +195,27 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       for (const taskAttribute of res[i].requestTaskAttributes) {
+        if (taskAttribute.name === 'attachments') {
+          attachmentsIDs.push(taskAttribute.value);
+        }
+
         if (taskAttribute.name === 'comment') {
           notes = taskAttribute.value;
-          break;
         }
+
+        if (taskAttribute.name === 'delete') {
+          if (taskAttribute.value === 'false') {
+            stepCustomState = 'edit';
+          } else if (taskAttribute.value === 'true') {
+            stepCustomState = 'danger';
+          }
+        }
+      }
+
+      for (const attachmentID of attachmentsIDs) {
+        this.reportsService.getAttachment(+attachmentID).subscribe((res) => {
+          attachments.push(res);
+        });
       }
 
       if (res[i].status === 'pending' && res[i].params?.length > 0) {
@@ -223,10 +245,16 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       const step: Step = {
-        caption: this.handleRequestTaskName(res[i].taskName, res[i].status, res[i]) ,
-        state: this.getStepStatus(res[i].status),
+        caption: this.handleRequestTaskName(
+          res[i].taskName,
+          res[i].status,
+          res[i]
+        ),
+        state: stepCustomState
+          ? stepCustomState
+          : this.getStepStatus(res[i].status),
         notes: notes,
-        // attachments: attachments,
+        attachments: attachments as any,
         extraInfo: [
           `${progressDate} ${
             byUser || 'Pending on ' + userThatTaskIsPendingOn
@@ -238,32 +266,36 @@ export class DyReportDetailsComponent implements OnInit {
       steps.push(step);
     }
 
+    console.log('Final res:', res);
     return steps;
   }
 
-  handleRequestTaskName(taskName: string, status: string, task: ReportWorkflowStep): string{
-
+  handleRequestTaskName(
+    taskName: string,
+    status: string,
+    task: ReportWorkflowStep
+  ): string {
     let finalStr = '';
 
-    if(taskName === 'Edit or Delete Report Data' && status !== 'pending'){
-      if(task.requestTaskAttributes.length > 0){
-        for(const reqTask of task.requestTaskAttributes){
-          if(reqTask.name === 'delete' && reqTask.value === "false"){
-            finalStr = 'Edited'
+    if (taskName === 'Edit or Delete Report Data' && status !== 'pending') {
+      if (task.requestTaskAttributes.length > 0) {
+        for (const reqTask of task.requestTaskAttributes) {
+          if (reqTask.name === 'delete' && reqTask.value === 'false') {
+            finalStr = 'Edited';
             break;
           }
 
-          if(reqTask.name === 'delete' && reqTask.value === "true"){
-            finalStr = 'Deleted'
+          if (reqTask.name === 'delete' && reqTask.value === 'true') {
+            finalStr = 'Deleted';
             break;
           }
         }
       }
-    }else{
-      finalStr = taskName
+    } else {
+      finalStr = taskName;
     }
 
-    return finalStr
+    return finalStr;
   }
 
   mergeTwoArraysAndDistinguishPendingObject(
@@ -325,9 +357,16 @@ export class DyReportDetailsComponent implements OnInit {
     }));
   }
 
-  getStepStatus(status: ReportFlowStatus): 'warning' | 'done' | 'undone' {
+  getStepStatus(
+    status: ReportFlowStatus
+  ): 'warning' | 'done' | 'undone' | 'edit' | 'danger' {
     const statusMap: {
-      [key in ReportFlowStatus]: 'warning' | 'done' | 'undone';
+      [key in ReportFlowStatus]:
+        | 'warning'
+        | 'done'
+        | 'undone'
+        | 'edit'
+        | 'danger';
     } = {
       breached: 'warning',
       rejected: 'warning',
@@ -348,6 +387,11 @@ export class DyReportDetailsComponent implements OnInit {
     ) {
       this.globalItem = action.item;
       this.handleStepperAction(action.actionObj.uniqueTitle, action.item);
+    } else if (
+      typeof action.actionObj === 'string' &&
+      action.actionObj === 'download'
+    ) {
+      this.downloadFile(action.item.id, action.item.label);
     }
   }
 
@@ -496,10 +540,6 @@ export class DyReportDetailsComponent implements OnInit {
       }
     );
   }
-
-  // downloadAttachment(id: number){
-  //   this.reportsService.downloadAttachment(id)
-  // }
 
   confirmAction(msg: string) {
     const dialogRef = this.matDialog.open(MessageDialogComponent, {

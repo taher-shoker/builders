@@ -255,7 +255,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           { name: 'delete', value: false },
           { name: 'description', value: this.form.get('description')?.value },
           {
-            name: 'attachment',
+            name: 'attachments',
             value: this.idsJoiner(this.form.get('attachments')?.value),
           },
           {

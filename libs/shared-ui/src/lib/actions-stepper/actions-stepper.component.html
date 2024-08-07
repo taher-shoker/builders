@@ -6,13 +6,19 @@
         class="step-head"
         [ngClass]="{
           'step-done': step.state === 'done',
-          'step-warning': step.state === 'warning'
+          'step-warning': step.state === 'warning',
+          'step-danger': step.state === 'danger',
+          'step-edit': step.state === 'edit'
         }"
       >
         @if (step.state === 'done') {
         <i class="ri-check-fill" style="color: white"></i>
         } @if (step.state === 'warning') {
         <span style="color: white">!</span>
+        } @if (step.state === 'edit') {
+        <i class="ri-edit-fill" style="color: white"></i>
+        } @if (step.state === 'danger') {
+          <i class="ri-close-line" style="color: white"></i>
         }
       </div>
     </div>
@@ -60,16 +66,17 @@
       >
       </ng-template>
       }
+      @if(step.actions){
+        <div class="d-flex action-btns">
+          @for(action of step.actions; track action){
+          <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
+            {{ action | displayCaption }}
+          </button>
+          }
+        </div>
+        }
     </div>
   </div>
 
-  @if(step.actions){
-  <div class="d-flex ms-3">
-    @for(action of step.actions; track action){
-    <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
-      {{ action | displayCaption }}
-    </button>
-    }
-  </div>
-  } }
+   }
 </div>

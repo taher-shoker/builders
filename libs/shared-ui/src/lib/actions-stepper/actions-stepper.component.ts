@@ -22,7 +22,7 @@ export interface Step {
   template?: string;
   caption: string;
   captionTemp?: boolean;
-  state: 'done' | 'undone' | 'warning';
+  state: 'done' | 'undone' | 'warning' | 'danger' | 'edit';
   actions?: string[] | Actions[];
   additionalTemp?: boolean;
   extraInfo?: string[];

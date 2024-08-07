@@ -75,6 +75,12 @@
 .step-warning {
   background-color: var(--stc-sunset-color);
 }
+.step-edit {
+  background-color: var(--stc-Sea-Color);
+}
+.step-danger {
+  background-color: var(--red-Color-dark);
+}
 
 .comment-prefix{
   color: grey;
@@ -86,4 +92,8 @@
   border-radius: 4px;
   color: white;
   padding: 12px;
+}
+
+.action-btns{
+  margin-left: -16px;
 }
