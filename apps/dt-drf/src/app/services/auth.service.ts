@@ -54,13 +54,13 @@ export class AuthService {
       .map((t: any) => {
         return t.groupName;
       })[0];
-    const fraudUser: LoggedUser = {
+    const mergedUser: LoggedUser = {
       roles: roles,
       teamName: teamName,
       ...user,
     };
-    this.loggedUserStream.next(fraudUser);
-    this.loggedInUser = fraudUser;
+    this.loggedUserStream.next(mergedUser);
+    this.loggedInUser = mergedUser;
   }
 
   isAdminUser() {

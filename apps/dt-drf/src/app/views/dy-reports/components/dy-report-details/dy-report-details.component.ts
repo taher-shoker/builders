@@ -699,8 +699,4 @@ export class DyReportDetailsComponent implements OnInit {
       return dialogRef.afterClosed();
     }
   }
-
-  isDirector(): boolean {
-    return this.reportsService.checkIsDirector();
-  }
 }

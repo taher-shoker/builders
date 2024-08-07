@@ -206,9 +206,7 @@ export class ReportsService {
     this.currentTeam = this.setUserTeams();
   }
 
-  isDTDirector!: boolean;
-  isBusinessSpoc!: boolean;
-  isDTAdmin!: boolean;
+  isProcessAdmin!: boolean;
 
   getCurrentSystem(): string {
     return JSON.parse(this.cookieService.get('granted-systems') || '')[0];
@@ -246,7 +244,7 @@ export class ReportsService {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.teams;
   }
-  getMilestoneUsersType(): Group[] {
+  getReportUsersType(): Group[] {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.userGroups;
   }
@@ -258,46 +256,22 @@ export class ReportsService {
    */
 
   userInGroup(role: string): boolean {
-    return this.getMilestoneUsersType().find((x) => x.groupName === role)
+    return this.getReportUsersType().find((x) => x.groupName === role)
       ? true
       : false;
   }
 
-  checkIsDirector() {
+  checkIsProcessAdmin() {
     if (
-      this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
-    ) {
-      this.isDTDirector = true;
-    } else {
-      this.isDTDirector = false;
-    }
-    return this.isDTDirector;
-  }
-
-  checkIsBusinessSpoc() {
-    if (
-      this.getMilestoneUsersType().find((x) => x.groupName === 'Business_SPOC')
-    ) {
-      this.isBusinessSpoc = true;
-    } else {
-      this.isBusinessSpoc = false;
-    }
-
-    return this.isBusinessSpoc;
-  }
-
-  checkIsAdmin() {
-    if (
-      this.getMilestoneUsersType().find(
-        (x) => x.groupName === 'DI_Milestones_Admins'
+      this.getReportUsersType().find(
+        (x) => x.groupName === 'System_Process_Admin'
       )
     ) {
-      this.isDTAdmin = true;
+      this.isProcessAdmin = true;
     } else {
-      this.isDTAdmin = false;
-      this.checkIsDirector;
+      this.isProcessAdmin = false;
     }
-    return this.isDTAdmin;
+    return this.isProcessAdmin;
   }
 
   createReportFlow(data: any) {
@@ -401,8 +375,8 @@ export class ReportsService {
     return this.http.patch(`${this.dtUrl}requests/${id}`, {}, options);
   }
 
-  deleteMilestone(id: string) {
-    return this.http.delete(`${this.dtUrl}/${id}`);
+  deleteReport(id: number) {
+    return this.http.delete(`${this.dtUrl}requests/${id}`);
   }
 
   getAssigneeTasks(userEmail: string) {
@@ -450,7 +424,7 @@ export class ReportsService {
   }
 
   downloadAttachment(id: number) {
-    return this.http.get(`${this.endpointAttachments}${id}/download`, {
+    return this.http.get(`${this.endpointAttachments}/${id}/download`, {
       responseType: 'blob',
     });
   }

@@ -253,6 +253,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       const params: RequestTaskAttributes = {
         requestParams: [
           { name: 'delete', value: false },
+          { name: 'report_name', value: this.form.get('reportName')?.value },
           { name: 'description', value: this.form.get('description')?.value },
           {
             name: 'attachments',
