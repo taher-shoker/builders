@@ -36,6 +36,9 @@ export class WelcomePageComponent implements OnInit {
   ];
   sectors: userSector[] = [];
   ngOnInit(): void {
+    this.getUserSectors();
+  }
+  getUserSectors() {
     this.welcomePageService
       .getUserSectors()
       .pipe(take(1))
