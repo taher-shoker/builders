@@ -10,7 +10,7 @@ export class DetailsCardComponent {
   description: InputSignal<string | any> = input('');
 
   isDescriptionString(): boolean {
-    return typeof this.description() === 'string';
+    return typeof this.description() === 'string' || typeof this.description()==='number';
   }
   checkForPrecentage(): boolean {
     if (typeof this.description() === 'string') {
