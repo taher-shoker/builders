@@ -23,13 +23,9 @@ import { SharedFormService } from '../../views/home/services/shared-form.service
 })
 export class TopBannerComponent implements OnInit {
   milestoneProgress: WritableSignal<number | null> = signal(74.91);
-<<<<<<< HEAD
   userName: InputSignal<string> = input('');
 
   scoreCardName: string = '';
-=======
-  scoreCardName: InputSignal<string> = input('');
->>>>>>> 7c1248b66c934786364f136b3406ecc1b93aa587
   showScorecard = true;
   title = 'Over all score';
   kpiCode = '';
@@ -45,19 +41,15 @@ export class TopBannerComponent implements OnInit {
 
   constructor(
     private router: Router,
-<<<<<<< HEAD
     private dashboardService: DashboardService,
-    private sharedFormService: SharedFormService
-=======
-    private fb: FormBuilder,
-    private dashboardService: DashboardService,
+    private sharedFormService: SharedFormService,
     private activatedRoute: ActivatedRoute
->>>>>>> 7c1248b66c934786364f136b3406ecc1b93aa587
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        console.log('Current URL:', this.router.url),this.activatedRoute.snapshot.paramMap.get('kpiName');
+        console.log('Current URL:', this.router.url),
+          this.activatedRoute.snapshot.paramMap.get('kpiName');
         if (this.router.url.includes('/details')) {
           this.showScorecard = false;
         } else {
