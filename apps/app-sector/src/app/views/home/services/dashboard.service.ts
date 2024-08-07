@@ -1,13 +1,16 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie';
 import { Observable, tap } from 'rxjs';
 import {
   OverallScore,
   OverallScoreParams,
 } from '../../models/overallScore.model';
 import { OverallScoreService } from './overall-score.service';
+import {
+  kpiDetailsResponse,
+  SectorKpisDetailsParams,
+} from '../../models/SectorKpisDetails.model';
 
 @Injectable({
   providedIn: 'root',
@@ -35,5 +38,20 @@ export class DashboardService {
           this.overallScoreService.setOverallScore(result);
         })
       );
+  }
+
+  getSectorKpisDetails(
+    params: SectorKpisDetailsParams
+  ): Observable<kpiDetailsResponse> {
+    const httpParams = new HttpParams()
+      .set('year', params.year)
+      .set('quarter', params.quarter)
+      .set('sectorName', params.sectorName)
+      .set('scorecardTitle', params.scorecardTitle);
+
+    return this.http.get<kpiDetailsResponse>(
+      this.baseUrl + '/v2/scrs/dashboard/sector/kpi-details',
+      { params: httpParams }
+    );
   }
 }

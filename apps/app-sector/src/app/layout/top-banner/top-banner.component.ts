@@ -9,11 +9,12 @@ import {
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
 import { DashboardService } from '../../views/home/services/dashboard.service';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 import {
   OverallScore,
   OverallScoreParams,
 } from '../../views/models/overallScore.model';
+import { SharedFormService } from '../../views/home/services/shared-form.service';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -22,12 +23,13 @@ import {
 })
 export class TopBannerComponent implements OnInit {
   milestoneProgress: WritableSignal<number | null> = signal(74.91);
-  scoreCardName: InputSignal<string> = input('');
-  showScorecard= true;
+  userName: InputSignal<string> = input('');
+
+  scoreCardName: string = '';
+  showScorecard = true;
   title = 'Over all score';
   kpiCode = '';
   currentUrl = '';
-  userName: InputSignal<string> = input('');
   form: FormGroup = new FormGroup({});
 
   currentDate = new Date();
@@ -38,8 +40,8 @@ export class TopBannerComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private fb: FormBuilder,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private sharedFormService: SharedFormService
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -53,17 +55,21 @@ export class TopBannerComponent implements OnInit {
       });
   }
   ngOnInit(): void {
+    this.scoreCardName = window.history.state.scoreCardName;
     this.handleForm();
     this.getOverallScore();
   }
 
   handleForm() {
-    this.form = this.fb.group({
-      year: this.fb.control(this.currentYear),
-      quarter: this.fb.control(this.currentQuarter),
-      sectorName: this.fb.control('Group Business Unit'),
-    });
+    this.form = this.sharedFormService.getForm();
+    const initialParams = {
+      year: this.currentYear.toString(),
+      quarter: this.currentQuarter.toString(),
+      sectorName: this.scoreCardName,
+    };
+    this.sharedFormService.initializeForm(initialParams);
   }
+
   yearsArray: any = [
     { name: 2020 },
     { name: 2021 },

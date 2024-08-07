@@ -3,7 +3,7 @@
     <div class="col-12">
       <stc-apps-panels-container></stc-apps-panels-container>
     </div>
-    @for (card of cards; track card) {
+    @for (card of kpiDTOList(); track card) {
     <div class="col-lg-4 col-md-6 col-sm-12">
       <mat-expansion-panel
         (opened)="panelOpenState = true"
@@ -12,18 +12,18 @@
         <mat-expansion-panel-header>
           <stc-apps-expansion-panel-header
             class="w-100"
-            [projectHeader]="card.projectHeader"
-            [kpisCode]='card.kpisCode'
-            [status]="card.status"
-            [function]="card.function"
+            [projectHeader]="card.kpiName"
+            [kpisCode]="card.kpiCode"
+            [status]="card.kpiStatus"
+            [function]="card.calculationFunction"
             [direction]="card.direction"
           ></stc-apps-expansion-panel-header>
         </mat-expansion-panel-header>
 
         <stc-apps-expansion-panel-body
-        class="mt-lg-0 mt-md-5"
-          [percentage]="card.percent"
-          [kpiCode]="card.kpisCode"
+          class="mt-lg-0 mt-md-5"
+          [percentage]="card.score"
+          [kpiCode]="card.kpiCode"
         ></stc-apps-expansion-panel-body>
       </mat-expansion-panel>
     </div>

@@ -1,13 +1,16 @@
 <div class="score-card-tabs py-4">
   <stc-apps-tabs
-  (changeSelectValue)="handleChangeTab($event)">
-  <stc-apps-tab value="ApplicationSector">Application sector</stc-apps-tab>
-  <stc-apps-tab value="CorporatePriorities">Corporate priorities</stc-apps-tab>
-</stc-apps-tabs>
+    ngDefaultControl
+    (changeSelectValue)="handleChangeTab($event); getSectorKpisDetails()"
+  >
+    @for (score of scores; track score) {
+    <stc-apps-tab [value]="score?.scorecardTitle">{{
+      score?.scorecardTitle
+    }}</stc-apps-tab>
+    }
+  </stc-apps-tabs>
 </div>
 
-@if (selectedTab() == 'ApplicationSector') {
-  <stc-apps-expansion-panel></stc-apps-expansion-panel> 
-} @else if (selectedTab() == 'CorporatePriorities') {
-  <h1>CorporatePriorities</h1>
+@if (selectedTab()) {
+<stc-apps-expansion-panel [kpiDTOList]="kpiDTOList"></stc-apps-expansion-panel>
 }
