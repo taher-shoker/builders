@@ -1,13 +1,20 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { WelcomePageService } from './services/welcomePage.service';
+import { take } from 'rxjs';
+import { sectorsList, userSector } from './models/userSector.model';
 
 @Component({
   selector: 'stc-apps-welcome-page',
   templateUrl: './welcome-page.component.html',
   styleUrl: './welcome-page.component.scss',
 })
-export class WelcomePageComponent {
-  constructor(private router: Router) {}
+export class WelcomePageComponent implements OnInit {
+  constructor(
+    private router: Router,
+    private welcomePageService: WelcomePageService
+  ) {}
+
   showItemDesc = false;
   hoverIndex = -1;
   listItems = [
@@ -27,6 +34,16 @@ export class WelcomePageComponent {
       scoreBoardDesc: '',
     },
   ];
+  sectors: userSector[] = [];
+  ngOnInit(): void {
+    this.welcomePageService
+      .getUserSectors()
+      .pipe(take(1))
+      .subscribe((response: sectorsList) => {
+        this.sectors = response.sectorsList;
+        console.log(response.sectorsList);
+      });
+  }
   onHover(i: number) {
     this.hoverIndex = i;
     if (i == -1) {
@@ -36,8 +53,8 @@ export class WelcomePageComponent {
     }
   }
   navigate(title: string) {
-    if (title == 'Application Sector') {
-      this.router.navigate(['/']);
-    }
+    this.router.navigate(['/'], {
+      state: { scoreCardName: title },
+    });
   }
 }

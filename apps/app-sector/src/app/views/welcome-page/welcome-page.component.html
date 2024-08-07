@@ -15,45 +15,7 @@
       <img src="/assets/images/brand/sidebar-logo.png" alt="" />
     </div>
   </div>
-  <!-- <div
-    class="score-card-options d-flex align-items-center justify-content-center"
-  > -->
-    <div class="col-lg-6 col-md-12 d-flex align-items-center justify-content-center">
-     <div class="score-card-options p-3">
-      <div class="score-card-options_header">
-        <p>Select one of Sector Dashboard</p>
-        <h2>Score Card</h2>
-      </div>
-      <div class="score-card-options_items w-100">
-        @for(listItem of listItems;track $index){
-        <div
-          (mouseenter)="onHover($index)"
-          (mouseleave)="onHover(-1)"
-          (click)="navigate(listItem.scoreBoardTitle)"
-          class="d-flex justify-content-between score-card-options_item mb-3"
-        >
-          <div class="item-content d-flex">
-            <div class="icon-bg position-relative">
-              <!-- <img src="/assets/images/Polygon 1.svg" alt="" /> -->
-              <div class="icon-img" [class.second-img]="$index === 1">
-                <img [class.first-img]="$index === 0" [src]="listItem.scoreBoardIconPath" alt="" />
-              </div>
-            </div>
-            <div>
-              <p class="list-item-title">{{ listItem.scoreBoardTitle }}</p>
-              @if(showItemDesc && hoverIndex==$index ){
-              <p class="list-item-desc">{{ listItem.scoreBoardDesc }}</p>
-              }
-            </div>
-          </div>
-          <div class="item-arrow">
-            <i class="fas fa-light fa-arrow-right"></i>
-          </div>
-        </div>
-
-        }
-      </div>
-     </div>
-    </div>
-  <!-- </div> -->
+  <div class="col-lg-6 col-md-12 d-flex align-items-end justify-content-center">
+    <stc-apps-user-score-cards [sectors]="sectors"></stc-apps-user-score-cards>
+  </div>
 </section>
