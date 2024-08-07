@@ -27,7 +27,7 @@
       <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
     </div>
     <div class="expansion-body_details mt-3">
-      <a [routerLink]="['/details',kpiCode()]">Details</a>
+      <a (click)="navigateToDetails()">Details</a>
     </div>
   </div>
 </div>

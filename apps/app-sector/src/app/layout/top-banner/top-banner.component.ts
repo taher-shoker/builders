@@ -23,7 +23,7 @@ import {
 export class TopBannerComponent implements OnInit {
   milestoneProgress: WritableSignal<number | null> = signal(74.91);
   scoreCardName: InputSignal<string> = input('');
-  showScorecard= true;
+  showScorecard = true;
   title = 'Over all score';
   kpiCode = '';
   currentUrl = '';
@@ -35,16 +35,18 @@ export class TopBannerComponent implements OnInit {
   currentMonth = this.currentDate.getMonth() + 1; // getMonth() returns 0-based month
   currentQuarter = Math.ceil(this.currentMonth / 3) - 2;
   overallScore!: OverallScore;
+  kpiName = '';
 
   constructor(
     private router: Router,
     private fb: FormBuilder,
-    private dashboardService: DashboardService
+    private dashboardService: DashboardService,
+    private activatedRoute: ActivatedRoute
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        console.log('Current URL:', this.router.url);
+        console.log('Current URL:', this.router.url),this.activatedRoute.snapshot.paramMap.get('kpiName');
         if (this.router.url.includes('/details')) {
           this.showScorecard = false;
         } else {

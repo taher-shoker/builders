@@ -1,12 +1,18 @@
-<div class="card" >
+<div
+  class="card"
+  [ngClass]="title() === 'Formula & Validation Notes' ? 'formula-height' : ''"
+>
   <h3 class="card_title">{{ title() }}</h3>
-  <div class="card_description"
-  [ngClass]="checkForPrecentage()?'puprleColor':''" 
+  <div
+    class="card_description"
+    [ngClass]="checkForPrecentage() ? 'puprleColor' : ''"
   >
-    @if (isDescriptionString()) {
-    {{ description() }}
-    } @else {
-    <ng-content></ng-content>
-    }
+    {{ description() === null ? '-' : description() }}
   </div>
 </div>
+
+<!-- @if (isDescriptionString() || description()===null) {
+  {{ description() === null ? '-' : description() }}
+  } @else {
+  <ng-content></ng-content>
+  } -->

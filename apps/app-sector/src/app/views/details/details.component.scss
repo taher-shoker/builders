@@ -13,21 +13,21 @@
     margin-bottom: 15px;
   }
 
-  &_content {
-    &_formula {
-      min-height: 380px;
-      h4 {
-        color: $semiBlackColor;
-      }
+  // &_content {
+  //   &_formula {
+  //     min-height: 380px;
+  //     h4 {
+  //       color: $semiBlackColor;
+  //     }
 
-      ul {
-        padding: 0;
+  //     ul {
+  //       padding: 0;
 
-        &:last-child {
-          list-style: disc;
-          padding: revert;
-        }
-      }
-    }
-  }
+  //       &:last-child {
+  //         list-style: disc;
+  //         padding: revert;
+  //       }
+  //     }
+  //   }
+  // }
 }

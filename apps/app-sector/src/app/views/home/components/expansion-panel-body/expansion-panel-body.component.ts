@@ -6,6 +6,7 @@ import {
   input,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
 
@@ -17,6 +18,7 @@ import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.c
 export class ExpansionPanelBodyComponent {
   percentage: InputSignal<number> = input(0);
   kpiCode: InputSignal<string> = input('');
+  kpiName: InputSignal<string> = input('');
   listItems = [
     {
       section: 'left',
@@ -61,4 +63,10 @@ export class ExpansionPanelBodyComponent {
 
     return data;
   });
+  constructor(private router: Router) {}
+  navigateToDetails() {
+    this.router.navigate(['/details'], {
+      state: { kpiCode: this.kpiCode() },
+    });
+  }
 }

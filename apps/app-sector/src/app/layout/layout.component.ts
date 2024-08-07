@@ -15,7 +15,7 @@ export class LayoutComponent implements OnInit {
     public router: Router,
     private authService: AuthService
   ) {
-    console.log('layout name', this.scoreCardName);
+    console.log('layout name');
   }
 
   urlHome = '/home';
