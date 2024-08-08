@@ -46,11 +46,11 @@ export class ScorecardService {
       name: 'scorecard',
       url: '/scorecard',
     },
-    // {
-    //   id: 2,
-    //   name: 'CAD strategy program',
-    //   url: '/strategy-program',
-    // },
+    {
+      id: 2,
+      name: 'CAD strategy program',
+      url: '/strategy-program',
+    },
     // {
     //   id: 3,
     //   name: 'raqami',
