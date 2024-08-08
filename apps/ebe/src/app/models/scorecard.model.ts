@@ -2,6 +2,7 @@ export interface ScorecardTaps
 {
   id : number;
   name : string;
+  value : string;
 }
 export interface NavLinks
 {

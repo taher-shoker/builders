@@ -17,22 +17,27 @@ export class ScorecardService {
     {
       id: 1,
       name: 'financial',
+      value : 'financial'
     },
     {
       id: 2,
       name: 'strategic',
+      value : 'strategic'
     },
     {
       id: 3,
       name: 'relational',
+      value : 'relational'
     },
     {
       id: 4,
       name: 'operational',
+      value : 'operational'
     },
     {
       id: 5,
       name: 'corporate priorities',
+      value : 'corporate'
     },
   ];
   private readonly navItems: NavLinks[] = [

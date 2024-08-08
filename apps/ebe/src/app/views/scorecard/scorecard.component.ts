@@ -62,12 +62,12 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   }
   getClickedTap(clickedTap: ScorecardTaps) {
     this.currentClickedTapData = clickedTap;
-    this.getScorecardData(clickedTap.name , this.filtersOptions.month , this.filtersOptions.year)
+    this.getScorecardData(clickedTap.value , this.filtersOptions.month , this.filtersOptions.year)
   }
   getFiltersOptions(options:FilteredOptions)
   {
     this.filtersOptions = options;
-    this.getScorecardData(this.currentClickedTapData.name , options.month , options.year);
+    this.getScorecardData(this.currentClickedTapData.value , options.month , options.year);
   }
   getImportedFile(e:FileModel)
   {
@@ -77,7 +77,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
         next : () => {
           if(this.child)
           {
-            this.getScorecardData(this.currentClickedTapData.name , this.filtersOptions.month , this.filtersOptions.year)
+            this.getScorecardData(this.currentClickedTapData.value , this.filtersOptions.month , this.filtersOptions.year)
             this.child.visible = false;
           }
         },
