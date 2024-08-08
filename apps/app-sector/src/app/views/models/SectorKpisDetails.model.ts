@@ -1,7 +1,10 @@
 import { OverallScoreParams } from './overallScore.model';
 
 //request models
-export interface SectorKpisDetailsBase extends OverallScoreParams {
+export interface SectorKpisDetailsBase {
+  sectorName: string;
+  year: string;
+  quarter: string;
   scorecardTitle: string;
 }
 
@@ -22,6 +25,11 @@ export interface KeyFilter {
   sectorGroup: string;
   yearNum: string;
   quarterNum: string;
+  scorecardTitle: string;
+}
+
+export interface KpiDTOMap {
+  [key: string]: KpiDTO[];
 }
 
 export interface KpiDTO {
@@ -36,7 +44,7 @@ export interface KpiDTO {
   actualPerf: number;
   appliedPerf: number;
   actualValue: number;
-  unit: string;
+  unit: number;
   target: number;
   ceiling: number;
   definition: string;
@@ -51,9 +59,26 @@ export interface KpiDTO {
   reportingPeriod: string;
   vtdCalculation: string;
   formula: string;
+  commentList: string[] | null;
+  attachementList: string[] | null;
 }
 
-export interface kpiDetailsResponse {
+// API Response Model
+export interface KpiDetailsResponse {
   keyFilter: KeyFilter;
-  kpiDTOList: KpiDTO[];
+  kpiDTOMap: {
+    [key: string]: KpiDTO[];
+  };
+}
+
+// Define the structure of listItems
+
+export interface ListItem {
+  label: string;
+  value: number;
+}
+
+export interface Section {
+  section: string;
+  items: ListItem[];
 }

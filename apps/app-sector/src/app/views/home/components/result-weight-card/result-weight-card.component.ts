@@ -19,7 +19,6 @@ export class ResultWeightCardComponent implements OnInit {
   getOverallScore() {
     this.overallScoreService.overallScore$.subscribe((result) => {
       if (result) {
-        console.log(result);
         this.scores = result.filter(
           (item) => item.scorecardTitle !== 'Overall'
         );

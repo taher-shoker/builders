@@ -9,6 +9,7 @@ import {
 import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
+import { Section } from '../../../models/SectorKpisDetails.model';
 
 @Component({
   selector: 'stc-apps-expansion-panel-body',
@@ -19,22 +20,8 @@ export class ExpansionPanelBodyComponent {
   percentage: InputSignal<number> = input(0);
   kpiCode: InputSignal<string> = input('');
   kpiName: InputSignal<string> = input('');
-  listItems = [
-    {
-      section: 'left',
-      items: [
-        { label: 'Weight:', value: '15%' },
-        { label: 'Unit:', value: '%' },
-      ],
-    },
-    {
-      section: 'right',
-      items: [
-        { label: 'Actual perf%:', value: '87.69 %' },
-        { label: 'Applied perf%:', value: '87.69 %' },
-      ],
-    },
-  ];
+  listItems: InputSignal<Section[] | any> = input([]);
+
   reportData: WritableSignal<any | undefined> = signal(undefined);
   progressBarData = computed(() => {
     let data: ProgressInfo;

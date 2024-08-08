@@ -9,8 +9,9 @@ import {
 import { OverallScore } from '../../../models/overallScore.model';
 import { OverallScoreService } from '../../services/overall-score.service';
 import {
-  kpiDetailsResponse,
+  KpiDetailsResponse,
   KpiDTO,
+  KpiDTOMap,
   SectorKpisDetailsParams,
 } from '../../../models/SectorKpisDetails.model';
 import { SharedFormService } from '../../services/shared-form.service';
@@ -24,8 +25,11 @@ import { DashboardService } from '../../services/dashboard.service';
 export class ScoreCardTabsComponent implements OnInit {
   selectedTab: WritableSignal<string> = signal('Corporate Priorities');
   scoreCardName: InputSignal<string> = input('');
+
   scores: OverallScore[] = [];
-  kpiDTOList: KpiDTO[] = [];
+
+  kpiDTOMap: KpiDTOMap = {};
+  categoryKpiLists: { [key: string]: KpiDTO[] } = {};
 
   constructor(
     private overallScoreService: OverallScoreService,
@@ -39,6 +43,7 @@ export class ScoreCardTabsComponent implements OnInit {
 
   handleChangeTab(value: any) {
     this.selectedTab.set(value);
+    this.getSectorKpisDetails();
   }
 
   getOverallScore() {
@@ -62,10 +67,12 @@ export class ScoreCardTabsComponent implements OnInit {
 
     this.dashboardService
       .getSectorKpisDetails(params)
-      .subscribe((result: kpiDetailsResponse) => {
-        console.log(result);
+      .subscribe((result: KpiDetailsResponse) => {
         if (result) {
-          this.kpiDTOList = result.kpiDTOList;
+          this.kpiDTOMap = result.kpiDTOMap;
+          Object.keys(this.kpiDTOMap).forEach((category) => {
+            this.categoryKpiLists[category] = this.kpiDTOMap[category];
+          });
         }
       });
   }

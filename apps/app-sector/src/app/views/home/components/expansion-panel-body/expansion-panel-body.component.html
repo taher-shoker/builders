@@ -3,7 +3,7 @@
     <stc-apps-result-score [percentage]="percentage()"></stc-apps-result-score>
   </div>
   <div class="row">
-    @for (section of listItems; track section) {
+    @for (section of listItems(); track section) {
     <div
       class="col-sm-12 col-lg-12"
       [ngClass]="{
@@ -17,7 +17,7 @@
         @for (item of section.items; track item) {
         <li>
           <label>{{ item.label }}</label>
-          <span>{{ item.value }}</span>
+          <span>{{ item.value | percent }}</span>
         </li>
         }
       </ul>

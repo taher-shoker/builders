@@ -8,7 +8,7 @@ import {
 } from '../../models/overallScore.model';
 import { OverallScoreService } from './overall-score.service';
 import {
-  kpiDetailsResponse,
+  KpiDetailsResponse,
   SectorKpisDetailsParams,
 } from '../../models/SectorKpisDetails.model';
 
@@ -42,14 +42,14 @@ export class DashboardService {
 
   getSectorKpisDetails(
     params: SectorKpisDetailsParams
-  ): Observable<kpiDetailsResponse> {
+  ): Observable<KpiDetailsResponse> {
     const httpParams = new HttpParams()
       .set('year', params.year)
       .set('quarter', params.quarter)
       .set('sectorName', params.sectorName)
       .set('scorecardTitle', params.scorecardTitle);
 
-    return this.http.get<kpiDetailsResponse>(
+    return this.http.get<KpiDetailsResponse>(
       this.baseUrl + '/v2/scrs/dashboard/sector/kpi-details',
       { params: httpParams }
     );

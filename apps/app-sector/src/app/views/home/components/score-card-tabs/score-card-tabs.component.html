@@ -1,8 +1,5 @@
 <div class="score-card-tabs py-4">
-  <stc-apps-tabs
-    ngDefaultControl
-    (changeSelectValue)="handleChangeTab($event); getSectorKpisDetails()"
-  >
+  <stc-apps-tabs ngDefaultControl (changeSelectValue)="handleChangeTab($event)">
     @for (score of scores; track score) {
     <stc-apps-tab [value]="score?.scorecardTitle">{{
       score?.scorecardTitle
@@ -12,5 +9,7 @@
 </div>
 
 @if (selectedTab()) {
-<stc-apps-expansion-panel [kpiDTOList]="kpiDTOList"></stc-apps-expansion-panel>
+<stc-apps-expansion-panel
+  [kpiDTOList]="categoryKpiLists"
+></stc-apps-expansion-panel>
 }

@@ -14,9 +14,7 @@ export class LayoutComponent implements OnInit {
     private cookieService: CookieService,
     public router: Router,
     private authService: AuthService
-  ) {
-    console.log('layout name');
-  }
+  ) {}
 
   urlHome = '/home';
   userName = '';
@@ -51,7 +49,7 @@ export class LayoutComponent implements OnInit {
         this.userName = res?.name || '';
       });
     }
-    console.log(this.userName, 'hi');
+    // console.log(this.userName, 'hi');
   }
 
   backToHome() {
