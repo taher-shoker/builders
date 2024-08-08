@@ -1,13 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  kpiCard,
-  kpiDetails,
-  kpiDetailsParams,
-  kpiDetailsResponse,
-} from './models/kpiDetailsModel';
+import { kpiCard, kpiDetailsParams } from './models/kpiDetailsModel';
 
 import { kpiInfoService } from '../../services/kpi-info.service';
-
+import { KpiDTOMap } from '../models/SectorKpisDetails.model';
+import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
@@ -17,7 +13,10 @@ export class DetailsComponent implements OnInit {
   currentDate = new Date();
   kpiCode = window.history.state.kpiCode;
   cards: kpiCard[] = [];
-  constructor(private kpiDetailsService:kpiInfoService ) {}
+  kpiDTOMap: KpiDTOMap = {};
+  categoryKpiLists: { [key: string]: KpiDTO[] } = {};
+
+  constructor(private kpiDetailsService: kpiInfoService) {}
 
   ngOnInit(): void {
     this.getKpiDetails();
@@ -30,11 +29,15 @@ export class DetailsComponent implements OnInit {
       scorecardTitle: 'Group Business Unit',
       kpiCode: 'GBU-13',
     };
-    this.kpiDetailsService.getKpiDetails(params).subscribe((result: kpiDetailsResponse) => {
-      this.addingCardsDescriptions(result.kpiDTOList[0]);
+    this.kpiDetailsService.getKpiDetails(params).subscribe((result: any) => {
+      this.kpiDTOMap = result.kpiDTOMap;
+      Object.keys(this.kpiDTOMap).forEach((category) => {
+        this.categoryKpiLists[category] = this.kpiDTOMap[category];
+        this.addingCardsDescriptions(this.categoryKpiLists[category][0]);
+      });
     });
   }
-  addingCardsDescriptions(kpiObject: kpiDetails) {
+  addingCardsDescriptions(kpiObject: KpiDTO) {
     this.cards = [
       {
         title: 'Definition',

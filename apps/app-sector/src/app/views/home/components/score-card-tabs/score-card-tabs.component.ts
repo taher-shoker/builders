@@ -39,6 +39,7 @@ export class ScoreCardTabsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOverallScore();
+    this.getSectorKpisDetails();
   }
 
   handleChangeTab(value: any) {

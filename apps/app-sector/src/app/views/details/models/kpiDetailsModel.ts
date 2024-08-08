@@ -7,17 +7,17 @@ export interface kpiDetailsParams {
 }
 export interface kpiCard {
   title: string;
-  description: string;
+  description: string | null;
   class: string;
 }
-export interface kpiDetailsResponse{
-  keyFilter:keyFilter;
-  kpiDTOList:kpiDetails[];
+export interface kpiDetailsResponse {
+  keyFilter: keyFilter;
+  kpiDTOList: kpiDetails[];
 }
-export interface keyFilter{
-  sectorGroup:string;
-  yearNum:number;
-  quarterNum:string;
+export interface keyFilter {
+  sectorGroup: string;
+  yearNum: number;
+  quarterNum: string;
 }
 export interface kpiDetails {
   definition: string;
@@ -25,10 +25,10 @@ export interface kpiDetails {
   custodianTitle: string;
   validationAuthority: string;
   subscorecardTitle: string;
-  scorecardTitle:string;
+  scorecardTitle: string;
   calculationFunction: string;
   dataSource: string;
-  direction:string;
+  direction: string;
   custodianEmail: string;
   reportingFrequency: string;
   reportingPeriod: string;
