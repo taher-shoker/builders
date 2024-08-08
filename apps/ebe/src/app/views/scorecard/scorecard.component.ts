@@ -28,6 +28,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   scorecardService = inject(ScorecardService);
   @ViewChild(TapDetailsComponent) child?: TapDetailsComponent;
   username!:string;
+  currYear = new Date().getFullYear()
   ngOnInit(): void {
     this.scorecardsTaps = this.scorecardService.getScorecardsTaps();
     this.currentClickedTapData = this.scorecardsTaps[0];

@@ -36,7 +36,11 @@ export class ErrorInterceptor implements HttpInterceptor {
         } else if (err.status === 403) {
           //this.authService.logout();
           // this.router.navigate(['/unauthorized-page']);
-        } else {
+        }  else if (err.status === 500) {
+          //this.authService.logout();
+          // this.router.navigate(['/unauthorized-page']);
+          this.toastr.error('Internal Server Error');
+        }else {
           this.toastr.error(
             err?.error?.debugMessage
               ? err?.error?.debugMessage

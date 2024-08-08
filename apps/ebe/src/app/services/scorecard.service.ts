@@ -93,11 +93,19 @@ export class ScorecardService {
       formData
     );
   }
-  downloadTemplate(tabName: string , month:number , year:number): Observable<string> { //scoreCard
-    return this.http.get<string>(
-      `${environment.apiUrl}/business-excellence/scorecards/download?month=${month}&year=${year}&group=${tabName}`,
-      { observe: 'body', responseType: 'text' as 'json' }
-    );
+  downloadTemplate(tabName?: string , month?:number , year?:number): Observable<string> {
+    if(tabName && month && year)
+    {
+      return this.http.get<string>(
+        `${environment.apiUrl}/business-excellence/scorecards/download?month=${month}&year=${year}&group=${tabName}`,
+        { observe: 'body', responseType: 'text' as 'json' }
+      );
+    } else {
+      return this.http.get<string>(
+        `${environment.apiUrl}/business-excellence/scorecards/download`,
+        { observe: 'body', responseType: 'text' as 'json' }
+      );
+    }
   }
   getCurrentUserInfo():Observable<UserModel>
   {

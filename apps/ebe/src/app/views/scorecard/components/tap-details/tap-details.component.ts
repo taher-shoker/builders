@@ -130,12 +130,12 @@ export class TapDetailsComponent implements OnInit {
   }
   downloadTemplate()
   {
-    const tabName = this.currentClickedTap().name;
-    const month = this.monthValue?.value;
-    const year = this.yearValue?.value;
-    this.scorecardService.downloadTemplate(tabName , month , year).subscribe({
+    // const tabName = this.currentClickedTap().name;
+    // const month = this.monthValue?.value;
+    // const year = this.yearValue?.value;
+    this.scorecardService.downloadTemplate().subscribe({
       next : (response) => {
-        this.downloadFile(response, `${tabName}.csv`);
+        this.downloadFile(response, `scorecards.csv`);
       }
     })
   }
