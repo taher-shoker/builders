@@ -110,10 +110,11 @@
                   (btnClick)="cancel()"></stc-apps-button>
               </div>
               <div class="col-md-6">
-                <stc-apps-button *ngIf="!isEditing && showInputs" [buttonText]="'Add user'" [buttonType]="'primary'"
-                  (btnClick)="onSubmit()"></stc-apps-button>
-                <stc-apps-button *ngIf="isEditing" [buttonText]="'Save'" [buttonType]="'primary'"
-                  (btnClick)="onSubmit()"></stc-apps-button>
+                <stc-apps-button [buttonText]="isEditing ? 'Save' : 'Add user'" [buttonType]="'primary'"
+                  (btnClick)="onSubmit()" [loading]="isSubmitLoader" *ngIf="showInputs">
+                </stc-apps-button>
+
+
               </div>
             </div>
           </div>

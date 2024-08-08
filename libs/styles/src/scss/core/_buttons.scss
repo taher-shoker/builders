@@ -38,6 +38,10 @@
 
   &.danger {
     background-color: #8c0808;
+    .loader {
+      border-color: $whiteColor !important;
+      border-bottom-color: transparent !important;
+    }
   }
   &.success {
     background-color: $stcGreenColor;
@@ -66,6 +70,10 @@
   &.danger-outline {
     color: $redColor;
     border: 1px solid $redColor;
+    .loader {
+      border-color: $redColor !important;
+      border-bottom-color: transparent !important;
+    }
   }
   i {
     padding-inline-end: 8px;

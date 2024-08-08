@@ -134,6 +134,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   filterSelect!: FormGroup;
+  isDeleteLoader = false;
   @ViewChild(MatSort, { static: true })
   sort!: MatSort;
   @ViewChild(MatPaginator, { static: true })
@@ -367,17 +368,28 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.router.navigate(['./edit-user', id], { relativeTo: this.route });
   }
   confirmDelete() {
-    this.userService.deleteUser(this.userId).subscribe((res) => {
-      const msgOfToaster =
-        this.languageManagerService.getSavedLanguage() == 'ar'
-          ? 'تم حذف المستخدم بنجاح'
-          : 'User is deleted successfully';
+    this.isDeleteLoader = true;
 
-      if (res) {
-        this.dialogService.close();
-        this.getUsersListing();
-        this.toastr.success(msgOfToaster);
-      }
+    this.userService.deleteUser(this.userId).subscribe({
+      next: (res) => {
+        if (res) {
+          const successMessage =
+            this.languageManagerService.getSavedLanguage() === 'ar'
+              ? 'تم حذف المستخدم بنجاح'
+              : 'User is deleted successfully';
+
+          this.isDeleteLoader = false;
+          this.dialogService.close();
+          this.getUsersListing();
+          this.toastr.success(successMessage);
+        }
+      },
+      error: (err) => {
+        this.isDeleteLoader = false;
+        // Handle error case if needed
+        console.error('Error deleting user:', err);
+        // Optionally, display an error message using toastr
+      },
     });
   }
 }

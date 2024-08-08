@@ -19,7 +19,7 @@
         </div>
       </div>
       <div class="row mt-7 align-items-center">
-        <div class="col-md-4 ">
+        <div class="col-md-3 ">
           <stc-apps-input [className]="'custom-input'" [inputId]="'slaDurationInDays'"
             (valueKeyDown)="preventComma($event)" [inputName]="'SLA Duration In Days'"
             formControlName="slaDurationInDays"></stc-apps-input>
@@ -30,8 +30,8 @@
           <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
             formControlName="needMoreDataFromCreator" [name]="'needMoreDataFromCreator'"></stc-apps-checkbox>
         </div>
-        <div class="col-md-2">
-          <stc-apps-checkbox *ngIf="form.get('needMoreDataFromCreator')?.value" [label]="'Should Approve'"
+        <div class="col-md-3">
+          <stc-apps-checkbox *ngIf="form.get('needMoreDataFromCreator')?.value" [label]="'Initiator Should Approve'"
             formControlName="initiatorShouldApprove" [name]="'initiatorShouldApprove'"></stc-apps-checkbox>
         </div>
         <div class="col-md-4" *ngIf="form.get('needMoreDataFromCreator')?.value">
@@ -54,15 +54,16 @@
                           ? 'error'
                           : ''
                       " (click)="uploadClick()">
-              <input [multiple]="true" #fileUpload class="file-input" type="file" (change)="handleUploadChange($event)"
-                name="attachments" hidden accept="{{ configService.getConfig().fileValidation.acceptType }}" />
+              <input [multiple]="true" #fileUpload class="file-input" type="file" (click)="handleUploadClick($event)"
+                (change)="handleUploadChange($event)" name="attachments" hidden
+                accept="{{ configService.getConfig().fileValidation.acceptType }}" />
               @if (errorType || errorSize) {
               <div class="text-center">
                 <img src="assets/images/file-uploader-error.png" alt="upload" />
                 <h4 class="error-file">Sorry !</h4>
                 @if (errorType) {
                 <p>
-                  Please ensure your file is in a supported format(csv)."
+                  Please ensure your file is in a supported format."
                 </p>
                 } @else {
                 <p>Please ensure your file is less than 20M. "</p>
@@ -75,12 +76,13 @@
                 <h4>Upload file,</h4>
                 <p>
                   be sure that the file
-                  format is csv file
+                  format is valid
                 </p>
               </div>
               }
-            </div>
+              <div *ngIf="isUploaderLoader" class="spinner"></div>
 
+            </div>
             <div class="error-file" *ngIf="
                         form.controls['attachments'].invalid &&
                         (form.controls['attachments'].dirty ||
@@ -152,7 +154,8 @@
             </div>
             <div class="col-md-6">
               <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Submit'" [buttonType]="'primary'"
-                (btnClick)="onSubmit()" [loading]="isSubmitLoading" [actionType]="'submit'"></stc-apps-button>
+                (btnClick)="onSubmit()" [buttonDisable]="isUploaderLoader" [loading]="isSubmitLoading"
+                [actionType]="'submit'"></stc-apps-button>
             </div>
           </div>
         </div>

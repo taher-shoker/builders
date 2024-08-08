@@ -111,12 +111,19 @@
     </ng-container>
     <tr class="mat-row" *matNoDataRow>
       <td class="mat-cell" [attr.colspan]="displayedColumns?.length">
+
         <div class="message-box">
-          <img src="../../assets/Group 590.png" alt="" />
+          <img src="assets/Group 590.png" alt="" />
+          @if(this.dataSource.filter){
+          <h3>{{ 'No users have found' }}</h3>
+
+          }@else {
           <h3>{{ 'No users yet' }}</h3>
           <p>{{ 'You didn&lsquo;t add any user yet, let&lsquo;s add new user' }}</p>
           <stc-apps-button [buttonText]="'Add new user'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
             (btnClick)="addUserNavigate()"></stc-apps-button>
+          }
+
         </div>
       </td>
     </tr>
@@ -168,11 +175,11 @@
       <div class="row mt-4">
         <div class="col-md-2"></div>
         <div class="col-md-5">
-          <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
+          <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
             (btnClick)="dialogService.close()"></stc-apps-button>
         </div>
         <div class="col-md-5">
-          <stc-apps-button [buttonText]="'delete user'" [buttonType]="'danger-outline'"
+          <stc-apps-button [buttonText]="'Delete User'" [loading]="isDeleteLoader" [buttonType]="'danger-outline'"
             (btnClick)="confirmDelete()"></stc-apps-button>
         </div>
       </div>

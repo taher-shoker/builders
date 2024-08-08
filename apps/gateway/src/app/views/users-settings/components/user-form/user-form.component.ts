@@ -50,6 +50,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   hideDropdown = false;
   userTeam = '';
   userId = 0;
+  isSubmitLoader = false;
 
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
@@ -90,28 +91,32 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
     }
   }
-
+  private noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { whitespace: true };
+  }
   initializeUserForm() {
     this.form = this.formBuilder.group({
-      email: new FormControl('', [Validators.required, Validators.email]),
-      name: new FormControl('', Validators.required),
-      jobTitle: new FormControl('', Validators.required),
-      userGroups: new FormControl(
+      email: ['', [Validators.required, Validators.email]],
+      name: ['', [Validators.required, this.noWhitespaceValidator]],
+      jobTitle: ['', [Validators.required, this.noWhitespaceValidator]],
+      userGroups: [
         '',
         this.userService.getCurrentSystem() === 'DI_Management'
           ? Validators.nullValidator
-          : Validators.required
-      ),
-      teamDto: new FormControl(
+          : Validators.required,
+      ],
+      teamDto: [
         [],
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
           ? Validators.nullValidator
-          : Validators.required
-      ),
-      userDelegates: new FormControl([]),
-      viewer: new FormControl(''),
-      editor: new FormControl(''),
-      pmo: new FormControl(''),
+          : Validators.required,
+      ],
+      userDelegates: [[]],
+      viewer: [''],
+      editor: [''],
+      pmo: [''],
     });
   }
 
@@ -132,6 +137,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   onSubmit() {
     if (this.form.valid) {
       let dataForm;
+      this.isSubmitLoader = true;
       // Check the current system
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         dataForm = {
@@ -193,12 +199,14 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
 
       const onSuccess = (message: string) => {
+        this.isSubmitLoader = false;
         this.toastr.success(message);
         this.form.reset();
         this.router.navigate(['./users-setting']);
       };
 
       const handleError = (error: unknown) => {
+        this.isSubmitLoader = false;
         console.error('Error:', error);
       };
 

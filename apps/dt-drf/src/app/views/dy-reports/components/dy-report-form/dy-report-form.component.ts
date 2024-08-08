@@ -50,6 +50,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   approvers: User[] = [];
   creators: User[] = [];
   uploadedFiles = new BehaviorSubject<{ id: number; label: string }[]>([]);
+  isUploaderLoader = false;
   isSubmitLoading = false;
   filteredOptions: Observable<User[]>[] = [];
   selectedOptions: string[] = [];
@@ -76,10 +77,21 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.loadInitialData();
     this.fetchDataOfReportAndEditIfExists();
   }
-
+  private noWhitespaceValidator(control: FormControl) {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { whitespace: true };
+  }
   private initForm() {
     this.form = this._formBuilder.group({
-      reportName: ['', [Validators.required, Validators.maxLength(100)]],
+      reportName: [
+        '',
+        [
+          Validators.required,
+          Validators.maxLength(100),
+          this.noWhitespaceValidator,
+        ],
+      ],
       description: [
         '',
         [
@@ -87,6 +99,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           Validators.maxLength(
             this.configService.getConfig().characterLimit.descriptionLength
           ),
+          this.noWhitespaceValidator,
         ],
       ],
       requestCategoryId: ['', Validators.required],
@@ -115,6 +128,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   private setupInitialFilteredOptions() {
     // Setup filtered options for each approval step
+    this.addNewStep();
     this.t.controls.forEach((control, index) => {
       this.manageUserNameControl(index);
     });
@@ -221,6 +235,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
   onSubmit() {
     if (this.form.invalid) {
+      console.log(this.form.controls);
       this.markFormGroupTouched(this.form);
       return;
     }
@@ -406,18 +421,27 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   uploadClick() {
     this.fileUpload.nativeElement.click();
   }
-
+  handleUploadClick(event: MouseEvent): void {
+    if (this.isUploaderLoader) {
+      event.preventDefault(); // Prevent the file dialog from opening
+      console.log('File selection prevented because uploader is not ready.');
+    }
+  }
   handleUploadChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const files = Array.from(inputElement.files || []);
-    if (files.length) {
-      this.uploadAndProgress(files);
+    if (this.isUploaderLoader) {
+      event.preventDefault();
+    } else {
+      const inputElement = event.target as HTMLInputElement;
+      const files = Array.from(inputElement.files || []);
+      if (files.length) {
+        this.uploadAndProgress(files);
+      }
     }
   }
 
   private uploadAndProgress(files: File[]) {
     let filesProcessed = 0;
-
+    this.isUploaderLoader = true;
     files.forEach((file) => {
       if (this.isFileValid(file)) {
         const formData = new FormData();
@@ -431,6 +455,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
             ]);
             filesProcessed++;
             if (filesProcessed === files.length) {
+              this.isUploaderLoader = false;
               this.form
                 .get('attachments')
                 ?.setValue(this.uploadedFiles.value.map(({ id }) => ({ id })));
