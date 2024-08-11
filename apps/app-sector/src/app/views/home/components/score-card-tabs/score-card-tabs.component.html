@@ -10,6 +10,7 @@
 
 @if (selectedTab()) {
 <stc-apps-expansion-panel
+  [newTabSelected]="selectedTabChanged"
   [kpiDTOList]="categoryKpiLists"
 ></stc-apps-expansion-panel>
 }

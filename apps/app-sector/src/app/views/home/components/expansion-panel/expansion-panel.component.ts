@@ -1,5 +1,17 @@
-import { Component, input, InputSignal } from '@angular/core';
+import {
+  AfterViewChecked,
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  effect,
+  input,
+  InputSignal,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { KpiDTO, Section } from '../../../models/SectorKpisDetails.model';
+import { MatExpansionPanel } from '@angular/material/expansion';
 
 @Component({
   selector: 'stc-apps-expansion-panel',
@@ -8,8 +20,17 @@ import { KpiDTO, Section } from '../../../models/SectorKpisDetails.model';
 })
 export class ExpansionPanelComponent {
   kpiDTOList: InputSignal<KpiDTO[] | any> = input([]);
-
+  @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
   panelOpenState = false;
+  newTabSelected: InputSignal<string> = input('');
+  constructor() {
+    effect(() => {
+      if (this.newTabSelected() !== '') {
+        console.log('called', this.newTabSelected());
+        this.closeAllPanels();
+      }
+    });
+  }
 
   getCategoryKeys(): string[] {
     const keys = Object.keys(this.kpiDTOList());
@@ -54,17 +75,20 @@ export class ExpansionPanelComponent {
       {
         section: 'left',
         items: [
-          { label: 'Weight:', value: Number(kpi.weight * 100) },
+          { label: 'Weight:', value: Number(kpi.weight) },
           { label: 'Unit:', value: Number(kpi.unit) },
         ],
       },
       {
         section: 'right',
         items: [
-          { label: 'Actual perf%:', value: kpi.actualPerf * 100 },
-          { label: 'Applied perf%:', value: kpi.appliedPerf * 100 },
+          { label: 'Actual perf%:', value: kpi.actualPerf },
+          { label: 'Applied perf%:', value: kpi.appliedPerf },
         ],
       },
     ];
+  }
+  closeAllPanels() {
+    this.panels?.forEach((panel) => panel.close());
   }
 }
