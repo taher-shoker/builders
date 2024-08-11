@@ -14,7 +14,7 @@
       @if (showScorecard) {
       <h1 class="py-2">{{ 'scorecard_report' | translate }}</h1>
       <stc-apps-result-score
-        [percentage]="overallScore?.score ?? 74.91"
+        [percentage]="overallScore?.score??0"
         [title]="overallScore?.scorecardTitle ?? title"
       ></stc-apps-result-score>
       } @else {

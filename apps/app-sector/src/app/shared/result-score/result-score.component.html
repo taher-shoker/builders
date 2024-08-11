@@ -18,11 +18,11 @@
         {{
           isIntegerNumber()
             ? percentage()
-            : (percentage() / 100 | percent : '1.2-2')
+            : (percentage()  | percent : '1.2-2')
         }}
       </h1>
       <stc-apps-progress-circle
-        [progressValue]="percentage() || 0"
+        [progressValue]="percentage()*100 || 0"
         progressSize="5rem"
         mainBgColor="var(--stc-sunset-color)"
         [showProgress]="false"
