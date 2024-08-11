@@ -52,7 +52,7 @@ export class ExpansionPanelBodyComponent {
   });
   constructor(private router: Router) {}
   navigateToDetails() {
-    this.router.navigate(['/details'], {
+    this.router.navigate(['/details', this.kpiName()], {
       state: { kpiCode: this.kpiCode() },
     });
   }
