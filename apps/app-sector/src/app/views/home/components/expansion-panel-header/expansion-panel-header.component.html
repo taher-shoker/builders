@@ -7,11 +7,9 @@
   <div class="w-100 d-flex justify-content-end">
     <div
       class="expansion_header_status"
-      [class]="
-        status() === 'On track' ? 'ontrackBackground' : 'delayedBackground'
-      "
+      [ngStyle]="{ 'background-color': statusBackground(status()) }"
     >
-      <p [ngClass]="status() === 'On track' ? 'ontrack' : 'delayed'">
+      <p [ngStyle]="{ color: statusColor(status()) }">
         {{ status() }}
       </p>
     </div>
@@ -23,7 +21,11 @@
   >
     <div class="direction-holder d-flex justify-content-between">
       <p>Direction : {{ direction() }}</p>
-      <img src="assets/images/direction-arrow.svg" alt="" />
+      <img
+        [class]="direction() === 'Decreasing' ? 'img-decreasing' : ''"
+        src="assets/images/direction-arrow.svg"
+        alt=""
+      />
     </div>
     <div class="function-holder">
       <p>Function : {{ function() }}</p>

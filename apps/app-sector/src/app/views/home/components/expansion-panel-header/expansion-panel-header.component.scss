@@ -1,15 +1,6 @@
 p {
   margin: 0;
 }
-
-.ontrackBackground {
-  background-color: rgba(0, 196, 140, 0.15);
-}
-
-.delayedBackground {
-  background-color: rgba(255, 26, 26, 0.1);
-}
-
 .expansion_header {
   width: 100%;
   font-family: var(--stc-font-base);
@@ -32,17 +23,9 @@ p {
     // width: 25%;
     border-radius: 6px;
     padding: 6px;
-
-    .ontrack {
-      color: var(--stcOasisColor);
-    }
-
-    .delayed {
-      color: var(--stc-red-color);
-    }
-
     p {
-      font-size: 16px;
+      font-size: 14px;
+      font-family: var(--stc-font-bold);
       font-weight: 700;
       text-align: center;
     }
@@ -53,6 +36,9 @@ p {
 
     .direction-holder {
       width: 53%;
+      .img-decreasing {
+        transform: rotateX(180deg);
+      }
     }
 
     .function-holder {
@@ -69,7 +55,6 @@ p {
         //  margin-right: 14px;
         font-weight: 300;
         font-size: 15px;
-
       }
     }
   }
@@ -101,7 +86,9 @@ p {
     }
   }
 
-  .mat-expansion-panel.mat-expanded .mat-expansion-panel-header .mat-expansion-indicator {
+  .mat-expansion-panel.mat-expanded
+    .mat-expansion-panel-header
+    .mat-expansion-indicator {
     border-color: var(--stc-pink-color);
     background-color: var(--stc-pink-color);
     color: var(--whiteColor);
