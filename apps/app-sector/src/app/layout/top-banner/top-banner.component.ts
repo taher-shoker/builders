@@ -1,4 +1,6 @@
 import {
+  AfterViewChecked,
+  ChangeDetectorRef,
   Component,
   InputSignal,
   OnInit,
@@ -25,7 +27,7 @@ export class TopBannerComponent implements OnInit {
   milestoneProgress: WritableSignal<number | null> = signal(74.91);
   userName: InputSignal<string> = input('');
 
-  scoreCardName: string = '';
+  scoreCardName = '';
   showScorecard = true;
   title = 'Over all score';
   kpiCode = '';
@@ -49,7 +51,9 @@ export class TopBannerComponent implements OnInit {
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
         console.log('Current URL:', this.router.url),
-          this.activatedRoute.snapshot.paramMap.get('kpiName');
+          (this.kpiName = this.router.url.split('/').pop() || '');
+        this.kpiName = this.kpiName.replace(/%20/g, ' ');
+        this.activatedRoute.snapshot.paramMap.get('kpiName');
         if (this.router.url.includes('/details')) {
           this.showScorecard = false;
         } else {

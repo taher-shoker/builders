@@ -14,7 +14,7 @@ export const appRoutes: Route[] = [
           import('./views/home/home.module').then((m) => m.HomeModule),
       },
       {
-        path: 'details',
+        path: 'details/:kpiName',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
       },
