@@ -34,8 +34,9 @@ import { CookieModule } from 'ngx-cookie';
 import { ReportingService } from './services/reporting.service';
 import { AppInitService } from './services/app-init.service';
 import { MatDialogModule } from '@angular/material/dialog';
-import { QuillModule } from 'ngx-quill'
+import { QuillModule } from 'ngx-quill';
 import { QuillConfigModule } from 'ngx-quill/config';
+import { ConfigService } from './services/config.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -82,7 +83,7 @@ export function initializeApp(appInitService: AppInitService) {
     //     toolbar: [...]
     //   }
     // })
-    QuillModule.forRoot()
+    QuillModule.forRoot(),
   ],
   providers: [
     AppInitService,
@@ -105,6 +106,14 @@ export function initializeApp(appInitService: AppInitService) {
       provide: APP_INITIALIZER,
       useFactory: () => initializeApp,
       deps: [AppInitService, ReportingService],
+      multi: true,
+    },
+    ConfigService,
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (configService: ConfigService) => () =>
+        configService.loadConfig(),
+      deps: [ConfigService],
       multi: true,
     },
   ],

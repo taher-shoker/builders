@@ -3,9 +3,13 @@
 import { Component, Inject, Signal, computed, signal } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import {  MilestoneAttachment, MilestonesService } from '../../milestones.service';
+import {
+  MilestoneAttachment,
+  MilestonesService,
+} from '../../milestones.service';
 import * as saveAs from 'file-saver';
 import { Actions } from 'apps/dtmv/src/app/services/models/milestones.models';
+import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
 
 @Component({
   selector: 'stc-apps-update-milestone-progress-dialog',
@@ -51,8 +55,10 @@ export class UpdateMilestoneProgressDialogComponent {
       type: string;
       milestoneName: string;
       milestoneId: number | string;
-      showAttachment: boolean
+      showAttachment: boolean;
     },
+    public configService: ConfigService,
+
     private milestonesService: MilestonesService
   ) {
     this.milestoneName.set(data.milestoneName);
@@ -86,16 +92,6 @@ export class UpdateMilestoneProgressDialogComponent {
   isLoading = false;
   uploadedFile: any[] = [];
   attachmentsIDs: string[] = []; // should be like 1,2,5,22 (comma separated)
-
-  acceptedExtensions = [
-    'image/png',
-    'image/jpeg',
-    'image/jpg',
-    'application/pdf',
-    'text/csv',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-excel',
-  ];
 
   onUploadFile(files: string | any[]) {
     this.isLoading = true;
@@ -159,5 +155,4 @@ export class UpdateMilestoneProgressDialogComponent {
   cancel() {
     this.dialogRef.close(undefined);
   }
-
 }
