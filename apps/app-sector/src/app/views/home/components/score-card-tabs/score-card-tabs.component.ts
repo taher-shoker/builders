@@ -88,4 +88,14 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
         });
     }
   }
+  getCategoryKeys(): string[] {
+    const keys = Object.keys(this.categoryKpiLists);
+    // console.log('Category Keys:', keys); // Debugging output
+
+    keys.forEach((key) => {
+      // console.log(`Category: ${key}`, this.kpiDTOList()[key]); // Debugging output
+    });
+
+    return keys;
+  }
 }

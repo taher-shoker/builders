@@ -19,7 +19,8 @@ import { MatExpansionPanel } from '@angular/material/expansion';
   styleUrl: './expansion-panel.component.scss',
 })
 export class ExpansionPanelComponent {
-  kpiDTOList: InputSignal<KpiDTO[] | any> = input([]);
+  //kpiDTOList: InputSignal<KpiDTO[] | any> = input([]);
+  kpi: InputSignal<KpiDTO | any> = input({} as KpiDTO);
   @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
   panelOpenState = false;
   newTabSelected: InputSignal<string> = input('');
@@ -32,16 +33,16 @@ export class ExpansionPanelComponent {
     });
   }
 
-  getCategoryKeys(): string[] {
-    const keys = Object.keys(this.kpiDTOList());
-    // console.log('Category Keys:', keys); // Debugging output
+  // getCategoryKeys(): string[] {
+  //   const keys = Object.keys(this.kpiDTOList());
+  //   // console.log('Category Keys:', keys); // Debugging output
 
-    keys.forEach((key) => {
-      // console.log(`Category: ${key}`, this.kpiDTOList()[key]); // Debugging output
-    });
-
-    return keys;
-  }
+  //   keys.forEach((key) => {
+  //     // console.log(`Category: ${key}`, this.kpiDTOList()[key]); // Debugging output
+  //   });
+  //   console.log('keys', keys);
+  //   return keys;
+  // }
 
   // cards = [
   //   {
