@@ -35,6 +35,7 @@ export class WelcomePageComponent implements OnInit {
     },
   ];
   sectors: userSector[] = [];
+
   ngOnInit(): void {
     this.getUserSectors();
   }
@@ -44,9 +45,9 @@ export class WelcomePageComponent implements OnInit {
       .pipe(take(1))
       .subscribe((response: sectorsList) => {
         this.sectors = response.sectorsList;
-        console.log(response.sectorsList);
       });
   }
+
   onHover(i: number) {
     this.hoverIndex = i;
     if (i == -1) {
@@ -54,10 +55,5 @@ export class WelcomePageComponent implements OnInit {
     } else {
       this.showItemDesc = true;
     }
-  }
-  navigate(title: string) {
-    this.router.navigate(['/'], {
-      state: { scoreCardName: title },
-    });
   }
 }

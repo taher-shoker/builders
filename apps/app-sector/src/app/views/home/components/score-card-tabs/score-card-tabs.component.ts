@@ -60,11 +60,9 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
         this.scores = result.filter(
           (item) => item.scorecardTitle !== 'Overall'
         );
-        console.log('scores',this.scores);
-        if (this.scores.length > 0) {
-          console.log(this.scores[0].scorecardTitle);
-          this.selectedTab.set(this.scores[0].scorecardTitle);
-        }
+        // if (this.scores.length > 0) {
+        // this.selectedTab.set(this.scores[0].scorecardTitle);
+        // }
       }
     });
   }

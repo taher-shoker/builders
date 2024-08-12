@@ -28,13 +28,6 @@ export class LayoutComponent implements OnInit {
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
     },
-    // {
-    //   name: 'dashboard',
-    //   url: '/dashboard',
-    //   icon: 'fa-chart-line',
-    //   roles: ['APPROVERS'],
-    //   urlHome: '/home',
-    // },
   ];
 
   ngOnInit() {
@@ -56,6 +49,6 @@ export class LayoutComponent implements OnInit {
     this.router.navigate(['/']);
   }
   logOut() {
-    //apply logout action
+    // this.authService.logout();
   }
 }
