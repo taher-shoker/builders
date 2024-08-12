@@ -1,70 +1,73 @@
 <section class="strategy-program-section">
   <div class="strategy-program-section-header">
     <div>
-      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'" />
+      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'" [username]="'BE Admin'" />
     </div>
   </div>
   <div class="strategy-program-section-details">
     <p class="strategy-program-section-details-title">
       strategic objective KPIs mapping and assessment
     </p>
-    <p-accordion>
+    <p-accordion (activeIndexChange)="getIndex($event)">
       @for (kpi of StrategyProgramData; track kpi.id;let index = $index) {
-        <p-accordionTab>
+        <p-accordionTab (selectedChange)="getCurrentIndex($event)">
           <ng-template pTemplate="header">
             <div class="accordion-header-details">
-              <div class="accordion-title">
-                <span class="number-text">{{index + 1}}</span>
-                <p>Key result</p>
-              </div>
-              <p class = "accordion-desc">
-                {{kpi.description}}
-              </p>
-              <div class="accordion-statuses">
-                @if(kpi.weight)
-                {
-                  <stc-apps-kpi-status-card
-                    [kpiStatus]="kpi.weight"
-                    [kpiType]="'weight'"
-                  />
-                }
-                @if(kpi.formula)
-                {
-                  <stc-apps-kpi-status-card
-                    [kpiStatus]="kpi.formula"
-                    [kpiType]="'in-progress'"
-                  />
-                }
-                @if(kpi.actualStatus)
-                {
-                  <stc-apps-kpi-status-card
-                    [kpiStatus]="kpi.actualStatus"
-                    [kpiType]="'actualStatus'"
-                  />
-                }
-              </div>
+                <div class="accordion-title">
+                  <span class="number-text">{{index + 1}}</span>
+                  <p>Key result</p>
+                </div>
+                <p class = "accordion-desc">
+                  {{kpi.description}}
+                </p>
+                <div class="accordion-statuses">
+                  @if(kpi.weight)
+                  {
+                    <stc-apps-kpi-status-card
+                      [kpiStatus]="kpi.weight"
+                      [kpiType]="'weight'"
+                    />
+                  }
+                  @if(kpi.formula)
+                  {
+                    <stc-apps-kpi-status-card
+                      [kpiStatus]="kpi.formula"
+                      [kpiType]="'in-progress'"
+                    />
+                  }
+                  @if(kpi.actualStatus)
+                  {
+                    <stc-apps-kpi-status-card
+                      [kpiStatus]="kpi.actualStatus"
+                      [kpiType]="'actualStatus'"
+                    />
+                  }
+                </div>
             </div>
           </ng-template>
-          <p class="accordion-container-title mb-0">projects/initiatives</p>
-          <div class="accordion-container">
-            @if(kpi.projects.length !== 0)
-            {
-              <div class="row">
-                @for (project of kpi.projects; track project.id) {
-                  <div class="col-lg-4 col-md-6 col-sm-12">
-                    <stc-apps-project-card
-                      [projectData]="project"
-                    />
-                  </div>
-                }
-              </div>
-            } @else {
-              <div class="no-projects-content mt-3">
-                <img src="assets/images/no-projects.svg" alt="">
-                <p>no projects</p>
-              </div>
-            }
-          </div>
+          @if(isTapOpened && currentTabIndex === index)
+          {
+            <p class="accordion-container-title mb-0">projects/initiatives</p>
+            <div class="accordion-container">
+              @if(kpi.projects.length !== 0)
+              {
+                <div class="row">
+                  @for (project of kpi.projects; track project.id) {
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                      <stc-apps-project-card
+                        [projectData]="project"
+                      />
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="no-projects-content mt-3">
+                  <img src="assets/images/no-projects.svg" alt="">
+                  <p>no projects</p>
+                </div>
+              }
+            </div>
+          }
         </p-accordionTab>
       }
     </p-accordion>

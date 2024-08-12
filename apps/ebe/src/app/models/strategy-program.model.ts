@@ -13,6 +13,7 @@ export interface StrategyProgramKpiProjectsDetailsModel
   title:string;
   actualValue:number;
   plannedValue:number;
+  progressValue:number;
 }
 export interface StrategyProgramModel
 {

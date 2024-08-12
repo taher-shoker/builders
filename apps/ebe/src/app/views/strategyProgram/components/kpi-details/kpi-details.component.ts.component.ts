@@ -27,4 +27,15 @@ export class KpiDetailsComponentTsComponent implements OnInit{
       }
     })
   }
+  isTapOpened!:boolean;
+  currentTabIndex!:number;
+  getCurrentIndex(index:boolean)
+  {
+    console.log(index);
+    this.isTapOpened = index;
+  }
+  getIndex(index:number | number[])
+  {
+    this.currentTabIndex = typeof index === 'number' ? index : 0;
+  }
 }

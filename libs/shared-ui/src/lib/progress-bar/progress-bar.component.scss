@@ -76,3 +76,47 @@
     bottom:-32px !important;
   }
 }
+.actual-caption
+{
+  top:0px;
+  color:#292D32;
+  font-weight: 600;
+}
+.actual-value
+{
+  top:0px;
+  color:#009F71;
+  font-weight: 700;
+  font-size: 22px;
+}
+.planned-caption
+{
+  color:#292D32;
+  font-weight: 600;
+}
+.planned-value
+{
+  // color:#009F71;
+  color:#292D32;
+  font-weight: 700;
+  font-size: 22px;
+}
+.planned-bar
+{
+  position: relative;
+  top: -24px;
+}
+.actual-bar
+{
+  position: relative;
+  top: -9px;
+}
+.actual-bar-line
+{
+  background-color: #009F71 !important;
+  border-radius:5px;
+}
+.planned-bar-line
+{
+  border-radius:5px;
+}

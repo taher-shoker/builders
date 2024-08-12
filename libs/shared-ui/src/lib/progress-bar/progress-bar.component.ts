@@ -27,6 +27,7 @@ interface Index {
 export class ProgressBarComponent {
   data = input.required<ProgressInfo>();
   isProject = input<boolean>(false);
+  fontFamily = input<string>('');
 
   constructor() {
     effect(() => {
