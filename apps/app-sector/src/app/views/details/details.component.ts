@@ -116,7 +116,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Threshold',
-        description: '85%',
+        description: Math.floor(kpiObject.target * 100) + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
