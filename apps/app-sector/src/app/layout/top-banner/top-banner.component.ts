@@ -1,6 +1,4 @@
 import {
-  AfterViewChecked,
-  ChangeDetectorRef,
   Component,
   InputSignal,
   OnInit,

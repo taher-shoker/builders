@@ -3,6 +3,7 @@ import {
   InputSignal,
   WritableSignal,
   computed,
+  effect,
   input,
   signal,
 } from '@angular/core';
@@ -18,10 +19,12 @@ import { Section } from '../../../models/SectorKpisDetails.model';
 })
 export class ExpansionPanelBodyComponent {
   percentage: InputSignal<number> = input(0);
+  kpiStatus: InputSignal<string> = input('');
   kpiCode: InputSignal<string> = input('');
   kpiName: InputSignal<string> = input('');
   listItems: InputSignal<Section[] | any> = input([]);
-
+  kpiActualValue: InputSignal<number> = input(0);
+  kpiTargetValue: InputSignal<number> = input(0);
   reportData: WritableSignal<any | undefined> = signal(undefined);
   progressBarData = computed(() => {
     let data: ProgressInfo;
@@ -31,26 +34,36 @@ export class ExpansionPanelBodyComponent {
       prefixValue: 0,
       suffixText: '',
       suffixValue: 0,
-      progressValue: 85.0,
+      progressValue: this.kpiTargetValue() * 100,
       indexes: [
         {
           caption: 'Actual',
-          value: 30.0,
+          value: this.kpiActualValue() * 100,
           position: 'up',
         },
         {
           caption: 'Target',
-          value: 85.0,
+          value: this.kpiTargetValue() * 100,
           position: 'down',
         },
       ],
-      barColor: '#c82a27',
-      bgBarColor: '#c82a271a',
+      barColor: this.barColor(this.kpiStatus()),
+      bgBarColor: this.barBackgroundColor(this.kpiStatus()),
     };
-
     return data;
   });
   constructor(private router: Router) {}
+  barBackgroundColor(status: string): string {
+    if (status.toLowerCase() === 'on track') return 'rgba(0, 196, 140, 0.15)';
+    else if (status.toLowerCase() === 'delayed')
+      return 'rgba(255, 26, 26, 0.1)';
+    else return '';
+  }
+  barColor(status: string): string {
+    if (status.toLowerCase() === 'on track') return 'var(--stcOasisColor)';
+    else if (status.toLowerCase() === 'delayed') return 'var(--stc-red-color)';
+    else return '';
+  }
   navigateToDetails() {
     this.router.navigate(['/details', this.kpiName()], {
       state: { kpiCode: this.kpiCode() },

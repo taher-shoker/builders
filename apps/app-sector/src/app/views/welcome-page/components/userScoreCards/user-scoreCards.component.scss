@@ -12,9 +12,9 @@
     }
   }
   &_items {
-    height: 500px;
+    height: 400px;
     // overflow-x: hidden;
-    // overflow-y: auto;
+    overflow-y: auto;
   }
   &_item {
     cursor: pointer;
@@ -58,7 +58,7 @@
     }
   }
   &_item:hover {
-    transform: scale(1.02);
+   // transform: scale(1.02);
     border: 1px solid var(--seaBlue);
     background-color: var(--lightBlue);
     .icon-bg {

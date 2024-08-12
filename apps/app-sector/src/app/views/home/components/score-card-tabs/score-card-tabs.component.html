@@ -8,9 +8,14 @@
   </stc-apps-tabs>
 </div>
 
-@if (selectedTab()) {
-<stc-apps-expansion-panel
+@if (selectedTab()) { 
+<stc-apps-panels-container
+[newTabSelected]="selectedTabChanged"
+  [kpiDTOList]="categoryKpiLists"
+></stc-apps-panels-container>
+
+<!-- <stc-apps-expansion-panel
   [newTabSelected]="selectedTabChanged"
   [kpiDTOList]="categoryKpiLists"
-></stc-apps-expansion-panel>
+></stc-apps-expansion-panel> -->
 }
