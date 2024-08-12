@@ -17,6 +17,7 @@ import {
   OverallScoreParams,
 } from '../../views/models/overallScore.model';
 import { SharedFormService } from '../../views/home/services/shared-form.service';
+import { SectorService } from '../../services/sector.service';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -27,7 +28,6 @@ export class TopBannerComponent implements OnInit {
   milestoneProgress: WritableSignal<number | null> = signal(74.91);
   userName: InputSignal<string> = input('');
 
-  scoreCardName = '';
   showScorecard = true;
   title = 'Over all score';
   kpiCode = '';
@@ -45,13 +45,13 @@ export class TopBannerComponent implements OnInit {
     private router: Router,
     private dashboardService: DashboardService,
     private sharedFormService: SharedFormService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private sectorService: SectorService
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        console.log('Current URL:', this.router.url),
-          (this.kpiName = this.router.url.split('/').pop() || '');
+        this.kpiName = this.router.url.split('/').pop() || '';
         this.kpiName = this.kpiName.replace(/%20/g, ' ');
         this.activatedRoute.snapshot.paramMap.get('kpiName');
         if (this.router.url.includes('/details')) {
@@ -62,7 +62,6 @@ export class TopBannerComponent implements OnInit {
       });
   }
   ngOnInit(): void {
-    this.scoreCardName = window.history.state.scoreCardName;
     this.handleForm();
     this.getOverallScore();
   }
@@ -72,7 +71,7 @@ export class TopBannerComponent implements OnInit {
     const initialParams = {
       year: this.currentYear.toString(),
       quarter: this.currentQuarter.toString(),
-      sectorName: this.scoreCardName,
+      sectorName: this.sectorService.getSectorName()?.toString() || '',
     };
     this.sharedFormService.initializeForm(initialParams);
   }

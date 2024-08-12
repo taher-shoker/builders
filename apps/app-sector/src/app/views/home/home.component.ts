@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { SectorService } from '../../services/sector.service';
 
 @Component({
   selector: 'stc-apps-home',
@@ -6,8 +7,6 @@ import { Component } from '@angular/core';
   styleUrls: ['./home.component.scss'],
 })
 export class HomeComponent {
-  scoreCardName = window.history.state.scoreCardName;
-  constructor() {
-    console.log('name', this.scoreCardName);
-  }
+  scoreCardName = this.sectorService.getSectorName() || '';
+  constructor(private sectorService: SectorService) {}
 }

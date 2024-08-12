@@ -1,6 +1,7 @@
 import { Component, Input, input, InputSignal } from '@angular/core';
 import { userSector } from '../../models/userSector.model';
 import { Router } from '@angular/router';
+import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
 
 @Component({
   selector: 'stc-apps-user-score-cards',
@@ -8,7 +9,7 @@ import { Router } from '@angular/router';
   styleUrl: './user-scoreCards.component.scss',
 })
 export class UserScoreCardsComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private sectorService: SectorService) {}
   showItemDesc = false;
   hoverIndex = -1;
   @Input() sectors: userSector[] = [];
@@ -21,8 +22,7 @@ export class UserScoreCardsComponent {
     }
   }
   navigate(title: string) {
-    this.router.navigate(['/'], {
-      state: { scoreCardName: title },
-    });
+    this.sectorService.setSectorName(title);
+    this.router.navigate(['/home']);
   }
 }
