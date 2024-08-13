@@ -43,10 +43,11 @@ export class ScorecardComponent implements OnInit , OnDestroy{
       }
     })
   }
-  private getScorecardData(tapName:string , month:number , year:number)
+  private getScorecardData(month:number , year:number , tapName?:string)
   {
-    this.scorecardService.getScorecardData(tapName , month , year).pipe(takeUntil(this.endSubs$)).subscribe({
+    this.scorecardService.getScorecardData(month , year , tapName).pipe(takeUntil(this.endSubs$)).subscribe({
       next : (scorecards:ScorecardModel[]) => {
+        console.log(scorecards);
         if(scorecards.length === 0)
           {
             this.isEmpty = true;
@@ -63,12 +64,12 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   }
   getClickedTap(clickedTap: ScorecardTaps) {
     this.currentClickedTapData = clickedTap;
-    this.getScorecardData(clickedTap.value , this.filtersOptions.month , this.filtersOptions.year)
+    this.getScorecardData(this.filtersOptions.month , this.filtersOptions.year , clickedTap.value)
   }
   getFiltersOptions(options:FilteredOptions)
   {
     this.filtersOptions = options;
-    this.getScorecardData(this.currentClickedTapData.value , options.month , options.year);
+    this.getScorecardData(options.month , options.year , this.currentClickedTapData.value);
   }
   getImportedFile(e:FileModel)
   {
@@ -78,7 +79,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
         next : () => {
           if(this.child)
           {
-            this.getScorecardData(this.currentClickedTapData.value , this.filtersOptions.month , this.filtersOptions.year)
+            this.getScorecardData(this.filtersOptions.month , this.filtersOptions.year , this.currentClickedTapData.value)
             this.child.visible = false;
           }
         },
