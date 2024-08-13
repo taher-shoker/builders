@@ -18,7 +18,7 @@
     </div>
     @if(time()){
     <div [class]="replyClass ? 'col-md-4' : 'col-md-4'">
-      <div class="profile-content_time">{{ time() }}</div>
+      <div class="profile-content_time">{{ getTimeAgo(time()) }}</div>
     </div>
     }
   </div>

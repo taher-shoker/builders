@@ -1,9 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { kpiCard, kpiDetailsParams } from './models/kpiDetailsModel';
 
-import { kpiInfoService } from '../../services/kpi-info.service';
-import { KpiDTOMap } from '../models/SectorKpisDetails.model';
+import {
+  kpiCard,
+  KpiDetailsResponse,
+  KpiDTOMap,
+  SectorKpisDetailsParams,
+} from '../models/SectorKpisDetails.model';
 import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
+import { comment } from './models/commentsModel';
+import { SharedFormService } from '../home/services/shared-form.service';
+import { DashboardService } from '../home/services/dashboard.service';
+import { commentsService } from './services/comments.service';
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
@@ -12,30 +19,43 @@ import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
 export class DetailsComponent implements OnInit {
   currentDate = new Date();
   kpiCode = window.history.state.kpiCode;
+  selectedTab = window.history.state.selectedTab;
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
   categoryKpiLists: { [key: string]: KpiDTO[] } = {};
-
-  constructor(private kpiDetailsService: kpiInfoService) {}
+  commentsList: comment[] = [];
+  constructor(
+    private sharedFormService: SharedFormService,
+    private dashboardService: DashboardService,
+    private commentService: commentsService
+  ) {}
 
   ngOnInit(): void {
     this.getKpiDetails();
   }
   getKpiDetails() {
-    const params: kpiDetailsParams = {
-      year: '2023',
-      quarter: '1',
-      sectorName: 'Group Business Unit',
-      scorecardTitle: 'Group Business Unit',
-      kpiCode: 'GBU-13',
+    const params: SectorKpisDetailsParams = {
+      ...this.sharedFormService.getForm().value,
+      scorecardTitle: this.selectedTab,
+      kpiCode: this.kpiCode,
     };
-    this.kpiDetailsService.getKpiDetails(params).subscribe((result: any) => {
-      this.kpiDTOMap = result.kpiDTOMap;
-      Object.keys(this.kpiDTOMap).forEach((category) => {
-        this.categoryKpiLists[category] = this.kpiDTOMap[category];
-        this.addingCardsDescriptions(this.categoryKpiLists[category][0]);
+    this.dashboardService
+      .getSectorKpisDetails(params)
+      .subscribe((result: KpiDetailsResponse) => {
+        if (result) {
+          this.kpiDTOMap = result.kpiDTOMap;
+          Object.keys(this.kpiDTOMap).forEach((category) => {
+            this.categoryKpiLists[category] = this.kpiDTOMap[category];
+            this.commentService.commenstList.next(
+              this.categoryKpiLists[category][0].commentList
+            );
+
+            this.commentsList = this.categoryKpiLists[category][0].commentList;
+            console.log('details page', this.commentsList);
+            this.addingCardsDescriptions(this.categoryKpiLists[category][0]);
+          });
+        }
       });
-    });
   }
   addingCardsDescriptions(kpiObject: KpiDTO) {
     this.cards = [
@@ -127,19 +147,3 @@ export class DetailsComponent implements OnInit {
     ];
   }
 }
-
-// {
-//   text: 'Measures the STC KSA Earning before Interest and Taxes (EBIT) as reported in stc consolidated financial statements. The FY target is based on the latest budget approved by the BOD',
-//   list: [
-//     'A = B - C - D',
-//     'Where,',
-//     'A = STC KSA EBIT',
-//     'B = STC KSA Revenues',
-//     'C = STC KSA Cost of Goods Sold',
-//   ],
-//   notes: [
-//     'Finance team shall communicate the validated and approved figures for COM official reference.',
-//     'CPM shall not consider any target or actual received from sources other than the KPI custodian officially assigned by the finance team.',
-//     'KPI Target is subject to further revision based on the official input received from the finance team aligned with the approved budget.',
-//   ],
-// },
