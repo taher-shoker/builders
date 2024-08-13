@@ -13,7 +13,7 @@
           <div class="col">
 
             <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Category Name'" [inputId]="'name'"
-              [inputName]="'Category name'" formControlName="name"></stc-apps-input>
+              [inputName]="'Category name'" formControlName="name" [disabled]="data.state === 'edit'"></stc-apps-input>
           </div>
           <div class="col">
 

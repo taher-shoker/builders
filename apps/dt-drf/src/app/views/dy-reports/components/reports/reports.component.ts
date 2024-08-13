@@ -108,6 +108,13 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+    this.handleDeleteFilter();
+  }
+
+  handleDeleteFilter() {
+    if (!this.reportsService.userInGroup('System_Process_Admin')) {
+      this.reportStatus.length = 3;
+    }
   }
 
   ngAfterViewInit(): void {
