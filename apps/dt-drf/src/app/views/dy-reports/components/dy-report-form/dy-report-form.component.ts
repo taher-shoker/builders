@@ -169,7 +169,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       requestCategoryId: data.requestCategory.id,
       needMoreDataFromCreator: !!data.creatorEmail,
       creatorEmail: data.creatorEmail || '',
-      slaDurationInDays: data.requestCategory.slaDuration || 0,
+      slaDurationInDays: data.reportSlaDuration || 0,
     });
     this.uploadedFiles.next(data.attachments);
     this.form.get('description')?.disable();
@@ -464,7 +464,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
                 ?.setValue(this.uploadedFiles.value.map(({ id }) => ({ id })));
             }
           },
-          error: (err) => console.error(err),
+          error: (err) => (this.isUploaderLoader = false),
         });
       }
     });

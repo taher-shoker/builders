@@ -72,6 +72,7 @@ export interface Report {
   reportName: string;
   slaDurationInDays: number;
   description: string | null;
+  reportSlaDuration: number;
 }
 export interface CurrentAssignee {
   username: string;
