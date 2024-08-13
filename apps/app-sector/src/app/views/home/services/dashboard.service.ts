@@ -43,12 +43,21 @@ export class DashboardService {
   getSectorKpisDetails(
     params: SectorKpisDetailsParams
   ): Observable<KpiDetailsResponse> {
-    const httpParams = new HttpParams()
-      .set('year', params.year)
-      .set('quarter', params.quarter)
-      .set('sectorName', params.sectorName)
-      .set('scorecardTitle', params.scorecardTitle);
-
+    let httpParams = new HttpParams();
+    if (params.kpiCode) {
+      httpParams = new HttpParams()
+        .set('year', params.year)
+        .set('quarter', params.quarter)
+        .set('sectorName', params.sectorName)
+        .set('scorecardTitle', params.scorecardTitle)
+        .set('kpiCode', params.kpiCode);
+    } else {
+      httpParams = new HttpParams()
+        .set('year', params.year)
+        .set('quarter', params.quarter)
+        .set('sectorName', params.sectorName)
+        .set('scorecardTitle', params.scorecardTitle);
+    }
     return this.http.get<KpiDetailsResponse>(
       this.baseUrl + '/v2/scrs/dashboard/sector/kpi-details',
       { params: httpParams }

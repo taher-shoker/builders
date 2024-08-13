@@ -1,6 +1,12 @@
+import { comment } from '../details/models/commentsModel';
 import { OverallScoreParams } from './overallScore.model';
 
 //request models
+export interface kpiCard {
+  title: string;
+  description: string | null;
+  class: string;
+}
 export interface SectorKpisDetailsBase {
   sectorName: string;
   year: string;
@@ -59,7 +65,7 @@ export interface KpiDTO {
   reportingPeriod: string;
   vtdCalculation: string;
   formula: string;
-  commentList: string[] | null;
+  commentList: comment[];
   attachementList: string[] | null;
 }
 
