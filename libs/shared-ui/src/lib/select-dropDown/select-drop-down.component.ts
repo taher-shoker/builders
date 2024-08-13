@@ -84,6 +84,20 @@ export class SelectDropDownComponent<T>
     this.searchControl.valueChanges
       .pipe(startWith(''))
       .subscribe((value) => this.filterOptions(value));
+    document.addEventListener(
+      'keydown',
+      (e: KeyboardEvent) => {
+        if (e.target instanceof HTMLElement) {
+          if (
+            e.target.nodeName === 'MAT-SELECT' ||
+            e.target.nodeName === 'INPUT'
+          ) {
+            e.stopImmediatePropagation();
+          }
+        }
+      },
+      true
+    );
   }
 
   onChangeValue(value: any): void {

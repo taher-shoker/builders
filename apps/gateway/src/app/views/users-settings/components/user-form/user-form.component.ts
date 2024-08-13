@@ -233,7 +233,7 @@ export class UserFormComponent implements OnInit, OnChanges {
             this.userService.getCurrentSystem() === 'DI_Milestones' ||
               this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
               ? this.form.get('userGroups')?.value.id
-              : this.form.get('teamDto')?.value,
+              : this.form.get('teamDto')?.value.id,
             {},
             queryParams
           )
@@ -384,9 +384,9 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.data?.userDelegates
       ) {
         const delegateEmail = this.data?.userDelegates?.[0]?.delegateName ?? '';
-        this.selectedDelegates = this.allUsers.find(
+        this.selectedDelegates = this.allUsers.filter(
           (p: User) => p.email === delegateEmail
-        );
+        )[0];
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id
@@ -564,5 +564,9 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.userDelegate = this.allUsers;
       }
     });
+  }
+  closeDialog() {
+    this.dialogService.close();
+    this.router.navigate(['/users-setting']);
   }
 }

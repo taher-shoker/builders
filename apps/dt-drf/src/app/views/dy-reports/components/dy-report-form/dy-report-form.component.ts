@@ -64,7 +64,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     private router: Router,
     private route: ActivatedRoute,
     private configService: ConfigService
-  ) {}
+  ) {
+    this.initForm();
+  }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reportData'] && this.reportData) {
@@ -73,7 +75,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.initForm();
     this.loadInitialData();
     this.fetchDataOfReportAndEditIfExists();
   }
@@ -177,7 +178,12 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.form.get('creatorEmail')?.disable();
     this.form.get('initiatorShouldApprove')?.disable();
     this.form.get('attachments')?.disable();
-    this.form.get('requestApprovals')?.disable();
+    const requestApprovalsArray = this.form.get(
+      'requestApprovals'
+    ) as FormArray;
+    if (requestApprovalsArray) {
+      requestApprovalsArray.disable(); // Disables the array and all controls within it
+    }
     this.form.get('slaDurationInDays')?.disable();
   }
 
@@ -192,13 +198,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
 
     // Clear existing array and add new controls
-    const requestApprovalsArray = this.form.get(
-      'requestApprovals'
-    ) as FormArray;
-    requestApprovalsArray.clear();
-    data.requestApprovals.forEach((approval) => {
-      requestApprovalsArray.push(this.createApprovalControl(approval));
-    });
 
     this.uploadedFiles.next(data.attachments);
 
@@ -209,8 +208,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.form.get('creatorEmail');
     this.form.get('initiatorShouldApprove');
     this.form.get('attachments');
-    this.form.get('requestApprovals');
     this.form.get('slaDurationInDays');
+    const requestApprovalsArray = this.form.get(
+      'requestApprovals'
+    ) as FormArray;
+    requestApprovalsArray.controls.forEach((c) => {
+      c.get('username')?.disable();
+    });
   }
 
   private createApprovalControl(approval: any): FormGroup {
@@ -246,7 +250,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       initiatorShouldApprove: this.form.value.initiatorShouldApprove ? 1 : 0,
       needMoreDataFromCreator: this.form.value.needMoreDataFromCreator ? 1 : 0,
     };
-
     const handleSuccess = (message: string) => {
       this.toastr.success(message);
       this.router.navigate(['./home']);
@@ -320,7 +323,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
     if (this.isEditing) {
       this.reportsService
-        .updateReportFlow(this.reportData.id, finalData)
+        .updateReportFlow(this.reportData.id, finalData.reportName)
         .subscribe({
           next: () => handleSuccess('Report has been edited successfully'),
           error: handleError,
@@ -468,6 +471,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private isFileValid(file: File): boolean {
+    console.log(file);
     const config = this.configService.getConfig().fileValidation;
     if (file.size > config.sizeWithMegaBytes * 1_000_000) {
       this.toastr.error('File size exceeds the allowed limit.');

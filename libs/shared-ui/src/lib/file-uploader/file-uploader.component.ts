@@ -137,7 +137,8 @@ export class FileUploaderComponent implements ControlValueAccessor {
   fileUpload!: ElementRef;
   @Input()
   files: File[] = [];
-
+  @Input()
+  size = 2e7;
   onClick(event: any) {
     if (this.fileUpload) {
       this.clearInputElement();
@@ -197,18 +198,47 @@ export class FileUploaderComponent implements ControlValueAccessor {
   }
 
   validate(file: File) {
-    if (file.size > 1e7) {
+    console.log(file);
+
+    // Check if the file size exceeds 10 MB
+    if (file.size > this.size) {
       this.invalidFileMessageDetail = 'File is too big!';
       return false;
     }
+
+    // Check if the file type is an empty string
+    if (file.type === '') {
+      // this.invalidFileMessageDetail = 'File type is not specified!';
+
+      // Split the name and extension based on the last dot
+      const lastDotIndex = file.name.lastIndexOf('.');
+      const extension =
+        lastDotIndex !== -1 ? '.' + file.name.substring(lastDotIndex + 1) : '';
+
+      // Check if the file extension is in the list of accepted types
+      if (!this.accept.includes(extension.toLowerCase())) {
+        this.invalidFileMessageDetail = 'File is Invalid Format!';
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+    // Check if the file type is in the list of accepted types
     if (!this.accept.includes(file.type)) {
-      this.invalidFileMessageDetail = 'File is Invalid Format !';
+      this.invalidFileMessageDetail = 'File is Invalid Format!';
       return false;
     } else {
       return true;
     }
   }
-
+  truncateLabelText(label: string) {
+    // Find the extension
+    const extension = label.slice(label.lastIndexOf('.'));
+    // Truncate the first 20 characters and append the extension
+    const truncatedText = label.slice(0, 10) + '...' + extension;
+    return truncatedText;
+  }
   clearInputElement() {
     this.fileUpload.nativeElement.value = '';
   }

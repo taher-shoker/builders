@@ -1,6 +1,6 @@
 {
   "fileValidation": {
-    "acceptType": "image/png,image/jpeg,image/jpg,application/pdf,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel",
+    "acceptType": "image/png,image/jpeg,image/jpg,image/gif,application/pdf,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document,application/vnd.openxmlformats-officedocument.presentationml.presentation,.pptx,.gif",
     "sizeWithMegaBytes": 50
   },
   "characterLimit": {

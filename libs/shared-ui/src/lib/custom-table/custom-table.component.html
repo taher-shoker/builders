@@ -25,6 +25,15 @@
       </th>
       }
     </tr>
+    <tr class="mat-row" *ngIf="items.length === 0">
+      <td class="mat-cell" [attr.colspan]="headers().length">
+        <div class="message-box">
+          <img src="assets/Group 590.png" alt="" />
+          <h3>{{ 'No data has found' }}</h3>
+        </div>
+      </td>
+    </tr>
+
 
     @if(itemsInView){
     <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"></ng-container>

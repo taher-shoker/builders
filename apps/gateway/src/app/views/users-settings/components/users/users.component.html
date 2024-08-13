@@ -58,7 +58,8 @@
           <div class="offset-md-1 col-md-5">
             <stc-apps-select-drop-down [label]="userService.translateText('privilege')"
               [selectType]="'filter-select-box'" [options]="privilege" [labelName]="'groupName'"
-              (selectChange)="handleSelectChange($event, 'privilege')" [defaultAll]="true"></stc-apps-select-drop-down>
+              (selectChange)="handleSelectChange($event, 'privilege')" formControlName="privilegeSelect"
+              [defaultAll]="true"></stc-apps-select-drop-down>
           </div>
           <div class="col-md-5" *ngIf="userService.getCurrentSystem() !== 'Dynamic_Report_Flow'">
             <stc-apps-select-drop-down [label]="userService.translateText('team')" [selectType]="'filter-select-box'"

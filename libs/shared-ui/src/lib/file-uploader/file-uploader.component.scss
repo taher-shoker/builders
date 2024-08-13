@@ -25,6 +25,14 @@
     i {
       color: $redColor;
     }
+    span {
+      display: inline-block;
+      // max-width: 200px; /* Adjust based on your layout */
+      white-space: nowrap;
+      //   overflow: hidden;
+      text-overflow: ellipsis;
+      vertical-align: middle;
+    }
   }
   .left-info {
     display: flex;
@@ -35,8 +43,11 @@
     color: $redColor;
     margin-top: 8px;
   }
+  .scrollable {
+    max-height: 240px;
+    overflow-y: auto;
+  }
 }
 
-.drager{
-  
+.drager {
 }

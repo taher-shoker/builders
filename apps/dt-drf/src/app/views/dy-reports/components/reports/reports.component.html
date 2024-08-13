@@ -45,7 +45,7 @@
               @for(action of header?.actions; track action; let i = $index){
 
               @if(action
-              === 'edit' && item?.initiatorEmail === reportsService.getCurrentUser().email ){
+              === 'edit' && item?.initiatorEmail === reportsService.getCurrentUser().email && item?.isDeletable ){
               <div class="edit-option action-option" (click)="handelEditReport(item.id)">
                 <i class="ri-edit-box-line edit-icon"></i>
                 Edit

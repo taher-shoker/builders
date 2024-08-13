@@ -382,12 +382,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
           this.dialogService.close();
           this.getUsersListing();
           this.toastr.success(successMessage);
+          this.filterSelect.reset();
         }
       },
       error: (err) => {
         this.isDeleteLoader = false;
         // Handle error case if needed
-        console.error('Error deleting user:', err);
+        //    console.error('Error deleting user:', err);
         // Optionally, display an error message using toastr
       },
     });
