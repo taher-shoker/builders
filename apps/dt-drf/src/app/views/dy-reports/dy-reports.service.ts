@@ -292,10 +292,22 @@ export class ReportsService {
    */
 
   getReports(filterData?: any): Observable<Requests> {
+    // Convert filterData to HttpParams
+    let params = new HttpParams();
+    if (filterData) {
+      Object.entries(filterData).forEach(([key, value]) => {
+        if (
+          value !== undefined &&
+          value !== '' &&
+          (typeof value === 'string' || typeof value === 'number')
+        ) {
+          params = params.append(key, value);
+        }
+      });
+    }
+    // Perform the GET request with the params
     return this.http
-      .get<Requests>(`${this.dtUrl}requests/search`, {
-        params: filterData,
-      })
+      .get<Requests>(`${this.dtUrl}requests/search`, { params })
       .pipe(map((res: Requests) => this.flattenRequestCategory(res)));
   }
 

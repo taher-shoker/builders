@@ -101,6 +101,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.getReports();
     this.getPendingTasks();
+    this.getCategories();
     this.bannerDataService.updateData({ title: 'Dynamic Reports', text: '' });
 
     this.searchForm();
@@ -248,9 +249,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   categories!: Category[];
 
   toggleFilter() {
-    this.reportsService.getCategories().subscribe((res) => {
-      this.categories = res;
-    });
     this.dialogService.open('filter-Modal');
   }
 
@@ -276,15 +274,23 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
     });
   }
 
-  filterString: string = '';
+  filterObj: { reportName: string; requestStatus: string; categoryId: string } =
+    { reportName: '', requestStatus: '', categoryId: '' };
   searchFilter(inp: HTMLInputElement) {
-    this.filterString = inp.value;
+    this.filterObj.reportName = inp.value;
+    this.getMilestonesSub = this.reportsService
+      .getReports(this.filterObj)
+      .subscribe((res: any) => {
+        this.dialogService.close();
+        this.populateReports(res);
+      });
   }
 
   onSubmit() {
-    const filteredForm = this.utilities.filterObject(this.form.value);
+    this.filterObj.categoryId = this.form.get('categoryId')?.value || '';
+    this.filterObj.requestStatus = this.form.get('requestStatus')?.value || '';
     this.getMilestonesSub = this.reportsService
-      .getReports(filteredForm)
+      .getReports(this.filterObj)
       .subscribe((res: any) => {
         this.dialogService.close();
         this.populateReports(res);
@@ -293,8 +299,10 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   clearFormFilter() {
     this.form.reset();
+    this.filterObj.categoryId = this.form.get('categoryId')?.value || '';
+    this.filterObj.requestStatus = this.form.get('requestStatus')?.value || '';
     this.dialogService.close();
-    this.getReports();
+    this.getReports(this.filterObj);
   }
 
   monthsArrPopulator() {
@@ -343,14 +351,18 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
     return finalDate;
   }
 
-  getReports() {
+  getReports(filterData?: any) {
     this.getMilestonesSub = this.reportsService
-      .getReports()
+      .getReports(filterData)
       .subscribe((res: any) => {
         this.populateReports(res);
       });
   }
-
+  getCategories() {
+    this.reportsService.getCategories().subscribe((res) => {
+      this.categories = res;
+    });
+  }
   ngOnDestroy(): void {
     this.getMilestonesSub?.unsubscribe();
     this.userSub?.unsubscribe();
