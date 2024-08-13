@@ -1,0 +1,55 @@
+<form [formGroup]="addProjectForm">
+  <div class="form-group">
+    <label for="groupName">program name:</label>
+    <textarea
+      type="text"
+      name="groupName"
+      formControlName="programName"
+      id="groupName"
+      class="groupName-input"
+      (ngModelChange)="getValue($event)"
+    ></textarea>
+    <span>{{textLength}}/50</span>
+    @if(programNameValue && programNameValue.errors && programNameValue.errors['maxlength'])
+    {
+        <small>dgsdfs</small>
+    }
+  </div>
+  <div class="form-group">
+    <label for="groupName">progress:</label>
+    <input
+      type="text"
+      name="progress"
+      formControlName="progress"
+      placeholder="progress"
+    />
+  </div>
+  <div class="form-group">
+    <label for="groupName">total weight:</label>
+    <input
+      type="text"
+      name="totalWeight"
+      formControlName="totalWeight"
+      placeholder="totalWeight"
+    />
+  </div>
+  <div class="form-group">
+    <label for="groupName">total Investment:</label>
+    <input
+      type="text"
+      name="totalInvestment"
+      formControlName="totalInvestment"
+      placeholder="totalInvestment"
+    />
+  </div>
+  <div class="form-group">
+    <label for="groupName">description:</label>
+    <input
+      type="text"
+      name="description"
+      formControlName="description"
+      placeholder="description"
+    />
+  </div>
+  <button (click)="save()">save</button>
+</form>
