@@ -83,7 +83,7 @@
 <p-dialog
   [modal]="true"
   [(visible)]="visible"
-  [style]="{ width: '30rem' }"
+  [style]="{ width: '35rem' }"
   [draggable]="false"
   [dismissableMask]="true"
   >
@@ -91,13 +91,11 @@
   (onShow)="showDialog2()" -->
   <ng-template pTemplate="header">
     <div class="modal-header">
-      edit program
+      add project
     </div>
   </ng-template>
-  <stc-apps-add-project-form />
-  <ng-template pTemplate="footer">
-    <footer>
-
-    </footer>
-  </ng-template>
+  <stc-apps-add-project-form [modalVisible]="visible" (closeModal)="visible = false" />
+  <!-- <ng-template pTemplate="footer">
+    
+  </ng-template> -->
 </p-dialog>

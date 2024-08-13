@@ -4,36 +4,85 @@
     <textarea
       type="text"
       name="groupName"
-      formControlName="programName"
+      formControlName="projectName"
       id="groupName"
       class="groupName-input"
       (ngModelChange)="getValue($event)"
+      [class.error-input]="
+        programNameValue &&
+        programNameValue.errors &&
+        programNameValue.errors['required'] &&
+        programNameValue.touched
+      "
+      maxlength="50"
     ></textarea>
-    <span>{{textLength}}/50</span>
-    @if(programNameValue && programNameValue.errors && programNameValue.errors['maxlength'])
-    {
-        <small>dgsdfs</small>
+    <span>{{ textLength }}/50</span>
+    @if(programNameValue && programNameValue.errors &&
+    programNameValue.errors['required'] && programNameValue.touched) {
+    <small class="error-msg">this field is required</small>
     }
   </div>
-  <div class="form-group">
-    <label for="groupName">progress:</label>
-    <input
-      type="text"
-      name="progress"
-      formControlName="progress"
-      placeholder="progress"
-    />
+  <div class="row mb-3">
+    <div class="col-lg-6 col-sm-12">
+      <div class="form-group">
+        <label for="groupName">actual Value:</label>
+        <input
+          type="text"
+          name="progress"
+          formControlName="actualValue"
+          class="groupName-input actual-input"
+          [class.error-input]="
+            actualValue &&
+            actualValue.errors &&
+            (actualValue.errors['required'] || actualValue.errors['isNumber'] || actualValue.errors['rangeError']) &&
+            actualValue.touched
+          "
+        />
+        @if(actualValue && actualValue.errors && actualValue.errors['required'] && actualValue.touched) 
+        {
+            <small class="error-msg error-msg2">this field is required</small>
+        }
+        @else if(actualValue && actualValue.errors && actualValue.errors['isNumber'] && actualValue.touched) 
+        {
+            <small class="error-msg error-msg2">you must enter numbers only</small>
+        }
+        @else if(actualValue && actualValue.errors && actualValue.errors['rangeError'] && actualValue.touched) 
+        {
+            <small class="error-msg error-msg2">number range must be between 0 and 100</small>
+        }
+      </div>
+    </div>
+    <div class="col-lg-6 col-sm-12">
+      <div class="form-group">
+        <label for="groupName">planned Value:</label>
+        <input
+          type="text"
+          name="totalWeight"
+          formControlName="plannedValue"
+          class="groupName-input actual-input"
+          [class.error-input]="
+            plannedValue &&
+            plannedValue.errors &&
+            (plannedValue.errors['required'] || plannedValue.errors['isNumber'] || plannedValue.errors['rangeError']) &&
+            plannedValue.touched
+          "
+        />
+        @if(plannedValue && plannedValue.errors && plannedValue.errors['required'] && plannedValue.touched) 
+        {
+            <small class="error-msg error-msg2">this field is required</small>
+        }
+        @else if(plannedValue && plannedValue.errors && plannedValue.errors['isNumber'] && plannedValue.touched) 
+        {
+            <small class="error-msg error-msg2">you must enter numbers only</small>
+        }
+        @else if(plannedValue && plannedValue.errors && plannedValue.errors['rangeError'] && plannedValue.touched) 
+        {
+            <small class="error-msg error-msg2">number range must be between 0 and 100</small>
+        }
+      </div>
+    </div>
   </div>
-  <div class="form-group">
-    <label for="groupName">total weight:</label>
-    <input
-      type="text"
-      name="totalWeight"
-      formControlName="totalWeight"
-      placeholder="totalWeight"
-    />
-  </div>
-  <div class="form-group">
+  <!-- <div class="form-group">
     <label for="groupName">total Investment:</label>
     <input
       type="text"
@@ -50,6 +99,16 @@
       formControlName="description"
       placeholder="description"
     />
-  </div>
-  <button (click)="save()">save</button>
+  </div> -->
+  <!-- <button (click)="save()">save</button> -->
+  <!-- (click)="saveProject()" -->
+  <footer>
+    <button 
+      class = "import-data-btn"
+      (click)="save()"
+      [disabled]="addProjectForm.invalid"
+      [class.disabled-btn]="addProjectForm.invalid"
+    >save</button>
+    <button class = "cancel-btn" (click)="closeModalFun()">cancel</button>
+  </footer>
 </form>

@@ -1,5 +1,5 @@
 import { StrategyProgramKpiDetailsModel } from './../../../../models/strategy-program.model';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -26,6 +26,7 @@ import { AddProjectFormComponent } from '../add-project-form/add-project-form.co
   styleUrl: './kpi-details.component.ts.component.scss',
 })
 export class KpiDetailsComponentTsComponent implements OnInit {
+  @ViewChild(AddProjectFormComponent) child?: AddProjectFormComponent;
   currentId = 0;
   activatedRoute = inject(ActivatedRoute);
   strategyProgramService = inject(StrategyProgramService);
