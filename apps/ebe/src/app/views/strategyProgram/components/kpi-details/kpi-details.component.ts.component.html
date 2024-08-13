@@ -47,7 +47,14 @@
           </ng-template>
           @if(isTapOpened && currentTabIndex === index)
           {
-            <p class="accordion-container-title mb-0">projects/initiatives</p>
+            <div class="header">
+              <p class="accordion-container-title mb-0">projects/initiatives</p>
+              <!-- <p-button label="Add Project" icon="pi pi-plus" iconPos="left" /> -->
+              <button (click)="showForm()">
+                <i class = "pi pi-plus"></i>
+                add project
+              </button>
+            </div>
             <div class="accordion-container">
               @if(kpi.projects.length !== 0)
               {
@@ -73,3 +80,24 @@
     </p-accordion>
   </div>
 </section>
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '30rem' }"
+  [draggable]="false"
+  [dismissableMask]="true"
+  >
+  <!-- (onHide)="hideDialog()"
+  (onShow)="showDialog2()" -->
+  <ng-template pTemplate="header">
+    <div class="modal-header">
+      edit program
+    </div>
+  </ng-template>
+  testtt
+  <ng-template pTemplate="footer">
+    <footer>
+
+    </footer>
+  </ng-template>
+</p-dialog>

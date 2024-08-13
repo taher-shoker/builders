@@ -4,10 +4,12 @@ div
   text-transform: capitalize;
   font-size: 15px;
   font-weight: 600;
-  padding:10px 14px;
+  padding:0px 14px;
+  height:35px;
+  line-height:35px;
   @media all and (max-width:1400px)
   {
-    padding:10px 11px;
+    padding:0px 11px;
   }
   border-radius:10px;
   @extend .stcFont;
