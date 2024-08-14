@@ -108,7 +108,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
 
     // Assign columnsSchema to columnssSchema if needed
     this.columnssSchema = this.columnsSchema;
-    if (this.userService.getCurrentSystem() === 'Dynamic_Report_Flow') {
+    if (
+      this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
+      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+    ) {
       // this.columnssSchema = th;
       this.displayedColumns = (this.columnsSchema ?? [])
         .filter((c) => c.label !== 'team')
@@ -217,7 +220,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
           r.groupName !== 'PMO'
       );
-    if (this.userService.getCurrentSystem() === 'Dynamic_Report_Flow') {
+    if (
+      this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
+      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+    ) {
       this.privilege = this.userService.allGroups
         .filter(
           (item: UserGroup) =>

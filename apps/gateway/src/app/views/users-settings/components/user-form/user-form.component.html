@@ -102,6 +102,15 @@
             </stc-apps-select-drop-down>
           </div>
         </div>
+        <div class="row mt-7" *ngIf="showInputs && userService.getCurrentSystem() === 'Business_Excellence_Dashboard'">
+          <div class="col-md-5">
+            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages"
+              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
+              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+            </stc-apps-select-drop-down>
+          </div>
+
+        </div>
         <div class="row mt-7 flex-row-reverse">
           <div class="col-md-4 offset-md-8 ">
             <div class="row">

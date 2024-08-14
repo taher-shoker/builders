@@ -134,7 +134,10 @@ export class UsersService {
 
   getRoles(): Role[] {
     let allRoles;
-    if (this.getCurrentSystem() === 'DI_Milestones') {
+    if (
+      this.getCurrentSystem() === 'DI_Milestones' ||
+      this.getCurrentSystem() === 'Business_Excellence_Dashboard'
+    ) {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')
         .map((t) => {

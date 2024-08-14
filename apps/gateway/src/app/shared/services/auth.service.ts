@@ -141,7 +141,8 @@ export class AuthService {
       res.dto.systems.includes('FRAUD_ManagementUsers') ||
       res.dto.systems.includes('DI_Management') ||
       res.dto.systems.includes('DI_Milestones') ||
-      res.dto.systems.includes('Dynamic_Report_Flow')
+      res.dto.systems.includes('Dynamic_Report_Flow') ||
+      res.dto.systems.includes('Business_Excellence_Dashboard')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -175,6 +176,7 @@ export class AuthService {
       res.dto.systems.includes('DI_Management') ||
       res.dto.systems.includes('DI_Milestones') ||
       res.dto.systems.includes('Dynamic_Report_Flow') ||
+      res.dto.systems.includes('Business_Excellence_Dashboard') ||
       res.dto.systems.includes('Jira_Dahsboard')
     ) {
       this.setLoggedInUser();
@@ -203,6 +205,9 @@ export class AuthService {
     }
     if (res.dto.systems.includes('Dynamic_Report_Flow')) {
       this.gratnedSystems.push('Dynamic_Report_Flow');
+    }
+    if (res.dto.systems.includes('Business_Excellence_Dashboard')) {
+      this.gratnedSystems.push('Business_Excellence_Dashboard');
     }
     if (res.dto.systems.includes('Jira_Dahsboard')) {
       this.gratnedSystems.push('Jira_Dahsboard');
@@ -261,6 +266,8 @@ export class AuthService {
       FRAUD_ManagementUsers: environment.systems.fraud_system,
       DI_Milestones: environment.systems.di_milestones_system,
       Dynamic_Report_Flow: environment.systems.dynamic_rf_system,
+      Business_Excellence_Dashboard:
+        environment.systems.business_excellence_system,
     };
     const url = systemUrls[system];
     if (url) {
@@ -423,6 +430,16 @@ export class AuthService {
                   environment.systems.dynamic_rf_system,
                 name: 'Dynamic Report Flow',
                 displayName: 'Dynamic Report Flow',
+              });
+              break;
+            case 'Business_Excellence_Dashboard':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin +
+                  environment.systems.business_excellence_system,
+                name: 'Business Excellence Dashboard',
+                displayName: 'Business Excellence Dashboard',
               });
               break;
             case 'Jira_Dahsboard':

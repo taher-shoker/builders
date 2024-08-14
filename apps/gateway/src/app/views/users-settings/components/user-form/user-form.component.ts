@@ -109,7 +109,8 @@ export class UserFormComponent implements OnInit, OnChanges {
       ],
       teamDto: [
         [],
-        this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
+        this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
+        this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
           ? Validators.nullValidator
           : Validators.required,
       ],
@@ -184,6 +185,15 @@ export class UserFormComponent implements OnInit, OnChanges {
               ]
             : [],
         };
+      } else if (
+        this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+      ) {
+        dataForm = {
+          userGroups: [{ id: this.form.get('userGroups')?.value.id }],
+          email: this.form.get('email')?.value,
+          name: this.form.get('name')?.value,
+          jobTitle: this.form.get('jobTitle')?.value,
+        };
       } else {
         dataForm = {
           userGroups:
@@ -231,7 +241,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           .addUserGroup(
             this.userId,
             this.userService.getCurrentSystem() === 'DI_Milestones' ||
-              this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
+              this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
+              this.userService.getCurrentSystem() ===
+                'Business_Excellence_Dashboard'
               ? this.form.get('userGroups')?.value.id
               : this.form.get('teamDto')?.value.id,
             {},
@@ -313,6 +325,15 @@ export class UserFormComponent implements OnInit, OnChanges {
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
           r.groupName !== 'PMO'
       );
+    if (
+      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+    ) {
+      this.privilages = this.userService.allGroups
+        .filter((g) => g.roles[0].roleName !== 'ADMINS')
+        .map((t) => {
+          return { id: t.id, groupName: t.roles[0].roleName };
+        });
+    }
     if (this.data) {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.selectedPrivilege = this.privilages.filter(
