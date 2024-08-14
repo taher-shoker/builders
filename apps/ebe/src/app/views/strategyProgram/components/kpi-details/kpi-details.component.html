@@ -1,0 +1,104 @@
+<section class="strategy-program-section">
+  <div class="strategy-program-section-header">
+    <div>
+      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'" [username]="'BE Admin'" />
+    </div>
+  </div>
+  <div class="strategy-program-section-details">
+    <p class="strategy-program-section-details-title">
+      strategic objective KPIs mapping and assessment
+    </p>
+    <p-accordion (activeIndexChange)="getIndex($event)">
+      @for (kpi of StrategyProgramData; track kpi.id;let index = $index) {
+        <p-accordionTab (selectedChange)="getCurrentIndex($event)">
+          <ng-template pTemplate="header">
+            <div class="accordion-header-details">
+                <div class="accordion-title">
+                  <span class="number-text">{{index + 1}}</span>
+                  <p>Key result</p>
+                </div>
+                <p class = "accordion-desc">
+                  {{kpi.description}}
+                </p>
+                <div class="accordion-statuses">
+                  @if(kpi.weight)
+                  {
+                    <stc-apps-kpi-status-card
+                      [kpiStatus]="kpi.weight"
+                      [kpiType]="'weight'"
+                    />
+                  }
+                  @if(kpi.formula)
+                  {
+                    <stc-apps-kpi-status-card
+                      [kpiStatus]="kpi.formula"
+                      [kpiType]="'in-progress'"
+                    />
+                  }
+                  @if(kpi.actualStatus)
+                  {
+                    <stc-apps-kpi-status-card
+                      [kpiStatus]="kpi.actualStatus"
+                      [kpiType]="'actualStatus'"
+                    />
+                  }
+                </div>
+            </div>
+          </ng-template>
+          @if(isTapOpened && currentTabIndex === index)
+          {
+            <div class="header">
+              <p class="accordion-container-title mb-0">projects/initiatives</p>
+              <!-- <p-button label="Add Project" icon="pi pi-plus" iconPos="left" /> -->
+              <button (click)="showForm()">
+                <i class = "pi pi-plus"></i>
+                add project
+              </button>
+            </div>
+            <div class="accordion-container">
+              @if(kpi.projects.length !== 0)
+              {
+                <div class="row">
+                  @for (project of kpi.projects; track project.id) {
+                    <div class="col-lg-4 col-md-6 col-sm-12">
+                      <stc-apps-project-card
+                        [projectData]="project"
+                      />
+                    </div>
+                  }
+                </div>
+              } @else {
+                <div class="no-projects-content mt-3">
+                  <img src="assets/images/no-projects.svg" alt="">
+                  <p>no projects</p>
+                </div>
+              }
+            </div>
+          }
+        </p-accordionTab>
+      }
+    </p-accordion>
+  </div>
+</section>
+<p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '35rem' }"
+  [draggable]="false"
+  [dismissableMask]="true"
+  >
+  <!-- (onHide)="hideDialog()"
+  (onShow)="showDialog2()" -->
+  <ng-template pTemplate="header">
+    <div class="modal-header">
+      add project
+    </div>
+  </ng-template>
+  @if(visible)
+  {
+    <stc-apps-add-project-form [modalVisible]="visible" (closeModal)="visible = false" />
+  }
+  <!-- <ng-template pTemplate="footer">
+    
+  </ng-template> -->
+</p-dialog>

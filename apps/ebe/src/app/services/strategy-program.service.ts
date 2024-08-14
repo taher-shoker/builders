@@ -53,20 +53,23 @@ export class StrategyProgramService {
         {
           id:1,
           title : "ML-Ops activation plan maturity level",
-          actualValue : 20,
-          plannedValue : 100
+          actualValue : 10,
+          plannedValue : 60,
+          progressValue : 20
         },
         {
           id:2,
           title : "ML-Ops activation plan maturity level",
           actualValue : 50,
-          plannedValue : 100
+          plannedValue : 25,
+          progressValue : 29
         },
         {
           id:3,
           title : "ML-Ops activation plan maturity level",
           actualValue : 50,
-          plannedValue : 100
+          plannedValue : 66,
+          progressValue : 44
         },
       ]
     },
@@ -81,7 +84,8 @@ export class StrategyProgramService {
           id:1,
           title : "ML-Ops activation plan maturity level",
           actualValue : 20,
-          plannedValue : 100
+          plannedValue : 23,
+          progressValue : 84
         }
       ]
     },

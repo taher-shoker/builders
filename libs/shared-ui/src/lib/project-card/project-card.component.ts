@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, OnInit } from '@angular/core';
 import { ProgressInfo } from '../progress-bar/progress-bar.component';
 export interface KpiProjectsDetailsModel
 {
@@ -6,6 +6,7 @@ export interface KpiProjectsDetailsModel
   title:string;
   actualValue:number;
   plannedValue:number;
+  progressValue:number;
 }
 @Component({
   selector: 'stc-apps-project-card',
@@ -13,27 +14,31 @@ export interface KpiProjectsDetailsModel
   templateUrl: './project-card.component.html',
   styleUrl: './project-card.component.scss',
 })
-export class ProjectCardComponent {
+export class ProjectCardComponent implements OnInit{
   projectData:InputSignal<KpiProjectsDetailsModel> = input.required<KpiProjectsDetailsModel>();
-  data:ProgressInfo = {
-    prefixText: '',
-    prefixValue: 0,
-    suffixText: '',
-    suffixValue: 0,
-    progressValue: 75,
-    barColor:'#00C48C',
-    bgBarColor:'#00c48c1a',
-    indexes: [
-      {
-        caption: 'Actual',
-        value: 20,
-        position: 'up',
-      },
-      {
-        caption: `Planned`,
-        value: 30,
-        position: 'down',
-      },
-    ],
-  };
+  data!:ProgressInfo;
+  ngOnInit()
+  {
+    this.data = {
+      prefixText: '',
+      prefixValue: 0,
+      suffixText: '',
+      suffixValue: 0,
+      progressValue: this.projectData().progressValue,
+      barColor:'#00C48C',
+      bgBarColor:'#00c48c1a',
+      indexes: [
+        {
+          caption: 'Actual',
+          value: this.projectData().actualValue,
+          position: 'up',
+        },
+        {
+          caption: `Planned`,
+          value: this.projectData().plannedValue,
+          position: 'down',
+        },
+      ],
+    };
+  }
 }

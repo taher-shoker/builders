@@ -3,12 +3,19 @@
     <div>
       <stc-apps-page-header
         [mainTitle]="'CAD Strategy Program'"
+        [username]="'BE Admin'"
       />
     </div>
   </div>
   <div class="strategy-program-section-details">
+    @if(currentMode === 'editMode') {
+      <stc-apps-edit-mode-view 
+        (import)="showDialog()"
+        (export)="downloadTemplate()"
+      />
+    }
     <p class = "strategy-program-section-details-title">{{strategyProgramData.title}}</p>
-    <div class="row">
+    <div class="row"> 
       <div class="col-lg-6 col-md-6 col-sm-12">
         <div class="strategy-program-section-details-progress-card" style = "padding:9px 20px;">
           <div class = "info">

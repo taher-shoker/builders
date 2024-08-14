@@ -20,7 +20,7 @@ export class MainLayoutComponent implements OnInit{
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.navItems = this.scorecardService.getNavLinks();
-    this.getUserDetails()
+    // this.getUserDetails()
     // this.userName = this.cookieService.get('USER_FULLNAME') || '';
     console.log(this.userName);
     // const token = this.cookieService.get("token")
