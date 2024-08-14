@@ -1,9 +1,9 @@
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgModule, importProvidersFrom } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
@@ -96,7 +96,7 @@ const components = [
   TimelineChartComponent,
   TextEditorQuillComponent,
   CheckboxComponent,
-  ProgressBarComponent
+  ProgressBarComponent,
 ];
 
 @NgModule({

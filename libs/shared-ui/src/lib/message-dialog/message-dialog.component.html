@@ -7,9 +7,12 @@
 
   <hr class="liner-hr" />
 
-  <div class="dialog-actions">
-    <button type="button" class="btn gray-outline" (click)="cancel()">Close</button>
-    <button type="button" class="btn primary" (click)="approve()">Yes</button>
+  <div class="dialog-actions row">
+    <div class="col-md-3"><stc-apps-button [buttonText]="'Close'" [buttonType]="'gray-outline'"
+        (btnClick)="cancel()"></stc-apps-button></div>
+    <div class="col-md-3"><stc-apps-button [buttonText]="'Yes'" [buttonType]="'primary'" (btnClick)="approve()"
+        [actionType]="'submit'"></stc-apps-button></div>
+
 
   </div>
 </div>

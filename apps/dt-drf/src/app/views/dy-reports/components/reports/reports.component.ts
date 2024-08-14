@@ -236,6 +236,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
         width: '800px',
         data: {
           msg: `You're about to Remove Report "${name}" Kindly note you can't roll back this action. Are you sure?`,
+          isLoading: true,
         },
         disableClose: true,
       });
