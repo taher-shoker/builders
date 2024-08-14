@@ -1,4 +1,4 @@
-import { Component, input, InputSignal, OnInit } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 import { KpiDTO } from '../../../models/SectorKpisDetails.model';
 
 @Component({
@@ -8,19 +8,16 @@ import { KpiDTO } from '../../../models/SectorKpisDetails.model';
 })
 export class PanelsContainerComponent {
   categoryName: InputSignal<string> = input('');
-  kpiDTOList: InputSignal<KpiDTO[] | any> = input([]);
+  kpiDTOList: InputSignal<{ [key: string]: { [subkey: string]: KpiDTO[] } }> =
+    input({});
   newTabSelected: InputSignal<string> = input('');
-  constructor(){
-    console.log(this.kpiDTOList())
-  }
+  constructor() {}
+
   getCategoryKeys(): string[] {
-    const keys = Object.keys(this.kpiDTOList());
-    // console.log('Category Keys:', keys); // Debugging output
+    return Object.keys(this.kpiDTOList() || {});
+  }
 
-    keys.forEach((key) => {
-      // console.log(`Category: ${key}`, this.kpiDTOList()[key]); // Debugging output
-    });
-
-    return keys;
+  getSubKeys(category: string): string[] {
+    return Object.keys(this.kpiDTOList()[category] || {});
   }
 }

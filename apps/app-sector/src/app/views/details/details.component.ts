@@ -38,7 +38,7 @@ export class DetailsComponent implements OnInit {
   getKpiDetails() {
     const params: SectorKpisDetailsParams = {
       ...this.sharedFormService.getForm().value,
-      scorecardTitle: 'Group Business Unit',
+      scorecardTitle: this.selectedTab,
       kpiCode: this.kpiCode,
     };
     this.dashboardService
