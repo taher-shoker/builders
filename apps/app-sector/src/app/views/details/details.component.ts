@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { kpiCard, kpiDetailsParams } from './models/kpiDetailsModel';
 
 import { kpiInfoService } from '../../services/kpi-info.service';
@@ -10,17 +10,20 @@ import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
   styleUrl: './details.component.scss',
 })
 export class DetailsComponent implements OnInit {
+  kpiObjectSignal: WritableSignal<KpiDTO | undefined> = signal(undefined);
+
   currentDate = new Date();
   kpiCode = window.history.state.kpiCode;
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
-  categoryKpiLists: { [key: string]: KpiDTO[] } = {};
+  categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
 
   constructor(private kpiDetailsService: kpiInfoService) {}
 
   ngOnInit(): void {
     this.getKpiDetails();
   }
+
   getKpiDetails() {
     const params: kpiDetailsParams = {
       year: '2023',
@@ -31,13 +34,35 @@ export class DetailsComponent implements OnInit {
     };
     this.kpiDetailsService.getKpiDetails(params).subscribe((result: any) => {
       this.kpiDTOMap = result.kpiDTOMap;
-      Object.keys(this.kpiDTOMap).forEach((category) => {
-        this.categoryKpiLists[category] = this.kpiDTOMap[category];
-        this.addingCardsDescriptions(this.categoryKpiLists[category][0]);
-      });
+      this.categoryKpiLists = {};
+
+      // // Populate categoryKpiLists based on the new structure
+      // Ensure kpiDTOMap is an object and iterate through its keys
+      if (this.kpiDTOMap && typeof this.kpiDTOMap === 'object') {
+        Object.keys(this.kpiDTOMap).forEach((kpiSubGrouping) => {
+          // Initialize an empty object for each kpiSubGrouping
+          this.categoryKpiLists[kpiSubGrouping] = {};
+
+          // Ensure that the value is an array
+          const kpiArray = this.kpiDTOMap[kpiSubGrouping];
+          // Loop through each KPI within the kpiSubGrouping
+          Object.keys(kpiArray).forEach((kpiDTO: any) => {
+            this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
+            this.categoryKpiLists[kpiSubGrouping][kpiDTO.kpiName]?.push(kpiDTO);
+
+            // console.log(this.categoryKpiLists[kpiSubGrouping][kpiDTO.kpiName]);
+          });
+        });
+      }
+
+      // // Call addingCardsDescriptions with the first KPI from the first sub-grouping, if available
     });
   }
+
   addingCardsDescriptions(kpiObject: KpiDTO) {
+    this.kpiObjectSignal.set(kpiObject);
+    // console.log(this.kpiObjectSignal());
+
     this.cards = [
       {
         title: 'Definition',

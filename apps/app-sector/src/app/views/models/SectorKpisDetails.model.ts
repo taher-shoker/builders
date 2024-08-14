@@ -29,7 +29,9 @@ export interface KeyFilter {
 }
 
 export interface KpiDTOMap {
-  [key: string]: KpiDTO[];
+  [kpiSubGrouping: string]: {
+    [kpiName: string]: KpiDTO[];
+  };
 }
 
 export interface KpiDTO {
@@ -44,7 +46,7 @@ export interface KpiDTO {
   actualPerf: number;
   appliedPerf: number;
   actualValue: number;
-  unit: number;
+  unit: string;
   target: number;
   ceiling: number;
   definition: string;
@@ -66,8 +68,12 @@ export interface KpiDTO {
 // API Response Model
 export interface KpiDetailsResponse {
   keyFilter: KeyFilter;
-  kpiDTOMap: {
-    [key: string]: KpiDTO[];
+  kpiDTOMap: KpiDTOMap;
+}
+
+export interface CategoryKpiLists {
+  [kpiSubGrouping: string]: {
+    [kpiName: string]: KpiDTO[];
   };
 }
 

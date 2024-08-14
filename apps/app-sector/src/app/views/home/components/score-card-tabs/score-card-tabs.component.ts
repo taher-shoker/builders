@@ -31,7 +31,9 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
   scores: OverallScore[] = [];
   selectedTabChanged = '';
   kpiDTOMap: KpiDTOMap = {};
-  categoryKpiLists: { [key: string]: KpiDTO[] } = {};
+  categoryKpiLists: {
+    [kpiSubGrouping: string]: { [kpiName: string]: KpiDTO[] };
+  } = {};
 
   constructor(
     private overallScoreService: OverallScoreService,
@@ -74,13 +76,32 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
         scorecardTitle: this.selectedTab(),
       };
 
+      // this.dashboardService
+      //   .getSectorKpisDetails(params)
+      //   .subscribe((result: KpiDetailsResponse) => {
+      //     if (result) {
+      //       this.kpiDTOMap = result.kpiDTOMap;
+
+      //       Object.keys(this.kpiDTOMap).forEach((category) => {
+      //         this.categoryKpiLists[category] = this.kpiDTOMap[category];
+      //       });
+      //     }
+      //   });
       this.dashboardService
         .getSectorKpisDetails(params)
         .subscribe((result: KpiDetailsResponse) => {
           if (result) {
             this.kpiDTOMap = result.kpiDTOMap;
-            Object.keys(this.kpiDTOMap).forEach((category) => {
-              this.categoryKpiLists[category] = this.kpiDTOMap[category];
+
+            this.categoryKpiLists = {};
+
+            Object.keys(this.kpiDTOMap).forEach((kpiSubGrouping) => {
+              this.categoryKpiLists[kpiSubGrouping] = {};
+
+              Object.keys(this.kpiDTOMap[kpiSubGrouping]).forEach((kpiName) => {
+                this.categoryKpiLists[kpiSubGrouping][kpiName] =
+                  this.kpiDTOMap[kpiSubGrouping][kpiName];
+              });
             });
           }
         });
