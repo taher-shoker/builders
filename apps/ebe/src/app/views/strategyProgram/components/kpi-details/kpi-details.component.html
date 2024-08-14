@@ -94,7 +94,10 @@
       add project
     </div>
   </ng-template>
-  <stc-apps-add-project-form [modalVisible]="visible" (closeModal)="visible = false" />
+  @if(visible)
+  {
+    <stc-apps-add-project-form [modalVisible]="visible" (closeModal)="visible = false" />
+  }
   <!-- <ng-template pTemplate="footer">
     
   </ng-template> -->

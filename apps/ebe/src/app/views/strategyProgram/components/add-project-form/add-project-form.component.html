@@ -1,6 +1,6 @@
 <form [formGroup]="addProjectForm">
   <div class="form-group">
-    <label for="groupName">program name:</label>
+    <label for="groupName">project name:</label>
     <textarea
       type="text"
       name="groupName"
@@ -9,44 +9,45 @@
       class="groupName-input"
       (ngModelChange)="getValue($event)"
       [class.error-input]="
-        programNameValue &&
-        programNameValue.errors &&
-        programNameValue.errors['required'] &&
-        programNameValue.touched
+        progectNameValue &&
+        progectNameValue.errors &&
+        (progectNameValue.errors['required'] || progectNameValue.errors['noSpaces']) &&
+        progectNameValue.dirty
       "
       maxlength="50"
     ></textarea>
     <span>{{ textLength }}/50</span>
-    @if(programNameValue && programNameValue.errors &&
-    programNameValue.errors['required'] && programNameValue.touched) {
+    @if(progectNameValue && progectNameValue.errors &&
+    (progectNameValue.errors['required'] || progectNameValue.errors['noSpaces']) && progectNameValue.dirty) {
     <small class="error-msg">this field is required</small>
     }
   </div>
   <div class="row mb-3">
     <div class="col-lg-6 col-sm-12">
       <div class="form-group">
-        <label for="groupName">actual Value:</label>
+        <label for="actual">actual Value:</label>
         <input
           type="text"
+          id="actual"
           name="progress"
           formControlName="actualValue"
           class="groupName-input actual-input"
           [class.error-input]="
             actualValue &&
             actualValue.errors &&
-            (actualValue.errors['required'] || actualValue.errors['isNumber'] || actualValue.errors['rangeError']) &&
-            actualValue.touched
+            (actualValue.errors['required'] || actualValue.errors['isNumber'] || actualValue.errors['rangeError'] || actualValue.errors['noSpaces']) &&
+            actualValue.dirty
           "
         />
-        @if(actualValue && actualValue.errors && actualValue.errors['required'] && actualValue.touched) 
+        @if(actualValue && actualValue.errors && (actualValue.errors['required'] || actualValue.errors['noSpaces']) && actualValue.dirty) 
         {
             <small class="error-msg error-msg2">this field is required</small>
         }
-        @else if(actualValue && actualValue.errors && actualValue.errors['isNumber'] && actualValue.touched) 
+        @else if(actualValue && actualValue.errors && actualValue.errors['isNumber'] && actualValue.dirty) 
         {
             <small class="error-msg error-msg2">you must enter numbers only</small>
         }
-        @else if(actualValue && actualValue.errors && actualValue.errors['rangeError'] && actualValue.touched) 
+        @else if(actualValue && actualValue.errors && actualValue.errors['rangeError'] && actualValue.dirty) 
         {
             <small class="error-msg error-msg2">number range must be between 0 and 100</small>
         }
@@ -54,28 +55,29 @@
     </div>
     <div class="col-lg-6 col-sm-12">
       <div class="form-group">
-        <label for="groupName">planned Value:</label>
+        <label for="planned">planned Value:</label>
         <input
           type="text"
+          id="planned"
           name="totalWeight"
           formControlName="plannedValue"
           class="groupName-input actual-input"
           [class.error-input]="
             plannedValue &&
             plannedValue.errors &&
-            (plannedValue.errors['required'] || plannedValue.errors['isNumber'] || plannedValue.errors['rangeError']) &&
-            plannedValue.touched
+            (plannedValue.errors['required'] || plannedValue.errors['isNumber'] || plannedValue.errors['rangeError'] || plannedValue.errors['noSpaces']) &&
+            plannedValue.dirty
           "
         />
-        @if(plannedValue && plannedValue.errors && plannedValue.errors['required'] && plannedValue.touched) 
+        @if(plannedValue && plannedValue.errors && (plannedValue.errors['required'] || plannedValue.errors['noSpaces']) && plannedValue.dirty) 
         {
             <small class="error-msg error-msg2">this field is required</small>
         }
-        @else if(plannedValue && plannedValue.errors && plannedValue.errors['isNumber'] && plannedValue.touched) 
+        @else if(plannedValue && plannedValue.errors && plannedValue.errors['isNumber'] && plannedValue.dirty) 
         {
             <small class="error-msg error-msg2">you must enter numbers only</small>
         }
-        @else if(plannedValue && plannedValue.errors && plannedValue.errors['rangeError'] && plannedValue.touched) 
+        @else if(plannedValue && plannedValue.errors && plannedValue.errors['rangeError'] && plannedValue.dirty) 
         {
             <small class="error-msg error-msg2">number range must be between 0 and 100</small>
         }

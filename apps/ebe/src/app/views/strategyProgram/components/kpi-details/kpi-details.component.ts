@@ -1,4 +1,4 @@
-import { StrategyProgramKpiDetailsModel } from './../../../../models/strategy-program.model';
+import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
 import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
@@ -22,8 +22,8 @@ import { AddProjectFormComponent } from '../add-project-form/add-project-form.co
     DialogModule,
     AddProjectFormComponent,
   ],
-  templateUrl: './kpi-details.component.ts.component.html',
-  styleUrl: './kpi-details.component.ts.component.scss',
+  templateUrl: './kpi-details.component.html',
+  styleUrl: './kpi-details.component.scss',
 })
 export class KpiDetailsComponentTsComponent implements OnInit {
   @ViewChild(AddProjectFormComponent) child?: AddProjectFormComponent;

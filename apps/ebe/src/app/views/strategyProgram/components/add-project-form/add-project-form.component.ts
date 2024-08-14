@@ -1,7 +1,6 @@
 import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
@@ -17,17 +16,19 @@ export class AddProjectFormComponent implements OnInit , OnChanges {
   @Output() closeModal:EventEmitter<boolean> = new EventEmitter<boolean>()
   ngOnInit(): void {
     this.addProjectForm = this.formBuilder.group({
-      projectName : [null , [Validators.required , Validators.maxLength(50)]],
-      actualValue : [null , [Validators.required , this.rangeValidator]],
-      plannedValue : [null , [Validators.required , this.rangeValidator]],
+      projectName : [null , [Validators.required , this.noSpacesValidator , Validators.maxLength(50)]],
+      actualValue : [null , [Validators.required , this.noSpacesValidator , this.rangeValidator]],
+      plannedValue : [null , [Validators.required , this.noSpacesValidator , this.rangeValidator]],
       // totalInvestment : [null , [Validators.required , this.rangeValidator]],
       // description : [null , Validators.maxLength(200)]
     })
   }
   ngOnChanges(): void {
-    if(this.modalVisible() === false)
+    if(!this.modalVisible())
     {
       this.addProjectForm.reset();
+      this.progectNameValue?.reset()
+      this.textLength = 0;
     }
   }
   rangeValidator(control: AbstractControl): ValidationErrors | null {
@@ -41,19 +42,35 @@ export class AddProjectFormComponent implements OnInit , OnChanges {
     }
     return null;
   }
+  noSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { noSpaces: true };
+  }
   closeModalFun()
   {
     this.closeModal.emit(true);
   }
   save()
   {
-    console.log(this.addProjectForm.value);
+    if(this.addProjectForm.valid)
+    {
+      const data = {
+        progectName : this.addProjectForm.value.projectName.trim(),
+        actualValue : +this.addProjectForm.value.actualValue,
+        plannedValue : +this.addProjectForm.value.plannedValue
+      }
+      console.log(data);
+    }
   }
   getValue(e:string)
   {
-    this.textLength = e.length;
+    if(e)
+    {
+      this.textLength = e.length;
+    }
   }
-  get programNameValue()
+  get progectNameValue()
   {
     return this.addProjectForm.get("projectName")
   }

@@ -22,7 +22,7 @@ export const appRoutes: Route[] = [
   {
     path : "strategy-program/:kpiId",
     loadComponent: () =>
-      import('./views/strategyProgram/components/kpi-details/kpi-details.component.ts.component').then(
+      import('./views/strategyProgram/components/kpi-details/kpi-details.component').then(
         (m) => m.KpiDetailsComponentTsComponent
       ),
   },
