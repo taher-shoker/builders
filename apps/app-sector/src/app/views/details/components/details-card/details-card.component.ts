@@ -10,10 +10,18 @@ export class DetailsCardComponent {
   description: InputSignal<string | any> = input('');
 
   isDescriptionString(): boolean {
-    return typeof this.description() === 'string' || typeof this.description()==='number';
+    return (
+      typeof this.description() === 'string' ||
+      typeof this.description() === 'number'
+    );
   }
   checkForPrecentage(): boolean {
-    if (typeof this.description() === 'string') {
+    if (
+      typeof this.description() === 'string' &&
+      (this.title() == 'Weight' ||
+        this.title() == 'Threshold' ||
+        this.title() == 'Ceiling')
+    ) {
       return this.description().includes('%');
     } else {
       return false;

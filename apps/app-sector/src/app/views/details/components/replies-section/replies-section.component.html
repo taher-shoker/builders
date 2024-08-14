@@ -2,16 +2,15 @@
   <div class="replies-section_totalComments">{{ totalComments }} Comments</div>
   @if(totalComments!==0){
   <div class="replies-section_holder">
-    @for (comment of commentsList; let parentLoop=$index;track parentLoop;) {
+    @for (comment of comments; let parentLoop=$index;track parentLoop;) {
     <div>
       <stc-apps-profile
-        [name]="comment.name"
+        [name]="comment.authorName"
         [comment]="comment.comment"
-        [time]="comment.time"
-        [lastItem]="parentLoop === commentsList.length - 1 ? true : false"
+        [time]="comment.edited ? comment.editedAt : comment.createdAt"
+        [lastItem]="parentLoop === comments.length - 1 ? true : false"
         [hasReplies]="comment.replies.length !== 0 ? true : false"
         [reply]="false"
-        [mentions]="comment.mentions"
         (commentActionName)="handleCommentActions($event, parentLoop)"
       ></stc-apps-profile>
     </div>
@@ -44,13 +43,12 @@
       <div class="replies">
         @for (reply of comment.replies; track $index) {
         <stc-apps-profile
-          [name]="reply.name"
-          [comment]="reply.comment"
-          [time]="reply.time"
-          [mentions]="reply.mentions"
+          [name]="reply.authorName"
+          [comment]="reply.reply"
+          [time]="reply.edited ? reply.editedAt : reply.createdAt"
           [lastItem]="
             $index === comment.replies.length - 1 &&
-            parentLoop === commentsList.length - 1
+            parentLoop === comments.length - 1
               ? true
               : false
           "

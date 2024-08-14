@@ -1,4 +1,13 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  ElementRef,
+  Input,
+  input,
+  InputSignal,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newComment } from '../../../models/newComment';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -6,6 +15,7 @@ import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { ConfirmationDialogeComponent } from 'apps/app-sector/src/app/shared/confirmation-dialoge/confirmationDialoge.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
+import { comment } from '../../models/commentsModel';
 
 @Component({
   selector: 'stc-apps-comments-form',

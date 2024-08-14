@@ -22,6 +22,7 @@ export class ExpansionPanelBodyComponent {
   kpiStatus: InputSignal<string> = input('');
   kpiCode: InputSignal<string> = input('');
   kpiName: InputSignal<string> = input('');
+  selectedTab: InputSignal<string> = input('');
   listItems: InputSignal<Section[] | any> = input([]);
   kpiActualValue: InputSignal<number> = input(0);
   kpiTargetValue: InputSignal<number> = input(0);
@@ -38,12 +39,12 @@ export class ExpansionPanelBodyComponent {
       indexes: [
         {
           caption: 'Actual',
-          value: this.kpiActualValue() * 100,
+          value: +(this.kpiActualValue() * 100).toFixed(2),
           position: 'up',
         },
         {
           caption: 'Target',
-          value: this.kpiTargetValue() * 100,
+          value: +(this.kpiTargetValue() * 100).toFixed(2),
           position: 'down',
         },
       ],
@@ -66,7 +67,7 @@ export class ExpansionPanelBodyComponent {
   }
   navigateToDetails() {
     this.router.navigate(['/details', this.kpiName()], {
-      state: { kpiCode: this.kpiCode() },
+      state: { kpiCode: this.kpiCode(), selectedTab: this.selectedTab() },
     });
   }
 }
