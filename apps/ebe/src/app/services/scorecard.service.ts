@@ -68,15 +68,21 @@ export class ScorecardService {
   getNavLinks(): NavLinks[] {
     return this.navItems;
   }
-  getScorecardData(month: number, year: number , groupName?: string): Observable<ScorecardModel[]> {
-    if(groupName)
+  getScorecardData(month?: number, year?: number , groupName?: string): Observable<ScorecardModel[]> {
+    if(groupName && month && year)
     {
       return this.http.get<ScorecardModel[]>(
         `${environment.apiUrl}/business-excellence/scorecards?month=${month}&year=${year}&group=${groupName}`
       );  
     }
+    else if(month && year && !groupName)
+    {
+      return this.http.get<ScorecardModel[]>(
+        `${environment.apiUrl}/business-excellence/scorecards?month=${month}&year=${year}`
+      );
+    }
     return this.http.get<ScorecardModel[]>(
-      `${environment.apiUrl}/business-excellence/scorecards?month=${month}&year=${year}`
+      `${environment.apiUrl}/business-excellence/scorecards`
     );
   }
   setEditMode(mode: 'editMode' | 'viewMode') {

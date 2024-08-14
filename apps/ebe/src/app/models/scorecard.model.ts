@@ -38,6 +38,7 @@ export interface KpiModel
   target:number;
   ceiling:number;
   threshold:number;
+  group:string;
 }
 export interface UserModel
 {

@@ -27,6 +27,7 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 import { DialogModule } from 'primeng/dialog';
 import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
 import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
+import { Subject } from 'rxjs';
 interface filterOption
 {
   month:number;
@@ -52,6 +53,7 @@ export class TapDetailsComponent implements OnInit {
   scorcardData: InputSignal<ScorecardModel[]> = input.required<ScorecardModel[]>();
   currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
   visible = false;
+  endSubs$:Subject<ScorecardModel[]> = new Subject();
   selectedFile!:FileModel | null;
   currentClickedTap: InputSignal<ScorecardTaps> = input.required<ScorecardTaps>();
   isEmpty: InputSignal<boolean> = input.required<boolean>();
@@ -80,7 +82,7 @@ export class TapDetailsComponent implements OnInit {
     }
     this.years.set(yearsArr);
     this.monthsArrPopulator();
-    this.filterOptions.emit(this.filtersForm.value);
+    // this.filterOptions.emit(this.filtersForm.value);
   }
   get monthValue() {
     return this.filtersForm.get('month');
@@ -126,6 +128,7 @@ export class TapDetailsComponent implements OnInit {
     if(this.selectedFile)
     {
       this.ImportedFile.emit(this.selectedFile);
+      // this.getScorecardsTaps()
     }
   }
   downloadTemplate()

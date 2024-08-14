@@ -30,8 +30,8 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   username!:string;
   currYear = new Date().getFullYear()
   ngOnInit(): void {
-    this.scorecardsTaps = this.scorecardService.getScorecardsTaps();
-    this.currentClickedTapData = this.scorecardsTaps[0];
+    this.getInitScorecardsTaps(new Date().getMonth() + 1 , new Date().getFullYear() , true);
+    // this.scorecardsTaps = this.scorecardService.getScorecardsTaps();
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
@@ -63,13 +63,48 @@ export class ScorecardComponent implements OnInit , OnDestroy{
     this.endSubs$.complete()
   }
   getClickedTap(clickedTap: ScorecardTaps) {
-    this.currentClickedTapData = clickedTap;
-    this.getScorecardData(this.filtersOptions.month , this.filtersOptions.year , clickedTap.value)
+    this.currentClickedTapData = clickedTap;    
+    if(this.filtersOptions)
+    {
+      this.getScorecardData(this.filtersOptions.month , this.filtersOptions.year , clickedTap.value)
+    } else {
+      this.getScorecardData(new Date().getMonth() + 1 , new Date().getFullYear() , clickedTap.value)
+    }
   }
   getFiltersOptions(options:FilteredOptions)
   {
     this.filtersOptions = options;
     this.getScorecardData(options.month , options.year , this.currentClickedTapData.value);
+  }
+  private getInitScorecardsTaps(month:number , year:number , initApp:boolean)
+  {
+    this.scorecardService.getScorecardData().pipe(takeUntil(this.endSubs$)).subscribe({
+      next : (scorecards:ScorecardModel[]) => {
+        console.log(scorecards);
+        const data:ScorecardTaps[] = [];
+        scorecards.forEach((scorecard , index) => {
+          scorecard.kpiDataDTO.forEach(kpi => {
+            data.push({
+              id : index + 1,
+              name : kpi.group,
+              value : kpi.group
+            })
+          })
+        })
+        const uniqueObjects:ScorecardTaps[] = data.filter((obj, index , self) =>
+          index === self.findIndex((t) => (
+            t.name === obj.name
+          ))
+        );
+        // console.log(uniqueObjects);
+        this.scorecardsTaps = uniqueObjects
+        if(initApp)
+        {
+          this.currentClickedTapData = this.scorecardsTaps[0];
+        }
+        this.getScorecardData(month , year , this.currentClickedTapData.value);
+      }
+    })
   }
   getImportedFile(e:FileModel)
   {
@@ -79,7 +114,13 @@ export class ScorecardComponent implements OnInit , OnDestroy{
         next : () => {
           if(this.child)
           {
-            this.getScorecardData(this.filtersOptions.month , this.filtersOptions.year , this.currentClickedTapData.value)
+            // this.getScorecardData(this.filtersOptions.month , this.filtersOptions.year , this.currentClickedTapData.value)
+            if(this.filtersOptions)
+            {
+              this.getInitScorecardsTaps(this.filtersOptions.month , this.filtersOptions.year , false) 
+            } else {
+              this.getInitScorecardsTaps(new Date().getMonth() + 1 , new Date().getFullYear() , false) 
+            }
             this.child.visible = false;
           }
         },

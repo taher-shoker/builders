@@ -56,7 +56,7 @@ export class AddProjectFormComponent implements OnInit , OnChanges {
     if(this.addProjectForm.valid)
     {
       const data = {
-        progectName : this.addProjectForm.value.projectName.trim(),
+        projectName : this.addProjectForm.value.projectName.trim(),
         actualValue : +this.addProjectForm.value.actualValue,
         plannedValue : +this.addProjectForm.value.plannedValue
       }
