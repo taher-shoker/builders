@@ -58,15 +58,16 @@ export class DetailsComponent implements OnInit {
             const kpiArray = this.kpiDTOMap[kpiSubGrouping];
             // Loop through each KPI within the kpiSubGrouping
             Object.keys(kpiArray).forEach((kpiDTO: any) => {
-              this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
+              const kpiArray = this.kpiDTOMap[kpiSubGrouping];
+              if (kpiArray && kpiArray[kpiDTO]?.length > 0) {
+                this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
+              }
               this.categoryKpiLists[kpiSubGrouping][kpiDTO.kpiName]?.push(
                 kpiDTO
               );
               // this.commentService.commenstList.next(
               //   this.categoryKpiLists[category][0].commentList
               // );
-
-              // console.log(this.categoryKpiLists[kpiSubGrouping][kpiDTO.kpiName]);
             });
           });
         }
@@ -77,8 +78,6 @@ export class DetailsComponent implements OnInit {
 
   addingCardsDescriptions(kpiObject: KpiDTO) {
     this.kpiObjectSignal.set(kpiObject);
-    // console.log(this.kpiObjectSignal());
-
     this.cards = [
       {
         title: 'Definition',

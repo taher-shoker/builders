@@ -1,28 +1,29 @@
 import {
   Component,
-  effect,
   ElementRef,
-  Input,
   input,
   InputSignal,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newComment } from '../../../models/newComment';
-import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { ConfirmationDialogeComponent } from 'apps/app-sector/src/app/shared/confirmation-dialoge/confirmationDialoge.component';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
-import { comment } from '../../models/commentsModel';
+import { AttachmentService } from '../../services/attachment.service';
+import { KpiDTO } from '../../../models/SectorKpisDetails.model';
+import { SharedFormService } from '../../../home/services/shared-form.service';
+import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
 
 @Component({
   selector: 'stc-apps-comments-form',
   templateUrl: './comments-form.component.html',
   styleUrls: ['./comments-form.component.scss'],
 })
-export class CommentsFormComponent implements OnInit {
+export class CommentsFormComponent implements OnInit, OnChanges {
+  kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
+
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
@@ -52,12 +53,30 @@ export class CommentsFormComponent implements OnInit {
   mentionsArray: string[] = [''];
   constructor(
     private fb: FormBuilder,
-    private dialog: MatDialog,
-    private dialogeService: dialogeService
+    private dialogeService: dialogeService,
+    private attachmentService: AttachmentService,
+    private sharedFormService: SharedFormService,
+    private sectorService: SectorService
   ) {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['kpiObjectSignal']) {
+      this.populateDisplayedFiles();
+    }
+  }
 
   ngOnInit(): void {
     this.handleForm();
+  }
+
+  populateDisplayedFiles() {
+    const kpiObject = this.kpiObjectSignal();
+
+    if (kpiObject && kpiObject.attachementList) {
+      this.displayedFiles = kpiObject.attachementList;
+    } else {
+      console.log('No attachmentList found or kpiObject is undefined');
+    }
   }
 
   handleForm() {
@@ -65,37 +84,6 @@ export class CommentsFormComponent implements OnInit {
       comment: this.fb.control('', [Validators.required]),
       attachments: this.fb.control([], [Validators.required]),
     });
-  }
-
-  triggerFileInput() {
-    this.fileInput.nativeElement.click();
-  }
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const filesArray = Array.from(input.files);
-      const existingFileNames = new Set(
-        this.uploadedFiles.map((file) => file.name)
-      );
-      const uniqueFiles = filesArray.filter(
-        (file) => !existingFileNames.has(file.name)
-      );
-
-      this.uploadedFiles = this.uploadedFiles.concat(uniqueFiles);
-      this.displayedFiles = this.displayedFiles.concat(
-        uniqueFiles.map((file) => ({
-          file,
-          formattedUploadDate: this.formatDate(new Date()),
-        }))
-      );
-
-      console.log('Selected files:', this.uploadedFiles);
-      this.form.patchValue({
-        attachments: this.uploadedFiles,
-      });
-      input.value = '';
-    }
   }
 
   formatDate(date: Date): string {
@@ -107,32 +95,66 @@ export class CommentsFormComponent implements OnInit {
     return `Uploaded at ${date.toLocaleDateString('en-US', options)}`;
   }
 
-  downloadFile(file: any) {
-    const url = URL.createObjectURL(file);
-    const anchor = document.createElement('a');
-    anchor.href = url;
-    anchor.download = file.name;
-    document.body.appendChild(anchor);
-    anchor.click();
-    document.body.removeChild(anchor);
-    URL.revokeObjectURL(url);
-  }
+  // triggerFileInput() {
+  //   this.fileInput.nativeElement.click();
+  // }
 
-  deleteFile(index: number) {
-    this.uploadedFiles?.splice(index, 1);
-    this.displayedFiles?.splice(index, 1);
-  }
-  index = 0;
-  file: any;
-  confirmdDownload() {
-    this.downloadFile(this.file);
-  }
-  confirmDelete() {
-    this.deleteFile(this.index);
-  }
-  openDialog(downloadOrDeleteFlag: string, index: number, file?: any) {
-    this.index = index;
-    if (downloadOrDeleteFlag == 'delete') {
+  // downloadFile(file: any) {
+  //   const url = URL.createObjectURL(file);
+  //   const anchor = document.createElement('a');
+  //   anchor.href = url;
+  //   anchor.download = file.name;
+  //   document.body.appendChild(anchor);
+  //   anchor.click();
+  //   document.body.removeChild(anchor);
+  //   URL.revokeObjectURL(url);
+  // }
+
+  // deleteFile(index: number) {
+  //   this.uploadedFiles?.splice(index, 1);
+  //   this.displayedFiles?.splice(index, 1);
+  // }
+  // index = 0;
+  // file: any;
+  // confirmdDownload() {
+  //   this.downloadFile(this.file);
+  // }
+  // confirmDelete() {
+  //   this.deleteFile(this.index);
+  // }
+  // openDialog(downloadOrDeleteFlag: string, index: number, file?: any) {
+  //   this.index = index;
+  //   if (downloadOrDeleteFlag == 'delete') {
+  //     const dialogeDesc = 'Are you sure you want to delete this attachment?';
+  //     const confirmationBtnDesc = 'Delete';
+  //     this.dialogeService.openDialog(
+  //       '0ms',
+  //       '0ms',
+  //       dialogeDesc,
+  //       confirmationBtnDesc,
+  //       this.confirmDelete.bind(this)
+  //     );
+  //   } else {
+  //     this.file = file;
+  //     const dialogeDesc = `Do you want to download file ${file.name}?`;
+  //     const confirmationBtnDesc = 'Download';
+  //     this.dialogeService.openDialog(
+  //       '0ms',
+  //       '0ms',
+  //       dialogeDesc,
+  //       confirmationBtnDesc,
+  //       this.confirmdDownload.bind(this)
+  //     );
+  //   }
+  // }
+
+  openDialog(
+    downloadOrDeleteFlag: string,
+    index: number,
+    id?: number,
+    file?: any
+  ) {
+    if (downloadOrDeleteFlag === 'delete' && id !== undefined) {
       const dialogeDesc = 'Are you sure you want to delete this attachment?';
       const confirmationBtnDesc = 'Delete';
       this.dialogeService.openDialog(
@@ -140,61 +162,20 @@ export class CommentsFormComponent implements OnInit {
         '0ms',
         dialogeDesc,
         confirmationBtnDesc,
-        this.confirmDelete.bind(this)
+        () => this.onDeleteFile(index, id)
       );
-    } else {
-      this.file = file;
-      const dialogeDesc = `Do you want to download file ${file.name}?`;
+    } else if (downloadOrDeleteFlag === 'download' && id !== undefined) {
+      const dialogeDesc = `Do you want to download file ${file.attachmentDisplayName}?`;
       const confirmationBtnDesc = 'Download';
       this.dialogeService.openDialog(
         '0ms',
         '0ms',
         dialogeDesc,
         confirmationBtnDesc,
-        this.confirmdDownload.bind(this)
+        () => this.onDownloadFile(file, id)
       );
     }
   }
-
-  // openDialog(
-  //   enterAnimationDuration: string,
-  //   exitAnimationDuration: string,
-  //   index: number,
-  //   deleteOrDownloadFlag: string,
-  //   file?: any
-  // ): void {
-  //   const dialogConfig = new MatDialogConfig();
-  //   dialogConfig.disableClose = true;
-  //   dialogConfig.autoFocus = true;
-  //   const dialogRef = this.dialog.open(ConfirmationDialogeComponent, {
-  //     width: '750px',
-  //     enterAnimationDuration,
-  //     exitAnimationDuration,
-  //   });
-  //   // eslint-disable-next-line prefer-const
-  //   let instance = dialogRef.componentInstance;
-  //   if (deleteOrDownloadFlag == 'delete') {
-  //     instance.dialogeDesc = 'Are you sure you want to delete this attachment?';
-  //     instance.confirmationBtnDesc = 'Confirm';
-  //   } else if (deleteOrDownloadFlag == 'download') {
-  //     instance.dialogeDesc = `Do you want to download file ${file.name}?`;
-  //     instance.confirmationBtnDesc = 'Download';
-  //   }
-
-  //   dialogRef.afterClosed().subscribe((data) => {
-  //     console.log('Dialog output:', data);
-  //     if (data == 'confirmed' && deleteOrDownloadFlag == 'delete') {
-  //       this.deleteFile(index);
-  //     } else if (data == 'confirmed' && deleteOrDownloadFlag == 'download') {
-  //       this.downloadFile(file);
-  //     }
-  //   });
-  // }
-
-  // onDeleteFile(id: number) {
-  //   this.uploadedFiles = this.uploadedFiles.filter((x: any) => x.id !== id);
-  //   this.form.get('attachments')?.setValue(this.uploadedFiles);
-  // }
 
   onContentChange(content: string) {
     const mentionsArray = this.extractMentions(content);
@@ -234,5 +215,50 @@ export class CommentsFormComponent implements OnInit {
   onEditComment(content: string) {
     // console.log(content);
     this.form.get('comment')?.setValue(content);
+  }
+
+  onFilesSelected(filesArray: File[]) {
+    const existingFileNames = new Set(
+      this.uploadedFiles.map((file) => file.name)
+    );
+    const uniqueFiles = filesArray.filter(
+      (file) => !existingFileNames.has(file.name)
+    );
+    const addAttachmentDto = {
+      sectorName: this.sectorService.getSectorName(),
+      year: this.sharedFormService.getForm().value.year,
+      quarter: this.sharedFormService.getForm().value.quarter,
+      scorecardTitle: 'Group Business Unit',
+      kpiCode: this.kpiObjectSignal().kpiCode,
+      note: 'Test Note',
+    };
+
+    uniqueFiles.forEach((file) => {
+      this.attachmentService
+        .uploadKPIAttachment(file, addAttachmentDto)
+        .subscribe((result) => {
+          this.displayedFiles.unshift({
+            file: file,
+            ...result,
+          });
+        });
+    });
+  }
+
+  onDeleteFile(index: number, id: number) {
+    this.attachmentService.deleteKPIAttachment(id).subscribe(() => {
+      this.displayedFiles.splice(index, 1);
+    });
+  }
+
+  onDownloadFile(file: any, id: number) {
+    this.attachmentService.downloadKPIAttachment(id).subscribe((blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.href = url;
+      anchor.download = file.attachmentDisplayName;
+      anchor.click();
+      window.URL.revokeObjectURL(url);
+    });
   }
 }

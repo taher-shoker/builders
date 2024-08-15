@@ -9,7 +9,6 @@
       [mentions]="mentions2"
       (contentChange)="onContentChange($event)"
     ></stc-apps-comment-editor>
-
     <div class="comments_actions">
       <button [disabled]="form.controls['comment'].hasError('required')">
         Submit
@@ -21,51 +20,17 @@
     </div>
   </div>
 
-  <div class="attachments">
-    <div class="attachments_summary">
-      <span>{{ uploadedFiles.length + ' Attachments' }}</span>
-      <button (click)="triggerFileInput()">
-        <img src="assets/images/attach-square.svg" />
-        Add Attachment
-      </button>
-    </div>
-    @if (displayedFiles.length==0) {
-      <div class="attachments_empty">There's no attachaments yet</div>
-    }
-    <div class="attachments_files">
-      <div class="row row-gap-3">
-        @for(fileObj of displayedFiles; track fileObj; let index = $index) {
-        <div class="col-12">
-          <div class="attachments_files_item px-2">
-            <div>
-              <span (click)="openDialog('download', index, fileObj.file)">
-                {{ fileObj.file.name }}
-              </span>
-              <div class="d-flex">
-                <!-- <button class="btn" (click)="downloadFile(file)">
-      <i class="fas fa-arrow-alt-circle-down"></i>
-    </button> -->
-                <button class="btn" (click)="openDialog('delete', index)">
-                  <img src="assets/images/trash.svg" />
-                </button>
-              </div>
-            </div>
-            <span class="attachments_files_item_time">{{
-              fileObj.formattedUploadDate
-            }}</span>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-
-    <input
-      type="file"
-      #fileInput
-      (change)="onFileSelected($event)"
-      style="display: none"
-      [accept]="accept"
-      multiple
-    />
-  </div>
+  <stc-apps-attachments
+    [displayedFiles]="
+      displayedFiles.length > 0
+        ? displayedFiles
+        : kpiObjectSignal()?.attachementList
+    "
+    [accept]="accept"
+    (filesSelected)="onFilesSelected($event)"
+    (deleteFile)="openDialog('delete', $event.index, $event.id)"
+    (downloadFile)="
+      openDialog('download', $event.index, $event.id, $event.file)
+    "
+  ></stc-apps-attachments>
 </form>
