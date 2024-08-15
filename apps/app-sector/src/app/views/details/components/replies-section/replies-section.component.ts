@@ -93,15 +93,15 @@ export class RepliesSectionComponent implements OnInit {
     this.handleForm();
   }
   ngOnInit(): void {
-    const params: sectorUsersParams = {
-      system: 'Score_Card_Report_DB',
-      team: this.sharedFormService.getForm().value.sectorName,
-    };
-    this.commentService.getSectorUsers(params).subscribe({
-      next: (result: user[]) => {
-        console.log(result);
-      },
-    });
+    // const params: sectorUsersParams = {
+    //   system: 'Score_Card_Report_DB',
+    //   team: this.sharedFormService.getForm().value.sectorName,
+    // };
+    // this.commentService.getSectorUsers(params).subscribe({
+    //   next: (result: user[]) => {
+    //     console.log(result);
+    //   },
+    // });
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
       this.cookieService.get('token')

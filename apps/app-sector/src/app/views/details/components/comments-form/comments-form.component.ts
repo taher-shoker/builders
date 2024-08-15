@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, ElementRef, input, InputSignal, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newComment } from '../../../models/newComment';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -16,6 +16,7 @@ import { ToastrService } from 'ngx-toastr';
 import { AttachmentService } from '../../services/attachment.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
+import { KpiDTO } from '../../../models/SectorKpisDetails.model';
 
 @Component({
   selector: 'stc-apps-comments-form',
