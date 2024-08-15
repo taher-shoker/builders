@@ -19,18 +19,16 @@
       (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader> -->
     </div>
   </div>
-
-  <stc-apps-attachments
-    [displayedFiles]="
-      displayedFiles.length > 0
-        ? displayedFiles
-        : kpiObjectSignal()?.attachementList
-    "
-    [accept]="accept"
-    (filesSelected)="onFilesSelected($event)"
-    (deleteFile)="openDialog('delete', $event.index, $event.id)"
-    (downloadFile)="
-      openDialog('download', $event.index, $event.id, $event.file)
-    "
-  ></stc-apps-attachments>
 </form>
+
+<stc-apps-attachments
+  [displayedFiles]="
+    displayedFiles.length > 0
+      ? displayedFiles
+      : kpiObjectSignal()?.attachementList
+  "
+  [accept]="accept"
+  (filesSelected)="onFilesSelected($event)"
+  (deleteFile)="openDialog('delete', $event.index, $event.id)"
+  (downloadFile)="openDialog('download', $event.index, $event.id, $event.file)"
+></stc-apps-attachments>

@@ -1,4 +1,13 @@
-import { Component, ElementRef, input, InputSignal, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  input,
+  InputSignal,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  ViewChild,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newComment } from '../../../models/newComment';
 // eslint-disable-next-line @nx/enforce-module-boundaries
@@ -23,7 +32,7 @@ import { KpiDTO } from '../../../models/SectorKpisDetails.model';
   templateUrl: './comments-form.component.html',
   styleUrls: ['./comments-form.component.scss'],
 })
-export class CommentsFormComponent implements OnInit {
+export class CommentsFormComponent implements OnInit, OnChanges {
   kpiCode = window.history.state.kpiCode;
   scoreCardTitle = window.history.state.selectedTab;
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
@@ -36,14 +45,15 @@ export class CommentsFormComponent implements OnInit {
   uploadedFiles: File[] = [];
   displayedFiles: { file: File; formattedUploadDate: string }[] = [];
   accept = [
-    'image/png',
-    'image/jpeg',
-    'image/jpg',
-    'application/pdf',
-    'text/csv',
-    'text/plain',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-excel',
+    'text/csv', // CSV files
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel files (xlsx)
+    'application/vnd.ms-excel', // Excel files (xls)
+    'application/vnd.ms-powerpoint', // PowerPoint files (ppt)
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation', // PowerPoint files (pptx)
+    'application/msword', // Word files (doc)
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Word files (docx)
+    'application/zip', // ZIP files
+    'application/x-rar-compressed', // RAR files
   ];
 
   mentions: string[] = ['John', 'Jane', 'Doe', 'Smith'];
@@ -71,7 +81,6 @@ export class CommentsFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    
     this.handleForm();
   }
 
