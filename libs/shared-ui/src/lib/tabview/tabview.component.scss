@@ -5,6 +5,7 @@
     gap:30px;
     margin-bottom: 30px;
     margin-right: 30px;
+    align-items: center;
     // min-width: 900px;
     .scored-card-section-taps-tap
     {
@@ -15,5 +16,10 @@
       border-radius: 5px;
       transition: .3s;
       // font-family: STCForwardFont;
+    }
+    i
+    {
+      cursor: pointer;
+      font-size: 22px;
     }
 }

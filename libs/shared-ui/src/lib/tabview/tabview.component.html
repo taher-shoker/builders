@@ -1,5 +1,5 @@
 <div class="tabs-view-section">
-  @for (tap of tabsData(); track tap.id;let index = $index){
+  @for (tap of data; track tap.id;let index = $index){
     <div
       class="scored-card-section-taps-tap"
       [class.clickedTap]="currentClickedTapIndex === index"
@@ -14,5 +14,9 @@
     >
       <span>{{tap.name}}</span>
     </div>
+  }
+  @if(tabsData() && tabsData().length > 5 && data.length !== tabsData().length)
+  {
+    <i class = "pi pi-ellipsis-h" (click)="showMore()"></i>
   }
 </div>
