@@ -77,7 +77,7 @@ export class ExpansionPanelComponent {
         section: 'left',
         items: [
           { label: 'Weight:', value: Number(kpi.weight) },
-          { label: 'Unit:', value: Number(kpi.unit) },
+          { label: 'Unit:', value: kpi.unit },
         ],
       },
       {

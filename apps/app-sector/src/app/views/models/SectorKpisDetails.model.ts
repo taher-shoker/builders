@@ -86,7 +86,7 @@ export interface CategoryKpiLists {
 
 export interface ListItem {
   label: string;
-  value: number;
+  value: string | number;
 }
 
 export interface Section {

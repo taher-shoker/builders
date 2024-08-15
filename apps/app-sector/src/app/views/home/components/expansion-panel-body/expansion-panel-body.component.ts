@@ -70,4 +70,8 @@ export class ExpansionPanelBodyComponent {
       state: { kpiCode: this.kpiCode(), selectedTab: this.selectedTab() },
     });
   }
+
+  isNumber(value: any): value is number {
+    return typeof value === 'number' && !isNaN(value);
+  }
 }
