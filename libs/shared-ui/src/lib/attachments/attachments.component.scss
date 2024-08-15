@@ -1,6 +1,4 @@
 .attachments {
-    height: 280px;
-    overflow: auto;
     margin-top: 10px;
     background: var(--whiteColor);
     padding: 15px;
@@ -42,6 +40,8 @@
 
     &_files {
         margin-top: 37px;
+        height: 280px;
+        overflow: hidden auto;
 
         &_item {
             &>div {
