@@ -1,4 +1,4 @@
-<!-- <section class="strategy-program-section">
+<section class="strategy-program-section">
   <div class = "strategy-program-section-header">
     <div>
       <stc-apps-page-header
@@ -14,45 +14,57 @@
         (export)="downloadTemplate()"
       />
     }
-    <p class = "strategy-program-section-details-title">{{strategyProgramData.title}}</p>
-    <div class="row"> 
-      <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="strategy-program-section-details-progress-card" style = "padding:9px 20px;">
-          <div class = "info">
-            <img src="assets/images/overall-progress.svg" alt="">
-            <p>overall progress</p>
-          </div>
-          <stc-apps-circular-progress-bar
-            [percentVal]="strategyProgramData.overallProgress"
-            [innerCircleColor]="'#e7e8ea'"
-            [outerCircleColor]="'#40036E'"
-            [titleColor]="'#121212'"
-            [radius]="40"
-            [titleFontSize]="25"
-            [outerStrokeRadius]="7"
-            [innerStrokeRadius]="7"
-          />
-        </div>
-      </div>
-      <div class="col-lg-6 col-md-6 col-sm-12">
-        <div class="strategy-program-section-details-progress-card">
-          <div class = "info">
-            <img src="assets/images/total-investments.svg" alt="">
-            <p>total investments</p>
-          </div>
-          <div class="amount">{{strategyProgramData.totalInvestments | million}}</div>
-        </div>
-      </div>
-      @for (strategyProgramKpi of strategyProgramData.strategyProgramKpiModel; track strategyProgramKpi.id){
-        <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
-          <div class="strategy-program-section-details-progress-card d-block">
-            <stc-apps-strategy-kpi-card
-              [strategyKpiCard]="strategyProgramKpi"
+    <p class = "strategy-program-section-details-title">execution status</p>
+    @if(strategyProgramData)
+    {
+      <div class="row"> 
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="strategy-program-section-details-progress-card" style = "padding:9px 20px;">
+            <div class = "info">
+              <img src="assets/images/overall-progress.svg" alt="">
+              <p>overall progress</p>
+            </div>
+            <stc-apps-circular-progress-bar
+              [percentVal]="strategyProgramData.key.overallProgress"
+              [innerCircleColor]="'#e7e8ea'"
+              [outerCircleColor]="'#40036E'"
+              [titleColor]="'#121212'"
+              [radius]="40"
+              [titleFontSize]="22"
+              [outerStrokeRadius]="7"
+              [innerStrokeRadius]="7"
             />
           </div>
         </div>
-      }
-    </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+          <div class="strategy-program-section-details-progress-card">
+            <div class = "info">
+              <img src="assets/images/total-investments.svg" alt="">
+              <p>total investments</p>
+            </div>
+            <div class="amount">{{strategyProgramData.key.totalInvestment| million}}</div>
+          </div>
+        </div>
+        @if(!isEmptyData)
+        {
+          @for (strategyProgramKpi of strategyProgramData.cadStrategyProgramDTO; track strategyProgramKpi.strategyProject){
+            <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+              <div class="strategy-program-section-details-progress-card d-block">
+                <stc-apps-strategy-kpi-card
+                  [strategyKpiCard]="strategyProgramKpi"
+                />
+              </div>
+            </div>
+          }
+        } @else {
+          <h4 class = "empty-data-msg mt-4">There are no KPIs</h4>
+        }
+      </div>
+    }
   </div>
-</section> -->
-<p>strategy-program works!</p>
+</section>
+<stc-apps-dialog-modal 
+  [visible]="visible"
+  (ImportedFile)="ImportFile($event)"
+/>
+<!-- <p>strategy-program works!</p> -->

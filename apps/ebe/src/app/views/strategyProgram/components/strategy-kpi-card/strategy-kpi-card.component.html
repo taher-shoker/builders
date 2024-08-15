@@ -1,5 +1,5 @@
 <section class="strategy-kpi-card">
-  <p class = "strategy-kpi-card-title">{{strategyKpiCard().title}}</p>
+  <p class = "strategy-kpi-card-title">{{strategyKpiCard().strategyProject}}</p>
   <div class="strategy-kpi-card-status">
     <stc-apps-solid-circular-bar
       [percentVal]="strategyKpiCard().currentProgress"
@@ -13,14 +13,14 @@
     </div>
     <div class="strategy-kpi-card-cards-investment-card">
       <p>total investment : </p>
-      <span>{{strategyKpiCard().totalInvestments | million}}</span>
+      <span>{{strategyKpiCard().totalInvestment| million}}</span>
     </div>
   </div>
   <div class="strategy-kpi-card-description">
     <p>{{strategyKpiCard().description}}</p>
   </div>
   <div class="strategy-kpi-card-details-btn mt-5 mb-3">
-    <a [routerLink]="['/strategy-program/' , strategyKpiCard().id]">
+    <a [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]">
       <span>more details</span>
       <img src="assets/images/arrow-right.svg" alt="">
     </a>

@@ -13,44 +13,17 @@ export class ScorecardService {
   private currMode: BehaviorSubject<'editMode' | 'viewMode'> = new BehaviorSubject<'editMode' | 'viewMode'>('viewMode');
   private currUsername: BehaviorSubject<string> = new BehaviorSubject<string>('');
   http = inject(HttpClient);
-  private readonly scorecardsTaps: ScorecardTaps[] = [
-    {
-      id: 1,
-      name: 'financial',
-      value : 'financial'
-    },
-    {
-      id: 2,
-      name: 'strategic',
-      value : 'strategic'
-    },
-    {
-      id: 3,
-      name: 'relational',
-      value : 'relational'
-    },
-    {
-      id: 4,
-      name: 'operational',
-      value : 'operational'
-    },
-    {
-      id: 5,
-      name: 'corporate priorities',
-      value : 'corporate'
-    },
-  ];
   private readonly navItems: NavLinks[] = [
     {
       id: 1,
       name: 'scorecard',
       url: '/scorecard',
     },
-    // {
-    //   id: 2,
-    //   name: 'CAD strategy program',
-    //   url: '/strategy-program',
-    // },
+    {
+      id: 2,
+      name: 'CAD strategy program',
+      url: '/strategy-program',
+    },
     // {
     //   id: 3,
     //   name: 'raqami',
@@ -62,9 +35,6 @@ export class ScorecardService {
     //   url: '/psr',
     // },
   ];
-  getScorecardsTaps(): ScorecardTaps[] {
-    return this.scorecardsTaps;
-  }
   getNavLinks(): NavLinks[] {
     return this.navItems;
   }

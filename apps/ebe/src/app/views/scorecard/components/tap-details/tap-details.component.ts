@@ -24,10 +24,11 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { DialogModule } from 'primeng/dialog';
-import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
+// import { DialogModule } from 'primeng/dialog';
+// import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
 import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
 import { Subject } from 'rxjs';
+import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 interface filterOption
 {
   month:number;
@@ -42,8 +43,7 @@ interface filterOption
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    DialogModule,
-    FileUploadInputComponent,
+    DialogModalComponent,
     EditModeViewComponent
   ],
   templateUrl: './tap-details.component.html',
@@ -100,42 +100,19 @@ export class TapDetailsComponent implements OnInit {
     console.log('year value => ', this.yearValue?.value);
     this.filterOptions.emit(this.filtersForm.value);
   }
-  getUploadedFile(e:FileModel | null) {
-    this.selectedFile = e;
-    // if (e.target && (e.target as HTMLInputElement).files) {
-    //   const files = (e.target as HTMLInputElement).files;
-    //   if (files) {
-    //     console.log(files);
-    //   }
-    // }
-  }
-  isHidden = false;
-  hideDialog()
-  {
-    this.isHidden = true;
-  }
-  showDialog2()
-  {
-    this.isHidden = false;
-  }
   showDialog()
   {
     this.visible = true;
   }
-  importData()
+  importData(e:FileModel)
   {
-    console.log(this.selectedFile);
-    if(this.selectedFile)
+    if(e)
     {
-      this.ImportedFile.emit(this.selectedFile);
-      // this.getScorecardsTaps()
+      this.ImportedFile.emit(e);
     }
   }
   downloadTemplate()
   {
-    // const tabName = this.currentClickedTap().name;
-    // const month = this.monthValue?.value;
-    // const year = this.yearValue?.value;
     this.scorecardService.downloadTemplate().subscribe({
       next : (response) => {
         this.downloadFile(response, `scorecards.csv`);

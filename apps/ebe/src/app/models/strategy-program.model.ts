@@ -15,19 +15,21 @@ export interface StrategyProgramKpiProjectsDetailsModel
   plannedValue:number;
   progressValue:number;
 }
+export interface StrategyProgramKeyModel
+{
+  overallProgress:number;
+  totalInvestment:number;
+}
 export interface StrategyProgramModel
 {
-  title:string;
-  overallProgress:number;
-  totalInvestments:number;
-  strategyProgramKpiModel:StrategyProgramKpiModel[];
+  key : StrategyProgramKeyModel;
+  cadStrategyProgramDTO : StrategyProgramKpiModel[]
 }
 export interface StrategyProgramKpiModel
 {
-  id:number;
-  title:string;
+  strategyProject:string;
   currentProgress:number;
   totalWeight:number;
-  totalInvestments:number;
+  totalInvestment:number;
   description:string;
 }

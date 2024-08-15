@@ -1,47 +1,17 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { StrategyProgramKpiDetailsModel, StrategyProgramModel } from '../models/strategy-program.model';
+import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class StrategyProgramService {
-  private StrategyProgramDaya:StrategyProgramModel = {
-    title : "execution status",
-    overallProgress : 75,
-    totalInvestments : 25342342,
-    strategyProgramKpiModel : [
-      {
-        id : 1,
-        title : "accelerated AI adoption",
-        currentProgress : 4,
-        totalWeight : 30,
-        totalInvestments : 6000000,
-        description : "build centralized layer of enterprise AI for rapid development of business use cases"
-      },
-      {
-        id : 2,
-        title : "analytics products democratization",
-        currentProgress : 8,
-        totalWeight : 25,
-        totalInvestments : 56435547,
-        description : "offer simplified, high quality, secure, protected & governed analytic products for data monetization"
-      },
-      {
-        id : 3,
-        title : "scalable system of insights",
-        currentProgress : 17,
-        totalWeight : 25,
-        totalInvestments : 183000000,
-        description : "offer simplified, high quality, secure, protected & governed analytic products for data monetization"
-      },
-      {
-        id : 4,
-        title : "talent growth & digital culture",
-        currentProgress : 6,
-        totalWeight : 20,
-        totalInvestments : 23534,
-        description : "improve end-to-end customer experience with a collaborated op.model & nWOW"
-      },
-    ]
-
-  };
+  http = inject(HttpClient);
+  getStrategyProgramSummary():Observable<StrategyProgramModel>
+  {
+    return this.http.get<StrategyProgramModel>(
+      `${environment.apiUrl}/business-excellence/cadstrategyprograms/summary`
+    ); 
+  }
   private strategyProgramKpiDetailsModel:StrategyProgramKpiDetailsModel[] = [
     {
       id:1,
@@ -98,10 +68,6 @@ export class StrategyProgramService {
       projects : []
     },
   ]
-  getStrategyProgramDaya():StrategyProgramModel
-  {
-    return this.StrategyProgramDaya;
-  }
   getStrategyProgramKpiDetailsModel():StrategyProgramKpiDetailsModel[]
   {
     return this.strategyProgramKpiDetailsModel;

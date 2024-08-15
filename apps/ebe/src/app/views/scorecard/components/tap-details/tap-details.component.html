@@ -47,7 +47,11 @@
     <h4 class = "empty-data-msg mt-4">There are no KPIs</h4>
   }
 </section>
-<p-dialog
+<stc-apps-dialog-modal 
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+/>
+<!-- <p-dialog
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '30rem' }"
@@ -76,4 +80,4 @@
       <button class = "cancel-btn" (click)="visible = false;">cancel</button>
     </footer>
   </ng-template>
-</p-dialog>
+</p-dialog> -->
