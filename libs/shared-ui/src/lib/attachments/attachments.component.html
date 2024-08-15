@@ -1,0 +1,43 @@
+<div class="attachments">
+  <div class="attachments_summary">
+    <span>{{ displayedFiles()?.length + ' Attachments' }}</span>
+    <button (click)="triggerFileInput(fileInput)">
+      <img src="assets/images/attach-square.svg" />
+      Add Attachment
+    </button>
+  </div>
+  @if (displayedFiles()?.length == 0) {
+  <div class="attachments_empty">There's no attachments yet</div>
+  }
+  <div class="attachments_files">
+    <div class="row row-gap-3">
+      @for(fileObj of displayedFiles(); track fileObj; let index = $index) {
+      <div class="col-12">
+        <div class="attachments_files_item px-2">
+          <div>
+            <span (click)="onDownloadFile(index, fileObj.id, fileObj)">
+              {{ fileObj.attachmentDisplayName }}
+            </span>
+            <div class="d-flex">
+              <button class="btn" (click)="onDeleteFile(index, fileObj.id)">
+                <img src="assets/images/trash.svg" />
+              </button>
+            </div>
+          </div>
+          <span class="attachments_files_item_time">
+            {{ 'Uploaded at ' + (fileObj.createdAt | date : 'MMMM dd,yyyy') }}
+          </span>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+  <input
+    type="file"
+    #fileInput
+    (change)="onFileSelected($event)"
+    style="display: none"
+    [accept]="accept().join(',')"
+    multiple
+  />
+</div>
