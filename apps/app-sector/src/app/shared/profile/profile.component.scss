@@ -34,6 +34,13 @@
     font-weight: 400;
     font-size: 14px;
   }
+  &_editedFlag{
+    text-align: end;
+    padding: 12px 24px 0px 0px;
+    color: var(--red-Color-dark);
+    font-weight: 400;
+    font-size: 14px;
+  }
   .actions-holder {
     margin-left: 60px;
     .action-btns {

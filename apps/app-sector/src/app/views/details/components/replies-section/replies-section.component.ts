@@ -23,10 +23,15 @@ import {
   commentEditBody,
   myComment,
   reply,
+  replyEditBody,
+  sectorUsersParams,
+  user,
 } from '../../models/commentsModel';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { AuthService } from 'apps/app-sector/src/app/services/auth.service';
 import { commentsService } from '../../services/comments.service';
+import { ToastrService } from 'ngx-toastr';
+import { SharedFormService } from '../../../home/services/shared-form.service';
 
 @Component({
   selector: 'stc-apps-replies-section',
@@ -36,7 +41,7 @@ import { commentsService } from '../../services/comments.service';
 export class RepliesSectionComponent implements OnInit {
   // @Output() editComment = new EventEmitter<string>();
   @ViewChild('targetElement') textArea?: ElementRef;
-  newComment: InputSignal<newComment> = input({} as newComment);
+  newComment: InputSignal<comment> = input({} as comment);
   totalComments = 0;
   deleteCommentFlag = false;
   deleteReplyFlag = false;
@@ -59,42 +64,7 @@ export class RepliesSectionComponent implements OnInit {
   ];
   mentionsArray: string[] = [];
   comments: comment[] = [];
-  commentsList: myComment[] = [
-    {
-      name: 'Assem Khalifa',
-      mentions: ['@Naden Draz', '@Habiba mohamed'],
-      comment: 'Test comment @Naden Draz test @Habiba mohamed',
-      time: 'Few Seconds ago',
-      replies: [
-        {
-          name: 'Assem Ahmed',
-          comment: 'Reply 1',
-          time: 'Few Seconds ago',
-          mentions: [],
-        },
-        {
-          name: 'Mohamed Fawzy Ahmed',
-          comment: 'Reply 2',
-          time: 'Few Seconds ago',
-          mentions: [],
-        },
-      ],
-    },
-    {
-      name: 'Assem Ahmed',
-      mentions: ['@Habiab Mohamed Nagiub'],
-      comment: 'Test Comment 2 @Habiab Mohamed Nagiub',
-      time: 'Few Seconds ago',
-      replies: [],
-    },
-    {
-      name: 'Mohamed Fawzy',
-      mentions: [],
-      comment: 'Test Comment 3',
-      time: '48 Mins ago',
-      replies: [],
-    },
-  ];
+
   confirmationBtnDesc = 'Delete';
   constructor(
     private dialog: MatDialog,
@@ -103,27 +73,35 @@ export class RepliesSectionComponent implements OnInit {
     public router: Router,
     private authService: AuthService,
     private dialogeService: dialogeService,
-    private commentService: commentsService
+    private commentService: commentsService,
+    private toastr: ToastrService,
+    private commentsService: commentsService,
+    private sharedFormService: SharedFormService
   ) {
     effect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      console.log('in replies', this.newComment());
-      if (this.newComment().name) {
-        const newObj: myComment = {
-          name: 'Assem Khalifa',
-          mentions: this.newComment().mentions,
-          comment: this.newComment().name,
-          time: 'Few Seconds ago',
-          replies: [],
-        };
-        this.commentsList.unshift(newObj);
+      if (this.newComment().comment) {
+        console.log('in replies', this.newComment());
+        if (this.newComment().replies == null) {
+          this.newComment().replies = [];
+        }
+        this.comments.unshift(this.newComment());
+        console.log('new comment', this.comments);
         this.commentsCount();
       }
-      console.log('array', this.commentsList);
     });
     this.handleForm();
   }
   ngOnInit(): void {
+    const params: sectorUsersParams = {
+      system: 'Score_Card_Report_DB',
+      team: this.sharedFormService.getForm().value.sectorName,
+    };
+    this.commentService.getSectorUsers(params).subscribe({
+      next: (result: user[]) => {
+        console.log(result);
+      },
+    });
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
       this.cookieService.get('token')
@@ -259,7 +237,9 @@ export class RepliesSectionComponent implements OnInit {
         const comment = this.comments[commentIndex].comment;
         this.form.get('comment')?.setValue(comment);
         this.editedText.set(comment);
-        this.mentionsArray = this.commentsList[commentIndex].mentions;
+        this.comments[commentIndex].commaSeparatedMentions =
+          this.commentsService.commaSepartedMentions(this.mentionsArray);
+        // this.mentionsArray = this.commentsList[commentIndex].mentions;
       }
     }
   }
@@ -268,9 +248,15 @@ export class RepliesSectionComponent implements OnInit {
     console.log(commentIndex);
     this.commentService
       .deleteComment(this.comments[commentIndex].id)
-      .subscribe(() => {
-        this.comments.splice(commentIndex, 1);
-        this.commentsCount();
+      .subscribe({
+        next: () => {
+          this.toastr.success('Comment Deleted Successfully');
+          this.comments.splice(commentIndex, 1);
+          this.commentsCount();
+        },
+        error: () => {
+          this.toastr.error('Unauthorized to delete this comment');
+        },
       });
   }
   editCommentt() {
@@ -279,9 +265,12 @@ export class RepliesSectionComponent implements OnInit {
       comment: this.form.get('comment')?.value,
     };
     this.commentService.editComment(commentObj).subscribe((result: comment) => {
+      this.toastr.success('Comment Edited Successfully');
       this.comments[this.commentIndex].comment = result.comment;
       this.comments[this.commentIndex].edited = result.edited;
       this.comments[this.commentIndex].editedAt = result.editedAt;
+      this.comments[this.commentIndex].commaSeparatedMentions =
+        result.commaSeparatedMentions;
       this.form.reset();
       this.editedText.set('');
       this.showCommentTextArea = false;
@@ -305,8 +294,7 @@ export class RepliesSectionComponent implements OnInit {
         );
       } else if (e === 'Edit') {
         this.editReplyTextArea = true;
-        const reply =
-          this.commentsList[commentIndex].replies[replyIndex].comment;
+        const reply = this.comments[commentIndex].replies[replyIndex].reply;
         this.form.get('comment')?.setValue(reply);
         this.editedText.set(reply);
         setTimeout(() => {
@@ -314,6 +302,11 @@ export class RepliesSectionComponent implements OnInit {
         });
       }
     }
+    this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions =
+      this.commentsService.commaSepartedMentions(this.mentionsArray);
+    console.log(
+      this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions
+    );
   }
 
   saveReply() {
@@ -322,32 +315,55 @@ export class RepliesSectionComponent implements OnInit {
       commentId: this.comments[this.commentIndex].id,
       reply: this.form.get('comment')?.value,
     };
-    this.commentService.addReply(replyObj).subscribe((result: reply) => {
-      if (result) {
-        this.comments[this.commentIndex].replies?.unshift(result);
-        this.commentsCount();
-        console.log('new comments', this.comments);
+    this.commentService.addReply(replyObj).subscribe({
+      next: (result: reply) => {
+        if (result) {
+          this.toastr.success('Reply Added Successfully');
+          this.comments[this.commentIndex].replies?.unshift(result);
+          this.commentsCount();
+          console.log('new comments', this.comments);
+          this.form.reset();
+          this.editedText.set('');
+          this.showCommentTextArea = false;
+        }
+      },
+      error: (error) => {
+        this.toastr.error('Reply Addtion Failed');
         this.form.reset();
         this.editedText.set('');
         this.showCommentTextArea = false;
-      }
+      },
     });
   }
   deleteReply(commentIndex: number, replyIndex: number) {
     this.commentService
       .deleteReply(this.comments[commentIndex].replies[replyIndex].id)
       .subscribe(() => {
+        this.toastr.success('Reply Deleted Successfully');
         this.comments[commentIndex].replies?.splice(replyIndex, 1);
         this.commentsCount();
       });
   }
   editReply() {
-    this.commentsList[this.commentIndex].replies[this.replyIndex].comment =
-      this.form.get('comment')?.value;
-    this.commentsList[this.commentIndex].replies[this.replyIndex].mentions =
-      this.mentionsArray;
-    console.log('new comments', this.commentsList);
-    this.form.reset();
-    this.editReplyTextArea = false;
+    const replyObj: replyEditBody = {
+      id: this.comments[this.commentIndex].replies[this.replyIndex].id,
+      reply: this.form.get('comment')?.value,
+    };
+    this.commentService.editReply(replyObj).subscribe((result: reply) => {
+      this.toastr.success('Reply Edited Successfully');
+      this.comments[this.commentIndex].replies[this.replyIndex].reply =
+        result.reply;
+      this.comments[this.commentIndex].replies[this.replyIndex].edited =
+        result.edited;
+      this.comments[this.commentIndex].replies[this.replyIndex].editedAt =
+        result.editedAt;
+      this.comments[this.commentIndex].replies[
+        this.replyIndex
+      ].commaSeparatedMentions = this.commentsService.commaSepartedMentions(
+        this.mentionsArray
+      );
+      this.editReplyTextArea = false;
+      this.form.reset();
+    });
   }
 }

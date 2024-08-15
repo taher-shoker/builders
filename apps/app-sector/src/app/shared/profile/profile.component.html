@@ -11,7 +11,7 @@
           <div class="profile-content_name">{{ name() }}</div>
           <div
             class="profile-content_desc"
-            [innerHTML]="comment().replace(generateRegex(), '<span>$&</span>')"
+            [innerHTML]="commaSepartedMentions()!==null?comment().replace(generateRegex(), '<span>$&</span>'):comment()"
           ></div>
         </div>
       </div>
@@ -19,6 +19,7 @@
     @if(time()){
     <div [class]="replyClass ? 'col-md-4' : 'col-md-4'">
       <div class="profile-content_time">{{ getTimeAgo(time()) }}</div>
+      <div *ngIf="edited()" class="profile-content_editedFlag">Edited</div>
     </div>
     }
   </div>

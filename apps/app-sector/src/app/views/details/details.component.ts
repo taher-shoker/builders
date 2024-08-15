@@ -1,15 +1,18 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import {
   kpiCard,
-  KpiDetailsResponse,
   KpiDTOMap,
   SectorKpisDetailsParams,
 } from '../models/SectorKpisDetails.model';
 import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
-import { comment } from './models/commentsModel';
 import { SharedFormService } from '../home/services/shared-form.service';
 import { DashboardService } from '../home/services/dashboard.service';
 import { commentsService } from './services/comments.service';
+import { HttpClient } from '@angular/common/http';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { environment } from 'apps/app-sector/src/environments/environment';
+import { CookieService } from 'ngx-cookie';
+import { LoggedUser } from './models/commentsModel';
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
@@ -24,15 +27,25 @@ export class DetailsComponent implements OnInit {
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
   categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
-
+  baseUrl = environment.apiUrl;
   constructor(
     private sharedFormService: SharedFormService,
     private dashboardService: DashboardService,
-    private commentService: commentsService
+    private commentService: commentsService,
+    private http: HttpClient,
+    private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
     this.getKpiDetails();
+    // this.http
+    //   .get<LoggedUser>(`${this.baseUrl}users/currentLoggedUser`)
+    //   .subscribe(async (res: LoggedUser) => {
+    //     // this.cookieService.put('USER_FULLNAME', res.name);
+    //     console.log(JSON.stringify(res));
+
+    //     this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
+    //   });
   }
 
   getKpiDetails() {
@@ -46,9 +59,6 @@ export class DetailsComponent implements OnInit {
       .subscribe((result: any) => {
         this.kpiDTOMap = result.kpiDTOMap;
         this.categoryKpiLists = {};
-
-        // // Populate categoryKpiLists based on the new structure
-        // Ensure kpiDTOMap is an object and iterate through its keys
         if (this.kpiDTOMap && typeof this.kpiDTOMap === 'object') {
           Object.keys(this.kpiDTOMap).forEach((kpiSubGrouping) => {
             // Initialize an empty object for each kpiSubGrouping
@@ -58,21 +68,16 @@ export class DetailsComponent implements OnInit {
             const kpiArray = this.kpiDTOMap[kpiSubGrouping];
             // Loop through each KPI within the kpiSubGrouping
             Object.keys(kpiArray).forEach((kpiDTO: any) => {
-              const kpiArray = this.kpiDTOMap[kpiSubGrouping];
-              if (kpiArray && kpiArray[kpiDTO]?.length > 0) {
-                this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
-              }
+              this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
+              this.commentService.commenstList.next(
+                kpiArray[kpiDTO][0].commentList
+              );
               this.categoryKpiLists[kpiSubGrouping][kpiDTO.kpiName]?.push(
                 kpiDTO
               );
-              // this.commentService.commenstList.next(
-              //   this.categoryKpiLists[category][0].commentList
-              // );
             });
           });
         }
-
-        // // Call addingCardsDescriptions with the first KPI from the first sub-grouping, if available
       });
   }
 

@@ -1,19 +1,20 @@
-import {
-  Component,
-  ElementRef,
-  input,
-  InputSignal,
-  OnChanges,
-  OnInit,
-  SimpleChanges,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { newComment } from '../../../models/newComment';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
-import { AttachmentService } from '../../services/attachment.service';
-import { KpiDTO } from '../../../models/SectorKpisDetails.model';
 import { SharedFormService } from '../../../home/services/shared-form.service';
+import {
+  addCommentBody,
+  comment,
+  sectorUsersParams,
+  user,
+} from '../../models/commentsModel';
+import { commentsService } from '../../services/comments.service';
+import { ToastrService } from 'ngx-toastr';
+import { AttachmentService } from '../../services/attachment.service';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
 
 @Component({
@@ -21,14 +22,15 @@ import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
   templateUrl: './comments-form.component.html',
   styleUrls: ['./comments-form.component.scss'],
 })
-export class CommentsFormComponent implements OnInit, OnChanges {
+export class CommentsFormComponent implements OnInit {
+  kpiCode = window.history.state.kpiCode;
+  scoreCardTitle = window.history.state.selectedTab;
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
-
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('mentionList') mentionList!: ElementRef<HTMLUListElement>;
-  newComment: newComment = {} as newComment;
+  newComment: comment = {} as comment;
   form: FormGroup = new FormGroup({});
   uploadedFiles: File[] = [];
   displayedFiles: { file: File; formattedUploadDate: string }[] = [];
@@ -55,8 +57,10 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     private fb: FormBuilder,
     private dialogeService: dialogeService,
     private attachmentService: AttachmentService,
+    private sectorService: SectorService,
     private sharedFormService: SharedFormService,
-    private sectorService: SectorService
+    private commentsService: commentsService,
+    private toastr: ToastrService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -66,6 +70,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    
     this.handleForm();
   }
 
@@ -203,13 +208,33 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    console.log('Form Data:', this.form.value);
-    this.newComment = {
-      name: this.form.value.comment,
-      mentions: this.mentionsArray,
+    this.mentionsArray = this.mentionsArray.filter(
+      (item, index, self) => self.indexOf(item) === index
+    );
+    const commentObj: addCommentBody = {
+      sectorName: this.sharedFormService.getForm().value.sectorName,
+      year: this.sharedFormService.getForm().value.year,
+      quarter: this.sharedFormService.getForm().value.quarter,
+      scorecardTitle: this.scoreCardTitle,
+      kpiCode: this.kpiCode,
+      comment: this.form.value.comment,
+      commaSeparatedMentions: this.mentionsArray
+        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+        : null,
     };
+    this.commentsService.addComment(commentObj).subscribe({
+      next: (result: comment) => {
+        this.toastr.success('Comment Added Successfully');
+        console.log(result);
+        this.newComment = result;
+      },
+    });
+    // this.newComment = {
+    //   name: this.form.value.comment,
+    //   mentions: this.mentionsArray,
+    // };
 
-    console.log('this', this.newComment);
+    // console.log('this', this.newComment);
     this.form.reset();
   }
   onEditComment(content: string) {

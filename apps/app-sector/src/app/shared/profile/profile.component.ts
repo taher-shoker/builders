@@ -22,10 +22,10 @@ export class ProfileComponent {
   time: InputSignal<string> = input('');
   lastItem: InputSignal<boolean> = input(false);
   reply: InputSignal<boolean> = input(false);
+  edited: InputSignal<boolean> = input(false);
   parentLoop: InputSignal<number> = input(0);
   hasReplies: InputSignal<boolean> = input(false);
-  @Input() mentions!: string[];
-
+  commaSepartedMentions: InputSignal<string> = input('');
   @Output() commentActionName = new EventEmitter<string>();
   @Output() replyActionName = new EventEmitter<string>();
   actionsList = [''];
@@ -34,14 +34,20 @@ export class ProfileComponent {
     private datePipe: DatePipe
   ) {
     effect(() => {
-      
+      let mentions;
+      if (this.commaSepartedMentions() !== null &&this.commaSepartedMentions()) {
+        mentions = this.commaSepartedMentions().split(',');
+      }
+
       console.log(
         'new mentions',
         this.reply(),
         this.comment(),
         this.hasReplies(),
-        this.mentions
+        this.commaSepartedMentions(),
+        mentions
       );
+
       if (this.reply() == true) {
         this.replyClass = true;
         this.actionsList = ['Edit', 'Delete'];
@@ -52,7 +58,8 @@ export class ProfileComponent {
     });
   }
   generateRegex() {
-    return this.mentionsService.generateRegex(this.mentions);
+    const mentions = this.commaSepartedMentions().split(',');
+    return this.mentionsService.generateRegex(mentions);
   }
   getTimeAgo(date: any) {
     const now: any = new Date();

@@ -1,5 +1,4 @@
 import { comment } from '../details/models/commentsModel';
-import { OverallScoreParams } from './overallScore.model';
 
 //request models
 export interface kpiCard {

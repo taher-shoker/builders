@@ -1,3 +1,40 @@
+export interface LoggedUser {
+  id: number;
+  email: string;
+  name: string;
+  jobTitle: string;
+  userGroups: UserGroup[];
+  username: null | string;
+}
+export interface UserGroup {
+  id: number;
+  groupName: string;
+  roles: {
+    id: number;
+    roleName: string;
+    system: { id: number; name: string };
+  }[];
+}
+export interface user {
+  id: number;
+  name: string;
+  email: string;
+  jobTitle: string;
+}
+export interface sectorUsersParams {
+  system: string;
+  team: string;
+}
+export interface addCommentBody {
+  sectorName: string;
+  year: number;
+  quarter: string;
+  scorecardTitle: string;
+  kpiCode: string;
+  comment: string;
+  commaSeparatedMentions: string | null;
+}
+
 export interface commentEditBody {
   id: number;
   comment: string;
@@ -18,6 +55,7 @@ export interface reply {
   authorName: string;
   reply: string;
   edited: boolean;
+  commaSeparatedMentions: string | null;
 }
 export interface comment {
   id: number;
@@ -28,6 +66,7 @@ export interface comment {
   createdAt: string;
   editedAt: string;
   edited: boolean;
+  commaSeparatedMentions: string | null;
   replies: reply[];
 }
 

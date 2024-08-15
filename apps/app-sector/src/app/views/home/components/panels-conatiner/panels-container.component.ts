@@ -11,6 +11,7 @@ export class PanelsContainerComponent {
   kpiDTOList: InputSignal<{ [key: string]: { [subkey: string]: KpiDTO[] } }> =
     input({});
   newTabSelected: InputSignal<string> = input('');
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor() {}
 
   getCategoryKeys(): string[] {
