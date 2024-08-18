@@ -7,7 +7,7 @@ import {
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../services/auth.service';
-import { LoaderService } from '../shared/services/loader.service';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'stc-apps-layout',
