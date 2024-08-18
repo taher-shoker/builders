@@ -8,14 +8,14 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { DashboardService } from '../../views/home/services/dashboard.service';
 import { FormGroup } from '@angular/forms';
+import { SectorService } from '../../../services/sector.service';
+import { SharedFormService } from '../../../views/home/services/shared-form.service';
 import {
   OverallScore,
   OverallScoreParams,
-} from '../../views/models/overallScore.model';
-import { SharedFormService } from '../../views/home/services/shared-form.service';
-import { SectorService } from '../../services/sector.service';
+} from '../../../views/models/overallScore.model';
+import { DashboardService } from '../../../views/home/services/dashboard.service';
 
 @Component({
   selector: 'stc-apps-top-banner',

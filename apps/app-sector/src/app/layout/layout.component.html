@@ -1,3 +1,6 @@
+@if (loaderService.isLoading$ | async) {
+<stc-apps-loader></stc-apps-loader>
+}
 <stc-apps-header
   [userName]="userName"
   [logoSrc]="logoSrc"
