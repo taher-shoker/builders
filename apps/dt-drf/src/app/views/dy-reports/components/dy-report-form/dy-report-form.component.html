@@ -3,68 +3,115 @@
     <div class="inputs">
       <div class="row">
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Report Name'" [inputId]="'reportName'"
-            (valueKeyDown)="preventComma($event)" [inputName]="'Report Name'"
-            formControlName="reportName"></stc-apps-input>
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="'Enter Report Name'"
+            [inputId]="'reportName'"
+            (valueKeyDown)="preventComma($event)"
+            [inputName]="'Report Name'"
+            formControlName="reportName"
+          ></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Description'"
-            [inputId]="'description'" (valueKeyDown)="preventComma($event)" [inputName]="'Description'"
-            formControlName="description"></stc-apps-input>
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputPlaceholder]="'Enter Description'"
+            [inputId]="'description'"
+            (valueKeyDown)="preventComma($event)"
+            [inputName]="'Description'"
+            formControlName="description"
+          ></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-select-drop-down (selectChange)="handleGategory($event)" [searchMode]="true" [label]="'Category'"
-            [options]="categories" [outputValue]="'id'" [required]="true"
-            formControlName="requestCategoryId"></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down
+            (selectChange)="handleGategory($event)"
+            [searchMode]="true"
+            [label]="'Category'"
+            [options]="categories"
+            [outputValue]="'id'"
+            [required]="true"
+            formControlName="requestCategoryId"
+          ></stc-apps-select-drop-down>
         </div>
       </div>
       <div class="row mt-7 align-items-center">
-        <div class="col-md-3 ">
-          <stc-apps-input [className]="'custom-input'" [inputId]="'slaDurationInDays'"
-            (valueKeyDown)="preventComma($event)" [inputName]="'SLA Duration In Days'"
-            formControlName="slaDurationInDays"></stc-apps-input>
+        <div class="col-md-3">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputId]="'slaDurationInDays'"
+            (valueKeyDown)="preventComma($event)"
+            [inputName]="'SLA Duration In Days'"
+            formControlName="slaDurationInDays"
+          ></stc-apps-input>
         </div>
-
 
         <div class="col-md-2">
-          <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
-            formControlName="needMoreDataFromCreator" [name]="'needMoreDataFromCreator'"></stc-apps-checkbox>
+          <stc-apps-checkbox
+            (selectChange)="handleCheck($event)"
+            [label]="'Assign Creator '"
+            formControlName="needMoreDataFromCreator"
+            [name]="'needMoreDataFromCreator'"
+          ></stc-apps-checkbox>
         </div>
         <div class="col-md-3">
-          <stc-apps-checkbox *ngIf="form.get('needMoreDataFromCreator')?.value" [label]="'Initiator Should Approve'"
-            formControlName="initiatorShouldApprove" [name]="'initiatorShouldApprove'"></stc-apps-checkbox>
+          <stc-apps-checkbox
+            *ngIf="form.get('needMoreDataFromCreator')?.value"
+            [label]="'Initiator Should Approve'"
+            formControlName="initiatorShouldApprove"
+            [name]="'initiatorShouldApprove'"
+          ></stc-apps-checkbox>
         </div>
-        <div class="col-md-4" *ngIf="form.get('needMoreDataFromCreator')?.value">
-          <stc-apps-select-drop-down [label]="'Creator Name'" (selectChange)="handelCreator($event)"
-            [options]="creators" [required]="true" [searchMode]="true" formControlName="creatorEmail"
-            [outputValue]="'email'" [disabled]="true"></stc-apps-select-drop-down>
-
+        <div
+          class="col-md-4"
+          *ngIf="form.get('needMoreDataFromCreator')?.value"
+        >
+          <stc-apps-select-drop-down
+            [label]="'Creator Name'"
+            (selectChange)="handelCreator($event)"
+            [options]="creators"
+            [required]="true"
+            [searchMode]="true"
+            formControlName="creatorEmail"
+            [outputValue]="'email'"
+            [disabled]="true"
+          ></stc-apps-select-drop-down>
         </div>
       </div>
-
 
       <div class="row mt-7" *ngIf="!isEditing">
         <div class="col-12">
           <div>
             <label for="">Upload File :</label>
-            <div class="file-uploader" [ngClass]="
-                        form.controls['attachments'].invalid &&
-                        (form.controls['attachments'].dirty ||
-                          form.controls['attachments'].touched)
-                          ? 'error'
-                          : ''
-                      " (click)="uploadClick()">
-              <input [multiple]="true" #fileUpload class="file-input" type="file" (click)="handleUploadClick($event)"
-                (change)="handleUploadChange($event)" name="attachments" hidden
-                accept="{{ configService.getConfig().fileValidation.acceptType }}" />
+            <div
+              class="file-uploader"
+              [ngClass]="
+                form.controls['attachments'].invalid &&
+                (form.controls['attachments'].dirty ||
+                  form.controls['attachments'].touched)
+                  ? 'error'
+                  : ''
+              "
+              (click)="uploadClick()"
+            >
+              <input
+                [multiple]="true"
+                #fileUpload
+                class="file-input"
+                type="file"
+                (click)="handleUploadClick($event)"
+                (change)="handleUploadChange($event)"
+                name="attachments"
+                hidden
+                accept="{{
+                  configService.getConfig().fileValidation.acceptType
+                }}"
+              />
               @if (errorType || errorSize) {
               <div class="text-center">
                 <img src="assets/images/file-uploader-error.png" alt="upload" />
                 <h4 class="error-file">Sorry !</h4>
                 @if (errorType) {
-                <p>
-                  Please ensure your file is in a supported format."
-                </p>
+                <p>Please ensure your file is in a supported format."</p>
                 } @else {
                 <p>Please ensure your file is less than 20M. "</p>
 
@@ -74,30 +121,38 @@
               <div class="text-center">
                 <img src="assets/images/file-uploader.png" alt="upload" />
                 <h4>Upload file,</h4>
-                <p>
-                  be sure that the file
-                  format is valid
-                </p>
+                <p>be sure that the file format is valid</p>
               </div>
               }
               <div *ngIf="isUploaderLoader" class="spinner"></div>
-
             </div>
-            <div class="error-file" *ngIf="
-                        form.controls['attachments'].invalid &&
-                        (form.controls['attachments'].dirty ||
-                          form.controls['attachments'].touched)
-                      ">
+            <div
+              class="error-file"
+              *ngIf="
+                form.controls['attachments'].invalid &&
+                (form.controls['attachments'].dirty ||
+                  form.controls['attachments'].touched)
+              "
+            >
               This Field Is Required
             </div>
           </div>
-          <div class="file-box" *ngIf="uploadedFiles.value.length > 0 && !errorSize && !errorType">
-            <div class="file" *ngFor="let f of uploadedFiles.value; let i = index">
+          <div
+            class="file-box"
+            *ngIf="uploadedFiles.value.length > 0 && !errorSize && !errorType"
+          >
+            <div
+              class="file"
+              *ngFor="let f of uploadedFiles.value; let i = index"
+            >
               <span><i class="pi pi-file-o"></i> {{ f.label }}</span>
-              <i role="button" class="fa fa-times-circle" (click)="removeFile(i)"></i>
+              <i
+                role="button"
+                class="fa fa-times-circle"
+                (click)="removeFile(i)"
+              ></i>
             </div>
           </div>
-
         </div>
       </div>
 
@@ -106,32 +161,47 @@
           <div class="steps-flow">
             <div class="row">
               <div class="col-md-12 mb-4">
-
                 <div class="d-flex justify-content-between align-items-center">
-                  <h5 class="mainTitle ">Approval Flow</h5>
+                  <h5 class="mainTitle">Approval Flow</h5>
                   <!-- <button type="button" *ngIf="!isEditing" class="add-btn" mat-raised-button (click)="addNewStep()">
                     <mat-icon>add </mat-icon> add new approval
                   </button> -->
-                  <stc-apps-button [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'"
-                    [buttonType]="'primary'" (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
+                  <stc-apps-button
+                    [buttonIcon]="'fa-plus-circle'"
+                    [buttonText]="'Add New Approval'"
+                    [buttonType]="'primary'"
+                    (btnClick)="addNewStep()"
+                    [actionType]="'submit'"
+                  ></stc-apps-button>
                 </div>
               </div>
             </div>
             <ul class="p-0">
-
-              <li *ngFor="let item of t.controls; let i = index" [formGroup]="item">
+              <li
+                *ngFor="let item of t.controls; let i = index"
+                [formGroup]="item"
+              >
                 <div class="row align-items-center w-100">
-                  <div class="col-md-1"><label>Approval {{i + 1}}#:</label>
+                  <div class="col-md-1">
+                    <label>Approval {{ i + 1 }}#:</label>
                   </div>
                   <div class="col-md-5">
-                    <stc-apps-select-drop-down (selectChange)="onSelectionChange($event,i)" [searchMode]="true"
-                      [options]="filteredOptions[i] | async" formControlName="username" [disabled]="true"
-                      [outputValue]="'email'"></stc-apps-select-drop-down>
+                    @if (availableUsers.length > 0) {
+                    <stc-apps-select-drop-down
+                      (selectChange)="onSelectionChange($event, i)"
+                      [searchMode]="true"
+                      [options]="availableUsers"
+                      formControlName="username"
+                      [disabled]="true"
+                      [outputValue]="'email'"
+                    ></stc-apps-select-drop-down>
 
+                    }
                   </div>
                   <div class="col-md-1">
-                    <div *ngIf="i !== 0 && !isEditing" class=""><i class="ri-delete-bin-line"
-                        (click)="removeStep(i)"></i></div>
+                    <div *ngIf="i !== 0 && !isEditing" class="">
+                      <i class="ri-delete-bin-line" (click)="removeStep(i)"></i>
+                    </div>
                   </div>
                   <!-- <div class="col-md-1">
                     <div class="" *ngIf="isEditing && reportData.requestApprovals[i]?.status !== 'pending'">
@@ -140,27 +210,40 @@
                   </div> -->
                 </div>
               </li>
-
             </ul>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-md-4 offset-md-8 ">
+        <div class="col-md-4 offset-md-8">
           <div class="row">
             <div class="col-md-6">
-              <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
-                (btnClick)="cancel()"></stc-apps-button>
+              <stc-apps-button
+                [buttonText]="'Cancel'"
+                [buttonType]="'gray-outline'"
+                (btnClick)="cancel()"
+              ></stc-apps-button>
             </div>
             <div class="col-md-6">
-              <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Submit'" [buttonType]="'primary'"
-                (btnClick)="onSubmit()" [buttonDisable]="isUploaderLoader" [loading]="isSubmitLoading"
-                [actionType]="'submit'"></stc-apps-button>
+              <stc-apps-button
+                [buttonText]="isEditing ? 'Save' : 'Submit'"
+                [buttonType]="'primary'"
+                (btnClick)="onSubmit()"
+                [buttonDisable]="isUploaderLoader"
+                [loading]="isSubmitLoading"
+                [actionType]="'submit'"
+              ></stc-apps-button>
             </div>
           </div>
         </div>
       </div>
     </div>
-
   </form>
+</div>
+
+<div class="for-test">
+  <stc-apps-custom-dropdown
+    [label]="'some label'"
+    [list]="[{ displayName: 'ay haga', value: 'ay haga' }]"
+  />
 </div>

@@ -57,6 +57,11 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   customRangeSLA: { name: number; id: number }[] = [];
   categories!: Category[];
 
+  // Fixation of Users issue.
+  allUsers: User[] = [];
+  filteredUsers: User[] = [];
+  availableUsers: User[] = [];
+
   constructor(
     private _formBuilder: FormBuilder,
     private reportsService: ReportsService,
@@ -77,6 +82,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.loadInitialData();
     this.fetchDataOfReportAndEditIfExists();
+    this.handleUserFiltration();
   }
   private noWhitespaceValidator(control: FormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
@@ -122,6 +128,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   private loadInitialData() {
     this.getUsers().subscribe(() => {
       this.setupInitialFilteredOptions();
+      this.handleUserFiltration();
     });
     this.populateCustomSLA();
     this.getCategories();
@@ -131,7 +138,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     // Setup filtered options for each approval step
     this.addNewStep();
     this.t.controls.forEach((control, index) => {
-      this.manageUserNameControl(index);
+      // this.manageUserNameControl(index);
+      // this.handleUserFiltration();
     });
   }
 
@@ -549,14 +557,56 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return filteredUsers;
   }
 
-  onSelectionChange(option: string, index: number) {
-    this.selectedOptions[index] = option.toLowerCase();
-    this.updateFilteredOptions();
+  // onSelectionChange(option: string, index: number) {
+  //   this.selectedOptions[index] = option.toLowerCase();
+  //   this.updateFilteredOptions();
+  //   this.handleUserFiltration();
+  // }
+
+  onSelectionChange(option: string) {
+    // Update filteredUsers based on the selected option
+    // Assuming you want to add the selected user to filteredUsers
+    // if (!this.filteredUsers.some((user) => user.email === option.email)) {
+    //   this.filteredUsers.push(option);
+    // }
+    // Call the handleUserFiltration method to update available users
+    console.log('user before filter:', option);
+    const user = this.users.find((user) => user.email === option);
+    this.handleUserFiltration(user);
   }
 
   private updateFilteredOptions() {
     this.selectedOptions.forEach((_, i) => {
       this.manageUserNameControl(i);
     });
+  }
+
+  handleUserFiltration(user?: User) {
+    console.log('user passed:', user);
+    console.log('all users:', this.users);
+
+    if (this.availableUsers.length === 0) {
+      // Initialize availableUsers with the full list of users
+      this.availableUsers = [...this.users];
+      console.log('Initialized availableUsers:', this.availableUsers);
+    } else if (user) {
+      console.log('user selected:', user);
+      // Add the selected user to the filteredUsers array
+      this.filteredUsers.push(user);
+
+      for (let i = 0; i < this.availableUsers.length; i++) {
+        for (let j = 0; j < this.filteredUsers.length; j++) {
+          if (this.availableUsers[i].email === this.filteredUsers[j].email) {
+            this.availableUsers.splice(i, 1);
+            console.log('Filtered users:', this.filteredUsers);
+            console.log(
+              'Available users after filtering:',
+              this.availableUsers
+            );
+            return;
+          }
+        }
+      }
+    }
   }
 }
