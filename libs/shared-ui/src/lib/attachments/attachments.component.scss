@@ -44,6 +44,14 @@
         overflow: hidden auto;
 
         &_item {
+            &:first-child {
+                padding-top: 0 !important;
+            }
+
+            &:last-child {
+                border-bottom: none !important;
+            }
+
             &>div {
                 display: flex;
                 justify-content: space-between;
@@ -65,6 +73,7 @@
                 button {
                     width: auto;
                     max-width: 1rem;
+                    padding: 0;
 
                     &:active {
                         border: none;
@@ -81,6 +90,7 @@
             &_time {
                 color: var(--grey-color);
                 font-family: var(--stc-font-light);
+
             }
         }
     }
