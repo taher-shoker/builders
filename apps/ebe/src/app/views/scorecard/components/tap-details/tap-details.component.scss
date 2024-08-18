@@ -138,3 +138,14 @@ footer
   @extend .stcFont;
   font-weight: 500;
 }
+.kpi-container
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+  .kpi-container-card
+  {
+    width:100%;
+  }
+}

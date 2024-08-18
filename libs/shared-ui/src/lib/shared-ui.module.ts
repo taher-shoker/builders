@@ -67,6 +67,8 @@ import { NgCircleProgressModule } from 'ng-circle-progress';
 import { MillionPipe } from './million.pipe';
 import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-bar.component';
 import { ProjectCardComponent } from './project-card/project-card.component';
+import { TabViewModule } from 'primeng/tabview';
+
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
@@ -142,7 +144,8 @@ const components = [
     MatProgressSpinnerModule,
     MatMenuModule,
     DateAgoPipe,
-    NgCircleProgressModule.forRoot()
+    NgCircleProgressModule.forRoot(),
+    TabViewModule
   ],
 })
 export class SharedUiModule {}
