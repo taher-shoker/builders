@@ -1,23 +1,25 @@
 <section class="project-container">
-    <p class="project-container-header">
-        {{project().title}}
-    </p>
-    <div class="project-container-chart mt-5">
-        <stc-apps-multi-circles-progress-bar 
-            [chartData]="project().chartData"
-            [colors]="colors"
-            [showLegend]="true"
-            [labelsFontFamily]="'STCForwardFont'"
-            [legendsFontFamily]="'mediunPoppins'"
-            [outerRadius]="160"
-            [innerRadius]="100"
-        />
-    </div>
-    <p class="project-container-description">
-        {{project().description}}
-    </p>
-    <a class = "project-container-details-link" href="">
-        <span>more details</span>
-        <img src="assets/images/arrow-right.svg" alt="">
-    </a>
+  <p class="project-container-header">
+    {{ project().title }}
+  </p>
+  <div class="project-container-chart mt-5">
+    <stc-apps-multi-circles-progress-bar
+      [chartData]="project().chartData"
+      [colors]="colors"
+      [showLegend]="true"
+      [labelsFontFamily]="'STCForwardFont'"
+      [legendsFontFamily]="'mediunPoppins'"
+      [outerRadius]="160"
+      [innerRadius]="100"
+      [showLabels]="true"
+      [showLegendValues]="false"
+    />
+  </div>
+  <p class="project-container-description">
+    {{ project().description }}
+  </p>
+  <a class="project-container-details-link" href="">
+    <span>more details</span>
+    <img src="assets/images/arrow-right.svg" alt="" />
+  </a>
 </section>

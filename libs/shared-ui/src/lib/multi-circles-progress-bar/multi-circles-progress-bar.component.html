@@ -9,6 +9,8 @@
       '--before-height.px' : outerRadius() - 40
     }"
   >
+  @if(showLabels() === true)
+  {
     <div
       class="tick-arrow"
       [ngStyle]="{
@@ -17,25 +19,32 @@
     >
       {{ this.chartData().actual }}%
     </div>
-    <div 
-      class="inner-circle" 
-      [style]="plannedStyles"
-      [ngStyle]="{
-        'width.px' : innerRadius(),
-        'height.px' : innerRadius(),
-        '--before-inner-width.px' : innerRadius() - 40,
-        '--before-inner-height.px' : innerRadius() - 40
-      }"
-    >
-      <div
-        class="tick-arrow2"
+  }
+    @if(innerRadius() > 0)
+    {
+      <div 
+        class="inner-circle" 
+        [style]="plannedStyles"
         [ngStyle]="{
-          'font-family': labelsFontFamily() ? labelsFontFamily() : 'sans-serif'
+          'width.px' : innerRadius(),
+          'height.px' : innerRadius(),
+          '--before-inner-width.px' : innerRadius() - 40,
+          '--before-inner-height.px' : innerRadius() - 40
         }"
       >
-        {{ this.chartData().planned }}%
+        @if(showLabels() === true)
+        {
+          <div
+            class="tick-arrow2"
+            [ngStyle]="{
+              'font-family': labelsFontFamily() ? labelsFontFamily() : 'sans-serif'
+            }"
+          >
+            {{ this.chartData().planned }}%
+          </div>
+        }
       </div>
-    </div>
+    }
   </div>
 </section>
 @if(showLegend()) {
@@ -46,7 +55,11 @@
         [ngStyle]="{
             'font-family' : legendsFontFamily() ? legendsFontFamily() : 'sans-serif'
         }"
-    >{{ dataKeys[0] }} %</span>
+    >{{ dataKeys[0] }}</span>
+    @if(showLegendValues() === true)
+    {
+      <span style = "display: inline-block;margin-left:15px;">{{chartData().planned}}%</span>
+    }
   </div>
   <div class="legend actual">
     <div class="bullet"></div>
@@ -54,7 +67,11 @@
         [ngStyle]="{
             'font-family' : legendsFontFamily() ? legendsFontFamily() : 'sans-serif'
         }"
-    >{{ dataKeys[1] }} %</span>
+    >{{ dataKeys[1] }}</span>
+    @if(showLegendValues() === true)
+    {
+      <span style = "display: inline-block;margin-left:15px;">{{chartData().actual}}%</span>
+    }
   </div>
 </div>
 }

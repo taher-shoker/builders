@@ -15,6 +15,8 @@ export class MultiCirclesProgressBarComponent implements OnInit{
   labelsFontFamily:InputSignal<string> = input<string>('')
   legendsFontFamily:InputSignal<string> = input<string>('')
   showLegend:InputSignal<boolean> = input<boolean>(true)
+  showLabels:InputSignal<boolean> = input<boolean>(true)
+  showLegendValues:InputSignal<boolean> = input<boolean>(true)
   plannedDegree!:number;
   actualDegree!:number;
   dataKeys:string[] = []
