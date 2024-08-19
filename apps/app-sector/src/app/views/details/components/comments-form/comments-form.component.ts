@@ -279,16 +279,16 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       note: 'Test Note',
     };
 
-    uniqueFiles.forEach((file) => {
-      this.attachmentService
-        .uploadKPIAttachment(file, addAttachmentDto)
-        .subscribe((result) => {
+    this.attachmentService
+      .uploadKPIAttachment(uniqueFiles, addAttachmentDto)
+      .subscribe((result) => {
+        uniqueFiles.forEach((file, index) => {
           this.displayedFiles.unshift({
             file: file,
-            ...result,
+            ...result[index],
           });
         });
-    });
+      });
   }
 
   onDeleteFile(index: number, id: number) {

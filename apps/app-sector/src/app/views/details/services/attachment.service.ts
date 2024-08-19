@@ -11,17 +11,19 @@ export class AttachmentService {
 
   constructor(private http: HttpClient) {}
 
-  uploadKPIAttachment(files: File, addAttachmentDto: any): Observable<any> {
+  uploadKPIAttachment(files: File[], addAttachmentDto: any): Observable<any> {
     const addAttachmentDtoBlob = new Blob([JSON.stringify(addAttachmentDto)], {
       type: 'application/json',
     });
     const formData = new FormData();
 
-    formData.append('file', files);
+    files.forEach((file, index) => {
+      formData.append(`files`, file);
+    });
     formData.append('addAttachmentDto', addAttachmentDtoBlob);
 
     return this.http.post(
-      `${this.baseUrl}v2/scrs/dashboard/sector/kpi-details/attachment`,
+      `${this.baseUrl}v2/scrs/dashboard/sector/kpi-details/attachments`,
       formData
     );
   }
