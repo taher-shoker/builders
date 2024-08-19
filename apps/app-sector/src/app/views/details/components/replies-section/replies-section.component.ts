@@ -6,33 +6,26 @@ import {
   InputSignal,
   OnInit,
   signal,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { CookieService } from 'ngx-cookie';
-import { newComment } from '../../../models/newComment';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
 import {
   addreplyBody,
   comment,
   commentEditBody,
-  myComment,
   reply,
   replyEditBody,
-  sectorUsersParams,
   user,
 } from '../../models/commentsModel';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { AuthService } from 'apps/app-sector/src/app/services/auth.service';
 import { commentsService } from '../../services/comments.service';
 import { ToastrService } from 'ngx-toastr';
-import { SharedFormService } from '../../../home/services/shared-form.service';
 
 @Component({
   selector: 'stc-apps-replies-section',
@@ -123,18 +116,25 @@ export class RepliesSectionComponent implements OnInit {
       comment: this.fb.control('', [Validators.required]),
     });
   }
+  mentionObjectChanged(object: user) {
+    console.log(object, 'in replies');
+  }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onContentChange(content: any): void {
+    console.log('content', content);
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
 
-    console.log('Form Value:', this.form.get('comment')?.value);
-    console.log('Mentions:', this.mentionsArray);
-    console.log('Content:', content);
-    console.log('editedText:', this.editedText());
+    // console.log('Form Value:', this.form.get('comment')?.value);
+    // console.log('Mentions:', this.mentionsArray);
+    // console.log('Content:', content);
+    // console.log('editedText:', this.editedText());
   }
 
   extractMentions(text: string): string[] {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mentions: string[] = this.mentions.map((mention: any) => {
+      console.log(mention);
       return `@${mention.name}`;
     });
 
@@ -232,8 +232,6 @@ export class RepliesSectionComponent implements OnInit {
       setTimeout(() => {
         this.scrollIntoView();
       });
-      this.comments[commentIndex].commaSeparatedMentions =
-        this.commentsService.commaSepartedMentions(this.mentionsArray);
     }
   }
 
@@ -306,11 +304,11 @@ export class RepliesSectionComponent implements OnInit {
       });
     }
 
-    this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions =
-      this.commentsService.commaSepartedMentions(this.mentionsArray);
-    console.log(
-      this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions
-    );
+    // this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions =
+    //   this.commentsService.commaSepartedMentions(this.mentionsArray);
+    // console.log(
+    //   this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions
+    // );
   }
 
   saveReply() {
@@ -334,7 +332,7 @@ export class RepliesSectionComponent implements OnInit {
           this.showCommentTextArea = false;
         }
       },
-      error: (error) => {
+      error: () => {
         this.toastr.error('Reply Addtion Failed');
         this.form.reset();
         this.editedText.set('');

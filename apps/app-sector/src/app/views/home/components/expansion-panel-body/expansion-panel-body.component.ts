@@ -48,23 +48,28 @@ export class ExpansionPanelBodyComponent {
           position: 'down',
         },
       ],
-      barColor: this.barColor(this.kpiStatus()),
-      bgBarColor: this.barBackgroundColor(this.kpiStatus()),
+      barColor: this.barColor(
+        +(this.kpiTargetValue() * 100).toFixed(2),
+        +(this.kpiActualValue() * 100).toFixed(2)
+      ),
+      bgBarColor: this.barBackgroundColor(
+        +(this.kpiTargetValue() * 100).toFixed(2),
+        +(this.kpiActualValue() * 100).toFixed(2)
+      ),
     };
     return data;
   });
   constructor(private router: Router) {}
-  barBackgroundColor(status: string): string {
-    if (status.toLowerCase() === 'on track') return 'rgba(0, 196, 140, 0.15)';
-    else if (status.toLowerCase() === 'delayed')
-      return 'rgba(255, 26, 26, 0.1)';
-    else return '';
+  barBackgroundColor(target: number, actual: number): string {
+    if (target > actual) return 'rgba(255, 26, 26, 0.1)';
+    else return 'rgba(0, 196, 140, 0.15)';
   }
-  barColor(status: string): string {
-    if (status.toLowerCase() === 'on track') return 'var(--stcOasisColor)';
-    else if (status.toLowerCase() === 'delayed') return 'var(--stc-red-color)';
-    else return '';
+
+  barColor(target: number, actual: number): string {
+    if (target > actual) return 'var(--stc-red-color)';
+    else return 'var(--stcOasisColor)';
   }
+
   navigateToDetails() {
     this.router.navigate(['/details', this.kpiName()], {
       state: { kpiCode: this.kpiCode(), selectedTab: this.selectedTab() },
