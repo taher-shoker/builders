@@ -36,6 +36,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   kpiCode = window.history.state.kpiCode;
   scoreCardTitle = window.history.state.selectedTab;
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
+  sectorUsersSignal: InputSignal<user[] | any> = input(undefined);
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
@@ -56,7 +57,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     'application/x-rar-compressed', // RAR files
   ];
 
-  mentions: string[] = ['John', 'Jane', 'Doe', 'Smith'];
+  mentions: user[] = [];
   placeholder = 'Enter Comment Here...';
   mentions2 = [
     { name: 'Assem Khalifa Ahmed', comment: 'UI/UX Designer' },
@@ -78,12 +79,22 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     if (changes['kpiObjectSignal']) {
       this.populateDisplayedFiles();
     }
+    if (changes['sectorUsersSignal']) {
+      console.log(this.sectorUsersSignal());
+      this.fillUserMentions();
+    }
   }
 
   ngOnInit(): void {
     this.handleForm();
   }
-
+  fillUserMentions() {
+    const mentionsObject = this.sectorUsersSignal();
+    if (mentionsObject) {
+      this.mentions = mentionsObject;
+      console.log(this.mentions);
+    }
+  }
   populateDisplayedFiles() {
     const kpiObject = this.kpiObjectSignal();
 
@@ -201,7 +212,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
 
   extractMentions(text: string): string[] {
-    const mentions: string[] = this.mentions2.map((mention: any) => {
+    const mentions: string[] = this.mentions.map((mention: user) => {
       return `@${mention.name}`;
     });
 

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 @Injectable({ providedIn: 'root' })
 export class mentionRegexService {
   generateRegex(mentions: string[]) {
-    if (mentions && mentions.length !== 0) {
+    if (mentions && mentions.length !== 0 && mentions[0] !== '') {
       const usernamesRegex = mentions
         .map((username: string) => `${this.escapeRegExp(username)}`)
         .join('|');

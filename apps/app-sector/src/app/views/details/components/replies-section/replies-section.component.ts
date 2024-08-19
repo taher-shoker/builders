@@ -6,6 +6,7 @@ import {
   InputSignal,
   OnInit,
   signal,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
@@ -54,20 +55,12 @@ export class RepliesSectionComponent implements OnInit {
   replyIndex = 0;
   loggedUser = '';
   editedText = signal('');
-  mentions = [
-    { name: 'Assem Khalifa Ahmed', comment: 'UI/UX Designer' },
-    { name: 'Assem Ahmed', comment: 'Business Analyst' },
-    { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
-    { name: 'Naden Draz', comment: 'UI/UX Designer' },
-    { name: 'Habiba mohamed', comment: 'UI/UX Designer' },
-    { name: 'Habiab Mohamed Nagiub', comment: 'UI/UX Designer' },
-  ];
+  mentions: user[] = [];
   mentionsArray: string[] = [];
   comments: comment[] = [];
 
   confirmationBtnDesc = 'Delete';
   constructor(
-    private dialog: MatDialog,
     private fb: FormBuilder,
     private cookieService: CookieService,
     public router: Router,
@@ -75,8 +68,7 @@ export class RepliesSectionComponent implements OnInit {
     private dialogeService: dialogeService,
     private commentService: commentsService,
     private toastr: ToastrService,
-    private commentsService: commentsService,
-    private sharedFormService: SharedFormService
+    private commentsService: commentsService
   ) {
     effect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -93,15 +85,7 @@ export class RepliesSectionComponent implements OnInit {
     this.handleForm();
   }
   ngOnInit(): void {
-    // const params: sectorUsersParams = {
-    //   system: 'Score_Card_Report_DB',
-    //   team: this.sharedFormService.getForm().value.sectorName,
-    // };
-    // this.commentService.getSectorUsers(params).subscribe({
-    //   next: (result: user[]) => {
-    //     console.log(result);
-    //   },
-    // });
+    //this.getSectorUsers();
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
       this.cookieService.get('token')
@@ -125,8 +109,15 @@ export class RepliesSectionComponent implements OnInit {
         this.commentsCount();
       }
     });
+    this.commentService.mentionsList.subscribe((result: user[]) => {
+      if (result) {
+        console.log('replies section users', result);
+        this.mentions = result;
+      } else {
+        this.mentions = [];
+      }
+    });
   }
-
   handleForm() {
     this.form = this.fb.group({
       comment: this.fb.control('', [Validators.required]),
@@ -209,38 +200,40 @@ export class RepliesSectionComponent implements OnInit {
     this.commentIndex = commentIndex;
     this.deleteReplyFlag = false;
     console.log(e, commentIndex);
-    if (!this.showCommentTextArea) {
-      if (e === 'Delete') {
-        this.deleteCommentFlag = true;
-        const dialogeDesc = 'Are you sure you want to delete this comment?';
-        this.dialogeService.openDialog(
-          '0ms',
-          '0ms',
-          dialogeDesc,
-          this.confirmationBtnDesc,
-          this.confirm.bind(this)
-        );
-        // this.openDialog('0ms', '0ms', commentIndex);
-      } else if (e === 'Reply') {
-        this.editedText.set('');
-        this.showCommentTextArea = true;
-        this.commentActionBtn = 'Save';
-        setTimeout(() => {
-          this.scrollIntoView();
-        });
-      } else if (e === 'Edit') {
-        this.commentActionBtn = 'Update';
-        setTimeout(() => {
-          this.scrollIntoView();
-        });
-        this.showCommentTextArea = true;
-        const comment = this.comments[commentIndex].comment;
-        this.form.get('comment')?.setValue(comment);
-        this.editedText.set(comment);
-        this.comments[commentIndex].commaSeparatedMentions =
-          this.commentsService.commaSepartedMentions(this.mentionsArray);
-        // this.mentionsArray = this.commentsList[commentIndex].mentions;
-      }
+
+    if (e == 'Delete') {
+      console.log('inside if');
+      this.deleteCommentFlag = true;
+      const dialogeDesc = 'Are you sure you want to delete this comment?';
+      this.dialogeService.openDialog(
+        '0ms',
+        '0ms',
+        dialogeDesc,
+        this.confirmationBtnDesc,
+        this.confirm.bind(this)
+      );
+    } else if (e == 'Reply') {
+      console.log('inside reply');
+      this.editedText.set('');
+      this.form.reset();
+      this.showCommentTextArea = true;
+      this.commentActionBtn = 'Save';
+      setTimeout(() => {
+        this.scrollIntoView();
+      });
+    } else if (e == 'Edit') {
+      console.log('inside');
+      this.showCommentTextArea = true;
+      const comment = this.comments[commentIndex].comment;
+      this.form.get('comment')?.setValue(comment);
+      this.editedText.set(comment);
+      console.log(this.comments[commentIndex].comment, 'edit');
+      this.commentActionBtn = 'Update';
+      setTimeout(() => {
+        this.scrollIntoView();
+      });
+      this.comments[commentIndex].commaSeparatedMentions =
+        this.commentsService.commaSepartedMentions(this.mentionsArray);
     }
   }
 
@@ -263,17 +256,28 @@ export class RepliesSectionComponent implements OnInit {
     const commentObj: commentEditBody = {
       id: this.comments[this.commentIndex].id,
       comment: this.form.get('comment')?.value,
+      commaSeparatedMentions: this.mentionsArray
+        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+        : null,
     };
-    this.commentService.editComment(commentObj).subscribe((result: comment) => {
-      this.toastr.success('Comment Edited Successfully');
-      this.comments[this.commentIndex].comment = result.comment;
-      this.comments[this.commentIndex].edited = result.edited;
-      this.comments[this.commentIndex].editedAt = result.editedAt;
-      this.comments[this.commentIndex].commaSeparatedMentions =
-        result.commaSeparatedMentions;
-      this.form.reset();
-      this.editedText.set('');
-      this.showCommentTextArea = false;
+    this.commentService.editComment(commentObj).subscribe({
+      next: (result: comment) => {
+        this.toastr.success('Comment Edited Successfully');
+        this.comments[this.commentIndex].comment = result.comment;
+        this.comments[this.commentIndex].edited = result.edited;
+        this.comments[this.commentIndex].editedAt = result.editedAt;
+        this.comments[this.commentIndex].commaSeparatedMentions =
+          result.commaSeparatedMentions;
+        this.form.reset();
+        this.editedText.set('');
+        this.showCommentTextArea = false;
+      },
+      error: () => {
+        this.toastr.error('error occured');
+        this.form.reset();
+        this.editedText.set('');
+        this.showCommentTextArea = false;
+      },
     });
   }
 
@@ -281,27 +285,27 @@ export class RepliesSectionComponent implements OnInit {
     this.commentIndex = commentIndex;
     this.replyIndex = replyIndex;
     this.deleteCommentFlag = false;
-    if (!this.editReplyTextArea) {
-      if (e === 'Delete') {
-        this.deleteReplyFlag = true;
-        const dialogeDesc = 'Are you sure you want to delete this reply?';
-        this.dialogeService.openDialog(
-          '0ms',
-          '0ms',
-          dialogeDesc,
-          this.confirmationBtnDesc,
-          this.confirm.bind(this)
-        );
-      } else if (e === 'Edit') {
-        this.editReplyTextArea = true;
-        const reply = this.comments[commentIndex].replies[replyIndex].reply;
-        this.form.get('comment')?.setValue(reply);
-        this.editedText.set(reply);
-        setTimeout(() => {
-          this.scrollIntoView();
-        });
-      }
+
+    if (e === 'Delete') {
+      this.deleteReplyFlag = true;
+      const dialogeDesc = 'Are you sure you want to delete this reply?';
+      this.dialogeService.openDialog(
+        '0ms',
+        '0ms',
+        dialogeDesc,
+        this.confirmationBtnDesc,
+        this.confirm.bind(this)
+      );
+    } else if (e === 'Edit') {
+      this.editReplyTextArea = true;
+      const reply = this.comments[commentIndex].replies[replyIndex].reply;
+      this.form.get('comment')?.setValue(reply);
+      this.editedText.set(reply);
+      setTimeout(() => {
+        this.scrollIntoView();
+      });
     }
+
     this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions =
       this.commentsService.commaSepartedMentions(this.mentionsArray);
     console.log(
@@ -314,6 +318,9 @@ export class RepliesSectionComponent implements OnInit {
     const replyObj: addreplyBody = {
       commentId: this.comments[this.commentIndex].id,
       reply: this.form.get('comment')?.value,
+      commaSeparatedMentions: this.mentionsArray
+        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+        : null,
     };
     this.commentService.addReply(replyObj).subscribe({
       next: (result: reply) => {
@@ -348,6 +355,9 @@ export class RepliesSectionComponent implements OnInit {
     const replyObj: replyEditBody = {
       id: this.comments[this.commentIndex].replies[this.replyIndex].id,
       reply: this.form.get('comment')?.value,
+      commaSeparatedMentions: this.mentionsArray
+        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+        : null,
     };
     this.commentService.editReply(replyObj).subscribe((result: reply) => {
       this.toastr.success('Reply Edited Successfully');
@@ -359,9 +369,7 @@ export class RepliesSectionComponent implements OnInit {
         result.editedAt;
       this.comments[this.commentIndex].replies[
         this.replyIndex
-      ].commaSeparatedMentions = this.commentsService.commaSepartedMentions(
-        this.mentionsArray
-      );
+      ].commaSeparatedMentions = result.commaSeparatedMentions;
       this.editReplyTextArea = false;
       this.form.reset();
     });

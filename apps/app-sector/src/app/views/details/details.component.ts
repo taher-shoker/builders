@@ -12,7 +12,7 @@ import { HttpClient } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { environment } from 'apps/app-sector/src/environments/environment';
 import { CookieService } from 'ngx-cookie';
-import { LoggedUser } from './models/commentsModel';
+import { sectorUsersParams, user } from './models/commentsModel';
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
@@ -20,7 +20,7 @@ import { LoggedUser } from './models/commentsModel';
 })
 export class DetailsComponent implements OnInit {
   kpiObjectSignal: WritableSignal<KpiDTO | undefined> = signal(undefined);
-
+  sectorUsersSignal: WritableSignal<user[] | undefined> = signal(undefined);
   currentDate = new Date();
   kpiCode = window.history.state.kpiCode;
   selectedTab = window.history.state.selectedTab;
@@ -38,16 +38,20 @@ export class DetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getKpiDetails();
-    // this.http
-    //   .get<LoggedUser>(`${this.baseUrl}users/currentLoggedUser`)
-    //   .subscribe(async (res: LoggedUser) => {
-    //     // this.cookieService.put('USER_FULLNAME', res.name);
-    //     console.log(JSON.stringify(res));
-
-    //     this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
-    //   });
+    this.getSectorUsers();
   }
-
+  getSectorUsers() {
+    const params: sectorUsersParams = {
+      system: 'Score_Card_Report_DB',
+      team: this.sharedFormService.getForm().value.sectorName,
+    };
+    this.commentService.getSectorUsers(params).subscribe({
+      next: (result: user[]) => {
+        this.sectorUsersSignal.set(result);
+        this.commentService.mentionsList.next(result);
+      },
+    });
+  }
   getKpiDetails() {
     const params: SectorKpisDetailsParams = {
       ...this.sharedFormService.getForm().value,

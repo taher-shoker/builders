@@ -8,6 +8,7 @@ import {
   addreplyBody,
   comment,
   commentEditBody,
+  notificationBody,
   reply,
   replyEditBody,
   sectorUsersParams,
@@ -19,18 +20,19 @@ export class commentsService {
   commentUrl =
     environment.apiUrl + 'v2/scrs/dashboard/sector/kpi-details/comment';
   replyUrl = `${this.commentUrl}/reply`;
-  usersUrl = environment.AdministrationBaseUrl + '/compact-users/team';
+  usersUrl = environment.AdministrationBaseUrl + 'compact-users/team';
   config = {
     headers: new HttpHeaders().set('Content-Type', 'application/json'),
   };
   commenstList: BehaviorSubject<comment[]> = new BehaviorSubject([
     {} as comment,
   ]);
-
+  mentionsList: BehaviorSubject<user[]> = new BehaviorSubject([{} as user]);
   constructor(private http: HttpClient) {}
   commaSepartedMentions(mentions: string[]): string {
     //mentions=['nadeen draz','habiba mohamed'];
     let mentionsString = '';
+
     mentions.map((mention: string) => {
       mentionsString = mentionsString + mention + ',';
     });
@@ -42,10 +44,19 @@ export class commentsService {
       .set('system', params.system)
       .set('team', params.team);
 
-    return this.http.get<user[]>(`${this.usersUrl}`, { params: httpParams });
+    return this.http.get<user[]>(
+      `${environment.apiUrl}v2/admin/compact-users/team`,
+      { params: httpParams }
+    );
   }
   addComment(commentObject: addCommentBody): Observable<comment> {
     return this.http.post<comment>(`${this.commentUrl}`, commentObject);
+  }
+  notificationSender(notificationObject: notificationBody): Observable<any> {
+    return this.http.post<any>(
+      `${environment.apiUrl}v2/scrs/notification`,
+      notificationObject
+    );
   }
   deleteComment(commentID: number): Observable<any> {
     return this.http.delete<any>(`${this.commentUrl}/${commentID}`);

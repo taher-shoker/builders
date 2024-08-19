@@ -23,12 +23,12 @@
   <ul #mentionList class="comments_mentions">
     @for (item of filteredList; track item; let index = $index) {
     <li
-      (click)="addMention(item[mentionProperty()])"
+      (click)="addMention(item[mentionProperty()]) "
       [ngClass]="{ active: index === activeMentionIndex }"
     >
       <stc-apps-profile
         [name]="item[mentionProperty()]"
-        [comment]="item.comment"
+        [comment]="item.jobTitle"
         [lastItem]="index === filteredList.length - 1"
       ></stc-apps-profile>
     </li>

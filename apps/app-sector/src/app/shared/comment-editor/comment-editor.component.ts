@@ -22,6 +22,7 @@ import {
   map,
 } from 'rxjs';
 import { mentionRegexService } from '../services/mentionRegex.service';
+import { user } from '../../views/details/models/commentsModel';
 
 @Component({
   selector: 'stc-apps-comment-editor',
@@ -207,7 +208,9 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
       }
     }
   }
-
+  constructMentionsArray(item: user) {
+    console.log('onChange', item);
+  }
   addMention(mention: string): void {
     const input = this.contentEditable.nativeElement;
     const value = input.textContent || '';
