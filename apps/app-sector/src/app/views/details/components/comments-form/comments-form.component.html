@@ -1,0 +1,34 @@
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+  <div class="comments">
+    <stc-apps-replies-section
+      [newComment]="newComment"
+    ></stc-apps-replies-section>
+    <stc-apps-comment-editor
+      formControlName="comment"
+      [placeholder]="placeholder"
+      [mentions]="mentions"
+      (contentChange)="onContentChange($event)"
+    ></stc-apps-comment-editor>
+    <div class="comments_actions">
+      <button [disabled]="form.controls['comment'].hasError('required')">
+        Submit
+      </button>
+      <!-- <stc-apps-file-uploader [multiple]="true" [chooseLabel]="'add_attachment'"
+      (onformchange)="onUploadFile($event)" [attachmentFiles]="this.form.controls['attachments'].value"
+      formControlName="attachments" [isLoading]="isLoading"
+      (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader> -->
+    </div>
+  </div>
+</form>
+
+<stc-apps-attachments
+  [displayedFiles]="
+    displayedFiles.length > 0
+      ? displayedFiles
+      : kpiObjectSignal()?.attachementList
+  "
+  [accept]="accept"
+  (filesSelected)="onFilesSelected($event)"
+  (deleteFile)="openDialog('delete', $event.index, $event.id)"
+  (downloadFile)="openDialog('download', $event.index, $event.id, $event.file)"
+></stc-apps-attachments>
