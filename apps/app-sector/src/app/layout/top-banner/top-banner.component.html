@@ -11,14 +11,16 @@
 
         <p>{{ 'welcome_back_msg' | translate }}</p>
       </div>
-      @if (showScorecard) {
+      @if (showScorecard ) {
       <h1 class="py-2">{{ 'scorecard_report' | translate }}</h1>
+
       <stc-apps-result-score
-        [percentage]="overallScore?.score??0"
+        [percentage]="overallScore?.score ?? 0"
         [title]="overallScore?.scorecardTitle ?? title"
+        *ngIf="overallScore?.score"
       ></stc-apps-result-score>
       } @else {
-      <h2 class="details-title">Details for {{kpiName}}</h2>
+      <h2 class="details-title">Details for {{ kpiName }}</h2>
       }
     </div>
   </div>
@@ -27,18 +29,22 @@
     <div class="banner_filter" [formGroup]="form">
       <stc-apps-select-drop-down
         formControlName="year"
+        [(ngModel)]="year"
         [label]="''"
         [matLabel]="'Select Year'"
         [options]="yearsArray"
         [outputValue]="'name'"
+        (selectChange)="selectYear($event)"
       ></stc-apps-select-drop-down>
 
       <stc-apps-select-drop-down
         formControlName="quarter"
+        [(ngModel)]="quarter"
         [label]="''"
         [matLabel]="'Select Quarter'"
         [options]="quarterArray"
         [outputValue]="'name'"
+        (selectChange)="selectQuarter($event)"
       ></stc-apps-select-drop-down>
     </div>
   </div>

@@ -14,6 +14,7 @@ export class ResultWeightCardComponent implements OnInit {
 
   ngOnInit(): void {
     this.getOverallScore();
+    console.log('scores', this.scores);
   }
 
   getOverallScore() {
@@ -22,6 +23,8 @@ export class ResultWeightCardComponent implements OnInit {
         this.scores = result.filter(
           (item) => item.scorecardTitle !== 'Overall'
         );
+      } else {
+        this.scores = [];
       }
     });
   }

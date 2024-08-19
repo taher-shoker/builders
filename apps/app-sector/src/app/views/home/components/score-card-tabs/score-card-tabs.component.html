@@ -8,9 +8,9 @@
   </stc-apps-tabs>
 </div>
 
-@if (selectedTab()) { 
+@if (selectedTab()&&scores.length!==0) {
 <stc-apps-panels-container
-[newTabSelected]="selectedTabChanged"
+  [newTabSelected]="selectedTabChanged"
   [kpiDTOList]="categoryKpiLists"
 ></stc-apps-panels-container>
 

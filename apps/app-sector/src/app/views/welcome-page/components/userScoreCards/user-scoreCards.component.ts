@@ -1,7 +1,10 @@
 import { Component, Input, input, InputSignal } from '@angular/core';
 import { userSector } from '../../models/userSector.model';
 import { Router } from '@angular/router';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { YearQuarterService } from 'apps/app-sector/src/app/services/yearQuarter.service';
 
 @Component({
   selector: 'stc-apps-user-score-cards',
@@ -9,7 +12,11 @@ import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
   styleUrl: './user-scoreCards.component.scss',
 })
 export class UserScoreCardsComponent {
-  constructor(private router: Router, private sectorService: SectorService) {}
+  constructor(
+    private router: Router,
+    private sectorService: SectorService,
+    private YearQuarterService: YearQuarterService
+  ) {}
   showItemDesc = false;
   hoverIndex = -1;
   @Input() sectors: userSector[] = [];
@@ -23,6 +30,7 @@ export class UserScoreCardsComponent {
   }
   navigate(title: string) {
     this.sectorService.setSectorName(title);
+    this.YearQuarterService.clearYearQuarter();
     this.router.navigate(['/home']);
   }
 }

@@ -16,6 +16,7 @@ import {
 } from '../../views/models/overallScore.model';
 import { SharedFormService } from '../../views/home/services/shared-form.service';
 import { SectorService } from '../../services/sector.service';
+import { YearQuarterService } from '../../services/yearQuarter.service';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -36,6 +37,9 @@ export class TopBannerComponent implements OnInit {
   currentYear = this.currentDate.getFullYear() - 1;
   currentMonth = this.currentDate.getMonth() + 1; // getMonth() returns 0-based month
   currentQuarter = Math.ceil(this.currentMonth / 3) - 2;
+  // the quarter variable gets the actual quarter whe are in which is 3.
+  quarter = Math.floor((this.currentMonth + 3) / 3);
+  year = this.currentDate.getFullYear();
   overallScore!: OverallScore;
   kpiName = '';
 
@@ -44,7 +48,8 @@ export class TopBannerComponent implements OnInit {
     private dashboardService: DashboardService,
     private sharedFormService: SharedFormService,
     private activatedRoute: ActivatedRoute,
-    private sectorService: SectorService
+    private sectorService: SectorService,
+    private YearQuarterService: YearQuarterService
   ) {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
@@ -60,28 +65,52 @@ export class TopBannerComponent implements OnInit {
       });
   }
   ngOnInit(): void {
+    console.log('quarter', this.quarter, this.currentQuarter, this.currentYear);
     this.handleForm();
     this.getOverallScore();
   }
 
   handleForm() {
     this.form = this.sharedFormService.getForm();
+    if (
+      this.YearQuarterService.getSelectedQuarter() ||
+      this.YearQuarterService.getSelectedYear()
+    ) {
+      if (this.YearQuarterService.getSelectedYear() !== null) {
+        this.year = +this.YearQuarterService.getSelectedYear()!;
+      }
+      if (this.YearQuarterService.getSelectedQuarter() !== null) {
+        this.quarter = +this.YearQuarterService.getSelectedQuarter()!;
+      }
+    } else {
+      console.log('inside else');
+      this.quarter = Math.floor((this.currentMonth + 3) / 3);
+      this.year = this.currentDate.getFullYear();
+    }
     const initialParams = {
-      year: this.currentYear.toString(),
-      quarter: this.currentQuarter.toString(),
+      year: this.year.toString(),
+      quarter: this.quarter.toString(),
       sectorName: this.sectorService.getSectorName()?.toString() || '',
     };
+
     this.sharedFormService.initializeForm(initialParams);
   }
-
+  // Years array should contain the current year only
   yearsArray: any = [
-    { name: 2020 },
-    { name: 2021 },
-    { name: 2022 },
-    { name: 2023 },
+    { name: this.currentYear },
+    { name: this.currentDate.getFullYear() },
   ];
   quarterArray: any = [{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }];
-
+  selectYear(event: any) {
+    console.log(event);
+    this.YearQuarterService.setYear(event.toString());
+    this.getOverallScore();
+  }
+  selectQuarter(event: any) {
+    this.YearQuarterService.setQuarter(event.toString());
+    this.getOverallScore();
+    console.log(event);
+  }
   getOverallScore() {
     const params: OverallScoreParams = { ...this.form.value };
 
@@ -92,6 +121,8 @@ export class TopBannerComponent implements OnInit {
         );
         if (foundItem) {
           this.overallScore = foundItem;
+        } else {
+          this.overallScore = {} as OverallScore;
         }
       }
     });

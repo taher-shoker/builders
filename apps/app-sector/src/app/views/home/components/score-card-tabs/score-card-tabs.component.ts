@@ -65,6 +65,8 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
         // if (this.scores.length > 0) {
         // this.selectedTab.set(this.scores[0].scorecardTitle);
         // }
+      } else {
+        this.scores = [];
       }
     });
   }
@@ -103,7 +105,7 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
                   this.kpiDTOMap[kpiSubGrouping][kpiName];
               });
             });
-          }
+          } 
         });
     }
   }

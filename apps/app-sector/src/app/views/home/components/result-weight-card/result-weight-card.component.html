@@ -27,4 +27,8 @@
     </div>
     }
   </div>
+  <!-- scores array is empty means there is no tabs(no data)-->
+  @if (scores.length===0) {
+  <div class="empty-scores">There's no data for this specified sector in this year or quarter.</div>
+  }
 </section>
