@@ -15,9 +15,14 @@ import { HomeRoutingModule } from './home-routing.module';
 import { HomeComponent } from './home.component';
 import { DyReportsModule } from '../dy-reports/dy-reports.module';
 import { DelegationDialogComponent } from './delegationDialog/delegationDialog.component';
+import { ExportDialogComponent } from '../dy-reports/components/reports/export-dialog/export-dialog.component';
 
 @NgModule({
-  declarations: [HomeComponent, DelegationDialogComponent],
+  declarations: [
+    HomeComponent,
+    DelegationDialogComponent,
+    ExportDialogComponent,
+  ],
   imports: [
     CommonModule,
     SharedUiModule,

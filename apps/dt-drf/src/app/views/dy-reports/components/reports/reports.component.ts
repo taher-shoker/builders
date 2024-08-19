@@ -28,6 +28,7 @@ import {
   Category,
   ReportDetails,
 } from '../../dy-reports.service';
+import { ExportDialogComponent } from './export-dialog/export-dialog.component';
 
 export interface Milestone {
   activityName: string;
@@ -254,11 +255,29 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onExporting() {
-    const filteredForm = this.utilities.filterObject(this.form.value);
-    this.reportsService.exportMilestones(filteredForm).subscribe((buffer) => {
-      const data: Blob = new Blob([buffer]);
-      saveAs(data, 'milestones.csv');
+    this.openDialogExportation().subscribe((res) => {
+      if (res) {
+        const { from, to } = res;
+        console.log('exp res :', from, to);
+        
+        this.reportsService.exportReports({ from, to }).subscribe({
+          next: (buffer) => {
+            const data: Blob = new Blob([buffer]);
+            saveAs(data, 'reports.csv');
+          },
+          error: (error) => {
+            console.log('Error in exportation', error);
+          },
+        });
+      }
     });
+  }
+
+  openDialogExportation() {
+    const dialogRef = this.matDialog.open(ExportDialogComponent, {
+      width: '800px',
+    });
+    return dialogRef.afterClosed();
   }
 
   searchForm() {

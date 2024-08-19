@@ -369,8 +369,8 @@ export class ReportsService {
     return this.http.delete(`${this.dtUrl}requests-category/${categoryId}`);
   }
 
-  exportMilestones(filterData?: any) {
-    return this.http.get(`${this.dtUrl}/export`, {
+  exportReports(filterData?: any) {
+    return this.http.get(`${this.dtUrl}requests/export`, { //?from=${filterData.from}&to=${filterData.to}
       params: filterData,
       responseType: 'blob',
     });
