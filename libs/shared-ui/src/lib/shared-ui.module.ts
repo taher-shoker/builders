@@ -58,6 +58,7 @@ import { TimelineChartComponent } from './timeline-chart/timeline-chart.componen
 import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.component';
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { CustomDropdownComponent } from './custom-dropdown/custom-dropdown.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -97,6 +98,7 @@ const components = [
   TextEditorQuillComponent,
   CheckboxComponent,
   ProgressBarComponent,
+  CustomDropdownComponent,
 ];
 
 @NgModule({

@@ -35,8 +35,6 @@ export class CategoryComponent implements OnInit {
     },
   ];
 
-  categoriesTotalCount: number = 90;
-
   constructor(
     public router: Router,
     public route: ActivatedRoute,

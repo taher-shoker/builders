@@ -1,0 +1,8 @@
+<div class="dropdown">
+  <label for="dropdown-label">{{label()}}</label>
+  <select id="dropdown-select">
+    @for (item of list(); track item) {
+      <option [value]="item.value">{{item.displayName}}</option>
+    }
+  </select>
+</div>

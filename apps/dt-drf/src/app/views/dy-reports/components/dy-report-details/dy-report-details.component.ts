@@ -180,7 +180,7 @@ export class DyReportDetailsComponent implements OnInit {
         this.datePipe.transform(displayDate, 'medium') || '';
 
       let byUser = '';
-      const userThatTaskIsPendingOn = res[i].userDisplayName;
+      const userThatTaskIsPendingOn = res[i].username;
       const actions: Actions[] = [];
       let stepCustomState: 'danger' | 'edit' | '' = '';
       const attachmentsIDs: string[] = [];
@@ -377,10 +377,6 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   doStepAction(action: { actionObj: Actions | string; item: any }) {
-    if (action) {
-      console.log('El ACT:', action);
-    }
-
     if (
       typeof action.actionObj !== 'string' &&
       'uniqueTitle' in action.actionObj
@@ -431,11 +427,13 @@ export class DyReportDetailsComponent implements OnInit {
     }
 
     if (action === 'Initiator Approve') {
-      this.approveInitiatorStep(item);
+      // this.approveInitiatorStep(item);
+      this.approveStep(item, true);
     }
 
     if (action === 'Initiator Reject') {
-      this.rejectInitiatorStep(item);
+      // this.rejectInitiatorStep(item);
+      this.rejectStep(item, true);
     }
   }
 
@@ -552,10 +550,14 @@ export class DyReportDetailsComponent implements OnInit {
     return dialogRef.afterClosed();
   }
 
-  approveStep(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'isApproved', value: true }],
-    };
+  approveStep(item: RequestTask, isInitiator: boolean = false) {
+    const params: RequestTaskAttributes = isInitiator
+      ? {
+          requestParams: [{ name: 'is_approved_by_initiator', value: true }],
+        }
+      : {
+          requestParams: [{ name: 'isApproved', value: true }],
+        };
 
     this.openReportStepApprovalModal(item, true).subscribe(
       (res: { comment: string; attachments: string }) => {
@@ -592,10 +594,14 @@ export class DyReportDetailsComponent implements OnInit {
     );
   }
 
-  rejectStep(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'isApproved', value: false }],
-    };
+  rejectStep(item: RequestTask, isInitiator: boolean = false) {
+    const params: RequestTaskAttributes = isInitiator
+      ? {
+          requestParams: [{ name: 'is_approved_by_initiator', value: false }],
+        }
+      : {
+          requestParams: [{ name: 'isApproved', value: false }],
+        };
 
     this.openReportStepApprovalModal(item, false).subscribe(
       (res: { comment: any; attachments: any }) => {
