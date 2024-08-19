@@ -126,6 +126,9 @@ export class UsersService {
       case 'DI_Milestones':
         allTeams = this.allTeams;
         break;
+      case 'Score_Card_Report_DB':
+        allTeams = this.allTeams;
+        break;
       default:
         break;
     }
@@ -136,7 +139,8 @@ export class UsersService {
     let allRoles;
     if (
       this.getCurrentSystem() === 'DI_Milestones' ||
-      this.getCurrentSystem() === 'Business_Excellence_Dashboard'
+      this.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.getCurrentSystem() === 'Score_Card_Report_DB'
     ) {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')
