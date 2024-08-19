@@ -68,6 +68,7 @@ import { MillionPipe } from './million.pipe';
 import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-bar.component';
 import { ProjectCardComponent } from './project-card/project-card.component';
 import { TabViewModule } from 'primeng/tabview';
+import { MultiCirclesProgressBarComponent } from './multi-circles-progress-bar/multi-circles-progress-bar.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -114,7 +115,8 @@ const components = [
   CircularProgressBarComponent,
   MillionPipe,
   SolidCircularBarComponent,
-  ProjectCardComponent
+  ProjectCardComponent,
+  MultiCirclesProgressBarComponent
 ];
 
 @NgModule({

@@ -1,0 +1,14 @@
+<section class="psr-tabview">
+    <p class = "psr-tabview-header">
+        data governance strategic projects execution (execution view)
+    </p>
+    <div class="project-container">
+        @for (project of projects(); track project.id) {
+            <div class="project-container-card">
+                <stc-apps-psr-project-card 
+                    [project]="project"
+                />
+            </div>
+        }
+    </div>
+</section>

@@ -1,1 +1,31 @@
-<p>PSR works!</p>
+<section class="scored-card-section">
+    <div class="scored-card-section-header">
+      <div>
+        <stc-apps-page-header
+          [mainTitle]="'PSR'"
+          [secondaryTitle]="''"
+          [username]="'BE Admin'"
+        />
+        <!-- <div class="scored-card-section-taps">
+          <stc-apps-tabview
+            [tabsData]="PSRTaps"
+            [tabColor]="'#ffffff'"
+            [clickedtabColor]="'#ffffff'"
+            [tabBackground]="'#FFFFFF0D'"
+            [clickedtabBackground]="'#FF375E'"
+            (clickedTap)="getClickedTap($event)"
+            [fontFamily]="'STCForwardFont'"
+          />
+        </div> -->
+      </div>
+      <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+    </div>
+    <div class="scored-card-section-tap-details">
+      <div class="projects-container">
+        <stc-apps-tab-details 
+          [projects]="psrData"
+        />
+      </div>
+    </div>
+  </section>
+  

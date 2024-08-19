@@ -2,7 +2,6 @@ import { inject, Injectable } from '@angular/core';
 import {
   NavLinks,
   ScorecardModel,
-  ScorecardTaps,
   UserModel,
 } from '../models/scorecard.model';
 import { environment } from '../../environments/environment';
@@ -19,21 +18,21 @@ export class ScorecardService {
       name: 'scorecard',
       url: '/scorecard',
     },
-    {
-      id: 2,
-      name: 'CAD strategy program',
-      url: '/strategy-program',
-    },
+    // {
+    //   id: 2,
+    //   name: 'CAD strategy program',
+    //   url: '/strategy-program',
+    // },
     // {
     //   id: 3,
     //   name: 'raqami',
     //   url: '/raqami',
     // },
-    // {
-    //   id: 4,
-    //   name: 'PSR',
-    //   url: '/psr',
-    // },
+    {
+      id: 4,
+      name: 'PSR',
+      url: '/psr',
+    },
   ];
   getNavLinks(): NavLinks[] {
     return this.navItems;

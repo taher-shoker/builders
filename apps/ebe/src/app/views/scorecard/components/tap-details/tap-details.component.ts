@@ -12,7 +12,7 @@ import {
 import {
   FileModel,
   ScorecardModel,
-  ScorecardTaps,
+  TapModel,
 } from '../../../../models/scorecard.model';
 import {
   FormControl,
@@ -55,7 +55,7 @@ export class TapDetailsComponent implements OnInit {
   visible = false;
   endSubs$:Subject<ScorecardModel[]> = new Subject();
   selectedFile!:FileModel | null;
-  currentClickedTap: InputSignal<ScorecardTaps> = input.required<ScorecardTaps>();
+  currentClickedTap: InputSignal<TapModel> = input.required<TapModel>();
   isEmpty: InputSignal<boolean> = input.required<boolean>();
   monthsArr: { name: string; id: number }[] = [];
   years: WritableSignal<{ name: string; id: number }[]> = signal<{ name: string; id: number }[]>([]);

@@ -1,5 +1,5 @@
 import { Component, inject, OnDestroy, OnInit, signal, ViewChild, WritableSignal } from '@angular/core';
-import {FileModel, ScorecardModel,ScorecardTaps} from '../../models/scorecard.model';
+import {FileModel, ScorecardModel,TapModel} from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { TapDetailsComponent } from './components/tap-details/tap-details.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -21,8 +21,8 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   currentMode!: 'editMode' | 'viewMode';
   endSubs$:Subject<ScorecardModel[]> = new Subject();
   kpisData: WritableSignal<ScorecardModel[]> = signal([]);
-  currentClickedTapData!: ScorecardTaps;
-  scorecardsTaps!: ScorecardTaps[];
+  currentClickedTapData!: TapModel;
+  scorecardsTaps!: TapModel[];
   isEmpty = false;
   filtersOptions!:FilteredOptions;
   scorecardService = inject(ScorecardService);
@@ -62,7 +62,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   {
     this.endSubs$.complete()
   }
-  getClickedTap(clickedTap: ScorecardTaps) {
+  getClickedTap(clickedTap: TapModel) {
     this.currentClickedTapData = clickedTap;    
     if(this.filtersOptions)
     {
@@ -81,7 +81,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
     this.scorecardService.getScorecardData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (scorecards:ScorecardModel[]) => {
         console.log(scorecards);
-        const data:ScorecardTaps[] = [];
+        const data:TapModel[] = [];
         scorecards.forEach((scorecard , index) => {
           scorecard.kpiDataDTO.forEach(kpi => {
             data.push({
@@ -91,7 +91,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
             })
           })
         })
-        const uniqueObjects:ScorecardTaps[] = data.filter((obj, index , self) =>
+        const uniqueObjects:TapModel[] = data.filter((obj, index , self) =>
           index === self.findIndex((t) => (
             t.name === obj.name
           ))

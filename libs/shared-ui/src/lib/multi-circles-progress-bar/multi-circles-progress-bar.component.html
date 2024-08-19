@@ -1,0 +1,60 @@
+<section>
+  <div 
+    class="circular-progress" 
+    [style]="actualStyles"
+    [ngStyle]="{
+      'width.px' : outerRadius(),
+      'height.px' : outerRadius(),
+      '--before-width.px' : outerRadius() - 40,
+      '--before-height.px' : outerRadius() - 40
+    }"
+  >
+    <div
+      class="tick-arrow"
+      [ngStyle]="{
+        'font-family': labelsFontFamily() ? labelsFontFamily() : 'sans-serif'
+      }"
+    >
+      {{ this.chartData().actual }}%
+    </div>
+    <div 
+      class="inner-circle" 
+      [style]="plannedStyles"
+      [ngStyle]="{
+        'width.px' : innerRadius(),
+        'height.px' : innerRadius(),
+        '--before-inner-width.px' : innerRadius() - 40,
+        '--before-inner-height.px' : innerRadius() - 40
+      }"
+    >
+      <div
+        class="tick-arrow2"
+        [ngStyle]="{
+          'font-family': labelsFontFamily() ? labelsFontFamily() : 'sans-serif'
+        }"
+      >
+        {{ this.chartData().planned }}%
+      </div>
+    </div>
+  </div>
+</section>
+@if(showLegend()) {
+<div class="legend-container">
+  <div class="legend planned">
+    <div class="bullet"></div>
+    <span
+        [ngStyle]="{
+            'font-family' : legendsFontFamily() ? legendsFontFamily() : 'sans-serif'
+        }"
+    >{{ dataKeys[0] }} %</span>
+  </div>
+  <div class="legend actual">
+    <div class="bullet"></div>
+    <span
+        [ngStyle]="{
+            'font-family' : legendsFontFamily() ? legendsFontFamily() : 'sans-serif'
+        }"
+    >{{ dataKeys[1] }} %</span>
+  </div>
+</div>
+}

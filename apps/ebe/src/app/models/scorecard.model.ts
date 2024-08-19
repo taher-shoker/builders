@@ -1,4 +1,4 @@
-export interface ScorecardTaps
+export interface TapModel
 {
   id : number;
   name : string;
