@@ -75,6 +75,7 @@ export class TapDetailsComponent implements OnInit {
     }
   }
   ngOnInit(): void {    
+    console.log(window.innerWidth);
     const yearsArr: { name: string; id: number }[] = [];
     const currYear: number = new Date().getFullYear();
     for (let index = 2024; index <= currYear; index++) {

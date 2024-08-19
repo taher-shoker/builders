@@ -47,15 +47,22 @@
         </div>
         @if(!isEmptyData)
         {
+          <div class="kpi-container">
           @for (strategyProgramKpi of strategyProgramData.cadStrategyProgramDTO; track strategyProgramKpi.strategyProject){
-            <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+            <!-- <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
               <div class="strategy-program-section-details-progress-card d-block">
                 <stc-apps-strategy-kpi-card
                   [strategyKpiCard]="strategyProgramKpi"
                 />
               </div>
-            </div>
-          }
+            </div> -->
+                <div class="kpi-container-card strategy-program-section-details-progress-card d-block">
+                  <stc-apps-strategy-kpi-card
+                    [strategyKpiCard]="strategyProgramKpi"
+                  />
+                </div>
+              }
+          </div>
         } @else {
           <h4 class = "empty-data-msg mt-4">There are no KPIs</h4>
         }

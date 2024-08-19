@@ -1,18 +1,56 @@
-<div class="tabs-view-section">
-  @for (tap of tabsData(); track tap.id;let index = $index){
-    <div
-      class="scored-card-section-taps-tap"
-      [class.clickedTap]="currentClickedTapIndex === index"
-      (click)="toggleTaps(index , tap)"
-      [ngStyle]="{
-        'color' : (currentClickedTapIndex === index) || (onHover && hoveredTap === index) ? clickedtabColor() : tabColor() ,
-        'background' : currentClickedTapIndex === index || (onHover && hoveredTap === index) ? clickedtabBackground() : tabBackground(),
-        'font-family' : fontFamily() ? fontFamily() : 'Poppins'
-      }"
-      (mouseenter)="onHover = true;hoveredTap = index"
-      (mouseleave)="onHover = false"
-    >
-      <span>{{tap.name}}</span>
-    </div>
-  }
-</div>
+<!-- <div class = "tabs-container">
+  <div class="tabs-view-section" #taps>
+    @for (tap of tabsData(); track tap.id;let index = $index){
+      <div
+        class="scored-card-section-taps-tap"
+        [class.clickedTap]="currentClickedTapIndex === index"
+        (click)="toggleTaps(index , tap)"
+        [ngStyle]="{
+          'color' : (currentClickedTapIndex === index) || (onHover && hoveredTap === index) ? clickedtabColor() : tabColor() ,
+          'background' : currentClickedTapIndex === index || (onHover && hoveredTap === index) ? clickedtabBackground() : tabBackground(),
+          'font-family' : fontFamily() ? fontFamily() : 'Poppins'
+        }"
+        (mouseenter)="onHover = true;hoveredTap = index"
+        (mouseleave)="onHover = false"
+      >
+        <span>{{tap.name}}</span>
+      </div>
+    }
+    @if(tabsData() && tabsData().length > 5 && data.length !== tabsData().length)
+    {
+      <i class = "pi pi-ellipsis-h" (click)="showMore()"></i>
+    }
+  </div>
+  
+</div> -->
+
+<p-tabView [(activeIndex)]="activeIndex" [scrollable]="true" #tabsView>
+  <p-tabPanel>
+    <ng-template pTemplate="header">
+      <div *ngFor="let tab of tabsData(); let index = index">
+        <div
+          [class.clickedTap]="currentClickedTapIndex === index"
+          (click)="toggleTaps(index, tab.name)"
+          (mouseenter)="onHover = true;hoveredTap = index"
+          (mouseleave)="onHover = false"
+          [ngStyle]="{
+            color:
+              currentClickedTapIndex === index ||
+              (onHover && hoveredTap === index)
+                ? clickedtabColor()
+                : tabColor(),
+            background:
+              currentClickedTapIndex === index ||
+              (onHover && hoveredTap === index)
+                ? clickedtabBackground()
+                : tabBackground(),
+            'font-family': fontFamily() ? fontFamily() : 'Poppins'
+          }"
+          class="tap"
+        >
+          {{ tab.name }}
+        </div>
+      </div>
+    </ng-template>
+  </p-tabPanel>
+</p-tabView>

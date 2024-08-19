@@ -34,9 +34,16 @@
       </p>
     </div>
     <div class="financial-scorecard-costs">
-      <div class="row">
+      <!-- <div class="row">
         @for (kpi of scorecard.kpiDataDTO; track $index) {
-          <div class="col-lg-6 col-md-6 col-sm-12 mt-4">
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mt-4">
+            <stc-apps-kpi-card [kpi]="kpi" />
+          </div>
+        }
+      </div> -->
+      <div class="kpi-container">
+        @for (kpi of scorecard.kpiDataDTO; track $index) {
+          <div class="kpi-container-card">
             <stc-apps-kpi-card [kpi]="kpi" />
           </div>
         }

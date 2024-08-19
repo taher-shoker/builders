@@ -7,6 +7,14 @@
   justify-content: space-between;
   position: fixed;
   width:20%;
+  @media all and (min-width:1600px) and (max-width:3000px)
+  {
+    width:15%;
+  }
+  @media all and (min-width:3001px)
+  {
+    width:12%;
+  }
   &.no-username
   {
     justify-content: stretch;

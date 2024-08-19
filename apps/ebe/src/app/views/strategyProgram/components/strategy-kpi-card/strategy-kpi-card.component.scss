@@ -27,6 +27,14 @@
       text-transform: capitalize;
       font-weight: 500;
       font-size: 18px;
+      @media all and (min-width:1600px)
+      {
+        font-size: 16px;
+      }
+      @media all and (min-width:1200px) and (max-width:1400px)
+      {
+        font-size: 16px;
+      }
       span
       {
         font-weight: 600;
