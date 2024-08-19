@@ -8,15 +8,13 @@ import {
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { filter } from 'rxjs';
-import { DashboardService } from '../../views/home/services/dashboard.service';
 import { FormGroup } from '@angular/forms';
-import {
-  OverallScore,
-  OverallScoreParams,
-} from '../../views/models/overallScore.model';
-import { SharedFormService } from '../../views/home/services/shared-form.service';
-import { SectorService } from '../../services/sector.service';
-import { YearQuarterService } from '../../services/yearQuarter.service';
+import { SectorService } from '../../../services/sector.service';
+import { SharedFormService } from '../../../views/home/services/shared-form.service';
+
+import { DashboardService } from '../../../views/home/services/dashboard.service';
+import { YearQuarterService } from '../../../services/yearQuarter.service';
+import { OverallScore, OverallScoreParams } from '../../../views/models/overallScore.model';
 
 @Component({
   selector: 'stc-apps-top-banner',

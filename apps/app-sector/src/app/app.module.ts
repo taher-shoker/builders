@@ -5,7 +5,11 @@ import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { HTTP_INTERCEPTORS, HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { ToastrModule } from 'ngx-toastr';
@@ -18,6 +22,7 @@ import { WelcomePageModule } from './views/welcome-page/welcome-page.module';
 import { DatePipe } from '@angular/common';
 import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
+import { LoaderInterceptor } from './services/interceptors/loader.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -52,7 +57,6 @@ export const provideTranslation = () => ({
     importProvidersFrom([
       HttpClientModule,
       TranslateModule.forRoot(provideTranslation()),
-     
     ]),
     {
       provide: HTTP_INTERCEPTORS,
@@ -64,6 +68,8 @@ export const provideTranslation = () => ({
       useClass: ErrorInterceptor,
       multi: true,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+
     DatePipe,
   ],
   bootstrap: [AppComponent],

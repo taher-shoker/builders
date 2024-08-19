@@ -10,24 +10,29 @@
   <div class="attachments_empty">There's no attachments yet</div>
   }
   <div class="attachments_files">
-    <div class="row row-gap-3">
+    <div class="row row-gap-1">
       @for(fileObj of displayedFiles(); track fileObj; let index = $index) {
-      <div class="col-12">
-        <div class="attachments_files_item px-2">
-          <div>
-            <span (click)="onDownloadFile(index, fileObj.id, fileObj)">
-              {{ fileObj.attachmentDisplayName }}
-            </span>
-            <div class="d-flex">
-              <button class="btn" (click)="onDeleteFile(index, fileObj.id)">
-                <img src="assets/images/trash.svg" />
-              </button>
-            </div>
-          </div>
-          <span class="attachments_files_item_time">
-            {{ 'Uploaded at ' + (fileObj.createdAt | date : 'MMMM dd,yyyy') }}
+      <div class="attachments_files_item py-3 px-4 border-bottom">
+        <div>
+          <span
+            title="dowload"
+            (click)="onDownloadFile(index, fileObj.id, fileObj)"
+          >
+            {{ fileObj.attachmentDisplayName }}
           </span>
+          <div class="d-flex">
+            <button
+              class="btn"
+              (click)="onDeleteFile(index, fileObj.id)"
+              title="delete"
+            >
+              <img src="assets/images/trash.svg" />
+            </button>
+          </div>
         </div>
+        <span class="attachments_files_item_time">
+          {{ 'Uploaded at ' + (fileObj.createdAt | date : 'MMMM dd,yyyy') }}
+        </span>
       </div>
       }
     </div>

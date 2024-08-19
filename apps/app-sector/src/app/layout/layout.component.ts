@@ -1,19 +1,27 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../services/auth.service';
+import { LoaderService } from '../services/loader.service';
 
 @Component({
   selector: 'stc-apps-layout',
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss'],
 })
-export class LayoutComponent implements OnInit {
+export class LayoutComponent implements OnInit, AfterViewInit {
   scoreCardName = window.history.state.scoreCardName;
   constructor(
     private cookieService: CookieService,
     public router: Router,
-    private authService: AuthService
+    private authService: AuthService,
+    public loaderService: LoaderService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   urlHome = '/home';
@@ -30,6 +38,12 @@ export class LayoutComponent implements OnInit {
     },
   ];
 
+  ngAfterViewInit(): void {
+    this.loaderService.isLoading$.subscribe(() => {
+      this.cdr.detectChanges();
+    });
+  }
+
   ngOnInit() {
     //this.userName='Habiba';
     if (
@@ -42,7 +56,6 @@ export class LayoutComponent implements OnInit {
         this.userName = res?.name || '';
       });
     }
-    // console.log(this.userName, 'hi');
   }
 
   backToHome() {
