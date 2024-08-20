@@ -2,7 +2,7 @@
 div
 {
   text-transform: capitalize;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   padding:0px 14px;
   height:45px;
@@ -13,6 +13,11 @@ div
   }
   border-radius:10px;
   @extend .stcFont;
+  &.status
+  {
+    color:var(--stc-light-sky-color2);
+    background-color:var(--stc-lighter-sky-color2);
+  }
   &.achieved
   {
     color:var(--stc-green-dark-color);
@@ -50,4 +55,11 @@ div
   width: 30px;
   position: relative;
   top: -5px;
+}
+.domainIndicator
+{
+  background-color: var(--stc-green-dark-color);
+  color:#fff;
+  padding: 3px 5px;
+  border-radius: 2px;
 }

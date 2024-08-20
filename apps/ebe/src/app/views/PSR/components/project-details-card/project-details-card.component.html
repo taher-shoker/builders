@@ -1,0 +1,27 @@
+<section class="project">
+  <p class="project-title">{{ projectData().title }}</p>
+  <div class="project-statuses-cards">
+    @if(projectData() && projectData().projectOwner) {
+        <stc-apps-kpi-status-card
+        [kpiStatus]="projectData().projectOwner!"
+        [kpiType]="'owner-name'"
+        />
+    } @if(projectData() && projectData().orginazation) {
+        <stc-apps-kpi-status-card
+        [kpiStatus]="projectData().orginazation!"
+        [kpiType]="'not-achieved'"
+        />
+    } @if(projectData() && projectData().status) {
+        <stc-apps-kpi-status-card
+        [kpiStatus]="projectData().status!"
+        [kpiType]="'status'"
+        />
+    } @if(projectData() && projectData().domain) {
+        <stc-apps-kpi-status-card
+        [kpiStatus]="projectData().domain"
+        [kpiType]="'domain'"
+        [domainIndicator]="projectData().domainIndicator"
+        />
+    }
+  </div>
+</section>

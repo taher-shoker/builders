@@ -14,6 +14,15 @@
         <p class = "psr-tabview-header">
             data governance strategic projects execution (execution view)
         </p>
+        <div class="project-cards-container">
+          @for (proj of PSRDetailsData; track $index) {
+            <div class="project-card">
+              <stc-apps-project-details-card 
+                [projectData]="proj"
+              />
+            </div>
+          }
+        </div>
       </div>
     </div>
   </section>

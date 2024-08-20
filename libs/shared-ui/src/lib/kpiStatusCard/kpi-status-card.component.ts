@@ -8,4 +8,5 @@ import { Component, input, InputSignal } from '@angular/core';
 export class KpiStatusCardComponent{
   kpiStatus:InputSignal<number | string | boolean> = input.required<number | string | boolean>();
   kpiType:InputSignal<string> = input.required<string>();
+  domainIndicator:InputSignal<string> = input<string>('');
 }

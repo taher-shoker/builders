@@ -1,0 +1,22 @@
+@import '../../../../../styles/fonts';
+.project
+{
+    text-align: left;
+    box-shadow: 0px 0px 24px 0px rgba(0,0,0,.1);
+    border-radius:10px;
+    padding:20px 15px;
+    &-title
+    {
+        color:var(--stc-purple-light-color);
+        @extend .stcFont;
+        text-transform: capitalize;
+        font-weight: 600;
+        font-size: 17px;
+    }
+    &-statuses-cards
+    {
+        display: flex;
+        align-items: center;
+        gap:10px;
+    }
+}

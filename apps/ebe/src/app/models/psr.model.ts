@@ -19,8 +19,8 @@ export interface PSRProjectDetailsModel
     domain:string;
     domainIndicator:string;
     projectTimeline:{
-        startDate:Date;
-        endDate:Date;
+        startDate:string;
+        endDate:string;
     };
     spendingStatus:{
         amount:number;
