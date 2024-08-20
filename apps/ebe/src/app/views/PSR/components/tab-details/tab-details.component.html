@@ -1,4 +1,10 @@
 <section class="psr-tabview">
+    @if(currentMode === 'editMode') {
+        <stc-apps-edit-mode-view 
+          (import)="showDialog()"
+          (export)="downloadTemplate()"
+        />
+    } 
     <p class = "psr-tabview-header">
         data governance strategic projects execution (execution view)
     </p>
@@ -12,3 +18,8 @@
         }
     </div>
 </section>
+<stc-apps-dialog-modal 
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
+/>

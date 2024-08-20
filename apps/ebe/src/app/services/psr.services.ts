@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PSRDataModel } from '../models/psr.model';
+import { PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
 @Injectable({ providedIn: 'root' })
 export class PSRService {
   private readonly PSRData:PSRDataModel[] = [
@@ -26,11 +26,14 @@ export class PSRService {
       title : 'AE',
       chartData : {
         actual : 32,
-        planned : 29
+        planned : 29.23144
       },
       description : "north star capability has deployed to enhance CAD eco system. market place demo was presented to have unified demand managment for CAD"
     },
   ];
+  private readonly PSRDetailsData:PSRProjectDetailsModel[] = [
+    
+  ]
   getPSRData():PSRDataModel[]
   {
     return this.PSRData;

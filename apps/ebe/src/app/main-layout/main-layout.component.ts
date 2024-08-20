@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
 import { CookieService } from 'ngx-cookie';
 import { NavLinks, UserModel } from '../models/scorecard.model';
+import { NavigationStart, Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -9,20 +10,28 @@ import { NavLinks, UserModel } from '../models/scorecard.model';
   styleUrl: './main-layout.component.scss',
 })
 export class MainLayoutComponent implements OnInit{
+  // @ViewChild(SidebarComponent) child?: SidebarComponent;
   logoSrc!:string;
   userName!:string;
   userNameLogo!:string;
   isChanged = false;
   scorecardService = inject(ScorecardService);
   cookieService = inject(CookieService)
+  router = inject(Router)
   navItems!:NavLinks[];
   ngOnInit(): void {
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.navItems = this.scorecardService.getNavLinks();
+    this.router.events.subscribe({
+      next : (res) => {
+        if (res instanceof NavigationStart) {
+          this.scorecardService.setEditMode("viewMode")
+        }
+      }
+    })
     // this.getUserDetails()
     // this.userName = this.cookieService.get('USER_FULLNAME') || '';
-    console.log(this.userName);
     // const token = this.cookieService.get("token")
     // if(token)
     // {

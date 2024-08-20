@@ -18,7 +18,11 @@
   <p class="project-container-description">
     {{ project().description }}
   </p>
-  <a class="project-container-details-link" href="">
+  <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
+  <a 
+    class="project-container-details-link" 
+    [routerLink]="['/psr/' , project().id]"
+  >
     <span>more details</span>
     <img src="assets/images/arrow-right.svg" alt="" />
   </a>

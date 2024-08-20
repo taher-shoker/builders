@@ -14,11 +14,13 @@ import { FileModel } from '../../models/scorecard.model';
 export class DialogModalComponent {
   @Input({required : true}) visible!:boolean;
   @Output() ImportedFile:EventEmitter<FileModel> = new EventEmitter();
+  @Output() onhide:EventEmitter<boolean> = new EventEmitter();
   selectedFile!:FileModel | null;
   isHidden!:boolean;
   hideDialog()
   {
     this.isHidden = true;
+    this.onhide.emit(true);
   }
   showDialog2()
   {

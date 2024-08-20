@@ -57,6 +57,7 @@
 <stc-apps-dialog-modal 
   [visible]="visible"
   (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
 />
 <!-- <p-dialog
   [modal]="true"

@@ -1,5 +1,6 @@
-import { Component, EventEmitter, input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, input, OnInit, Output } from '@angular/core';
 import { SidebarLinksModel } from './sidebarLinks.model';
+import { NavigationStart, Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-sidebar',
   standalone: false,
@@ -7,10 +8,11 @@ import { SidebarLinksModel } from './sidebarLinks.model';
   styleUrl: './sidebar.component.scss',
 })
 export class SidebarComponent implements OnInit{
-  editModeChecked = false;
+  editModeChecked!:boolean;
   logoSrc = input.required<string>({alias : 'logoSrc'})
   usernameImage = input<string>()
   userName = input<string>()
+  router = inject(Router)
   // tabChanged = input<boolean>()
   // isEditModeChecked = input<boolean>()
   sidebarLinks = input.required<SidebarLinksModel[]>()
@@ -19,6 +21,13 @@ export class SidebarComponent implements OnInit{
   ngOnInit()
   {
     this.currentMode.emit(this.activeMode);
+    this.router.events.subscribe({
+      next : (res) => {
+        if (res instanceof NavigationStart) {
+          this.editModeChecked = false;
+        }
+      }
+    })
   }
   // ngOnDestory()
   // {

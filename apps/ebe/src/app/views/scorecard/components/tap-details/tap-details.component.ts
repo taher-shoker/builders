@@ -129,4 +129,8 @@ export class TapDetailsComponent implements OnInit {
     a.click();
     window.URL.revokeObjectURL(url);
   }
+  onHide()
+  {
+    this.visible = false;
+  }
 }

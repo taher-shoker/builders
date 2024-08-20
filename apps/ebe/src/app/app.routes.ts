@@ -38,6 +38,13 @@ export const appRoutes: Route[] = [
     loadComponent: () =>
       import('./views/PSR/PSR.component').then(
         (m) => m.PSRComponent
+    )
+  },
+    {
+    path : "psr/:id",
+    loadComponent: () =>
+      import('./views/PSR/components/psr-details-page/psr-details-page.component').then(
+        (m) => m.PsrDetailsPageComponent
       ),
-  }
+  },
 ];
