@@ -114,6 +114,8 @@
 .popover-section
 {
     min-width:650px;
+    max-height:500px;
+    overflow: auto;
     .arrow
     {
         border-width: 25px;
