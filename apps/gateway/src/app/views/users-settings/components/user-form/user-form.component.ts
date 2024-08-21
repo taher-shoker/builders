@@ -330,7 +330,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     });
   }
   getRoles() {
-    this.privilages = this.userService
+    const filteredRoles = this.userService
       .getRoles()
       .filter(
         (r) =>
@@ -338,7 +338,6 @@ export class UserFormComponent implements OnInit, OnChanges {
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
           r.groupName !== 'PMO'
       );
-    console.log(this.privilages);
 
     if (
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
@@ -348,24 +347,23 @@ export class UserFormComponent implements OnInit, OnChanges {
         .map((t) => {
           return { id: t.id, groupName: t.roles[0].roleName };
         });
+    } else {
+      this.privilages = filteredRoles;
     }
     if (this.data) {
-      if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+      const currentSystem = this.userService.getCurrentSystem();
+      if (currentSystem === 'DI_Milestones') {
         this.selectedPrivilege = this.privilages.filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
-      } else if (this.userService.getCurrentSystem() === 'DI_Management') {
+      } else if (currentSystem === 'DI_Management') {
         this.selectedPrivilege = this.privilages.filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
         )[0];
-      } else if (
-        this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
-      ) {
+      } else if (currentSystem === 'Score_Card_Report_DB') {
         this.selectedPrivilege = this.privilages.filter(
-          (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
+          (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
-        console.log(this.privilages);
-        console.log(this.selectedPrivilege);
       } else {
         this.selectedPrivilege = this.privilages.filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
@@ -424,6 +422,17 @@ export class UserFormComponent implements OnInit, OnChanges {
               this.checkSystem(this.data.userGroups)?.roles[0].roleName
           );
       } else if (
+        this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+      ) {
+        this.teams = this.userService.getTeams();
+        if (this.data?.teams && this.data.teams.length > 0) {
+          this.selectedGroup = this.data.teams.map(
+            (t: { name: string; id: number }) => t.id
+          );
+          this.form.get('teamDto')?.setValidators(null);
+          this.form.get('teamDto')?.updateValueAndValidity();
+        }
+      } else if (
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' &&
         this.data?.userDelegates
       ) {
@@ -444,8 +453,6 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   handleTeam(value: Role) {
-    console.log(value);
-
     if (this.userService.getCurrentSystem() === 'DI_Milestones') {
       this.form.get('viewer')?.enable();
       this.form.get('viewer')?.setValue(false);
@@ -460,7 +467,6 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.teams = this.userService.allTeams;
       }
     } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
-      this.form?.get('teamDto')?.setValue('');
       this.teams = this.userService.getTeams();
     } else {
       this.form?.get('teamDto')?.setValue('');
@@ -528,6 +534,11 @@ export class UserFormComponent implements OnInit, OnChanges {
         );
       } else if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.handleDI_Milestones();
+      } else if (
+        this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+      ) {
+        this.form?.get('jobTitle')?.disable();
+        this.form.patchValue(data);
       }
     }
 

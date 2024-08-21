@@ -179,6 +179,10 @@ export class UsersService {
       _.forEach(user.teams, (team) => {
         x.push(team.name);
       });
+    } else if (this.getCurrentSystem() === 'Score_Card_Report_DB') {
+      _.forEach(user.teams, (team) => {
+        x.push(team.name);
+      });
     } else if (this.getCurrentSystem() === 'Dynamic_Report_Flow') {
       x.push('-');
     } else {
