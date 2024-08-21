@@ -113,6 +113,7 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   watchSlaChanges(value: number) {
+    console.log("VALUE IS:", value)
     this.loadingSla = true;
     this.addReportSLA(value);
   }
@@ -195,11 +196,11 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       for (const taskAttribute of res[i].requestTaskAttributes) {
-        if (taskAttribute.name === 'attachments') {
+        if (taskAttribute.name === 'attachments' || taskAttribute.name === 'creator_attachments') {
           attachmentsIDs.push(taskAttribute.value);
         }
 
-        if (taskAttribute.name === 'comment') {
+        if (taskAttribute.name === 'comment' || taskAttribute.name === 'creator_description') {
           notes = taskAttribute.value;
         }
 
@@ -401,7 +402,7 @@ export class DyReportDetailsComponent implements OnInit {
     }
 
     if (action === 'Edit Report') {
-      this.router.navigate(['/home/add_report'], {
+      this.router.navigate(['/home/edit_report'], {
         queryParams: {
           mode: 'edit_report_step',
           id: this.reportsDetails.id,
@@ -437,64 +438,64 @@ export class DyReportDetailsComponent implements OnInit {
     }
   }
 
-  approveInitiatorStep(item: RequestTask) {
-    const msg = `Are you sure to approve current state?`;
-    this.confirmAction(msg).subscribe((res) => {
-      if (!res) {
-        return;
-      }
+  // approveInitiatorStep(item: RequestTask) {
+  //   const msg = `Are you sure to approve current state?`;
+  //   this.confirmAction(msg).subscribe((res) => {
+  //     if (!res) {
+  //       return;
+  //     }
 
-      this.approveInitiator(item);
-    });
-  }
+  //     this.approveInitiator(item);
+  //   });
+  // }
 
-  rejectInitiatorStep(item: RequestTask) {
-    const msg = `Are you sure to reject current state?`;
-    this.confirmAction(msg).subscribe((res) => {
-      if (!res) {
-        return;
-      }
+  // rejectInitiatorStep(item: RequestTask) {
+  //   const msg = `Are you sure to reject current state?`;
+  //   this.confirmAction(msg).subscribe((res) => {
+  //     if (!res) {
+  //       return;
+  //     }
 
-      this.approveInitiator(item);
-    });
-  }
+  //     this.rejectInitiator(item);
+  //   });
+  // }
 
-  rejectInitiator(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'is_approved_by_initiator', value: false }],
-    };
+  // rejectInitiator(item: RequestTask) {
+  //   const params: RequestTaskAttributes = {
+  //     requestParams: [{ name: 'is_approved_by_initiator', value: false }],
+  //   };
 
-    this.reportsService
-      .completePendingTask(
-        this.reportsDetails.flowId,
-        item.requestTaskId,
-        params
-      )
-      .subscribe((res) => {
-        console.log('The res of complete task:', res);
-        this.isLoadingSteps = false;
-        this.getReportDetails();
-      });
-  }
+  //   this.reportsService
+  //     .completePendingTask(
+  //       this.reportsDetails.flowId,
+  //       item.requestTaskId,
+  //       params
+  //     )
+  //     .subscribe((res) => {
+  //       console.log('The res of complete task:', res);
+  //       this.isLoadingSteps = false;
+  //       this.getReportDetails();
+  //     });
+  // }
 
-  approveInitiator(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'is_approved_by_initiator', value: true }],
-    };
+  // approveInitiator(item: RequestTask) {
+  //   const params: RequestTaskAttributes = {
+  //     requestParams: [{ name: 'is_approved_by_initiator', value: true }],
+  //   };
 
-    this.isLoadingSteps = true;
-    this.reportsService
-      .completePendingTask(
-        this.reportsDetails.flowId,
-        item.requestTaskId,
-        params
-      )
-      .subscribe((res) => {
-        console.log('The res of complete task:', res);
-        this.isLoadingSteps = false;
-        this.getReportDetails();
-      });
-  }
+  //   this.isLoadingSteps = true;
+  //   this.reportsService
+  //     .completePendingTask(
+  //       this.reportsDetails.flowId,
+  //       item.requestTaskId,
+  //       params
+  //     )
+  //     .subscribe((res) => {
+  //       console.log('The res of complete task:', res);
+  //       this.isLoadingSteps = false;
+  //       this.getReportDetails();
+  //     });
+  // }
 
   addDataStep(item: RequestTask) {
     const params: RequestTaskAttributes = {

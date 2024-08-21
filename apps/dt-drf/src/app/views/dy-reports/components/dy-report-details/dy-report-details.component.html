@@ -19,9 +19,7 @@
               <div class="col-12">
                 <p class="cell-name">With SLA/Not</p>
                 <p class="cell-value">
-                  {{
-                    reportsDetails.requestCategory.slaDuration ? 'Yes' : 'No'
-                  }}
+                  {{ reportsDetails.reportSlaDuration ? 'Yes' : 'No' }}
                 </p>
               </div>
 
@@ -87,7 +85,9 @@
               </div>
 
               <div class="col-12">
-                @if (processAdminUser) {
+                @if (processAdminUser && (!isWorkflowComplete &&
+                reportsDetails.reportFlowStatus !== 'Deleted' &&
+                reportsDetails.remainingSteps !== 0) ) {
                 <form [formGroup]="slaForm">
                   <stc-apps-select-drop-down
                     (selectChange)="watchSlaChanges($event)"

@@ -185,17 +185,24 @@
                   <div class="col-md-1">
                     <label>Approval {{ i + 1 }}#:</label>
                   </div>
-                  <div class="col-md-5">
+                  <div class="col-md-5 my-3">
                     @if (availableUsers.length > 0) {
-                    <stc-apps-select-drop-down
+                    <!-- <stc-apps-select-drop-down
                       (selectChange)="onSelectionChange($event, i)"
                       [searchMode]="true"
                       [options]="availableUsers"
                       formControlName="username"
                       [disabled]="true"
                       [outputValue]="'email'"
-                    ></stc-apps-select-drop-down>
-
+                    ></stc-apps-select-drop-down> -->
+                    <stc-apps-custom-dropdown
+                      formControlName="username"
+                      [label]="'some label'"
+                      [list]="availableUsers"
+                      [displayNameProperty]="'name'"
+                      [valueProperty]="'email'"
+                      (itemSelected)="customDropdownSelectionChange($event)"
+                    />
                     }
                   </div>
                   <div class="col-md-1">
@@ -239,11 +246,4 @@
       </div>
     </div>
   </form>
-</div>
-
-<div class="for-test">
-  <stc-apps-custom-dropdown
-    [label]="'some label'"
-    [list]="[{ displayName: 'ay haga', value: 'ay haga' }]"
-  />
 </div>

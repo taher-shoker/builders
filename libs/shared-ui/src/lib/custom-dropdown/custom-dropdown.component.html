@@ -1,8 +1,31 @@
-<div class="dropdown">
-  <label for="dropdown-label">{{label()}}</label>
-  <select id="dropdown-select">
-    @for (item of list(); track item) {
-      <option [value]="item.value">{{item.displayName}}</option>
+<div class="custom-dropdown-component">
+  <!--I make the class name harder as 'dropdown' intervenes with bootstrap!-->
+  <div class="label">
+    {{ label() }}
+  </div>
+
+  <div
+    class="dropdown-head"
+    (click)="alternateList()"
+    [ngClass]="{ 'active-dropdown-head': showItemsList() }"
+  >
+    <div class="head-wrapper">
+      <div class="head-display-name">
+        {{ chosenItem()?.['componentScopedNameAccessor'] }}
+      </div>
+      <div class="head-caret-down">
+        <i class="ri-arrow-down-s-line"></i>
+      </div>
+    </div>
+  </div>
+
+  @if (showItemsList()) {
+  <div class="items-list">
+    @for (item of mutatedList(); track item) {
+    <div class="item" (click)="selectItem(item)">
+      {{ item.componentScopedNameAccessor }}
+    </div>
     }
-  </select>
+  </div>
+  }
 </div>

@@ -265,7 +265,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
     const handleSuccessStepEdit = (message: string) => {
       this.toastr.success(message);
-      this.router.navigate(['../']);
+      this.router.navigate(['../'], { relativeTo: this.route });
     };
 
     const handleError = () => {
@@ -302,7 +302,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           {
             name: 'initiator_should_approve',
-            value: this.form.get('initiatorShouldApprove')?.value,
+            value: this.form.get('initiatorShouldApprove')?.value ? 1 : 0,
           },
           {
             name: 'request_category',
@@ -310,7 +310,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           {
             name: 'sla_duration',
-            value: this.form.get('slaDurationInDays')?.value,
+            value: Number(this.form.get('slaDurationInDays')?.value),
           },
         ],
       };
@@ -403,7 +403,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     }));
   }
   cancel() {
-    this.router.navigate(['../']);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
   preventComma(event: KeyboardEvent) {
     if (event.key === ',') {
@@ -474,6 +474,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           error: (err) => (this.isUploaderLoader = false),
         });
+      } else {
+        this.isUploaderLoader = false;
       }
     });
   }
@@ -483,6 +485,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     const config = this.configService.getConfig().fileValidation;
     if (file.size > config.sizeWithMegaBytes * 1_000_000) {
       this.toastr.error('File size exceeds the allowed limit.');
+
       return false;
     } else if (!config.acceptType.includes(file.type)) {
       this.toastr.error('File type is not allowed.');
@@ -572,6 +575,10 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     // Call the handleUserFiltration method to update available users
     console.log('user before filter:', option);
     const user = this.users.find((user) => user.email === option);
+    this.handleUserFiltration(user);
+  }
+
+  customDropdownSelectionChange(user: User) {
     this.handleUserFiltration(user);
   }
 
