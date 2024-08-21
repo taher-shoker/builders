@@ -74,3 +74,51 @@ tr:not(.table-header) {
     cursor: pointer;
   }
 }
+.psrTable
+{
+  .table-header
+  {
+    height: 70px;
+    th
+    {
+      color:#4F008C;
+      text-transform: capitalize;
+      font-weight: 700;
+      font-size: 16px;
+    }
+  }
+  tbody
+  {
+    tr
+    {
+      border-bottom: 1px solid rgba(142, 154, 160, 0.201);
+      &:last-child
+      {
+        border-bottom: 0;
+      }
+    }
+    td
+    {
+      text-align: center;
+    }
+    .psrTabldID
+    {
+      color:#8E9AA0;
+      font-weight: 800;
+      font-size: 19px;
+    }
+    .psrTabldMajor
+    {
+      color:#363636;
+      font-weight: 600;
+      font-size: 15px;
+      text-align: left;
+    }
+    .psrTabldLevel
+    {
+      color:#00C48C;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+}

@@ -46,6 +46,8 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
     new EventEmitter<{ value: string; dataRow: any }>();
 
   headers = input.required<ColumnsSchema[]>();
+  psrTable = input<boolean>();
+  fontFamily = input<string>();
 
   @Input({ required: true }) items!: any[];
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.

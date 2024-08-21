@@ -48,7 +48,7 @@ export class PSRService {
         actual : 34234223
       },
       progressBarData : {
-        actualValue : 55,
+        actualValue : 35,
         plannedValue : 60,
         progressValue : 74,
         details : [
@@ -71,14 +71,14 @@ export class PSRService {
             majorTitle : "data protection & privacy program design for stc subsidiaries",
             start:50,
             duration:18,
-            completeLevel:80,
+            completeLevel:33,
           },
           {
             id : 4,
             majorTitle : "data protection & privacy program implementation for stc subsidiaries",
             start:58,
             duration:22,
-            completeLevel:80,
+            completeLevel:50,
           },
         ]
       }

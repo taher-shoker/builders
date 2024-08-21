@@ -21,7 +21,94 @@
         [kpiStatus]="projectData().domain"
         [kpiType]="'domain'"
         [domainIndicator]="projectData().domainIndicator"
+        [domainIndicatorColor]="'#FF0000'"
         />
+        <!-- [domainIndicatorColor]="'#00C48C'" -->
     }
   </div>
+  <div class="project-timelines">
+    <div class="project-timelines-timeline">
+      <p class="project-timelines-timeline-title">
+        project timeline
+      </p>
+      <div class="project-timelines-timeline-data">
+        <div class="project-timelines-timeline-data-start">
+          <p class="project-timelines-timeline-data-start-title">
+            start date
+          </p>
+          <p class="project-timelines-timeline-data-start-info">
+            {{projectData().projectTimeline.startDate}}
+          </p>
+        </div>
+        <span class="line"></span>
+        <div class="project-timelines-timeline-data-end">
+          <p class="project-timelines-timeline-data-start-title">
+            end date
+          </p>
+          <p class="project-timelines-timeline-data-start-info">
+            {{projectData().projectTimeline.endDate}}
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="project-timelines-timeline">
+      <p class="project-timelines-timeline-title">
+        spending status
+      </p>
+      <div class="project-timelines-timeline-data">
+        <div class="project-timelines-timeline-data-start">
+          <p class="project-timelines-timeline-data-start-title">
+            PO amount
+          </p>
+          <p class="project-timelines-timeline-data-start-info">
+            {{projectData().spendingStatus.amount | million}}
+          </p>
+        </div>
+        <span class="line"></span>
+        <div class="project-timelines-timeline-data-end">
+          <p class="project-timelines-timeline-data-start-title">
+            actual
+          </p>
+          <p class="project-timelines-timeline-data-start-info">
+            {{projectData().spendingStatus.actual | million}}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="project-chart-card">
+    <p class="project-chart-card-details" (click)="displayDrilldown()">details</p>
+    <div class="project-chart-card-chart position-relative">
+      <stc-apps-progress-bar
+        [data]="data"
+        [isPSRProject]="true"
+        [fontFamily]="'STCForwardFont'"
+        (displayDrilldown)="displayDrilldown()"
+      />
+      <!-- @if(showPopover)
+      {
+        <section class="popover-section">
+          <div class="arrow"></div>
+          <div class = "header">
+            <i class = 'pi pi-times-circle' (click)="showPopover = false"></i>
+            <p>details for chart</p>
+          </div>
+        </section> 
+      } -->
+    </div>
+  </div>
 </section>
+<p-overlayPanel #overlayPanel>
+  <section class="popover-section">
+    <div class = "header mb-3">
+      <i class = 'pi pi-times-circle' (click)="overlayPanel.hide()"></i>
+      <p>details for chart</p>
+    </div>
+    <stc-apps-custom-table
+      [headers]="tableHeader"
+      [items]="projectData().progressBarData.details"
+      [psrTable]="true"
+      [fontFamily]="'STCForwardFont'"
+    />
+  </section> 
+</p-overlayPanel>

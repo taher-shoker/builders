@@ -23,7 +23,7 @@
   @if(kpiType() === 'domain'){
     @if(domainIndicator())
     {
-      <span class = 'domainIndicator'>{{domainIndicator()}}</span>
+      <span class = 'domainIndicator' [ngStyle]="{'background' : domainIndicatorColor()}">{{domainIndicator()}}</span>
     }
     {{kpiStatus()}}
   }

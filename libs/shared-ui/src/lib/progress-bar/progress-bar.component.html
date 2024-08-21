@@ -1,4 +1,4 @@
-<div class="progress-bar-holder" [class.isProject]="isProject()">
+<div class="progress-bar-holder" [class.isProject]="isProject() || isPSRProject()">
   @if(data().prefixText || +data().prefixValue > 0) {
   <div class="bar-prefix">
     <p class="title">{{ data().prefixText }}</p>
@@ -6,7 +6,7 @@
   </div>
   }
 
-  <div class="bars-holder">
+  <div class="bars-holder" [class.isPSRProject]="isPSRProject()" (click)="showDrilldown()">
     <div
       class="background-bar"
       [ngStyle]="{ 'background-color': data().bgBarColor }"
@@ -34,21 +34,21 @@
               'padding-top': index.position === 'down' ? '12px' : null,
               'padding-bottom': index.position === 'up' ? '12px' : ''
             }"
-            [class.planned-bar]="isProject() && index.caption === 'Planned'"
-            [class.actual-bar]="isProject() && index.caption === 'Actual'"
+            [class.planned-bar]="(isProject() || isPSRProject()) && index.caption === 'Planned'"
+            [class.actual-bar]="(isProject() || isPSRProject()) && index.caption === 'Actual'"
           >
             <span
               class="index-info caption"
-              [class.actual-caption]="isProject() && index.caption === 'Actual'"
-              [class.planned-caption]="isProject() && index.caption === 'Planned'"
+              [class.actual-caption]="(isProject() || isPSRProject()) && index.caption === 'Actual'"
+              [class.planned-caption]="(isProject() || isPSRProject()) && index.caption === 'Planned'"
               [ngStyle]="{
                 'font-family' : fontFamily() ? fontFamily() : ''
               }"
               >{{ index.caption }}</span
             ><br />
             <span class="index-info value" 
-              [class.actual-value]="isProject() && index.caption === 'Actual'"
-              [class.planned-value]="isProject() && index.caption === 'Planned'"
+              [class.actual-value]="(isProject() || isPSRProject()) && index.caption === 'Actual'"
+              [class.planned-value]="(isProject() || isPSRProject()) && index.caption === 'Planned'"
               [ngStyle]="{
                 'font-family' : fontFamily() ? fontFamily() : ''
               }"
@@ -56,8 +56,8 @@
             >
             <span
               class="index-info pointer"
-              [class.actual-bar-line]="isProject() && index.caption === 'Actual'"
-              [class.planned-bar-line]="isProject() && index.caption === 'Planned'"
+              [class.actual-bar-line]="(isProject() || isPSRProject()) && index.caption === 'Actual'"
+              [class.planned-bar-line]="(isProject() || isPSRProject()) && index.caption === 'Planned'"
               [ngStyle]="{
                 top: index.position === 'down' ? '0' : '',
                 bottom: index.position === 'up' ? '0' : '',

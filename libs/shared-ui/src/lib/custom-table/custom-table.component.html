@@ -1,8 +1,11 @@
-<table cellpadding="10">
+<table cellpadding="10" [class.psrTable]="psrTable()">
   <tbody>
     <tr class="table-header">
       @for(header of headers(); track header){
-      <th (click)="changeCurrentSortingColumn(header.key)">
+      <th
+        (click)="changeCurrentSortingColumn(header.key)"
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }"
+      >
         <div class="header-cell-holder">
           <div>{{ header.label }}</div>
           @if (sort && header.key !== 'actions') {
@@ -68,7 +71,19 @@
     </td>
     }@else {
 
-    <td>{{ item[header.key] }}</td>
+    <td
+      [class.psrTabldID]="psrTable() && (header.label === 'ID' || header.label === 'Start' || header.label === 'Duration')"
+      [class.psrTabldMajor]="psrTable() && header.label === 'Major Activities/Deliverables'"
+      [class.psrTabldLevel]="psrTable() && header.label === 'Completion Level'"
+      [ngStyle]="{
+        'font-family' : fontFamily() && psrTable() ? fontFamily() : ''
+      }"
+    >{{ item[header.key] }}
+      @if(psrTable() && header.label === 'Completion Level')
+      {
+        %
+      }
+  </td>
     } } @else if(header.type === 'actions') {
 
     <td>

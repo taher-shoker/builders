@@ -9,4 +9,5 @@ export class KpiStatusCardComponent{
   kpiStatus:InputSignal<number | string | boolean> = input.required<number | string | boolean>();
   kpiType:InputSignal<string> = input.required<string>();
   domainIndicator:InputSignal<string> = input<string>('');
+  domainIndicatorColor:InputSignal<string> = input<string>('');
 }

@@ -2,7 +2,8 @@
 .project
 {
     text-align: left;
-    box-shadow: 0px 0px 24px 0px rgba(0,0,0,.1);
+    // box-shadow: 0px 0px 24px 0px rgba(0,0,0,.1);
+    background-color: var(--stc-light-pink-color);
     border-radius:10px;
     padding:20px 15px;
     &-title
@@ -12,11 +13,136 @@
         text-transform: capitalize;
         font-weight: 600;
         font-size: 17px;
+        min-height:50px;
     }
     &-statuses-cards
     {
         display: flex;
-        align-items: center;
+        align-items:flex-start;
         gap:10px;
+        flex-wrap: wrap;
+        min-height:100px;
+        @media all and (min-width:1700px)
+        {
+            margin-bottom: 20px;
+        }
+    }
+    &-timelines
+    {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        &-timeline
+        {
+            background-color: #FFF;
+            width: 100%;
+            text-align: center;
+            border-radius: 10px;
+            padding:10px 0;
+            &-title
+            {
+                color:var(--stc-purple-color);
+                @extend .stcFont;
+                text-transform: capitalize;
+                font-weight: 600;
+                font-size: 14px;
+            }
+            &-data
+            {
+                display: flex;
+                align-items: center;
+                justify-content: space-evenly;
+                p
+                {
+                    margin: 0;
+                    padding: 0;
+                }
+                &-start
+                {
+                    &-title
+                    {
+                        color:var(--stc-grey-dark-color);
+                        text-transform: capitalize;
+                        @extend .stcFont;
+                        font-size: 15px;
+                        font-weight: 500;
+                    }
+                    &-info
+                    {
+                        color:var(--stc-dark-blue-color);
+                        text-transform: capitalize;
+                        @extend .stcFont;
+                        font-weight: 600;
+                        font-size: 16px;
+                        margin-top: 10px !important;
+                    }
+                }
+            }
+        }
+    }
+    &-chart-card
+    {
+        background-color: var(--stc-white-color);
+        padding:10px;
+        border-radius:10px;
+        margin-top: 20px;
+        &-details
+        {
+            text-align: right;
+            @extend .stcFont;
+            text-transform: capitalize;
+            font-weight: 500;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: underline;
+            color:var(--stc-purple-color);
+            width: fit-content;
+            margin-left: auto;
+        }
+        &-chart
+        {
+            height:200px;
+        }
+    }
+}
+.line
+{
+    background-color: var(--stc-light-grey-color);
+    width:1px;
+    height:66px;
+}
+.popover-section
+{
+    min-width:650px;
+    .arrow
+    {
+        border-width: 25px;
+        border-style: solid;
+        border-color: transparent transparent white transparent;
+        position: absolute;
+        top: -48px;
+        left: 50px;
+    }
+    .header
+    {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-direction: row-reverse;
+        p
+        {
+            margin: 0;
+            color:var(--stc-purple-color);
+            text-transform: capitalize;
+            font-weight: 600;
+            font-size: 17px;
+            @extend .stcFont;
+        }
+        i
+        {
+            color:#292D32;
+            font-size: 22px;
+            cursor: pointer;
+        }
     }
 }

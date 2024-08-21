@@ -39,3 +39,18 @@ export interface PSRProjectDetailsModel
         }[]
     }
 }
+export interface ProgressInfo {
+    prefixText: string;
+    prefixValue: number | string;
+    suffixText: string;
+    suffixValue: number | string;
+    progressValue: number;
+    indexes?: Index[];
+    barColor?: string;
+    bgBarColor?: string
+  }
+export interface Index {
+    caption: string;
+    value: number;
+    position?: 'up' | 'down'
+  }
