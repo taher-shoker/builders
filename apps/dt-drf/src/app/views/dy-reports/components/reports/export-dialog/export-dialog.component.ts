@@ -1,43 +1,65 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { FormControl, FormGroup } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 import moment from 'moment';
 
 @Component({
   selector: 'stc-apps-export-dialog',
   templateUrl: './export-dialog.component.html',
-  styleUrl: './export-dialog.component.scss',
+  styleUrls: ['./export-dialog.component.scss'],  // Note: Changed to "styleUrls"
 })
 export class ExportDialogComponent implements OnInit {
   form!: FormGroup;
   fromDate: any;
   toDate: any;
 
-  constructor(
-    public dialogRef: MatDialogRef<ExportDialogComponent> // @Inject(MAT_DIALOG_DATA) public data: { overallProgress: string, milestoneName: string }
-  ) {}
+  startDate!: Date | null;
+  endDate!: Date | null;
+
+  constructor(public dialogRef: MatDialogRef<ExportDialogComponent>) {}
 
   ngOnInit(): void {
     this.form = new FormGroup({
-      from: new FormControl(''),
-      to: new FormControl(''),
+      from: new FormControl('', Validators.required),
+      to: new FormControl({ value: '', disabled: true }, Validators.required),  // Initially disable 'to' date
+    });
+
+    // Watch for changes on fromDate and update toDate validation
+    this.form.get('from')?.valueChanges.subscribe((fromValue) => {
+      if (fromValue) {
+        this.startDate = fromValue;
+        this.form.get('to')?.enable();  // Enable 'to' date after 'from' date is selected
+        this.form.get('to')?.setValidators((control) => {
+          const toDate = control.value;
+          return toDate && toDate < fromValue ? { invalidDateRange: true } : null;
+        });
+      } else {
+        this.startDate = null;
+        this.form.get('to')?.disable();  // Disable 'to' date if 'from' date is cleared
+      }
+      this.form.get('to')?.updateValueAndValidity();
     });
   }
 
-  handelChangeDate(event: MatDatepickerInputEvent<Date>, type: string) {
+  FilterEndDate = (d: Date | null): boolean => {
+    if (d === null) return false;
+    return !this.startDate || d >= this.startDate;
+  };
+
+  handleDateChange(event: MatDatepickerInputEvent<Date>, type: string) {
     if (type === 'from') {
-      this.fromDate = null;
-      this.toDate = null;
       this.fromDate = moment(event.value).format('YYYY-MM-DD');
-      this.form.get('toDate')?.reset();
+      this.form.get('to')?.reset();  // Reset 'to' date if 'from' date changes
+      this.toDate = null;  // Clear toDate value
     } else {
       this.toDate = moment(event.value).format('YYYY-MM-DD');
     }
 
-    console.log('in fromDate:', this.fromDate);
-    console.log('in toDate:', this.toDate);
+    console.log('fromDate:', this.fromDate);
+    console.log('toDate:', this.toDate);
   }
+
   update() {
     this.dialogRef.close({
       from: this.fromDate,
