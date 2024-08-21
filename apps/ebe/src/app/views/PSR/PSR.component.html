@@ -22,9 +22,10 @@
     </div>
     <div class="scored-card-section-tap-details">
       <div class="projects-container">
-        <stc-apps-tab-details 
-          [projects]="psrData"
-        />
+          <stc-apps-tab-details 
+            [projects]="psrData"
+            [isEmpty]="isEmpty"
+          />
       </div>
     </div>
   </section>

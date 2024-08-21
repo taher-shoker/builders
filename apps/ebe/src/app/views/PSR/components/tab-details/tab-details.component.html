@@ -8,15 +8,20 @@
     <p class = "psr-tabview-header">
         data governance strategic projects execution (execution view)
     </p>
-    <div class="project-container">
-        @for (project of projects(); track project.id) {
-            <div class="project-container-card">
-                <stc-apps-psr-project-card 
-                    [project]="project"
-                />
-            </div>
-        }
-    </div>
+    @if(!isEmpty())
+    {
+        <div class="project-container">
+            @for (project of projects(); track project.group) {
+                <div class="project-container-card">
+                    <stc-apps-psr-project-card 
+                        [project]="project"
+                    />
+                </div>
+            }
+        </div>
+    } @else {
+        <p class = "empty-data-msg mt-4">there are no projects</p>
+    }
 </section>
 <stc-apps-dialog-modal 
   [visible]="visible"

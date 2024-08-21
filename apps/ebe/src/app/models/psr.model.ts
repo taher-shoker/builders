@@ -1,9 +1,9 @@
 export interface PSRDataModel
 {
-    id:number;
-    title:string;
-    chartData:PSRChartDataModel;
-    description:string;
+    planned:number;
+    group:string;
+    actual:number;
+    details:string;
 }
 export interface PSRChartDataModel
 {

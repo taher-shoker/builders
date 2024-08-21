@@ -18,6 +18,7 @@ import { FileModel } from '../../../../models/scorecard.model';
 export class TabDetailsComponent implements OnInit{
   visible = false;
   projects:InputSignal<PSRDataModel[]> = input.required<PSRDataModel[]>();
+  isEmpty:InputSignal<boolean> = input.required<boolean>();
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService)
   ngOnInit(): void {

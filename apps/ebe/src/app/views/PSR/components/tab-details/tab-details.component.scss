@@ -21,3 +21,14 @@
         }
     }
 }
+.empty-data-msg
+{
+  color:var(--stc-purple-light-color);
+  // margin: 0;
+  text-align: center;
+  font-style: italic;
+  @extend .stcFont;
+  font-weight: 600;
+  text-transform: capitalize;
+  font-size: 20px;
+}

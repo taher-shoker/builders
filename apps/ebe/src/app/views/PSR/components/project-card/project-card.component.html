@@ -1,10 +1,10 @@
 <section class="project-container">
   <p class="project-container-header">
-    {{ project().title }}
+    {{ project().group | uppercase }}
   </p>
   <div class="project-container-chart mt-5">
     <stc-apps-multi-circles-progress-bar
-      [chartData]="project().chartData"
+      [chartData]="chartData"
       [colors]="colors"
       [showLegend]="true"
       [labelsFontFamily]="'STCForwardFont'"
@@ -16,12 +16,12 @@
     />
   </div>
   <p class="project-container-description">
-    {{ project().description }}
+    {{ project().details }}
   </p>
   <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
   <a 
     class="project-container-details-link" 
-    [routerLink]="['/psr/' , project().id]"
+    [routerLink]="['/psr/' , project().group]"
   >
     <span>more details</span>
     <img src="assets/images/arrow-right.svg" alt="" />

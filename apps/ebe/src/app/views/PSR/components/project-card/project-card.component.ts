@@ -1,6 +1,6 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PSRDataModel } from '../../../../models/psr.model';
+import { PSRChartDataModel, PSRDataModel } from '../../../../models/psr.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { RouterModule } from '@angular/router';
 
@@ -11,7 +11,14 @@ import { RouterModule } from '@angular/router';
   templateUrl: './project-card.component.html',
   styleUrl: './project-card.component.scss',
 })
-export class PSRProjectCardComponent {
+export class PSRProjectCardComponent implements OnInit {
   project:InputSignal<PSRDataModel> = input.required<PSRDataModel>();
   colors:string[] = ['#4F008C' , '#B999D1'];
+  chartData!:PSRChartDataModel;
+  ngOnInit(): void {
+    this.chartData = {
+      actual : this.project().actual,
+      planned : this.project().planned
+    }
+  }
 }

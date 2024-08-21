@@ -20,7 +20,22 @@ export class PSRComponent implements OnInit {
   currentTab!:TapModel;
   psrData!:PSRDataModel[];
   ngOnInit(): void {
-    this.psrData = this.psrServices.getPSRData();
+    this.getExecuteViewData();
+  }
+  isEmpty!:boolean;
+  private getExecuteViewData()
+  {
+    this.psrServices.getExecuteViewData().subscribe({
+      next : (res:PSRDataModel[]) => {
+        if(res.length === 0)
+        {
+          this.isEmpty = true;
+        } else {
+          this.isEmpty = false;
+          this.psrData = res;
+        }
+      }
+    })
   }
   getClickedTap(tab:TapModel)
   {
