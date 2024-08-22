@@ -13,6 +13,8 @@ import { HttpClient } from '@angular/common/http';
 import { environment } from 'apps/app-sector/src/environments/environment';
 import { CookieService } from 'ngx-cookie';
 import { sectorUsersParams, user } from './models/commentsModel';
+import { AuthService } from '../../services/auth.service';
+import { NotificationsService } from './services/notifications.service';
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
@@ -26,17 +28,29 @@ export class DetailsComponent implements OnInit {
   selectedTab = window.history.state.selectedTab;
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
+  loggedUserID = 0;
+  loggedUserObject: any;
   categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
   baseUrl = environment.apiUrl;
   constructor(
     private sharedFormService: SharedFormService,
     private dashboardService: DashboardService,
     private commentService: commentsService,
-    private http: HttpClient,
+    private authService: AuthService,
+    private notificationService: NotificationsService,
     private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
+    if (
+      this.cookieService.get('MODERN_SYSTEM_USER') &&
+      this.cookieService.get('token')
+    ) {
+      this.authService.getUserData();
+      this.authService.loggedUserStream.subscribe((res) => {
+        this.loggedUserID = res?.id || 0;
+      });
+    }
     this.getKpiDetails();
     this.getSectorUsers();
   }
@@ -45,10 +59,12 @@ export class DetailsComponent implements OnInit {
       system: 'Score_Card_Report_DB',
       team: this.sharedFormService.getForm().value.sectorName,
     };
-    this.commentService.getSectorUsers(params).subscribe({
+    this.notificationService.getSectorUsers(params).subscribe({
       next: (result: user[]) => {
+        result = result.filter((mention) => mention.id !== this.loggedUserID);
         this.sectorUsersSignal.set(result);
-        this.commentService.mentionsList.next(result);
+
+        this.notificationService.mentionsList.next(result);
       },
     });
   }
