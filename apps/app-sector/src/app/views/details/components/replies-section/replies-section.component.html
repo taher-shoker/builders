@@ -19,6 +19,8 @@
         [reply]="false"
         [edited]="comment.edited"
         [commaSepartedMentions]="comment.commaSeparatedMentions!"
+        [authorID]="comment.authorId"
+        [loggedUserID]="loggedUserID"
         (commentActionName)="handleCommentActions($event, parentLoop)"
       ></stc-apps-profile>
     </div>
@@ -69,6 +71,8 @@
           [reply]="true"
           [edited]="reply.edited"
           [commaSepartedMentions]="reply.commaSeparatedMentions!"
+          [authorID]="reply.authorId"
+          [loggedUserID]="loggedUserID"
           (replyActionName)="handleReplyActions($event, parentLoop, $index)"
         ></stc-apps-profile>
         @if(editReplyTextArea && parentLoop==commentIndex &&

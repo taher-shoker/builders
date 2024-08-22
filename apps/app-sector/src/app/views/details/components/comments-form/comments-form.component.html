@@ -2,6 +2,7 @@
   <div class="comments">
     <stc-apps-replies-section
       [newComment]="newComment"
+      (textAreaOpend)="resetForm()"
     ></stc-apps-replies-section>
     <stc-apps-comment-editor
       formControlName="comment"
@@ -13,10 +14,6 @@
       <button [disabled]="form.controls['comment'].hasError('required')">
         Submit
       </button>
-      <!-- <stc-apps-file-uploader [multiple]="true" [chooseLabel]="'add_attachment'"
-      (onformchange)="onUploadFile($event)" [attachmentFiles]="this.form.controls['attachments'].value"
-      formControlName="attachments" [isLoading]="isLoading"
-      (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader> -->
     </div>
   </div>
 </form>
