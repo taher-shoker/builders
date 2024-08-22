@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../../../environments/environment';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, tap } from 'rxjs';
+import { BehaviorSubject, Observable, tap } from 'rxjs';
 import {
   OverallScore,
   OverallScoreParams,
@@ -17,7 +17,7 @@ import {
 })
 export class DashboardService {
   baseUrl = environment.apiUrl;
-
+  kpiNameSubject: BehaviorSubject<string> = new BehaviorSubject('');
   constructor(
     private http: HttpClient,
     private overallScoreService: OverallScoreService

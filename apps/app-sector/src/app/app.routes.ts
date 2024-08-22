@@ -16,7 +16,7 @@ export const appRoutes: Route[] = [
         canActivate: [sectorGuard],
       },
       {
-        path: 'details/:kpiName',
+        path: 'details',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
         canActivate: [sectorGuard],

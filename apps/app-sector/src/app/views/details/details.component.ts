@@ -26,6 +26,7 @@ export class DetailsComponent implements OnInit {
   currentDate = new Date();
   kpiCode = window.history.state.kpiCode;
   selectedTab = window.history.state.selectedTab;
+  kpiName = window.history.state.kpiName;
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
   loggedUserID = 0;
@@ -42,6 +43,9 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log(this.kpiName);
+    this.dashboardService.kpiNameSubject.next(this.kpiName);
+
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
       this.cookieService.get('token')

@@ -71,8 +71,12 @@ export class ExpansionPanelBodyComponent {
   }
 
   navigateToDetails() {
-    this.router.navigate(['/details', this.kpiName()], {
-      state: { kpiCode: this.kpiCode(), selectedTab: this.selectedTab() },
+    this.router.navigate(['/details'], {
+      state: {
+        kpiCode: this.kpiCode(),
+        selectedTab: this.selectedTab(),
+        kpiName: this.kpiName(),
+      },
     });
   }
 
