@@ -78,8 +78,26 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     this.setupMentionListener();
     this.preventScrollOnFocusLoss();
+    const editableDiv = document.getElementById('myDiv');
+
+    if (editableDiv) {
+      editableDiv.addEventListener('cut', this.handleCut);
+      editableDiv.addEventListener('copy', this.handleCopy);
+      editableDiv.addEventListener('paste', this.handlePaste);
+    }
   }
 
+  handleCut(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
+
+  handleCopy(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
+
+  handlePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
   preventScrollOnFocusLoss(): void {
     fromEvent<Event>(this.contentEditable.nativeElement, 'focusout').subscribe(
       (event) => {
@@ -286,37 +304,44 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   }
 
   onBackspace(event: KeyboardEvent): void {
-    const input = this.contentEditable.nativeElement;
-    const caretPosition = this.getCaretPosition(input);
-
-    if (caretPosition === 0) {
-      this.showDropdown = false;
-      return; // No action needed if caret is at the beginning
-    }
-
-    const mention = this.getMentionAtCaretPosition(input, caretPosition);
-
-    if (mention) {
-      // If the caret is immediately after a mention, delete the mention
-      this.deleteMention(mention);
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) {
+      console.log(selection.toString());
+      // Prevent Backspace if there's selected text
       event.preventDefault();
     } else {
-      // Delete a single character before the caret
-      setTimeout(() => {
-        const textContent = input.textContent || '';
-        const textBeforeCaret = textContent.slice(0, caretPosition - 1);
-        const textAfterCaret = textContent.slice(caretPosition);
+      const input = this.contentEditable.nativeElement;
+      const caretPosition = this.getCaretPosition(input);
 
-        const newText = textBeforeCaret + textAfterCaret;
+      if (caretPosition === 0) {
+        this.showDropdown = false;
+        return; // No action needed if caret is at the beginning
+      }
 
-        input.textContent = ''; // Clear existing content
-        input.innerHTML = this.highlightMentions(newText); // Update HTML content
-        this.content = input.textContent || ''; // Update content
-        this.setCaretPosition(input, caretPosition - 1); // Adjust caret position
-        this.contentChange.emit(this.content); // Emit content change event
-        this.showDropdown = false; // Hide dropdown after deletion
-        // event.preventDefault();
-      }, 0);
+      const mention = this.getMentionAtCaretPosition(input, caretPosition);
+
+      if (mention) {
+        // If the caret is immediately after a mention, delete the mention
+        this.deleteMention(mention);
+        event.preventDefault();
+      } else {
+        // Delete a single character before the caret
+        setTimeout(() => {
+          const textContent = input.textContent || '';
+          const textBeforeCaret = textContent.slice(0, caretPosition - 1);
+          const textAfterCaret = textContent.slice(caretPosition);
+
+          const newText = textBeforeCaret + textAfterCaret;
+
+          input.textContent = ''; // Clear existing content
+          input.innerHTML = this.highlightMentions(newText); // Update HTML content
+          this.content = input.textContent || ''; // Update content
+          this.setCaretPosition(input, caretPosition - 1); // Adjust caret position
+          this.contentChange.emit(this.content); // Emit content change event
+          this.showDropdown = false; // Hide dropdown after deletion
+          // event.preventDefault();
+        }, 0);
+      }
     }
   }
 
