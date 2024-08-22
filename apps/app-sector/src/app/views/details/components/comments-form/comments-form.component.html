@@ -13,10 +13,6 @@
       <button [disabled]="form.controls['comment'].hasError('required')">
         Submit
       </button>
-      <!-- <stc-apps-file-uploader [multiple]="true" [chooseLabel]="'add_attachment'"
-      (onformchange)="onUploadFile($event)" [attachmentFiles]="this.form.controls['attachments'].value"
-      formControlName="attachments" [isLoading]="isLoading"
-      (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader> -->
     </div>
   </div>
 </form>
@@ -28,6 +24,8 @@
       : kpiObjectSignal()?.attachementList
   "
   [accept]="accept"
+  [maxFiles]="4"
+  [maxFileSize]="15"
   (filesSelected)="onFilesSelected($event)"
   (deleteFile)="openDialog('delete', $event.index, $event.id)"
   (downloadFile)="openDialog('download', $event.index, $event.id, $event.file)"
