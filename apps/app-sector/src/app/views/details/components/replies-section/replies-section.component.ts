@@ -2,9 +2,11 @@ import {
   Component,
   effect,
   ElementRef,
+  EventEmitter,
   input,
   InputSignal,
   OnInit,
+  Output,
   signal,
   ViewChild,
 } from '@angular/core';
@@ -26,6 +28,7 @@ import {
 import { AuthService } from 'apps/app-sector/src/app/services/auth.service';
 import { commentsService } from '../../services/comments.service';
 import { ToastrService } from 'ngx-toastr';
+import { NotificationsService } from '../../services/notifications.service';
 
 @Component({
   selector: 'stc-apps-replies-section',
@@ -33,7 +36,7 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './replies-section.component.scss',
 })
 export class RepliesSectionComponent implements OnInit {
-  // @Output() editComment = new EventEmitter<string>();
+  @Output() textAreaOpend = new EventEmitter<string>();
   @ViewChild('targetElement') textArea?: ElementRef;
   newComment: InputSignal<comment> = input({} as comment);
   totalComments = 0;
@@ -46,12 +49,11 @@ export class RepliesSectionComponent implements OnInit {
   commentActionBtn = '';
   commentIndex = 0;
   replyIndex = 0;
-  loggedUser = '';
+  loggedUserID = 0;
   editedText = signal('');
   mentions: user[] = [];
   mentionsArray: string[] = [];
   comments: comment[] = [];
-
   confirmationBtnDesc = 'Delete';
   constructor(
     private fb: FormBuilder,
@@ -61,7 +63,8 @@ export class RepliesSectionComponent implements OnInit {
     private dialogeService: dialogeService,
     private commentService: commentsService,
     private toastr: ToastrService,
-    private commentsService: commentsService
+    private commentsService: commentsService,
+    private notificatinService: NotificationsService
   ) {
     effect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -83,15 +86,12 @@ export class RepliesSectionComponent implements OnInit {
       this.cookieService.get('MODERN_SYSTEM_USER') &&
       this.cookieService.get('token')
     ) {
-      this.loggedUser = this.cookieService.get('USER_FULLNAME') || '';
       this.authService.getUserData();
       this.authService.loggedUserStream.subscribe((res) => {
-        this.loggedUser = res?.name || '';
+        this.loggedUserID = res?.id || 0;
+        console.log(this.loggedUserID, 'in replies section');
       });
-    } else {
-      this.loggedUser = 'Assem Khalifa';
     }
-
     this.commentService.commenstList.subscribe((result: comment[]) => {
       if (result[0] && result[0].comment) {
         console.log('replies section', result);
@@ -102,7 +102,7 @@ export class RepliesSectionComponent implements OnInit {
         this.commentsCount();
       }
     });
-    this.commentService.mentionsList.subscribe((result: user[]) => {
+    this.notificatinService.mentionsList.subscribe((result: user[]) => {
       if (result) {
         console.log('replies section users', result);
         this.mentions = result;
@@ -119,12 +119,33 @@ export class RepliesSectionComponent implements OnInit {
   mentionObjectChanged(object: user) {
     console.log(object, 'in replies');
   }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  findAllIndexes(str: string, searchTerm: string): number[] {
+    const indexes: number[] = [];
+    let startIndex = 0;
+
+    while ((startIndex = str.indexOf(searchTerm, startIndex)) > -1) {
+      indexes.push(startIndex);
+      startIndex += searchTerm.length; // Move past the last found index
+    }
+
+    return indexes;
+  }
+  //eslint-disable-next-line @typescript-eslint/no-explicit-any
+
   onContentChange(content: any): void {
     console.log('content', content);
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
-
+    if (mentionsArray?.length == 0) {
+      this.notificatinService.mentionsObjects = [];
+    } else if (
+      mentionsArray.length !== this.notificatinService.mentionsObjects.length
+    ) {
+      this.notificatinService.mentionsObjects =
+        this.notificatinService.mentionsObjects.filter((mention) =>
+          this.mentionsArray.includes('@' + mention.name)
+        );
+    }
     // console.log('Form Value:', this.form.get('comment')?.value);
     // console.log('Mentions:', this.mentionsArray);
     // console.log('Content:', content);
@@ -134,7 +155,6 @@ export class RepliesSectionComponent implements OnInit {
   extractMentions(text: string): string[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mentions: string[] = this.mentions.map((mention: any) => {
-      console.log(mention);
       return `@${mention.name}`;
     });
 
@@ -181,10 +201,13 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   cancel() {
+    this.notificatinService.mentionsObjects = [];
     this.showCommentTextArea = false;
+
     this.form.reset();
   }
   cancelReply() {
+    this.notificatinService.mentionsObjects = [];
     this.editReplyTextArea = false;
     this.form.reset();
   }
@@ -196,11 +219,28 @@ export class RepliesSectionComponent implements OnInit {
       this.editCommentt();
     }
   }
+  refactoringCommaSepartedMention(commaSepartedMentions: string): any[] {
+    let mentionsSeparted: any = commaSepartedMentions?.split(',');
+    console.log(mentionsSeparted);
+    mentionsSeparted = mentionsSeparted?.map((mention: any) => {
+      const pipeSeparted = mention.split('|');
+      const mentionObj: user = {
+        id: +pipeSeparted[0],
+        name: pipeSeparted[1].slice(1),
+        email: pipeSeparted[2],
+        jobTitle: pipeSeparted[3],
+      };
+      return mentionObj;
+    });
+    return mentionsSeparted;
+  }
+  section = '';
   handleCommentActions(e: string, commentIndex: number) {
+    this.section = 'reply';
     this.commentIndex = commentIndex;
     this.deleteReplyFlag = false;
-    console.log(e, commentIndex);
 
+    console.log(e, commentIndex);
     if (e == 'Delete') {
       console.log('inside if');
       this.deleteCommentFlag = true;
@@ -213,20 +253,35 @@ export class RepliesSectionComponent implements OnInit {
         this.confirm.bind(this)
       );
     } else if (e == 'Reply') {
+      this.notificatinService.mentionsObjects = [];
       console.log('inside reply');
-      this.editedText.set('');
+      //  this.editedText.set('');
       this.form.reset();
       this.showCommentTextArea = true;
+      this.textAreaOpend.emit('opened');
       this.commentActionBtn = 'Save';
       setTimeout(() => {
         this.scrollIntoView();
       });
     } else if (e == 'Edit') {
+      this.notificatinService.mentionsObjects = [];
+      if (
+        this.comments[commentIndex].commaSeparatedMentions !== '' &&
+        this.comments[commentIndex].commaSeparatedMentions?.includes('|')
+      ) {
+        this.notificatinService.mentionsObjects =
+          this.refactoringCommaSepartedMention(
+            this.comments[commentIndex].commaSeparatedMentions!
+          );
+      }
+
       console.log('inside');
       this.showCommentTextArea = true;
+      this.textAreaOpend.emit('opend');
       const comment = this.comments[commentIndex].comment;
+      // this.editedText.set(comment);
       this.form.get('comment')?.setValue(comment);
-      this.editedText.set(comment);
+
       console.log(this.comments[commentIndex].comment, 'edit');
       this.commentActionBtn = 'Update';
       setTimeout(() => {
@@ -251,13 +306,17 @@ export class RepliesSectionComponent implements OnInit {
       });
   }
   editCommentt() {
+    console.log('final mentions ', this.notificatinService.mentionsObjects);
     const commentObj: commentEditBody = {
       id: this.comments[this.commentIndex].id,
       comment: this.form.get('comment')?.value,
       commaSeparatedMentions: this.mentionsArray
-        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+        ? this.notificatinService.commaSepartedMentions(
+            this.notificatinService.mentionsObjects
+          )
         : null,
     };
+
     this.commentService.editComment(commentObj).subscribe({
       next: (result: comment) => {
         this.toastr.success('Comment Edited Successfully');
@@ -267,6 +326,13 @@ export class RepliesSectionComponent implements OnInit {
         this.comments[this.commentIndex].commaSeparatedMentions =
           result.commaSeparatedMentions;
         this.form.reset();
+        if (this.mentionsArray?.length !== 0) {
+          this.notificatinService.notificationsSenderEngine(
+            result.comment,
+            this.notificatinService.mentionsObjects,
+            result.id
+          );
+        }
         this.editedText.set('');
         this.showCommentTextArea = false;
       },
@@ -280,10 +346,11 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {
+    this.section = 'reply';
+
     this.commentIndex = commentIndex;
     this.replyIndex = replyIndex;
     this.deleteCommentFlag = false;
-
     if (e === 'Delete') {
       this.deleteReplyFlag = true;
       const dialogeDesc = 'Are you sure you want to delete this reply?';
@@ -295,7 +362,23 @@ export class RepliesSectionComponent implements OnInit {
         this.confirm.bind(this)
       );
     } else if (e === 'Edit') {
+      this.notificatinService.mentionsObjects = [];
+      if (
+        this.comments[commentIndex].replies[replyIndex]
+          .commaSeparatedMentions !== '' &&
+        this.comments[commentIndex].replies[
+          replyIndex
+        ].commaSeparatedMentions?.includes('|')
+      ) {
+        this.notificatinService.mentionsObjects =
+          this.refactoringCommaSepartedMention(
+            this.comments[commentIndex].replies[replyIndex]
+              .commaSeparatedMentions!
+          );
+      }
+
       this.editReplyTextArea = true;
+      this.textAreaOpend.emit('opend');
       const reply = this.comments[commentIndex].replies[replyIndex].reply;
       this.form.get('comment')?.setValue(reply);
       this.editedText.set(reply);
@@ -303,21 +386,22 @@ export class RepliesSectionComponent implements OnInit {
         this.scrollIntoView();
       });
     }
-
-    // this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions =
-    //   this.commentsService.commaSepartedMentions(this.mentionsArray);
-    // console.log(
-    //   this.comments[commentIndex].replies[replyIndex].commaSeparatedMentions
-    // );
   }
 
   saveReply() {
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter(
+        (item, index, self) => self.indexOf(item) === index
+      );
+    console.log('final mentions ', this.notificatinService.mentionsObjects);
     console.log('inside save');
     const replyObj: addreplyBody = {
       commentId: this.comments[this.commentIndex].id,
       reply: this.form.get('comment')?.value,
-      commaSeparatedMentions: this.mentionsArray
-        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+      commaSeparatedMentions: this.notificatinService.mentionsObjects
+        ? this.notificatinService.commaSepartedMentions(
+            this.notificatinService.mentionsObjects
+          )
         : null,
     };
     this.commentService.addReply(replyObj).subscribe({
@@ -330,6 +414,13 @@ export class RepliesSectionComponent implements OnInit {
           this.form.reset();
           this.editedText.set('');
           this.showCommentTextArea = false;
+          if (this.mentionsArray?.length !== 0) {
+            this.notificatinService.notificationsSenderEngine(
+              result.reply,
+              this.notificatinService.mentionsObjects,
+              this.comments[this.commentIndex].id
+            );
+          }
         }
       },
       error: () => {
@@ -354,22 +445,33 @@ export class RepliesSectionComponent implements OnInit {
       id: this.comments[this.commentIndex].replies[this.replyIndex].id,
       reply: this.form.get('comment')?.value,
       commaSeparatedMentions: this.mentionsArray
-        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+        ? this.notificatinService.commaSepartedMentions(
+            this.notificatinService.mentionsObjects
+          )
         : null,
     };
-    this.commentService.editReply(replyObj).subscribe((result: reply) => {
-      this.toastr.success('Reply Edited Successfully');
-      this.comments[this.commentIndex].replies[this.replyIndex].reply =
-        result.reply;
-      this.comments[this.commentIndex].replies[this.replyIndex].edited =
-        result.edited;
-      this.comments[this.commentIndex].replies[this.replyIndex].editedAt =
-        result.editedAt;
-      this.comments[this.commentIndex].replies[
-        this.replyIndex
-      ].commaSeparatedMentions = result.commaSeparatedMentions;
-      this.editReplyTextArea = false;
-      this.form.reset();
+    this.commentService.editReply(replyObj).subscribe({
+      next: (result: reply) => {
+        this.toastr.success('Reply Edited Successfully');
+        this.comments[this.commentIndex].replies[this.replyIndex].reply =
+          result.reply;
+        this.comments[this.commentIndex].replies[this.replyIndex].edited =
+          result.edited;
+        this.comments[this.commentIndex].replies[this.replyIndex].editedAt =
+          result.editedAt;
+        this.comments[this.commentIndex].replies[
+          this.replyIndex
+        ].commaSeparatedMentions = result.commaSeparatedMentions;
+        if (this.mentionsArray?.length !== 0) {
+          this.notificatinService.notificationsSenderEngine(
+            result.reply,
+            this.notificatinService.mentionsObjects,
+            this.comments[this.commentIndex].id
+          );
+        }
+        this.editReplyTextArea = false;
+        this.form.reset();
+      },
     });
   }
 }
