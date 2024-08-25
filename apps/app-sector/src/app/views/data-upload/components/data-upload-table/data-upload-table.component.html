@@ -4,7 +4,7 @@
       <div class="input-group-prepend">
         <div class="input-group-text"><i class="fas fa-search"></i></div>
       </div>
-      <input type="text" class="form-control" />
+      <input placeholder="Search for file" type="text" class="form-control" />
     </div>
     <button class="btn" (click)="fileInput.click()">Upload a File</button>
     <input
@@ -14,5 +14,8 @@
       accept=".xlsx"
       style="display: none"
     />
+  </div>
+  <div class="logs-table mt-8">
+    <stc-apps-logs-table></stc-apps-logs-table>
   </div>
 </div>

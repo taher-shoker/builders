@@ -1,28 +1,29 @@
 .data-upload {
-    &_filter {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
+  &_filter {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-        .input-group {
-            width: 40%;
-            border: 1px solid var(--stc-color);
+    .input-group {
+      width: 40%;
+      border: 1px solid var(--stc-color);
 
-            &-text {
-                height: 100%;
+      &-text {
+        height: 100%;
 
-                i {
-                    color: var(--stc-color);
-                }
-            }
-
-
+        i {
+          color: var(--stc-color);
         }
-
-        button {
-            width: auto;
-            background: var(--stc-color);
-            color: var(--whiteColor);
-        }
+      }
     }
+
+    button {
+      width: auto;
+      background: var(--stc-color);
+      color: var(--whiteColor);
+    }
+  }
+  .logs-table {
+    margin-top: 60px;
+  }
 }
