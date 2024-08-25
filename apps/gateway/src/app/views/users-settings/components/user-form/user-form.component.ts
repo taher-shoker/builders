@@ -241,7 +241,10 @@ export class UserFormComponent implements OnInit, OnChanges {
       } else if (this.addGroups) {
         let queryParams = new HttpParams();
 
-        if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+        if (
+          this.userService.getCurrentSystem() === 'DI_Milestones' ||
+          this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+        ) {
           if (this.form.get('teamDto')?.value?.length > 0) {
             queryParams = queryParams.set(
               'teamId',

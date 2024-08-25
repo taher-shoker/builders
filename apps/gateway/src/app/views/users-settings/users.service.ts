@@ -4,7 +4,11 @@ import * as _ from 'lodash';
 
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
-import { di_labels, fraud_labels } from '../../shared/constant/labels';
+import {
+  app_sector_labels,
+  di_labels,
+  fraud_labels,
+} from '../../shared/constant/labels';
 import { Observable } from 'rxjs';
 import {
   User,
@@ -216,6 +220,9 @@ export class UsersService {
         break;
       case 'DI_Management':
         this.labels = di_labels;
+        break;
+      case 'Score_Card_Report_DB':
+        this.labels = app_sector_labels;
         break;
       default:
         break;
