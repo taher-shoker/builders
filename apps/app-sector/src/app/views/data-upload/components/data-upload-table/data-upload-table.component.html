@@ -1,0 +1,18 @@
+<div class="data-upload px-4">
+  <div class="data-upload_filter">
+    <div class="input-group">
+      <div class="input-group-prepend">
+        <div class="input-group-text"><i class="fas fa-search"></i></div>
+      </div>
+      <input type="text" class="form-control" />
+    </div>
+    <button class="btn" (click)="fileInput.click()">Upload a File</button>
+    <input
+      type="file"
+      #fileInput
+      (change)="onFileSelected($event)"
+      accept=".xlsx"
+      style="display: none"
+    />
+  </div>
+</div>

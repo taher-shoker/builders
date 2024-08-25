@@ -36,6 +36,13 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
     },
+    {
+      name: 'data upload',
+      url: '/data-upload',
+      icon: 'fa-upload',
+      roles: ['APPROVERS'],
+      urlHome: '/home',
+    },
   ];
 
   ngAfterViewInit(): void {

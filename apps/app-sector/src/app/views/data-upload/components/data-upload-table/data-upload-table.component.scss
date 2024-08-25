@@ -1,0 +1,28 @@
+.data-upload {
+    &_filter {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .input-group {
+            width: 40%;
+            border: 1px solid var(--stc-color);
+
+            &-text {
+                height: 100%;
+
+                i {
+                    color: var(--stc-color);
+                }
+            }
+
+
+        }
+
+        button {
+            width: auto;
+            background: var(--stc-color);
+            color: var(--whiteColor);
+        }
+    }
+}
