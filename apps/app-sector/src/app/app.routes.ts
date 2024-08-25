@@ -21,6 +21,14 @@ export const appRoutes: Route[] = [
           import('./views/details/details.module').then((m) => m.DetailsModule),
         canActivate: [sectorGuard],
       },
+      {
+        path: 'data-upload',
+        loadChildren: () =>
+          import('./views/data-upload/data-upload.module').then(
+            (m) => m.UploadFileModule
+          ),
+        canActivate: [sectorGuard],
+      },
     ],
   },
   {
