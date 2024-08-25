@@ -28,19 +28,12 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
-  navItems = [
+  navItems: any[] = [
     {
       name: 'home',
       url: '/home',
       icon: 'fa-home',
       roles: ['APPROVERS,CREATORS'],
-      urlHome: '/home',
-    },
-    {
-      name: 'data upload',
-      url: '/data-upload',
-      icon: 'fa-upload',
-      roles: ['APPROVERS'],
       urlHome: '/home',
     },
   ];
@@ -60,6 +53,20 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       this.userName = this.cookieService.get('USER_FULLNAME') || '';
       this.authService.getUserData();
       this.authService.loggedUserStream.subscribe((res) => {
+        console.log(res?.userGroups);
+
+        res?.userGroups.map((group) => {
+          if (group.groupName == 'Data_Admins') {
+            console.log('hey');
+            this.navItems.push({
+              name: 'data upload',
+              url: '/data-upload',
+              icon: 'fa-upload',
+              roles: ['APPROVERS'],
+              urlHome: '/home',
+            });
+          }
+        });
         this.userName = res?.name || '';
       });
     }
