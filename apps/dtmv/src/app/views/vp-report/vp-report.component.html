@@ -39,14 +39,10 @@
         <div class="col-md-4">
           <div class="container-box">
             <h5>Milestone Progress</h5>
-            <div
-              class="progress-circule"
-              role="progresscircule"
-              [style]="'--value:' + milestoneProgress()"
-            >
-              <span class="circle-content"
-                >{{ milestoneProgress() || 0 }}%</span
-              >
+            <div class="d-flex justify-content-center">
+              <stc-apps-progress-circle
+                [progressValue]="milestoneProgress() || 0"
+              ></stc-apps-progress-circle>
             </div>
           </div>
         </div>

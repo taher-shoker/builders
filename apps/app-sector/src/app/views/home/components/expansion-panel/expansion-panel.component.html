@@ -1,0 +1,35 @@
+<div class="expansion-panel">
+  <!-- <div class="col-12">
+      <stc-apps-panels-container
+        [categoryName]="category"
+      ></stc-apps-panels-container>
+    </div> -->
+
+  <mat-expansion-panel
+    (opened)="panelOpenState = true"
+    (closed)="panelOpenState = false"
+  >
+    <mat-expansion-panel-header>
+      <stc-apps-expansion-panel-header
+        class="w-100"
+        [projectHeader]="kpi().kpiName"
+        [kpisCode]="kpi().kpiCode"
+        [status]="kpi().kpiStatus"
+        [function]="kpi().calculationFunction"
+        [direction]="kpi().direction"
+      ></stc-apps-expansion-panel-header>
+    </mat-expansion-panel-header>
+
+    <stc-apps-expansion-panel-body
+      class="mt-lg-0 mt-md-5"
+      [percentage]="kpi().score"
+      [kpiCode]="kpi().kpiCode"
+      [kpiName]="kpi().kpiName"
+      [kpiStatus]="kpi().kpiStatus"
+      [kpiActualValue]="kpi().actualValue"
+      [kpiTargetValue]="kpi().target"
+      [listItems]="generateListItems(kpi())"
+      [selectedTab]="newTabSelected()"
+    ></stc-apps-expansion-panel-body>
+  </mat-expansion-panel>
+</div>

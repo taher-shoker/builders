@@ -59,6 +59,8 @@ import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.
 import { CheckboxComponent } from './checkbox/checkbox.component';
 import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { CustomDropdownComponent } from './custom-dropdown/custom-dropdown.component';
+import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
+import { AttachmentsComponent } from './attachments/attachments.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -99,6 +101,8 @@ const components = [
   CheckboxComponent,
   ProgressBarComponent,
   CustomDropdownComponent,
+  ProgressCircleComponent,
+  AttachmentsComponent,
 ];
 
 @NgModule({

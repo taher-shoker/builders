@@ -1,0 +1,66 @@
+p {
+  margin: 0;
+}
+
+.welcome {
+  min-height: 100vh;
+  height: 100%;
+
+  .welcome-part {
+    position: relative;
+    background: linear-gradient(
+      180deg,
+      var(--stc-color) 100%,
+      var(--semiPurbleColor) 100%
+    );
+
+    &_background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: url('/assets/images/welcome-bg.png');
+      background-size: contain;
+      background-position: top right;
+      background-repeat: no-repeat;
+      z-index: 0;
+    }
+    &_container {
+      height: 100%;
+      // margin-bottom: 60px;
+    }
+    &_content {
+      text-align: center;
+      h3 {
+        color: var(--whiteColor);
+        font-weight: 300;
+        font-size: 24px;
+      }
+      h1 {
+        font-weight: 700;
+        padding-bottom: 20px;
+        font-size: 40px;
+        color: var(--whiteColor);
+      }
+      p {
+        font-weight: 400;
+
+        font-size: 20px;
+        color: var(--whiteColor);
+      }
+
+      img {
+        margin-bottom: 80px;
+      }
+    }
+    &_stc-logo {
+      position: absolute;
+      bottom: 40px;
+      left: 40px;
+      img {
+        width: 80%;
+      }
+    }
+  }
+}

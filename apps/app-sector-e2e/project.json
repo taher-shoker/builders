@@ -1,0 +1,29 @@
+{
+  "name": "app-sector-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "sourceRoot": "apps/app-sector-e2e/src",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/app-sector-e2e/cypress.config.ts",
+        "testingType": "e2e",
+        "devServerTarget": "app-sector:serve:development"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "app-sector:serve:production"
+        },
+        "ci": {
+          "devServerTarget": "app-sector:serve-static"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["app-sector"]
+}

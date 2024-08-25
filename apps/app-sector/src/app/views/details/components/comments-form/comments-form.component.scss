@@ -1,0 +1,35 @@
+.comments {
+  background: var(--whiteColor);
+  padding: 15px;
+  // border: 1px solid rgba($color: var(--blackColor), $alpha: 0.1);
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  height: 695.6px;
+
+  &_actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 16px;
+
+    button {
+      border: none;
+      background: transparent;
+      padding: 11.5px 39px;
+      display: flex;
+
+      &:first-child {
+        background: var(--stcCoralColor);
+        color: var(--whiteColor);
+        border-radius: 8px;
+
+        &:disabled {
+          opacity: 0.4;
+        }
+      }
+
+      img {
+        margin-inline-end: 9px;
+      }
+    }
+  }
+}
