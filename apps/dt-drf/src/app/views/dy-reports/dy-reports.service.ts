@@ -443,7 +443,7 @@ export class ReportsService {
 
   getAttachment(id: number): Observable<MilestoneAttachment> {
     return this.http.get<MilestoneAttachment>(
-      `${this.baseUrl}v2/dt-milestone-service/attachments/${id}`
+      `${this.endpointAttachments}/${id}`
     );
   }
 
@@ -462,12 +462,6 @@ export class ReportsService {
       `${this.baseUrl}v2/dt-milestone-service/reminders/read/${id}`,
       {}
     );
-  }
-
-  getMilestonesHistory(mielstoneId: number | null) {
-    return this.http.get<any>(`${this.requestUrl}history/${mielstoneId}`, {
-      params: this.setSystemParam(),
-    });
   }
 
   /**
