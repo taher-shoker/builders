@@ -3,12 +3,15 @@ import {
   EventEmitter,
   Input,
   InputSignal,
+  OnInit,
   Output,
   effect,
   input,
 } from '@angular/core';
 import { mentionRegexService } from '../services/mentionRegex.service';
 import { DatePipe } from '@angular/common';
+import { CookieService } from 'ngx-cookie';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'stc-apps-profile',
@@ -24,6 +27,8 @@ export class ProfileComponent {
   reply: InputSignal<boolean> = input(false);
   edited: InputSignal<boolean> = input(false);
   parentLoop: InputSignal<number> = input(0);
+  authorID: InputSignal<number> = input(0);
+  loggedUserID: InputSignal<number> = input(0);
   hasReplies: InputSignal<boolean> = input(false);
   commaSepartedMentions: InputSignal<string> = input('');
   @Output() commentActionName = new EventEmitter<string>();
@@ -34,31 +39,36 @@ export class ProfileComponent {
     private datePipe: DatePipe
   ) {
     effect(() => {
-      let mentions;
-      if (this.commaSepartedMentions() !== null &&this.commaSepartedMentions()) {
-        mentions = this.commaSepartedMentions().split(',');
-      }
-
-      console.log(
-        'new mentions',
-        this.reply(),
-        this.comment(),
-        this.hasReplies(),
-        this.commaSepartedMentions(),
-        mentions
-      );
-
-      if (this.reply() == true) {
+      if (this.reply() == true && this.authorID() == this.loggedUserID()) {
         this.replyClass = true;
         this.actionsList = ['Edit', 'Delete'];
-      } else {
+      } else if (
+        this.reply() == true &&
+        this.authorID() != this.loggedUserID()
+      ) {
+        this.replyClass = true;
+        this.actionsList = [];
+      } else if (!this.reply() && this.authorID() == this.loggedUserID()) {
         this.actionsList = ['Reply', 'Edit', 'Delete'];
+        this.replyClass = false;
+      } else {
+        this.actionsList = ['Reply'];
         this.replyClass = false;
       }
     });
   }
+
   generateRegex() {
-    const mentions = this.commaSepartedMentions().split(',');
+    let mentions = this.commaSepartedMentions().split(',');
+
+    mentions = mentions.map((mention) => {
+      if (mention.includes('|')) {
+        const mentionData = mention.split('|');
+        return mentionData[1];
+      } else {
+        return mention;
+      }
+    });
     return this.mentionsService.generateRegex(mentions);
   }
   getTimeAgo(date: any) {

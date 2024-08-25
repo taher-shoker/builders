@@ -6,6 +6,14 @@
       Add Attachment
     </button>
   </div>
+  <div *ngIf="fileSizeExceeded" class="attachments_error">
+    File size exceeds the {{ maxFileSize() }}MB limit. Please upload a smaller
+    file.
+  </div>
+  <div *ngIf="fileLimitExceeded" class="attachments_error">
+    You can upload a maximum of {{ maxFiles() }} files per time.
+  </div>
+
   @if (displayedFiles()?.length == 0) {
   <div class="attachments_empty">There's no attachments yet</div>
   }

@@ -9,23 +9,19 @@ import {
   ViewChild,
 } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { newComment } from '../../../models/newComment';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { dialogeService } from 'apps/app-sector/src/app/shared/services/dialoge.service';
 import { SharedFormService } from '../../../home/services/shared-form.service';
-import {
-  addCommentBody,
-  comment,
-  sectorUsersParams,
-  user,
-} from '../../models/commentsModel';
+import { addCommentBody, comment, user } from '../../models/commentsModel';
 import { commentsService } from '../../services/comments.service';
 import { ToastrService } from 'ngx-toastr';
 import { AttachmentService } from '../../services/attachment.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
 import { KpiDTO } from '../../../models/SectorKpisDetails.model';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { NotificationsService } from '../../services/notifications.service';
 
 @Component({
   selector: 'stc-apps-comments-form',
@@ -36,7 +32,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   kpiCode = window.history.state.kpiCode;
   scoreCardTitle = window.history.state.selectedTab;
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
-  sectorUsersSignal: InputSignal<user[] | any> = input(undefined);
+  caretIndexes: any[] = [];
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
@@ -59,11 +55,32 @@ export class CommentsFormComponent implements OnInit, OnChanges {
 
   mentions: user[] = [];
   placeholder = 'Enter Comment Here...';
-  mentions2 = [
-    { name: 'Assem Khalifa Ahmed', comment: 'UI/UX Designer' },
-    { name: 'Assem Ahmed', comment: 'Business Analyst' },
-    { name: 'Assem Khalifa', comment: 'UI/UX Designer' },
-  ];
+  // mentions2 = [
+  //   {
+  //     id: 532,
+  //     name: 'Habiba Mohamed',
+  //     email: 'habiba.mohamed@qeema.net',
+  //     jobTitle: 'Has two roles User Chief, GCEO',
+  //   },
+  //   {
+  //     id: 552,
+  //     name: 'Sara',
+  //     email: 'sara.alkurdy@qeema.net',
+  //     jobTitle: 'Professional Football Player',
+  //   },
+  //   {
+  //     id: 519,
+  //     name: 'Habiba Mohamed',
+  //     email: 'habiba12.mohamed@qeema.net',
+  //     jobTitle: 'Has two roles User Chief',
+  //   },
+  //   {
+  //     id: 614,
+  //     name: 'Noha Yousry',
+  //     email: 'noha.yousry@qeema.net',
+  //     jobTitle: 'Football Manager',
+  //   },
+  // ];
   mentionsArray: string[] = [''];
   constructor(
     private fb: FormBuilder,
@@ -72,28 +89,26 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     private sectorService: SectorService,
     private sharedFormService: SharedFormService,
     private commentsService: commentsService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private notificatinService: NotificationsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['kpiObjectSignal']) {
       this.populateDisplayedFiles();
     }
-    if (changes['sectorUsersSignal']) {
-      console.log(this.sectorUsersSignal());
-      this.fillUserMentions();
-    }
   }
 
   ngOnInit(): void {
+    this.notificatinService.mentionsList.subscribe((result: user[]) => {
+      if (result) {
+        console.log('replies section users', result);
+        this.mentions = result;
+      } else {
+        this.mentions = [];
+      }
+    });
     this.handleForm();
-  }
-  fillUserMentions() {
-    const mentionsObject = this.sectorUsersSignal();
-    if (mentionsObject) {
-      this.mentions = mentionsObject;
-      console.log(this.mentions);
-    }
   }
   populateDisplayedFiles() {
     const kpiObject = this.kpiObjectSignal();
@@ -120,59 +135,6 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     };
     return `Uploaded at ${date.toLocaleDateString('en-US', options)}`;
   }
-
-  // triggerFileInput() {
-  //   this.fileInput.nativeElement.click();
-  // }
-
-  // downloadFile(file: any) {
-  //   const url = URL.createObjectURL(file);
-  //   const anchor = document.createElement('a');
-  //   anchor.href = url;
-  //   anchor.download = file.name;
-  //   document.body.appendChild(anchor);
-  //   anchor.click();
-  //   document.body.removeChild(anchor);
-  //   URL.revokeObjectURL(url);
-  // }
-
-  // deleteFile(index: number) {
-  //   this.uploadedFiles?.splice(index, 1);
-  //   this.displayedFiles?.splice(index, 1);
-  // }
-  // index = 0;
-  // file: any;
-  // confirmdDownload() {
-  //   this.downloadFile(this.file);
-  // }
-  // confirmDelete() {
-  //   this.deleteFile(this.index);
-  // }
-  // openDialog(downloadOrDeleteFlag: string, index: number, file?: any) {
-  //   this.index = index;
-  //   if (downloadOrDeleteFlag == 'delete') {
-  //     const dialogeDesc = 'Are you sure you want to delete this attachment?';
-  //     const confirmationBtnDesc = 'Delete';
-  //     this.dialogeService.openDialog(
-  //       '0ms',
-  //       '0ms',
-  //       dialogeDesc,
-  //       confirmationBtnDesc,
-  //       this.confirmDelete.bind(this)
-  //     );
-  //   } else {
-  //     this.file = file;
-  //     const dialogeDesc = `Do you want to download file ${file.name}?`;
-  //     const confirmationBtnDesc = 'Download';
-  //     this.dialogeService.openDialog(
-  //       '0ms',
-  //       '0ms',
-  //       dialogeDesc,
-  //       confirmationBtnDesc,
-  //       this.confirmdDownload.bind(this)
-  //     );
-  //   }
-  // }
 
   openDialog(
     downloadOrDeleteFlag: string,
@@ -202,15 +164,39 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       );
     }
   }
+  findAllIndexes(str: string, searchTerm: string): number[] {
+    const indexes: number[] = [];
+    let startIndex = 0;
+
+    while ((startIndex = str.indexOf(searchTerm, startIndex)) > -1) {
+      indexes.push(startIndex);
+      startIndex += searchTerm.length; // Move past the last found index
+    }
+
+    return indexes;
+  }
 
   onContentChange(content: string) {
+    console.log('Content:', content);
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
     this.form.get('comment')?.setValue(content);
     console.log('Mentions:', mentionsArray);
-    // console.log('Content:', content);
+    if (mentionsArray?.length == 0) {
+      this.notificatinService.mentionsObjects = [];
+    } else if (
+      mentionsArray.length !==
+      this.notificatinService.getmentionObjects().length
+    ) {
+      this.notificatinService.mentionsObjects =
+        this.notificatinService.mentionsObjects.filter((mention) =>
+          this.mentionsArray.includes('@' + mention.name)
+        );
+    }
   }
-
+  resetForm() {
+    this.form.reset();
+  }
   extractMentions(text: string): string[] {
     const mentions: string[] = this.mentions.map((mention: user) => {
       return `@${mention.name}`;
@@ -229,9 +215,11 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
-    this.mentionsArray = this.mentionsArray.filter(
-      (item, index, self) => self.indexOf(item) === index
-    );
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter(
+        (item, index, self) => self.indexOf(item) === index
+      );
+
     const commentObj: addCommentBody = {
       sectorName: this.sharedFormService.getForm().value.sectorName,
       year: this.sharedFormService.getForm().value.year,
@@ -240,27 +228,27 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       kpiCode: this.kpiCode,
       comment: this.form.value.comment,
       commaSeparatedMentions: this.mentionsArray
-        ? this.commentsService.commaSepartedMentions(this.mentionsArray)
+        ? this.notificatinService.commaSepartedMentions(
+            this.notificatinService.mentionsObjects
+          )
         : null,
     };
     this.commentsService.addComment(commentObj).subscribe({
       next: (result: comment) => {
         this.toastr.success('Comment Added Successfully');
         console.log(result);
+        this.notificatinService.mentionsObjects = [];
         this.newComment = result;
+        if (this.mentionsArray?.length !== 0) {
+          this.notificatinService.notificationsSenderEngine(
+            result.comment,
+            this.notificatinService.mentionsObjects,
+            result.id
+          );
+        }
       },
     });
-    // this.newComment = {
-    //   name: this.form.value.comment,
-    //   mentions: this.mentionsArray,
-    // };
-
-    // console.log('this', this.newComment);
     this.form.reset();
-  }
-  onEditComment(content: string) {
-    // console.log(content);
-    this.form.get('comment')?.setValue(content);
   }
 
   onFilesSelected(filesArray: File[]) {

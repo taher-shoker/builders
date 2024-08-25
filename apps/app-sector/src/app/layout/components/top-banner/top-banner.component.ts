@@ -14,7 +14,10 @@ import { SharedFormService } from '../../../views/home/services/shared-form.serv
 
 import { DashboardService } from '../../../views/home/services/dashboard.service';
 import { YearQuarterService } from '../../../services/yearQuarter.service';
-import { OverallScore, OverallScoreParams } from '../../../views/models/overallScore.model';
+import {
+  OverallScore,
+  OverallScoreParams,
+} from '../../../views/models/overallScore.model';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -52,9 +55,6 @@ export class TopBannerComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.kpiName = this.router.url.split('/').pop() || '';
-        this.kpiName = this.kpiName.replace(/%20/g, ' ');
-        this.activatedRoute.snapshot.paramMap.get('kpiName');
         if (this.router.url.includes('/details')) {
           this.showScorecard = false;
         } else {
@@ -63,6 +63,9 @@ export class TopBannerComponent implements OnInit {
       });
   }
   ngOnInit(): void {
+    this.dashboardService.kpiNameSubject.subscribe((result) => {
+      this.kpiName = result;
+    });
     console.log('quarter', this.quarter, this.currentQuarter, this.currentYear);
     this.handleForm();
     this.getOverallScore();
