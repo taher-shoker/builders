@@ -55,26 +55,32 @@ export class CommentsFormComponent implements OnInit, OnChanges {
 
   mentions: user[] = [];
   placeholder = 'Enter Comment Here...';
-  mentions3 = [
-    {
-      id: 450,
-      name: 'Ahmed Test',
-      email: 'ahmed.abdelhaleem@qeema.net',
-      jobTitle: 'Software engineer',
-    },
-    {
-      id: 452,
-      name: 'Ahmed Test',
-      email: 'ahmed.abdelhaleem@qeema.net',
-      jobTitle: 'Software engineer',
-    },
-    {
-      id: 658,
-      name: '7biba',
-      email: 'habiba.mohamed@qeema.net',
-      jobTitle: 'software engineer',
-    },
-  ];
+  // mentions2 = [
+  //   {
+  //     id: 532,
+  //     name: 'Habiba Mohamed',
+  //     email: 'habiba.mohamed@qeema.net',
+  //     jobTitle: 'Has two roles User Chief, GCEO',
+  //   },
+  //   {
+  //     id: 552,
+  //     name: 'Sara',
+  //     email: 'sara.alkurdy@qeema.net',
+  //     jobTitle: 'Professional Football Player',
+  //   },
+  //   {
+  //     id: 519,
+  //     name: 'Habiba Mohamed',
+  //     email: 'habiba12.mohamed@qeema.net',
+  //     jobTitle: 'Has two roles User Chief',
+  //   },
+  //   {
+  //     id: 614,
+  //     name: 'Noha Yousry',
+  //     email: 'noha.yousry@qeema.net',
+  //     jobTitle: 'Football Manager',
+  //   },
+  // ];
   mentionsArray: string[] = [''];
   constructor(
     private fb: FormBuilder,
