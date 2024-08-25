@@ -1,0 +1,34 @@
+<section>
+  <div class="row m-0 p-0">
+    @for(score of scores; track score) {
+    <div class="col-md-6">
+      <div class="card-holder">
+        <div class="header-container d-flex justify-content-between">
+          <h5>{{ score.scorecardTitle }}</h5>
+          <img src="assets/images/brand/growth-curve.svg" alt="" />
+        </div>
+        <div class="res-we-container d-flex justify-content-around">
+          <div class="res-container">
+            <div class="res-content d-flex justify-content-between">
+              <p class="res-p">Result</p>
+              <div class="res-value">
+                {{ score.score | percent : '1.1-1' }}
+              </div>
+            </div>
+          </div>
+          <div class="we-container">
+            <div class="we-content d-flex justify-content-between">
+              <p class="we-p">Weight</p>
+              <div class="we-value">{{ score.weight | percent }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  <!-- scores array is empty means there is no tabs(no data)-->
+  @if (scores.length===0) {
+  <div class="empty-scores">There's no data for this specified sector in this year or quarter.</div>
+  }
+</section>

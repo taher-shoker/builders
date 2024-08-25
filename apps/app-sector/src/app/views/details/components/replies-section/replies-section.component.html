@@ -1,0 +1,103 @@
+<section class="replies-section">
+  <div class="replies-section_totalComments">{{ totalComments }} Comments</div>
+  @if(totalComments!==0){
+  <div class="replies-section_holder">
+    @for (comment of comments; let parentLoop=$index;track parentLoop;) {
+    <div>
+      <stc-apps-profile
+        [name]="comment.authorName"
+        [comment]="comment.comment"
+        [time]="comment.edited ? comment.editedAt : comment.createdAt"
+        [lastItem]="parentLoop === comments.length - 1 ? true : false"
+        [hasReplies]="
+          comment.replies !== null
+            ? comment.replies.length !== 0
+              ? true
+              : false
+            : false
+        "
+        [reply]="false"
+        [edited]="comment.edited"
+        [commaSepartedMentions]="comment.commaSeparatedMentions!"
+        (commentActionName)="handleCommentActions($event, parentLoop)"
+      ></stc-apps-profile>
+    </div>
+    @if(showCommentTextArea && parentLoop==commentIndex){
+    <form [formGroup]="form">
+      <div #targetElement>
+        <stc-apps-comment-editor
+          class="replies-section_add-reply"
+          formControlName="comment"
+          [placeholder]="placeholder"
+          [mentions]="mentions"
+          [editedText]="editedText()"
+          (contentChange)="onContentChange($event)"
+        ></stc-apps-comment-editor>
+
+        <div class="replies-section_add-reply-actions">
+          <button class="cancel-btn" (click)="cancel()">Cancel</button>
+          <button
+            (click)="save()"
+            [disabled]="form.controls['comment'].hasError('required')"
+          >
+            {{ commentActionBtn }}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    }
+    <div
+      *ngIf="
+        comment.replies !== null &&
+        comment.replies &&
+        comment.replies.length > 0
+      "
+    >
+      <div class="replies">
+        @for (reply of comment.replies; track $index) {
+        <stc-apps-profile
+          [name]="reply.authorName"
+          [comment]="reply.reply"
+          [time]="reply.edited ? reply.editedAt : reply.createdAt"
+          [lastItem]="
+            $index === comment.replies.length - 1 &&
+            parentLoop === comments.length - 1
+              ? true
+              : false
+          "
+          [reply]="true"
+          [edited]="reply.edited"
+          [commaSepartedMentions]="reply.commaSeparatedMentions!"
+          (replyActionName)="handleReplyActions($event, parentLoop, $index)"
+        ></stc-apps-profile>
+        @if(editReplyTextArea && parentLoop==commentIndex &&
+        $index===replyIndex){
+        <form [formGroup]="form">
+          <div #targetElement>
+            <stc-apps-comment-editor
+              class="replies-section_add-reply"
+              formControlName="comment"
+              [placeholder]="placeholder"
+              [mentions]="mentions"
+              [editedText]="editedText()"
+              (contentChange)="onContentChange($event)"
+            ></stc-apps-comment-editor>
+            <div class="replies-section_add-reply-actions">
+              <button class="cancel-btn" (click)="cancelReply()">Cancel</button>
+              <button
+                (click)="editReply()"
+                [disabled]="form.controls['comment'].hasError('required')"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </form>
+        } }
+      </div>
+    </div>
+    }
+  </div>
+  }
+</section>

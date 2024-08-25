@@ -1,0 +1,43 @@
+
+.score {
+    background: var(--whiteColor);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+
+    &_content {
+        display: flex;
+        align-items: center;
+
+        &_image {
+            margin-inline-end: 23px;
+            background: var(--lightPurpleColor);
+        }
+
+        &_result {
+            h3 {
+                font-family: var(--stc-font-meduim);
+                color: var(--darkPurpleColor);
+            }
+        }
+    }
+
+    &_percent {
+        display: flex;
+        align-items: center;
+        justify-content: end;
+
+        h1 {
+            font-family: var(--stc-font-bold);
+            margin-inline-end: 37px;
+        }
+    }
+
+    @media screen and (max-width: 1250px) and (min-width: 767px) {
+        >div {
+            width: 100%;
+        }
+    }
+}

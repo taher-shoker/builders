@@ -1,0 +1,149 @@
+p {
+  margin: 0;
+}
+.expansion_header {
+  width: 100%;
+  font-family: var(--stc-font-base);
+
+  &_title {
+    .kpis_code {
+      font-size: 12px;
+      font-weight: 300;
+      color: var(--stc-color);
+    }
+
+    h3 {
+      font-weight: 700;
+      font-size: 24px;
+      color: var(--grayColor);
+    }
+  }
+
+  &_status {
+    // width: 25%;
+    border-radius: 6px;
+    padding: 6px;
+    p {
+      font-size: 14px;
+      font-family: var(--stc-font-bold);
+      font-weight: 700;
+      text-align: center;
+    }
+  }
+
+  &_info {
+    margin-top: 17px;
+
+    .direction-holder {
+      width: 53%;
+      .img-decreasing {
+        transform: rotateX(180deg);
+      }
+    }
+
+    .function-holder {
+      width: 43%;
+    }
+
+    .direction-holder,
+    .function-holder {
+      padding: 6px 10px;
+      border-radius: 10px;
+      background-color: rgba(113, 113, 113, 0.1);
+
+      p {
+        //  margin-right: 14px;
+        font-weight: 300;
+        font-size: 15px;
+      }
+    }
+  }
+}
+
+::ng-deep {
+  .mat-expansion-panel-header .mat-expansion-indicator {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+    border: 1.6px solid var(--darkPurpleColor);
+    border-radius: 50%;
+    padding: 4px 6px 7px 6px;
+    display: flex;
+    align-items: center;
+
+    &::after {
+      color: var(--darkPurpleColor);
+      padding: 2.6px;
+    }
+
+    &:hover {
+      border-color: var(--stc-pink-color);
+      background-color: var(--stc-pink-color);
+
+      &::after {
+        color: var(--whiteColor);
+      }
+    }
+  }
+
+  .mat-expansion-panel.mat-expanded
+    .mat-expansion-panel-header
+    .mat-expansion-indicator {
+    border-color: var(--stc-pink-color);
+    background-color: var(--stc-pink-color);
+    color: var(--whiteColor);
+
+    &::after {
+      color: var(--whiteColor);
+      padding: 2.6px;
+    }
+  }
+}
+
+@media screen and (max-width: 576px) {
+  #expansion-header-info {
+    display: block !important;
+
+    .direction-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .function-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 768px) and (min-width: 576px) {
+  #expansion-header-info {
+    display: flex !important;
+
+    .direction-holder {
+      width: 53%;
+      margin-bottom: 0.5rem;
+    }
+
+    .function-holder {
+      width: 43%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}
+
+@media screen and (max-width: 1120px) and (min-width: 768px) {
+  #expansion-header-info {
+    display: block !important;
+
+    .direction-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+
+    .function-holder {
+      width: 100%;
+      margin-bottom: 0.5rem;
+    }
+  }
+}

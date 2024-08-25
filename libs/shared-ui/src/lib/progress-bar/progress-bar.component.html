@@ -1,12 +1,22 @@
 <div class="progress-bar-holder">
+  @if (data().prefixText){
   <div class="bar-prefix">
     <p class="title">{{ data().prefixText }}</p>
     <p class="value">{{ data().prefixValue }}%</p>
   </div>
-
+  }
   <div class="bars-holder">
-    <div class="background-bar" [ngStyle]="{'background-color': data().bgBarColor}">
-      <div class="bar" [ngStyle]="{ width: data().progressValue + '%', 'background-color': data().barColor}"></div>
+    <div
+      class="background-bar"
+      [ngStyle]="{ 'background-color': data().bgBarColor }"
+    >
+      <div
+        class="bar"
+        [ngStyle]="{
+          width: data().progressValue + '%',
+          'background-color': data().barColor
+        }"
+      ></div>
       <div class="invisible-bar">
         @for (index of data().indexes; track index) {
         <div
@@ -41,9 +51,11 @@
       </div>
     </div>
   </div>
+  @if (data().suffixText){
 
   <div class="bar-suffix">
     <p class="title">{{ data().suffixText }}</p>
     <p class="value">{{ data().suffixValue }}%</p>
   </div>
+  }
 </div>

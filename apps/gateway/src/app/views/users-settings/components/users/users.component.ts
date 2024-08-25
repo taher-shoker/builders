@@ -84,12 +84,18 @@ export class UsersComponent implements OnInit, AfterViewInit {
       {
         key: 'userGroups',
         type: 'text',
-        label: 'privilege',
+        label:
+          this.userService.getCurrentSystem() !== 'Score_Card_Report_DB'
+            ? 'privilege'
+            : 'roles',
       },
       {
         key: 'teamDto',
         type: 'text',
-        label: 'team',
+        label:
+          this.userService.getCurrentSystem() !== 'Score_Card_Report_DB'
+            ? 'team'
+            : 'sectors',
       },
       {
         key: 'jobTitle',
@@ -222,7 +228,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
       );
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
-      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
     ) {
       this.privilege = this.userService.allGroups
         .filter(
@@ -259,6 +266,24 @@ export class UsersComponent implements OnInit, AfterViewInit {
     } else {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         if (this.selectedPrivilege.id !== 0) {
+          this.dataSource.data = this.list
+            .filter((x) =>
+              this.userService.getUserTeam(x).includes((value as Team)?.name)
+            )
+            .filter((x) =>
+              this.userService
+                .getUserPrivilege(x)
+                .includes((this.selectedPrivilege as Role)?.groupName)
+            );
+        } else {
+          this.dataSource.data = this.list.filter((x) =>
+            this.userService.getUserTeam(x).includes((value as Team)?.name)
+          );
+        }
+      } else if (
+        this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+      ) {
+        if (this.selectedPrivilege) {
           this.dataSource.data = this.list
             .filter((x) =>
               this.userService.getUserTeam(x).includes((value as Team)?.name)
@@ -316,6 +341,11 @@ export class UsersComponent implements OnInit, AfterViewInit {
         } else {
           this.teams = this.userService.getTeams();
         }
+      } else if (
+        this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+      ) {
+        // this.filterSelect.controls['teamSelect'].setValue('');
+        this.teams = this.userService.getTeams();
       } else {
         this.teams = this.userService
           .getTeams()

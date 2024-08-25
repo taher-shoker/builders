@@ -4,7 +4,11 @@ import * as _ from 'lodash';
 
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
-import { di_labels, fraud_labels } from '../../shared/constant/labels';
+import {
+  app_sector_labels,
+  di_labels,
+  fraud_labels,
+} from '../../shared/constant/labels';
 import { Observable } from 'rxjs';
 import {
   User,
@@ -126,6 +130,9 @@ export class UsersService {
       case 'DI_Milestones':
         allTeams = this.allTeams;
         break;
+      case 'Score_Card_Report_DB':
+        allTeams = this.allTeams;
+        break;
       default:
         break;
     }
@@ -136,7 +143,8 @@ export class UsersService {
     let allRoles;
     if (
       this.getCurrentSystem() === 'DI_Milestones' ||
-      this.getCurrentSystem() === 'Business_Excellence_Dashboard'
+      this.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.getCurrentSystem() === 'Score_Card_Report_DB'
     ) {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')
@@ -175,6 +183,10 @@ export class UsersService {
       _.forEach(user.teams, (team) => {
         x.push(team.name);
       });
+    } else if (this.getCurrentSystem() === 'Score_Card_Report_DB') {
+      _.forEach(user.teams, (team) => {
+        x.push(team.name);
+      });
     } else if (this.getCurrentSystem() === 'Dynamic_Report_Flow') {
       x.push('-');
     } else {
@@ -208,6 +220,9 @@ export class UsersService {
         break;
       case 'DI_Management':
         this.labels = di_labels;
+        break;
+      case 'Score_Card_Report_DB':
+        this.labels = app_sector_labels;
         break;
       default:
         break;
