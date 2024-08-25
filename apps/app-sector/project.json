@@ -30,33 +30,65 @@
           "node_modules/ngx-toastr/toastr.css",
           "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
           "node_modules/quill/dist/quill.snow.css",
-          "apps/app-sector/src/styles.scss"],
-          "stylePreprocessorOptions": {
-            "includePaths": ["libs/styles/src"]
-          },
-          "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
-
+          "apps/app-sector/src/styles.scss"
+        ],
+        "stylePreprocessorOptions": {
+          "includePaths": ["libs/styles/src"]
+        },
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"]
       },
       "configurations": {
         "production": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/app-sector/src/environments/environment.ts",
+              "with": "apps/app-sector/src/environments/environment.prod.ts"
+            }
+          ],
           "budgets": [
             {
               "type": "initial",
               "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumError": "5mb"
             },
             {
               "type": "anyComponentStyle",
-              "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "maximumWarning": "8kb",
+              "maximumError": "10kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/app-sector/src/environments/environment.ts",
+              "with": "apps/app-sector/src/environments/environment.stage.ts"
             }
           ],
           "outputHashing": "all"
         },
         "development": {
+          "buildOptimizer": false,
           "optimization": false,
+          "vendorChunk": true,
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "namedChunks": true
         }
       },
       "defaultConfiguration": "production"
