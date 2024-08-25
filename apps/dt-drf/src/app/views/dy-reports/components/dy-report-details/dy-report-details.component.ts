@@ -113,7 +113,7 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   watchSlaChanges(value: number) {
-    console.log("VALUE IS:", value)
+    console.log('VALUE IS:', value);
     this.loadingSla = true;
     this.addReportSLA(value);
   }
@@ -188,7 +188,7 @@ export class DyReportDetailsComponent implements OnInit {
       const attachments: MilestoneAttachment[] = [];
 
       if (res[i].status !== 'pending') {
-        byUser = `By ${res[i].completedByName}`;
+        byUser = `By ${res[i].username}`;
       }
 
       if (res[i].status === 'pending') {
@@ -196,12 +196,25 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       for (const taskAttribute of res[i].requestTaskAttributes) {
-        if (taskAttribute.name === 'attachments' || taskAttribute.name === 'creator_attachments') {
+        if (
+          taskAttribute.name === 'attachments' ||
+          taskAttribute.name === 'creator_attachments'
+        ) {
           attachmentsIDs.push(taskAttribute.value);
         }
 
-        if (taskAttribute.name === 'comment' || taskAttribute.name === 'creator_description') {
+        if (
+          taskAttribute.name === 'comment' ||
+          taskAttribute.name === 'creator_description'
+        ) {
           notes = taskAttribute.value;
+        }
+
+        if (
+          taskAttribute.name === 'is_approved_by_initiator' &&
+          taskAttribute.value === 'false'
+        ) {
+          stepCustomState = 'danger';
         }
 
         if (taskAttribute.name === 'delete') {
@@ -402,7 +415,7 @@ export class DyReportDetailsComponent implements OnInit {
     }
 
     if (action === 'Edit Report') {
-      this.router.navigate(['/home/edit_report'], {
+      this.router.navigate(['home/edit_report', this.reportsDetails.id], {
         queryParams: {
           mode: 'edit_report_step',
           id: this.reportsDetails.id,
@@ -533,7 +546,6 @@ export class DyReportDetailsComponent implements OnInit {
           )
           .subscribe((res) => {
             console.log('The res of complete task:', res);
-            this.isLoadingSteps = false;
             this.getReportDetails();
           });
       }
@@ -631,7 +643,6 @@ export class DyReportDetailsComponent implements OnInit {
           )
           .subscribe((res) => {
             console.log('The res of complete task:', res);
-            this.isLoadingSteps = false;
             this.getReportDetails();
           });
       }

@@ -65,7 +65,7 @@
           class="col-md-4"
           *ngIf="form.get('needMoreDataFromCreator')?.value"
         >
-          <stc-apps-select-drop-down
+          <!-- <stc-apps-select-drop-down
             [label]="'Creator Name'"
             (selectChange)="handelCreator($event)"
             [options]="creators"
@@ -74,7 +74,18 @@
             formControlName="creatorEmail"
             [outputValue]="'email'"
             [disabled]="true"
-          ></stc-apps-select-drop-down>
+          ></stc-apps-select-drop-down> -->
+
+          <stc-apps-custom-dropdown
+            formControlName="creatorEmail"
+            [label]="'Creator Name'"
+            [list]="availableUsers()"
+            [searchable]="true"
+            [displayNameProperty]="'name'"
+            [outputProperty]="'email'"
+            [valueProperty]="'email'"
+            (itemSelected)="handelCreator($event)"
+          ></stc-apps-custom-dropdown>
         </div>
       </div>
 
@@ -178,7 +189,10 @@
             </div>
             <ul class="p-0">
               <li
-                *ngFor="let item of t.controls; let i = index"
+                *ngFor="
+                  let item of requestApprovalsGetter.controls;
+                  let i = index
+                "
                 [formGroup]="item"
               >
                 <div class="row align-items-center w-100">
@@ -186,35 +200,34 @@
                     <label>Approval {{ i + 1 }}#:</label>
                   </div>
                   <div class="col-md-5 my-3">
-                    @if (availableUsers.length > 0) {
-                    <!-- <stc-apps-select-drop-down
-                      (selectChange)="onSelectionChange($event, i)"
-                      [searchMode]="true"
-                      [options]="availableUsers"
-                      formControlName="username"
-                      [disabled]="true"
-                      [outputValue]="'email'"
-                    ></stc-apps-select-drop-down> -->
                     <stc-apps-custom-dropdown
                       formControlName="username"
-                      [label]="'some label'"
-                      [list]="availableUsers"
+                      [list]="availableUsers()"
+                      [searchable]="true"
                       [displayNameProperty]="'name'"
                       [valueProperty]="'email'"
-                      (itemSelected)="customDropdownSelectionChange($event)"
-                    />
-                    }
+                      [outputProperty]="'email'"
+                      (itemSelected)="
+                        customDropdownSelectionChange($event, i + 1)
+                      "
+                    ></stc-apps-custom-dropdown>
                   </div>
                   <div class="col-md-1">
-                    <div *ngIf="i !== 0 && !isEditing" class="">
-                      <i class="ri-delete-bin-line" (click)="removeStep(i)"></i>
+                    <div *ngIf="i !== 0 && !isEditing">
+                      <i
+                        class="ri-delete-bin-line"
+                        (click)="removeStep(item, i + 1)"
+                      ></i>
                     </div>
                   </div>
-                  <!-- <div class="col-md-1">
-                    <div class="" *ngIf="isEditing && reportData.requestApprovals[i]?.status !== 'pending'">
+                  <!-- Optional: Show check icon if editing and status is not pending -->
+                  <!--
+                  <div class="col-md-1">
+                    <div *ngIf="isEditing && reportData.requestApprovals[i]?.status !== 'pending'">
                       <i class="pi pi-check"></i>
                     </div>
-                  </div> -->
+                  </div>
+                  -->
                 </div>
               </li>
             </ul>

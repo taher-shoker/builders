@@ -21,6 +21,7 @@
           formControlName="attachment" [isLoading]="isLoading"
           [accept]="configService.getConfig().fileValidation.acceptType"
           [required]="data.approvalState === 'Add Data' ? true : false"
+          [size]="configService.getConfig().fileValidation.sizeWithMegaBytes * 1_048_576"
           (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader>
         }
       </form>

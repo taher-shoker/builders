@@ -1,8 +1,13 @@
 <div class="custom-dropdown-component">
   <!--I make the class name harder as 'dropdown' intervenes with bootstrap!-->
+  @if (label()) {
   <div class="label">
     {{ label() }}
+    @if (required()) {
+    <span style="color: red">*</span>
+    }
   </div>
+  }
 
   <div
     class="dropdown-head"
@@ -21,11 +26,41 @@
 
   @if (showItemsList()) {
   <div class="items-list">
-    @for (item of mutatedList(); track item) {
-    <div class="item" (click)="selectItem(item)">
-      {{ item.componentScopedNameAccessor }}
+    @if (searchable()) {
+    <div class="searcher">
+      <i class="ri-search-line icon"></i>
+      <!-- This is the magnifier icon -->
+      <input type="text" placeholder="Search" (keyup)="filterList($event)" />
+    </div>
+
+    <div class="items-holder">
+      @for (item of filteredList(); track item) {
+      <div class="item" (click)="selectItem(item)">
+        {{ item.componentScopedNameAccessor }}
+      </div>
+      }
+    </div>
+    }@else{
+
+    <div class="items-holder">
+      @for (item of mutatedList(); track item) {
+      <div class="item" (click)="selectItem(item)">
+        {{ item.componentScopedNameAccessor }}
+      </div>
+      }
     </div>
     }
   </div>
   }
 </div>
+
+@if (control?.errors && firstTimeTouched && chosenItem() === null) {
+  <div class="error-holder">
+    <p>This Field Is Required</p>
+  </div>
+}
+
+<!--The Overlay div-->
+@if (showItemsList()) {
+<div class="dt-overlay" (click)="toggleOverlay()"></div>
+}

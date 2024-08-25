@@ -17,30 +17,6 @@ import { ConfigService } from 'apps/dt-drf/src/app/services/config.service';
   styleUrl: './update-report-dialog.component.scss',
 })
 export class UpdateReportDialogComponent {
-  // remarksHint: string = 'You can add remarks optionally';
-  // justificationHint: string = 'Please add justification';
-  // evidenceHint: string = 'Please add Evidence';
-
-  // hint = signal('');
-  // milestoneName = signal('');
-
-  // paramsName = signal('');
-  // paramsValue = signal('');
-
-  // dialogCaption: Signal<string> = computed(() => {
-  //   let status;
-  //   if (this.data.type === Actions.addEvidence.uniqueTitle) {
-  //     status = 'status is completed !';
-  //   } else if (this.data.type === Actions.addJustification.uniqueTitle) {
-  //     status = 'status is delayed !';
-  //   } else if (this.data.type === Actions.addOnTrack.uniqueTitle) {
-  //     status = 'status is on track !';
-  //   } else {
-  //     return `Validation Confirmation | ${this.milestoneName()}`;
-  //   }
-  //   return `${this.milestoneName()} ${status}`;
-  // });
-
   form!: FormGroup;
   showAttachment!: boolean;
 
@@ -63,29 +39,6 @@ export class UpdateReportDialogComponent {
     public configService: ConfigService
   ) {
     this.initForm(data.approvalState);
-    // this.milestoneName.set(data.milestoneName);
-    // if (data.type === Actions.addEvidence.uniqueTitle) {
-    //   this.requireFormControl();
-    //   this.isRequired = true;
-    // }
-    // const hintPrefix = `You're about to`;
-    // const returnHintAction = 'return';
-    // const hintTail =
-    //   "Kindly note you can't roll back this action, Are you sure?";
-
-    // if (data.type === Actions.addEvidence.uniqueTitle) {
-    //   this.hint.set(this.evidenceHint);
-    // } else if (data.type === Actions.addJustification.uniqueTitle) {
-    //   this.hint.set(this.justificationHint);
-    // } else if (this.data.type === Actions.addOnTrack.uniqueTitle) {
-    //   this.hint.set(this.remarksHint);
-    // } else if (
-    //   this.data.type === Actions.returnEvidence.uniqueTitle
-    // ) {
-    //   this.hint.set(
-    //     `${hintPrefix} ${returnHintAction} ${this.milestoneName()}, ${hintTail} `
-    //   );
-    // }
   }
 
   isLoading = false;
