@@ -55,6 +55,32 @@ export class RepliesSectionComponent implements OnInit {
   mentionsArray: string[] = [];
   comments: comment[] = [];
   confirmationBtnDesc = 'Delete';
+  // mentions2 = [
+  //   {
+  //     id: 532,
+  //     name: 'Habiba Mohamed',
+  //     email: 'habiba.mohamed@qeema.net',
+  //     jobTitle: 'Has two roles User Chief, GCEO',
+  //   },
+  //   {
+  //     id: 552,
+  //     name: 'Sara',
+  //     email: 'sara.alkurdy@qeema.net',
+  //     jobTitle: 'Professional Football Player',
+  //   },
+  //   {
+  //     id: 519,
+  //     name: 'Habiba Mohamed',
+  //     email: 'habiba12.mohamed@qeema.net',
+  //     jobTitle: 'Has two roles User Chief',
+  //   },
+  //   {
+  //     id: 614,
+  //     name: 'Noha Yousry',
+  //     email: 'noha.yousry@qeema.net',
+  //     jobTitle: 'Football Manager',
+  //   },
+  // ];
   constructor(
     private fb: FormBuilder,
     private cookieService: CookieService,
@@ -69,12 +95,14 @@ export class RepliesSectionComponent implements OnInit {
     effect(() => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       if (this.newComment().comment) {
-        console.log('in replies', this.newComment());
+        this.cancel();
+        this.cancelReply();
+
         if (this.newComment().replies == null) {
           this.newComment().replies = [];
         }
         this.comments.unshift(this.newComment());
-        console.log('new comment', this.comments);
+
         this.commentsCount();
       }
     });
@@ -89,12 +117,10 @@ export class RepliesSectionComponent implements OnInit {
       this.authService.getUserData();
       this.authService.loggedUserStream.subscribe((res) => {
         this.loggedUserID = res?.id || 0;
-        console.log(this.loggedUserID, 'in replies section');
       });
     }
     this.commentService.commenstList.subscribe((result: comment[]) => {
       if (result[0] && result[0].comment) {
-        console.log('replies section', result);
         this.comments = result;
         this.commentsCount();
       } else {
@@ -104,7 +130,6 @@ export class RepliesSectionComponent implements OnInit {
     });
     this.notificatinService.mentionsList.subscribe((result: user[]) => {
       if (result) {
-        console.log('replies section users', result);
         this.mentions = result;
       } else {
         this.mentions = [];
@@ -117,7 +142,7 @@ export class RepliesSectionComponent implements OnInit {
     });
   }
   mentionObjectChanged(object: user) {
-    console.log(object, 'in replies');
+    // console.log(object, 'in replies');
   }
   findAllIndexes(str: string, searchTerm: string): number[] {
     const indexes: number[] = [];
@@ -146,10 +171,7 @@ export class RepliesSectionComponent implements OnInit {
           this.mentionsArray.includes('@' + mention.name)
         );
     }
-    // console.log('Form Value:', this.form.get('comment')?.value);
-    // console.log('Mentions:', this.mentionsArray);
-    // console.log('Content:', content);
-    // console.log('editedText:', this.editedText());
+
   }
 
   extractMentions(text: string): string[] {
@@ -180,9 +202,9 @@ export class RepliesSectionComponent implements OnInit {
     }
   }
   scrollIntoView() {
-    console.log(this.textArea?.nativeElement);
+  
     if (this.textArea?.nativeElement) {
-      console.log('scrolll 2');
+      
       // window.scrollBy({ top: 300, behavior: 'smooth' });
       this.textArea.nativeElement.scrollIntoView({
         behavior: 'smooth',
@@ -212,7 +234,7 @@ export class RepliesSectionComponent implements OnInit {
     this.form.reset();
   }
   save() {
-    console.log(this.commentActionBtn);
+    
     if (this.commentActionBtn === 'Save') {
       this.saveReply();
     } else {
@@ -221,7 +243,7 @@ export class RepliesSectionComponent implements OnInit {
   }
   refactoringCommaSepartedMention(commaSepartedMentions: string): any[] {
     let mentionsSeparted: any = commaSepartedMentions?.split(',');
-    console.log(mentionsSeparted);
+  
     mentionsSeparted = mentionsSeparted?.map((mention: any) => {
       const pipeSeparted = mention.split('|');
       const mentionObj: user = {
@@ -239,10 +261,10 @@ export class RepliesSectionComponent implements OnInit {
     this.section = 'reply';
     this.commentIndex = commentIndex;
     this.deleteReplyFlag = false;
-
-    console.log(e, commentIndex);
+    this.editReplyTextArea = false;
+    
     if (e == 'Delete') {
-      console.log('inside if');
+     
       this.deleteCommentFlag = true;
       const dialogeDesc = 'Are you sure you want to delete this comment?';
       this.dialogeService.openDialog(
@@ -254,7 +276,7 @@ export class RepliesSectionComponent implements OnInit {
       );
     } else if (e == 'Reply') {
       this.notificatinService.mentionsObjects = [];
-      console.log('inside reply');
+   
       //  this.editedText.set('');
       this.form.reset();
       this.showCommentTextArea = true;
@@ -275,14 +297,14 @@ export class RepliesSectionComponent implements OnInit {
           );
       }
 
-      console.log('inside');
+     
       this.showCommentTextArea = true;
       this.textAreaOpend.emit('opend');
       const comment = this.comments[commentIndex].comment;
       // this.editedText.set(comment);
       this.form.get('comment')?.setValue(comment);
 
-      console.log(this.comments[commentIndex].comment, 'edit');
+      
       this.commentActionBtn = 'Update';
       setTimeout(() => {
         this.scrollIntoView();
@@ -291,7 +313,7 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   deleteComment(commentIndex: number) {
-    console.log(commentIndex);
+    
     this.commentService
       .deleteComment(this.comments[commentIndex].id)
       .subscribe({
@@ -299,9 +321,11 @@ export class RepliesSectionComponent implements OnInit {
           this.toastr.success('Comment Deleted Successfully');
           this.comments.splice(commentIndex, 1);
           this.commentsCount();
+          this.cancel();
         },
         error: () => {
-          this.toastr.error('Unauthorized to delete this comment');
+          this.toastr.error('Error occured while deleting comment');
+          this.cancel();
         },
       });
   }
@@ -347,7 +371,7 @@ export class RepliesSectionComponent implements OnInit {
 
   handleReplyActions(e: string, commentIndex: number, replyIndex: number) {
     this.section = 'reply';
-
+    this.showCommentTextArea = false;
     this.commentIndex = commentIndex;
     this.replyIndex = replyIndex;
     this.deleteCommentFlag = false;
@@ -434,10 +458,17 @@ export class RepliesSectionComponent implements OnInit {
   deleteReply(commentIndex: number, replyIndex: number) {
     this.commentService
       .deleteReply(this.comments[commentIndex].replies[replyIndex].id)
-      .subscribe(() => {
-        this.toastr.success('Reply Deleted Successfully');
-        this.comments[commentIndex].replies?.splice(replyIndex, 1);
-        this.commentsCount();
+      .subscribe({
+        next: () => {
+          this.toastr.success('Reply Deleted Successfully');
+          this.comments[commentIndex].replies?.splice(replyIndex, 1);
+          this.commentsCount();
+          this.cancelReply();
+        },
+        error: () => {
+          this.toastr.success('Error occured while deleting reply');
+          this.cancelReply();
+        },
       });
   }
   editReply() {

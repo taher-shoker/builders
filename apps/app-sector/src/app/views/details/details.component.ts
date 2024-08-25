@@ -15,6 +15,7 @@ import { CookieService } from 'ngx-cookie';
 import { sectorUsersParams, user } from './models/commentsModel';
 import { AuthService } from '../../services/auth.service';
 import { NotificationsService } from './services/notifications.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
@@ -38,13 +39,51 @@ export class DetailsComponent implements OnInit {
     private dashboardService: DashboardService,
     private commentService: commentsService,
     private authService: AuthService,
+    private route: ActivatedRoute,
     private notificationService: NotificationsService,
     private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
-    console.log(this.kpiName);
-    this.dashboardService.kpiNameSubject.next(this.kpiName);
+    this.route.queryParams.subscribe((params) => {
+      console.log(params);
+      if (
+        params['kpiCode'] &&
+        params['year'] &&
+        params['quarter'] &&
+        params['sectorName'] &&
+        params['scorecardTitle']
+      ) {
+        console.log('params');
+        const paramsAPI: SectorKpisDetailsParams = {
+          year: params['year'],
+          quarter: params['quarter'],
+          sectorName: params['sectorName'],
+          scorecardTitle: params['scorecardTitle'],
+          kpiCode: params['kpiCode'],
+        };
+        this.getKpiDetails(paramsAPI);
+        const paramsUsers: sectorUsersParams = {
+          system: 'Score_Card_Report_DB',
+          team: params['sectorName'],
+        };
+        this.getSectorUsers(paramsUsers);
+      } else {
+        const params: SectorKpisDetailsParams = {
+          ...this.sharedFormService.getForm().value,
+          scorecardTitle: this.selectedTab,
+          kpiCode: this.kpiCode,
+        };
+        this.getKpiDetails(params);
+        const paramsUsers: sectorUsersParams = {
+          system: 'Score_Card_Report_DB',
+          team: this.sharedFormService.getForm().value.sectorName,
+        };
+        this.getSectorUsers(paramsUsers);
+      }
+    });
+
+    // console.log(this.kpiName);
 
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
@@ -55,14 +94,8 @@ export class DetailsComponent implements OnInit {
         this.loggedUserID = res?.id || 0;
       });
     }
-    this.getKpiDetails();
-    this.getSectorUsers();
   }
-  getSectorUsers() {
-    const params: sectorUsersParams = {
-      system: 'Score_Card_Report_DB',
-      team: this.sharedFormService.getForm().value.sectorName,
-    };
+  getSectorUsers(params: sectorUsersParams) {
     this.notificationService.getSectorUsers(params).subscribe({
       next: (result: user[]) => {
         result = result.filter((mention) => mention.id !== this.loggedUserID);
@@ -72,12 +105,7 @@ export class DetailsComponent implements OnInit {
       },
     });
   }
-  getKpiDetails() {
-    const params: SectorKpisDetailsParams = {
-      ...this.sharedFormService.getForm().value,
-      scorecardTitle: this.selectedTab,
-      kpiCode: this.kpiCode,
-    };
+  getKpiDetails(params: SectorKpisDetailsParams) {
     this.dashboardService
       .getSectorKpisDetails(params)
       .subscribe((result: any) => {
@@ -95,6 +123,9 @@ export class DetailsComponent implements OnInit {
               this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
               this.commentService.commenstList.next(
                 kpiArray[kpiDTO][0].commentList
+              );
+              this.dashboardService.kpiNameSubject.next(
+                kpiArray[kpiDTO][0].kpiName
               );
               this.categoryKpiLists[kpiSubGrouping][kpiDTO.kpiName]?.push(
                 kpiDTO

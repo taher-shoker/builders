@@ -237,7 +237,7 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
     console.log('onChange', item);
   }
   mentionClick(item: any) {
-    console.log(this.notificationService.getmentionObjects());
+    console.log('adding item',this.notificationService.getmentionObjects());
 
     this.notificationService.addMentionObjects(item);
 

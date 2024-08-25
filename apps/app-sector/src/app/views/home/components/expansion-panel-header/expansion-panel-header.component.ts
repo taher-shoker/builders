@@ -14,13 +14,20 @@ export class ExpansionPanelHeaderComponent {
 
   statusBackground(status: string): string {
     if (status.toLowerCase() === 'on track') return 'rgba(0, 196, 140, 0.15)';
-    else if (status.toLowerCase() === 'delayed')
+    else if (
+      status.toLowerCase() === 'delayed' ||
+      status.toLowerCase() == 'delay'
+    )
       return 'rgba(255, 26, 26, 0.1)';
     else return '';
   }
   statusColor(status: string): string {
     if (status.toLowerCase() === 'on track') return 'var(--stcOasisColor)';
-    else if (status.toLowerCase() === 'delayed') return 'var(--stc-red-color)';
+    else if (
+      status.toLowerCase() === 'delayed' ||
+      status.toLowerCase() == 'delay'
+    )
+      return 'var(--stc-red-color)';
     else return '';
   }
 }
