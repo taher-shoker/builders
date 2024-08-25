@@ -12,6 +12,7 @@ export interface LoggedUser {
   name: string;
   jobTitle: string;
   roles: string[];
+  userGroups: any[];
   teamName: null | string;
 }
 export interface AuthResponseData {
