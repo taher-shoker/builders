@@ -7,10 +7,11 @@ import { DataUploadTableComponent } from './components/data-upload-table/data-up
 import { LogsTableComponent } from './components/logs-table/logs-table.component';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { FormsModule } from '@angular/forms';
 
 
 const components = [UploadFileComponent, DataUploadTableComponent,LogsTableComponent];
-const modules = [CommonModule,MatTableModule,MatPaginatorModule, RouterModule.forChild(appRoutes)];
+const modules = [CommonModule,FormsModule,MatTableModule,MatPaginatorModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
   declarations: [components],

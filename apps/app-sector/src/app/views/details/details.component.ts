@@ -30,6 +30,7 @@ export class DetailsComponent implements OnInit {
   kpiName = window.history.state.kpiName;
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
+  pathKpiCode: string | null = '';
   loggedUserID = 0;
   categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
   baseUrl = environment.apiUrl;
@@ -44,6 +45,9 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((paramMap) => {
+      this.pathKpiCode = paramMap.get('KPICode');
+    });
     this.route.queryParams.subscribe((params) => {
       console.log(params);
       if (
@@ -68,10 +72,11 @@ export class DetailsComponent implements OnInit {
         };
         this.getSectorUsers(paramsUsers);
       } else {
+        const selectedTab = this.cookieService.get('selectedTab');
         const params: SectorKpisDetailsParams = {
           ...this.sharedFormService.getForm().value,
-          scorecardTitle: this.selectedTab,
-          kpiCode: this.kpiCode,
+          scorecardTitle: selectedTab,
+          kpiCode: this.pathKpiCode,
         };
         this.getKpiDetails(params);
         const paramsUsers: sectorUsersParams = {

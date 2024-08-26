@@ -31,10 +31,24 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   navItems: any[] = [
     {
       name: 'home',
-      url: '/home',
+      url: '/sectors/sectorID',
       icon: 'fa-home',
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
+    },
+    {
+      name: 'data upload',
+      url: '/data-upload',
+      icon: 'fa-upload',
+      roles: ['APPROVERS'],
+      urlHome: '/sectors/:sectorID',
+    },
+    {
+      name: 'Sectors',
+      url: '/sectors',
+      icon: 'fa-home',
+      roles: ['APPROVERS'],
+      urlHome: '/sectors/:sectorID',
     },
   ];
 
@@ -45,6 +59,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
+    
     //this.userName='Habiba';
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
@@ -58,13 +73,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
         res?.userGroups.map((group) => {
           if (group.groupName == 'Data_Admins') {
             console.log('hey');
-            this.navItems.push({
-              name: 'data upload',
-              url: '/data-upload',
-              icon: 'fa-upload',
-              roles: ['APPROVERS'],
-              urlHome: '/home',
-            });
+           // this.navItems.push();
           }
         });
         this.userName = res?.name || '';
@@ -76,6 +85,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/']);
   }
   logOut() {
-     this.authService.logout();
+    this.authService.logout();
   }
 }

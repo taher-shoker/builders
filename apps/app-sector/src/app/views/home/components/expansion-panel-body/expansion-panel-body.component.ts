@@ -71,13 +71,17 @@ export class ExpansionPanelBodyComponent {
   }
 
   navigateToDetails() {
-    this.router.navigate(['/details'], {
-      state: {
-        kpiCode: this.kpiCode(),
-        selectedTab: this.selectedTab(),
-        kpiName: this.kpiName(),
-      },
-    });
+    this.router.navigate(
+      ['/KPI', this.kpiCode()],
+
+      {
+        state: {
+          kpiCode: this.kpiCode(),
+          selectedTab: this.selectedTab(),
+          kpiName: this.kpiName(),
+        },
+      }
+    );
   }
 
   isNumber(value: any): value is number {

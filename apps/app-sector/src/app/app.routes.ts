@@ -9,15 +9,15 @@ export const appRoutes: Route[] = [
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', redirectTo: 'home', pathMatch: 'full' },
+      { path: '', redirectTo: 'sectors/:sectorName', pathMatch: 'full' },
       {
-        path: 'home',
+        path: 'sectors/:sectorName',
         loadChildren: () =>
           import('./views/home/home.module').then((m) => m.HomeModule),
         canActivate: [sectorGuard, authGuard],
       },
       {
-        path: 'details',
+        path: 'KPI/:KPICode',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
         canActivate: [sectorGuard, authGuard],
@@ -33,7 +33,7 @@ export const appRoutes: Route[] = [
     ],
   },
   {
-    path: 'welcome',
+    path: 'sectors',
     component: WelcomePageComponent,
     canActivate: [authGuard],
   },

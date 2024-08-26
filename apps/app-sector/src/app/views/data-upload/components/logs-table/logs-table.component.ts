@@ -1,4 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  effect,
+  input,
+  InputSignal,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { logs } from '../../models/logModel';
@@ -11,7 +18,18 @@ import { DataUploadService } from '../../services/data-upload.service';
 })
 export class LogsTableComponent implements OnInit {
   ELEMENT_DATA: logs[] = [];
-  constructor(private dataUploadService: DataUploadService) {}
+  searchValue: InputSignal<string> = input('');
+  constructor(private dataUploadService: DataUploadService) {
+    effect(() => {
+      if (this.searchValue()) {
+        this.ELEMENT_DATA = this.ELEMENT_DATA.filter((history) =>
+          history.originalFileName
+            .toLowerCase()
+            .includes(this.searchValue().toLowerCase())
+        );
+      }
+    });
+  }
 
   displayedColumns: string[] = [
     'jobId',
