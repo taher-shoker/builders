@@ -1,0 +1,51 @@
+.replies-section {
+  &_totalComments {
+    font-size: 20px;
+    font-family: var(--stc-font-meduim);
+    margin-bottom: 28px;
+    line-height: 20px;
+    color: var(--semiBlackColor);
+  }
+
+  &_add-reply {
+    display: block;
+    width: 90%;
+    margin: 12px 32px;
+  }
+
+  &_holder {
+    border: 1px solid var(--semiGreyColor);
+    border-radius: 6px;
+    margin-bottom: 28px;
+    max-height: 410px;
+    overflow: auto;
+  }
+
+  &_add-reply-actions {
+    display: flex;
+    justify-content: end;
+    margin: 12px 32px;
+
+    button {
+      border: none;
+      background: transparent;
+      padding: 8px 20px;
+      border-radius: 3px;
+      display: flex;
+      color: var(--whiteColor);
+
+      &:first-child {
+        background: var(--backgroundGrey);
+      }
+
+      &:last-child {
+        margin-left: 12px;
+        background: var(--stcCoralColor);
+
+        &:disabled {
+          opacity: 0.4;
+        }
+      }
+    }
+  }
+}

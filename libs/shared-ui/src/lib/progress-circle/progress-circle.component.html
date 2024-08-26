@@ -1,0 +1,10 @@
+<div
+  class="progress-circule"
+  role="progresscircule"
+  [style]="'--value:' + progressValue()"
+  [ngStyle]="{ background: conicGradient(), '--size': progressSize() }"
+>
+  @if (showProgress()) {
+  <span class="circle-content">{{ progressValue() | percent }}</span>
+  }
+</div>

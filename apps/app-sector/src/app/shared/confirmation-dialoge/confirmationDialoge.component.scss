@@ -1,0 +1,30 @@
+.mat-dialoge {
+  padding: 24px 12px;
+  border-radius: 12.5px;
+}
+::ng-deep {
+  .mat-mdc-dialog-container-with-actions .mat-mdc-dialog-content {
+    font-family: var(--stc-font-meduim);
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 27px;
+    color: var(--blackColor) !important;
+    margin-bottom: 45px;
+  }
+  .mdc-dialog__actions {
+    button {
+      border: none !important;
+      outline: none !important;
+      padding: 12px 44px;
+      border-radius: 6px;
+    }
+    .mat-dialog-confirm {
+      background-color: var(--stcCoralColor) !important;
+      color: var(--whiteColor);
+      margin-left: 12px;
+    }
+    .mat-dialoge-close {
+      color: var(--blackColor);
+    }
+  }
+}

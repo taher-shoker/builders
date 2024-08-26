@@ -13,6 +13,7 @@ export const environment = {
     jira_system: '/cem/reporting/jiradashboard/',
     dynamic_rf_system: '/cem/reporting/dynamic-rf-workspace/',
     business_excellence_system: '/cem/reporting/business-excellence-workspace/',
+    score_card_report_db: '/cem/reporting/score-card-report/',
   },
   sso_url: '/reporting-api/saml/saml/login',
   languageFilesPath: '/cem/reporting/assets/i18n/',

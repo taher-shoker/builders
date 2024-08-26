@@ -1,0 +1,39 @@
+<div class="comments">
+  <div class="comments_form">
+    <!-- @if(title()){
+    <div class="comments_form_header">
+      <h3>{{ title() }}</h3>
+      <img src="assets/images/chat.svg" />
+    </div>
+    } -->
+
+    <div class="comments_form_content">
+      <div
+        [innerHTML]="editedText()"
+        #contentEditable
+        contenteditable="true"
+        [attr.data-placeholder]="placeholder()"
+        class="comments_form_editor"
+        id="myDiv"
+        (input)="onInput($event)"
+        (keyup)="onKeyUp($event)"
+      ></div>
+    </div>
+  </div>
+  @if (showDropdown && content) {
+  <ul #mentionList class="comments_mentions">
+    @for (item of filteredList; track item; let index = $index) {
+    <li
+      (click)="mentionClick(item); addMention(item[mentionProperty()])"
+      [ngClass]="{ active: index === activeMentionIndex }"
+    >
+      <stc-apps-profile
+        [name]="item[mentionProperty()]"
+        [comment]="item.jobTitle"
+        [lastItem]="index === filteredList.length - 1"
+      ></stc-apps-profile>
+    </li>
+    }
+  </ul>
+  }
+</div>

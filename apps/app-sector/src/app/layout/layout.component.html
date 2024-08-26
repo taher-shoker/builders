@@ -1,0 +1,17 @@
+@if (loaderService.isLoading$ | async) {
+<stc-apps-loader></stc-apps-loader>
+}
+<stc-apps-header
+  [userName]="userName"
+  [logoSrc]="logoSrc"
+  [allItems]="navItems"
+  [sidebarLogoSrc]="sidebarLogoSrc"
+  (logOut)="logOut()"
+  (backToHome)="backToHome()"
+  [showLang]="false"
+></stc-apps-header>
+
+<stc-apps-top-banner [userName]="userName"></stc-apps-top-banner>
+<div class="py-4">
+  <router-outlet></router-outlet>
+</div>

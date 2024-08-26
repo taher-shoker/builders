@@ -1,0 +1,21 @@
+import { ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { CommentEditorComponent } from './comment-editor.component';
+
+describe('CommentEditorComponent', () => {
+  let component: CommentEditorComponent;
+  let fixture: ComponentFixture<CommentEditorComponent>;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      declarations: [CommentEditorComponent]
+    });
+    fixture = TestBed.createComponent(CommentEditorComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

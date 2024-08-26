@@ -1,0 +1,73 @@
+@import '../../../../../../../../libs/styles/src/scss/core/variables/colors';
+@import '../../../../../../../../libs/styles/src/scss/core/variables/fonts';
+
+.expansion-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+ // overflow: hidden;
+
+  &_score {
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  &_list {
+    list-style: none;
+    border-radius: 10px;
+    padding: 24px;
+    background-color: var(--whiteColor);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    li {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+
+      label {
+        color: var(--grey-color);
+        font-family: 'stc forward-regular';
+      }
+
+      span {
+        color: var(--grayColor);
+        font-family: 'stc forward-medium';
+      }
+    }
+  }
+
+  &_bar {
+    margin: 60px 0px;
+  }
+
+  &_details {
+    display: flex;
+    justify-content: end;
+
+    a {
+      text-decoration: underline;
+      cursor: pointer;
+      color: var(--stc-color);
+      font-size: 16px;
+    }
+  }
+
+  ::ng-deep {
+    stc-apps-result-score .score {
+      @media screen and (max-width: 766px) and (min-width: 482px) {
+        > div {
+          width: 50%;
+        }
+      }
+
+      &_percent {
+        h1 {
+          margin-inline-end: 16px;
+          font-size: 24px;
+        }
+      }
+    }
+  }
+}

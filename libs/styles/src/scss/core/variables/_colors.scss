@@ -1,4 +1,5 @@
 @import './fonts';
+
 :root {
   --stc-color: #4f008c;
   --grey-color: #8e9aa0;
@@ -12,8 +13,32 @@
   --stc-font-meduim: 'stc forward-medium';
   --stc-font-bold: 'stc forward-bold';
   --stc-color-very-light: #e3dde9;
-  --stc-sky-blue-color: #1BCED8;
+  --stc-sky-blue-color: #1bced8;
 
+  --blackColor: #000000;
+  --semiGreyColor: #e0e2e7;
+  --stcCoralColor: #ff375e;
+  --darkGreyColor: #6f727a;
+  --stcLightGray: #f5f5f5fb;
+  --whiteColor: #ffffff;
+  --lightGreyColor: #919191;
+  --semiBlackColor: #1c1c1c;
+  --backgroundGrey: #aaaaaa;
+  --darkPurbleColor: #17191c;
+  --stcSunsetColor: #ff6a39;
+  --grayColor: #1d252d;
+  --stcOasisColor: #00c48c;
+
+  --darkPurpleColor: #292d32;
+  --mediumGrey: #858585;
+  --lightPurpleColor: #4f008c12;
+  --fontGreyColor: #8692a6;
+  --purpleIconBg: #420274;
+  --seaBlue: #1565d8;
+  --lightBlue: #f5f9ff;
+  --semiPurbleColor: #37045f;
+  --greyIconBg: #e8e8e8;
+  --lighterGreyColor: #f5f6fa;
 }
 
 // GMPO palette color
@@ -43,3 +68,23 @@ $yellowColor: #ffc107;
 $greyColor: #8e9aa0;
 $pinkColor: #ff375e;
 $newPurbleColor: #edd2ff;
+
+$darkPurbleColor: #17191c;
+$lightPurbleColor: #4f008c12;
+$lightGreyColor: #d4d4d4;
+$darkPurpleColor: #40036e;
+$originalBalck: #000000;
+$lighterGreyColor: #f5f6fa;
+$fontGreyColor: #8692a6;
+$purpleIconBg: #420274;
+$greyIconBg: #e8e8e8;
+$lightBlue: #f5f9ff;
+$seaBlue: #1565d8;
+$semiBlackColor: #1c1c1c;
+$semiGreyColor: #e0e2e7;
+$semiPurbleColor: #37045f;
+$darkerPurbleColor: #292d32;
+$darkGreyColor: #6f727a;
+$mediumGrey: #858585;
+$backgroundGrey: #aaaaaa;
+$lightGreyColor: #919191;

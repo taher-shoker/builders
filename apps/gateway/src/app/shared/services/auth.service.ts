@@ -142,7 +142,8 @@ export class AuthService {
       res.dto.systems.includes('DI_Management') ||
       res.dto.systems.includes('DI_Milestones') ||
       res.dto.systems.includes('Dynamic_Report_Flow') ||
-      res.dto.systems.includes('Business_Excellence_Dashboard')
+      res.dto.systems.includes('Business_Excellence_Dashboard') ||
+      res.dto.systems.includes('Score_Card_Report_DB')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -177,7 +178,8 @@ export class AuthService {
       res.dto.systems.includes('DI_Milestones') ||
       res.dto.systems.includes('Dynamic_Report_Flow') ||
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
-      res.dto.systems.includes('Jira_Dahsboard')
+      res.dto.systems.includes('Jira_Dahsboard') ||
+      res.dto.systems.includes('Score_Card_Report_DB')
     ) {
       this.setLoggedInUser();
     }
@@ -211,6 +213,9 @@ export class AuthService {
     }
     if (res.dto.systems.includes('Jira_Dahsboard')) {
       this.gratnedSystems.push('Jira_Dahsboard');
+    }
+    if (res.dto.systems.includes('Score_Card_Report_DB')) {
+      this.gratnedSystems.push('Score_Card_Report_DB');
     }
     this.setLoggedInUser();
   }
@@ -268,10 +273,12 @@ export class AuthService {
       Dynamic_Report_Flow: environment.systems.dynamic_rf_system,
       Business_Excellence_Dashboard:
         environment.systems.business_excellence_system,
+      Score_Card_Report_DB: environment.systems.score_card_report_db,
     };
     const url = systemUrls[system];
     if (url) {
-      window.location.href = window.location.origin + url;
+      // window.location.href = window.location.origin + url;
+      window.location.href = url;
     } else {
       console.log('not handled system');
     }
@@ -449,6 +456,16 @@ export class AuthService {
                   window.location.origin + environment.systems.jira_system,
                 name: 'Jira Dashboard',
                 displayName: 'Jira Dashboard',
+              });
+              break;
+            case 'Score_Card_Report_DB':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin +
+                  environment.systems.score_card_report_db,
+                name: 'Score Card Report',
+                displayName: 'Score Card Report',
               });
               break;
             default:
