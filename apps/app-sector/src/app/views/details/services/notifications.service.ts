@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { environment } from 'apps/app-sector/src/environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
-  comment,
   notificationBody,
   sectorUsersParams,
   user,

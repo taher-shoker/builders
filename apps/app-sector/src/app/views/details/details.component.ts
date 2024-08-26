@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import {
   kpiCard,
+  KpiDetailsResponse,
   KpiDTOMap,
   SectorKpisDetailsParams,
 } from '../models/SectorKpisDetails.model';
@@ -8,7 +9,6 @@ import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
 import { SharedFormService } from '../home/services/shared-form.service';
 import { DashboardService } from '../home/services/dashboard.service';
 import { commentsService } from './services/comments.service';
-import { HttpClient } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { environment } from 'apps/app-sector/src/environments/environment';
 import { CookieService } from 'ngx-cookie';
@@ -31,7 +31,6 @@ export class DetailsComponent implements OnInit {
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
   loggedUserID = 0;
-  loggedUserObject: any;
   categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
   baseUrl = environment.apiUrl;
   constructor(
@@ -108,7 +107,7 @@ export class DetailsComponent implements OnInit {
   getKpiDetails(params: SectorKpisDetailsParams) {
     this.dashboardService
       .getSectorKpisDetails(params)
-      .subscribe((result: any) => {
+      .subscribe((result: KpiDetailsResponse) => {
         this.kpiDTOMap = result.kpiDTOMap;
         this.categoryKpiLists = {};
         if (this.kpiDTOMap && typeof this.kpiDTOMap === 'object') {
