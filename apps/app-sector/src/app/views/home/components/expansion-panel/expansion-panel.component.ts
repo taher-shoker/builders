@@ -19,8 +19,7 @@ import { MatExpansionPanel } from '@angular/material/expansion';
   styleUrl: './expansion-panel.component.scss',
 })
 export class ExpansionPanelComponent {
-  //kpiDTOList: InputSignal<KpiDTO[] | any> = input([]);
-  kpi: InputSignal<KpiDTO | any> = input({} as KpiDTO);
+  kpi: InputSignal<KpiDTO> = input({} as KpiDTO);
   @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
   panelOpenState = false;
   newTabSelected: InputSignal<string> = input('');
