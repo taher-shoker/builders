@@ -59,7 +59,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   filteredOptions: Observable<User[]>[] = [];
   selectedOptions: string[] = [];
   customRangeSLA: { name: number; id: number }[] = [];
-  categories!: Category[];
+  categories: WritableSignal<Category[]> = signal([]);
 
   paramsId!: string;
   paramsMode!: string;
@@ -482,7 +482,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
   handleGategory(item: number) {
-    const selectedCategory = this.categories.filter(
+    const selectedCategory = this.categories()?.filter(
       (c: Category) => c?.id === item
     )[0];
     // Set the form control value to the found category's slaDuration or default to 0
@@ -507,7 +507,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   private getCategories() {
     this.reportsService.getCategories().subscribe((res) => {
-      this.categories = res;
+      this.categories.set(res);
     });
   }
 
