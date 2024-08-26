@@ -3,6 +3,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { logs } from '../../models/logModel';
 import { DataUploadService } from '../../services/data-upload.service';
+import { LogService } from '../../services/log.service';
 
 @Component({
   selector: 'stc-apps-logs-table',
@@ -11,7 +12,10 @@ import { DataUploadService } from '../../services/data-upload.service';
 })
 export class LogsTableComponent implements OnInit {
   ELEMENT_DATA: logs[] = [];
-  constructor(private dataUploadService: DataUploadService) {}
+  constructor(
+    private dataUploadService: DataUploadService,
+    private logService: LogService
+  ) {}
 
   displayedColumns: string[] = [
     'jobId',
@@ -30,16 +34,26 @@ export class LogsTableComponent implements OnInit {
   // ngAfterViewInit() {}
   ngOnInit(): void {
     this.getLogsHistory();
+    this.subscribeToLogUpdates();
   }
   getLogsHistory() {
     this.dataUploadService.getLogHistory().subscribe({
       next: (result) => {
         this.ELEMENT_DATA = result;
-        console.log(this.ELEMENT_DATA, 'dataupload');
+        // console.log(this.ELEMENT_DATA, 'dataupload');
 
         this.dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
         this.dataSource.paginator = this.paginator;
       },
+    });
+  }
+
+  subscribeToLogUpdates() {
+    this.logService.logUpdates.subscribe((newLog) => {
+      if (newLog) {
+        this.ELEMENT_DATA.unshift(newLog);
+        this.dataSource.data = [...this.ELEMENT_DATA];
+      }
     });
   }
 }
