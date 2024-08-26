@@ -1,12 +1,15 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   Input,
   OnChanges,
   OnInit,
+  signal,
   SimpleChanges,
   ViewChild,
+  WritableSignal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -32,6 +35,7 @@ import {
   RequestTaskAttributes,
   UploadResponse,
 } from '../../dy-reports.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
@@ -57,10 +61,11 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   customRangeSLA: { name: number; id: number }[] = [];
   categories!: Category[];
 
-  // Fixation of Users issue.
-  allUsers: User[] = [];
-  filteredUsers: User[] = [];
-  availableUsers: User[] = [];
+  paramsId!: string;
+  paramsMode!: string;
+  paramsFlowId!: string;
+  paramsRequestTaskId!: string;
+  availableUsers: WritableSignal<User[]> = signal([]);
 
   constructor(
     private _formBuilder: FormBuilder,
@@ -68,10 +73,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
-    private configService: ConfigService
-  ) {
-    this.initForm();
-  }
+    private configService: ConfigService,
+    private location: Location
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reportData'] && this.reportData) {
@@ -80,15 +84,58 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    this.loadInitialData();
+    // this.initForm();
+    // this.loadInitialData();
+    
+    this.initForm();
+    this.fetchUsers();
+    this.populateCustomSLA();
+    this.getCategories();
     this.fetchDataOfReportAndEditIfExists();
-    this.handleUserFiltration();
   }
+
   private noWhitespaceValidator(control: FormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
     return isValid ? null : { whitespace: true };
   }
+
+  // private initForm() {
+  //   this.form = this._formBuilder.group({
+  //     reportName: [
+  //       '',
+  //       [
+  //         Validators.required,
+  //         Validators.maxLength(100),
+  //         this.noWhitespaceValidator,
+  //       ],
+  //     ],
+  //     description: [
+  //       '',
+  //       [
+  //         Validators.required,
+  //         Validators.maxLength(
+  //           this.configService.getConfig().characterLimit.descriptionLength
+  //         ),
+  //         this.noWhitespaceValidator,
+  //       ],
+  //     ],
+  //     requestCategoryId: ['', Validators.required],
+  //     slaDurationInDays: [
+  //       '',
+  //       [
+  //         Validators.pattern('^[0-9]+$'),
+  //         Validators.max(this.configService.getConfig().rangeForSLA.max),
+  //       ],
+  //     ],
+  //     needMoreDataFromCreator: [0],
+  //     initiatorShouldApprove: [0],
+  //     creatorEmail: [''],
+  //     attachments: [[], Validators.required],
+  //     requestApprovals: this._formBuilder.array([]),
+  //   });
+  // }
+
   private initForm() {
     this.form = this._formBuilder.group({
       reportName: [
@@ -103,19 +150,14 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         '',
         [
           Validators.required,
-          Validators.maxLength(
-            this.configService.getConfig().characterLimit.descriptionLength
-          ),
+          Validators.maxLength(1000),
           this.noWhitespaceValidator,
         ],
       ],
       requestCategoryId: ['', Validators.required],
       slaDurationInDays: [
         '',
-        [
-          Validators.pattern('^[0-9]+$'),
-          Validators.max(this.configService.getConfig().rangeForSLA.max),
-        ],
+        [Validators.pattern('^[0-9]+$'), Validators.max(14)],
       ],
       needMoreDataFromCreator: [0],
       initiatorShouldApprove: [0],
@@ -125,10 +167,18 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
 
+  private fetchUsers() {
+    this.getUsers().subscribe((users: User[]) => {
+      this.users = users;
+      this.availableUsers.set([...users].sort((a, b) => a.id - b.id)); // Clone the list of available users
+      this.fetchDataOfReportAndEditIfExists();
+    });
+  }
+
   private loadInitialData() {
     this.getUsers().subscribe(() => {
       this.setupInitialFilteredOptions();
-      this.handleUserFiltration();
+      // this.handleUserFiltration();
     });
     this.populateCustomSLA();
     this.getCategories();
@@ -137,29 +187,22 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   private setupInitialFilteredOptions() {
     // Setup filtered options for each approval step
     this.addNewStep();
-    this.t.controls.forEach((control, index) => {
-      // this.manageUserNameControl(index);
+    this.requestApprovalsGetter.controls.forEach((control, index) => {
+      this.manageUserNameControl(index);
       // this.handleUserFiltration();
     });
   }
-
-  paramsId!: string;
-  paramsMode!: string;
-  paramsflowId!: string;
-  paramsRequestTaskId!: string;
 
   fetchDataOfReportAndEditIfExists(): void {
     this.route.queryParams.subscribe((params) => {
       this.paramsId = params['id'];
       this.paramsMode = params['mode'];
-      this.paramsflowId = params['flowId'];
-      this.paramsRequestTaskId = params['requestTaskId'];
+      this.paramsFlowId = params['flowId']; // Needed for complete task method
+      this.paramsRequestTaskId = params['requestTaskId']; // Needed for complete task method
 
       if (this.paramsMode === 'edit_report_step' && this.paramsId) {
-        this.paramsMode = 'edit_report_step';
         this.reportsService.getReport(this.paramsId).subscribe({
           next: (res) => {
-            console.log(res);
             this.resetFormWithValueForEditStep(res);
           },
           error: (err) => {
@@ -196,6 +239,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private resetFormWithValueForEditStep(data: ReportDetails) {
+    console.log("El resetFormWithValueForEditStep data:", data)
     this.form.patchValue({
       reportName: data.reportName,
       description: data.description,
@@ -203,26 +247,77 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       needMoreDataFromCreator: !!data.creatorEmail,
       creatorEmail: data.creatorEmail || '',
       slaDurationInDays: data.requestCategory.slaDuration || 0,
+      attachments: data.attachments.map((attachment) => attachment.id),
+      // attachments: data.attachments,
     });
-
-    // Clear existing array and add new controls
 
     this.uploadedFiles.next(data.attachments);
 
-    // Disable certain form controls if needed
-    this.form.get('description');
-    this.form.get('requestCategoryId');
-    this.form.get('needMoreDataFromCreator');
-    this.form.get('creatorEmail');
-    this.form.get('initiatorShouldApprove');
-    this.form.get('attachments');
-    this.form.get('slaDurationInDays');
-    const requestApprovalsArray = this.form.get(
+    this.populateRequestApprovals(data.requestApprovals);
+  }
+
+  private populateRequestApprovals(approvals: ReportDetails['requestApprovals']) {
+    const requestApprovalsFormArray = this.form.get(
       'requestApprovals'
     ) as FormArray;
-    requestApprovalsArray.controls.forEach((c) => {
-      c.get('username')?.disable();
+    approvals.forEach((approval) => {
+      const user = this.users.find((u) => u.email === approval.username);
+      if (user) {
+        requestApprovalsFormArray.push(this.createApprovalFormGroup(user));
+        this.removeFromAvailableUsers(user);
+      }
     });
+    console.log("form finally is :", this.form.value)
+
+  }
+
+  private createApprovalFormGroup(user: User): FormGroup {
+    return this._formBuilder.group({
+      user: [user, Validators.required],
+    });
+  }
+
+  private removeFromAvailableUsers(user: User) {
+    this.availableUsers.set(
+      this.availableUsers()
+        .filter((u) => u.email !== user.email)
+        .sort((a, b) => a.id - b.id)
+    );
+  }
+
+  protected addUserApproval(user: User | null) {
+    // Ensure the user is not null before proceeding
+    if (user) {
+      const approvalControl = this._formBuilder.group({
+        username: [user.email, Validators.required],
+        // Additional form controls related to the user approval can go here
+      });
+
+      this.requestApprovalsGetter.push(approvalControl);
+
+      // Remove the selected user from availableUsers list
+      this.availableUsers.set(
+        this.availableUsers().filter(
+          (availableUser) => availableUser.email !== user.email
+        )
+      );
+    } else {
+      console.error('Invalid user selection: User is null');
+    }
+  }
+
+  protected removeUserApproval(index: number) {
+    const requestApprovalsFormArray = this.form.get(
+      'requestApprovals'
+    ) as FormArray;
+    const userControl = requestApprovalsFormArray.at(index).get('user');
+    const user = userControl?.value;
+    if (user) {
+      this.availableUsers.set(
+        [...this.availableUsers(), user].sort((a, b) => a.id - b.id)
+      );
+    }
+    requestApprovalsFormArray.removeAt(index);
   }
 
   private createApprovalControl(approval: any): FormGroup {
@@ -235,19 +330,26 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
   handelCreator(value: string) {
-    this.approvers = this.creators.filter((a: User) => a.email !== value);
+    // this.approvers = this.creators.filter((a: User) => a.email !== selectedValue);
     // Find and remove the selected value from the FormArray
-    this.t.controls.forEach((control, index) => {
-      if (control.get('username')?.value === value) {
-        this.t.removeAt(index);
-      }
-    });
-    this.selectedOptions = this.selectedOptions.filter((s) => s !== value);
-    this.updateFilteredOptions();
+    // this.requestApprovalsGetter.controls.forEach((control, index) => {
+    //   if (control.get('username')?.value === selectedValue) {
+    //     this.requestApprovalsGetter.removeAt(index);
+    //   }
+    // });
+    // this.selectedOptions = this.selectedOptions.filter((s) => s !== selectedValue);
+    // this.updateFilteredOptions();
+    this.refetchAvailableUsers(0);
+    this.customDropdownSelectionChange(value, 0);
   }
   onSubmit() {
+    console.log('Form Controls:', this.form.controls);
+    Object.keys(this.form.controls).forEach(key => {
+      const control = this.form.get(key);
+      console.log(`Control: ${key}, Status: ${control?.status}, Errors: ${control?.errors}, value: ${control?.value}`);
+    });
+
     if (this.form.invalid) {
-      console.log(this.form.controls);
       this.markFormGroupTouched(this.form);
       return;
     }
@@ -265,7 +367,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
     const handleSuccessStepEdit = (message: string) => {
       this.toastr.success(message);
-      this.router.navigate(['../']);
+      this.router.navigate(['../'], { relativeTo: this.route });
     };
 
     const handleError = () => {
@@ -275,6 +377,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
     if (this.paramsMode === 'edit_report_step') {
       console.log('Req Approvals', this.form.get('requestApprovals')?.value);
+      console.log("form before submission is :", this.form.value)
 
       const params: RequestTaskAttributes = {
         requestParams: [
@@ -283,7 +386,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           { name: 'description', value: this.form.get('description')?.value },
           {
             name: 'attachments',
-            value: this.idsJoiner(this.form.get('attachments')?.value),
+            value: this.idsJoinerWithNoExtraction(this.form.get('attachments')?.value),
           },
           {
             name: 'request_approvals',
@@ -302,7 +405,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           {
             name: 'initiator_should_approve',
-            value: this.form.get('initiatorShouldApprove')?.value,
+            value: this.form.get('initiatorShouldApprove')?.value ? 1 : 0,
           },
           {
             name: 'request_category',
@@ -310,18 +413,22 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           {
             name: 'sla_duration',
-            value: this.form.get('slaDurationInDays')?.value,
+            value: Number(this.form.get('slaDurationInDays')?.value),
           },
         ],
       };
       this.reportsService
         .completePendingTask(
-          this.paramsflowId,
+          this.paramsFlowId,
           this.paramsRequestTaskId,
           params
         )
         .subscribe({
-          next: () => handleSuccessStepEdit('Edit Step is success'),
+          next: () => {
+            handleSuccessStepEdit('Edit Step is success')
+            this.location.back();
+
+          },
           error: handleError,
           complete: () => (this.isSubmitLoading = false),
         });
@@ -347,12 +454,21 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private idsJoiner(arrOfObjs: { id: string }[]) {
+    console.log("Got this arr of ids:", arrOfObjs)
     const newArr = arrOfObjs.map((x) => x.id);
-    return newArr.join('@#%@#%Z%#@%#@');
+    const final =  newArr.join('@#%@#%Z%#@%#@');
+    return final
   }
 
-  private usernamesJoiner(arrOfObjs: { username: string }[]) {
-    const newArr = arrOfObjs.map((x) => x.username);
+  private idsJoinerWithNoExtraction(arrOfObjs: number[]) {
+    console.log("Got this arr of ids:", arrOfObjs)
+    const final = arrOfObjs.join('@#%@#%Z%#@%#@');
+    return final
+  }
+
+  private usernamesJoiner(arrOfObjs: {user:{ username: string }}[]) {
+    console.log("Got this arr of username:", arrOfObjs)
+    const newArr = arrOfObjs.map((x) => x.user.username);
     return newArr.join('@#%@#%Z%#@%#@');
   }
 
@@ -402,9 +518,11 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       id: min + i,
     }));
   }
+
   cancel() {
-    this.router.navigate(['../']);
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
+
   preventComma(event: KeyboardEvent) {
     if (event.key === ',') {
       event.preventDefault();
@@ -474,6 +592,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           },
           error: (err) => (this.isUploaderLoader = false),
         });
+      } else {
+        this.isUploaderLoader = false;
       }
     });
   }
@@ -483,6 +603,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     const config = this.configService.getConfig().fileValidation;
     if (file.size > config.sizeWithMegaBytes * 1_000_000) {
       this.toastr.error('File size exceeds the allowed limit.');
+
       return false;
     } else if (!config.acceptType.includes(file.type)) {
       this.toastr.error('File type is not allowed.');
@@ -504,27 +625,27 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return this.form.controls;
   }
 
-  get t(): FormArray {
+  get requestApprovalsGetter(): FormArray {
     return this.f['requestApprovals'] as FormArray;
   }
 
   addNewStep() {
     const newGroup = this._formBuilder.group({
       username: ['', Validators.required],
-      sequence: [this.t.length + 1],
+      sequence: [this.requestApprovalsGetter.length + 1],
     });
-    this.t.push(newGroup);
-    this.manageUserNameControl(this.t.length - 1);
+    this.requestApprovalsGetter.push(newGroup);
+    this.manageUserNameControl(this.requestApprovalsGetter.length - 1);
   }
 
-  removeStep(index: number) {
-    this.t.removeAt(index);
-    this.selectedOptions.splice(index, 1);
-    this.updateFilteredOptions();
-  }
+  // removeStep(index: number) {
+  //   this.requestApprovalsGetter.removeAt(index);
+  //   this.selectedOptions.splice(index, 1);
+  //   this.updateFilteredOptions();
+  // }
 
   manageUserNameControl(index: number) {
-    const control = this.t.at(index).get('username');
+    const control = this.requestApprovalsGetter.at(index).get('username');
     if (control) {
       this.filteredOptions[index] = control.valueChanges.pipe(
         startWith<string | User>(''),
@@ -570,43 +691,76 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     //   this.filteredUsers.push(option);
     // }
     // Call the handleUserFiltration method to update available users
-    console.log('user before filter:', option);
-    const user = this.users.find((user) => user.email === option);
-    this.handleUserFiltration(user);
+    // console.log('user before filter:', option);
+    // const user = this.users.find((user) => user.email === option);
+    // this.handleUserFiltration(user);
+  }
+
+  // customDropdownSelectionChange(user: User) {
+  //   this.handleUserFiltration(user);
+  // }
+
+  selectedUsers: { index: number; userEmail: string }[] = [];
+
+  customDropdownSelectionChange(selectedUserEmail: string, index: number) {
+    this.selectedUsers.push({ index: index, userEmail: selectedUserEmail });
+    // Remove the selected user from available users
+    this.availableUsers.set(
+      this.availableUsers()
+        .filter((user) => user.email !== selectedUserEmail)
+        .sort((a, b) => a.id - b.id)
+    );
+
+    // Optionally, handle other logic related to the selection
+  }
+
+  removeStep(item: FormGroup, index: number) {
+
+    this.refetchAvailableUsers(index);
+    // const removedUser = this.users.find(user => user.email === username);
+    // console.log("removedUser", removedUser)
+
+    // if (removedUser ) {
+    //   this.availableUsers.set([...this.availableUsers(), removedUser]);
+    //   console.log("this avails", this.availableUsers)
+    // }
+
+    this.requestApprovalsGetter.removeAt(index - 1);
+    console.log('available users:', this.availableUsers());
+    console.log('index:', index);
+  }
+
+  refetchAvailableUsers(index: number){
+    const selected = this.selectedUsers.find((user) => user.index === index);
+
+    
+    if (selected) {
+      const selectedUser = this.users.find(user => user.email === selected.userEmail)
+      if(selectedUser){
+        this.availableUsers.set(
+          [...this.availableUsers(), selectedUser].sort((a, b) => a.id - b.id)
+        );
+      }
+
+      const indexOfRemoval = this.selectedUsers.findIndex(
+        (element) => selected.userEmail === element.userEmail
+      );
+
+      this.selectedUsers.splice(indexOfRemoval, 1);
+
+      this.selectedUsers = this.selectedUsers.map((element) => {
+        if (element.index > selected.index) {
+          return { ...element, index: element.index - 1 };
+        } else {
+          return element;
+        }
+      });
+    }
   }
 
   private updateFilteredOptions() {
     this.selectedOptions.forEach((_, i) => {
       this.manageUserNameControl(i);
     });
-  }
-
-  handleUserFiltration(user?: User) {
-    console.log('user passed:', user);
-    console.log('all users:', this.users);
-
-    if (this.availableUsers.length === 0) {
-      // Initialize availableUsers with the full list of users
-      this.availableUsers = [...this.users];
-      console.log('Initialized availableUsers:', this.availableUsers);
-    } else if (user) {
-      console.log('user selected:', user);
-      // Add the selected user to the filteredUsers array
-      this.filteredUsers.push(user);
-
-      for (let i = 0; i < this.availableUsers.length; i++) {
-        for (let j = 0; j < this.filteredUsers.length; j++) {
-          if (this.availableUsers[i].email === this.filteredUsers[j].email) {
-            this.availableUsers.splice(i, 1);
-            console.log('Filtered users:', this.filteredUsers);
-            console.log(
-              'Available users after filtering:',
-              this.availableUsers
-            );
-            return;
-          }
-        }
-      }
-    }
   }
 }
