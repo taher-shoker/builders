@@ -35,6 +35,7 @@ import {
   RequestTaskAttributes,
   UploadResponse,
 } from '../../dy-reports.service';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
@@ -72,7 +73,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     private toastr: ToastrService,
     private router: Router,
     private route: ActivatedRoute,
-    private configService: ConfigService
+    private configService: ConfigService,
+    private location: Location
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -254,17 +256,19 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.populateRequestApprovals(data.requestApprovals);
   }
 
-  private populateRequestApprovals(approvals: any[]) {
+  private populateRequestApprovals(approvals: ReportDetails['requestApprovals']) {
     const requestApprovalsFormArray = this.form.get(
       'requestApprovals'
     ) as FormArray;
     approvals.forEach((approval) => {
-      const user = this.users.find((u) => u.email === approval.email);
+      const user = this.users.find((u) => u.email === approval.username);
       if (user) {
         requestApprovalsFormArray.push(this.createApprovalFormGroup(user));
         this.removeFromAvailableUsers(user);
       }
     });
+    console.log("form finally is :", this.form.value)
+
   }
 
   private createApprovalFormGroup(user: User): FormGroup {
@@ -339,12 +343,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.customDropdownSelectionChange(value, 0);
   }
   onSubmit() {
+    console.log('Form Controls:', this.form.controls);
+    Object.keys(this.form.controls).forEach(key => {
+      const control = this.form.get(key);
+      console.log(`Control: ${key}, Status: ${control?.status}, Errors: ${control?.errors}, value: ${control?.value}`);
+    });
+
     if (this.form.invalid) {
-      console.log('Form Controls:', this.form.controls);
-      Object.keys(this.form.controls).forEach(key => {
-        const control = this.form.get(key);
-        console.log(`Control: ${key}, Status: ${control?.status}, Errors: ${control?.errors}`);
-      });
       this.markFormGroupTouched(this.form);
       return;
     }
@@ -372,6 +377,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
     if (this.paramsMode === 'edit_report_step') {
       console.log('Req Approvals', this.form.get('requestApprovals')?.value);
+      console.log("form before submission is :", this.form.value)
 
       const params: RequestTaskAttributes = {
         requestParams: [
@@ -380,7 +386,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           { name: 'description', value: this.form.get('description')?.value },
           {
             name: 'attachments',
-            value: this.idsJoiner(this.form.get('attachments')?.value),
+            value: this.idsJoinerWithNoExtraction(this.form.get('attachments')?.value),
           },
           {
             name: 'request_approvals',
@@ -418,7 +424,11 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           params
         )
         .subscribe({
-          next: () => handleSuccessStepEdit('Edit Step is success'),
+          next: () => {
+            handleSuccessStepEdit('Edit Step is success')
+            this.location.back();
+
+          },
           error: handleError,
           complete: () => (this.isSubmitLoading = false),
         });
@@ -444,12 +454,21 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private idsJoiner(arrOfObjs: { id: string }[]) {
+    console.log("Got this arr of ids:", arrOfObjs)
     const newArr = arrOfObjs.map((x) => x.id);
-    return newArr.join('@#%@#%Z%#@%#@');
+    const final =  newArr.join('@#%@#%Z%#@%#@');
+    return final
   }
 
-  private usernamesJoiner(arrOfObjs: { username: string }[]) {
-    const newArr = arrOfObjs.map((x) => x.username);
+  private idsJoinerWithNoExtraction(arrOfObjs: number[]) {
+    console.log("Got this arr of ids:", arrOfObjs)
+    const final = arrOfObjs.join('@#%@#%Z%#@%#@');
+    return final
+  }
+
+  private usernamesJoiner(arrOfObjs: {user:{ username: string }}[]) {
+    console.log("Got this arr of username:", arrOfObjs)
+    const newArr = arrOfObjs.map((x) => x.user.username);
     return newArr.join('@#%@#%Z%#@%#@');
   }
 

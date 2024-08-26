@@ -23,15 +23,16 @@
           ></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-select-drop-down
-            (selectChange)="handleGategory($event)"
-            [searchMode]="true"
-            [label]="'Category'"
-            [options]="categories"
-            [outputValue]="'id'"
-            [required]="true"
-            formControlName="requestCategoryId"
-          ></stc-apps-select-drop-down>
+          <stc-apps-custom-dropdown
+          formControlName="requestCategoryId"
+          [label]="'Category'"
+          [list]="categories"
+          [searchable]="true"
+          [displayNameProperty]="'name'"
+          [outputProperty]="'id'"
+          [valueProperty]="'id'"
+          (itemSelected)="handleGategory($event)"
+        ></stc-apps-custom-dropdown>
         </div>
       </div>
       <div class="row mt-7 align-items-center">
@@ -63,6 +64,7 @@
         </div>
         <div
           class="col-md-4"
+          style="height: 110px;"
           *ngIf="form.get('needMoreDataFromCreator')?.value"
         >
           <!-- <stc-apps-select-drop-down
@@ -77,6 +79,7 @@
           ></stc-apps-select-drop-down> -->
 
           <stc-apps-custom-dropdown
+          
             formControlName="creatorEmail"
             [label]="'Creator Name'"
             [list]="availableUsers()"
