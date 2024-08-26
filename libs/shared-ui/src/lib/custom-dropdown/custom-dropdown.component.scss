@@ -15,7 +15,7 @@
   }
 }
 
-.label{
+.label {
   margin-bottom: 8px;
 }
 
@@ -52,7 +52,9 @@
   .items-holder {
     padding-inline: 15px;
   }
-
+  .rest-item {
+    background-color: rgb(241, 241, 241);
+  }
   .item {
     margin-top: 3px;
     padding: 10px;
@@ -100,7 +102,7 @@
 
 // Error styles:
 
-.error-holder{
+.error-holder {
   font-size: 12px;
   color: var(--stc-coral-color);
   position: absolute;
@@ -108,7 +110,7 @@
 
 // disabled styles :
 
-.disabled{
+.disabled {
   pointer-events: none;
   color: darkgrey;
 }

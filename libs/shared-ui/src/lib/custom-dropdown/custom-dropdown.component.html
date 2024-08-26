@@ -9,11 +9,8 @@
   </div>
   }
 
-  <div
-    class="dropdown-head"
-    (click)="alternateList()"
-    [ngClass]="{ 'active-dropdown-head': showItemsList(), 'disabled': disableDropdownHead() }"
-  >
+  <div class="dropdown-head" (click)="alternateList()"
+    [ngClass]="{ 'active-dropdown-head': showItemsList(), 'disabled': disableDropdownHead() }">
     <div class="head-wrapper">
       <div class="head-display-name">
         {{ chosenItem()?.['componentScopedNameAccessor'] }}
@@ -34,6 +31,11 @@
     </div>
 
     <div class="items-holder">
+      @if (resetable() && list.length > 0) {
+      <div class="item rest-item" (click)="selectItem({displayName:'',value:''})">
+        {{'None' }}
+      </div>
+      }
       @for (item of filteredList(); track item) {
       <div class="item" (click)="selectItem(item)">
         {{ item.componentScopedNameAccessor }}
@@ -43,6 +45,11 @@
     }@else{
 
     <div class="items-holder">
+      @if (resetable() && list.length > 0) {
+      <div class="item" (click)="selectItem({displayName:'',value:''})">
+        {{'None' }}
+      </div>
+      }
       @for (item of mutatedList(); track item) {
       <div class="item" (click)="selectItem(item)">
         {{ item.componentScopedNameAccessor }}
@@ -55,9 +62,9 @@
 </div>
 
 @if (control?.errors && firstTimeTouched && chosenItem() === null) {
-  <div class="error-holder">
-    <p>This Field Is Required</p>
-  </div>
+<div class="error-holder">
+  <p>This Field Is Required</p>
+</div>
 }
 
 <!--The Overlay div-->

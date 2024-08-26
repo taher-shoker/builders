@@ -5,7 +5,9 @@ import {
   Input,
   OnChanges,
   OnInit,
+  signal,
   SimpleChanges,
+  WritableSignal,
 } from '@angular/core';
 import {
   AbstractControl,
@@ -26,6 +28,7 @@ import {
   UserGroup,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-user-form',
@@ -37,10 +40,12 @@ export class UserFormComponent implements OnInit, OnChanges {
   @Input() data!: User;
 
   form!: FormGroup;
-  privilages: Role[] = [];
+  // privilages: Role[] = [];
+  privilages: WritableSignal<any[]> = signal([]);
+
   teams: Team[] = [];
   allUsers: User[] = [];
-  userDelegate: User[] = [];
+  userDelegate: any[] = [];
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   selectedDelegates: any;
@@ -176,10 +181,10 @@ export class UserFormComponent implements OnInit, OnChanges {
           email: this.form.get('email')?.value,
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,
-          userDelegates: this.form.get('userDelegates')?.value?.email
+          userDelegates: this.form.get('userDelegates')?.value
             ? [
                 {
-                  delegateName: this.form.get('userDelegates')?.value.email,
+                  delegateName: this.form.get('userDelegates')?.value,
                   systemName: this.userService.getCurrentSystem(),
                 },
               ]
@@ -266,8 +271,7 @@ export class UserFormComponent implements OnInit, OnChanges {
             queryParams
           )
           .subscribe(() => {
-            const email = this.form.get('userDelegates')?.value?.email;
-
+            const email = this.form.get('userDelegates')?.value;
             if (email) {
               this.updateUserDelegate(email);
             }
@@ -345,30 +349,32 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
     ) {
-      this.privilages = this.userService.allGroups
-        .filter((g) => g.roles[0].roleName !== 'ADMINS')
-        .map((t) => {
-          return { id: t.id, groupName: t.roles[0].roleName };
-        });
+      this.privilages.set(
+        this.userService.allGroups
+          .filter((g) => g.roles[0].roleName !== 'ADMINS')
+          .map((t) => {
+            return { id: t.id, groupName: t.roles[0].roleName };
+          })
+      );
     } else {
-      this.privilages = filteredRoles;
+      this.privilages.set(filteredRoles);
     }
     if (this.data) {
       const currentSystem = this.userService.getCurrentSystem();
       if (currentSystem === 'DI_Milestones') {
-        this.selectedPrivilege = this.privilages.filter(
+        this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
       } else if (currentSystem === 'DI_Management') {
-        this.selectedPrivilege = this.privilages.filter(
+        this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
         )[0];
       } else if (currentSystem === 'Score_Card_Report_DB') {
-        this.selectedPrivilege = this.privilages.filter(
+        this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
       } else {
-        this.selectedPrivilege = this.privilages.filter(
+        this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
       }
@@ -435,14 +441,6 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.form.get('teamDto')?.setValidators(null);
           this.form.get('teamDto')?.updateValueAndValidity();
         }
-      } else if (
-        this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' &&
-        this.data?.userDelegates
-      ) {
-        const delegateEmail = this.data?.userDelegates?.[0]?.delegateName ?? '';
-        this.selectedDelegates = this.allUsers.filter(
-          (p: User) => p.email === delegateEmail
-        )[0];
       } else {
         this.selectedTeam = this.teams.filter(
           (p: Team) => p.id === this.data?.userGroups[0].id
@@ -526,6 +524,16 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
   restFormWithValue(data: User) {
+    this.getusersList();
+    forkJoin([this.userService.getUsers()]).subscribe(() => {
+      this.form.patchValue({
+        email: data.email,
+        name: data.name,
+        jobTitle: data.jobTitle,
+        userDelegates: this.data?.userDelegates?.[0]?.delegateName,
+      });
+    });
+
     if (!this.addGroups) {
       this.getTeams(data?.userGroups[0]);
       if (this.userService.getCurrentSystem() === 'DI_Management') {
@@ -541,15 +549,11 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
       ) {
         this.form?.get('jobTitle')?.disable();
-        this.form.patchValue(data);
       }
     }
 
-    this.form?.get('email')?.setValue(data?.email);
     this.form?.get('email')?.disable();
-    this.form?.get('name')?.setValue(data.name);
     this.form?.get('name')?.disable();
-    this.form?.get('jobTitle')?.setValue(data.jobTitle);
   }
 
   /**
@@ -615,16 +619,18 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
   getusersList() {
     this.userService.getUsers().subscribe((res) => {
-      this.allUsers = res.filter(
-        (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
-      );
-
-      if (this.isEditing && this.data) {
-        this.userDelegate = this.allUsers.filter(
-          (l) => l.email !== this.data?.email
+      if (res) {
+        this.allUsers = res.filter(
+          (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
         );
-      } else {
-        this.userDelegate = this.allUsers;
+
+        if (this.isEditing && this.data) {
+          this.userDelegate = this.allUsers.filter(
+            (l) => l.email !== this.data?.email
+          );
+        } else {
+          this.userDelegate = this.allUsers;
+        }
       }
     });
   }
