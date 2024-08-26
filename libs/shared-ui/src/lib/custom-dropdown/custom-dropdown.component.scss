@@ -105,3 +105,10 @@
   color: var(--stc-coral-color);
   position: absolute;
 }
+
+// disabled styles :
+
+.disabled{
+  pointer-events: none;
+  color: darkgrey;
+}

@@ -12,7 +12,7 @@
   <div
     class="dropdown-head"
     (click)="alternateList()"
-    [ngClass]="{ 'active-dropdown-head': showItemsList() }"
+    [ngClass]="{ 'active-dropdown-head': showItemsList(), 'disabled': disableDropdownHead() }"
   >
     <div class="head-wrapper">
       <div class="head-display-name">

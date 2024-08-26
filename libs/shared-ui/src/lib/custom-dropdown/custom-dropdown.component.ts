@@ -57,37 +57,39 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   control: FormControl | undefined;
 
   mutatedList = computed(() => {
-    const mappedList = this.list().map((item) => ({
-      ...item,
-      componentScopedNameAccessor: item[this.displayNameProperty()],
-      componentScopedValueAccessor: item[this.valueProperty()],
-      componentScopedOutputPropertyAccessor: item[this.outputProperty()],
-    }));
-    return mappedList;
+    if (this.list().length > 0) {
+      const mappedList = this.list().map((item) => ({
+        ...item,
+        componentScopedNameAccessor: item[this.displayNameProperty()],
+        componentScopedValueAccessor: item[this.valueProperty()],
+        componentScopedOutputPropertyAccessor: item[this.outputProperty()],
+      }));
+      return mappedList;
+    }
+    return [];
   });
 
   filteredList = computed(() => {
-    const filtered = this.mutatedList().filter((item) => {
-      if (typeof item['componentScopedNameAccessor'] === 'string') {
-        return item['componentScopedNameAccessor']
-          .toLowerCase()
-          .includes(this.filtrationText());
-      }
-      return false;
-    });
+    if (this.mutatedList().length > 0) {
+      const filtered = this.mutatedList().filter((item) => {
+        if (typeof item['componentScopedNameAccessor'] === 'string') {
+          return item['componentScopedNameAccessor']
+            .toLowerCase()
+            .includes(this.filtrationText());
+        }
+        return false;
+      });
 
-    return filtered;
+      return filtered;
+    }
+    return [];
   });
 
   showItemsList: WritableSignal<boolean> = signal(false);
   chosenItem: WritableSignal<Item | null> = signal(null);
 
-  constructor(
-    @Inject(Injector) private injector: Injector
-  ) {
-    effect(() => {
-      console.log('Changes:', this.list());
-    });
+  constructor(@Inject(Injector) private injector: Injector) {
+
   }
 
   ngOnInit() {
@@ -120,8 +122,13 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   private onTouched: () => void = () => {};
 
   writeValue(value: unknown): void {
-    const selected = this.list().find((item) => item.value === value) || null;
-    this.chosenItem.set(selected);
+    if (this.list().length > 0) {
+      const selected =
+        this.mutatedList().find(
+          (item) => item['componentScopedValueAccessor'] === value
+        ) || null;
+      this.chosenItem.set(selected);
+    }
   }
 
   registerOnChange(fn: (value: unknown) => void): void {
@@ -133,18 +140,27 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   }
 
   // Optional: Handle the touched state when interacting with the control
+  disableDropdownHead: WritableSignal<boolean> = signal(false);
   setDisabledState?(isDisabled: boolean): void {
-    // Implement if needed, e.g., to disable the dropdown
+
+    if (isDisabled) {
+      // this.control?.disable();
+      this.disableDropdownHead.set(true);
+    } else {
+      // this.control?.enable();
+      this.disableDropdownHead.set(false);
+    }
   }
 
   // End of Implement ControlValueAccessor methods^^
 
   firstTimeTouched: boolean = false;
   protected alternateList() {
-    if(!this.firstTimeTouched){
-      this.firstTimeTouched = true
+    if (!this.firstTimeTouched) {
+      this.firstTimeTouched = true; // For error handling 
     }
     this.showItemsList.set(!this.showItemsList());
+    this.filtrationText.set('');
   }
 
   protected selectItem(item: Item) {
