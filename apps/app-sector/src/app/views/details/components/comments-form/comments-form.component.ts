@@ -261,7 +261,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       sectorName: this.sectorService.getSectorName(),
       year: this.sharedFormService.getForm().value.year,
       quarter: this.sharedFormService.getForm().value.quarter,
-      scorecardTitle: 'Group Business Unit',
+      scorecardTitle: this.kpiObjectSignal().scorecardTitle,
       kpiCode: this.kpiObjectSignal().kpiCode,
       note: 'Test Note',
     };

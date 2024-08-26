@@ -39,20 +39,21 @@ export class AttachmentsComponent {
 
     if (input.files && input.files.length > 0) {
       const filesArray = Array.from(input.files);
-      const currentFileCount = this.displayedFiles()?.length || 0;
 
-      if (currentFileCount + filesArray.length > this.maxFiles()) {
+      if (filesArray.length > this.maxFiles()) {
         this.fileLimitExceeded = true;
         input.value = '';
         return;
       }
+
+      this.fileLimitExceeded = false;
+      this.fileSizeExceeded = false;
 
       const validFiles = filesArray.filter((file) => {
         if (file.size > maxFileSizeBytes) {
           this.fileSizeExceeded = true;
           return false;
         }
-        this.fileSizeExceeded = false;
         return true;
       });
 
