@@ -370,7 +370,8 @@ export class ReportsService {
   }
 
   exportReports(filterData?: any) {
-    return this.http.get(`${this.dtUrl}requests/export`, { //?from=${filterData.from}&to=${filterData.to}
+    return this.http.get(`${this.dtUrl}requests/export`, {
+      //?from=${filterData.from}&to=${filterData.to}
       params: filterData,
       responseType: 'blob',
     });
@@ -380,11 +381,11 @@ export class ReportsService {
     return this.http.get(`${this.dtUrl}/${id}`);
   }
 
-  updateReportFlow(id: number, reportName: string) {
-    const options = {
-      params: new HttpParams().set('reportName', reportName),
-    };
-    return this.http.patch(`${this.dtUrl}requests/${id}`, {}, options);
+  updateReportFlow(id: number, reportName: string, description: string) {
+    return this.http.patch(`${this.dtUrl}requests/${id}`, {
+      reportName,
+      description,
+    });
   }
 
   deleteReport(id: number) {

@@ -463,7 +463,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
     if (this.isEditing) {
       this.reportsService
-        .updateReportFlow(this.reportData.id, finalData.reportName) // TODO: Add the Description once the backend has added it to the API.
+        .updateReportFlow(this.reportData.id, finalData.reportName, finalData.description) // TODO: Add the Description once the backend has added it to the API.
         .subscribe({
           next: () => handleSuccess('Report has been edited successfully'),
           error: handleError,
