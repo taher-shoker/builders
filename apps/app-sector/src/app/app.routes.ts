@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { WelcomePageComponent } from './views/welcome-page/welcome-page.component';
 import { LayoutComponent } from './layout/layout.component';
 import { sectorGuard } from './services/guards/sector.guard';
+import { authGuard } from './services/guards/auth.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -13,13 +14,13 @@ export const appRoutes: Route[] = [
         path: 'home',
         loadChildren: () =>
           import('./views/home/home.module').then((m) => m.HomeModule),
-        canActivate: [sectorGuard],
+        canActivate: [sectorGuard, authGuard],
       },
       {
         path: 'details',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
-        canActivate: [sectorGuard],
+        canActivate: [sectorGuard, authGuard],
       },
       {
         path: 'data-upload',
@@ -27,12 +28,13 @@ export const appRoutes: Route[] = [
           import('./views/data-upload/data-upload.module').then(
             (m) => m.UploadFileModule
           ),
-        canActivate: [sectorGuard],
+        canActivate: [sectorGuard, authGuard],
       },
     ],
   },
   {
     path: 'welcome',
     component: WelcomePageComponent,
+    canActivate: [authGuard],
   },
 ];
