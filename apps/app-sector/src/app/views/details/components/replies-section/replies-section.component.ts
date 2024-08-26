@@ -171,12 +171,11 @@ export class RepliesSectionComponent implements OnInit {
           this.mentionsArray.includes('@' + mention.name)
         );
     }
-
   }
 
   extractMentions(text: string): string[] {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mentions: string[] = this.mentions.map((mention: any) => {
+    const mentions: string[] = this.mentions.map((mention: user) => {
       return `@${mention.name}`;
     });
 
@@ -202,9 +201,7 @@ export class RepliesSectionComponent implements OnInit {
     }
   }
   scrollIntoView() {
-  
     if (this.textArea?.nativeElement) {
-      
       // window.scrollBy({ top: 300, behavior: 'smooth' });
       this.textArea.nativeElement.scrollIntoView({
         behavior: 'smooth',
@@ -234,7 +231,6 @@ export class RepliesSectionComponent implements OnInit {
     this.form.reset();
   }
   save() {
-    
     if (this.commentActionBtn === 'Save') {
       this.saveReply();
     } else {
@@ -243,7 +239,7 @@ export class RepliesSectionComponent implements OnInit {
   }
   refactoringCommaSepartedMention(commaSepartedMentions: string): any[] {
     let mentionsSeparted: any = commaSepartedMentions?.split(',');
-  
+
     mentionsSeparted = mentionsSeparted?.map((mention: any) => {
       const pipeSeparted = mention.split('|');
       const mentionObj: user = {
@@ -262,9 +258,8 @@ export class RepliesSectionComponent implements OnInit {
     this.commentIndex = commentIndex;
     this.deleteReplyFlag = false;
     this.editReplyTextArea = false;
-    
+
     if (e == 'Delete') {
-     
       this.deleteCommentFlag = true;
       const dialogeDesc = 'Are you sure you want to delete this comment?';
       this.dialogeService.openDialog(
@@ -276,7 +271,7 @@ export class RepliesSectionComponent implements OnInit {
       );
     } else if (e == 'Reply') {
       this.notificatinService.mentionsObjects = [];
-   
+
       //  this.editedText.set('');
       this.form.reset();
       this.showCommentTextArea = true;
@@ -297,14 +292,12 @@ export class RepliesSectionComponent implements OnInit {
           );
       }
 
-     
       this.showCommentTextArea = true;
       this.textAreaOpend.emit('opend');
       const comment = this.comments[commentIndex].comment;
       // this.editedText.set(comment);
       this.form.get('comment')?.setValue(comment);
 
-      
       this.commentActionBtn = 'Update';
       setTimeout(() => {
         this.scrollIntoView();
@@ -313,7 +306,6 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   deleteComment(commentIndex: number) {
-    
     this.commentService
       .deleteComment(this.comments[commentIndex].id)
       .subscribe({

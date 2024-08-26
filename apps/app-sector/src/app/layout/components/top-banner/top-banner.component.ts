@@ -18,7 +18,9 @@ import {
   OverallScore,
   OverallScoreParams,
 } from '../../../views/models/overallScore.model';
-
+interface name {
+  name: number;
+}
 @Component({
   selector: 'stc-apps-top-banner',
   templateUrl: './top-banner.component.html',
@@ -97,17 +99,17 @@ export class TopBannerComponent implements OnInit {
     this.sharedFormService.initializeForm(initialParams);
   }
   // Years array should contain the current year only
-  yearsArray: any = [
+  yearsArray: name[] = [
     { name: this.currentYear },
     { name: this.currentDate.getFullYear() },
   ];
-  quarterArray: any = [{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }];
-  selectYear(event: any) {
-    console.log(event);
+  quarterArray: name[] = [{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }];
+  selectYear(event: number) {
+    console.log(typeof event);
     this.YearQuarterService.setYear(event.toString());
     this.getOverallScore();
   }
-  selectQuarter(event: any) {
+  selectQuarter(event: number) {
     this.YearQuarterService.setQuarter(event.toString());
     this.getOverallScore();
     console.log(event);

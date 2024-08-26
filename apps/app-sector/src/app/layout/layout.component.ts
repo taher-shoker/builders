@@ -76,6 +76,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/']);
   }
   logOut() {
-    // this.authService.logout();
+     this.authService.logout();
   }
 }

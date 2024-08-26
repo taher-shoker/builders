@@ -32,7 +32,6 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   kpiCode = window.history.state.kpiCode;
   scoreCardTitle = window.history.state.selectedTab;
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
-  caretIndexes: any[] = [];
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
