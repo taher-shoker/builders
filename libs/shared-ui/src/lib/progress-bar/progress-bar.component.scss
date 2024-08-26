@@ -72,8 +72,8 @@
   height:100%;
   .index-info
   {
-    height:35px !important;
-    bottom:-32px !important;
+    height:35px;
+    bottom:-32px;
   }
 }
 .actual-caption
@@ -115,10 +115,14 @@
 {
   background-color: #009F71 !important;
   border-radius:5px;
+  height: 35px !important;
+  bottom:-32px !important;
 }
 .planned-bar-line
 {
   border-radius:5px;
+  height: 35.5px !important;
+  margin-top: 1px !important;
 }
 .isPSRProject
 {

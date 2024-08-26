@@ -12,32 +12,30 @@ export interface PSRChartDataModel
 }
 export interface PSRProjectDetailsModel
 {
-    title:string;
-    projectOwner?:string;
-    orginazation:string;
-    status:string;
+    id:number;
+    group:string;
+    kpiName:string;
+    kpiOwner:string;
+    vendor:string;
+    kpiStatus:string;
+    indicator:string;
     domain:string;
-    domainIndicator:string;
-    projectTimeline:{
-        startDate:string;
-        endDate:string;
-    };
-    spendingStatus:{
-        amount:number;
-        actual:number;
-    };
-    progressBarData:{
-        actualValue:number;
-        plannedValue:number;
-        progressValue:number;
-        details : {
-            id:number;
-            majorTitle:string;
-            start:number;
-            duration:number;
-            completeLevel:number;
-        }[]
-    }
+    startDate:string;
+    endDate:string;
+    poAmount:string;
+    actual:string;
+    chartDetails:ChartDetails[];
+    vactual:number;
+    vplanned:number;
+}
+export interface ChartDetails
+{
+    id:number;
+    major:string;
+    start:number;
+    duration:number;
+    completion_level:number;
+    deleteAction?:string;
 }
 export interface ProgressInfo {
     prefixText: string;
@@ -54,3 +52,11 @@ export interface Index {
     value: number;
     position?: 'up' | 'down'
   }
+export interface AddProjectForm
+{
+    id:number;
+    major:string;
+    start:number;
+    duration:number;
+    completion_level:number;
+}

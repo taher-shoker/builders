@@ -19,6 +19,9 @@
             <div class="project-card">
               <stc-apps-project-details-card 
                 [projectData]="proj"
+                (addRecordInTable)="addRecordInTable($event)"
+                (closePopupEmit)="closePopup($event)"
+                (sendData)="sendData($event)"
               />
             </div>
           }

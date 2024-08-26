@@ -112,7 +112,7 @@ tr:not(.table-header) {
       color:#363636;
       font-weight: 600;
       font-size: 15px;
-      text-align: left;
+      // text-align: left;
     }
     .psrTabldLevel
     {
@@ -120,5 +120,45 @@ tr:not(.table-header) {
       font-weight: bold;
       font-size: 20px;
     }
+  }
+}
+.empty-details
+{
+  text-align: center;
+  text-transform: capitalize;
+  color:#4F008C;
+  font-size: 20px;
+  font-style: italic;
+  margin: 0;
+  margin-top: 20px;
+}
+.add-record-btn
+{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border:0;
+  font-size: 16px;
+  color:#4F008C;
+  text-decoration: underline;
+  cursor: pointer;
+  margin:15px auto 0;
+  background-color: transparent;
+  text-transform: capitalize;
+}
+.delete-btn
+{
+  color:#FF1A1A;
+  text-transform: capitalize;
+  font-size: 14px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  gap:5px;
+  img
+  {
+    width:15px;
+    position: relative;
+    top:-1px;
   }
 }

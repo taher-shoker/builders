@@ -1,0 +1,79 @@
+<div class="add-project-form">
+  <form [formGroup]="addProjectForm">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">major activities/deliverables</label>
+          <input
+            type="text"
+            placeholder="add major activities/deliverables"
+            formControlName="major"
+          />
+          @if(major?.hasError("required") && major?.dirty) {
+          <small class="error-msg"
+            >major activities/deliverables is required</small
+          >
+          }
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">start</label>
+          <input
+            type="number"
+            placeholder="add start"
+            formControlName="start"
+            (keypress)="keyPress($event)"
+          />
+          @if(start?.hasError("required") && start?.dirty) {
+          <small class="error-msg">start is required</small>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="row" style="margin-top: 30px">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">duration</label>
+          <input
+            type="number"
+            placeholder="add duration"
+            formControlName="duration"
+            (keypress)="keyPress($event)"
+          />
+          @if(duration?.hasError("required") && duration?.dirty) {
+          <small class="error-msg">duration is required</small>
+          }
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="">completion level</label>
+          <input
+            type="number"
+            placeholder="add completion level"
+            formControlName="completion_level"
+            (keypress)="keyPress($event)"
+          />
+          @if(completionLevel?.hasError("required") && completionLevel?.dirty) {
+          <small class="error-msg">completion Level is required</small>
+          }
+        </div>
+      </div>
+    </div>
+    <footer>
+      <button (click)="closePopup()" type="button" class="cancel-btn">
+        cancel
+      </button>
+      <button
+        (click)="addRecord()"
+        type="button"
+        class="add-btn"
+        [disabled]="addProjectForm.invalid"
+        [class.disabled-btn]="addProjectForm.invalid"
+      >
+        add record
+      </button>
+    </footer>
+  </form>
+</div>

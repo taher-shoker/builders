@@ -1,0 +1,94 @@
+@import '../../../../../styles/fonts';
+.add-project-form
+{
+    padding: 20px;
+    .form-group
+    {
+        position: relative;
+        input
+        {
+            width: 100%;
+            background: var(--stc-lighter-grey-color);
+            border-radius: 10px;
+            padding:15px;
+            border:0;
+            outline: 0;
+            box-shadow: none;
+            &::placeholder
+            {
+                color:var(--stc-grey-dark-color);
+                font-size: 13px;
+                text-transform: capitalize;
+                @extend .stcFont;
+                font-weight: 400;
+            }
+        }
+        .error-msg
+        {
+            position: absolute;
+            left: 0px;
+            bottom: -22px;
+            color:red;
+            font-size: 13px;
+            @extend .stcFont;
+        }
+        label
+        {
+            color:var(--stc-purple-color);
+            @extend .stcFont;
+            display: block;
+            margin-bottom: 10px;
+            text-transform: capitalize;
+            font-size: 16px;
+            font-weight: 700;
+        }
+    }
+    footer
+    {
+        margin-top: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        gap: 25px;
+        .cancel-btn
+        {
+            border:0;
+            background-color: transparent;
+            color:var(--stc-grey-dark-color);
+            @extend .stcFont;
+            text-transform: capitalize;
+            cursor: pointer;
+            font-size: 17px;
+            font-weight: 500;
+        }
+        .add-btn
+        {
+            border:0;
+            background-color:var(--stc-purple-color);
+            color:var(--stc-white-color);
+            @extend .stcFont;
+            text-transform: capitalize;
+            font-size: 17px;
+            font-weight: 500;
+            border-radius: 5px;
+            padding:7px 15px;
+            cursor: pointer;
+        }
+    }
+}
+.disabled-btn
+{
+    opacity: .7;
+    cursor: not-allowed !important;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

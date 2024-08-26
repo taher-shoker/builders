@@ -69,6 +69,8 @@ import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-b
 import { ProjectCardComponent } from './project-card/project-card.component';
 import { TabViewModule } from 'primeng/tabview';
 import { MultiCirclesProgressBarComponent } from './multi-circles-progress-bar/multi-circles-progress-bar.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 
 const modules = [BreadCrumbModule, MatIconModule];
 
@@ -116,7 +118,8 @@ const components = [
   MillionPipe,
   SolidCircularBarComponent,
   ProjectCardComponent,
-  MultiCirclesProgressBarComponent
+  MultiCirclesProgressBarComponent,
+  ConfirmDialogComponent
 ];
 
 @NgModule({
@@ -125,6 +128,7 @@ const components = [
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   imports: [
     CommonModule,
+    ConfirmDialogModule,
     RouterModule,
     LngSelectorModule,
     ModeToggleModule,

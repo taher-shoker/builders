@@ -34,7 +34,6 @@
       </th>
       }
     </tr>
-
     @if(itemsInView){
     <ng-container
       *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"
@@ -46,7 +45,22 @@
     }
   </tbody>
 </table>
-
+@if(psrTable() && items.length === 0)
+{
+  <p
+    [ngStyle]="{'font-family' : fontFamily()}" 
+    class = "empty-details"
+  >there are no details</p>
+}
+@if(psrTable())
+{
+  <button type = "button" class = "add-record-btn" [ngStyle]="{'font-family' : fontFamily()}" (click)="addNewRecord()">
+    <img src="assets/images/add-square.svg" alt="">
+    <span>
+      add new record
+    </span>
+  </button>
+}
 @if(paginate && length > 0){
 <stc-apps-paginator
   [pageRows]="paginationConfig.pageCount"
@@ -78,7 +92,18 @@
       [ngStyle]="{
         'font-family' : fontFamily() && psrTable() ? fontFamily() : ''
       }"
-    >{{ item[header.key] }}
+    >
+      @if(header.key === '')
+      {
+        <div class = "delete-btn" (click)="deleteRecord(item)" [ngStyle]="{
+          'font-family' : fontFamily() && psrTable() ? fontFamily() : ''
+        }">
+          <img src="assets/images/trash.svg" alt="">
+          delete
+        </div>
+      } @else {
+        {{ item[header.key] }}
+      }
       @if(psrTable() && header.label === 'Completion Level')
       {
         %

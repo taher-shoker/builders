@@ -42,6 +42,10 @@ export interface PaginationConfig {
 export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
+  @Output() deleteAddedRecord: EventEmitter<any> =
+    new EventEmitter<any>();
+  @Output() addRecord: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
 
@@ -68,12 +72,18 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   filterStrStored: string = '';
   currentSortedByColumn$: Subject<string> = new Subject<string>();
-
+  deleteRecord(item:any)
+  {
+    this.deleteAddedRecord.emit(item);
+  }
   sortingDirection: 'desc' | 'asc' = 'asc';
   changeCurrentSortingColumn(colName: string): void {
     this.currentSortedByColumn$.next(colName);
   }
-
+  addNewRecord()
+  {
+    this.addRecord.emit();
+  }
   setupSorting() {
     this.currentSortedByColumn$.subscribe((res: string) => {
       this.sortByColumn(this.itemsInView, res);
@@ -151,7 +161,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
     if (changes['items']) {
       this.items = changes['items'].currentValue;
 
-      if (this.paginationConfig.paginationIq === 'smart') {
+      if (this.paginationConfig && this.paginationConfig.paginationIq === 'smart') {
         this.onDataChange(this.items);
       }
     }

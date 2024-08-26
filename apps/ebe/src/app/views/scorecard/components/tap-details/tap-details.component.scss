@@ -92,14 +92,6 @@
     }
   }
 }
-.modal-header
-{
-  @extend .stcFont;
-  text-transform: capitalize;
-  font-size: 20px;
-  font-weight: 500;
-  color:var(--stc-purple-light-color);
-}
 .empty-data-msg
 {
   color:var(--stc-purple-light-color);
