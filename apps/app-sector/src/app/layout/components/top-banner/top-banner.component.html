@@ -15,8 +15,8 @@
       <h1 class="py-2">{{ 'scorecard_report' | translate }}</h1>
 
       <stc-apps-result-score
-        [percentage]="overallScore?.score ?? 0"
-        [title]="overallScore?.scorecardTitle ?? title"
+        [percentage]="overallScore.score"
+        [title]="overallScore.scorecardTitle || title"
         *ngIf="overallScore?.score"
       ></stc-apps-result-score>
       } @else {
