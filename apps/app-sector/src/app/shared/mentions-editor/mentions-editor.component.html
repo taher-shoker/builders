@@ -8,12 +8,17 @@
         [mentionConfig]="mentionConfig"
         [mentionListTemplate]="mentionListTemplate"
         contenteditable="true"
-        (change)="change($event)"
         (itemSelected)="onItemSelected($event)"
+        (change)="change($event)"
+        (keyup)="onInput($event)"
       ></div>
-
-      <ng-template #mentionListTemplate let-item="item">
-        <span>{{ item.name }}</span>
+      <ng-template #mentionListTemplate let-item="item" let-index="index">
+        <!-- <span>{{ item.name }}</span> -->
+        <stc-apps-profile
+          [name]="item[mentionProperty()]"
+          [comment]="item.jobTitle"
+          [lastItem]="index === items.length - 1"
+        ></stc-apps-profile>
       </ng-template>
     </div>
   </div>

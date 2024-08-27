@@ -2,8 +2,13 @@
   <div class="replies-section_totalComments">{{ totalComments }} Comments</div>
   @if(totalComments!==0){
   <div class="replies-section_holder">
-    @for (comment of comments; let parentLoop=$index;track parentLoop;) {
-    <div>
+    @for (comment of comments; let parentLoop=$index;track parentLoop; let
+    lastComment=$last) {
+    <div
+      [ngClass]="{
+        'replies-section_item': !lastComment || comment.replies.length !== 0
+      }"
+    >
       <stc-apps-profile
         [name]="comment.authorName"
         [comment]="comment.comment"
@@ -57,24 +62,26 @@
       "
     >
       <div class="replies">
-        @for (reply of comment.replies; track $index) {
-        <stc-apps-profile
-          [name]="reply.authorName"
-          [comment]="reply.reply"
-          [time]="reply.edited ? reply.editedAt : reply.createdAt"
-          [lastItem]="
-            $index === comment.replies.length - 1 &&
-            parentLoop === comments.length - 1
-              ? true
-              : false
-          "
-          [reply]="true"
-          [edited]="reply.edited"
-          [commaSepartedMentions]="reply.commaSeparatedMentions!"
-          [authorID]="reply.authorId"
-          [loggedUserID]="loggedUserID"
-          (replyActionName)="handleReplyActions($event, parentLoop, $index)"
-        ></stc-apps-profile>
+        @for (reply of comment.replies; track $index; let lastReply = $last) {
+        <div [ngClass]="{ 'replies-section_subitem': !lastComment }">
+          <stc-apps-profile
+            [name]="reply.authorName"
+            [comment]="reply.reply"
+            [time]="reply.edited ? reply.editedAt : reply.createdAt"
+            [lastItem]="
+              $index === comment.replies.length - 1 &&
+              parentLoop === comments.length - 1
+                ? true
+                : false
+            "
+            [reply]="true"
+            [edited]="reply.edited"
+            [commaSepartedMentions]="reply.commaSeparatedMentions!"
+            [authorID]="reply.authorId"
+            [loggedUserID]="loggedUserID"
+            (replyActionName)="handleReplyActions($event, parentLoop, $index)"
+          ></stc-apps-profile>
+        </div>
         @if(editReplyTextArea && parentLoop==commentIndex &&
         $index===replyIndex){
         <form [formGroup]="form">

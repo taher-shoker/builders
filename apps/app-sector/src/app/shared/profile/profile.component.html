@@ -11,7 +11,11 @@
           <div class="profile-content_name">{{ name() }}</div>
           <div
             class="profile-content_desc"
-            [innerHTML]="commaSepartedMentions()!==null?comment().replace(generateRegex(), '<span>$&</span>'):comment()"
+            [innerHTML]="
+              commaSepartedMentions() !== null
+                ? comment().replace(generateRegex(), '<span>$&</span>')
+                : comment()
+            "
           ></div>
         </div>
       </div>
@@ -34,12 +38,12 @@
     }
   </div>
   }
-  <hr
+  <!-- <hr
     *ngIf="!lastItem() || hasReplies()"
     [class]="
       !hasReplies() && !reply()
         ? 'profile-content_line'
         : 'profile-content_line-reply'
     "
-  />
+  /> -->
 </div>

@@ -21,6 +21,19 @@
     overflow: auto;
   }
 
+  &_item {
+    border-bottom: 1px solid var(--semiGreyColor);
+    padding: 12px;
+    margin: 12px 0px 12px 12px;
+
+  }
+
+  &_subitem {
+    border-bottom: 1px solid var(--semiGreyColor);
+    padding: 12px;
+    margin: 12px 0px 12px 120px;
+  }
+
   &_add-reply-actions {
     display: flex;
     justify-content: end;

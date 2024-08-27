@@ -33,8 +33,6 @@ export class MentionsEditorComponent
   mentions: InputSignal<any> = input([]);
   @Output() contentChange = new EventEmitter<string>();
 
-  filteredList: any[] = [];
-
   items: any[] = [];
   mentionConfig: any;
   _value: string = '';
@@ -119,6 +117,11 @@ export class MentionsEditorComponent
     if (item) {
       this.value = item.name;
     }
+  }
+
+  onInput(event: Event): void {
+    const input = event.target as HTMLDivElement;
+    this.value = input.textContent || '';
   }
 }
 
