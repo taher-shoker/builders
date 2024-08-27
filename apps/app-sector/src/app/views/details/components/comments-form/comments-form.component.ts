@@ -177,9 +177,10 @@ export class CommentsFormComponent implements OnInit, OnChanges {
 
   onContentChange(content: string) {
     console.log('Content:', content);
+    const contentText = this.extractTextFromContent(content);
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
-    this.form.get('comment')?.setValue(content);
+    this.form.get('comment')?.setValue(contentText);
     console.log('Mentions:', mentionsArray);
     if (mentionsArray?.length == 0) {
       this.notificatinService.mentionsObjects = [];
@@ -192,6 +193,9 @@ export class CommentsFormComponent implements OnInit, OnChanges {
           this.mentionsArray.includes('@' + mention.name)
         );
     }
+  }
+  extractTextFromContent(content: any): string {
+    return content ?? content.name;
   }
   resetForm() {
     this.form.reset();
