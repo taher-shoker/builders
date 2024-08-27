@@ -305,6 +305,9 @@ export class DyReportDetailsComponent implements OnInit {
           }
         }
       }
+    }else if(task.status === 'breached'){
+      finalStr = taskName + '- Breached';
+
     } else {
       finalStr = taskName;
     }

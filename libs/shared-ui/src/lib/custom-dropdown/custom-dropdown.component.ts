@@ -122,11 +122,16 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   private onTouched: () => void = () => {};
 
   writeValue(value: unknown): void {
+    console.log("Curr VAL is :", value)
     if (this.list().length > 0) {
       const selected =
-        this.mutatedList().find(
-          (item) => item['componentScopedValueAccessor'] === value
+        this.mutatedList().find( (item) => {
+          return item['componentScopedValueAccessor'] === value
+        }
+          
         ) || null;
+
+        console.log("SELECTED IS:::", selected)
       this.chosenItem.set(selected);
     }
   }
