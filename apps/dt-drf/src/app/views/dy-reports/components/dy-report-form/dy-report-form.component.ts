@@ -78,7 +78,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['reportData'] && this.reportData) {
-      if(this.paramsMode !== 'edit_report_step'){
+      if (this.paramsMode !== 'edit_report_step') {
         this.resetFormWithValue(this.reportData);
       }
     }
@@ -143,7 +143,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         '',
         [
           Validators.required,
-          Validators.maxLength(100),
+          Validators.maxLength(this.configService.getConfig().characterLimit.nameLength),
           this.noWhitespaceValidator,
         ],
       ],
@@ -151,14 +151,19 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         '',
         [
           Validators.required,
-          Validators.maxLength(1000),
+          Validators.maxLength(
+            this.configService.getConfig().characterLimit.descriptionLength
+          ),
           this.noWhitespaceValidator,
         ],
       ],
       requestCategoryId: ['', Validators.required],
       slaDurationInDays: [
         '',
-        [Validators.pattern('^[0-9]+$'), Validators.max(14)],
+        [
+          Validators.pattern('^[0-9]+$'),
+          Validators.max(this.configService.getConfig().rangeForSLA.max),
+        ],
       ],
       needMoreDataFromCreator: [0],
       initiatorShouldApprove: [0],
@@ -274,7 +279,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
     Object.keys(this.form.controls).forEach((key) => {
       const control = this.form.get(key);
-      control?.enable()
+      control?.enable();
       // console.log(
       //   `Control: ${key}, Status: ${control?.status}, Errors: ${control?.errors}, value: ${control?.value}`
       // );
@@ -540,7 +545,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return final;
   }
 
-  private usernamesJoiner(arrOfObjs:  { username: string } []) {
+  private usernamesJoiner(arrOfObjs: { username: string }[]) {
     console.log('Got this arr of username:', arrOfObjs);
     const newArr = arrOfObjs.map((x) => x.username);
     return newArr.join('@#%@#%Z%#@%#@');
@@ -568,8 +573,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return this.reportsService.getUsers().pipe(
       map((res) => {
         this.users = res.filter(
-          (user) => user.userGroups[0].roles[0].roleName !== 'ADMINS' &&
-          user.email !== this.reportsService.getCurrentUser().email
+          (user) =>
+            user.userGroups[0].roles[0].roleName !== 'ADMINS' &&
+            user.email !== this.reportsService.getCurrentUser().email
         );
         // this.approvers = this.users.filter(
         //   (user) => user.email !== this.reportsService.getCurrentUser().email
