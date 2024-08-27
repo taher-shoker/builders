@@ -19,17 +19,17 @@ export class WelcomePageComponent implements OnInit {
   hoverIndex = -1;
   listItems = [
     {
-      scoreBoardIconPath: '/assets/images/app-sector-icon.svg',
+      scoreBoardIconPath: 'assets/images/app-sector-icon.svg',
       scoreBoardTitle: 'Application Sector',
       scoreBoardDesc: 'Here’s of scorecard report Dashboard ',
     },
     {
-      scoreBoardIconPath: '/assets/images/HR-icon.svg',
+      scoreBoardIconPath: 'assets/images/HR-icon.svg',
       scoreBoardTitle: 'HR Sector',
       scoreBoardDesc: '',
     },
     {
-      scoreBoardIconPath: '/assets/images/TO-icon.svg',
+      scoreBoardIconPath: 'assets/images/TO-icon.svg',
       scoreBoardTitle: 'T/O Sector',
       scoreBoardDesc: '',
     },

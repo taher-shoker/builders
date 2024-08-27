@@ -35,7 +35,7 @@ export class TopBannerComponent implements OnInit {
   kpiCode = '';
   currentUrl = '';
   form: FormGroup = new FormGroup({});
-
+  dataUploadFlag = false;
   currentDate = new Date();
   currentYear = this.currentDate.getFullYear() - 1;
   currentMonth = this.currentDate.getMonth() + 1; // getMonth() returns 0-based month
@@ -59,8 +59,13 @@ export class TopBannerComponent implements OnInit {
       .subscribe(() => {
         if (this.router.url.includes('/KPI')) {
           this.showScorecard = false;
+          this.dataUploadFlag = false;
+        } else if (this.router.url.includes('/data-upload')) {
+          this.showScorecard = false;
+          this.dataUploadFlag = true;
         } else {
           this.showScorecard = true;
+          this.dataUploadFlag = false;
         }
       });
   }
