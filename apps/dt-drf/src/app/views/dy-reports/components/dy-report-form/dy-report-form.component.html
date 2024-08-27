@@ -81,7 +81,7 @@
           <stc-apps-custom-dropdown
             formControlName="creatorEmail"
             [label]="'Creator Name'"
-            [list]="availableUsers()"
+            [list]="fetchAvailableUsers(0)"
             [searchable]="true"
             [displayNameProperty]="'name'"
             [outputProperty]="'email'"
@@ -204,7 +204,7 @@
                   <div class="col-md-5 my-3">
                     <stc-apps-custom-dropdown
                       formControlName="username"
-                      [list]="availableUsers()"
+                      [list]="fetchAvailableUsers(i + 1)"
                       [searchable]="true"
                       [displayNameProperty]="'name'"
                       [valueProperty]="'email'"
