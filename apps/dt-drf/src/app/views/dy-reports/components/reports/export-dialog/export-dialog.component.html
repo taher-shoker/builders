@@ -7,11 +7,12 @@
           <div class="col-md-6">
             <stc-apps-date-picker
               [className]="'custom-input'"
-              (selectChange)="handelChangeDate($event, 'from')"
               [inputPlaceholder]="''"
               [inputId]="'startDate'"
               [inputName]="'Start Date'"
               formControlName="from"
+              [inputId]="'startDate'"
+              (selectChange)="handleDateChange($event, 'from')"
             >
             </stc-apps-date-picker>
           </div>
@@ -22,7 +23,9 @@
               [inputId]="'endDate'"
               [inputName]="'End Date'"
               formControlName="to"
-              (selectChange)="handelChangeDate($event, 'to')"
+              [myFilter]="FilterEndDate"
+              (selectChange)="handleDateChange($event, 'to')"
+              [inputId]="'endDate'"
             >
             </stc-apps-date-picker>
           </div>
