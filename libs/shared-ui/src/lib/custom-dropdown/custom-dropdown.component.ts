@@ -44,6 +44,7 @@ export interface Item {
 export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   label = input<string>();
   searchable = input<boolean>(false);
+  resetable = input<boolean>(false);
   // required = input<boolean>(false);
   required: WritableSignal<boolean> = signal(false);
   displayNameProperty = input<string>('displayName');
@@ -88,9 +89,7 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   showItemsList: WritableSignal<boolean> = signal(false);
   chosenItem: WritableSignal<Item | null> = signal(null);
 
-  constructor(@Inject(Injector) private injector: Injector) {
-
-  }
+  constructor(@Inject(Injector) private injector: Injector) {}
 
   ngOnInit() {
     this.setFormControl();
@@ -147,7 +146,6 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   // Optional: Handle the touched state when interacting with the control
   disableDropdownHead: WritableSignal<boolean> = signal(false);
   setDisabledState?(isDisabled: boolean): void {
-
     if (isDisabled) {
       // this.control?.disable();
       this.disableDropdownHead.set(true);
@@ -162,7 +160,7 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   firstTimeTouched: boolean = false;
   protected alternateList() {
     if (!this.firstTimeTouched) {
-      this.firstTimeTouched = true; // For error handling 
+      this.firstTimeTouched = true; // For error handling
     }
     this.showItemsList.set(!this.showItemsList());
     this.filtrationText.set('');
