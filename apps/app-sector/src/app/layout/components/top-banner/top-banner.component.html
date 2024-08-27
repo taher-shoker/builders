@@ -19,9 +19,11 @@
         [title]="overallScore.scorecardTitle || title"
         *ngIf="overallScore?.score"
       ></stc-apps-result-score>
-      } @else {
+      } @else { @if(!dataUploadFlag){
       <h2 class="details-title">Details for {{ kpiName }}</h2>
-      }
+      } @else{
+      <h2 class="details-title">Upload File Page</h2>
+      } }
     </div>
   </div>
   @if (showScorecard) {

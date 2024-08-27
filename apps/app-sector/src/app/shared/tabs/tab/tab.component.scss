@@ -1,6 +1,8 @@
 @import '../../../../styles/variables.scss';
 
 .tab {
+  width: 90%;
+  height: 90%;
   flex: 1;
   font-size: 20px;
   padding: 18px 32px;
@@ -11,7 +13,7 @@
   color: var(--grey-color);
   font-family: var(--stc-font-base);
   border-radius: 8px;
-
+ 
   &.active {
     background-color: var(--stc-coral-color);
     color: var(--white);

@@ -16,41 +16,39 @@ import { LoaderService } from '../services/loader.service';
 })
 export class LayoutComponent implements OnInit, AfterViewInit {
   scoreCardName = window.history.state.scoreCardName;
+  sectorName: string | undefined = '';
+  navItems: any[] = [];
   constructor(
     private cookieService: CookieService,
     public router: Router,
     private authService: AuthService,
     public loaderService: LoaderService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.sectorName = this.cookieService.get('sectorName');
+    console.log(this.sectorName, 'navItem');
+    this.navItems = [
+      {
+        name: 'Sectors',
+        url: '/sectors',
+        icon: 'fa-th-large',
+        roles: ['APPROVERS'],
+        urlHome: `/sectorPage/${this.sectorName}`,
+      },
+      {
+        name: 'home',
+        url: `/sectorPage/${this.sectorName}`,
+        icon: 'fa-home',
+        roles: ['APPROVERS,CREATORS'],
+        urlHome: `/sectorPage/${this.sectorName}`,
+      },
+    ];
+  }
 
-  urlHome = '/home';
+  // urlHome = '/home';
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
-  navItems: any[] = [
-    {
-      name: 'home',
-      url: '/sectors/sectorID',
-      icon: 'fa-home',
-      roles: ['APPROVERS,CREATORS'],
-      urlHome: '/home',
-    },
-    {
-      name: 'data upload',
-      url: '/data-upload',
-      icon: 'fa-upload',
-      roles: ['APPROVERS'],
-      urlHome: '/sectors/:sectorID',
-    },
-    {
-      name: 'Sectors',
-      url: '/sectors',
-      icon: 'fa-home',
-      roles: ['APPROVERS'],
-      urlHome: '/sectors/:sectorID',
-    },
-  ];
 
   ngAfterViewInit(): void {
     this.loaderService.isLoading$.subscribe(() => {
@@ -59,8 +57,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    
-    //this.userName='Habiba';
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
       this.cookieService.get('token')
@@ -73,7 +69,21 @@ export class LayoutComponent implements OnInit, AfterViewInit {
         res?.userGroups.map((group) => {
           if (group.groupName == 'Data_Admins') {
             console.log('hey');
-           // this.navItems.push();
+            let flag = false;
+            this.navItems.map((item) => {
+              if (item.name == 'data upload') {
+                flag = true;
+              }
+            });
+            if (!flag) {
+              this.navItems.push({
+                name: 'data upload',
+                url: '/data-upload',
+                icon: 'fa-upload',
+                roles: ['Data_Admins'],
+                urlHome: `/sectorPage/${this.sectorName}`,
+              });
+            }
           }
         });
         this.userName = res?.name || '';

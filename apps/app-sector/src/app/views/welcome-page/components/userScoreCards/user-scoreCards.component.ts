@@ -31,6 +31,6 @@ export class UserScoreCardsComponent {
   navigate(title: string, id: number) {
     this.sectorService.setSectorName(title);
     this.YearQuarterService.clearYearQuarter();
-    this.router.navigate(['/sectors',title]);
+    this.router.navigate(['/sectorPage', title]);
   }
 }

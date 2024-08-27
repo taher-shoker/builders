@@ -3,15 +3,23 @@ import { WelcomePageComponent } from './views/welcome-page/welcome-page.componen
 import { LayoutComponent } from './layout/layout.component';
 import { sectorGuard } from './services/guards/sector.guard';
 import { authGuard } from './services/guards/auth.guard';
+import { dataUploadGuard } from './services/guards/dataUpload.guard';
+import { sectorsPageGuard } from './services/guards/serctorsPage.guard';
 
 export const appRoutes: Route[] = [
   {
     path: '',
     component: LayoutComponent,
     children: [
-      { path: '', redirectTo: 'sectors/:sectorName', pathMatch: 'full' },
+      { path: '', redirectTo: 'sectorPage/:sectorName', pathMatch: 'full' },
       {
-        path: 'sectors/:sectorName',
+        path: 'sectorPage',
+        loadChildren: () =>
+          import('./views/home/home.module').then((m) => m.HomeModule),
+        canActivate: [sectorGuard, authGuard,sectorsPageGuard],
+      },
+      {
+        path: 'sectorPage/:sectorName',
         loadChildren: () =>
           import('./views/home/home.module').then((m) => m.HomeModule),
         canActivate: [sectorGuard, authGuard],
@@ -28,7 +36,7 @@ export const appRoutes: Route[] = [
           import('./views/data-upload/data-upload.module').then(
             (m) => m.UploadFileModule
           ),
-        canActivate: [sectorGuard, authGuard],
+        canActivate: [sectorGuard, authGuard, dataUploadGuard],
       },
     ],
   },
