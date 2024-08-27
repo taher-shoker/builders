@@ -45,8 +45,9 @@ export class LoginComponent implements OnInit {
   }
 
   createLogin() {
-    this.authService.isLoading = true;
     if (this.form.valid) {
+      this.authService.isLoading = true;
+
       this.authService.login(this.form.value).subscribe(
         () => {
           this.authService.isLoading = false;
@@ -57,6 +58,11 @@ export class LoginComponent implements OnInit {
           }
         }
       );
+    } else {
+      Object.keys(this.form.controls).forEach((field) => {
+        const control = this.form.get(field);
+        control?.markAsTouched({ onlySelf: true });
+      });
     }
   }
 
