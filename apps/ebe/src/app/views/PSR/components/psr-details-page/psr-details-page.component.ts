@@ -68,9 +68,15 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
     const result = this.removeElementsFromArray(this.values, clickedProj.chartDetails);
     clickedProj.chartDetails = result;
   }
-  sendData(id:number)
+  sendData(data:{id:number , type:string})
   {
-    const sentObj = this.PSRDetailsData.filter(d => d.id === id)[0];
-    console.log(sentObj.chartDetails);
+    console.log(data.type);
+    if(data.type === 'editMode')
+    {
+      const sentObj = this.PSRDetailsData.filter(d => d.id === data.id)[0];
+      console.log(sentObj.chartDetails);
+    } else {
+      console.log(this.values);
+    }
   }
 }

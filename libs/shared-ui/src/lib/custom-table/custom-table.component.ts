@@ -48,6 +48,8 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
     new EventEmitter<boolean>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
+  @Output() updatedData: EventEmitter<any> =
+    new EventEmitter<any>();
 
   headers = input.required<ColumnsSchema[]>();
   psrTable = input<boolean>();
@@ -62,7 +64,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
   @Input() length!: number;
-
+  isEditMode = input<boolean>();
   paginator$: Subject<PaginationEvent> = new Subject<PaginationEvent>();
   currentPage: number = 1;
 
@@ -215,5 +217,9 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   setItemsMap(items: any[]) {
     this.itemsMap.set(this.currentPage.toString(), items);
+  }
+  inputChanged(id:number)
+  {
+    this.updatedData.emit({items:this.items , id : id})
   }
 }

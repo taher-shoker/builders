@@ -1,7 +1,7 @@
-import { Component, EventEmitter, inject, input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { AddProjectForm } from 'apps/ebe/src/app/models/psr.model';
+import { AddProjectForm } from '../../../../models/psr.model';
 
 @Component({
   selector: 'stc-apps-add-project-form',
@@ -10,15 +10,15 @@ import { AddProjectForm } from 'apps/ebe/src/app/models/psr.model';
   templateUrl: './add-project-form.component.html',
   styleUrl: './add-project-form.component.scss',
 })
-export class AddProjectFormComponent implements OnInit {
-  id = input.required<number>();
+export class AddProjectFormComponent implements OnInit , OnChanges{
+  @Input({required : true}) id!:number;
   @Output() closePopupEmit:EventEmitter<boolean> = new EventEmitter(false);
   @Output() getValues:EventEmitter<AddProjectForm> = new EventEmitter();
   fb = inject(FormBuilder);
   addProjectForm!:FormGroup;
   ngOnInit() {
     this.addProjectForm = this.fb.group({
-      major : ['' , Validators.required],
+      major : ['' , [Validators.required , Validators.maxLength(100)]],
       start : ['' , Validators.required],
       duration : ['' , Validators.required],
       completion_level : ['' , Validators.required]
@@ -51,12 +51,18 @@ export class AddProjectFormComponent implements OnInit {
     this.closePopupEmit.emit(true);
     this.addProjectForm.reset();
   }
+  count = 0;
+  ngOnChanges(): void {
+    this.count = this.id;
+  }
   addRecord()
   {
+    ++this.count;
     if(this.addProjectForm.valid)
     {
+      let count2 = this.count;
       const data:AddProjectForm = {
-        id : this.id(),
+        id : count2,
         major : this.major?.value,
         start : this.start?.value,
         duration : this.duration?.value,
@@ -64,6 +70,7 @@ export class AddProjectFormComponent implements OnInit {
       }
       this.getValues.emit(data);
       this.addProjectForm.reset();
+      count2++;
     }
   }
 }

@@ -93,6 +93,8 @@
         'font-family' : fontFamily() && psrTable() ? fontFamily() : ''
       }"
     >
+    @if(!isEditMode())
+    {
       @if(header.key === '')
       {
         <div class = "delete-btn" (click)="deleteRecord(item)" [ngStyle]="{
@@ -108,6 +110,17 @@
       {
         %
       }
+    } @else {
+      @if(header.key !== '')
+      {
+        @if(header.key !== 'id')
+        {
+          <input type="text" [(ngModel)]="item[header.key]" class = "edit-input" (ngModelChange)="inputChanged(item['id'])" />
+        } @else {
+          {{ item[header.key] }}
+        }
+      }
+    }
   </td>
     } } @else if(header.type === 'actions') {
 

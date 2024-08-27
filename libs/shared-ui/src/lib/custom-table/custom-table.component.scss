@@ -162,3 +162,14 @@ tr:not(.table-header) {
     top:-1px;
   }
 }
+.edit-input
+{
+  width: 100%;
+  border:0;
+  border:1px solid #8E9AA0;
+  padding:0 10px;
+  height:40px;
+  border-radius: 5px;
+  outline: 0;
+  box-shadow: none;
+}

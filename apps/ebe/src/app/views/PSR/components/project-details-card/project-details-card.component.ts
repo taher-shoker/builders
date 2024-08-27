@@ -25,13 +25,14 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   projectData:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
   @Output() addRecordInTable:EventEmitter<AddProjectForm> = new EventEmitter();
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
-  @Output() sendData:EventEmitter<number> = new EventEmitter();
+  @Output() sendData:EventEmitter<{id:number , type:string}> = new EventEmitter();
   data!:ProgressInfo;
   showPopover = false;
   tableHeader!:ColumnsSchema[];
   months = ['Jan' , 'Feb' , 'Mar' , 'Apr' , 'May' , 'Jun' , 'Jul' , 'Aug' , 'Sep' , 'Oct' , 'Nov' , 'Dec'];
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   visible = false;
+  isEditMode = false;
   constructor(private elementRef: ElementRef , private confirmationService: ConfirmationService) {}
   ngOnInit(): void {
     this.data = {
@@ -88,7 +89,9 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       },
     ]
   }
+  newData!:PSRProjectDetailsModel;
   ngOnChanges(): void {
+    this.newData = JSON.parse(JSON.stringify(this.projectData()));
     const start = this.projectData().startDate;
     const end = this.projectData().endDate;
     if(start && end)
@@ -112,8 +115,11 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   {
     console.log(formValue);
     this.formValues.push(formValue);
+    console.log(this.formValues);
     this.addRecordInTable.emit(formValue);
     this.visible = false;
+    this.newData.chartDetails.push(formValue)
+    // this.newData = JSON.parse(JSON.stringify(this.projectData()));
   }
   deletedData!:ChartDetails;
   deleteRecord(e:ChartDetails)
@@ -129,18 +135,53 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   }
   deleteRecordRow()
   {
-    console.log(this.deletedData);
+
+      this.newData.chartDetails = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
+      this.formValues = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
+      this.close();
+      console.log(this.formValues);
+    // console.log(this.newData);
   }
+  selectedItem!:ChartDetails;
   cancel()
   {
     this.formValues = [];
     this.closePopupEmit.emit(this.projectData().id)
+    this.isEditMode = false;
+    const filteredArray = this.tableHeader.filter(obj => obj.key === '');
+    if(filteredArray.length === 0)
+    {
+      this.tableHeader.push({
+        key : "",
+        type : "text",
+        label : ""
+      });
+    }
+    this.newData = JSON.parse(JSON.stringify(this.projectData()));
+    console.log(this.selectedItem);
+    console.log(this.projectData());
   }
   closePopup()
   {
     this.overlayPanel.hide();
     this.formValues = []
+    this.isEditMode = false;
     this.closePopupEmit.emit(this.projectData().id)
+    const filteredArray = this.tableHeader.filter(obj => obj.key === '');
+    if(filteredArray.length === 0)
+    {
+      this.tableHeader.push({
+        key : "",
+        type : "text",
+        label : ""
+      });
+    }
+    this.newData = JSON.parse(JSON.stringify(this.projectData()));
+  }
+  getUpdatedData(e:{items:ChartDetails[] , id:number})
+  {
+    this.selectedItem = e.items.filter(val => val.id === e.id)[0];
+    console.log(this.selectedItem);
   }
   addRecord()
   {
@@ -148,6 +189,25 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   }
   saveData()
   {
-    this.sendData.emit(this.projectData().id);
+    // console.log(this.selectedItem);
+    // console.log(this.projectData());
+    if(this.selectedItem)
+    {
+      this.projectData().chartDetails.forEach((d , index) => {
+        if(d.id === this.selectedItem.id)
+        {
+          this.projectData().chartDetails[index] = this.selectedItem;
+        }
+      })
+    }
+    this.sendData.emit({id : this.projectData().id , type : this.selectedItem ? 'editMode' : 'addMode'});
+    this.isEditMode = false;
+  }
+  editMode()
+  {
+    console.log('sfd');
+    this.isEditMode = true;
+    const filteredArray = this.tableHeader.filter(obj => obj.key !== '');
+    this.tableHeader = filteredArray;
   }
 }

@@ -12,7 +12,11 @@
           @if(major?.hasError("required") && major?.dirty) {
           <small class="error-msg"
             >major activities/deliverables is required</small
-          >
+          >}
+          @if(major?.hasError("maxlength") && major?.dirty) {
+          <small class="error-msg"
+            style = 'width:380px;'
+            >major activities/deliverables max length is 100 characters</small>
           }
         </div>
       </div>
@@ -54,9 +58,14 @@
             placeholder="add completion level"
             formControlName="completion_level"
             (keypress)="keyPress($event)"
+            min = 0 
+            max = 100
           />
           @if(completionLevel?.hasError("required") && completionLevel?.dirty) {
           <small class="error-msg">completion Level is required</small>
+          }
+          @if(completionLevel?.value > 100) {
+          <small class="error-msg">completion Level max number is 100</small>
           }
         </div>
       </div>

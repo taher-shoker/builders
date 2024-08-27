@@ -92,8 +92,8 @@
 }
 ::ng-deep .add-project-details-dialog {
   .p-dialog-content {
-    border-top-left-radius: 6px !important;
-    border-top-right-radius: 6px !important;
+    border-top-left-radius: 10px !important;
+    border-top-right-radius: 10px !important;
     padding: 0 !important;
   }
 }
@@ -103,7 +103,7 @@
   height: 66px;
 }
 .popover-section {
-  min-width: 650px;
+  width: 720px;
   max-height: 500px;
   overflow: auto;
   .arrow {
@@ -219,6 +219,28 @@
         background-color: var(--stc-red-color2);
         color:var(--stc-white-color);
       }
+    }
+  }
+}
+.main-title
+{
+  display: flex;
+  align-items: center;
+  gap:10px;
+  .edit-img
+  {
+    display: flex;
+    align-items: center;
+    gap:3px;
+    cursor: pointer;
+    img
+    {
+      width:15px;
+    }
+    span
+    {
+      color:var(--stc-purple-color);
+      text-decoration:underline;
     }
   }
 }

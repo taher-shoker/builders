@@ -110,31 +110,42 @@
     >
     <div class = "header mb-3">
       <div class = "header-actions">
-        @if(formValues.length !== 0)
+        @if(formValues.length !== 0 || isEditMode)
         {
           <div class="buttons">
             <button class = "cancel-btn" type="button" (click)="cancel()">cancel</button>
             <button class = "add-btn" type="button" (click)="saveData()">save</button>
           </div>
         }
-        <i class = 'pi pi-times-circle' (click)="closePopup()"></i>
+        <i class = 'pi pi-times-circle' (click)="closePopup()" style = "margin-right:1px;"></i>
       </div>
-      <p>details for chart</p>
+      <div class = "main-title">
+        <p>details for chart</p>
+        @if((!isEditMode) && (formValues.length !== 0 || projectData().chartDetails.length !== 0))
+        {
+          <div class="edit-img" (click)="editMode()">
+            <img src="assets/images/edit.svg" alt="">
+            <span>edit</span>
+          </div>
+        }
+      </div>
     </div>
     <stc-apps-custom-table
       [headers]="tableHeader"
-      [items]="projectData().chartDetails"
+      [items]="newData.chartDetails"
       [psrTable]="true"
       [fontFamily]="'STCForwardFont'"
       (addRecord)="addRecord()"
       (deleteAddedRecord)="deleteRecord($event)"
+      [isEditMode]="isEditMode"
+      (updatedData)="getUpdatedData($event)"
     />
   </section> 
 </p-overlayPanel>
 <p-dialog
   [modal]="true"
   [(visible)]="visible"
-  [style]="{ width: '40rem' }"
+  [style]="{ width: '45rem' }"
   [draggable]="false"
   [dismissableMask]="false"
   [showHeader]="false"
@@ -142,7 +153,7 @@
 >
   <div>
     <stc-apps-add-project-form
-      [id]="projectData().id"
+      [id]="projectData().chartDetails.length !== 0 ? projectData().chartDetails[projectData().chartDetails.length - 1].id : 0"
       (closePopupEmit)="visible = false"
       (getValues)="getFormValues($event)"
     />
