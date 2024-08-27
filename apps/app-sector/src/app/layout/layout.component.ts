@@ -28,19 +28,13 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.sectorName = this.cookieService.get('sectorName');
     console.log(this.sectorName, 'navItem');
     this.navItems = [
-      {
-        name: 'Sectors',
-        url: '/sectors',
-        icon: 'fa-th-large',
-        roles: ['APPROVERS'],
-        urlHome: `/sectorPage/${this.sectorName}`,
-      },
+     
       {
         name: 'home',
-        url: `/sectorPage/${this.sectorName}`,
+        url: `/sectors/${this.sectorName}`,
         icon: 'fa-home',
         roles: ['APPROVERS,CREATORS'],
-        urlHome: `/sectorPage/${this.sectorName}`,
+        urlHome: `/sectors/${this.sectorName}`,
       },
     ];
   }
@@ -81,7 +75,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
                 url: '/data-upload',
                 icon: 'fa-upload',
                 roles: ['Data_Admins'],
-                urlHome: `/sectorPage/${this.sectorName}`,
+                urlHome: `/sectors/${this.sectorName}`,
               });
             }
           }
