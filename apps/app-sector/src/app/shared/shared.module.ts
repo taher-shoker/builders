@@ -13,6 +13,10 @@ import {
   MatDialogContent,
   MatDialogTitle,
 } from '@angular/material/dialog';
+import { BreadcrumbsComponent } from './breadcrumbs/breadcrumbs.component';
+import { RouterModule } from '@angular/router';
+import { MentionModule } from 'angular-mentions';
+import { MentionsEditorComponent } from './mentions-editor/mentions-editor.component';
 
 const components = [
   ResultScoreComponent,
@@ -21,6 +25,8 @@ const components = [
   CommentEditorComponent,
   ProfileComponent,
   ConfirmationDialogeComponent,
+  BreadcrumbsComponent,
+  MentionsEditorComponent,
 ];
 const modules = [
   CommonModule,
@@ -29,10 +35,12 @@ const modules = [
   MatDialogClose,
   MatDialogActions,
   MatDialogContent,
+  RouterModule,
+  MentionModule,
 ];
 
 @NgModule({
-  declarations: [...components],
+  declarations: [...components, MentionsEditorComponent],
   imports: [...modules],
   exports: [...components, ...modules],
 })
