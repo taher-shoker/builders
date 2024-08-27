@@ -1,6 +1,6 @@
 {
   "fileValidation": {
-    "acceptType": "image/png,image/jpeg,image/jpg,application/pdf,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,message/rfc822,application/vnd.ms-outlook,.msg,.rar,application/zip,application/x-zip-compressed,application/x-compressed",
+    "acceptType": "image/png,image/jpeg,image/jpg,image/gif,application/pdf,text/csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,message/rfc822,application/vnd.ms-outlook,.msg,.rar,application/zip,application/x-zip-compressed,application/x-compressed",
     "sizeWithMegaBytes": 50
   },
   "characterLimit": {

@@ -115,7 +115,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleDeleteFilter() {
     if (!this.reportsService.userInGroup('System_Process_Admin')) {
-      this.reportStatus.length = 3;
+      this.reportStatus.length = 2;
     }
   }
 
@@ -259,7 +259,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
       if (res) {
         const { from, to } = res;
         console.log('exp res :', from, to);
-        
+
         this.reportsService.exportReports({ from, to }).subscribe({
           next: (buffer) => {
             const data: Blob = new Blob([buffer]);
