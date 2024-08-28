@@ -7,6 +7,7 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 import { FileModel } from '../../../../models/scorecard.model';
+import { PSRService } from '../../../../services/psr.services';
 
 @Component({
   selector: 'stc-apps-tab-details',
@@ -21,6 +22,7 @@ export class TabDetailsComponent implements OnInit{
   isEmpty:InputSignal<boolean> = input.required<boolean>();
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService)
+  psrService = inject(PSRService);
   ngOnInit(): void {
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
@@ -34,7 +36,20 @@ export class TabDetailsComponent implements OnInit{
   }
   downloadTemplate()
   {
-    console.log('test');
+    this.psrService.downloadExecutiveViewTemplate().subscribe({
+      next : (res) => {
+        this.downloadFile(res, `psrProjects.csv`);
+      }
+    })
+  }
+  downloadFile(data: string, filename: string) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
   importData(file:FileModel | null)
   {

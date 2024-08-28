@@ -1,84 +1,87 @@
 <div class="financial-scorecard-costs-card">
-  <p class = "financial-scorecard-costs-card-title">{{kpiData().title}}</p>
+  <div class="financial-scorecard-costs-card-header">
+    <p class="financial-scorecard-costs-card-title">{{ kpiData().title }}</p>
+    @if(kpiData().details) {
+    <a
+      (click)="displayDrilldown()"
+      class="financial-scorecard-costs-card-header-details"
+      >view details</a
+    >
+    }
+  </div>
   <div class="financial-scorecard-costs-card-statuses">
-    @if(kpiData() && kpiData().achievedStatus)
-    {
-      <stc-apps-kpi-status-card
-        [kpiStatus]="kpiData().achievedStatus!"
-        [kpiType]="'achieved'"
-      />
-    }
-    @if(kpiData() && kpiData().formula)
-    {
-      <stc-apps-kpi-status-card
-        [kpiStatus]="kpiData().formula!"
-        [kpiType]="'not-achieved'"
-      />
-    }
-    @if(kpiData() && kpiData().actual)
-    {
-      <stc-apps-kpi-status-card
-        [kpiStatus]="kpiData().actual!"
-        [kpiType]="'actual'"
-      />
+    @if(kpiData() && kpiData().achievedStatus) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="kpiData().achievedStatus!"
+      [kpiType]="'achieved'"
+    />
+    } @if(kpiData() && kpiData().formula) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="kpiData().formula!"
+      [kpiType]="'not-achieved'"
+    />
+    } @if(kpiData() && kpiData().actual) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="kpiData().actual!"
+      [kpiType]="'actual'"
+    />
     }
   </div>
   <div class="financial-scorecard-costs-card-cards">
     <div class="row">
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <div class="financial-scorecard-costs-card-cards-weight">
-        <div class = "weight-card">
-          <p class = "weight2">weight</p>
-          <span>:</span>
-          <p class = "weight-val">{{kpiData().weight}}%</p>
-        </div>
-        <div class = "weight-card">
-          <p class = "weight2">unit</p>
-          <span>:</span>
-          <p class = "weight-val">{{kpiData().unit}}</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <div class="financial-scorecard-costs-card-cards-weight">
-        <div class = "weight-card">
-          <p class = "weight2">baseline</p>
-          <span>:</span>
-          <p class = "weight-val">
-            @if (kpiData().baseline) {
-              {{kpiData().baseline}}
-              @if (kpiData().unit === '%') {
-                %
-              }
-            } @else {
-              N/A
-            }
-          </p>
-        </div>
-        <div class = "weight-card">
-          <p class = "weight2">target</p>
-          <span>:</span>
-          <p class = "weight-val">
-            {{kpiData().target}}
-            @if (kpiData().unit === '%') {
-              %
-            }
-          </p>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="financial-scorecard-costs-card-cards-weight">
+          <div class="weight-card">
+            <p class="weight2">weight</p>
+            <span>:</span>
+            <p class="weight-val">{{ kpiData().weight }}%</p>
+          </div>
+          <div class="weight-card">
+            <p class="weight2">unit</p>
+            <span>:</span>
+            <p class="weight-val">{{ kpiData().unit }}</p>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <div class="financial-scorecard-costs-card-cards-ceiling">
-        <p>ceiling</p>
-        <span>{{kpiData().ceiling}}%</span>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="financial-scorecard-costs-card-cards-weight">
+          <div class="weight-card">
+            <p class="weight2">baseline</p>
+            <span>:</span>
+            <p class="weight-val">
+              @if (kpiData().baseline) {
+              {{ kpiData().baseline }}
+              @if (kpiData().unit === '%') { % } } @else { N/A }
+            </p>
+          </div>
+          <div class="weight-card">
+            <p class="weight2">target</p>
+            <span>:</span>
+            <p class="weight-val">
+              {{ kpiData().target }}
+              @if (kpiData().unit === '%') { % }
+            </p>
+          </div>
+        </div>
       </div>
-    </div>
-    <div class="col-lg-6 col-md-6 col-sm-12">
-      <div class="financial-scorecard-costs-card-cards-ceiling">
-        <p>threshold</p>
-        <span>{{kpiData().threshold}}%</span>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="financial-scorecard-costs-card-cards-ceiling">
+          <p>ceiling</p>
+          <span>{{ kpiData().ceiling }}%</span>
+        </div>
       </div>
-    </div>
+      <div class="col-lg-6 col-md-6 col-sm-12">
+        <div class="financial-scorecard-costs-card-cards-ceiling">
+          <p>threshold</p>
+          <span>{{ kpiData().threshold }}%</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
+@if(kpiData().details)
+{
+  <p-overlayPanel #overlayPanel dismissable="true">
+    <section class="popover-section">{{kpiData().details}}</section>
+  </p-overlayPanel>
+}

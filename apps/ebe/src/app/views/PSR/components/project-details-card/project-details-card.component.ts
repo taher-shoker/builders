@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, input, InputSignal, OnChanges, OnInit , Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, input, InputSignal, OnChanges, OnInit , Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AddProjectForm, ChartDetails, ProgressInfo, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -22,10 +22,11 @@ export interface ColumnsSchema {
   providers : [ConfirmationService]
 })
 export class ProjectDetailsCardComponent implements OnInit , OnChanges{
+  @Input() isAdded!:boolean;
   projectData:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
   @Output() addRecordInTable:EventEmitter<AddProjectForm> = new EventEmitter();
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
-  @Output() sendData:EventEmitter<{id:number , type:string}> = new EventEmitter();
+  @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
   data!:ProgressInfo;
   showPopover = false;
   tableHeader!:ColumnsSchema[];
@@ -111,11 +112,12 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.visible = true;
   }
   formValues:AddProjectForm[] = [];
+  formValues2:AddProjectForm[] = [];
   getFormValues(formValue:AddProjectForm)
   {
-    console.log(formValue);
+    this.selectedItem = null;
     this.formValues.push(formValue);
-    console.log(this.formValues);
+    this.formValues2.push(formValue);
     this.addRecordInTable.emit(formValue);
     this.visible = false;
     this.newData.chartDetails.push(formValue)
@@ -135,14 +137,14 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   }
   deleteRecordRow()
   {
-
-      this.newData.chartDetails = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
-      this.formValues = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
-      this.close();
-      console.log(this.formValues);
-    // console.log(this.newData);
+    this.newData.chartDetails = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
+    this.projectData().chartDetails = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
+    this.formValues2 = this.formValues2.filter(val => val.major !== this.deletedData.major);
+    this.formValues = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
+    console.log(this.newData.chartDetails);
+    this.close();
   }
-  selectedItem!:ChartDetails;
+  selectedItem!:ChartDetails | null;
   cancel()
   {
     this.formValues = [];
@@ -158,6 +160,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       });
     }
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
+    this.formValues2 = [];
     console.log(this.selectedItem);
     console.log(this.projectData());
   }
@@ -168,6 +171,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.isEditMode = false;
     this.closePopupEmit.emit(this.projectData().id)
     const filteredArray = this.tableHeader.filter(obj => obj.key === '');
+    this.formValues2 = [];
     if(filteredArray.length === 0)
     {
       this.tableHeader.push({
@@ -189,19 +193,22 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   }
   saveData()
   {
-    // console.log(this.selectedItem);
+    console.log(this.selectedItem);
     // console.log(this.projectData());
     if(this.selectedItem)
     {
       this.projectData().chartDetails.forEach((d , index) => {
-        if(d.id === this.selectedItem.id)
+        if(this.selectedItem && d.id === this.selectedItem.id)
         {
           this.projectData().chartDetails[index] = this.selectedItem;
         }
       })
     }
-    this.sendData.emit({id : this.projectData().id , type : this.selectedItem ? 'editMode' : 'addMode'});
-    this.isEditMode = false;
+    this.sendData.emit({id : this.projectData().id , data : this.newData.chartDetails});
+    if(this.isAdded === true)
+    {
+      this.isEditMode = false;
+    }
   }
   editMode()
   {

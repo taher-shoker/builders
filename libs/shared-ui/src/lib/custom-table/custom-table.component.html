@@ -45,23 +45,21 @@
     }
   </tbody>
 </table>
-@if(psrTable() && items.length === 0)
-{
-  <p
-    [ngStyle]="{'font-family' : fontFamily()}" 
-    class = "empty-details"
-  >there are no details</p>
-}
-@if(psrTable())
-{
-  <button type = "button" class = "add-record-btn" [ngStyle]="{'font-family' : fontFamily()}" (click)="addNewRecord()">
-    <img src="assets/images/add-square.svg" alt="">
-    <span>
-      add new record
-    </span>
-  </button>
-}
-@if(paginate && length > 0){
+@if(psrTable() && items.length === 0) {
+<p [ngStyle]="{ 'font-family': fontFamily() }" class="empty-details">
+  there are no details
+</p>
+} @if(psrTable()) {
+<button
+  type="button"
+  class="add-record-btn"
+  [ngStyle]="{ 'font-family': fontFamily() }"
+  (click)="addNewRecord()"
+>
+  <img src="assets/images/add-square.svg" alt="" />
+  <span> add new record </span>
+</button>
+} @if(paginate && length > 0){
 <stc-apps-paginator
   [pageRows]="paginationConfig.pageCount"
   [elementsLength]="length"
@@ -86,42 +84,67 @@
     }@else {
 
     <td
-      [class.psrTabldID]="psrTable() && (header.label === 'ID' || header.label === 'Start' || header.label === 'Duration')"
-      [class.psrTabldMajor]="psrTable() && header.label === 'Major Activities/Deliverables'"
+      [class.psrTabldID]="
+        psrTable() &&
+        (header.label === 'ID' ||
+          header.label === 'Start' ||
+          header.label === 'Duration')
+      "
+      [class.psrTabldMajor]="
+        psrTable() && header.label === 'Major Activities/Deliverables'
+      "
       [class.psrTabldLevel]="psrTable() && header.label === 'Completion Level'"
       [ngStyle]="{
-        'font-family' : fontFamily() && psrTable() ? fontFamily() : ''
+        'font-family': fontFamily() && psrTable() ? fontFamily() : ''
       }"
     >
-    @if(!isEditMode())
-    {
-      @if(header.key === '')
-      {
-        <div class = "delete-btn" (click)="deleteRecord(item)" [ngStyle]="{
-          'font-family' : fontFamily() && psrTable() ? fontFamily() : ''
-        }">
-          <img src="assets/images/trash.svg" alt="">
-          delete
-        </div>
+      @if(!isEditMode()) { @if(header.key === '') {
+      <div
+        class="delete-btn"
+        (click)="deleteRecord(item)"
+        [ngStyle]="{
+          'font-family': fontFamily() && psrTable() ? fontFamily() : ''
+        }"
+      >
+        <img src="assets/images/trash.svg" alt="" />
+        delete
+      </div>
       } @else {
-        {{ item[header.key] }}
-      }
-      @if(psrTable() && header.label === 'Completion Level')
-      {
-        %
-      }
-    } @else {
-      @if(header.key !== '')
-      {
-        @if(header.key !== 'id')
+      {{ item[header.key] }}
+      } @if(psrTable() && header.label === 'Completion Level') { % } } @else {
+      @if(header.key !== '') { @if(header.key !== 'id') {
+        @if(header.key === 'major')
         {
-          <input type="text" [(ngModel)]="item[header.key]" class = "edit-input" (ngModelChange)="inputChanged(item['id'])" />
+          <input
+            type="text"
+            [(ngModel)]="item[header.key]"
+            class="edit-input"
+            (ngModelChange)="inputChanged(item['id'])"
+          />
         } @else {
-          {{ item[header.key] }}
+          @if(header.key === 'completion_level')
+          {
+            <input
+              type="number"
+              [(ngModel)]="item[header.key]"
+              class="edit-input"
+              (keypress)="keyPress2($event)"
+              max="100"
+            />
+          } @else {
+            <input
+              type="number"
+              [(ngModel)]="item[header.key]"
+              class="edit-input"
+              (ngModelChange)="inputChanged(item['id'])"
+              (keypress)="keyPress($event)"
+            />
+          }
         }
-      }
-    }
-  </td>
+      } @else {
+      {{ item[header.key] }}
+      } } }
+    </td>
     } } @else if(header.type === 'actions') {
 
     <td>

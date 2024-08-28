@@ -71,7 +71,7 @@ import { TabViewModule } from 'primeng/tabview';
 import { MultiCirclesProgressBarComponent } from './multi-circles-progress-bar/multi-circles-progress-bar.component';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-
+import { OverlayPanelModule } from 'primeng/overlaypanel';
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
@@ -151,7 +151,8 @@ const components = [
     MatMenuModule,
     DateAgoPipe,
     NgCircleProgressModule.forRoot(),
-    TabViewModule
+    TabViewModule,
+    OverlayPanelModule
   ],
 })
 export class SharedUiModule {}

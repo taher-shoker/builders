@@ -27,6 +27,7 @@ export interface PSRProjectDetailsModel
     chartDetails:ChartDetails[];
     vactual:number;
     vplanned:number;
+    title:string;
 }
 export interface ChartDetails
 {

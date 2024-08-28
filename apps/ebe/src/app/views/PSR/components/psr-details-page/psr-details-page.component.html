@@ -10,9 +10,15 @@
       <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
     </div>
     <div class="scored-card-section-tap-details">
+      @if(currentMode === 'editMode') {
+        <stc-apps-edit-mode-view 
+          (import)="showDialog()"
+          (export)="downloadTemplate()"
+        />
+      }
       <div class="projects-container">
         <p class = "psr-tabview-header">
-            data governance strategic projects execution (execution view)
+          {{PSRDetailsData ? PSRDetailsData[0].title : ''}}
         </p>
         <div class="project-cards-container">
           @for (proj of PSRDetailsData; track $index) {
@@ -22,6 +28,7 @@
                 (addRecordInTable)="addRecordInTable($event)"
                 (closePopupEmit)="closePopup($event)"
                 (sendData)="sendData($event)"
+                [isAdded]="isAdded"
               />
             </div>
           }
@@ -29,3 +36,8 @@
       </div>
     </div>
   </section>
+<stc-apps-dialog-modal 
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
+/>

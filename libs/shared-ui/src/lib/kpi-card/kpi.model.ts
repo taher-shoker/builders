@@ -11,6 +11,7 @@ export interface KpiModel
   target:number;
   ceiling:number;
   threshold:number;
+  details:string | null;
 }
 export interface KpiStatusModel
 {

@@ -244,3 +244,14 @@
     }
   }
 }
+.empty-chart-data
+{
+  margin: 0;
+  height: 240px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 23px;
+  @extend .stcFont;
+  font-weight: 600;
+}

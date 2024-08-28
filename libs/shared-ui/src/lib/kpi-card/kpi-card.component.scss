@@ -6,6 +6,21 @@
     background-color: var(--stc-grey-light-color);
     padding: 20px;
     border-radius: 20px;
+    &-header
+    {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &-details
+      {
+        margin: 0;
+        text-decoration: underline;
+        color:var(--stc-purple-color);
+        @extend .stcFont;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    }
     &-title
     {
       text-transform: capitalize;
@@ -106,3 +121,11 @@
 //     transform: translate(-50%, 0);
 //   }
 // }
+.popover-section
+{
+  color:var(--stc-purple-color);
+  @extend .stcFont;
+  font-size: 16px;
+  max-width:300px;
+  text-align: justify;
+}

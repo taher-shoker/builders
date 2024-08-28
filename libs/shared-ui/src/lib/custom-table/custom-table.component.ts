@@ -222,4 +222,28 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   {
     this.updatedData.emit({items:this.items , id : id})
   }
+  keyPress(e:KeyboardEvent)
+  {
+    if (e.key === 'e') {
+      e.preventDefault();
+    }
+  }
+  keyPress2(e:KeyboardEvent)
+  {   
+    if (e.key === 'e') {
+      e.preventDefault();
+    } else {
+      if(e.target)
+        {
+          const val = e.target as HTMLInputElement;
+          const val2 = val.value;
+          const val3 = val2 + e.key;
+          console.log(val3);
+          if(+val3 > 100)
+          {
+            e.preventDefault();
+          }
+        } 
+    }
+  }
 }
