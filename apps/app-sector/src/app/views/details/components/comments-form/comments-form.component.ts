@@ -249,9 +249,11 @@ export class CommentsFormComponent implements OnInit, OnChanges {
             result.id
           );
         }
+        this.form.get('comment')?.reset();
+        this.form.updateValueAndValidity();
       },
     });
-    this.form.reset();
+    // this.form.reset();
   }
 
   onFilesSelected(filesArray: File[]) {

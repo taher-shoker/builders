@@ -11,6 +11,7 @@
         (itemSelected)="onItemSelected($event)"
         (change)="change($event)"
         (keyup)="onInput($event)"
+        [textContent]="value"
       ></div>
       <ng-template #mentionListTemplate let-item="item" let-index="index">
         <!-- <span>{{ item.name }}</span> -->
