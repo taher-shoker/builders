@@ -60,6 +60,7 @@ export class ExpansionPanelBodyComponent {
         +this.kpiTargetValue().toFixed(2),
         +this.kpiActualValue().toFixed(2)
       ),
+      unit: this.kpiUnit(),
     };
     return data;
   });
