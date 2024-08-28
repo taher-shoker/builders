@@ -176,19 +176,22 @@ export class UserFormComponent implements OnInit, OnChanges {
       } else if (
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
       ) {
+        console.log(this.form.get('userDelegates')?.value);
         dataForm = {
           userGroups: [{ id: this.form.get('userGroups')?.value.id }],
           email: this.form.get('email')?.value,
           name: this.form.get('name')?.value,
           jobTitle: this.form.get('jobTitle')?.value,
-          userDelegates: this.form.get('userDelegates')?.value
-            ? [
-                {
-                  delegateName: this.form.get('userDelegates')?.value,
-                  systemName: this.userService.getCurrentSystem(),
-                },
-              ]
-            : [],
+          userDelegates:
+            this.form.get('userDelegates')?.value &&
+            this.form.get('userDelegates')?.value.length > 0
+              ? [
+                  {
+                    delegateName: this.form.get('userDelegates')?.value,
+                    systemName: this.userService.getCurrentSystem(),
+                  },
+                ]
+              : [],
         };
       } else if (
         this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
