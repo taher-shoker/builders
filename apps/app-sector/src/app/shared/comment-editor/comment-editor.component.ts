@@ -138,6 +138,8 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   }
 
   registerOnChange(fn: (value: string) => void): void {
+    console.log('register on cahnge');
+    
     this.onChange = fn;
   }
 

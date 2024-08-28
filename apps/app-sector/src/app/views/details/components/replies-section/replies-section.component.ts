@@ -131,6 +131,8 @@ export class RepliesSectionComponent implements OnInit {
     this.notificatinService.mentionsList.subscribe((result: user[]) => {
       if (result) {
         this.mentions = result;
+        console.log(this.mentions,'this.mentions');
+        
       } else {
         this.mentions = [];
       }
@@ -163,18 +165,19 @@ export class RepliesSectionComponent implements OnInit {
     this.mentionsArray = mentionsArray;
     if (mentionsArray?.length == 0) {
       this.notificatinService.mentionsObjects = [];
-    } else if (
-      mentionsArray.length !== this.notificatinService.mentionsObjects.length
-    ) {
-      this.notificatinService.mentionsObjects =
-        this.notificatinService.mentionsObjects.filter((mention) =>
-          this.mentionsArray.includes('@' + mention.name)
-        );
     }
+  }
+  deleteMention(event: number[]) {
+    console.log('deleteMention', event);
+    const ids = event.map((str) => Number(str));
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter((obj) =>
+        ids.includes(obj.id)
+      );
   }
 
   extractMentions(text: string): string[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mentions: string[] = this.mentions.map((mention: user) => {
       return `@${mention.name}`;
     });
@@ -239,12 +242,13 @@ export class RepliesSectionComponent implements OnInit {
   }
   refactoringCommaSepartedMention(commaSepartedMentions: string): any[] {
     let mentionsSeparted: any = commaSepartedMentions?.split(',');
+    console.log('mentions separted', mentionsSeparted);
 
     mentionsSeparted = mentionsSeparted?.map((mention: any) => {
       const pipeSeparted = mention.split('|');
       const mentionObj: user = {
         id: +pipeSeparted[0],
-        name: pipeSeparted[1].slice(1),
+        name: pipeSeparted[1],
         email: pipeSeparted[2],
         jobTitle: pipeSeparted[3],
       };
@@ -282,20 +286,20 @@ export class RepliesSectionComponent implements OnInit {
       });
     } else if (e == 'Edit') {
       this.notificatinService.mentionsObjects = [];
-      // if (
-      //   this.comments[commentIndex].commaSeparatedMentions !== '' &&
-      //   this.comments[commentIndex].commaSeparatedMentions?.includes('|')
-      // ) {
-      //   this.notificatinService.mentionsObjects =
-      //     this.refactoringCommaSepartedMention(
-      //       this.comments[commentIndex].commaSeparatedMentions!
-      //     );
-      // }
+      if (
+        this.comments[commentIndex].commaSeparatedMentions !== '' &&
+        this.comments[commentIndex].commaSeparatedMentions?.includes('|')
+      ) {
+        this.notificatinService.mentionsObjects =
+          this.refactoringCommaSepartedMention(
+            this.comments[commentIndex].commaSeparatedMentions!
+          );
+      }
 
       this.showCommentTextArea = true;
       this.textAreaOpend.emit('opend');
       const comment = this.comments[commentIndex].comment;
-      // this.editedText.set(comment);
+      this.editedText.set(comment);
       this.form.get('comment')?.setValue(comment);
 
       this.commentActionBtn = 'Update';
@@ -326,7 +330,7 @@ export class RepliesSectionComponent implements OnInit {
     const commentObj: commentEditBody = {
       id: this.comments[this.commentIndex].id,
       comment: this.form.get('comment')?.value,
-      commaSeparatedMentions: this.mentionsArray
+      commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects
           )
@@ -342,7 +346,7 @@ export class RepliesSectionComponent implements OnInit {
         this.comments[this.commentIndex].commaSeparatedMentions =
           result.commaSeparatedMentions;
         this.form.reset();
-        if (this.mentionsArray?.length !== 0) {
+        if (this.notificatinService.mentionsObjects?.length !== 0) {
           this.notificatinService.notificationsSenderEngine(
             result.comment,
             this.notificatinService.mentionsObjects,
@@ -430,7 +434,7 @@ export class RepliesSectionComponent implements OnInit {
           this.form.reset();
           this.editedText.set('');
           this.showCommentTextArea = false;
-          if (this.mentionsArray?.length !== 0) {
+          if (this.notificatinService.mentionsObjects?.length !== 0) {
             this.notificatinService.notificationsSenderEngine(
               result.reply,
               this.notificatinService.mentionsObjects,
@@ -467,7 +471,7 @@ export class RepliesSectionComponent implements OnInit {
     const replyObj: replyEditBody = {
       id: this.comments[this.commentIndex].replies[this.replyIndex].id,
       reply: this.form.get('comment')?.value,
-      commaSeparatedMentions: this.mentionsArray
+      commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects
           )
@@ -485,7 +489,7 @@ export class RepliesSectionComponent implements OnInit {
         this.comments[this.commentIndex].replies[
           this.replyIndex
         ].commaSeparatedMentions = result.commaSeparatedMentions;
-        if (this.mentionsArray?.length !== 0) {
+        if (this.notificatinService.mentionsObjects?.length !== 0) {
           this.notificatinService.notificationsSenderEngine(
             result.reply,
             this.notificatinService.mentionsObjects,

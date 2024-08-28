@@ -4,11 +4,7 @@
   <div class="replies-section_holder">
     @for (comment of comments; let parentLoop=$index;track parentLoop; let
     lastComment=$last) {
-    <div
-      [ngClass]="{
-        'replies-section_item': !lastComment || comment.replies.length !== 0
-      }"
-    >
+    <div class="replies-section_item" [ngStyle]="{'border-bottom' : lastComment ? ' none' :' 1px solid #E0E2E7'}">
       <stc-apps-profile
         [name]="comment.authorName"
         [comment]="comment.comment"
@@ -32,20 +28,14 @@
     @if(showCommentTextArea && parentLoop==commentIndex){
     <form [formGroup]="form">
       <div #targetElement>
-        <!-- <stc-apps-comment-editor
-          class="replies-section_add-reply"
-          formControlName="comment"
-          [placeholder]="placeholder"
-          [mentions]="mentions"
-          [editedText]="editedText()"
-          (contentChange)="onContentChange($event)"
-        ></stc-apps-comment-editor> -->
         <stc-apps-mentions-editor
           class="replies-section_add-reply"
+          [editedText]="editedText()"
           formControlName="comment"
           [placeholder]="placeholder"
           [mentions]="mentions"
           (contentChange)="onContentChange($event)"
+          (deletionEmitter)="deleteMention($event)"
         >
         </stc-apps-mentions-editor>
 
@@ -94,14 +84,16 @@
         $index===replyIndex){
         <form [formGroup]="form">
           <div #targetElement>
-            <stc-apps-comment-editor
+            <stc-apps-mentions-editor
               class="replies-section_add-reply"
+              [editedText]="editedText()"
               formControlName="comment"
               [placeholder]="placeholder"
               [mentions]="mentions"
-              [editedText]="editedText()"
               (contentChange)="onContentChange($event)"
-            ></stc-apps-comment-editor>
+              (deletionEmitter)="deleteMention($event)"
+            >
+            </stc-apps-mentions-editor>
             <div class="replies-section_add-reply-actions">
               <button class="cancel-btn" (click)="cancelReply()">Cancel</button>
               <button
