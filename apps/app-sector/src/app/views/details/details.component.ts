@@ -180,7 +180,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Weight',
-        description: kpiObject.weight * 100 + '%',
+        description: (kpiObject.weight * 100).toFixed(2) + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
@@ -220,7 +220,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Threshold',
-        description: Math.floor(kpiObject.target * 100) + '%',
+        description: Math.floor(kpiObject.target * 100).toFixed(2) + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {

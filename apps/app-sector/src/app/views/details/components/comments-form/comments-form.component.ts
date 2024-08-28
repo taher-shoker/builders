@@ -81,7 +81,6 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   //     jobTitle: 'Football Manager',
   //   },
   // ];
-  mentionsArray: string[] = [''];
   constructor(
     private fb: FormBuilder,
     private dialogeService: dialogeService,
@@ -166,14 +165,16 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       );
     }
   }
-
+  mentionsArray: string[] = [''];
   onContentChange(content: string) {
     console.log('Content:', content);
-     const contentText = this.extractTextFromContent(content);
-    // const mentionsArray = this.extractMentions(content);
-    // this.mentionsArray = mentionsArray;
-     this.form.get('comment')?.setValue(contentText);
-    // console.log('Mentions:', mentionsArray);
+    const contentText = this.extractTextFromContent(content);
+    const mentionsArray = this.extractMentions(content);
+    this.mentionsArray = mentionsArray;
+    this.form.get('comment')?.setValue(contentText);
+    if (this.mentionsArray.length == 0) {
+      this.notificatinService.mentionsObjects = [];
+    }
   }
   deleteMention(event: number[]) {
     console.log('deleteMention', event);
@@ -220,7 +221,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       quarter: this.sharedFormService.getForm().value.quarter,
       scorecardTitle: this.cookieService.get('selectedTab'),
       kpiCode: this.pathKpiCode(),
-      comment: this.form.value.comment,
+      comment: this.form.value.comment.replace(/@/g, ''),
       commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects
@@ -245,13 +246,13 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       },
     });
 
-    this.form.controls['comment'].setValue('');
-    this.cdr.detectChanges();
-    this.form.get('comment')?.reset();
+    // this.form.controls['comment'].setValue('');
+    // this.cdr.detectChanges();
+    // this.form.get('comment')?.reset();
 
-    this.form.markAsPristine();
-    this.form.markAsUntouched();
-    this.form.updateValueAndValidity();
+    // this.form.markAsPristine();
+    // this.form.markAsUntouched();
+    // this.form.updateValueAndValidity();
   }
 
   onFilesSelected(filesArray: File[]) {

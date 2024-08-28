@@ -27,6 +27,7 @@ export class ExpansionPanelBodyComponent {
   kpiActualValue: InputSignal<number> = input(0);
   kpiTargetValue: InputSignal<number> = input(0);
   reportData: WritableSignal<any | undefined> = signal(undefined);
+  kpiUnit: InputSignal<string> = input('%');
   progressBarData = computed(() => {
     let data: ProgressInfo;
     // eslint-disable-next-line prefer-const
@@ -35,26 +36,29 @@ export class ExpansionPanelBodyComponent {
       prefixValue: 0,
       suffixText: '',
       suffixValue: 0,
-      progressValue: this.kpiTargetValue() * 100,
+      progressValue:
+        this.kpiTargetValue() > this.kpiActualValue()
+          ? this.kpiTargetValue()
+          : this.kpiActualValue(),
       indexes: [
         {
           caption: 'Actual',
-          value: +(this.kpiActualValue() * 100).toFixed(2),
+          value: +this.kpiActualValue().toFixed(2),
           position: 'up',
         },
         {
           caption: 'Target',
-          value: +(this.kpiTargetValue() * 100).toFixed(2),
+          value: +this.kpiTargetValue().toFixed(2),
           position: 'down',
         },
       ],
       barColor: this.barColor(
-        +(this.kpiTargetValue() * 100).toFixed(2),
-        +(this.kpiActualValue() * 100).toFixed(2)
+        +this.kpiTargetValue().toFixed(2),
+        +this.kpiActualValue().toFixed(2)
       ),
       bgBarColor: this.barBackgroundColor(
-        +(this.kpiTargetValue() * 100).toFixed(2),
-        +(this.kpiActualValue() * 100).toFixed(2)
+        +this.kpiTargetValue().toFixed(2),
+        +this.kpiActualValue().toFixed(2)
       ),
     };
     return data;

@@ -12,7 +12,6 @@
     ></stc-apps-comment-editor> -->
     <stc-apps-mentions-editor
       formControlName="comment"
-     
       [placeholder]="placeholder"
       [mentions]="mentions"
       (contentChange)="onContentChange($event)"
@@ -26,7 +25,7 @@
     </div>
   </div>
 </form>
-{{ form.value.comment | json }}
+
 <stc-apps-attachments
   [displayedFiles]="
     displayedFiles.length > 0

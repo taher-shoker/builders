@@ -4,13 +4,14 @@
       <div
         class="comments_form_editor"
         type="text"
+        #contentEditable
         [attr.data-placeholder]="placeholder()"
         [mentionConfig]="mentionConfig"
         [mentionListTemplate]="mentionListTemplate"
         contenteditable="true"
         (change)="change($event)"
-        (keyup)="onInput($event)"
-        [textContent]="value"
+        (itemSelected)="onItemSelected($event)"
+        (keyup)="onKeyUp($event)"
       ></div>
       <ng-template #mentionListTemplate let-item="item" let-index="index">
         <!-- <span>{{ item.name }}</span> -->

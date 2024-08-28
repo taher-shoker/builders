@@ -53,7 +53,7 @@ export class NotificationsService {
       if (typeof mention == 'object') {
         mentionsString =
           mentionsString +
-          `${mention.id}|${mention.name}|${mention.email}|${mention.jobTitle}` +
+          `${mention.id}|${mention.name}|${mention.email}` +
           ',';
       } else if (typeof mention == 'string') {
         mentionsString = mentionsString + mention + ',';

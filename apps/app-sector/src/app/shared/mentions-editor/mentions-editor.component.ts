@@ -9,6 +9,7 @@ import {
   OnChanges,
   Output,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { NotificationsService } from '../../views/details/services/notifications.service';
@@ -28,6 +29,8 @@ import { NotificationsService } from '../../views/details/services/notifications
 export class MentionsEditorComponent
   implements ControlValueAccessor, OnChanges
 {
+  @ViewChild('contentEditable', { static: true })
+  contentEditable!: ElementRef<HTMLDivElement>;
   placeholder: InputSignal<string> = input('');
   title: InputSignal<string> = input('');
   mentionProperty: InputSignal<string> = input('name');
@@ -47,10 +50,14 @@ export class MentionsEditorComponent
   private onTouched: () => void = () => {};
 
   get value(): string {
+    console.log('get');
+
     return this._value;
   }
 
   set value(val: string) {
+    console.log('set');
+
     this._value = val;
     this.onChange(val);
     this.contentChange.emit(val);
@@ -64,9 +71,57 @@ export class MentionsEditorComponent
   writeValue(value: string): void {
     console.log('writeValue', value);
     if (value == null) {
-      this._value = '';
+      console.log('hee', value);
+      this.contentEditable.nativeElement.innerHTML = value;
+    } else if (this.editedText()) {
+      console.log('found edited text');
+
+      if (this.notificationService.mentionsObjects) {
+        console.log(this.notificationService.mentionsObjects);
+        this.contentEditable.nativeElement.innerHTML =
+          this.highlightMentions(value);
+      }
+
+      // this.contentEditable.nativeElement.innerHTML = value;
+      // console.log(this.contentEditable.nativeElement.innerHTML);
+    } else {
+      this._value = value;
     }
-    this._value = value;
+  }
+  highlightMentions(content: string): string {
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = content;
+    console.log('in highlights', this.notificationService.mentionsObjects);
+
+    const mentions = this.mentions().map((mention: any) => `${mention.name}`);
+    const mentionRegex = new RegExp(mentions.join('|'), 'gi');
+    console.log(mentionRegex, mentions);
+
+    // Convert NodeList to array to use forEach
+    Array.from(tempDiv.childNodes).forEach((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        let textContent = node.textContent || '';
+        if (this.notificationService.mentionsObjects?.length !== 0) {
+          let index = -1;
+          textContent = textContent.replace(mentionRegex, (match) => {
+            index++;
+            console.log(index);
+
+            return `<span contenteditable=false data-id=${this.notificationService.mentionsObjects[index].id} class="mention" >${match}</span>`;
+          });
+        } else {
+          textContent = textContent.replace(mentionRegex, (match) => {
+            return `<span contenteditable=false class="mention" >${match}</span>`;
+          });
+        }
+
+        const newSpan = document.createElement('span');
+        newSpan.innerHTML = textContent;
+        node.replaceWith(...Array.from(newSpan.childNodes));
+      }
+    });
+
+    return tempDiv.innerHTML;
   }
 
   registerOnChange(fn: (value: string) => void): void {
@@ -76,11 +131,11 @@ export class MentionsEditorComponent
   }
 
   registerOnTouched(fn: () => void): void {
+    console.log('touched');
+
     this.onTouched = fn;
   }
-  search(event: any) {
-    console.log('search', event);
-  }
+
   ngOnChanges(changes: SimpleChanges): void {
     console.log('ngOnchanges');
 
@@ -95,6 +150,8 @@ export class MentionsEditorComponent
   }
 
   initializeMentionConfig() {
+    console.log('initializeMentionConfig');
+
     this.mentionConfig = {
       items: this.items,
       triggerChar: '@',
@@ -127,6 +184,8 @@ export class MentionsEditorComponent
     }
   }
   textToInsertWhenSelect(item: any): any {
+    console.log('textToInsertWhenSelect');
+
     setTimeout(() => {
       pasteHtmlAtCaret(
         '<span contenteditable=false class="mention" data-id=' +
@@ -140,6 +199,15 @@ export class MentionsEditorComponent
     return '';
   }
 
+  textMentions(item: any): string {
+    return (
+      '<span contenteditable=false class="mention" data-id=' +
+      item.id +
+      '>' +
+      item.name +
+      '</span>'
+    );
+  }
   change(e: any) {
     setTimeout(() => {
       console.log('change', e);
@@ -161,14 +229,11 @@ export class MentionsEditorComponent
       this.value += item.name;
     }
   }
-
-  onInput(event: Event): void {
-    const input = event.target as HTMLDivElement;
-    this.value = input.textContent || '';
-  }
 }
 
 export function pasteHtmlAtCaret(html: any) {
+  console.log('pasteHtmlAtCaret', html);
+
   let sel, range;
   if (window.getSelection) {
     sel = window.getSelection();

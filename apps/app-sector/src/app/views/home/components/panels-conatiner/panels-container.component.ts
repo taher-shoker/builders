@@ -14,14 +14,14 @@ export class PanelsContainerComponent {
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   constructor(private cookieService: CookieService) {
-    effect(() => {
-      if (this.newTabSelected()) {
-        this.cookieService.set('selectedTab', this.newTabSelected(), {
-          expires: 7,
-          path: '/',
-        });
-      }
-    });
+    // effect(() => {
+    //   if (this.newTabSelected()) {
+    //     this.cookieService.set('selectedTab', this.newTabSelected(), {
+    //       expires: 7,
+    //       path: '/',
+    //     });
+    //   }
+    // });
   }
 
   getCategoryKeys(): string[] {
