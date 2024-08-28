@@ -143,7 +143,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         '',
         [
           Validators.required,
-          Validators.maxLength(this.configService.getConfig().characterLimit.nameLength),
+          Validators.maxLength(
+            this.configService.getConfig().characterLimit.nameLength
+          ),
           this.noWhitespaceValidator,
         ],
       ],
@@ -368,23 +370,33 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   protected fetchAvailableUsers(index: number): User[] {
-    const availableUsers: User[] = [...this.availableUsers()];
+    // find the available user then exclude the selected from the list
+    const availableUsers: User[] = [
+      ...this.availableUsers().filter(
+        (avUser) =>
+          !this.selectedUsers.some((sUser) => sUser.userEmail === avUser.email)
+      ),
+    ];
 
-    console.log('availableUsers const :', availableUsers);
-
+    // find the current selected user in this control index to be added to the list again
     const userEmail = this.selectedUsers.find(
       (user) => user.index === index
     )?.userEmail;
 
+    // get the user object
     const user = this.users.find((user) => user.email === userEmail);
     if (user) {
+      // add the user to the available user list
       availableUsers.push(user);
     }
 
-    console.log('userEmail is :', userEmail);
-    console.log('user is :', user);
+    // console.log('userEmail is :', userEmail);
+    // console.log('user is :', user);
 
-    return availableUsers;
+    console.table(availableUsers);
+
+    // return the users
+    return availableUsers.sort((a, b) => a.id - b.id);
   }
 
   private createApprovalControl(approval: any): FormGroup {
@@ -589,7 +601,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   private getCategories() {
     this.reportsService.getCategories().subscribe((res) => {
       this.categories.set(res);
-      console.log('Populating categories from parent:', this.categories());
+      // console.log('Populating categories from parent:', this.categories());
     });
   }
 
@@ -806,6 +818,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   removeStep(item: FormGroup, index: number) {
     this.refetchAvailableUsers(index);
+
     // const removedUser = this.users.find(user => user.email === username);
     // console.log("removedUser", removedUser)
 
@@ -813,31 +826,25 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     //   this.availableUsers.set([...this.availableUsers(), removedUser]);
     //   console.log("this avails", this.availableUsers)
     // }
-
     this.requestApprovalsGetter.removeAt(index - 1);
     console.log('available users:', this.availableUsers());
     console.log('index:', index);
   }
 
   refetchAvailableUsers(index: number) {
+    // get the selected user from the selected users list
     const selected = this.selectedUsers.find((user) => user.index === index);
 
+    // if there a selected one
     if (selected) {
-      const selectedUser = this.users.find(
-        (user) => user.email === selected.userEmail
-      );
-      if (selectedUser) {
-        this.availableUsers.set(
-          [...this.availableUsers(), selectedUser].sort((a, b) => a.id - b.id)
-        );
-      }
-
+      // remove from the selected users
       const indexOfRemoval = this.selectedUsers.findIndex(
         (element) => selected.userEmail === element.userEmail
       );
-
+      // splice to remove
       this.selectedUsers.splice(indexOfRemoval, 1);
 
+      // update each selection index
       this.selectedUsers = this.selectedUsers.map((element) => {
         if (element.index > selected.index) {
           return { ...element, index: element.index - 1 };
@@ -845,6 +852,21 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           return element;
         }
       });
+
+      // get the user object for this selection
+      const selectedUser = this.users.find(
+        (user) => user.email === selected.userEmail
+      );
+      // after get the user object add it to the available list
+      if (selectedUser) {
+        if (
+          !this.availableUsers().find((x) => x.email === selected.userEmail)
+        ) {
+          this.availableUsers.set(
+            [...this.availableUsers(), selectedUser].sort((a, b) => a.id - b.id)
+          );
+        }
+      }
     }
   }
 
