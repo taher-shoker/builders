@@ -1,6 +1,7 @@
 import {
   ChangeDetectorRef,
   Component,
+  ElementRef,
   EventEmitter,
   forwardRef,
   input,
@@ -10,6 +11,7 @@ import {
   SimpleChanges,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { NotificationsService } from '../../views/details/services/notifications.service';
 
 @Component({
   selector: 'stc-apps-mentions-editor',
@@ -32,12 +34,16 @@ export class MentionsEditorComponent
   editedText: InputSignal<string> = input('');
   mentions: InputSignal<any> = input([]);
   @Output() contentChange = new EventEmitter<string>();
+  @Output() deletionEmitter = new EventEmitter<number[]>();
+  filteredList: any[] = [];
 
   items: any[] = [];
   mentionConfig: any;
-  _value: string = '';
+  _value: any = '';
 
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched: () => void = () => {};
 
   get value(): string {
@@ -50,21 +56,34 @@ export class MentionsEditorComponent
     this.contentChange.emit(val);
   }
 
-  constructor(private cd: ChangeDetectorRef) {}
+  constructor(
+    private cd: ChangeDetectorRef,
+    private notificationService: NotificationsService
+  ) {}
 
   writeValue(value: string): void {
+    console.log('writeValue', value);
+    if (value == null) {
+      this._value = '';
+    }
     this._value = value;
   }
 
   registerOnChange(fn: (value: string) => void): void {
+    console.log('registerOnChange');
+
     this.onChange = fn;
   }
 
   registerOnTouched(fn: () => void): void {
     this.onTouched = fn;
   }
-
+  search(event: any) {
+    console.log('search', event);
+  }
   ngOnChanges(changes: SimpleChanges): void {
+    console.log('ngOnchanges');
+
     this.items = this.mentions();
     this.initializeMentionConfig();
   }
@@ -86,7 +105,27 @@ export class MentionsEditorComponent
       returnTrigger: true,
     };
   }
+  onKeyUp(event: any) {
+    console.log('onKeyUp', event);
 
+    const input = event.target as HTMLDivElement;
+    this.value = input.textContent || '';
+    if (event.key == 'Backspace') {
+      const spans = event.target.querySelectorAll('span');
+      console.log('keydown', spans);
+      let dataInfo;
+      const dataIds: any[] = [];
+      spans.forEach((span: any) => {
+        // Access data attributes using the dataset property
+        // For example, if you have a data attribute like data-info
+        dataInfo = span.dataset.id;
+        dataIds.push(dataInfo);
+        // Do something with the data attribute value
+        // console.log(dataInfo);
+      });
+      this.deletionEmitter.emit(dataIds);
+    }
+  }
   textToInsertWhenSelect(item: any): any {
     setTimeout(() => {
       pasteHtmlAtCaret(
@@ -103,19 +142,23 @@ export class MentionsEditorComponent
 
   change(e: any) {
     setTimeout(() => {
-      let newe = document.createElement('div');
-      let html = e.target.innerHTML;
+      console.log('change', e);
+      const newe = document.createElement('div');
+      const html = e.target.innerHTML;
       newe.innerHTML = e.target.innerHTML;
       newe.querySelectorAll('b').forEach((elem: any) => {
-        let id = elem.getAttribute('data-id');
+        const id = elem.getAttribute('data-id');
         elem.replaceWith(id);
       });
     }, 0);
   }
 
   onItemSelected(item: any): void {
+    console.log('onItemSelected', item);
+
     if (item) {
-      this.value = item.name;
+      this.notificationService.addMentionObjects(item);
+      this.value += item.name;
     }
   }
 
@@ -132,8 +175,9 @@ export function pasteHtmlAtCaret(html: any) {
     if (sel?.getRangeAt && sel.rangeCount) {
       range = sel.getRangeAt(0);
       range.deleteContents();
-      let el = document.createElement('div');
+      const el = document.createElement('div');
       el.innerHTML = html;
+      // eslint-disable-next-line prefer-const
       let frag = document.createDocumentFragment(),
         node,
         lastNode;

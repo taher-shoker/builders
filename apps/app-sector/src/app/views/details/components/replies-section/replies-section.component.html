@@ -32,14 +32,22 @@
     @if(showCommentTextArea && parentLoop==commentIndex){
     <form [formGroup]="form">
       <div #targetElement>
-        <stc-apps-comment-editor
+        <!-- <stc-apps-comment-editor
           class="replies-section_add-reply"
           formControlName="comment"
           [placeholder]="placeholder"
           [mentions]="mentions"
           [editedText]="editedText()"
           (contentChange)="onContentChange($event)"
-        ></stc-apps-comment-editor>
+        ></stc-apps-comment-editor> -->
+        <stc-apps-mentions-editor
+          class="replies-section_add-reply"
+          formControlName="comment"
+          [placeholder]="placeholder"
+          [mentions]="mentions"
+          (contentChange)="onContentChange($event)"
+        >
+        </stc-apps-mentions-editor>
 
         <div class="replies-section_add-reply-actions">
           <button class="cancel-btn" (click)="cancel()">Cancel</button>

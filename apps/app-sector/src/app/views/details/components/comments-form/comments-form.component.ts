@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   input,
@@ -22,6 +23,7 @@ import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
 import { KpiDTO } from '../../../models/SectorKpisDetails.model';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { NotificationsService } from '../../services/notifications.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'stc-apps-comments-form',
@@ -29,9 +31,8 @@ import { NotificationsService } from '../../services/notifications.service';
   styleUrls: ['./comments-form.component.scss'],
 })
 export class CommentsFormComponent implements OnInit, OnChanges {
-  kpiCode = window.history.state.kpiCode;
-  scoreCardTitle = window.history.state.selectedTab;
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
+  pathKpiCode: InputSignal<string> = input('');
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
@@ -89,7 +90,9 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     private sharedFormService: SharedFormService,
     private commentsService: commentsService,
     private toastr: ToastrService,
-    private notificatinService: NotificationsService
+    private notificatinService: NotificationsService,
+    private cdr: ChangeDetectorRef,
+    private cookieService: CookieService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -163,36 +166,22 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       );
     }
   }
-  findAllIndexes(str: string, searchTerm: string): number[] {
-    const indexes: number[] = [];
-    let startIndex = 0;
-
-    while ((startIndex = str.indexOf(searchTerm, startIndex)) > -1) {
-      indexes.push(startIndex);
-      startIndex += searchTerm.length; // Move past the last found index
-    }
-
-    return indexes;
-  }
 
   onContentChange(content: string) {
     console.log('Content:', content);
-    const contentText = this.extractTextFromContent(content);
-    const mentionsArray = this.extractMentions(content);
-    this.mentionsArray = mentionsArray;
-    this.form.get('comment')?.setValue(contentText);
-    console.log('Mentions:', mentionsArray);
-    if (mentionsArray?.length == 0) {
-      this.notificatinService.mentionsObjects = [];
-    } else if (
-      mentionsArray.length !==
-      this.notificatinService.getmentionObjects().length
-    ) {
-      this.notificatinService.mentionsObjects =
-        this.notificatinService.mentionsObjects.filter((mention) =>
-          this.mentionsArray.includes('@' + mention.name)
-        );
-    }
+     const contentText = this.extractTextFromContent(content);
+    // const mentionsArray = this.extractMentions(content);
+    // this.mentionsArray = mentionsArray;
+     this.form.get('comment')?.setValue(contentText);
+    // console.log('Mentions:', mentionsArray);
+  }
+  deleteMention(event: number[]) {
+    console.log('deleteMention', event);
+    const ids = event.map((str) => Number(str));
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter((obj) =>
+        ids.includes(obj.id)
+      );
   }
   extractTextFromContent(content: any): string {
     return content ?? content.name;
@@ -202,7 +191,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
   extractMentions(text: string): string[] {
     const mentions: string[] = this.mentions.map((mention: user) => {
-      return `@${mention.name}`;
+      return `${mention.name}`;
     });
 
     const mentionPattern = new RegExp(mentions.join('|'), 'gi');
@@ -216,8 +205,10 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     console.log('Extracted mentions:', extractedMentions);
     return extractedMentions;
   }
-
+  value = '';
   onSubmit() {
+    console.log(this.notificatinService.mentionsObjects);
+
     this.notificatinService.mentionsObjects =
       this.notificatinService.mentionsObjects.filter(
         (item, index, self) => self.indexOf(item) === index
@@ -227,10 +218,10 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       sectorName: this.sharedFormService.getForm().value.sectorName,
       year: this.sharedFormService.getForm().value.year,
       quarter: this.sharedFormService.getForm().value.quarter,
-      scorecardTitle: this.scoreCardTitle,
-      kpiCode: this.kpiCode,
+      scorecardTitle: this.cookieService.get('selectedTab'),
+      kpiCode: this.pathKpiCode(),
       comment: this.form.value.comment,
-      commaSeparatedMentions: this.mentionsArray
+      commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects
           )
@@ -242,18 +233,25 @@ export class CommentsFormComponent implements OnInit, OnChanges {
         console.log(result);
         this.notificatinService.mentionsObjects = [];
         this.newComment = result;
-        if (this.mentionsArray?.length !== 0) {
-          this.notificatinService.notificationsSenderEngine(
-            result.comment,
-            this.notificatinService.mentionsObjects,
-            result.id
-          );
+        if (this.notificatinService.mentionsObjects?.length !== 0) {
+          // this.notificatinService.notificationsSenderEngine(
+          //   result.comment,
+          //   this.notificatinService.mentionsObjects,
+          //   result.id
+          // );
         }
         this.form.get('comment')?.reset();
         this.form.updateValueAndValidity();
       },
     });
-    // this.form.reset();
+
+    this.form.controls['comment'].setValue('');
+    this.cdr.detectChanges();
+    this.form.get('comment')?.reset();
+
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
+    this.form.updateValueAndValidity();
   }
 
   onFilesSelected(filesArray: File[]) {

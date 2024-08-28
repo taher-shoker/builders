@@ -282,15 +282,15 @@ export class RepliesSectionComponent implements OnInit {
       });
     } else if (e == 'Edit') {
       this.notificatinService.mentionsObjects = [];
-      if (
-        this.comments[commentIndex].commaSeparatedMentions !== '' &&
-        this.comments[commentIndex].commaSeparatedMentions?.includes('|')
-      ) {
-        this.notificatinService.mentionsObjects =
-          this.refactoringCommaSepartedMention(
-            this.comments[commentIndex].commaSeparatedMentions!
-          );
-      }
+      // if (
+      //   this.comments[commentIndex].commaSeparatedMentions !== '' &&
+      //   this.comments[commentIndex].commaSeparatedMentions?.includes('|')
+      // ) {
+      //   this.notificatinService.mentionsObjects =
+      //     this.refactoringCommaSepartedMention(
+      //       this.comments[commentIndex].commaSeparatedMentions!
+      //     );
+      // }
 
       this.showCommentTextArea = true;
       this.textAreaOpend.emit('opend');
