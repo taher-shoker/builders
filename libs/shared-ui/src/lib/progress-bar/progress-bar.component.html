@@ -2,7 +2,7 @@
   @if (data().prefixText){
   <div class="bar-prefix">
     <p class="title">{{ data().prefixText }}</p>
-    <p class="value">{{ data().prefixValue }}%</p>
+    <p class="value">{{ data().prefixValue }}{{ unit }}</p>
   </div>
   }
   <div class="bars-holder">
@@ -13,7 +13,7 @@
       <div
         class="bar"
         [ngStyle]="{
-          width: data().progressValue + '%',
+          width: data().progressValue + unit,
           'background-color': data().barColor
         }"
       ></div>
@@ -22,7 +22,7 @@
         <div
           class="indexer"
           [ngStyle]="{
-            left: index.value + '%',
+            left: index.value + unit,
             top: index.position === 'up' ? '-85px' : null,
             bottom: index.position === 'down' ? '-65px' : null
           }"
@@ -36,7 +36,7 @@
           >
             <span class="index-info caption">{{ index.caption }}</span
             ><br />
-            <span class="index-info value">{{ index.value }}%</span>
+            <span class="index-info value">{{ index.value }}{{ unit }}</span>
             <span
               class="index-info pointer"
               [ngStyle]="{
@@ -55,7 +55,7 @@
 
   <div class="bar-suffix">
     <p class="title">{{ data().suffixText }}</p>
-    <p class="value">{{ data().suffixValue }}%</p>
+    <p class="value">{{ data().suffixValue }}{{ unit }}</p>
   </div>
   }
 </div>

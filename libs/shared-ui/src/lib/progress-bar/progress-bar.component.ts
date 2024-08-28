@@ -10,13 +10,14 @@ export interface ProgressInfo {
   progressValue: number;
   indexes?: Index[];
   barColor?: string;
-  bgBarColor?: string
+  bgBarColor?: string;
+  unit?: string;
 }
 
 interface Index {
   caption: string;
   value: number;
-  position?: 'up' | 'down'
+  position?: 'up' | 'down';
 }
 
 @Component({
@@ -31,5 +32,9 @@ export class ProgressBarComponent {
     effect(() => {
       console.log(this.data());
     });
+  }
+
+  get unit(): string {
+    return this.data().unit || '%';
   }
 }
