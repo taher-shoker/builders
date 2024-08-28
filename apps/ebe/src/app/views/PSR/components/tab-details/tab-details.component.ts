@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal, OnInit } from '@angular/core';
+import { Component, EventEmitter, inject, input, InputSignal, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRProjectCardComponent } from "../project-card/project-card.component";
@@ -17,6 +17,7 @@ import { PSRService } from '../../../../services/psr.services';
   styleUrl: './tab-details.component.scss',
 })
 export class TabDetailsComponent implements OnInit{
+  @Output() getUploadedFile:EventEmitter<FileModel> = new EventEmitter();
   visible = false;
   projects:InputSignal<PSRDataModel[]> = input.required<PSRDataModel[]>();
   isEmpty:InputSignal<boolean> = input.required<boolean>();
@@ -55,7 +56,7 @@ export class TabDetailsComponent implements OnInit{
   {
     if(file)
     {
-      console.log(file);
+      this.getUploadedFile.emit(file);
     }
   }
   onHide()

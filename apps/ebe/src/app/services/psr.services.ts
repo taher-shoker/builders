@@ -38,4 +38,19 @@ export class PSRService {
         body
       );
   }
+  uploadFile(pageType:string , selectedFile: any): Observable<any> {
+    const formData = new FormData();
+    formData.append('multipartFile', selectedFile, selectedFile.name);
+    if(pageType === 'executiveView')
+    {
+      return this.http.post<any>(
+        `${environment.apiUrl}/business-excellence/psr/executiveView/upload`,
+        formData
+      );
+    }
+    return this.http.post<any>(
+      `${environment.apiUrl}/business-excellence/psr/executiveViewData/upload`,
+      formData
+    );
+  }
 }

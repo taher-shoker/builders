@@ -1,9 +1,9 @@
-import { Component, inject, OnDestroy, OnInit} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.services';
-import { AddProjectForm, ChartDetails, PSRProjectDetailsModel } from '../../../../models/psr.model';
+import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
 import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -19,6 +19,7 @@ import { FileModel } from '../../../../models/scorecard.model';
   styleUrl: './psr-details-page.component.scss',
 })
 export class PsrDetailsPageComponent implements OnInit , OnDestroy {
+  @ViewChild(ProjectDetailsCardComponent) child?: ProjectDetailsCardComponent;
   psrServices = inject(PSRService)
   router = inject(ActivatedRoute)
   PSRDetailsData!:PSRProjectDetailsModel[];
@@ -84,25 +85,6 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
     const result = this.removeElementsFromArray(this.values, clickedProj.chartDetails);
     clickedProj.chartDetails = result;
   }
-  isAdded = false;
-  sendData(data:{id:number , data:ChartDetails[]})
-  {
-      // console.log(this.PSRDetailsData);
-      // console.log(data.id);
-      // console.log(data.data);
-      const exists = this.PSRDetailsData.filter(val => val.id === data.id)[0];
-      // console.log(exists);
-      const index = this.PSRDetailsData.indexOf(exists);
-      this.psrServices.addNewChartDetails(data.id , data.data).subscribe({
-        next : (res) => {
-          console.log(res);
-          this.PSRDetailsData[index].chartDetails = res;
-          this.isAdded = true;
-          // this.getProjectDetails(this.groupName)
-        }
-      })
-
-  }
   visible = false;
   showDialog()
   {
@@ -128,7 +110,12 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   }
   importData(file:FileModel | null)
   {
-    console.log(file);
+    this.psrServices.uploadFile("executiveViewData" , file).subscribe({
+      next : () => {
+        this.getProjectDetails(this.groupName);
+        this.visible = false;
+      }
+    })
   }
   onHide()
   {
