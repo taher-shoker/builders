@@ -15,7 +15,7 @@ import { LoaderService } from '../services/loader.service';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent implements OnInit, AfterViewInit {
-  scoreCardName = window.history.state.scoreCardName;
+  
   sectorName: string | undefined = '';
   navItems: any[] = [];
   constructor(

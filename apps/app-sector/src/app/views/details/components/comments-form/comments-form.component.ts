@@ -206,7 +206,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     console.log('Extracted mentions:', extractedMentions);
     return extractedMentions;
   }
-  value = '';
+
   onSubmit() {
     console.log(this.notificatinService.mentionsObjects);
 
@@ -235,24 +235,16 @@ export class CommentsFormComponent implements OnInit, OnChanges {
         this.notificatinService.mentionsObjects = [];
         this.newComment = result;
         if (this.notificatinService.mentionsObjects?.length !== 0) {
-          // this.notificatinService.notificationsSenderEngine(
-          //   result.comment,
-          //   this.notificatinService.mentionsObjects,
-          //   result.id
-          // );
+          this.notificatinService.notificationsSenderEngine(
+            result.comment,
+            this.notificatinService.mentionsObjects,
+            result.id
+          );
         }
         this.form.get('comment')?.reset();
         this.form.updateValueAndValidity();
       },
     });
-
-    // this.form.controls['comment'].setValue('');
-    // this.cdr.detectChanges();
-    // this.form.get('comment')?.reset();
-
-    // this.form.markAsPristine();
-    // this.form.markAsUntouched();
-    // this.form.updateValueAndValidity();
   }
 
   onFilesSelected(filesArray: File[]) {
@@ -280,12 +272,14 @@ export class CommentsFormComponent implements OnInit, OnChanges {
             ...result[index],
           });
         });
+        this.toastr.success('File added Successfully');
       });
   }
 
   onDeleteFile(index: number, id: number) {
     this.attachmentService.deleteKPIAttachment(id).subscribe(() => {
       this.displayedFiles.splice(index, 1);
+      this.toastr.success('File Deleted Successfully');
     });
   }
 
@@ -297,6 +291,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       anchor.download = file.attachmentDisplayName;
       anchor.click();
       window.URL.revokeObjectURL(url);
+      this.toastr.success('File downloaded Successfully');
     });
   }
 }

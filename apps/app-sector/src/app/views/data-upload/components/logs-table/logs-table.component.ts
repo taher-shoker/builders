@@ -41,6 +41,7 @@ export class LogsTableComponent implements OnInit {
   // ngAfterViewInit() {}
   ngOnInit(): void {
     this.getLogsHistory();
+    this.subscribeToFailedLogs();
     this.subscribeToLogUpdates();
   }
   getLogsHistory() {
@@ -60,6 +61,15 @@ export class LogsTableComponent implements OnInit {
       if (newLog) {
         this.ELEMENT_DATA.unshift(newLog);
         this.dataSource.data = [...this.ELEMENT_DATA];
+      }
+    });
+  }
+  subscribeToFailedLogs() {
+    this.logService.logFailedSubject.subscribe((failedLod) => {
+      if (failedLod) {
+        console.log('failedLog', failedLod);
+
+        this.getLogsHistory();
       }
     });
   }

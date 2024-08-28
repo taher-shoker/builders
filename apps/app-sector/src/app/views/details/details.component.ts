@@ -25,9 +25,7 @@ export class DetailsComponent implements OnInit {
   kpiObjectSignal: WritableSignal<KpiDTO | undefined> = signal(undefined);
   sectorUsersSignal: WritableSignal<user[] | undefined> = signal(undefined);
   currentDate = new Date();
-  kpiCode = window.history.state.kpiCode;
-  selectedTab = window.history.state.selectedTab;
-  kpiName = window.history.state.kpiName;
+ 
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
   pathKpiCode: string | null = '';

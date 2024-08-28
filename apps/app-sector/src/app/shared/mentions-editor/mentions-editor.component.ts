@@ -91,12 +91,10 @@ export class MentionsEditorComponent
   highlightMentions(content: string): string {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = content;
-    console.log('in highlights', this.notificationService.mentionsObjects);
-
-    const mentions = this.mentions().map((mention: any) => `${mention.name}`);
+    const mentions = this.notificationService.mentionsObjects.map(
+      (mention: any) => `${mention.name}`
+    );
     const mentionRegex = new RegExp(mentions.join('|'), 'gi');
-    console.log(mentionRegex, mentions);
-
     // Convert NodeList to array to use forEach
     Array.from(tempDiv.childNodes).forEach((node) => {
       if (node.nodeType === Node.TEXT_NODE) {
@@ -105,8 +103,6 @@ export class MentionsEditorComponent
           let index = -1;
           textContent = textContent.replace(mentionRegex, (match) => {
             index++;
-            console.log(index);
-
             return `<span contenteditable=false data-id=${this.notificationService.mentionsObjects[index].id} class="mention" >${match}</span>`;
           });
         } else {
@@ -125,20 +121,14 @@ export class MentionsEditorComponent
   }
 
   registerOnChange(fn: (value: string) => void): void {
-    console.log('registerOnChange');
-
     this.onChange = fn;
   }
 
   registerOnTouched(fn: () => void): void {
-    console.log('touched');
-
     this.onTouched = fn;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log('ngOnchanges');
-
     this.items = this.mentions();
     this.initializeMentionConfig();
   }
@@ -163,13 +153,10 @@ export class MentionsEditorComponent
     };
   }
   onKeyUp(event: any) {
-    console.log('onKeyUp', event);
-
     const input = event.target as HTMLDivElement;
     this.value = input.textContent || '';
     if (event.key == 'Backspace') {
       const spans = event.target.querySelectorAll('span');
-      console.log('keydown', spans);
       let dataInfo;
       const dataIds: any[] = [];
       spans.forEach((span: any) => {
@@ -177,15 +164,11 @@ export class MentionsEditorComponent
         // For example, if you have a data attribute like data-info
         dataInfo = span.dataset.id;
         dataIds.push(dataInfo);
-        // Do something with the data attribute value
-        // console.log(dataInfo);
       });
       this.deletionEmitter.emit(dataIds);
     }
   }
   textToInsertWhenSelect(item: any): any {
-    console.log('textToInsertWhenSelect');
-
     setTimeout(() => {
       pasteHtmlAtCaret(
         '<span contenteditable=false class="mention" data-id=' +

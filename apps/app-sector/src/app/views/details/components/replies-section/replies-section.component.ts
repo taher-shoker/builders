@@ -131,8 +131,6 @@ export class RepliesSectionComponent implements OnInit {
     this.notificatinService.mentionsList.subscribe((result: user[]) => {
       if (result) {
         this.mentions = result;
-        console.log(this.mentions,'this.mentions');
-        
       } else {
         this.mentions = [];
       }
@@ -142,9 +140,6 @@ export class RepliesSectionComponent implements OnInit {
     this.form = this.fb.group({
       comment: this.fb.control('', [Validators.required]),
     });
-  }
-  mentionObjectChanged(object: user) {
-    // console.log(object, 'in replies');
   }
   findAllIndexes(str: string, searchTerm: string): number[] {
     const indexes: number[] = [];
@@ -160,7 +155,6 @@ export class RepliesSectionComponent implements OnInit {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
 
   onContentChange(content: any): void {
-    console.log('content', content);
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
     if (mentionsArray?.length == 0) {
@@ -168,7 +162,6 @@ export class RepliesSectionComponent implements OnInit {
     }
   }
   deleteMention(event: number[]) {
-    console.log('deleteMention', event);
     const ids = event.map((str) => Number(str));
     this.notificatinService.mentionsObjects =
       this.notificatinService.mentionsObjects.filter((obj) =>
@@ -179,7 +172,7 @@ export class RepliesSectionComponent implements OnInit {
   extractMentions(text: string): string[] {
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mentions: string[] = this.mentions.map((mention: user) => {
-      return `@${mention.name}`;
+      return `${mention.name}`;
     });
 
     const mentionPattern = new RegExp(mentions.join('|'), 'gi');
@@ -190,7 +183,6 @@ export class RepliesSectionComponent implements OnInit {
       extractedMentions.push(match[0]);
     }
 
-    console.log('Extracted mentions:', extractedMentions);
     return extractedMentions;
   }
 
@@ -242,7 +234,6 @@ export class RepliesSectionComponent implements OnInit {
   }
   refactoringCommaSepartedMention(commaSepartedMentions: string): any[] {
     let mentionsSeparted: any = commaSepartedMentions?.split(',');
-    console.log('mentions separted', mentionsSeparted);
 
     mentionsSeparted = mentionsSeparted?.map((mention: any) => {
       const pipeSeparted = mention.split('|');
@@ -326,7 +317,6 @@ export class RepliesSectionComponent implements OnInit {
       });
   }
   editCommentt() {
-    console.log('final mentions ', this.notificatinService.mentionsObjects);
     const commentObj: commentEditBody = {
       id: this.comments[this.commentIndex].id,
       comment: this.form.get('comment')?.value,
@@ -413,8 +403,7 @@ export class RepliesSectionComponent implements OnInit {
       this.notificatinService.mentionsObjects.filter(
         (item, index, self) => self.indexOf(item) === index
       );
-    console.log('final mentions ', this.notificatinService.mentionsObjects);
-    console.log('inside save');
+
     const replyObj: addreplyBody = {
       commentId: this.comments[this.commentIndex].id,
       reply: this.form.get('comment')?.value,
@@ -430,7 +419,6 @@ export class RepliesSectionComponent implements OnInit {
           this.toastr.success('Reply Added Successfully');
           this.comments[this.commentIndex].replies?.unshift(result);
           this.commentsCount();
-          console.log('new comments', this.comments);
           this.form.reset();
           this.editedText.set('');
           this.showCommentTextArea = false;

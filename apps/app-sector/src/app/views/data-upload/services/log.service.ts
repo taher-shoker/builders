@@ -7,7 +7,7 @@ import { logs } from '../models/logModel';
 })
 export class LogService {
   private logSubject = new BehaviorSubject<logs | null>(null);
-
+ logFailedSubject = new BehaviorSubject<boolean>(false);
   get logUpdates(): Observable<logs | null> {
     return this.logSubject.asObservable();
   }
