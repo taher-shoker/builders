@@ -73,6 +73,7 @@ export interface Report {
   slaDurationInDays: number;
   description: string | null;
   reportSlaDuration: number;
+  initiatorShouldApprove: number;
 }
 export interface CurrentAssignee {
   username: string;

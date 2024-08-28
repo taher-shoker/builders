@@ -143,7 +143,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         '',
         [
           Validators.required,
-          Validators.maxLength(this.configService.getConfig().characterLimit.nameLength),
+          Validators.maxLength(
+            this.configService.getConfig().characterLimit.nameLength
+          ),
           this.noWhitespaceValidator,
         ],
       ],
@@ -237,6 +239,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         needMoreDataFromCreator: !!data.creatorEmail,
         creatorEmail: data.creatorEmail || '',
         slaDurationInDays: data.reportSlaDuration || 0,
+        initiatorShouldApprove: data.initiatorShouldApprove,
       });
 
       this.uploadedFiles.next(data.attachments);
@@ -274,6 +277,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       creatorEmail: data.creatorEmail || '',
       slaDurationInDays: data.requestCategory.slaDuration || 0,
       attachments: data.attachments.map((attachment) => attachment.id),
+      initiatorShouldApprove: data.initiatorShouldApprove,
       // attachments: data.attachments,
     });
 

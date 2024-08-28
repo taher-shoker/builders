@@ -134,6 +134,7 @@ export interface ReportDetails {
   reportName: string;
   description: string;
   reportSlaDuration: number;
+  initiatorShouldApprove: number;
 }
 
 export interface MilestoneAttachment {
