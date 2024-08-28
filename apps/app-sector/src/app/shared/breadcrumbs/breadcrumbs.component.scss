@@ -1,8 +1,5 @@
 .breadcrumbs {
-    border-bottom: 1px solid #e5e7eb;
     padding-bottom: 1rem;
-    padding-top: 1rem;
-    margin-top: 0.75rem;
 
     ul {
         list-style-type: none;
@@ -12,28 +9,28 @@
         li {
             display: inline;
             text-transform: capitalize;
-            color: #6b7280;
             font-size: 0.875rem;
             font-weight: 400;
 
             a {
-                color: inherit;
+                color: var(--half-black);
+
                 text-decoration: none;
 
                 &:hover {
-                    color: #3b82f6;
-                    text-decoration: underline;
+                    color: var(--stcColor);
+                    text-decoration: none;
                 }
             }
 
             &::after {
                 content: '/';
                 margin: 0 0.5rem;
-                color: #9ca3af;
+                color: var(--half-black);
             }
 
             &:last-child::after {
-                content: ''; // Removes the separator after the last item
+                content: '';
             }
         }
     }

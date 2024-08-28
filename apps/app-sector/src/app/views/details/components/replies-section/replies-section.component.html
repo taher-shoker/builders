@@ -4,7 +4,13 @@
   <div class="replies-section_holder">
     @for (comment of comments; let parentLoop=$index;track parentLoop; let
     lastComment=$last) {
-    <div class="replies-section_item" [ngStyle]="{'border-bottom' : lastComment ? ' none' :' 1px solid #E0E2E7'}">
+    <div
+      class="replies-section_item"
+      [ngStyle]="{
+        'border-bottom':
+          lastComment && !comment.replies ? ' none' : ' 1px solid #E0E2E7'
+      }"
+    >
       <stc-apps-profile
         [name]="comment.authorName"
         [comment]="comment.comment"
@@ -61,7 +67,12 @@
     >
       <div class="replies">
         @for (reply of comment.replies; track $index; let lastReply = $last) {
-        <div [ngClass]="{ 'replies-section_subitem': !lastComment }">
+        <div
+          class="replies-section_subitem"
+          [ngStyle]="{
+            'border-bottom': lastReply ? ' none' : ' 1px solid #E0E2E7'
+          }"
+        >
           <stc-apps-profile
             [name]="reply.authorName"
             [comment]="reply.reply"
