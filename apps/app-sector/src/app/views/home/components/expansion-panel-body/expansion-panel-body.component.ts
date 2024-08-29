@@ -37,7 +37,7 @@ export class ExpansionPanelBodyComponent {
       suffixText: '',
       suffixValue: 0,
       progressValue:
-        this.kpiTargetValue() > this.kpiActualValue()
+        this.kpiTargetValue() >= this.kpiActualValue()
           ? this.kpiTargetValue()
           : this.kpiActualValue(),
       indexes: [
@@ -66,8 +66,8 @@ export class ExpansionPanelBodyComponent {
   });
   constructor(private router: Router) {}
   barBackgroundColor(target: number, actual: number): string {
-    if (target > actual) return 'rgba(255, 26, 26, 0.1)';
-    else return 'rgba(0, 196, 140, 0.15)';
+    if (target <= actual) return ' rgba(0, 196, 140, 0.15)';
+    else return 'rgba(255, 26, 26, 0.1)';
   }
 
   barColor(target: number, actual: number): string {

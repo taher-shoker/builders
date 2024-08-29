@@ -8,7 +8,7 @@ import { Component, InputSignal, input } from '@angular/core';
 export class DetailsCardComponent {
   title: InputSignal<string> = input('');
   description: InputSignal<string | any> = input('');
-
+  unit: InputSignal<string | any> = input('');
   isDescriptionString(): boolean {
     return (
       typeof this.description() === 'string' ||

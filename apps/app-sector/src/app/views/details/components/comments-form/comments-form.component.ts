@@ -221,7 +221,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       quarter: this.sharedFormService.getForm().value.quarter,
       scorecardTitle: this.cookieService.get('selectedTab'),
       kpiCode: this.pathKpiCode(),
-      comment: this.form.value.comment.replace(/@/g, ''),
+      comment: this.form.value.comment,
       commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects

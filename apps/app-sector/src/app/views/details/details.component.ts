@@ -25,12 +25,13 @@ export class DetailsComponent implements OnInit {
   kpiObjectSignal: WritableSignal<KpiDTO | undefined> = signal(undefined);
   sectorUsersSignal: WritableSignal<user[] | undefined> = signal(undefined);
   currentDate = new Date();
- 
+
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
   pathKpiCode: string | null = '';
   loggedUserID = 0;
   categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
+  unit = '';
   baseUrl = environment.apiUrl;
   constructor(
     private sharedFormService: SharedFormService,
@@ -123,6 +124,7 @@ export class DetailsComponent implements OnInit {
             // Loop through each KPI within the kpiSubGrouping
             Object.keys(kpiArray).forEach((kpiDTO: any) => {
               this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
+              this.unit = kpiArray[kpiDTO][0].unit;
               this.commentService.commenstList.next(
                 kpiArray[kpiDTO][0].commentList
               );
@@ -178,7 +180,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Weight',
-        description: (kpiObject.weight * 100).toFixed(2) + '%',
+        description: kpiObject.weight.toFixed(2) + ' ' + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
@@ -198,7 +200,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Ceiling',
-        description: kpiObject.ceiling + '%',
+        description: kpiObject.ceiling + ' ' + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
@@ -218,7 +220,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Threshold',
-        description: Math.floor(kpiObject.target * 100).toFixed(2) + '%',
+        description: kpiObject.target.toFixed(2) + ' ' + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
