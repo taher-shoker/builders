@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
 import { Section } from '../../../models/SectorKpisDetails.model';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'stc-apps-expansion-panel-body',
@@ -64,7 +65,7 @@ export class ExpansionPanelBodyComponent {
     };
     return data;
   });
-  constructor(private router: Router) {}
+  constructor(private router: Router, private cookieService: CookieService) {}
   barBackgroundColor(target: number, actual: number): string {
     if (target <= actual) return ' rgba(0, 196, 140, 0.15)';
     else return 'rgba(255, 26, 26, 0.1)';
@@ -76,17 +77,14 @@ export class ExpansionPanelBodyComponent {
   }
 
   navigateToDetails() {
-    this.router.navigate(
-      ['/KPI', this.kpiCode()],
-
-      {
-        state: {
-          kpiCode: this.kpiCode(),
-          selectedTab: this.selectedTab(),
-          kpiName: this.kpiName(),
-        },
-      }
-    );
+    console.log(this.cookieService.get('sectorName'));
+    this.cookieService.set('kpiCode', this.kpiCode());
+    this.router.navigate([
+      '/sectors',
+      this.cookieService.get('sectorName'),
+      'KPI',
+      this.kpiCode(),
+    ]);
   }
 
   isNumber(value: any): value is number {

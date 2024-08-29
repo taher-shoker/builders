@@ -4,6 +4,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { sectorGuard } from './services/guards/sector.guard';
 import { authGuard } from './services/guards/auth.guard';
 import { dataUploadGuard } from './services/guards/dataUpload.guard';
+import { KPIGuard } from './services/guards/KPIG.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -18,7 +19,13 @@ export const appRoutes: Route[] = [
         canActivate: [sectorGuard, authGuard],
       },
       {
-        path: 'KPI/:KPICode',
+        path: 'sectors/:sectorName/KPI',
+        loadChildren: () =>
+          import('./views/details/details.module').then((m) => m.DetailsModule),
+        canActivate: [sectorGuard, authGuard, KPIGuard],
+      },
+      {
+        path: 'sectors/:sectorName/KPI/:KPICode',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
         canActivate: [sectorGuard, authGuard],

@@ -20,7 +20,7 @@ export const dataUploadGuard: CanActivateFn = (route, state) => {
   if (dataAdmin) {
     return true;
   } else {
-    router.navigate(['/sectorPage', sectorName]);
+    router.navigate(['/sectors', sectorName]);
     return false;
   }
 };
