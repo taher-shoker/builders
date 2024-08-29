@@ -134,6 +134,7 @@ export interface ReportDetails {
   reportName: string;
   description: string;
   reportSlaDuration: number;
+  initiatorShouldApprove: number;
 }
 
 export interface MilestoneAttachment {
@@ -172,6 +173,7 @@ export interface Requests extends PaginatedRecords {
     lastModifiedDate: Date;
     remainingSteps: number;
     flowId: number;
+    reportSlaDuration: number | string
   }[];
 }
 
@@ -317,7 +319,7 @@ export class ReportsService {
       content: data.content.map((item) => ({
         ...item,
         requestCategoryName: item.requestCategory.name,
-        requestCategorySla: item.requestCategory.slaDuration ? 'Yes' : 'No',
+        reportSlaDuration: item.reportSlaDuration === 0 ? 'No' : 'Yes',
       })),
     };
   }

@@ -143,7 +143,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         '',
         [
           Validators.required,
-          Validators.maxLength(this.configService.getConfig().characterLimit.nameLength),
+          Validators.maxLength(
+            this.configService.getConfig().characterLimit.nameLength
+          ),
           this.noWhitespaceValidator,
         ],
       ],
@@ -237,6 +239,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         needMoreDataFromCreator: !!data.creatorEmail,
         creatorEmail: data.creatorEmail || '',
         slaDurationInDays: data.reportSlaDuration || 0,
+        initiatorShouldApprove: data.initiatorShouldApprove,
       });
 
       this.uploadedFiles.next(data.attachments);
@@ -274,6 +277,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       creatorEmail: data.creatorEmail || '',
       slaDurationInDays: data.requestCategory.slaDuration || 0,
       attachments: data.attachments.map((attachment) => attachment.id),
+      initiatorShouldApprove: data.initiatorShouldApprove,
       // attachments: data.attachments,
     });
 
@@ -455,9 +459,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           { name: 'description', value: this.form.get('description')?.value },
           {
             name: 'attachments',
-            value: this.idsJoinerWithNoExtraction(
-              this.form.get('attachments')?.value
-            ),
+            value: this.idsJoinerWithNoExtraction(this.form.get('attachments')?.value),
           },
           {
             name: 'request_approvals',
@@ -539,9 +541,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return final;
   }
 
-  private idsJoinerWithNoExtraction(arrOfObjs: number[]) {
-    console.log('Got this arr of ids:', arrOfObjs);
-    const final = arrOfObjs.join('@#%@#%Z%#@%#@');
+  private idsJoinerWithNoExtraction(arrOfNums: number[]) {
+    console.log('Got this arr of ids:', arrOfNums);
+    const final = arrOfNums.join('@#%@#%Z%#@%#@');
     return final;
   }
 
@@ -554,8 +556,10 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   private markFormGroupTouched(formGroup: FormGroup | FormArray) {
     Object.values(formGroup.controls).forEach((control) => {
       if (control instanceof FormControl) {
+        console.log('control instanceof FormControl:', control);
         control.markAsTouched();
       } else if (control instanceof FormGroup || control instanceof FormArray) {
+        console.log('control instanceof FormGroup:', control);
         this.markFormGroupTouched(control);
       }
     });

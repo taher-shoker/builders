@@ -139,7 +139,9 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
     this.onChange = fn;
   }
 
+
   registerOnTouched(fn: () => void): void {
+    
     this.onTouched = fn;
   }
 
@@ -157,16 +159,21 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
 
   // End of Implement ControlValueAccessor methods^^
 
-  firstTimeTouched: boolean = false;
   protected alternateList() {
-    if (!this.firstTimeTouched) {
-      this.firstTimeTouched = true; // For error handling
-    }
+    // if (!this.firstTimeTouched) {
+    //   this.firstTimeTouched = true; // For error handling
+    // }
     this.showItemsList.set(!this.showItemsList());
     this.filtrationText.set('');
   }
 
   protected selectItem(item: Item) {
+
+    if(item['componentScopedValueAccessor'] === this.chosenItem()?.['componentScopedValueAccessor']){
+      this.chosenItem.set(null)
+      return;
+    }
+
     this.chosenItem.set(item);
     this.onChange(item['componentScopedValueAccessor']); // Notify parent form control of the change
     this.alternateList();

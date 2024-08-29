@@ -36,9 +36,12 @@
         {{'None' }}
       </div>
       }
-      @for (item of filteredList(); track item) {
+      @for (item of filteredList(); track item) { 
       <div class="item" (click)="selectItem(item)">
         {{ item.componentScopedNameAccessor }}
+        @if (item.componentScopedValueAccessor === chosenItem()?.['componentScopedValueAccessor']) {
+          <i class="ri-check-fill"></i>
+        }
       </div>
       }
     </div>
@@ -61,7 +64,7 @@
   }
 </div>
 
-@if (control?.errors && firstTimeTouched && chosenItem() === null) {
+@if (control?.errors && control?.touched && chosenItem() === null) {
 <div class="error-holder">
   <p>This Field Is Required</p>
 </div>

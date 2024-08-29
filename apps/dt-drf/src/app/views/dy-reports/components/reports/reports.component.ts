@@ -132,7 +132,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'Category',
       },
       {
-        key: 'requestCategorySla',
+        key: 'reportSlaDuration',
         type: 'text',
         label: 'With SLA/Not',
       },

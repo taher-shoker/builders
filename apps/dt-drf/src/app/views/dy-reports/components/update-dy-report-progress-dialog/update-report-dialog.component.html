@@ -12,7 +12,7 @@
       <form [formGroup]="form">
         <div class="my-2">
           <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="'Write your note'"
-            [inputId]="'description'" [inputName]="'Add note'" formControlName="comment"></stc-apps-textarea>
+            [inputId]="'description'" [inputName]="data.approvalState === 'Add Data' ? 'Add Description' : 'Add note'" formControlName="comment"></stc-apps-textarea>
         </div>
 
         @if (showAttachment) {
