@@ -149,7 +149,7 @@ export class MentionsEditorComponent
       mentionSelect: this.textToInsertWhenSelect,
       mentionFilter: this.filter,
       allowSpace: true,
-      returnTrigger: true,
+      returnTrigger: false,
     };
   }
   onKeyUp(event: any) {
@@ -180,15 +180,6 @@ export class MentionsEditorComponent
     return '';
   }
 
-  textMentions(item: any): string {
-    return (
-      '<span contenteditable=false class="mention" data-id=' +
-      item.id +
-      '>' +
-      item.name +
-      '</span>'
-    );
-  }
   change(e: any) {
     setTimeout(() => {
       console.log('change', e);
@@ -208,6 +199,7 @@ export class MentionsEditorComponent
     if (item) {
       this.notificationService.addMentionObjects(item);
       this.value += item.name;
+      this.value=this.value.replace('@','');
     }
   }
 }
