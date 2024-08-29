@@ -32,7 +32,7 @@
       border-radius: 4px;
       box-sizing: border-box;
       min-height: 75px;
-      white-space: pre-wrap;
+      // white-space: pre-wrap;
       word-wrap: break-word;
 
       &:empty:before {
@@ -79,7 +79,7 @@
         &.active {
           background: var(--stcLightGray);
 
-          > a {
+          >a {
             background: var(--stcLightGray) !important;
             color: var(--darkGreyColor) !important;
           }

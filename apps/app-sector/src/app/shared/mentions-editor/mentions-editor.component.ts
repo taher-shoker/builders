@@ -1,4 +1,5 @@
 import {
+  AfterViewInit,
   ChangeDetectorRef,
   Component,
   ElementRef,
@@ -7,6 +8,7 @@ import {
   input,
   InputSignal,
   OnChanges,
+  OnInit,
   Output,
   SimpleChanges,
   ViewChild,
@@ -27,7 +29,7 @@ import { NotificationsService } from '../../views/details/services/notifications
   ],
 })
 export class MentionsEditorComponent
-  implements ControlValueAccessor, OnChanges
+  implements ControlValueAccessor, OnChanges, OnInit, AfterViewInit
 {
   @ViewChild('contentEditable', { static: true })
   contentEditable!: ElementRef<HTMLDivElement>;
@@ -43,6 +45,7 @@ export class MentionsEditorComponent
   items: any[] = [];
   mentionConfig: any;
   _value: any = '';
+  mentionsArray: string[] = [];
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: string) => void = () => {};
@@ -68,11 +71,37 @@ export class MentionsEditorComponent
     private notificationService: NotificationsService
   ) {}
 
+  ngAfterViewInit(): void {
+    const contentEditableDiv = this.contentEditable.nativeElement;
+
+    contentEditableDiv.addEventListener('paste', (event: any) => {
+      event.preventDefault();
+
+      const clipboardData = event.clipboardData || window.Clipboard;
+      const htmlData = clipboardData.getData('text/html');
+      const plainText = clipboardData.getData('text/plain');
+
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = htmlData;
+      const hasIdSpans = tempDiv.querySelectorAll('span[data-id]').length > 0;
+
+      if (hasIdSpans) {
+        document.execCommand('insertHTML', false, htmlData);
+      } else {
+        document.execCommand('insertText', false, plainText);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    this.setupContentChangeListener();
+  }
+
   writeValue(value: string): void {
     console.log('writeValue', value);
     if (value == null) {
       console.log('hee', value);
-      this.contentEditable.nativeElement.innerHTML = value;
+      this.contentEditable.nativeElement.textContent = value;
     } else if (this.editedText()) {
       console.log('found edited text');
 
@@ -81,9 +110,6 @@ export class MentionsEditorComponent
         this.contentEditable.nativeElement.innerHTML =
           this.highlightMentions(value);
       }
-
-      // this.contentEditable.nativeElement.innerHTML = value;
-      // console.log(this.contentEditable.nativeElement.innerHTML);
     } else {
       this._value = value;
     }
@@ -140,8 +166,6 @@ export class MentionsEditorComponent
   }
 
   initializeMentionConfig() {
-    console.log('initializeMentionConfig');
-
     this.mentionConfig = {
       items: this.items,
       triggerChar: '@',
@@ -152,6 +176,7 @@ export class MentionsEditorComponent
       returnTrigger: false,
     };
   }
+
   onKeyUp(event: any) {
     const input = event.target as HTMLDivElement;
     this.value = input.textContent || '';
@@ -173,7 +198,7 @@ export class MentionsEditorComponent
       pasteHtmlAtCaret(
         `<span contenteditable=false class="mention" data-id=
           ${item.id}
-          >${item.name}</span>&nbsp;`
+          >${item.name}</span>&nbsp`
       );
     }, 0);
 
@@ -199,7 +224,6 @@ export class MentionsEditorComponent
     if (item) {
       this.notificationService.addMentionObjects(item);
       this.value += item.name;
-
       if (this.value.endsWith('@' + item.name)) {
         this.value = this.value.replace('@' + item.name, item.name);
       } else {
@@ -207,10 +231,67 @@ export class MentionsEditorComponent
       }
     }
   }
+
+  setupContentChangeListener(): void {
+    const contentDiv = this.contentEditable.nativeElement;
+    contentDiv.addEventListener('keyup', () =>
+      this.onContentChange(contentDiv.textContent ?? contentDiv.innerHTML)
+    );
+  }
+
+  onContentChange(content: string): void {
+    console.log('Content:', content);
+    // const mentionsArray = this.extractMentions(content);
+
+    // this.mentionsArray = mentionsArray;
+    this.processMentions(content);
+  }
+
+  processMentions(content: string): void {
+    // Parse the HTML content and find all span elements with a data-id attribute
+    const spans = document.querySelectorAll('span[data-id]');
+    console.log(spans);
+
+    const mentionObjects: any[] = [];
+
+    spans.forEach((span) => {
+      const id = span.getAttribute('data-id');
+      console.log(id);
+
+      if (id) {
+        const mention = this.mentions().find(
+          (m: any) => m.id.toString() === id
+        );
+        if (mention) {
+          mentionObjects.push(mention);
+          this.notificationService.addMentionObjects(mention);
+        }
+      }
+    });
+
+    // Update notification service with the mention objects
+    // this.notificationService.mentionsObjects = mentionObjects;
+  }
+
+  extractMentions(text: string): string[] {
+    const mentions: string[] = this.mentions().map(
+      (mention: any) => mention.name
+    );
+    const mentionPattern = new RegExp(mentions.join('|'), 'gi');
+    const extractedMentions: string[] = [];
+    let match;
+
+    while ((match = mentionPattern.exec(text)) !== null) {
+      extractedMentions.push(match[0]);
+    }
+
+    // console.log('Extracted mentions:', extractedMentions);
+    return extractedMentions;
+  }
 }
 
 export function pasteHtmlAtCaret(html: any) {
-  console.log('pasteHtmlAtCaret', html);
+  // console.log('pasteHtmlAtCaret', html);
 
   let sel, range;
   if (window.getSelection) {
