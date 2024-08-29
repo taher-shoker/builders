@@ -171,11 +171,9 @@ export class MentionsEditorComponent
   textToInsertWhenSelect(item: any): any {
     setTimeout(() => {
       pasteHtmlAtCaret(
-        '<span contenteditable=false class="mention" data-id=' +
-          item.id +
-          '>' +
-          item.name +
-          '</span>'
+        `<span contenteditable=false class="mention" data-id=
+          ${item.id}
+          >${item.name}</span>&nbsp;`
       );
     }, 0);
 
