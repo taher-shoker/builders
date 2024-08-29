@@ -16,7 +16,7 @@
     <div class="score_percent">
       <h1>
         {{
-          isIntegerNumber() ? percentage() : (percentage() | percent : '1.2-2')
+         percentage().toFixed(2)
         }}
       </h1>
       <stc-apps-progress-circle
