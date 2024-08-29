@@ -1,7 +1,7 @@
 <div class="select-box input-group " [class]="selectType" *ngIf="control">
   <label [ngStyle]="{'font-size': labelSize + 'px'}">{{ label | translate }}<span>:</span><mat-error
       *ngIf="control.errors"> *</mat-error></label>
-  <mat-form-field *ngIf="!group">
+  <mat-form-field *ngIf="!group" [ngStyle]="{'width': inputWidth ? inputWidth : ''}">
     <mat-label>{{matLabel}}</mat-label>
     <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
       [(value)]="selectedValue" [multiple]="multi">

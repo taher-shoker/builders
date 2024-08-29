@@ -31,7 +31,7 @@
     </div>
 
     <div class="items-holder">
-      @if (resetable() && list.length > 0) {
+      @if (resetable()) {
       <div class="item rest-item" (click)="selectItem({displayName:'',value:''})">
         {{'None' }}
       </div>
@@ -48,7 +48,7 @@
     }@else{
 
     <div class="items-holder">
-      @if (resetable() && list.length > 0) {
+      @if (resetable()) {
       <div class="item" (click)="selectItem({displayName:'',value:''})">
         {{'None' }}
       </div>

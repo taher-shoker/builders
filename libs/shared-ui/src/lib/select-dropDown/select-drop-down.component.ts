@@ -50,6 +50,7 @@ export class SelectDropDownComponent<T>
   @Input() groupName = 'groupName';
   @Input() groupOptions = 'roles';
   @Input() labelSize = 18;
+  @Input() inputWidth = '';
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;

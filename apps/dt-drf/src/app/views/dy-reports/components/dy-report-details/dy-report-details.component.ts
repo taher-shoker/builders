@@ -520,7 +520,6 @@ export class DyReportDetailsComponent implements OnInit {
 
     this.openAddDataForReportModal(item).subscribe(
       (res: { comment: string; attachments: string }) => {
-        console.log('The res of dialog:', res);
         if (!res) {
           return;
         }
