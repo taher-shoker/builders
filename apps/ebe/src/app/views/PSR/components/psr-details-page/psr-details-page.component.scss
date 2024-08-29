@@ -72,3 +72,14 @@
     width:100%;
   }
 }
+.empty-data-msg
+{
+  color: var(--stc-purple-light-color);
+  text-align: center;
+  text-transform: capitalize;
+  margin: 0;
+  font-size: 20px;
+  @extend .stcFont;
+  font-style: italic;
+  font-weight: 600;
+}

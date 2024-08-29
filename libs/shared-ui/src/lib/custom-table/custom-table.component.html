@@ -115,31 +115,44 @@
       @if(header.key !== '') { @if(header.key !== 'id') {
         @if(header.key === 'major')
         {
-          <input
-            type="text"
-            [(ngModel)]="item[header.key]"
-            class="edit-input"
-            (ngModelChange)="inputChanged(item['id'])"
-          />
-        } @else {
-          @if(header.key === 'completion_level')
-          {
+          <div class = "position-relative">
             <input
-              type="number"
-              [(ngModel)]="item[header.key]"
-              class="edit-input"
-              (keypress)="keyPress2($event)"
-              max="100"
-            />
-          } @else {
-            <input
-              type="number"
+              type="text"
               [(ngModel)]="item[header.key]"
               class="edit-input"
               (ngModelChange)="inputChanged(item['id'])"
-              (keypress)="keyPress($event)"
             />
-          }
+            @if(item[header.key] === '')
+            {
+              <small class = "empty-data-msg">This field is required</small>
+            }
+          </div>
+        } @else {
+          <div class = "position-relative">
+            @if(header.key === 'completion_level')
+            {
+              <input
+                type="number"
+                [(ngModel)]="item[header.key]"
+                class="edit-input"
+                (keypress)="keyPress2($event)"
+                (ngModelChange)="inputChanged(item['id'])"
+                max="100"
+              />
+            } @else {
+              <input
+                type="number"
+                [(ngModel)]="item[header.key]"
+                class="edit-input"
+                (ngModelChange)="inputChanged(item['id'])"
+                (keypress)="keyPress($event)"
+              />
+            }
+            @if(item[header.key] === null)
+            {
+              <small class = "empty-data-msg">This field is required</small>
+            }
+          </div>
         }
       } @else {
       {{ item[header.key] }}

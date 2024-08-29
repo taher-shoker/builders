@@ -5,6 +5,7 @@ import { TapDetailsComponent } from './components/tap-details/tap-details.compon
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { Subject, takeUntil } from 'rxjs';
+import { CommonModule } from '@angular/common';
 interface FilteredOptions
 {
   month:number;
@@ -13,7 +14,7 @@ interface FilteredOptions
 @Component({
   selector: 'stc-apps-scorecard',
   standalone: true,
-  imports: [TapDetailsComponent, SharedUiModule, PageHeaderComponent],
+  imports: [TapDetailsComponent, SharedUiModule, PageHeaderComponent , CommonModule],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss'
 })

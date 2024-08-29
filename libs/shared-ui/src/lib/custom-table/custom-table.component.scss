@@ -184,3 +184,13 @@ input[type=number] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+.empty-data-msg
+{
+  position: absolute;
+    left: 0;
+    bottom: -20px;
+    color: red;
+    font-size: 12px;
+    width: 124px;
+}

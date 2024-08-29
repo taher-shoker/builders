@@ -46,12 +46,13 @@ export interface ProgressInfo {
     progressValue: number;
     indexes?: Index[];
     barColor?: string;
-    bgBarColor?: string
+    bgBarColor?: string;
   }
 export interface Index {
     caption: string;
     value: number;
-    position?: 'up' | 'down'
+    position?: 'up' | 'down';
+    actualBarColor:string;
   }
 export interface AddProjectForm
 {

@@ -42,7 +42,7 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   }
   keyPress(e:KeyboardEvent)
   {
-    if (e.key === 'e') {
+    if (e.key === 'e' || e.key === '-') {
       e.preventDefault();
     }
   }

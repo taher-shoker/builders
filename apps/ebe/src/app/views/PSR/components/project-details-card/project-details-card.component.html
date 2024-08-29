@@ -116,7 +116,7 @@
         {
           <div class="buttons">
             <button class = "cancel-btn" type="button" (click)="cancel()">cancel</button>
-            <button class = "add-btn" type="button" (click)="saveData()">save</button>
+            <button class = "add-btn" type="button" (click)="saveData()" [disabled]="isDisabled" [class.disabled-btn]="isDisabled">save</button>
           </div>
         }
         <i class = 'pi pi-times-circle' (click)="closePopup()" style = "margin-right:1px;"></i>

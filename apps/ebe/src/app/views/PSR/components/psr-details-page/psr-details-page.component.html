@@ -9,30 +9,37 @@
       </div>
       <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
     </div>
-    <div class="scored-card-section-tap-details">
-      @if(currentMode === 'editMode') {
-        <stc-apps-edit-mode-view 
-          (import)="showDialog()"
-          (export)="downloadTemplate()"
-        />
-      }
-      <div class="projects-container">
-        <p class = "psr-tabview-header">
-          {{PSRDetailsData ? PSRDetailsData[0].title : ''}}
-        </p>
-        <div class="project-cards-container">
-          @for (proj of PSRDetailsData; track $index) {
-            <div class="project-card">
-              <stc-apps-project-details-card 
-                [projectData]="proj"
-                (addRecordInTable)="addRecordInTable($event)"
-                (closePopupEmit)="closePopup($event)"
-              />
+      <div class="scored-card-section-tap-details">
+        @if(currentMode === 'editMode') {
+          <stc-apps-edit-mode-view 
+            (import)="showDialog()"
+            (export)="downloadTemplate()"
+          />
+        }
+        @if(PSRDetailsData && PSRDetailsData.length !== 0)
+        {
+          <div class="projects-container">
+            <p class = "psr-tabview-header">
+              {{PSRDetailsData ? PSRDetailsData[0].title : ''}}
+            </p>
+            <div class="project-cards-container">
+              @for (proj of PSRDetailsData; track $index) {
+                <div class="project-card">
+                  <stc-apps-project-details-card 
+                    [projectData]="proj"
+                    (addRecordInTable)="addRecordInTable($event)"
+                    (closePopupEmit)="closePopup($event)"
+                  />
+                </div>
+              }
             </div>
-          }
-        </div>
+          </div>
+        } @else {
+          <p class = "empty-data-msg">
+            there are no data for this project
+          </p>
+        }
       </div>
-    </div>
   </section>
 <stc-apps-dialog-modal 
   [visible]="visible"

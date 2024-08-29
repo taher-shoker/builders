@@ -28,6 +28,7 @@
   <p-tabPanel>
     <ng-template pTemplate="header">
       <div *ngFor="let tab of tabsData(); let index = index">
+      <!-- <div *ngFor="let tab of tabsData(); let index = index"> -->
         <div
           [class.clickedTap]="currentClickedTapIndex === index"
           (click)="toggleTaps(index, tab.name)"

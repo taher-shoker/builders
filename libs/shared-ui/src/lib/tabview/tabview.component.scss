@@ -74,7 +74,14 @@
     display: none !important;
   }
   .p-tabview-nav-btn {
-    height: 57px !important;
+    width: 30px !important;
+    height: 30px !important;
+    border-radius: 50% !important;
+    align-items: center !important;
+    background-color: rgba(255, 255, 255, .5) !important;
+    color:#ffffff !important;
+    position: absolute !important;
+    top: 18% !important;
   }
   .p-tabview-nav {
     background-color: transparent !important;

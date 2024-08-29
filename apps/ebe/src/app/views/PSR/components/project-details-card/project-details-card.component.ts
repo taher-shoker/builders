@@ -86,24 +86,30 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
         this.projectData().endDate = ed;
       }
     }
+    console.log(this.projectData());
+    const vactual = this.projectData().vactual;
+    const vplanned = this.projectData().vplanned;
+    const difference = Math.abs(vplanned - vactual);
     this.data = {
       prefixText: '',
       prefixValue: 0,
       suffixText: '',
       suffixValue: 0,
-      progressValue: 100,
-      barColor:'#00C48C',
-      bgBarColor:'#00c48c1a',
+      progressValue: vactual,
+      barColor:(difference >= 0 && difference < 5) ? '#00C48C' : (difference >= 5 && difference < 10) ? '#EFC500' : '#FF1A1A',
+      bgBarColor:(difference >= 0 && difference < 5) ? '#00c48c1a' : (difference >= 5 && difference < 10) ? 'rgba(239, 197, 0, .2)' : 'rgba(255, 26, 26, .2)',
       indexes: [
         {
           caption: 'Actual',
           value: this.projectData().vactual,
           position: 'up',
+          actualBarColor : (difference >= 0 && difference < 5) ? '#009F71' : (difference >= 5 && difference < 10) ? '#D9B301' : '#BC0000',
         },
         {
           caption: `Planned`,
           value: this.projectData().vplanned,
           position: 'down',
+          actualBarColor : '#000000',
         },
       ],
     };
@@ -211,10 +217,30 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     }
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
   }
+  isDisabled = false;
+  allElementsNotNull(arrayOfObjects:any[]) {
+    for (const obj of arrayOfObjects) {
+      for (const key in obj) {
+        if (obj[key] === null || obj[key] === '') {
+          return false;
+        }
+      }
+    }
+  
+    // If the loop completes without finding a null value, return true
+    return true;
+  }
   getUpdatedData(e:{items:ChartDetails[] , id:number})
   {
     this.selectedItem = e.items.filter(val => val.id === e.id)[0];
-    console.log(this.selectedItem);
+    console.log(this.allElementsNotNull(e.items));
+    console.log(e.items);
+    if(!this.allElementsNotNull(e.items))
+    {
+      this.isDisabled = true;
+    } else {
+      this.isDisabled = false;
+    }
   }
   addRecord()
   {

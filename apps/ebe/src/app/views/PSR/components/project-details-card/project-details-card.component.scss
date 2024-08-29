@@ -11,15 +11,16 @@
     text-transform: capitalize;
     font-weight: 600;
     font-size: 17px;
-    min-height: 50px;
+    // min-height: 50px;
   }
   &-statuses-cards {
     display: flex;
     align-items: flex-start;
     gap: 10px;
     flex-wrap: wrap;
-    min-height: 100px;
+    margin-bottom: 25px;
     @media all and (min-width: 1700px) {
+      min-height: 100px;
       margin-bottom: 20px;
     }
   }
@@ -254,4 +255,9 @@
   font-size: 23px;
   @extend .stcFont;
   font-weight: 600;
+}
+.disabled-btn
+{
+  cursor: not-allowed !important;
+  opacity: .7;
 }

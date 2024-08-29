@@ -113,16 +113,22 @@
 }
 .actual-bar-line
 {
-  background-color: #009F71 !important;
+  // background-color: #009F71 !important;
   border-radius:5px;
   height: 35px !important;
-  bottom:-32px !important;
+  bottom:-31.5px !important;
+  width: 0;
+  padding:0 1.5px;
+  max-width: 5px;
 }
 .planned-bar-line
 {
   border-radius:5px;
   height: 35.5px !important;
   margin-top: 1px !important;
+  width: 0;
+  padding:0 1.5px;
+  max-width: 5px;
 }
 .isPSRProject
 {

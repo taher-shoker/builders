@@ -50,7 +50,8 @@
               [class.actual-value]="(isProject() || isPSRProject()) && index.caption === 'Actual'"
               [class.planned-value]="(isProject() || isPSRProject()) && index.caption === 'Planned'"
               [ngStyle]="{
-                'font-family' : fontFamily() ? fontFamily() : ''
+                'font-family' : fontFamily() ? fontFamily() : '',
+                color : index.actualBarColor
               }"
               >{{ index.value }}%</span
             >
@@ -61,6 +62,7 @@
               [ngStyle]="{
                 top: index.position === 'down' ? '0' : '',
                 bottom: index.position === 'up' ? '0' : '',
+                background :  index.actualBarColor
               }"
             ></span>
           </div>
