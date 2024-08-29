@@ -198,8 +198,8 @@ export class MentionsEditorComponent
 
     if (item) {
       this.notificationService.addMentionObjects(item);
-      this.value += item.name;
-      this.value=this.value.replace('@','');
+      this.value += item.name.replace('@','');
+      // this.value=this.value.replace('@','');
     }
   }
 }
