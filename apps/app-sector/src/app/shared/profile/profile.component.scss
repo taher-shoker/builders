@@ -1,36 +1,47 @@
 .profile-content {
   &_avatar {
-   width: 3rem;
-   height: 3rem;
-    img{
+    width: 3rem;
+    height: 3rem;
+
+    img {
       width: 100%;
     }
   }
+
   &_name {
     margin-left: 10px;
     font-family: var(--stc-font-base);
     color: var(--darkPurpleColor);
     font-weight: 600;
     font-size: 18px;
+    width: 100%;
+    text-wrap: wrap;
   }
+
   &_desc {
     padding: 6px 0px 0px 12px;
     font-weight: 400;
     font-size: 14px;
+    width: 100%;
+    text-wrap: wrap;
+
     ::ng-deep {
       span {
         color: var(--stcCoralColor) !important;
       }
     }
   }
+
   &_line {
     border: 1px solid var(--mediumGrey);
     margin: 12px 0px 12px 12px;
   }
+
   &_line-reply {
     border: 1px solid var(--mediumGrey);
     margin: 12px 0px 12px 120px;
   }
+
   &_time {
     text-align: end;
     padding: 12px 24px 0px 0px;
@@ -38,15 +49,18 @@
     font-weight: 400;
     font-size: 14px;
   }
-  &_editedFlag{
+
+  &_editedFlag {
     text-align: end;
     padding: 12px 24px 0px 0px;
     color: var(--red-Color-dark);
     font-weight: 400;
     font-size: 14px;
   }
+
   .actions-holder {
     margin-left: 12px;
+
     .action-btns {
       margin-right: 12px;
       font-weight: 400;
@@ -56,12 +70,15 @@
       margin-top: 12px;
       cursor: pointer;
     }
+
     .action-btns:hover {
       color: var(--stcCoralColor);
     }
   }
+
   .actions-reply-holder {
     margin-left: 12px;
+
     .action-btns {
       margin-right: 12px;
       font-weight: 400;
@@ -71,6 +88,7 @@
       margin-top: 12px;
       cursor: pointer;
     }
+
     .action-btns:hover {
       color: var(--stcCoralColor);
     }
