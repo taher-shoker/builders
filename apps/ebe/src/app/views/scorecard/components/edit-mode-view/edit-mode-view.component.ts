@@ -9,8 +9,8 @@ import { CommonModule } from '@angular/common';
   styleUrl: './edit-mode-view.component.scss',
 })
 export class EditModeViewComponent {
-  @Output() import:EventEmitter<any> = new EventEmitter();
-  @Output() export:EventEmitter<any> = new EventEmitter();
+  @Output() import:EventEmitter<boolean> = new EventEmitter();
+  @Output() export:EventEmitter<boolean> = new EventEmitter();
   showDialog()
   {
     this.import.emit()

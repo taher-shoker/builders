@@ -17,17 +17,22 @@ footer
     @extend .stcFont;
     font-size: 16px;
     text-transform: capitalize;
-    padding:7px 22px;
+    padding:7px 30px;
     border-radius:10px;
     cursor: pointer;
+    margin-right: 20px;
     &.import-data-btn
     {
-      margin-right: 20px;
-      background-color: var(--stc-green-dark-color);
+      margin-right:0px;
+      background-color: var(--stc-purple-color);
+      border:2px solid var(--stc-purple-color);
     }
     &.cancel-btn
     {
-      background-color: var(--stc-pink-color);
+      background-color: var(--stc-white-color);
+      border:2px solid var(--stc-grey-dark-color);
+      border-radius: 10px;
+      color:var(--stc-grey-dark-color);
     }
     &.disabled-btn
     {

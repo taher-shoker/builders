@@ -7,9 +7,17 @@ div
   padding:0px 14px;
   height:45px;
   line-height:45px;
-  @media all and (max-width:1400px)
+  @media all and (max-width:1250px)
   {
-    padding:0px 11px;
+    padding:0px 14px;
+  }
+  @media all and (min-width:1251px) and (max-width:1400px)
+  {
+    padding:0px 7px;
+  }
+  @media all and (min-width:1900px)
+  {
+    padding:0px 7px;
   }
   border-radius:10px;
   @extend .stcFont;

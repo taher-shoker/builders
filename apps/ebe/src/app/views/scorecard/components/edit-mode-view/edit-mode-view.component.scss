@@ -16,7 +16,7 @@
   {
     // background-color: var(--stc-purple-light-color);
     // color:var(--stc-white-color);
-    background-color: var(--stc-green-dark-color);
+    background-color: var(--stc-red-dark-color);
     color: var(--stc-white-color);
     border:0;
     @extend .stcFont;
@@ -29,13 +29,15 @@
     cursor: pointer;
     &.import-btn
     {
-      background-color: var(--stc-sky-color);
+      background-color: var(--stc-purple-color);
     }
     img
     {
       display: inline-block;
       margin-right: 10px;
-      width:17px;
+      position: relative;
+      top:-1px;
+      // width:17px;
     }
   }
 }

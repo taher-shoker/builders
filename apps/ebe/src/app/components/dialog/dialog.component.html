@@ -18,13 +18,13 @@
   />
   <ng-template pTemplate="footer">
     <footer>
+      <button class = "cancel-btn" (click)="visible = false;">cancel</button>
       <button 
         class = "import-data-btn" 
         (click)="importData()"
         [disabled]="!selectedFile"
         [class.disabled-btn]="!selectedFile"
       >import</button>
-      <button class = "cancel-btn" (click)="visible = false;">cancel</button>
     </footer>
   </ng-template>
 </p-dialog>
