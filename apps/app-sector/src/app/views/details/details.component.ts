@@ -180,7 +180,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Weight',
-        description: kpiObject.weight.toFixed(2) + ' ' + '%',
+        description: kpiObject.weight.toFixed(2) + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
@@ -200,7 +200,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Ceiling',
-        description: kpiObject.ceiling + ' ' + '%',
+        description: kpiObject.ceiling + ' ' + kpiObject.unit,
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
@@ -220,7 +220,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Threshold',
-        description: kpiObject.target.toFixed(2) + ' ' + '%',
+        description: kpiObject.target.toFixed(2) + ' ' + kpiObject.unit,
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {

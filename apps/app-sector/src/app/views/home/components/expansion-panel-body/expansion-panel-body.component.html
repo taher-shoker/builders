@@ -1,6 +1,6 @@
 <div class="expansion-body">
   <div class="expansion-body_score">
-    <stc-apps-result-score [percentage]="percentage()"></stc-apps-result-score>
+    <stc-apps-result-score [percentage]="kpiObject().score"></stc-apps-result-score>
   </div>
   <div class="row">
     @for (section of listItems(); track section) {
@@ -18,7 +18,7 @@
         <li>
           <label>{{ item.label }}</label>
           @if (isNumber(item.value)) {
-          <span>{{ item.value | percent }}</span>
+          <span>{{ item.value.toFixed(2) }}</span>
           } @else {
           <span>{{ item.value }}</span>
           }
