@@ -1,4 +1,4 @@
-import { Component, InputSignal, input } from '@angular/core';
+import { Component, InputSignal, effect, input } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-details-card',
@@ -9,6 +9,7 @@ export class DetailsCardComponent {
   title: InputSignal<string> = input('');
   description: InputSignal<string | any> = input('');
   unit: InputSignal<string | any> = input('');
+
   isDescriptionString(): boolean {
     return (
       typeof this.description() === 'string' ||
@@ -22,7 +23,7 @@ export class DetailsCardComponent {
         this.title() == 'Threshold' ||
         this.title() == 'Ceiling')
     ) {
-      return this.description().includes('%');
+      return true;
     } else {
       return false;
     }

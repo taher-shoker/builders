@@ -13,7 +13,7 @@
       <div
         class="bar"
         [ngStyle]="{
-          width: data().progressValue + unit,
+          width: data().progressValue + '%',
           'background-color': data().barColor
         }"
       ></div>
@@ -22,13 +22,16 @@
         <div
           class="indexer"
           [ngStyle]="{
-            left: index.value + unit,
+            left: index.progressValue
+              ? index.progressValue + '%'
+              : index.value + '%',
             top: index.position === 'up' ? '-85px' : null,
             bottom: index.position === 'down' ? '-65px' : null
           }"
         >
           <div
             class="holder"
+            [ngClass]="index.progressValue ? 'longUnits' : ''"
             [ngStyle]="{
               'padding-top': index.position === 'down' ? '12px' : null,
               'padding-bottom': index.position === 'up' ? '12px' : ''

@@ -17,6 +17,7 @@ export interface ProgressInfo {
 interface Index {
   caption: string;
   value: number;
+  progressValue?:number
   position?: 'up' | 'down';
 }
 

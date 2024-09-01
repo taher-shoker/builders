@@ -300,14 +300,6 @@ export class MentionsEditorComponent
     // console.log('Extracted mentions:', extractedMentions);
     return extractedMentions;
   }
-  removeBrTags() {
-    const nativeElement = this.el.nativeElement;
-    const brElements = nativeElement.querySelectorAll('br');
-
-    brElements.forEach((br: any) => {
-      this.renderer.removeChild(nativeElement, br);
-    });
-  }
 }
 
 export function pasteHtmlAtCaret(html: any) {
