@@ -12,14 +12,14 @@
             <div class="res-content d-flex justify-content-between">
               <p class="res-p">Result</p>
               <div class="res-value">
-                {{ score.score | percent : '1.1-1' }}
+                {{ score.score }}
               </div>
             </div>
           </div>
           <div class="we-container">
             <div class="we-content d-flex justify-content-between">
               <p class="we-p">Weight</p>
-              <div class="we-value">{{ score.weight | percent }}</div>
+              <div class="we-value">{{ score.weight }}</div>
             </div>
           </div>
         </div>
@@ -29,6 +29,8 @@
   </div>
   <!-- scores array is empty means there is no tabs(no data)-->
   @if (scores.length===0) {
-  <div class="empty-scores">There's no data for this specified sector in this year or quarter.</div>
+  <div class="empty-scores">
+    There's no data for this specified sector in this year or quarter.
+  </div>
   }
 </section>

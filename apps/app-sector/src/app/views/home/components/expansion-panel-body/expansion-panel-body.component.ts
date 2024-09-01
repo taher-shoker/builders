@@ -10,7 +10,7 @@ import {
 import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
-import { Section } from '../../../models/SectorKpisDetails.model';
+import { KpiDTO, Section } from '../../../models/SectorKpisDetails.model';
 import { CookieService } from 'ngx-cookie-service';
 
 @Component({
@@ -19,17 +19,28 @@ import { CookieService } from 'ngx-cookie-service';
   styleUrl: './expansion-panel-body.component.scss',
 })
 export class ExpansionPanelBodyComponent {
-  percentage: InputSignal<number> = input(0);
-  kpiStatus: InputSignal<string> = input('');
-  kpiCode: InputSignal<string> = input('');
-  kpiName: InputSignal<string> = input('');
+  // target = 50;
+  // actual = 80;
+  // ceilingg = 80;
+  // unit = '#';
+  // newTarget = 0;
+  // newActual = 0;
+  kpiObject: InputSignal<KpiDTO> = input({} as KpiDTO);
   selectedTab: InputSignal<string> = input('');
   listItems: InputSignal<Section[] | any> = input([]);
-  kpiActualValue: InputSignal<number> = input(0);
-  kpiTargetValue: InputSignal<number> = input(0);
+
   reportData: WritableSignal<any | undefined> = signal(undefined);
-  kpiUnit: InputSignal<string> = input('%');
+
+  progressActual = 0;
+  progressTraget = 0;
   progressBarData = computed(() => {
+    console.log(this.kpiObject());
+    this.progressTraget = this.calculatingProgressValues()[0]
+      ? this.calculatingProgressValues()[0]
+      : this.kpiObject().target;
+    this.progressActual = this.calculatingProgressValues()[1]
+      ? this.calculatingProgressValues()[1]
+      : this.kpiObject().actualValue;
     let data: ProgressInfo;
     // eslint-disable-next-line prefer-const
     data = {
@@ -38,34 +49,61 @@ export class ExpansionPanelBodyComponent {
       suffixText: '',
       suffixValue: 0,
       progressValue:
-        this.kpiTargetValue() >= this.kpiActualValue()
-          ? this.kpiTargetValue()
-          : this.kpiActualValue(),
+        this.progressTraget >= this.progressActual
+          ? this.progressTraget
+          : this.progressActual,
       indexes: [
         {
           caption: 'Actual',
-          value: +this.kpiActualValue().toFixed(2),
+          value: +this.kpiObject().actualValue.toFixed(2),
+          progressValue: this.progressActual,
           position: 'up',
         },
         {
           caption: 'Target',
-          value: +this.kpiTargetValue().toFixed(2),
+          value: +this.kpiObject().target.toFixed(2),
+          progressValue: this.progressTraget,
           position: 'down',
         },
       ],
       barColor: this.barColor(
-        +this.kpiTargetValue().toFixed(2),
-        +this.kpiActualValue().toFixed(2)
+        +this.kpiObject().target,
+        +this.kpiObject().actualValue
       ),
       bgBarColor: this.barBackgroundColor(
-        +this.kpiTargetValue().toFixed(2),
-        +this.kpiActualValue().toFixed(2)
+        +this.kpiObject().target,
+        +this.kpiObject().actualValue
       ),
-      unit: this.kpiUnit(),
+      unit: this.kpiObject().unit,
     };
     return data;
   });
   constructor(private router: Router, private cookieService: CookieService) {}
+  calculatingProgressValues(): number[] {
+    const progressValues: number[] = [];
+    let progressTraget = 0;
+    let progressActual = 0;
+    if (!this.kpiObject().unit.includes('%')) {
+      if (this.kpiObject().direction.toLowerCase() == 'increasing') {
+        // the target and actual values progress.
+        progressTraget = +(
+          (this.kpiObject().target / this.kpiObject().ceiling) *
+          100
+        ).toFixed(2);
+        progressActual = +(
+          (this.kpiObject().actualValue / this.kpiObject().ceiling) *
+          100
+        ).toFixed(2);
+
+        this.progressTraget = Math.abs(this.progressTraget);
+        this.progressActual = Math.abs(this.progressActual);
+        progressValues.push(progressTraget);
+        progressValues.push(progressActual);
+      }
+    }
+
+    return progressValues;
+  }
   barBackgroundColor(target: number, actual: number): string {
     if (target <= actual) return ' rgba(0, 196, 140, 0.15)';
     else return 'rgba(255, 26, 26, 0.1)';
@@ -78,12 +116,12 @@ export class ExpansionPanelBodyComponent {
 
   navigateToDetails() {
     console.log(this.cookieService.get('sectorName'));
-    this.cookieService.set('kpiCode', this.kpiCode());
+    this.cookieService.set('kpiCode', this.kpiObject().kpiCode);
     this.router.navigate([
       '/sectors',
       this.cookieService.get('sectorName'),
       'KPI',
-      this.kpiCode(),
+      this.kpiObject().kpiCode,
     ]);
   }
 

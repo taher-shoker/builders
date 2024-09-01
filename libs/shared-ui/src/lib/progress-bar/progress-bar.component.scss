@@ -43,11 +43,11 @@
     text-align: center;
     // padding-top: 12px;
 
-    .caption{
+    .caption {
       left: -50%;
     }
 
-    .value{
+    .value {
       left: -50%;
     }
 
@@ -62,7 +62,10 @@
     }
   }
 }
-
+.longUnits {
+  display: block;
+  width: max-content;
+}
 .index-info {
   position: relative;
   word-break: keep-all;
