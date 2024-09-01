@@ -10,6 +10,7 @@ import {
   OnChanges,
   OnInit,
   Output,
+  Renderer2,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -68,7 +69,9 @@ export class MentionsEditorComponent
 
   constructor(
     private cd: ChangeDetectorRef,
-    private notificationService: NotificationsService
+    private notificationService: NotificationsService,
+    private el: ElementRef,
+    private renderer: Renderer2
   ) {}
 
   ngAfterViewInit(): void {
@@ -188,7 +191,9 @@ export class MentionsEditorComponent
         // Access data attributes using the dataset property
         // For example, if you have a data attribute like data-info
         dataInfo = span.dataset.id;
-        dataIds.push(dataInfo);
+        if (dataInfo) {
+          dataIds.push(dataInfo);
+        }
       });
       this.deletionEmitter.emit(dataIds);
     }
@@ -251,6 +256,13 @@ export class MentionsEditorComponent
     // Parse the HTML content and find all span elements with a data-id attribute
     const spans = document.querySelectorAll('span[data-id]');
     console.log(spans);
+    const brElements = document.querySelectorAll('br');
+    console.log('br elements', brElements);
+    if (brElements) {
+      brElements.forEach((br: any) => {
+        this.renderer.removeChild(document, br);
+      });
+    }
 
     const mentionObjects: any[] = [];
 
@@ -288,6 +300,14 @@ export class MentionsEditorComponent
     // console.log('Extracted mentions:', extractedMentions);
     return extractedMentions;
   }
+  removeBrTags() {
+    const nativeElement = this.el.nativeElement;
+    const brElements = nativeElement.querySelectorAll('br');
+
+    brElements.forEach((br: any) => {
+      this.renderer.removeChild(nativeElement, br);
+    });
+  }
 }
 
 export function pasteHtmlAtCaret(html: any) {
@@ -309,6 +329,7 @@ export function pasteHtmlAtCaret(html: any) {
         lastNode = frag.appendChild(node);
       }
       range.insertNode(frag);
+
       // Preserve the selection
       if (lastNode) {
         range = range.cloneRange();
