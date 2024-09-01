@@ -32,6 +32,7 @@
             [outputProperty]="'id'"
             [valueProperty]="'id'"
             (itemSelected)="handleGategory($event)"
+
           ></stc-apps-custom-dropdown>
         </div>
       </div>
@@ -87,6 +88,8 @@
             [outputProperty]="'email'"
             [valueProperty]="'email'"
             (itemSelected)="handelCreator($event)"
+            (unselectItem)="handleUnselectedItem($event, 0)"
+
           ></stc-apps-custom-dropdown>
         </div>
       </div>
@@ -212,6 +215,7 @@
                       (itemSelected)="
                         customDropdownSelectionChange($event, i + 1)
                       "
+                      (unselectItem)="handleUnselectedItem($event, i + 1)"
                     ></stc-apps-custom-dropdown>
                   </div>
                   <div class="col-md-1">

@@ -53,6 +53,7 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   outputProperty = input<string>('');
 
   @Output() itemSelected: EventEmitter<Item> = new EventEmitter<Item>();
+  @Output() unselectItem: EventEmitter<Item> = new EventEmitter<Item>();
 
   filtrationText: WritableSignal<string> = signal('');
   control: FormControl | undefined;
@@ -171,6 +172,11 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
 
     if(item['componentScopedValueAccessor'] === this.chosenItem()?.['componentScopedValueAccessor']){
       this.chosenItem.set(null)
+      if (this.outputProperty() !== '') {
+        this.unselectItem.emit((<any>item).componentScopedOutputPropertyAccessor);
+      } else {
+        this.unselectItem.emit(item);
+      }
       return;
     }
 

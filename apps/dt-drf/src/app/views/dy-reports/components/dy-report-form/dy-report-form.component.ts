@@ -1,3 +1,4 @@
+/* eslint-disable no-prototype-builtins */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import {
   Component,
@@ -463,7 +464,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
           { name: 'description', value: this.form.get('description')?.value },
           {
             name: 'attachments',
-            value: this.idsJoinerWithNoExtraction(this.form.get('attachments')?.value),
+            value: this.idsJoiner(this.form.get('attachments')?.value),
           },
           {
             name: 'request_approvals',
@@ -538,11 +539,18 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     }
   }
 
-  private idsJoiner(arrOfObjs: { id: string }[]) {
-    console.log('Got this arr of ids:', arrOfObjs);
-    const newArr = arrOfObjs.map((x) => x.id);
-    const final = newArr.join('@#%@#%Z%#@%#@');
-    return final;
+  private idsJoiner(arr: any) {
+    console.log('Got this arr of ids:', arr);
+    let newArr;
+
+    if(Array.isArray(arr) && arr.every(item => item.hasOwnProperty('id'))){
+
+      newArr = arr.map((x) => x.id);
+      newArr = newArr.join('@#%@#%Z%#@%#@');
+    }else{
+      newArr = arr.join('@#%@#%Z%#@%#@');
+    }
+    return newArr;
   }
 
   private idsJoinerWithNoExtraction(arrOfNums: number[]) {
@@ -678,7 +686,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
               this.isUploaderLoader = false;
               this.form
                 .get('attachments')
-                ?.setValue(this.uploadedFiles.value.map(({ id }) => (id)));
+                ?.setValue(this.uploadedFiles.value.map(({ id }) => ({id:id})));
             }
           },
           error: (err) => (this.isUploaderLoader = false),
@@ -729,12 +737,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.manageUserNameControl(this.requestApprovalsGetter.length - 1);
   }
 
-  // removeStep(index: number) {
-  //   this.requestApprovalsGetter.removeAt(index);
-  //   this.selectedOptions.splice(index, 1);
-  //   this.updateFilteredOptions();
-  // }
-
   manageUserNameControl(index: number) {
     const control = this.requestApprovalsGetter.at(index).get('username');
     if (control) {
@@ -769,27 +771,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return filteredUsers;
   }
 
-  // onSelectionChange(option: string, index: number) {
-  //   this.selectedOptions[index] = option.toLowerCase();
-  //   this.updateFilteredOptions();
-  //   this.handleUserFiltration();
-  // }
-
-  onSelectionChange(option: string) {
-    // Update filteredUsers based on the selected option
-    // Assuming you want to add the selected user to filteredUsers
-    // if (!this.filteredUsers.some((user) => user.email === option.email)) {
-    //   this.filteredUsers.push(option);
-    // }
-    // Call the handleUserFiltration method to update available users
-    // console.log('user before filter:', option);
-    // const user = this.users.find((user) => user.email === option);
-    // this.handleUserFiltration(user);
-  }
-
-  // customDropdownSelectionChange(user: User) {
-  //   this.handleUserFiltration(user);
-  // }
 
   selectedUsers: { index: number; userEmail: string }[] = [];
 
@@ -810,6 +791,26 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     );
 
     // Optionally, handle other logic related to the selection
+  }
+
+  handleUnselectedItem(selectedUserEmail: string, index: number) {
+    const userIndex = this.selectedUsers.findIndex((user) => user.index === index);
+    if (userIndex !== -1) {
+      this.selectedUsers.splice(userIndex, 1);
+    }
+  
+    const unselectedUser = this.users.find((user) => user.email === selectedUserEmail);
+  
+    console.log("selectedUserEmail", selectedUserEmail)
+    console.log("userIndex", userIndex)
+    console.log("unselectedUser", unselectedUser)
+    if (unselectedUser) {
+      const foundUser = this.availableUsers().find(user => user.email === selectedUserEmail)
+      if(!foundUser){
+        const updatedAvailableUsers = [...this.availableUsers(), unselectedUser].sort((a, b) => a.id - b.id);
+        this.availableUsers.set(updatedAvailableUsers);
+      }
+    }
   }
 
   removeStep(item: FormGroup, index: number) {
@@ -870,5 +871,12 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.selectedOptions.forEach((_, i) => {
       this.manageUserNameControl(i);
     });
+  }
+}
+
+class AttachmentBody {
+  id: number;
+  constructor(id: number) {
+    this.id = id;
   }
 }
