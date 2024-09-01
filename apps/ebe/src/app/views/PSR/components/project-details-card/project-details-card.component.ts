@@ -86,7 +86,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
         this.projectData().endDate = ed;
       }
     }
-    console.log(this.projectData());
+    // console.log(this.projectData());
     const vactual = this.projectData().vactual;
     const vplanned = this.projectData().vplanned;
     const difference = Math.abs(vplanned - vactual);

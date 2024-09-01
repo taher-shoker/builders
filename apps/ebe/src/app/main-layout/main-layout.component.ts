@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
-import { CookieService } from 'ngx-cookie';
-import { NavLinks, UserModel } from '../models/scorecard.model';
+import { NavLinks, UserGroup, UserGroupRoles, UserModel } from '../models/scorecard.model';
 import { NavigationStart, Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-main-layout',
@@ -16,10 +15,15 @@ export class MainLayoutComponent implements OnInit{
   userNameLogo!:string;
   isChanged = false;
   scorecardService = inject(ScorecardService);
-  cookieService = inject(CookieService)
   router = inject(Router)
+  currentSystem = "";
   navItems!:NavLinks[];
+  userData!:UserModel;
+  userRoles!:UserGroup;
   ngOnInit(): void {
+    this.currentSystem = this.scorecardService.getCurrentSystem();
+    this.userData = this.scorecardService.getUserGroups();
+    this.scorecardService.setUsername(this.userData.name);
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.navItems = this.scorecardService.getNavLinks();
@@ -30,24 +34,16 @@ export class MainLayoutComponent implements OnInit{
         }
       }
     })
-    // this.getUserDetails()
-    // this.userName = this.cookieService.get('USER_FULLNAME') || '';
-    // const token = this.cookieService.get("token")
-    // if(token)
-    // {
-    //   const username = this.decodeToken(token);
-    //   console.log(username)
-    //   this.userName = username.sub;
-    // }
+    // this.userRoles = this.checkSystem(this.userData.userGroups) ?? ;
   }
-  private getUserDetails()
-  {
-    this.scorecardService.getCurrentUserInfo().subscribe({
-      next :(res:UserModel) => {
-        this.userName = res.dto.username;
-        this.scorecardService.setUsername(res.dto.displayName);
-      }
-    })
+  private checkSystem(groups: UserGroup[]) {
+    return groups.find((group: UserGroup) => {
+      return group.roles.some(
+        (role:UserGroupRoles) => {
+          return role.system.name === this.currentSystem;
+        }
+      );
+    });
   }
   getCurrentMode(mode:'editMode' | 'viewMode')
   {

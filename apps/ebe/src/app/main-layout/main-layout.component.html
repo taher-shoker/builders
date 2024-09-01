@@ -13,9 +13,10 @@
         [logoSrc]="logoSrc"
         [sidebarLinks]="navItems"
         [usernameImage]="userNameLogo"
-        [userName]="'BE Admin'"
+        [userName]="userData.name"
         (currentMode)="getCurrentMode($event)"
-      />
+        />
+        <!-- [userRoles]="userRoles" -->
     </div>
     <div class="main-layout-content-page">
       <router-outlet></router-outlet>

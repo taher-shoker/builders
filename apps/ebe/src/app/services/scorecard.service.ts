@@ -7,11 +7,13 @@ import {
 import { environment } from '../../environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { CookieService } from 'ngx-cookie';
 @Injectable({ providedIn: 'root' })
 export class ScorecardService {
   private currMode: BehaviorSubject<'editMode' | 'viewMode'> = new BehaviorSubject<'editMode' | 'viewMode'>('viewMode');
-  private currUsername: BehaviorSubject<string> = new BehaviorSubject<string>('');
+  private currUsername = "";
   http = inject(HttpClient);
+  cookieService = inject(CookieService)
   private readonly navItems: NavLinks[] = [
     {
       id: 1,
@@ -34,8 +36,22 @@ export class ScorecardService {
       url: '/psr',
     },
   ];
+  getCurrentSystem(): string {
+    return JSON.parse(this.cookieService.get('granted-systems') || '')[0];
+  }
+  getUserGroups(): UserModel {
+    return JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+  }
   getNavLinks(): NavLinks[] {
     return this.navItems;
+  }
+  setUsername(name:string)
+  {
+    this.currUsername = name;
+  }
+  getUsername():string
+  {
+    return this.currUsername;
   }
   getScorecardData(month?: number, year?: number , groupName?: string): Observable<ScorecardModel[]> {
     if(groupName && month && year)
@@ -59,12 +75,6 @@ export class ScorecardService {
   }
   getCurrentMode(): BehaviorSubject<'editMode' | 'viewMode'> {
     return this.currMode;
-  }
-  setUsername(username:string) {
-    this.currUsername.next(username);
-  }
-  getUsername(): BehaviorSubject<string> {
-    return this.currUsername;
   }
   uploadFile(selectedFile: any): Observable<any> {
     const formData = new FormData();

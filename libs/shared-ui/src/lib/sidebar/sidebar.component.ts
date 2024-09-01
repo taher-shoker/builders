@@ -1,6 +1,23 @@
 import { Component, EventEmitter, inject, input, OnInit, Output } from '@angular/core';
 import { SidebarLinksModel } from './sidebarLinks.model';
 import { NavigationStart, Router } from '@angular/router';
+export interface UserGroup
+{
+  id:number;
+  groupName:string;
+  roles:UserGroupRoles[];
+}
+export interface UserGroupRoles
+{
+  id:number;
+  roleName:string;
+  system:UserGroupSystem;
+}
+export interface UserGroupSystem
+{
+  id:number;
+  name:string;
+}
 @Component({
   selector: 'stc-apps-sidebar',
   standalone: false,
@@ -10,6 +27,7 @@ import { NavigationStart, Router } from '@angular/router';
 export class SidebarComponent implements OnInit{
   editModeChecked!:boolean;
   logoSrc = input.required<string>({alias : 'logoSrc'})
+  // userRoles = input.required<UserGroup>()
   usernameImage = input<string>()
   userName = input<string>()
   router = inject(Router)

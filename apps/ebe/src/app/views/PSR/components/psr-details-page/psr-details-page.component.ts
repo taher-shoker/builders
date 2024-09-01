@@ -27,7 +27,9 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService)
   groupName = "";
+  username = "";
   ngOnInit(): void {
+    this.username = this.scorecardService.getUsername();
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;

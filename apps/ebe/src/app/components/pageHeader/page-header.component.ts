@@ -1,5 +1,6 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ScorecardService } from '../../services/scorecard.service';
 
 @Component({
   selector: 'stc-apps-page-header',
@@ -8,8 +9,12 @@ import { CommonModule } from '@angular/common';
   templateUrl: './page-header.component.html',
   styleUrl: './page-header.component.scss',
 })
-export class PageHeaderComponent {
+export class PageHeaderComponent implements OnInit {
   mainTitle = input.required<string>();
-  username = input<string>();
+  username = "";
   secondaryTitle = input<string>();
+  scorecardService = inject(ScorecardService)
+  ngOnInit(): void {
+    this.username = this.scorecardService.getUsername();
+  }
 }

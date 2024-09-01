@@ -8,6 +8,7 @@ import { TabDetailsComponent } from './components/tab-details/tab-details.compon
 import { PSRProjectCardComponent } from './components/project-card/project-card.component';
 import { PSRDataModel } from '../../models/psr.model';
 import { Subject, takeUntil } from 'rxjs';
+import { ScorecardService } from '../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-psr',
   standalone: true,
@@ -22,6 +23,7 @@ export class PSRComponent implements OnInit , OnDestroy {
   currentTab!:TapModel;
   psrData!:PSRDataModel[];
   endSubs$:Subject<PSRDataModel[]> = new Subject();
+  scorecardService = inject(ScorecardService);
   ngOnInit(): void {
     this.getExecuteViewData();
   }

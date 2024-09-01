@@ -29,19 +29,21 @@
         <span>{{ userName() }}</span>
       </div>
     </div>
-    <div class="edit-mode-switch-btn">
-      <span>Edit Mode : </span>
-      <div class="form-check form-switch">
-        <input
-          class="form-check-input"
-          type="checkbox"
-          role="switch"
-          id="flexSwitchCheckDefault"
-          [(ngModel)]="editModeChecked"
-          (change)="switchEditMode()"
-        />
+    <!-- @if(userRoles().roles[0].roleName === 'ADMIN'){ -->
+      <div class="edit-mode-switch-btn">
+        <span>Edit Mode : </span>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+            [(ngModel)]="editModeChecked"
+            (change)="switchEditMode()"
+          />
+        </div>
       </div>
-    </div>
+    <!-- } -->
   </div>
   }
 </section>

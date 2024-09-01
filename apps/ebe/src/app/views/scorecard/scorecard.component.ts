@@ -28,7 +28,6 @@ export class ScorecardComponent implements OnInit , OnDestroy{
   filtersOptions!:FilteredOptions;
   scorecardService = inject(ScorecardService);
   @ViewChild(TapDetailsComponent) child?: TapDetailsComponent;
-  username!:string;
   currYear = new Date().getFullYear()
   ngOnInit(): void {
     this.getInitScorecardsTaps(new Date().getMonth() + 1 , new Date().getFullYear() , true);
@@ -38,11 +37,11 @@ export class ScorecardComponent implements OnInit , OnDestroy{
         this.currentMode = res;
       },
     });
-    this.scorecardService.getUsername().subscribe({
-      next : (name) => {
-        this.username = name;
-      }
-    })
+    // this.scorecardService.getUsername().subscribe({
+    //   next : (name) => {
+    //     this.username = name;
+    //   }
+    // })
   }
   private getScorecardData(month:number , year:number , tapName?:string)
   {
