@@ -2,10 +2,12 @@ import {
   AfterContentInit,
   Component,
   ContentChildren,
+  ElementRef,
   EventEmitter,
   forwardRef,
   Output,
   QueryList,
+  ViewChild,
 } from '@angular/core';
 import { TabComponent } from './tab/tab.component';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
@@ -25,6 +27,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 export class TabsComponent implements AfterContentInit {
   @ContentChildren(TabComponent) tabs: QueryList<TabComponent> | any;
   @Output() changeSelectValue: EventEmitter<any> = new EventEmitter();
+  @ViewChild('tabsContainer', { static: false }) tabsContainer!: ElementRef;
 
   // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onChange: (value: any) => void = () => {};
@@ -34,13 +37,10 @@ export class TabsComponent implements AfterContentInit {
   public value: any;
 
   ngAfterContentInit(): void {
-    console.log('ngAfterContentInit');
     this.handelSelectTab();
 
     this.tabs.changes.subscribe(() => {
-      console.log('change');
       if (this.tabs.length > 0) {
-        console.log('change 2');
         this.handelSelectTab();
       }
     });
@@ -103,5 +103,17 @@ export class TabsComponent implements AfterContentInit {
 
     this.value = tab.value();
     this.changeValue();
+  }
+
+  scrollLeft() {
+    if (this.tabsContainer) {
+      this.tabsContainer.nativeElement.scrollLeft -= 300;
+    }
+  }
+
+  scrollRight() {
+    if (this.tabsContainer) {
+      this.tabsContainer.nativeElement.scrollLeft += 300;
+    }
   }
 }

@@ -1,7 +1,9 @@
-<button
-  (click)="handelChangeTab()"
-  class="tab"
-  [ngClass]="{ active: active() }"
->
-  <ng-content></ng-content>
-</button>
+<div class="tab-container">
+  <button
+    (click)="handelChangeTab()"
+    class="tab"
+    [ngClass]="{ active: active() }"
+  >
+    <ng-content></ng-content>
+  </button>
+</div>

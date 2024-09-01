@@ -1,6 +1,43 @@
 .tabs {
   border-bottom-width: 1px;
-  // display: flex;
-  // width: 100%;
+  display: flex;
+  // white-space: nowrap;
+  // overflow: hidden;
+  width: 100%;
+  // justify-content: space-between;
+  align-items: stretch;
 
+  &_wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  &_container {
+    overflow-x: hidden;
+    white-space: nowrap;
+    width: 100%;
+    scroll-behavior: smooth;
+    margin: 0 40px;
+  }
+
+}
+
+.nav-arrow {
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 20px;
+  padding: 0 10px;
+  z-index: 1;
+}
+
+.left-arrow {
+  position: absolute;
+  left: 0;
+}
+
+.right-arrow {
+  position: absolute;
+  right: 0;
 }
