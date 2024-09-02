@@ -5,11 +5,13 @@ import {
   ElementRef,
   EventEmitter,
   forwardRef,
+  input,
+  InputSignal,
   Output,
   QueryList,
+  TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { TabComponent } from './tab/tab.component';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -25,25 +27,21 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
   ],
 })
 export class TabsComponent implements AfterContentInit {
-  @ContentChildren(TabComponent) tabs: QueryList<TabComponent> | any;
+  @ContentChildren(TemplateRef) tabContents!: QueryList<TemplateRef<any>>;
+  public templates: TemplateRef<any>[] = [];
+
   @Output() changeSelectValue: EventEmitter<any> = new EventEmitter();
   @ViewChild('tabsContainer', { static: false }) tabsContainer!: ElementRef;
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  scores: InputSignal<any[] | any> = input([]);
   private onChange: (value: any) => void = () => {};
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
   private onTouched: any = () => {};
   public disabled = false;
   public value: any;
+  selectedIndex = 0;
 
   ngAfterContentInit(): void {
+    this.templates = this.tabContents.toArray();
     this.handelSelectTab();
-
-    this.tabs.changes.subscribe(() => {
-      if (this.tabs.length > 0) {
-        this.handelSelectTab();
-      }
-    });
   }
 
   writeValue(value: any): void {
@@ -69,51 +67,38 @@ export class TabsComponent implements AfterContentInit {
   }
 
   handelSelectTab() {
-    const activeTabs = this.tabs?.filter((tab: TabComponent) => tab.active());
-    if (activeTabs.length === 0) {
-      console.log('activeTabs is zero');
-      this.selectTab(this.tabs.first);
+    if (this.templates.length > 0) {
+      this.selectTab(this.selectedIndex);
     }
-    this.tabs.forEach((tab: TabComponent) => {
-      tab.selectTab.subscribe(() => {
-        console.log('tab');
-        this.selectTab(tab);
-        this.value = tab.value();
-        // this.changeValue();
-      });
-    });
+  }
+
+  updateTabs() {
+    this.templates = this.tabContents.toArray();
+    this.handelSelectTab();
   }
 
   handelSelectTabByValue(value: any) {
-    const activeTabs = this.tabs?.filter(
-      (tab: TabComponent) => tab.value == this.value
+    const tabIndex = this.scores().findIndex(
+      (score: any) => score.value === value
     );
-    // eslint-disable-next-line no-extra-boolean-cast
-    if (!!activeTabs) this.selectTab(activeTabs);
+    if (tabIndex !== -1) {
+      this.selectTab(tabIndex);
+    }
   }
 
-  selectTab(tab: TabComponent) {
-    console.log('selectTab');
-    if (!tab) return;
-    // deactivate all tabs
-    this.tabs.toArray().forEach((tab: TabComponent) => tab.active.set(false));
-
-    // activate the tab the user has clicked on.
-    tab.active.set(true);
-
-    this.value = tab.value();
+  selectTab(index: number) {
+    this.selectedIndex = index;
+    this.value = this.scores()[index]?.value;
     this.changeValue();
   }
 
-  scrollLeft() {
-    if (this.tabsContainer) {
-      this.tabsContainer.nativeElement.scrollLeft -= 300;
-    }
+  onTabChange(event: any) {
+    this.selectedIndex = event.index;
+    this.value = this.scores()[this.selectedIndex]?.value;
+    this.changeValue();
   }
 
-  scrollRight() {
-    if (this.tabsContainer) {
-      this.tabsContainer.nativeElement.scrollLeft += 300;
-    }
+  handleChangeTab(value: any) {
+    this.changeSelectValue.emit(value);
   }
 }

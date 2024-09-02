@@ -23,15 +23,18 @@ export class ExpansionPanelComponent {
   kpi: InputSignal<KpiDTO> = input({} as KpiDTO);
   @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
   panelOpenState = false;
-  newTabSelected: InputSignal<string> = input('');
-  constructor(private cookieService:CookieService) {
+  newTabSelected: InputSignal<string | any> = input('');
+  constructor(private cookieService: CookieService) {
     effect(() => {
       if (this.newTabSelected() !== '') {
-        console.log('called', this.newTabSelected());
-        this.cookieService.set('selectedTab', this.newTabSelected(), {
-          expires: 7,
-          path: '/',
-        });
+        this.cookieService.set(
+          'selectedTab',
+          this.newTabSelected().tab.textLabel,
+          {
+            expires: 7,
+            path: '/',
+          }
+        );
         this.closeAllPanels();
       }
     });

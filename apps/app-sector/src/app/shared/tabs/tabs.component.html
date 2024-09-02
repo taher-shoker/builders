@@ -1,17 +1,11 @@
-<div class="tabs_wrapper">
-  @if (tabs.length > 0) {
-  <button class="nav-arrow left-arrow" (click)="scrollLeft()">
-    <i class="fas fa-chevron-left"></i>
-  </button>
+<mat-tab-group
+  (selectedTabChange)="handleChangeTab($event)"
+  mat-stretch-tabs="false"
+  mat-align-tabs="left"
+>
+  @for (score of scores(); track score; let i = $index) {
+  <mat-tab [label]="score?.scorecardTitle">
+    <ng-template [ngTemplateOutlet]="templates[i]"></ng-template>
+  </mat-tab>
   }
-  <div class="tabs_container" #tabsContainer>
-    <div class="tabs">
-      <ng-content select="stc-apps-tab"></ng-content>
-    </div>
-  </div>
-  @if (tabs.length > 0) {
-  <button class="nav-arrow right-arrow" (click)="scrollRight()">
-    <i class="fas fa-chevron-right"></i>
-  </button>
-  }
-</div>
+</mat-tab-group>

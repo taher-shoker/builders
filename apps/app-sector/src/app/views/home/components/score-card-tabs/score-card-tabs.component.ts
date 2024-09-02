@@ -18,6 +18,8 @@ import {
 } from '../../../models/SectorKpisDetails.model';
 import { SharedFormService } from '../../services/shared-form.service';
 import { DashboardService } from '../../services/dashboard.service';
+import { Router } from '@angular/router';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-score-card-tabs',
@@ -27,7 +29,6 @@ import { DashboardService } from '../../services/dashboard.service';
 export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
   selectedTab: WritableSignal<string> = signal('');
   scoreCardName: InputSignal<string> = input('');
-
   scores: OverallScore[] = [];
   selectedTabChanged = '';
   kpiDTOMap: KpiDTOMap = {};
@@ -39,19 +40,21 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
     private overallScoreService: OverallScoreService,
     private dashboardService: DashboardService,
     private sharedFormService: SharedFormService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    this.getOverallScore();
-    this.getSectorKpisDetails();
+    this.router.events.pipe(take(1)).subscribe((event: any) => {
+      this.getOverallScore();
+      this.getSectorKpisDetails();
+    });
   }
   ngAfterViewChecked(): void {
     this.cdr.detectChanges();
   }
   handleChangeTab(value: any) {
-    console.log('handle change tab', value);
-    this.selectedTab.set(value);
+    this.selectedTab.set(value.tab.textLabel);
     this.selectedTabChanged = value;
     this.getSectorKpisDetails();
   }
@@ -105,7 +108,7 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
                   this.kpiDTOMap[kpiSubGrouping][kpiName];
               });
             });
-          } 
+          }
         });
     }
   }
