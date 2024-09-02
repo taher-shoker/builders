@@ -227,9 +227,12 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       for (const attachmentID of attachmentsIDs) {
-        this.reportsService.getAttachment(+attachmentID).subscribe((res) => {
-          attachments.push(res);
-        });
+        console.log('attachmentID', attachmentID);
+        if (attachmentID) {
+          this.reportsService.getAttachment(+attachmentID).subscribe((res) => {
+            attachments.push(res);
+          });
+        }
       }
 
       if (res[i].status === 'pending' && res[i].params?.length > 0) {
@@ -305,9 +308,8 @@ export class DyReportDetailsComponent implements OnInit {
           }
         }
       }
-    }else if(task.status === 'breached'){
+    } else if (task.status === 'breached') {
       finalStr = taskName + ' - Breached';
-
     } else {
       finalStr = taskName;
     }
