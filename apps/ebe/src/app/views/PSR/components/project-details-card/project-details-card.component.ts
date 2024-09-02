@@ -1,6 +1,6 @@
 import { Component, ElementRef, EventEmitter, inject, Input, input, InputSignal, OnChanges, OnInit , Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AddProjectForm, ChartDetails, ProgressInfo, PSRProjectDetailsModel } from '../../../../models/psr.model';
+import { AddProjectForm, ChartDetails, ColumnsSchema, ProgressInfo, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
@@ -8,12 +8,7 @@ import { AddProjectFormComponent } from '../add-project-form/add-project-form.co
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PSRService } from '../../../../services/psr.services';
-
-export interface ColumnsSchema {
-  key: string;
-  type: 'text' | 'date' | 'actions' | 'custom';
-  label: string;
-}
+import { UserGroup } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
@@ -25,6 +20,7 @@ export interface ColumnsSchema {
 export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   @Input() isAdded!:boolean;
   projectData:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
+  userRoles:InputSignal<UserGroup> = input.required<UserGroup>();
   @Output() addRecordInTable:EventEmitter<AddProjectForm> = new EventEmitter();
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
@@ -38,38 +34,12 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   psrServices = inject(PSRService)
   constructor(private elementRef: ElementRef , private confirmationService: ConfirmationService) {}
   ngOnInit(): void {
-    this.tableHeader = [
-      {
-        key : "id",
-        type : "text",
-        label : "ID"
-      },
-      {
-        key : "major",
-        type : "text",
-        label : "Major Activities/Deliverables"
-      },
-      {
-        key : "start",
-        type : "text",
-        label : "Start"
-      },
-      {
-        key : "duration",
-        type : "text",
-        label : "Duration"
-      },
-      {
-        key : "completion_level",
-        type : "text",
-        label : "Completion Level"
-      },
-      {
-        key : "",
-        type : "text",
-        label : ""
-      },
-    ]
+    if(this.userRoles().roles[0].roleName !== 'BE_VIEWERS')
+    {
+      this.tableHeader = this.psrServices.tableHeader;
+    } else {
+      this.tableHeader = this.psrServices.tableHeader.filter(val => val.key !== '');
+    }
   }
   newData!:PSRProjectDetailsModel;
   ngOnChanges(): void {

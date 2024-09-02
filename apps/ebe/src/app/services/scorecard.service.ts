@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import {
   NavLinks,
   ScorecardModel,
+  UserGroup,
   UserModel,
 } from '../models/scorecard.model';
 import { environment } from '../../environments/environment';
@@ -12,6 +13,7 @@ import { CookieService } from 'ngx-cookie';
 export class ScorecardService {
   private currMode: BehaviorSubject<'editMode' | 'viewMode'> = new BehaviorSubject<'editMode' | 'viewMode'>('viewMode');
   private currUsername = "";
+  userRoles!:UserGroup;
   http = inject(HttpClient);
   cookieService = inject(CookieService)
   private readonly navItems: NavLinks[] = [

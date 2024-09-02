@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -10,7 +10,7 @@ import { Subject, takeUntil } from 'rxjs';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
-import { FileModel } from '../../../../models/scorecard.model';
+import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
@@ -28,6 +28,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   scorecardService = inject(ScorecardService)
   groupName = "";
   username = "";
+  userRoles!:UserGroup;
   ngOnInit(): void {
     this.username = this.scorecardService.getUsername();
     this.scorecardService.getCurrentMode().subscribe({
@@ -35,6 +36,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         this.currentMode = res;
       },
     });
+    this.userRoles = this.scorecardService.userRoles;
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({
       next : (param) => {

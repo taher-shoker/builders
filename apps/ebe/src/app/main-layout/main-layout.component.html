@@ -13,10 +13,10 @@
         [logoSrc]="logoSrc"
         [sidebarLinks]="navItems"
         [usernameImage]="userNameLogo"
-        [userName]="userData.name"
+        [userName]="userData ? userData.name : ''"
         (currentMode)="getCurrentMode($event)"
+        [userRoles]="userRoles"
         />
-        <!-- [userRoles]="userRoles" -->
     </div>
     <div class="main-layout-content-page">
       <router-outlet></router-outlet>

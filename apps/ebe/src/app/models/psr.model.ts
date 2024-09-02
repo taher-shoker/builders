@@ -62,3 +62,8 @@ export interface AddProjectForm
     duration:number;
     completion_level:number;
 }
+export interface ColumnsSchema {
+    key: string;
+    type: 'text' | 'date' | 'actions' | 'custom';
+    label: string;
+  }

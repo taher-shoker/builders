@@ -49,7 +49,7 @@
 <p [ngStyle]="{ 'font-family': fontFamily() }" class="empty-details">
   there are no details
 </p>
-} @if(psrTable()) {
+} @if(psrTable() && userRoles() !== "BE_VIEWERS") {
 <button
   type="button"
   class="add-record-btn"
@@ -98,7 +98,7 @@
         'font-family': fontFamily() && psrTable() ? fontFamily() : ''
       }"
     >
-      @if(!isEditMode()) { @if(header.key === '') {
+      @if(!isEditMode()) { @if(header.key === '' && userRoles() !== "BE_VIEWERS") {
       <div
         class="delete-btn"
         (click)="deleteRecord(item)"

@@ -27,7 +27,7 @@ export interface UserGroupSystem
 export class SidebarComponent implements OnInit{
   editModeChecked!:boolean;
   logoSrc = input.required<string>({alias : 'logoSrc'})
-  // userRoles = input.required<UserGroup>()
+  userRoles = input.required<UserGroup>()
   usernameImage = input<string>()
   userName = input<string>()
   router = inject(Router)

@@ -34,16 +34,24 @@ export class MainLayoutComponent implements OnInit{
         }
       }
     })
-    // this.userRoles = this.checkSystem(this.userData.userGroups) ?? ;
+    this.userRoles = this.checkSystem(this.userData.userGroups);
+    console.log(this.userRoles);
+    this.scorecardService.userRoles = this.userRoles;
   }
-  private checkSystem(groups: UserGroup[]) {
-    return groups.find((group: UserGroup) => {
+  private checkSystem(groups: UserGroup[]):UserGroup {
+    const matchingGroup = groups.find((group: UserGroup) => {
       return group.roles.some(
         (role:UserGroupRoles) => {
           return role.system.name === this.currentSystem;
         }
       );
     });
+    if(matchingGroup)
+    {
+      return matchingGroup;
+    } else {
+      throw new Error('No user group found for the current system');
+    }
   }
   getCurrentMode(mode:'editMode' | 'viewMode')
   {

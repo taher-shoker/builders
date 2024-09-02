@@ -1,10 +1,42 @@
 import { inject, Injectable } from '@angular/core';
-import { ChartDetails, PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
+import { ChartDetails, ColumnsSchema, PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class PSRService {
+  tableHeader:ColumnsSchema[] = [
+      {
+        key : "id",
+        type : "text",
+        label : "ID"
+      },
+      {
+        key : "major",
+        type : "text",
+        label : "Major Activities/Deliverables"
+      },
+      {
+        key : "start",
+        type : "text",
+        label : "Start"
+      },
+      {
+        key : "duration",
+        type : "text",
+        label : "Duration"
+      },
+      {
+        key : "completion_level",
+        type : "text",
+        label : "Completion Level"
+      },
+      {
+        key : "",
+        type : "text",
+        label : ""
+      },
+    ]
   http = inject(HttpClient);
   getExecuteViewData(): Observable<PSRDataModel[]> {
     return this.http.get<PSRDataModel[]>(

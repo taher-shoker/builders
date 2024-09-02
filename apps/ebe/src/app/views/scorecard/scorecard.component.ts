@@ -36,7 +36,7 @@ export class ScorecardComponent implements OnInit , OnDestroy{
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
       },
-    });
+    });    
     // this.scorecardService.getUsername().subscribe({
     //   next : (name) => {
     //     this.username = name;

@@ -2,133 +2,140 @@
   <p class="project-title">{{ projectData().kpiName }}</p>
   <div class="project-statuses-cards">
     @if(projectData() && projectData().kpiOwner) {
-        <stc-apps-kpi-status-card
-        [kpiStatus]="projectData().kpiOwner!"
-        [kpiType]="'owner-name'"
-        />
+    <stc-apps-kpi-status-card
+      [kpiStatus]="projectData().kpiOwner!"
+      [kpiType]="'owner-name'"
+    />
     } @if(projectData() && projectData().vendor) {
-        <stc-apps-kpi-status-card
-        [kpiStatus]="projectData().vendor!"
-        [kpiType]="'not-achieved'"
-        />
+    <stc-apps-kpi-status-card
+      [kpiStatus]="projectData().vendor!"
+      [kpiType]="'not-achieved'"
+    />
     } @if(projectData() && projectData().kpiStatus) {
-        <stc-apps-kpi-status-card
-        [kpiStatus]="projectData().kpiStatus!"
-        [kpiType]="'status'"
-        />
+    <stc-apps-kpi-status-card
+      [kpiStatus]="projectData().kpiStatus!"
+      [kpiType]="'status'"
+    />
     } @if(projectData() && projectData().domain) {
-        <stc-apps-kpi-status-card
-        [kpiStatus]="projectData().domain"
-        [kpiType]="'domain'"
-        [domainIndicator]="projectData().indicator"
-        [domainIndicatorColor]="'#FF0000'"
-        />
-        <!-- [domainIndicatorColor]="'#00C48C'" -->
+    <stc-apps-kpi-status-card
+      [kpiStatus]="projectData().domain"
+      [kpiType]="'domain'"
+      [domainIndicator]="projectData().indicator"
+      [domainIndicatorColor]="'#FF0000'"
+    />
+    <!-- [domainIndicatorColor]="'#00C48C'" -->
     }
   </div>
   <div class="project-timelines">
     <div class="project-timelines-timeline">
-      <p class="project-timelines-timeline-title">
-        project timeline
-      </p>
+      <p class="project-timelines-timeline-title">project timeline</p>
       <div class="project-timelines-timeline-data">
         <div class="project-timelines-timeline-data-start">
-          <p class="project-timelines-timeline-data-start-title">
-            start date
-          </p>
+          <p class="project-timelines-timeline-data-start-title">start date</p>
           <p class="project-timelines-timeline-data-start-info">
-            {{projectData().startDate ? projectData().startDate : 'N/A'}}
+            {{ projectData().startDate ? projectData().startDate : 'N/A' }}
           </p>
         </div>
         <span class="line"></span>
         <div class="project-timelines-timeline-data-end">
-          <p class="project-timelines-timeline-data-start-title">
-            end date
-          </p>
+          <p class="project-timelines-timeline-data-start-title">end date</p>
           <p class="project-timelines-timeline-data-start-info">
-            {{projectData().endDate ? projectData().endDate : 'N/A'}}
+            {{ projectData().endDate ? projectData().endDate : 'N/A' }}
           </p>
         </div>
       </div>
     </div>
     <div class="project-timelines-timeline">
-      <p class="project-timelines-timeline-title">
-        spending status
-      </p>
+      <p class="project-timelines-timeline-title">spending status</p>
       <div class="project-timelines-timeline-data">
         <div class="project-timelines-timeline-data-start">
-          <p class="project-timelines-timeline-data-start-title">
-            PO amount
-          </p>
+          <p class="project-timelines-timeline-data-start-title">PO amount</p>
           <p class="project-timelines-timeline-data-start-info">
-            {{projectData().poAmount ? projectData().poAmount : 'N/A'}}
+            {{ projectData().poAmount ? projectData().poAmount : 'N/A' }}
           </p>
         </div>
         <span class="line"></span>
         <div class="project-timelines-timeline-data-end">
-          <p class="project-timelines-timeline-data-start-title">
-            actual
-          </p>
+          <p class="project-timelines-timeline-data-start-title">actual</p>
           <p class="project-timelines-timeline-data-start-info">
-            {{projectData().actual ? projectData().actual : 'N/A'}}
+            {{ projectData().actual ? projectData().actual : 'N/A' }}
           </p>
         </div>
       </div>
     </div>
   </div>
   <div class="project-chart-card">
-      @if(projectData().vactual && projectData().vplanned)
-      {
-      @if(projectData().chartDetails.length !== 0)
-      {
-        <p class="project-chart-card-details" (click)="displayDrilldown()">details</p>
-      } @else {
-        <p class="project-chart-card-details empty-details-btn" (click)="showAddRecordForm()">
-          <img src="assets/images/add-square.svg" alt="">
-          <span>
-            add details
-          </span>
-        </p>
-      }
-  
-        <div class="project-chart-card-chart position-relative" style = "margin:0 20px;">
-          <stc-apps-progress-bar
-            [data]="data"
-            [isPSRProject]="true"
-            [fontFamily]="'STCForwardFont'"
-            (displayDrilldown)="displayDrilldown()"
-          />
-        </div>
-      } @else {
-        <p class = "empty-chart-data">N/A</p>
-      }
+    @if(projectData().vactual && projectData().vplanned) {
+    @if(projectData().chartDetails.length !== 0) {
+    <p class="project-chart-card-details" (click)="displayDrilldown()">
+      details
+    </p>
+    } @else {
+    <p
+      class="project-chart-card-details empty-details-btn"
+      (click)="showAddRecordForm()"
+      [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
+    >
+      <img src="assets/images/add-square.svg" alt="" />
+      <span> add details </span>
+    </p>
+    }
+
+    <div
+      class="project-chart-card-chart position-relative"
+      style="margin: 0 20px"
+    >
+      <stc-apps-progress-bar
+        [data]="data"
+        [isPSRProject]="true"
+        [fontFamily]="'STCForwardFont'"
+        (displayDrilldown)="displayDrilldown()"
+      />
     </div>
+    } @else {
+    <p class="empty-chart-data">N/A</p>
+    }
+  </div>
 </section>
 <p-overlayPanel #overlayPanel dismissable="false">
-  <section class="popover-section"
-      [ngStyle]="{
-        'padding-right' : projectData().chartDetails.length > 4 ? '10px' : '0'
-      }"
-    >
-    <div class = "header mb-3">
-      <div class = "header-actions">
-        @if(formValues2.length !== 0 || isEditMode)
-        {
-          <div class="buttons">
-            <button class = "cancel-btn" type="button" (click)="cancel()">cancel</button>
-            <button class = "add-btn" type="button" (click)="saveData()" [disabled]="isDisabled" [class.disabled-btn]="isDisabled">save</button>
-          </div>
+  <section
+    class="popover-section"
+    [ngStyle]="{
+      'padding-right': projectData().chartDetails.length > 4 ? '10px' : '0'
+    }"
+  >
+    <div class="header mb-3">
+      <div class="header-actions">
+        @if(formValues2.length !== 0 || isEditMode) {
+        <div class="buttons">
+          <button class="cancel-btn" type="button" (click)="cancel()">
+            cancel
+          </button>
+          <button
+            class="add-btn"
+            type="button"
+            (click)="saveData()"
+            [disabled]="isDisabled"
+            [class.disabled-btn]="isDisabled"
+          >
+            save
+          </button>
+        </div>
         }
-        <i class = 'pi pi-times-circle' (click)="closePopup()" style = "margin-right:1px;"></i>
+        <i
+          class="pi pi-times-circle"
+          (click)="closePopup()"
+          style="margin-right: 1px"
+        ></i>
       </div>
-      <div class = "main-title">
+      <div class="main-title">
         <p>details for chart</p>
-        @if(!isEditMode && formValues2.length === 0)
-        {
-          <div class="edit-img" (click)="editMode()">
-            <img src="assets/images/edit.svg" alt="">
-            <span>edit</span>
-          </div>
+        @if(!isEditMode && formValues2.length === 0 &&
+        userRoles().roles[0].roleName !== "BE_VIEWERS") {
+        <div class="edit-img" (click)="editMode()">
+          <img src="assets/images/edit.svg" alt="" />
+          <span>edit</span>
+        </div>
         }
       </div>
     </div>
@@ -141,9 +148,11 @@
       (deleteAddedRecord)="deleteRecord($event)"
       [isEditMode]="isEditMode"
       (updatedData)="getUpdatedData($event)"
+      [userRoles]="userRoles().roles[0].roleName"
     />
-  </section> 
+  </section>
 </p-overlayPanel>
+@if(userRoles().roles[0].roleName !== "BE_VIEWERS") {
 <p-dialog
   [modal]="true"
   [(visible)]="visible"
@@ -151,27 +160,35 @@
   [draggable]="false"
   [dismissableMask]="false"
   [showHeader]="false"
-  class = "add-project-details-dialog"
+  class="add-project-details-dialog"
 >
   <div>
     <stc-apps-add-project-form
-      [id]="projectData().chartDetails.length !== 0 ? projectData().chartDetails[projectData().chartDetails.length - 1].id : 0"
+      [id]="
+        projectData().chartDetails.length !== 0
+          ? projectData().chartDetails[projectData().chartDetails.length - 1].id
+          : 0
+      "
       (closePopupEmit)="visible = false"
       (getValues)="getFormValues($event)"
     />
   </div>
 </p-dialog>
-<stc-apps-confirm-dialog
-  [key]="'delete-record'"
->
+<stc-apps-confirm-dialog [key]="'delete-record'">
   <div class="dialog-container">
-    <img src="assets/images/close-circle.svg" alt="">
-    <p class = "delete-record-header">delete project?</p>
-    <p class = "delete-record-content">Are you sure you want to <br> delete this project?</p>
-    <p class = "delete-record-warning">This action is permanent and cannot be undone!</p>
+    <img src="assets/images/close-circle.svg" alt="" />
+    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-content">
+      Are you sure you want to <br />
+      delete this project?
+    </p>
+    <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p>
     <div class="buttons">
-      <button class = "delete" (click)="deleteRecordRow()">yes. delete</button>
-      <button (click)="close()" class = "cancel">cancel</button>
+      <button class="delete" (click)="deleteRecordRow()">yes. delete</button>
+      <button (click)="close()" class="cancel">cancel</button>
     </div>
   </div>
 </stc-apps-confirm-dialog>
+}

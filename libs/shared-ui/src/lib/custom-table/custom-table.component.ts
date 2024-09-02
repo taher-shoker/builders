@@ -65,6 +65,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() sort: boolean = true;
   @Input() length!: number;
   isEditMode = input<boolean>();
+  userRoles = input<string>();
   paginator$: Subject<PaginationEvent> = new Subject<PaginationEvent>();
   currentPage: number = 1;
 
