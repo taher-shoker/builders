@@ -8,10 +8,11 @@ import { LogsTableComponent } from './components/logs-table/logs-table.component
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { FormsModule } from '@angular/forms';
+import { SharedModule } from '../../shared/shared.module';
 
 
 const components = [UploadFileComponent, DataUploadTableComponent,LogsTableComponent];
-const modules = [CommonModule,FormsModule,MatTableModule,MatPaginatorModule, RouterModule.forChild(appRoutes)];
+const modules = [CommonModule,FormsModule,MatTableModule,MatPaginatorModule,SharedModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
   declarations: [components],

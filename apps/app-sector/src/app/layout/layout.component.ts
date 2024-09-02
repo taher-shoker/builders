@@ -72,7 +72,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
             if (!flag) {
               this.navItems.push({
                 name: 'data upload',
-                url: '/data-upload',
+                url: `/sectors/${this.sectorName}/data-upload`,
                 icon: 'fa-upload',
                 roles: ['Data_Admins'],
                 urlHome: `/sectors/${this.sectorName}`,
