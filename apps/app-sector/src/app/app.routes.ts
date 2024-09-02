@@ -31,7 +31,7 @@ export const appRoutes: Route[] = [
         canActivate: [sectorGuard, authGuard],
       },
       {
-        path: 'data-upload',
+        path: 'sectors/:sectorName/data-upload',
         loadChildren: () =>
           import('./views/data-upload/data-upload.module').then(
             (m) => m.UploadFileModule

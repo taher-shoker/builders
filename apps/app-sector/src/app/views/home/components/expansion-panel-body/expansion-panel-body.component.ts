@@ -84,24 +84,21 @@ export class ExpansionPanelBodyComponent {
     let progressTraget = 0;
     let progressActual = 0;
     if (!this.kpiObject().unit.includes('%')) {
-      if (this.kpiObject().direction.toLowerCase() == 'increasing') {
-        // the target and actual values progress.
-        progressTraget = +(
-          (this.kpiObject().target / this.kpiObject().ceiling) *
-          100
-        ).toFixed(2);
-        progressActual = +(
-          (this.kpiObject().actualValue / this.kpiObject().ceiling) *
-          100
-        ).toFixed(2);
+      // the target and actual values progress.
+      progressTraget = +(
+        (this.kpiObject().target / this.kpiObject().ceiling) *
+        100
+      ).toFixed(2);
+      progressActual = +(
+        (this.kpiObject().actualValue / this.kpiObject().ceiling) *
+        100
+      ).toFixed(2);
 
-        this.progressTraget = Math.abs(this.progressTraget);
-        this.progressActual = Math.abs(this.progressActual);
-        progressValues.push(progressTraget);
-        progressValues.push(progressActual);
-      }
+      this.progressTraget = Math.abs(this.progressTraget);
+      this.progressActual = Math.abs(this.progressActual);
+      progressValues.push(progressTraget);
+      progressValues.push(progressActual);
     }
-
     return progressValues;
   }
   barBackgroundColor(target: number, actual: number): string {
