@@ -200,7 +200,9 @@ export class DyReportDetailsComponent implements OnInit {
           taskAttribute.name === 'attachments' ||
           taskAttribute.name === 'creator_attachments'
         ) {
-          attachmentsIDs.push(taskAttribute.value);
+          if (taskAttribute.value) {
+            attachmentsIDs.push(taskAttribute.value);
+          }
         }
 
         if (
@@ -305,9 +307,8 @@ export class DyReportDetailsComponent implements OnInit {
           }
         }
       }
-    }else if(task.status === 'breached'){
+    } else if (task.status === 'breached') {
       finalStr = taskName + ' - Breached';
-
     } else {
       finalStr = taskName;
     }
