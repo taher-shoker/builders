@@ -296,6 +296,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       });
     }
 
+    this.handleCheck({name: 'needMoreDataFromCreator', value: !!data.creatorEmail})
+
     this.uploadedFiles.next(data.attachments);
 
     this.populateRequestApprovals(data.requestApprovals);
@@ -628,7 +630,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     }
   }
 
-  handleCheck({ name, value }: { name: string; value: string }) {
+  handleCheck({ name, value }: { name: string; value: boolean }) {
     if (name === 'needMoreDataFromCreator') {
       if (value) {
         this.form.get('creatorEmail')?.setValidators(Validators.required);
