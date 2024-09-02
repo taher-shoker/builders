@@ -200,7 +200,9 @@ export class DyReportDetailsComponent implements OnInit {
           taskAttribute.name === 'attachments' ||
           taskAttribute.name === 'creator_attachments'
         ) {
-          attachmentsIDs.push(taskAttribute.value);
+          if (taskAttribute.value) {
+            attachmentsIDs.push(taskAttribute.value);
+          }
         }
 
         if (
@@ -227,12 +229,9 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       for (const attachmentID of attachmentsIDs) {
-        console.log('attachmentID', attachmentID);
-        if (attachmentID) {
-          this.reportsService.getAttachment(+attachmentID).subscribe((res) => {
-            attachments.push(res);
-          });
-        }
+        this.reportsService.getAttachment(+attachmentID).subscribe((res) => {
+          attachments.push(res);
+        });
       }
 
       if (res[i].status === 'pending' && res[i].params?.length > 0) {
