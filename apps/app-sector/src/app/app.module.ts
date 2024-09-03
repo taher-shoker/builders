@@ -46,7 +46,7 @@ export const provideTranslation = () => ({
     HomeModule,
     DetailsModule,
     BrowserAnimationsModule,
-    RouterModule.forRoot(appRoutes),
+    RouterModule.forRoot(appRoutes, { useHash: true }),
     TranslateModule,
     ToastrModule.forRoot(),
     CookieModule.withOptions(),
