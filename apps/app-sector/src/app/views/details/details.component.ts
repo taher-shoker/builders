@@ -44,11 +44,7 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((paramMap) => {
-      this.pathKpiCode = paramMap.get('KPICode');
-    });
     this.route.queryParams.subscribe((params) => {
-      console.log(params);
       if (
         params['kpiCode'] &&
         params['year'] &&
@@ -56,7 +52,15 @@ export class DetailsComponent implements OnInit {
         params['sectorName'] &&
         params['scorecardTitle']
       ) {
-        console.log('params');
+        console.log('params', params);
+        this.pathKpiCode = params['kpiCode'];
+        const initialParams = {
+          year: params['year'],
+          quarter: params['quarter'],
+          sectorName: params['sectorName'],
+        };
+
+        this.sharedFormService.initializeForm(initialParams);
         const paramsAPI: SectorKpisDetailsParams = {
           year: params['year'],
           quarter: params['quarter'],
@@ -71,6 +75,9 @@ export class DetailsComponent implements OnInit {
         };
         this.getSectorUsers(paramsUsers);
       } else {
+        this.route.paramMap.subscribe((paramMap) => {
+          this.pathKpiCode = paramMap.get('KPICode');
+        });
         const selectedTab = this.cookieService.get('selectedTab');
         const params: SectorKpisDetailsParams = {
           ...this.sharedFormService.getForm().value,
@@ -108,10 +115,11 @@ export class DetailsComponent implements OnInit {
       },
     });
   }
+  errorMessage = '';
   getKpiDetails(params: SectorKpisDetailsParams) {
-    this.dashboardService
-      .getSectorKpisDetails(params)
-      .subscribe((result: KpiDetailsResponse) => {
+    this.dashboardService.getSectorKpisDetails(params).subscribe({
+      next: (result: KpiDetailsResponse) => {
+        this.errorMessage = '';
         this.kpiDTOMap = result.kpiDTOMap;
         this.categoryKpiLists = {};
         if (this.kpiDTOMap && typeof this.kpiDTOMap === 'object') {
@@ -137,7 +145,12 @@ export class DetailsComponent implements OnInit {
             });
           });
         }
-      });
+      },
+      error: (error) => {
+        this.errorMessage = 'error Occured';
+        console.log(this.errorMessage);
+      },
+    });
   }
 
   addingCardsDescriptions(kpiObject: KpiDTO) {

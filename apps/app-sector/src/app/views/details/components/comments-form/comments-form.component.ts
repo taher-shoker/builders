@@ -219,8 +219,8 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       sectorName: this.sharedFormService.getForm().value.sectorName,
       year: this.sharedFormService.getForm().value.year,
       quarter: this.sharedFormService.getForm().value.quarter,
-      scorecardTitle: this.cookieService.get('selectedTab'),
-      kpiCode: this.pathKpiCode(),
+      scorecardTitle: this.kpiObjectSignal().scorecardTitle,
+      kpiCode: this.kpiObjectSignal().kpiCode,
       comment: this.form.value.comment,
       commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(

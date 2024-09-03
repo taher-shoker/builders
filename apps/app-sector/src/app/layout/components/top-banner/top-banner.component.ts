@@ -57,7 +57,10 @@ export class TopBannerComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        if (this.router.url.includes('/KPI')) {
+        if (
+          this.router.url.includes('/KPI') ||
+          this.router.url.includes('/kpi-details')
+        ) {
           this.showScorecard = false;
           this.dataUploadFlag = false;
         } else if (this.router.url.includes('/data-upload')) {

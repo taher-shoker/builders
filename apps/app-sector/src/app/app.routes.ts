@@ -22,7 +22,20 @@ export const appRoutes: Route[] = [
         path: 'sectors/:sectorName/KPI',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
-        canActivate: [sectorGuard, authGuard, KPIGuard],
+        canActivate: [sectorGuard, authGuard,KPIGuard],
+      },
+      {
+        path: 'kpi-details',
+        loadChildren: () =>
+          import('./views/details/details.module').then((m) => m.DetailsModule),
+        canActivate: [authGuard],
+      },
+      
+      {
+        path: 'sectors/:sectorName/KPI',
+        loadChildren: () =>
+          import('./views/details/details.module').then((m) => m.DetailsModule),
+        canActivate: [sectorGuard, authGuard],
       },
       {
         path: 'sectors/:sectorName/KPI/:KPICode',
