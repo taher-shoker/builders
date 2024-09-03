@@ -125,15 +125,8 @@ export class VpReportComponent implements OnInit {
   }
 
   private getAllTeams() {
-    if (this.milestonesService.checkIsDirector()) {
-      this.milestonesService.setSystemTeams().subscribe((res) => {
-        this.allTeams = res;
-        this.watchRoute();
-      });
-    } else {
-      this.allTeams = this.milestonesService.setUserTeams();
-      this.watchRoute();
-    }
+    this.allTeams = this.milestonesService.setUserTeams();
+    this.watchRoute();
   }
 
   private getDTStreams() {

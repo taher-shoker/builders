@@ -52,7 +52,6 @@ export class UserFormComponent implements OnInit, OnChanges {
   selectedGroup: number[] = [];
   addGroups = false;
   showInputs = true;
-  hideDropdown = false;
   userTeam = '';
   userId = 0;
   isSubmitLoader = false;
@@ -420,10 +419,6 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.selectedGroup = this.data.teams.map(
             (t: { name: string; id: number }) => t.id
           );
-        } else if (this.data.userGroups[0].groupName === 'DT_Director') {
-          this.hideDropdown = true;
-          this.form.get('teamDto')?.setValidators(null);
-          this.form.get('teamDto')?.updateValueAndValidity();
         }
       } else if (this.userService.getCurrentSystem() === 'DI_Management') {
         this.teams = this.userService
@@ -461,15 +456,8 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.form.get('viewer')?.enable();
       this.form.get('viewer')?.setValue(false);
       this.form.get('teamDto')?.setValue([]);
-      if (value.groupName === 'DT_Director') {
-        this.hideDropdown = true;
-        this.form.get('teamDto')?.setValidators(null);
-        this.form.get('teamDto')?.updateValueAndValidity();
-      } else {
-        this.checkDtUserPermissions(value.groupName);
-        this.hideDropdown = false;
-        this.teams = this.userService.allTeams;
-      }
+      this.checkDtUserPermissions(value.groupName);
+      this.teams = this.userService.allTeams;
     } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
       this.teams = this.userService.getTeams();
     } else {
