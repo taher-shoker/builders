@@ -50,7 +50,7 @@
 ::ng-deep {
   mention-list {
     width: 100%;
-    left: 0;
+    left: 0 !important;
     right: 73px;
 
     .mention-menu {

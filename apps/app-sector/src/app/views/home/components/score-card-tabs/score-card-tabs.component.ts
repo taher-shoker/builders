@@ -54,7 +54,7 @@ export class ScoreCardTabsComponent implements OnInit, AfterViewChecked {
     this.cdr.detectChanges();
   }
   handleChangeTab(value: any) {
-    this.selectedTab.set(value.tab.textLabel);
+    this.selectedTab.set(value?.tab?.textLabel);
     this.selectedTabChanged = value;
     this.getSectorKpisDetails();
   }
