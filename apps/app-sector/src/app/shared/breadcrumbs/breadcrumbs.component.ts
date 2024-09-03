@@ -37,8 +37,10 @@ export class BreadcrumbsComponent {
     this.breadcrumbs = combinedSegments
       .filter((segment) => segment && segment.trim().length > 0)
       .map((segment) => {
+       
         const decodedSegment = decodeURIComponent(segment);
-        return `${decodedSegment.replace(/[^a-zA-Z0-9\/\-\:\s]/g, '')}`;
+
+        return `${decodedSegment.replace(/[^a-zA-Z0-9&-_\/\-\:\s]/g, '')}`;
       })
       .filter((segment) => segment.length > 0);
   }
