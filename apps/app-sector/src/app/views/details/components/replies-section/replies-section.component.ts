@@ -120,7 +120,7 @@ export class RepliesSectionComponent implements OnInit {
       });
     }
     this.commentService.commenstList.subscribe((result: comment[]) => {
-      if (result[0] && result[0].comment) {
+      if (result&& result[0] && result[0].comment) {
         this.comments = result;
         this.commentsCount();
       } else {

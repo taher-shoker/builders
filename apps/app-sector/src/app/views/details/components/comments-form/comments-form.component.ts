@@ -172,9 +172,9 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
     this.form.get('comment')?.setValue(contentText);
-    if (this.mentionsArray.length == 0) {
-      this.notificatinService.mentionsObjects = [];
-    }
+    // if (this.mentionsArray.length == 0) {
+    //   this.notificatinService.mentionsObjects = [];
+    // }
   }
   deleteMention(event: number[]) {
     console.log('deleteMention', event);
@@ -232,7 +232,6 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       next: (result: comment) => {
         this.toastr.success('Comment Added Successfully');
         console.log(result);
-        this.notificatinService.mentionsObjects = [];
         this.newComment = result;
         if (this.notificatinService.mentionsObjects?.length !== 0) {
           this.notificatinService.notificationsSenderEngine(
@@ -242,6 +241,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
           );
         }
         this.form.get('comment')?.reset();
+        this.notificatinService.mentionsObjects = [];
         this.form.updateValueAndValidity();
       },
     });

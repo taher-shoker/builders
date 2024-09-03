@@ -34,13 +34,13 @@ export class ExpansionPanelBodyComponent {
   progressActual = 0;
   progressTraget = 0;
   progressBarData = computed(() => {
-    console.log(this.kpiObject());
     this.progressTraget = this.calculatingProgressValues()[0]
       ? this.calculatingProgressValues()[0]
       : this.kpiObject().target;
     this.progressActual = this.calculatingProgressValues()[1]
       ? this.calculatingProgressValues()[1]
       : this.kpiObject().actualValue;
+
     let data: ProgressInfo;
     // eslint-disable-next-line prefer-const
     data = {
@@ -48,10 +48,8 @@ export class ExpansionPanelBodyComponent {
       prefixValue: 0,
       suffixText: '',
       suffixValue: 0,
-      progressValue:
-        this.progressTraget >= this.progressActual
-          ? this.progressTraget
-          : this.progressActual,
+      progressValue: this.progressActual,
+
       indexes: [
         {
           caption: 'Actual',
@@ -94,21 +92,40 @@ export class ExpansionPanelBodyComponent {
         100
       ).toFixed(2);
 
-      this.progressTraget = Math.abs(this.progressTraget);
-      this.progressActual = Math.abs(this.progressActual);
+      progressTraget = Math.abs(progressTraget);
+      progressActual = Math.abs(progressActual);
+
       progressValues.push(progressTraget);
       progressValues.push(progressActual);
     }
     return progressValues;
   }
   barBackgroundColor(target: number, actual: number): string {
-    if (target <= actual) return ' rgba(0, 196, 140, 0.15)';
-    else return 'rgba(255, 26, 26, 0.1)';
+    if (
+      this.kpiObject().direction.toLowerCase() == 'decreasing' &&
+      target >= actual
+    ) {
+      return 'rgba(0, 196, 140, 0.15)';
+    } else if (
+      this.kpiObject().direction.toLowerCase() == 'increasing' &&
+      target <= actual
+    ) {
+      return ' rgba(0, 196, 140, 0.15)';
+    } else return 'rgba(255, 26, 26, 0.1)';
   }
 
   barColor(target: number, actual: number): string {
-    if (target > actual) return 'var(--stc-red-color)';
-    else return 'var(--stcOasisColor)';
+    if (
+      this.kpiObject().direction.toLowerCase() == 'decreasing' &&
+      target >= actual
+    ) {
+      return 'var(--stcOasisColor)';
+    } else if (
+      this.kpiObject().direction.toLowerCase() == 'increasing' &&
+      target <= actual
+    ) {
+      return ' var(--stcOasisColor)';
+    } else return 'var(--stc-red-color)';
   }
 
   navigateToDetails() {
