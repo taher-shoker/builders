@@ -17,7 +17,7 @@ interface Index {
   caption: string;
   value: number;
   position?: 'up' | 'down';
-  actualBarColor:string;
+  actualBarColor?:string;
 }
 
 @Component({

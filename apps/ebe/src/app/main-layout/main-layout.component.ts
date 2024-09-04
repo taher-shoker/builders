@@ -2,6 +2,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
 import { NavLinks, UserGroup, UserGroupRoles, UserModel } from '../models/scorecard.model';
 import { NavigationStart, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -15,6 +16,7 @@ export class MainLayoutComponent implements OnInit{
   userNameLogo!:string;
   isChanged = false;
   scorecardService = inject(ScorecardService);
+  authService = inject(AuthService);
   router = inject(Router)
   currentSystem = "";
   navItems!:NavLinks[];
@@ -64,5 +66,9 @@ export class MainLayoutComponent implements OnInit{
         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
     }).join(''));
     return JSON.parse(jsonPayload);
+  }
+  logout()
+  {
+    this.authService.logout();
   }
 }

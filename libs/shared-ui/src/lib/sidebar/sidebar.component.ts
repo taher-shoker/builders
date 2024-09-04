@@ -36,6 +36,7 @@ export class SidebarComponent implements OnInit{
   sidebarLinks = input.required<SidebarLinksModel[]>()
   activeMode:'editMode' | 'viewMode' = 'viewMode';
   @Output() currentMode:EventEmitter<'editMode' | 'viewMode'> = new EventEmitter();
+  @Output() logoutFun:EventEmitter<boolean> = new EventEmitter();
   ngOnInit()
   {
     this.currentMode.emit(this.activeMode);
@@ -61,5 +62,9 @@ export class SidebarComponent implements OnInit{
       this.activeMode = 'viewMode';
     }
     this.currentMode.emit(this.activeMode);
+  }
+  logout()
+  {
+    this.logoutFun.emit();
   }
 }

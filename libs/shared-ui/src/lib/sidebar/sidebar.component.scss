@@ -112,3 +112,16 @@
     }
   }
 }
+.logout-btn
+{
+  display: flex;
+  align-items: center;
+  gap:10px;
+  background-color: var(--stc-pink-light-color);
+  width: 100%;
+  padding:8px 30px;
+  cursor: pointer;
+  @extend .stcFont;
+  text-transform: capitalize;
+  font-size: 18px;
+}
