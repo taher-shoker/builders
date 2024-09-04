@@ -1,45 +1,55 @@
-@import "../../../../../styles/fonts.scss";
-.project-container
-{
-    text-align: center;
-    box-shadow: 0px 0px 24px 0px rgba(0,0,0,.1);
-    border-radius:10px;
-    padding:20px 0;
-    &-header
-    {
-        font-size: 30px;
-        @extend .boldPoppins;
-        color:var(--stc-dark-grey-color);
-    }
-    &-description
-    {
-        color:var(--stc-grey-dark-color);
-        @extend .stcFont;
-        font-weight: 500;
-        font-size: 17px;
-        text-align: center;
-        padding:0 25px;
-        margin-top: 30px;
-        min-height: 102px;
-    }
-    &-details-link
-    {
-      text-decoration: none;
-      cursor: pointer;
-      color:var(--stc-purple-color);
-      text-transform: capitalize;
-      @extend .stcFont;
-      font-size: 18px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: fit-content;
-      margin: auto;
-      gap:5px;
-      span
-      {
-        position: relative;
-        top:1px;
-      }
+@import '../../../../../styles/fonts.scss';
+.project-container {
+  text-align: center;
+  box-shadow: 0px 0px 24px 0px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px 0;
+  &-header {
+    font-size: 30px;
+    @extend .boldPoppins;
+    color: var(--stc-dark-grey-color);
   }
+  &-description {
+    color: var(--stc-grey-dark-color);
+    @extend .stcFont;
+    font-weight: 500;
+    font-size: 17px;
+    text-align: center;
+    padding: 0 25px;
+    margin-top: 30px;
+    min-height: 102px;
+  }
+  &-details-link {
+    text-decoration: none;
+    cursor: pointer;
+    color: var(--stc-purple-color);
+    text-transform: capitalize;
+    @extend .stcFont;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: fit-content;
+    margin: auto;
+    gap: 5px;
+    span {
+      position: relative;
+      top: 1px;
+    }
+  }
+}
+.popover-section {
+  color: #222222;
+  @extend .stcFont;
+  font-size: 16px;
+  max-width: 400px;
+  word-spacing: 3px;
+}
+.read-more {
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #222222;
+  text-decoration: none;
+  text-transform: capitalize;
 }

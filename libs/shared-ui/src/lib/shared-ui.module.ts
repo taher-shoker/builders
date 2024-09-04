@@ -72,6 +72,7 @@ import { MultiCirclesProgressBarComponent } from './multi-circles-progress-bar/m
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TruncateWordPipe } from './truncateWord.pipe';
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
@@ -119,7 +120,8 @@ const components = [
   SolidCircularBarComponent,
   ProjectCardComponent,
   MultiCirclesProgressBarComponent,
-  ConfirmDialogComponent
+  ConfirmDialogComponent,
+  TruncateWordPipe
 ];
 
 @NgModule({

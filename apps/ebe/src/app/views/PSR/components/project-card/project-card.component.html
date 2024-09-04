@@ -15,8 +15,13 @@
       [showLegendValues]="false"
     />
   </div>
+  {{maxTextLength}}
   <p class="project-container-description">
-    {{ project().details }}
+    {{ project().details | truncateWord:20}}
+    @if(maxTextLength > 20)
+    {
+      <a (click)="displayDrilldown()" class = "read-more">read more</a>
+    }
   </p>
   <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
   <a 
@@ -27,3 +32,9 @@
     <img src="assets/images/arrow-right.svg" alt="" />
   </a>
 </section>
+@if(project().details)
+{
+  <p-overlayPanel #overlayPanel dismissable="true">
+    <section class="popover-section">{{project().details}}</section>
+  </p-overlayPanel>
+}

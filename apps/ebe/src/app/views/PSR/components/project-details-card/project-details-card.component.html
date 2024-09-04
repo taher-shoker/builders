@@ -21,7 +21,7 @@
       [kpiStatus]="projectData().domain"
       [kpiType]="'domain'"
       [domainIndicator]="projectData().indicator"
-      [domainIndicatorColor]="'#FF0000'"
+      [domainIndicatorColor]="projectData().indicator.toLowerCase() === 'r' ? '#FF0000' : projectData().indicator.toLowerCase() === 'g' ? '#00C48C' : projectData().indicator.toLowerCase() === 'y' ? '#ECB027' : '#bbbbbb'"
     />
     <!-- [domainIndicatorColor]="'#00C48C'" -->
     }

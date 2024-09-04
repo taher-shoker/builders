@@ -1,13 +1,6 @@
 <div class="financial-scorecard-costs-card">
   <div class="financial-scorecard-costs-card-header">
     <p class="financial-scorecard-costs-card-title">{{ kpiData().title }}</p>
-    @if(kpiData().details) {
-    <a
-      (click)="displayDrilldown()"
-      class="financial-scorecard-costs-card-header-details"
-      >view details</a
-    >
-    }
   </div>
   <div class="financial-scorecard-costs-card-statuses">
     @if(kpiData() && kpiData().achievedStatus) {
@@ -27,6 +20,20 @@
     />
     }
   </div>
+  @if(kpiData().details && kpiData().details?.length !== 0)
+  {
+    <p class="kpi-details" [class.short-text]="maxTextLength < 9">
+      {{kpiData().details! | truncateWord:9}}
+      @if(maxTextLength >= 9)
+      {
+        <a (click)="displayDrilldown()">read more</a>
+      }
+    </p>
+  } @else {
+    <p class="no-kpi-details">
+      no description
+    </p>
+  }
   <div class="financial-scorecard-costs-card-cards">
     <div class="row">
       <div class="col-lg-6 col-md-6 col-sm-12">

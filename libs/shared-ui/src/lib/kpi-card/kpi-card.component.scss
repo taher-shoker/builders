@@ -123,9 +123,39 @@
 // }
 .popover-section
 {
-  color:var(--stc-purple-color);
+  color:#222222;
   @extend .stcFont;
   font-size: 16px;
   max-width:300px;
-  text-align: justify;
+  word-spacing:3px;
 }
+.kpi-details , .no-kpi-details
+{
+  @extend .stcFont;
+  color:#222222;
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0;
+  margin-top: 20px;
+  // word-spacing:5px;
+  text-align: left;
+  a
+  {
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color:#222222;
+    text-decoration: none;
+  }
+}
+.no-kpi-details , .short-text
+{
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+// .no-kpi-details
+// {
+  
+// }
