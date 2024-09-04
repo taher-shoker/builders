@@ -1,5 +1,10 @@
 <div class="home-page">
-  <stc-apps-result-weight-card ></stc-apps-result-weight-card>
-  <stc-apps-score-card-tabs></stc-apps-score-card-tabs>
+  <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+  <stc-apps-result-weight-card
+    [scoreCardName]="scoreCardName"
+  ></stc-apps-result-weight-card>
+  <stc-apps-score-card-tabs
+    [scoreCardName]="scoreCardName"
+  ></stc-apps-score-card-tabs>
   <!-- <stc-apps-panels-container></stc-apps-panels-container> -->
 </div>

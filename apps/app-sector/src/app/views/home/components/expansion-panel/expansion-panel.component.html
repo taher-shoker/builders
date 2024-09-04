@@ -1,32 +1,30 @@
 <div class="expansion-panel">
-  <div class="row">
-    <div class="col-12">
-      <stc-apps-panels-container></stc-apps-panels-container>
-    </div>
-    @for (card of cards; track card) {
-    <div class="col-lg-4 col-md-6 col-sm-12">
-      <mat-expansion-panel
-        (opened)="panelOpenState = true"
-        (closed)="panelOpenState = false"
-      >
-        <mat-expansion-panel-header>
-          <stc-apps-expansion-panel-header
-            class="w-100"
-            [projectHeader]="card.projectHeader"
-            [kpisCode]='card.kpisCode'
-            [status]="card.status"
-            [function]="card.function"
-            [direction]="card.direction"
-          ></stc-apps-expansion-panel-header>
-        </mat-expansion-panel-header>
+  <!-- <div class="col-12">
+      <stc-apps-panels-container
+        [categoryName]="category"
+      ></stc-apps-panels-container>
+    </div> -->
 
-        <stc-apps-expansion-panel-body
-        class="mt-lg-0 mt-md-5"
-          [percentage]="card.percent"
-          [kpiCode]="card.kpisCode"
-        ></stc-apps-expansion-panel-body>
-      </mat-expansion-panel>
-    </div>
-    }
-  </div>
+  <mat-expansion-panel
+    (opened)="panelOpenState = true"
+    (closed)="panelOpenState = false"
+  >
+    <mat-expansion-panel-header>
+      <stc-apps-expansion-panel-header
+        class="w-100"
+        [projectHeader]="kpi().kpiName"
+        [kpisCode]="kpi().kpiCode"
+        [status]="kpi().kpiStatus"
+        [function]="kpi().calculationFunction"
+        [direction]="kpi().direction"
+      ></stc-apps-expansion-panel-header>
+    </mat-expansion-panel-header>
+
+    <stc-apps-expansion-panel-body
+      class="mt-lg-0 mt-md-5"
+      [kpiObject]="kpi()"
+      [listItems]="generateListItems(kpi())"
+      [selectedTab]="newTabSelected()"
+    ></stc-apps-expansion-panel-body>
+  </mat-expansion-panel>
 </div>

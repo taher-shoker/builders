@@ -1,99 +1,246 @@
-import { Component } from '@angular/core';
-
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  kpiCard,
+  KpiDetailsResponse,
+  KpiDTOMap,
+  SectorKpisDetailsParams,
+} from '../models/SectorKpisDetails.model';
+import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
+import { SharedFormService } from '../home/services/shared-form.service';
+import { DashboardService } from '../home/services/dashboard.service';
+import { commentsService } from './services/comments.service';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { environment } from 'apps/app-sector/src/environments/environment';
+import { CookieService } from 'ngx-cookie';
+import { sectorUsersParams, user } from './models/commentsModel';
+import { AuthService } from '../../services/auth.service';
+import { NotificationsService } from './services/notifications.service';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
   styleUrl: './details.component.scss',
 })
-export class DetailsComponent {
-  cards = [
-    {
-      title: 'Definition',
-      description:
-        'Measures the STC KSA Earning before Interest and Taxes (EBIT) as reported in stc consolidated financial statements. The FY target is based on the latest budget approved by the BOD',
-      class: 'col-12',
-    },
-    {
-      title: 'Objective',
-      description: 'Transforming Costs to Maximize Value',
-      class: 'col-lg-4 col-md-6 col-sm-12',
-    },
-    {
-      title: 'Custodian Title',
-      description: 'STC Financial Performance Section Manager',
-      class: 'col-lg-4 col-md-6 col-sm-12',
-    },
-    {
-      title: 'Validation Authority',
-      description: 'Finanicial Repoting & Control',
-      class: 'col-lg-4 col-md-6 col-sm-12',
-    },
-    {
-      title: 'Sub-Scorecard Title',
-      description: 'AP32023',
-      class: 'col-lg-3 col-md-6 col-sm-12',
-    },
-    {
-      title: 'Calculation Function',
-      description: 'Linear 2X',
-      class: 'col-lg-3 col-md-6 col-sm-12',
-    },
-    {
-      title: 'Scorecard Title',
-      description: 'Applications Sector',
-      class: 'col-lg-4 col-md-6 col-sm-12',
-    },
-    { title: 'Weight', description: '5.0%', class: 'col-lg-2 col-md-6 col-sm-12' },
-    {
-      title: 'Data Source',
-      description: 'STC P&L Report',
-      class: 'col-lg-3 col-md-6 col-sm-12',
-    },
-    {
-      title: 'KPI Direction',
-      description: 'Increasing',
-      class: 'col-lg-3 col-md-6 col-sm-12',
-    },
-    {
-      title: 'Custodian Email',
-      description: 'Gnejmeddin@stc.com.5d',
-      class: 'col-lg-4 col-md-6 col-sm-12',
-    },
-    { title: 'Ceiling', description: '110.0%', class: 'col-lg-2 col-md-6 col-sm-12' },
-    {
-      title: 'Reporting Frequency',
-      description: 'Qurterly',
-      class: 'col-lg-3 col-md-6 col-sm-12',
-    },
-    {
-      title: 'Reporting Period',
-      description: 'Q3 2023',
-      class: 'col-lg-3 col-md-6 col-sm-12',
-    },
-    {
-      title: 'VTD Calculation',
-      description: 'Periodle & Sum For YTD',
-      class: 'col-lg-4 col-md-6 col-sm-12',
-    },
-    { title: 'Threshold', description: '85%', class: 'col-lg-2 col-md-6 col-sm-12' },
-    { 
-      title: 'Formula & Validation Notes',  
-      description: {
-        text: "Measures the STC KSA Earning before Interest and Taxes (EBIT) as reported in stc consolidated financial statements. The FY target is based on the latest budget approved by the BOD",
-        list: [
-          "A = B - C - D",
-          "Where,",
-          "A = STC KSA EBIT",
-          "B = STC KSA Revenues",
-          "C = STC KSA Cost of Goods Sold"
-        ],
-        notes: [
-          "Finance team shall communicate the validated and approved figures for COM official reference.",
-          "CPM shall not consider any target or actual received from sources other than the KPI custodian officially assigned by the finance team.",
-          "KPI Target is subject to further revision based on the official input received from the finance team aligned with the approved budget."
-        ]
+export class DetailsComponent implements OnInit {
+  kpiObjectSignal: WritableSignal<KpiDTO | undefined> = signal(undefined);
+  sectorUsersSignal: WritableSignal<user[] | undefined> = signal(undefined);
+  currentDate = new Date();
+
+  cards: kpiCard[] = [];
+  kpiDTOMap: KpiDTOMap = {};
+  pathKpiCode: string | null = '';
+  loggedUserID = 0;
+  categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
+  unit = '';
+  baseUrl = environment.apiUrl;
+  constructor(
+    private sharedFormService: SharedFormService,
+    private dashboardService: DashboardService,
+    private commentService: commentsService,
+    private authService: AuthService,
+    private route: ActivatedRoute,
+    private notificationService: NotificationsService,
+    private cookieService: CookieService
+  ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      if (
+        params['kpiCode'] &&
+        params['year'] &&
+        params['quarter'] &&
+        params['sectorName'] &&
+        params['scorecardTitle']
+      ) {
+        console.log('params', params);
+        this.pathKpiCode = params['kpiCode'];
+        const initialParams = {
+          year: params['year'],
+          quarter: params['quarter'],
+          sectorName: params['sectorName'],
+        };
+
+        this.sharedFormService.initializeForm(initialParams);
+        const paramsAPI: SectorKpisDetailsParams = {
+          year: params['year'],
+          quarter: params['quarter'],
+          sectorName: params['sectorName'],
+          scorecardTitle: params['scorecardTitle'],
+          kpiCode: params['kpiCode'],
+        };
+        this.getKpiDetails(paramsAPI);
+        const paramsUsers: sectorUsersParams = {
+          system: 'Score_Card_Report_DB',
+          team: params['sectorName'],
+        };
+        this.getSectorUsers(paramsUsers);
+      } else {
+        this.route.paramMap.subscribe((paramMap) => {
+          this.pathKpiCode = paramMap.get('KPICode');
+        });
+        const selectedTab = this.cookieService.get('selectedTab');
+        const params: SectorKpisDetailsParams = {
+          ...this.sharedFormService.getForm().value,
+          scorecardTitle: selectedTab,
+          kpiCode: this.pathKpiCode,
+        };
+        this.getKpiDetails(params);
+        const paramsUsers: sectorUsersParams = {
+          system: 'Score_Card_Report_DB',
+          team: this.sharedFormService.getForm().value.sectorName,
+        };
+        this.getSectorUsers(paramsUsers);
+      }
+    });
+
+    // console.log(this.kpiName);
+
+    if (
+      this.cookieService.get('MODERN_SYSTEM_USER') &&
+      this.cookieService.get('token')
+    ) {
+      this.authService.getUserData();
+      this.authService.loggedUserStream.subscribe((res) => {
+        this.loggedUserID = res?.id || 0;
+      });
+    }
+  }
+  getSectorUsers(params: sectorUsersParams) {
+    this.notificationService.getSectorUsers(params).subscribe({
+      next: (result: user[]) => {
+        result = result.filter((mention) => mention.id !== this.loggedUserID);
+        this.sectorUsersSignal.set(result);
+
+        this.notificationService.mentionsList.next(result);
       },
-      class: 'col-12' 
-    },
-  ];
+    });
+  }
+  errorMessage = '';
+  getKpiDetails(params: SectorKpisDetailsParams) {
+    this.dashboardService.getSectorKpisDetails(params).subscribe({
+      next: (result: KpiDetailsResponse) => {
+        this.errorMessage = '';
+        this.kpiDTOMap = result.kpiDTOMap;
+        this.categoryKpiLists = {};
+        if (this.kpiDTOMap && typeof this.kpiDTOMap === 'object') {
+          Object.keys(this.kpiDTOMap).forEach((kpiSubGrouping) => {
+            // Initialize an empty object for each kpiSubGrouping
+            this.categoryKpiLists[kpiSubGrouping] = {};
+
+            // Ensure that the value is an array
+            const kpiArray = this.kpiDTOMap[kpiSubGrouping];
+            // Loop through each KPI within the kpiSubGrouping
+            Object.keys(kpiArray).forEach((kpiDTO: any) => {
+              this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
+              this.unit = kpiArray[kpiDTO][0].unit;
+              this.commentService.commenstList.next(
+                kpiArray[kpiDTO][0].commentList
+              );
+              this.dashboardService.kpiNameSubject.next(
+                kpiArray[kpiDTO][0].kpiName
+              );
+              this.categoryKpiLists[kpiSubGrouping][kpiDTO.kpiName]?.push(
+                kpiDTO
+              );
+            });
+          });
+        }
+      },
+      error: (error) => {
+        this.errorMessage = 'error Occured';
+        console.log(this.errorMessage);
+      },
+    });
+  }
+
+  addingCardsDescriptions(kpiObject: KpiDTO) {
+    this.kpiObjectSignal.set(kpiObject);
+    this.cards = [
+      {
+        title: 'Definition',
+        description: kpiObject.definition,
+        class: 'col-12',
+      },
+      {
+        title: 'Objective',
+        description: kpiObject.objective,
+        class: 'col-lg-4 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Custodian Title',
+        description: kpiObject.custodianTitle,
+        class: 'col-lg-4 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Validation Authority',
+        description: kpiObject.validationAuthority,
+        class: 'col-lg-4 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Sub-Scorecard Title',
+        description: kpiObject.subscorecardTitle,
+        class: 'col-lg-3 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Calculation Function',
+        description: kpiObject.calculationFunction,
+        class: 'col-lg-3 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Scorecard Title',
+        description: kpiObject.scorecardTitle,
+        class: 'col-lg-4 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Weight',
+        description: kpiObject.weight.toFixed(2) + '%',
+        class: 'col-lg-2 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Data Source',
+        description: kpiObject.dataSource,
+        class: 'col-lg-3 col-md-6 col-sm-12',
+      },
+      {
+        title: 'KPI Direction',
+        description: kpiObject.direction,
+        class: 'col-lg-3 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Custodian Email',
+        description: kpiObject.custodianEmail,
+        class: 'col-lg-4 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Ceiling',
+        description: kpiObject.ceiling + ' ' + kpiObject.unit,
+        class: 'col-lg-2 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Reporting Frequency',
+        description: kpiObject.reportingFrequency,
+        class: 'col-lg-3 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Reporting Period',
+        description: kpiObject.reportingPeriod,
+        class: 'col-lg-3 col-md-6 col-sm-12',
+      },
+      {
+        title: 'VTD Calculation',
+        description: kpiObject.vtdCalculation,
+        class: 'col-lg-4 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Threshold',
+        description: kpiObject.target.toFixed(2) + ' ' + kpiObject.unit,
+        class: 'col-lg-2 col-md-6 col-sm-12',
+      },
+      {
+        title: 'Formula & Validation Notes',
+        description: kpiObject.formula,
+        class: 'col-12',
+      },
+    ];
+  }
 }

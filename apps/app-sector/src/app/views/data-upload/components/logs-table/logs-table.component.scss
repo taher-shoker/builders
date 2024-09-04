@@ -1,0 +1,26 @@
+table {
+  width: 100%;
+  td,
+  th {
+    text-align: center;
+  }
+  th {
+    font-family: 'stc forward-bold';
+    font-size: 11px;
+  }
+  td {
+    font-size: 13px;
+    font-weight: bold;
+  }
+  .status-container {
+    border-radius: 10px;
+    padding: 7px;
+    color: var(--whiteColor);
+  }
+  .success {
+    background-color: var(--stcOasisColor);
+  }
+  .failure {
+    background-color: var(--stc-red-color);
+  }
+}

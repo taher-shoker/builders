@@ -1,9 +1,20 @@
-.row>* {
+.row > * {
   padding-left: 0 !important;
 }
 
+.empty-scores {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 100px;
+  font-size: 18px;
+  font-weight: 400;
+  color: var(--lightGreyColor);
+}
+
 .card-holder {
-  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-right: 20px;
   background-color: var(--whiteColor);
   border-radius: 10px;
 
@@ -49,6 +60,22 @@
 }
 
 @media screen and (max-width: 880px) and (min-width: 768px) {
+  .res-we-container {
+    display: block !important;
+
+    .res-container,
+    .we-container {
+      width: 90% !important;
+      margin: 0px 20px;
+    }
+
+    .res-container {
+      margin-bottom: 20px;
+    }
+  }
+}
+
+@media screen and (max-width: 590px) {
   .res-we-container {
     display: block !important;
 

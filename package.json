@@ -22,6 +22,7 @@
     "@nx/angular": "18.0.2",
     "@types/quill": "^2.0.14",
     "@types/uuid": "^9.0.2",
+    "angular-mentions": "^1.5.0",
     "angular-resizable-element": "^3.3.2",
     "angular-uuid": "^0.0.4",
     "bootstrap": "^5.0.0",

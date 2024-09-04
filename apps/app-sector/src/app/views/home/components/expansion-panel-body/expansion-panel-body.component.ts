@@ -3,11 +3,15 @@ import {
   InputSignal,
   WritableSignal,
   computed,
+  effect,
   input,
   signal,
 } from '@angular/core';
+import { Router } from '@angular/router';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
+import { KpiDTO, Section } from '../../../models/SectorKpisDetails.model';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'stc-apps-expansion-panel-body',
@@ -15,26 +19,28 @@ import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.c
   styleUrl: './expansion-panel-body.component.scss',
 })
 export class ExpansionPanelBodyComponent {
-  percentage: InputSignal<number> = input(0);
-  kpiCode: InputSignal<string> = input('');
-  listItems = [
-    {
-      section: 'left',
-      items: [
-        { label: 'Weight:', value: '15%' },
-        { label: 'Unit:', value: '%' },
-      ],
-    },
-    {
-      section: 'right',
-      items: [
-        { label: 'Actual perf%:', value: '87.69 %' },
-        { label: 'Applied perf%:', value: '87.69 %' },
-      ],
-    },
-  ];
+  // target = 50;
+  // actual = 80;
+  // ceilingg = 80;
+  // unit = '#';
+  // newTarget = 0;
+  // newActual = 0;
+  kpiObject: InputSignal<KpiDTO> = input({} as KpiDTO);
+  selectedTab: InputSignal<string> = input('');
+  listItems: InputSignal<Section[] | any> = input([]);
+
   reportData: WritableSignal<any | undefined> = signal(undefined);
+
+  progressActual = 0;
+  progressTraget = 0;
   progressBarData = computed(() => {
+    this.progressTraget = this.calculatingProgressValues()[0]
+      ? this.calculatingProgressValues()[0]
+      : this.kpiObject().target;
+    this.progressActual = this.calculatingProgressValues()[1]
+      ? this.calculatingProgressValues()[1]
+      : this.kpiObject().actualValue;
+
     let data: ProgressInfo;
     // eslint-disable-next-line prefer-const
     data = {
@@ -42,23 +48,98 @@ export class ExpansionPanelBodyComponent {
       prefixValue: 0,
       suffixText: '',
       suffixValue: 0,
-      progressValue: 85.0,
+      progressValue: this.progressActual,
+
       indexes: [
         {
           caption: 'Actual',
-          value: 30.0,
+          value: +this.kpiObject().actualValue.toFixed(2),
+          progressValue: this.progressActual,
           position: 'up',
         },
         {
           caption: 'Target',
-          value: 85.0,
+          value: +this.kpiObject().target.toFixed(2),
+          progressValue: this.progressTraget,
           position: 'down',
         },
       ],
-      barColor: '#c82a27',
-      bgBarColor: '#c82a271a',
+      barColor: this.barColor(
+        +this.kpiObject().target,
+        +this.kpiObject().actualValue
+      ),
+      bgBarColor: this.barBackgroundColor(
+        +this.kpiObject().target,
+        +this.kpiObject().actualValue
+      ),
+      unit: this.kpiObject().unit,
     };
-
     return data;
   });
+  constructor(private router: Router, private cookieService: CookieService) {}
+  calculatingProgressValues(): number[] {
+    const progressValues: number[] = [];
+    let progressTraget = 0;
+    let progressActual = 0;
+    if (!this.kpiObject().unit.includes('%')) {
+      // the target and actual values progress.
+      progressTraget = +(
+        (this.kpiObject().target / this.kpiObject().ceiling) *
+        100
+      ).toFixed(2);
+      progressActual = +(
+        (this.kpiObject().actualValue / this.kpiObject().ceiling) *
+        100
+      ).toFixed(2);
+
+      progressTraget = Math.abs(progressTraget);
+      progressActual = Math.abs(progressActual);
+
+      progressValues.push(progressTraget);
+      progressValues.push(progressActual);
+    }
+    return progressValues;
+  }
+  barBackgroundColor(target: number, actual: number): string {
+    if (
+      this.kpiObject().direction.toLowerCase() == 'decreasing' &&
+      target >= actual
+    ) {
+      return 'rgba(0, 196, 140, 0.15)';
+    } else if (
+      this.kpiObject().direction.toLowerCase() == 'increasing' &&
+      target <= actual
+    ) {
+      return ' rgba(0, 196, 140, 0.15)';
+    } else return 'rgba(255, 26, 26, 0.1)';
+  }
+
+  barColor(target: number, actual: number): string {
+    if (
+      this.kpiObject().direction.toLowerCase() == 'decreasing' &&
+      target >= actual
+    ) {
+      return 'var(--stcOasisColor)';
+    } else if (
+      this.kpiObject().direction.toLowerCase() == 'increasing' &&
+      target <= actual
+    ) {
+      return ' var(--stcOasisColor)';
+    } else return 'var(--stc-red-color)';
+  }
+
+  navigateToDetails() {
+    console.log(this.cookieService.get('sectorName'));
+    this.cookieService.set('kpiCode', this.kpiObject().kpiCode);
+    this.router.navigate([
+      '/sectors',
+      this.cookieService.get('sectorName'),
+      'KPI',
+      this.kpiObject().kpiCode,
+    ]);
+  }
+
+  isNumber(value: any): value is number {
+    return typeof value === 'number' && !isNaN(value);
+  }
 }

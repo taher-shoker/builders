@@ -1,18 +1,29 @@
+@for (category of getCategoryKeys(); track category){
 <div class="panels_container">
   <div class="d-flex">
     <div class="arrow mt-3">
       <img src="assets/images/Vector 40.svg" alt="" />
     </div>
-    <div class="panels_container_title">
-      <h4>Strategic</h4>
-      <div class="title-desc d-flex">
+    <div class="panels_container_title mb-3">
+      <h4>{{ category }}</h4>
+      @for (subkey of getSubKeys(category); track $index) {
+      <div class="title-desc d-flex mb-3">
         <img src="assets/images/orange-arrow.svg" alt="" />
-        <p class="d-flex align-items-center">Execute strategy right</p>
+        <p class="d-flex align-items-center">{{ subkey }}</p>
       </div>
+      <div class="panels_container_body row">
+        @for (kpi of kpiDTOList()[category][subkey]; track $index) {
+        <div class="col-lg-4 col-md-6 col-sm-12">
+          <stc-apps-expansion-panel
+            [kpi]="kpi"
+            [newTabSelected]="newTabSelected()"
+          ></stc-apps-expansion-panel>
+        </div>
+        }
+      </div>
+
+      }
     </div>
   </div>
-  <div class="row panles_container_body w-100">
-    <!-- <stc-apps-expansion-panel class="w100"></stc-apps-expansion-panel> -->
-     <!-- <stc-apps-score-card-tabs></stc-apps-score-card-tabs> -->
-  </div>
 </div>
+}

@@ -2,70 +2,40 @@
   <div class="comments">
     <stc-apps-replies-section
       [newComment]="newComment"
+      (textAreaOpend)="resetForm()"
     ></stc-apps-replies-section>
-    <stc-apps-comment-editor
+    <!-- <stc-apps-comment-editor
       formControlName="comment"
       [placeholder]="placeholder"
-      [mentions]="mentions2"
+      [mentions]="mentions"
       (contentChange)="onContentChange($event)"
-    ></stc-apps-comment-editor>
+    ></stc-apps-comment-editor> -->
+    <stc-apps-mentions-editor
+      formControlName="comment"
+      [placeholder]="placeholder"
+      [mentions]="mentions"
+      (contentChange)="onContentChange($event)"
+      (deletionEmitter)="deleteMention($event)"
+    ></stc-apps-mentions-editor>
 
     <div class="comments_actions">
       <button [disabled]="form.controls['comment'].hasError('required')">
         Submit
       </button>
-      <!-- <stc-apps-file-uploader [multiple]="true" [chooseLabel]="'add_attachment'"
-      (onformchange)="onUploadFile($event)" [attachmentFiles]="this.form.controls['attachments'].value"
-      formControlName="attachments" [isLoading]="isLoading"
-      (ondelete)="onDeleteFile($event)"></stc-apps-file-uploader> -->
     </div>
-  </div>
-
-  <div class="attachments">
-    <div class="attachments_summary">
-      <span>{{ uploadedFiles.length + ' Attachments' }}</span>
-      <button (click)="triggerFileInput()">
-        <img src="assets/images/attach-square.svg" />
-        Add Attachment
-      </button>
-    </div>
-    @if (displayedFiles.length==0) {
-      <div class="attachments_empty">There's no attachaments yet</div>
-    }
-    <div class="attachments_files">
-      <div class="row row-gap-3">
-        @for(fileObj of displayedFiles; track fileObj; let index = $index) {
-        <div class="col-12">
-          <div class="attachments_files_item px-2">
-            <div>
-              <span (click)="openDialog('download', index, fileObj.file)">
-                {{ fileObj.file.name }}
-              </span>
-              <div class="d-flex">
-                <!-- <button class="btn" (click)="downloadFile(file)">
-      <i class="fas fa-arrow-alt-circle-down"></i>
-    </button> -->
-                <button class="btn" (click)="openDialog('delete', index)">
-                  <img src="assets/images/trash.svg" />
-                </button>
-              </div>
-            </div>
-            <span class="attachments_files_item_time">{{
-              fileObj.formattedUploadDate
-            }}</span>
-          </div>
-        </div>
-        }
-      </div>
-    </div>
-
-    <input
-      type="file"
-      #fileInput
-      (change)="onFileSelected($event)"
-      style="display: none"
-      [accept]="accept"
-      multiple
-    />
   </div>
 </form>
+
+<stc-apps-attachments
+  [displayedFiles]="
+    displayedFiles.length > 0
+      ? displayedFiles
+      : kpiObjectSignal()?.attachementList
+  "
+  [accept]="accept"
+  [maxFiles]="4"
+  [maxFileSize]="15"
+  (filesSelected)="onFilesSelected($event)"
+  (deleteFile)="openDialog('delete', $event.index, $event.id)"
+  (downloadFile)="openDialog('download', $event.index, $event.id, $event.file)"
+></stc-apps-attachments>

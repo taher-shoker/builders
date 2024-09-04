@@ -1,13 +1,15 @@
 <div class="score-card-tabs py-4">
   <stc-apps-tabs
-  (changeSelectValue)="handleChangeTab($event)">
-  <stc-apps-tab value="ApplicationSector">Application sector</stc-apps-tab>
-  <stc-apps-tab value="CorporatePriorities">Corporate priorities</stc-apps-tab>
-</stc-apps-tabs>
+    ngDefaultControl
+    [scores]="scores"
+    (changeSelectValue)="handleChangeTab($event)"
+  >
+  </stc-apps-tabs>
 </div>
 
-@if (selectedTab() == 'ApplicationSector') {
-  <stc-apps-expansion-panel></stc-apps-expansion-panel> 
-} @else if (selectedTab() == 'CorporatePriorities') {
-  <h1>CorporatePriorities</h1>
+@if (selectedTab()&&scores.length!==0) {
+<stc-apps-panels-container
+  [newTabSelected]="selectedTabChanged"
+  [kpiDTOList]="categoryKpiLists"
+></stc-apps-panels-container>
 }

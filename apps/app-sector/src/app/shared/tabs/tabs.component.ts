@@ -2,55 +2,103 @@ import {
   AfterContentInit,
   Component,
   ContentChildren,
+  ElementRef,
   EventEmitter,
+  forwardRef,
+  input,
+  InputSignal,
   Output,
   QueryList,
+  TemplateRef,
+  ViewChild,
 } from '@angular/core';
-import { TabComponent } from './tab/tab.component';
+import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'stc-apps-tabs',
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => TabsComponent),
+      multi: true,
+    },
+  ],
 })
 export class TabsComponent implements AfterContentInit {
-  @ContentChildren(TabComponent) tabs: QueryList<TabComponent> | any;
+  @ContentChildren(TemplateRef) tabContents!: QueryList<TemplateRef<any>>;
+  public templates: TemplateRef<any>[] = [];
+
   @Output() changeSelectValue: EventEmitter<any> = new EventEmitter();
-  value: any;
+  @ViewChild('tabsContainer', { static: false }) tabsContainer!: ElementRef;
+  scores: InputSignal<any[] | any> = input([]);
+  private onChange: (value: any) => void = () => {};
+  private onTouched: any = () => {};
+  public disabled = false;
+  public value: any;
+  selectedIndex = 0;
 
   ngAfterContentInit(): void {
-    setTimeout(() => {
-      this.handelSelectTab();
-    }, 0);
+    this.templates = this.tabContents.toArray();
+    this.handelSelectTab();
   }
 
-  changeValue() {    
+  writeValue(value: any): void {
+    this.value = value;
+    this.handelSelectTabByValue(value);
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  changeValue() {
     this.changeSelectValue.emit(this.value);
+    this.onChange(this.value);
+  }
+
+  setDisabledState?(isDisabled: boolean): void {
+    this.disabled = isDisabled;
   }
 
   handelSelectTab() {
-    const activeTabs = this.tabs?.filter((tab: TabComponent) => tab.active());
-    if (activeTabs.length === 0) {
-      this.selectTab(this.tabs.first);
+    if (this.templates.length > 0) {
+      this.selectTab(this.selectedIndex);
     }
-    this.tabs.forEach((tab: TabComponent) => {
-      tab.selectTab.subscribe(() => {
-        // console.log(tab);
-        this.selectTab(tab);
-        this.value = tab.value();
-        this.changeValue();
-      });
-    });
   }
 
-  selectTab(tab: TabComponent) {
-    // deactivate all tabs
-    this.tabs.toArray().forEach((tab: TabComponent) => (tab.active.set(false)));
+  updateTabs() {
+    this.templates = this.tabContents.toArray();
+    this.handelSelectTab();
+  }
 
-    // activate the tab the user has clicked on.
-    tab.active.set(true);
+  handelSelectTabByValue(value: any) {
+    const tabIndex = this.scores().findIndex(
+      (score: any) => score.value === value
+    );
+    if (tabIndex !== -1) {
+      this.selectTab(tabIndex);
+    }
+  }
 
-    this.value = tab.value();
+  selectTab(index: number) {
+    this.selectedIndex = index;
+    this.value = this.scores()[index]?.value;
     this.changeValue();
+  }
+
+  onTabChange(event: any) {
+    this.selectedIndex = event.index;
+    this.value = this.scores()[this.selectedIndex]?.value;
+    this.changeValue();
+  }
+
+  handleChangeTab(value: any) {
+    this.changeSelectValue.emit(value);
   }
 }

@@ -4,12 +4,16 @@ import {
   Component,
   ElementRef,
   EventEmitter,
+  HostListener,
   Input,
   InputSignal,
   OnChanges,
   Output,
+  QueryList,
   SimpleChanges,
   ViewChild,
+  ViewChildren,
+  effect,
   forwardRef,
   input,
 } from '@angular/core';
@@ -22,6 +26,8 @@ import {
   map,
 } from 'rxjs';
 import { mentionRegexService } from '../services/mentionRegex.service';
+import { user } from '../../views/details/models/commentsModel';
+import { NotificationsService } from '../../views/details/services/notifications.service';
 
 @Component({
   selector: 'stc-apps-comment-editor',
@@ -39,13 +45,14 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   @ViewChild('contentEditable', { static: true })
   contentEditable!: ElementRef<HTMLDivElement>;
   @ViewChild('mentionList') mentionList!: ElementRef<HTMLUListElement>;
-
+  // mentionsObjcets: user[] = [];
   placeholder: InputSignal<string> = input('');
   title: InputSignal<string> = input('');
   mentionProperty: InputSignal<string> = input('name');
   editedText: InputSignal<string> = input('');
   mentions: InputSignal<any> = input([]);
   @Output() contentChange = new EventEmitter<string>();
+
   content = '';
   showDropdown = false;
   filteredList: any[] = [];
@@ -53,8 +60,8 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   activeMentionIndex = -1;
 
   constructor(
-    private mentionsService: mentionRegexService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private notificationService: NotificationsService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -71,8 +78,26 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   ngAfterViewInit(): void {
     this.setupMentionListener();
     this.preventScrollOnFocusLoss();
+    const editableDiv = document.getElementById('myDiv');
+
+    if (editableDiv) {
+      editableDiv.addEventListener('cut', this.handleCut);
+      editableDiv.addEventListener('copy', this.handleCopy);
+      editableDiv.addEventListener('paste', this.handlePaste);
+    }
   }
 
+  handleCut(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
+
+  handleCopy(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
+
+  handlePaste(event: ClipboardEvent): void {
+    event.preventDefault();
+  }
   preventScrollOnFocusLoss(): void {
     fromEvent<Event>(this.contentEditable.nativeElement, 'focusout').subscribe(
       (event) => {
@@ -113,6 +138,8 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   }
 
   registerOnChange(fn: (value: string) => void): void {
+    console.log('register on cahnge');
+    
     this.onChange = fn;
   }
 
@@ -138,7 +165,6 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
     const cursorPosition = this.getCaretPosition(input);
     const textBeforeCursor = input.textContent!.slice(0, cursorPosition);
     const mentionIndex = textBeforeCursor.lastIndexOf('@');
-
     if (mentionIndex > -1 && event.key === '@') {
       const query = textBeforeCursor.slice(mentionIndex + 1).toLowerCase();
       this.filteredList = this.mentions().filter((mention: any) =>
@@ -177,9 +203,11 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
 
         case 'Enter':
           if (this.activeMentionIndex > -1) {
+            this.mentionClick(this.filteredList[this.activeMentionIndex]);
             this.addMention(
               this.filteredList[this.activeMentionIndex][this.mentionProperty()]
             );
+
             this.showDropdown = false;
             event.preventDefault();
           }
@@ -207,8 +235,17 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
       }
     }
   }
+  constructMentionsArray(item: user) {
+    console.log('onChange', item);
+  }
+  mentionClick(item: any) {
+    console.log('adding item',this.notificationService.getmentionObjects());
 
-  addMention(mention: string): void {
+    this.notificationService.addMentionObjects(item);
+
+    this.onChange(item);
+  }
+  addMention(mention: any): void {
     const input = this.contentEditable.nativeElement;
     const value = input.textContent || '';
     const mentionStartIndex = value.lastIndexOf('@');
@@ -245,6 +282,7 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
 
   setupMentionListener(): void {
     const input = this.contentEditable.nativeElement;
+
     fromEvent(input, 'input')
       .pipe(
         debounceTime(300),
@@ -268,36 +306,44 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   }
 
   onBackspace(event: KeyboardEvent): void {
-    const input = this.contentEditable.nativeElement;
-    const caretPosition = this.getCaretPosition(input);
-
-    if (caretPosition === 0) {
-      this.showDropdown = false;
-      return; // No action needed if caret is at the beginning
-    }
-
-    const mention = this.getMentionAtCaretPosition(input, caretPosition);
-
-    if (mention) {
-      // If the caret is immediately after a mention, delete the mention
-      this.deleteMention(mention);
+    const selection = window.getSelection();
+    if (selection && selection.toString().length > 0) {
+      console.log(selection.toString());
+      // Prevent Backspace if there's selected text
       event.preventDefault();
     } else {
-      // Delete a single character before the caret
-      setTimeout(() => {
-        const textContent = input.textContent || '';
-        const textBeforeCaret = textContent.slice(0, caretPosition - 1);
-        const textAfterCaret = textContent.slice(caretPosition);
-        const newText = textBeforeCaret + textAfterCaret;
+      const input = this.contentEditable.nativeElement;
+      const caretPosition = this.getCaretPosition(input);
 
-        input.textContent = ''; // Clear existing content
-        input.innerHTML = this.highlightMentions(newText); // Update HTML content
-        this.content = input.textContent || ''; // Update content
-        this.setCaretPosition(input, caretPosition - 1); // Adjust caret position
-        this.contentChange.emit(this.content); // Emit content change event
-        this.showDropdown = false; // Hide dropdown after deletion
-        // event.preventDefault();
-      }, 0);
+      if (caretPosition === 0) {
+        this.showDropdown = false;
+        return; // No action needed if caret is at the beginning
+      }
+
+      const mention = this.getMentionAtCaretPosition(input, caretPosition);
+
+      if (mention) {
+        // If the caret is immediately after a mention, delete the mention
+        this.deleteMention(mention);
+        event.preventDefault();
+      } else {
+        // Delete a single character before the caret
+        setTimeout(() => {
+          const textContent = input.textContent || '';
+          const textBeforeCaret = textContent.slice(0, caretPosition - 1);
+          const textAfterCaret = textContent.slice(caretPosition);
+
+          const newText = textBeforeCaret + textAfterCaret;
+
+          input.textContent = ''; // Clear existing content
+          input.innerHTML = this.highlightMentions(newText); // Update HTML content
+          this.content = input.textContent || ''; // Update content
+          this.setCaretPosition(input, caretPosition - 1); // Adjust caret position
+          this.contentChange.emit(this.content); // Emit content change event
+          this.showDropdown = false; // Hide dropdown after deletion
+          // event.preventDefault();
+        }, 0);
+      }
     }
   }
 
@@ -355,6 +401,19 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
 
     if (mentionToDelete) {
       const mentionHtml = (mentionToDelete as HTMLElement).outerHTML;
+
+      console.log(mentionToDelete);
+
+      this.notificationService.mentionsObjects = this.notificationService
+        .getmentionObjects()
+        .filter(
+          (mention: any) =>
+            mention.id !==
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion, @typescript-eslint/no-non-null-asserted-optional-chain
+            +(mentionToDelete as HTMLElement)?.getAttribute('id')!
+        );
+      console.log(this.notificationService.mentionsObjects);
+
       const mentionIndex = content.indexOf(mentionHtml, mentionStartIndex);
 
       if (mentionIndex !== -1) {
@@ -364,7 +423,7 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
 
         input.innerHTML = this.highlightMentions(newText);
         this.content = input.textContent || '';
-        this.onChange(this.content);
+        this.onChange(mention.start);
         this.contentChange.emit(this.content);
 
         // Adjust caret position after mention deletion
@@ -377,6 +436,7 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
   highlightMentions(content: string): string {
     const tempDiv = document.createElement('div');
     tempDiv.innerHTML = content;
+    console.log('in highlights', this.notificationService.mentionsObjects);
 
     const mentions = this.mentions().map((mention: any) => `@${mention.name}`);
     const mentionRegex = new RegExp(mentions.join('|'), 'gi');
@@ -385,9 +445,20 @@ export class CommentEditorComponent implements AfterViewInit, OnChanges {
     Array.from(tempDiv.childNodes).forEach((node) => {
       if (node.nodeType === Node.TEXT_NODE) {
         let textContent = node.textContent || '';
-        textContent = textContent.replace(mentionRegex, (match) => {
-          return `<span class="mention">${match}</span>`;
-        });
+        if (this.notificationService.mentionsObjects?.length !== 0) {
+          let index = -1;
+          textContent = textContent.replace(mentionRegex, (match) => {
+            index++;
+            return `<span id=${
+              this.notificationService.getmentionObjects()[index].id
+            } class="mention" >${match}</span>`;
+          });
+        } else {
+          textContent = textContent.replace(mentionRegex, (match) => {
+            return `<span class="mention" >${match}</span>`;
+          });
+        }
+
         const newSpan = document.createElement('span');
         newSpan.innerHTML = textContent;
         node.replaceWith(...Array.from(newSpan.childNodes));

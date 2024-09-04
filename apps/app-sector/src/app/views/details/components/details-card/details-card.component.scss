@@ -11,10 +11,14 @@
   &_description {
     font-size: 14px;
     color: var(--semiBlackColor);
+    white-space: pre-line;
   }
-
   .puprleColor {
     color: var(--stc-color);
     font-weight: 700;
   }
+}
+.formula-height {
+  // min-height: 410px;
+  margin-bottom: 30px;
 }
