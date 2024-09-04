@@ -14,9 +14,11 @@
   </div>
 
   <div class="col-md-2 col-sm-12">
-    <div class="banner_filter">
+    <div class="banner_filter" [formGroup]="form">
       <stc-apps-select-drop-down
+        formControlName="year"
         [label]="'Select FY Year'"
+        [(ngModel)]="year"
         [options]="yearsArray"
         [outputValue]="'name'"
       ></stc-apps-select-drop-down>

@@ -1,11 +1,22 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormGroup } from '@angular/forms';
+import { SharedFormService } from 'apps/strategic-dashboard/src/app/shared/services/shared-form.service';
+import { YearService } from 'apps/strategic-dashboard/src/app/shared/services/year.service';
 
+interface name {
+  name: number;
+}
 @Component({
   selector: 'stc-apps-main-banner',
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.scss'],
 })
-export class BannerComponent {
+export class BannerComponent implements OnInit {
+  currentDate = new Date();
+  year = this.currentDate.getFullYear();
+  currentYear = this.currentDate.getFullYear() - 1;
+  form: FormGroup = new FormGroup({});
+
   navItems = [
     {
       name: 'home',
@@ -16,10 +27,33 @@ export class BannerComponent {
     },
   ];
 
-  yearsArray: any = [
-    { name: 2020 },
-    { name: 2021 },
-    { name: 2022 },
-    { name: 2023 },
+  yearsArray: name[] = [
+    { name: this.currentYear },
+    { name: this.currentDate.getFullYear() },
   ];
+
+  constructor(
+    private yearService: YearService,
+    private sharedFormService: SharedFormService
+  ) {}
+
+  ngOnInit(): void {
+    this.handleForm();
+  }
+
+  handleForm() {
+    this.form = this.sharedFormService.getForm();
+
+    if (this.yearService.getSelectedYear()) {
+      this.year = +this.yearService.getSelectedYear()!;
+    } else {
+      this.year = this.currentDate.getFullYear();
+    }
+
+    const initialParams = {
+      year: this.year.toString(),
+    };
+
+    this.sharedFormService.initializeForm(initialParams);
+  }
 }
