@@ -20,9 +20,10 @@ import { HttpInterceptorService } from './shared/interceptors/http-interceptor.s
 import { CookieModule } from 'ngx-cookie';
 import { ReportingService } from './shared/services/reporting.service';
 import { AppInitService } from './shared/services/app-init.service';
+import { environment } from '../environments/environment';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http);
+  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
 }
 
 export const provideTranslation = () => ({

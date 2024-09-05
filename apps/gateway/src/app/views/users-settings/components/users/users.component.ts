@@ -265,7 +265,10 @@ export class UsersComponent implements OnInit, AfterViewInit {
       this.handleAllSelectedForTeamDropdown();
     } else {
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-        if (this.selectedPrivilege.id !== 0) {
+        if (
+          this.selectedPrivilege !== undefined &&
+          this.selectedPrivilege.id !== 0
+        ) {
           this.dataSource.data = this.list
             .filter((x) =>
               this.userService.getUserTeam(x).includes((value as Team)?.name)
@@ -341,11 +344,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     } else {
       this.selectedPrivilege = value as Role; // Assuming 'Role' is a subtype of 'Team'
       if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-        if (this.selectedPrivilege.groupName === 'DT_Director') {
-          this.teams = [];
-        } else {
-          this.teams = this.userService.getTeams();
-        }
+        this.teams = this.userService.getTeams();
       } else if (
         this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
       ) {
@@ -395,6 +394,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.userService.getAllTeams().subscribe((res) => {
       if (res) {
         this.userService.allTeams = res;
+        // this.teams = res;
+        this.getTeams();
       }
       if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
         this.getTeams();

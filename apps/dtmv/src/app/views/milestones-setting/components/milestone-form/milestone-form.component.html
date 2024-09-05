@@ -42,8 +42,7 @@
       <div class="row mt-7">
         <div class="col-md-6">
           <stc-apps-textarea [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'message'"
-            [inputName]="'deliverable' | translate" formControlName="deliverable"
-            (valueKeyDown)="preventComma($event)"></stc-apps-textarea>
+            [inputName]="'deliverable' | translate" formControlName="deliverable"></stc-apps-textarea>
         </div>
         <div class="col-md-6">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Work Stream'" [inputId]="'workStream'"
@@ -62,16 +61,13 @@
             </div>
             <div class="col-md-6">
               <stc-apps-button [buttonText]=" isEditing ? 'Save' :'Add'" [buttonType]="'primary'"
-                (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+                (btnClick)="onSubmit()" [loading]="isLoadingSubmit" [actionType]="'submit'"></stc-apps-button>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- <div class="btn-form-action" *ngIf="!isSubmited">
 
-
-    </div> -->
   </form>
 </div>
 

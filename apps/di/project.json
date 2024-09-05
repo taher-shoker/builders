@@ -66,6 +66,22 @@
           ],
           "outputHashing": "all"
         },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/di/src/environments/environment.ts",
+              "with": "apps/di/src/environments/environment.stage.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
         "development": {
           "buildOptimizer": false,
           "optimization": false,
