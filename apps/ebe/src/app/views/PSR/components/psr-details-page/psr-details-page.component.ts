@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, signal, ViewChild} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -96,10 +96,10 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   }
   downloadTemplate()
   {
-    const groupName = this.PSRDetailsData[0].group;
-    this.psrServices.downloadProjectDetailsTemplate(groupName).subscribe({
+    // const groupName = this.PSRDetailsData[0].group;
+    this.psrServices.downloadProjectDetailsTemplate(this.groupName).subscribe({
       next : (res) => {
-        this.downloadFile(res, `${groupName}.csv`);
+        this.downloadFile(res, `${this.groupName}.csv`);
       }
     })
   }
