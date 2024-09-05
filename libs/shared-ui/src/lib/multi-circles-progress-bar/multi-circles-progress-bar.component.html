@@ -57,7 +57,7 @@
         [ngStyle]="{
             'font-family' : legendsFontFamily() ? legendsFontFamily() : 'sans-serif'
         }"
-    >{{ dataKeys[0] }}</span>
+    >{{ dataKeys[1] }}</span>
     @if(showLegendValues() === true)
     {
       <span style = "display: inline-block;margin-left:15px;">{{chartData().planned}}%</span>
@@ -69,7 +69,7 @@
         [ngStyle]="{
             'font-family' : legendsFontFamily() ? legendsFontFamily() : 'sans-serif'
         }"
-    >{{ dataKeys[1] }}</span>
+    >{{ dataKeys[0] }}</span>
     @if(showLegendValues() === true)
     {
       <span style = "display: inline-block;margin-left:15px;">{{chartData().actual}}%</span>

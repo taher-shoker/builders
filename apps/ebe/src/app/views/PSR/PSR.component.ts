@@ -9,6 +9,7 @@ import { PSRProjectCardComponent } from './components/project-card/project-card.
 import { PSRDataModel } from '../../models/psr.model';
 import { Subject, takeUntil } from 'rxjs';
 import { ScorecardService } from '../../services/scorecard.service';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-psr',
   standalone: true,
@@ -20,6 +21,7 @@ export class PSRComponent implements OnInit , OnDestroy {
   @ViewChild(TabDetailsComponent) child?: TabDetailsComponent;
   PSRTaps!:TapModel[];
   psrServices = inject(PSRService);
+  toastr = inject(ToastrService);
   currentTab!:TapModel;
   psrData!:PSRDataModel[];
   endSubs$:Subject<PSRDataModel[]> = new Subject();
@@ -36,6 +38,7 @@ export class PSRComponent implements OnInit , OnDestroy {
     this.psrServices.uploadFile("executiveView" , file).subscribe({
       next : () => {
         this.getExecuteViewData();
+        this.toastr.success("The File is Saved Successfully");
         if(this.child)
         {
           this.child.visible = false;

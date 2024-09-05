@@ -11,6 +11,7 @@ import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-v
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 import { FileModel, UserGroup } from '../../../../models/scorecard.model';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
@@ -24,6 +25,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   router = inject(ActivatedRoute)
   PSRDetailsData!:PSRProjectDetailsModel[];
   endSubs$:Subject<PSRProjectDetailsModel[]> = new Subject();
+  toastr = inject(ToastrService);
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService)
   groupName = "";
@@ -117,6 +119,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
     this.psrServices.uploadFile("executiveViewData" , file).subscribe({
       next : () => {
         this.getProjectDetails(this.groupName);
+        this.toastr.success("The File is Saved Successfully");
         this.visible = false;
       }
     })
