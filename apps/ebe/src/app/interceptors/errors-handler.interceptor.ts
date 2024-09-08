@@ -48,7 +48,7 @@ export class ErrorInterceptor implements HttpInterceptor {
               ? err?.error?.result
               : err?.error?.message
               ? err?.error?.message
-              : 'Something went wrong!'
+              : 'a Failure occurred, please try again'
           );
         }
         return throwError(error);
