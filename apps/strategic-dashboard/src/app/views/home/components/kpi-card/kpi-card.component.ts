@@ -33,8 +33,9 @@ export class KpiCardComponent {
       return 'between-orange';
     }
   }
-  navigateToCardDetails() {
+  navigateToCardDetails(strategicName: string) {
     this.router.navigate(['/details'], {
+      queryParams: { strategicName },
       state: { title: this.kpiTitle() },
     });
   }

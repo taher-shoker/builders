@@ -45,12 +45,15 @@
       </div>
       } }
     </div>
-    }
-  </div>
-  <div class="kpi-card_footer">
-    <div (click)="navigateToCardDetails()" class="kpi-card_footer-content">
-      More details
-      <img src="assets/images/arrow-right.svg" alt="" />
+    <div class="kpi-card_footer">
+      <div
+        (click)="navigateToCardDetails(content.name)"
+        class="kpi-card_footer-content"
+      >
+        More details
+        <img src="assets/images/arrow-right.svg" alt="" />
+      </div>
     </div>
+    }
   </div>
 </div>
