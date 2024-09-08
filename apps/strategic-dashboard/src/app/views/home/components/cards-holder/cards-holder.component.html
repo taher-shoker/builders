@@ -1,0 +1,20 @@
+<div class="cardHolder">
+  @for(kpi of strategicGroups;track kpi; let index = $index ){
+  <div class="kpis-card">
+    <stc-apps-kpi-card-header
+      class="kpis-card_header"
+      [kpiTitle]="kpi.name"
+    ></stc-apps-kpi-card-header>
+    <stc-apps-kpi-card
+      class="kpis-card_body"
+      [currentContents]="getCurrentContents(index)"
+      [kpiTitle]="kpi.name"
+      [isHovered]="activeIndex === index"
+      [strategicGroupKpis]="strategicGroupKpis"
+      (mouseover)="onCardHover(index, kpi.name)"
+      (mouseleave)="onCardLeave()"
+    >
+    </stc-apps-kpi-card>
+  </div>
+  }
+</div>

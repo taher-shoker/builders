@@ -1,27 +1,4 @@
 <div class="home-page">
   <stc-apps-main-banner></stc-apps-main-banner>
-
-  <div class="home-page_cardHolder">
-    @for(kpi of kpis;track kpi; let index = $index ){
-    <div class="kpis-card">
-      <stc-apps-kpi-card-header
-        class="kpis-card_header"
-        [kpiTitle]="kpi.title"
-        [iconPath]="kpi.iconPath"
-      ></stc-apps-kpi-card-header>
-      <stc-apps-kpi-card
-        class="kpis-card_body"
-        [currentContents]="getCurrentContents(index)"
-        [kpiTitle]="kpi.title"
-        (mouseover)="onCardHover(index)"
-        (mouseleave)="onCardLeave()"
-      >
-      </stc-apps-kpi-card>
-    </div>
-    }
-  </div>
-  <!-- <div class="home-page_footer d-flex justify-content-between">
-    <img src="assets/images/Rectangle.svg" alt="" />
-    <img class="inverted" src="assets/images/Rectangle.svg" alt="" />
-  </div> -->
+  <stc-apps-cards-holder></stc-apps-cards-holder>
 </div>
