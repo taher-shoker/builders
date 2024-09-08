@@ -6,12 +6,17 @@ import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
 import { HomeModule } from './views/home/home.module';
 import { CookieModule } from 'ngx-cookie';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { environment } from '../environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from './layout/layout.module';
+import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -47,6 +52,11 @@ const modules = [
       HttpClientModule,
       TranslateModule.forRoot(provideTranslation()),
     ]),
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: HttpInterceptorService,
+      multi: true,
+    },
   ],
   bootstrap: [AppComponent],
 })
