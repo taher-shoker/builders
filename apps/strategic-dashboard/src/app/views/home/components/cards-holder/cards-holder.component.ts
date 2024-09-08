@@ -1,3 +1,4 @@
+import { YearService } from './../../../../shared/services/year.service';
 import { Component, OnInit } from '@angular/core';
 import { StrategicGroupsService } from '../../services/strategic-groups.service';
 import { StrategicGroup } from '../../models/strategic-group.model';
@@ -20,11 +21,15 @@ export class CardsHolderComponent implements OnInit {
 
   constructor(
     private strategicGroupsService: StrategicGroupsService,
-    private sharedFormService: SharedFormService
+    private sharedFormService: SharedFormService,
+    private yearService: YearService
   ) {}
 
   ngOnInit(): void {
     this.getAllStrategicGroups();
+    this.yearService.getYearChangeObservable().subscribe((year: number) => {
+      this.getAllStrategicGroups();
+    });
   }
   getAllStrategicGroups() {
     const params = {

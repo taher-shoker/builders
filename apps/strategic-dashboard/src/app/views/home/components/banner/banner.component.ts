@@ -56,4 +56,8 @@ export class BannerComponent implements OnInit {
 
     this.sharedFormService.initializeForm(initialParams);
   }
+
+  selectYear(event: number) {
+    this.yearService.setYear(event.toString());
+  }
 }

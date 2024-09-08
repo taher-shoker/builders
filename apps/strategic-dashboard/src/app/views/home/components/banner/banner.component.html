@@ -21,6 +21,7 @@
         [(ngModel)]="year"
         [options]="yearsArray"
         [outputValue]="'name'"
+        (selectChange)="selectYear($event)"
       ></stc-apps-select-drop-down>
     </div>
   </div>
