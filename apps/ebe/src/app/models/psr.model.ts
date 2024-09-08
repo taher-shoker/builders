@@ -14,6 +14,7 @@ export interface PSRProjectDetailsModel
 {
     id:number;
     group:string;
+    backgroundColor?:string;
     kpiName:string;
     kpiOwner:string;
     vendor:string;
