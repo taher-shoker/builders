@@ -79,7 +79,11 @@ export class NotificationsService {
       notificationObject
     );
   }
-  notificationsSenderEngine(comment: any, mentionObjects: user[],commentID:number) {
+  notificationsSenderEngine(
+    comment: any,
+    mentionObjects: user[],
+    commentID: number
+  ) {
     const loggedInObj = {
       id: this.loggedUserObject.id,
       name: this.loggedUserObject.name,
@@ -97,9 +101,6 @@ export class NotificationsService {
       next: () => {
         console.log('email.sent');
         this.toastr.success('Email sent to the mentioned users successfully');
-      },
-      error: () => {
-        this.toastr.error('Error occured while sending email');
       },
     });
   }

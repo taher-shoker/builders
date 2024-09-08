@@ -134,11 +134,12 @@ export class MentionsEditorComponent
             index++;
             return `<span contenteditable=false data-id=${this.notificationService.mentionsObjects[index].id} class="mention" >${match}</span>`;
           });
-        } else {
-          textContent = textContent.replace(mentionRegex, (match) => {
-            return `<span contenteditable=false class="mention" >${match}</span>`;
-          });
         }
+        // else {
+        //   textContent = textContent.replace(mentionRegex, (match) => {
+        //     return `<span contenteditable=false class="mention" >${match}</span>`;
+        //   });
+        // }
 
         const newSpan = document.createElement('span');
         newSpan.innerHTML = textContent;
@@ -183,6 +184,7 @@ export class MentionsEditorComponent
   onKeyUp(event: any) {
     const input = event.target as HTMLDivElement;
     this.value = input.textContent || '';
+  
     if (event.key == 'Backspace') {
       const spans = event.target.querySelectorAll('span');
       let dataInfo;
@@ -253,10 +255,14 @@ export class MentionsEditorComponent
   }
 
   processMentions(content: string): void {
+    console.log('inside process mentions');
+
     // Parse the HTML content and find all span elements with a data-id attribute
     const spans = document.querySelectorAll('span[data-id]');
     console.log(spans);
-    const brElements = document.querySelectorAll('br');
+    const brElements = document.querySelectorAll(
+      'br.Apple-interchange-newline'
+    );
     console.log('br elements', brElements);
     if (brElements) {
       brElements.forEach((br: any) => {
@@ -264,7 +270,7 @@ export class MentionsEditorComponent
       });
     }
 
-    const mentionObjects: any[] = [];
+    const mentionObjects: any[] = this.notificationService.mentionsObjects;
 
     spans.forEach((span) => {
       const id = span.getAttribute('data-id');
@@ -275,8 +281,14 @@ export class MentionsEditorComponent
           (m: any) => m.id.toString() === id
         );
         if (mention) {
-          mentionObjects.push(mention);
-          this.notificationService.addMentionObjects(mention);
+          const mentionExist = mentionObjects.some(
+            (mentions) => mentions.id === mention.id
+          );
+          console.log('mention', mention.id, mentionExist);
+          if (!mentionExist) {
+            mentionObjects.push(mention);
+            this.notificationService.addMentionObjects(mention);
+          }
         }
       }
     });

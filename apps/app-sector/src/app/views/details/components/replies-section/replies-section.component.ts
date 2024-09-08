@@ -120,7 +120,7 @@ export class RepliesSectionComponent implements OnInit {
       });
     }
     this.commentService.commenstList.subscribe((result: comment[]) => {
-      if (result&& result[0] && result[0].comment) {
+      if (result && result[0] && result[0].comment) {
         this.comments = result;
         this.commentsCount();
       } else {
@@ -311,12 +311,20 @@ export class RepliesSectionComponent implements OnInit {
           this.cancel();
         },
         error: () => {
-          this.toastr.error('Error occured while deleting comment');
+          // this.toastr.error('Error occured while deleting comment');
           this.cancel();
         },
       });
   }
+  removeDuplicates() {
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter(
+        (item, index, self) => self.indexOf(item) === index
+      );
+  }
   editCommentt() {
+    console.log(this.notificatinService.mentionsObjects);
+    this.removeDuplicates();
     const commentObj: commentEditBody = {
       id: this.comments[this.commentIndex].id,
       comment: this.form.get('comment')?.value,
@@ -347,7 +355,7 @@ export class RepliesSectionComponent implements OnInit {
         this.showCommentTextArea = false;
       },
       error: () => {
-        this.toastr.error('error occured');
+        // this.toastr.error('error occured');
         this.form.reset();
         this.editedText.set('');
         this.showCommentTextArea = false;
@@ -399,11 +407,7 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   saveReply() {
-    this.notificatinService.mentionsObjects =
-      this.notificatinService.mentionsObjects.filter(
-        (item, index, self) => self.indexOf(item) === index
-      );
-
+    this.removeDuplicates();
     const replyObj: addreplyBody = {
       commentId: this.comments[this.commentIndex].id,
       reply: this.form.get('comment')?.value,
@@ -432,7 +436,7 @@ export class RepliesSectionComponent implements OnInit {
         }
       },
       error: () => {
-        this.toastr.error('Reply Addtion Failed');
+        // this.toastr.error('Reply Addtion Failed');
         this.form.reset();
         this.editedText.set('');
         this.showCommentTextArea = false;
@@ -456,6 +460,7 @@ export class RepliesSectionComponent implements OnInit {
       });
   }
   editReply() {
+    this.removeDuplicates();
     const replyObj: replyEditBody = {
       id: this.comments[this.commentIndex].replies[this.replyIndex].id,
       reply: this.form.get('comment')?.value,

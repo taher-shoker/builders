@@ -6,6 +6,7 @@
     <button mat-button mat-dialog-close class="mat-dialoge-close">
       Cancel
     </button>
+    @if(confirmationBtnDesc!==''){
     <button
       mat-button
       class="mat-dialog-confirm"
@@ -14,5 +15,6 @@
     >
       {{ confirmationBtnDesc }}
     </button>
+    }
   </mat-dialog-actions>
 </div>

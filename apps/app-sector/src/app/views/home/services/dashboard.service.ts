@@ -18,6 +18,7 @@ import {
 export class DashboardService {
   baseUrl = environment.apiUrl;
   kpiNameSubject: BehaviorSubject<string> = new BehaviorSubject('');
+  sectorNameSubject: BehaviorSubject<string> = new BehaviorSubject('');
   constructor(
     private http: HttpClient,
     private overallScoreService: OverallScoreService
@@ -44,19 +45,25 @@ export class DashboardService {
     params: SectorKpisDetailsParams
   ): Observable<KpiDetailsResponse> {
     let httpParams = new HttpParams();
-    if (params.kpiCode) {
+    if (params.kpiCode && params.scorecardTitle) {
       httpParams = new HttpParams()
         .set('year', params.year)
         .set('quarter', params.quarter)
         .set('sectorName', params.sectorName)
         .set('scorecardTitle', params.scorecardTitle)
         .set('kpiCode', params.kpiCode);
+    } else if (params.kpiCode && !params.scorecardTitle) {
+      httpParams = new HttpParams()
+        .set('year', params.year)
+        .set('quarter', params.quarter)
+        .set('sectorName', params.sectorName)
+        .set('kpiCode', params.kpiCode);
     } else {
       httpParams = new HttpParams()
         .set('year', params.year)
         .set('quarter', params.quarter)
         .set('sectorName', params.sectorName)
-        .set('scorecardTitle', params.scorecardTitle);
+        .set('scorecardTitle', params.scorecardTitle!);
     }
     return this.http.get<KpiDetailsResponse>(
       this.baseUrl + '/v2/scrs/dashboard/sector/kpi-details',

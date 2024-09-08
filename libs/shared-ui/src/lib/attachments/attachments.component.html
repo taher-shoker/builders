@@ -38,9 +38,14 @@
             </button>
           </div>
         </div>
-        <span class="attachments_files_item_time">
-          {{ 'Uploaded at ' + (fileObj.createdAt | date : 'MMMM dd,yyyy') }}
-        </span>
+        
+          <span class="attachments_files_item_time">
+            {{ 'Uploaded at ' + (fileObj.createdAt | date : 'MMMM dd,yyyy') }}
+          </span>
+          <span class="attachments_files_item_time">{{
+            ', Uploaded by ' + fileObj.authorName
+          }}</span>
+        
       </div>
       }
     </div>

@@ -33,14 +33,17 @@ import { CookieService } from 'ngx-cookie-service';
 export class CommentsFormComponent implements OnInit, OnChanges {
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
   pathKpiCode: InputSignal<string> = input('');
+  pathSectorName: InputSignal<string> = input('');
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('mentionList') mentionList!: ElementRef<HTMLUListElement>;
   newComment: comment = {} as comment;
   form: FormGroup = new FormGroup({});
+  loggedUserID = 0;
   uploadedFiles: File[] = [];
   displayedFiles: { file: File; formattedUploadDate: string }[] = [];
+  attachemntList: any[] = [];
   accept = [
     'text/csv', // CSV files
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel files (xlsx)
@@ -50,7 +53,8 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     'application/msword', // Word files (doc)
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Word files (docx)
     'application/zip', // ZIP files
-    'application/x-rar-compressed', // RAR files
+    'application/x-rar-compressed',
+    '.rar', // RAR files
   ];
 
   mentions: user[] = [];
@@ -101,6 +105,9 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.loggedUserID = JSON.parse(
+      this.cookieService.get('MODERN_SYSTEM_USER') || ''
+    ).id;
     this.notificatinService.mentionsList.subscribe((result: user[]) => {
       if (result) {
         console.log('replies section users', result);
@@ -116,6 +123,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
 
     if (kpiObject && kpiObject.attachementList) {
       this.displayedFiles = kpiObject.attachementList;
+      this.attachemntList = kpiObject.attachementList;
     } else {
       console.log('No attachmentList found or kpiObject is undefined');
     }
@@ -143,16 +151,31 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     id?: number,
     file?: any
   ) {
+    console.log(id, index);
+
     if (downloadOrDeleteFlag === 'delete' && id !== undefined) {
-      const dialogeDesc = 'Are you sure you want to delete this attachment?';
-      const confirmationBtnDesc = 'Delete';
-      this.dialogeService.openDialog(
-        '0ms',
-        '0ms',
-        dialogeDesc,
-        confirmationBtnDesc,
-        () => this.onDeleteFile(index, id)
-      );
+      if (this.loggedUserID == this.attachemntList[index].authorId) {
+        const dialogeDesc = 'Are you sure you want to delete this attachment?';
+        const confirmationBtnDesc = 'Delete';
+        this.dialogeService.openDialog(
+          '0ms',
+          '0ms',
+          dialogeDesc,
+          confirmationBtnDesc,
+          () => this.onDeleteFile(index, id)
+        );
+      } else {
+        const dialogeDesc = 'You are not authorized to delete this attachment';
+        const confirmationBtnDesc = '';
+        this.dialogeService.openDialog(
+          '0ms',
+          '0ms',
+          dialogeDesc,
+          confirmationBtnDesc,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          () => {}
+        );
+      }
     } else if (downloadOrDeleteFlag === 'download' && id !== undefined) {
       const dialogeDesc = `Do you want to download file ${file.attachmentDisplayName}?`;
       const confirmationBtnDesc = 'Download';
@@ -272,7 +295,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
             ...result[index],
           });
         });
-        this.toastr.success('File added Successfully');
+        this.toastr.success('File Uploaded Successfully');
       });
   }
 

@@ -29,6 +29,7 @@ export class DetailsComponent implements OnInit {
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
   pathKpiCode: string | null = '';
+  pathSectorName: string | null = '';
   loggedUserID = 0;
   categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
   unit = '';
@@ -49,8 +50,7 @@ export class DetailsComponent implements OnInit {
         params['kpiCode'] &&
         params['year'] &&
         params['quarter'] &&
-        params['sectorName'] &&
-        params['scorecardTitle']
+        params['sectorName']
       ) {
         console.log('params', params);
         this.pathKpiCode = params['kpiCode'];
@@ -65,7 +65,7 @@ export class DetailsComponent implements OnInit {
           year: params['year'],
           quarter: params['quarter'],
           sectorName: params['sectorName'],
-          scorecardTitle: params['scorecardTitle'],
+
           kpiCode: params['kpiCode'],
         };
         this.getKpiDetails(paramsAPI);
@@ -77,6 +77,7 @@ export class DetailsComponent implements OnInit {
       } else {
         this.route.paramMap.subscribe((paramMap) => {
           this.pathKpiCode = paramMap.get('KPICode');
+          this.pathSectorName = paramMap.get('sectorName');
         });
         const selectedTab = this.cookieService.get('selectedTab');
         const params: SectorKpisDetailsParams = {

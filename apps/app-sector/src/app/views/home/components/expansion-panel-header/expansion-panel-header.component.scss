@@ -35,7 +35,13 @@ p {
     margin-top: 17px;
 
     .direction-holder {
+      // text-wrap: nowrap;
       width: 53%;
+      img {
+        width: 28px;
+        height: 28px;
+        // width: 20%;
+      }
       .img-decreasing {
         transform: rotateX(180deg);
       }
@@ -47,7 +53,7 @@ p {
 
     .direction-holder,
     .function-holder {
-      padding: 6px 10px;
+      padding: 8px 8px 6px 12px;
       border-radius: 10px;
       background-color: rgba(113, 113, 113, 0.1);
 
