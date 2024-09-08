@@ -1,9 +1,38 @@
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'apps/strategic-dashboard/src/environments/environment';
+import { Observable } from 'rxjs';
+import { StrategicGroup } from '../models/strategic-group.model';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class StrategicGroupsService {
+  baseUrl = environment.apiUrl;
 
-  constructor() { }
+  constructor(private http: HttpClient) {}
+
+  getAllStrategicGroups(params: {
+    year: string;
+  }): Observable<StrategicGroup[]> {
+    const httpParams = new HttpParams().set('year', params.year);
+    return this.http.get<StrategicGroup[]>(
+      this.baseUrl + 'v1/dashboard/strategic',
+      {
+        params: httpParams,
+      }
+    );
+  }
+
+  getAllStrategicGroupKpis(params: any) {
+    const httpParams = new HttpParams()
+      .set('year', params.year)
+      .set('strategicName', params.strategicName);
+    return this.http.get<StrategicGroup[]>(
+      this.baseUrl + 'v1/dashboard/strategic/kpi',
+      {
+        params: httpParams,
+      }
+    );
+  }
 }

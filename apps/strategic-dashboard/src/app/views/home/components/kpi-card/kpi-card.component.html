@@ -1,34 +1,49 @@
-<div class="kpi-card">
+<div class="kpi-card" [ngClass]="{ hovered: isHovered() }">
   <div class="kpi-card_content-holder">
-    @if (!isStringContent) {
-    <h4 class="kpi-card_title">{{ kpiTitle() }}</h4>
-    } @for (content of currentContents; track content; let index = $index) {
-    <div
-      class="kpi-card_content"
-      [ngClass]="{  'with-full-border': !isStringContent, 'with-bottom-border': (isStringContent&&index!==currentContents.length-1), } "
-    >
-      @if (isStringContent) {
-      {{ content }}
-      } @else {
-      <div class="kpi-card_details">
-        <div>
-          <p class="kpi-card_details_title">{{ content.title }}</p>
-          <span
-            class="kpi-card_details_percentage"
-            [ngClass]="getPercentageClass(content.percentage)"
-            >{{ content.percentage }}</span
-          >
+    @if (isHovered()) {
+    <div class="kpi-card_header">
+      <h4 class="kpi-card_title">{{ kpiTitle() }}</h4>
+    </div>
+    } @for (content of getFilteredContents(); track content; let index = $index)
+    {
+    <div>
+      @if (!isHovered() ) { @for (kpi of content.kpis; track kpi) {
+      <div class="kpi-card_content with-bottom-border">{{ kpi.name }}</div>
+      } } @else { @for (strategicGroupKpi of
+      getStrategicGroupKpisByKpiName(content?.name) ; track strategicGroupKpi) {
+      <div class="kpi-card_content with-full-border">
+        <div class="kpi-card_details">
+          <div>
+            <p class="kpi-card_details_title">{{ strategicGroupKpi.name }}</p>
+            <span
+              class="kpi-card_details_percentage"
+              [ngClass]="
+                getPercentageClass(strategicGroupKpi.actualValue, {
+                  green: strategicGroupKpi.greenThreshold,
+                  orange: strategicGroupKpi.orangeThreshold,
+                  red: strategicGroupKpi.redThreshold
+                })
+              "
+            >
+              {{
+                strategicGroupKpi.unit === '%'
+                  ? (strategicGroupKpi.actualValue | percent)
+                  : strategicGroupKpi.actualValue + ' ' + strategicGroupKpi.unit
+              }}</span
+            >
+          </div>
+
+          <stc-apps-progress-percentage
+            [percentage]="strategicGroupKpi.actualValue"
+            [thresholds]="{
+              green: strategicGroupKpi.greenThreshold,
+              orange: strategicGroupKpi.orangeThreshold,
+              red: strategicGroupKpi.redThreshold
+            }"
+          ></stc-apps-progress-percentage>
         </div>
-        <!-- <img
-          class="kpi-card_details_progress"
-          src="assets/images/progress.svg"
-          [ngClass]="getPercentageClass(content.percentage)"
-        /> -->
-        <stc-apps-progress-percentage
-          [percentage]="content.percentage"
-        ></stc-apps-progress-percentage>
       </div>
-      }
+      } }
     </div>
     }
   </div>

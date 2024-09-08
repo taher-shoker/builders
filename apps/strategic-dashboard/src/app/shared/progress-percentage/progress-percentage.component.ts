@@ -7,15 +7,22 @@ import { Component, input, InputSignal } from '@angular/core';
 })
 export class ProgressPercentageComponent {
   percentage: InputSignal<string> = input('');
+  thresholds: InputSignal<{ green: number; orange: number; red: number }> =
+    input({
+      green: 0,
+      orange: 0,
+      red: 0,
+    });
 
-  getPercentageClass(percentage: string): string {
-    const value = parseFloat(percentage);
-    if (value < 90) {
-      return 'less-than-100';
-    } else if (value >= 90 && value <= 100) {
-      return 'near-to-100';
+  getPercentageClass(): string {
+    const value = +this.percentage();
+    const { green, orange, red } = this.thresholds();
+    if (value >= green) {
+      return 'greater-than-green';
+    } else if (value < red) {
+      return 'less-than-red';
     } else {
-      return 'greater-than-100';
+      return 'between-orange';
     }
   }
 }

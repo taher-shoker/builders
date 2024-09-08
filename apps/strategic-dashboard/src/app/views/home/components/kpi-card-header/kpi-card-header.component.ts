@@ -7,7 +7,7 @@ import { Component, effect, input, InputSignal } from '@angular/core';
 })
 export class KpiCardHeaderComponent {
   kpiTitle: InputSignal<string> = input('');
-  iconPath: InputSignal<string> = input('');
+  iconPath: InputSignal<string> = input('assets/images/interaction-icon.svg');
   firstPartTitle = '';
   secondPartTitle = '';
   firstLetter = '';

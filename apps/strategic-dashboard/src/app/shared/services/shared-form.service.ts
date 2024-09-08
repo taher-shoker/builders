@@ -9,7 +9,7 @@ export class SharedFormService {
 
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      year: new FormControl(''),
+      year: new FormControl(0),
     });
   }
 

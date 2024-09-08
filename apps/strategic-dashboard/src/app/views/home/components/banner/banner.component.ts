@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup } from '@angular/forms';
-import { SharedFormService } from 'apps/strategic-dashboard/src/app/shared/services/shared-form.service';
-import { YearService } from 'apps/strategic-dashboard/src/app/shared/services/year.service';
+import { SharedFormService } from '../../../../shared/services/shared-form.service';
+import { YearService } from '../../../../shared/services/year.service';
 
 interface name {
   name: number;
@@ -51,7 +51,7 @@ export class BannerComponent implements OnInit {
     }
 
     const initialParams = {
-      year: this.year.toString(),
+      year: this.year,
     };
 
     this.sharedFormService.initializeForm(initialParams);
