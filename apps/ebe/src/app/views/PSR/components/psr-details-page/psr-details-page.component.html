@@ -15,7 +15,7 @@
             (export)="downloadTemplate()"
           />
         }
-        @if(PSRDetailsData && PSRDetailsData.length !== 0)
+        @if(!isEmpty)
         {
           <div class="projects-container">
             <p class = "psr-tabview-header">

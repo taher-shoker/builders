@@ -53,6 +53,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
+  isEmpty!:boolean;
   private getProjectDetails(group:string)
   {
     this.psrServices.getExecuteProjectDetailsData(group).pipe(takeUntil(this.endSubs$)).subscribe({
@@ -63,7 +64,12 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
           })
         })
         this.PSRDetailsData = res;
-        console.log(this.PSRDetailsData);
+        if(this.PSRDetailsData.length === 0)
+        {
+          this.isEmpty = true;
+        } else {
+          this.isEmpty = false;
+        }
       }
     })
   }
