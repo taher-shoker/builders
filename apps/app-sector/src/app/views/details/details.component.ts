@@ -1,6 +1,7 @@
 import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import {
   kpiCard,
+  KpiDetailsResponse,
   KpiDTOMap,
   SectorKpisDetailsParams,
 } from '../models/SectorKpisDetails.model';
@@ -8,7 +9,6 @@ import { KpiDTO } from '../../views/models/SectorKpisDetails.model';
 import { SharedFormService } from '../home/services/shared-form.service';
 import { DashboardService } from '../home/services/dashboard.service';
 import { commentsService } from './services/comments.service';
-import { HttpClient } from '@angular/common/http';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { environment } from 'apps/app-sector/src/environments/environment';
 import { CookieService } from 'ngx-cookie';
@@ -25,14 +25,14 @@ export class DetailsComponent implements OnInit {
   kpiObjectSignal: WritableSignal<KpiDTO | undefined> = signal(undefined);
   sectorUsersSignal: WritableSignal<user[] | undefined> = signal(undefined);
   currentDate = new Date();
-  kpiCode = window.history.state.kpiCode;
-  selectedTab = window.history.state.selectedTab;
-  kpiName = window.history.state.kpiName;
+
   cards: kpiCard[] = [];
   kpiDTOMap: KpiDTOMap = {};
+  pathKpiCode: string | null = '';
+  pathSectorName: string | null = '';
   loggedUserID = 0;
-  loggedUserObject: any;
   categoryKpiLists: { [key: string]: { [kpiName: string]: KpiDTO[] } } = {};
+  unit = '';
   baseUrl = environment.apiUrl;
   constructor(
     private sharedFormService: SharedFormService,
@@ -46,20 +46,26 @@ export class DetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe((params) => {
-      console.log(params);
       if (
         params['kpiCode'] &&
         params['year'] &&
         params['quarter'] &&
-        params['sectorName'] &&
-        params['scorecardTitle']
+        params['sectorName']
       ) {
-        console.log('params');
+        console.log('params', params);
+        this.pathKpiCode = params['kpiCode'];
+        const initialParams = {
+          year: params['year'],
+          quarter: params['quarter'],
+          sectorName: params['sectorName'],
+        };
+
+        this.sharedFormService.initializeForm(initialParams);
         const paramsAPI: SectorKpisDetailsParams = {
           year: params['year'],
           quarter: params['quarter'],
           sectorName: params['sectorName'],
-          scorecardTitle: params['scorecardTitle'],
+
           kpiCode: params['kpiCode'],
         };
         this.getKpiDetails(paramsAPI);
@@ -69,10 +75,15 @@ export class DetailsComponent implements OnInit {
         };
         this.getSectorUsers(paramsUsers);
       } else {
+        this.route.paramMap.subscribe((paramMap) => {
+          this.pathKpiCode = paramMap.get('KPICode');
+          this.pathSectorName = paramMap.get('sectorName');
+        });
+        const selectedTab = this.cookieService.get('selectedTab');
         const params: SectorKpisDetailsParams = {
           ...this.sharedFormService.getForm().value,
-          scorecardTitle: this.selectedTab,
-          kpiCode: this.kpiCode,
+          scorecardTitle: selectedTab,
+          kpiCode: this.pathKpiCode,
         };
         this.getKpiDetails(params);
         const paramsUsers: sectorUsersParams = {
@@ -105,10 +116,11 @@ export class DetailsComponent implements OnInit {
       },
     });
   }
+  errorMessage = '';
   getKpiDetails(params: SectorKpisDetailsParams) {
-    this.dashboardService
-      .getSectorKpisDetails(params)
-      .subscribe((result: any) => {
+    this.dashboardService.getSectorKpisDetails(params).subscribe({
+      next: (result: KpiDetailsResponse) => {
+        this.errorMessage = '';
         this.kpiDTOMap = result.kpiDTOMap;
         this.categoryKpiLists = {};
         if (this.kpiDTOMap && typeof this.kpiDTOMap === 'object') {
@@ -121,6 +133,7 @@ export class DetailsComponent implements OnInit {
             // Loop through each KPI within the kpiSubGrouping
             Object.keys(kpiArray).forEach((kpiDTO: any) => {
               this.addingCardsDescriptions(kpiArray[kpiDTO][0]);
+              this.unit = kpiArray[kpiDTO][0].unit;
               this.commentService.commenstList.next(
                 kpiArray[kpiDTO][0].commentList
               );
@@ -133,7 +146,12 @@ export class DetailsComponent implements OnInit {
             });
           });
         }
-      });
+      },
+      error: (error) => {
+        this.errorMessage = 'error Occured';
+        console.log(this.errorMessage);
+      },
+    });
   }
 
   addingCardsDescriptions(kpiObject: KpiDTO) {
@@ -176,7 +194,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Weight',
-        description: kpiObject.weight * 100 + '%',
+        description: kpiObject.weight.toFixed(2) + '%',
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
@@ -196,7 +214,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Ceiling',
-        description: kpiObject.ceiling + '%',
+        description: kpiObject.ceiling + ' ' + kpiObject.unit,
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {
@@ -216,7 +234,7 @@ export class DetailsComponent implements OnInit {
       },
       {
         title: 'Threshold',
-        description: Math.floor(kpiObject.target * 100) + '%',
+        description: kpiObject.target.toFixed(2) + ' ' + kpiObject.unit,
         class: 'col-lg-2 col-md-6 col-sm-12',
       },
       {

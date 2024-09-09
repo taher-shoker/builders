@@ -22,12 +22,7 @@
 
     <stc-apps-expansion-panel-body
       class="mt-lg-0 mt-md-5"
-      [percentage]="kpi().score"
-      [kpiCode]="kpi().kpiCode"
-      [kpiName]="kpi().kpiName"
-      [kpiStatus]="kpi().kpiStatus"
-      [kpiActualValue]="kpi().actualValue"
-      [kpiTargetValue]="kpi().target"
+      [kpiObject]="kpi()"
       [listItems]="generateListItems(kpi())"
       [selectedTab]="newTabSelected()"
     ></stc-apps-expansion-panel-body>

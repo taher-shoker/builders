@@ -2,7 +2,7 @@
 @import '../../../../../../libs/styles/src/scss/core/variables/colors';
 
 .details {
-  padding: 26px 28px;
+  padding: 0 28px;
   position: relative;
   z-index: 99;
 
@@ -30,4 +30,13 @@
   //     }
   //   }
   // }
+  .no-data {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    margin-top: 10%;
+    font-size: 18px;
+    font-weight: 400;
+    color: var(--lightGreyColor);
+  }
 }

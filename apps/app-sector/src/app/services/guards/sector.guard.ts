@@ -13,7 +13,7 @@ export const sectorGuard: CanActivateFn = (route, state) => {
     return true;
   } else {
     // No sector selected, redirect to welcome
-    router.navigate(['/welcome']);
+    router.navigate(['/sectors']);
     return false;
   }
 };

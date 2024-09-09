@@ -1,3 +1,11 @@
-<div class="tabs">
-  <ng-content select="stc-apps-tab"></ng-content>
-</div>
+<mat-tab-group
+  (selectedTabChange)="handleChangeTab($event)"
+  mat-stretch-tabs="false"
+  mat-align-tabs="left"
+>
+  @for (score of scores(); track score; let i = $index) {
+  <mat-tab [label]="score?.scorecardTitle">
+    <ng-template [ngTemplateOutlet]="templates[i]"></ng-template>
+  </mat-tab>
+  }
+</mat-tab-group>

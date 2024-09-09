@@ -12,6 +12,7 @@ import {
 } from '@angular/core';
 import { KpiDTO, Section } from '../../../models/SectorKpisDetails.model';
 import { MatExpansionPanel } from '@angular/material/expansion';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'stc-apps-expansion-panel',
@@ -19,15 +20,21 @@ import { MatExpansionPanel } from '@angular/material/expansion';
   styleUrl: './expansion-panel.component.scss',
 })
 export class ExpansionPanelComponent {
-  //kpiDTOList: InputSignal<KpiDTO[] | any> = input([]);
-  kpi: InputSignal<KpiDTO | any> = input({} as KpiDTO);
+  kpi: InputSignal<KpiDTO> = input({} as KpiDTO);
   @ViewChildren(MatExpansionPanel) panels!: QueryList<MatExpansionPanel>;
   panelOpenState = false;
-  newTabSelected: InputSignal<string> = input('');
-  constructor() {
+  newTabSelected: InputSignal<string | any> = input('');
+  constructor(private cookieService: CookieService) {
     effect(() => {
       if (this.newTabSelected() !== '') {
-        console.log('called', this.newTabSelected());
+        this.cookieService.set(
+          'selectedTab',
+          this.newTabSelected().tab.textLabel,
+          {
+            expires: 7,
+            path: '/',
+          }
+        );
         this.closeAllPanels();
       }
     });

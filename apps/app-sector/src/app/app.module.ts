@@ -19,7 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from './layout/layout.module';
 import { DetailsModule } from './views/details/details.module';
 import { WelcomePageModule } from './views/welcome-page/welcome-page.module';
-import { DatePipe } from '@angular/common';
+import { DatePipe, HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
 import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { LoaderInterceptor } from './services/interceptors/loader.interceptor';
@@ -71,6 +71,7 @@ export const provideTranslation = () => ({
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
 
     DatePipe,
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
   bootstrap: [AppComponent],
 })

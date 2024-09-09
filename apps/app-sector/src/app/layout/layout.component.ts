@@ -15,28 +15,34 @@ import { LoaderService } from '../services/loader.service';
   styleUrls: ['./layout.component.scss'],
 })
 export class LayoutComponent implements OnInit, AfterViewInit {
-  scoreCardName = window.history.state.scoreCardName;
+  
+  sectorName: string | undefined = '';
+  navItems: any[] = [];
   constructor(
     private cookieService: CookieService,
     public router: Router,
     private authService: AuthService,
     public loaderService: LoaderService,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    this.sectorName = this.cookieService.get('sectorName');
+    console.log(this.sectorName, 'navItem');
+    this.navItems = [
+     
+      {
+        name: 'home',
+        url: `/sectors/${this.sectorName}`,
+        icon: 'fa-home',
+        roles: ['APPROVERS,CREATORS'],
+        urlHome: `/sectors/${this.sectorName}`,
+      },
+    ];
+  }
 
-  urlHome = '/home';
+  // urlHome = '/home';
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
-  navItems = [
-    {
-      name: 'home',
-      url: '/home',
-      icon: 'fa-home',
-      roles: ['APPROVERS,CREATORS'],
-      urlHome: '/home',
-    },
-  ];
 
   ngAfterViewInit(): void {
     this.loaderService.isLoading$.subscribe(() => {
@@ -45,7 +51,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit() {
-    //this.userName='Habiba';
     if (
       this.cookieService.get('MODERN_SYSTEM_USER') &&
       this.cookieService.get('token')
@@ -53,6 +58,28 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       this.userName = this.cookieService.get('USER_FULLNAME') || '';
       this.authService.getUserData();
       this.authService.loggedUserStream.subscribe((res) => {
+        console.log(res?.userGroups);
+
+        res?.userGroups.map((group) => {
+          if (group.groupName == 'Data_Admins') {
+            console.log('hey');
+            let flag = false;
+            this.navItems.map((item) => {
+              if (item.name == 'data upload') {
+                flag = true;
+              }
+            });
+            if (!flag) {
+              this.navItems.push({
+                name: 'data upload',
+                url: `/sectors/${this.sectorName}/data-upload`,
+                icon: 'fa-upload',
+                roles: ['Data_Admins'],
+                urlHome: `/sectors/${this.sectorName}`,
+              });
+            }
+          }
+        });
         this.userName = res?.name || '';
       });
     }
@@ -62,6 +89,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     this.router.navigate(['/']);
   }
   logOut() {
-    // this.authService.logout();
+    this.authService.logout();
   }
 }

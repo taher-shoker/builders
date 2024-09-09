@@ -120,7 +120,7 @@ export class RepliesSectionComponent implements OnInit {
       });
     }
     this.commentService.commenstList.subscribe((result: comment[]) => {
-      if (result[0] && result[0].comment) {
+      if (result && result[0] && result[0].comment) {
         this.comments = result;
         this.commentsCount();
       } else {
@@ -141,9 +141,6 @@ export class RepliesSectionComponent implements OnInit {
       comment: this.fb.control('', [Validators.required]),
     });
   }
-  mentionObjectChanged(object: user) {
-    // console.log(object, 'in replies');
-  }
   findAllIndexes(str: string, searchTerm: string): number[] {
     const indexes: number[] = [];
     let startIndex = 0;
@@ -158,26 +155,24 @@ export class RepliesSectionComponent implements OnInit {
   //eslint-disable-next-line @typescript-eslint/no-explicit-any
 
   onContentChange(content: any): void {
-    console.log('content', content);
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
     if (mentionsArray?.length == 0) {
       this.notificatinService.mentionsObjects = [];
-    } else if (
-      mentionsArray.length !== this.notificatinService.mentionsObjects.length
-    ) {
-      this.notificatinService.mentionsObjects =
-        this.notificatinService.mentionsObjects.filter((mention) =>
-          this.mentionsArray.includes('@' + mention.name)
-        );
     }
-
+  }
+  deleteMention(event: number[]) {
+    const ids = event.map((str) => Number(str));
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter((obj) =>
+        ids.includes(obj.id)
+      );
   }
 
   extractMentions(text: string): string[] {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mentions: string[] = this.mentions.map((mention: any) => {
-      return `@${mention.name}`;
+    //eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const mentions: string[] = this.mentions.map((mention: user) => {
+      return `${mention.name}`;
     });
 
     const mentionPattern = new RegExp(mentions.join('|'), 'gi');
@@ -188,7 +183,6 @@ export class RepliesSectionComponent implements OnInit {
       extractedMentions.push(match[0]);
     }
 
-    console.log('Extracted mentions:', extractedMentions);
     return extractedMentions;
   }
 
@@ -202,9 +196,7 @@ export class RepliesSectionComponent implements OnInit {
     }
   }
   scrollIntoView() {
-  
     if (this.textArea?.nativeElement) {
-      
       // window.scrollBy({ top: 300, behavior: 'smooth' });
       this.textArea.nativeElement.scrollIntoView({
         behavior: 'smooth',
@@ -234,7 +226,6 @@ export class RepliesSectionComponent implements OnInit {
     this.form.reset();
   }
   save() {
-    
     if (this.commentActionBtn === 'Save') {
       this.saveReply();
     } else {
@@ -243,12 +234,12 @@ export class RepliesSectionComponent implements OnInit {
   }
   refactoringCommaSepartedMention(commaSepartedMentions: string): any[] {
     let mentionsSeparted: any = commaSepartedMentions?.split(',');
-  
+
     mentionsSeparted = mentionsSeparted?.map((mention: any) => {
       const pipeSeparted = mention.split('|');
       const mentionObj: user = {
         id: +pipeSeparted[0],
-        name: pipeSeparted[1].slice(1),
+        name: pipeSeparted[1],
         email: pipeSeparted[2],
         jobTitle: pipeSeparted[3],
       };
@@ -262,9 +253,8 @@ export class RepliesSectionComponent implements OnInit {
     this.commentIndex = commentIndex;
     this.deleteReplyFlag = false;
     this.editReplyTextArea = false;
-    
+
     if (e == 'Delete') {
-     
       this.deleteCommentFlag = true;
       const dialogeDesc = 'Are you sure you want to delete this comment?';
       this.dialogeService.openDialog(
@@ -276,7 +266,7 @@ export class RepliesSectionComponent implements OnInit {
       );
     } else if (e == 'Reply') {
       this.notificatinService.mentionsObjects = [];
-   
+
       //  this.editedText.set('');
       this.form.reset();
       this.showCommentTextArea = true;
@@ -297,14 +287,12 @@ export class RepliesSectionComponent implements OnInit {
           );
       }
 
-     
       this.showCommentTextArea = true;
       this.textAreaOpend.emit('opend');
       const comment = this.comments[commentIndex].comment;
-      // this.editedText.set(comment);
+      this.editedText.set(comment);
       this.form.get('comment')?.setValue(comment);
 
-      
       this.commentActionBtn = 'Update';
       setTimeout(() => {
         this.scrollIntoView();
@@ -313,7 +301,6 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   deleteComment(commentIndex: number) {
-    
     this.commentService
       .deleteComment(this.comments[commentIndex].id)
       .subscribe({
@@ -324,17 +311,24 @@ export class RepliesSectionComponent implements OnInit {
           this.cancel();
         },
         error: () => {
-          this.toastr.error('Error occured while deleting comment');
+          // this.toastr.error('Error occured while deleting comment');
           this.cancel();
         },
       });
   }
+  removeDuplicates() {
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter(
+        (item, index, self) => self.indexOf(item) === index
+      );
+  }
   editCommentt() {
-    console.log('final mentions ', this.notificatinService.mentionsObjects);
+    console.log(this.notificatinService.mentionsObjects);
+    this.removeDuplicates();
     const commentObj: commentEditBody = {
       id: this.comments[this.commentIndex].id,
       comment: this.form.get('comment')?.value,
-      commaSeparatedMentions: this.mentionsArray
+      commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects
           )
@@ -350,7 +344,7 @@ export class RepliesSectionComponent implements OnInit {
         this.comments[this.commentIndex].commaSeparatedMentions =
           result.commaSeparatedMentions;
         this.form.reset();
-        if (this.mentionsArray?.length !== 0) {
+        if (this.notificatinService.mentionsObjects?.length !== 0) {
           this.notificatinService.notificationsSenderEngine(
             result.comment,
             this.notificatinService.mentionsObjects,
@@ -361,7 +355,7 @@ export class RepliesSectionComponent implements OnInit {
         this.showCommentTextArea = false;
       },
       error: () => {
-        this.toastr.error('error occured');
+        // this.toastr.error('error occured');
         this.form.reset();
         this.editedText.set('');
         this.showCommentTextArea = false;
@@ -413,12 +407,7 @@ export class RepliesSectionComponent implements OnInit {
   }
 
   saveReply() {
-    this.notificatinService.mentionsObjects =
-      this.notificatinService.mentionsObjects.filter(
-        (item, index, self) => self.indexOf(item) === index
-      );
-    console.log('final mentions ', this.notificatinService.mentionsObjects);
-    console.log('inside save');
+    this.removeDuplicates();
     const replyObj: addreplyBody = {
       commentId: this.comments[this.commentIndex].id,
       reply: this.form.get('comment')?.value,
@@ -434,11 +423,10 @@ export class RepliesSectionComponent implements OnInit {
           this.toastr.success('Reply Added Successfully');
           this.comments[this.commentIndex].replies?.unshift(result);
           this.commentsCount();
-          console.log('new comments', this.comments);
           this.form.reset();
           this.editedText.set('');
           this.showCommentTextArea = false;
-          if (this.mentionsArray?.length !== 0) {
+          if (this.notificatinService.mentionsObjects?.length !== 0) {
             this.notificatinService.notificationsSenderEngine(
               result.reply,
               this.notificatinService.mentionsObjects,
@@ -448,7 +436,7 @@ export class RepliesSectionComponent implements OnInit {
         }
       },
       error: () => {
-        this.toastr.error('Reply Addtion Failed');
+        // this.toastr.error('Reply Addtion Failed');
         this.form.reset();
         this.editedText.set('');
         this.showCommentTextArea = false;
@@ -472,10 +460,11 @@ export class RepliesSectionComponent implements OnInit {
       });
   }
   editReply() {
+    this.removeDuplicates();
     const replyObj: replyEditBody = {
       id: this.comments[this.commentIndex].replies[this.replyIndex].id,
       reply: this.form.get('comment')?.value,
-      commaSeparatedMentions: this.mentionsArray
+      commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects
           )
@@ -493,7 +482,7 @@ export class RepliesSectionComponent implements OnInit {
         this.comments[this.commentIndex].replies[
           this.replyIndex
         ].commaSeparatedMentions = result.commaSeparatedMentions;
-        if (this.mentionsArray?.length !== 0) {
+        if (this.notificatinService.mentionsObjects?.length !== 0) {
           this.notificatinService.notificationsSenderEngine(
             result.reply,
             this.notificatinService.mentionsObjects,

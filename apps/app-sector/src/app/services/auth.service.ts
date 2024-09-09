@@ -12,6 +12,7 @@ export interface LoggedUser {
   name: string;
   jobTitle: string;
   roles: string[];
+  userGroups: any[];
   teamName: null | string;
 }
 export interface AuthResponseData {
@@ -82,7 +83,7 @@ export class AuthService {
 
   logout() {
     this.user.next(null);
-    this.cookieService.remove('token');
+    this.cookieService.removeAll();
     this.tokenExpirationTimer = null;
     //  this.loggedUserStream.next(null);
     this.loggedInUser = null;

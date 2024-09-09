@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   input,
@@ -22,6 +23,7 @@ import { SectorService } from 'apps/app-sector/src/app/services/sector.service';
 import { KpiDTO } from '../../../models/SectorKpisDetails.model';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { NotificationsService } from '../../services/notifications.service';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'stc-apps-comments-form',
@@ -29,18 +31,19 @@ import { NotificationsService } from '../../services/notifications.service';
   styleUrls: ['./comments-form.component.scss'],
 })
 export class CommentsFormComponent implements OnInit, OnChanges {
-  kpiCode = window.history.state.kpiCode;
-  scoreCardTitle = window.history.state.selectedTab;
   kpiObjectSignal: InputSignal<KpiDTO | any> = input(undefined);
-  caretIndexes: any[] = [];
+  pathKpiCode: InputSignal<string> = input('');
+  pathSectorName: InputSignal<string> = input('');
   @ViewChild('fileInput') fileInput!: ElementRef;
   @ViewChild('contenteditableDiv')
   contenteditableDiv!: ElementRef<HTMLDivElement>;
   @ViewChild('mentionList') mentionList!: ElementRef<HTMLUListElement>;
   newComment: comment = {} as comment;
   form: FormGroup = new FormGroup({});
+  loggedUserID = 0;
   uploadedFiles: File[] = [];
   displayedFiles: { file: File; formattedUploadDate: string }[] = [];
+  attachemntList: any[] = [];
   accept = [
     'text/csv', // CSV files
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // Excel files (xlsx)
@@ -50,7 +53,8 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     'application/msword', // Word files (doc)
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // Word files (docx)
     'application/zip', // ZIP files
-    'application/x-rar-compressed', // RAR files
+    'application/x-rar-compressed',
+    '.rar', // RAR files
   ];
 
   mentions: user[] = [];
@@ -81,7 +85,6 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   //     jobTitle: 'Football Manager',
   //   },
   // ];
-  mentionsArray: string[] = [''];
   constructor(
     private fb: FormBuilder,
     private dialogeService: dialogeService,
@@ -90,7 +93,9 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     private sharedFormService: SharedFormService,
     private commentsService: commentsService,
     private toastr: ToastrService,
-    private notificatinService: NotificationsService
+    private notificatinService: NotificationsService,
+    private cdr: ChangeDetectorRef,
+    private cookieService: CookieService
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -100,6 +105,9 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
+    this.loggedUserID = JSON.parse(
+      this.cookieService.get('MODERN_SYSTEM_USER') || ''
+    ).id;
     this.notificatinService.mentionsList.subscribe((result: user[]) => {
       if (result) {
         console.log('replies section users', result);
@@ -115,6 +123,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
 
     if (kpiObject && kpiObject.attachementList) {
       this.displayedFiles = kpiObject.attachementList;
+      this.attachemntList = kpiObject.attachementList;
     } else {
       console.log('No attachmentList found or kpiObject is undefined');
     }
@@ -142,16 +151,31 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     id?: number,
     file?: any
   ) {
+    console.log(id, index);
+
     if (downloadOrDeleteFlag === 'delete' && id !== undefined) {
-      const dialogeDesc = 'Are you sure you want to delete this attachment?';
-      const confirmationBtnDesc = 'Delete';
-      this.dialogeService.openDialog(
-        '0ms',
-        '0ms',
-        dialogeDesc,
-        confirmationBtnDesc,
-        () => this.onDeleteFile(index, id)
-      );
+      if (this.loggedUserID == this.attachemntList[index].authorId) {
+        const dialogeDesc = 'Are you sure you want to delete this attachment?';
+        const confirmationBtnDesc = 'Delete';
+        this.dialogeService.openDialog(
+          '0ms',
+          '0ms',
+          dialogeDesc,
+          confirmationBtnDesc,
+          () => this.onDeleteFile(index, id)
+        );
+      } else {
+        const dialogeDesc = 'You are not authorized to delete this attachment';
+        const confirmationBtnDesc = '';
+        this.dialogeService.openDialog(
+          '0ms',
+          '0ms',
+          dialogeDesc,
+          confirmationBtnDesc,
+          // eslint-disable-next-line @typescript-eslint/no-empty-function
+          () => {}
+        );
+      }
     } else if (downloadOrDeleteFlag === 'download' && id !== undefined) {
       const dialogeDesc = `Do you want to download file ${file.attachmentDisplayName}?`;
       const confirmationBtnDesc = 'Download';
@@ -164,42 +188,34 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       );
     }
   }
-  findAllIndexes(str: string, searchTerm: string): number[] {
-    const indexes: number[] = [];
-    let startIndex = 0;
-
-    while ((startIndex = str.indexOf(searchTerm, startIndex)) > -1) {
-      indexes.push(startIndex);
-      startIndex += searchTerm.length; // Move past the last found index
-    }
-
-    return indexes;
-  }
-
+  mentionsArray: string[] = [''];
   onContentChange(content: string) {
     console.log('Content:', content);
+    const contentText = this.extractTextFromContent(content);
     const mentionsArray = this.extractMentions(content);
     this.mentionsArray = mentionsArray;
-    this.form.get('comment')?.setValue(content);
-    console.log('Mentions:', mentionsArray);
-    if (mentionsArray?.length == 0) {
-      this.notificatinService.mentionsObjects = [];
-    } else if (
-      mentionsArray.length !==
-      this.notificatinService.getmentionObjects().length
-    ) {
-      this.notificatinService.mentionsObjects =
-        this.notificatinService.mentionsObjects.filter((mention) =>
-          this.mentionsArray.includes('@' + mention.name)
-        );
-    }
+    this.form.get('comment')?.setValue(contentText);
+    // if (this.mentionsArray.length == 0) {
+    //   this.notificatinService.mentionsObjects = [];
+    // }
+  }
+  deleteMention(event: number[]) {
+    console.log('deleteMention', event);
+    const ids = event.map((str) => Number(str));
+    this.notificatinService.mentionsObjects =
+      this.notificatinService.mentionsObjects.filter((obj) =>
+        ids.includes(obj.id)
+      );
+  }
+  extractTextFromContent(content: any): string {
+    return content ?? content.name;
   }
   resetForm() {
     this.form.reset();
   }
   extractMentions(text: string): string[] {
     const mentions: string[] = this.mentions.map((mention: user) => {
-      return `@${mention.name}`;
+      return `${mention.name}`;
     });
 
     const mentionPattern = new RegExp(mentions.join('|'), 'gi');
@@ -215,6 +231,8 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
 
   onSubmit() {
+    console.log(this.notificatinService.mentionsObjects);
+
     this.notificatinService.mentionsObjects =
       this.notificatinService.mentionsObjects.filter(
         (item, index, self) => self.indexOf(item) === index
@@ -224,10 +242,10 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       sectorName: this.sharedFormService.getForm().value.sectorName,
       year: this.sharedFormService.getForm().value.year,
       quarter: this.sharedFormService.getForm().value.quarter,
-      scorecardTitle: this.scoreCardTitle,
-      kpiCode: this.kpiCode,
+      scorecardTitle: this.kpiObjectSignal().scorecardTitle,
+      kpiCode: this.kpiObjectSignal().kpiCode,
       comment: this.form.value.comment,
-      commaSeparatedMentions: this.mentionsArray
+      commaSeparatedMentions: this.notificatinService.mentionsObjects
         ? this.notificatinService.commaSepartedMentions(
             this.notificatinService.mentionsObjects
           )
@@ -237,18 +255,19 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       next: (result: comment) => {
         this.toastr.success('Comment Added Successfully');
         console.log(result);
-        this.notificatinService.mentionsObjects = [];
         this.newComment = result;
-        if (this.mentionsArray?.length !== 0) {
+        if (this.notificatinService.mentionsObjects?.length !== 0) {
           this.notificatinService.notificationsSenderEngine(
             result.comment,
             this.notificatinService.mentionsObjects,
             result.id
           );
         }
+        this.form.get('comment')?.reset();
+        this.notificatinService.mentionsObjects = [];
+        this.form.updateValueAndValidity();
       },
     });
-    this.form.reset();
   }
 
   onFilesSelected(filesArray: File[]) {
@@ -262,7 +281,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       sectorName: this.sectorService.getSectorName(),
       year: this.sharedFormService.getForm().value.year,
       quarter: this.sharedFormService.getForm().value.quarter,
-      scorecardTitle: 'Group Business Unit',
+      scorecardTitle: this.kpiObjectSignal().scorecardTitle,
       kpiCode: this.kpiObjectSignal().kpiCode,
       note: 'Test Note',
     };
@@ -276,12 +295,14 @@ export class CommentsFormComponent implements OnInit, OnChanges {
             ...result[index],
           });
         });
+        this.toastr.success('File Uploaded Successfully');
       });
   }
 
   onDeleteFile(index: number, id: number) {
     this.attachmentService.deleteKPIAttachment(id).subscribe(() => {
       this.displayedFiles.splice(index, 1);
+      this.toastr.success('File Deleted Successfully');
     });
   }
 
@@ -293,6 +314,7 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       anchor.download = file.attachmentDisplayName;
       anchor.click();
       window.URL.revokeObjectURL(url);
+      this.toastr.success('File downloaded Successfully');
     });
   }
 }

@@ -4,12 +4,20 @@
       [newComment]="newComment"
       (textAreaOpend)="resetForm()"
     ></stc-apps-replies-section>
-    <stc-apps-comment-editor
+    <!-- <stc-apps-comment-editor
       formControlName="comment"
       [placeholder]="placeholder"
       [mentions]="mentions"
       (contentChange)="onContentChange($event)"
-    ></stc-apps-comment-editor>
+    ></stc-apps-comment-editor> -->
+    <stc-apps-mentions-editor
+      formControlName="comment"
+      [placeholder]="placeholder"
+      [mentions]="mentions"
+      (contentChange)="onContentChange($event)"
+      (deletionEmitter)="deleteMention($event)"
+    ></stc-apps-mentions-editor>
+
     <div class="comments_actions">
       <button [disabled]="form.controls['comment'].hasError('required')">
         Submit

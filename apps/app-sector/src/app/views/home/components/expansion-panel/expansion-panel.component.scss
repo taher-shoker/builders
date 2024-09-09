@@ -23,7 +23,7 @@
   //   //font-size: 20px;
   // }
   stc-apps-expansion-panel-header {
-    margin-right: 20px;
+    margin-right: 10px;
   }
   .mat-expansion-panel {
     background-color: var(--lighterGreyColor) !important;
@@ -35,14 +35,14 @@
     .mat-expansion-panel-header {
       // margin-right: 14px !important;
       min-height: 220px !important;
-      height: 240px;
+      height: auto;
       align-items: start !important;
       padding: 0px 14px;
     }
   }
   .mat-expansion-panel-body {
     padding: 0px !important;
-    margin: 40px 17px 0px 17px !important;
+    margin: 20px 17px 0px 17px !important;
   }
 }
 

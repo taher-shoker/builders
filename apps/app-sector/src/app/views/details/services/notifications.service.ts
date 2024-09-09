@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { environment } from 'apps/app-sector/src/environments/environment';
 import { BehaviorSubject, Observable } from 'rxjs';
 import {
-  comment,
   notificationBody,
   sectorUsersParams,
   user,
@@ -54,7 +53,7 @@ export class NotificationsService {
       if (typeof mention == 'object') {
         mentionsString =
           mentionsString +
-          `${mention.id}|@${mention.name}|${mention.email}|${mention.jobTitle}` +
+          `${mention.id}|${mention.name}|${mention.email}` +
           ',';
       } else if (typeof mention == 'string') {
         mentionsString = mentionsString + mention + ',';
@@ -80,7 +79,11 @@ export class NotificationsService {
       notificationObject
     );
   }
-  notificationsSenderEngine(comment: any, mentionObjects: user[],commentID:number) {
+  notificationsSenderEngine(
+    comment: any,
+    mentionObjects: user[],
+    commentID: number
+  ) {
     const loggedInObj = {
       id: this.loggedUserObject.id,
       name: this.loggedUserObject.name,
@@ -98,9 +101,6 @@ export class NotificationsService {
       next: () => {
         console.log('email.sent');
         this.toastr.success('Email sent to the mentioned users successfully');
-      },
-      error: () => {
-        this.toastr.error('Error occured while sending email');
       },
     });
   }

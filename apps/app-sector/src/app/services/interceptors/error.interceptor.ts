@@ -25,7 +25,6 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
-        const error = err.message;
         if (err.status === 401) {
           if (err.error.status === 'UNAUTHORIZED') {
             // this.router.navigate(['/unauthorized-page']);
@@ -33,21 +32,14 @@ export class ErrorInterceptor implements HttpInterceptor {
             // auto logout if 401 response returned from api
             this.authService.logout();
           }
-        } else if (err.status === 403) {
-          //this.authService.logout();
-          // this.router.navigate(['/unauthorized-page']);
         } else {
           this.toastr.error(
-            err?.error?.debugMessage
-              ? err?.error?.debugMessage
-              : err?.error?.result
-              ? err?.error?.result
-              : err?.error?.message
-              ? err?.error?.message
+            err.error.errorDetailsMessage
+              ? err.error.errorDetailsMessage
               : 'Something went wrong!'
           );
         }
-        return throwError(error);
+        return throwError(err);
       })
     );
   }

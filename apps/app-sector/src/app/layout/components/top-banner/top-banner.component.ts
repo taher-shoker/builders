@@ -18,7 +18,9 @@ import {
   OverallScore,
   OverallScoreParams,
 } from '../../../views/models/overallScore.model';
-
+interface name {
+  name: number;
+}
 @Component({
   selector: 'stc-apps-top-banner',
   templateUrl: './top-banner.component.html',
@@ -33,7 +35,7 @@ export class TopBannerComponent implements OnInit {
   kpiCode = '';
   currentUrl = '';
   form: FormGroup = new FormGroup({});
-
+  dataUploadFlag = false;
   currentDate = new Date();
   currentYear = this.currentDate.getFullYear() - 1;
   currentMonth = this.currentDate.getMonth() + 1; // getMonth() returns 0-based month
@@ -55,10 +57,18 @@ export class TopBannerComponent implements OnInit {
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe(() => {
-        if (this.router.url.includes('/details')) {
+        if (
+          this.router.url.includes('/KPI') ||
+          this.router.url.includes('/kpi-details')
+        ) {
           this.showScorecard = false;
+          this.dataUploadFlag = false;
+        } else if (this.router.url.includes('/data-upload')) {
+          this.showScorecard = false;
+          this.dataUploadFlag = true;
         } else {
           this.showScorecard = true;
+          this.dataUploadFlag = false;
         }
       });
   }
@@ -97,17 +107,17 @@ export class TopBannerComponent implements OnInit {
     this.sharedFormService.initializeForm(initialParams);
   }
   // Years array should contain the current year only
-  yearsArray: any = [
+  yearsArray: name[] = [
     { name: this.currentYear },
     { name: this.currentDate.getFullYear() },
   ];
-  quarterArray: any = [{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }];
-  selectYear(event: any) {
-    console.log(event);
+  quarterArray: name[] = [{ name: 1 }, { name: 2 }, { name: 3 }, { name: 4 }];
+  selectYear(event: number) {
+    console.log(typeof event);
     this.YearQuarterService.setYear(event.toString());
     this.getOverallScore();
   }
-  selectQuarter(event: any) {
+  selectQuarter(event: number) {
     this.YearQuarterService.setQuarter(event.toString());
     this.getOverallScore();
     console.log(event);

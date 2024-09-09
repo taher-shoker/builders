@@ -1,6 +1,28 @@
-.tabs {
-  border-bottom-width: 1px;
-  display: flex;
-  width: 100%;
+@import '../../../styles/variables.scss';
+
+::ng-deep {
+
+  .mat-mdc-tab.mdc-tab--active {
+    background: var(--stc-coral-color) !important;
+
+
+    .mdc-tab__text-label {
+      color: var(--white) !important;
+    }
+  }
+
+  .mat-mdc-tab:not(.mdc-tab--stacked) {
+    background-color: var(--stc-grey-color);
+    color: var(--grey-color);
+  }
+
+  .mat-mdc-tab.mdc-tab {
+    height: auto !important;
+    margin-inline-end: 25px;
+  }
+
+  .mat-mdc-tab-header {
+    padding-inline-start: 0
+  }
 
 }

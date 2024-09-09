@@ -28,9 +28,9 @@ export class UserScoreCardsComponent {
       this.showItemDesc = true;
     }
   }
-  navigate(title: string) {
+  navigate(title: string, id: number) {
     this.sectorService.setSectorName(title);
     this.YearQuarterService.clearYearQuarter();
-    this.router.navigate(['/home']);
+    this.router.navigate(['/sectors', title]);
   }
 }
