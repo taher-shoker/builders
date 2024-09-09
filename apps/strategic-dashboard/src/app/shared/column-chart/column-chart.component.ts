@@ -20,6 +20,8 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() chartData: any[] = [];
   @Input() colors: string[] = [];
+  @Input() unit: string = '';
+
   ngAfterViewInit(): void {
     this.columnChart();
   }
@@ -50,7 +52,29 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
       })
     );
 
-    // eslint-disable-next-line prefer-const
+    const minValue = Math.min(
+      ...this.chartData.map((item) => Math.min(item.Actual, item.Target))
+    );
+    const maxValue = Math.max(
+      ...this.chartData.map((item) => Math.max(item.Actual, item.Target))
+    );
+
+    const padding = (maxValue - minValue) * 0.1;
+    const minY = minValue - padding;
+    const maxY = maxValue + padding;
+
+    const allYears = [...new Set(this.chartData.map((item) => item.year))].sort(
+      (a: any, b: any) => a - b
+    );
+
+    const processedData = allYears.map((year) => {
+      const item = this.chartData.find((data) => data.year === year);
+      return {
+        year: year,
+        Actual: item ? item.Actual : 0,
+        Target: item ? item.Target : 0,
+      };
+    });
 
     // Create axes
     // https://www.amcharts.com/docs/v5/charts/xy-chart/axes/
@@ -74,13 +98,13 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
       location: 1,
     });
 
-    xAxis.data.setAll(this.chartData);
+    xAxis.data.setAll(processedData);
 
     // eslint-disable-next-line prefer-const
     let yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(this.root, {
-        min: 0,
-        max: 100,
+        min: minY,
+        max: maxY,
         renderer: am5xy.AxisRendererY.new(this.root, {
           strokeOpacity: 0.1,
           minGridDistance: 40,
@@ -96,7 +120,6 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
     xRenderer.ticks.template.setAll({
       stroke: am5.color(0x0000),
       visible: true,
-      
     });
     // Add series
     // https://www.amcharts.com/docs/v5/charts/xy-chart/series/
@@ -113,13 +136,13 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
       );
 
       series.columns.template.setAll({
-        tooltipText: '{name}, {categoryX}:{valueY}',
+        tooltipText: `{name}, {categoryX}:{valueY}`,
         width: am5.percent(90),
         tooltipY: 0,
         strokeOpacity: 0,
       });
 
-      series.data.setAll(this.chartData);
+      series.data.setAll(processedData);
 
       // Make stuff animate on load
       // https://www.amcharts.com/docs/v5/concepts/animations/
@@ -148,10 +171,9 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
         cornerRadiusBR: 10,
       });
     };
-    
 
-    makeSeries('Actual (SAR Bn)', 'Actual', this.colors[1]);
-    makeSeries('Target (SAR Bn)', 'Target', this.colors[0]);
+    makeSeries(`Actual ${this.unit}`, 'Actual', this.colors[1]);
+    makeSeries(`Target ${this.unit}`, 'Target', this.colors[0]);
     // Make stuff animate on load
     // https://www.amcharts.com/docs/v5/concepts/animations/
     chart.appear(1000, 100);

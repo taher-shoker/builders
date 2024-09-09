@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { StrategicGroupDetailsService } from './services/strategic-group-details.service';
+import { SharedFormService } from '../../shared/services/shared-form.service';
+import { FormGroup } from '@angular/forms';
+import { YearService } from '../../shared/services/year.service';
+import { StrategicGroupDetails } from 'c:/Users/saraa/projects/stc-apps/apps/strategic-dashboard/src/app/views/details/models/strategic-group-details.model';
 
 @Component({
   selector: 'stc-apps-details',
@@ -8,6 +13,11 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DetailsComponent implements OnInit {
   titleData = window.history.state.title;
+  currentDate = new Date();
+  year = this.currentDate.getFullYear();
+  currentYear = this.currentDate.getFullYear() - 1;
+
+  form: FormGroup = new FormGroup({});
 
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
@@ -21,11 +31,9 @@ export class DetailsComponent implements OnInit {
       urlHome: '/home',
     },
   ];
-  yearsArray: any = [
-    { name: 2020 },
-    { name: 2021 },
-    { name: 2022 },
-    { name: 2023 },
+  yearsArray: any[] = [
+    { name: this.currentYear },
+    { name: this.currentDate.getFullYear() },
   ];
 
   pageTitle = '';
@@ -33,17 +41,17 @@ export class DetailsComponent implements OnInit {
     {
       iconPath: 'assets/images/arrow-up.svg',
       progressDesc: 'Actual performance above target(>=100%)',
-      percantage:'120'
+      percantage: '120',
     },
     {
       iconPath: 'assets/images/arrow-down.svg',
       progressDesc: 'Actual performance below target(>=90% and < 100%)',
-      percantage:'99'
+      percantage: '99',
     },
     {
       iconPath: 'assets/images/arrow-down-delayed.svg',
       progressDesc: 'Actual performance below target(< 96%)',
-      percantage:'80'
+      percantage: '80',
     },
   ];
   cardsInfo = [
@@ -78,7 +86,15 @@ export class DetailsComponent implements OnInit {
       status: 'onHold',
     },
   ];
-  constructor(private activeRoute: ActivatedRoute) {}
+  strategicGroupDetails: StrategicGroupDetails = [];
+
+  constructor(
+    private activeRoute: ActivatedRoute,
+    private yearService: YearService,
+    private sharedFormService: SharedFormService,
+    private strategicGroupDetailsService: StrategicGroupDetailsService
+  ) {}
+
   ngOnInit(): void {
     this.activeRoute.paramMap.subscribe((paramMap) => {
       if (paramMap) {
@@ -86,5 +102,41 @@ export class DetailsComponent implements OnInit {
         console.log(this.pageTitle);
       }
     });
+    this.handleForm();
+    this.getAllStrategicGroupKpiDetails();
+  }
+
+  handleForm() {
+    this.form = this.sharedFormService.getForm();
+
+    if (this.yearService.getSelectedYear()) {
+      this.year = +this.yearService.getSelectedYear()!;
+    } else {
+      this.year = this.currentDate.getFullYear();
+    }
+
+    const initialParams = {
+      year: this.year,
+    };
+
+    this.sharedFormService.initializeForm(initialParams);
+  }
+
+  getAllStrategicGroupKpiDetails() {
+    this.activeRoute.queryParams.subscribe((params) => {
+      const strategicName = params['strategicName'];
+      const year = this.sharedFormService.getForm().controls['year'].value;
+
+      this.strategicGroupDetailsService
+        .getAllStrategicGroupKpiDetails({ strategicName, year })
+        .subscribe((result: StrategicGroupDetails) => {
+          this.strategicGroupDetails = result;
+        });
+    });
+  }
+
+  selectYear(event: number) {
+    this.yearService.setYear(event.toString());
+    this.getAllStrategicGroupKpiDetails();
   }
 }

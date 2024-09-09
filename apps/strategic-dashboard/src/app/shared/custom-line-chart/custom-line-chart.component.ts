@@ -51,16 +51,6 @@ export class CustomLineChartComponent
       this.multiChartData = changes['multiChartData'].currentValue;
       this.lineChart();
     }
-
-    if (changes['targetData'] && !changes['targetData'].firstChange) {
-      this.targetData = changes['targetData'].currentValue;
-      this.lineChart();
-    }
-
-    if (changes['target2Data'] && !changes['target2Data'].firstChange) {
-      this.target2Data = changes['target2Data'].currentValue;
-      this.lineChart();
-    }
   }
 
   ngOnInit() {
@@ -111,6 +101,31 @@ export class CustomLineChartComponent
     });
     chart.get('colors')?.set('colors', allColors);
 
+    let minValue = Infinity;
+    let maxValue = -Infinity;
+
+    const allData = [...this.multiChartData.map((s) => s.data)];
+
+    allData.forEach((dataSeries) => {
+      dataSeries.forEach((item: LineChartData) => {
+        if (item.value !== null && item.value !== undefined) {
+          const value =
+            typeof item.value === 'string'
+              ? parseFloat(item.value)
+              : item.value;
+          if (value < minValue) {
+            minValue = value;
+          }
+          if (value > maxValue) {
+            maxValue = value;
+          }
+        }
+      });
+    });
+    const padding = (maxValue - minValue) * 0.1;
+    const yMin = minValue - padding;
+    const yMax = maxValue + padding;
+
     const xAxis = chart.xAxes.push(
       am5xy.DateAxis.new(this.root, {
         maxDeviation: 0.5,
@@ -132,9 +147,9 @@ export class CustomLineChartComponent
 
     const yAxis = chart.yAxes.push(
       am5xy.ValueAxis.new(this.root, {
-        min: 0,
-        max: 100,
-        maxDeviation: 0.1,
+        min: yMin,
+        max: yMax,
+        // maxDeviation: 0.1,
         renderer: am5xy.AxisRendererY.new(this.root, {}),
         tooltip: am5.Tooltip.new(this.root, {}),
       })

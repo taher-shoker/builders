@@ -26,14 +26,15 @@
 
 <ng-template #lineChart>
   <stc-apps-custom-line-chart
-    [multiChartData]="chartData"
+    [multiChartData]="lineChartData()"
     [trendModuleState]="true"
     [colors]="lineChartColors"
   ></stc-apps-custom-line-chart>
 </ng-template>
 <ng-template #columnChart>
   <stc-apps-column-chart
-    [chartData]="columnChartData"
+    [chartData]="columnChartData()"
     [colors]="lineChartColors"
+    [unit]="unit()"
   ></stc-apps-column-chart>
 </ng-template>

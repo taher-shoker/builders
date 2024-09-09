@@ -1,19 +1,24 @@
 <div class="details-page">
   <div class="details-page_title">
     <h3>{{ titleData }}</h3>
-    <div class="filter">
+    <div class="filter" [formGroup]="form">
       <p>Select FY Year</p>
       <stc-apps-select-drop-down
+        formControlName="year"
         [label]="''"
         [options]="yearsArray"
         [outputValue]="'name'"
+        [(ngModel)]="year"
+        (selectChange)="selectYear($event)"
       ></stc-apps-select-drop-down>
     </div>
   </div>
   <div class="details-page_progressHolder">
     @for(progress of progressInfo; track progress; let index=$index){
     <div class="details-page_progress-overview">
-     <stc-apps-progress-percentage [percentage]="progress.percantage"></stc-apps-progress-percentage>
+      <stc-apps-progress-percentage
+        [percentage]="progress.percantage"
+      ></stc-apps-progress-percentage>
       <p>{{ progress.progressDesc }}</p>
     </div>
     }
@@ -43,9 +48,12 @@
   </div>
 </div>
 <div class="details-page_charts row row-gap-3">
-  @for (item of cardsInfo; track $index) {
+  @for (item of strategicGroupDetails; track item) {
   <div class="details-page_charts_item col-lg-6 col-md-12 col-sm-12">
-    <stc-apps-chart-card [title]="item.title"></stc-apps-chart-card>
+    <stc-apps-chart-card
+      [title]="item.name"
+      [strategicGroup]="item"
+    ></stc-apps-chart-card>
   </div>
   }
 </div>
