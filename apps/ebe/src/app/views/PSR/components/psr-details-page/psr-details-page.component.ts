@@ -127,6 +127,9 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         this.getProjectDetails(this.groupName);
         this.toastr.success("The File is Saved Successfully");
         this.visible = false;
+      },
+      error : () => {
+        this.visible = false;
       }
     })
   }

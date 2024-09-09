@@ -43,6 +43,12 @@ export class PSRComponent implements OnInit , OnDestroy {
         {
           this.child.visible = false;
         }
+      },
+      error : () => {
+        if(this.child)
+          {
+            this.child.visible = false;
+          }
       }
     })
   }
