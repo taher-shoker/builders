@@ -6,12 +6,12 @@
       [kpiStatus]="projectData().kpiOwner!"
       [kpiType]="'owner-name'"
     />
-    } @if(projectData() && projectData().vendor) {
+    }
     <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().vendor!"
-      [kpiType]="'not-achieved'"
+      [kpiStatus]="projectData().vendor"
+      [kpiType]="'vendor'"
     />
-    } @if(projectData() && projectData().kpiStatus) {
+     @if(projectData() && projectData().kpiStatus) {
     <stc-apps-kpi-status-card
       [kpiStatus]="projectData().kpiStatus!"
       [kpiType]="'status'"

@@ -9,6 +9,7 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PSRService } from '../../../../services/psr.services';
 import { UserGroup } from '../../../../models/scorecard.model';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
@@ -25,6 +26,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
   data!:ProgressInfo;
+  toastr = inject(ToastrService);
   showPopover = false;
   tableHeader!:ColumnsSchema[];
   months = ['Jan' , 'Feb' , 'Mar' , 'Apr' , 'May' , 'Jun' , 'Jul' , 'Aug' , 'Sep' , 'Oct' , 'Nov' , 'Dec'];
@@ -131,6 +133,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     } else {
       this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
         next : (res) => {
+          this.toastr.success("The record is deleted Successfully");
           this.newData.chartDetails = res;
           this.projectData().chartDetails = res;
           this.isEditMode = false;
@@ -229,6 +232,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     }
     this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
       next : (res) => {
+        this.toastr.success("The table is updated Successfully");
         this.newData.chartDetails = res;
         this.projectData().chartDetails = res;
         this.isEditMode = false;

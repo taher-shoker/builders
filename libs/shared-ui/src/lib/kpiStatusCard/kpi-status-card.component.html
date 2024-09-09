@@ -1,6 +1,6 @@
 <div
   [class.achieved]="kpiType() === 'achieved' || kpiType() === 'domain'"
-  [class.not-achieved]="kpiType() === 'not-achieved'"
+  [class.not-achieved]="kpiType() === 'not-achieved' || kpiType() === 'vendor'"
   [class.actual]="kpiType() === 'actual' || kpiType() === 'owner-name'"
   [class.weight]="kpiType() === 'weight'"
   [class.in-progress]="kpiType() === 'in-progress'"
@@ -17,8 +17,12 @@
   @if(kpiType() === 'weight'){
     weight : {{kpiStatus()}}%
   }
-  @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved' || kpiType() === 'owner-name' || kpiType() === 'status'){
+  @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved' || kpiType() === 'vendor' || kpiType() === 'owner-name' || kpiType() === 'status'){
     {{kpiStatus()}}
+    @if(kpiType() === 'vendor' && !kpiStatus())
+    {
+      N/A
+    }
   }
   @if(kpiType() === 'domain'){
     @if(domainIndicator())

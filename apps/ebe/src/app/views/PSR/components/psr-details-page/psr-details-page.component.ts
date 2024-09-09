@@ -32,6 +32,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   username = "";
   userRoles!:UserGroup;
   ngOnInit(): void {
+    // this.toastr.success("The File is Saved Successfully");
     this.username = this.scorecardService.getUsername();
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
