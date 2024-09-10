@@ -9,7 +9,7 @@ export class StrategyProgramService {
   getStrategyProgramSummary():Observable<StrategyProgramModel>
   {
     return this.http.get<StrategyProgramModel>(
-      `${environment.apiUrl}/business-excellence/cadstrategyprograms/summary`
+      `${environment.apiUrl}/business-excellence/cad/summary`
     ); 
   }
   private strategyProgramKpiDetailsModel:StrategyProgramKpiDetailsModel[] = [
