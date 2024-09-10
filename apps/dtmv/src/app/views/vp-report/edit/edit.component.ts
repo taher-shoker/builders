@@ -327,7 +327,9 @@ export class EditComponent implements OnInit {
   }
 
   private getAllTeams() {
-    this.allTeams = this.milestonesService.setUserTeams();
+    this.milestonesService.setUserTeams().subscribe((res) => {
+      this.allTeams = res;
+    });
     this.watchRoute();
   }
 

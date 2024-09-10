@@ -133,7 +133,7 @@ export class MilestonesComponent
   ];
   monthsArr: any = [];
   yearsArr: any = [];
-  allTeams: any;
+  allTeams: any = [];
 
   ngOnInit() {
     this.getMilestones();
@@ -244,8 +244,10 @@ export class MilestonesComponent
   }
 
   getAllTeams() {
-    this.allTeams = this.milestonesService.setUserTeams();
-    if (this.allTeams.length === 0) {
+    this.milestonesService.setUserTeams().subscribe((res) => {
+      this.allTeams = res;
+    });
+    if (this.allTeams?.length === 0) {
       this.milestonesService.setSystemTeams().subscribe((res) => {
         this.allTeams = res;
       });

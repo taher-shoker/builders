@@ -173,7 +173,7 @@ export interface Requests extends PaginatedRecords {
     lastModifiedDate: Date;
     remainingSteps: number;
     flowId: number;
-    reportSlaDuration: number | string
+    reportSlaDuration: number | string;
   }[];
 }
 
@@ -197,16 +197,9 @@ export class ReportsService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  currentTeam: {
-    id: number;
-    name: string;
-    systemDto: { id: number; name: string };
-  };
   remindersItems: Reminders[] = [];
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.currentTeam = this.setUserTeams();
-  }
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   isProcessAdmin!: boolean;
 
@@ -242,10 +235,7 @@ export class ReportsService {
       }
     );
   }
-  setUserTeams() {
-    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    return user.teams;
-  }
+
   getReportUsersType(): Group[] {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.userGroups;

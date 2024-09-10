@@ -96,7 +96,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   ];
   monthsArr: any = [];
   yearsArr: any = [];
-  allTeams: any;
   columnsSchema?: ColumnsSchema[] = undefined;
 
   ngOnInit() {
@@ -107,7 +106,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.searchForm();
     this.dialogService.modals = [];
-    this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
     this.handleDeleteFilter();
@@ -192,15 +190,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.reportsTotalCount = res.totalElements;
 
     this.tableData = res.content;
-  }
-
-  getAllTeams() {
-    this.allTeams = this.reportsService.setUserTeams();
-    if (this.allTeams.length === 0) {
-      this.reportsService.setSystemTeams().subscribe((res) => {
-        this.allTeams = res;
-      });
-    }
   }
 
   detailsNavigate(item: PendingTask) {
