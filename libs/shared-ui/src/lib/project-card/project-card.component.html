@@ -1,5 +1,15 @@
 <div class="project-card mt-4">
-  <p class = "project-card-title">{{projectData().title}}</p>
+  <div class="project-card-header">
+    <p class = "project-card-header-title">{{projectData().title}}</p>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon >more_vert</mat-icon>
+      <!-- <i class="pi pi-ellipsis-v"></i> -->
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item>Item 1</button>
+      <button mat-menu-item>Item 2</button>
+    </mat-menu>
+  </div>
   <div>
     <div class="project-card-bar">
       <stc-apps-progress-bar

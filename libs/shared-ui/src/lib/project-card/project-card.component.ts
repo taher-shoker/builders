@@ -32,7 +32,7 @@ export class ProjectCardComponent implements OnInit{
           caption: 'Actual',
           value: this.projectData().actualValue,
           position: 'up',
-          actualBarColor:"#000000",
+          actualBarColor:"#009F71",
         },
         {
           caption: `Planned`,

@@ -5,15 +5,21 @@
   border-radius:10px;
   text-align: left;
   padding:15px;
-  &-title
+  &-header
   {
-    margin: 0;
-    @extend .stcFont;
-    color: #4F008C;
-    text-transform: capitalize;
-    font-weight: 500;
-    font-size: 16px;
-    text-decoration: underline;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &-title
+    {
+      margin: 0;
+      @extend .stcFont;
+      color: #4F008C;
+      text-transform: capitalize;
+      font-weight: 500;
+      font-size: 16px;
+      text-decoration: underline;
+    }
   }
   &-bar
   {

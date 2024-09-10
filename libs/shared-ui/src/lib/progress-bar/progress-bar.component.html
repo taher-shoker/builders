@@ -57,7 +57,9 @@
             >
             <span
               class="index-info pointer"
+              [class.project-actual-bar-line]="(isProject()) && index.caption === 'Actual'"
               [class.actual-bar-line]="(isProject() || isPSRProject()) && index.caption === 'Actual'"
+              [class.project-planned-bar-line]="(isProject()) && index.caption === 'Planned'"
               [class.planned-bar-line]="(isProject() || isPSRProject()) && index.caption === 'Planned'"
               [ngStyle]="{
                 top: index.position === 'down' ? '0' : '',

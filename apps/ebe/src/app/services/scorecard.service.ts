@@ -22,21 +22,21 @@ export class ScorecardService {
       name: 'scorecard',
       url: '/scorecard',
     },
-    // {
-    //   id: 2,
-    //   name: 'CAD strategy program',
-    //   url: '/strategy-program',
-    // },
+    {
+      id: 2,
+      name: 'CAD strategy program',
+      url: '/strategy-program',
+    },
     // {
     //   id: 3,
     //   name: 'raqami',
     //   url: '/raqami',
     // },
-    // {
-    //   id: 4,
-    //   name: 'PSR',
-    //   url: '/psr',
-    // },
+    {
+      id: 4,
+      name: 'PSR',
+      url: '/psr',
+    },
   ];
   getCurrentSystem(): string {
     return JSON.parse(this.cookieService.get('granted-systems') || '')[0];

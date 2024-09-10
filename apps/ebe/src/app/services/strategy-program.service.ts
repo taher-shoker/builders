@@ -24,7 +24,7 @@ export class StrategyProgramService {
           id:1,
           title : "ML-Ops activation plan maturity level",
           actualValue : 10,
-          plannedValue : 60,
+          plannedValue : 12,
           progressValue : 20
         },
         {

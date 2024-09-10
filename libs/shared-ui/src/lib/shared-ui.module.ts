@@ -12,9 +12,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LngSelectorModule } from '@stc-apps/lng-selector';
 import { ModeToggleModule } from '@stc-apps/mode-toggle';
-import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 
 import { ButtonComponent } from './button/button.component';
 import { HeaderComponent } from './header/header.component';
@@ -44,7 +47,6 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
 import { CounterCardComponent } from './counter-card/counter-card.component';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
-import { MatMenuModule } from '@angular/material/menu';
 import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SortableTableDirective } from './sorter/sorter.directive';
@@ -73,6 +75,7 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TruncateWordPipe } from './truncateWord.pipe';
+
 const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
@@ -154,7 +157,9 @@ const components = [
     DateAgoPipe,
     NgCircleProgressModule.forRoot(),
     TabViewModule,
-    OverlayPanelModule
+    OverlayPanelModule,
+    MatIconModule,
+    MatButtonModule
   ],
 })
 export class SharedUiModule {}
