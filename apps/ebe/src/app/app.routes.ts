@@ -12,20 +12,20 @@ export const appRoutes: Route[] = [
         (m) => m.ScorecardComponent
       ),
   },
-  {
-    path : "strategy-program",
-    loadComponent: () =>
-      import('./views/strategyProgram/strategyProgram.component').then(
-        (m) => m.StrategyProgramComponent
-      ),
-  },
-  {
-    path : "strategy-program/:kpiId",
-    loadComponent: () =>
-      import('./views/strategyProgram/components/kpi-details/kpi-details.component').then(
-        (m) => m.KpiDetailsComponentTsComponent
-      ),
-  },
+  // {
+  //   path : "strategy-program",
+  //   loadComponent: () =>
+  //     import('./views/strategyProgram/strategyProgram.component').then(
+  //       (m) => m.StrategyProgramComponent
+  //     ),
+  // },
+  // {
+  //   path : "strategy-program/:kpiId",
+  //   loadComponent: () =>
+  //     import('./views/strategyProgram/components/kpi-details/kpi-details.component').then(
+  //       (m) => m.KpiDetailsComponentTsComponent
+  //     ),
+  // },
   // {
   //   path : "raqami",
   //   loadComponent: () =>
@@ -33,18 +33,18 @@ export const appRoutes: Route[] = [
   //       (m) => m.RaqamiComponent
   //     ),
   // },
-  {
-    path : "psr",
-    loadComponent: () =>
-      import('./views/PSR/PSR.component').then(
-        (m) => m.PSRComponent
-    )
-  },
-    {
-    path : "psr/:id",
-    loadComponent: () =>
-      import('./views/PSR/components/psr-details-page/psr-details-page.component').then(
-        (m) => m.PsrDetailsPageComponent
-      ),
-  },
+  // {
+  //   path : "psr",
+  //   loadComponent: () =>
+  //     import('./views/PSR/PSR.component').then(
+  //       (m) => m.PSRComponent
+  //   )
+  // },
+  //   {
+  //   path : "psr/:id",
+  //   loadComponent: () =>
+  //     import('./views/PSR/components/psr-details-page/psr-details-page.component').then(
+  //       (m) => m.PsrDetailsPageComponent
+  //     ),
+  // },
 ];
