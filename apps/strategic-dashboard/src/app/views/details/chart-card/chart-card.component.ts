@@ -43,25 +43,44 @@ export class ChartCardComponent implements OnInit {
     let processedData: { name: string; data: LineChartData[] }[] = [];
 
     if (strategicGroupData && Array.isArray(strategicGroupData.values)) {
-      const sortedValues = strategicGroupData.values.sort(
-        (a: any, b: any) => a.year - b.year
+      const groupedData = strategicGroupData.values.reduce(
+        (
+          acc: { [key: number]: { target: number[]; actualValue: number[] } },
+          value: any
+        ) => {
+          if (!acc[value.year]) {
+            acc[value.year] = { target: [], actualValue: [] };
+          }
+          acc[value.year].target.push(value.target || 0);
+          acc[value.year].actualValue.push(value.actualValue || 0);
+          return acc;
+        },
+        {}
       );
 
       const targetSeries: LineChartData[] = [];
       const actualSeries: LineChartData[] = [];
 
-      sortedValues.forEach((value: any, index: number) => {
-        const dateCategory = new Date(value.year, index, 1);
+      Object.keys(groupedData).forEach((yearStr: string) => {
+        const year = parseInt(yearStr);
+        const targetValues = groupedData[year].target;
+        const actualValues = groupedData[year].actualValue;
 
-        targetSeries.push({
-          category: dateCategory,
-          value: value.target,
-        });
+        if (targetValues.length > 0 || actualValues.length > 0) {
+          targetValues.forEach((targetValue: any) => {
+            targetSeries.push({
+              category: new Date(year, 0, 1),
+              value: targetValue,
+            });
+          });
 
-        actualSeries.push({
-          category: dateCategory,
-          value: value.actualValue,
-        });
+          actualValues.forEach((actualValue: any) => {
+            actualSeries.push({
+              category: new Date(year, 0, 1),
+              value: actualValue,
+            });
+          });
+        }
       });
 
       processedData = [
