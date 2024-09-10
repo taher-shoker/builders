@@ -15,6 +15,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 export class PSRProjectCardComponent implements OnChanges {
   maxTextLength = 0;
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
+  @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
   project:InputSignal<PSRDataModel> = input.required<PSRDataModel>();
   colors:string[] = ['#4F008C' , '#B999D1'];
   chartData!:PSRChartDataModel;
@@ -31,5 +32,9 @@ export class PSRProjectCardComponent implements OnChanges {
   displayDrilldown()
   {
     this.overlayPanel.toggle(event);
+  }
+  displayDrilldown2()
+  {
+    this.overlayPanel2.toggle(event);
   }
 }

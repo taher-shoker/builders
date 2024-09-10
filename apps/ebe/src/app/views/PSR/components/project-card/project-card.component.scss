@@ -5,9 +5,13 @@
   border-radius: 10px;
   padding: 20px 0;
   &-header {
-    font-size: 30px;
+    font-size: 28px;
+    padding:0 15px;
     @extend .boldPoppins;
     color: var(--stc-dark-grey-color);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   &-description {
     color: var(--stc-grey-dark-color);
@@ -44,6 +48,7 @@
   font-size: 16px;
   max-width: 400px;
   word-spacing: 3px;
+  word-break: break-all;
 }
 .read-more {
   font-size: 14px;
@@ -52,4 +57,8 @@
   color: #222222;
   text-decoration: none;
   text-transform: capitalize;
+}
+::ng-deep .p-overlaypanel
+{
+  margin-left:15px  !important;
 }

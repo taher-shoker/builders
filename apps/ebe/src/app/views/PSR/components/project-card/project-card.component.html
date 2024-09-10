@@ -1,5 +1,8 @@
 <section class="project-container">
-  <p class="project-container-header">
+  <p class="project-container-header"
+  (mouseenter)="overlayPanel2.show($event)" 
+  (mouseleave)="overlayPanel2.hide()"
+  >
     {{ project().group | uppercase }}
   </p>
   <div class="project-container-chart mt-5">
@@ -36,5 +39,11 @@
 {
   <p-overlayPanel #overlayPanel dismissable="true">
     <section class="popover-section">{{project().details}}</section>
+  </p-overlayPanel>
+}
+@if(project().group.length > 20)
+{
+  <p-overlayPanel #overlayPanel2 dismissable="true">
+    <section class="popover-section">{{project().group | uppercase}}</section>
   </p-overlayPanel>
 }
