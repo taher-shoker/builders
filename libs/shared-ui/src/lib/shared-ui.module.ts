@@ -153,13 +153,13 @@ const components = [
     MatExpansionModule,
     TranslateModule,
     MatProgressSpinnerModule,
-    MatMenuModule,
     DateAgoPipe,
     NgCircleProgressModule.forRoot(),
     TabViewModule,
     OverlayPanelModule,
+    MatMenuModule,
     MatIconModule,
-    MatButtonModule
+    MatButtonModule,
   ],
 })
 export class SharedUiModule {}
