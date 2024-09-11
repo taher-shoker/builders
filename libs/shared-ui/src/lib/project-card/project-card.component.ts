@@ -1,4 +1,4 @@
-import { Component, input, InputSignal, OnInit } from '@angular/core';
+import { Component, EventEmitter, input, InputSignal, OnInit, Output } from '@angular/core';
 import { ProgressInfo } from '../progress-bar/progress-bar.component';
 export interface KpiProjectsDetailsModel
 {
@@ -17,6 +17,8 @@ export interface KpiProjectsDetailsModel
 export class ProjectCardComponent implements OnInit{
   projectData:InputSignal<KpiProjectsDetailsModel> = input.required<KpiProjectsDetailsModel>();
   data!:ProgressInfo;
+  @Output() edit:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
+  @Output() delete:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
   ngOnInit()
   {
     this.data = {
@@ -42,5 +44,13 @@ export class ProjectCardComponent implements OnInit{
         },
       ],
     };
+  }
+  editProject()
+  {
+    this.edit.emit(this.projectData())    
+  }
+  deleteProject()
+  {
+    this.delete.emit(this.projectData())      
   }
 }

@@ -63,6 +63,8 @@
                     <div class="col-lg-4 col-md-6 col-sm-12">
                       <stc-apps-project-card
                         [projectData]="project"
+                        (edit)="editProject($event)"
+                        (delete)="deleteProject($event)"
                       />
                     </div>
                   }
@@ -80,15 +82,13 @@
     </p-accordion>
   </div>
 </section>
-<p-dialog
+<!-- <p-dialog
   [modal]="true"
   [(visible)]="visible"
   [style]="{ width: '35rem' }"
   [draggable]="false"
   [dismissableMask]="true"
   >
-  <!-- (onHide)="hideDialog()"
-  (onShow)="showDialog2()" -->
   <ng-template pTemplate="header">
     <div class="modal-header">
       add project
@@ -98,7 +98,21 @@
   {
     <stc-apps-add-project-form [modalVisible]="visible" (closeModal)="visible = false" />
   }
-  <!-- <ng-template pTemplate="footer">
-    
-  </ng-template> -->
-</p-dialog>
+</p-dialog> -->
+<stc-apps-confirm-dialog [key]="'delete-project'">
+  <div class="dialog-container">
+    <img src="assets/images/close-circle.svg" alt="" />
+    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-content">
+      Are you sure you want to <br />
+      delete this project?
+    </p>
+    <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="deleteProjectItem()">yes. delete</button>
+      <button (click)="close()" class="cancel">cancel</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>

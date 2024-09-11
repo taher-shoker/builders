@@ -44,5 +44,29 @@
   .mat-mdc-menu-content
   {
     padding: 0 !important;
+    .mat-mdc-menu-item-text
+    {
+      display: flex;
+      align-items: center;
+      gap:10px;
+      span
+      {
+        text-transform: capitalize;
+        @extend .stcFont;
+        font-size: 17px;
+        &.edit-btn
+        {
+          color:#4F008C !important;
+        }
+        &.delete-btn
+        {
+          color:#FF1A1A !important;
+        }
+      }
+      img
+      {
+        width:15px;
+      }
+    }
   }
 }

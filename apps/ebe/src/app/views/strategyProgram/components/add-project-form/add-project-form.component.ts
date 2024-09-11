@@ -1,33 +1,48 @@
-import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
+import { Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
-  imports: [CommonModule , ReactiveFormsModule],
+  imports: [CommonModule , ReactiveFormsModule , PageHeaderComponent],
   templateUrl: './add-project-form.component.html',
   styleUrl: './add-project-form.component.scss',
 })
-export class AddProjectFormComponent implements OnInit , OnChanges {
+export class AddProjectFormComponent implements OnInit , OnChanges{
   formBuilder = inject(FormBuilder);
   addProjectForm!:FormGroup;
   textLength = 0;
+  private router = inject(Router);
   modalVisible:InputSignal<boolean> = input.required<boolean>()
   @Output() closeModal:EventEmitter<boolean> = new EventEmitter<boolean>()
   ngOnInit(): void {
     this.addProjectForm = this.formBuilder.group({
+      projects : this.formBuilder.array([])
+    })
+    
+    this.projectsList.push(this.createProjectFormGroup());
+  }
+  createProjectFormGroup(): FormGroup {
+    return this.formBuilder.group({
       projectName : [null , [Validators.required , this.noSpacesValidator , Validators.maxLength(50)]],
       actualValue : [null , [Validators.required , this.noSpacesValidator , this.rangeValidator]],
       plannedValue : [null , [Validators.required , this.noSpacesValidator , this.rangeValidator]],
-      // totalInvestment : [null , [Validators.required , this.rangeValidator]],
-      // description : [null , Validators.maxLength(200)]
-    })
+    });
+  }
+  get projectsList():FormArray
+  {
+    return this.addProjectForm.get("projects") as FormArray;
+  }
+  hasErrors(): boolean {
+    return this.projectsList.controls.some(control => control.invalid);
   }
   ngOnChanges(): void {
     if(!this.modalVisible())
     {
       this.addProjectForm.reset();
-      this.progectNameValue?.reset()
+      // this.progectNameValue?.reset()
       this.textLength = 0;
     }
   }
@@ -55,12 +70,8 @@ export class AddProjectFormComponent implements OnInit , OnChanges {
   {
     if(this.addProjectForm.valid)
     {
-      const data = {
-        projectName : this.addProjectForm.value.projectName.trim(),
-        actualValue : +this.addProjectForm.value.actualValue,
-        plannedValue : +this.addProjectForm.value.plannedValue
-      }
-      console.log(data);
+      const projectArr = this.addProjectForm.value.projects;
+      console.log(projectArr);
     }
   }
   getValue(e:string)
@@ -70,16 +81,16 @@ export class AddProjectFormComponent implements OnInit , OnChanges {
       this.textLength = e.length;
     }
   }
-  get progectNameValue()
+  closeForm()
   {
-    return this.addProjectForm.get("projectName")
+    this.router.navigateByUrl("/strategy-program")
   }
-  get actualValue()
+  addNewProjectForm()
   {
-    return this.addProjectForm.get("actualValue")
+    this.projectsList.push(this.createProjectFormGroup());
   }
-  get plannedValue()
+  deleteForm(index:number)
   {
-    return this.addProjectForm.get("plannedValue")
+    this.projectsList.removeAt(index);
   }
 }

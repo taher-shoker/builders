@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { StrategyProgramService } from '../../services/strategy-program.service';
@@ -9,6 +9,7 @@ import { ScorecardService } from '../../services/scorecard.service';
 import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { DialogModalComponent } from '../../components/dialog/dialog.component';
 import { FileModel } from '../../models/scorecard.model';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-strategy-program',
@@ -24,11 +25,12 @@ import { FileModel } from '../../models/scorecard.model';
   templateUrl: './strategyProgram.component.html',
   styleUrl: './strategyProgram.component.scss',
 })
-export class StrategyProgramComponent implements OnInit {
+export class StrategyProgramComponent implements OnInit , OnDestroy {
   strategyProgramService = inject(StrategyProgramService);
   strategyProgramData!: StrategyProgramModel;
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService);
+  endSubs$:Subject<boolean> = new Subject();
   ngOnInit() {
     // this.strategyProgramData = [];
     this.getStrategyProgramSummary();
@@ -39,8 +41,11 @@ export class StrategyProgramComponent implements OnInit {
     });
   }
   isEmptyData!: boolean;
+  ngOnDestroy(): void {
+    this.endSubs$.complete();
+  }
   private getStrategyProgramSummary() {
-    this.strategyProgramService.getStrategyProgramSummary().subscribe({
+    this.strategyProgramService.getStrategyProgramSummary().pipe(takeUntil(this.endSubs$)).subscribe({
       next: (res: StrategyProgramModel) => {
         this.strategyProgramData = res;
         if (this.strategyProgramData.cadStrategyProgramDTO.length === 0) {

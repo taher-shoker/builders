@@ -6,13 +6,13 @@
       <!-- <mat-icon >more_vert</mat-icon> -->
     </button>
     <mat-menu #menu="matMenu" class = "edit-delete-project">
-      <button mat-menu-item>
+      <button mat-menu-item (click)="editProject()">
         <img src="assets/images/edit-project.svg" alt="">
-        <span>edit</span>
+        <span class = "edit-btn">edit</span>
       </button>
-      <button mat-menu-item>
+      <button mat-menu-item (click)="deleteProject()">
         <img src="assets/images/delete-project.svg" alt="">
-        <span>delete</span>
+        <span class = "delete-btn">delete</span>
       </button>
     </mat-menu>
   </div>

@@ -1,15 +1,22 @@
 import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { StrategyProgramService } from '../../../../services/strategy-program.service';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
-import { AddProjectFormComponent } from '../add-project-form/add-project-form.component';
-
+import { ConfirmationService } from 'primeng/api';
+export interface KpiProjectsDetailsModel
+{
+  id:number;
+  title:string;
+  actualValue:number;
+  plannedValue:number;
+  progressValue:number;
+}
 @Component({
   selector: 'stc-apps-kpi-details.component.ts',
   standalone: true,
@@ -20,17 +27,19 @@ import { AddProjectFormComponent } from '../add-project-form/add-project-form.co
     SharedUiModule,
     ButtonModule,
     DialogModule,
-    AddProjectFormComponent,
+    RouterModule
   ],
+  providers : [ConfirmationService],
   templateUrl: './kpi-details.component.html',
   styleUrl: './kpi-details.component.scss',
 })
 export class KpiDetailsComponentTsComponent implements OnInit {
-  @ViewChild(AddProjectFormComponent) child?: AddProjectFormComponent;
   currentId = 0;
   activatedRoute = inject(ActivatedRoute);
   strategyProgramService = inject(StrategyProgramService);
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
+  private confirmationService = inject(ConfirmationService);
+  constructor(private router:Router){}
   ngOnInit(): void {
     this.StrategyProgramData =
       this.strategyProgramService.getStrategyProgramKpiDetailsModel();
@@ -40,7 +49,6 @@ export class KpiDetailsComponentTsComponent implements OnInit {
       },
     });
   }
-  visible!: boolean;
   isTapOpened!: boolean;
   currentTabIndex!: number;
   getCurrentIndex(index: boolean) {
@@ -51,6 +59,27 @@ export class KpiDetailsComponentTsComponent implements OnInit {
     this.currentTabIndex = typeof index === 'number' ? index : 0;
   }
   showForm() {
-    this.visible = true;
+    this.router.navigateByUrl('/strategy-project-form');
+  }
+  editProject(project:KpiProjectsDetailsModel)
+  {
+    console.log(project);
+  }
+  deletedProject!:KpiProjectsDetailsModel;
+  deleteProject(project:KpiProjectsDetailsModel)
+  {
+    this.deletedProject = project;
+    this.confirmationService.confirm({
+      key: 'delete-project'
+    });
+  }
+  close()
+  {
+    this.confirmationService.close()
+  }
+  deleteProjectItem()
+  {
+    console.log(this.deletedProject);
+    this.close();
   }
 }

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import * as moment from 'moment';
+import moment from 'moment';
 import { YearRangeObj, YearObj } from '../date-picker-weekly/date-picker-weekly.component';
 import { LanguageManagerService } from '@stc-apps/lng-selector';
 
@@ -13,7 +13,7 @@ import { LanguageManagerService } from '@stc-apps/lng-selector';
 export class DatePickerWeeklyRangeComponent implements OnInit{
 
   @Output() dateRange: EventEmitter<YearRangeObj> = new EventEmitter<YearRangeObj>();
-  @Input() formControlParentalState: FormControl = new FormControl(moment); // Variable to receive Form control from parent to maintain the last date user has inserted
+  @Input() formControlParentalState: FormControl = new FormControl(moment()); // Variable to receive Form control from parent to maintain the last date user has inserted
 
   isFirst: boolean = true;
   showCalendar: boolean = false;
