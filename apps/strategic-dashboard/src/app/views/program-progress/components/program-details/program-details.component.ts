@@ -1,13 +1,31 @@
 import { Component, input, InputSignal, OnInit } from '@angular/core';
+import { ProgramKPIService } from '../../services/program-kpi.service';
+import { ActivatedRoute } from '@angular/router';
+import { ProgramKPIDetails } from '../../models/program-kpi-details.model';
+import { ProgramKPI } from '../../models/program-kpi.model';
 
 @Component({
   selector: 'stc-apps-program-details',
   templateUrl: './program-details.component.html',
   styleUrls: ['./program-details.component.scss'],
 })
-export class ProgramDetailsComponent {
+export class ProgramDetailsComponent implements OnInit {
   title: InputSignal<string> = input('Business efficiency program');
   programData = window.history.state.program;
+  programName: string = '';
+  programDetails: ProgramKPIDetails[] = [];
+  programsKPIs: ProgramKPI[] = [];
+  constructor(
+    private route: ActivatedRoute,
+    private programKPIService: ProgramKPIService
+  ) {}
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.programName = params['programName'];
+
+      this.getAllProgramsKPIs();
+    });
+  }
 
   yearsArray: any = [
     { name: 2020 },
@@ -57,4 +75,12 @@ export class ProgramDetailsComponent {
         '% of analytics capabilities implemented in alignment with northstar to-be architecture analytics roadmap',
     },
   ];
+
+  getAllProgramsKPIs() {
+    this.programKPIService
+      .getAllProgramsKPIs({ programName: this.programName })
+      .subscribe((result: ProgramKPI[]) => {
+        this.programsKPIs = result;
+      });
+  }
 }
