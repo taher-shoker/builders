@@ -68,14 +68,14 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       suffixText: '',
       suffixValue: 0,
       progressValue: vactual,
-      barColor:(difference >= 0 && difference <= 5) ? '#00C48C' : (difference > 5 && difference <= 10) ? '#EFC500' : '#FF1A1A',
-      bgBarColor:(difference >= 0 && difference <= 5) ? '#00c48c1a' : (difference > 5 && difference <= 10) ? 'rgba(239, 197, 0, .2)' : 'rgba(255, 26, 26, .2)',
+      barColor:(difference >= 0 && difference <= 5) || (vactual > vplanned) ? '#00C48C' : (difference > 5 && difference <= 10) ? '#EFC500' : '#FF1A1A',
+      bgBarColor:(difference >= 0 && difference <= 5) || (vactual > vplanned) ? '#00c48c1a' : (difference > 5 && difference <= 10) ? 'rgba(239, 197, 0, .2)' : 'rgba(255, 26, 26, .2)',
       indexes: [
         {
           caption: 'Actual',
           value: this.projectData().vactual,
           position: 'up',
-          actualBarColor : (difference >= 0 && difference <= 5) ? '#009F71' : (difference > 5 && difference <= 10) ? '#D9B301' : '#BC0000',
+          actualBarColor : (difference >= 0 && difference <= 5) || (vactual > vplanned) ? '#009F71' : (difference > 5 && difference <= 10) ? '#D9B301' : '#BC0000',
         },
         {
           caption: `Planned`,

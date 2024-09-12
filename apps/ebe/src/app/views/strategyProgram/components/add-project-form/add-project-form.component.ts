@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit, Output } from '@angular/core';
+import { CommonModule , Location } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { Router } from '@angular/router';
@@ -15,6 +15,7 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   addProjectForm!:FormGroup;
   textLength = 0;
   private router = inject(Router);
+  private location = inject(Location);
   modalVisible:InputSignal<boolean> = input.required<boolean>()
   @Output() closeModal:EventEmitter<boolean> = new EventEmitter<boolean>()
   ngOnInit(): void {
@@ -92,5 +93,9 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   deleteForm(index:number)
   {
     this.projectsList.removeAt(index);
+  }
+  goback()
+  {
+    this.location.back();
   }
 }

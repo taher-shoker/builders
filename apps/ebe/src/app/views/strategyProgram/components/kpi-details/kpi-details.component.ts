@@ -64,6 +64,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   editProject(project:KpiProjectsDetailsModel)
   {
     console.log(project);
+    this.router.navigateByUrl(`/strategy-project-form/${project.id}`);
   }
   deletedProject!:KpiProjectsDetailsModel;
   deleteProject(project:KpiProjectsDetailsModel)

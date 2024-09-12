@@ -33,6 +33,13 @@ export const appRoutes: Route[] = [
         (m) => m.AddProjectFormComponent
       ),
   },
+  {
+    path : "strategy-project-form/:id",
+    loadComponent: () =>
+      import('./views/strategyProgram/components/add-project-form/add-project-form.component').then(
+        (m) => m.AddProjectFormComponent
+      ),
+  },
   // {
   //   path : "raqami",
   //   loadComponent: () =>
