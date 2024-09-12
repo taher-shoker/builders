@@ -89,17 +89,9 @@ export class UsersService {
     });
   }
 
-  addUserGroup(
-    userId: number,
-    groupId: number,
-    data?: Partial<UserGroup>,
-    params?: HttpParams
-  ): Observable<User> {
-    return this.http.patch<User>(
-      `${this.endpoint}/users/groups/${userId}/${groupId}`,
-      data,
-      { params }
-    );
+  addUserGroup(data?: Partial<UserGroup>): Observable<User> {
+    console.log(data);
+    return this.http.patch<User>(`${this.endpoint}/users/groups`, data);
   }
 
   getTeams(): Team[] {
@@ -174,7 +166,9 @@ export class UsersService {
         privilege.push(group.roles[0].roleName);
       }
     });
-    return privilege;
+
+    // Use lodash to get unique values
+    return _.uniq(privilege);
   }
   getUserTeam(user: User): string | string[] {
     const sys = this.getCurrentSystem();
