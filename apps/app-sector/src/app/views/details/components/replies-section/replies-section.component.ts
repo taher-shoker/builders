@@ -311,7 +311,7 @@ export class RepliesSectionComponent implements OnInit {
       this.notificatinService.index =
         this.notificatinService.mentionsObjects[
           this.notificatinService.mentionsObjects.length - 1
-        ].index;
+        ]?.index;
       this.showCommentTextArea = true;
       this.textAreaOpend.emit('opend');
       const comment = this.comments[commentIndex].comment;
@@ -422,7 +422,7 @@ export class RepliesSectionComponent implements OnInit {
       this.notificatinService.index =
         this.notificatinService.mentionsObjects[
           this.notificatinService.mentionsObjects.length - 1
-        ].index;
+        ]?.index;
       this.editReplyTextArea = true;
       this.textAreaOpend.emit('opend');
       const reply = this.comments[commentIndex].replies[replyIndex].reply;
