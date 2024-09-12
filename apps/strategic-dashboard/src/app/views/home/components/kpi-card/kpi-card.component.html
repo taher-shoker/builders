@@ -9,8 +9,8 @@
     <div>
       @if (!isHovered() ) { @for (kpi of content.kpis; track kpi) {
       <div class="kpi-card_content with-bottom-border">{{ kpi.name }}</div>
-      } } @else { @for (strategicGroupKpi of
-      getStrategicGroupKpisByKpiName(content?.name) ; track strategicGroupKpi) {
+      } } @else { @for (strategicGroupKpi of strategicGroupKpis(); track
+      strategicGroupKpi) {
       <div class="kpi-card_content with-full-border">
         <div class="kpi-card_details">
           <div>

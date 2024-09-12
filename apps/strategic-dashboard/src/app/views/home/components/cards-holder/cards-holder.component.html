@@ -10,8 +10,8 @@
       [currentContents]="getCurrentContents(index)"
       [kpiTitle]="kpi.name"
       [isHovered]="activeIndex === index"
-      [strategicGroupKpis]="strategicGroupKpis"
-      (mouseover)="onCardHover(index, kpi.name)"
+      [strategicGroupKpis]="kpi.kpis"
+      (mouseover)="onCardHover(index)"
       (mouseleave)="onCardLeave()"
     >
     </stc-apps-kpi-card>
