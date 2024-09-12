@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { ProgramKPIService } from '../../services/program-kpi.service';
+import { KPIDetails, KPIItem } from '../../models/kpi-details.model';
 
 @Component({
   selector: 'stc-apps-kpi-details',
@@ -68,62 +70,73 @@ export class KpiDetailsComponent implements OnInit {
     },
   ];
 
-  kpiData = [
-    {
-      title: 'Strategic objective',
-      desc: 'Strategic objective',
-    },
-    {
-      title: 'Strategic objective relative',
-      desc: 'Strategic objective relative',
-    },
-    {
-      title: 'Activation period',
-      desc: '3 months',
-    },
-    {
-      title: 'Reporting frequency',
-      desc: 'Reporting frequency',
-    },
-    {
-      title: 'Data source',
-      desc: 'Data source',
-    },
-    {
-      title: 'Validation Authority',
-      desc: 'Validation Authority',
-    },
-    {
-      title: 'Custodian email',
-      desc: 'Custodian email',
-    },
-    {
-      title: 'Custodian Title',
-      desc: 'Custodian Title',
-    },
-  ];
+  kpiData: KPIItem[] = [];
+
   kpiCode = '';
-  kpiDefinition = `This KPI will measure the completion of External assessment, market study,
-best practices to get a grip of global digital transformation
-priorities of top digital services enterprises This KPI will measure the completion of External assessment, market study,
-best practices to get a grip of global digital transformation
-priorities of top digital services enterprises`;
-  kpiFormula = `This KPI will measure the completion of External assessment, market study,
-best practices to get a grip of global digital transformation
-priorities of top digital services enterprises This KPI will measure the completion of External assessment, market study,
-best practices to get a grip of global digital transformation
-priorities of top digital services enterprises`;
-  constructor(private activeRouter: ActivatedRoute) {}
+  kpiDefinition = '';
+  kpiFormula = '';
+  kpiDetails!: KPIDetails;
+
+  constructor(
+    private route: ActivatedRoute,
+    private programKPIService: ProgramKPIService
+  ) {}
   ngOnInit(): void {
+    this.kpiCode = this.route.snapshot.queryParamMap.get('kpiCode') || '';
     this.chunkedTitles = this.chunkArray(this.kpiData, 4);
-    console.log(this.chunkedTitles);
+
+    this.getKPIDetails();
   }
-  private chunkArray(array: any[], size: number): any[][] {
+
+  chunkArray(array: any[], size: number): any[][] {
     // eslint-disable-next-line prefer-const
     let chunkedArray = [];
     for (let i = 0; i < array.length; i += size) {
       chunkedArray.push(array.slice(i, i + size));
     }
     return chunkedArray;
+  }
+
+  getKPIDetails() {
+    if (this.kpiCode) {
+      this.programKPIService
+        .getKPIDetails({ kpiCode: this.kpiCode })
+        .subscribe((result: KPIDetails) => {
+          this.kpiDetails = result;
+          if (this.kpiDetails) {
+            this.mapKpiDetailsToData(this.kpiDetails);
+          }
+        });
+    }
+  }
+
+  mapKpiDetailsToData(details: KPIDetails): void {
+    this.kpiData = [
+      {
+        title: 'Strategic objective',
+        desc: details.strategicObjective || 'N/A',
+      },
+      {
+        title: 'Strategic objective relative',
+        desc: details.strategicObjectiveRelative || 'N/A',
+      },
+      { title: 'Activation period', desc: details.activationPeriod || 'N/A' },
+      {
+        title: 'Reporting frequency',
+        desc: details.reportingFrequency || 'N/A',
+      },
+      { title: 'Data source', desc: details.dataSource || 'N/A' },
+      {
+        title: 'Validation Authority',
+        desc: details.validationAuthority || 'N/A',
+      },
+      { title: 'Custodian email', desc: details.custodianEmail || 'N/A' },
+      { title: 'Custodian Title', desc: details.custodianTitle || 'N/A' },
+    ];
+
+    this.kpiDefinition = details.definition || 'N/A';
+    this.kpiFormula = details.formula || 'N/A';
+
+    this.chunkedTitles = this.chunkArray(this.kpiData, 4);
   }
 }

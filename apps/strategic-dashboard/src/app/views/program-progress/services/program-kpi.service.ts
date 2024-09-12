@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { ProgramKPIDetails } from '../models/program-kpi-details.model';
 import { StrategicProgramKPIDetails } from '../models/strategic-program-kpi-details.model';
 import { ProgramKPI } from '../models/program-kpi.model';
+import { KPIDetails } from '../models/kpi-details.model';
 
 @Injectable({
   providedIn: 'root',
@@ -33,7 +34,7 @@ export class ProgramKPIService {
   getAllProgramsKPIs(params: {
     programName: string;
   }): Observable<ProgramKPI[]> {
-    let httpParams = new HttpParams().set('programName', params.programName);
+    const httpParams = new HttpParams().set('programName', params.programName);
     return this.http.get<ProgramKPI[]>(
       this.baseUrl + 'v1/dashboard/program/kpi',
       {
@@ -44,14 +45,26 @@ export class ProgramKPIService {
 
   getKPIProgramDetails(params: {
     programName: string;
-    quarter: string;
+    quarter?: string;
   }): Observable<StrategicProgramKPIDetails[]> {
-    let httpParams = new HttpParams()
-      .set('programName', params.programName)
-      .set('quarter', params.quarter);
+    let httpParams = new HttpParams().set('programName', params.programName);
+    if (params.quarter) {
+      httpParams = httpParams.set('quarter', params.quarter);
+    }
 
     return this.http.get<StrategicProgramKPIDetails[]>(
       this.baseUrl + 'v1/dashboard/program/detail',
+      {
+        params: httpParams,
+      }
+    );
+  }
+
+  getKPIDetails(params: { kpiCode: string }): Observable<KPIDetails> {
+    const httpParams = new HttpParams().set('kpiCode', params.kpiCode);
+
+    return this.http.get<KPIDetails>(
+      this.baseUrl + 'v1/dashboard/strategic/kpi/detail',
       {
         params: httpParams,
       }

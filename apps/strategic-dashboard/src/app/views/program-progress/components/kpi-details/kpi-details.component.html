@@ -34,18 +34,18 @@
     </div>
     }
   </div>
-  @for (chunk  of chunkedTitles; track $index) {
-    <div class="kpi-details_info row">
-      @for (kpi of chunk; track $index) {
-      <div class="info-holder col-lg-3 col-md-6 col-sm-12">
-        <div class="info-title">{{ kpi.title }}</div>
-        <div class="info-desc">{{ kpi.desc }}</div>
-      </div>
-      
-      }
+  @for (chunk of chunkedTitles; track $index) {
+  <div class="kpi-details_info row">
+    @for (kpi of chunk; track $index) {
+    <div class="info-holder col-lg-3 col-md-6 col-sm-12">
+      <div class="info-title">{{ kpi.title }}</div>
+      <div class="info-desc">{{ kpi.desc }}</div>
     </div>
+
+    }
+  </div>
   }
- 
+
   <div class="def-formula d-flex justify-content-between">
     <div class="kpi-details_definition">
       <div class="title">Definition</div>
@@ -53,7 +53,7 @@
     </div>
     <div class="kpi-details_formula">
       <div class="title">Formula</div>
-      <p>{{ kpiDefinition }}</p>
+      <p>{{ kpiFormula }}</p>
     </div>
   </div>
 </div>

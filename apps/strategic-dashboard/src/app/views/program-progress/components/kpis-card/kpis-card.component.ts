@@ -9,13 +9,23 @@ import { Router } from '@angular/router';
 export class KpisCardComponent {
   title: InputSignal<string> = input('');
   kpiCode: InputSignal<string> = input('1');
-  programName:InputSignal<string> = input('');
+  programName: InputSignal<string> = input('');
 
   constructor(private router: Router) {}
 
   navigateToKpiDetails() {
     this.router.navigate(['/programs/kpi-details'], {
-      state: { kpi: { title: this.title(), code: this.kpiCode(),programName:this.programName() } },
+      queryParams: {
+        programName: this.programName(),
+        kpiCode: this.kpiCode(),
+      },
+      state: {
+        kpi: {
+          title: this.title(),
+          code: this.kpiCode(),
+          programName: this.programName(),
+        },
+      },
     });
   }
 }
