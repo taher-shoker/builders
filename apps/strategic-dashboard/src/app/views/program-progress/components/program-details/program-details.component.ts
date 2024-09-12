@@ -49,33 +49,6 @@ export class ProgramDetailsComponent implements OnInit {
     { title: 'KPIs Performance', chartType: 'progress' },
   ];
 
-  kpisItems = [
-    {
-      id: '1',
-      title:
-        '% of analytics capabilities implemented in alignment with northstar to-be architecture analytics roadmap',
-    },
-    {
-      id: '2',
-      title: ' #self-service capability enabled for BU/FU',
-    },
-    {
-      id: '3',
-      title:
-        ' % implementation of data lake first principle “store everything on the lake first”',
-    },
-    { id: '4', title: 'stc TRUST Maturity Score' },
-    {
-      id: '5',
-      title: ' #self-service capability enabled for BU/FU',
-    },
-    {
-      id: '6',
-      title:
-        '% of analytics capabilities implemented in alignment with northstar to-be architecture analytics roadmap',
-    },
-  ];
-
   getAllProgramsKPIs() {
     this.programKPIService
       .getAllProgramsKPIs({ programName: this.programName })

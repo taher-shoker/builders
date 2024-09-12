@@ -111,6 +111,27 @@ export class KpiDetailsComponent implements OnInit {
   }
 
   mapKpiDetailsToData(details: KPIDetails): void {
+    this.kpiInfo = [
+      {
+        overView: '',
+        overViewDesc: 'Increasing',
+        backgroundColor: details.direction,
+        color: 'var(--stcOasisColor)',
+      },
+      {
+        overView: 'Owner: ',
+        overViewDesc: details.kpiOwner || 'N/A',
+        backgroundColor: 'rgba(79, 0, 140, 0.1)',
+        color: 'var(--stc-color)',
+      },
+      {
+        overView: 'Function: ',
+        overViewDesc: details.function || 'N/A',
+        backgroundColor: 'rgba(97, 203, 214, 0.1)',
+        color: 'var(--stc-terqouiseColor)',
+      },
+    ];
+
     this.kpiData = [
       {
         title: 'Strategic objective',

@@ -11,6 +11,7 @@ export class ProgressCardComponent {
   iconPath = 'assets/images/arrow-up.svg';
   title: InputSignal<string> = input('');
   precentage: InputSignal<string> = input('');
+  unit: InputSignal<string | any> = input('');
   thresholds: InputSignal<{ green: number; orange: number; red: number }> =
     input({
       green: 0,
@@ -24,7 +25,11 @@ export class ProgressCardComponent {
   getPercentageDisplay(): string {
     const value = +this.precentage();
     if (!isNaN(value)) {
-      return (value * 100).toFixed(2) + '%';
+      if (this.unit() === '%') {
+        return (value * 100).toFixed(2) + ' ' + this.unit();
+      } else {
+        return value + ' ' + this.unit();
+      }
     }
     return '0%';
   }
