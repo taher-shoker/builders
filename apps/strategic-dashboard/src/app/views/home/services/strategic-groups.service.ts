@@ -23,16 +23,4 @@ export class StrategicGroupsService {
       }
     );
   }
-
-  getAllStrategicGroupKpis(params: any) {
-    const httpParams = new HttpParams()
-      .set('year', params.year)
-      .set('strategicName', params.strategicName);
-    return this.http.get<StrategicGroup[]>(
-      this.baseUrl + 'v1/dashboard/strategic/kpi',
-      {
-        params: httpParams,
-      }
-    );
-  }
 }

@@ -11,22 +11,33 @@ export class ProgressCardComponent {
   iconPath = 'assets/images/arrow-up.svg';
   title: InputSignal<string> = input('');
   precentage: InputSignal<string> = input('');
-  status: InputSignal<string> = input('');
-  constructor() {
-    effect(() => {
-      console.log('hi');
-      if (this.status() == 'delayed') {
-        this.color = 'var(--light-pink)';
-        this.precentColor = 'var(--stc-red-color)';
-        this.iconPath = 'assets/images/arrow-down-delayed.svg';
-      } else if (this.status() == 'onHold') {
-        this.color = 'var(--light-stc-orangeColor)';
-        this.precentColor = 'var(--stcSunsetColor)';
-        this.iconPath = 'assets/images/arrow-down.svg';
-      } else if (this.status() == 'onTrack') {
-        this.color = 'rgb(194, 252, 221)';
-        this.precentColor = 'var(--stcOasisColor)';
-      }
+  thresholds: InputSignal<{ green: number; orange: number; red: number }> =
+    input({
+      green: 0,
+      orange: 0,
+      red: 0,
     });
+  constructor() {
+    this.getPercentageClass();
+  }
+
+  getPercentageDisplay(): string {
+    const value = +this.precentage();
+    if (!isNaN(value)) {
+      return (value * 100).toFixed(2) + '%';
+    }
+    return '0%';
+  }
+
+  getPercentageClass(): string {
+    const value = +this.precentage();
+    const { green, orange, red } = this.thresholds();
+    if (value >= green) {
+      return 'greater-than-green';
+    } else if (value < red) {
+      return 'less-than-red';
+    } else {
+      return 'between-orange';
+    }
   }
 }

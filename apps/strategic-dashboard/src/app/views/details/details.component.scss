@@ -1,7 +1,7 @@
 .details-page {
-  
+  padding: 44px 40px;
+
   &_title {
-    margin: 0px 34px;
     display: flex;
     justify-content: space-between;
     margin-top: 22px;
@@ -37,8 +37,7 @@
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
-
-    margin: 0px 24px;
+    margin-bottom: 24px;
   }
 
   &_progress-overview {
@@ -56,8 +55,7 @@
 
   &_cards {
     display: flex;
-    justify-content: space-between;
-    padding: 44px 40px;
+    // justify-content: space-between;
     flex-wrap: wrap;
 
     .card-holder {
@@ -71,16 +69,18 @@
     background-color: var(--whiteColor);
     border-radius: 10px;
     padding: 24px 24px 24px 34px;
+
     .range-title {
       font-size: 18px;
       margin-bottom: 12px;
       font-weight: 600;
       color: var(--semiBlueColor);
     }
+
     .range-holder {
       padding: 30px 24px 20px 24px;
       border-radius: 8px;
-      
+
       border: 1px solid var(--stcLightGreyColor);
     }
   }
@@ -114,7 +114,7 @@
   }
 
   .details-page_header {
-    > div {
+    >div {
       margin-left: 20%;
     }
   }
@@ -136,7 +136,7 @@
   }
 
   .details-page_header {
-    > div {
+    >div {
       margin-left: 20%;
     }
   }

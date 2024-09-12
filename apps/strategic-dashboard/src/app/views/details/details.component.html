@@ -18,6 +18,11 @@
     <div class="details-page_progress-overview">
       <stc-apps-progress-percentage
         [percentage]="progress.percantage"
+        [thresholds]="{
+          green: 100,
+          orange: 90,
+          red: 70
+        }"
       ></stc-apps-progress-percentage>
       <p>{{ progress.progressDesc }}</p>
     </div>
@@ -25,12 +30,16 @@
   </div>
 
   <div class="details-page_cards row row-gap-3">
-    @for (cardInfo of cardsInfo; track $index) {
+    @for (strategicKPI of strategicGroupKPI; track $index) {
     <div class="col-xl-2 col-md-4 col-sm-6 col-xs-12">
       <stc-apps-progress-card
-        [title]="cardInfo.title"
-        [precentage]="cardInfo.percentage"
-        [status]="cardInfo.status"
+        [title]="strategicKPI.name"
+        [precentage]="strategicKPI.actualValue.toString()"
+        [thresholds]="{
+          green: strategicKPI.greenThreshold,
+          orange: strategicKPI.orangeThreshold,
+          red: strategicKPI.redThreshold
+        }"
       ></stc-apps-progress-card>
     </div>
     }

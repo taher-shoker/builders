@@ -45,6 +45,10 @@
       [kpiCode]="kpi.code"
       [programName]="programName"
     ></stc-apps-kpis-card>
+    } @empty {
+    <div class="program-details_kpis_empty">
+      No available KPI's for this program.
+    </div>
     }
   </div>
 </div>

@@ -4,18 +4,37 @@
   display: flex;
   flex-direction: column;
   height: 168px;
+
+  &.greater-than-green {
+    background: rgb(194, 252, 221);
+    color: var(--stcOasisColor);
+  }
+
+  &.less-than-red {
+    background: #FFE4E4;
+    color: var(--stc-red-color);
+    ;
+  }
+
+  &.between-orange {
+    color: var(--stcSunsetColor);
+    background: #FFEAE3;
+  }
+
   &_title {
     margin-bottom: 5%;
     font-weight: 500;
     font-size: 16px;
     color: var(--grayColor);
   }
-  &_percent-holder{
+
+  &_percent-holder {
     margin-top: auto;
   }
+
   &_precantage {
     font-weight: 700;
-    color: var(--stc-red-color) ;
+    // color: var(--stc-red-color);
     font-size: 24px;
     font-family: var(--stc-font-bold);
   }

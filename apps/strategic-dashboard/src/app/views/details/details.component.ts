@@ -5,6 +5,7 @@ import { SharedFormService } from '../../shared/services/shared-form.service';
 import { FormGroup } from '@angular/forms';
 import { YearService } from '../../shared/services/year.service';
 import { StrategicGroupDetails } from 'c:/Users/saraa/projects/stc-apps/apps/strategic-dashboard/src/app/views/details/models/strategic-group-details.model';
+import { StrategicGroupKPI } from './models/strategic-group-kpi.model';
 
 @Component({
   selector: 'stc-apps-details',
@@ -42,51 +43,28 @@ export class DetailsComponent implements OnInit {
       iconPath: 'assets/images/arrow-up.svg',
       progressDesc: 'Actual performance above target(>=100%)',
       percantage: '120',
+      thresholds: { green: 119, orange: 0, red: 0 },
+    },
+    {
+      iconPath: 'assets/images/arrow-down-delayed.svg',
+      progressDesc: 'Actual performance below target(< 96%)',
+      percantage: ' 0.04432946816086769',
+      thresholds: {
+        green: 0.6000000238418579,
+        orange: 0.44999998807907104,
+        red: 0.30000001192092896,
+      },
     },
     {
       iconPath: 'assets/images/arrow-down.svg',
       progressDesc: 'Actual performance below target(>=90% and < 100%)',
       percantage: '99',
-    },
-    {
-      iconPath: 'assets/images/arrow-down-delayed.svg',
-      progressDesc: 'Actual performance below target(< 96%)',
-      percantage: '80',
+      thresholds: { green: 100, orange: 0, red: 100 },
     },
   ];
-  cardsInfo = [
-    {
-      title: 'STC Group EBTDA',
-      percentage: '130 %',
-      status: 'onTrack',
-    },
-    {
-      title: '% Next-Gen Teck Roll-Out',
-      percentage: '121 %',
-      status: 'onTrack',
-    },
-    {
-      title: 'STC Group ROCE',
-      percentage: '120 %',
-      status: 'onTrack',
-    },
-    {
-      title: 'Sustainability Score',
-      percentage: '23 %',
-      status: 'delayed',
-    },
-    {
-      title: '% of Strategic Roles and Capabilities Filled',
-      percentage: '23 %',
-      status: 'delayed',
-    },
-    {
-      title: 'Employee Experience Score',
-      percentage: '92 %',
-      status: 'onHold',
-    },
-  ];
+
   strategicGroupDetails: StrategicGroupDetails = [];
+  strategicGroupKPI: StrategicGroupKPI[] = [];
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -104,6 +82,7 @@ export class DetailsComponent implements OnInit {
     });
     this.handleForm();
     this.getAllStrategicGroupKpiDetails();
+    this.getAllStrategicGroupKpis();
   }
 
   handleForm() {
@@ -131,6 +110,18 @@ export class DetailsComponent implements OnInit {
         .getAllStrategicGroupKpiDetails({ strategicName, year })
         .subscribe((result: StrategicGroupDetails) => {
           this.strategicGroupDetails = result;
+        });
+    });
+  }
+
+  getAllStrategicGroupKpis() {
+    this.activeRoute.queryParams.subscribe((params) => {
+      const strategicName = params['strategicName'];
+      const year = this.sharedFormService.getForm().controls['year'].value;
+      this.strategicGroupDetailsService
+        .getAllStrategicGroupKpis({ strategicName, year })
+        .subscribe((result: StrategicGroupKPI[]) => {
+          this.strategicGroupKPI = result;
         });
     });
   }
