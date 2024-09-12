@@ -218,6 +218,10 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   extractTextFromContent(content: any): string {
     return content ?? content.name;
   }
+  textAreaOpend(){
+    this.resetForm();
+    this.contentChanged=false;
+  }
   resetForm() {
     this.form.reset();
   }
