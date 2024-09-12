@@ -3,12 +3,13 @@ export interface user {
   name: string;
   email: string;
   jobTitle: string;
+  index?: number;
 }
-export interface notificationBody{
-  commentId:number;
-  mentioner:user;
-  mentionedList:user[];
-  content:string;
+export interface notificationBody {
+  commentId: number;
+  mentioner: user;
+  mentionedList: user[];
+  content: string;
 }
 export interface sectorUsersParams {
   system: string;
@@ -27,17 +28,17 @@ export interface addCommentBody {
 export interface commentEditBody {
   id: number;
   comment: string;
-  commaSeparatedMentions?:string|null;
+  commaSeparatedMentions?: string | null;
 }
 export interface addreplyBody {
   commentId: number;
   reply: string;
-  commaSeparatedMentions?:string|null;
+  commaSeparatedMentions?: string | null;
 }
 export interface replyEditBody {
   id: number;
   reply: string;
-  commaSeparatedMentions?:string|null;
+  commaSeparatedMentions?: string | null;
 }
 export interface reply {
   id: number;

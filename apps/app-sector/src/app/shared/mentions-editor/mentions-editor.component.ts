@@ -42,7 +42,6 @@ export class MentionsEditorComponent
   @Output() contentChange = new EventEmitter<string>();
   @Output() deletionEmitter = new EventEmitter<number[]>();
   filteredList: any[] = [];
-
   items: any[] = [];
   mentionConfig: any;
   _value: any = '';
@@ -132,7 +131,7 @@ export class MentionsEditorComponent
           let index = -1;
           textContent = textContent.replace(mentionRegex, (match) => {
             index++;
-            return `<span contenteditable=false data-id=${this.notificationService.mentionsObjects[index].id} class="mention" >${match}</span>`;
+            return `<span contenteditable=false data-index=${this.notificationService.mentionsObjects[index].index} data-id=${this.notificationService.mentionsObjects[index].id} class="mention" >${match}</span>`;
           });
         }
         // else {
@@ -160,6 +159,7 @@ export class MentionsEditorComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     this.items = this.mentions();
+
     this.initializeMentionConfig();
   }
 
@@ -174,8 +174,8 @@ export class MentionsEditorComponent
       items: this.items,
       triggerChar: '@',
       labelKey: this.mentionProperty(),
-      mentionSelect: this.textToInsertWhenSelect,
-      mentionFilter: this.filter,
+      mentionSelect: this.textToInsertWhenSelect.bind(this),
+      mentionFilter: this.filter.bind(this),
       allowSpace: true,
       returnTrigger: false,
     };
@@ -184,29 +184,41 @@ export class MentionsEditorComponent
   onKeyUp(event: any) {
     const input = event.target as HTMLDivElement;
     this.value = input.textContent || '';
-  
+
     if (event.key == 'Backspace') {
       const spans = event.target.querySelectorAll('span');
       let dataInfo;
+      let dataIndex;
       const dataIds: any[] = [];
+      const dataIndexes: any[] = [];
       spans.forEach((span: any) => {
         // Access data attributes using the dataset property
         // For example, if you have a data attribute like data-info
+        console.log(span.id, 'ID');
+        dataIndex = span.dataset.index;
         dataInfo = span.dataset.id;
         if (dataInfo) {
           dataIds.push(dataInfo);
+          dataIndexes.push(dataIndex);
         }
       });
-      this.deletionEmitter.emit(dataIds);
+      console.log('dataIDS', dataIndex);
+
+      this.deletionEmitter.emit(dataIndexes);
     }
   }
   textToInsertWhenSelect(item: any): any {
+    const index = this.notificationService.index;
     setTimeout(() => {
       pasteHtmlAtCaret(
-        `<span contenteditable=false class="mention" data-id=
+        `<span contenteditable=false class="mention" 
+      data-index=${index}
+        data-id=
           ${item.id}
           >${item.name}</span>&nbsp`
       );
+      const contentDiv = this.contentEditable.nativeElement;
+      this.onContentChange(contentDiv.textContent ?? contentDiv.innerHTML);
     }, 0);
 
     return '';
@@ -241,9 +253,9 @@ export class MentionsEditorComponent
 
   setupContentChangeListener(): void {
     const contentDiv = this.contentEditable.nativeElement;
-    contentDiv.addEventListener('keyup', () =>
-      this.onContentChange(contentDiv.textContent ?? contentDiv.innerHTML)
-    );
+    // contentDiv.addEventListener('keyup', () =>
+    //   this.onContentChange(contentDiv.textContent ?? contentDiv.innerHTML)
+    // );
   }
 
   onContentChange(content: string): void {
@@ -251,12 +263,12 @@ export class MentionsEditorComponent
     // const mentionsArray = this.extractMentions(content);
 
     // this.mentionsArray = mentionsArray;
+    this.value = content;
     this.processMentions(content);
   }
 
   processMentions(content: string): void {
     console.log('inside process mentions');
-
     // Parse the HTML content and find all span elements with a data-id attribute
     const spans = document.querySelectorAll('span[data-id]');
     console.log(spans);
@@ -269,9 +281,7 @@ export class MentionsEditorComponent
         this.renderer.removeChild(document, br);
       });
     }
-
     const mentionObjects: any[] = this.notificationService.mentionsObjects;
-
     spans.forEach((span) => {
       const id = span.getAttribute('data-id');
       console.log(id);
@@ -292,9 +302,6 @@ export class MentionsEditorComponent
         }
       }
     });
-
-    // Update notification service with the mention objects
-    // this.notificationService.mentionsObjects = mentionObjects;
   }
 
   extractMentions(text: string): string[] {

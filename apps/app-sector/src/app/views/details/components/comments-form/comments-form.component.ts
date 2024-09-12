@@ -117,7 +117,9 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       }
     });
     this.handleForm();
+   
   }
+ 
   populateDisplayedFiles() {
     const kpiObject = this.kpiObjectSignal();
 
@@ -189,7 +191,11 @@ export class CommentsFormComponent implements OnInit, OnChanges {
     }
   }
   mentionsArray: string[] = [''];
+  contentChanged = false;
   onContentChange(content: string) {
+    this.contentChanged = true;
+    console.log(this.contentChanged,'this.contentChanged');
+    
     console.log('Content:', content);
     const contentText = this.extractTextFromContent(content);
     const mentionsArray = this.extractMentions(content);
@@ -201,11 +207,13 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   }
   deleteMention(event: number[]) {
     console.log('deleteMention', event);
-    const ids = event.map((str) => Number(str));
+    const indexesToKeep = event.map((str) => Number(str));
+
     this.notificatinService.mentionsObjects =
       this.notificatinService.mentionsObjects.filter((obj) =>
-        ids.includes(obj.id)
+        indexesToKeep.includes(obj.index)
       );
+    console.log('after deletion', this.notificatinService.mentionsObjects);
   }
   extractTextFromContent(content: any): string {
     return content ?? content.name;
@@ -233,10 +241,10 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   onSubmit() {
     console.log(this.notificatinService.mentionsObjects);
 
-    this.notificatinService.mentionsObjects =
-      this.notificatinService.mentionsObjects.filter(
-        (item, index, self) => self.indexOf(item) === index
-      );
+    // this.notificatinService.mentionsObjects =
+    //   this.notificatinService.mentionsObjects.filter(
+    //     (item, index, self) => self.indexOf(item) === index
+    //   );
 
     const commentObj: addCommentBody = {
       sectorName: this.sharedFormService.getForm().value.sectorName,
@@ -265,6 +273,8 @@ export class CommentsFormComponent implements OnInit, OnChanges {
         }
         this.form.get('comment')?.reset();
         this.notificatinService.mentionsObjects = [];
+        this.notificatinService.index = 0;
+        this.contentChanged = false;
         this.form.updateValueAndValidity();
       },
     });

@@ -11,10 +11,12 @@ import {
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
+import { User } from '../../../shared/models/user.model';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
   loggedUserObject: any;
+  index = 0;
   mentionsList: BehaviorSubject<user[]> = new BehaviorSubject([{} as user]);
   mentionsObjects: any[] = [];
   constructor(
@@ -37,8 +39,19 @@ export class NotificationsService {
   }
   addMentionObjects(mention: any): void {
     console.log('add mentions objects', this.mentionsObjects);
+    let userObj: any;
+    // eslint-disable-next-line prefer-const
+    // userObj=mention;
+    // userObj.index=this.index++;
 
-    this.mentionsObjects.push(mention);
+    // eslint-disable-next-line prefer-const
+    userObj = {
+      ...mention,
+      index: ++this.index,
+    };
+    console.log(userObj.index);
+
+    this.mentionsObjects.push(userObj);
   }
 
   // Method to get the final array
@@ -53,7 +66,7 @@ export class NotificationsService {
       if (typeof mention == 'object') {
         mentionsString =
           mentionsString +
-          `${mention.id}|${mention.name}|${mention.email}` +
+          `${mention.id}|${mention.name}|${mention.email}|${mention.index}` +
           ',';
       } else if (typeof mention == 'string') {
         mentionsString = mentionsString + mention + ',';
