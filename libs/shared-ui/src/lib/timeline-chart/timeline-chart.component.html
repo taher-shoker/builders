@@ -76,33 +76,34 @@
 
   <!-- Data will binding here -->
   @defer (on viewport(trigger)) {
-    <div class="row chart-body">
-      <div class="col">
-        <div class="row today-liner-row">
-          <div class="col-md-3"></div>
-          <div class="col today-liner-col">
-            <div
-              class="today-liner"
-              [ngStyle]="{ left: todayDate() + '%' }"
-            ></div>
-            <div class="today-text" [ngStyle]="{ left: todayDate() + '%' }">
-              Today
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col">
-            @for (activity of dtStreamMutated().activities; track activity) {
-            <ng-container
-              *ngTemplateOutlet="streamRow; context: { item: activity }"
-            ></ng-container>
-            }
+  <div class="row chart-body">
+    <div class="col">
+      <div class="row today-liner-row">
+        <div class="col-md-3"></div>
+        <div class="col today-liner-col">
+          <div
+            class="today-liner"
+            [ngStyle]="{ left: todayDate() + '%' }"
+          ></div>
+          <div class="today-text" [ngStyle]="{ left: todayDate() + '%' }">
+            Today
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col">
+          @for (activity of dtStreamMutated().activities; track activity) {
+          <ng-container
+            *ngTemplateOutlet="streamRow; context: { item: activity }"
+          ></ng-container>
+          }
+        </div>
+      </div>
     </div>
+  </div>
   } @placeholder {
-    <h1 #trigger>trigger that never shows!</h1>
+  <h1 #trigger></h1>
+  <!--trigger that never shows!-->
   }
 </div>
 
