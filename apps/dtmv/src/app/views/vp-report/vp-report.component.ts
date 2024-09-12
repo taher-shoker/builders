@@ -107,12 +107,12 @@ export class VpReportComponent implements OnInit {
 
       if (!params['year']) {
         this.selectedYear.set(currentYear);
-        this.updateRoute(this.allTeams[0].name, currentYear);
+        this.updateRoute(this.allTeams[0]?.name, currentYear);
       }
 
       if (!params['team']) {
-        this.selectedTeam.set(this.allTeams[0].name);
-        this.updateRoute(this.allTeams[0].name, currentYear);
+        this.selectedTeam.set(this.allTeams[0]?.name);
+        this.updateRoute(this.allTeams[0]?.name, currentYear);
       }
 
       this.getDTStreams();
@@ -127,8 +127,8 @@ export class VpReportComponent implements OnInit {
   private getAllTeams() {
     this.milestonesService.setUserTeams().subscribe((res) => {
       this.allTeams = res;
+      this.watchRoute();
     });
-    this.watchRoute();
   }
 
   private getDTStreams() {

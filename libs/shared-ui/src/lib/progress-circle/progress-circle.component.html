@@ -1,10 +1,7 @@
-<div
-  class="progress-circule"
-  role="progresscircule"
-  [style]="'--value:' + progressValue()"
-  [ngStyle]="{ background: conicGradient(), '--size': progressSize() }"
->
+<div class="progress-circule" role="progresscircule" [style]="'--value:' + progressValue()"
+  [ngStyle]="{ background: conicGradient(), '--size': progressSize() }">
   @if (showProgress()) {
-  <span class="circle-content">{{ progressValue() | percent }}</span>
+  <span class="circle-content">{{ progressValue() }} %</span>
+  <!-- be careful when you make an enhancement, test it with dtmilestone App -->
   }
 </div>
