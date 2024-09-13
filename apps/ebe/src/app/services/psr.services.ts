@@ -70,7 +70,7 @@ export class PSRService {
         body
       );
   }
-  uploadFile(pageType:string , selectedFile: any): Observable<any> {
+  uploadFile(pageType:string , selectedFile: any , groupName?:string): Observable<any> {
     const formData = new FormData();
     formData.append('multipartFile', selectedFile, selectedFile.name);
     if(pageType === 'executiveView')
@@ -81,7 +81,7 @@ export class PSRService {
       );
     }
     return this.http.post<any>(
-      `${environment.apiUrl}/business-excellence/psr/executiveViewData/upload`,
+      `${environment.apiUrl}/business-excellence/psr/executiveViewData/upload/${groupName}`,
       formData
     );
   }

@@ -123,7 +123,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   }
   importData(file:FileModel | null)
   {
-    this.psrServices.uploadFile("executiveViewData" , file).subscribe({
+    this.psrServices.uploadFile("executiveViewData" , file , this.groupName).subscribe({
       next : () => {
         this.getProjectDetails(this.groupName);
         this.toastr.success("The File is Saved Successfully");
