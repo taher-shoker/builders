@@ -117,9 +117,8 @@ export class CommentsFormComponent implements OnInit, OnChanges {
       }
     });
     this.handleForm();
-   
   }
- 
+
   populateDisplayedFiles() {
     const kpiObject = this.kpiObjectSignal();
 
@@ -194,8 +193,8 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   contentChanged = false;
   onContentChange(content: string) {
     this.contentChanged = true;
-    console.log(this.contentChanged,'this.contentChanged');
-    
+    console.log(this.contentChanged, 'this.contentChanged');
+
     console.log('Content:', content);
     const contentText = this.extractTextFromContent(content);
     const mentionsArray = this.extractMentions(content);
@@ -218,28 +217,32 @@ export class CommentsFormComponent implements OnInit, OnChanges {
   extractTextFromContent(content: any): string {
     return content ?? content.name;
   }
-  textAreaOpend(){
+  textAreaOpend() {
     this.resetForm();
-    this.contentChanged=false;
+    this.contentChanged = false;
   }
   resetForm() {
     this.form.reset();
   }
   extractMentions(text: string): string[] {
-    const mentions: string[] = this.mentions.map((mention: user) => {
-      return `${mention.name}`;
-    });
+    if (this.mentions.length !== 0) {
+      console.log(this.mentions);
 
-    const mentionPattern = new RegExp(mentions.join('|'), 'gi');
-    const extractedMentions: string[] = [];
-    let match;
+      const mentions: string[] = this.mentions.map((mention: user) => {
+        return `${mention.name}`;
+      });
 
-    while ((match = mentionPattern.exec(text)) !== null) {
-      extractedMentions.push(match[0]);
-    }
+      const mentionPattern = new RegExp(mentions.join('|'), 'gi');
+      const extractedMentions: string[] = [];
+      let match;
 
-    console.log('Extracted mentions:', extractedMentions);
-    return extractedMentions;
+      while ((match = mentionPattern.exec(text)) !== null) {
+        extractedMentions.push(match[0]);
+      }
+
+      console.log('Extracted mentions:', extractedMentions);
+      return extractedMentions;
+    } else return [];
   }
 
   onSubmit() {
