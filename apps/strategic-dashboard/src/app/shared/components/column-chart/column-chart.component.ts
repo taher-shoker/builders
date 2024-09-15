@@ -1,4 +1,11 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
@@ -7,7 +14,7 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
   templateUrl: './column-chart.component.html',
   styleUrl: './column-chart.component.scss',
 })
-export class ColumnChartComponent implements OnInit, AfterViewInit {
+export class ColumnChartComponent implements OnInit, AfterViewInit, OnChanges {
   ngOnInit(): void {
     this.chartdiv_id = `${Math.random()}_chart_id`;
   }
@@ -25,7 +32,15 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.columnChart();
   }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['chartData'] && !changes['chartData'].isFirstChange()) {
+      this.columnChart();
+    }
+  }
   columnChart() {
+    if (this.root) {
+      this.root.dispose();
+    }
     this.root = am5.Root.new(this.chartdiv_id);
     this.root.setThemes([am5themes_Animated.new(this.root)]);
     // eslint-disable-next-line prefer-const
@@ -51,7 +66,6 @@ export class ColumnChartComponent implements OnInit, AfterViewInit {
         marginTop: 20,
       })
     );
-
     const minValue = Math.min(
       ...this.chartData.map((item) => Math.min(item.Actual, item.Target))
     );

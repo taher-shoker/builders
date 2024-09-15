@@ -24,4 +24,11 @@ export interface KPIDetails {
   custodianTitle: string;
   definition: string;
   formula: string;
+  values: KpiValue[];
+}
+
+export interface KpiValue {
+  yearNum: string;
+  kpiValue: number;
+  kpiTarget: number;
 }

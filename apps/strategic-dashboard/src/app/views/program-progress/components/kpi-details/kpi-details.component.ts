@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProgramKPIService } from '../../services/program-kpi.service';
-import { KPIDetails, KPIItem } from '../../models/kpi-details.model';
+import { KPIDetails, KPIItem, KpiValue } from '../../models/kpi-details.model';
 
 @Component({
   selector: 'stc-apps-kpi-details',
@@ -36,28 +36,7 @@ export class KpiDetailsComponent implements OnInit {
     {
       title: 'FY Target',
       chartType: 'column',
-      chartData: [
-        {
-          year: '2022',
-          Actual: 50,
-          Target: 0,
-        },
-        {
-          year: '2023',
-          Actual: 70,
-          Target: 0,
-        },
-        {
-          year: '2024',
-          Actual: 20,
-          Target: 0,
-        },
-        {
-          year: '2025',
-          Actual: 0,
-          Target: 0,
-        },
-      ],
+      chartData: [] as any[],
     },
     {
       title: 'Status of the KPI',
@@ -163,6 +142,15 @@ export class KpiDetailsComponent implements OnInit {
     this.kpiDefinition = details.definition || 'N/A';
     this.kpiFormula = details.formula || 'N/A';
 
+    this.cardItems[0].chartData = this.mapChartData(details.values);
     this.chunkedTitles = this.chunkArray(this.kpiData, 4);
+  }
+
+  mapChartData(values: KpiValue[]): any[] {
+    return values.map((value: KpiValue) => ({
+      year: value.yearNum,
+      Actual: value.kpiValue,
+      Target: value.kpiTarget,
+    }));
   }
 }

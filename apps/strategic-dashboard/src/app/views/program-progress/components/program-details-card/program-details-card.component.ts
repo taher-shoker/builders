@@ -23,7 +23,20 @@ export class ProgramDetailsCardComponent {
   title: InputSignal<string> = input('');
   chartType: InputSignal<string> = input('');
   progressValue: InputSignal<Progress[]> = input<Progress[]>([]);
-  columnChartData: InputSignal<columnChartData[]> = input<columnChartData[]>([]);
+  strategicGroup: InputSignal<any> = input<any>([]);
+  columnChartData = computed(() => {
+    const strategicGroupData = this.strategicGroup();
+    let processedData: { year: number; Actual: number; Target: number }[] = [];
+
+    if (strategicGroupData) {
+      processedData = strategicGroupData.map((value: any) => ({
+        year: value.year,
+        Actual: value.Actual,
+        Target: value.Target,
+      }));
+    }
+    return processedData;
+  });
 
   lineChartColors = ['#D2D7D9', '#45006F'];
   lineChartData: { name: string; data: LineChartData[] }[] = [
