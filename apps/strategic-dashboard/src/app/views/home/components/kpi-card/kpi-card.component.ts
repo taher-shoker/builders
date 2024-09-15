@@ -34,8 +34,7 @@ export class KpiCardComponent {
     }
   }
   navigateToCardDetails(strategicName: string) {
-    this.router.navigate(['/details'], {
-      queryParams: { strategicName },
+    this.router.navigate(['/home', strategicName], {
       state: { title: this.kpiTitle() },
     });
   }

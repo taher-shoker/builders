@@ -14,16 +14,16 @@ export const appRoutes: Route[] = [
           import('./views/home/home.module').then((m) => m.HomeModule),
       },
       {
-        path: 'details',
-        loadChildren: () =>
-          import('./views/details/details.module').then((m) => m.DetailsModule),
-      },
-      {
-        path: 'programs',
+        path: 'home/programs',
         loadChildren: () =>
           import('./views/program-progress/program-progress.module').then(
             (m) => m.ProgramProgressModule
           ),
+      },
+      {
+        path: 'home/:strategicName',
+        loadChildren: () =>
+          import('./views/details/details.module').then((m) => m.DetailsModule),
       },
     ],
   },

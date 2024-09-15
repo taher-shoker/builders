@@ -11,19 +11,14 @@ export const appRoutes: Route[] = [
     children: [
       {
         path: '',
-        redirectTo: 'allPrograms',
-        pathMatch: 'full',
-      },
-      {
-        path: 'allPrograms',
         component: AllProgramsComponent,
       },
       {
-        path: 'program-details',
+        path: ':programName',
         component: ProgramDetailsComponent,
       },
       {
-        path: 'kpi-details',
+        path: ':programName/:kpiCode',
         component: KpiDetailsComponent,
       },
     ],

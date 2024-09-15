@@ -20,10 +20,12 @@ export class ProgramDetailsComponent implements OnInit {
     private programKPIService: ProgramKPIService
   ) {}
   ngOnInit(): void {
-    this.route.queryParams.subscribe((params) => {
-      this.programName = params['programName'];
+    this.route.paramMap.subscribe((params) => {
+      this.programName = params.get('programName') || '';
 
-      this.getAllProgramsKPIs();
+      if (this.programName) {
+        this.getAllProgramsKPIs();
+      }
     });
   }
 

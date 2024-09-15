@@ -14,18 +14,17 @@ export class KpisCardComponent {
   constructor(private router: Router) {}
 
   navigateToKpiDetails() {
-    this.router.navigate(['/programs/kpi-details'], {
-      queryParams: {
-        programName: this.programName(),
-        kpiCode: this.kpiCode(),
-      },
-      state: {
-        kpi: {
-          title: this.title(),
-          code: this.kpiCode(),
-          programName: this.programName(),
+    this.router.navigate(
+      ['/home/programs', this.programName(), this.kpiCode()],
+      {
+        state: {
+          kpi: {
+            title: this.title(),
+            code: this.kpiCode(),
+            programName: this.programName(),
+          },
         },
-      },
-    });
+      }
+    );
   }
 }

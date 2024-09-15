@@ -1,15 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { TabComponent } from './tabs/tab/tab.component';
-import { TabsComponent } from './tabs/tabs.component';
-import { ProgressPercentageComponent } from './progress-percentage/progress-percentage.component';
-import { ColumnChartComponent } from './column-chart/column-chart.component';
-import { RangeSliderComponent } from './range-slider/range-slider.component';
+import { TabComponent } from './components/tabs/tab/tab.component';
+import { TabsComponent } from './components/tabs/tabs.component';
+import { ProgressPercentageComponent } from './components/progress-percentage/progress-percentage.component';
+import { ColumnChartComponent } from './components/column-chart/column-chart.component';
+import { RangeSliderComponent } from './components/range-slider/range-slider.component';
 import { MatSliderModule } from '@angular/material/slider';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { CustomLineChartComponent } from './custom-line-chart/custom-line-chart.component';
+import { CustomLineChartComponent } from './components/custom-line-chart/custom-line-chart.component';
+import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
 
 const components = [
   TabsComponent,
@@ -18,6 +19,7 @@ const components = [
   ColumnChartComponent,
   RangeSliderComponent,
   CustomLineChartComponent,
+  BreadcrumbsComponent,
 ];
 const modules = [
   CommonModule,

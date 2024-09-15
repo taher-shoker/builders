@@ -14,12 +14,13 @@ const components = [
   KpiCardHeaderComponent,
   KpiCardComponent,
   BannerComponent,
+  CardsHolderComponent,
 ];
 
 const modules = [SharedModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
-  declarations: [...components, CardsHolderComponent],
+  declarations: [...components],
   imports: [...modules],
 })
 export class HomeModule {}

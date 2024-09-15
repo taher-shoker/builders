@@ -75,14 +75,15 @@ export class DetailsComponent implements OnInit {
 
   ngOnInit(): void {
     this.activeRoute.paramMap.subscribe((paramMap) => {
-      if (paramMap) {
-        this.pageTitle = paramMap.get('kpiName')!;
-        console.log(this.pageTitle);
+      const strategicName = paramMap.get('strategicName');
+      if (strategicName) {
+        this.pageTitle = strategicName;
+        this.getAllStrategicGroupKpiDetails();
+        this.getAllStrategicGroupKpis();
       }
     });
+
     this.handleForm();
-    this.getAllStrategicGroupKpiDetails();
-    this.getAllStrategicGroupKpis();
   }
 
   handleForm() {
@@ -102,28 +103,30 @@ export class DetailsComponent implements OnInit {
   }
 
   getAllStrategicGroupKpiDetails() {
-    this.activeRoute.queryParams.subscribe((params) => {
-      const strategicName = params['strategicName'];
-      const year = this.sharedFormService.getForm().controls['year'].value;
+    const strategicName =
+      this.activeRoute.snapshot.paramMap.get('strategicName');
+    const year = this.sharedFormService.getForm().controls['year'].value;
 
+    if (strategicName) {
       this.strategicGroupDetailsService
         .getAllStrategicGroupKpiDetails({ strategicName, year })
         .subscribe((result: StrategicGroupDetails) => {
           this.strategicGroupDetails = result;
         });
-    });
+    }
   }
 
   getAllStrategicGroupKpis() {
-    this.activeRoute.queryParams.subscribe((params) => {
-      const strategicName = params['strategicName'];
-      const year = this.sharedFormService.getForm().controls['year'].value;
+    const strategicName =
+      this.activeRoute.snapshot.paramMap.get('strategicName');
+    const year = this.sharedFormService.getForm().controls['year'].value;
+    if (strategicName) {
       this.strategicGroupDetailsService
         .getAllStrategicGroupKpis({ strategicName, year })
         .subscribe((result: StrategicGroupKPI[]) => {
           this.strategicGroupKPI = result;
         });
-    });
+    }
   }
 
   selectYear(event: number) {

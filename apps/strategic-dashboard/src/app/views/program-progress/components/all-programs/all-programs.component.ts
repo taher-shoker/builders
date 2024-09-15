@@ -45,8 +45,7 @@ export class AllProgramsComponent implements OnInit {
   }
 
   navigateToProgramDetails(program: any): void {
-    this.router.navigate(['/programs/program-details'], {
-      queryParams: { programName: program.programName },
+    this.router.navigate(['/home/programs', program.programName], {
       state: { program: program },
     });
   }

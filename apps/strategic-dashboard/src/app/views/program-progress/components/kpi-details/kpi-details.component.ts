@@ -73,6 +73,7 @@ export class KpiDetailsComponent implements OnInit {
   kpiData: KPIItem[] = [];
 
   kpiCode = '';
+  programName = '';
   kpiDefinition = '';
   kpiFormula = '';
   kpiDetails!: KPIDetails;
@@ -82,10 +83,14 @@ export class KpiDetailsComponent implements OnInit {
     private programKPIService: ProgramKPIService
   ) {}
   ngOnInit(): void {
-    this.kpiCode = this.route.snapshot.queryParamMap.get('kpiCode') || '';
-    this.chunkedTitles = this.chunkArray(this.kpiData, 4);
+    this.route.params.subscribe((params) => {
+      this.kpiCode = params['kpiCode'] || '';
+      this.programName = params['programName'] || '';
 
-    this.getKPIDetails();
+      this.chunkedTitles = this.chunkArray(this.kpiData, 4);
+
+      this.getKPIDetails();
+    });
   }
 
   chunkArray(array: any[], size: number): any[][] {
