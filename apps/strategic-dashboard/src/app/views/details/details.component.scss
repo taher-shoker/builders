@@ -78,7 +78,7 @@
     }
 
     .range-holder {
-      padding: 30px 24px 20px 24px;
+      padding: 12px;
       border-radius: 8px;
 
       border: 1px solid var(--stcLightGreyColor);
@@ -87,6 +87,18 @@
 
   &_charts {
     margin: 16px 20px;
+  }
+  ::ng-deep {
+    stc-apps-select-drop-down {
+      .mat-mdc-form-field-infix {
+        padding-top: inherit !important;
+        padding-bottom: inherit !important;
+      }
+
+      .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+        transform: none;
+      }
+    }
   }
 }
 
@@ -114,7 +126,7 @@
   }
 
   .details-page_header {
-    >div {
+    > div {
       margin-left: 20%;
     }
   }
@@ -136,7 +148,7 @@
   }
 
   .details-page_header {
-    >div {
+    > div {
       margin-left: 20%;
     }
   }

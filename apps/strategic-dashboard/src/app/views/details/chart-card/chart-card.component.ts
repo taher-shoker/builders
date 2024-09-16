@@ -23,6 +23,8 @@ export class ChartCardComponent implements OnInit {
   > = input([]);
 
   ngOnInit(): void {
+    console.log('strategic group',this.strategicGroup());
+    
     this.extractUnit();
   }
 
