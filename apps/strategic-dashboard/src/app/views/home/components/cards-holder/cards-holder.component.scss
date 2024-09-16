@@ -24,7 +24,7 @@
 
     }
 
-    :first-child {
+    .kpis-card:first-of-type {
         ::before {
             content: "";
             position: absolute;
