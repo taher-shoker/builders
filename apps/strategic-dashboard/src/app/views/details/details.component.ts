@@ -4,8 +4,8 @@ import { StrategicGroupDetailsService } from './services/strategic-group-details
 import { SharedFormService } from '../../shared/services/shared-form.service';
 import { FormGroup } from '@angular/forms';
 import { YearService } from '../../shared/services/year.service';
-import { StrategicGroupDetails } from 'c:/Users/saraa/projects/stc-apps/apps/strategic-dashboard/src/app/views/details/models/strategic-group-details.model';
 import { StrategicGroupKPI } from './models/strategic-group-kpi.model';
+import { StrategicGroupDetails } from './models/strategic-group-details.model';
 
 @Component({
   selector: 'stc-apps-details',

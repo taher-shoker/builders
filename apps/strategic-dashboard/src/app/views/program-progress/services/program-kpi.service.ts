@@ -46,13 +46,13 @@ export class ProgramKPIService {
   getKPIProgramDetails(params: {
     programName: string;
     quarter?: string;
-  }): Observable<StrategicProgramKPIDetails[]> {
+  }): Observable<StrategicProgramKPIDetails> {
     let httpParams = new HttpParams().set('programName', params.programName);
     if (params.quarter) {
       httpParams = httpParams.set('quarter', params.quarter);
     }
 
-    return this.http.get<StrategicProgramKPIDetails[]>(
+    return this.http.get<StrategicProgramKPIDetails>(
       this.baseUrl + 'v1/dashboard/program/detail',
       {
         params: httpParams,
@@ -70,4 +70,5 @@ export class ProgramKPIService {
       }
     );
   }
+
 }
