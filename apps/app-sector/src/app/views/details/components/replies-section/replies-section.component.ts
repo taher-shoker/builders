@@ -180,19 +180,21 @@ export class RepliesSectionComponent implements OnInit {
 
   extractMentions(text: string): string[] {
     //eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const mentions: string[] = this.mentions.map((mention: user) => {
-      return `${mention.name}`;
-    });
+    if (this.mentions.length !== 0) {
+      const mentions: string[] = this.mentions.map((mention: user) => {
+        return `${mention.name}`;
+      });
 
-    const mentionPattern = new RegExp(mentions.join('|'), 'gi');
-    const extractedMentions: string[] = [];
-    let match;
+      const mentionPattern = new RegExp(mentions.join('|'), 'gi');
+      const extractedMentions: string[] = [];
+      let match;
 
-    while ((match = mentionPattern.exec(text)) !== null) {
-      extractedMentions.push(match[0]);
-    }
+      while ((match = mentionPattern.exec(text)) !== null) {
+        extractedMentions.push(match[0]);
+      }
 
-    return extractedMentions;
+      return extractedMentions;
+    } else return [];
   }
 
   commentsCount() {
