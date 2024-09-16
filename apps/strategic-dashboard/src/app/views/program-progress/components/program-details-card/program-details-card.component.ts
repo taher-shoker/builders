@@ -2,11 +2,6 @@ import { Component, computed, effect, input, InputSignal } from '@angular/core';
 import { LineChartData } from '@stc-apps/shared-ui';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
-import {
-  columnChartData,
-  Progress,
-} from '../../models/program-kpi-details.model';
-import { KPIValue } from '../../models/strategic-program-kpi-details.model';
 
 @Component({
   selector: 'stc-apps-program-details-card',
@@ -18,6 +13,7 @@ export class ProgramDetailsCardComponent {
   chartType: InputSignal<string> = input('');
   // progressValue: InputSignal<Progress[]> = input<Progress[]>([]);
   strategicGroup: InputSignal<any> = input<any>([]);
+  unit:InputSignal<string> = input('');
   columnChartData = computed(() => {
     const strategicGroupData = this.strategicGroup();
     let processedData: { year: number; Actual: number; Target: number }[] = [];
@@ -33,12 +29,12 @@ export class ProgramDetailsCardComponent {
   });
 
   progressValue: InputSignal<any> = input<any>();
-  lineChartValues: InputSignal<any> = input([]);
+  // lineChartValues: InputSignal<any> = input([]);
   // columnChartData: InputSignal<columnChartData[]> = input<columnChartData[]>(
   //   []
   // );
 
-  lineChartColors = ['#D2D7D9', '#45006F'];
+  lineChartColors = ['#45006F', '#D2D7D9'];
   // lineChartData: { name: string; data: LineChartData[] }[] = [
   //   {
   //     name: 'Planned',
@@ -70,13 +66,13 @@ export class ProgramDetailsCardComponent {
           acc: { [key: number]: { target: number[]; actualValue: number[] } },
           value: any
         ) => {
-          console.log('value', value);
+          console.log('value', value.yearNum);
 
-          if (!acc[value.year]) {
-            acc[value.year] = { target: [], actualValue: [] };
+          if (!acc[value.yearNum]) {
+            acc[value.yearNum] = { target: [], actualValue: [] };
           }
-          acc[value.year].target.push(value.actual || 0);
-          acc[value.year].actualValue.push(value.target || 0);
+          acc[value.yearNum].target.push(value.kpiValue || 0);
+          acc[value.yearNum].actualValue.push(value.kpiTarget || 0);
           return acc;
         },
         {}
@@ -87,7 +83,7 @@ export class ProgramDetailsCardComponent {
 
       Object.keys(groupedData).forEach((yearStr: string) => {
         const year = parseInt(yearStr);
-    
+
         const targetValues = groupedData[year].target;
         const actualValues = groupedData[year].actualValue;
 
@@ -109,14 +105,13 @@ export class ProgramDetailsCardComponent {
       });
 
       processedData = [
-        { name: `Target`, data: targetSeries },
-        { name: `Actual`, data: actualSeries },
+        { name: `Completion ${this.unit()}`, data: targetSeries },
+        { name: `Planned ${this.unit()}`, data: actualSeries },
       ];
     }
 
     return processedData;
   });
- 
 
   progressBarData = computed(() => {
     console.log(this.progressValue()[0]);

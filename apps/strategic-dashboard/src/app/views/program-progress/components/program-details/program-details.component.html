@@ -3,20 +3,22 @@
   <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
 
   <div class="program-details_header row">
-    <div class="col-md-4 col-sm-12">
+    <div class="col-md-3 col-sm-12">
       <h2>{{ programName }}</h2>
     </div>
-    <div class="col-md-4 col-sm-12">
+    <div class="col-md-7 col-sm-12">
       <div class="program-details_slider">
         <h4>Range Historical Trend</h4>
-        <stc-apps-range-slider
-          [startValue]="200"
-          [endValue]="750"
-        ></stc-apps-range-slider>
+        <div class="range-holder">
+          <stc-apps-range-slider
+            [startValue]="200"
+            [endValue]="750"
+          ></stc-apps-range-slider>
+        </div>
       </div>
     </div>
-    <div class="col-md-4 col-sm-12">
-      <div class="program-details_filter">
+    <div class="col-md-2 col-sm-12">
+      <div class="program-details_filter d-flex justify-content-end">
         <stc-apps-select-drop-down
           [label]="'Select FY Year'"
           [options]="yearsArray"
@@ -30,6 +32,7 @@
     @for (card of cardItems; track card; let index = $index) {
     <div class="col-md-6 col-sm-12">
       <stc-apps-program-details-card
+        [unit]="programDetails.unit"
         [title]="card.title"
         [chartType]="card.chartType"
         [progressValue]="card.progress || []"

@@ -7,6 +7,7 @@ import {
   KPIValue,
   StrategicProgramKPIDetails,
 } from '../../models/strategic-program-kpi-details.model';
+import { KpiValue } from '../../models/kpi-details.model';
 
 @Component({
   selector: 'stc-apps-program-details',
@@ -81,23 +82,23 @@ export class ProgramDetailsComponent implements OnInit {
       {
         title: 'Budget variance',
         chartType: 'line',
-        // progress: this.programDetails.values?.map((value) => {
-        //   let obj: any;
-        //   obj.year = value.year;
-        //   obj.actual = value.budgetSpend;
-        //   obj.target = value.budgetTarget;
-        //   return obj;
-        // }),
+        progress: this.programDetails.values?.map((value) => {
+          const obj: KpiValue = {} as KpiValue;
+          obj.yearNum = value.year;
+          obj.kpiValue = value.budgetSpend;
+          obj.kpiTarget = value.budgetTarget;
+          return obj;
+        }),
       },
       {
         title: 'Completion VS plan',
         chartType: 'line',
         progress: this.programDetails.values?.map((value) => {
           console.log(value);
-
-          let obj: any;
-          obj.budgetTarget = value.budgetTarget;
-
+          const obj: KpiValue = {} as KpiValue;
+          obj.yearNum = value.year;
+          obj.kpiValue = value.completionActual;
+          obj.kpiTarget = value.completionTarget;
           return obj;
         }),
       },
