@@ -17,14 +17,20 @@ export class LoaderInterceptor implements HttpInterceptor {
     request: HttpRequest<unknown>,
     next: HttpHandler
   ): Observable<HttpEvent<unknown>> {
-    this.totalRequests++;
-    this.loaderService.setLoading(true);
+    const excludedUrls = ['/api/v2/scrs/notification'];
+    const shouldExclude = excludedUrls.some((url) => request.url.includes(url));
+    if (!shouldExclude) {
+      this.totalRequests++;
+      this.loaderService.setLoading(true);
+    }
 
     return next.handle(request).pipe(
       finalize(() => {
-        this.totalRequests--;
-        if (this.totalRequests === 0) {
-          this.loaderService.setLoading(false);
+        if (!shouldExclude) {
+          this.totalRequests--;
+          if (this.totalRequests === 0) {
+            this.loaderService.setLoading(false);
+          }
         }
       })
     );
