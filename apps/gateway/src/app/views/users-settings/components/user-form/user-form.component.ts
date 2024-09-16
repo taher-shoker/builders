@@ -362,6 +362,8 @@ export class UserFormComponent implements OnInit, OnChanges {
       dataForm = { userGroups: teams, email, name, jobTitle };
     } else if (currentSystem === 'Score_Card_Report_DB') {
       dataForm = { userGroups, teams, email, name, jobTitle };
+    } else if (currentSystem === 'Business_Excellence_Dashboard') {
+      dataForm = { userGroups, email, name, jobTitle };
     } else {
       dataForm = { userGroups: teams, email, name, jobTitle };
     }
