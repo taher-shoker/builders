@@ -1,8 +1,6 @@
 .allPrograms-holder {
   background-color: var(--stc-lightGrey-color);
-  &_content {
-    padding: 40px;
-  }
+
   &_title {
     font-weight: 700;
     font-size: 32px;
@@ -10,6 +8,7 @@
     color: var(--stc-color);
     margin-bottom: 24px;
   }
+
   &_search {
     margin-bottom: 24px;
     display: flex;
@@ -23,18 +22,22 @@
       outline: none;
       width: 90%;
     }
+
     .search-input::placeholder {
       color: var(--grey-color);
     }
+
     img {
       padding: 0px 12px;
     }
   }
+
   &_card {
     transition: transform 0.3s ease-in-out;
     margin-bottom: 34px;
     cursor: pointer;
   }
+
   &_card:hover {
     transform: scale(1.03);
   }

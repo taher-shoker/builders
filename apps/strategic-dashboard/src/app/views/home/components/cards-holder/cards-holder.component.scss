@@ -3,7 +3,8 @@
     flex-wrap: wrap;
     justify-content: space-between;
     row-gap: 2.5rem;
-    margin: 20px 24px;
+    margin: 0 20px;
+    padding: 30px;
 
     .kpis-card {
         width: 24%;
@@ -32,7 +33,7 @@
             width: 30%;
             border-left: 5px solid var(--stcSunsetColor);
             bottom: -16px;
-            left: -10.5px;
+            left: -20.5px;
             border-bottom-left-radius: 12px;
         }
 
@@ -43,7 +44,7 @@
             width: 29%;
             border-bottom: 5px solid var(--stcSunsetColor);
             bottom: -20.5px;
-            left: -8px;
+            left: -20px;
             border-bottom-left-radius: 12px;
         }
     }
@@ -56,7 +57,7 @@
             width: 30%;
             border-right: 5px solid var(--stcSunsetColor);
             bottom: -16px;
-            right: -10.5px;
+            right: -20.5px;
             border-bottom-right-radius: 12px;
         }
 
@@ -67,7 +68,7 @@
             width: 29%;
             border-bottom: 5px solid var(--stcSunsetColor);
             bottom: -20.5px;
-            right: -8px;
+            right: -18px;
             border-bottom-right-radius: 12px;
         }
     }
