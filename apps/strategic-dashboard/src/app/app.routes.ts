@@ -21,6 +21,13 @@ export const appRoutes: Route[] = [
           ),
       },
       {
+        path: 'home/data-upload',
+        loadChildren: () =>
+          import('./views/data-upload/data-upload.module').then(
+            (m) => m.DataUploadModule
+          ),
+      },
+      {
         path: 'home/:strategicName',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),

@@ -1,1 +1,17 @@
-<p>file-upload works!</p>
+<div class="data-upload px-4">
+    <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+    <div class="data-upload_filter">
+      <button class="btn upload-btn" (click)="fileInput.click()">Upload a File</button>
+      <input
+        type="file"
+        #fileInput
+        (change)="onFileSelected($event)"
+        accept=".xlsx"
+        style="display: none; border: none; outline: none"
+      />
+    </div>
+    <div class="logs-table mt-8">
+      <stc-apps-logs-table></stc-apps-logs-table>
+    </div>
+  </div>
+  
