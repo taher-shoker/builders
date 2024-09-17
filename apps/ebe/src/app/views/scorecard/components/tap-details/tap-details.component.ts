@@ -7,7 +7,8 @@ import {
   Output,
   signal,
   WritableSignal,
-  EventEmitter
+  EventEmitter,
+  ViewChild
 } from '@angular/core';
 import {
   FileModel,
@@ -29,6 +30,7 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
 import { Subject } from 'rxjs';
 import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 interface filterOption
 {
   month:number;
@@ -44,12 +46,14 @@ interface filterOption
     MatFormFieldModule,
     MatSelectModule,
     DialogModalComponent,
-    EditModeViewComponent
+    EditModeViewComponent,
+    OverlayPanelModule
   ],
   templateUrl: './tap-details.component.html',
   styleUrl: './tap-details.component.scss',
 })
 export class TapDetailsComponent implements OnInit {
+  @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
   scorcardData: InputSignal<ScorecardModel[]> = input.required<ScorecardModel[]>();
   currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
   visible = false;
@@ -119,6 +123,10 @@ export class TapDetailsComponent implements OnInit {
         this.downloadFile(response, `scorecards.csv`);
       }
     })
+  }
+  text()
+  {
+    this.overlayPanel2.toggle(event);
   }
   downloadFile(data: string, filename: string) {
     const blob = new Blob([data], { type: 'text/csv' });

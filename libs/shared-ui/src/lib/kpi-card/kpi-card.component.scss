@@ -28,6 +28,15 @@
       color:var(--stc-purple-light-color);
       font-size: 18px;
       margin: 0;
+      height: 54px;
+      a
+      {
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        color:var(--stc-purple-light-color);
+        text-decoration: none;
+      }
     }
     &-statuses
     {
@@ -126,7 +135,7 @@
   color:#222222;
   @extend .stcFont;
   font-size: 16px;
-  max-width:300px;
+  max-width:500px;
   word-spacing:3px;
 }
 .kpi-details , .no-kpi-details

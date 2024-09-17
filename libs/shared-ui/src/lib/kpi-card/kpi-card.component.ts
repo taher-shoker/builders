@@ -10,6 +10,8 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 })
 export class KpiCardComponent implements OnChanges {
   maxTextLength = 0; // Adjust the maximum length as needed
+  maxTitleLength = 0; // Adjust the maximum length as needed
+  @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
   showFullText = false;
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   // @Input({required:true}) costData!:CostModel;
@@ -19,14 +21,22 @@ export class KpiCardComponent implements OnChanges {
       const textArr:string[] = this.kpiData().details?.trim()?.split(' ') ?? [];
       const filteredArray = textArr.filter(item => item !== '');
       this.maxTextLength = filteredArray.length;
-      console.log(filteredArray);
-      
+    }
+    if(this.kpiData().title)
+    {
+      const textArr:string[] = this.kpiData().title.trim()?.split(' ') ?? [];
+      const filteredArray = textArr.filter(item => item !== '');
+      this.maxTitleLength = filteredArray.length;
     }
   }
   kpiData:InputSignal<KpiModel> = input.required<KpiModel>({alias : 'kpi'});
   displayDrilldown()
   {
     this.overlayPanel.toggle(event);
+  }
+  displayDrilldown2()
+  {
+    this.overlayPanel2.toggle(event);
   }
   toggleReadMore() {
     this.showFullText = !this.showFullText;

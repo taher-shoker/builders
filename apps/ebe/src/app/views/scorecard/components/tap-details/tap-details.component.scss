@@ -112,3 +112,11 @@
     width:100%;
   }
 }
+.popover-section {
+  color: #222222;
+  @extend .stcFont;
+  font-size: 16px;
+  max-width: 400px;
+  word-spacing: 3px;
+  word-break: break-all;
+}

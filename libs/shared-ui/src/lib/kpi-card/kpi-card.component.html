@@ -1,6 +1,14 @@
 <div class="financial-scorecard-costs-card">
   <div class="financial-scorecard-costs-card-header">
-    <p class="financial-scorecard-costs-card-title">{{ kpiData().title }}</p>
+    <p 
+      class="financial-scorecard-costs-card-title"
+    >
+      {{ kpiData().title | truncateWord:9}}
+      @if(maxTitleLength > 9)
+      {
+        <a (click)="displayDrilldown2()">read more</a>
+      }
+    </p>
   </div>
   <div class="financial-scorecard-costs-card-statuses">
     @if(kpiData() && kpiData().achievedStatus) {
@@ -90,5 +98,11 @@
 {
   <p-overlayPanel #overlayPanel dismissable="true">
     <section class="popover-section">{{kpiData().details}}</section>
+  </p-overlayPanel>
+}
+@if(kpiData().title.length > 20)
+{
+  <p-overlayPanel #overlayPanel2 dismissable="true">
+    <section class="popover-section">{{kpiData().title}}</section>
   </p-overlayPanel>
 }

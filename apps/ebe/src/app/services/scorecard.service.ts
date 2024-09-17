@@ -32,11 +32,11 @@ export class ScorecardService {
     //   name: 'raqami',
     //   url: '/raqami',
     // },
-    // {
-    //   id: 4,
-    //   name: 'PSR',
-    //   url: '/psr',
-    // },
+    {
+      id: 4,
+      name: 'PSR',
+      url: '/psr',
+    },
   ];
   getUserGroups(): UserModel {
     return JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
