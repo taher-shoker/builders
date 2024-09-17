@@ -17,6 +17,7 @@ import { environment } from '../environments/environment';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LayoutModule } from './layout/layout.module';
 import { HttpInterceptorService } from './services/interceptors/http-interceptor.service';
+import { LoaderInterceptor } from './services/interceptors/loader.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -57,6 +58,7 @@ const modules = [
       useClass: HttpInterceptorService,
       multi: true,
     },
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
   ],
   bootstrap: [AppComponent],
 })

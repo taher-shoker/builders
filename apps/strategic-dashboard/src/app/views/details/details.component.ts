@@ -74,6 +74,8 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.handleForm();
+
     this.activeRoute.paramMap.subscribe((paramMap) => {
       const strategicName = paramMap.get('strategicName');
       if (strategicName) {
@@ -82,8 +84,6 @@ export class DetailsComponent implements OnInit {
         this.getAllStrategicGroupKpis();
       }
     });
-
-    this.handleForm();
   }
 
   handleForm() {

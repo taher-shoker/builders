@@ -1,2 +1,5 @@
+@if (loaderService.isLoading$ | async) {
+<stc-apps-loader></stc-apps-loader>
+}
 <stc-apps-top-banner></stc-apps-top-banner>
 <router-outlet></router-outlet>
