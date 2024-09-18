@@ -12,7 +12,17 @@
       }"
     >
       {{ item.overView }}{{ item.overViewDesc }}
-      <img *ngIf="!item.overView" src="assets/images/arrow-up.svg" alt="" />
+      <img
+        *ngIf="!item.overView"
+        src="assets/images/arrow-up.svg"
+        [ngStyle]="{
+          transform: shouldRotateArrow(item.overViewDesc)
+            ? 'rotate(180deg)'
+            : 'none',
+          filter: shouldRotateArrow(item.overViewDesc) ? 'invert(1)' : 'none'
+        }"
+        alt="Direction Arrow"
+      />
     </div>
     }
   </div>

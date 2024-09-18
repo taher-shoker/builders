@@ -24,6 +24,8 @@ export interface KPIDetails {
   custodianTitle: string;
   definition: string;
   formula: string;
+  baseline: number;
+  celing: number;
   values: KpiValue[];
 }
 
