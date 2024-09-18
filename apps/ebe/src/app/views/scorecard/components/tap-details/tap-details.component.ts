@@ -141,4 +141,12 @@ export class TapDetailsComponent implements OnInit {
   {
     this.visible = false;
   }
+  hoverTitle!:string;
+  showPopup(title:string)
+  {
+    if(title.trim().length > 95){
+      this.hoverTitle = title;
+      this.overlayPanel2.show(event)
+    }
+  }
 }

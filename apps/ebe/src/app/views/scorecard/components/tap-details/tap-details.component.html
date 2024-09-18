@@ -30,14 +30,14 @@
     <p
       class="financial-scorecard-header-title"
       [class.mt-4]="!first"
-      (mouseenter)="overlayPanel2.show($event)"
+      (mouseenter)="showPopup(scorecard.title)"
       (mouseleave)="overlayPanel2.hide()"
       >
       <!-- (click)="text()" -->
       {{ scorecard.title | truncateWord : 13 }}
-      @if(scorecard.title.length > 100) {
+      @if(scorecard.title.trim().length > 95) {
       <p-overlayPanel #overlayPanel2 dismissable="true">
-        <section class="popover-section">{{ scorecard.title }}</section>
+        <section class="popover-section">{{ hoverTitle }}</section>
       </p-overlayPanel>
       }
     </p>

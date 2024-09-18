@@ -29,7 +29,7 @@
         <span>{{ userName() ? userName() : "" }}</span>
       </div>
     </div>
-    @if(userRoles().roles[0].roleName !== 'BE_VIEWERS'){
+    @if(userRoles() && userRoles().roles[0].roleName !== 'BE_VIEWERS'){
       <div class="edit-mode-switch-btn">
         <span>Edit Mode : </span>
         <div class="form-check form-switch">
