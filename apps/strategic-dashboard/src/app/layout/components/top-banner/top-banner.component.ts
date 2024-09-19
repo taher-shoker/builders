@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -19,8 +20,14 @@ export class TopBannerComponent implements OnInit {
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
     },
+    {
+      name: 'data upload',
+      url: `/home/data-upload`,
+      icon: 'fa-upload',
+      roles: ['Data_Admins'],
+      urlHome: `/home`,
+    },
   ];
-
   yearsArray: any = [
     { name: 2020 },
     { name: 2021 },
@@ -28,7 +35,11 @@ export class TopBannerComponent implements OnInit {
     { name: 2023 },
   ];
 
-  constructor(private cookieService: CookieService, public router: Router) {}
+  constructor(
+    private cookieService: CookieService,
+    public router: Router,
+    private authService: AuthService
+  ) {}
   ngOnInit() {
     //this.userName='Habiba';
     if (
@@ -36,6 +47,31 @@ export class TopBannerComponent implements OnInit {
       this.cookieService.get('token')
     ) {
       this.userName = this.cookieService.get('USER_FULLNAME') || '';
+      this.authService.getUserData();
+      // this.authService.loggedUserStream.subscribe((res) => {
+      //   console.log(res?.userGroups);
+
+      //   res?.userGroups.map((group) => {
+      //     if (group.groupName == 'Data_Admins') {
+      //       console.log('hey');
+      //       let flag = false;
+      //       this.navItems.map((item) => {
+      //         if (item.name == 'data upload') {
+      //           flag = true;
+      //         }
+      //       });
+      //       if (!flag) {
+      //         this.navItems.push({
+      //           name: 'data upload',
+      //           url: `/home/data-upload`,
+      //           icon: 'fa-upload',
+      //           roles: ['Data_Admins'],
+      //           urlHome: `/home`,
+      //         });
+      //       }
+      //     }
+      //   });
+      // });
     }
   }
 

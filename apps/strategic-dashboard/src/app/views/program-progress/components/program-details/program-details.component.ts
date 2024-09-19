@@ -53,29 +53,17 @@ export class ProgramDetailsComponent implements OnInit {
           {
             value: this.programDetails.actualValue * 100,
             label: 'Actul',
-            bgColor: this.getChartColors(
-              this.programDetails.actualValue,
-              this.programDetails.redThreshold,
-              this.programDetails.greenThreshold
-            ),
+            bgColor: "var(--stcOasisColor)",
           },
           {
             value: this.programDetails.target * 100,
             label: 'Planned',
-            bgColor: this.getChartColors(
-              this.programDetails.target,
-              this.programDetails.redThreshold,
-              this.programDetails.greenThreshold
-            ),
+            bgColor: "var(--stc-color)"
           },
           {
             value: Math.abs(this.programDetails.deviation * 100),
             label: 'deviation',
-            bgColor: this.getChartColors(
-              this.programDetails.deviation,
-              this.programDetails.redThreshold,
-              this.programDetails.greenThreshold
-            ),
+            bgColor: "var(--stc-pink-color)"
           },
         ],
       },
