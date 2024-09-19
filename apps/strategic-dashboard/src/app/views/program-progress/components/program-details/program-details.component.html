@@ -11,8 +11,9 @@
         <h4>Range Historical Trend</h4>
         <div class="range-holder">
           <stc-apps-range-slider
-            [startValueInput]="200"
-            [endValueInput]="750"
+            [startValueInput]="0"
+            [endValueInput]="2024"
+            (rangeChanged)="onRangeChange($event)"
           ></stc-apps-range-slider>
         </div>
       </div>

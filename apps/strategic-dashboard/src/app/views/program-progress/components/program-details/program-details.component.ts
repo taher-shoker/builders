@@ -20,7 +20,14 @@ export class ProgramDetailsComponent implements OnInit {
   programName = '';
   programDetails: ProgramKPIDetails = {} as ProgramKPIDetails;
   programsKPIs: ProgramKPI[] = [];
+  currentDate = new Date();
+  year = this.currentDate.getFullYear();
+  currentYear = this.currentDate.getFullYear() - 1;
   cardItems: any[] = [];
+  selectedYearRange: { start: number; end: number } = {
+    start: 2000,
+    end: 2024,
+  };
   constructor(
     private route: ActivatedRoute,
     private programKPIService: ProgramKPIService
@@ -35,14 +42,11 @@ export class ProgramDetailsComponent implements OnInit {
       }
     });
   }
-
-  yearsArray: any = [
-    { name: 2020 },
-    { name: 2021 },
-    { name: 2022 },
-    { name: 2023 },
+  yearsArray: any[] = [
+    { name: this.currentYear },
+    { name: this.currentDate.getFullYear() },
   ];
-  setChartsData() {
+  setChartsData(programDetailsValues: any) {
     console.log(this.programDetails.values);
 
     this.cardItems = [
@@ -53,24 +57,24 @@ export class ProgramDetailsComponent implements OnInit {
           {
             value: this.programDetails.actualValue * 100,
             label: 'Actul',
-            bgColor: "var(--stcOasisColor)",
+            bgColor: 'var(--stcOasisColor)',
           },
           {
             value: this.programDetails.target * 100,
             label: 'Planned',
-            bgColor: "var(--stc-color)"
+            bgColor: 'var(--stc-color)',
           },
           {
             value: Math.abs(this.programDetails.deviation * 100),
             label: 'deviation',
-            bgColor: "var(--stc-pink-color)"
+            bgColor: 'var(--stc-pink-color)',
           },
         ],
       },
       {
         title: 'Budget variance',
         chartType: 'line',
-        progress: this.programDetails.values?.map((value) => {
+        progress: programDetailsValues?.map((value: any) => {
           const obj: KpiValue = {} as KpiValue;
           obj.yearNum = value.year;
           obj.kpiValue = value.budgetSpend;
@@ -81,7 +85,7 @@ export class ProgramDetailsComponent implements OnInit {
       {
         title: 'Completion VS plan',
         chartType: 'line',
-        progress: this.programDetails.values?.map((value) => {
+        progress: programDetailsValues?.map((value: any) => {
           console.log(value);
           const obj: KpiValue = {} as KpiValue;
           obj.yearNum = value.year;
@@ -120,9 +124,10 @@ export class ProgramDetailsComponent implements OnInit {
       .subscribe((result: StrategicProgramKPIDetails) => {
         console.log('program details api', result);
         this.programDetails = result;
-        this.setChartsData();
+        this.setChartsData(this.programDetails.values);
       });
   }
+
   getChartColors(
     value: number,
     redThershold: number,
@@ -140,5 +145,14 @@ export class ProgramDetailsComponent implements OnInit {
       console.log('inside orange');
       return 'var(--stcSunsetColor)';
     }
+  }
+  onRangeChange(range: { start: number; end: number }) {
+    this.selectedYearRange = range;
+
+    const filteredDetails = this.programDetails.values?.filter((value) => {
+      return +value.year >= range.start && +value.year <= range.end;
+    });
+    this.setChartsData(filteredDetails);
+    console.log(filteredDetails);
   }
 }

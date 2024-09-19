@@ -35,15 +35,21 @@
 </ng-template>
 
 <ng-template #lineChart>
+  @if (progressValue().length!==0) {
   <stc-apps-custom-line-chart
     [multiChartData]="lineChartData()"
     [trendModuleState]="true"
     [colors]="lineChartColors"
   ></stc-apps-custom-line-chart>
+  } @else {
+  <div class="empty-values">There is no data for this range of years</div>
+  }
 </ng-template>
 
 <ng-template #progressChart>
-  <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
+  <stc-apps-progress-bar
+    [data]="progressBarData()"
+  ></stc-apps-progress-bar>
 </ng-template>
 <ng-template #columnChart>
   <stc-apps-column-chart

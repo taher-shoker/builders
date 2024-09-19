@@ -15,7 +15,7 @@
       text-transform: capitalize;
       font-size: 24px;
       font-weight: 500;
-      margin-left:12px;
+      margin-left: 12px;
     }
   }
 
@@ -39,5 +39,12 @@
         }
       }
     }
+  }
+  .empty-values{
+    text-align: center;
+    font-size: 18px;
+  }
+  stc-apps-progress-bar {
+    margin: 35px;
   }
 }
