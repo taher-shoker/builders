@@ -11,8 +11,20 @@
     tickInterval="100"
     [discrete]="true"
   >
-    <input [ngModel]="startValue()" matSliderStartThumb thumbLabel />
-    <input [ngModel]="endValue()" matSliderEndThumb thumbLabel />
+    <input
+      type="range"
+      [ngModel]="startValue()"
+      (input)="onInputChangeStart($event)"
+      matSliderStartThumb
+      thumbLabel
+    />
+    <input
+      type="range"
+      [ngModel]="endValue()"
+      (input)="onInputChangeEnd($event)"
+      matSliderEndThumb
+      thumbLabel
+    />
   </mat-slider>
   <label class="range-slider_label"> {{ slider.max }} </label>
 </div>

@@ -52,19 +52,23 @@
   <div>
     <div class="range-holder col-md-12 col-lg-12 col-xl-6">
       <stc-apps-range-slider
-        [startValue]="200"
-        [endValue]="750"
+        [startValueInput]="200"
+        [endValueInput]="750"
+        (rangeChanged)="onRangeChange($event)"
       ></stc-apps-range-slider>
+      <!-- {{ filteredDetails | json }} -->
     </div>
   </div>
 </div>
 <div class="details-page_charts row row-gap-3">
-  @for (item of strategicGroupDetails; track item) {
+  @for (item of filteredDetails; track item) {
   <div class="details-page_charts_item col-lg-6 col-md-12 col-sm-12">
     <stc-apps-chart-card
       [title]="item.name"
       [strategicGroup]="item"
     ></stc-apps-chart-card>
   </div>
+  } @empty {
+  <p>No data available for the selected range or year.</p>
   }
 </div>

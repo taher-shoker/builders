@@ -65,6 +65,7 @@ export class DetailsComponent implements OnInit {
 
   strategicGroupDetails: StrategicGroupDetails = [];
   strategicGroupKPI: StrategicGroupKPI[] = [];
+  filteredDetails: StrategicGroupDetails = [];
 
   constructor(
     private activeRoute: ActivatedRoute,
@@ -112,6 +113,7 @@ export class DetailsComponent implements OnInit {
         .getAllStrategicGroupKpiDetails({ strategicName, year })
         .subscribe((result: StrategicGroupDetails) => {
           this.strategicGroupDetails = result;
+          this.filteredDetails = [...this.strategicGroupDetails];
         });
     }
   }
@@ -132,5 +134,13 @@ export class DetailsComponent implements OnInit {
   selectYear(event: number) {
     this.yearService.setYear(event.toString());
     this.getAllStrategicGroupKpiDetails();
+  }
+
+  onRangeChange(range: { start: number; end: number }) {
+    this.filteredDetails = this.strategicGroupDetails.filter((item) =>
+      item.values.some((value) => {
+        return value.year >= range.start && value.year <= range.end;
+      })
+    );
   }
 }
