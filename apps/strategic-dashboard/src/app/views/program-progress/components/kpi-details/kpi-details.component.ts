@@ -41,11 +41,7 @@ export class KpiDetailsComponent implements OnInit {
     {
       title: 'Status of the KPI',
       chartType: 'donut',
-      progress: [
-        { value: 97, label: 'Baseline', bgColor: 'var(--stcOasisColor)' },
-        { value: 100, label: 'Celing', bgColor: 'var(--stc-color)' },
-        { value: 87, label: 'Target', bgColor: 'var(--stc-pink-color)' },
-      ],
+      progress: [] as any[],
     },
   ];
 
@@ -98,9 +94,15 @@ export class KpiDetailsComponent implements OnInit {
     this.kpiInfo = [
       {
         overView: '',
-        overViewDesc: 'Increasing',
-        backgroundColor: details.direction,
-        color: 'var(--stcOasisColor)',
+        overViewDesc: details.direction === '1.0' ? 'Increasing' : 'Decreasing',
+        backgroundColor:
+          details.direction === '1.0'
+            ? 'rgba(0, 196, 140, 0.1)'
+            : 'rgba(255, 0, 0, 0.1)',
+        color:
+          details.direction === '1.0'
+            ? 'var(--stcOasisColor)'
+            : 'var(--stc-red-color)',
       },
       {
         overView: 'Owner: ',
@@ -143,7 +145,28 @@ export class KpiDetailsComponent implements OnInit {
     this.kpiFormula = details.formula || 'N/A';
 
     this.cardItems[0].chartData = this.mapChartData(details.values);
+    this.cardItems[1].progress = [
+      {
+        value: details.baseline || 0,
+        label: 'Baseline',
+        bgColor: 'var(--stcOasisColor)',
+      },
+      {
+        value: details.celing || 0,
+        label: 'Celing',
+        bgColor: 'var(--stc-color)',
+      },
+      {
+        value: details.kpiTarget * 100 || 0,
+        label: 'Target',
+        bgColor: 'var(--stc-pink-color)',
+      },
+    ];
     this.chunkedTitles = this.chunkArray(this.kpiData, 4);
+  }
+
+  shouldRotateArrow(overViewDesc: string): boolean {
+    return overViewDesc.toLowerCase().includes('decreasing');
   }
 
   mapChartData(values: KpiValue[]): any[] {
