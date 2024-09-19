@@ -17,7 +17,10 @@ export class DetailsComponent implements OnInit {
   currentDate = new Date();
   year = this.currentDate.getFullYear();
   currentYear = this.currentDate.getFullYear() - 1;
-
+  selectedYearRange: { start: number; end: number } = {
+    start: 2000,
+    end: 2024,
+  };
   form: FormGroup = new FormGroup({});
 
   userName = '';
@@ -137,6 +140,7 @@ export class DetailsComponent implements OnInit {
   }
 
   onRangeChange(range: { start: number; end: number }) {
+    this.selectedYearRange = range;
     this.filteredDetails = this.strategicGroupDetails.filter((item) =>
       item.values.some((value) => {
         return value.year >= range.start && value.year <= range.end;

@@ -56,7 +56,6 @@
         [endValueInput]="750"
         (rangeChanged)="onRangeChange($event)"
       ></stc-apps-range-slider>
-      <!-- {{ filteredDetails | json }} -->
     </div>
   </div>
 </div>
@@ -66,6 +65,7 @@
     <stc-apps-chart-card
       [title]="item.name"
       [strategicGroup]="item"
+      [selectedYearRange]="selectedYearRange"
     ></stc-apps-chart-card>
   </div>
   } @empty {

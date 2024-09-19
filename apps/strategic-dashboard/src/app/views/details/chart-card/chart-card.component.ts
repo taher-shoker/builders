@@ -18,6 +18,10 @@ export class ChartCardComponent implements OnInit {
   selectedTab: WritableSignal<string> = signal('ColumnChart');
   title: InputSignal<string> = input('');
   unit: WritableSignal<string> = signal('');
+  selectedYearRange: InputSignal<{ start: number; end: number }> = input({
+    start: 2000,
+    end: 2024,
+  });
   strategicGroup: InputSignal<
     { values: { year: number; actualValue: number; target: number }[] } | any
   > = input([]);
@@ -42,10 +46,15 @@ export class ChartCardComponent implements OnInit {
   //Hold the line of the data
   lineChartData = computed(() => {
     const strategicGroupData = this.strategicGroup();
+    const { start, end } = this.selectedYearRange();
     let processedData: { name: string; data: LineChartData[] }[] = [];
 
     if (strategicGroupData && Array.isArray(strategicGroupData.values)) {
-      const groupedData = strategicGroupData.values.reduce(
+      const filteredValues = strategicGroupData.values.filter(
+        (value: any) => value.year >= start && value.year <= end
+      );
+
+      const groupedData = filteredValues.reduce(
         (
           acc: { [key: number]: { target: number[]; actualValue: number[] } },
           value: any
@@ -96,15 +105,21 @@ export class ChartCardComponent implements OnInit {
 
   columnChartData = computed(() => {
     const strategicGroupData = this.strategicGroup();
+    const { start, end } = this.selectedYearRange();
     let processedData: { year: number; Actual: number; Target: number }[] = [];
 
     if (strategicGroupData && Array.isArray(strategicGroupData.values)) {
-      processedData = strategicGroupData.values.map((value: any) => ({
+      const filteredValues = strategicGroupData.values.filter(
+        (value: any) => value.year >= start && value.year <= end
+      );
+
+      processedData = filteredValues.map((value: any) => ({
         year: value.year,
         Actual: value.actualValue,
         Target: value.target,
       }));
     }
+
     return processedData;
   });
 
