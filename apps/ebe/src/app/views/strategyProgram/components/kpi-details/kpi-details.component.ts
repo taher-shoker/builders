@@ -11,11 +11,9 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 export interface KpiProjectsDetailsModel
 {
-  id:number;
-  title:string;
-  actualValue:number;
-  plannedValue:number;
-  progressValue:number;
+  project:string;
+  actual:number;
+  planned:number;
 }
 @Component({
   selector: 'stc-apps-kpi-details.component.ts',
@@ -34,18 +32,22 @@ export interface KpiProjectsDetailsModel
   styleUrl: './kpi-details.component.scss',
 })
 export class KpiDetailsComponentTsComponent implements OnInit {
-  currentId = 0;
+  currentId!:string;
   activatedRoute = inject(ActivatedRoute);
   strategyProgramService = inject(StrategyProgramService);
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
   private confirmationService = inject(ConfirmationService);
   constructor(private router:Router){}
   ngOnInit(): void {
-    this.StrategyProgramData =
-      this.strategyProgramService.getStrategyProgramKpiDetailsModel();
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
-        this.currentId = +param['kpiId'];
+        this.currentId = param['kpiId'];
+        this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
+          next : (res:StrategyProgramKpiDetailsModel[]) => {
+            console.log(res);
+            this.StrategyProgramData = res;
+          }
+        })
       },
     });
   }
@@ -64,7 +66,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   editProject(project:KpiProjectsDetailsModel)
   {
     console.log(project);
-    this.router.navigateByUrl(`/strategy-project-form/${project.id}`);
+    this.router.navigateByUrl(`/strategy-project-form/${project.project}`);
   }
   deletedProject!:KpiProjectsDetailsModel;
   deleteProject(project:KpiProjectsDetailsModel)

@@ -2,11 +2,9 @@ import { Component, EventEmitter, input, InputSignal, OnInit, Output } from '@an
 import { ProgressInfo } from '../progress-bar/progress-bar.component';
 export interface KpiProjectsDetailsModel
 {
-  id:number;
-  title:string;
-  actualValue:number;
-  plannedValue:number;
-  progressValue:number;
+  project:string;
+  actual:number;
+  planned:number;
 }
 @Component({
   selector: 'stc-apps-project-card',
@@ -26,19 +24,20 @@ export class ProjectCardComponent implements OnInit{
       prefixValue: 0,
       suffixText: '',
       suffixValue: 0,
-      progressValue: this.projectData().progressValue,
+      // progressValue: this.projectData().progressValue,
+      progressValue: 100,
       barColor:'#00C48C',
       bgBarColor:'#00c48c1a',
       indexes: [
         {
           caption: 'Actual',
-          value: this.projectData().actualValue,
+          value: this.projectData().actual,
           position: 'up',
           actualBarColor:"#009F71",
         },
         {
           caption: `Planned`,
-          value: this.projectData().plannedValue,
+          value: this.projectData().planned,
           position: 'down',
           actualBarColor:"#000000",
         },

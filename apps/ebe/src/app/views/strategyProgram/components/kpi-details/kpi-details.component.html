@@ -9,7 +9,7 @@
       strategic objective KPIs mapping and assessment
     </p>
     <p-accordion (activeIndexChange)="getIndex($event)">
-      @for (kpi of StrategyProgramData; track kpi.id;let index = $index) {
+      @for (kpi of StrategyProgramData; track kpi.objective;let index = $index) {
         <p-accordionTab (selectedChange)="getCurrentIndex($event)">
           <ng-template pTemplate="header">
             <div class="accordion-header-details">
@@ -28,10 +28,10 @@
                       [kpiType]="'weight'"
                     />
                   }
-                  @if(kpi.formula)
+                  @if(kpi.status)
                   {
                     <stc-apps-kpi-status-card
-                      [kpiStatus]="kpi.formula"
+                      [kpiStatus]="kpi.status"
                       [kpiType]="'in-progress'"
                     />
                   }
@@ -59,7 +59,7 @@
               @if(kpi.projects.length !== 0)
               {
                 <div class="row">
-                  @for (project of kpi.projects; track project.id) {
+                  @for (project of kpi.projects; track project.project) {
                     <div class="col-lg-4 col-md-6 col-sm-12">
                       <stc-apps-project-card
                         [projectData]="project"
