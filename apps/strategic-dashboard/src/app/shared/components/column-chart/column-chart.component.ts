@@ -74,9 +74,12 @@ export class ColumnChartComponent implements OnInit, AfterViewInit, OnChanges {
     );
 
     const padding = (maxValue - minValue) * 0.1;
-    const minY = minValue - padding;
+    let minY = minValue - padding;
     const maxY = maxValue + padding;
 
+    if (minY < 0) {
+      minY = 0;
+    }
     const allYears = [...new Set(this.chartData.map((item) => item.year))].sort(
       (a: any, b: any) => a - b
     );

@@ -53,6 +53,10 @@
             background: var(--stcSunsetColor);
             width: fit-content;
             color: var(--whiteColor);
+
+            &:hover {
+                opacity: 0.9;
+            }
         }
     }
 
