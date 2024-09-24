@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
+import { authGuard } from './services/guards/auth.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -19,6 +20,7 @@ export const appRoutes: Route[] = [
           import('./views/program-progress/program-progress.module').then(
             (m) => m.ProgramProgressModule
           ),
+        canActivate: [authGuard],
       },
       {
         path: 'home/data-upload',
@@ -31,6 +33,7 @@ export const appRoutes: Route[] = [
         path: 'home/:strategicName',
         loadChildren: () =>
           import('./views/details/details.module').then((m) => m.DetailsModule),
+        canActivate: [authGuard],
       },
     ],
   },
