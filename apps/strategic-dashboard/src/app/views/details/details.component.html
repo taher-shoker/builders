@@ -2,16 +2,9 @@
   <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
   <div class="details-page_title">
     <h3>{{ titleData }}</h3>
-    <div class="filter" [formGroup]="form">
-      <p>Select FY Year</p>
-      <stc-apps-select-drop-down
-        formControlName="year"
-        [label]="''"
-        [options]="yearsArray"
-        [outputValue]="'name'"
-        [(ngModel)]="year"
-        (selectChange)="selectYear($event)"
-      ></stc-apps-select-drop-down>
+    <div class="filter">
+      <!-- <p>Select FY Year</p> -->
+     <stc-apps-dropdown></stc-apps-dropdown>
     </div>
   </div>
   <div class="details-page_progressHolder">

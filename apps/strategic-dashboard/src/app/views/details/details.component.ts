@@ -78,8 +78,6 @@ export class DetailsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.handleForm();
-
     this.activeRoute.paramMap.subscribe((paramMap) => {
       const strategicName = paramMap.get('strategicName');
       if (strategicName) {
@@ -88,28 +86,18 @@ export class DetailsComponent implements OnInit {
         this.getAllStrategicGroupKpis();
       }
     });
-  }
-
-  handleForm() {
-    this.form = this.sharedFormService.getForm();
-
-    if (this.yearService.getSelectedYear()) {
-      this.year = +this.yearService.getSelectedYear()!;
-    } else {
-      this.year = this.currentDate.getFullYear();
-    }
-
-    const initialParams = {
-      year: this.year,
-    };
-
-    this.sharedFormService.initializeForm(initialParams);
+    this.yearService.getYearChangeObservable().subscribe((year: number) => {
+      this.getAllStrategicGroupKpiDetails();
+    });
   }
 
   getAllStrategicGroupKpiDetails() {
     const strategicName =
       this.activeRoute.snapshot.paramMap.get('strategicName');
-    const year = this.sharedFormService.getForm().controls['year'].value;
+    const year = this.sharedFormService
+      .getForm()
+      .controls['year'].value.split('-')[0];
+    console.log('details', year);
 
     if (strategicName) {
       this.strategicGroupDetailsService
@@ -124,7 +112,9 @@ export class DetailsComponent implements OnInit {
   getAllStrategicGroupKpis() {
     const strategicName =
       this.activeRoute.snapshot.paramMap.get('strategicName');
-    const year = this.sharedFormService.getForm().controls['year'].value;
+    const year = this.sharedFormService
+      .getForm()
+      .controls['year'].value.split('-')[0];
     if (strategicName) {
       this.strategicGroupDetailsService
         .getAllStrategicGroupKpis({ strategicName, year })
@@ -132,11 +122,6 @@ export class DetailsComponent implements OnInit {
           this.strategicGroupKPI = result;
         });
     }
-  }
-
-  selectYear(event: number) {
-    this.yearService.setYear(event.toString());
-    this.getAllStrategicGroupKpiDetails();
   }
 
   onRangeChange(range: { start: number; end: number }) {
