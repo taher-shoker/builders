@@ -6,7 +6,7 @@
 >
   @if (showProgress()&&strategicFlag()) {
   <span class="circle-content">{{
-    progressValue() / 100 | percent : '2.0-2'
+    progressValue() / 100 | percent : '1.0-2'
   }}</span>
   } @else if(showProgress() && !strategicFlag()){
   <span class="circle-content">{{ progressValue() | percent }}</span>

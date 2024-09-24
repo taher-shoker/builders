@@ -4,6 +4,8 @@ import { ProgramKPIService } from '../../services/program-kpi.service';
 import { ProgramKPIDetails } from '../../models/program-kpi-details.model';
 import { ProgramProgress } from '../../models/program-progress.model';
 // eslint-disable-next-line @nx/enforce-module-boundaries
+import { SharedFormService } from 'apps/strategic-dashboard/src/app/shared/services/shared-form.service';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 @Component({
   selector: 'stc-apps-all-programs',
   templateUrl: './all-programs.component.html',
@@ -29,7 +31,8 @@ export class AllProgramsComponent implements OnInit {
 
   constructor(
     private router: Router,
-    private programKPIService: ProgramKPIService
+    private programKPIService: ProgramKPIService,
+    private sharedForm:SharedFormService
   ) {}
   ngOnInit(): void {
     this.getAllStrategicPrograms();
@@ -51,8 +54,12 @@ export class AllProgramsComponent implements OnInit {
   }
 
   getAllStrategicPrograms() {
+    const yearQuarter:string=this.sharedForm.getForm().controls['year'].value;
+    const params = {
+      quarter: yearQuarter.split('-')[1],
+    };
     this.programKPIService
-      .getAllStrategicPrograms()
+      .getAllStrategicPrograms(params)
       .subscribe((result: ProgramKPIDetails[]) => {
         this.programsProgress = this.transformToProgramProgress(result);
         this.filteredItems = [...this.programsProgress];

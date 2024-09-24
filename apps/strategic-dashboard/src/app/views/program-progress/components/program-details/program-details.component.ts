@@ -8,6 +8,10 @@ import {
   StrategicProgramKPIDetails,
 } from '../../models/strategic-program-kpi-details.model';
 import { KpiValue } from '../../models/kpi-details.model';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { SharedFormService } from 'apps/strategic-dashboard/src/app/shared/services/shared-form.service';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { YearService } from 'apps/strategic-dashboard/src/app/shared/services/year.service';
 
 @Component({
   selector: 'stc-apps-program-details',
@@ -30,7 +34,9 @@ export class ProgramDetailsComponent implements OnInit {
   };
   constructor(
     private route: ActivatedRoute,
-    private programKPIService: ProgramKPIService
+    private programKPIService: ProgramKPIService,
+    private sharedForm:SharedFormService,
+    private yearService: YearService
   ) {}
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
@@ -40,6 +46,9 @@ export class ProgramDetailsComponent implements OnInit {
         this.getAllProgramsKPIs();
         this.getProgramDetails();
       }
+    });
+    this.yearService.getQuarterChangeObservable().subscribe((quarter: string) => {
+      this.getProgramDetails();
     });
   }
   yearsArray: any[] = [
@@ -119,8 +128,13 @@ export class ProgramDetailsComponent implements OnInit {
       });
   }
   getProgramDetails() {
+    const yearQuarter:string=this.sharedForm.getForm().controls['year'].value;
+    const params = {
+      programName: this.programName,
+      quarter: yearQuarter.split('-')[1],
+    };
     this.programKPIService
-      .getKPIProgramDetails({ programName: this.programName })
+      .getKPIProgramDetails(params)
       .subscribe((result: StrategicProgramKPIDetails) => {
         console.log('program details api', result);
         this.programDetails = result;
