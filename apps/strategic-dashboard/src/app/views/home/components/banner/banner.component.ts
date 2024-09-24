@@ -38,26 +38,9 @@ export class BannerComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.handleForm();
+   console.log('ay haga');
+   
   }
 
-  handleForm() {
-    this.form = this.sharedFormService.getForm();
-
-    if (this.yearService.getSelectedYear()) {
-      this.year = +this.yearService.getSelectedYear()!;
-    } else {
-      this.year = this.currentDate.getFullYear();
-    }
-
-    const initialParams = {
-      year: this.year,
-    };
-
-    this.sharedFormService.initializeForm(initialParams);
-  }
-
-  selectYear(event: number) {
-    this.yearService.setYear(event.toString());
-  }
+  
 }
