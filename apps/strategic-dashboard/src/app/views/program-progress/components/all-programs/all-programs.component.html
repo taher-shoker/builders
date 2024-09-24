@@ -2,6 +2,7 @@
   <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
   <div class="allPrograms-holder_content">
     <div class="allPrograms-holder_title">All strategic program progress</div>
+    @if (filteredItems && filteredItems.length > 0) {
     <div class="row">
       <div class="col-md-6">
         <div class="allPrograms-holder_search">
@@ -30,5 +31,8 @@
       </div>
       }
     </div>
+    } @else {
+    <div class="mt-5">No programs available.</div>
+    }
   </div>
 </div>
