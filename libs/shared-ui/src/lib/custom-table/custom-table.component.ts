@@ -99,7 +99,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   }
   addNewRecord()
   {
-    this.addRecord.emit();
+    this.addRecord.emit(true);
   }
   setupSorting() {
     this.currentSortedByColumn$.subscribe((res: string) => {

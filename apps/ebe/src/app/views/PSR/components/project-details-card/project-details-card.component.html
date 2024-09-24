@@ -1,5 +1,17 @@
 <section class="project">
-  <p class="project-title">{{ projectData().projectName }}</p>
+  <p 
+    class="project-title"
+    (mouseenter)="overlayPanel2.show($event)" 
+    (mouseleave)="overlayPanel2.hide()"
+  >
+    {{ projectData().projectName | truncateWord:11 }}
+  </p>
+  @if(titleArr.length > 11)
+  {
+    <p-overlayPanel #overlayPanel2 dismissable="true">
+      <section class="popover-section2">{{projectData().projectName}}</section>
+    </p-overlayPanel>
+  }
   <div class="project-statuses-cards">
     @if(projectData() && projectData().projectOwner) {
     <stc-apps-kpi-status-card
@@ -73,7 +85,7 @@
     } @else {
     <p
       class="project-chart-card-details empty-details-btn"
-      (click)="showAddRecordForm()"
+      (click)="showAddRecordForm2()"
       [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
     >
       <img src="assets/images/add-square.svg" alt="" />
@@ -130,7 +142,8 @@
       </div>
       <div class="main-title">
         <p>details for chart</p>
-        @if(!isEditMode && formValues2.length === 0 &&
+        <!-- {{formValues2.length}} -->
+        @if(!isEditMode && newData.chartDetails.length !== 0 &&
         userRoles().roles[0].roleName !== "BE_VIEWERS") {
         <div class="edit-img" (click)="editMode()">
           <img src="assets/images/edit.svg" alt="" />
@@ -144,7 +157,7 @@
       [items]="newData.chartDetails"
       [psrTable]="true"
       [fontFamily]="'STCForwardFont'"
-      (addRecord)="addRecord()"
+      (addRecord)="addRecord($event)"
       (deleteAddedRecord)="deleteRecord($event)"
       [isEditMode]="isEditMode"
       (updatedData)="getUpdatedData($event)"

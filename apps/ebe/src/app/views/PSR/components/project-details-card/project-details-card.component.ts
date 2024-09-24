@@ -20,6 +20,7 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   @Input() isAdded!:boolean;
+  @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
   projectData:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
   userRoles:InputSignal<UserGroup> = input.required<UserGroup>();
   @Output() addRecordInTable:EventEmitter<AddProjectForm> = new EventEmitter();
@@ -45,7 +46,9 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     }
   }
   newData!:PSRProjectDetailsModel;
+  titleArr!:string[];
   ngOnChanges(): void {
+    this.titleArr = this.projectData().projectName.split(' ');
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
     const start = this.projectData().startDate;
     const end = this.projectData().endDate;
@@ -95,6 +98,11 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   {
     this.visible = true;
   }
+  showAddRecordForm2()
+  {
+    this.visible = true;
+    this.isAddedInTable = false;
+  }
   formValues:AddProjectForm[] = [];
   formValues2:AddProjectForm[] = [];
   getFormValues(formValue:AddProjectForm)
@@ -106,7 +114,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.visible = false;
     this.isEditMode = false;
     this.newData.chartDetails.push(formValue)
-    if(this.newData.chartDetails.length === 1)
+    if(!this.isAddedInTable)
     {
       this.saveData()
     }
@@ -232,9 +240,12 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       return new Date(+year, +month - 1, +day);
     }
   }
-  addRecord()
+  isAddedInTable = false;
+  addRecord(e:boolean)
   {
+    this.isAddedInTable = e;
     this.showAddRecordForm();
+    this.isDisabled = false;
   }
   saveData()
   {

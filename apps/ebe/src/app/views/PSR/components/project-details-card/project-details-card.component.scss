@@ -265,3 +265,12 @@
 {
   visibility: hidden;
 }
+.popover-section2
+{
+  max-width: 400px;
+  color: var(--stc-purple-light-color);
+  @extend .stcFont;
+  text-transform: capitalize;
+  font-weight: 600;
+  font-size: 17px;
+}
