@@ -1,7 +1,7 @@
 import { Component, input, InputSignal, OnChanges, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PSRChartDataModel, PSRDataModel } from '../../../../models/psr.model';
-import { SharedUiModule } from '@stc-apps/shared-ui';
+import { SharedUiModule } from "@stc-apps/shared-ui";
 import { RouterModule } from '@angular/router';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 

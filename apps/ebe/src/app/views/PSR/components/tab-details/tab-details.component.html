@@ -11,7 +11,7 @@
     @if(!isEmpty())
     {
         <div class="project-container">
-            @for (project of projects(); track project.group) {
+            @for (project of projects(); track project.sector) {
                 <div class="project-container-card">
                     <stc-apps-psr-project-card 
                         [project]="project"

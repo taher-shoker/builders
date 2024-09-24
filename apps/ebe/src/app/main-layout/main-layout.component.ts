@@ -42,7 +42,7 @@ export class MainLayoutComponent implements OnInit {
     console.log("currentSystem => " , this.currentSystem);
     console.log("userData => " , this.userData);
   }
-  private checkSystem(groups: UserGroup[]): any {
+  private checkSystem(groups: UserGroup[]): UserGroup {
     const matchingGroup = groups.find((group: UserGroup) => {
       return group.roles.some((role: UserGroupRoles) => {
         return this.currentSystem.includes(role.system.name);

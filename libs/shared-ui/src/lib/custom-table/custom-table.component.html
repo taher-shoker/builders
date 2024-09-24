@@ -129,7 +129,7 @@
           </div>
         } @else {
           <div class = "position-relative">
-            @if(header.key === 'completion_level')
+            @if(header.key === 'completionLevel')
             {
               <input
                 type="number"
@@ -140,13 +140,27 @@
                 max="100"
               />
             } @else {
-              <input
-                type="number"
+              <p-calendar 
+                dateFormat="dd/mm/yy"
+                styleClass="custom-calendar2"
+                class="custom-calendar2"
+                appendTo="body"
+                [(ngModel)]="item[header.key]"
+                (ngModelChange)="inputChanged(item['id'])"
+              />
+              <!-- {{item['endDate']}} -->
+              <!-- {{parseDate(item['startDate']) > parseDate(item['endDate'])}}  -->
+              @if(parseDate(item['startDate']) > parseDate(item['endDate']) && header.key === 'startDate' && item['endDate'] !== null)
+              {
+                <small class = "empty-data-msg empty-data-msg2">end date must be greater than start date</small>
+              }
+              <!-- <input
+                type="text"
                 [(ngModel)]="item[header.key]"
                 class="edit-input"
                 (ngModelChange)="inputChanged(item['id'])"
                 (keypress)="keyPress($event)"
-              />
+              /> -->
             }
             @if(item[header.key] === null)
             {

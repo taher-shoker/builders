@@ -5,7 +5,7 @@ import { PageHeaderComponent } from '../../../../components/pageHeader/page-head
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { StrategyProgramService } from '../../../../services/strategy-program.service';
-import { SharedUiModule } from '@stc-apps/shared-ui';
+import { SharedUiModule } from "@stc-apps/shared-ui";
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';

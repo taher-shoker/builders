@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, inject, Input, input, InputSignal, OnChanges, OnInit , Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { AddProjectForm, ChartDetails, ColumnsSchema, ProgressInfo, PSRProjectDetailsModel } from '../../../../models/psr.model';
-import { SharedUiModule } from '@stc-apps/shared-ui';
+import { SharedUiModule } from "@stc-apps/shared-ui";
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { DialogModule } from 'primeng/dialog';
 import { AddProjectFormComponent } from '../add-project-form/add-project-form.component';
@@ -16,7 +16,7 @@ import { ToastrService } from 'ngx-toastr';
   imports: [CommonModule , SharedUiModule , OverlayPanelModule , DialogModule , AddProjectFormComponent , ConfirmDialogModule],
   templateUrl: './project-details-card.component.html',
   styleUrl: './project-details-card.component.scss',
-  providers : [ConfirmationService]
+  providers : [ConfirmationService , DatePipe]
 })
 export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   @Input() isAdded!:boolean;
@@ -34,6 +34,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   visible = false;
   isEditMode!:boolean;
   psrServices = inject(PSRService)
+  datePipe = inject(DatePipe)
   constructor(private elementRef: ElementRef , private confirmationService: ConfirmationService) {}
   ngOnInit(): void {
     if(this.userRoles().roles[0].roleName !== 'BE_VIEWERS')
@@ -105,6 +106,10 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.visible = false;
     this.isEditMode = false;
     this.newData.chartDetails.push(formValue)
+    if(this.newData.chartDetails.length === 1)
+    {
+      this.saveData()
+    }
     // this.newData = JSON.parse(JSON.stringify(this.projectData()));
   }
   deletedData!:ChartDetails;
@@ -170,6 +175,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       });
     }
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
+    console.log(this.newData);
     this.formValues2 = [];
   }
   closePopup()
@@ -194,7 +200,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   allElementsNotNull(arrayOfObjects:any[]) {
     for (const obj of arrayOfObjects) {
       for (const key in obj) {
-        if (obj[key] === null || obj[key] === '') {
+        if (obj[key] === null || obj[key] === '' || this.parseDate(obj['startDate']) > this.parseDate(obj['endDate'])) {
           return false;
         }
       }
@@ -206,13 +212,24 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   getUpdatedData(e:{items:ChartDetails[] , id:number})
   {
     this.selectedItem = e.items.filter(val => val.id === e.id)[0];
-    console.log(this.allElementsNotNull(e.items));
-    console.log(e.items);
+    // console.log(this.allElementsNotNull(e.items));
     if(!this.allElementsNotNull(e.items))
     {
       this.isDisabled = true;
     } else {
       this.isDisabled = false;
+    }
+  }
+  parseDate(dateString:Date | string) {
+    if(typeof dateString !== 'string')
+    {
+      // const date:string = this.datePipe.transform(dateString, 'yyyy/MM/dd') ?? ""
+      // const [day, month, year] = date.split('/');
+      return new Date(dateString);
+      // return date;
+    } else {
+      const [day, month, year] = dateString.split('/');
+      return new Date(+year, +month - 1, +day);
     }
   }
   addRecord()
@@ -230,6 +247,17 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
         label : ""
       });
     }
+    this.newData.chartDetails.forEach(data => {
+      if(typeof data.startDate === 'object')
+      {
+        data.startDate = this.datePipe.transform(data.startDate , "dd/MM/yyyy")
+      }
+      if(typeof data.endDate === 'object')
+      {
+        data.endDate = this.datePipe.transform(data.endDate , "dd/MM/yyyy")
+      }
+    })
+    // console.log(this.newData.chartDetails);
     this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
       next : (res) => {
         this.toastr.success("The table is updated Successfully");
@@ -247,5 +275,6 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.isEditMode = true;
     const filteredArray = this.tableHeader.filter(obj => obj.key !== '');
     this.tableHeader = filteredArray;
+    this.isDisabled = false;    
   }
 }

@@ -1,7 +1,7 @@
 export interface PSRDataModel
 {
     planned:number;
-    group:string;
+    sector:string;
     actual:number;
     details:string;
 }
@@ -12,32 +12,23 @@ export interface PSRChartDataModel
 }
 export interface PSRProjectDetailsModel
 {
-    id:number;
-    group:string;
-    backgroundColor?:string;
-    kpiName:string;
-    kpiOwner:string;
-    vendor:string;
-    kpiStatus:string;
-    indicator:string;
-    domain:string;
-    startDate:string;
-    endDate:string;
-    poAmount:string;
     actual:string;
+    backgroundColor?:string;
     chartDetails:ChartDetails[];
-    vactual:number;
-    vplanned:number;
-    title:string;
-}
-export interface ChartDetails
-{
+    domain:string;
+    endDate:string;
+    gd:string;
     id:number;
-    major:string;
-    start:number;
-    duration:number;
-    completion_level:number;
-    deleteAction?:string;
+    indicator:string;
+    poAmount:string;
+    projectName:string;
+    projectOwner:string;
+    projectStatus:string;
+    sector:string;
+    startDate:string;
+    vactual:number;
+    vendor:string;
+    vplanned:number;
 }
 export interface ProgressInfo {
     prefixText: string;
@@ -54,14 +45,24 @@ export interface Index {
     value: number;
     position?: 'up' | 'down';
     actualBarColor:string;
-  }
+}
+export interface ChartDetails
+{
+    id:number;
+    major:string;
+    startDate:string | null;
+    endDate:string | null;
+    deleteAction?:string;
+    completionLevel:number;
+}
 export interface AddProjectForm
 {
     id:number;
     major:string;
-    start:number;
-    duration:number;
-    completion_level:number;
+    startDate:string | null;
+    endDate:string | null;
+    completionLevel:number;
+    deleteAction?:string;
 }
 export interface ColumnsSchema {
     key: string;

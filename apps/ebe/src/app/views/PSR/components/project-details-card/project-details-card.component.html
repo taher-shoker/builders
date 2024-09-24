@@ -1,9 +1,9 @@
 <section class="project">
-  <p class="project-title">{{ projectData().kpiName }}</p>
+  <p class="project-title">{{ projectData().projectName }}</p>
   <div class="project-statuses-cards">
-    @if(projectData() && projectData().kpiOwner) {
+    @if(projectData() && projectData().projectOwner) {
     <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().kpiOwner!"
+      [kpiStatus]="projectData().projectOwner!"
       [kpiType]="'owner-name'"
     />
     }
@@ -11,9 +11,9 @@
       [kpiStatus]="projectData().vendor"
       [kpiType]="'vendor'"
     />
-     @if(projectData() && projectData().kpiStatus) {
+     @if(projectData() && projectData().projectStatus) {
     <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().kpiStatus!"
+      [kpiStatus]="projectData().projectStatus!"
       [kpiType]="'status'"
     />
     } @if(projectData() && projectData().domain) {

@@ -13,11 +13,13 @@ import {
   QueryList,
   SimpleChanges,
   TemplateRef,
+  inject,
   input,
 } from '@angular/core';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
 import { CustomTemplateDirective } from './custom-template.directive';
+import { DatePipe } from '@angular/common';
 
 export interface ColumnsSchema {
   key: string;
@@ -57,7 +59,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input({ required: true }) items!: any[];
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
-
+  datePipe = inject(DatePipe)
   @Input() applyFilter: boolean = false;
   @Input() filter: string = '';
   @Input() paginate: boolean = false;
@@ -78,6 +80,18 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   deleteRecord(item:any)
   {
     this.deleteAddedRecord.emit(item);
+  }
+  parseDate(dateString:Date | string) {
+    if(typeof dateString !== 'string')
+    {
+      // const date:string = this.datePipe.transform(dateString, 'yyyy/MM/dd') ?? ""
+      // const [day, month, year] = date.split('/');
+      return new Date(dateString);
+      // return date;
+    } else {
+      const [day, month, year] = dateString.split('/');
+      return new Date(+year, +month - 1, +day);
+    }
   }
   sortingDirection: 'desc' | 'asc' = 'asc';
   changeCurrentSortingColumn(colName: string): void {

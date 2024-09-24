@@ -17,17 +17,17 @@ export class PSRService {
         label : "Major Activities/Deliverables"
       },
       {
-        key : "start",
+        key : "startDate",
         type : "text",
-        label : "Start"
+        label : "Start date"
       },
       {
-        key : "duration",
+        key : "endDate",
         type : "text",
-        label : "Duration"
+        label : "end date"
       },
       {
-        key : "completion_level",
+        key : "completionLevel",
         type : "text",
         label : "Completion Level"
       },

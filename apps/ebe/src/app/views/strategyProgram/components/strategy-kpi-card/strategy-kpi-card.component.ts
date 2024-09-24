@@ -1,8 +1,8 @@
 import { Component, input, InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StrategyProgramKpiModel } from '../../../../models/strategy-program.model';
-import { SharedUiModule } from '@stc-apps/shared-ui';
 import { RouterModule } from '@angular/router';
+import { SharedUiModule } from '@stc-apps/shared-ui';
 
 @Component({
   selector: 'stc-apps-strategy-kpi-card',

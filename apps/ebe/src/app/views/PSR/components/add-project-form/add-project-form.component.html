@@ -1,4 +1,4 @@
-<div class="add-project-form">
+<section class="add-project-form">
   <form [formGroup]="addProjectForm">
     <div class="row">
       <div class="col-md-6">
@@ -22,15 +22,23 @@
       </div>
       <div class="col-md-6">
         <div class="form-group">
-          <label for="">start</label>
-          <input
-            type="number"
-            placeholder="add start"
-            formControlName="start"
-            (keypress)="keyPress($event)"
+          <label for="">start date</label>
+          <p-calendar 
+            formControlName="startDate" 
+            dateFormat="dd/mm/yy"
+            styleClass="custom-calendar"
+            class="custom-calendar"
+            appendTo="body"
+            placeholder="choose start date"
           />
-          @if(start?.hasError("required") && start?.dirty) {
-          <small class="error-msg">start is required</small>
+          <!-- <input
+            type="number"
+            placeholder="add start date"
+            formControlName="startDate"
+            (keypress)="keyPress($event)"
+          /> -->
+          @if(startDate?.hasError("required") && startDate?.dirty) {
+          <small class="error-msg">start date is required</small>
           }
         </div>
       </div>
@@ -38,15 +46,26 @@
     <div class="row" style="margin-top: 30px">
       <div class="col-md-6">
         <div class="form-group">
-          <label for="">duration</label>
-          <input
-            type="number"
-            placeholder="add duration"
-            formControlName="duration"
-            (keypress)="keyPress($event)"
+          <label for="">end date</label>
+          <p-calendar 
+            formControlName="endDate" 
+            dateFormat="dd/mm/yy"
+            styleClass="custom-calendar"
+            class="custom-calendar"
+            appendTo="body"
+            placeholder="choose end date"
           />
-          @if(duration?.hasError("required") && duration?.dirty) {
-          <small class="error-msg">duration is required</small>
+          <!-- <input
+            type="number"
+            placeholder="add end date"
+            formControlName="endDate"
+            (keypress)="keyPress($event)"
+          /> -->
+          @if(endDate?.hasError("required") && endDate?.dirty) {
+          <small class="error-msg">end date is required</small>
+          }
+          @if(addProjectForm.hasError("startDateGreaterThanEndDate")) {
+            <small class="error-msg">end date must be greater than start date</small>
           }
         </div>
       </div>
@@ -85,4 +104,4 @@
       </button>
     </footer>
   </form>
-</div>
+</section>

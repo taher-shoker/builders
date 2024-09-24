@@ -21,7 +21,7 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { SharedUiModule } from '@stc-apps/shared-ui';
+import { SharedUiModule } from "@stc-apps/shared-ui";
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ScorecardService } from '../../../../services/scorecard.service';

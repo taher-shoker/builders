@@ -75,8 +75,9 @@ import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TruncateWordPipe } from './truncateWord.pipe';
+import { CalendarModule } from 'primeng/calendar';
 
-const modules = [BreadCrumbModule, MatIconModule];
+const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
   ButtonComponent,
@@ -160,6 +161,7 @@ const components = [
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-  ],
+    CalendarModule
+  ]
 })
 export class SharedUiModule {}

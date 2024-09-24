@@ -14,7 +14,7 @@ import {
 } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { TapDetailsComponent } from './components/tap-details/tap-details.component';
-import { SharedUiModule } from '@stc-apps/shared-ui';
+import { SharedUiModule } from "@stc-apps/shared-ui";
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
