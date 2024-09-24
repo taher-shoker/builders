@@ -11,6 +11,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { CustomLineChartComponent } from './components/custom-line-chart/custom-line-chart.component';
 import { BreadcrumbsComponent } from './components/breadcrumbs/breadcrumbs.component';
+import { DropdownComponent } from './components/select-dropdown/dropdown.component';
 
 const components = [
   TabsComponent,
@@ -20,6 +21,7 @@ const components = [
   RangeSliderComponent,
   CustomLineChartComponent,
   BreadcrumbsComponent,
+  DropdownComponent
 ];
 const modules = [
   CommonModule,

@@ -18,15 +18,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
-  
-
-  yearsArray: any = [
-    { name: 2020 },
-    { name: 2021 },
-    { name: 2022 },
-    { name: 2023 },
-  ];
-
+ 
   constructor(
     private cookieService: CookieService,
     public router: Router,

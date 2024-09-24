@@ -71,16 +71,5 @@
 
     }
 
-    ::ng-deep {
-        stc-apps-select-drop-down {
-            .mat-mdc-form-field-infix {
-                padding-top: inherit !important;
-                padding-bottom: inherit !important;
-            }
-
-            .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
-                transform: none;
-            }
-        }
-    }
+   
 }

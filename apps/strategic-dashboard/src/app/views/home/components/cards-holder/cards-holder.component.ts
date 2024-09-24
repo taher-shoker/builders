@@ -28,8 +28,11 @@ export class CardsHolderComponent implements OnInit {
     });
   }
   getAllStrategicGroups() {
+    const year:string=this.sharedFormService.getForm().controls['year'].value;
+    console.log(year.split('-')[0],'year');
+    
     const params = {
-      year: this.sharedFormService.getForm().controls['year'].value,
+      year: year.split('-')[0],
     };
     this.strategicGroupsService.getAllStrategicGroups(params).subscribe(
       (result: StrategicGroup[]) => {
@@ -42,6 +45,7 @@ export class CardsHolderComponent implements OnInit {
   }
 
   getCurrentContents(index: number): any[] {
+    // eslint-disable-next-line prefer-const
     let allContents: any[] = [];
 
     for (let i = 0; i <= index; i++) {

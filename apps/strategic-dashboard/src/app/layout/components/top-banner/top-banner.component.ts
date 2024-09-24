@@ -28,13 +28,6 @@ export class TopBannerComponent implements OnInit {
       urlHome: `/home`,
     },
   ];
-  yearsArray: any = [
-    { name: 2020 },
-    { name: 2021 },
-    { name: 2022 },
-    { name: 2023 },
-  ];
-
   constructor(
     private cookieService: CookieService,
     public router: Router,

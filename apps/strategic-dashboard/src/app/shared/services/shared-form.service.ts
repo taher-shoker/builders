@@ -6,14 +6,17 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 })
 export class SharedFormService {
   form: FormGroup = new FormGroup({});
-
+  currentDate = new Date();
+  year = `${this.currentDate.getFullYear()}-FY`;
   constructor(private fb: FormBuilder) {
     this.form = this.fb.group({
-      year: new FormControl(0),
+      year: new FormControl(this.year),
     });
   }
 
   initializeForm(params: any): void {
+    console.log(params,+(params.year).split('-')[0]);
+    
     this.form.setValue({
       year: params.year,
     });
