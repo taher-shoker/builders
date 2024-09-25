@@ -2,7 +2,9 @@ import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit,
 import { CommonModule , Location } from '@angular/common';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { StrategyProgramService } from '../../../../services/strategy-program.service';
+import { StrategyProgramKpiDetailsModel, StrategyProgramKpiProjectsDetailsModel } from '../../../../models/strategy-program.model';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
@@ -17,19 +19,44 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   private router = inject(Router);
   private location = inject(Location);
   modalVisible:InputSignal<boolean> = input.required<boolean>()
+  strategyService = inject(StrategyProgramService);
   @Output() closeModal:EventEmitter<boolean> = new EventEmitter<boolean>()
+  activatedRoute = inject(ActivatedRoute);
+  objectiveNumber!:number;
+  title!:string;
+  prevProjects!:StrategyProgramKpiProjectsDetailsModel[];
   ngOnInit(): void {
     this.addProjectForm = this.formBuilder.group({
       projects : this.formBuilder.array([])
     })
-    
+    this.activatedRoute.params.subscribe({
+      next: (param: Params) => {
+        this.title = param['title'];
+        this.objectiveNumber = +param['objective'];
+        // this.isEmpty = true;
+      },
+    });
+    this.strategyService.clickedProjects.subscribe({
+      next : (res:StrategyProgramKpiProjectsDetailsModel[]) => {
+        if(res.length !== 0)
+        {
+          this.prevProjects = res;
+        } else {
+          this.strategyService.getStrategyProgramDetails(this.title).subscribe({
+            next : (res:StrategyProgramKpiDetailsModel[]) => {
+              this.prevProjects = res.filter(val => val.objective === this.objectiveNumber)[0].projects;
+            }
+          })
+        }
+      }
+    })
     this.projectsList.push(this.createProjectFormGroup());
   }
   createProjectFormGroup(): FormGroup {
     return this.formBuilder.group({
-      projectName : [null , [Validators.required , this.noSpacesValidator , Validators.maxLength(50)]],
-      actualValue : [null , [Validators.required , this.noSpacesValidator , this.rangeValidator]],
-      plannedValue : [null , [Validators.required , this.noSpacesValidator , this.rangeValidator]],
+      project : [null , [Validators.required , this.noSpacesValidator , Validators.maxLength(50)]],
+      actual : [null , [Validators.required , this.rangeValidator]],
+      planned : [null , [Validators.required , this.rangeValidator]],
     });
   }
   get projectsList():FormArray
@@ -71,8 +98,13 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   {
     if(this.addProjectForm.valid)
     {
-      const projectArr = this.addProjectForm.value.projects;
-      console.log(projectArr);
+      let projectArr = this.addProjectForm.value.projects;
+      projectArr = projectArr.concat(this.prevProjects);
+      this.strategyService.updateProjects(this.title , this.objectiveNumber , projectArr).subscribe({
+        next : () => {
+          this.goback();
+        }
+      })
     }
   }
   getValue(e:string)
@@ -97,5 +129,11 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   goback()
   {
     this.location.back();
+  }
+  keyPress(e:KeyboardEvent)
+  {
+    if (e.key === 'e' || e.key === '-') {
+      e.preventDefault();
+    }
   }
 }

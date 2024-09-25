@@ -67,7 +67,21 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
       console.log(e);
     }
   }
-  downloadTemplate() {
-    console.log('testt');
+  downloadTemplate()
+  {
+    this.strategyProgramService.downloadStrategyProgram().subscribe({
+      next : (response) => {
+        this.downloadFile(response, `cad_summary.csv`);
+      }
+    })
+  }
+  downloadFile(data: string, filename: string) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }

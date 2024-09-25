@@ -30,6 +30,7 @@
             class="custom-calendar"
             appendTo="body"
             placeholder="choose start date"
+            (ngModelChange)="selectStartDate($event)"
           />
           <!-- <input
             type="number"

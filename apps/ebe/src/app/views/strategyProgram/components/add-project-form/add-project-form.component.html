@@ -28,12 +28,12 @@
             <input
               type="text"
               placeholder="Add project name"
-              formControlName="projectName"
+              formControlName="project"
             />
-            @if((project.get("projectName")?.value?.trim() === '') ||
-            project.get("projectName")?.value === '') {
+            @if((project.get("project")?.value?.trim() === '') ||
+            project.get("project")?.value === '') {
             <small class="error-msg">this field is required</small>
-            } @if(project.get("projectName")?.hasError("maxlength")) {
+            } @if(project.get("project")?.hasError("maxlength")) {
             <small class="error-msg"
               >this field has maxLength 50 characters</small
             >
@@ -44,21 +44,21 @@
               <div class="form-group">
                 <label>actual</label>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Add actual value"
-                  formControlName="actualValue"
+                  formControlName="actual"
+                  (keypress)="keyPress($event)"
                 />
                 <!-- @if((project.get("actualValue")?.hasError("required") || project.get("actualValue")?.hasError("noSpaces")) && project.dirty)  -->
-                @if((project.get("actualValue")?.value?.trim() === '') ||
-                project.get("actualValue")?.value === '') {
+                @if(project.get("actual")?.value === null && project.get("actual")?.dirty) {
                 <small class="error-msg error-msg2"
                   >this field is required</small
                 >
-                } @else if(project.get("actualValue")?.hasError("isNumber")) {
+                } @else if(project.get("actual")?.hasError("isNumber")) {
                 <small class="error-msg error-msg2"
                   >you must enter numbers only</small
                 >
-                } @else if(project.get("actualValue")?.hasError("rangeError")) {
+                } @else if(project.get("actual")?.hasError("rangeError")) {
                 <small class="error-msg error-msg2"
                   >number range must be between 0 and 100</small
                 >
@@ -69,20 +69,20 @@
               <div class="form-group">
                 <label>planned</label>
                 <input
-                  type="text"
+                  type="number"
                   placeholder="Add planned value"
-                  formControlName="plannedValue"
+                  formControlName="planned"
+                  (keypress)="keyPress($event)"
                 />
-                @if((project.get("plannedValue")?.value?.trim() === '') ||
-                project.get("plannedValue")?.value === '') {
+                @if(project.get("planned")?.value === null && project.get("planned")?.dirty) {
                 <small class="error-msg error-msg2"
                   >this field is required</small
                 >
-                } @else if(project.get("plannedValue")?.hasError("isNumber")) {
+                } @else if(project.get("planned")?.hasError("isNumber")) {
                 <small class="error-msg error-msg2"
                   >you must enter numbers only</small
                 >
-                } @else if(project.get("plannedValue")?.hasError("rangeError"))
+                } @else if(project.get("planned")?.hasError("rangeError"))
                 {
                 <small class="error-msg error-msg2"
                   >number range must be between 0 and 100</small

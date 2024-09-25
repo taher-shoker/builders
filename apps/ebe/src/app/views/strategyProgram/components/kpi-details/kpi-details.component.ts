@@ -1,4 +1,4 @@
-import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
+import { StrategyProgramKpiDetailsModel, StrategyProgramKpiProjectsDetailsModel } from '../../../../models/strategy-program.model';
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
@@ -9,6 +9,10 @@ import { SharedUiModule } from "@stc-apps/shared-ui";
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
+import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
+import { ScorecardService } from '../../../../services/scorecard.service';
+import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
+import { FileModel } from '../../../../models/scorecard.model';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -25,7 +29,9 @@ export interface KpiProjectsDetailsModel
     SharedUiModule,
     ButtonModule,
     DialogModule,
-    RouterModule
+    RouterModule,
+    EditModeViewComponent,
+    DialogModalComponent
   ],
   providers : [ConfirmationService],
   templateUrl: './kpi-details.component.html',
@@ -33,19 +39,33 @@ export interface KpiProjectsDetailsModel
 })
 export class KpiDetailsComponentTsComponent implements OnInit {
   currentId!:string;
+  currentMode!: 'editMode' | 'viewMode';
   activatedRoute = inject(ActivatedRoute);
   strategyProgramService = inject(StrategyProgramService);
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
   private confirmationService = inject(ConfirmationService);
+  private scorecardService = inject(ScorecardService);
   constructor(private router:Router){}
+  isEmpty!:boolean;
   ngOnInit(): void {
+    this.scorecardService.getCurrentMode().subscribe({
+      next: (res: 'editMode' | 'viewMode') => {
+        this.currentMode = res;
+      },
+    });
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
         this.currentId = param['kpiId'];
+        // this.isEmpty = true;
         this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
           next : (res:StrategyProgramKpiDetailsModel[]) => {
-            console.log(res);
             this.StrategyProgramData = res;
+            if(this.StrategyProgramData.length === 0)
+            {
+              this.isEmpty = true;
+            } else {
+              this.isEmpty = false;
+            }
           }
         })
       },
@@ -60,22 +80,30 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   getIndex(index: number | number[]) {
     this.currentTabIndex = typeof index === 'number' ? index : 0;
   }
-  showForm() {
-    this.router.navigateByUrl('/strategy-project-form');
+  showForm(project:StrategyProgramKpiDetailsModel) {
+    this.router.navigateByUrl(`/strategy-project-form/${project.strategyProject}/${project.objective}`);
+    this.strategyProgramService.clickedProjects.next(project.projects);
   }
-  editProject(project:KpiProjectsDetailsModel)
+  editProject(kpi:KpiProjectsDetailsModel , project:StrategyProgramKpiDetailsModel , singleproject:StrategyProgramKpiProjectsDetailsModel)
   {
-    console.log(project);
-    this.router.navigateByUrl(`/strategy-project-form/${project.project}`);
+    // this.router.navigateByUrl(`/strategy-project-form/${project.project}`);
+    this.router.navigateByUrl(`/strategy-project-form/${project.strategyProject}/${project.objective}`);
+    this.strategyProgramService.clickedProjects.next(project.projects);
+    this.strategyProgramService.clickedProject.next(singleproject);
   }
   deletedProject!:KpiProjectsDetailsModel;
-  deleteProject(project:KpiProjectsDetailsModel)
+  prevProjects!:KpiProjectsDetailsModel[];
+  kpi!:StrategyProgramKpiDetailsModel;
+  deleteProject(project:KpiProjectsDetailsModel , projects:KpiProjectsDetailsModel[] , kpi:StrategyProgramKpiDetailsModel)
   {
     this.deletedProject = project;
+    this.prevProjects = projects;
+    this.kpi = kpi;
     this.confirmationService.confirm({
       key: 'delete-project'
     });
   }
+  visible!:boolean;
   close()
   {
     this.confirmationService.close()
@@ -83,6 +111,45 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   deleteProjectItem()
   {
     console.log(this.deletedProject);
-    this.close();
+    console.log(this.prevProjects);
+    console.log(this.kpi);
+    const deletedData = this.prevProjects.filter(val => val.project !== this.deletedProject.project);
+    console.log(deletedData);
+    console.log(this.prevProjects);
+    this.strategyProgramService.updateProjects(this.kpi.strategyProject , this.kpi.objective , deletedData).subscribe({
+      next : () => {
+        this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
+          next : (res:StrategyProgramKpiDetailsModel[]) => {
+            this.StrategyProgramData = res;
+            this.close();
+          }
+        })
+      }
+    })
+  }
+  showDialog()
+  {
+    this.visible = true;
+  }
+  downloadTemplate()
+  {
+    this.strategyProgramService.downloadStrategyProgramDetails(this.currentId).subscribe({
+      next : (response) => {
+        this.downloadFile(response, `${this.currentId}.csv`);
+      }
+    })
+  }
+  ImportFile(e:FileModel | null)
+  {
+    console.log(e);
+  }
+  downloadFile(data: string, filename: string) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 }

@@ -1,11 +1,13 @@
 import { inject, Injectable } from '@angular/core';
-import { StrategyProgramKpiDetailsModel, StrategyProgramModel } from '../models/strategy-program.model';
+import { StrategyProgramKpiDetailsModel, StrategyProgramKpiProjectsDetailsModel, StrategyProgramModel, UpdatedData } from '../models/strategy-program.model';
 import { environment } from '../../environments/environment';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 @Injectable({ providedIn: 'root' })
 export class StrategyProgramService {
   http = inject(HttpClient);
+  clickedProjects:BehaviorSubject<StrategyProgramKpiProjectsDetailsModel[]> = new BehaviorSubject<StrategyProgramKpiProjectsDetailsModel[]>([]);
+  clickedProject:BehaviorSubject<any> = new BehaviorSubject<any>({});
   getStrategyProgramSummary():Observable<StrategyProgramModel>
   {
     return this.http.get<StrategyProgramModel>(
@@ -16,6 +18,27 @@ export class StrategyProgramService {
   {
     return this.http.get<StrategyProgramKpiDetailsModel[]>(
       `${environment.apiUrl}/business-excellence/cad/details/${summaryName}`
+    );
+  }
+  downloadStrategyProgram():Observable<string>
+  {
+    return this.http.get<string>(
+      `${environment.apiUrl}/business-excellence/cad/summary/download`,
+      { observe: 'body', responseType: 'text' as 'json' }
+    );
+  }
+  downloadStrategyProgramDetails(groupName:string):Observable<string>
+  {
+    return this.http.get<string>(
+      `${environment.apiUrl}/business-excellence/cad/details/${groupName}/download`,
+      { observe: 'body', responseType: 'text' as 'json' }
+    );
+  }
+  updateProjects(projectName:string , objective:number , data:UpdatedData[]):Observable<UpdatedData[]>
+  {
+    return this.http.put<UpdatedData[]>(
+      `${environment.apiUrl}/business-excellence/cad/projectName/${projectName}/objective/${objective}/projects`,
+      data
     );
   }
 }

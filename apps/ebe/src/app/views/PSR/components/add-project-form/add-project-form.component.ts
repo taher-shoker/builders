@@ -1,6 +1,6 @@
 import { Component, EventEmitter, inject, Input, OnChanges, OnInit, Output } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormControl, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { AddProjectForm } from '../../../../models/psr.model';
 import { CalendarModule } from 'primeng/calendar';
 
@@ -23,9 +23,20 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
     this.addProjectForm = this.fb.group({
       major : ['' , [Validators.required , Validators.maxLength(100)]],
       startDate : ['' , Validators.required],
-      endDate : ['' , Validators.required],
+      // endDate : ['' , Validators.required],
+      endDate : new FormControl({value:"" , disabled:true} , Validators.required),
       completion_level : ['' , Validators.required]
     } , { validators: this.startDateEndDateValidator('startDate', 'endDate') })
+  }
+  selectStartDate(date:Date | null)
+  {
+    if(date)
+    {
+      this.endDate?.enable();
+    } else {
+      this.endDate?.disable();
+      this.endDate?.reset();
+    }
   }
   get major()
   {

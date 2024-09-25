@@ -32,3 +32,9 @@ export interface StrategyProgramKpiModel
   totalInvestment:number;
   description:string;
 }
+export interface UpdatedData
+{
+  actual:number;
+  planned:number;
+  project:string;
+}

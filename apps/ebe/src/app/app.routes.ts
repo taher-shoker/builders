@@ -27,7 +27,7 @@ export const appRoutes: Route[] = [
       ),
   },
   {
-    path : "strategy-project-form",
+    path : "strategy-project-form/:title/:objective",
     loadComponent: () =>
       import('./views/strategyProgram/components/add-project-form/add-project-form.component').then(
         (m) => m.AddProjectFormComponent
