@@ -35,7 +35,7 @@ export class ProgramDetailsComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private programKPIService: ProgramKPIService,
-    private sharedForm:SharedFormService,
+    private sharedForm: SharedFormService,
     private yearService: YearService
   ) {}
   ngOnInit(): void {
@@ -47,9 +47,11 @@ export class ProgramDetailsComponent implements OnInit {
         this.getProgramDetails();
       }
     });
-    this.yearService.getQuarterChangeObservable().subscribe((quarter: string) => {
-      this.getProgramDetails();
-    });
+    this.yearService
+      .getQuarterChangeObservable()
+      .subscribe((quarter: string) => {
+        this.getProgramDetails();
+      });
   }
   yearsArray: any[] = [
     { name: this.currentYear },
@@ -128,18 +130,23 @@ export class ProgramDetailsComponent implements OnInit {
       });
   }
   getProgramDetails() {
-    const yearQuarter:string=this.sharedForm.getForm().controls['year'].value;
+    const yearQuarter: string =
+      this.sharedForm.getForm().controls['year'].value;
     const params = {
       programName: this.programName,
+      year: +yearQuarter.split('-')[0],
       quarter: yearQuarter.split('-')[1],
     };
-    this.programKPIService
-      .getKPIProgramDetails(params)
-      .subscribe((result: StrategicProgramKPIDetails) => {
+    this.programKPIService.getKPIProgramDetails(params).subscribe({
+      next: (result: StrategicProgramKPIDetails) => {
         console.log('program details api', result);
         this.programDetails = result;
         this.setChartsData(this.programDetails.values);
-      });
+      },
+      error: (error) => {
+        console.log(error.error.message);
+      },
+    });
   }
 
   getChartColors(

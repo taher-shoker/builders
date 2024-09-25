@@ -45,9 +45,11 @@ export class ProgramKPIService {
 
   getKPIProgramDetails(params: {
     programName: string;
+    year: number;
     quarter?: string;
   }): Observable<StrategicProgramKPIDetails> {
     let httpParams = new HttpParams().set('programName', params.programName);
+    httpParams = httpParams.set('year', params.year);
     if (params.quarter) {
       httpParams = httpParams.set('quarter', params.quarter);
     }
@@ -70,5 +72,4 @@ export class ProgramKPIService {
       }
     );
   }
-
 }
