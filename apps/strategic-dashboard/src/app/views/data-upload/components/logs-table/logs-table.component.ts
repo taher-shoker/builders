@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DataUploadService } from '../../services/data-upload.service';
 import { LogService } from '../../services/logs.service';
 import { logs } from '../../models/logsModel';
@@ -10,7 +10,7 @@ import { MatTableDataSource } from '@angular/material/table';
   templateUrl: './logs-table.component.html',
   styleUrl: './logs-table.component.scss',
 })
-export class LogsTableComponent {
+export class LogsTableComponent implements OnInit {
   ELEMENT_DATA: logs[] = [];
   constructor(
     private dataUploadService: DataUploadService,
@@ -30,8 +30,9 @@ export class LogsTableComponent {
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+  emptyData = new MatTableDataSource([{ empty: 'row' }]);
   dataSource: any;
-  // ngAfterViewInit() {}
+
   ngOnInit(): void {
     this.getLogsHistory();
     this.subscribeToFailedLogs();
