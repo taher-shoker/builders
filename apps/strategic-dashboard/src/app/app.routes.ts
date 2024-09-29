@@ -1,6 +1,7 @@
 import { Route } from '@angular/router';
 import { LayoutComponent } from './layout/layout.component';
 import { authGuard } from './services/guards/auth.guard';
+import { dataUploadGuard } from './services/guards/data-upload.guard';
 
 export const appRoutes: Route[] = [
   {
@@ -28,6 +29,7 @@ export const appRoutes: Route[] = [
           import('./views/data-upload/data-upload.module').then(
             (m) => m.DataUploadModule
           ),
+        canActivate: [authGuard, dataUploadGuard],
       },
       {
         path: 'home/:strategicName',
