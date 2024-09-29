@@ -1,0 +1,79 @@
+.comments {
+  position: relative;
+
+  &_form {
+    border: 1px solid rgba(224, 226, 231, 1);
+    padding: 20px 16px;
+    display: flex;
+    border-radius: 8px;
+    flex-direction: column;
+    gap: 24px;
+
+    &_header {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--semiGreyColor);
+    }
+
+    &_content {
+      position: relative;
+
+      ::ng-deep {
+        .mention {
+          color: var(--stcCoralColor) !important;
+        }
+
+        span {
+          color: var(--stcCoralColor) !important;
+        }
+      }
+    }
+
+    &_editor {
+      width: 100%;
+      background: transparent;
+      border: none;
+      border-radius: 4px;
+      box-sizing: border-box;
+      min-height: 75px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+
+      &:empty:before {
+        content: attr(data-placeholder);
+        color: var(--darkGreyColor);
+      }
+
+      &:focus-visible {
+        outline: none;
+      }
+    }
+  }
+
+  &_mentions {
+    padding: 0;
+    position: absolute;
+    top: 50%;
+    left: 5%;
+    max-height: 20rem;
+    overflow-y: auto;
+    background: var(--whiteColor);
+    z-index: 1000;
+    list-style: none;
+    width: 90%;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+
+    li {
+      cursor: pointer;
+
+      &:hover {
+        background: var(--stcLightGray);
+      }
+
+      &.active {
+        background: var(--stcLightGray);
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+<div class="expansion-body">
+  <div class="expansion-body_score">
+    <stc-apps-result-score [percentage]="kpiObject().score"></stc-apps-result-score>
+  </div>
+  <div class="row">
+    @for (section of listItems(); track section) {
+    <div
+      class="col-sm-12 col-lg-12"
+      [ngClass]="{
+        'col-md-7': $index === 1,
+        'col-md-5': $index === 0,
+        'col-xl-7': $index === 1,
+        'col-xl-5': $index === 0
+      }"
+    >
+      <ul class="expansion-body_list">
+        @for (item of section.items; track item) {
+        <li>
+          <label>{{ item.label }}</label>
+          @if (isNumber(item.value)) {
+          <span>{{ item.value.toFixed(2) }}</span>
+          } @else {
+          <span>{{ item.value }}</span>
+          }
+        </li>
+        }
+      </ul>
+    </div>
+    }
+    <div class="expansion-body_bar">
+      <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
+    </div>
+    <div class="expansion-body_details mt-3">
+      <a (click)="navigateToDetails()">Details</a>
+    </div>
+  </div>
+</div>

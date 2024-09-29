@@ -1,0 +1,56 @@
+<div class="profile-content">
+  <div class="row">
+    <div [class]="replyClass ? 'col-md-6' : 'col-md-8'">
+      <div class="profile-content_holder d-flex align-items-start">
+        <div class="avatar">
+          <img
+            [class]="replyClass ? '' : 'profile-content_avatar'"
+            class=" avatar-16 rounded-circle text-white"
+            src="assets/images/avatar.svg"
+          />
+        </div>
+
+        <div class="profile-content-info">
+          <div class="profile-content_name">{{ name() }}</div>
+
+          <div
+            class="profile-content_desc"
+            [innerHTML]="
+              commaSepartedMentions() !== null
+                ? comment().replace(generateRegex(), '<span>$&</span>')
+                : comment()
+            "
+          ></div>
+          @if(time()){
+          <div
+            class="d-flex"
+            [class]="replyClass ? 'actions-reply-holder' : 'actions-holder'"
+          >
+            @for(action of actionsList;track $index ){
+
+            <div (click)="actionsClick(action)" class="action-btns">
+              {{ action }}
+            </div>
+            }
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    @if(time()){
+    <div [class]="replyClass ? 'col-md-6' : 'col-md-4'">
+      <div class="profile-content_time">{{ getTimeAgo(time()) }}</div>
+      <div *ngIf="edited()" class="profile-content_editedFlag">Edited</div>
+    </div>
+    }
+  </div>
+
+  <!-- <hr
+    *ngIf="!lastItem() || hasReplies()"
+    [class]="
+      !hasReplies() && !reply()
+        ? 'profile-content_line'
+        : 'profile-content_line-reply'
+    "
+  /> -->
+</div>

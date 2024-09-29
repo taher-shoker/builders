@@ -1,0 +1,54 @@
+<div class="banner row px-4 pt-5 pb-4">
+  <div class="banner_background"></div>
+  <div class="col-md-6 col-sm-12">
+    <div class="banner_content">
+      <div class="welcome-msg">
+        <div class="d-flex">
+          <h4>{{ 'welcome_back' | translate }}</h4>
+          <p class="userName">{{ userName() }}</p>
+          <img src="assets/images/Waving Hand.svg" alt="" />
+        </div>
+
+        <p>{{ 'welcome_back_msg' | translate }}</p>
+      </div>
+      @if (showScorecard ) {
+      <h1 class="py-2">{{ 'scorecard_report' | translate }}</h1>
+
+      <stc-apps-result-score
+        [percentage]="overallScore.score"
+        [title]="overallScore.scorecardTitle || title"
+        *ngIf="overallScore?.score"
+      ></stc-apps-result-score>
+      } @else { @if(!dataUploadFlag){ @if (kpiName) {
+      <h2 class="details-title">Details for {{ kpiName }}</h2>
+      } } @else{
+      <h2 class="details-title">Upload File Page</h2>
+      } }
+    </div>
+  </div>
+  @if (showScorecard) {
+  <div class="col-md-6 col-sm-12">
+    <div class="banner_filter" [formGroup]="form">
+      <stc-apps-select-drop-down
+        formControlName="year"
+        [(ngModel)]="year"
+        [label]="''"
+        [matLabel]="'Select Year'"
+        [options]="yearsArray"
+        [outputValue]="'name'"
+        (selectChange)="selectYear($event)"
+      ></stc-apps-select-drop-down>
+
+      <stc-apps-select-drop-down
+        formControlName="quarter"
+        [(ngModel)]="quarter"
+        [label]="''"
+        [matLabel]="'Select Quarter'"
+        [options]="quarterArray"
+        [outputValue]="'name'"
+        (selectChange)="selectQuarter($event)"
+      ></stc-apps-select-drop-down>
+    </div>
+  </div>
+  }
+</div>

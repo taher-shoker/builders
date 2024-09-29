@@ -1,0 +1,13 @@
+<div class="breadcrumbs">
+  <ul>
+    <ng-container *ngFor="let item of breadcrumbs; let i = index">
+      <li *ngIf="!!item">
+        <a
+          [routerLink]="generateBreadcrumbUrl(i)"
+          class="hover:text-blue-500"
+          >{{ item }}</a
+        >
+      </li>
+    </ng-container>
+  </ul>
+</div>

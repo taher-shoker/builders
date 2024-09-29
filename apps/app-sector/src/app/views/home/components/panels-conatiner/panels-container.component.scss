@@ -1,0 +1,46 @@
+.panels_container {
+  background-color: var(--whiteColor);
+  width: 100%;
+  padding: 16px;
+  border-radius: 8px;
+  font-family: var(--stc-font-base);
+  margin-bottom: 50px;
+
+  &_title {
+    width: 100%;
+
+    h4 {
+      font-weight: 600;
+      font-size: 21px;
+      color: var(--darkPurbleColor);
+    }
+
+    .title-desc {
+      p {
+        font-weight: 400;
+        font-size: 21px;
+        color: var(--darkPurbleColor);
+        margin-top: 12px;
+        position: relative;
+      }
+
+      p::after {
+        content: "";
+        background-color: var(--stcSunsetColor);
+        position: absolute;
+        top: 130%;
+        right: 0;
+        width: 100%;
+        height: 2px;
+      }
+
+    }
+
+    .arrow {
+      position: absolute;
+      top: 50%;
+      left: 0;
+
+    }
+  }
+}

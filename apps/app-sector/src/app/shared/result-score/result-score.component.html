@@ -1,0 +1,30 @@
+<div class="score row row-gap-3">
+  <div class="col-md-6 col-sm-12">
+    <div class="score_content">
+      <div class="score_content_image">
+        <img src="assets/images/status-up.svg" class="img-fluid" />
+      </div>
+
+      <div class="score_content_result">
+        <h3>{{ title() ? 'Over all score' : '' }}</h3>
+        <p>Result</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-6 col-sm-12">
+    <div class="score_percent">
+      <h1>
+        {{
+         percentage().toFixed(2)
+        }}
+      </h1>
+      <stc-apps-progress-circle
+        [progressValue]="percentage() || 0"
+        progressSize="5rem"
+        mainBgColor="var(--stc-sunset-color)"
+        [showProgress]="false"
+      ></stc-apps-progress-circle>
+    </div>
+  </div>
+</div>

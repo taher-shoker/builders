@@ -1,0 +1,49 @@
+@import '../../../../styles/src/scss/core/variables/colors';
+
+
+  @keyframes growProgressCircule {
+    0%,
+    33% {
+      --pgPercentage: 0;
+    }
+
+    100% {
+      --pgPercentage: var(--value);
+    }
+  }
+
+  div[role='progresscircule'] {
+    --pgPercentage: var(--value);
+    animation: growProgressCircule 3s 1 forwards;
+    width: var(--size);
+    height: var(--size);
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1;
+    font-size: calc(var(--size) / 5);
+    color: var(--stc-color);
+  }
+
+  div[role='progresscircule']::after {
+    content: '';
+    position: absolute;
+    z-index: 2;
+    width: calc(var(--size) - 2rem);
+    height: calc(var(--size) - 2rem);
+    background-color: rgb(255, 255, 255);
+    border-radius: 50%;
+    box-shadow: inset 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
+      inset -6px -6px 10px -1px rgba(0, 0, 0, 0.055);
+  }
+
+  @property --pgPercentage {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
+
+  .circle-content {
+    position: absolute;
+    z-index: 3;
+  }

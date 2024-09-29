@@ -1,0 +1,128 @@
+<section class="replies-section">
+  <div class="replies-section_totalComments">{{ totalComments }} Comments</div>
+  @if(totalComments!==0){
+  <div class="replies-section_holder">
+    @for (comment of comments; let parentLoop=$index;track parentLoop; let
+    lastComment=$last) {
+    <div
+      class="replies-section_item"
+      [ngStyle]="{
+        'border-bottom':
+          lastComment && comment.replies.length === 0
+            ? ' none'
+            : ' 1px solid #E0E2E7'
+      }"
+    >
+      <stc-apps-profile
+        [name]="comment.authorName"
+        [comment]="comment.comment"
+        [time]="comment.edited ? comment.editedAt : comment.createdAt"
+        [lastItem]="parentLoop === comments.length - 1 ? true : false"
+        [hasReplies]="
+          comment.replies !== null
+            ? comment.replies.length !== 0
+              ? true
+              : false
+            : false
+        "
+        [reply]="false"
+        [edited]="comment.edited"
+        [commaSepartedMentions]="comment.commaSeparatedMentions!"
+        [authorID]="comment.authorId"
+        [loggedUserID]="loggedUserID"
+        (commentActionName)="handleCommentActions($event, parentLoop)"
+      ></stc-apps-profile>
+    </div>
+    @if(showCommentTextArea && parentLoop==commentIndex){
+    <form [formGroup]="form">
+      <div #targetElement>
+        <stc-apps-mentions-editor
+          class="replies-section_add-reply"
+          [editedText]="editedText()"
+          formControlName="comment"
+          [placeholder]="placeholder"
+          [mentions]="mentions"
+          (contentChange)="onContentChange($event)"
+          (deletionEmitter)="deleteMention($event)"
+        >
+        </stc-apps-mentions-editor>
+
+        <div class="replies-section_add-reply-actions">
+          <button class="cancel-btn" (click)="cancel()">Cancel</button>
+          <button
+            (click)="save()"
+            [disabled]="form.controls['comment'].hasError('required')"
+          >
+            {{ commentActionBtn }}
+          </button>
+        </div>
+      </div>
+    </form>
+
+    }
+    <div
+      *ngIf="
+        comment.replies !== null &&
+        comment.replies &&
+        comment.replies.length > 0
+      "
+    >
+      <div class="replies">
+        @for (reply of comment.replies; track $index; let lastReply = $last) {
+        <div
+          class="replies-section_subitem"
+          [ngStyle]="{
+            'border-bottom':
+              lastComment && lastReply ? ' none' : ' 1px solid #E0E2E7'
+          }"
+        >
+          <stc-apps-profile
+            [name]="reply.authorName"
+            [comment]="reply.reply"
+            [time]="reply.edited ? reply.editedAt : reply.createdAt"
+            [lastItem]="
+              $index === comment.replies.length - 1 &&
+              parentLoop === comments.length - 1
+                ? true
+                : false
+            "
+            [reply]="true"
+            [edited]="reply.edited"
+            [commaSepartedMentions]="reply.commaSeparatedMentions!"
+            [authorID]="reply.authorId"
+            [loggedUserID]="loggedUserID"
+            (replyActionName)="handleReplyActions($event, parentLoop, $index)"
+          ></stc-apps-profile>
+        </div>
+        @if(editReplyTextArea && parentLoop==commentIndex &&
+        $index===replyIndex){
+        <form [formGroup]="form">
+          <div #targetElement>
+            <stc-apps-mentions-editor
+              class="replies-section_add-reply"
+              [editedText]="editedText()"
+              formControlName="comment"
+              [placeholder]="placeholder"
+              [mentions]="mentions"
+              (contentChange)="onContentChange($event)"
+              (deletionEmitter)="deleteMention($event)"
+            >
+            </stc-apps-mentions-editor>
+            <div class="replies-section_add-reply-actions">
+              <button class="cancel-btn" (click)="cancelReply()">Cancel</button>
+              <button
+                (click)="editReply()"
+                [disabled]="form.controls['comment'].hasError('required')"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </form>
+        } }
+      </div>
+    </div>
+    }
+  </div>
+  }
+</section>

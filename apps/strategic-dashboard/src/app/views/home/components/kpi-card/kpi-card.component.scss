@@ -1,0 +1,134 @@
+.kpi-card {
+  position: relative;
+  height: 683px;
+  border-radius: 10px;
+  // overflow: auto;
+  background-color: var(--whiteColor);
+  padding: 0px 14px;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+
+  &_header {
+    position: sticky;
+    top: 0;
+    background-color: var(--whiteColor);
+    z-index: 10;
+    padding: 12px 0;
+    // box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  &_content-holder {
+    margin-top: 50px;
+    max-height: 83%;
+    overflow-y: auto;
+    padding: 0 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 12px;
+
+    h4 {
+      font-family: 'stc forward-bold';
+    }
+  }
+
+  &_content {
+    padding: 15px 0;
+    font-size: 16px;
+    text-align: center;
+    color: var(--grey-color);
+    font-weight: 400;
+    margin: 10px 0;
+
+    &.with-full-border {
+      border: 1px solid var(--borderGreyColor);
+      padding: 12px;
+    }
+
+    &.with-bottom-border {
+      border-bottom: 1px solid var(--borderGreyColor);
+    }
+
+    &:last-child {
+      margin-bottom: 5rem;
+
+      &.with-bottom-border {
+        border-bottom: none
+      }
+    }
+  }
+
+  &_details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    column-gap: 15px;
+
+    &>div {
+      text-align: justify;
+    }
+
+    &_title {
+      margin: 0;
+      color: var(--grayColor);
+      font-size: 14px;
+    }
+
+    &_percentage {
+      font-family: 'stc forward-bold';
+
+      &.greater-than-green {
+        color: var(--stcOasisColor);
+      }
+
+      &.less-than-red {
+        color: var(--stc-red-color);
+      }
+
+      &.between-orange {
+        color: var(--stcSunsetColor);
+      }
+    }
+
+    &_progress {
+      width: 24px;
+      height: 24px;
+
+      &.less-than-red {
+        filter: invert(1);
+      }
+
+      &.between-orange {
+        filter: invert(0.55) sepia(1) saturate(5);
+      }
+    }
+  }
+
+  &_footer {
+    font-weight: 300;
+    font-size: 18px;
+    font-family: var(--stc-font-light);
+    text-decoration: underline;
+    color: var(--stc-color);
+    position: absolute;
+    z-index: 999;
+    left: 34%;
+    bottom: 12px;
+    margin-top: 16px;
+    background-color: var(--whiteColor);
+    padding: 16px 0;
+  }
+
+  &_footer-content {
+    transition: transform ease-in-out 0.4s;
+    cursor: pointer;
+  }
+
+  &_footer-content:hover {
+    transform: translateX(5px);
+  }
+
+  .content-border {
+    border-bottom: 1px solid var(--borderGreyColor);
+  }
+}

@@ -1,0 +1,22 @@
+.kpis {
+
+    &_title {
+        font-weight: 700;
+    }
+
+    &_button {
+        button {
+            color: var(--blueColor);
+            font-weight: 400;
+            font-family: 'Roboto';
+
+            img {
+                margin-inline-start: 4px;
+            }
+
+            &:hover {
+                opacity: 0.5;
+            }
+        }
+    }
+}

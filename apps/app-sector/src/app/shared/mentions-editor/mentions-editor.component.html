@@ -1,0 +1,26 @@
+<div class="comments">
+  <div class="comments_form">
+    <div class="comments_form_content">
+      <div
+        class="comments_form_editor"
+        type="text"
+        #contentEditable
+        [attr.data-placeholder]="placeholder()"
+        [mentionConfig]="mentionConfig"
+        [mentionListTemplate]="mentionListTemplate"
+        contenteditable="true"
+        (change)="change($event)"
+        (itemSelected)="onItemSelected($event)"
+        (keyup)="onKeyUp($event)"
+      ></div>
+      <ng-template #mentionListTemplate let-item="item" let-index="index">
+        <!-- <span>{{ item.name }}</span> -->
+        <stc-apps-profile
+          [name]="item[mentionProperty()]"
+          [comment]="item.jobTitle"
+          [lastItem]="index === items.length - 1"
+        ></stc-apps-profile>
+      </ng-template>
+    </div>
+  </div>
+</div>

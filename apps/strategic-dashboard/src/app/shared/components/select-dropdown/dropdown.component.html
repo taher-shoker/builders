@@ -1,0 +1,11 @@
+<div [formGroup]="form">
+    <stc-apps-select-drop-down
+    formControlName="year"
+    [label]="'Select FY Year'"
+    [(ngModel)]="year"
+    [options]="yearsArray"
+    [outputValue]="'name'"
+    (selectChange)="selectYear($event)"
+    ></stc-apps-select-drop-down>
+</div>
+

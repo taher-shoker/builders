@@ -1,0 +1,102 @@
+.attachments {
+    margin-top: 10px;
+    background: var(--whiteColor);
+    padding: 15px;
+    // border: 1px solid rgba($color: var(--blackColor), $alpha: 0.1);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+
+    &_summary {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        span {
+            font-family: var(--stc-font-meduim);
+            font-size: 20px;
+        }
+
+        button {
+            border: none;
+            background: transparent;
+            padding: 11.5px 39px;
+            display: flex;
+            color: var(--lightGreyColor);
+
+            img {
+                margin-inline-end: 9px;
+            }
+        }
+    }
+
+    &_error {
+        margin-top: 1rem;
+        color: var(--stc-red-color);
+    }
+
+    &_empty {
+        display: flex;
+        justify-content: center;
+        margin-top: 100px;
+        font-size: 18px;
+        font-weight: 400;
+        color: var(--lightGreyColor);
+    }
+
+    &_files {
+        margin-top: 37px;
+        height: 280px;
+        overflow: hidden auto;
+
+        &_item {
+            &:first-child {
+                padding-top: 0 !important;
+            }
+
+            &:last-child {
+                border-bottom: none !important;
+            }
+
+            &>div {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                span {
+                    cursor: pointer;
+                    font-family: var(--stc-font-meduim);
+                    font-size: 18px;
+                    display: inline-block;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    margin-inline-end: 8px;
+                    color: var(--stc-color);
+                    text-decoration: underline;
+                }
+
+                button {
+                    width: auto;
+                    max-width: 1rem;
+                    padding: 0;
+
+                    &:active {
+                        border: none;
+                    }
+
+                    i {
+                        &:focus-visible {
+                            outline: none;
+                        }
+                    }
+                }
+            }
+
+            &_time {
+                color: var(--grey-color);
+                font-family: var(--stc-font-light);
+
+            }
+        }
+    }
+}

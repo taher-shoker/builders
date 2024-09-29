@@ -8,6 +8,23 @@
   }
 }
 
+.container-box {
+  padding: 20px;
+  background-color: white;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+
+  h5 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: left;
+    color: var(--stc-color);
+    font-family: var(--stc-font-meduim);
+  }
+}
+
 .vp-report {
   h3 {
     font-size: 32px;
@@ -17,24 +34,7 @@
     font-size: 20px;
     font-family: var(--stc-font-bold);
   }
-  .container-box {
-    padding: 20px;
-    background-color: white;
-    border-radius: 10px;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    h5 {
-      font-size: 24px;
-      margin-bottom: 20px;
-      text-align: left;
-      color: var(--stc-color);
-      font-family: var(--stc-font-meduim);
-    }
-    .progress-circule {
-      margin: 0 auto;
-    }
-  }
+
   .teams {
     display: flex;
     align-items: center;
@@ -94,55 +94,7 @@
 
 /** Progress Circule **/
 
-@keyframes growProgressCircule {
-  0%,
-  33% {
-    --pgPercentage: 0;
-  }
-  100% {
-    --pgPercentage: var(--value);
-  }
-}
 
-@property --pgPercentage {
-  syntax: '<number>';
-  inherits: true;
-  initial-value: 0;
-}
-
-div[role='progresscircule'] {
-  --size: 12rem;
-  --pgPercentage: var(--value);
-  animation: growProgressCircule 3s 1 forwards;
-  width: var(--size);
-  height: var(--size);
-  border-radius: 50%;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
-  background: conic-gradient(
-    var(--stc-color) calc(var(--pgPercentage) * 1%),
-    var(--stc-lightGrey-color) 0
-  );
-  font-size: calc(var(--size) / 5);
-  color: var(--stc-color);
-}
-div[role='progresscircule']::after {
-  content: '';
-  position: absolute;
-  z-index: 2;
-  width: calc(var(--size) - 2rem);
-  height: calc(var(--size) - 2rem);
-  background-color: rgb(255, 255, 255);
-  border-radius: 50%;
-  box-shadow: inset 6px 6px 10px -1px rgba(0, 0, 0, 0.15),
-    inset -6px -6px 10px -1px rgba(0, 0, 0, 0.055);
-}
-
-.circle-content {
-  position: absolute;
-  z-index: 3;
-}
 // div[role='progresscircule']::before {
 //   counter-reset: percentage var(--value);
 //   content: counter(percentage) '%';

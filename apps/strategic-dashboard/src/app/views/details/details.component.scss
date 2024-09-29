@@ -1,0 +1,148 @@
+.details-page {
+  padding: 44px 40px;
+
+  &_title {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 22px;
+
+    h3 {
+      color: var(--stc-color);
+      font-weight: 700;
+      font-size: 28px;
+      margin-top: 40px;
+      font-family: var(--stc-font-bold);
+    }
+
+    .filter {
+      font-weight: 600;
+      color: var(--semiBlueColor);
+      font-size: 16px;
+      font-family: var(--stc-font-light);
+
+      p {
+        margin: 0;
+      }
+
+      ::ng-deep .mat-mdc-text-field-wrapper {
+        background-color: var(--whiteColor);
+        border: 1px solid var(--darkGreyColor);
+        border-radius: 4px;
+        margin: 0 !important;
+      }
+    }
+  }
+
+  &_progressHolder {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    margin-bottom: 24px;
+  }
+
+  &_progress-overview {
+    width: 33.333%;
+    display: flex;
+
+    p {
+      margin: 0;
+      padding-left: 12px;
+      color: var(--grey-color);
+      font-weight: 400;
+      font-size: 16px;
+    }
+  }
+
+  &_cards {
+    display: flex;
+    // justify-content: space-between;
+    flex-wrap: wrap;
+
+    .card-holder {
+      margin-bottom: 24px;
+      width: 15%;
+    }
+  }
+
+  &_range {
+    margin: 0px 34px;
+    background-color: var(--whiteColor);
+    border-radius: 10px;
+    padding: 24px 24px 24px 34px;
+
+    .range-title {
+      font-size: 18px;
+      margin-bottom: 12px;
+      font-weight: 600;
+      color: var(--semiBlueColor);
+    }
+
+    .range-holder {
+      padding: 12px;
+      border-radius: 8px;
+
+      border: 1px solid var(--stcLightGreyColor);
+    }
+  }
+
+  &_charts {
+    margin: 16px 20px;
+
+    p {
+      color: var(--darkGreyColor);
+    }
+  }
+
+}
+
+@media screen and (max-width: 1405px) and (min-width: 900px) {
+  .details-page_cards {
+    .card-holder {
+      width: 23% !important;
+    }
+  }
+
+  .details-page_progress-overview {
+    width: 49% !important;
+  }
+}
+
+@media screen and (max-width: 900px) and (min-width: 660px) {
+  .details-page_cards {
+    .card-holder {
+      width: 32.33% !important;
+    }
+  }
+
+  .details-page_progress-overview {
+    width: 99% !important;
+  }
+
+  .details-page_header {
+    >div {
+      margin-left: 20%;
+    }
+  }
+}
+
+@media screen and (max-width: 660px) {
+  .details-page_cards {
+    .card-holder {
+      width: 49% !important;
+    }
+  }
+
+  .details-page_progress-overview {
+    width: 99% !important;
+  }
+
+  .details-page_title {
+    display: block !important;
+  }
+
+  .details-page_header {
+    >div {
+      margin-left: 20%;
+    }
+  }
+}
