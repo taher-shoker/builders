@@ -210,7 +210,7 @@
                     </ng-container>
                   </div>
                   <div class="logs" *ngIf="historySteps.length > 0">
-                    <stc-apps-actions-stepper [steps]="historySteps">
+                    <stc-apps-actions-stepper [steps]="historySteps" (stepperAction)="doStepAction($event)">
                       <ng-template #bodyTemplate let-step>
                         <div class="stepp-info">
                           <p class="mt-1">

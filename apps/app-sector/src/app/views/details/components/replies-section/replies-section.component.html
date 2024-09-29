@@ -51,7 +51,10 @@
           <button class="cancel-btn" (click)="cancel()">Cancel</button>
           <button
             (click)="save()"
-            [disabled]="form.controls['comment'].hasError('required')"
+            [disabled]="
+              form.controls['comment'].hasError('required') ||
+              form.controls['comment'].value?.trim().length === 0
+            "
           >
             {{ commentActionBtn }}
           </button>
@@ -112,7 +115,10 @@
               <button class="cancel-btn" (click)="cancelReply()">Cancel</button>
               <button
                 (click)="editReply()"
-                [disabled]="form.controls['comment'].hasError('required')"
+                [disabled]="
+                  form.controls['comment'].hasError('required') ||
+                  form.controls['comment'].value?.trim().length === 0
+                "
               >
                 Update
               </button>

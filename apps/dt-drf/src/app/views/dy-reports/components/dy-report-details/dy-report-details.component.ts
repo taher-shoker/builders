@@ -113,6 +113,7 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   watchSlaChanges(value: number) {
+    console.log('VALUE IS:', value);
     this.loadingSla = true;
     this.addReportSLA(value);
   }
@@ -180,14 +181,14 @@ export class DyReportDetailsComponent implements OnInit {
         this.datePipe.transform(displayDate, 'medium') || '';
 
       let byUser = '';
-      const userThatTaskIsPendingOn = res[i].userDisplayName;
+      const userThatTaskIsPendingOn = res[i].username;
       const actions: Actions[] = [];
       let stepCustomState: 'danger' | 'edit' | '' = '';
       const attachmentsIDs: string[] = [];
       const attachments: MilestoneAttachment[] = [];
 
       if (res[i].status !== 'pending') {
-        byUser = `By ${res[i].completedByName}`;
+        byUser = `By ${res[i].username}`;
       }
 
       if (res[i].status === 'pending') {
@@ -195,12 +196,27 @@ export class DyReportDetailsComponent implements OnInit {
       }
 
       for (const taskAttribute of res[i].requestTaskAttributes) {
-        if (taskAttribute.name === 'attachments') {
-          attachmentsIDs.push(taskAttribute.value);
+        if (
+          taskAttribute.name === 'attachments' ||
+          taskAttribute.name === 'creator_attachments'
+        ) {
+          if (taskAttribute.value) {
+            attachmentsIDs.push(taskAttribute.value);
+          }
         }
 
-        if (taskAttribute.name === 'comment') {
+        if (
+          taskAttribute.name === 'comment' ||
+          taskAttribute.name === 'creator_description'
+        ) {
           notes = taskAttribute.value;
+        }
+
+        if (
+          taskAttribute.name === 'is_approved_by_initiator' &&
+          taskAttribute.value === 'false'
+        ) {
+          stepCustomState = 'danger';
         }
 
         if (taskAttribute.name === 'delete') {
@@ -291,6 +307,8 @@ export class DyReportDetailsComponent implements OnInit {
           }
         }
       }
+    } else if (task.status === 'breached') {
+      finalStr = taskName + ' - Breached';
     } else {
       finalStr = taskName;
     }
@@ -377,10 +395,6 @@ export class DyReportDetailsComponent implements OnInit {
   }
 
   doStepAction(action: { actionObj: Actions | string; item: any }) {
-    if (action) {
-      console.log('El ACT:', action);
-    }
-
     if (
       typeof action.actionObj !== 'string' &&
       'uniqueTitle' in action.actionObj
@@ -405,7 +419,7 @@ export class DyReportDetailsComponent implements OnInit {
     }
 
     if (action === 'Edit Report') {
-      this.router.navigate(['/home/add_report'], {
+      this.router.navigate(['home/edit_report', this.reportsDetails.id], {
         queryParams: {
           mode: 'edit_report_step',
           id: this.reportsDetails.id,
@@ -431,72 +445,74 @@ export class DyReportDetailsComponent implements OnInit {
     }
 
     if (action === 'Initiator Approve') {
-      this.approveInitiatorStep(item);
+      // this.approveInitiatorStep(item);
+      this.approveStep(item, true);
     }
 
     if (action === 'Initiator Reject') {
-      this.rejectInitiatorStep(item);
+      // this.rejectInitiatorStep(item);
+      this.rejectStep(item, true);
     }
   }
 
-  approveInitiatorStep(item: RequestTask) {
-    const msg = `Are you sure to approve current state?`;
-    this.confirmAction(msg).subscribe((res) => {
-      if (!res) {
-        return;
-      }
+  // approveInitiatorStep(item: RequestTask) {
+  //   const msg = `Are you sure to approve current state?`;
+  //   this.confirmAction(msg).subscribe((res) => {
+  //     if (!res) {
+  //       return;
+  //     }
 
-      this.approveInitiator(item);
-    });
-  }
+  //     this.approveInitiator(item);
+  //   });
+  // }
 
-  rejectInitiatorStep(item: RequestTask) {
-    const msg = `Are you sure to reject current state?`;
-    this.confirmAction(msg).subscribe((res) => {
-      if (!res) {
-        return;
-      }
+  // rejectInitiatorStep(item: RequestTask) {
+  //   const msg = `Are you sure to reject current state?`;
+  //   this.confirmAction(msg).subscribe((res) => {
+  //     if (!res) {
+  //       return;
+  //     }
 
-      this.approveInitiator(item);
-    });
-  }
+  //     this.rejectInitiator(item);
+  //   });
+  // }
 
-  rejectInitiator(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'is_approved_by_initiator', value: false }],
-    };
+  // rejectInitiator(item: RequestTask) {
+  //   const params: RequestTaskAttributes = {
+  //     requestParams: [{ name: 'is_approved_by_initiator', value: false }],
+  //   };
 
-    this.reportsService
-      .completePendingTask(
-        this.reportsDetails.flowId,
-        item.requestTaskId,
-        params
-      )
-      .subscribe((res) => {
-        console.log('The res of complete task:', res);
-        this.isLoadingSteps = false;
-        this.getReportDetails();
-      });
-  }
+  //   this.reportsService
+  //     .completePendingTask(
+  //       this.reportsDetails.flowId,
+  //       item.requestTaskId,
+  //       params
+  //     )
+  //     .subscribe((res) => {
+  //       console.log('The res of complete task:', res);
+  //       this.isLoadingSteps = false;
+  //       this.getReportDetails();
+  //     });
+  // }
 
-  approveInitiator(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'is_approved_by_initiator', value: true }],
-    };
+  // approveInitiator(item: RequestTask) {
+  //   const params: RequestTaskAttributes = {
+  //     requestParams: [{ name: 'is_approved_by_initiator', value: true }],
+  //   };
 
-    this.isLoadingSteps = true;
-    this.reportsService
-      .completePendingTask(
-        this.reportsDetails.flowId,
-        item.requestTaskId,
-        params
-      )
-      .subscribe((res) => {
-        console.log('The res of complete task:', res);
-        this.isLoadingSteps = false;
-        this.getReportDetails();
-      });
-  }
+  //   this.isLoadingSteps = true;
+  //   this.reportsService
+  //     .completePendingTask(
+  //       this.reportsDetails.flowId,
+  //       item.requestTaskId,
+  //       params
+  //     )
+  //     .subscribe((res) => {
+  //       console.log('The res of complete task:', res);
+  //       this.isLoadingSteps = false;
+  //       this.getReportDetails();
+  //     });
+  // }
 
   addDataStep(item: RequestTask) {
     const params: RequestTaskAttributes = {
@@ -505,7 +521,6 @@ export class DyReportDetailsComponent implements OnInit {
 
     this.openAddDataForReportModal(item).subscribe(
       (res: { comment: string; attachments: string }) => {
-        console.log('The res of dialog:', res);
         if (!res) {
           return;
         }
@@ -534,7 +549,6 @@ export class DyReportDetailsComponent implements OnInit {
           )
           .subscribe((res) => {
             console.log('The res of complete task:', res);
-            this.isLoadingSteps = false;
             this.getReportDetails();
           });
       }
@@ -552,10 +566,14 @@ export class DyReportDetailsComponent implements OnInit {
     return dialogRef.afterClosed();
   }
 
-  approveStep(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'isApproved', value: true }],
-    };
+  approveStep(item: RequestTask, isInitiator: boolean = false) {
+    const params: RequestTaskAttributes = isInitiator
+      ? {
+          requestParams: [{ name: 'is_approved_by_initiator', value: true }],
+        }
+      : {
+          requestParams: [{ name: 'isApproved', value: true }],
+        };
 
     this.openReportStepApprovalModal(item, true).subscribe(
       (res: { comment: string; attachments: string }) => {
@@ -592,10 +610,14 @@ export class DyReportDetailsComponent implements OnInit {
     );
   }
 
-  rejectStep(item: RequestTask) {
-    const params: RequestTaskAttributes = {
-      requestParams: [{ name: 'isApproved', value: false }],
-    };
+  rejectStep(item: RequestTask, isInitiator: boolean = false) {
+    const params: RequestTaskAttributes = isInitiator
+      ? {
+          requestParams: [{ name: 'is_approved_by_initiator', value: false }],
+        }
+      : {
+          requestParams: [{ name: 'isApproved', value: false }],
+        };
 
     this.openReportStepApprovalModal(item, false).subscribe(
       (res: { comment: any; attachments: any }) => {
@@ -624,7 +646,6 @@ export class DyReportDetailsComponent implements OnInit {
           )
           .subscribe((res) => {
             console.log('The res of complete task:', res);
-            this.isLoadingSteps = false;
             this.getReportDetails();
           });
       }

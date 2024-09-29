@@ -42,6 +42,7 @@ export class AttachmentsComponent {
 
       if (filesArray.length > this.maxFiles()) {
         this.fileLimitExceeded = true;
+        this.removeErrorMessage('limit');
         input.value = '';
         return;
       }
@@ -52,8 +53,10 @@ export class AttachmentsComponent {
       const validFiles = filesArray.filter((file) => {
         if (file.size > maxFileSizeBytes) {
           this.fileSizeExceeded = true;
+          this.removeErrorMessage('size');
           return false;
         }
+
         return true;
       });
 
@@ -64,7 +67,17 @@ export class AttachmentsComponent {
       input.value = '';
     }
   }
-
+  removeErrorMessage(variableName: string) {
+    if (variableName == 'size') {
+      setTimeout(() => {
+        this.fileSizeExceeded = false;
+      }, 3000);
+    } else if (variableName == 'limit') {
+      setTimeout(() => {
+        this.fileLimitExceeded = false;
+      }, 3000);
+    }
+  }
   onDeleteFile(index: number, id: number) {
     this.deleteFile.emit({ index, id });
   }

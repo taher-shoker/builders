@@ -11,6 +11,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { logs } from '../../models/logModel';
 import { DataUploadService } from '../../services/data-upload.service';
 import { LogService } from '../../services/log.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'stc-apps-logs-table',
@@ -21,19 +22,17 @@ export class LogsTableComponent implements OnInit {
   ELEMENT_DATA: logs[] = [];
   constructor(
     private dataUploadService: DataUploadService,
-    private logService: LogService
+    private logService: LogService,
+    public datePipe: DatePipe
   ) {}
 
   displayedColumns: string[] = [
     'jobId',
     'executedBy',
     'originalFileName',
+    'status',
     'startTime',
     'endTime',
-    'status',
-    'jobCategory',
-    'talendJobName',
-    'sourceSubsidiaryName',
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -52,6 +51,10 @@ export class LogsTableComponent implements OnInit {
 
         this.dataSource = new MatTableDataSource<any>(this.ELEMENT_DATA);
         this.dataSource.paginator = this.paginator;
+      },
+      error: (error) => {
+        console.log('error happend');
+        console.log(error);
       },
     });
   }

@@ -1,0 +1,76 @@
+<div class="custom-dropdown-component">
+  <!--I make the class name harder as 'dropdown' intervenes with bootstrap!-->
+  @if (label()) {
+  <div class="label">
+    {{ label() }}
+    @if (required()) {
+    <span style="color: red">*</span>
+    }
+  </div>
+  }
+
+  <div class="dropdown-head" (click)="alternateList()"
+    [ngClass]="{ 'active-dropdown-head': showItemsList(), 'disabled': disableDropdownHead() }">
+    <div class="head-wrapper">
+      <div class="head-display-name">
+        {{ chosenItem()?.['componentScopedNameAccessor'] }}
+      </div>
+      <div class="head-caret-down">
+        <i class="ri-arrow-down-s-line"></i>
+      </div>
+    </div>
+  </div>
+
+  @if (showItemsList()) {
+  <div class="items-list">
+    @if (searchable()) {
+    <div class="searcher">
+      <i class="ri-search-line icon"></i>
+      <!-- This is the magnifier icon -->
+      <input type="text" placeholder="Search" (keyup)="filterList($event)" />
+    </div>
+
+    <div class="items-holder">
+      @if (resetable()) {
+      <div class="item rest-item" (click)="selectItem({displayName:'',value:''})">
+        {{'None' }}
+      </div>
+      }
+      @for (item of filteredList(); track item) { 
+      <div class="item" (click)="selectItem(item)">
+        {{ item.componentScopedNameAccessor }}
+        @if (item.componentScopedValueAccessor === chosenItem()?.['componentScopedValueAccessor']) {
+          <i class="ri-check-fill"></i>
+        }
+      </div>
+      }
+    </div>
+    }@else{
+
+    <div class="items-holder">
+      @if (resetable()) {
+      <div class="item" (click)="selectItem({displayName:'',value:''})">
+        {{'None' }}
+      </div>
+      }
+      @for (item of mutatedList(); track item) {
+      <div class="item" (click)="selectItem(item)">
+        {{ item.componentScopedNameAccessor }}
+      </div>
+      }
+    </div>
+    }
+  </div>
+  }
+</div>
+
+@if (control?.errors && control?.touched && chosenItem() === null) {
+<div class="error-holder">
+  <p>This Field Is Required</p>
+</div>
+}
+
+<!--The Overlay div-->
+@if (showItemsList()) {
+<div class="dt-overlay" (click)="toggleOverlay()"></div>
+}

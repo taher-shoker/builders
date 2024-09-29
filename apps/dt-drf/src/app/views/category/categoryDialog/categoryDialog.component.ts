@@ -23,12 +23,18 @@ export class CategoryDialogComponent implements OnInit {
   ngOnInit(): void {
     console.log('El data', this.data);
     this.form = new FormGroup({
-      name: new FormControl(this.data.category?.name ?? '', [
-        Validators.required,
-        Validators.maxLength(
-          this.configService.getConfig()?.characterLimit.nameLength
-        ),
-      ]),
+      name: new FormControl(
+        {
+          value: this.data.category?.name ?? '',
+          disabled: this.data.state === 'edit',
+        },
+        [
+          Validators.required,
+          Validators.maxLength(
+            this.configService.getConfig()?.characterLimit.nameLength
+          ),
+        ]
+      ),
       slaDuration: new FormControl(this.data.category?.slaDuration ?? '', [
         Validators.required,
       ]),

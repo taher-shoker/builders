@@ -3,5 +3,6 @@
         "CCEX",
         "dtmv",
         "Kpis"
-    ]
+    ],
+    "angular.enable-strict-mode-prompt": false
 }

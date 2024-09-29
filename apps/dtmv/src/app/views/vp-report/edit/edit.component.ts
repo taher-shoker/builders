@@ -140,7 +140,8 @@ export class EditComponent implements OnInit {
 
         this.populateForm(res);
 
-        if (res.isApproved === null || res.isApproved === true) { // Is Approved true or null, means a flow is closed and a DT User with role "Editor" can submit again
+        if (res.isApproved === null || res.isApproved === true) {
+          // Is Approved true or null, means a flow is closed and a DT User with role "Editor" can submit again
           if (
             this.milestonesService.userInGroup('DT_User') &&
             this.milestonesService.userInGroup('DT_VP_Dashboard_Editor')
@@ -202,26 +203,38 @@ export class EditComponent implements OnInit {
   }
 
   private handleCommentsOfAllTasks() {
-    const PMOsComments : string [] = [];
-    const directorsComments : string [] = [];
+    const PMOsComments: string[] = [];
+    const directorsComments: string[] = [];
 
     this.milestonesService
       .getVPReportWorkflow(this.workflowId()!)
       .subscribe((workflowRes) => {
         for (const item of workflowRes) {
           for (const taskAttr of item.requestTaskAttributes) {
-            if (taskAttr.name === 'reason_of_rejection' && item.taskName === 'Approve Report Data PMO') { // comments of PMO
+            if (
+              taskAttr.name === 'reason_of_rejection' &&
+              item.taskName === 'Approve Report Data PMO'
+            ) {
+              // comments of PMO
               PMOsComments.push(taskAttr.value);
             }
 
-            if (taskAttr.name === 'reason_of_rejection' && item.taskName === 'Approve Report Data Director') { // comments of Director
+            if (
+              taskAttr.name === 'reason_of_rejection' &&
+              item.taskName === 'Approve Report Data Director'
+            ) {
+              // comments of Director
               directorsComments.push(taskAttr.value);
             }
           }
         }
 
-        this.lastCommentReceivedFromDirector.set(directorsComments[directorsComments.length - 1]);
-        this.lastCommentReceivedFromPMO.set(PMOsComments[PMOsComments.length - 1]);
+        this.lastCommentReceivedFromDirector.set(
+          directorsComments[directorsComments.length - 1]
+        );
+        this.lastCommentReceivedFromPMO.set(
+          PMOsComments[PMOsComments.length - 1]
+        );
       });
   }
 
@@ -314,15 +327,10 @@ export class EditComponent implements OnInit {
   }
 
   private getAllTeams() {
-    if (this.milestonesService.checkIsDirector()) {
-      this.milestonesService.setSystemTeams().subscribe((res) => {
-        this.allTeams = res;
-        this.watchRoute();
-      });
-    } else {
-      this.allTeams = this.milestonesService.setUserTeams();
-      this.watchRoute();
-    }
+    this.milestonesService.setUserTeams().subscribe((res) => {
+      this.allTeams = res;
+    });
+    this.watchRoute();
   }
 
   private updateRoute(team: string, year: number) {
@@ -381,11 +389,9 @@ export class EditComponent implements OnInit {
       year: this.selectedYear(),
     };
 
-    this.milestonesService
-      .postHighlightOrImpact(editingData)
-      .subscribe(() => {
-        this.getVpReportState();
-      });
+    this.milestonesService.postHighlightOrImpact(editingData).subscribe(() => {
+      this.getVpReportState();
+    });
   }
 
   protected resubmitForm() {
@@ -518,5 +524,4 @@ export class EditComponent implements OnInit {
         });
     }
   }
-
 }

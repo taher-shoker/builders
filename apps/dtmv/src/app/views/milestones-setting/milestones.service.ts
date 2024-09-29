@@ -55,16 +55,9 @@ export class MilestonesService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  currentTeam: {
-    id: number;
-    name: string;
-    systemDto: { id: number; name: string };
-  };
   remindersItems: Reminders[] = [];
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.currentTeam = this.setUserTeams();
-  }
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   isDTDirector!: boolean;
   isBusinessSpoc!: boolean;
@@ -86,8 +79,11 @@ export class MilestonesService {
     });
   }
   setUserTeams() {
-    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    return user.teams;
+    return this.http.get<any[]>(`${this.adminUrl}/users/teams/sys`, {
+      params: this.setSystemParam(),
+    });
+    // const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    // return user.teams;
   }
   getMilestoneUsersType(): Group[] {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
@@ -95,7 +91,7 @@ export class MilestonesService {
   }
 
   checkIsDirector() {
-    console.warn(this.getMilestoneUsersType())
+    console.warn(this.getMilestoneUsersType());
     if (
       this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
     ) {
@@ -107,13 +103,15 @@ export class MilestonesService {
   }
 
   /**
-   * 
+   *
    * @param role Pass a groupName like ['DT_Director', 'Business_SPOC', 'DT_User', 'DT_VP_Dashboard_Viewer', 'DT_VP_Dashboard_Editor', 'PMO']
    * @returns True if the groupName is assigned to the user.
    */
 
-  userInGroup(role: string) : boolean{
-    return this.getMilestoneUsersType().find((x) => x.groupName === role) ? true : false;
+  userInGroup(role: string): boolean {
+    return this.getMilestoneUsersType().find((x) => x.groupName === role)
+      ? true
+      : false;
   }
 
   checkIsBusinessSpoc() {
@@ -162,7 +160,9 @@ export class MilestonesService {
       .set('teamName', teamName)
       .set('year', year.toString());
 
-    return this.http.get<StreamsResponse>(`${this.vpUrl}activities`, { params });
+    return this.http.get<StreamsResponse>(`${this.vpUrl}activities`, {
+      params,
+    });
   }
 
   /**
@@ -268,29 +268,31 @@ export class MilestonesService {
    * @param requestId pass the workflow ID
    * @returns the workflow data and state
    */
-  getVPReportWorkflow(
-    requestId: number
-  ): Observable<ReportDataWorkflow[]> {
-    return this.http.get<ReportDataWorkflow[]>(
-      `${this.ticketUrl}${requestId}`
-    ).pipe(
-      map((res: ReportDataWorkflow[]) => res.filter(item => item.status === 'completed'))
-    )
+  getVPReportWorkflow(requestId: number): Observable<ReportDataWorkflow[]> {
+    return this.http
+      .get<ReportDataWorkflow[]>(`${this.ticketUrl}${requestId}`)
+      .pipe(
+        map((res: ReportDataWorkflow[]) =>
+          res.filter((item) => item.status === 'completed')
+        )
+      );
   }
 
-    /**
+  /**
    * @param requestId pass the workflow ID
    * @returns the workflow data and state
    */
-    getPendingVPReportWorkflowItem(
-      requestId: number
-    ): Observable<ReportDataWorkflow | undefined> {
-      return this.http.get<ReportDataWorkflow[]>(
-        `${this.ticketUrl}${requestId}`
-      ).pipe(
-        map((res: ReportDataWorkflow[]) => res?.find(item => item.status === 'pending'))
+  getPendingVPReportWorkflowItem(
+    requestId: number
+  ): Observable<ReportDataWorkflow | undefined> {
+    return this.http
+      .get<ReportDataWorkflow[]>(`${this.ticketUrl}${requestId}`)
+      .pipe(
+        map((res: ReportDataWorkflow[]) =>
+          res?.find((item) => item.status === 'pending')
+        )
       );
-    }
+  }
 
   getMilestoneTasks(): Observable<PendingTask[]> {
     return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`, {

@@ -42,7 +42,6 @@ export class MentionsEditorComponent
   @Output() contentChange = new EventEmitter<string>();
   @Output() deletionEmitter = new EventEmitter<number[]>();
   filteredList: any[] = [];
-
   items: any[] = [];
   mentionConfig: any;
   _value: any = '';
@@ -132,13 +131,14 @@ export class MentionsEditorComponent
           let index = -1;
           textContent = textContent.replace(mentionRegex, (match) => {
             index++;
-            return `<span contenteditable=false data-id=${this.notificationService.mentionsObjects[index].id} class="mention" >${match}</span>`;
-          });
-        } else {
-          textContent = textContent.replace(mentionRegex, (match) => {
-            return `<span contenteditable=false class="mention" >${match}</span>`;
+            return `<span contenteditable=false data-index=${this.notificationService.mentionsObjects[index].index} data-id=${this.notificationService.mentionsObjects[index].id} class="mention" >${match}</span>`;
           });
         }
+        // else {
+        //   textContent = textContent.replace(mentionRegex, (match) => {
+        //     return `<span contenteditable=false class="mention" >${match}</span>`;
+        //   });
+        // }
 
         const newSpan = document.createElement('span');
         newSpan.innerHTML = textContent;
@@ -159,6 +159,7 @@ export class MentionsEditorComponent
 
   ngOnChanges(changes: SimpleChanges): void {
     this.items = this.mentions();
+
     this.initializeMentionConfig();
   }
 
@@ -173,8 +174,8 @@ export class MentionsEditorComponent
       items: this.items,
       triggerChar: '@',
       labelKey: this.mentionProperty(),
-      mentionSelect: this.textToInsertWhenSelect,
-      mentionFilter: this.filter,
+      mentionSelect: this.textToInsertWhenSelect.bind(this),
+      mentionFilter: this.filter.bind(this),
       allowSpace: true,
       returnTrigger: false,
     };
@@ -182,29 +183,43 @@ export class MentionsEditorComponent
 
   onKeyUp(event: any) {
     const input = event.target as HTMLDivElement;
-    this.value = input.textContent || '';
+    this.value = input.innerHTML || '';
+
     if (event.key == 'Backspace') {
       const spans = event.target.querySelectorAll('span');
       let dataInfo;
+      let dataIndex;
       const dataIds: any[] = [];
+      const dataIndexes: any[] = [];
       spans.forEach((span: any) => {
         // Access data attributes using the dataset property
         // For example, if you have a data attribute like data-info
+        console.log(span.id, 'ID');
+        dataIndex = span.dataset.index;
         dataInfo = span.dataset.id;
         if (dataInfo) {
           dataIds.push(dataInfo);
+          dataIndexes.push(dataIndex);
         }
       });
-      this.deletionEmitter.emit(dataIds);
+      console.log('dataIDS', dataIndex);
+
+      this.deletionEmitter.emit(dataIndexes);
     }
   }
+
   textToInsertWhenSelect(item: any): any {
+    const index = this.notificationService.index;
     setTimeout(() => {
       pasteHtmlAtCaret(
-        `<span contenteditable=false class="mention" data-id=
+        `<span contenteditable=false class="mention" 
+      data-index=${index}
+        data-id=
           ${item.id}
           >${item.name}</span>&nbsp`
       );
+      const contentDiv = this.contentEditable.nativeElement;
+      this.onContentChange(contentDiv.textContent ?? contentDiv.innerHTML);
     }, 0);
 
     return '';
@@ -239,33 +254,42 @@ export class MentionsEditorComponent
 
   setupContentChangeListener(): void {
     const contentDiv = this.contentEditable.nativeElement;
-    contentDiv.addEventListener('keyup', () =>
-      this.onContentChange(contentDiv.textContent ?? contentDiv.innerHTML)
-    );
+    // contentDiv.addEventListener('keyup', () =>
+    //   this.onContentChange(contentDiv.textContent ?? contentDiv.innerHTML)
+    // );
   }
 
-  onContentChange(content: string): void {
-    console.log('Content:', content);
-    // const mentionsArray = this.extractMentions(content);
+  // onContentChange(content: string): void {
+  //   console.log('Content:', content);
+  //   // const mentionsArray = this.extractMentions(content);
 
-    // this.mentionsArray = mentionsArray;
-    this.processMentions(content);
+  //   // this.mentionsArray = mentionsArray;
+  //   this.value = content;
+  //   this.processMentions(content);
+  // }
+
+  onContentChange(content: string): void {
+    const contentDiv = this.contentEditable.nativeElement;
+    this._value = contentDiv.innerHTML;
+    this.onChange(this._value);
+    this.contentChange.emit(this._value);
   }
 
   processMentions(content: string): void {
+    console.log('inside process mentions');
     // Parse the HTML content and find all span elements with a data-id attribute
     const spans = document.querySelectorAll('span[data-id]');
     console.log(spans);
-    const brElements = document.querySelectorAll('br');
+    const brElements = document.querySelectorAll(
+      'br.Apple-interchange-newline'
+    );
     console.log('br elements', brElements);
     if (brElements) {
       brElements.forEach((br: any) => {
         this.renderer.removeChild(document, br);
       });
     }
-
-    const mentionObjects: any[] = [];
-
+    const mentionObjects: any[] = this.notificationService.mentionsObjects;
     spans.forEach((span) => {
       const id = span.getAttribute('data-id');
       console.log(id);
@@ -275,14 +299,17 @@ export class MentionsEditorComponent
           (m: any) => m.id.toString() === id
         );
         if (mention) {
-          mentionObjects.push(mention);
-          this.notificationService.addMentionObjects(mention);
+          const mentionExist = mentionObjects.some(
+            (mentions) => mentions.id === mention.id
+          );
+          console.log('mention', mention.id, mentionExist);
+          if (!mentionExist) {
+            mentionObjects.push(mention);
+            this.notificationService.addMentionObjects(mention);
+          }
         }
       }
     });
-
-    // Update notification service with the mention objects
-    // this.notificationService.mentionsObjects = mentionObjects;
   }
 
   extractMentions(text: string): string[] {
@@ -303,17 +330,15 @@ export class MentionsEditorComponent
 }
 
 export function pasteHtmlAtCaret(html: any) {
-  // console.log('pasteHtmlAtCaret', html);
-
   let sel, range;
   if (window.getSelection) {
     sel = window.getSelection();
     if (sel?.getRangeAt && sel.rangeCount) {
       range = sel.getRangeAt(0);
       range.deleteContents();
+
       const el = document.createElement('div');
       el.innerHTML = html;
-      // eslint-disable-next-line prefer-const
       let frag = document.createDocumentFragment(),
         node,
         lastNode;
@@ -327,6 +352,7 @@ export function pasteHtmlAtCaret(html: any) {
         range = range.cloneRange();
         range.setStartAfter(lastNode);
         range.collapse(true);
+
         sel.removeAllRanges();
         sel.addRange(range);
       }

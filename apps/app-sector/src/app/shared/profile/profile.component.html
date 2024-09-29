@@ -17,7 +17,7 @@
             class="profile-content_desc"
             [innerHTML]="
               commaSepartedMentions() !== null
-                ? comment().replace(generateRegex(), '<span>$&</span>')
+                ? comment()?.replace(generateRegex(), '<span>$&</span>')
                 : comment()
             "
           ></div>

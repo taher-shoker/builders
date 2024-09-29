@@ -4,7 +4,11 @@ import * as _ from 'lodash';
 
 import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
-import { di_labels, fraud_labels } from '../../shared/constant/labels';
+import {
+  app_sector_labels,
+  di_labels,
+  fraud_labels,
+} from '../../shared/constant/labels';
 import { Observable } from 'rxjs';
 import {
   User,
@@ -85,17 +89,9 @@ export class UsersService {
     });
   }
 
-  addUserGroup(
-    userId: number,
-    groupId: number,
-    data?: Partial<UserGroup>,
-    params?: HttpParams
-  ): Observable<User> {
-    return this.http.patch<User>(
-      `${this.endpoint}/users/groups/${userId}/${groupId}`,
-      data,
-      { params }
-    );
+  addUserGroup(data?: Partial<UserGroup>): Observable<User> {
+    console.log(data);
+    return this.http.patch<User>(`${this.endpoint}/users/groups`, data);
   }
 
   getTeams(): Team[] {
@@ -126,6 +122,9 @@ export class UsersService {
       case 'DI_Milestones':
         allTeams = this.allTeams;
         break;
+      case 'Score_Card_Report_DB':
+        allTeams = this.allTeams;
+        break;
       default:
         break;
     }
@@ -136,7 +135,8 @@ export class UsersService {
     let allRoles;
     if (
       this.getCurrentSystem() === 'DI_Milestones' ||
-      this.getCurrentSystem() === 'Business_Excellence_Dashboard'
+      this.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.getCurrentSystem() === 'Score_Card_Report_DB'
     ) {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')
@@ -166,12 +166,18 @@ export class UsersService {
         privilege.push(group.roles[0].roleName);
       }
     });
-    return privilege;
+
+    // Use lodash to get unique values
+    return _.uniq(privilege);
   }
   getUserTeam(user: User): string | string[] {
     const sys = this.getCurrentSystem();
     const x: string[] = []; // Initialize as an empty array
     if (this.getCurrentSystem() === 'DI_Milestones') {
+      _.forEach(user.teams, (team) => {
+        x.push(team.name);
+      });
+    } else if (this.getCurrentSystem() === 'Score_Card_Report_DB') {
       _.forEach(user.teams, (team) => {
         x.push(team.name);
       });
@@ -208,6 +214,9 @@ export class UsersService {
         break;
       case 'DI_Management':
         this.labels = di_labels;
+        break;
+      case 'Score_Card_Report_DB':
+        this.labels = app_sector_labels;
         break;
       default:
         break;

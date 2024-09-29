@@ -54,7 +54,6 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   @Input() data!: any;
 
   @Input() readOnly!: boolean;
-  @Input() isSubmited!: boolean;
   @Input() casseId!: string;
   @Output() caseStatus = new EventEmitter<string>();
 
@@ -63,6 +62,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
   endDate!: Date | null;
   allTeams: any;
   selectTeam!: any;
+  isLoadingSubmit = false;
   constructor(
     private formBuilder: FormBuilder,
     protected dialogService: DialogService,
@@ -114,7 +114,9 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
 
   setRelatedTeam() {
     if (!this.milestonesService.isDTAdmin) {
-      this.allTeams = this.milestonesService.setUserTeams();
+      this.milestonesService.setUserTeams().subscribe((res) => {
+        this.allTeams = res;
+      });
     } else {
       this.getAllTeams();
     }
@@ -158,39 +160,90 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
     this.form?.get('weight')?.setValue(data.weight);
     this.form?.get('deliverable')?.setValue(data.deliverable);
   }
+  // onSubmit() {
+  //   if (this.form.valid) {
+  //     this.isLoadigSubmit = true;
+  //     let finalData = {
+  //       ...this.form.value,
+  //       weight: +this.form.get('weight')?.value,
+  //     };
+  //     if (this.isEditing) {
+  //       finalData = { ...finalData, teamName: this.data.teamName };
+  //       this.milestonesService
+  //         .updateMilestone(this.data.id, finalData)
+  //         .subscribe((res) => {
+  //           if (res) {
+  //             this.isLoadigSubmit = false;
+  //             this.toastr.success('Milestone has been edited successfully');
+  //             this.form.reset();
+  //             this.router.navigate(['./home']);
+  //           }
+  //         });
+  //     } else {
+  //       this.milestonesService.createMilestone(finalData).subscribe((res) => {
+  //         if (res) {
+  //           this.isLoadigSubmit = false;
+  //           this.toastr.success('Milestone has been created successfully');
+  //           this.form.reset();
+  //           this.router.navigate(['./home']);
+  //         }
+  //       });
+  //     }
+  //   } else {
+  //     Object.keys(this.form.controls).forEach((field) => {
+  //       const control = this.form.get(field);
+  //       control?.markAsTouched({ onlySelf: true });
+  //     });
+  //   }
+  // }
   onSubmit() {
-    if (this.form.valid) {
-      let finalData = {
-        ...this.form.value,
-        weight: +this.form.get('weight')?.value,
-      };
-      if (this.isEditing) {
-        finalData = { ...finalData, teamName: this.data.teamName };
-        this.milestonesService
-          .updateMilestone(this.data.id, finalData)
-          .subscribe((res) => {
-            if (res) {
-              this.toastr.success('Milestone has been edited successfully');
-              this.form.reset();
-              this.router.navigate(['./home']);
-            }
-          });
-      } else {
-        this.milestonesService.createMilestone(finalData).subscribe((res) => {
-          if (res) {
-            this.toastr.success('Milestone has been created successfully');
-            this.form.reset();
-            this.router.navigate(['./home']);
-          }
-        });
-      }
-    } else {
-      Object.keys(this.form.controls).forEach((field) => {
-        const control = this.form.get(field);
-        control?.markAsTouched({ onlySelf: true });
-      });
+    if (!this.form.valid) {
+      this.markFormAsTouched();
+      return;
     }
+
+    this.isLoadingSubmit = true;
+    const finalData = this.getFinalData();
+
+    const milestoneRequest$ = this.isEditing
+      ? this.milestonesService.updateMilestone(this.data.id, finalData)
+      : this.milestonesService.createMilestone(finalData);
+
+    milestoneRequest$.subscribe({
+      next: () => this.handleSuccess(),
+      error: () => (this.isLoadingSubmit = false),
+    });
   }
+
+  getFinalData() {
+    const formValue = {
+      ...this.form.value,
+      weight: +this.form.get('weight')?.value,
+    };
+
+    return this.isEditing
+      ? { ...formValue, teamName: this.data.teamName }
+      : formValue;
+  }
+
+  handleSuccess() {
+    this.isLoadingSubmit = false;
+    const successMessage = this.isEditing
+      ? 'Milestone has been edited successfully'
+      : 'Milestone has been created successfully';
+
+    this.toastr.success(successMessage);
+    this.form.reset();
+    this.router.navigate(['./home']);
+  }
+
+  markFormAsTouched() {
+    Object.keys(this.form.controls).forEach((field) => {
+      const control = this.form.get(field);
+      control?.markAsTouched({ onlySelf: true });
+    });
+  }
+
   preventComma(event: KeyboardEvent) {
     if (event.key === ',') {
       event.preventDefault();

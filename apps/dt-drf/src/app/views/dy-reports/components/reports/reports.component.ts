@@ -28,6 +28,7 @@ import {
   Category,
   ReportDetails,
 } from '../../dy-reports.service';
+import { ExportDialogComponent } from './export-dialog/export-dialog.component';
 
 export interface Milestone {
   activityName: string;
@@ -90,12 +91,11 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   reportStatus: { value: string; name: string }[] = [
     { value: 'pending', name: 'Pending' },
     { value: 'completed', name: 'Completed' },
-    { value: 'breached', name: 'Breached' },
+    // { value: 'breached', name: 'Breached' },
     { value: 'deleted', name: 'Deleted' },
   ];
   monthsArr: any = [];
   yearsArr: any = [];
-  allTeams: any;
   columnsSchema?: ColumnsSchema[] = undefined;
 
   ngOnInit() {
@@ -106,7 +106,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.searchForm();
     this.dialogService.modals = [];
-    this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
     this.handleDeleteFilter();
@@ -114,7 +113,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleDeleteFilter() {
     if (!this.reportsService.userInGroup('System_Process_Admin')) {
-      this.reportStatus.length = 3;
+      this.reportStatus.length = 2;
     }
   }
 
@@ -131,7 +130,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'Category',
       },
       {
-        key: 'requestCategorySla',
+        key: 'reportSlaDuration',
         type: 'text',
         label: 'With SLA/Not',
       },
@@ -193,15 +192,6 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.tableData = res.content;
   }
 
-  getAllTeams() {
-    this.allTeams = this.reportsService.setUserTeams();
-    if (this.allTeams.length === 0) {
-      this.reportsService.setSystemTeams().subscribe((res) => {
-        this.allTeams = res;
-      });
-    }
-  }
-
   detailsNavigate(item: PendingTask) {
     const id = item.externalSystemId ? item.externalSystemId : item.id;
     this.router.navigate(['./report_details', id], {
@@ -254,11 +244,29 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   onExporting() {
-    const filteredForm = this.utilities.filterObject(this.form.value);
-    this.reportsService.exportMilestones(filteredForm).subscribe((buffer) => {
-      const data: Blob = new Blob([buffer]);
-      saveAs(data, 'milestones.csv');
+    this.openDialogExportation().subscribe((res) => {
+      if (res) {
+        const { from, to } = res;
+        console.log('exp res :', from, to);
+
+        this.reportsService.exportReports({ from, to }).subscribe({
+          next: (buffer) => {
+            const data: Blob = new Blob([buffer]);
+            saveAs(data, 'reports.csv');
+          },
+          error: (error) => {
+            console.log('Error in exportation', error);
+          },
+        });
+      }
     });
+  }
+
+  openDialogExportation() {
+    const dialogRef = this.matDialog.open(ExportDialogComponent, {
+      width: '800px',
+    });
+    return dialogRef.afterClosed();
   }
 
   searchForm() {

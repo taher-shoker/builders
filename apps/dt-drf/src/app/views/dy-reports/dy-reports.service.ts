@@ -134,6 +134,7 @@ export interface ReportDetails {
   reportName: string;
   description: string;
   reportSlaDuration: number;
+  initiatorShouldApprove: number;
 }
 
 export interface MilestoneAttachment {
@@ -172,6 +173,7 @@ export interface Requests extends PaginatedRecords {
     lastModifiedDate: Date;
     remainingSteps: number;
     flowId: number;
+    reportSlaDuration: number | string;
   }[];
 }
 
@@ -195,16 +197,9 @@ export class ReportsService {
 
   pendingTasks: BehaviorSubject<any[]> = new BehaviorSubject<any[]>([]);
 
-  currentTeam: {
-    id: number;
-    name: string;
-    systemDto: { id: number; name: string };
-  };
   remindersItems: Reminders[] = [];
 
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    this.currentTeam = this.setUserTeams();
-  }
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   isProcessAdmin!: boolean;
 
@@ -240,10 +235,7 @@ export class ReportsService {
       }
     );
   }
-  setUserTeams() {
-    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
-    return user.teams;
-  }
+
   getReportUsersType(): Group[] {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.userGroups;
@@ -317,7 +309,7 @@ export class ReportsService {
       content: data.content.map((item) => ({
         ...item,
         requestCategoryName: item.requestCategory.name,
-        requestCategorySla: item.requestCategory.slaDuration ? 'Yes' : 'No',
+        reportSlaDuration: item.reportSlaDuration === 0 ? 'No' : 'Yes',
       })),
     };
   }
@@ -369,8 +361,9 @@ export class ReportsService {
     return this.http.delete(`${this.dtUrl}requests-category/${categoryId}`);
   }
 
-  exportMilestones(filterData?: any) {
-    return this.http.get(`${this.dtUrl}/export`, {
+  exportReports(filterData?: any) {
+    return this.http.get(`${this.dtUrl}requests/export`, {
+      //?from=${filterData.from}&to=${filterData.to}
       params: filterData,
       responseType: 'blob',
     });
@@ -380,11 +373,11 @@ export class ReportsService {
     return this.http.get(`${this.dtUrl}/${id}`);
   }
 
-  updateReportFlow(id: number, reportName: string) {
-    const options = {
-      params: new HttpParams().set('reportName', reportName),
-    };
-    return this.http.patch(`${this.dtUrl}requests/${id}`, {}, options);
+  updateReportFlow(id: number, reportName: string, description: string) {
+    return this.http.patch(`${this.dtUrl}requests/${id}`, {
+      reportName,
+      description,
+    });
   }
 
   deleteReport(id: number) {
@@ -443,7 +436,7 @@ export class ReportsService {
 
   getAttachment(id: number): Observable<MilestoneAttachment> {
     return this.http.get<MilestoneAttachment>(
-      `${this.baseUrl}v2/dt-milestone-service/attachments/${id}`
+      `${this.endpointAttachments}/${id}`
     );
   }
 
@@ -462,12 +455,6 @@ export class ReportsService {
       `${this.baseUrl}v2/dt-milestone-service/reminders/read/${id}`,
       {}
     );
-  }
-
-  getMilestonesHistory(mielstoneId: number | null) {
-    return this.http.get<any>(`${this.requestUrl}history/${mielstoneId}`, {
-      params: this.setSystemParam(),
-    });
   }
 
   /**

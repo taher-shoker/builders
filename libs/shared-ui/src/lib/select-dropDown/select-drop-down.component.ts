@@ -9,7 +9,7 @@ import {
   SimpleChanges,
   forwardRef,
 } from '@angular/core';
-import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
 import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 import { startWith } from 'rxjs';
@@ -50,6 +50,7 @@ export class SelectDropDownComponent<T>
   @Input() groupName = 'groupName';
   @Input() groupOptions = 'roles';
   @Input() labelSize = 18;
+  @Input() inputWidth = '';
   @Input() required = false;
   @Input() selectId: any;
   @Input() defaultAll = false;
@@ -102,7 +103,12 @@ export class SelectDropDownComponent<T>
   }
 
   onChangeValue(value: any): void {
-    if (value) {
+    if (value || value === 0) {
+      if (value.length === 0 && this.multi && this.required) {
+        this.control.addValidators(Validators.required);
+        this.control.updateValueAndValidity();
+      }
+      // Value === 0 as it counts as false at sometimes while we need to listen to it and have it passed.
       const output = this.outputValue
         ? value[this.outputValue] || value
         : value;

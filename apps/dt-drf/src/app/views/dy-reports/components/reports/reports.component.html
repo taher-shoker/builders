@@ -13,6 +13,15 @@
                       class="form-control stc-input" (keyup)="searchFilter(input)" />
                   </div>
                 </div>
+                @if (this.reportsService.checkIsProcessAdmin()) {
+                  <div class="col-2">
+                    <stc-apps-button
+                      [buttonText]="'Export'"
+                      [buttonType]="'warn'"
+                      (btnClick)="onExporting()"
+                    ></stc-apps-button>
+                  </div>
+                }
                 <div class="col-3">
                   <stc-apps-button [buttonText]="'Filter' | translate" [buttonType]="'gray-outline'"
                     [buttonIcon]="'fa-filter'" (btnClick)="toggleFilter()"></stc-apps-button>

@@ -1,0 +1,54 @@
+<div class="dialog p-4">
+  <div class="dialog-body">
+    <div class="dialog-header">Export Reports</div>
+    <div class="body-holder">
+      <form [formGroup]="form">
+        <div class="row mt-7">
+          <div class="col-md-6">
+            <stc-apps-date-picker
+              [className]="'custom-input'"
+              [inputPlaceholder]="''"
+              [inputId]="'startDate'"
+              [inputName]="'Start Date'"
+              formControlName="from"
+              [inputId]="'startDate'"
+              (selectChange)="handleDateChange($event, 'from')"
+            >
+            </stc-apps-date-picker>
+          </div>
+          <div class="col-md-6">
+            <stc-apps-date-picker
+              [className]="'custom-input'"
+              [inputPlaceholder]="''"
+              [inputId]="'endDate'"
+              [inputName]="'End Date'"
+              formControlName="to"
+              [myFilter]="FilterEndDate"
+              (selectChange)="handleDateChange($event, 'to')"
+              [inputId]="'endDate'"
+            >
+            </stc-apps-date-picker>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <hr class="liner-hr" />
+
+  <div class="dialog-actions">
+    <div class="actions-wrapper">
+      <button type="button" class="btn gray-outline" (click)="cancel()">
+        Cancel
+      </button>
+      <button
+        type="button"
+        class="btn primary"
+        (click)="update()"
+        [disabled]="form.invalid"
+      >
+        Export
+      </button>
+    </div>
+  </div>
+</div>

@@ -10,7 +10,7 @@ export interface SectorKpisDetailsBase {
   sectorName: string;
   year: string;
   quarter: string;
-  scorecardTitle: string;
+  scorecardTitle?: string;
 }
 
 export interface SectorKpisDetailsWithKpiCode extends SectorKpisDetailsBase {

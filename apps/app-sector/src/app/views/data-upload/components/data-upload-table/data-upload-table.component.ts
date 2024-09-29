@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataUploadService } from '../../services/data-upload.service';
 import { LogService } from '../../services/log.service';
+import { ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
@@ -11,7 +12,8 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class DataUploadTableComponent {
   constructor(
     private dataUploadService: DataUploadService,
-    private logService: LogService
+    private logService: LogService,
+    private toastr: ToastrService
   ) {}
 
   onFileSelected(event: Event): void {
@@ -23,7 +25,7 @@ export class DataUploadTableComponent {
         next: (result) => {
           this.logService.addLog(result);
         },
-        error: (httpError: HttpErrorResponse) => {
+        error: (error) => {
           this.logService.logFailedSubject.next(true);
         },
       });
