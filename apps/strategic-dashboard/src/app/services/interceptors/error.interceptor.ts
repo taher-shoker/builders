@@ -35,9 +35,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           console.log('toatser', err?.error?.errorDetailsMessage);
 
           this.toastr.error(
-            err?.error?.errorDetailsMessage
-              ? err?.error?.errorDetailsMessage
-              : 'Something went wrong!'
+            err?.error?.message ? err?.error?.message : 'Something went wrong!'
           );
         }
         return throwError(err);
