@@ -20,13 +20,6 @@ export class TopBannerComponent implements OnInit {
       roles: ['APPROVERS,CREATORS'],
       urlHome: '/home',
     },
-    {
-      name: 'data upload',
-      url: `/home/data-upload`,
-      icon: 'fa-upload',
-      roles: ['Data_Admins'],
-      urlHome: `/home`,
-    },
   ];
   constructor(
     private cookieService: CookieService,
@@ -41,30 +34,30 @@ export class TopBannerComponent implements OnInit {
     ) {
       this.userName = this.cookieService.get('USER_FULLNAME') || '';
       this.authService.getUserData();
-      // this.authService.loggedUserStream.subscribe((res) => {
-      //   console.log(res?.userGroups);
+      this.authService.loggedUserStream.subscribe((res) => {
+        console.log(res?.userGroups);
 
-      //   res?.userGroups.map((group) => {
-      //     if (group.groupName == 'Data_Admins') {
-      //       console.log('hey');
-      //       let flag = false;
-      //       this.navItems.map((item) => {
-      //         if (item.name == 'data upload') {
-      //           flag = true;
-      //         }
-      //       });
-      //       if (!flag) {
-      //         this.navItems.push({
-      //           name: 'data upload',
-      //           url: `/home/data-upload`,
-      //           icon: 'fa-upload',
-      //           roles: ['Data_Admins'],
-      //           urlHome: `/home`,
-      //         });
-      //       }
-      //     }
-      //   });
-      // });
+        res?.userGroups.map((group) => {
+          if (group.groupName == 'Data_Admins') {
+            console.log('hey');
+            let flag = false;
+            this.navItems.map((item) => {
+              if (item.name == 'data upload') {
+                flag = true;
+              }
+            });
+            if (!flag) {
+              this.navItems.push({
+                name: 'data upload',
+                url: `/home/data-upload`,
+                icon: 'fa-upload',
+                roles: ['Data_Admins'],
+                urlHome: `/home`,
+              });
+            }
+          }
+        });
+      });
     }
   }
 
@@ -72,6 +65,6 @@ export class TopBannerComponent implements OnInit {
     this.router.navigate(['/']);
   }
   logOut() {
-    //apply logout action
+    this.authService.logout();
   }
 }
