@@ -58,7 +58,11 @@ export class ProgramDetailsComponent implements OnInit {
     { name: this.currentDate.getFullYear() },
   ];
   setChartsData(programDetailsValues: any) {
-    console.log(this.programDetails.values);
+    // console.log(this.programDetails.values);
+    if (!programDetailsValues || programDetailsValues.length === 0) {
+      this.cardItems = [];
+      return;
+    }
 
     this.cardItems = [
       {
@@ -97,7 +101,7 @@ export class ProgramDetailsComponent implements OnInit {
         title: 'Completion VS plan',
         chartType: 'line',
         progress: programDetailsValues?.map((value: any) => {
-          console.log(value);
+          // console.log(value);
           const obj: KpiValue = {} as KpiValue;
           obj.yearNum = value.year;
           obj.kpiValue = value.completionActual;
@@ -139,12 +143,13 @@ export class ProgramDetailsComponent implements OnInit {
     };
     this.programKPIService.getKPIProgramDetails(params).subscribe({
       next: (result: StrategicProgramKPIDetails) => {
-        console.log('program details api', result);
+        // console.log('program details api', result);
         this.programDetails = result;
         this.setChartsData(this.programDetails.values);
       },
       error: (error) => {
-        console.log(error.error.message);
+        // console.log(error.error.message);
+        this.cardItems = [];
       },
     });
   }
@@ -154,16 +159,16 @@ export class ProgramDetailsComponent implements OnInit {
     redThershold: number,
     greenThershold: number
   ): string {
-    console.log(value, redThershold, greenThershold);
+    // console.log(value, redThershold, greenThershold);
 
     if (value >= greenThershold) {
       return 'var(--stcOasisColor)';
     } else if (value <= redThershold) {
-      console.log('inside red');
+      // console.log('inside red');
 
       return 'var(--stc-red-color)';
     } else {
-      console.log('inside orange');
+      // console.log('inside orange');
       return 'var(--stcSunsetColor)';
     }
   }
@@ -174,6 +179,6 @@ export class ProgramDetailsComponent implements OnInit {
       return +value.year >= range.start && +value.year <= range.end;
     });
     this.setChartsData(filteredDetails);
-    console.log(filteredDetails);
+    // console.log(filteredDetails);
   }
 }
