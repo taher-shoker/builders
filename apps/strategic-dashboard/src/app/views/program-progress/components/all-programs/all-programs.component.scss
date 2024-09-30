@@ -32,6 +32,15 @@
     }
   }
 
+  &_filter {
+    ::ng-deep .mat-mdc-text-field-wrapper {
+      background-color: var(--whiteColor);
+      border: 1px solid var(--Extra-ligh-greyColor);
+      border-radius: 4px;
+      margin: 0 !important;
+    }
+  }
+
   &_card {
     transition: transform 0.3s ease-in-out;
     margin-bottom: 34px;

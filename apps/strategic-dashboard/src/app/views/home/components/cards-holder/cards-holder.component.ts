@@ -1,19 +1,20 @@
 import { YearService } from './../../../../shared/services/year.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { StrategicGroupsService } from '../../services/strategic-groups.service';
 import { StrategicGroup } from '../../models/strategic-group.model';
 import { SharedFormService } from '../../../../shared/services/shared-form.service';
-import { forkJoin, map, Subject } from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-cards-holder',
   templateUrl: './cards-holder.component.html',
   styleUrls: ['./cards-holder.component.scss'],
 })
-export class CardsHolderComponent implements OnInit {
+export class CardsHolderComponent implements OnInit, OnDestroy {
   activeIndex: number | null = null;
   kpis: any = {};
   strategicGroups: StrategicGroup[] = [];
+  yearChangeSubscription: Subscription | undefined;
 
   constructor(
     private strategicGroupsService: StrategicGroupsService,
@@ -21,16 +22,34 @@ export class CardsHolderComponent implements OnInit {
     private yearService: YearService
   ) {}
 
-  ngOnInit(): void {
-    this.getAllStrategicGroups();
-    this.yearService.getYearChangeObservable().subscribe((year: number) => {
-      this.getAllStrategicGroups();
-    });
+  ngOnDestroy(): void {
+    if (this.yearChangeSubscription) {
+      this.yearChangeSubscription.unsubscribe();
+    }
   }
+
+  ngOnInit(): void {
+    const savedYear = this.yearService.getSelectedYear();
+    const savedQuarter = this.yearService.getSelectedQuarter();
+
+    if (savedYear && savedQuarter) {
+      const year = `${savedYear}-${savedQuarter}`;
+      this.sharedFormService.getForm().patchValue({ year });
+      this.getAllStrategicGroups();
+    }
+    this.yearChangeSubscription = this.yearService
+      .getYearChangeObservable()
+      .subscribe((year: number) => {
+        this.getAllStrategicGroups();
+      });
+  }
+
   getAllStrategicGroups() {
-    const year:string=this.sharedFormService.getForm().controls['year'].value;
-    console.log(year.split('-')[0],'year');
-    
+    const year: string =
+      this.sharedFormService.getForm().controls['year'].value;
+
+    // console.log(year.split('-')[0], 'year');
+
     const params = {
       year: year.split('-')[0],
     };
