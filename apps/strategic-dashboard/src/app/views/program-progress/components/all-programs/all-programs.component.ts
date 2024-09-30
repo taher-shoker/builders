@@ -1,17 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { ProgramKPIService } from '../../services/program-kpi.service';
 import { ProgramKPIDetails } from '../../models/program-kpi-details.model';
 import { ProgramProgress } from '../../models/program-progress.model';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { SharedFormService } from 'apps/strategic-dashboard/src/app/shared/services/shared-form.service';
-// eslint-disable-next-line @nx/enforce-module-boundaries
+import { SharedFormService } from '../../../../shared/services/shared-form.service';
+import { YearService } from '../../../../shared/services/year.service';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'stc-apps-all-programs',
   templateUrl: './all-programs.component.html',
   styleUrl: './all-programs.component.scss',
 })
-export class AllProgramsComponent implements OnInit {
+export class AllProgramsComponent implements OnInit, OnDestroy {
   searchTerm = '';
   userName = '';
   logoSrc = 'assets/images/brand/stc-logo.png';
@@ -28,15 +28,35 @@ export class AllProgramsComponent implements OnInit {
 
   programsProgress: ProgramProgress[] = [];
   filteredItems: ProgramProgress[] = [];
+  yearChangeSubscription: Subscription | undefined;
 
   constructor(
     private router: Router,
     private programKPIService: ProgramKPIService,
-    private sharedForm:SharedFormService
+    private sharedForm: SharedFormService,
+    private yearService: YearService
   ) {}
-  ngOnInit(): void {
-    this.getAllStrategicPrograms();
+  ngOnDestroy(): void {
+    if (this.yearChangeSubscription) {
+      this.yearChangeSubscription.unsubscribe();
+    }
   }
+  ngOnInit(): void {
+    const savedYear = this.yearService.getSelectedYear();
+    const savedQuarter = this.yearService.getSelectedQuarter();
+
+    if (savedYear && savedQuarter) {
+      const year = `${savedYear}-${savedQuarter}`;
+      this.sharedForm.getForm().patchValue({ year });
+      this.getAllStrategicPrograms();
+    }
+    this.yearChangeSubscription = this.yearService
+      .getYearChangeObservable()
+      .subscribe((year: number) => {
+        this.getAllStrategicPrograms();
+      });
+  }
+
   search(value: string) {
     if (!value) {
       this.filteredItems = [...this.programsProgress];
@@ -54,9 +74,11 @@ export class AllProgramsComponent implements OnInit {
   }
 
   getAllStrategicPrograms() {
-    const yearQuarter:string=this.sharedForm.getForm().controls['year'].value;
+    const yearQuarter: string =
+      this.sharedForm.getForm().controls['year'].value;
     const params = {
       quarter: yearQuarter.split('-')[1],
+      year: yearQuarter.split('-')[0],
     };
     this.programKPIService
       .getAllStrategicPrograms(params)
