@@ -116,7 +116,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.columnssSchema = this.columnsSchema;
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
-      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.userService.getCurrentSystem() === 'Strategic_Dashboard'
     ) {
       // this.columnssSchema = th;
       this.displayedColumns = (this.columnsSchema ?? [])
@@ -364,12 +365,12 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
       ) {
         this.teams = this.userService.getTeams();
-      } 
+      }
       // else if (
       //   this.userService.getCurrentSystem() === 'Strategic_Dashboard'
       // ) {
       //   this.teams = this.userService.getTeams();
-      // } 
+      // }
       else {
         this.teams = this.userService
           .getTeams()
@@ -418,9 +419,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
         // this.teams = res;
         this.getTeams();
       }
-      if (
-        this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
-      ) {
+      if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
         this.getTeams();
       }
     });
