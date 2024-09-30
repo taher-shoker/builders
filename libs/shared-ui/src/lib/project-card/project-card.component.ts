@@ -1,5 +1,6 @@
-import { Component, EventEmitter, input, InputSignal, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, input, InputSignal, OnInit, Output, ViewChild } from '@angular/core';
 import { ProgressInfo } from '../progress-bar/progress-bar.component';
+import { OverlayPanel } from 'primeng/overlaypanel';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -17,6 +18,8 @@ export class ProjectCardComponent implements OnInit{
   data!:ProgressInfo;
   @Output() edit:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
   @Output() delete:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
+  @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
+  titleArr:string[] = [];
   ngOnInit()
   {
     this.data = {
@@ -43,6 +46,7 @@ export class ProjectCardComponent implements OnInit{
         },
       ],
     };
+    this.titleArr = this.projectData().project.split(" ");
   }
   editProject()
   {
@@ -51,5 +55,9 @@ export class ProjectCardComponent implements OnInit{
   deleteProject()
   {
     this.delete.emit(this.projectData())      
+  }
+  displayDrilldown()
+  {
+    this.overlayPanel.toggle(event);
   }
 }

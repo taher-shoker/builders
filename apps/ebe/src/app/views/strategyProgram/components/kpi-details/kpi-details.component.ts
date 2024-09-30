@@ -81,16 +81,17 @@ export class KpiDetailsComponentTsComponent implements OnInit {
     this.currentTabIndex = typeof index === 'number' ? index : 0;
   }
   showForm(project:StrategyProgramKpiDetailsModel) {
-    this.router.navigateByUrl(`/strategy-project-form/${project.strategyProject}/${project.objective}`);
+    console.log(project);
+    this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.objective}`);
     this.strategyProgramService.clickedProjects.next(project.projects);
   }
-  editProject(kpi:KpiProjectsDetailsModel , project:StrategyProgramKpiDetailsModel , singleproject:StrategyProgramKpiProjectsDetailsModel)
-  {
-    // this.router.navigateByUrl(`/strategy-project-form/${project.project}`);
-    this.router.navigateByUrl(`/strategy-project-form/${project.strategyProject}/${project.objective}`);
-    this.strategyProgramService.clickedProjects.next(project.projects);
-    this.strategyProgramService.clickedProject.next(singleproject);
-  }
+  // editProject(kpi:KpiProjectsDetailsModel , project:StrategyProgramKpiDetailsModel , singleproject:StrategyProgramKpiProjectsDetailsModel)
+  // {
+  //   // this.router.navigateByUrl(`/strategy-project-form/${project.project}`);
+  //   this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.objective}`);
+  //   this.strategyProgramService.clickedProjects.next(project.projects);
+  //   this.strategyProgramService.clickedProject.next(singleproject);
+  // }
   deletedProject!:KpiProjectsDetailsModel;
   prevProjects!:KpiProjectsDetailsModel[];
   kpi!:StrategyProgramKpiDetailsModel;
@@ -116,7 +117,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
     const deletedData = this.prevProjects.filter(val => val.project !== this.deletedProject.project);
     console.log(deletedData);
     console.log(this.prevProjects);
-    this.strategyProgramService.updateProjects(this.kpi.strategyProject , this.kpi.objective , deletedData).subscribe({
+    this.strategyProgramService.updateProjects(this.kpi.strategyProjectName , this.kpi.objective , deletedData).subscribe({
       next : () => {
         this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
           next : (res:StrategyProgramKpiDetailsModel[]) => {
@@ -139,9 +140,12 @@ export class KpiDetailsComponentTsComponent implements OnInit {
       }
     })
   }
-  ImportFile(e:FileModel | null)
+  ImportFile(uploadFile:FileModel | null)
   {
-    console.log(e);
+    if(uploadFile)
+    {
+      console.log(uploadFile);
+    }
   }
   downloadFile(data: string, filename: string) {
     const blob = new Blob([data], { type: 'text/csv' });

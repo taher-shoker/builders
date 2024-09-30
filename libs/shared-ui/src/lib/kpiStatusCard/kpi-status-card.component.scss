@@ -7,6 +7,7 @@ div
   padding:0px 10px;
   height:45px;
   line-height:45px;
+  color:#000000;
   @media all and (max-width:1250px)
   {
     padding:0px 14px;
@@ -40,13 +41,29 @@ div
   {
     color:var(--stc-dark-yellow-color);
     background-color:var(--stc-light-yellow-color);
-    font-weight: 400;
+    font-weight: 500;
+    border-radius:7px;
+  }
+  &.completed
+  {
+    color: #00C48C;
+    background-color: #00C48C26;
+    font-weight: 500;
+    border-radius:7px;
+  }
+  &.planned
+  {
+    color: #8E9AA0;
+    background-color: #8E9AA01F;
+    font-weight: 500;
+    border-radius:7px;
   }
   &.actualStatus
   {
     color:var(--stc-light-blue-color);
     background-color:var(--stc-lighter-blue-color);
-    font-weight: 400;
+    font-weight: 500;
+    border-radius:7px;
   }
   &.actual , &.weight
   {
@@ -55,7 +72,8 @@ div
   }
   &.weight
   {
-    font-weight: 400;
+    font-weight: 500;
+    border-radius:7px;
   }
 }
 .arrow

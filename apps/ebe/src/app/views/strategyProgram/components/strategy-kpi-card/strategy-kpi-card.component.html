@@ -1,5 +1,16 @@
 <section class="strategy-kpi-card">
-  <p class = "strategy-kpi-card-title">{{strategyKpiCard().strategyProject}}</p>
+  <p class = "strategy-kpi-card-title">
+    {{strategyKpiCard().strategyProjectName | truncateWord:5}}
+    @if(titleArr.length > 5)
+    {
+      <span (click)="displayDrilldown()" class = "read-more">read more</span>
+      <p-overlayPanel #overlayPanel dismissable="true">
+        <section class="popover-section2">
+          <p>{{strategyKpiCard().strategyProjectName}}</p>
+        </section>
+      </p-overlayPanel>
+    }
+  </p>
   <div class="strategy-kpi-card-status">
     <stc-apps-solid-circular-bar
       [percentVal]="strategyKpiCard().currentProgress"
@@ -13,14 +24,24 @@
     </div>
     <div class="strategy-kpi-card-cards-investment-card">
       <p>total investment : </p>
-      <span>{{strategyKpiCard().totalInvestment| million}}</span>
+      <span>{{strategyKpiCard().totalInvestment | million}}</span>
     </div>
   </div>
   <div class="strategy-kpi-card-description">
-    <p>{{strategyKpiCard().description}}</p>
+    <p>
+      {{strategyKpiCard().description | truncateWord:10}}
+      @if(descArr.length > 10){
+        <span (click)="displayDrilldown2()" class = "read-more">read more</span>
+        <p-overlayPanel #overlayPanel2 dismissable="true">
+          <section class="popover-section2">
+            <p>{{strategyKpiCard().description}}</p>
+          </section>
+        </p-overlayPanel>
+      }
+    </p>
   </div>
   <div class="strategy-kpi-card-details-btn mt-5 mb-3">
-    <a [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]">
+    <a [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProjectName]">
       <span>more details</span>
       <img src="assets/images/arrow-right.svg" alt="">
     </a>

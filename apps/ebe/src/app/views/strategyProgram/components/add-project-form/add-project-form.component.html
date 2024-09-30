@@ -8,7 +8,7 @@
     <div class="strategy-project-form-card-header">
       <div class="strategy-project-form-card-header-title">
         <img src="assets/images/close-project-circle.svg" alt="" />
-        <span>add new project</span>
+        <span>manage project</span>
       </div>
       <img
         class="close-form"
@@ -23,6 +23,15 @@
         @for (project of projectsList.controls; track project;let index =
         $index) {
         <div class="form-wrapper" [formGroupName]="index">
+          <div class = "text-end">
+            <img
+              class="close-form"
+              src="assets/images/close-circle2.svg"
+              alt=""
+              (click)="deleteForm(index)"
+              style = "cursor: pointer;"
+            />
+          </div>
           <div class="form-group" style="margin-bottom: 30px">
             <label class="mt-0 pt-0">project name</label>
             <input
@@ -91,9 +100,9 @@
               </div>
             </div>
           </div>
-          <div class="delete-btn">
+          <!-- <div class="delete-btn">
             <button (click)="deleteForm(index)">remove</button>
-          </div>
+          </div> -->
         </div>
         }
       </div>
@@ -106,8 +115,8 @@
       <button
         class="save-btn"
         (click)="save()"
-        [disabled]="projectsList.invalid || projectsList.length === 0"
-        [class.btn-disabled]="projectsList.invalid || projectsList.length === 0"
+        [disabled]="projectsList.invalid"
+        [class.btn-disabled]="projectsList.invalid"
       >
         add and save
       </button>

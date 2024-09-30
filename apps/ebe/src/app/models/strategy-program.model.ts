@@ -1,6 +1,6 @@
 export interface StrategyProgramKpiDetailsModel
 {
-  strategyProject:string;
+  strategyProjectName:string;
   objective:number;
   description:string;
   weight:number;
@@ -26,7 +26,7 @@ export interface StrategyProgramModel
 }
 export interface StrategyProgramKpiModel
 {
-  strategyProject:string;
+  strategyProjectName:string;
   currentProgress:number;
   totalWeight:number;
   totalInvestment:number;

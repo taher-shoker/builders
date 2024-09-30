@@ -88,3 +88,20 @@
     }
   }
 }
+.read-more
+{
+  text-transform: lowercase;
+  cursor: pointer;
+  font-size: 15px;
+  color:blue;
+  font-weight: 500;
+  text-decoration: underline;
+}
+.popover-section2
+{
+  max-width: 350px;
+  p
+  {
+    margin: 0;
+  }
+}

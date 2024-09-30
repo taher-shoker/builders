@@ -60,11 +60,16 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   showDialog() {
     this.visible = true;
   }
-  ImportFile(e:FileModel | null)
+  ImportFile(uploadFile:FileModel | null)
   {
-    if(e)
+    if(uploadFile)
     {
-      console.log(e);
+      this.strategyProgramService.uploadCadSummaryFile(uploadFile).subscribe({
+        next:() => {
+          this.getStrategyProgramSummary();
+          this.visible = false;
+        }
+      })
     }
   }
   downloadTemplate()

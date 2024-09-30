@@ -29,7 +29,7 @@
                     {{kpi.description}}
                   </p>
                   <div class="accordion-statuses">
-                    @if(kpi.weight)
+                    @if(kpi.weight || kpi.weight === 0)
                     {
                       <stc-apps-kpi-status-card
                         [kpiStatus]="kpi.weight"
@@ -43,7 +43,7 @@
                         [kpiType]="'in-progress'"
                       />
                     }
-                    @if(kpi.actualStatus)
+                    @if(kpi.actualStatus || kpi.actualStatus === 0)
                     {
                       <stc-apps-kpi-status-card
                         [kpiStatus]="kpi.actualStatus"
@@ -59,8 +59,8 @@
                 <p class="accordion-container-title mb-0">projects/initiatives</p>
                 <!-- <p-button label="Add Project" icon="pi pi-plus" iconPos="left" /> -->
                 <button (click)="showForm(kpi)">
-                  <i class = "pi pi-plus"></i>
-                  add project
+                  <!-- <i class = "pi pi-plus"></i> -->
+                  manage projects
                 </button>
               </div>
               <div class="accordion-container">
@@ -71,9 +71,9 @@
                       <div class="col-lg-4 col-md-6 col-sm-12">
                         <stc-apps-project-card
                           [projectData]="project"
-                          (edit)="editProject($event , kpi , project)"
-                          (delete)="deleteProject($event , kpi.projects , kpi)"
-                        />
+                          />
+                          <!-- (delete)="deleteProject($event , kpi.projects , kpi)" -->
+                          <!-- (edit)="editProject($event , kpi , project)" -->
                       </div>
                     }
                   </div>

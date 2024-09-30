@@ -1,34 +1,55 @@
-import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit, Output } from '@angular/core';
-import { CommonModule , Location } from '@angular/common';
-import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  InputSignal,
+  OnChanges,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import {
+  AbstractControl,
+  FormArray,
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { StrategyProgramService } from '../../../../services/strategy-program.service';
-import { StrategyProgramKpiDetailsModel, StrategyProgramKpiProjectsDetailsModel } from '../../../../models/strategy-program.model';
+import {
+  StrategyProgramKpiDetailsModel,
+  StrategyProgramKpiProjectsDetailsModel,
+} from '../../../../models/strategy-program.model';
+import { take } from 'rxjs';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
-  imports: [CommonModule , ReactiveFormsModule , PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent],
   templateUrl: './add-project-form.component.html',
   styleUrl: './add-project-form.component.scss',
 })
-export class AddProjectFormComponent implements OnInit , OnChanges{
+export class AddProjectFormComponent implements OnInit, OnChanges {
   formBuilder = inject(FormBuilder);
-  addProjectForm!:FormGroup;
+  addProjectForm!: FormGroup;
   textLength = 0;
   private router = inject(Router);
   private location = inject(Location);
-  modalVisible:InputSignal<boolean> = input.required<boolean>()
+  modalVisible: InputSignal<boolean> = input.required<boolean>();
   strategyService = inject(StrategyProgramService);
-  @Output() closeModal:EventEmitter<boolean> = new EventEmitter<boolean>()
+  @Output() closeModal: EventEmitter<boolean> = new EventEmitter<boolean>();
   activatedRoute = inject(ActivatedRoute);
-  objectiveNumber!:number;
-  title!:string;
-  prevProjects!:StrategyProgramKpiProjectsDetailsModel[];
+  objectiveNumber!: number;
+  title!: string;
+  prevProjects: StrategyProgramKpiProjectsDetailsModel[] = [];
   ngOnInit(): void {
     this.addProjectForm = this.formBuilder.group({
-      projects : this.formBuilder.array([])
-    })
+      projects: this.formBuilder.array([]),
+    });
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
         this.title = param['title'];
@@ -36,39 +57,54 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
         // this.isEmpty = true;
       },
     });
-    this.strategyService.clickedProjects.subscribe({
-      next : (res:StrategyProgramKpiProjectsDetailsModel[]) => {
-        if(res.length !== 0)
-        {
+    this.strategyService.clickedProjects.pipe(take(1)).subscribe({
+      next: (res: StrategyProgramKpiProjectsDetailsModel[]) => {
+        if (res.length !== 0) {
           this.prevProjects = res;
+          if (this.prevProjects.length !== 0) {
+            this.prevProjects.forEach((proj) => {
+              this.projectsList.push(this.createProjectFormGroup(proj));
+            });
+          } else {
+            this.projectsList.push(this.createProjectFormGroup());
+          }
         } else {
           this.strategyService.getStrategyProgramDetails(this.title).subscribe({
-            next : (res:StrategyProgramKpiDetailsModel[]) => {
-              this.prevProjects = res.filter(val => val.objective === this.objectiveNumber)[0].projects;
-            }
-          })
+            next: (res: StrategyProgramKpiDetailsModel[]) => {
+              this.prevProjects = res.filter(
+                (val) => val.objective === this.objectiveNumber
+              )[0].projects;
+              if (this.prevProjects.length !== 0) {
+                this.prevProjects.forEach((proj) => {
+                  this.projectsList.push(this.createProjectFormGroup(proj));
+                });
+              } else {
+                this.projectsList.push(this.createProjectFormGroup());
+              }
+            },
+          });
         }
-      }
-    })
-    this.projectsList.push(this.createProjectFormGroup());
-  }
-  createProjectFormGroup(): FormGroup {
-    return this.formBuilder.group({
-      project : [null , [Validators.required , this.noSpacesValidator , Validators.maxLength(50)]],
-      actual : [null , [Validators.required , this.rangeValidator]],
-      planned : [null , [Validators.required , this.rangeValidator]],
+      },
     });
   }
-  get projectsList():FormArray
-  {
-    return this.addProjectForm.get("projects") as FormArray;
+  createProjectFormGroup(data?:StrategyProgramKpiProjectsDetailsModel): FormGroup {
+    return this.formBuilder.group({
+      project: [
+        data && data.project ? data.project : null,
+        [Validators.required, this.noSpacesValidator, Validators.maxLength(50)],
+      ],
+      actual: [data && (data.actual || data.actual === 0) ? data.actual : null, [Validators.required, this.rangeValidator]],
+      planned: [data && (data.planned || data.planned === 0) ? data.planned : null, [Validators.required, this.rangeValidator]],
+    });
+  }
+  get projectsList(): FormArray {
+    return this.addProjectForm.get('projects') as FormArray;
   }
   hasErrors(): boolean {
-    return this.projectsList.controls.some(control => control.invalid);
+    return this.projectsList.controls.some((control) => control.invalid);
   }
   ngOnChanges(): void {
-    if(!this.modalVisible())
-    {
+    if (!this.modalVisible()) {
       this.addProjectForm.reset();
       // this.progectNameValue?.reset()
       this.textLength = 0;
@@ -76,12 +112,11 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   }
   rangeValidator(control: AbstractControl): ValidationErrors | null {
     const value = control.value;
-    if(isNaN(value))
-    {
-      return { isNumber : true };
+    if (isNaN(value)) {
+      return { isNumber: true };
     }
     if (value !== null && (isNaN(value) || value < 0 || value > 100)) {
-      return { rangeError : true };
+      return { rangeError: true };
     }
     return null;
   }
@@ -90,48 +125,41 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
     const isValid = !isWhitespace;
     return isValid ? null : { noSpaces: true };
   }
-  closeModalFun()
-  {
+  closeModalFun() {
     this.closeModal.emit(true);
   }
-  save()
-  {
-    if(this.addProjectForm.valid)
-    {
-      let projectArr = this.addProjectForm.value.projects;
-      projectArr = projectArr.concat(this.prevProjects);
-      this.strategyService.updateProjects(this.title , this.objectiveNumber , projectArr).subscribe({
-        next : () => {
-          this.goback();
-        }
-      })
+  save() {
+    if (this.addProjectForm.valid) {
+      const projectArr = this.addProjectForm.value.projects;
+      // projectArr = projectArr.concat(this.prevProjects);
+      console.log(projectArr);
+      this.strategyService
+        .updateProjects(this.title, this.objectiveNumber, projectArr)
+        .subscribe({
+          next: () => {
+            this.goback();
+          },
+        });
     }
   }
-  getValue(e:string)
-  {
-    if(e)
-    {
+  getValue(e: string) {
+    if (e) {
       this.textLength = e.length;
     }
   }
-  closeForm()
-  {
-    this.router.navigateByUrl("/strategy-program")
+  closeForm() {
+    this.router.navigateByUrl('/strategy-program');
   }
-  addNewProjectForm()
-  {
+  addNewProjectForm() {
     this.projectsList.push(this.createProjectFormGroup());
   }
-  deleteForm(index:number)
-  {
+  deleteForm(index: number) {
     this.projectsList.removeAt(index);
   }
-  goback()
-  {
+  goback() {
     this.location.back();
   }
-  keyPress(e:KeyboardEvent)
-  {
+  keyPress(e: KeyboardEvent) {
     if (e.key === 'e' || e.key === '-') {
       e.preventDefault();
     }
