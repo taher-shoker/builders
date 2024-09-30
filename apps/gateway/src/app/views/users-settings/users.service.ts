@@ -227,7 +227,7 @@ export class UsersService {
         this.labels = app_sector_labels;
         break;
       case 'Strategic_Dashboard':
-        this.labels = app_sector_labels;
+        this.labels = fraud_labels;
         break;
       default:
         break;

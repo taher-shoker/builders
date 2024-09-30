@@ -1,5 +1,8 @@
 <div class="users-settings">
-  <div class="top-info" *ngIf="userService.getCurrentSystem() === 'FRAUD_ManagementUsers'">
+  <div
+    class="top-info"
+    *ngIf="userService.getCurrentSystem() === 'FRAUD_ManagementUsers'"
+  >
     <div class="row">
       <div class="col-md-4">
         <div class="static register">
@@ -47,9 +50,17 @@
         </div> -->
       <div class="col">
         <div class="input-group stc-input-group custom-input mb-3">
-          <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
-          <input type="text" matInput #input placeholder="{{ 'Search for user name' }}" class="form-control stc-input"
-            (keyup)="searchFilter($event)" />
+          <span class="input-group-text" id="basic-addon1"
+            ><i class="fas fa-search"></i
+          ></span>
+          <input
+            type="text"
+            matInput
+            #input
+            placeholder="{{ 'Search for user name' }}"
+            class="form-control stc-input"
+            (keyup)="searchFilter($event)"
+          />
         </div>
       </div>
 
@@ -57,26 +68,52 @@
         <div class="row">
           <div class="offset-md-1 col-md-5">
             <stc-apps-select-drop-down
-              [inputWidth]="userService.getCurrentSystem() === 'Score_Card_Report_DB' ? '75%' : ''"
-              [label]="userService.translateText('privilege')" [selectType]="'filter-select-box'" [options]="privilege"
-              [labelName]="'groupName'" (selectChange)="handleSelectChange($event, 'privilege')"
-              formControlName="privilegeSelect" [defaultAll]="true"></stc-apps-select-drop-down>
+              [inputWidth]="
+                userService.getCurrentSystem() === 'Score_Card_Report_DB'
+                  ? '75%'
+                  : ''
+              "
+              [label]="userService.translateText('privilege')"
+              [selectType]="'filter-select-box'"
+              [options]="privilege"
+              [labelName]="'groupName'"
+              (selectChange)="handleSelectChange($event, 'privilege')"
+              formControlName="privilegeSelect"
+              [defaultAll]="true"
+            ></stc-apps-select-drop-down>
           </div>
-          <div class="col-md-5" *ngIf="
+          <div
+            class="col-md-5"
+            *ngIf="
               userService.getCurrentSystem() !== 'Dynamic_Report_Flow' &&
               userService.getCurrentSystem() !== 'Business_Excellence_Dashboard'
-            ">
+            "
+          >
+            @if(userService.getCurrentSystem() !== 'Strategic_Dashboard'){
             <stc-apps-select-drop-down
-              [inputWidth]="userService.getCurrentSystem() === 'Score_Card_Report_DB' ? '75%' : ''"
-              [label]="userService.translateText('team')" [selectType]="'filter-select-box'" [options]="teams"
-              (selectChange)="handleSelectChange($event, 'team')" [defaultAll]="true"
-              formControlName="teamSelect"></stc-apps-select-drop-down>
+              [inputWidth]="
+                userService.getCurrentSystem() === 'Score_Card_Report_DB'
+                  ? '75%'
+                  : ''
+              "
+              [label]="userService.translateText('team')"
+              [selectType]="'filter-select-box'"
+              [options]="teams"
+              (selectChange)="handleSelectChange($event, 'team')"
+              [defaultAll]="true"
+              formControlName="teamSelect"
+            ></stc-apps-select-drop-down>
+            }
           </div>
         </div>
       </div>
       <div class="col-md-2">
-        <stc-apps-button [buttonText]="'Add new user'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
-          (btnClick)="addUserNavigate()"></stc-apps-button>
+        <stc-apps-button
+          [buttonText]="'Add new user'"
+          [buttonType]="'primary'"
+          [buttonIcon]="' fa-plus-circle'"
+          (btnClick)="addUserNavigate()"
+        ></stc-apps-button>
       </div>
     </div>
   </div>
@@ -89,7 +126,11 @@
       <td mat-cell *matCellDef="let element">
         <div [ngSwitch]="col.key">
           <div class="info-name" *ngSwitchCase="'name'">
-            <img src="{{ element.profileIcon }}" alt="" *ngIf="element.profileIcon" />
+            <img
+              src="{{ element.profileIcon }}"
+              alt=""
+              *ngIf="element.profileIcon"
+            />
             <div class="name">
               <h4>{{ element[col.key] }}</h4>
               <small>{{ element.email }}</small>
@@ -102,10 +143,18 @@
             {{ userService.getUserTeam(element) }}
           </span>
           <div class="btns-action" *ngSwitchCase="'actions'">
-            <button mat-button class="btn edit-btn-table" (click)="editItem(element.id)">
+            <button
+              mat-button
+              class="btn edit-btn-table"
+              (click)="editItem(element.id)"
+            >
               <i class="fas fa-pencil-alt"></i>
             </button>
-            <button mat-button class="btn delete-btn-table" (click)="deleteItem(element.id)">
+            <button
+              mat-button
+              class="btn delete-btn-table"
+              (click)="deleteItem(element.id)"
+            >
               <i class="far fa-trash-alt"></i>
             </button>
           </div>
@@ -127,8 +176,12 @@
           <p>
             {{ 'You didn&lsquo;t add any user yet, let&lsquo;s add new user' }}
           </p>
-          <stc-apps-button [buttonText]="'Add new user'" [buttonType]="'primary'" [buttonIcon]="' fa-plus-circle'"
-            (btnClick)="addUserNavigate()"></stc-apps-button>
+          <stc-apps-button
+            [buttonText]="'Add new user'"
+            [buttonType]="'primary'"
+            [buttonIcon]="' fa-plus-circle'"
+            (btnClick)="addUserNavigate()"
+          ></stc-apps-button>
           }
         </div>
       </td>
@@ -139,7 +192,12 @@
   </table>
   }
 
-  <mat-paginator [pageSize]="5" [pageSizeOptions]="[5, 10, 15, 20]" [showFirstLastButtons]="true" [hidePageSize]="true">
+  <mat-paginator
+    [pageSize]="5"
+    [pageSizeOptions]="[5, 10, 15, 20]"
+    [showFirstLastButtons]="true"
+    [hidePageSize]="true"
+  >
   </mat-paginator>
   <!-- <div class="row">
     <div class="col-md-12">
@@ -174,7 +232,8 @@
 
     <strong>{{ user?.email }}</strong>
     <span>
-      {{ 'will be denied from the system accessibility, Are you sure?' }}</span>
+      {{ 'will be denied from the system accessibility, Are you sure?' }}</span
+    >
   </p>
 
   <div class="row mt-4">
@@ -182,12 +241,19 @@
       <div class="row mt-4">
         <div class="col-md-2"></div>
         <div class="col-md-5">
-          <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
-            (btnClick)="dialogService.close()"></stc-apps-button>
+          <stc-apps-button
+            [buttonText]="'Cancel'"
+            [buttonType]="'gray-outline'"
+            (btnClick)="dialogService.close()"
+          ></stc-apps-button>
         </div>
         <div class="col-md-5">
-          <stc-apps-button [buttonText]="'Delete User'" [loading]="isDeleteLoader" [buttonType]="'danger-outline'"
-            (btnClick)="confirmDelete()"></stc-apps-button>
+          <stc-apps-button
+            [buttonText]="'Delete User'"
+            [loading]="isDeleteLoader"
+            [buttonType]="'danger-outline'"
+            (btnClick)="confirmDelete()"
+          ></stc-apps-button>
         </div>
       </div>
     </div>
