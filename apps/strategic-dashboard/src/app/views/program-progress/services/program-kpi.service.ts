@@ -15,11 +15,12 @@ export class ProgramKPIService {
 
   constructor(private http: HttpClient) {}
 
-  getAllStrategicPrograms(params?: {
+  getAllStrategicPrograms(params: {
+    year: string;
     quarter?: string;
   }): Observable<ProgramKPIDetails[]> {
     let httpParams = new HttpParams();
-
+    httpParams = httpParams.set('year', params.year);
     if (params?.quarter) {
       httpParams = httpParams.set('quarter', params.quarter);
     }
