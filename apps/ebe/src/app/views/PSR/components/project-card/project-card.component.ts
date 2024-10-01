@@ -27,7 +27,7 @@ export class PSRProjectCardComponent implements OnChanges {
     const textArr:string[] = this.project().details?.trim()?.split(' ') ?? [];
     const filteredArray = textArr.filter(item => item !== '');
     this.maxTextLength = filteredArray.length;
-    console.log(filteredArray);
+    // console.log(filteredArray);
   }
   displayDrilldown()
   {

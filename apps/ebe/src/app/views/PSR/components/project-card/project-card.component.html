@@ -1,7 +1,7 @@
 <section class="project-container">
   <p class="project-container-header"
-  (mouseenter)="overlayPanel2.show($event)" 
-  (mouseleave)="overlayPanel2.hide()"
+  (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+  (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
   >
     {{ project().sector | uppercase }}
   </p>
