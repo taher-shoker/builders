@@ -1,7 +1,10 @@
 <div class="charts">
   <div class="charts_card">
     <div class="charts_card_title">
-      <stc-apps-progress-percentage></stc-apps-progress-percentage>
+      <stc-apps-progress-percentage
+      [percentage]="actualValue"
+      [thresholds]="thresholds"
+      ></stc-apps-progress-percentage>
       <h3>{{ title() }}</h3>
     </div>
     <div class="charts_card_tabs">

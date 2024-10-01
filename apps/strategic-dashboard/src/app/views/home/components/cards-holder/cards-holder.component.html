@@ -1,6 +1,7 @@
 <div class="cardHolder">
   @if (strategicGroups && strategicGroups.length > 0) {
   <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+
   @for(kpi of strategicGroups;track kpi; let index = $index ){
   <div class="kpis-card">
     <stc-apps-kpi-card-header

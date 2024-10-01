@@ -8,6 +8,7 @@ import {
   WritableSignal,
 } from '@angular/core';
 import { LineChartData } from '@stc-apps/shared-ui';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'stc-apps-chart-card',
@@ -25,9 +26,28 @@ export class ChartCardComponent implements OnInit {
   strategicGroup: InputSignal<
     { values: { year: number; actualValue: number; target: number }[] } | any
   > = input([]);
-
+  actualValue = '';
+  thresholds = {
+    green: 0,
+    orange: 0,
+    red: 0,
+  };
+  constructor(private cookieService: CookieService) {}
   ngOnInit(): void {
-    // console.log('strategic group',this.strategicGroup());
+    //console.log('strategic group', this.strategicGroup());
+    const selcetedYear = this.cookieService.get('selectedYear');
+    const firstOccurrence = this.strategicGroup().values.filter(
+      (obj: any) => obj.year === +selcetedYear!
+    )[0];
+    console.log(firstOccurrence, selcetedYear);
+    if (firstOccurrence !== undefined) {
+      this.actualValue = firstOccurrence.actualValue as string;
+      this.thresholds = {
+        green: firstOccurrence.greenThreshold,
+        orange: firstOccurrence.orangeThreshold,
+        red: firstOccurrence.redThreshold,
+      };
+    }
 
     this.extractUnit();
   }

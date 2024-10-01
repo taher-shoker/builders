@@ -57,6 +57,7 @@ export class TopBannerComponent implements OnInit {
             }
           }
         });
+        this.userName = res?.name || '';
       });
     }
   }

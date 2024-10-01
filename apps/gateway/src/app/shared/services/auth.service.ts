@@ -480,8 +480,8 @@ export class AuthService {
                 systemUrl:
                   window.location.origin +
                   environment.systems.strategic_dashboard,
-                name: 'Score Card Report',
-                displayName: 'Score Card Report',
+                name: 'Strategic Dashboard',
+                displayName: 'Strategic Dashboard',
               });
               break;
             default:

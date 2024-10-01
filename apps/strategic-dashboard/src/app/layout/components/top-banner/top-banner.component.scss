@@ -1,7 +1,8 @@
 .top-banner {
   position: relative;
-
+  background-color: var(--whiteColor);
   > div {
+  //  background-color: white;
     position: absolute;
     margin: 0;
     top: 37%;
@@ -16,7 +17,8 @@
 @media screen and (max-width: 1200px) {
   .top-banner {
     > div {
-      left: 35% !important;
+      position: relative;
+      left: 3%;
     }
   }
 }

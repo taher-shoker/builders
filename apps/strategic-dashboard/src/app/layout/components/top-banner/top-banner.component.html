@@ -7,9 +7,12 @@
     (logOut)="logOut()"
     (backToHome)="backToHome()"
     [showLang]="false"
-  ></stc-apps-header>
-  <div class="top-banner_headerWelcome d-flex">
-    <p>Welcome Back , Assem khalifa</p>
-    <img src="assets/images/Waving Hand.svg" alt="" />
+  >
+  </stc-apps-header>
+  <div class="d-flex">
+    <div class="top-banner_headerWelcome d-flex">
+      <p>Welcome Back , {{ userName }}</p>
+      <img src="assets/images/Waving Hand.svg" alt="" />
+    </div>
   </div>
 </div>

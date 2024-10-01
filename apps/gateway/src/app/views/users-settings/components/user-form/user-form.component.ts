@@ -312,11 +312,14 @@ export class UserFormComponent implements OnInit, OnChanges {
   //   }
   // }
   onSubmit() {
-    if (!this.form.valid && this.userService.getCurrentSystem()!=='Strategic_Dashboard') {
+    if (
+      !this.form.valid &&
+      this.userService.getCurrentSystem() !== 'Strategic_Dashboard'
+    ) {
       this.markFormFieldsAsTouched();
       return;
     }
-   
+
     let dataForm;
     this.isSubmitLoader = true;
     const currentSystem = this.userService.getCurrentSystem();
@@ -363,7 +366,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     } else if (currentSystem === 'DI_Management') {
       dataForm = { userGroups: teams, email, name, jobTitle };
     } else if (currentSystem === 'Score_Card_Report_DB') {
-      dataForm = { userGroups,teams, email, name, jobTitle };
+      dataForm = { userGroups, teams, email, name, jobTitle };
     } else if (currentSystem === 'Strategic_Dashboard') {
       dataForm = { userGroups, email, name, jobTitle };
     } else if (currentSystem === 'Business_Excellence_Dashboard') {
@@ -395,9 +398,9 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (currentSystem === 'Score_Card_Report_DB' && teams?.length > 0) {
         data.teams = teams;
       }
-      // if (currentSystem === 'Strategic_Dashboard' && teams?.length > 0) {
-      //   data.teams = teams;
-      // }
+      if (currentSystem === 'Strategic_Dashboard' && teams?.length > 0) {
+        data.teams = null;
+      }
       console.log(userGroups);
 
       if (
@@ -588,7 +591,7 @@ export class UserFormComponent implements OnInit, OnChanges {
               s.roleName ===
               this.checkSystem(this.data.userGroups)?.roles[0].roleName
           );
-      } 
+      }
       // else if (
       //   this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
       // ) {
@@ -601,10 +604,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       //     this.form.get('teamDto')?.updateValueAndValidity();
       //   }
       // }
-      
-      else if (
-        this.userService.getCurrentSystem() === 'Strategic_Dashboard'
-      ) {
+      else if (this.userService.getCurrentSystem() === 'Strategic_Dashboard') {
         this.teams = this.userService.getTeams();
         if (this.data?.teams && this.data.teams.length > 0) {
           this.selectedGroup = this.data.teams.map(
@@ -634,11 +634,11 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.teams = this.userService.allTeams;
     } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
       this.teams = this.userService.getTeams();
-    } 
+    }
     // else if (this.userService.getCurrentSystem() === 'Strategic_Dashboard') {
     //   this.teams = this.userService.getTeams();
     // }
-     else {
+    else {
       this.form?.get('teamDto')?.setValue('');
       this.teams = this.userService
         .getTeams()
@@ -769,7 +769,6 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   handleGrouping() {
-   
     this.userService.getAllTeams().subscribe((res) => {
       this.userService.allTeams = res;
     });
