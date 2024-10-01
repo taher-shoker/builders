@@ -14,8 +14,8 @@ export const environment = {
     jira_system: '/cem/reporting/jiradashboard/',
     dynamic_rf_system: '/cem/reporting/dynamic-rf-workspace/',
     business_excellence_system: '/cem/reporting/business-excellence-workspace/',
-    score_card_report_db: 'http://localhost:4200/',
-    strategic_dashboard:'http://localhost:4200/'
+    score_card_report_db: '/cem/reporting/score-card-report/',
+    strategic_dashboard:'/cem/reporting/strategic_dashboard/'
   },
   sso_url: 'http://localhost:7080/administration/saml/login',
   languageFilesPath: '/assets/i18n/',

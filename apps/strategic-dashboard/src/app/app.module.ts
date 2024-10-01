@@ -21,6 +21,7 @@ import { ErrorInterceptor } from './services/interceptors/error.interceptor';
 import { LoaderInterceptor } from './services/interceptors/loader.interceptor';
 
 import { ToastrModule } from 'ngx-toastr';
+import { HashLocationStrategy,LocationStrategy } from '@angular/common';
 
 
 
@@ -47,7 +48,7 @@ const modules = [
   LayoutModule,
   BrowserAnimationsModule,
   ToastrModule.forRoot(),
-  RouterModule.forRoot(appRoutes),
+  RouterModule.forRoot(appRoutes,{ useHash: true }),
   TranslateModule,
   CookieModule.withOptions(),
 ];
@@ -71,6 +72,7 @@ const modules = [
       multi:true
     },
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
+    { provide: LocationStrategy, useClass: HashLocationStrategy },
   ],
   bootstrap: [AppComponent],
 })
