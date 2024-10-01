@@ -13,6 +13,7 @@ import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-v
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 import { FileModel } from '../../../../models/scorecard.model';
+import { ToastrService } from 'ngx-toastr';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -46,6 +47,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   private confirmationService = inject(ConfirmationService);
   private scorecardService = inject(ScorecardService);
   constructor(private router:Router){}
+  toastr = inject(ToastrService);
   isEmpty!:boolean;
   ngOnInit(): void {
     this.scorecardService.getCurrentMode().subscribe({
@@ -156,6 +158,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
             next : (res:StrategyProgramKpiDetailsModel[]) => {
               this.StrategyProgramData = res;
               this.visible = false;
+              this.toastr.success("The File is Saved Successfully");
               if(this.StrategyProgramData.length === 0)
               {
                 this.isEmpty = true;

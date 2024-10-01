@@ -6,7 +6,7 @@
   >
     {{ projectData().projectName | truncateWord:11 }}
   </p>
-  @if(titleArr.length > 11)
+  @if(titleArr && titleArr.length > 11)
   {
     <p-overlayPanel #overlayPanel2 dismissable="true">
       <section class="popover-section2">{{projectData().projectName}}</section>

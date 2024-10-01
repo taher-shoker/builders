@@ -10,6 +10,7 @@ import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/ed
 import { DialogModalComponent } from '../../components/dialog/dialog.component';
 import { FileModel } from '../../models/scorecard.model';
 import { Subject, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'stc-apps-strategy-program',
@@ -31,6 +32,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService);
   endSubs$:Subject<boolean> = new Subject();
+  toastr = inject(ToastrService);
   ngOnInit() {
     // this.strategyProgramData = [];
     this.getStrategyProgramSummary();
@@ -67,6 +69,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
       this.strategyProgramService.uploadCadSummaryFile(uploadFile).subscribe({
         next:() => {
           this.getStrategyProgramSummary();
+          this.toastr.success("The File is Saved Successfully");
           this.visible = false;
         }
       })

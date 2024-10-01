@@ -46,9 +46,12 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     }
   }
   newData!:PSRProjectDetailsModel;
-  titleArr!:string[];
+  titleArr:string[] = [];
   ngOnChanges(): void {
-    this.titleArr = this.projectData().projectName.split(' ');
+    if(this.projectData().projectName)
+    {
+      this.titleArr = this.projectData().projectName.split(' ');
+    }
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
     const start = this.projectData().startDate;
     const end = this.projectData().endDate;
