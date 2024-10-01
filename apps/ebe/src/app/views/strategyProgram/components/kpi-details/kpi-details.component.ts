@@ -59,19 +59,23 @@ export class KpiDetailsComponentTsComponent implements OnInit {
       next: (param: Params) => {
         this.currentId = param['kpiId'];
         // this.isEmpty = true;
-        this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
-          next : (res:StrategyProgramKpiDetailsModel[]) => {
-            this.StrategyProgramData = res;
-            if(this.StrategyProgramData.length === 0)
-            {
-              this.isEmpty = true;
-            } else {
-              this.isEmpty = false;
-            }
-          }
-        })
+        this.getStrategyProgramDetails(this.currentId);
       },
     });
+  }
+  private getStrategyProgramDetails(strategyName:string)
+  {
+    this.strategyProgramService.getStrategyProgramDetails(strategyName).subscribe({
+      next : (res:StrategyProgramKpiDetailsModel[]) => {
+        this.StrategyProgramData = res;
+        if(this.StrategyProgramData.length === 0)
+        {
+          this.isEmpty = true;
+        } else {
+          this.isEmpty = false;
+        }
+      }
+    })
   }
   isTapOpened!: boolean;
   currentTabIndex!: number;
@@ -113,12 +117,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   }
   deleteProjectItem()
   {
-    console.log(this.deletedProject);
-    console.log(this.prevProjects);
-    console.log(this.kpi);
     const deletedData = this.prevProjects.filter(val => val.project !== this.deletedProject.project);
-    console.log(deletedData);
-    console.log(this.prevProjects);
     this.strategyProgramService.updateProjects(this.kpi.strategyProjectName , this.kpi.objective , deletedData).subscribe({
       next : () => {
         this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
@@ -154,19 +153,9 @@ export class KpiDetailsComponentTsComponent implements OnInit {
     {
       this.strategyProgramService.uploadCadSummaryDetailsFile(uploadFile , this.currentId).subscribe({
         next : () => {
-          this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
-            next : (res:StrategyProgramKpiDetailsModel[]) => {
-              this.StrategyProgramData = res;
-              this.visible = false;
-              this.toastr.success("The File is Saved Successfully");
-              if(this.StrategyProgramData.length === 0)
-              {
-                this.isEmpty = true;
-              } else {
-                this.isEmpty = false;
-              }
-            }
-          })
+          this.getStrategyProgramDetails(this.currentId);
+          this.visible = false;
+          this.toastr.success("The File is Saved Successfully");
         }
       })
     }

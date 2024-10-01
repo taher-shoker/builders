@@ -64,7 +64,8 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
             res3.deleteAction = 'delete';
           })
         })
-        this.PSRDetailsData = res;
+        // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
+        this.PSRDetailsData = res
         if(this.PSRDetailsData.length === 0)
         {
           this.isEmpty = true;

@@ -1,8 +1,8 @@
 <section class="project">
   <p 
     class="project-title"
-    (mouseenter)="overlayPanel2.show($event)" 
-    (mouseleave)="overlayPanel2.hide()"
+    (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+    (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
   >
     {{ projectData().projectName | truncateWord:11 }}
   </p>
