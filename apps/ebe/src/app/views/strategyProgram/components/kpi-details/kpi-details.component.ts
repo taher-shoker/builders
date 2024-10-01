@@ -140,11 +140,32 @@ export class KpiDetailsComponentTsComponent implements OnInit {
       }
     })
   }
+  capitalizeSentence(sentence:string) {
+    return sentence
+      .split(" ")
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+  }
   ImportFile(uploadFile:FileModel | null)
   {
     if(uploadFile)
     {
-      console.log(uploadFile);
+      this.strategyProgramService.uploadCadSummaryDetailsFile(uploadFile , this.currentId).subscribe({
+        next : () => {
+          this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
+            next : (res:StrategyProgramKpiDetailsModel[]) => {
+              this.StrategyProgramData = res;
+              this.visible = false;
+              if(this.StrategyProgramData.length === 0)
+              {
+                this.isEmpty = true;
+              } else {
+                this.isEmpty = false;
+              }
+            }
+          })
+        }
+      })
     }
   }
   downloadFile(data: string, filename: string) {

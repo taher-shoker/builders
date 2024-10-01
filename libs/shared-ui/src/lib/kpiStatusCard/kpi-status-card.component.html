@@ -3,9 +3,9 @@
   [class.not-achieved]="kpiType() === 'not-achieved' || kpiType() === 'vendor'"
   [class.actual]="kpiType() === 'actual' || kpiType() === 'owner-name'"
   [class.weight]="kpiType() === 'weight'"
-  [class.in-progress]="kpiType() === 'in-progress'"
-  [class.completed]="kpiType() === 'in-progress' && kpiStatus() === 'completed'"
-  [class.planned]="kpiType() === 'in-progress' && kpiStatus() === 'planned'"
+  [class.in-progress]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'in progress'"
+  [class.completed]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'completed'"
+  [class.planned]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'planned'"
   [class.actualStatus]="kpiType() === 'actualStatus'"
   [class.status]="kpiType() === 'status'"
 >

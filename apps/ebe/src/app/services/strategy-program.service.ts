@@ -42,6 +42,14 @@ export class StrategyProgramService {
       formData
     );
   }
+  uploadCadSummaryDetailsFile(selectedFile: any , cadTitle:string): Observable<any> {
+    const formData = new FormData();
+    formData.append('multipartFile', selectedFile, selectedFile.name);
+    return this.http.post<any>(
+      `${environment.apiUrl}/business-excellence/cad/details/${cadTitle}/upload`,
+      formData
+    );
+  }
   updateProjects(projectName:string , objective:number , data:UpdatedData[]):Observable<UpdatedData[]>
   {
     return this.http.put<UpdatedData[]>(
