@@ -32,11 +32,11 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
     const savedYear = this.yearService.getSelectedYear();
     const savedQuarter = this.yearService.getSelectedQuarter();
 
-    if (savedYear && savedQuarter) {
-      const year = `${savedYear}-${savedQuarter}`;
-      this.sharedFormService.getForm().patchValue({ year });
-      this.getAllStrategicGroups();
-    }
+    // // if (savedYear) {
+    const year = `${savedYear}-${savedQuarter}`;
+    this.sharedFormService.getForm().patchValue({ year });
+    this.getAllStrategicGroups();
+    // }
     this.yearChangeSubscription = this.yearService
       .getYearChangeObservable()
       .subscribe((year: number) => {
