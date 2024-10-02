@@ -13,7 +13,7 @@ import { logs } from '../models/logsModel';
 })
 export class DataUploadService {
   constructor(private http: HttpClient) {}
-  baseURL = environment.apiUrl + 'v1/upload';
+  baseURL = environment.apiUrl + '/upload';
 
   getLogHistory(): Observable<logs[]> {
     return this.http.get<logs[]>(this.baseURL);

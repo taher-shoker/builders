@@ -115,8 +115,9 @@ export class ChartCardComponent implements OnInit {
       });
 
       processedData = [
-        { name: `Target ${this.unit()}`, data: targetSeries },
         { name: `Actual ${this.unit()}`, data: actualSeries },
+        { name: `Target ${this.unit()}`, data: targetSeries },
+       
       ];
     }
 
@@ -142,6 +143,6 @@ export class ChartCardComponent implements OnInit {
 
     return processedData;
   });
-
+  colors=['#45006F','#D2D7D9']
   lineChartColors = ['#D2D7D9', '#45006F'];
 }

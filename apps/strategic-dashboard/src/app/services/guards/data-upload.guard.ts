@@ -10,7 +10,7 @@ export const dataUploadGuard: CanActivateFn = (route, state) => {
   const user = JSON.parse(cookieService.get('MODERN_SYSTEM_USER') || '');
 
   user.userGroups.map((group: any) => {
-    if (group.groupName == 'Data_Admins') {
+    if (group.groupName == 'SD_Data_Admins') {
       console.log('hey inside guard');
       dataAdmin = true;
     }

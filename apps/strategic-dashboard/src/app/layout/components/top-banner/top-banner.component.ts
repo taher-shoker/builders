@@ -38,7 +38,7 @@ export class TopBannerComponent implements OnInit {
         console.log(res?.userGroups);
 
         res?.userGroups.map((group) => {
-          if (group.groupName == 'Data_Admins') {
+          if (group.groupName == 'SD_Data_Admins') {
             console.log('hey');
             let flag = false;
             this.navItems.map((item) => {
