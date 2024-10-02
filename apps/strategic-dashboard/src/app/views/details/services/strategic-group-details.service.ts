@@ -22,7 +22,7 @@ export class StrategicGroupDetailsService {
       .set('year', params.year.toString());
 
     return this.http.get<StrategicGroupDetails>(
-      this.baseUrl + 'v1/dashboard/strategic/detail',
+      this.baseUrl + 'dashboard/strategic/detail',
       {
         params: httpParams,
       }
@@ -37,7 +37,7 @@ export class StrategicGroupDetailsService {
       .set('year', params.year)
       .set('strategicName', params.strategicName);
     return this.http.get<StrategicGroupKPI[]>(
-      this.baseUrl + 'v1/dashboard/strategic/kpi',
+      this.baseUrl + 'dashboard/strategic/kpi',
       {
         params: httpParams,
       }

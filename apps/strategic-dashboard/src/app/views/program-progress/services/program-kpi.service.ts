@@ -25,7 +25,7 @@ export class ProgramKPIService {
       httpParams = httpParams.set('quarter', params.quarter);
     }
     return this.http.get<ProgramKPIDetails[]>(
-      this.baseUrl + 'v1/dashboard/program',
+      this.baseUrl + 'dashboard/program',
       {
         params: httpParams,
       }
@@ -36,12 +36,9 @@ export class ProgramKPIService {
     programName: string;
   }): Observable<ProgramKPI[]> {
     const httpParams = new HttpParams().set('programName', params.programName);
-    return this.http.get<ProgramKPI[]>(
-      this.baseUrl + 'v1/dashboard/program/kpi',
-      {
-        params: httpParams,
-      }
-    );
+    return this.http.get<ProgramKPI[]>(this.baseUrl + 'dashboard/program/kpi', {
+      params: httpParams,
+    });
   }
 
   getKPIProgramDetails(params: {
@@ -56,7 +53,7 @@ export class ProgramKPIService {
     }
 
     return this.http.get<StrategicProgramKPIDetails>(
-      this.baseUrl + 'v1/dashboard/program/detail',
+      this.baseUrl + 'dashboard/program/detail',
       {
         params: httpParams,
       }
@@ -67,7 +64,7 @@ export class ProgramKPIService {
     const httpParams = new HttpParams().set('kpiCode', params.kpiCode);
 
     return this.http.get<KPIDetails>(
-      this.baseUrl + 'v1/dashboard/strategic/kpi/detail',
+      this.baseUrl + 'dashboard/strategic/kpi/detail',
       {
         params: httpParams,
       }
