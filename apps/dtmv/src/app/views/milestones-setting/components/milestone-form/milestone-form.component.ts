@@ -97,7 +97,7 @@ export class MilestoneFormComponent implements OnInit, OnChanges {
         '',
         [
           Validators.required,
-          Validators.min(1),
+          Validators.min(0.0000001),
           Validators.max(100),
           Validators.pattern(/^[+]?([0-9]+\.?[0-9]*|\.[0-9]+)$/),
         ],

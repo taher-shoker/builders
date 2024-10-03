@@ -235,8 +235,19 @@ export class AuthService {
         .subscribe(async (res: LoggedUser) => {
           this.loggedInUser = res;
           this.loggedUserStream.next(res);
-          this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
           this.handleSingleGrantedSystem(res);
+          const userCookieData = {
+            id: res.id,
+            name: res.name,
+            username: res.username,
+            email: res.email,
+            userDelegates: res.userDelegates,
+            userGroups: res.userGroups,
+          };
+          this.cookieService.put(
+            'MODERN_SYSTEM_USER',
+            JSON.stringify(userCookieData)
+          );
         });
     }
   }

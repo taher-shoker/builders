@@ -41,21 +41,6 @@ export class AuthService {
     private cookieService: CookieService
   ) {}
 
-  login(data: any) {
-    return this.http
-      .post<AuthResponseData>(
-        `${window.location.origin}/reporting-api/user/authenticate`,
-        data
-      )
-      .pipe(
-        catchError(this.handleError),
-        tap((resData) => {
-          this.handleAuthentication(resData.displayName, resData.token);
-          this.getUserData();
-        })
-      );
-  }
-
   getUserData() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     const roles = user.userGroups
