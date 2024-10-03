@@ -116,7 +116,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     this.columnssSchema = this.columnsSchema;
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
-      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.userService.getCurrentSystem() === 'Strategic_Dashboard'
     ) {
       // this.columnssSchema = th;
       this.displayedColumns = (this.columnsSchema ?? [])
@@ -229,7 +230,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
-      this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+      this.userService.getCurrentSystem() === 'Score_Card_Report_DB' ||
+      this.userService.getCurrentSystem() === 'Strategic_Dashboard'
     ) {
       this.privilege = this.userService.allGroups
         .filter(
@@ -301,6 +303,20 @@ export class UsersComponent implements OnInit, AfterViewInit {
             this.userService.getUserTeam(x).includes((value as Team)?.name)
           );
         }
+      } else if (
+        this.userService.getCurrentSystem() === 'Strategic_Dashboard'
+      ) {
+        if (this.selectedPrivilege && this.selectedPrivilege.id !== 0) {
+          this.dataSource.data = this.list.filter((x) =>
+            this.userService
+              .getUserPrivilege(x)
+              .includes((this.selectedPrivilege as Role)?.groupName)
+          );
+        } else {
+          this.dataSource.data = this.list.filter((x) =>
+            this.userService.getUserTeam(x).includes((value as Team)?.name)
+          );
+        }
       } else {
         this.dataSource.data = this.list.filter((x) =>
           this.userService.getUserTeam(x).includes((value as Team)?.name)
@@ -349,7 +365,13 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
       ) {
         this.teams = this.userService.getTeams();
-      } else {
+      }
+      // else if (
+      //   this.userService.getCurrentSystem() === 'Strategic_Dashboard'
+      // ) {
+      //   this.teams = this.userService.getTeams();
+      // }
+      else {
         this.teams = this.userService
           .getTeams()
           .filter((x) => x.roleName == (value as Role).groupName);

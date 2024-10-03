@@ -1,0 +1,38 @@
+.home-page {
+  background-color: var(--stc-lightGrey-color);
+
+  &_footer {
+    position: relative;
+    top: -70px;
+    left: 22px;
+
+    .inverted {
+      margin-right: 48px;
+      transform: scaleX(-1);
+    }
+  }
+}
+
+@media screen and (max-width: 1570px) and (min-width: 1180px) {
+  .home-page_cardHolder {
+    .kpis-card {
+      width: 32.333% !important;
+    }
+  }
+}
+
+@media screen and (max-width: 1180px) and (min-width: 790px) {
+  .home-page_cardHolder {
+    .kpis-card {
+      width: 49% !important;
+    }
+  }
+}
+
+@media screen and (max-width: 790px) {
+  .home-page_cardHolder {
+    .kpis-card {
+      width: 99% !important;
+    }
+  }
+}

@@ -14,6 +14,7 @@ export const environment = {
     dynamic_rf_system: '/cem/reporting/dynamic-rf-workspace/',
     business_excellence_system: '/cem/reporting/business-excellence-workspace/',
     score_card_report_db: '/cem/reporting/score-card-report/',
+    strategic_dashboard: '/cem/reporting/strategic_dashboard/',
   },
   sso_url: '/reporting-api/saml/saml/login',
   languageFilesPath: '/cem/reporting/assets/i18n/',

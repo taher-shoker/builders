@@ -7,6 +7,7 @@ import { Component, InputSignal, WritableSignal, input, signal } from '@angular/
 })
 export class ProgressCircleComponent {
   progressValue: InputSignal<number> = input(0);
+  strategicFlag:InputSignal<boolean>=input(false);
   progressSize: InputSignal<string> = input('12rem');
   mainBgColor: InputSignal<string> = input('var(--stc-color)');
   secondaryBgColor: InputSignal<string> = input('var(--stc-lightGrey-color)');

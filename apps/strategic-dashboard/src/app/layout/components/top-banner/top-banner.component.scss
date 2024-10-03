@@ -1,0 +1,24 @@
+.top-banner {
+  position: relative;
+  background-color: var(--whiteColor);
+  > div {
+  //  background-color: white;
+    position: absolute;
+    margin: 0;
+    top: 37%;
+    left: 15%;
+  }
+
+  img {
+    margin-bottom: 16px;
+    margin-left: 12px;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .top-banner {
+    > div {
+      position: relative;
+      left: 3%;
+    }
+  }
+}

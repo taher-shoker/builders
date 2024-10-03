@@ -1,0 +1,82 @@
+.range-slider {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  /* Adjust spacing as needed */
+  width: 100%;
+  max-width: 520px;
+
+  mat-slider {
+    flex-grow: 1;
+  }
+
+  &_label {
+    color: var(--semiBlueColor);
+    text-decoration: underline;
+    flex-shrink: 0;
+  }
+
+  ::ng-deep {
+    .mdc-slider .mdc-slider__value-indicator-container {
+      bottom: 30px !important;
+    }
+
+    .mdc-slider .mdc-slider__value-indicator {
+      transform: none !important;
+      opacity: 1 !important;
+      background-color: transparent !important;
+      color: var(--semiBlueColor) !important;
+
+      &::before {
+        display: none !important;
+      }
+
+      > span {
+        font-size: 16px !important;
+      }
+    }
+  }
+
+  .custom-slider .mat-slider-thumb-container {
+    width: 24px;
+    /* Adjust to match image width */
+    height: 24px;
+    /* Adjust to match image height */
+  }
+
+  ::ng-deep .mat-mdc-slider .mdc-slider__track--inactive {
+    background-color: var(--Extra-ligh-greyColor) !important;
+    opacity: 1 !important;
+    height: 90% !important;
+  }
+
+  ::ng-deep .mat-mdc-slider .mdc-slider__track--active_fill {
+    border-color: var(--stc-color) !important;
+  }
+
+  ::ng-deep .mat-mdc-slider .mdc-slider__thumb {
+    background-image: url('../../../../assets/images/brand/Vector.png');
+    width: 22px !important;
+    height: 24px !important;
+    left: -12px !important;
+    top: 10px !important;
+    background-size: cover !important;
+    border-radius: 0px !important;
+  }
+
+  ::ng-deep .mat-mdc-slider .mdc-slider__thumb-knob {
+    border-radius: 0px !important;
+    width: 0px !important;
+    height: 0px !important;
+    border-style: none !important;
+    border-width: 0px !important;
+    //background-color: red !important;
+    border-color: transparent !important;
+  }
+
+  ::ng-deep .mat-mdc-slider-visual-thumb .mat-ripple {
+    width: 0px !important;
+    height: 0px !important;
+  }
+}

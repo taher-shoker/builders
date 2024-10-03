@@ -1,0 +1,59 @@
+<div class="kpi-card" [ngClass]="{ hovered: isHovered() }">
+  <div class="kpi-card_content-holder">
+    @if (isHovered()) {
+    <div class="kpi-card_header">
+      <h4 class="kpi-card_title">{{ kpiTitle() }}</h4>
+    </div>
+    } @for (content of getFilteredContents(); track content; let index = $index)
+    {
+    <div>
+      @if (!isHovered() ) { @for (kpi of content.kpis; track kpi) {
+      <div class="kpi-card_content with-bottom-border">{{ kpi.name }}</div>
+      } } @else { @for (strategicGroupKpi of strategicGroupKpis(); track
+      strategicGroupKpi) {
+      <div class="kpi-card_content with-full-border">
+        <div class="kpi-card_details">
+          <div>
+            <p class="kpi-card_details_title">{{ strategicGroupKpi.name }}</p>
+            <span
+              class="kpi-card_details_percentage"
+              [ngClass]="
+                getPercentageClass(strategicGroupKpi.actualValue, {
+                  green: strategicGroupKpi.greenThreshold,
+                  orange: strategicGroupKpi.orangeThreshold,
+                  red: strategicGroupKpi.redThreshold
+                })
+              "
+            >
+              {{
+                strategicGroupKpi.unit === '%'
+                  ? (strategicGroupKpi.actualValue | percent)
+                  : strategicGroupKpi.actualValue + ' ' + strategicGroupKpi.unit
+              }}</span
+            >
+          </div>
+
+          <stc-apps-progress-percentage
+            [percentage]="strategicGroupKpi.actualValue"
+            [thresholds]="{
+              green: strategicGroupKpi.greenThreshold,
+              orange: strategicGroupKpi.orangeThreshold,
+              red: strategicGroupKpi.redThreshold
+            }"
+          ></stc-apps-progress-percentage>
+        </div>
+      </div>
+      } }
+    </div>
+    <div class="kpi-card_footer">
+      <div
+        (click)="navigateToCardDetails(content.name)"
+        class="kpi-card_footer-content"
+      >
+        More details
+        <img src="assets/images/arrow-right.svg" alt="" />
+      </div>
+    </div>
+    }
+  </div>
+</div>

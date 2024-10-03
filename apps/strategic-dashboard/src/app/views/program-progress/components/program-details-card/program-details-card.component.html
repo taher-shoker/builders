@@ -1,0 +1,59 @@
+<div class="card">
+  <div class="card_title">
+    @if (chartType() == 'donut' || chartType()=='column') {
+    <stc-apps-progress-percentage></stc-apps-progress-percentage>
+    }
+    <h3>{{ title() }}</h3>
+  </div>
+  <div class="card_body">
+    @if (chartType() == 'donut') {
+    <ng-container [ngTemplateOutlet]="donutChart"></ng-container>
+    } @if (chartType() == 'line') {
+    <ng-container [ngTemplateOutlet]="lineChart"></ng-container>
+    } @if (chartType() == 'progress') {
+    <ng-container [ngTemplateOutlet]="progressChart"></ng-container>
+    } @if (chartType() == 'column') {
+    <ng-container [ngTemplateOutlet]="columnChart"></ng-container>
+    }
+  </div>
+</div>
+
+<ng-template #donutChart>
+  <div class="donut row">
+    @for (progress of progressValue(); track $index) {
+    <div class="donut_content col-xl-4 col-lg-12 col-md-12">
+      <stc-apps-progress-circle
+        [strategicFlag]="true"
+        progressSize="10rem"
+        [progressValue]="progress.value"
+        [mainBgColor]="progress.bgColor"
+      ></stc-apps-progress-circle>
+      <p>{{ progress.label }}</p>
+    </div>
+    }
+  </div>
+</ng-template>
+
+<ng-template #lineChart>
+  @if (progressValue().length!==0) {
+  <stc-apps-custom-line-chart
+    [multiChartData]="lineChartData()"
+    [trendModuleState]="true"
+    [colors]="lineChartColors"
+  ></stc-apps-custom-line-chart>
+  } @else {
+  <div class="empty-values">There is no data for this range of years</div>
+  }
+</ng-template>
+
+<ng-template #progressChart>
+  <stc-apps-progress-bar
+    [data]="progressBarData()"
+  ></stc-apps-progress-bar>
+</ng-template>
+<ng-template #columnChart>
+  <stc-apps-column-chart
+    [colors]="lineChartColors"
+    [chartData]="columnChartData()"
+  ></stc-apps-column-chart>
+</ng-template>

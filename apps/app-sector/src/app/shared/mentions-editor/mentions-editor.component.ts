@@ -183,7 +183,7 @@ export class MentionsEditorComponent
 
   onKeyUp(event: any) {
     const input = event.target as HTMLDivElement;
-    this.value = input.textContent || '';
+    this.value = input.innerHTML || '';
 
     if (event.key == 'Backspace') {
       const spans = event.target.querySelectorAll('span');
@@ -207,6 +207,7 @@ export class MentionsEditorComponent
       this.deletionEmitter.emit(dataIndexes);
     }
   }
+
   textToInsertWhenSelect(item: any): any {
     const index = this.notificationService.index;
     setTimeout(() => {
@@ -258,13 +259,20 @@ export class MentionsEditorComponent
     // );
   }
 
-  onContentChange(content: string): void {
-    console.log('Content:', content);
-    // const mentionsArray = this.extractMentions(content);
+  // onContentChange(content: string): void {
+  //   console.log('Content:', content);
+  //   // const mentionsArray = this.extractMentions(content);
 
-    // this.mentionsArray = mentionsArray;
-    this.value = content;
-    this.processMentions(content);
+  //   // this.mentionsArray = mentionsArray;
+  //   this.value = content;
+  //   this.processMentions(content);
+  // }
+
+  onContentChange(content: string): void {
+    const contentDiv = this.contentEditable.nativeElement;
+    this._value = contentDiv.innerHTML;
+    this.onChange(this._value);
+    this.contentChange.emit(this._value);
   }
 
   processMentions(content: string): void {
@@ -322,17 +330,15 @@ export class MentionsEditorComponent
 }
 
 export function pasteHtmlAtCaret(html: any) {
-  // console.log('pasteHtmlAtCaret', html);
-
   let sel, range;
   if (window.getSelection) {
     sel = window.getSelection();
     if (sel?.getRangeAt && sel.rangeCount) {
       range = sel.getRangeAt(0);
       range.deleteContents();
+
       const el = document.createElement('div');
       el.innerHTML = html;
-      // eslint-disable-next-line prefer-const
       let frag = document.createDocumentFragment(),
         node,
         lastNode;
@@ -346,6 +352,7 @@ export function pasteHtmlAtCaret(html: any) {
         range = range.cloneRange();
         range.setStartAfter(lastNode);
         range.collapse(true);
+
         sel.removeAllRanges();
         sel.addRange(range);
       }

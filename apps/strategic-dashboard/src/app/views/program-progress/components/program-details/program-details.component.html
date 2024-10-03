@@ -1,0 +1,60 @@
+<div class="program-details">
+  <!-- <stc-apps-breadcrumb [bgColor]="'transparent'"></stc-apps-breadcrumb> -->
+  <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+
+  <div class="program-details_header row">
+    <div class="col-md-3 col-sm-12">
+      <h2>{{ programName }}</h2>
+    </div>
+    <div class="col-md-7 col-sm-12">
+      <div class="program-details_slider">
+        <h4>Range Historical Trend</h4>
+        <div class="range-holder">
+          <stc-apps-range-slider
+            [startValueInput]="0"
+            [endValueInput]="2024"
+            (rangeChanged)="onRangeChange($event)"
+          ></stc-apps-range-slider>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-2 col-sm-12">
+      <div class="program-details_filter d-flex justify-content-end">
+        <stc-apps-dropdown></stc-apps-dropdown>
+      </div>
+    </div>
+  </div>
+
+  <div class="program-details_cards row row-gap-3">
+    @for (card of cardItems; track card; let index = $index) {
+    <div class="col-md-6 col-sm-12">
+      <stc-apps-program-details-card
+        [unit]="programDetails.unit"
+        [title]="card.title"
+        [chartType]="card.chartType"
+        [progressValue]="card.progress || []"
+      ></stc-apps-program-details-card>
+    </div>
+    }
+    @empty {
+      <div class="program-details_kpis_empty">
+        No data for this year or quarter.
+      </div>
+      }
+  </div>
+
+  <div class="program-details_kpis">
+    <h3>List of all KPIs</h3>
+    @for (kpi of programsKPIs; track kpi) {
+    <stc-apps-kpis-card
+      [title]="kpi.name"
+      [kpiCode]="kpi.code"
+      [programName]="programName"
+    ></stc-apps-kpis-card>
+    } @empty {
+    <div class="program-details_kpis_empty">
+      No available KPI's for this program.
+    </div>
+    }
+  </div>
+</div>

@@ -45,6 +45,24 @@
           </div>
         </div>
         <div class="row mt-7" *ngIf="
+        showInputs &&
+        userService.getCurrentSystem() === 'Strategic_Dashboard'
+      ">
+      <div class="col-md-5">
+        <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
+          formControlName="userGroups" [labelName]="'groupName'" [required]="true"
+          [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+        </stc-apps-select-drop-down>
+      </div>
+      <div class="col-md-2"></div>
+
+      <!-- <div class="col-md-5">
+        <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
+          [required]="true" [options]="teams" [selectId]="selectedTeam || null">
+        </stc-apps-select-drop-down>
+      </div> -->
+    </div>
+        <div class="row mt-7" *ngIf="
             showInputs &&
             userService.getCurrentSystem() === 'Score_Card_Report_DB'
           ">

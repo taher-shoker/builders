@@ -1,0 +1,64 @@
+<div class="kpi-details">
+  <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+  <div class="kpi-details_kpiName">{{ kpiDataRoute.title }}</div>
+  <div class="kpi-details_kpiCode">KPI code : {{ kpiDataRoute.code }}</div>
+  <div class="row kpi-details_kpiOverview">
+    @for (item of kpiInfo; track $index) {
+    <div
+      class="kpi-overview-holder col-md-3 col-lg-3 col-xl-2"
+      [ngStyle]="{
+        'background-color': item.backgroundColor,
+        color: item.color
+      }"
+    >
+      {{ item.overView }}{{ item.overViewDesc }}
+      <img
+        *ngIf="!item.overView"
+        src="assets/images/arrow-up.svg"
+        [ngStyle]="{
+          transform: shouldRotateArrow(item.overViewDesc)
+            ? 'rotate(180deg)'
+            : 'none',
+          filter: shouldRotateArrow(item.overViewDesc) ? 'invert(1)' : 'none'
+        }"
+        alt="Direction Arrow"
+      />
+    </div>
+    }
+  </div>
+  <div class="kpi-details_kpiDahsboard row row-gap-3">
+    @for (card of cardItems; track card; let index = $index) {
+    <div class="col-lg-6 col-md-12 col-sm-12">
+      <stc-apps-program-details-card
+        class="chart"
+        [title]="card.title"
+        [chartType]="card.chartType"
+        [progressValue]="card.progress || []"
+        [strategicGroup]="card.chartData || []"
+      ></stc-apps-program-details-card>
+    </div>
+    }
+  </div>
+  @for (chunk of chunkedTitles; track $index) {
+  <div class="kpi-details_info row">
+    @for (kpi of chunk; track $index) {
+    <div class="info-holder col-lg-3 col-md-6 col-sm-12">
+      <div class="info-title">{{ kpi.title }}</div>
+      <div class="info-desc">{{ kpi.desc }}</div>
+    </div>
+
+    }
+  </div>
+  }
+
+  <div class="def-formula d-flex justify-content-between">
+    <div class="kpi-details_definition">
+      <div class="title">Definition</div>
+      <p>{{ kpiDefinition }}</p>
+    </div>
+    <div class="kpi-details_formula">
+      <div class="title">Formula</div>
+      <p>{{ kpiFormula }}</p>
+    </div>
+  </div>
+</div>
