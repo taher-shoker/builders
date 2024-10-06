@@ -115,7 +115,9 @@ export class UserFormComponent implements OnInit, OnChanges {
       teamDto: [
         [],
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
-        this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+        this.userService.getCurrentSystem() ===
+          'Business_Excellence_Dashboard' ||
+        this.userService.getCurrentSystem() === 'Strategic_Dashboard'
           ? Validators.nullValidator
           : Validators.required,
       ],
@@ -312,10 +314,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   //   }
   // }
   onSubmit() {
-    if (
-      !this.form.valid &&
-      this.userService.getCurrentSystem() !== 'Strategic_Dashboard'
-    ) {
+    if (!this.form.valid) {
       this.markFormFieldsAsTouched();
       return;
     }
