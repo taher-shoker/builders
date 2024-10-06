@@ -43,15 +43,16 @@ export class ProgramDetailsComponent implements OnInit {
       this.programName = params.get('programName') || '';
 
       if (this.programName) {
+        console.log('inside params');
+
         this.getAllProgramsKPIs();
         this.getProgramDetails();
       }
     });
-    this.yearService
-      .getQuarterChangeObservable()
-      .subscribe((quarter: string) => {
-        this.getProgramDetails();
-      });
+    this.yearService.getYearChangeObservable().subscribe((year: number) => {
+      console.log('inside observable');
+      this.getProgramDetails();
+    });
   }
   yearsArray: any[] = [
     { name: this.currentYear },
@@ -71,7 +72,7 @@ export class ProgramDetailsComponent implements OnInit {
         progress: [
           {
             value: this.programDetails.actualValue * 100,
-            label: 'Actul',
+            label: 'Actual',
             bgColor: 'var(--stcOasisColor)',
           },
           {
@@ -134,12 +135,25 @@ export class ProgramDetailsComponent implements OnInit {
       });
   }
   getProgramDetails() {
-    const yearQuarter: string =
-      this.sharedForm.getForm().controls['year'].value;
+    let selectedYear = 0;
+    let selectedQuarter = '';
+    if (
+      this.yearService.getSelectedYear() &&
+      this.yearService.getSelectedQuarter()
+    ) {
+      selectedYear = +this.yearService.getSelectedYear()!;
+      selectedQuarter = this.yearService.getSelectedQuarter()!;
+    } else {
+      const yearQuarter: string =
+        this.sharedForm.getForm().controls['year'].value;
+      selectedYear = +yearQuarter.split('-')[0];
+      selectedQuarter = yearQuarter.split('-')[1];
+    }
+
     const params = {
       programName: this.programName,
-      year: +yearQuarter.split('-')[0],
-      quarter: yearQuarter.split('-')[1],
+      year: selectedYear,
+      quarter: selectedQuarter,
     };
     this.programKPIService.getKPIProgramDetails(params).subscribe({
       next: (result: StrategicProgramKPIDetails) => {

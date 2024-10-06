@@ -21,12 +21,9 @@ export class LogsTableComponent implements OnInit {
     'jobId',
     'executedBy',
     'originalFileName',
+    'status',
     'startTime',
     'endTime',
-    'status',
-    'jobCategory',
-    'talendJobName',
-    'sourceSubsidiaryName',
   ];
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;

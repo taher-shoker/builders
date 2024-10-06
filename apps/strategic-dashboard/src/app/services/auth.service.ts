@@ -1,9 +1,10 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, throwError } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { User } from '../shared/models/user.model';
 
 export interface LoggedUser {
   id: number;
@@ -64,21 +65,21 @@ export class AuthService {
     return this.loggedUserStream.getValue()?.roles.includes('ADMINS');
   }
 
-  // autoLogin() {
-  //   const userData: {
-  //     userName: string;
-  //     token: string;
-  //   } = JSON.parse(localStorage?.getItem('userData') || '');
-  //   if (!userData) {
-  //     return;
-  //   }
+  autoLogin() {
+    const userData: {
+      userName: string;
+      token: string;
+    } = JSON.parse(localStorage?.getItem('userData') || '');
+    if (!userData) {
+      return;
+    }
 
-  //   const loadedUser = new User(userData.userName, userData.token);
+    const loadedUser = new User(userData.userName, userData.token);
 
-  //   if (loadedUser.userName) {
-  //     this.user.next(loadedUser);
-  //   }
-  // }
+    if (loadedUser.userName) {
+      this.user.next(loadedUser);
+    }
+  }
 
   logout() {
     this.user.next(null);
@@ -115,31 +116,31 @@ export class AuthService {
       });
   }
 
-  // private handleAuthentication(displayName: string, token: string) {
-  //   const user = new User(displayName, token);
-  //   this.user.next(user);
-  //   this.cookieService.put('token', token);
-  //   this.cookieService.put('displayName', displayName);
+  private handleAuthentication(displayName: string, token: string) {
+    const user = new User(displayName, token);
+    this.user.next(user);
+    this.cookieService.put('token', token);
+    this.cookieService.put('displayName', displayName);
 
-  //   //localStorage.setItem('userData', JSON.stringify(user));
-  // }
+    //localStorage.setItem('userData', JSON.stringify(user));
+  }
 
-  // private handleError(errorRes: HttpErrorResponse) {
-  //   let errorMessage = 'An unknown error occurred!';
-  //   if (!errorRes.error || !errorRes.error.error) {
-  //     return throwError(errorMessage);
-  //   }
-  //   switch (errorRes.error.error.message) {
-  //     case 'EMAIL_EXISTS':
-  //       errorMessage = 'This email exists already';
-  //       break;
-  //     case 'EMAIL_NOT_FOUND':
-  //       errorMessage = 'This email does not exist.';
-  //       break;
-  //     case 'INVALID_PASSWORD':
-  //       errorMessage = 'This password is not correct.';
-  //       break;
-  //   }
-  //   return throwError(errorMessage);
-  // }
+  private handleError(errorRes: HttpErrorResponse) {
+    let errorMessage = 'An unknown error occurred!';
+    if (!errorRes.error || !errorRes.error.error) {
+      return throwError(errorMessage);
+    }
+    switch (errorRes.error.error.message) {
+      case 'EMAIL_EXISTS':
+        errorMessage = 'This email exists already';
+        break;
+      case 'EMAIL_NOT_FOUND':
+        errorMessage = 'This email does not exist.';
+        break;
+      case 'INVALID_PASSWORD':
+        errorMessage = 'This password is not correct.';
+        break;
+    }
+    return throwError(errorMessage);
+  }
 }

@@ -13,16 +13,19 @@ import { logs } from '../models/logsModel';
 })
 export class DataUploadService {
   constructor(private http: HttpClient) {}
-  baseURL = environment.apiUrl + '/upload';
+  baseURL = environment.apiUrl + 'upload';
 
   getLogHistory(): Observable<logs[]> {
     return this.http.get<logs[]>(this.baseURL);
   }
 
-  uploadData(file: File): Observable<logs> {
+  uploadData(file: File, dashboardName: string): Observable<logs> {
     const formData = new FormData();
-    formData.append(`file`, file);
-    return this.http.post(this.baseURL, formData).pipe(
+    formData.append('file', file);
+
+    const urlWithParams = `${this.baseURL}?dashboardName=${dashboardName}`;
+
+    return this.http.post<logs>(urlWithParams, formData).pipe(
       map((response) => {
         return response as logs;
       })
