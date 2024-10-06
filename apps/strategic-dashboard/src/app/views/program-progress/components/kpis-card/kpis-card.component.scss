@@ -5,9 +5,10 @@
     }
 
     &_button {
-        button {
+        .btn {
             color: var(--blueColor);
             font-weight: 400;
+            text-decoration: underline;
             font-family: 'Roboto';
 
             img {

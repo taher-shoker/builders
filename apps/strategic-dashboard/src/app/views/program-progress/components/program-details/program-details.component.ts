@@ -71,7 +71,7 @@ export class ProgramDetailsComponent implements OnInit {
         progress: [
           {
             value: this.programDetails.actualValue * 100,
-            label: 'Actul',
+            label: 'Actual',
             bgColor: 'var(--stcOasisColor)',
           },
           {
