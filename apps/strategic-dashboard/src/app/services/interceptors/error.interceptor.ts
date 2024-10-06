@@ -7,7 +7,7 @@ import {
 import { Injectable } from '@angular/core';
 import { AuthService } from '../auth.service';
 import { ToastrService } from 'ngx-toastr';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, of, throwError } from 'rxjs';
 import { Router } from '@angular/router';
 
 @Injectable()
@@ -33,10 +33,15 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
         } else {
           console.log('toatser', err?.error?.errorDetailsMessage);
-
-          this.toastr.error(
-            err?.error?.message ? err?.error?.message : 'Something went wrong!'
-          );
+          if (err.error.message == 'RESOURCE_NOT_FOUND') {
+            this.toastr.error('No data for this year or quarter');
+          } else {
+            this.toastr.error(
+              err?.error?.message
+                ? err?.error?.message
+                : 'Something went wrong!'
+            );
+          }
         }
         return throwError(err);
       })
