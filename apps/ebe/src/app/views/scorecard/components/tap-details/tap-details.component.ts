@@ -29,7 +29,6 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 // import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
 import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
 import { Subject } from 'rxjs';
-import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 interface filterOption
 {
@@ -45,7 +44,6 @@ interface filterOption
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    DialogModalComponent,
     EditModeViewComponent,
     OverlayPanelModule
   ],

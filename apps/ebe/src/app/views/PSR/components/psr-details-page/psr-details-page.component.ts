@@ -9,13 +9,12 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , SharedUiModule , ProjectDetailsCardComponent , EditModeViewComponent , DialogModalComponent],
+  imports: [CommonModule , PageHeaderComponent , SharedUiModule , ProjectDetailsCardComponent , EditModeViewComponent],
   templateUrl: './psr-details-page.component.html',
   styleUrl: './psr-details-page.component.scss',
 })

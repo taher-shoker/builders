@@ -1,10 +1,16 @@
 import { Component, EventEmitter, input, OnChanges, OnInit, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FileModel } from '../../models/scorecard.model';
+interface FileModel
+{
+  lastModified:number;
+  name:string;
+  size:number;
+  lastModifiedDate?:Date;
+  webkitRelativePath:string;
+  type:string;
+}
 @Component({
   selector: 'stc-apps-file-upload-input',
-  standalone: true,
-  imports: [CommonModule],
+  standalone: false,
   templateUrl: './file-upload-input.component.html',
   styleUrl: './file-upload-input.component.scss',
 })

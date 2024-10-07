@@ -7,7 +7,6 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { StrategyKpiCardComponent } from './components/strategy-kpi-card/strategy-kpi-card.component';
 import { ScorecardService } from '../../services/scorecard.service';
 import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/edit-mode-view.component';
-import { DialogModalComponent } from '../../components/dialog/dialog.component';
 import { FileModel } from '../../models/scorecard.model';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
@@ -20,8 +19,7 @@ import { ToastrService } from 'ngx-toastr';
     PageHeaderComponent,
     SharedUiModule,
     StrategyKpiCardComponent,
-    EditModeViewComponent,
-    DialogModalComponent
+    EditModeViewComponent
   ],
   templateUrl: './strategyProgram.component.html',
   styleUrl: './strategyProgram.component.scss',
@@ -70,6 +68,9 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
         next:() => {
           this.getStrategyProgramSummary();
           this.toastr.success("The File is Saved Successfully");
+          this.visible = false;
+        },
+        error : () => {
           this.visible = false;
         }
       })

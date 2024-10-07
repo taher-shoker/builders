@@ -5,14 +5,13 @@ import { PSRProjectCardComponent } from "../project-card/project-card.component"
 import { PSRDataModel } from '../../../../models/psr.model';
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
-import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 import { FileModel } from '../../../../models/scorecard.model';
 import { PSRService } from '../../../../services/psr.services';
 
 @Component({
   selector: 'stc-apps-tab-details',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , EditModeViewComponent , DialogModalComponent],
+  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , EditModeViewComponent],
   templateUrl: './tab-details.component.html',
   styleUrl: './tab-details.component.scss',
 })

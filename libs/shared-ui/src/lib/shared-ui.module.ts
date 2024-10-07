@@ -76,7 +76,10 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { OverlayPanelModule } from 'primeng/overlaypanel';
 import { TruncateWordPipe } from './truncateWord.pipe';
 import { CalendarModule } from 'primeng/calendar';
-
+import { DialogModalComponent } from './file-upload-dialog/dialog.component';
+import { FileUploadInputComponent } from './file-upload-input/file-upload-input.component';
+import { DialogModule } from '@angular/cdk/dialog';
+import { DialogModule as primengDialogModule } from 'primeng/dialog';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
@@ -125,7 +128,9 @@ const components = [
   ProjectCardComponent,
   MultiCirclesProgressBarComponent,
   ConfirmDialogComponent,
-  TruncateWordPipe
+  TruncateWordPipe,
+  DialogModalComponent,
+  FileUploadInputComponent
 ];
 
 @NgModule({
@@ -161,7 +166,8 @@ const components = [
     MatMenuModule,
     MatIconModule,
     MatButtonModule,
-    CalendarModule
+    CalendarModule,
+    primengDialogModule
   ]
 })
 export class SharedUiModule {}

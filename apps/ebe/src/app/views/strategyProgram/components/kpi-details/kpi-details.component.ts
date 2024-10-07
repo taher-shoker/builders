@@ -1,4 +1,4 @@
-import { StrategyProgramKpiDetailsModel, StrategyProgramKpiProjectsDetailsModel } from '../../../../models/strategy-program.model';
+import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
@@ -11,7 +11,6 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { DialogModalComponent } from '../../../../components/dialog/dialog.component';
 import { FileModel } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 export interface KpiProjectsDetailsModel
@@ -31,8 +30,7 @@ export interface KpiProjectsDetailsModel
     ButtonModule,
     DialogModule,
     RouterModule,
-    EditModeViewComponent,
-    DialogModalComponent
+    EditModeViewComponent
   ],
   providers : [ConfirmationService],
   templateUrl: './kpi-details.component.html',

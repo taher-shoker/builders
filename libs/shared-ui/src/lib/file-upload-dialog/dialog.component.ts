@@ -1,13 +1,16 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { DialogModule } from 'primeng/dialog';
-import { FileUploadInputComponent } from '../file-upload-input/file-upload-input.component';
-import { FileModel } from '../../models/scorecard.model';
-
+interface FileModel
+{
+  lastModified:number;
+  name:string;
+  size:number;
+  lastModifiedDate?:Date;
+  webkitRelativePath:string;
+  type:string;
+}
 @Component({
   selector: 'stc-apps-dialog-modal',
-  standalone: true,
-  imports: [CommonModule , DialogModule, FileUploadInputComponent],
+  standalone: false,
   templateUrl: './dialog.component.html',
   styleUrl: './dialog.component.scss',
 })
