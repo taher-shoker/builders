@@ -26,12 +26,15 @@ import {
   StrategyProgramKpiProjectsDetailsModel,
 } from '../../../../models/strategy-program.model';
 import { take } from 'rxjs';
+import { SharedUiModule } from '@stc-apps/shared-ui';
+import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent],
+  imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent , SharedUiModule],
   templateUrl: './add-project-form.component.html',
   styleUrl: './add-project-form.component.scss',
+  providers : [ConfirmationService]
 })
 export class AddProjectFormComponent implements OnInit, OnChanges {
   formBuilder = inject(FormBuilder);
@@ -128,16 +131,17 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
   closeModalFun() {
     this.closeModal.emit(true);
   }
+  private confirmationService = inject(ConfirmationService);
   save() {
     if (this.addProjectForm.valid) {
       const projectArr = this.addProjectForm.value.projects;
-      // projectArr = projectArr.concat(this.prevProjects);
-      console.log(projectArr);
       this.strategyService
         .updateProjects(this.title, this.objectiveNumber, projectArr)
         .subscribe({
           next: () => {
-            this.goback();
+            this.confirmationService.confirm({
+              key: 'added-project-success'
+            });
           },
         });
     }

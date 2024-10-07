@@ -1,40 +1,33 @@
 @import '../../../../../styles/fonts.scss';
-.strategy-project-form
-{
+.strategy-project-form {
   padding: 20px 30px;
-  &-card
-  {
+  &-card {
     background-color: var(--stc-grey-lighter-color);
     border-radius: 20px;
     padding: 20px;
     position: relative;
-    color:#000;
-    &-header
-    {
+    color: #000;
+    &-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      &-title
-      {
-        span
-        {
+      &-title {
+        span {
           display: inline-block;
           text-transform: capitalize;
-          color:var(--stc-lighter-black-color);
+          color: var(--stc-lighter-black-color);
           @extend .stcFont;
           font-size: 17px;
           font-weight: 600;
           margin-left: 15px;
         }
       }
-      .close-form
-      {
+      .close-form {
         cursor: pointer;
-        width:25px;
+        width: 25px;
       }
     }
-    &-main-title
-    {
+    &-main-title {
       text-transform: capitalize;
       @extend .stcFont;
       font-size: 19px;
@@ -42,20 +35,16 @@
       margin: 0;
       padding-top: 30px;
     }
-    .form-wrapper
-    {
+    .form-wrapper {
       border: 0.5px solid #000000;
-      border-radius:10px;
+      border-radius: 10px;
       margin-top: 30px;
-      padding:20px 20px 30px;
+      padding: 20px 20px 30px;
     }
-    form
-    {
-      .form-group
-      {
+    form {
+      .form-group {
         position: relative;
-        .error-msg
-        {
+        .error-msg {
           position: absolute;
           left: 0;
           bottom: -21px;
@@ -65,46 +54,41 @@
           @extend .stcFont;
           font-size: 13px;
         }
-        label
-        {
+        label {
           display: block;
           @extend .stcFont;
-          color:var(--stc-purple-light-color);
+          color: var(--stc-purple-light-color);
           text-transform: capitalize;
           font-weight: 500;
           padding-bottom: 5px;
         }
-        input
-        {
+        input {
           width: 100%;
-          border:0;
-          background: #8E9AA01A;
-          border-radius:10px;
-          color:#000;
-          padding:15px 10px;
+          border: 0;
+          background: #8e9aa01a;
+          border-radius: 10px;
+          color: #000;
+          padding: 15px 10px;
           outline: 0;
           box-shadow: none;
-          &::placeholder
-          {
+          &::placeholder {
             color: #141414;
             font-weight: 400;
             @extend .stcFont;
           }
         }
       }
-      .delete-btn
-      {
+      .delete-btn {
         display: flex;
         align-items: center;
         justify-content: flex-end;
         margin-top: 25px;
-        button
-        {
+        button {
           background-color: var(--stc-red-color);
-          border:0;
-          border-radius:5px;
-          padding:9px 30px;
-          color:var(--stc-white-color);
+          border: 0;
+          border-radius: 5px;
+          padding: 9px 30px;
+          color: var(--stc-white-color);
           text-transform: capitalize;
           cursor: pointer;
           font-size: 17px;
@@ -112,9 +96,8 @@
         }
       }
     }
-    .add-project-btn
-    {
-      border:0;
+    .add-project-btn {
+      border: 0;
       margin: auto;
       background-color: transparent;
       text-transform: capitalize;
@@ -126,35 +109,31 @@
       align-items: center;
       justify-content: center;
       text-decoration: underline;
-      gap:10px;
-      color:var(--stc-purple-color);
+      gap: 10px;
+      color: var(--stc-purple-color);
       cursor: pointer;
     }
-    .save-cancel-btns
-    {
+    .save-cancel-btns {
       display: flex;
       align-items: center;
       justify-content: flex-end;
-      gap:20px;
+      gap: 20px;
       margin-top: 30px;
-      button
-      {
-        padding:12px 30px;
-        border:0;
+      button {
+        padding: 12px 30px;
+        border: 0;
         text-transform: capitalize;
-        border-radius:5px;
+        border-radius: 5px;
         font-weight: 16;
         font-weight: 500;
         cursor: pointer;
-        &.save-btn
-        {
+        &.save-btn {
           background-color: var(--stc-purple-color);
-          color:var(--stc-white-color);
+          color: var(--stc-white-color);
         }
-        &.cancel-btn
-        {
+        &.cancel-btn {
           background-color: var(--stc-lighter-grey-color3);
-          color:var(--stc-dark-grey-color2);
+          color: var(--stc-dark-grey-color2);
         }
       }
     }
@@ -246,17 +225,54 @@
 //     }
 //   }
 // }
-.btn-disabled
-{
+.btn-disabled {
   cursor: not-allowed !important;
-  opacity: .7;
+  opacity: 0.7;
 }
-input[type="number"]::-webkit-outer-spin-button,
-input[type="number"]::-webkit-inner-spin-button {
+input[type='number']::-webkit-outer-spin-button,
+input[type='number']::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-input[type="number"] {
+input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
+}
+.dialog-container {
+  padding: 10px 30px 30px;
+  text-align: center;
+  min-width: 500px;
+  min-height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  img {
+    width: 75px;
+  }
+  p {
+    margin: 0;
+    color: var(--stc-lighter-black-color);
+    font-weight: 500;
+    @extend .stcFont;
+    margin: 15px 0;
+    font-size: 19px;
+    text-transform: capitalize;
+  }
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    button {
+      border: 0;
+      background-color: #609d50;
+      border-radius: 5px;
+      width: 132px;
+      height: 48px;
+      color: #ffffff;
+      text-transform: capitalize;
+      @extend .stcFont;
+      font-weight: 500;
+    }
+  }
 }
