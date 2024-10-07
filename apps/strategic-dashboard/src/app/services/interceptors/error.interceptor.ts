@@ -33,24 +33,13 @@ export class ErrorInterceptor implements HttpInterceptor {
           }
         } else {
           console.log('toatser', err?.error?.errorDetailsMessage);
-          // if (err.error.message == 'RESOURCE_NOT_FOUND') {
-          //   console.log('if condition');
-
-          //   this.toastr.error('No data for this year or quarter');
-          // } else {
-          //   console.log('error happend');
-
-          //   this.toastr.error(
-          //     err?.error?.message
-          //       ? err?.error?.message
-          //       : 'Something went wrong!'
-          //   );
-          // }
           this.toastr.error(
             err?.error?.message
               ? err?.error?.message === 'RESOURCE_NOT_FOUND'
                 ? 'No data for this year or quarter'
                 : err?.error?.message
+              : err?.error?.errorDetailsMessage
+              ? err?.error?.errorDetailsMessage
               : 'Something went wrong!'
           );
         }
