@@ -157,8 +157,9 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
   addNewProjectForm() {
     this.projectsList.push(this.createProjectFormGroup());
   }
-  deleteForm(index: number) {
-    this.projectsList.removeAt(index);
+  deleteForm() {
+    this.projectsList.removeAt(this.deletedProj);
+    this.close();
   }
   goback() {
     this.location.back();
@@ -168,8 +169,10 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
       e.preventDefault();
     }
   }
-  showDeleteDialog()
+  deletedProj!:number;
+  showDeleteDialog(index:number)
   {
+    this.deletedProj = index;
     this.confirmationService.confirm({
       key: 'delete-project'
     });

@@ -29,25 +29,8 @@
               src="assets/images/close-circle2.svg"
               alt=""
               style = "cursor: pointer;"
-              (click)="showDeleteDialog()"
+              (click)="showDeleteDialog(index)"
             />
-            <stc-apps-confirm-dialog [key]="'delete-project'">
-              <div class="dialog-container2">
-                <img src="assets/images/close-circle.svg" alt="" />
-                <p class="delete-record-header">delete project?</p>
-                <p class="delete-record-content">
-                  Are you sure you want to <br />
-                  delete this project?
-                </p>
-                <!-- <p class="delete-record-warning">
-                  This action is permanent and cannot be undone!
-                </p> -->
-                <div class="buttons mt-4">
-                  <button class="delete" (click)="deleteForm(index)">yes. delete</button>
-                  <button (click)="close()" class="cancel">cancel</button>
-                </div>
-              </div>
-            </stc-apps-confirm-dialog>
           </div>
           <div class="form-group" style="margin-bottom: 30px">
             <label class="mt-0 pt-0">project name</label>
@@ -152,6 +135,23 @@
     </p>
     <div class="buttons">
       <button class="delete" (click)="goback()">go back</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-confirm-dialog [key]="'delete-project'">
+  <div class="dialog-container2">
+    <img src="assets/images/close-circle.svg" alt="" />
+    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-content">
+      Are you sure you want to <br />
+      delete this project?
+    </p>
+    <!-- <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p> -->
+    <div class="buttons mt-4">
+      <button class="delete" (click)="deleteForm()">yes. delete</button>
+      <button (click)="close()" class="cancel">cancel</button>
     </div>
   </div>
 </stc-apps-confirm-dialog>
