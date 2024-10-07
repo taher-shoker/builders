@@ -9,11 +9,12 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './data-upload.routes';
+import { FileUploadDialogComponent } from './components/file-upload-dialog/file-upload-dialog.component';
 const components = [DataUploadComponent, FileUploadComponent, LogsTableComponent];
 const modules = [CommonModule,FormsModule,MatTableModule,MatPaginatorModule,SharedModule, RouterModule.forChild(appRoutes)];
 
 @NgModule({
-  declarations: [components],
+  declarations: [components, FileUploadDialogComponent],
   imports: [modules],
 })
 export class DataUploadModule {}

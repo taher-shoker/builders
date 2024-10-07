@@ -1,7 +1,6 @@
+import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
-import { DataUploadService } from '../../services/data-upload.service';
-import { LogService } from '../../services/logs.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { FileUploadDialogComponent } from '../file-upload-dialog/file-upload-dialog.component';
 
 @Component({
   selector: 'stc-apps-file-upload',
@@ -11,6 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class FileUploadComponent {
   showList = false;
   items = [
+    { name: 'ALL', key: 'ALL' },
     { name: 'Strategic KPIs', key: 'Strategic KPIs' },
     { name: 'Strategic Program', key: 'Strategic Program' },
     {
@@ -19,37 +19,18 @@ export class FileUploadComponent {
     },
   ];
 
-  selectedKey = '';
+  constructor(private dialog: MatDialog) {}
 
-  constructor(
-    private dataUploadService: DataUploadService,
-    private logService: LogService
-  ) {}
+  openDialog(): void {
+    const dialogRef = this.dialog.open(FileUploadDialogComponent, {
+      width: '600px',
+      data: { items: this.items },
+    });
 
-  toggleList() {
-    this.showList = !this.showList;
-  }
-
-  onItemSelected(item: any, fileInput: HTMLInputElement) {
-    this.selectedKey = item.key;
-    fileInput.click();
-  }
-
-  onFileSelected(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files.length > 0) {
-      const file = input.files[0];
-      const dashboardName = this.selectedKey;
-
-      this.dataUploadService.uploadData(file, dashboardName).subscribe({
-        next: (result) => {
-          this.logService.addLog(result);
-        },
-        error: (httpError: HttpErrorResponse) => {
-          this.logService.logFailedSubject.next(true);
-        },
-      });
-      input.value = '';
-    }
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        console.log('Dialog result:', result);
+      }
+    });
   }
 }

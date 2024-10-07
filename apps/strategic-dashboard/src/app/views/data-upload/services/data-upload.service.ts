@@ -1,10 +1,6 @@
 import { Injectable } from '@angular/core';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-
 import { map, Observable } from 'rxjs';
-
 import { HttpClient } from '@angular/common/http';
-// eslint-disable-next-line @nx/enforce-module-boundaries
 import { environment } from 'apps/strategic-dashboard/src/environments/environment';
 import { logs } from '../models/logsModel';
 
@@ -19,11 +15,13 @@ export class DataUploadService {
     return this.http.get<logs[]>(this.baseURL);
   }
 
-  uploadData(file: File, dashboardName: string): Observable<logs> {
+  uploadData(file: File, dashboardName?: string): Observable<logs> {
     const formData = new FormData();
     formData.append('file', file);
 
-    const urlWithParams = `${this.baseURL}?dashboardName=${dashboardName}`;
+    const urlWithParams = dashboardName
+      ? `${this.baseURL}?dashboardName=${dashboardName}`
+      : this.baseURL;
 
     return this.http.post<logs>(urlWithParams, formData).pipe(
       map((response) => {

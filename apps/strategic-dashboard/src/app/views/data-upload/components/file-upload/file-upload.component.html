@@ -1,18 +1,8 @@
 <div class="data-upload">
   <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
   <div class="data-upload_filter">
-    <button class="btn dropdown upload-btn" (click)="toggleList()">
-      Upload a File @if (showList) {
-      <div class="dropdown_content">
-        <ul>
-          @for (item of items; track $index) {
-          <li class="dropdown_item" (click)="onItemSelected(item, fileInput)">
-            {{ item.name }}
-          </li>
-          }
-        </ul>
-      </div>
-      }
+    <button class="btn dropdown upload-btn" (click)="openDialog()">
+      Upload a File
     </button>
   </div>
 
@@ -20,11 +10,3 @@
     <stc-apps-logs-table></stc-apps-logs-table>
   </div>
 </div>
-
-<input
-  type="file"
-  #fileInput
-  (change)="onFileSelected($event)"
-  accept=".xlsx"
-  style="display: none; border: none; outline: none"
-/>

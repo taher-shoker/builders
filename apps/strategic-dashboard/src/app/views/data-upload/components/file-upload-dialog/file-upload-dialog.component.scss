@@ -1,0 +1,17 @@
+.dialog {
+    select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 4px;
+    }
+
+
+    &_actions {
+        display: flex;
+        gap: 20px;
+    }
+
+    &_error-message {
+        color: var(--stc-red-color);
+    }
+}
