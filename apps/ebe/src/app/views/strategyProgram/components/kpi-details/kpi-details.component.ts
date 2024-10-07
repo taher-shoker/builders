@@ -154,6 +154,9 @@ export class KpiDetailsComponentTsComponent implements OnInit {
           this.getStrategyProgramDetails(this.currentId);
           this.visible = false;
           this.toastr.success("The File is Saved Successfully");
+        },
+        error : () => {
+          this.visible = false;
         }
       })
     }
