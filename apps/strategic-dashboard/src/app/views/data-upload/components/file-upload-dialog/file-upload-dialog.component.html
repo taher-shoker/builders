@@ -4,7 +4,7 @@
 
     <div class="dropdown_content my-3">
       <select (change)="onItemSelected($event)">
-        <option *ngFor="let item of data.items">
+        <option *ngFor="let item of data.items" [value]="item.key">
           {{ item.name }}
         </option>
       </select>

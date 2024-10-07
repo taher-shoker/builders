@@ -12,7 +12,7 @@ import { LogService } from '../../services/logs.service';
 export class FileUploadDialogComponent {
   selectedItem: any = { name: 'ALL', key: 'ALL' };
   selectedFile: File[] = [];
-  errorMessage: string = '';
+  errorMessage = '';
 
   constructor(
     public dialogRef: MatDialogRef<FileUploadDialogComponent>,

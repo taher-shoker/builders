@@ -1,6 +1,7 @@
 import { MatDialog } from '@angular/material/dialog';
 import { Component } from '@angular/core';
 import { FileUploadDialogComponent } from '../file-upload-dialog/file-upload-dialog.component';
+import { DashboardNameEnum } from '../../enums/DashboardName.enum';
 
 @Component({
   selector: 'stc-apps-file-upload',
@@ -11,12 +12,10 @@ export class FileUploadComponent {
   showList = false;
   items = [
     { name: 'ALL', key: 'ALL' },
-    { name: 'Strategic KPIs', key: 'Strategic KPIs' },
-    { name: 'Strategic Program', key: 'Strategic Program' },
-    {
-      name: 'Strategic Program KPIs Details',
-      key: 'Strategic Program KPIs Details',
-    },
+    ...Object.keys(DashboardNameEnum).map((key) => ({
+      name: DashboardNameEnum[key as keyof typeof DashboardNameEnum],
+      key: DashboardNameEnum[key as keyof typeof DashboardNameEnum],
+    })),
   ];
 
   constructor(private dialog: MatDialog) {}
