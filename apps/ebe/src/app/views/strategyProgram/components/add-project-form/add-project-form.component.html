@@ -120,9 +120,20 @@
       >
         add and save
       </button>
-      <button class="cancel-btn" (click)="closeForm()" type="button">
+      <button class="cancel-btn" (click)="goback()" type="button">
         cancel
       </button>
     </div>
   </div>
 </section>
+<stc-apps-confirm-dialog [key]="'added-project-success'">
+  <div class="dialog-container">
+    <img src="assets/images/tick-circle.svg" alt="" />
+    <p class="delete-record-content">
+      the projects is updated successfully
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="goback()">go back</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
