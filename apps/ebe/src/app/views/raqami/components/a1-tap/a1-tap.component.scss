@@ -1,0 +1,12 @@
+@import '../../../../../styles/fonts';
+.a1-tap-section
+{
+    &-title
+    {
+        margin: 0;
+        color:var(--stc-purple-light-color);
+        text-transform: capitalize;
+        @extend .blackPoppins;
+        font-size: 20px;
+    }
+}

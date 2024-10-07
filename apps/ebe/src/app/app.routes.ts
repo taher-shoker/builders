@@ -40,13 +40,13 @@ export const appRoutes: Route[] = [
         (m) => m.AddProjectFormComponent
       ),
   },
-  // {
-  //   path : "raqami",
-  //   loadComponent: () =>
-  //     import('./views/raqami/raqami.component').then(
-  //       (m) => m.RaqamiComponent
-  //     ),
-  // },
+  {
+    path : "raqami",
+    loadComponent: () =>
+      import('./views/raqami/raqami.component').then(
+        (m) => m.RaqamiComponent
+      ),
+  },
   {
     path : "psr",
     loadComponent: () =>

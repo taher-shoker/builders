@@ -27,11 +27,11 @@ export class ScorecardService {
       name: 'CAD strategy program',
       url: '/strategy-program',
     },
-    // {
-    //   id: 3,
-    //   name: 'raqami',
-    //   url: '/raqami',
-    // },
+    {
+      id: 3,
+      name: 'raqami',
+      url: '/raqami',
+    },
     {
       id: 4,
       name: 'PSR',
