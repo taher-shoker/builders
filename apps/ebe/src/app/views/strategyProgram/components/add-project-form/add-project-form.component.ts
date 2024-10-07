@@ -168,4 +168,15 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
       e.preventDefault();
     }
   }
+  showDeleteDialog()
+  {
+    this.confirmationService.confirm({
+      key: 'delete-project'
+    });
+  }
+  visible!:boolean;
+  close()
+  {
+    this.confirmationService.close()
+  }
 }
