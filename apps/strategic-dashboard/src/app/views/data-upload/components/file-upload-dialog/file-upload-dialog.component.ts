@@ -55,6 +55,7 @@ export class FileUploadDialogComponent {
         error: (httpError: HttpErrorResponse) => {
           console.error('Upload Failed:', httpError);
           this.logService.logFailedSubject.next(true);
+          this.dialogRef.close();
         },
       });
   }
