@@ -1,9 +1,16 @@
 .dialog {
-    select {
-        width: 100%;
-        padding: 10px;
-        border-radius: 4px;
+    .dropdown_content {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid var(--greyBorderColor);
+            outline: none;
+        }
     }
+
 
 
     &_actions {
