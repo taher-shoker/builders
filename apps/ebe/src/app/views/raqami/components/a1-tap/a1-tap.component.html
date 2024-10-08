@@ -425,4 +425,14 @@
       </div>
     </div>
   </div>
+  <p class="a1-tap-section-title2 mb-4">main KPIs & targets (2024 - 2026)</p>
+  <div class="a1-tap-section-kpi-cards">
+    @for (kpi of raqamiKpiData(); track $index){
+        <div class="a1-tap-section-kpi-cards-card">
+            <stc-apps-raqami-kpi-card 
+                [raqamiKpiData]="kpi"
+            />
+        </div>
+      }
+  </div>
 </section>

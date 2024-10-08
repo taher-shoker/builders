@@ -8,6 +8,8 @@
   [class.planned]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'planned'"
   [class.actualStatus]="kpiType() === 'actualStatus'"
   [class.status]="kpiType() === 'status'"
+  [class.output]="kpiType() === 'output'"
+  [class.theme]="kpiType() === 'theme'"
 >
   @if(kpiType() === 'achieved'){
     Over Achieved
@@ -19,7 +21,10 @@
   @if(kpiType() === 'weight'){
     weight : {{kpiStatus()}}%
   }
-  @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved' || kpiType() === 'vendor' || kpiType() === 'owner-name' || kpiType() === 'status'){
+  @if(kpiType() === 'theme'){
+    strategic theme : {{kpiStatus()}}
+  }
+  @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved' || kpiType() === 'vendor' || kpiType() === 'owner-name' || kpiType() === 'status' || kpiType() === 'output'){
     {{kpiStatus()}}
     @if(kpiType() === 'vendor' && !kpiStatus())
     {

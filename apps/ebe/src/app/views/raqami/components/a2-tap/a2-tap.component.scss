@@ -1,0 +1,176 @@
+@import '../../../../../styles/fonts';
+.a2-section
+{
+    &-header
+    {
+        display: flex;
+        align-items: center;
+        gap:20px;
+        p
+        {
+            margin: 0;
+        }
+        &-title
+        {
+            margin: 0;
+            color:var(--stc-purple-light-color);
+            text-transform: capitalize;
+            @extend .blackPoppins;
+            font-size: 20px;
+        }
+        &-targets , &-actual
+        {
+            display: flex;
+            align-items: center;
+            gap:10px;
+            p
+            {
+                color:var(--stc-grey-color);
+                text-transform: capitalize;
+                @extend .stcFont;
+            }
+        }
+        .target
+        {
+            border-bottom: 2px dashed var(--stc-orange-color);
+            width: 50px;
+            height: 2px;
+            display: block;
+            position: relative;
+            display: inline-block;
+            &::after
+            {
+                content: "";
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: var(--stc-orange-color);
+                position: absolute;
+                top: -4px;
+                right: -8px;
+            }
+        }
+        .actual
+        {
+            border-bottom: 2px solid var(--stc-purple-color);
+            width: 50px;
+            height: 2px;
+            display: block;
+            position: relative;
+            display: inline-block;
+            &::after
+            {
+                content: "";
+                display: inline-block;
+                width: 10px;
+                height: 10px;
+                border-radius: 50%;
+                background-color: var(--stc-purple-color);
+                position: absolute;
+                top: -4px;
+                right: -8px;
+            }
+        }
+    }
+    &-body
+    {
+        margin-top: 20px;
+        &-title
+        {
+            @extend .stcFont;
+            color:var(--stc-purple-light-color);
+            text-transform: capitalize;
+            font-weight: 600;
+            font-size: 17px;
+            margin: 0;
+        }
+        &-cards
+        {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 20px;
+            &-owner , &-project
+            {
+                background-color: var(--stc-light-grey-color);
+                border-radius: 7px;
+                color:var(--stc-dark-grey-color);
+                text-transform: capitalize;
+                font-weight: 600;
+                @extend .boldPoppins;
+                padding:10px 15px;
+            }
+            &-project
+            {
+                background: var(--stc-purple-lighter-color);
+                color:var(--stc-purple-color);
+            }
+        }
+        &-content
+        {
+            display: grid;
+            grid-template-columns: 25% 75%;
+            &-data
+            {
+                margin-top: 15px;
+                .content
+                {
+                    box-shadow: 0px 4px 24px 0px #00000014;
+                    border-radius: 10px;
+                    padding:15px 10px;
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-around;
+                    margin-bottom: 15px;
+                    .weight-container
+                    {
+                        text-align: center;
+                    }
+                    p
+                    {
+                        margin: 0;
+                        @extend .stcFont;
+                        &.title
+                        {
+                            color:var(--stc-grey-dark-color);
+                            font-size: 16px;
+                            margin-bottom: 15px;
+                        }
+                        &.value
+                        {
+                            font-weight: bold;
+                            color:var(--stc-dark-blue-color);
+                            font-size: 17px;
+                        }
+                    }
+                    .data
+                    {
+                        display: flex;
+                        justify-content: space-around;
+                        .year , .val
+                        {
+                            color:var(--stc-dark-blue-color);
+                            font-weight: bold;
+                            font-size: 17px;
+                            @extend .stcFont;
+                        }
+                        .year
+                        {
+                            margin-bottom: 10px;
+                        }
+                    }
+                }
+            }
+            &-chart
+            {
+                margin-top: 15px;
+                margin-left: 15px;
+                box-shadow: 0px 4px 24px 0px #00000014;
+                padding: 15px;
+                border-radius: 10px;
+            }
+        }
+    }
+}

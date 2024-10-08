@@ -1,7 +1,7 @@
 @import '../../../../../styles/fonts';
 .a1-tap-section
 {
-    &-title
+    &-title , &-title2
     {
         margin: 0;
         color:var(--stc-purple-light-color);
@@ -23,8 +23,8 @@
             padding:20px;
             border-radius: 15px;
             position: relative;
-            max-width: 500px;
-            z-index: 9999;
+            max-width: 100%;
+            // z-index: 9999;
             background-color: #fff;
             &::before
             {
@@ -90,6 +90,18 @@
                     bottom: 20px;                
                 }
             }
+        }
+    }
+    &-kpi-cards
+    {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+        &-card
+        {
+            width:100%;
+            // background: gray;
         }
     }
 }
