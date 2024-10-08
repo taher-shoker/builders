@@ -27,6 +27,7 @@ export interface KPIDetails {
   baseline: number;
   celing: number;
   values: KpiValue[];
+  unit: string;
 }
 
 export interface KpiValue {

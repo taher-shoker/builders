@@ -47,13 +47,12 @@
 </ng-template>
 
 <ng-template #progressChart>
-  <stc-apps-progress-bar
-    [data]="progressBarData()"
-  ></stc-apps-progress-bar>
+  <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
 </ng-template>
 <ng-template #columnChart>
   <stc-apps-column-chart
     [colors]="lineChartColors"
     [chartData]="columnChartData()"
+    [unit]="unit()"
   ></stc-apps-column-chart>
 </ng-template>

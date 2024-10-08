@@ -37,6 +37,7 @@ export class KpiDetailsComponent implements OnInit {
       title: 'FY Target',
       chartType: 'column',
       chartData: [] as any[],
+      unit: '',
     },
     {
       title: 'Status of the KPI',
@@ -143,7 +144,7 @@ export class KpiDetailsComponent implements OnInit {
 
     this.kpiDefinition = details.definition || 'N/A';
     this.kpiFormula = details.formula || 'N/A';
-
+    this.cardItems[0].unit = details.unit || 'N/A';
     this.cardItems[0].chartData = this.mapChartData(details.values);
     this.cardItems[1].progress = [
       {
