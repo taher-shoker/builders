@@ -32,14 +32,12 @@ export class ErrorInterceptor implements HttpInterceptor {
             this.authService.logout();
           }
         } else {
-          console.log('toatser', err?.error?.errorDetailsMessage);
+          console.log('toatser', err?.error?.message);
           this.toastr.error(
-            err?.error?.message
-              ? err?.error?.message === 'RESOURCE_NOT_FOUND'
+            err?.error?.errorDetailsMessage
+              ? err?.error?.errorDetailsMessage == 'Resource not found'
                 ? 'No data for this year or quarter'
-                : err?.error?.message
-              : err?.error?.errorDetailsMessage
-              ? err?.error?.errorDetailsMessage
+                : err?.error?.errorDetailsMessage
               : 'Something went wrong!'
           );
         }
