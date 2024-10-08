@@ -1,8 +1,12 @@
-<div class="cardHolder">
+<div class="breadcrumbs-container">
   @if (strategicGroups && strategicGroups.length > 0) {
   <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+  }
+</div>
 
-  @for(kpi of strategicGroups;track kpi; let index = $index ){
+<div class="cardHolder">
+  @if (strategicGroups && strategicGroups.length > 0) { @for(kpi of
+  strategicGroups;track kpi; let index = $index ){
   <div class="kpis-card">
     <stc-apps-kpi-card-header
       class="kpis-card_header"
