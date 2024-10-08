@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { StrategicGroupDetailsService } from './services/strategic-group-details.service';
 import { SharedFormService } from '../../shared/services/shared-form.service';
@@ -6,16 +6,18 @@ import { FormGroup } from '@angular/forms';
 import { YearService } from '../../shared/services/year.service';
 import { StrategicGroupKPI } from './models/strategic-group-kpi.model';
 import { StrategicGroupDetails } from './models/strategic-group-details.model';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
 })
-export class DetailsComponent implements OnInit {
+export class DetailsComponent implements OnInit, OnDestroy {
   titleData = window.history.state.title;
   currentDate = new Date();
   year = this.currentDate.getFullYear();
+  selectedYear = 0;
   currentYear = this.currentDate.getFullYear() - 1;
   selectedYearRange: { start: number; end: number } = {
     start: 2000,
@@ -65,7 +67,7 @@ export class DetailsComponent implements OnInit {
       thresholds: { green: 100, orange: 0, red: 100 },
     },
   ];
-
+  yearChangeSubscription: Subscription | undefined;
   strategicGroupDetails: StrategicGroupDetails = [];
   strategicGroupKPI: StrategicGroupKPI[] = [];
   filteredDetails: StrategicGroupDetails = [];
@@ -76,28 +78,43 @@ export class DetailsComponent implements OnInit {
     private sharedFormService: SharedFormService,
     private strategicGroupDetailsService: StrategicGroupDetailsService
   ) {}
+  ngOnDestroy(): void {
+    this.yearChangeSubscription?.unsubscribe();
+  }
 
   ngOnInit(): void {
     this.activeRoute.paramMap.subscribe((paramMap) => {
       const strategicName = paramMap.get('strategicName');
       if (strategicName) {
         this.pageTitle = strategicName;
+        this.getSelectedYear();
         this.getAllStrategicGroupKpiDetails();
         this.getAllStrategicGroupKpis();
       }
     });
-    this.yearService.getYearChangeObservable().subscribe((year: number) => {
-      this.getAllStrategicGroupKpiDetails();
-    });
+    this.yearChangeSubscription = this.yearService
+      .getYearChangeObservable()
+      .subscribe((year: number) => {
+        this.getSelectedYear();
+        this.getAllStrategicGroupKpiDetails();
+      });
+    // this.yearService.getQuarterChangeObservable().subscribe((quarter: string) => {
+    //   this.getAllStrategicGroupKpiDetails();
+    // });
   }
-
+  getSelectedYear() {
+    if (this.yearService.getSelectedYear()) {
+      this.selectedYear = +this.yearService.getSelectedYear()!;
+    } else {
+      this.selectedYear =
+        this.sharedFormService.getForm().controls['year'].value;
+    }
+  }
   getAllStrategicGroupKpiDetails() {
     const strategicName =
       this.activeRoute.snapshot.paramMap.get('strategicName');
-    const year = this.sharedFormService
-      .getForm()
-      .controls['year'].value.split('-')[0];
-    console.log('details', year);
+    const year = this.selectedYear;
+    console.log('details', this.selectedYear);
 
     if (strategicName) {
       this.strategicGroupDetailsService
@@ -112,9 +129,7 @@ export class DetailsComponent implements OnInit {
   getAllStrategicGroupKpis() {
     const strategicName =
       this.activeRoute.snapshot.paramMap.get('strategicName');
-    const year = this.sharedFormService
-      .getForm()
-      .controls['year'].value.split('-')[0];
+    const year = this.selectedYear;
     if (strategicName) {
       this.strategicGroupDetailsService
         .getAllStrategicGroupKpis({ strategicName, year })

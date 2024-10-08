@@ -1,4 +1,10 @@
-import { Component, input, InputSignal, OnInit } from '@angular/core';
+import {
+  Component,
+  input,
+  InputSignal,
+  OnDestroy,
+  OnInit,
+} from '@angular/core';
 import { ProgramKPIService } from '../../services/program-kpi.service';
 import { ActivatedRoute } from '@angular/router';
 import { ProgramKPIDetails } from '../../models/program-kpi-details.model';
@@ -12,13 +18,14 @@ import { KpiValue } from '../../models/kpi-details.model';
 import { SharedFormService } from 'apps/strategic-dashboard/src/app/shared/services/shared-form.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { YearService } from 'apps/strategic-dashboard/src/app/shared/services/year.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-program-details',
   templateUrl: './program-details.component.html',
   styleUrls: ['./program-details.component.scss'],
 })
-export class ProgramDetailsComponent implements OnInit {
+export class ProgramDetailsComponent implements OnInit, OnDestroy {
   title: InputSignal<string> = input('Business efficiency program');
   programData = window.history.state.program;
   programName = '';
@@ -32,12 +39,19 @@ export class ProgramDetailsComponent implements OnInit {
     start: 2000,
     end: 2024,
   };
+  yearChangeSubscription: Subscription | undefined;
+  quarterChangeSubscription: Subscription | undefined;
   constructor(
     private route: ActivatedRoute,
     private programKPIService: ProgramKPIService,
     private sharedForm: SharedFormService,
     private yearService: YearService
   ) {}
+  ngOnDestroy(): void {
+    this.yearChangeSubscription?.unsubscribe();
+
+    this.quarterChangeSubscription?.unsubscribe();
+  }
   ngOnInit(): void {
     this.route.paramMap.subscribe((params) => {
       this.programName = params.get('programName') || '';
@@ -49,10 +63,18 @@ export class ProgramDetailsComponent implements OnInit {
         this.getProgramDetails();
       }
     });
-    this.yearService.getYearChangeObservable().subscribe((year: number) => {
-      console.log('inside observable');
-      this.getProgramDetails();
-    });
+    this.yearChangeSubscription = this.yearService
+      .getYearChangeObservable()
+      .subscribe((year: number) => {
+        console.log('inside observable');
+        this.getProgramDetails();
+      });
+    this.quarterChangeSubscription = this.yearService
+      .getQuarterChangeObservable()
+      .subscribe((quarter: string) => {
+        console.log('inside observable');
+        this.getProgramDetails();
+      });
   }
   yearsArray: any[] = [
     { name: this.currentYear },
@@ -144,10 +166,11 @@ export class ProgramDetailsComponent implements OnInit {
       selectedYear = +this.yearService.getSelectedYear()!;
       selectedQuarter = this.yearService.getSelectedQuarter()!;
     } else {
-      const yearQuarter: string =
-        this.sharedForm.getForm().controls['year'].value;
-      selectedYear = +yearQuarter.split('-')[0];
-      selectedQuarter = yearQuarter.split('-')[1];
+      const year: string = this.sharedForm.getForm().controls['year'].value;
+      const quarter: string =
+        this.sharedForm.getForm().controls['quarter'].value;
+      selectedYear = +year;
+      selectedQuarter = quarter;
     }
 
     const params = {

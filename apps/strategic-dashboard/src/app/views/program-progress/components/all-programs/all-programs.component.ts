@@ -29,7 +29,7 @@ export class AllProgramsComponent implements OnInit, OnDestroy {
   programsProgress: ProgramProgress[] = [];
   filteredItems: ProgramProgress[] = [];
   yearChangeSubscription: Subscription | undefined;
-
+  quarterChangeSubscription: Subscription | undefined;
   constructor(
     private router: Router,
     private programKPIService: ProgramKPIService,
@@ -37,22 +37,27 @@ export class AllProgramsComponent implements OnInit, OnDestroy {
     private yearService: YearService
   ) {}
   ngOnDestroy(): void {
-    if (this.yearChangeSubscription) {
-      this.yearChangeSubscription.unsubscribe();
-    }
+    this.yearChangeSubscription?.unsubscribe();
+
+    this.quarterChangeSubscription?.unsubscribe();
   }
   ngOnInit(): void {
     const savedYear = this.yearService.getSelectedYear();
     const savedQuarter = this.yearService.getSelectedQuarter();
 
     if (savedYear && savedQuarter) {
-      const year = `${savedYear}-${savedQuarter}`;
+      const year = `${savedYear}`;
       this.sharedForm.getForm().patchValue({ year });
       this.getAllStrategicPrograms();
     }
     this.yearChangeSubscription = this.yearService
       .getYearChangeObservable()
       .subscribe((year: number) => {
+        this.getAllStrategicPrograms();
+      });
+    this.quarterChangeSubscription = this.yearService
+      .getQuarterChangeObservable()
+      .subscribe((quarter: string) => {
         this.getAllStrategicPrograms();
       });
   }
@@ -74,11 +79,11 @@ export class AllProgramsComponent implements OnInit, OnDestroy {
   }
 
   getAllStrategicPrograms() {
-    const yearQuarter: string =
-      this.sharedForm.getForm().controls['year'].value;
+    const year: string = this.sharedForm.getForm().controls['year'].value;
+    const quarter: string = this.sharedForm.getForm().controls['quarter'].value;
     const params = {
-      quarter: yearQuarter.split('-')[1],
-      year: yearQuarter.split('-')[0],
+      quarter: quarter,
+      year: year,
     };
     this.programKPIService
       .getAllStrategicPrograms(params)
@@ -128,7 +133,7 @@ export class AllProgramsComponent implements OnInit, OnDestroy {
     actualValue: number,
     greenThreshold: number,
     redThreshold: number,
-    isBackground: boolean = false
+    isBackground = false
   ): string {
     if (actualValue >= greenThreshold) {
       return isBackground ? '#00C48C1A' : '#00C48C'; // Green

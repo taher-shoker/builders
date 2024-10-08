@@ -17,29 +17,38 @@ export class YearService {
     private sharedFormService: SharedFormService
   ) {}
 
-  setYearQuarter(yearQuarter: string): void {
-    const year = yearQuarter.split('-')[0];
-    const quarter = yearQuarter.split('-')[1];
+  // setYearQuarter(yearQuarter: string): void {
+  //   console.log('yearQuarter', yearQuarter);
+  //   const year = yearQuarter;
+  //   const quarter = yearQuarter;
+  //   this.cookieService.set(this.yearKey, year, { expires: 7, path: '/' });
+  //   this.cookieService.set(this.quarterKey, quarter, { expires: 7, path: '/' });
+  //   this.yearChangeSubject.next(+year);
+  //   this.quarterChangeSubject.next(quarter);
+  // }
+  setYear(year: string): void {
     this.cookieService.set(this.yearKey, year, { expires: 7, path: '/' });
-    this.cookieService.set(this.quarterKey, quarter, { expires: 7, path: '/' });
     this.yearChangeSubject.next(+year);
+  }
+  setQuarter(quarter:string):void{
+    this.cookieService.set(this.quarterKey, quarter, { expires: 7, path: '/' });
     this.quarterChangeSubject.next(quarter);
   }
-
+ 
   getSelectedYear(): string | null {
     console.log(
-      this.sharedFormService.getForm().controls['year'].value.split('-')[0]
+      this.sharedFormService.getForm().controls['year'].value
     );
 
     return (
       this.cookieService.get(this.yearKey) ||
-      this.sharedFormService.getForm().controls['year'].value.split('-')[0]
+      this.sharedFormService.getForm().controls['year'].value
     );
   }
   getSelectedQuarter(): string | null {
     return (
       this.cookieService.get(this.quarterKey) ||
-      this.sharedFormService.getForm().controls['year'].value.split('-')[1]
+      this.sharedFormService.getForm().controls['quarter'].value
     );
   }
   clearYear(): void {

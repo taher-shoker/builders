@@ -33,7 +33,7 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
     const savedQuarter = this.yearService.getSelectedQuarter();
 
     // // if (savedYear) {
-    const year = `${savedYear}-${savedQuarter}`;
+    const year = `${savedYear}`;
     this.sharedFormService.getForm().patchValue({ year });
     this.getAllStrategicGroups();
     // }
@@ -48,10 +48,10 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
     const year: string =
       this.sharedFormService.getForm().controls['year'].value;
 
-    // console.log(year.split('-')[0], 'year');
+     console.log(year, 'year');
 
     const params = {
-      year: year.split('-')[0],
+      year: year,
     };
     this.strategicGroupsService.getAllStrategicGroups(params).subscribe(
       (result: StrategicGroup[]) => {
