@@ -276,3 +276,65 @@ input[type='number'] {
     }
   }
 }
+.dialog-container2
+{
+  padding: 30px;
+  text-align: center;
+  min-width:500px;
+  min-height:300px;
+  p
+  {
+    margin: 0;
+    &.delete-record-header
+    {
+      color:var(--stc-lighter-black-color);
+      font-weight: 600;
+      text-transform: capitalize;
+      margin:15px 0;
+      font-size: 19px;
+    }
+    &.delete-record-content
+    {
+      @extend .stcFont;
+      color:var(--stc-lighter-grey-color2);
+      font-size: 17px;
+    }
+    &.delete-record-warning
+    {
+      color:var( --stc-red-color);
+      margin:15px 0;
+      font-size: 16px;
+    }
+  }
+  .buttons
+  {
+    display: flex;
+    justify-content: center;
+    gap:25px;
+    button
+    {
+      border:0;
+      background-color:var(--stc-lighter-grey-color3);
+      border-radius: 5px;
+      width:132px;
+      height:48px;
+      color:var(--stc-dark-grey-color2);
+      text-transform: capitalize;
+      @extend .stcFont;
+      font-weight: 500;
+      &.delete
+      {
+        background-color: var(--stc-red-color2);
+        color:var(--stc-white-color);
+      }
+    }
+  }
+}
+.project-name-length
+{
+  display: inline-block;
+  position: absolute;
+  bottom: -24px;
+  right: 5px;
+  font-weight: 500;
+}

@@ -28,8 +28,8 @@
               class="close-form"
               src="assets/images/close-circle2.svg"
               alt=""
-              (click)="deleteForm(index)"
               style = "cursor: pointer;"
+              (click)="showDeleteDialog(index)"
             />
           </div>
           <div class="form-group" style="margin-bottom: 30px">
@@ -47,6 +47,7 @@
               >this field has maxLength 50 characters</small
             >
             }
+            <small class = "project-name-length">{{project.get("project")?.value ? project.get("project")?.value.trim().length : 0}}/50</small>
           </div>
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -133,7 +134,24 @@
       the projects is updated successfully
     </p>
     <div class="buttons">
-      <button class="delete" (click)="goback()">go back</button>
+      <button class="delete" (click)="goback()">ok</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-confirm-dialog [key]="'delete-project'">
+  <div class="dialog-container2">
+    <img src="assets/images/close-circle.svg" alt="" />
+    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-content">
+      Are you sure you want to <br />
+      delete this project?
+    </p>
+    <!-- <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p> -->
+    <div class="buttons mt-4">
+      <button class="delete" (click)="deleteForm()">yes. delete</button>
+      <button (click)="close()" class="cancel">cancel</button>
     </div>
   </div>
 </stc-apps-confirm-dialog>
