@@ -1,0 +1,170 @@
+@import '../../../../../apps/ebe/src/styles/fonts.scss';
+.financial-scorecard-costs
+{
+  &-card
+  {
+    background-color: var(--stc-grey-light-color);
+    padding: 20px;
+    border-radius: 20px;
+    &-header
+    {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      &-details
+      {
+        margin: 0;
+        text-decoration: underline;
+        color:var(--stc-purple-color);
+        @extend .stcFont;
+        font-size: 14px;
+        cursor: pointer;
+      }
+    }
+    &-title
+    {
+      text-transform: capitalize;
+      @extend .boldPoppins;
+      color:var(--stc-purple-light-color);
+      font-size: 18px;
+      margin: 0;
+      height: 54px;
+      a
+      {
+        font-size: 16px;
+        font-weight: bold;
+        cursor: pointer;
+        color:var(--stc-purple-light-color);
+        text-decoration: none;
+      }
+    }
+    &-statuses
+    {
+      display: flex;
+      align-items: center;
+      gap:25px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+    &-cards
+    {
+      margin-top: 25px;
+      &-weight
+      {
+        background-color: var(--stc-white-color);
+        padding:10px 0;
+        border-radius: 10px;
+        @extend .stcFont;
+        .weight-card
+        {
+          display: grid;
+          grid-template-columns:40% 20% 40%;
+          margin-bottom: 10px;
+          text-align: center;
+          .weight2 , span
+          {
+            color:var(--stc-grey-dark-color);
+            font-weight: 400;
+            font-size: 17px;
+            text-transform: capitalize;
+          }
+          .weight-val
+          {
+            color:var(--stc-black-color);
+            font-weight: 600;
+            font-size: 15px;
+          }
+          &:last-child
+          {
+            margin-bottom: 0;
+          }
+          p
+          {
+            margin: 0;
+          }
+        }
+      }
+      &-ceiling
+      {
+        text-align: center;
+        background-color: var(--stc-white-color);
+        padding:10px 0;
+        border-radius: 10px;
+        margin-top: 20px;
+        p
+        {
+          margin: 0;
+          color:var(--stc-grey-dark-color);
+          font-weight: 400;
+          font-size: 17px;
+          text-transform: capitalize;
+          margin-bottom: 10px;
+        }
+        span
+        {
+          color:var(--stc-black-color);
+            font-weight: 600;
+            font-size: 17px;
+        }
+      }
+    }
+  }
+}
+// .arrow {
+//   opacity: 0;
+//   // width: 0;
+//   // height: 0;
+//   // border-left: 20px solid transparent;
+//   // border-right: 20px solid transparent;
+//   // border-top: 20px solid #000; /* Adjust color and size as needed */
+//   animation: slideFromBottom 1s ease infinite; /* CSS animation to slide from bottom */
+// }
+
+// @keyframes slideFromBottom {
+//   0% {
+//     opacity: 0;
+//     transform: translate(-50%, 100%);
+//   }
+//   100% {
+//     opacity: 1;
+//     transform: translate(-50%, 0);
+//   }
+// }
+.popover-section
+{
+  color:#222222;
+  @extend .stcFont;
+  font-size: 16px;
+  max-width:500px;
+  word-spacing:3px;
+}
+.kpi-details , .no-kpi-details
+{
+  @extend .stcFont;
+  color:#222222;
+  text-transform: capitalize;
+  font-weight: 500;
+  font-size: 16px;
+  margin: 0;
+  margin-top: 20px;
+  // word-spacing:5px;
+  text-align: left;
+  a
+  {
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    color:#222222;
+    text-decoration: none;
+  }
+}
+.no-kpi-details , .short-text
+{
+  height: 50px;
+  display: flex;
+  align-items: center;
+}
+// .no-kpi-details
+// {
+  
+// }

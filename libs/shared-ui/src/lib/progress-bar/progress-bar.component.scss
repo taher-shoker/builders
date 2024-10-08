@@ -2,7 +2,6 @@
   display: flex;
   width: 100%; /* Ensure the holder takes the full width of its container */
 }
-
 .bar-prefix,
 .bar-suffix {
   flex: 1; /* 1 part of the 6 parts */
@@ -69,4 +68,77 @@
 .index-info {
   position: relative;
   word-break: keep-all;
+}
+.isProject
+{
+  align-items: center;
+  height:100%;
+  .index-info
+  {
+    height:35px;
+    bottom:-32px;
+  }
+}
+.actual-caption
+{
+  top:0px;
+  color:#292D32;
+  font-weight: 600;
+}
+.actual-value
+{
+  top:0px;
+  color:#009F71;
+  font-weight: 700;
+  font-size: 22px;
+}
+.planned-caption
+{
+  color:#292D32;
+  font-weight: 600;
+}
+.planned-value
+{
+  // color:#009F71;
+  color:#292D32;
+  font-weight: 700;
+  font-size: 22px;
+}
+.planned-bar
+{
+  position: relative;
+  top: -24px;
+}
+.actual-bar
+{
+  position: relative;
+  top: -9px;
+}
+.actual-bar-line
+{
+  // background-color: #009F71 !important;
+  border-radius:5px;
+  height: 35px !important;
+  bottom:-31.5px !important;
+  width: 0;
+  padding:0 1.5px;
+  max-width: 5px;
+}
+.planned-bar-line
+{
+  border-radius:5px;
+  height: 35.5px !important;
+  margin-top: 1px !important;
+  width: 0;
+  padding:0 1.5px;
+  max-width: 5px;
+}
+.isPSRProject
+{
+  cursor: pointer;
+}
+.project-actual-bar-line
+{
+  height:35.5px !important;
+  top:67px !important;
 }

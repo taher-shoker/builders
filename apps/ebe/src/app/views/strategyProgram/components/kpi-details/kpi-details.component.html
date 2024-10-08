@@ -1,0 +1,134 @@
+<section class="strategy-program-section">
+  <div class="strategy-program-section-header">
+    <div>
+      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'"/>
+    </div>
+  </div>
+  <div class="strategy-program-section-details">
+    @if(currentMode === 'editMode') {
+      <stc-apps-edit-mode-view 
+        (import)="showDialog()"
+        (export)="downloadTemplate()"
+      />
+    }
+    <p class="strategy-program-section-details-title">
+      strategic objective KPIs mapping and assessment
+    </p>
+    <p-accordion (activeIndexChange)="getIndex($event)">
+      @if(!isEmpty)
+      {
+        @for (kpi of StrategyProgramData; track kpi.objective;let index = $index) {
+          <p-accordionTab (selectedChange)="getCurrentIndex($event)">
+            <ng-template pTemplate="header">
+              <div class="accordion-header-details">
+                  <div class="accordion-title">
+                    <span class="number-text">{{kpi.objective}}</span>
+                    <p>Key result</p>
+                  </div>
+                  <p class = "accordion-desc">
+                    {{kpi.description}}
+                  </p>
+                  <div class="accordion-statuses">
+                    @if(kpi.weight || kpi.weight === 0)
+                    {
+                      <stc-apps-kpi-status-card
+                        [kpiStatus]="kpi.weight"
+                        [kpiType]="'weight'"
+                      />
+                    }
+                    @if(kpi.status)
+                    {
+                      <stc-apps-kpi-status-card
+                        [kpiStatus]="kpi.status"
+                        [kpiType]="'in-progress'"
+                      />
+                    }
+                    @if(kpi.actualStatus || kpi.actualStatus === 0)
+                    {
+                      <stc-apps-kpi-status-card
+                        [kpiStatus]="kpi.actualStatus"
+                        [kpiType]="'actualStatus'"
+                      />
+                    }
+                  </div>
+              </div>
+            </ng-template>
+            @if(isTapOpened && currentTabIndex === index)
+            {
+              <div class="header">
+                <p class="accordion-container-title mb-0">projects/initiatives</p>
+                <!-- <p-button label="Add Project" icon="pi pi-plus" iconPos="left" /> -->
+                <button (click)="showForm(kpi)">
+                  <!-- <i class = "pi pi-plus"></i> -->
+                  manage projects
+                </button>
+              </div>
+              <div class="accordion-container">
+                @if(kpi.projects.length !== 0)
+                {
+                  <div class="row">
+                    @for (project of kpi.projects; track project.project) {
+                      <div class="col-lg-4 col-md-6 col-sm-12">
+                        <stc-apps-project-card
+                          [projectData]="project"
+                          />
+                          <!-- (delete)="deleteProject($event , kpi.projects , kpi)" -->
+                          <!-- (edit)="editProject($event , kpi , project)" -->
+                      </div>
+                    }
+                  </div>
+                } @else {
+                  <div class="no-projects-content mt-3">
+                    <img src="assets/images/no-projects.svg" alt="">
+                    <p>no projects</p>
+                  </div>
+                }
+              </div>
+            }
+          </p-accordionTab>
+        }
+      } @else {
+        <h4 class = "empty-msg mt-4">There are no data</h4>
+      }
+    </p-accordion>
+  </div>
+</section>
+<!-- <p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '35rem' }"
+  [draggable]="false"
+  [dismissableMask]="true"
+  >
+  <ng-template pTemplate="header">
+    <div class="modal-header">
+      add project
+    </div>
+  </ng-template>
+  @if(visible)
+  {
+    <stc-apps-add-project-form [modalVisible]="visible" (closeModal)="visible = false" />
+  }
+</p-dialog> -->
+<stc-apps-confirm-dialog [key]="'delete-project'">
+  <div class="dialog-container">
+    <img src="assets/images/close-circle.svg" alt="" />
+    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-content">
+      Are you sure you want to <br />
+      delete this project?
+    </p>
+    <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="deleteProjectItem()">yes. delete</button>
+      <button (click)="close()" class="cancel">cancel</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-dialog-modal 
+  [visible]="visible"
+  (ImportedFile)="ImportFile($event)"
+  (onhide)="visible = false"
+/>

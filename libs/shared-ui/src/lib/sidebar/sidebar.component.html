@@ -1,0 +1,53 @@
+<section
+  class="sidebar-section"
+  [class.no-username]="!usernameImage && !userName"
+>
+  <div class="sidebar-section-main-image">
+    <img [src]="logoSrc()" alt="" />
+  </div>
+  <div class="sidebar-section-links">
+    <ul>
+      @for (link of sidebarLinks(); track link.id) {
+      <li>
+        <a
+          routerLinkActive="activeLink"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [routerLink]="link.url"
+          >{{ link.name }}</a
+        >
+      </li>
+      }
+    </ul>
+  </div>
+  @if (usernameImage() && userName()) {
+  <div class="sidebar-section-username">
+    <div class="username-info">
+      <div class="sidebar-section-username-image">
+        <img [src]="usernameImage()" alt="" />
+      </div>
+      <div class="sidebar-section-username-name">
+        <span>{{ userName() ? userName() : "" }}</span>
+      </div>
+    </div>
+    @if(userRoles() && userRoles().roles[0].roleName !== 'BE_VIEWERS'){
+      <div class="edit-mode-switch-btn">
+        <span>Edit Mode : </span>
+        <div class="form-check form-switch">
+          <input
+            class="form-check-input"
+            type="checkbox"
+            role="switch"
+            id="flexSwitchCheckDefault"
+            [(ngModel)]="editModeChecked"
+            (change)="switchEditMode()"
+          />
+        </div>
+      </div>
+    }
+    <div class="logout-btn" (click)="logout()">
+      <i class = "pi pi-sign-out"></i>
+      logout
+    </div>
+  </div>
+  }
+</section>

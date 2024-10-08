@@ -1,0 +1,21 @@
+<circle-progress
+  [radius]='radius()'
+  [percent]="percentVal()"
+  [space]='-innerStrokeRadius()'
+  [outerStrokeWidth]='outerStrokeRadius()'
+  [innerStrokeWidth]='innerStrokeRadius()'
+  [innerStrokeColor]="innerCircleColor()"
+  [outerStrokeColor]="outerCircleColor()"
+  [outerStrokeGradient]="false"
+  [title]="percentVal() + '%'"
+  [animateTitle]='false'
+  [animationDuration]='1000'
+  [showUnits]='false'
+  [showBackground]='false'
+  [clockwise]='true'
+  [startFromZero]='false'
+  [showSubtitle]="false"
+  [titleFontSize]="titleFontSize().toString()"
+  [titleFontWeight]="'700'"
+  [titleColor]="titleColor()"
+></circle-progress>

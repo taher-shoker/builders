@@ -1,0 +1,30 @@
+.main-layout
+{
+  color: var(--stc-white-color);
+  &-content
+  {
+    height: 100vh;
+    display: grid;
+    grid-template-columns:20% 80%;
+    @media all and (min-width:1600px) and (max-width:3000px)
+    {
+      grid-template-columns:15% 85%;
+    }
+    @media all and (min-width:3001px)
+    {
+      grid-template-columns:12% 88%;
+    }
+    &-sidebar
+    {
+      background-color: var(--stc-purple-color);
+    }
+    &-page
+    {
+      background-color: var(--stc-purple-dark-color);
+      background-image: url(../../assets/images/main-background.svg);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  }
+}
