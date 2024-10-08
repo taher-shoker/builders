@@ -1,0 +1,102 @@
+@import '../../../../../styles/fonts';
+.scored-card-section {
+  padding: 20px 30px;
+  &-welcome-text {
+    text-transform: capitalize;
+    font-size: 19px;
+    @extend .stcFont;
+    span {
+      @extend .mediunPoppins;
+      font-size: 22px;
+    }
+    img {
+      display: inline-block;
+      margin-left: 10px;
+      position: relative;
+      top: -3px;
+    }
+  }
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .hands-img {
+      position: relative;
+      top: 15px;
+    }
+  }
+  &-title {
+    font-size: 24px;
+    text-transform: capitalize;
+    font-weight: normal;
+    @extend .stcFont;
+    font-size: 22px;
+    span {
+      font-size: 27px;
+      @extend .blackPoppins;
+    }
+  }
+
+  &-tap-details {
+    background-color: var(--stc-white-color);
+    border-radius: 20px;
+    padding: 20px;
+    // z-index: 9999999;
+    position: relative;
+    // margin-top:30px;
+    color: #000;
+    // margin-top: 35px;
+    // z-index: 111111;
+  }
+}
+.images {
+  position: absolute;
+  top: -177px;
+  right: 5px;
+}
+.psr-tabview-header {
+  color: var(--stc-purple-light-color);
+  @extend .blackPoppins;
+  text-transform: capitalize;
+  font-size: 22px;
+  margin: 0;
+}
+.project-cards-container
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+  @media all and (min-width:1700px) and (max-width:3000px)
+  {
+    // grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  }
+  @media all and (max-width:1250px)
+  {
+    grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+  }
+  @media all and (min-width:3001px) and (max-width:4600px)
+  {
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+  }
+  @media all and (min-width:4601px)
+  {
+    grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
+  }
+  .project-card
+  {
+    width:100%;
+  }
+}
+.empty-data-msg
+{
+  color: var(--stc-purple-light-color);
+  text-align: center;
+  text-transform: capitalize;
+  margin: 0;
+  font-size: 20px;
+  @extend .stcFont;
+  font-style: italic;
+  font-weight: 600;
+}

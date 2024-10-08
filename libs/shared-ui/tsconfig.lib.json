@@ -5,7 +5,9 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSources": true,
-    "types": []
+    "types": [],
+    "allowSyntheticDefaultImports":true,
+    "composite": true
   },
   "exclude": [
     "src/**/*.spec.ts",
@@ -13,5 +15,5 @@
     "jest.config.ts",
     "src/**/*.test.ts"
   ],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts" , "../lng-selector/src/**/*.ts" , "../mode-toggle/src/**/*.ts"]
 }

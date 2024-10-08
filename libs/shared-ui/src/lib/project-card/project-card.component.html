@@ -1,0 +1,38 @@
+<div class="project-card mt-4">
+  <div class="project-card-header">
+    <p class = "project-card-header-title">
+      {{projectData().project | truncateWord:3}}
+      @if(titleArr.length > 3){
+        <span class = "read-more" (click)="displayDrilldown()">read more</span>
+      }
+    </p>
+    <!-- <button class = "show-menu-btn" [matMenuTriggerFor]="menu">
+      <i class="pi pi-ellipsis-v"></i>
+    </button>
+    <mat-menu #menu="matMenu" class = "edit-delete-project">
+      <button mat-menu-item (click)="editProject()">
+        <img src="assets/images/edit-project.svg" alt="">
+        <span class = "edit-btn">edit</span>
+      </button>
+      <button mat-menu-item (click)="deleteProject()">
+        <img src="assets/images/delete-project.svg" alt="">
+        <span class = "delete-btn">delete</span>
+      </button>
+    </mat-menu> -->
+  </div>
+  <div>
+    <div class="project-card-bar" style = "padding: 0 10px;">
+      <stc-apps-progress-bar
+        [data]="data"
+        [isProject]="true"
+        [fontFamily]="'STCForwardFont'"
+      />
+    </div>
+  </div>
+</div>
+@if(titleArr.length > 3)
+{
+  <p-overlayPanel #overlayPanel dismissable="true">
+    <section class="popover-section">{{projectData().project}}</section>
+  </p-overlayPanel>
+}

@@ -1,0 +1,157 @@
+<section class="strategy-project-form">
+  <div class="strategy-project-form-header">
+    <div>
+      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'" />
+    </div>
+  </div>
+  <div class="strategy-project-form-card">
+    <div class="strategy-project-form-card-header">
+      <div class="strategy-project-form-card-header-title">
+        <img src="assets/images/close-project-circle.svg" alt="" />
+        <span>manage project</span>
+      </div>
+      <img
+        class="close-form"
+        src="assets/images/close-circle2.svg"
+        alt=""
+        (click)="goback()"
+      />
+    </div>
+    <p class="strategy-project-form-card-main-title">projects/initiatives</p>
+    <form [formGroup]="addProjectForm">
+      <div formArrayName="projects">
+        @for (project of projectsList.controls; track project;let index =
+        $index) {
+        <div class="form-wrapper" [formGroupName]="index">
+          <div class = "text-end">
+            <img
+              class="close-form"
+              src="assets/images/close-circle2.svg"
+              alt=""
+              style = "cursor: pointer;"
+              (click)="showDeleteDialog(index)"
+            />
+          </div>
+          <div class="form-group" style="margin-bottom: 30px">
+            <label class="mt-0 pt-0">project name</label>
+            <input
+              type="text"
+              placeholder="Add project name"
+              formControlName="project"
+            />
+            @if((project.get("project")?.value?.trim() === '') ||
+            project.get("project")?.value === '') {
+            <small class="error-msg">this field is required</small>
+            } @if(project.get("project")?.hasError("maxlength")) {
+            <small class="error-msg"
+              >this field has maxLength 50 characters</small
+            >
+            }
+            <small class = "project-name-length">{{project.get("project")?.value ? project.get("project")?.value.trim().length : 0}}/50</small>
+          </div>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>actual</label>
+                <input
+                  type="number"
+                  placeholder="Add actual value"
+                  formControlName="actual"
+                  (keypress)="keyPress($event)"
+                />
+                <!-- @if((project.get("actualValue")?.hasError("required") || project.get("actualValue")?.hasError("noSpaces")) && project.dirty)  -->
+                @if(project.get("actual")?.value === null && project.get("actual")?.dirty) {
+                <small class="error-msg error-msg2"
+                  >this field is required</small
+                >
+                } @else if(project.get("actual")?.hasError("isNumber")) {
+                <small class="error-msg error-msg2"
+                  >you must enter numbers only</small
+                >
+                } @else if(project.get("actual")?.hasError("rangeError")) {
+                <small class="error-msg error-msg2"
+                  >number range must be between 0 and 100</small
+                >
+                }
+              </div>
+            </div>
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="form-group">
+                <label>planned</label>
+                <input
+                  type="number"
+                  placeholder="Add planned value"
+                  formControlName="planned"
+                  (keypress)="keyPress($event)"
+                />
+                @if(project.get("planned")?.value === null && project.get("planned")?.dirty) {
+                <small class="error-msg error-msg2"
+                  >this field is required</small
+                >
+                } @else if(project.get("planned")?.hasError("isNumber")) {
+                <small class="error-msg error-msg2"
+                  >you must enter numbers only</small
+                >
+                } @else if(project.get("planned")?.hasError("rangeError"))
+                {
+                <small class="error-msg error-msg2"
+                  >number range must be between 0 and 100</small
+                >
+                }
+              </div>
+            </div>
+          </div>
+          <!-- <div class="delete-btn">
+            <button (click)="deleteForm(index)">remove</button>
+          </div> -->
+        </div>
+        }
+      </div>
+    </form>
+    <button class="add-project-btn" (click)="addNewProjectForm()" type="button">
+      <img src="assets/images/add-square2.svg" alt="" />
+      <span>add new project</span>
+    </button>
+    <div class="save-cancel-btns">
+      <button
+        class="save-btn"
+        (click)="save()"
+        [disabled]="projectsList.invalid"
+        [class.btn-disabled]="projectsList.invalid"
+      >
+        add and save
+      </button>
+      <button class="cancel-btn" (click)="goback()" type="button">
+        cancel
+      </button>
+    </div>
+  </div>
+</section>
+<stc-apps-confirm-dialog [key]="'added-project-success'">
+  <div class="dialog-container">
+    <img src="assets/images/tick-circle.svg" alt="" />
+    <p class="delete-record-content">
+      the projects is updated successfully
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="goback()">ok</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-confirm-dialog [key]="'delete-project'">
+  <div class="dialog-container2">
+    <img src="assets/images/close-circle.svg" alt="" />
+    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-content">
+      Are you sure you want to <br />
+      delete this project?
+    </p>
+    <!-- <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p> -->
+    <div class="buttons mt-4">
+      <button class="delete" (click)="deleteForm()">yes. delete</button>
+      <button (click)="close()" class="cancel">cancel</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>

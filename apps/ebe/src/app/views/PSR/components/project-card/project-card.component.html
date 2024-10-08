@@ -1,0 +1,49 @@
+<section class="project-container">
+  <p class="project-container-header"
+  (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+  (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
+  >
+    {{ project().sector | uppercase }}
+  </p>
+  <div class="project-container-chart mt-5">
+    <stc-apps-multi-circles-progress-bar
+      [chartData]="chartData"
+      [colors]="colors"
+      [showLegend]="true"
+      [labelsFontFamily]="'STCForwardFont'"
+      [legendsFontFamily]="'mediunPoppins'"
+      [outerRadius]="160"
+      [innerRadius]="100"
+      [showLabels]="true"
+      [showLegendValues]="false"
+    />
+  </div>
+  <!-- {{maxTextLength}} -->
+  <p class="project-container-description">
+    {{ project().details | truncateWord:20}}
+    @if(maxTextLength > 20)
+    {
+      <a (click)="displayDrilldown()" class = "read-more">read more</a>
+    }
+  </p>
+  <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
+  <a 
+    class="project-container-details-link" 
+    [routerLink]="['/psr/' , project().sector]"
+  >
+    <span>more details</span>
+    <img src="assets/images/arrow-right.svg" alt="" />
+  </a>
+</section>
+@if(project().details)
+{
+  <p-overlayPanel #overlayPanel dismissable="true">
+    <section class="popover-section">{{project().details}}</section>
+  </p-overlayPanel>
+}
+@if(project().sector.length > 20)
+{
+  <p-overlayPanel #overlayPanel2 dismissable="true">
+    <section class="popover-section">{{project().sector | uppercase}}</section>
+  </p-overlayPanel>
+}

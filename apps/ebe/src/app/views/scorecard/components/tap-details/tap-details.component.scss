@@ -1,0 +1,122 @@
+@import '../../../../../styles/fonts';
+::ng-deep .financial-scorecard
+{
+  &-edit-mode
+  {
+    // height:60px;
+    border-radius: 15px;
+    // background-color: var(--stc-grey-light-color);
+    background-color:var(--stc-lighter-sky-color);
+    // background-color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding:20px;
+    margin-bottom: 20px;
+    gap:20px;
+    &-button
+    {
+      // background-color: var(--stc-purple-light-color);
+      // color:var(--stc-white-color);
+      background-color: var(--stc-green-dark-color);
+      color: var(--stc-white-color);
+      border:0;
+      @extend .stcFont;
+      font-size: 16px;
+      text-transform: capitalize;
+      padding:10px 25px;
+      border-radius:10px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      &.import-btn
+      {
+        background-color: var(--stc-sky-color);
+      }
+      img
+      {
+        display: inline-block;
+        margin-right: 10px;
+        width:17px;
+      }
+    }
+  }
+  &-header
+  {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    &-title
+    {
+      text-transform: capitalize;
+      color:var(--stc-purple-light-color);
+      @extend .mediunPoppins;
+      font-size: 18px;
+      padding: 0;
+      margin: 0;
+    }
+    &-dropdowns
+    {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      position: relative;
+      top: 10px;
+      .mat-mdc-form-field
+      {
+        width:100px !important;
+        height:60px !important;
+        .mat-mdc-text-field-wrapper
+        {
+          border-radius: 5px !important;
+        }
+        .mdc-line-ripple
+        {
+          display: none !important;
+        }
+        .mat-mdc-select-arrow
+        {
+          color:var(--stc-purple-color);
+        }
+        .mat-mdc-select-min-line
+        {
+          color:var(--stc-black-color);
+          @extend .stcFont;
+        }
+        .mat-mdc-select-trigger
+        {
+          position: relative !important;
+          top:-8px !important;
+        }
+      }
+    }
+  }
+}
+.empty-data-msg
+{
+  color:var(--stc-purple-light-color);
+  // margin: 0;
+  text-align: center;
+  font-style: italic;
+  @extend .stcFont;
+  font-weight: 500;
+}
+.kpi-container
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+  .kpi-container-card
+  {
+    width:100%;
+  }
+}
+.popover-section {
+  color: #222222;
+  @extend .stcFont;
+  font-size: 16px;
+  max-width: 400px;
+  word-spacing: 3px;
+  word-break: break-all;
+}

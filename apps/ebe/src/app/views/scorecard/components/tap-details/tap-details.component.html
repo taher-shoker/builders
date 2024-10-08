@@ -1,0 +1,99 @@
+<section class="financial-scorecard">
+  @if(currentMode() === 'editMode') {
+  <stc-apps-edit-mode-view
+    (import)="showDialog()"
+    (export)="downloadTemplate()"
+  />
+  }
+  <form
+    class="financial-scorecard-header-dropdowns justify-content-end"
+    [formGroup]="filtersForm"
+  >
+    <stc-apps-select-drop-down
+      [label]="''"
+      formControlName="month"
+      [options]="monthsArr"
+      [outputValue]="'id'"
+      (selectChange)="selectMonth()"
+    />
+    <stc-apps-select-drop-down
+      [label]="''"
+      formControlName="year"
+      [options]="years()"
+      [outputValue]="'id'"
+      (selectChange)="selectYear()"
+    />
+  </form>
+  @if(!isEmpty()) { @for (scorecard of scorcardData(); track $index;let first =
+  $first) {
+  <div class="financial-scorecard-header">
+    <p
+      class="financial-scorecard-header-title"
+      [class.mt-4]="!first"
+      (mouseenter)="showPopup(scorecard.title)"
+      (mouseleave)="overlayPanel2.hide()"
+      >
+      <!-- (click)="text()" -->
+      {{ scorecard.title | truncateWord : 13 }}
+      @if(scorecard.title.trim().length > 95) {
+      <p-overlayPanel #overlayPanel2 dismissable="true">
+        <section class="popover-section">{{ hoverTitle }}</section>
+      </p-overlayPanel>
+      }
+    </p>
+  </div>
+  <div class="financial-scorecard-costs">
+    <!-- <div class="row">
+        @for (kpi of scorecard.kpiDataDTO; track $index) {
+          <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mt-4">
+            <stc-apps-kpi-card [kpi]="kpi" />
+          </div>
+        }
+      </div> -->
+    <div class="kpi-container">
+      @for (kpi of scorecard.kpiDataDTO; track $index) {
+      <div class="kpi-container-card">
+        <stc-apps-kpi-card [kpi]="kpi" />
+      </div>
+      }
+    </div>
+  </div>
+  } } @else {
+  <h4 class="empty-data-msg mt-4">There are no KPIs</h4>
+  }
+</section>
+<stc-apps-dialog-modal
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
+/>
+<!-- <p-dialog
+  [modal]="true"
+  [(visible)]="visible"
+  [style]="{ width: '30rem' }"
+  [draggable]="false"
+  [dismissableMask]="true"
+  (onHide)="hideDialog()"
+  (onShow)="showDialog2()"
+>
+  <ng-template pTemplate="header">
+    <div class="modal-header">
+      upload file
+    </div>
+  </ng-template>
+  <stc-apps-file-upload-input 
+    [isHidden]="isHidden"
+    (uploadedFile)="getUploadedFile($event)"
+  />
+  <ng-template pTemplate="footer">
+    <footer>
+      <button 
+        class = "import-data-btn" 
+        (click)="importData()"
+        [disabled]="!selectedFile"
+        [class.disabled-btn]="!selectedFile"
+      >import</button>
+      <button class = "cancel-btn" (click)="visible = false;">cancel</button>
+    </footer>
+  </ng-template>
+</p-dialog> -->

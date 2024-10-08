@@ -45,6 +45,7 @@ export class SelectDropDownComponent<T>
   @Input() matLabel!: string;
   @Input() selectType: 'filter-select-box' | 'default' = 'default';
   @Input() options: any[] = [];
+  @Input() translate = true;
   @Input() labelName = 'name';
   @Input() labelValue = 'id';
   @Input() groupName = 'groupName';

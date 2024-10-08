@@ -1,6 +1,6 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Component, effect, input } from '@angular/core';
+import { Component, EventEmitter, input, Output } from '@angular/core';
 
 export interface ProgressInfo {
   prefixText: string;
@@ -18,7 +18,9 @@ interface Index {
   caption: string;
   value: number;
   progressValue?:number
+  // position?: 'up' | 'down';
   position?: 'up' | 'down';
+  actualBarColor?:string;
 }
 
 @Component({
@@ -28,11 +30,18 @@ interface Index {
 })
 export class ProgressBarComponent {
   data = input.required<ProgressInfo>();
-
-  constructor() {
-    effect(() => {
-      console.log(this.data());
-    });
+  isProject = input<boolean>(false);
+  isPSRProject = input<boolean>(false);
+  fontFamily = input<string>('');
+  @Output() displayDrilldown:EventEmitter<boolean> = new EventEmitter(false);
+  isClicked = false;
+  showDrilldown()
+  {
+    if(this.isPSRProject())
+    {
+      this.isClicked = !this.isClicked;
+      this.displayDrilldown.emit(this.isClicked);
+    }
   }
 
   get unit(): string {

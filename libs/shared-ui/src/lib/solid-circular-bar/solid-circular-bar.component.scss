@@ -1,0 +1,27 @@
+.strategy-kpi-card-status-circle
+{
+  margin:25px auto 15px;
+  // background: linear-gradient(152.45deg, #00C48C -4.88%, #026A4C 131.8%);
+  width:155px;
+  height:155px;
+  border-radius:50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  .progress-number
+  {
+    color:var(--stc-white-color);
+    font-weight: 700;
+    font-size: 30px;
+  }
+  .text
+  {
+    color:var(--stc-white-color);
+    font-weight: 400;
+    font-size: 17px;
+    text-transform: capitalize;
+    word-break: break-all;
+    max-width: 130px;
+  }
+}

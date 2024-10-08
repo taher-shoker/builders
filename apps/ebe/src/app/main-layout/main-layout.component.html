@@ -1,0 +1,26 @@
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#40036e"
+  type="ball-spin"
+  [fullScreen]="true"
+  ><p style="color: white">Loading...</p></ngx-spinner
+>
+<section class="main-layout">
+  <div class="main-layout-content">
+    <div class="main-layout-content-sidebar">
+      <stc-apps-sidebar
+        [logoSrc]="logoSrc"
+        [sidebarLinks]="navItems"
+        [usernameImage]="userNameLogo"
+        [userName]="userData ? userData.name : ''"
+        (currentMode)="getCurrentMode($event)"
+        [userRoles]="userRoles"
+        (logoutFun)="logout()"
+        />
+    </div>
+    <div class="main-layout-content-page">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</section>

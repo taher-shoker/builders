@@ -1,0 +1,67 @@
+@import '../../../../../apps/ebe/src/styles/fonts.scss';
+.file-upload
+{
+    text-align: center;
+    position: relative;
+    &-image
+    {
+        border:2px dashed var(--stc-purple-light-color);
+        border-radius:10px;
+        display: flex;
+        padding:30px 0;
+        flex-direction: column;
+        justify-content: center;
+        cursor: pointer;
+        align-items: center;
+        img
+        {
+            // width:60px;
+            margin-bottom: 15px;
+        }
+        p
+        {
+            margin: 0;
+            text-transform: capitalize;
+            font-weight: 500;
+            color:var(--stc-purple-light-color);
+            @extend .stcFont;
+        }
+        span
+        {
+            @extend .stcFont;
+            display: inline-block;
+            font-size: 12px;
+        }
+    }
+    small
+    {
+        color:var(--stc-pink-color);
+        position: absolute;
+        left:0;
+        font-size: 13px;
+        font-weight: 500;
+        @extend .stcFont;
+    }
+    &-file-details
+    {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:10px;
+        border:1px solid var(--stc-grey-dark-color);
+        border-radius:10px;
+        .file-info
+        {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            text-align: left;
+            gap: 10px;
+        }
+        .remove-file
+        {
+            font-size: 25px;
+            cursor: pointer;
+        }
+    }
+}

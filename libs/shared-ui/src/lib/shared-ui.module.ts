@@ -12,9 +12,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { LngSelectorModule } from '@stc-apps/lng-selector';
 import { ModeToggleModule } from '@stc-apps/mode-toggle';
-import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+
+import {MatIconModule} from '@angular/material/icon';
+import {MatMenuModule} from '@angular/material/menu';
+import {MatButtonModule} from '@angular/material/button';
 
 import { ButtonComponent } from './button/button.component';
 import { HeaderComponent } from './header/header.component';
@@ -44,7 +47,6 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
 import { CounterCardComponent } from './counter-card/counter-card.component';
 import { ItemsListComponent } from './items-list/items-list.component';
 import { CustomTableComponent } from './custom-table/custom-table.component';
-import { MatMenuModule } from '@angular/material/menu';
 import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
 import { PaginatorComponent } from './paginator/paginator.component';
 import { SortableTableDirective } from './sorter/sorter.directive';
@@ -61,11 +63,34 @@ import { ProgressBarComponent } from './progress-bar/progress-bar.component';
 import { CustomDropdownComponent } from './custom-dropdown/custom-dropdown.component';
 import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
 import { AttachmentsComponent } from './attachments/attachments.component';
-
-const modules = [BreadCrumbModule, MatIconModule];
+import { TabviewComponent } from './tabview/tabview.component';
+import { KpiCardComponent } from './kpi-card/kpi-card.component';
+import { KpiStatusCardComponent } from './kpiStatusCard/kpi-status-card.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { CircularProgressBarComponent } from './curcular-progress-bar/circular-progress-bar.component';
+import { NgCircleProgressModule } from 'ng-circle-progress';
+import { MillionPipe } from './million.pipe';
+import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-bar.component';
+import { ProjectCardComponent } from './project-card/project-card.component';
+import { TabViewModule } from 'primeng/tabview';
+import { MultiCirclesProgressBarComponent } from './multi-circles-progress-bar/multi-circles-progress-bar.component';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TruncateWordPipe } from './truncateWord.pipe';
+import { CalendarModule } from 'primeng/calendar';
+import { DialogModalComponent } from './file-upload-dialog/dialog.component';
+import { FileUploadInputComponent } from './file-upload-input/file-upload-input.component';
+import { DialogModule } from '@angular/cdk/dialog';
+import { DialogModule as primengDialogModule } from 'primeng/dialog';
+const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
+// const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
   ButtonComponent,
+  TabviewComponent,
+  KpiCardComponent,
+  KpiStatusCardComponent,
   HeaderComponent,
   InputComponent,
   BannerComponent,
@@ -103,6 +128,16 @@ const components = [
   CustomDropdownComponent,
   ProgressCircleComponent,
   AttachmentsComponent,
+  SidebarComponent,
+  CircularProgressBarComponent,
+  MillionPipe,
+  SolidCircularBarComponent,
+  ProjectCardComponent,
+  MultiCirclesProgressBarComponent,
+  ConfirmDialogComponent,
+  TruncateWordPipe,
+  DialogModalComponent,
+  FileUploadInputComponent
 ];
 
 @NgModule({
@@ -111,6 +146,7 @@ const components = [
   providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   imports: [
     CommonModule,
+    ConfirmDialogModule,
     RouterModule,
     LngSelectorModule,
     ModeToggleModule,
@@ -130,8 +166,15 @@ const components = [
     MatExpansionModule,
     TranslateModule,
     MatProgressSpinnerModule,
-    MatMenuModule,
     DateAgoPipe,
-  ],
+    NgCircleProgressModule.forRoot(),
+    TabViewModule,
+    OverlayPanelModule,
+    MatMenuModule,
+    MatIconModule,
+    MatButtonModule,
+    CalendarModule,
+    primengDialogModule
+  ]
 })
 export class SharedUiModule {}

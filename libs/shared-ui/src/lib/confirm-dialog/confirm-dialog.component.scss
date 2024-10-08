@@ -1,0 +1,12 @@
+::ng-deep .confirm-dialog-section
+{
+    .p-dialog-footer , .p-dialog-header
+    {
+        display: none !important;
+    }
+    .p-dialog-content
+    {
+        border-radius:10px !important;
+        padding: 0 !important;
+    }
+}

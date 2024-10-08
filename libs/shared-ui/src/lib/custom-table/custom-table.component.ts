@@ -13,11 +13,13 @@ import {
   QueryList,
   SimpleChanges,
   TemplateRef,
+  inject,
   input,
 } from '@angular/core';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
 import { CustomTemplateDirective } from './custom-template.directive';
+import { DatePipe } from '@angular/common';
 
 export interface ColumnsSchema {
   key: string;
@@ -42,21 +44,30 @@ export interface PaginationConfig {
 export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
+  @Output() deleteAddedRecord: EventEmitter<any> =
+    new EventEmitter<any>();
+  @Output() addRecord: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
+  @Output() updatedData: EventEmitter<any> =
+    new EventEmitter<any>();
 
   headers = input.required<ColumnsSchema[]>();
+  psrTable = input<boolean>();
+  fontFamily = input<string>();
 
   @Input({ required: true }) items!: any[];
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
-
+  datePipe = inject(DatePipe)
   @Input() applyFilter: boolean = false;
   @Input() filter: string = '';
   @Input() paginate: boolean = false;
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
   @Input() length!: number;
-
+  isEditMode = input<boolean>();
+  userRoles = input<string>();
   paginator$: Subject<PaginationEvent> = new Subject<PaginationEvent>();
   currentPage: number = 1;
 
@@ -66,12 +77,30 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   filterStrStored: string = '';
   currentSortedByColumn$: Subject<string> = new Subject<string>();
-
+  deleteRecord(item:any)
+  {
+    this.deleteAddedRecord.emit(item);
+  }
+  parseDate(dateString:Date | string) {
+    if(typeof dateString !== 'string')
+    {
+      // const date:string = this.datePipe.transform(dateString, 'yyyy/MM/dd') ?? ""
+      // const [day, month, year] = date.split('/');
+      return new Date(dateString);
+      // return date;
+    } else {
+      const [day, month, year] = dateString.split('/');
+      return new Date(+year, +month - 1, +day);
+    }
+  }
   sortingDirection: 'desc' | 'asc' = 'asc';
   changeCurrentSortingColumn(colName: string): void {
     this.currentSortedByColumn$.next(colName);
   }
-
+  addNewRecord()
+  {
+    this.addRecord.emit(true);
+  }
   setupSorting() {
     this.currentSortedByColumn$.subscribe((res: string) => {
       this.sortByColumn(this.itemsInView, res);
@@ -207,5 +236,33 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   setItemsMap(items: any[]) {
     this.itemsMap.set(this.currentPage.toString(), items);
+  }
+  inputChanged(id:number)
+  {
+    this.updatedData.emit({items:this.items , id : id})
+  }
+  keyPress(e:KeyboardEvent)
+  {
+    if (e.key === 'e') {
+      e.preventDefault();
+    }
+  }
+  keyPress2(e:KeyboardEvent)
+  {   
+    if (e.key === 'e') {
+      e.preventDefault();
+    } else {
+      if(e.target)
+        {
+          const val = e.target as HTMLInputElement;
+          const val2 = val.value;
+          const val3 = val2 + e.key;
+          console.log(val3);
+          if(+val3 > 100)
+          {
+            e.preventDefault();
+          }
+        } 
+    }
   }
 }

@@ -1,0 +1,220 @@
+table {
+  width: 100%;
+  background-color: white;
+}
+
+.table-header {
+  background-color: #e7d6f4;
+
+  th {
+    color: var(--stc-color);
+    font-weight: 400;
+
+    .header-cell-holder{
+      display: flex;
+    }
+    
+    &:first-of-type {
+      border-radius: 7px 0 0 0px;
+    }
+    &:last-of-type {
+      border-radius: 0px 7px 0px 0px;
+    }
+    // padding: 10px 0;
+  }
+}
+
+td {
+  max-width: 150px;
+  word-wrap: break-word;
+  color: var(--grey-color);
+}
+.actions-span {
+  cursor: pointer;
+}
+tr:not(.table-header) {
+  border-bottom: 1px solid #cbcbcb;
+
+  td {
+    padding: 20px 10px;
+  }
+}
+
+.action-option {
+  padding-block: 0.5rem;
+  color: grey;
+  border-bottom: 1px solid #dddddd;
+  &:last-of-type {
+    border-bottom: unset;
+  }
+}
+
+.delete-option {
+  color: var(--stc-coral-color);
+}
+
+.arrows-holder {
+  display: inline-block;
+  transform: rotate(90deg);
+  cursor: pointer;
+}
+
+.hashed-arrow {
+  opacity: 0.4;
+}
+
+.active-arrow {
+  opacity: 1;
+}
+
+.menu-btns-wrapper {
+  padding: 0px 10px;
+
+  .details {
+    cursor: pointer;
+  }
+}
+.psrTable
+{
+  .table-header
+  {
+    height: 70px;
+    th
+    {
+      color:#4F008C;
+      text-transform: capitalize;
+      font-weight: 700;
+      font-size: 16px;
+    }
+  }
+  tbody
+  {
+    tr
+    {
+      border-bottom: 1px solid rgba(142, 154, 160, 0.201);
+      &:last-child
+      {
+        border-bottom: 0;
+      }
+    }
+    td
+    {
+      text-align: center;
+    }
+    .psrTabldID
+    {
+      color:#8E9AA0;
+      font-weight: 800;
+      font-size: 19px;
+    }
+    .psrTabldMajor
+    {
+      color:#363636;
+      font-weight: 600;
+      font-size: 15px;
+      // text-align: left;
+    }
+    .psrTabldLevel
+    {
+      color:#00C48C;
+      font-weight: bold;
+      font-size: 20px;
+    }
+  }
+}
+.empty-details
+{
+  text-align: center;
+  text-transform: capitalize;
+  color:#4F008C;
+  font-size: 20px;
+  font-style: italic;
+  margin: 0;
+  margin-top: 20px;
+}
+.add-record-btn
+{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border:0;
+  font-size: 16px;
+  color:#4F008C;
+  text-decoration: underline;
+  cursor: pointer;
+  margin:15px auto 0;
+  background-color: transparent;
+  text-transform: capitalize;
+}
+.delete-btn
+{
+  color:#FF1A1A;
+  text-transform: capitalize;
+  font-size: 14px;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  gap:5px;
+  img
+  {
+    width:15px;
+    position: relative;
+    top:-1px;
+  }
+}
+.edit-input
+{
+  width: 100%;
+  border:0;
+  border:1px solid #8E9AA0;
+  padding:0 10px;
+  height:40px;
+  border-radius: 5px;
+  outline: 0;
+  box-shadow: none;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+.empty-data-msg
+{
+  position: absolute;
+    left: 0;
+    bottom: -20px;
+    color: red;
+    font-size: 12px;
+    width: 124px;
+}
+::ng-deep .custom-calendar2
+{
+  span
+  {
+    input
+    {
+      width: 100%;
+      border:0;
+      border:1px solid #8E9AA0;
+      padding:0 10px;
+      height:40px;
+      border-radius: 5px;
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+}
+.empty-data-msg2
+{
+  position: absolute;
+    bottom: -19px;
+    width: 300px;
+    left: -32px;
+}

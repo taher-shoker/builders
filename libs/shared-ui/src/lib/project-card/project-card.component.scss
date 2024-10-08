@@ -1,0 +1,78 @@
+@import '../../../../../apps/ebe/src/styles/fonts';
+.project-card
+{
+  background-color: #fff;
+  border-radius:10px;
+  text-align: left;
+  padding:15px;
+  &-header
+  {
+    display: flex;
+    align-items:baseline;
+    justify-content: space-between;
+    &-title
+    {
+      margin: 0;
+      @extend .stcFont;
+      color: #4F008C;
+      text-transform: capitalize;
+      font-weight: 500;
+      font-size: 16px;
+      text-decoration: underline;
+    }
+  }
+  &-bar
+  {
+    height:200px;
+  }
+}
+.show-menu-btn
+{
+  background-color: transparent;
+  border:0;
+  outline: 0;
+  box-shadow: none;
+  cursor: pointer;
+  position: relative;
+  top:3px;
+  padding: 0;
+  width: 30px;
+}
+::ng-deep .edit-delete-project
+{
+  width:150px !important;
+  .mat-mdc-menu-content
+  {
+    padding: 0 !important;
+    .mat-mdc-menu-item-text
+    {
+      display: flex;
+      align-items: center;
+      gap:10px;
+      span
+      {
+        text-transform: capitalize;
+        @extend .stcFont;
+        font-size: 17px;
+        &.edit-btn
+        {
+          color:#4F008C !important;
+        }
+        &.delete-btn
+        {
+          color:#FF1A1A !important;
+        }
+      }
+      img
+      {
+        width:15px;
+      }
+    }
+  }
+}
+.read-more
+{
+  font-size: 13px;
+  cursor: pointer;
+  font-weight: 500;
+}

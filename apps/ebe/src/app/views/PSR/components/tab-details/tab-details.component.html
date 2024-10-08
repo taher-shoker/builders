@@ -1,0 +1,30 @@
+<section class="psr-tabview">
+    @if(currentMode === 'editMode') {
+        <stc-apps-edit-mode-view 
+          (import)="showDialog()"
+          (export)="downloadTemplate()"
+        />
+    } 
+    <p class = "psr-tabview-header">
+        Data Governance Strategic Projects Execution (Executive View)
+    </p>
+    @if(!isEmpty())
+    {
+        <div class="project-container">
+            @for (project of projects(); track project.sector) {
+                <div class="project-container-card">
+                    <stc-apps-psr-project-card 
+                        [project]="project"
+                    />
+                </div>
+            }
+        </div>
+    } @else {
+        <p class = "empty-data-msg mt-4">there are no projects</p>
+    }
+</section>
+<stc-apps-dialog-modal 
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
+/>
