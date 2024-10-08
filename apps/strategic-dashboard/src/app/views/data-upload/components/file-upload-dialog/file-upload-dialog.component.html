@@ -1,0 +1,39 @@
+<div class="dialog p-4">
+  <div class="dialog_body">
+    <h3 class="dialog_header">Upload File</h3>
+
+    <div class="dropdown_content my-3">
+      <select (change)="onItemSelected($event)">
+        <option *ngFor="let item of data.items" [value]="item.key">
+          {{ item.name }}
+        </option>
+      </select>
+    </div>
+  </div>
+
+  <stc-apps-file-uploader
+    [multiple]="true"
+    [chooseLabel]="'upload file'"
+    (onformchange)="onFileSelected($event)"
+    [attachmentFiles]="selectedFile"
+    (ondelete)="onDeleteFile($event)"
+  ></stc-apps-file-uploader>
+
+  <hr class="liner-hr" />
+
+  <div class="actions-wrapper">
+    <div class="dialog_actions">
+      <button type="button" class="btn btn-outline-dark" (click)="cancel()">
+        Cancel
+      </button>
+      <button type="button" class="btn primary" (click)="upload()">
+        Upload File
+      </button>
+    </div>
+    @if (errorMessage) {
+    <p class="dialog_error-message mt-2">
+      {{ errorMessage }}
+    </p>
+    }
+  </div>
+</div>

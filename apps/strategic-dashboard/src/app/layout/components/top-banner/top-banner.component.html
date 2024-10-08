@@ -1,0 +1,18 @@
+<div class="top-banner">
+  <stc-apps-header
+    [userName]="userName"
+    [logoSrc]="logoSrc"
+    [allItems]="navItems"
+    [sidebarLogoSrc]="sidebarLogoSrc"
+    (logOut)="logOut()"
+    (backToHome)="backToHome()"
+    [showLang]="false"
+  >
+  </stc-apps-header>
+  <div class="d-flex">
+    <div class="top-banner_headerWelcome d-flex">
+      <p>Welcome Back , {{ userName }}</p>
+      <img src="assets/images/Waving Hand.svg" alt="" />
+    </div>
+  </div>
+</div>

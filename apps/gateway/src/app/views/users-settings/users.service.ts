@@ -125,6 +125,9 @@ export class UsersService {
       case 'Score_Card_Report_DB':
         allTeams = this.allTeams;
         break;
+      case 'Strategic_Dashboard':
+        allTeams = this.allTeams;
+        break;
       default:
         break;
     }
@@ -136,7 +139,8 @@ export class UsersService {
     if (
       this.getCurrentSystem() === 'DI_Milestones' ||
       this.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
-      this.getCurrentSystem() === 'Score_Card_Report_DB'
+      this.getCurrentSystem() === 'Score_Card_Report_DB' ||
+      this.getCurrentSystem() === 'Strategic_Dashboard'
     ) {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')
@@ -181,6 +185,10 @@ export class UsersService {
       _.forEach(user.teams, (team) => {
         x.push(team.name);
       });
+    } else if (this.getCurrentSystem() === 'Strategic_Dashboard') {
+      _.forEach(user.teams, (team) => {
+        x.push(team.name);
+      });
     } else if (this.getCurrentSystem() === 'Dynamic_Report_Flow') {
       x.push('-');
     } else {
@@ -217,6 +225,9 @@ export class UsersService {
         break;
       case 'Score_Card_Report_DB':
         this.labels = app_sector_labels;
+        break;
+      case 'Strategic_Dashboard':
+        this.labels = fraud_labels;
         break;
       default:
         break;

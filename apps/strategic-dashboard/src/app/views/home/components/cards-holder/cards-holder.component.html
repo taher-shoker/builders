@@ -1,0 +1,25 @@
+<div class="cardHolder">
+  @if (strategicGroups && strategicGroups.length > 0) {
+  <stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+
+  @for(kpi of strategicGroups;track kpi; let index = $index ){
+  <div class="kpis-card">
+    <stc-apps-kpi-card-header
+      class="kpis-card_header"
+      [kpiTitle]="kpi.name"
+    ></stc-apps-kpi-card-header>
+    <stc-apps-kpi-card
+      class="kpis-card_body"
+      [currentContents]="getCurrentContents(index)"
+      [kpiTitle]="kpi.name"
+      [isHovered]="activeIndex === index"
+      [strategicGroupKpis]="kpi.kpis"
+      (mouseover)="onCardHover(index)"
+      (mouseleave)="onCardLeave()"
+    >
+    </stc-apps-kpi-card>
+  </div>
+  } } @else {
+  <p>Failed to load data. Please try again later.</p>
+  }
+</div>

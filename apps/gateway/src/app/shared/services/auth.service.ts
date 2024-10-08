@@ -143,7 +143,8 @@ export class AuthService {
       res.dto.systems.includes('DI_Milestones') ||
       res.dto.systems.includes('Dynamic_Report_Flow') ||
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
-      res.dto.systems.includes('Score_Card_Report_DB')
+      res.dto.systems.includes('Score_Card_Report_DB') ||
+      res.dto.systems.includes('Strategic_Dashboard')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -179,7 +180,8 @@ export class AuthService {
       res.dto.systems.includes('Dynamic_Report_Flow') ||
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
       res.dto.systems.includes('Jira_Dahsboard') ||
-      res.dto.systems.includes('Score_Card_Report_DB')
+      res.dto.systems.includes('Score_Card_Report_DB') ||
+      res.dto.systems.includes('Strategic_Dashboard')
     ) {
       this.setLoggedInUser();
     }
@@ -217,6 +219,9 @@ export class AuthService {
     if (res.dto.systems.includes('Score_Card_Report_DB')) {
       this.gratnedSystems.push('Score_Card_Report_DB');
     }
+    if (res.dto.systems.includes('Strategic_Dashboard')) {
+      this.gratnedSystems.push('Strategic_Dashboard');
+    }
     this.setLoggedInUser();
   }
 
@@ -235,8 +240,19 @@ export class AuthService {
         .subscribe(async (res: LoggedUser) => {
           this.loggedInUser = res;
           this.loggedUserStream.next(res);
-          this.cookieService.put('MODERN_SYSTEM_USER', JSON.stringify(res));
           this.handleSingleGrantedSystem(res);
+          const userCookieData = {
+            id: res.id,
+            name: res.name,
+            username: res.username,
+            email: res.email,
+            userDelegates: res.userDelegates,
+            userGroups: res.userGroups,
+          };
+          this.cookieService.put(
+            'MODERN_SYSTEM_USER',
+            JSON.stringify(userCookieData)
+          );
         });
     }
   }
@@ -274,6 +290,7 @@ export class AuthService {
       Business_Excellence_Dashboard:
         environment.systems.business_excellence_system,
       Score_Card_Report_DB: environment.systems.score_card_report_db,
+      Strategic_Dashboard: environment.systems.strategic_dashboard,
     };
     const url = systemUrls[system];
     if (url) {
@@ -466,6 +483,16 @@ export class AuthService {
                   environment.systems.score_card_report_db,
                 name: 'Score Card Report',
                 displayName: 'Score Card Report',
+              });
+              break;
+            case 'Strategic_Dashboard':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin +
+                  environment.systems.strategic_dashboard,
+                name: 'Strategic Dashboard',
+                displayName: 'Strategic Dashboard',
               });
               break;
             default:

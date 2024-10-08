@@ -55,22 +55,28 @@
 
       <div class="col-md-7">
         <div class="row">
-          <div class="offset-md-1 col-md-5">
-            <stc-apps-select-drop-down
-              [inputWidth]="userService.getCurrentSystem() === 'Score_Card_Report_DB' ? '75%' : ''"
-              [label]="userService.translateText('privilege')" [selectType]="'filter-select-box'" [options]="privilege"
-              [labelName]="'groupName'" (selectChange)="handleSelectChange($event, 'privilege')"
+          <div class="offset-md-1 "
+            [ngClass]="userService.getCurrentSystem() === 'Strategic_Dashboard' ?'col-md-6':'col-md-5'">
+            <stc-apps-select-drop-down [inputWidth]="
+                userService.getCurrentSystem() === 'Score_Card_Report_DB' || userService.getCurrentSystem() === 'Strategic_Dashboard'
+                  ? '75%'
+                  : ''
+              " [label]="userService.translateText('privilege')" [selectType]="'filter-select-box'"
+              [options]="privilege" [labelName]="'groupName'" (selectChange)="handleSelectChange($event, 'privilege')"
               formControlName="privilegeSelect" [defaultAll]="true"></stc-apps-select-drop-down>
           </div>
           <div class="col-md-5" *ngIf="
               userService.getCurrentSystem() !== 'Dynamic_Report_Flow' &&
-              userService.getCurrentSystem() !== 'Business_Excellence_Dashboard'
+              userService.getCurrentSystem() !== 'Business_Excellence_Dashboard' && userService.getCurrentSystem() !== 'Strategic_Dashboard'
             ">
-            <stc-apps-select-drop-down
-              [inputWidth]="userService.getCurrentSystem() === 'Score_Card_Report_DB' ? '75%' : ''"
-              [label]="userService.translateText('team')" [selectType]="'filter-select-box'" [options]="teams"
+            <stc-apps-select-drop-down [inputWidth]="
+                userService.getCurrentSystem() === 'Score_Card_Report_DB'
+                  ? '75%'
+                  : ''
+              " [label]="userService.translateText('team')" [selectType]="'filter-select-box'" [options]="teams"
               (selectChange)="handleSelectChange($event, 'team')" [defaultAll]="true"
               formControlName="teamSelect"></stc-apps-select-drop-down>
+
           </div>
         </div>
       </div>

@@ -12,6 +12,7 @@ export interface LoggedUser {
   jobTitle: string;
   userGroups: UserGroup[];
   username: null | string;
+  userDelegates?: any[];
 }
 
 export interface System {

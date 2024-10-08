@@ -1,0 +1,30 @@
+<div class="range-slider">
+  <label class="range-slider_label"> {{ slider.min }} </label>
+
+  <mat-slider
+    #slider
+    thumbLabel
+    [min]="0"
+    [max]="3000"
+    [step]="1"
+    [displayWith]="formatLabel"
+    tickInterval="100"
+    [discrete]="true"
+  >
+    <input
+      type="range"
+      [ngModel]="startValue()"
+      (input)="onInputChangeStart($event)"
+      matSliderStartThumb
+      thumbLabel
+    />
+    <input
+      type="range"
+      [ngModel]="endValue()"
+      (input)="onInputChangeEnd($event)"
+      matSliderEndThumb
+      thumbLabel
+    />
+  </mat-slider>
+  <label class="range-slider_label"> {{ slider.max }} </label>
+</div>

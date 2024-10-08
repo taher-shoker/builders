@@ -1,4 +1,5 @@
 import {
+  ChangeDetectorRef,
   Component,
   ElementRef,
   HostListener,
@@ -74,7 +75,8 @@ export class UserFormComponent implements OnInit, OnChanges {
     public userService: UsersService,
     private toastr: ToastrService,
     protected dialogService: DialogService,
-    private el: ElementRef
+    private el: ElementRef,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -113,7 +115,9 @@ export class UserFormComponent implements OnInit, OnChanges {
       teamDto: [
         [],
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
-        this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+        this.userService.getCurrentSystem() ===
+          'Business_Excellence_Dashboard' ||
+        this.userService.getCurrentSystem() === 'Strategic_Dashboard'
           ? Validators.nullValidator
           : Validators.required,
       ],
@@ -362,6 +366,8 @@ export class UserFormComponent implements OnInit, OnChanges {
       dataForm = { userGroups: teams, email, name, jobTitle };
     } else if (currentSystem === 'Score_Card_Report_DB') {
       dataForm = { userGroups, teams, email, name, jobTitle };
+    } else if (currentSystem === 'Strategic_Dashboard') {
+      dataForm = { userGroups, email, name, jobTitle };
     } else if (currentSystem === 'Business_Excellence_Dashboard') {
       dataForm = { userGroups, email, name, jobTitle };
     } else {
@@ -390,6 +396,9 @@ export class UserFormComponent implements OnInit, OnChanges {
       let data = { id: this.userId, userGroups, teams };
       if (currentSystem === 'Score_Card_Report_DB' && teams?.length > 0) {
         data.teams = teams;
+      }
+      if (currentSystem === 'Strategic_Dashboard' && teams?.length > 0) {
+        data.teams = null;
       }
       console.log(userGroups);
 
@@ -520,6 +529,10 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+      } else if (currentSystem === 'Strategic_Dashboard') {
+        this.selectedPrivilege = this.privilages().filter(
+          (p) => p.id === this.checkSystem(this.data.userGroups)?.id
+        )[0];
       } else if (currentSystem === 'FRAUD_ManagementUsers') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
@@ -577,9 +590,20 @@ export class UserFormComponent implements OnInit, OnChanges {
               s.roleName ===
               this.checkSystem(this.data.userGroups)?.roles[0].roleName
           );
-      } else if (
-        this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
-      ) {
+      }
+      // else if (
+      //   this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+      // ) {
+      //   this.teams = this.userService.getTeams();
+      //   if (this.data?.teams && this.data.teams.length > 0) {
+      //     this.selectedGroup = this.data.teams.map(
+      //       (t: { name: string; id: number }) => t.id
+      //     );
+      //     this.form.get('teamDto')?.setValidators(null);
+      //     this.form.get('teamDto')?.updateValueAndValidity();
+      //   }
+      // }
+      else if (this.userService.getCurrentSystem() === 'Strategic_Dashboard') {
         this.teams = this.userService.getTeams();
         if (this.data?.teams && this.data.teams.length > 0) {
           this.selectedGroup = this.data.teams.map(
@@ -609,7 +633,11 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.teams = this.userService.allTeams;
     } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
       this.teams = this.userService.getTeams();
-    } else {
+    }
+    // else if (this.userService.getCurrentSystem() === 'Strategic_Dashboard') {
+    //   this.teams = this.userService.getTeams();
+    // }
+    else {
       this.form?.get('teamDto')?.setValue('');
       this.teams = this.userService
         .getTeams()
@@ -687,6 +715,10 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.handleDI_Milestones();
       } else if (
         this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+      ) {
+        this.form?.get('jobTitle')?.disable();
+      } else if (
+        this.userService.getCurrentSystem() === 'Strategic_Dashboard'
       ) {
         this.form?.get('jobTitle')?.disable();
       }
