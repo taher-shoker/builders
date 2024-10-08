@@ -2,11 +2,11 @@ import { Component, input, Input, InputSignal } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'stc-apps-kpi-card',
+  selector: 'stc-apps-kpis-card',
   templateUrl: './kpi-card.component.html',
   styleUrl: './kpi-card.component.scss',
 })
-export class KpiCardComponent {
+export class KpisCardComponent {
   title = 'Digitize STC';
   iconPath = 'assets/images/interaction-icon.svg';
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

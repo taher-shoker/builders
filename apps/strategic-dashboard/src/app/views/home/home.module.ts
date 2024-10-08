@@ -5,14 +5,14 @@ import { HomeComponent } from './home.component';
 import { SharedModule } from '../../shared/shared.module';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './home.routes';
-import { KpiCardComponent } from './components/kpi-card/kpi-card.component';
+import { KpisCardComponent } from './components/kpi-card/kpi-card.component';
 import { BannerComponent } from './components/banner/banner.component';
 import { CardsHolderComponent } from './components/cards-holder/cards-holder.component';
 
 const components = [
   HomeComponent,
   KpiCardHeaderComponent,
-  KpiCardComponent,
+  KpisCardComponent,
   BannerComponent,
   CardsHolderComponent,
 ];

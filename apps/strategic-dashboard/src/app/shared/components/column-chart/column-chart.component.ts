@@ -27,7 +27,7 @@ export class ColumnChartComponent implements OnInit, AfterViewInit, OnChanges {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   @Input() chartData: any[] = [];
   @Input() colors: string[] = [];
-  @Input() unit: string = '';
+  @Input() unit = '';
 
   ngAfterViewInit(): void {
     this.columnChart();
