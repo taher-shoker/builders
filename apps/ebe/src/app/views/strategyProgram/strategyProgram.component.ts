@@ -33,6 +33,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   toastr = inject(ToastrService);
   ngOnInit() {
     // this.strategyProgramData = [];
+    console.log("window width => " , window.innerWidth);
     this.getStrategyProgramSummary();
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
