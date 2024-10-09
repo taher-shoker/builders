@@ -7,9 +7,13 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 //   MilestoneAttachment,
 //   MilestonesService,
 // } from '../../milestones.service';
-import * as saveAs from 'file-saver';
-import {  MilestoneAttachment, MilestonesService } from '../../milestones.service';
-// import { saveAs } from 'file-saver';
+//import * as saveAs from 'file-saver';
+import { saveAs } from 'file-saver';
+import {
+  MilestoneAttachment,
+  MilestonesService,
+} from '../../milestones.service';
+
 import { Actions } from 'apps/dtmv/src/app/services/models/milestones.models';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
 
