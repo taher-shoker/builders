@@ -10,9 +10,13 @@
     [raqamiKpiData]="raqamiKpiData"
   />
   } @else if(currentTap().name === 'A2'){
-  <stc-apps-a2-tap />
+  <stc-apps-a2-tap 
+    [A1Data]="raqamiA2Data"
+  />
   } @else if(currentTap().name === 'A3'){
-  <stc-apps-a3-tap />
+  <stc-apps-a3-tap 
+    [raqamiA3Data]="raqamiA3Data"
+  />
   }
 </div>
 <stc-apps-dialog-modal 

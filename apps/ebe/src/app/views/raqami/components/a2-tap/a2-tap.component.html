@@ -3,68 +3,69 @@
         <p class="a2-section-header-title">
             analytics amplification
         </p>
-        <div class="a2-section-header-targets">
-            <p>target</p>
-            <span class = "target"></span>
-        </div>
-        <div class="a2-section-header-actual">
-            <p>actual</p>
-            <span class = "actual"></span>
+        <div class = "d-flex align-items-center" style = "gap:25px">
+            <div class="a2-section-header-targets">
+                <p>target</p>
+                <span class = "target"></span>
+            </div>
+            <div class="a2-section-header-actual">
+                <p>actual</p>
+                <span class = "actual"></span>
+            </div>
         </div>
     </div>
-    <div class="a2-section-body">
-        <p class="a2-section-body-title">
-            (AA2-1) MSAR Potential value creation via analytics based use cases
-        </p>
-        <div class="a2-section-body-cards">
-            <p class="a2-section-body-cards-owner">
-                Nabeel M.Alhaider
+    @for (item of A1Data(); track $index;let count = $count;let last = $last) {
+        <div class="a2-section-body" [class.mb-5]="count !== 1 && !last">
+            <p class="a2-section-body-title">
+                {{item.title}}
             </p>
-            <p class="a2-section-body-cards-project">
-                Cumulative YTD
-            </p>
-        </div>
-        <div class="a2-section-body-content">
-            <div class="a2-section-body-content-data">
-                <div class = "content">
-                    <div class="weight-container">
-                        <p class="title">KPI Weight</p>
-                        <p class="value">15%</p>
+            <div class="a2-section-body-cards">
+                <p class="a2-section-body-cards-owner">
+                    {{item.owner}}
+                </p>
+                <p class="a2-section-body-cards-project">
+                    {{item.project}}
+                </p>
+            </div>
+            <div class="a2-section-body-content">
+                <div class="a2-section-body-content-data">
+                    <div class = "content">
+                        <div class="weight-container">
+                            <p class="title">KPI Weight</p>
+                            <p class="value">{{item.kpiWeight}}%</p>
+                        </div>
+                        <div class="weight-container">
+                            <p class="title">UoM</p>
+                            <p class="value">{{item.UoM}}</p>
+                        </div>
                     </div>
-                    <div class="weight-container">
-                        <p class="title">UoM</p>
-                        <p class="value">#</p>
+                    <div class = "content">
+                        <div class="weight-container">
+                            <p class="title">Baseline</p>
+                            <p class="value">{{item.baseLine.year}} <span class = "column">:</span> {{item.baseLine.val}}</p>
+                        </div>
                     </div>
-                </div>
-                <div class = "content">
-                    <div class="weight-container">
-                        <p class="title">Baseline</p>
-                        <p class="value">2023   :   1000</p>
-                    </div>
-                </div>
-                <div class = "content mb-0">
-                    <div class="weight-container w-100">
-                        <p class="title">Target</p>
-                        <div class="data">
-                            <div class="text">
-                                <div class="year">2023</div>
-                                <div class="val">1186</div>
-                            </div>
-                            <div class="text">
-                                <div class="year">2024</div>
-                                <div class="val">TBD</div>
-                            </div>
-                            <div class="text">
-                                <div class="year">2025</div>
-                                <div class="val">TBD</div>
+                    <div class = "content mb-0">
+                        <div class="weight-container w-100">
+                            <p class="title">Target</p>
+                            <div class="data">
+                            @for (target of item.targets; track $index) {
+                                    <div class="text">
+                                        <div class="year">{{target.year}}</div>
+                                        <div class="val">{{target.val}}</div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="a2-section-body-content-chart" style = "height: 349px;">
-                <stc-apps-double-line-chart />
+                <div class="a2-section-body-content-chart" style = "height: 349px;">
+                    <stc-apps-double-line-chart 
+                        [chartData]="item.chartData"
+                        [colors]="colors"
+                    />
+                </div>
             </div>
         </div>
-    </div>
+    }
 </section>
