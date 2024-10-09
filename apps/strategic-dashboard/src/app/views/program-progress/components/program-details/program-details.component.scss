@@ -20,6 +20,7 @@
       //margin-bottom: 30px;
       color: var(--semiBlueColor);
     }
+
     .range-holder {
       background-color: var(--whiteColor);
       padding: 30px 24px 20px 24px;
@@ -30,6 +31,10 @@
   &_filter {
     flex: 0.5;
     color: var(--semiBlueColor);
+
+    stc-apps-dropdown {
+      width: 100%;
+    }
   }
 
   &_kpis {
@@ -45,11 +50,12 @@
       font-family: 'poppins-regular';
     }
   }
+
   ::ng-deep .mat-mdc-text-field-wrapper {
     background-color: var(--whiteColor);
     border: 1px solid var(--darkGreyColor);
     border-radius: 4px;
     margin: 0 !important;
   }
-  
+
 }
