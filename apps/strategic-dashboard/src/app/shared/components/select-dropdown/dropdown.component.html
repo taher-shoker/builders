@@ -1,14 +1,16 @@
 <div [formGroup]="form">
   <div class="filters-holder d-flex">
+    @if (showYear()) {
     <stc-apps-select-drop-down
       class="yearHolder"
       formControlName="year"
-      [label]="'Select FY Year'"
+      [label]="'Select Year'"
       [(ngModel)]="year"
       [options]="yearsArray"
       [outputValue]="'name'"
       (selectChange)="selectYear($event)"
     ></stc-apps-select-drop-down>
+    } @if (showQuarter()) {
     <stc-apps-select-drop-down
       formControlName="quarter"
       [label]="'Select quarter'"
@@ -17,5 +19,6 @@
       [outputValue]="'name'"
       (selectChange)="selectQuarter($event)"
     ></stc-apps-select-drop-down>
+    }
   </div>
 </div>
