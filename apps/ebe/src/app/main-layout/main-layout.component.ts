@@ -22,6 +22,7 @@ export class MainLayoutComponent implements OnInit {
   navItems!: NavLinks[];
   userData!: UserModel;
   userRoles!: UserGroup;
+  isAllowed!:boolean;
   ngOnInit(): void {
     this.currentSystem = JSON.parse(decodeURIComponent(this.scorecardService.getCurrentSystem()));
     // this.userData = this.scorecardService.getUserGroups();
@@ -38,6 +39,7 @@ export class MainLayoutComponent implements OnInit {
       },
     });
     this.userRoles = this.checkSystem(this.userData.userGroups);
+    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
     this.scorecardService.userRoles = this.userRoles;
     console.log("currentSystem => " , this.currentSystem);
     console.log("userData => " , this.userData);
