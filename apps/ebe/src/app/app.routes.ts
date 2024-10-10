@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 export const appRoutes: Route[] = [
   {
     path : "",
@@ -32,6 +33,7 @@ export const appRoutes: Route[] = [
       import('./views/strategyProgram/components/add-project-form/add-project-form.component').then(
         (m) => m.AddProjectFormComponent
       ),
+      canActivate:[AuthGuard]
   },
   {
     path : "strategy-project-form/:id",
@@ -39,6 +41,7 @@ export const appRoutes: Route[] = [
       import('./views/strategyProgram/components/add-project-form/add-project-form.component').then(
         (m) => m.AddProjectFormComponent
       ),
+      canActivate:[AuthGuard]
   },
   // {
   //   path : "raqami",

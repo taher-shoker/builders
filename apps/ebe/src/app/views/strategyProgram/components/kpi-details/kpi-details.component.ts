@@ -11,7 +11,7 @@ import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { FileModel } from '../../../../models/scorecard.model';
+import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 export interface KpiProjectsDetailsModel
 {
@@ -47,7 +47,11 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   constructor(private router:Router){}
   toastr = inject(ToastrService);
   isEmpty!:boolean;
+  userRoles!:UserGroup;
+  isAllowed!:boolean;
   ngOnInit(): void {
+    this.userRoles = this.scorecardService.userRoles;
+    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
@@ -85,9 +89,13 @@ export class KpiDetailsComponentTsComponent implements OnInit {
     this.currentTabIndex = typeof index === 'number' ? index : 0;
   }
   showForm(project:StrategyProgramKpiDetailsModel) {
-    console.log(project);
-    this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.objective}`);
-    this.strategyProgramService.clickedProjects.next(project.projects);
+    if(this.isAllowed)
+    {
+      this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.objective}`);
+      this.strategyProgramService.clickedProjects.next(project.projects);
+    } else {
+      this.router.navigateByUrl(`/strategy-program`);
+    }
   }
   // editProject(kpi:KpiProjectsDetailsModel , project:StrategyProgramKpiDetailsModel , singleproject:StrategyProgramKpiProjectsDetailsModel)
   // {
