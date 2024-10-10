@@ -12,11 +12,12 @@
   </div>
 
   <stc-apps-file-uploader
-    [multiple]="true"
+    [multiple]="false"
     [chooseLabel]="'upload file'"
     (onformchange)="onFileSelected($event)"
     [attachmentFiles]="selectedFile"
     (ondelete)="onDeleteFile($event)"
+    [accept]="acceptedFileTypes"
   ></stc-apps-file-uploader>
 
   <hr class="liner-hr" />

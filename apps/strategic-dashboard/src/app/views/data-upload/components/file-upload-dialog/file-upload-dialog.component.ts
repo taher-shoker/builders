@@ -13,6 +13,7 @@ export class FileUploadDialogComponent {
   selectedItem: any = { name: 'ALL', key: 'ALL' };
   selectedFile: File[] = [];
   errorMessage = '';
+  acceptedFileTypes = ['.xlsx'];
 
   constructor(
     public dialogRef: MatDialogRef<FileUploadDialogComponent>,
