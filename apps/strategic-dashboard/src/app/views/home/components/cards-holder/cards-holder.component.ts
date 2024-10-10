@@ -15,6 +15,7 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
   kpis: any = {};
   strategicGroups: StrategicGroup[] = [];
   yearChangeSubscription: Subscription | undefined;
+  quarterChangeSubscription: Subscription | undefined;
 
   constructor(
     private strategicGroupsService: StrategicGroupsService,
@@ -23,36 +24,46 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    if (this.yearChangeSubscription) {
-      this.yearChangeSubscription.unsubscribe();
-    }
+    this.yearChangeSubscription?.unsubscribe();
+    this.quarterChangeSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     const savedYear = this.yearService.getSelectedYear();
     const savedQuarter = this.yearService.getSelectedQuarter();
 
-    // // if (savedYear) {
-    const year = `${savedYear}`;
-    this.sharedFormService.getForm().patchValue({ year });
-    this.getAllStrategicGroups();
-    // }
+    if (savedYear && savedQuarter) {
+      this.sharedFormService
+        .getForm()
+        .patchValue({ year: savedYear, quarter: savedQuarter });
+      this.getAllStrategicGroups();
+    }
+
+    // Subscribe to year change observable
     this.yearChangeSubscription = this.yearService
       .getYearChangeObservable()
       .subscribe((year: number) => {
+        this.getAllStrategicGroups();
+      });
+
+    // Subscribe to quarter change observable
+    this.quarterChangeSubscription = this.yearService
+      .getQuarterChangeObservable()
+      .subscribe((quarter: string) => {
         this.getAllStrategicGroups();
       });
   }
 
   getAllStrategicGroups() {
     const year: string =
+      this.yearService.getSelectedYear() ||
       this.sharedFormService.getForm().controls['year'].value;
+    const quarter: string =
+      this.yearService.getSelectedQuarter() ||
+      this.sharedFormService.getForm().controls['quarter'].value;
 
-     console.log(year, 'year');
+    const params = { year, quarter };
 
-    const params = {
-      year: year,
-    };
     this.strategicGroupsService.getAllStrategicGroups(params).subscribe(
       (result: StrategicGroup[]) => {
         this.strategicGroups = result;
