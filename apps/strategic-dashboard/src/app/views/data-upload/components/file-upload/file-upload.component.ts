@@ -10,13 +10,10 @@ import { DashboardNameEnum } from '../../enums/DashboardName.enum';
 })
 export class FileUploadComponent {
   showList = false;
-  items = [
-    { name: 'ALL', key: 'ALL' },
-    ...Object.keys(DashboardNameEnum).map((key) => ({
-      name: DashboardNameEnum[key as keyof typeof DashboardNameEnum],
-      key: DashboardNameEnum[key as keyof typeof DashboardNameEnum],
-    })),
-  ];
+  items = Object.keys(DashboardNameEnum).map((key) => ({
+    name: DashboardNameEnum[key as keyof typeof DashboardNameEnum], // Use enum value
+    key: DashboardNameEnum[key as keyof typeof DashboardNameEnum], // Set key same as value
+  }));
 
   constructor(private dialog: MatDialog) {}
 
