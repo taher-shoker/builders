@@ -2,10 +2,8 @@
   padding: 44px 40px;
 
   &_title {
-    // display: flex;
-    // justify-content: space-between;
     display: grid;
-    grid-template-columns: 1fr 0.5fr;
+    grid-template-columns: 1fr 0.2fr;
     gap: 20px;
     margin: 22px 0;
 
@@ -120,10 +118,12 @@
   .details-page_progress-overview {
     width: 99% !important;
   }
+}
 
-  .details-page_header {
-    >div {
-      margin-left: 20%;
+@media screen and (max-width: 992px) {
+  .details-page {
+    &_title {
+      grid-template-columns: 1fr 0.3fr;
     }
   }
 }
@@ -141,11 +141,5 @@
 
   .details-page_title {
     display: block !important;
-  }
-
-  .details-page_header {
-    >div {
-      margin-left: 20%;
-    }
   }
 }
