@@ -42,7 +42,16 @@ export class DoubleLineChartComponent implements AfterViewInit, OnDestroy , OnIn
     );
 
     chart.get('colors')?.set('step', 3);
-    this.root.numberFormatter.set("numberFormat", "#.a");
+    // this.root.numberFormatter.set("numberFormat", "#a");
+    this.root.numberFormatter.setAll({
+      bigNumberPrefixes: [
+        { "number": 1e+3, "suffix": "K" },
+        { "number": 1e+6, "suffix": "M" },
+        { "number": 1e+9, "suffix": "B" },
+      ],
+      numberFormat: "#.a",
+      smallNumberPrefixes: []
+    });
     // Add cursor
     // https://www.amcharts.com/docs/v5/charts/xy-chart/cursor/
     const cursor = chart.set('cursor', am5xy.XYCursor.new(this.root, {}));
