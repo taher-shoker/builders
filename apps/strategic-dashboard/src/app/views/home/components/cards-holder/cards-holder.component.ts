@@ -15,7 +15,6 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
   kpis: any = {};
   strategicGroups: StrategicGroup[] = [];
   yearChangeSubscription: Subscription | undefined;
-  quarterChangeSubscription: Subscription | undefined;
 
   constructor(
     private strategicGroupsService: StrategicGroupsService,
@@ -25,17 +24,13 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.yearChangeSubscription?.unsubscribe();
-    this.quarterChangeSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     const savedYear = this.yearService.getSelectedYear();
-    const savedQuarter = this.yearService.getSelectedQuarter();
 
-    if (savedYear && savedQuarter) {
-      this.sharedFormService
-        .getForm()
-        .patchValue({ year: savedYear, quarter: savedQuarter });
+    if (savedYear) {
+      this.sharedFormService.getForm().patchValue({ year: savedYear });
       this.getAllStrategicGroups();
     }
 
@@ -45,24 +40,14 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
       .subscribe((year: number) => {
         this.getAllStrategicGroups();
       });
-
-    // Subscribe to quarter change observable
-    this.quarterChangeSubscription = this.yearService
-      .getQuarterChangeObservable()
-      .subscribe((quarter: string) => {
-        this.getAllStrategicGroups();
-      });
   }
 
   getAllStrategicGroups() {
     const year: string =
       this.yearService.getSelectedYear() ||
       this.sharedFormService.getForm().controls['year'].value;
-    const quarter: string =
-      this.yearService.getSelectedQuarter() ||
-      this.sharedFormService.getForm().controls['quarter'].value;
 
-    const params = { year, quarter };
+    const params = { year };
 
     this.strategicGroupsService.getAllStrategicGroups(params).subscribe(
       (result: StrategicGroup[]) => {
