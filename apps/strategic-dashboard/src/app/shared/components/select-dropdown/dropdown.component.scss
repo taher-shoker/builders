@@ -2,11 +2,11 @@
   // display: flex;
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
   align-items: end;
 
-  .yearHolder {
-    margin-right: 24px;
+  .quarterHolder {
+    margin-inline-start: 24px;
+
   }
 
   ::ng-deep {

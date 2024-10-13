@@ -12,6 +12,7 @@
     ></stc-apps-select-drop-down>
     } @if (showQuarter()) {
     <stc-apps-select-drop-down
+      class="quarterHolder"
       formControlName="quarter"
       [label]="'Select quarter'"
       [(ngModel)]="quarter"
