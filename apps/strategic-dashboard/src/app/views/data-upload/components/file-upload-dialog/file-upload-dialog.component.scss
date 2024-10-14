@@ -21,4 +21,11 @@
     &_error-message {
         color: var(--stc-red-color);
     }
+
+    @media (max-width: 480px) {
+        &_actions {
+            flex-direction: column;
+            gap: 10px;
+        }
+    }
 }
