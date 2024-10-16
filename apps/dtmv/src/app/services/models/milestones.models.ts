@@ -173,6 +173,18 @@ export interface HighlightImpactReport {
   target: number;
   actual: number;
   targetEoy: number;
+  stcDiScore: number;
+  diScore: number;
+  charterStatus: number;
+  achievements: string;
+  charterProgress: string;
+  supportNeeded: string;
+  digitalTransformationReflectionLevel: ReflectionLevel[];
+  clarityProgramProgress: number;
+  status: string;
+  clarityStrategicProgramReflectionLevel: ReflectionLevel[];
+  erpStatus: string;
+  erpStatusReflectionLevel: ReflectionLevel[];
 }
 
 export interface HighlightImpartReportResponse extends HighlightImpactReport {
@@ -256,6 +268,19 @@ export interface ReportData {
   valueImpact: string;
   workflowId: number;
   year: number;
+  digitalTransformationReflectionLevel: ReflectionLevel;
+  achievements: string;
+  charterProgress: string;
+  charterStatus: number;
+  clarityProgramProgress: number;
+  clarityStrategicProgramReflectionLevel: ReflectionLevel;
+  diScore: number;
+  editedBy: string;
+  erpStatus: string;
+  erpStatusReflectionLevel: ReflectionLevel;
+  status: string;
+  stcDiScore: number;
+  supportNeeded: string;
 }
 
 export interface ReportDataWorkflow {
@@ -281,3 +306,11 @@ export interface ReportDataWorkflow {
 export type Params = {
   requestParams: { name: string; value: number | string | boolean }[];
 };
+
+export type ReflectionLevel =
+  | 'PR_Meeting'
+  | 'DT_GCEO_Workshop'
+  | 'Deep_Dive'
+  | 'Strategic_Dialogue'
+  | 'Pulse_Check_Report'
+  | 'ERP_Committee';

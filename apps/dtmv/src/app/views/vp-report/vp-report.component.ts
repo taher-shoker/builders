@@ -33,9 +33,11 @@ export class VpReportComponent implements OnInit {
   selectedTeam: WritableSignal<string> = signal('');
 
   reportData: WritableSignal<ReportData | undefined> = signal(undefined);
+  digitalTransformation: WritableSignal<boolean> = signal(true);
 
   progressBarData = computed(() => {
     const reportData = this.reportData();
+
     let data: ProgressInfo;
     if (reportData) {
       data = {
@@ -66,7 +68,6 @@ export class VpReportComponent implements OnInit {
             : '#00c48c1a',
       };
     } else {
-      console.log('Data is null:', reportData);
       data = {
         prefixText: 'Baseline',
         prefixValue: 0,
@@ -96,8 +97,15 @@ export class VpReportComponent implements OnInit {
     });
     this.setDateInitiallyToCurrentYear();
     this.getAllTeams();
+    this.showDigitalTransformation();
   }
 
+  showDigitalTransformation() {
+    this.digitalTransformation.set(true);
+  }
+  showClarityStrateic() {
+    this.digitalTransformation.set(false);
+  }
   private watchRoute() {
     this.route.queryParams.subscribe((params) => {
       this.selectedYear.set(params['year']);

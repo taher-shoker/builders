@@ -1,0 +1,43 @@
+<div [ngSwitch]="state">
+  <!-- PR_Meeting content -->
+  <div *ngSwitchCase="'PR_Meeting'" [ngClass]="state +' puls-card'">
+    <img [src]="'assets/images/'+state+'.png'" [alt]="state" />
+    <h4>PR Meeting</h4>
+  </div>
+
+  <!-- DT_GCEO_Workshop content -->
+  <div *ngSwitchCase="'DT_GCEO_Workshop'" [ngClass]="state +' puls-card'">
+    <img [src]="'assets/images/'+state+'.png'" [alt]="state" />
+    <h4>DT GCEO Workshop</h4>
+  </div>
+
+  <!-- Deep_Dive content -->
+  <div *ngSwitchCase="'Deep_Dive'" [ngClass]="state +' puls-card'">
+    <img [src]="'assets/images/'+state+'.png'" [alt]="state" />
+    <h4>Deep Dive</h4>
+  </div>
+
+  <!-- Strategic_Dialogue content -->
+  <div *ngSwitchCase="'Strategic_Dialogue'" [ngClass]="state +' puls-card'">
+    <img [src]="'assets/images/'+state+'.png'" [alt]="state" />
+    <h4>Strategic Dialogue</h4>
+  </div>
+
+  <!-- Pulse_Check_Report content -->
+  <div *ngSwitchCase="'Pulse_Check_Report'" [ngClass]="state +' puls-card'">
+    <img [src]="'assets/images/'+state+'.png'" [alt]="state" />
+    <h4>Pulse Check Report</h4>
+  </div>
+
+  <!-- ERP_Committee content -->
+  <div *ngSwitchCase="'ERP_Committee'" [ngClass]="state +' puls-card'">
+    <img [src]="'assets/images/'+state+'.png'" [alt]="state" />
+    <h4>ERP Committee</h4>
+  </div>
+
+  <!-- Default content if no matching state is found -->
+  <div *ngSwitchDefault>
+    <h4>Unknown State</h4>
+    <p>No content available for this state.</p>
+  </div>
+</div>

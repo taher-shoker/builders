@@ -6,8 +6,8 @@ import {
   HighlightImpactReport,
   MilestonesService,
 } from '../../milestones-setting/milestones.service';
-import { quillContentValidator } from '../../../services/validators/quill-empty-validator';
 import { ReportData } from '../../../services/models/milestones.models';
+import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'stc-apps-edit',
@@ -55,10 +55,19 @@ export class EditComponent implements OnInit {
 
   showQuill: WritableSignal<boolean> = signal(true);
 
+  levels = [
+    { name: 'Pulse Check Report', id: 'Pulse_Check_Report' },
+    { name: 'PR Meeting', id: 'PR_Meeting' },
+    { name: 'DT GCEO Workshop', id: 'DT_GCEO_Workshop' },
+    { name: 'Deep Dive', id: 'Deep_Dive' },
+    { name: 'Strategic Dialogue', id: 'Strategic_Dialogue' },
+    { name: 'ERP Committee', id: 'ERP_Committee' },
+  ];
   constructor(
     private router: Router,
     private route: ActivatedRoute,
-    private milestonesService: MilestonesService
+    private milestonesService: MilestonesService,
+    private cookieService: CookieService
   ) {}
 
   ngOnInit(): void {
@@ -72,37 +81,55 @@ export class EditComponent implements OnInit {
     this.form = new FormGroup({
       dataForm: new FormGroup({
         actual: new FormControl('', [
-          Validators.required,
           Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         baseline: new FormControl('', [
-          Validators.required,
           Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         targetEoy: new FormControl('', [
-          Validators.required,
           Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         target: new FormControl('', [
-          Validators.required,
           Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
-        highlight: new FormControl('', [
-          Validators.required,
-          quillContentValidator,
+        highlight: new FormControl(''),
+        valueImpact: new FormControl(''),
+        stcDiScore: new FormControl(0.0, [
+          Validators.max(200),
+          Validators.min(0),
+          Validators.pattern(numberPattern),
         ]),
-        valueImpact: new FormControl('', [
-          Validators.required,
-          quillContentValidator,
+        diScore: new FormControl(0.0, [
+          Validators.max(200),
+          Validators.min(0),
+          Validators.pattern(numberPattern),
         ]),
+        charterStatus: new FormControl(0.0, [
+          Validators.max(200),
+          Validators.min(0),
+          Validators.pattern(numberPattern),
+        ]),
+        achievements: new FormControl('', Validators.maxLength(1000)),
+        charterProgress: new FormControl('', Validators.maxLength(1000)),
+        supportNeeded: new FormControl('', Validators.maxLength(1000)),
+        digitalTransformationReflectionLevel: new FormControl(null),
+        clarityProgramProgress: new FormControl(0.0, [
+          Validators.max(200),
+          Validators.min(0),
+          Validators.pattern(numberPattern),
+        ]),
+        status: new FormControl('', Validators.maxLength(1000)),
+        clarityStrategicProgramReflectionLevel: new FormControl(null),
+        erpStatus: new FormControl('', Validators.maxLength(1000)),
+        erpStatusReflectionLevel: new FormControl(null),
       }),
       commentForm: new FormGroup({
         comment: new FormControl(''),
@@ -248,7 +275,42 @@ export class EditComponent implements OnInit {
       .get('dataForm')
       ?.get('valueImpact')
       ?.setValue(formData.valueImpact);
-
+    this.form.get('dataForm')?.get('stcDiScore')?.setValue(formData.stcDiScore);
+    this.form.get('dataForm')?.get('diScore')?.setValue(formData.diScore);
+    this.form
+      .get('dataForm')
+      ?.get('charterStatus')
+      ?.setValue(formData.charterStatus);
+    this.form
+      .get('dataForm')
+      ?.get('clarityProgramProgress')
+      ?.setValue(formData.clarityProgramProgress);
+    this.form
+      .get('dataForm')
+      ?.get('achievements')
+      ?.setValue(formData.achievements);
+    this.form
+      .get('dataForm')
+      ?.get('charterProgress')
+      ?.setValue(formData.charterProgress);
+    this.form
+      .get('dataForm')
+      ?.get('supportNeeded')
+      ?.setValue(formData.supportNeeded);
+    this.form
+      .get('dataForm')
+      ?.get('digitalTransformationReflectionLevel')
+      ?.setValue(formData.digitalTransformationReflectionLevel);
+    this.form.get('dataForm')?.get('status')?.setValue(formData.status);
+    this.form
+      .get('dataForm')
+      ?.get('clarityStrategicProgramReflectionLevel')
+      ?.setValue(formData.clarityStrategicProgramReflectionLevel);
+    this.form.get('dataForm')?.get('erpStatus')?.setValue(formData.erpStatus);
+    this.form
+      .get('dataForm')
+      ?.get('erpStatusReflectionLevel')
+      ?.setValue(formData.erpStatusReflectionLevel);
     this.destroyQuillEditor();
     this.reviewMode.set(true);
     this.buildQuillEditor();
@@ -371,61 +433,180 @@ export class EditComponent implements OnInit {
 
   protected navBack() {
     this.router.navigate(['../'], { relativeTo: this.route });
+    window.scrollTo(0, 0);
   }
 
   protected submitForm() {
+    if (!this.form.valid) {
+      this.markFormAsTouched();
+      return;
+    }
     this.handleUiState('loading');
-
-    const { actual, baseline, targetEoy, target, highlight, valueImpact } =
-      this.form.get('dataForm')!.value;
-    const editingData: HighlightImpactReport = {
+    const {
       actual,
       baseline,
       targetEoy,
       target,
       highlight,
       valueImpact,
+      stcDiScore,
+      diScore,
+      charterStatus,
+      achievements,
+      charterProgress,
+      supportNeeded,
+      digitalTransformationReflectionLevel,
+      clarityProgramProgress,
+      status,
+      clarityStrategicProgramReflectionLevel,
+      erpStatus,
+      erpStatusReflectionLevel,
+    } = this.form.get('dataForm')!.value;
+    const editingData: HighlightImpactReport = {
+      actual: actual || 0,
+      baseline: baseline || 0,
+      target: target || 0,
+      targetEoy: targetEoy || 0,
+      valueImpact,
+      highlight,
+      stcDiScore: stcDiScore || 0.0,
+      diScore: diScore || 0.0,
+      charterStatus: charterStatus || 0.0,
+      achievements: achievements || '',
+      charterProgress: charterProgress || '',
+      supportNeeded: supportNeeded || '',
+      digitalTransformationReflectionLevel:
+        digitalTransformationReflectionLevel || null,
+      clarityProgramProgress: clarityProgramProgress || 0.0,
+      status: status || '',
+      clarityStrategicProgramReflectionLevel:
+        clarityStrategicProgramReflectionLevel || null,
+      erpStatus: erpStatus || '',
+      erpStatusReflectionLevel: erpStatusReflectionLevel || null,
       team: this.selectedTeam(),
       year: this.selectedYear(),
     };
-
-    this.milestonesService.postHighlightOrImpact(editingData).subscribe(() => {
-      this.getVpReportState();
+    this.milestonesService.postHighlightOrImpact(editingData).subscribe({
+      next: () => this.getVpReportState(),
+    });
+  }
+  markFormAsTouched() {
+    Object.keys(this.form.controls).forEach((field) => {
+      const control = this.form.get(field);
+      control?.markAsTouched({ onlySelf: true });
     });
   }
 
   protected resubmitForm() {
-    this.handleUiState('loading');
+    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
 
-    const { actual, baseline, targetEoy, target, highlight, valueImpact } =
-      this.form.get('dataForm')!.value;
+    this.handleUiState('loading');
+    const {
+      actual,
+      baseline,
+      targetEoy,
+      target,
+      highlight,
+      valueImpact,
+      stcDiScore,
+      diScore,
+      charterStatus,
+      achievements,
+      charterProgress,
+      supportNeeded,
+      digitalTransformationReflectionLevel,
+      clarityProgramProgress,
+      status,
+      clarityStrategicProgramReflectionLevel,
+      erpStatus,
+      erpStatusReflectionLevel,
+    } = this.form.get('dataForm')!.value;
+    const params = [
+      {
+        name: 'edit_by',
+        value: user.email.toString(),
+      },
+      {
+        name: 'actual',
+        value: actual ? actual.toString() : '0',
+      },
+      {
+        name: 'baseline',
+        value: baseline ? baseline.toString() : '0',
+      },
+      {
+        name: 'target_eoy',
+        value: targetEoy ? targetEoy.toString() : '0',
+      },
+      {
+        name: 'target',
+        value: target ? target.toString() : '0',
+      },
+      {
+        name: 'highlight',
+        value: highlight,
+      },
+      {
+        name: 'value_impact',
+        value: valueImpact,
+      },
+      {
+        name: 'stc_di_score',
+        value: stcDiScore ? stcDiScore.toString() : '0',
+      },
+      {
+        name: 'di_score',
+        value: diScore ? diScore.toString() : '0',
+      },
+      {
+        name: 'charter_status',
+        value: charterStatus ? charterStatus.toString() : '0',
+      },
+      {
+        name: 'achievements',
+        value: achievements,
+      },
+      {
+        name: 'charter_progress',
+        value: charterProgress,
+      },
+      {
+        name: 'support_needed',
+        value: supportNeeded,
+      },
+      {
+        name: 'digital_transformation_reflection_level',
+        value: digitalTransformationReflectionLevel
+          ? digitalTransformationReflectionLevel?.join(',')
+          : null,
+      },
+      {
+        name: 'clarity_program_progress',
+        value: clarityProgramProgress ? clarityProgramProgress.toString() : '0',
+      },
+      {
+        name: 'status',
+        value: status,
+      },
+      {
+        name: 'clarity_strategic_program_reflection_level',
+        value: clarityStrategicProgramReflectionLevel
+          ? clarityStrategicProgramReflectionLevel?.join(',')
+          : null,
+      },
+      {
+        name: 'erp_status',
+        value: erpStatus,
+      },
+      {
+        name: 'erp_status_reflection_level',
+        value: erpStatusReflectionLevel
+          ? erpStatusReflectionLevel?.join(',')
+          : null,
+      },
+    ].filter((param: { name: string; value: string }) => param.value !== null);
     this.requestParams.set({
-      requestParams: [
-        {
-          name: 'actual',
-          value: actual.toString(),
-        },
-        {
-          name: 'baseline',
-          value: baseline.toString(),
-        },
-        {
-          name: 'target_eoy',
-          value: targetEoy.toString(),
-        },
-        {
-          name: 'target',
-          value: target.toString(),
-        },
-        {
-          name: 'highlight',
-          value: highlight,
-        },
-        {
-          name: 'value_impact',
-          value: valueImpact,
-        },
-      ],
+      requestParams: params,
     });
 
     const workflowId = this.workflowId();
@@ -476,8 +657,6 @@ export class EditComponent implements OnInit {
       this.milestonesService
         .completePendingTask(workflowId, requestTaskId, requestParams)
         .subscribe((res) => {
-          console.log('res of approving', res);
-
           this.getVpReportState();
         });
     }
@@ -518,8 +697,6 @@ export class EditComponent implements OnInit {
       this.milestonesService
         .completePendingTask(workflowId, requestTaskId, requestParams)
         .subscribe((res) => {
-          console.log('res of approving', res);
-
           this.getVpReportState();
         });
     }

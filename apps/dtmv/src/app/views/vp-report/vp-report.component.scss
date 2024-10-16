@@ -39,6 +39,7 @@
     display: flex;
     align-items: center;
     flex-wrap: wrap;
+    padding-left: 0;
     li {
       border: 1px solid var(--stc-color);
       border-radius: 8px;
@@ -93,7 +94,6 @@
 }
 
 /** Progress Circule **/
-
 
 // div[role='progresscircule']::before {
 //   counter-reset: percentage var(--value);
@@ -189,7 +189,7 @@
   }
 }
 
-.bar-holder{
+.bar-holder {
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -272,40 +272,110 @@
   margin-block: 50px;
 }
 
-.no-data-text{
+.no-data-text {
   text-align: center;
   padding: 50px;
   font-weight: bold;
 }
 
-.report-row{
+.report-row {
   justify-content: space-between;
 
-  .report-col{
+  .report-col {
     background-color: white;
     padding: 20px;
     margin-inline: 10px;
   }
 }
 
-.highlight-title, .impact-title{
+.highlight-title,
+.impact-title {
   color: var(--stc-color);
   font-weight: bold;
   font-size: 1.3rem;
-
 }
 
-.edit-link{
+.edit-link {
   font-size: 1rem;
   cursor: pointer;
   float: right;
   text-decoration: underline;
 }
 
-quill-editor{
+quill-editor {
   width: 100%;
 
   ::ng-deep .ql-container.ql-snow {
-    border: none!important;
+    border: none !important;
+  }
+}
+
+.tabs {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  stc-apps-button {
+    margin-right: 23px !important;
+  }
+}
+.tab-content {
+  margin-top: 15px;
+  background-color: white;
+  padding: 20px 36px;
+  border-radius: 10px;
+}
+.cards {
+  display: flex;
+  align-items: center;
+}
+.puls-report-value {
+  background-color: white;
+  max-height: 100%;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  margin: 5px 0;
+  min-height: 110px;
+  h5 {
+    font-size: 16px;
+    padding-top: 16px;
+    padding-left: 16px;
+    color: #7e8fa7;
+  }
+  p {
+    font-size: 16px;
+    padding-left: 23px;
+    color: #1d252d;
+    margin-bottom: 5px;
+  }
+  span {
+    font-size: 14px;
+    padding-left: 23px;
+    color: #f44336;
+  }
+}
+.transperant-bg {
+  background-color: #f8f8f8;
+  margin-top: 10px;
+  padding-block: 16px;
+  border-radius: 10px;
+}
+.font-bloder {
+  font-family: var(--stc-font-bold);
+}
+
+.wrap-text {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.5em; /* Adjust line-height based on design */
+  width: 95%;
+  transition: overflow 0.6s ease; /* Smooth transition */
+  &:hover {
+    overflow: visible;
+    -webkit-box-orient: unset;
   }
 }

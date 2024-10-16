@@ -1,0 +1,53 @@
+$stc-color: var(--stc-color);
+
+.PR_Meeting {
+  background-color: rgba($color: #ff375e, $alpha: 0.1);
+  h4 {
+    color: var(--stc-coral-color);
+  }
+}
+.DT_GCEO_Workshop {
+  background-color: rgba($color: #3db5c1, $alpha: 0.1);
+  h4 {
+    color: var(--stc-Sea2-Color);
+  }
+}
+.ERP_Committee {
+  background-color: rgba($color: #ff6a39, $alpha: 0.1);
+  h4 {
+    color: #ff6a39;
+  }
+}
+.Strategic_Dialogue {
+  background-color: rgba($color: #8b97a7, $alpha: 0.1);
+  h4 {
+    color: var(--stc-black-color);
+  }
+}
+.Pulse_Check_Report {
+  background-color: rgba($color: #e39600, $alpha: 0.1);
+  h4 {
+    color: var(--stc-sun2-color);
+  }
+}
+.Deep_Dive {
+  background-color: rgba($color: #4f008c, $alpha: 0.1);
+  h4 {
+    color: var(--stc-color);
+  }
+}
+.puls-card {
+  padding: 10px 16px;
+  margin-right: 8px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  h4 {
+    margin-bottom: 0;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  img {
+    margin-right: 10px;
+  }
+}

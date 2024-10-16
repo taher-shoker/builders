@@ -83,6 +83,7 @@
   }
   ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
     background-color: rgba($color: white, $alpha: 1) !important;
+    border: 1px solid lightgray;
   }
 }
 
@@ -109,28 +110,43 @@
   }
 }
 
-.input-label{
-    margin-bottom: 8px;
-    text-transform: capitalize;
-    font-size: 18px;
-    font-weight: 400;
+.input-label {
+  margin-bottom: 8px;
+  text-transform: capitalize;
+  font-size: 18px;
+  font-weight: 400;
 }
 
-.action-btns-row{
+.action-btns-row {
   align-items: center;
   justify-content: end;
 }
 
-.quills-row{
-    margin-bottom: 6rem;
+.quills-row {
+  margin-bottom: 6rem;
 }
 
-.form-status{
+.form-status {
   text-decoration: underline;
   color: grey;
 }
 
-.director-pmo-comment{
+.director-pmo-comment {
   font-weight: bold;
   color: grey;
+}
+.tabs {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  stc-apps-button {
+    margin-right: 23px !important;
+  }
+}
+.tab-content {
+  margin-top: 30px;
+  background-color: white;
+  padding: 36px;
+  border-radius: 5px;
 }

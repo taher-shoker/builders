@@ -16,6 +16,7 @@ const routes: Routes = [
     BrowserModule,
     RouterModule.forRoot(routes, {
       useHash: true,
+      scrollPositionRestoration: 'enabled',
     }),
   ],
   exports: [RouterModule],

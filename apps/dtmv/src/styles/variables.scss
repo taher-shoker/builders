@@ -1,11 +1,10 @@
-
 /* Colors pallet */
 
-:root{
+:root {
   --views-padding: 26px;
   --grey-color: #8e9aa0;
 
-  --stc-grey-color: #8B97A7;
+  --stc-grey-color: #8b97a7;
   --side-title: 16px;
   --secondary-text: 12px;
   --secondary-big-text: 14px;
@@ -22,10 +21,13 @@
   --stc-coral-color: #ff375e;
 
   --stc-sun-color: #ffdd40;
+  --stc-sun2-color: #e39600;
+
   --stc-sunset-color: #ff6a39; // 4
 
   --stc-oasis-color: #00c48c; // 6
   --stc-Sea-Color: #1cced8; // 3
+  --stc-Sea2-Color: #3db5c1; // 3
 
   --stc-Silver-Color: #8e9aa0;
   --stc-Air-Color: #f3f3f1;
@@ -52,9 +54,7 @@
   // --secondaryTitleSize: 20px;
 
   // --smallShadow: -7px 5px 9px -10px rgba(0,0,0,0.75);
-
 }
-
 
 // mixin that enables css variables in light mode
 // @mixin lighten() {

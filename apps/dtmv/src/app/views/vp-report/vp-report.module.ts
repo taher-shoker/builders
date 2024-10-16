@@ -16,9 +16,10 @@ import { VpReportComponent } from './vp-report.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { QuillModule } from 'ngx-quill';
 import { EditComponent } from './edit/edit.component';
+import { PulsCardComponent } from './puls-card/puls-card.component';
 
 @NgModule({
-  declarations: [VpReportComponent, EditComponent],
+  declarations: [VpReportComponent, EditComponent, PulsCardComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -35,7 +36,7 @@ import { EditComponent } from './edit/edit.component';
     VpReportRoutingModule,
     QuillModule.forRoot(), // Ensure QuillModule is imported and initialized
   ],
-  exports: [],
+  exports: [PulsCardComponent],
   providers: [],
 })
 export class VpReportModule {}

@@ -23,7 +23,7 @@ const routes: Routes = [
   },
   {
     path: 'users-setting',
-    canActivate: [AdminAuthGuard],
+    canActivate: [AuthGuard, AdminAuthGuard],
     loadChildren: () =>
       import('./views/users-settings/users-settings.module').then(
         (m) => m.UsersSettingsModule
