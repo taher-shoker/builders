@@ -1,18 +1,35 @@
 .filters-holder {
-  display: flex;
-  .yearHolder {
-    margin-right: 24px;
+  // display: flex;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  align-items: end;
+
+  .quarterHolder {
+    margin-inline-start: 24px;
+
+  }
+
+  ::ng-deep {
+    stc-apps-select-drop-down {
+      width: 100%;
+
+      .mat-mdc-form-field-infix {
+        padding-top: inherit !important;
+        padding-bottom: inherit !important;
+        width: 100%;
+      }
+
+      .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
+        transform: none;
+      }
+    }
   }
 }
-::ng-deep {
-  stc-apps-select-drop-down {
-    .mat-mdc-form-field-infix {
-      padding-top: inherit !important;
-      padding-bottom: inherit !important;
-    }
 
-    .mat-form-field-appearance-fill .mat-mdc-select-arrow-wrapper {
-      transform: none;
-    }
+@media screen and (max-width: 1200px) {
+  .filters-holder {
+    flex-direction: column;
+    grid-template-columns: repeat(1, 1fr);
   }
+
 }

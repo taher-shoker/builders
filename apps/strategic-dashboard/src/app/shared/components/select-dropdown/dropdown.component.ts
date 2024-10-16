@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, input, InputSignal, OnInit } from '@angular/core';
 import { YearService } from '../../services/year.service';
 import { SharedFormService } from '../../services/shared-form.service';
 import { FormGroup } from '@angular/forms';
@@ -11,6 +11,8 @@ interface name {
   styleUrl: './dropdown.component.scss',
 })
 export class DropdownComponent implements OnInit {
+  showYear: InputSignal<boolean> = input(true);
+  showQuarter: InputSignal<boolean> = input(true);
   currentDate = new Date();
   currentYear = this.currentDate.getFullYear() - 1;
   year = this.currentDate.getFullYear();

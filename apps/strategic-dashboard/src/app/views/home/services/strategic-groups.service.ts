@@ -16,6 +16,7 @@ export class StrategicGroupsService {
     year: string;
   }): Observable<StrategicGroup[]> {
     const httpParams = new HttpParams().set('year', params.year);
+
     return this.http.get<StrategicGroup[]>(
       this.baseUrl + 'dashboard/strategic',
       {

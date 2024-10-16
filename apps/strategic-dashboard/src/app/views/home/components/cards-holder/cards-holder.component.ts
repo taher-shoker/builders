@@ -23,20 +23,18 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnDestroy(): void {
-    if (this.yearChangeSubscription) {
-      this.yearChangeSubscription.unsubscribe();
-    }
+    this.yearChangeSubscription?.unsubscribe();
   }
 
   ngOnInit(): void {
     const savedYear = this.yearService.getSelectedYear();
-    const savedQuarter = this.yearService.getSelectedQuarter();
 
-    // // if (savedYear) {
-    const year = `${savedYear}`;
-    this.sharedFormService.getForm().patchValue({ year });
-    this.getAllStrategicGroups();
-    // }
+    if (savedYear) {
+      this.sharedFormService.getForm().patchValue({ year: savedYear });
+      this.getAllStrategicGroups();
+    }
+
+    // Subscribe to year change observable
     this.yearChangeSubscription = this.yearService
       .getYearChangeObservable()
       .subscribe((year: number) => {
@@ -46,13 +44,11 @@ export class CardsHolderComponent implements OnInit, OnDestroy {
 
   getAllStrategicGroups() {
     const year: string =
+      this.yearService.getSelectedYear() ||
       this.sharedFormService.getForm().controls['year'].value;
 
-     console.log(year, 'year');
+    const params = { year };
 
-    const params = {
-      year: year,
-    };
     this.strategicGroupsService.getAllStrategicGroups(params).subscribe(
       (result: StrategicGroup[]) => {
         this.strategicGroups = result;

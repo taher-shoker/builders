@@ -1,16 +1,19 @@
 .kpi-details {
   color: var(--stc-color);
+
   &_programInfo {
     font-size: 18px;
     font-family: 'montserrat-light';
     color: var(--darkGreyColor);
     font-weight: 400;
+
     .program-name {
       font-weight: 600;
       font-family: 'montserrat-meduim';
       color: var(--stc-color);
     }
   }
+
   &_kpiName {
     margin: 24px 0px;
     font-size: 32px;
@@ -18,6 +21,7 @@
     font-weight: 700;
     line-height: 48px;
   }
+
   &_kpiCode {
     font-family: 'montserrat-meduim';
     font-size: 18px;
@@ -25,35 +29,43 @@
     font-family: var(--stc-font-bold);
     line-height: 40px;
   }
+
   &_kpiOverview {
     .kpi-overview-holder {
-      padding: 16px 0px 8px 0px;
+      padding: 16px 0px;
       margin: 24px 12px;
       border-radius: 10px;
       font-size: 16px;
       font-weight: 500;
       font-family: var(--stc-font-bold);
-      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
   }
+
   &_kpiDahsboard {
     .chart {
       margin-bottom: 24px;
     }
   }
+
   &_info {
     margin: 24px 0px;
     background-color: var(--whiteColor);
     border-radius: 10px;
+
     .info-holder {
       padding: 46px;
       margin: 24px 0px;
       text-align: center;
       border-right: solid 1px rgba(204, 204, 204, 0.4);
       font-family: var(--stc-font-light);
-      &:last-child{
+
+      &:last-child {
         border: none;
       }
+
       .info-title {
         color: var(--grey-color);
         font-weight: 300;
@@ -61,6 +73,7 @@
         line-height: 33px;
         margin-bottom: 33px;
       }
+
       .info-desc {
         color: var(--grayColor);
         font-weight: 400;
@@ -70,6 +83,7 @@
       }
     }
   }
+
   &_definition,
   &_formula {
     width: 49%;
@@ -78,11 +92,13 @@
     padding: 24px;
     font-family: var(--stc-font-light);
     color: var(--grey-color);
+
     .title {
       margin-bottom: 32px;
       font-size: 24px;
       font-weight: 300;
     }
+
     p {
       font-size: 18px;
       font-weight: 400;
@@ -91,13 +107,16 @@
     }
   }
 }
+
 @media screen and (max-width: 1200px) {
   .def-formula {
     display: block !important;
+
     .kpi-details_definition {
       width: 100% !important;
       margin-bottom: 24px;
     }
+
     .kpi-details_formula {
       width: 100% !important;
     }

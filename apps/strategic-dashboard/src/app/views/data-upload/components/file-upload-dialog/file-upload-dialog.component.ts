@@ -13,6 +13,10 @@ export class FileUploadDialogComponent {
   selectedItem: any = { name: 'ALL', key: 'ALL' };
   selectedFile: File[] = [];
   errorMessage = '';
+  acceptedFileTypes = [
+    '.xlsx',
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  ];
 
   constructor(
     public dialogRef: MatDialogRef<FileUploadDialogComponent>,
@@ -26,9 +30,7 @@ export class FileUploadDialogComponent {
     const selectedItem = this.data.items.find(
       (item: any) => item.key === selectedValue
     );
-    if (selectedItem != 'All') {
-      this.selectedItem = selectedItem;
-    }
+    this.selectedItem = selectedItem;
   }
 
   cancel(): void {
@@ -41,10 +43,7 @@ export class FileUploadDialogComponent {
       return;
     }
 
-    let dashboardName;
-    if (this.selectedItem?.key !== 'ALL') {
-      dashboardName = this.selectedItem?.key;
-    }
+    const dashboardName = this.selectedItem?.key;
     this.dataUploadService
       .uploadData(this.selectedFile[0], dashboardName)
       .subscribe({
