@@ -23,7 +23,7 @@
     }
     &-title
     {
-      text-transform: capitalize;
+      // text-transform: capitalize;
       @extend .boldPoppins;
       color:var(--stc-purple-light-color);
       font-size: 18px;
@@ -137,6 +137,13 @@
   font-size: 16px;
   max-width:500px;
   word-spacing:3px;
+  word-break: break-all;
+}
+.unit-popover-section
+{
+  color:var(--stc-purple-light-color);
+  font-weight: 500;
+  max-width: 250px;
 }
 .kpi-details , .no-kpi-details
 {
@@ -149,6 +156,9 @@
   margin-top: 20px;
   // word-spacing:5px;
   text-align: left;
+  word-break: break-all;
+  min-height: 47px;
+  // line-height: 47px;
   a
   {
     font-size: 14px;

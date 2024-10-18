@@ -80,6 +80,7 @@ import { DialogModalComponent } from './file-upload-dialog/dialog.component';
 import { FileUploadInputComponent } from './file-upload-input/file-upload-input.component';
 import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
+import { NewLinePipe } from './newLine.pipe';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
@@ -130,7 +131,8 @@ const components = [
   ConfirmDialogComponent,
   TruncateWordPipe,
   DialogModalComponent,
-  FileUploadInputComponent
+  FileUploadInputComponent,
+  NewLinePipe
 ];
 
 @NgModule({

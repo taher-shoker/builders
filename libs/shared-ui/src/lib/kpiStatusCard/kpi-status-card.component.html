@@ -14,7 +14,21 @@
     <img class="arrow" src="assets/images/arrow-up.gif" />
   }
   @if(kpiType() === 'actual'){
-    Actual : {{kpiStatus()}}%
+    Actual : {{kpiStatus()}}
+    @if(domainIndicator() !== '#')
+    {
+      <span
+        (mouseenter)="overlayPanel ? overlayPanel.show($event) : ''" 
+        (mouseleave)="overlayPanel ? overlayPanel.hide() : ''"
+      >
+        {{domainIndicator() | truncateWord:2}}
+      </span>
+      @if(domainIndicator().split(" ").length > 2){
+        <p-overlayPanel #overlayPanel dismissable="true">
+          <section class="popover-section" [innerHTML]="domainIndicator()"></section>
+        </p-overlayPanel>
+      }
+    }
   }
   @if(kpiType() === 'weight'){
     weight : {{kpiStatus()}}%
