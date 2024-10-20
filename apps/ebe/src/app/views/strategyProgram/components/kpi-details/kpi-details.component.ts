@@ -91,7 +91,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   showForm(project:StrategyProgramKpiDetailsModel) {
     if(this.isAllowed)
     {
-      this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.objective}`);
+      this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.keyResultNumber}`);
       this.strategyProgramService.clickedProjects.next(project.projects);
     } else {
       this.router.navigateByUrl(`/strategy-program`);
@@ -124,7 +124,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   deleteProjectItem()
   {
     const deletedData = this.prevProjects.filter(val => val.project !== this.deletedProject.project);
-    this.strategyProgramService.updateProjects(this.kpi.strategyProjectName , this.kpi.objective , deletedData).subscribe({
+    this.strategyProgramService.updateProjects(this.kpi.strategyProjectName , this.kpi.keyResultNumber , deletedData).subscribe({
       next : () => {
         this.strategyProgramService.getStrategyProgramDetails(this.currentId).subscribe({
           next : (res:StrategyProgramKpiDetailsModel[]) => {

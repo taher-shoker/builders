@@ -12,18 +12,18 @@
       />
     }
     <p class="strategy-program-section-details-title">
-      strategic objective KPIs mapping and assessment
+      Strategic objectives to Key Results Mapping
     </p>
     <p-accordion (activeIndexChange)="getIndex($event)">
       @if(!isEmpty)
       {
-        @for (kpi of StrategyProgramData; track kpi.objective;let index = $index) {
+        @for (kpi of StrategyProgramData; track kpi.keyResultNumber;let index = $index) {
           <p-accordionTab (selectedChange)="getCurrentIndex($event)">
             <ng-template pTemplate="header">
               <div class="accordion-header-details">
                   <div class="accordion-title">
-                    <span class="number-text">{{kpi.objective}}</span>
-                    <p>Key result</p>
+                    <span class="number-text">{{kpi.keyResultNumber}}</span>
+                    <p>{{kpi.keyResultName}}</p>
                   </div>
                   <p class = "accordion-desc">
                     {{kpi.description}}
