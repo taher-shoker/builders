@@ -81,6 +81,7 @@ import { FileUploadInputComponent } from './file-upload-input/file-upload-input.
 import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
 import { DoubleLineChartComponent } from './double-line-chart/double-line-chart.component';
+import { NewLinePipe } from './newLine.pipe';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
@@ -132,7 +133,8 @@ const components = [
   TruncateWordPipe,
   DialogModalComponent,
   FileUploadInputComponent,
-  DoubleLineChartComponent
+  DoubleLineChartComponent,
+  NewLinePipe
 ];
 
 @NgModule({

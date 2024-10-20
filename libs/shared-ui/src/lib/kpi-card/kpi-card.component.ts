@@ -12,6 +12,7 @@ export class KpiCardComponent implements OnChanges {
   maxTextLength = 0; // Adjust the maximum length as needed
   maxTitleLength = 0; // Adjust the maximum length as needed
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
+  @ViewChild('overlayPanel3') overlayPanel3!: OverlayPanel;
   showFullText = false;
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   // @Input({required:true}) costData!:CostModel;
