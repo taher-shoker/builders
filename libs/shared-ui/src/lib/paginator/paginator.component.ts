@@ -8,6 +8,7 @@ import {
   Output,
   SimpleChanges,
 } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
 
 export interface PaginationConfig {
   pageCount: number;
@@ -28,31 +29,35 @@ export interface PaginationEvent {
 export class PaginatorComponent implements OnInit, OnChanges {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
-
+  @Output() pageSize: EventEmitter<number> = new EventEmitter<number>();
   @Input({ required: true }) pageRows!: number;
   @Input({ required: true }) elementsLength!: number;
   @Input() showTotal: boolean = false;
+  @Input() showPagePerItems: boolean = false;
   @Input() pagesCountLimit: number = 5;
-
+  @Input() numbers: { name: string; id: string }[] = [];
   pagesCount!: number;
   pagesLimitExceeded: boolean = false;
   remainingPagesShown: boolean = false;
 
-  activePage: number = 1;
+  @Input() activePage: number = 1;
   onLastPage: boolean = false;
   onFirstPage: boolean = true;
   goLastPageBtn: boolean = false;
   goFirstPageBtn: boolean = false;
-
+  pageItemsSelect!: FormGroup;
   ngOnInit(): void {
     this.setPagesCount();
+    this.pageItemsSelect = new FormGroup({
+      pageSize: new FormControl(this.pageRows.toString()),
+    });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['elementsLength']) {
       this.elementsLength = changes['elementsLength'].currentValue;
       this.setPagesCount();
-      this.activePage = 1
+      this.activePage = 1;
       this.validate();
     }
   }
@@ -61,9 +66,14 @@ export class PaginatorComponent implements OnInit, OnChanges {
     this.pagesCount = Math.ceil(this.elementsLength / this.pageRows);
     if (this.pagesCount > this.pagesCountLimit) {
       this.pagesLimitExceeded = true;
-    }else{
+    } else {
       this.pagesLimitExceeded = false;
     }
+  }
+  handleSelectSize(value: string) {
+    this.pageRows = +value;
+    this.setPagesCount();
+    this.pageSize.emit(+value);
   }
 
   goPageByNumber(num: number) {
@@ -107,8 +117,7 @@ export class PaginatorComponent implements OnInit, OnChanges {
     });
   }
 
-  protected toggleRemainingPages(){
+  protected toggleRemainingPages() {
     this.remainingPagesShown = !this.remainingPagesShown;
-    console.log(this.remainingPagesShown)
   }
 }

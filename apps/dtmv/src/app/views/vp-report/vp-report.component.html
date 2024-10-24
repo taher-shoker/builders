@@ -231,7 +231,7 @@
             <span class="edit-link" *ngIf="!milestonesService.isBusinessSpoc" (click)="goEditPage()">Edit</span>
           </p>
           <quill-editor [readOnly]="true" [modules]="{ toolbar: false }"
-            [ngModel]="reportData()?.highlight !=='<p><br></p>' ?reportData()?.highlight: '&nbsp;'"></quill-editor>
+            [ngModel]="(reportData()&& reportData()?.highlight&& reportData()?.highlight !=='<p><br></p>') ?reportData()?.highlight: '&nbsp;'"></quill-editor>
           <!-- <div [innerHTML]="reportData()?.highlight"></div> -->
         </div>
         <div class="col report-col">
@@ -241,7 +241,7 @@
             <span class="edit-link" *ngIf="!milestonesService.isBusinessSpoc" (click)="goEditPage()">Edit</span>
           </p>
           <quill-editor [readOnly]="true" [modules]="{ toolbar: false }"
-            [ngModel]="reportData()?.valueImpact !=='<p><br></p>' ? reportData()?.valueImpact: '&nbsp;'"></quill-editor>
+            [ngModel]="(reportData()  && reportData()?.valueImpact && reportData()?.valueImpact !=='<p><br></p>' )? reportData()?.valueImpact: '&nbsp;'"></quill-editor>
           <!-- <div [innerHTML]="reportData()?.valueImpact"></div> -->
         </div>
       </div>

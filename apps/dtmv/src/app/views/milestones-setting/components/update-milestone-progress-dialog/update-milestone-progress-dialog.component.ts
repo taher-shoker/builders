@@ -38,7 +38,11 @@ export class UpdateMilestoneProgressDialogComponent {
     if (this.data.type === Actions.addEvidence.uniqueTitle) {
       status = 'status is completed !';
     } else if (this.data.type === Actions.addJustification.uniqueTitle) {
-      status = 'status is delayed !';
+      if (this.data.status === 'At Risk') {
+        status = 'status is at risk';
+      } else {
+        status = 'status is delayed !';
+      }
     } else if (this.data.type === Actions.addOnTrack.uniqueTitle) {
       status = 'status is on track !';
     } else {
@@ -62,6 +66,7 @@ export class UpdateMilestoneProgressDialogComponent {
       milestoneName: string;
       milestoneId: number | string;
       showAttachment: boolean;
+      status: string;
     },
     public configService: ConfigService,
 

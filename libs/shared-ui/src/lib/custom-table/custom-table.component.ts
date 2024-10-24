@@ -16,7 +16,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { BehaviorSubject, Subject, take } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
 import { CustomTemplateDirective } from './custom-template.directive';
 import { DatePipe } from '@angular/common';
@@ -34,6 +34,9 @@ export interface PaginationConfig {
   paginationIq?: 'dumb' | 'smart';
   pageCount: number;
   showTotal?: boolean;
+  pageSizesOptionals: { name: string; id: string }[];
+  showPagePerItems?: boolean;
+  currentPage: number;
 }
 
 @Component({
@@ -44,14 +47,15 @@ export interface PaginationConfig {
 export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
     new EventEmitter<PaginationEvent>();
-  @Output() deleteAddedRecord: EventEmitter<any> =
-    new EventEmitter<any>();
-  @Output() addRecord: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
+  @Output() sortration: EventEmitter<{ colName: string; sortType: string }> =
+    new EventEmitter<{ colName: string; sortType: string }>();
+
+  @Output() pageSizeEvent: EventEmitter<number> = new EventEmitter<number>();
+  @Output() deleteAddedRecord: EventEmitter<any> = new EventEmitter<any>();
+  @Output() addRecord: EventEmitter<boolean> = new EventEmitter<boolean>();
   @Output() doAction: EventEmitter<{ value: string; dataRow: any }> =
     new EventEmitter<{ value: string; dataRow: any }>();
-  @Output() updatedData: EventEmitter<any> =
-    new EventEmitter<any>();
+  @Output() updatedData: EventEmitter<any> = new EventEmitter<any>();
 
   headers = input.required<ColumnsSchema[]>();
   psrTable = input<boolean>();
@@ -59,17 +63,20 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   @Input({ required: true }) items!: any[];
   itemsInView!: any[]; // in case of pagination, this defines what is shown in the browser in the table.
-  datePipe = inject(DatePipe)
+  datePipe = inject(DatePipe);
   @Input() applyFilter: boolean = false;
   @Input() filter: string = '';
+  @Input() filterForm: object = {};
   @Input() paginate: boolean = false;
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
   @Input() length!: number;
+  @Input() currentPage: number = 1;
+
   isEditMode = input<boolean>();
   userRoles = input<string>();
   paginator$: Subject<PaginationEvent> = new Subject<PaginationEvent>();
-  currentPage: number = 1;
+  showOptionSizePage: boolean = false;
 
   loadedPages: undefined | number[]; // should be defined in case of 'smart' paginationIq.
   itemsMap = new Map<string, any[]>(); // should be used and set in case of 'smart' paginationIq.
@@ -77,13 +84,11 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   filterSubject: BehaviorSubject<string> = new BehaviorSubject<string>('');
   filterStrStored: string = '';
   currentSortedByColumn$: Subject<string> = new Subject<string>();
-  deleteRecord(item:any)
-  {
+  deleteRecord(item: any) {
     this.deleteAddedRecord.emit(item);
   }
-  parseDate(dateString:Date | string) {
-    if(typeof dateString !== 'string')
-    {
+  parseDate(dateString: Date | string) {
+    if (typeof dateString !== 'string') {
       // const date:string = this.datePipe.transform(dateString, 'yyyy/MM/dd') ?? ""
       // const [day, month, year] = date.split('/');
       return new Date(dateString);
@@ -97,35 +102,20 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   changeCurrentSortingColumn(colName: string): void {
     this.currentSortedByColumn$.next(colName);
   }
-  addNewRecord()
-  {
+  addNewRecord() {
     this.addRecord.emit(true);
   }
   setupSorting() {
     this.currentSortedByColumn$.subscribe((res: string) => {
       this.sortByColumn(this.itemsInView, res);
     });
-
-    this.paginator$.subscribe(() => {
-      this.currentSortedByColumn$.pipe(take(1)).subscribe((res: string) => {
-        this.sortByColumn(this.itemsInView, res);
-      });
-    });
   }
 
   sortByColumn(list: any[] | undefined, column: string): void {
-    const sortedArray = (list || []).sort((a, b) => {
-      if (a[column]?.toLowerCase() > b[column]?.toLowerCase()) {
-        return this.sortingDirection === 'desc' ? 1 : -1;
-      }
-      if (a[column]?.toLowerCase() < b[column]?.toLowerCase()) {
-        return this.sortingDirection === 'desc' ? -1 : 1;
-      }
-      return 0;
-    });
     this.sortingDirection === 'asc'
       ? (this.sortingDirection = 'desc')
       : (this.sortingDirection = 'asc');
+    this.sortration.emit({ colName: column, sortType: this.sortingDirection });
   }
 
   @ContentChildren(CustomTemplateDirective)
@@ -150,6 +140,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
       }
       if (this.paginate && this.paginationConfig.paginationIq === 'smart') {
         this.setupSmartPagination();
+        this.showOptionSizePage = true;
       }
     }
     if (this.sort) {
@@ -177,11 +168,29 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
+    if (changes['paginationConfig']) {
+      if (
+        changes['paginationConfig'].currentValue?.pageCount !==
+        changes['paginationConfig'].previousValue?.pageCount
+      ) {
+        this.loadedPages = [1];
+        this.itemsMap.clear();
+      }
+    }
+    if (changes['filterForm']) {
+      if (
+        changes['filterForm'].currentValue !=
+        changes['filterForm'].previousValue
+      ) {
+        this.loadedPages = [1];
+        this.itemsMap.clear();
+      }
+    }
     if (changes['items']) {
       this.items = changes['items'].currentValue;
-
       if (this.paginationConfig) {
         if (this.paginationConfig.paginationIq === 'smart') {
+          this.currentPage = this.paginationConfig.currentPage;
           this.onDataChange(this.items);
         }
       }
@@ -218,6 +227,9 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   raisePagination(event: PaginationEvent) {
     this.paginator$.next(event);
   }
+  setPageSize(size: number) {
+    this.pageSizeEvent.emit(size);
+  }
 
   ngOnDestroy(): void {
     this.paginator$.unsubscribe();
@@ -237,32 +249,26 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   setItemsMap(items: any[]) {
     this.itemsMap.set(this.currentPage.toString(), items);
   }
-  inputChanged(id:number)
-  {
-    this.updatedData.emit({items:this.items , id : id})
+  inputChanged(id: number) {
+    this.updatedData.emit({ items: this.items, id: id });
   }
-  keyPress(e:KeyboardEvent)
-  {
+  keyPress(e: KeyboardEvent) {
     if (e.key === 'e') {
       e.preventDefault();
     }
   }
-  keyPress2(e:KeyboardEvent)
-  {   
+  keyPress2(e: KeyboardEvent) {
     if (e.key === 'e') {
       e.preventDefault();
     } else {
-      if(e.target)
-        {
-          const val = e.target as HTMLInputElement;
-          const val2 = val.value;
-          const val3 = val2 + e.key;
-          console.log(val3);
-          if(+val3 > 100)
-          {
-            e.preventDefault();
-          }
-        } 
+      if (e.target) {
+        const val = e.target as HTMLInputElement;
+        const val2 = val.value;
+        const val3 = val2 + e.key;
+        if (+val3 > 100) {
+          e.preventDefault();
+        }
+      }
     }
   }
 }

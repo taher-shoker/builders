@@ -10,10 +10,10 @@ table {
     color: var(--stc-color);
     font-weight: 400;
 
-    .header-cell-holder{
+    .header-cell-holder {
       display: flex;
     }
-    
+
     &:first-of-type {
       border-radius: 7px 0 0 0px;
     }
@@ -57,6 +57,7 @@ tr:not(.table-header) {
   display: inline-block;
   transform: rotate(90deg);
   cursor: pointer;
+  width: 27px;
 }
 
 .hashed-arrow {
@@ -74,101 +75,86 @@ tr:not(.table-header) {
     cursor: pointer;
   }
 }
-.psrTable
-{
-  .table-header
-  {
+.psrTable {
+  .table-header {
     height: 70px;
-    th
-    {
-      color:#4F008C;
+    th {
+      color: #4f008c;
       text-transform: capitalize;
       font-weight: 700;
       font-size: 16px;
     }
   }
-  tbody
-  {
-    tr
-    {
+  tbody {
+    tr {
       border-bottom: 1px solid rgba(142, 154, 160, 0.201);
-      &:last-child
-      {
+      &:last-child {
         border-bottom: 0;
       }
     }
-    td
-    {
+    td {
       text-align: center;
     }
-    .psrTabldID
-    {
-      color:#8E9AA0;
+    .psrTabldID {
+      color: #8e9aa0;
       font-weight: 800;
       font-size: 19px;
     }
-    .psrTabldMajor
-    {
-      color:#363636;
+    .psrTabldMajor {
+      color: #363636;
       font-weight: 600;
       font-size: 15px;
       // text-align: left;
     }
-    .psrTabldLevel
-    {
-      color:#00C48C;
+    .psrTabldLevel {
+      color: #00c48c;
       font-weight: bold;
       font-size: 20px;
     }
   }
 }
-.empty-details
-{
+.empty-details {
   text-align: center;
   text-transform: capitalize;
-  color:#4F008C;
+  color: #4f008c;
   font-size: 20px;
   font-style: italic;
   margin: 0;
   margin-top: 20px;
 }
-.add-record-btn
-{
+.add-record-btn {
   display: flex;
   align-items: center;
   gap: 7px;
-  border:0;
+  border: 0;
   font-size: 16px;
-  color:#4F008C;
+  color: #4f008c;
   text-decoration: underline;
   cursor: pointer;
-  margin:15px auto 0;
+  margin: 15px auto 0;
   background-color: transparent;
   text-transform: capitalize;
 }
-.delete-btn
-{
-  color:#FF1A1A;
+.delete-btn {
+  color: #ff1a1a;
   text-transform: capitalize;
   font-size: 14px;
   display: flex;
   cursor: pointer;
   align-items: center;
-  gap:5px;
-  img
-  {
-    width:15px;
+  gap: 5px;
+  img {
+    width: 15px;
     position: relative;
-    top:-1px;
+    top: -1px;
   }
 }
-.edit-input
-{
+.edit-input {
   width: 100%;
-  border:0;
-  border:1px solid #8E9AA0;
-  padding:0 10px;
-  height:40px;
+  border: 0;
+  border: 1px solid #8e9aa0;
+  padding: 0 10px;
+  height: 40px;
   border-radius: 5px;
   outline: 0;
   box-shadow: none;
@@ -180,41 +166,36 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
 
-.empty-data-msg
-{
+.empty-data-msg {
   position: absolute;
-    left: 0;
-    bottom: -20px;
-    color: red;
-    font-size: 12px;
-    width: 124px;
+  left: 0;
+  bottom: -20px;
+  color: red;
+  font-size: 12px;
+  width: 124px;
 }
-::ng-deep .custom-calendar2
-{
-  span
-  {
-    input
-    {
+::ng-deep .custom-calendar2 {
+  span {
+    input {
       width: 100%;
-      border:0;
-      border:1px solid #8E9AA0;
-      padding:0 10px;
-      height:40px;
+      border: 0;
+      border: 1px solid #8e9aa0;
+      padding: 0 10px;
+      height: 40px;
       border-radius: 5px;
       outline: 0;
       box-shadow: none;
     }
   }
 }
-.empty-data-msg2
-{
+.empty-data-msg2 {
   position: absolute;
-    bottom: -19px;
-    width: 300px;
-    left: -32px;
+  bottom: -19px;
+  width: 300px;
+  left: -32px;
 }

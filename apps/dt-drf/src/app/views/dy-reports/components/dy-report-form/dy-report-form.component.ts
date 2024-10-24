@@ -53,6 +53,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   users: User[] = [];
   approvers: User[] = [];
   creators: User[] = [];
+  creatorSelected!: string;
   uploadedFiles = new BehaviorSubject<{ id: number; label: string }[]>([]);
   isUploaderLoader = false;
   isSubmitLoading = false;
@@ -102,42 +103,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return isValid ? null : { whitespace: true };
   }
 
-  // private initForm() {
-  //   this.form = this._formBuilder.group({
-  //     reportName: [
-  //       '',
-  //       [
-  //         Validators.required,
-  //         Validators.maxLength(100),
-  //         this.noWhitespaceValidator,
-  //       ],
-  //     ],
-  //     description: [
-  //       '',
-  //       [
-  //         Validators.required,
-  //         Validators.maxLength(
-  //           this.configService.getConfig().characterLimit.descriptionLength
-  //         ),
-  //         this.noWhitespaceValidator,
-  //       ],
-  //     ],
-  //     requestCategoryId: ['', Validators.required],
-  //     slaDurationInDays: [
-  //       '',
-  //       [
-  //         Validators.pattern('^[0-9]+$'),
-  //         Validators.max(this.configService.getConfig().rangeForSLA.max),
-  //       ],
-  //     ],
-  //     needMoreDataFromCreator: [0],
-  //     initiatorShouldApprove: [0],
-  //     creatorEmail: [''],
-  //     attachments: [[], Validators.required],
-  //     requestApprovals: this._formBuilder.array([]),
-  //   });
-  // }
-
   private initForm() {
     this.form = this._formBuilder.group({
       reportName: [
@@ -183,24 +148,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
 
-  // private loadInitialData() {
-  //   this.getUsers().subscribe(() => {
-  //     this.setupInitialFilteredOptions();
-  //     // this.handleUserFiltration();
-  //   });
-  //   this.populateCustomSLA();
-  //   this.getCategories();
-  // }
-
-  // private setupInitialFilteredOptions() {
-  //   // Setup filtered options for each approval step
-  //   this.addNewStep();
-  //   this.requestApprovalsGetter.controls.forEach((control, index) => {
-  //     this.manageUserNameControl(index);
-  //     // this.handleUserFiltration();
-  //   });
-  // }
-
   fetchDataOfReportAndEditIfExists(): void {
     this.route.queryParams.subscribe((params) => {
       this.paramsId = params['id'];
@@ -228,7 +175,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private resetFormWithValue(data: Report) {
-    console.log('Data report:', data);
     forkJoin([
       this.reportsService.getUsers(),
       this.reportsService.getCategories(),
@@ -258,18 +204,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       }
       this.form.get('slaDurationInDays')?.disable();
 
-      console.log('Form Controls:', this.form.controls);
       Object.keys(this.form.controls).forEach((key) => {
         const control = this.form.get(key);
-        console.log(
-          `Control: ${key}, Status: ${control?.status}, Errors: ${control?.errors}, value: ${control?.value}`
-        );
       });
     });
   }
 
   private resetFormWithValueForEditStep(data: ReportDetails) {
-    console.log('El resetFormWithValueForEditStep data:', data);
     this.form.patchValue({
       reportName: data.reportName,
       description: data.description,
@@ -284,9 +225,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     Object.keys(this.form.controls).forEach((key) => {
       const control = this.form.get(key);
       control?.enable();
-      // console.log(
-      //   `Control: ${key}, Status: ${control?.status}, Errors: ${control?.errors}, value: ${control?.value}`
-      // );
     });
 
     if (data.creatorEmail) {
@@ -296,7 +234,10 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       });
     }
 
-    this.handleCheck({name: 'needMoreDataFromCreator', value: !!data.creatorEmail})
+    this.handleCheck({
+      name: 'needMoreDataFromCreator',
+      value: !!data.creatorEmail,
+    });
 
     this.uploadedFiles.next(data.attachments);
 
@@ -321,7 +262,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         this.removeFromAvailableUsers(user);
       }
     });
-    console.log('requestApprovalsFormArray is :', requestApprovalsFormArray);
   }
 
   private createApprovalFormGroup(user: User): FormGroup {
@@ -398,37 +338,12 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return availableUsers.sort((a, b) => a.id - b.id);
   }
 
-  private createApprovalControl(approval: any): FormGroup {
-    return this._formBuilder.group({
-      id: [approval.id],
-      username: [approval.username],
-      sequence: [approval.sequence],
-      status: [approval.status],
-      userDisplayName: [approval.userDisplayName],
-    });
-  }
   handelCreator(value: string) {
-    // this.approvers = this.creators.filter((a: User) => a.email !== selectedValue);
-    // Find and remove the selected value from the FormArray
-    // this.requestApprovalsGetter.controls.forEach((control, index) => {
-    //   if (control.get('username')?.value === selectedValue) {
-    //     this.requestApprovalsGetter.removeAt(index);
-    //   }
-    // });
-    // this.selectedOptions = this.selectedOptions.filter((s) => s !== selectedValue);
-    // this.updateFilteredOptions();
+    this.creatorSelected = value;
     this.refetchAvailableUsers(0);
     this.customDropdownSelectionChange(value, 0);
   }
   onSubmit() {
-    // console.log('Form Controls:', this.form.controls);
-    // Object.keys(this.form.controls).forEach((key) => {
-    //   const control = this.form.get(key);
-    //   console.log(
-    //     `Control: ${key}, Status: ${control?.status}, Errors: ${control?.errors}, value: ${control?.value}`
-    //   );
-    // });
-
     if (this.form.invalid) {
       this.markFormGroupTouched(this.form);
       return;
@@ -456,9 +371,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     };
 
     if (this.paramsMode === 'edit_report_step') {
-      console.log('Req Approvals', this.form.get('requestApprovals')?.value);
-      console.log('form before submission is :', this.form.value);
-
       const params: RequestTaskAttributes = {
         requestParams: [
           { name: 'delete', value: false },
@@ -542,27 +454,18 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private idsJoiner(arr: any) {
-    console.log('Got this arr of ids:', arr);
     let newArr;
 
-    if(Array.isArray(arr) && arr.every(item => item.hasOwnProperty('id'))){
-
+    if (Array.isArray(arr) && arr.every((item) => item.hasOwnProperty('id'))) {
       newArr = arr.map((x) => x.id);
       newArr = newArr.join('@#%@#%Z%#@%#@');
-    }else{
+    } else {
       newArr = arr.join('@#%@#%Z%#@%#@');
     }
     return newArr;
   }
 
-  private idsJoinerWithNoExtraction(arrOfNums: number[]) {
-    console.log('Got this arr of ids:', arrOfNums);
-    const final = arrOfNums.join('@#%@#%Z%#@%#@');
-    return final;
-  }
-
   private usernamesJoiner(arrOfObjs: { username: string }[]) {
-    console.log('Got this arr of username:', arrOfObjs);
     const newArr = arrOfObjs.map((x) => x.username);
     return newArr.join('@#%@#%Z%#@%#@');
   }
@@ -570,10 +473,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   private markFormGroupTouched(formGroup: FormGroup | FormArray) {
     Object.values(formGroup.controls).forEach((control) => {
       if (control instanceof FormControl) {
-        console.log('control instanceof FormControl:', control);
         control.markAsTouched();
       } else if (control instanceof FormGroup || control instanceof FormArray) {
-        console.log('control instanceof FormGroup:', control);
         this.markFormGroupTouched(control);
       }
     });
@@ -607,7 +508,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   private getCategories() {
     this.reportsService.getCategories().subscribe((res) => {
       this.categories.set(res);
-      // console.log('Populating categories from parent:', this.categories());
     });
   }
 
@@ -632,6 +532,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   handleCheck({ name, value }: { name: string; value: boolean }) {
     if (name === 'needMoreDataFromCreator') {
+      this.form.get('creatorEmail')?.reset();
+      this.handleUnselectedItem(this.creatorSelected, 0);
       if (value) {
         this.form.get('creatorEmail')?.setValidators(Validators.required);
         this.form.get('attachments')?.clearValidators();
@@ -654,7 +556,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   handleUploadClick(event: MouseEvent): void {
     if (this.isUploaderLoader) {
       event.preventDefault(); // Prevent the file dialog from opening
-      console.log('File selection prevented because uploader is not ready.');
     }
   }
   handleUploadChange(event: Event): void {
@@ -688,7 +589,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
               this.isUploaderLoader = false;
               this.form
                 .get('attachments')
-                ?.setValue(this.uploadedFiles.value.map(({ id }) => ({id:id})));
+                ?.setValue(
+                  this.uploadedFiles.value.map(({ id }) => ({ id: id }))
+                );
             }
           },
           error: (err) => (this.isUploaderLoader = false),
@@ -700,7 +603,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   private isFileValid(file: File): boolean {
-    console.log(file);
     const config = this.configService.getConfig().fileValidation;
     if (file.size > config.sizeWithMegaBytes * 1_000_000) {
       this.toastr.error('File size exceeds the allowed limit.');
@@ -773,7 +675,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     return filteredUsers;
   }
 
-
   selectedUsers: { index: number; userEmail: string }[] = [];
 
   customDropdownSelectionChange(selectedUserEmail: string, index: number) {
@@ -796,20 +697,26 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   }
 
   handleUnselectedItem(selectedUserEmail: string, index: number) {
-    const userIndex = this.selectedUsers.findIndex((user) => user.index === index);
+    const userIndex = this.selectedUsers.findIndex(
+      (user) => user.index === index
+    );
     if (userIndex !== -1) {
       this.selectedUsers.splice(userIndex, 1);
     }
-  
-    const unselectedUser = this.users.find((user) => user.email === selectedUserEmail);
-  
-    console.log("selectedUserEmail", selectedUserEmail)
-    console.log("userIndex", userIndex)
-    console.log("unselectedUser", unselectedUser)
+
+    const unselectedUser = this.users.find(
+      (user) => user.email === selectedUserEmail
+    );
+
     if (unselectedUser) {
-      const foundUser = this.availableUsers().find(user => user.email === selectedUserEmail)
-      if(!foundUser){
-        const updatedAvailableUsers = [...this.availableUsers(), unselectedUser].sort((a, b) => a.id - b.id);
+      const foundUser = this.availableUsers().find(
+        (user) => user.email === selectedUserEmail
+      );
+      if (!foundUser) {
+        const updatedAvailableUsers = [
+          ...this.availableUsers(),
+          unselectedUser,
+        ].sort((a, b) => a.id - b.id);
         this.availableUsers.set(updatedAvailableUsers);
       }
     }
@@ -817,17 +724,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   removeStep(item: FormGroup, index: number) {
     this.refetchAvailableUsers(index);
-
-    // const removedUser = this.users.find(user => user.email === username);
-    // console.log("removedUser", removedUser)
-
-    // if (removedUser ) {
-    //   this.availableUsers.set([...this.availableUsers(), removedUser]);
-    //   console.log("this avails", this.availableUsers)
-    // }
     this.requestApprovalsGetter.removeAt(index - 1);
-    console.log('available users:', this.availableUsers());
-    console.log('index:', index);
   }
 
   refetchAvailableUsers(index: number) {
@@ -867,12 +764,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         }
       }
     }
-  }
-
-  private updateFilteredOptions() {
-    this.selectedOptions.forEach((_, i) => {
-      this.manageUserNameControl(i);
-    });
   }
 }
 

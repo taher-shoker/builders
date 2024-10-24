@@ -33,6 +33,7 @@ import {
   transition,
   animate,
 } from '@angular/animations';
+import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
 
 export interface Milestone {
   activityName: string;
@@ -41,6 +42,13 @@ export interface Milestone {
   teamName: string;
   completionLevel: string;
   id: number;
+}
+interface MilestonesParamsFilterration {
+  page?: number;
+  numberOfElementsToDisplay?: number;
+  sortBy?: string;
+  sortDirection?: string;
+  [key: string]: any; // To accommodate any additional form fields from filteredForm
 }
 
 @Component({
@@ -99,6 +107,8 @@ export class MilestonesComponent
     { name: '-', value: '-' },
     { name: 'In Validation', value: 'In-Validation' },
   ];
+  previousParams: MilestonesParamsFilterration = {}; // Store previous parameters
+  filterForm: any = {};
 
   constructor(
     private formBuilder: FormBuilder,
@@ -112,7 +122,8 @@ export class MilestonesComponent
     private matDialog: MatDialog,
     private utilities: UtilitiesService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    public configService: ConfigService
   ) {}
 
   allItems!: PendingTask[];
@@ -222,25 +233,75 @@ export class MilestonesComponent
     });
   }
 
-  paginate(paginationEvent: PaginationEvent) {
-    const filteredForm = this.utilities.filterObject(this.form.value);
+  fetchMilestones(options: any = {}) {
+    const filteredForm = this.form.value;
+    // Start with previousParams
+    let params: MilestonesParamsFilterration = { ...this.previousParams };
+    // Override properties in previousParams with filteredForm
+    Object.keys(filteredForm).forEach((key) => {
+      if (filteredForm[key] === null) {
+        // Delete property from params if the value in filteredForm is null
+        delete params[key];
+      } else {
+        // Otherwise, override the previousParam with the value from filteredForm
+        params[key] = filteredForm[key];
+      }
+    });
 
+    // Override with options
+    params = { ...params, ...options };
+    // Remove undefined values
+    const cleanParams = Object.fromEntries(
+      Object.entries(params).filter(
+        ([_, value]) => value !== undefined && value !== ''
+      )
+    );
+
+    // Store the latest clean params
+    this.previousParams = { ...cleanParams };
+    // Make the API call with the clean parameters
     this.milestonesService
-      .getMilestones({
-        page: paginationEvent.currentPage - 1,
-        ...filteredForm,
-      })
+      .getMilestones(cleanParams)
       .pipe(take(1))
       .subscribe((res: any) => {
         this.populateMilestones(res);
       });
   }
 
+  paginate(event: PaginationEvent) {
+    this.fetchMilestones({ page: event.currentPage - 1 });
+  }
+
+  setPageItemsCount(pageSize: number) {
+    this.fetchMilestones({ numberOfElementsToDisplay: pageSize, page: 0 });
+  }
+
+  setSorting({ colName, sortType }: { colName: string; sortType: string }) {
+    this.filterForm = { ...this.filterForm, colName };
+    this.fetchMilestones({ sortBy: colName, sortDirection: sortType, page: 0 });
+  }
+
   populateMilestones(res: any) {
     this.isLoading = false;
     this.milestonesTotalCount = res.totalElements;
-
     this.tableData = res.content;
+  }
+  /** 1910 * 1485 */
+  searchFilter(input: HTMLInputElement) {
+    this.filterString = input.value;
+  }
+
+  onSubmit() {
+    this.filterForm = this.utilities.filterObject(this.form.value);
+    this.fetchMilestones({ page: 0 });
+    this.dialogService.close();
+  }
+
+  clearFormFilter() {
+    this.form.reset();
+    this.filterForm = {};
+    this.fetchMilestones({ page: 0 });
+    this.dialogService.close();
   }
 
   getAllTeams() {
@@ -356,9 +417,8 @@ export class MilestonesComponent
   }
 
   onExporting() {
-    const filteredForm = this.utilities.filterObject(this.form.value);
     this.milestonesService
-      .exportMilestones(filteredForm)
+      .exportMilestones(this.previousParams)
       .subscribe((buffer) => {
         const data: Blob = new Blob([buffer]);
         saveAs(data, 'milestones.csv');
@@ -368,14 +428,14 @@ export class MilestonesComponent
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
-      milestoneName: ['', { nonNullable: true }],
-      milestoneId: ['', { nonNullable: true }],
-      teamName: ['', { nonNullable: true }],
-      status: ['', { nonNullable: true }],
-      month: ['', { nonNullable: true }],
-      year: ['', { nonNullable: true }],
-      workStream: ['', { nonNullable: true }],
-      validationStatus: ['', { nonNullable: true }],
+      milestoneName: [null],
+      milestoneId: [null],
+      teamName: [null],
+      status: [null],
+      month: [null],
+      year: [null],
+      workStream: [null],
+      validationStatus: [null],
     });
   }
 
@@ -386,25 +446,6 @@ export class MilestonesComponent
   }
 
   filterString: string = '';
-  searchFilter(inp: HTMLInputElement) {
-    this.filterString = inp.value;
-  }
-
-  onSubmit() {
-    const filteredForm = this.utilities.filterObject(this.form.value);
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones(filteredForm)
-      .subscribe((res: any) => {
-        this.dialogService.close();
-        this.populateMilestones(res);
-      });
-  }
-
-  clearFormFilter() {
-    this.form.reset();
-    this.dialogService.close();
-    this.getMilestones();
-  }
 
   monthsArrPopulator() {
     for (let i = 1; this.monthsArr.length < 12; i++) {

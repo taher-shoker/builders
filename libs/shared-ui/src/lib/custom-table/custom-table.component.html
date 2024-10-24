@@ -2,10 +2,8 @@
   <tbody>
     <tr class="table-header">
       @for(header of headers(); track header){
-      <th
-        (click)="changeCurrentSortingColumn(header.key)"
-        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }"
-      >
+      <th (click)="changeCurrentSortingColumn(header.key)"
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }">
         <div class="header-cell-holder">
           <div>{{ header.label }}</div>
           @if (sort && header.key !== 'actions') {
@@ -32,7 +30,7 @@
       <td class="mat-cell" [attr.colspan]="headers().length">
         <div class="message-box">
           <img src="assets/Group 590.png" alt="" />
-          <h3>{{ 'No data has found' }}</h3>
+          <h3>{{ 'No data found' }}</h3>
         </div>
       </td>
     </tr>
@@ -50,21 +48,14 @@
   there are no details
 </p>
 } @if(psrTable() && userRoles() !== "BE_VIEWERS") {
-<button
-  type="button"
-  class="add-record-btn"
-  [ngStyle]="{ 'font-family': fontFamily() }"
-  (click)="addNewRecord()"
->
+<button type="button" class="add-record-btn" [ngStyle]="{ 'font-family': fontFamily() }" (click)="addNewRecord()">
   <img src="assets/images/add-square.svg" alt="" />
   <span> add new record </span>
 </button>
 } @if(paginate && length > 0){
-<stc-apps-paginator
-  [pageRows]="paginationConfig.pageCount"
-  [elementsLength]="length"
-  (paginationEvent)="raisePagination($event)"
-></stc-apps-paginator>
+<stc-apps-paginator [showPagePerItems]="showOptionSizePage" (pageSize)="setPageSize($event)"
+  [pageRows]="paginationConfig.pageCount" [activePage]="currentPage" [numbers]="paginationConfig.pageSizesOptionals"
+  [elementsLength]="length" (paginationEvent)="raisePagination($event)"></stc-apps-paginator>
 }
 
 <ng-template #tableBody let-tableItems="tableItems">
@@ -81,29 +72,20 @@
     </td>
     }@else {
 
-    <td
-      [class.psrTabldID]="
+    <td [class.psrTabldID]="
         psrTable() &&
         (header.label === 'ID' ||
           header.label === 'Start' ||
           header.label === 'Duration')
-      "
-      [class.psrTabldMajor]="
+      " [class.psrTabldMajor]="
         psrTable() && header.label === 'Major Activities/Deliverables'
-      "
-      [class.psrTabldLevel]="psrTable() && header.label === 'Completion Level'"
-      [ngStyle]="{
+      " [class.psrTabldLevel]="psrTable() && header.label === 'Completion Level'" [ngStyle]="{
         'font-family': fontFamily() && psrTable() ? fontFamily() : ''
-      }"
-    >
+      }">
       @if(!isEditMode()) { @if(header.key === '' && userRoles() !== "BE_VIEWERS") {
-      <div
-        class="delete-btn"
-        (click)="deleteRecord(item)"
-        [ngStyle]="{
+      <div class="delete-btn" (click)="deleteRecord(item)" [ngStyle]="{
           'font-family': fontFamily() && psrTable() ? fontFamily() : ''
-        }"
-      >
+        }">
         <img src="assets/images/trash.svg" alt="" />
         delete
       </div>
@@ -111,61 +93,46 @@
       {{ item[header.key] }}
       } @if(psrTable() && header.label === 'Completion Level') { % } } @else {
       @if(header.key !== '') { @if(header.key !== 'id') {
-        @if(header.key === 'major')
+      @if(header.key === 'major')
+      {
+      <div class="position-relative">
+        <input type="text" [(ngModel)]="item[header.key]" class="edit-input"
+          (ngModelChange)="inputChanged(item['id'])" />
+        @if(item[header.key] === '')
         {
-          <div class = "position-relative">
-            <input
-              type="text"
-              [(ngModel)]="item[header.key]"
-              class="edit-input"
-              (ngModelChange)="inputChanged(item['id'])"
-            />
-            @if(item[header.key] === '')
-            {
-              <small class = "empty-data-msg">This field is required</small>
-            }
-          </div>
+        <small class="empty-data-msg">This field is required</small>
+        }
+      </div>
+      } @else {
+      <div class="position-relative">
+        @if(header.key === 'completionLevel')
+        {
+        <input type="number" [(ngModel)]="item[header.key]" class="edit-input" (keypress)="keyPress2($event)"
+          (ngModelChange)="inputChanged(item['id'])" max="100" />
         } @else {
-          <div class = "position-relative">
-            @if(header.key === 'completionLevel')
-            {
-              <input
-                type="number"
-                [(ngModel)]="item[header.key]"
-                class="edit-input"
-                (keypress)="keyPress2($event)"
-                (ngModelChange)="inputChanged(item['id'])"
-                max="100"
-              />
-            } @else {
-              <p-calendar 
-                dateFormat="dd/mm/yy"
-                styleClass="custom-calendar2"
-                class="custom-calendar2"
-                appendTo="body"
-                [(ngModel)]="item[header.key]"
-                (ngModelChange)="inputChanged(item['id'])"
-              />
-              <!-- {{item['endDate']}} -->
-              <!-- {{parseDate(item['startDate']) > parseDate(item['endDate'])}}  -->
-              @if(parseDate(item['startDate']) > parseDate(item['endDate']) && header.key === 'startDate' && item['endDate'] !== null)
-              {
-                <small class = "empty-data-msg empty-data-msg2">end date must be greater than start date</small>
-              }
-              <!-- <input
+        <p-calendar dateFormat="dd/mm/yy" styleClass="custom-calendar2" class="custom-calendar2" appendTo="body"
+          [(ngModel)]="item[header.key]" (ngModelChange)="inputChanged(item['id'])" />
+        <!-- {{item['endDate']}} -->
+        <!-- {{parseDate(item['startDate']) > parseDate(item['endDate'])}}  -->
+        @if(parseDate(item['startDate']) > parseDate(item['endDate']) && header.key === 'startDate' && item['endDate']
+        !== null)
+        {
+        <small class="empty-data-msg empty-data-msg2">end date must be greater than start date</small>
+        }
+        <!-- <input
                 type="text"
                 [(ngModel)]="item[header.key]"
                 class="edit-input"
                 (ngModelChange)="inputChanged(item['id'])"
                 (keypress)="keyPress($event)"
               /> -->
-            }
-            @if(item[header.key] === null)
-            {
-              <small class = "empty-data-msg">This field is required</small>
-            }
-          </div>
         }
+        @if(item[header.key] === null)
+        {
+        <small class="empty-data-msg">This field is required</small>
+        }
+      </div>
+      }
       } @else {
       {{ item[header.key] }}
       } } }

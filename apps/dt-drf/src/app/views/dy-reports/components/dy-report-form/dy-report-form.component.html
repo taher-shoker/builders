@@ -3,71 +3,37 @@
     <div class="inputs">
       <div class="row">
         <div class="col-md-4">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputPlaceholder]="'Enter Report Name'"
-            [inputId]="'reportName'"
-            (valueKeyDown)="preventComma($event)"
-            [inputName]="'Report Name'"
-            formControlName="reportName"
-          ></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Report Name'" [inputId]="'reportName'"
+            (valueKeyDown)="preventComma($event)" [inputName]="'Report Name'"
+            formControlName="reportName"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputPlaceholder]="'Enter Description'"
-            [inputId]="'description'"
-            (valueKeyDown)="preventComma($event)"
-            [inputName]="'Description'"
-            formControlName="description"
-          ></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Description'"
+            [inputId]="'description'" (valueKeyDown)="preventComma($event)" [inputName]="'Description'"
+            formControlName="description"></stc-apps-input>
         </div>
         <div class="col-md-4">
-          <stc-apps-custom-dropdown
-            formControlName="requestCategoryId"
-            [label]="'Category'"
-            [list]="categories()"
-            [searchable]="true"
-            [displayNameProperty]="'name'"
-            [outputProperty]="'id'"
-            [valueProperty]="'id'"
-            (itemSelected)="handleGategory($event)"
-
-          ></stc-apps-custom-dropdown>
+          <stc-apps-custom-dropdown formControlName="requestCategoryId" [label]="'Category'" [list]="categories()"
+            [searchable]="true" [displayNameProperty]="'name'" [outputProperty]="'id'" [valueProperty]="'id'"
+            (itemSelected)="handleGategory($event)"></stc-apps-custom-dropdown>
         </div>
       </div>
       <div class="row mt-7 align-items-center">
         <div class="col-md-3">
-          <stc-apps-input
-            [className]="'custom-input'"
-            [inputId]="'slaDurationInDays'"
-            (valueKeyDown)="preventComma($event)"
-            [inputName]="'SLA Duration In Days'"
-            formControlName="slaDurationInDays"
-          ></stc-apps-input>
+          <stc-apps-input [className]="'custom-input'" [inputId]="'slaDurationInDays'"
+            (valueKeyDown)="preventComma($event)" [inputName]="'SLA Duration In Days'"
+            formControlName="slaDurationInDays"></stc-apps-input>
         </div>
 
         <div class="col-md-2">
-          <stc-apps-checkbox
-            (selectChange)="handleCheck($event)"
-            [label]="'Assign Creator '"
-            formControlName="needMoreDataFromCreator"
-            [name]="'needMoreDataFromCreator'"
-          ></stc-apps-checkbox>
+          <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
+            formControlName="needMoreDataFromCreator" [name]="'needMoreDataFromCreator'"></stc-apps-checkbox>
         </div>
         <div class="col-md-3">
-          <stc-apps-checkbox
-            *ngIf="form.get('needMoreDataFromCreator')?.value"
-            [label]="'Initiator Should Approve'"
-            formControlName="initiatorShouldApprove"
-            [name]="'initiatorShouldApprove'"
-          ></stc-apps-checkbox>
+          <stc-apps-checkbox *ngIf="form.get('needMoreDataFromCreator')?.value" [label]="'Initiator Should Approve'"
+            formControlName="initiatorShouldApprove" [name]="'initiatorShouldApprove'"></stc-apps-checkbox>
         </div>
-        <div
-          class="col-md-4"
-          style="height: 110px"
-          *ngIf="form.get('needMoreDataFromCreator')?.value"
-        >
+        <div class="col-md-4" style="height: 110px" *ngIf="form.get('needMoreDataFromCreator')?.value">
           <!-- <stc-apps-select-drop-down
             [label]="'Creator Name'"
             (selectChange)="handelCreator($event)"
@@ -79,18 +45,10 @@
             [disabled]="true"
           ></stc-apps-select-drop-down> -->
 
-          <stc-apps-custom-dropdown
-            formControlName="creatorEmail"
-            [label]="'Creator Name'"
-            [list]="fetchAvailableUsers(0)"
-            [searchable]="true"
-            [displayNameProperty]="'name'"
-            [outputProperty]="'email'"
-            [valueProperty]="'email'"
-            (itemSelected)="handelCreator($event)"
-            (unselectItem)="handleUnselectedItem($event, 0)"
-
-          ></stc-apps-custom-dropdown>
+          <stc-apps-custom-dropdown formControlName="creatorEmail" [label]="'Creator Name'"
+            [list]="fetchAvailableUsers(0)" [searchable]="true" [displayNameProperty]="'name'"
+            [outputProperty]="'email'" [valueProperty]="'email'" (itemSelected)="handelCreator($event)"
+            (unselectItem)="handleUnselectedItem($event, 0)"></stc-apps-custom-dropdown>
         </div>
       </div>
 
@@ -98,30 +56,17 @@
         <div class="col-12">
           <div>
             <label for="">Upload File :</label>
-            <div
-              class="file-uploader"
-              [ngClass]="
+            <div class="file-uploader" [ngClass]="
                 form.controls['attachments'].invalid &&
                 (form.controls['attachments'].dirty ||
                   form.controls['attachments'].touched)
                   ? 'error'
                   : ''
-              "
-              (click)="uploadClick()"
-            >
-              <input
-                [multiple]="true"
-                #fileUpload
-                class="file-input"
-                type="file"
-                (click)="handleUploadClick($event)"
-                (change)="handleUploadChange($event)"
-                name="attachments"
-                hidden
-                accept="{{
+              " (click)="uploadClick()">
+              <input [multiple]="true" #fileUpload class="file-input" type="file" (click)="handleUploadClick($event)"
+                (change)="handleUploadChange($event)" name="attachments" hidden accept="{{
                   configService.getConfig().fileValidation.acceptType
-                }}"
-              />
+                }}" />
               @if (errorType || errorSize) {
               <div class="text-center">
                 <img src="assets/images/file-uploader-error.png" alt="upload" />
@@ -142,31 +87,18 @@
               }
               <div *ngIf="isUploaderLoader" class="spinner"></div>
             </div>
-            <div
-              class="error-file"
-              *ngIf="
+            <div class="error-file" *ngIf="
                 form.controls['attachments'].invalid &&
                 (form.controls['attachments'].dirty ||
                   form.controls['attachments'].touched)
-              "
-            >
+              ">
               This Field Is Required
             </div>
           </div>
-          <div
-            class="file-box"
-            *ngIf="uploadedFiles.value.length > 0 && !errorSize && !errorType"
-          >
-            <div
-              class="file"
-              *ngFor="let f of uploadedFiles.value; let i = index"
-            >
+          <div class="file-box" *ngIf="uploadedFiles.value.length > 0 && !errorSize && !errorType">
+            <div class="file" *ngFor="let f of uploadedFiles.value; let i = index">
               <span><i class="pi pi-file-o"></i> {{ f.label }}</span>
-              <i
-                role="button"
-                class="fa fa-times-circle"
-                (click)="removeFile(i)"
-              ></i>
+              <i role="button" class="fa fa-times-circle" (click)="removeFile(i)"></i>
             </div>
           </div>
         </div>
@@ -179,51 +111,30 @@
               <div class="col-md-12 mb-4">
                 <div class="d-flex justify-content-between align-items-center">
                   <h5 class="mainTitle">Approval Flow</h5>
-                  <!-- <button type="button" *ngIf="!isEditing" class="add-btn" mat-raised-button (click)="addNewStep()">
-                    <mat-icon>add </mat-icon> add new approval
-                  </button> -->
-                  <stc-apps-button
-                    [buttonIcon]="'fa-plus-circle'"
-                    [buttonText]="'Add New Approval'"
-                    [buttonType]="'primary'"
-                    (btnClick)="addNewStep()"
-                    [actionType]="'submit'"
-                  ></stc-apps-button>
+                  <stc-apps-button [buttonIcon]="'fa-plus-circle'" [buttonText]="'Add New Approval'"
+                    [buttonType]="'primary'" (btnClick)="addNewStep()" [actionType]="'submit'"></stc-apps-button>
                 </div>
               </div>
             </div>
             <ul class="p-0">
-              <li
-                *ngFor="
+              <li *ngFor="
                   let item of requestApprovalsGetter.controls;
                   let i = index
-                "
-                [formGroup]="item"
-              >
+                " [formGroup]="item">
                 <div class="row align-items-center w-100">
                   <div class="col-md-1">
                     <label>Approval {{ i + 1 }}#:</label>
                   </div>
                   <div class="col-md-5 my-3">
-                    <stc-apps-custom-dropdown
-                      formControlName="username"
-                      [list]="fetchAvailableUsers(i + 1)"
-                      [searchable]="true"
-                      [displayNameProperty]="'name'"
-                      [valueProperty]="'email'"
-                      [outputProperty]="'email'"
-                      (itemSelected)="
+                    <stc-apps-custom-dropdown formControlName="username" [list]="fetchAvailableUsers(i + 1)"
+                      [searchable]="true" [displayNameProperty]="'name'" [valueProperty]="'email'"
+                      [outputProperty]="'email'" (itemSelected)="
                         customDropdownSelectionChange($event, i + 1)
-                      "
-                      (unselectItem)="handleUnselectedItem($event, i + 1)"
-                    ></stc-apps-custom-dropdown>
+                      " (unselectItem)="handleUnselectedItem($event, i + 1)"></stc-apps-custom-dropdown>
                   </div>
                   <div class="col-md-1">
                     <div *ngIf="i !== 0 && !isEditing">
-                      <i
-                        class="ri-delete-bin-line"
-                        (click)="removeStep(item, i + 1)"
-                      ></i>
+                      <i class="ri-delete-bin-line" (click)="removeStep(item, i + 1)"></i>
                     </div>
                   </div>
                   <!-- Optional: Show check icon if editing and status is not pending -->
@@ -244,21 +155,13 @@
         <div class="col-md-4 offset-md-8">
           <div class="row">
             <div class="col-md-6">
-              <stc-apps-button
-                [buttonText]="'Cancel'"
-                [buttonType]="'gray-outline'"
-                (btnClick)="cancel()"
-              ></stc-apps-button>
+              <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
+                (btnClick)="cancel()"></stc-apps-button>
             </div>
             <div class="col-md-6">
-              <stc-apps-button
-                [buttonText]="isEditing ? 'Save' : 'Submit'"
-                [buttonType]="'primary'"
-                (btnClick)="onSubmit()"
-                [buttonDisable]="isUploaderLoader"
-                [loading]="isSubmitLoading"
-                [actionType]="'submit'"
-              ></stc-apps-button>
+              <stc-apps-button [buttonText]="isEditing ? 'Save' : 'Submit'" [buttonType]="'primary'"
+                (btnClick)="onSubmit()" [buttonDisable]="isUploaderLoader" [loading]="isSubmitLoading"
+                [actionType]="'submit'"></stc-apps-button>
             </div>
           </div>
         </div>

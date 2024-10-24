@@ -91,7 +91,6 @@ export class MilestonesService {
   }
 
   checkIsDirector() {
-    console.warn(this.getMilestoneUsersType());
     if (
       this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
     ) {

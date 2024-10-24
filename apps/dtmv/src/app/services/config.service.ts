@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 interface Config {
   fileValidation: { acceptType: string[]; sizeWithMegaBytes: number };
   characterLimit: { descriptionLength: number; nameLength: number };
+  pageSizesOptions: { name: string; id: string }[];
+  defaultPageSize: number;
 }
 
 @Injectable({

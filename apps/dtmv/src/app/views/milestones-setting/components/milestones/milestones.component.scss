@@ -252,7 +252,7 @@ table {
   }
 }
 
-.pending-list-holder{
+.pending-list-holder {
   position: absolute;
   width: 500px;
 }
@@ -418,4 +418,11 @@ body.rtl {
 
 .planned-status {
   color: var(--grey-color);
+}
+
+@media (min-width: 1630px) {
+  .pending-list-holder {
+    position: static;
+    width: 100%;
+  }
 }

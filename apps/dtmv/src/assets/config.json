@@ -25,5 +25,12 @@
   "characterLimit": {
     "descriptionLength": 1000,
     "nameLength": 100
-  }
+  },
+  "pageSizesOptions": [
+    { "name": "5", "id": "5" },
+    { "name": "10", "id": "10" },
+    { "name": "25", "id": "25" },
+    { "name": "100", "id": "100" }
+  ],
+  "defaultPageSize": 10
 }

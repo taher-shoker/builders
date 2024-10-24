@@ -529,7 +529,8 @@ export class MilestoneDetailsComponent implements OnInit {
             action.actionObj.uniqueTitle,
             action.item,
             false,
-            false
+            false,
+            undefined
           );
         } else {
           this.makeSureToApprove(
@@ -653,7 +654,8 @@ export class MilestoneDetailsComponent implements OnInit {
 
   doSpecialStepAction(
     action: { actionObj: Actions | string },
-    isFirstUpdateProgress: boolean = true
+    isFirstUpdateProgress: boolean = true,
+    status: string
   ) {
     if (
       typeof action.actionObj !== 'string' &&
@@ -671,7 +673,9 @@ export class MilestoneDetailsComponent implements OnInit {
         this.openMilestoneWorkflowActionsModal(
           action.actionObj.uniqueTitle,
           undefined,
-          isFirstUpdateProgress
+          isFirstUpdateProgress,
+          true,
+          status
         );
       }
     }
@@ -698,7 +702,8 @@ export class MilestoneDetailsComponent implements OnInit {
     type: string,
     item?: RequestTask,
     isFirstUpdateProgress: boolean = true,
-    showAttachment: boolean = true
+    showAttachment: boolean = true,
+    status: string = ''
   ) {
     const dialogRef = this.matDialog.open(
       UpdateMilestoneProgressDialogComponent,
@@ -709,6 +714,7 @@ export class MilestoneDetailsComponent implements OnInit {
           type,
           milestoneId: this.milestoneId,
           showAttachment,
+          status,
         },
       }
     );
@@ -906,7 +912,7 @@ export class MilestoneDetailsComponent implements OnInit {
       .calculateMilestoneProgress(milestoneId, progress)
       .subscribe((res) => {
         let actionObj: Actions;
-        if (res.status === 'Delayed') {
+        if (res.status === 'Delayed' || res.status === 'At Risk') {
           actionObj = Actions.addJustification;
         } else if (res.status === 'Completed') {
           actionObj = Actions.addEvidence;
@@ -914,7 +920,11 @@ export class MilestoneDetailsComponent implements OnInit {
           actionObj = Actions.addOnTrack;
         }
 
-        this.doSpecialStepAction({ actionObj }, isFirstUpdateProgress);
+        this.doSpecialStepAction(
+          { actionObj },
+          isFirstUpdateProgress,
+          res?.status
+        );
       });
   }
 
