@@ -69,17 +69,20 @@
                   <div class="puls-report-value  text-center">
                     <h5>STC DI Score</h5>
                     <p class="font-bloder">{{ reportData()?.stcDiScore ? reportData()?.stcDiScore + '%' : '-' }}</p>
+                    <stc-apps-progress-circle
+                      [progressValue]="reportData()?.stcDiScore  || 0"></stc-apps-progress-circle>
+
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="puls-report-value text-center">
-                    <h5>( Unit ) DI Score</h5>
+                    <h5>( {{selectedTeam()}} ) DI Score</h5>
                     <p class="font-bloder"> {{reportData()?.diScore ? reportData()?.diScore + '%' : '-' }}</p>
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="puls-report-value text-center">
-                    <h5>( Unit ) Charter status</h5>
+                    <h5>( {{selectedTeam()}} ) Charter status</h5>
                     <p class="font-bloder">{{reportData()?.charterStatus ? reportData()?.charterStatus + '%' : '-'}}</p>
                   </div>
                 </div>

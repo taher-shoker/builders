@@ -1,14 +1,10 @@
-<div
-  class="progress-circule"
-  role="progresscircule"
-  [style]="'--value:' + progressValue()"
-  [ngStyle]="{ background: conicGradient(), '--size': progressSize() }"
->
+<div class="progress-circule" role="progresscircule" [style]="'--value:' + progressValue()"
+  [ngStyle]="{ background: conicGradient(), '--size': progressSize() }">
   @if (showProgress()&&strategicFlag()) {
   <span class="circle-content">{{
     progressValue() / 100 | percent : '1.0-2'
-  }}</span>
+    }}</span>
   } @else if(showProgress() && !strategicFlag()){
-  <span class="circle-content">{{ progressValue() | percent }}</span>
+  <span class="circle-content">{{ progressValue() / 100 | percent }}</span>
   }
 </div>
