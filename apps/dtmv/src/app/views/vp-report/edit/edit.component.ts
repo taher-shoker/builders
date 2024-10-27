@@ -103,17 +103,17 @@ export class EditComponent implements OnInit {
         highlight: new FormControl(''),
         valueImpact: new FormControl(''),
         stcDiScore: new FormControl(0.0, [
-          Validators.max(200),
+          Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         diScore: new FormControl(0.0, [
-          Validators.max(200),
+          Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
         charterStatus: new FormControl(0.0, [
-          Validators.max(200),
+          Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
@@ -122,7 +122,7 @@ export class EditComponent implements OnInit {
         supportNeeded: new FormControl('', Validators.maxLength(1000)),
         digitalTransformationReflectionLevel: new FormControl(null),
         clarityProgramProgress: new FormControl(0.0, [
-          Validators.max(200),
+          Validators.max(100),
           Validators.min(0),
           Validators.pattern(numberPattern),
         ]),
