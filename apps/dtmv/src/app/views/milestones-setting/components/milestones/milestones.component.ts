@@ -171,6 +171,11 @@ export class MilestonesComponent
         label: 'Work Stream',
       },
       {
+        key: 'activityName',
+        type: 'text',
+        label: 'Activity Name',
+      },
+      {
         key: 'milestoneName',
         type: 'text',
         label: 'Milestone Name',
