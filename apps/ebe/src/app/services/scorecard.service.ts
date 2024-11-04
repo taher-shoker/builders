@@ -37,6 +37,11 @@ export class ScorecardService {
       name: 'PSR',
       url: '/psr',
     },
+    {
+      id: 5,
+      name: 'Financial Reporting',
+      url: '/financial-reporting',
+    },
   ];
   getUserGroups(): string {
     return this.cookieService.get('MODERN_SYSTEM_USER') || '';

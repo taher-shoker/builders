@@ -19,7 +19,7 @@ export class PSRProjectCardComponent implements OnChanges {
   project:InputSignal<PSRDataModel> = input.required<PSRDataModel>();
   colors:string[] = ['#4F008C' , '#B999D1'];
   chartData!:PSRChartDataModel;
-  ngOnChanges(): void {
+  ngOnChanges(): void {    
     this.chartData = {
       actual : this.project().actual,
       planned : this.project().planned

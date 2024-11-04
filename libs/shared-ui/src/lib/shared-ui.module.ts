@@ -81,6 +81,7 @@ import { FileUploadInputComponent } from './file-upload-input/file-upload-input.
 import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
 import { NewLinePipe } from './newLine.pipe';
+import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
@@ -132,7 +133,8 @@ const components = [
   TruncateWordPipe,
   DialogModalComponent,
   FileUploadInputComponent,
-  NewLinePipe
+  NewLinePipe,
+  MultiCirclesChartComponent
 ];
 
 @NgModule({

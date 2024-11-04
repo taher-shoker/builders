@@ -1,0 +1,33 @@
+<section class="financial-reporting">
+  <div class="financial-reporting-header">
+    <stc-apps-page-header
+      mainTitle = "Financial Reporting"
+      secondaryTitle = ""
+    />
+  </div>
+  <div class="financial-reporting-body">
+    @if(currentMode === 'editMode') {
+      <stc-apps-edit-mode-view
+        (import)="showDialog()"
+        (export)="downloadTemplate()"
+      />
+    }
+    <div class="row">
+      <div class="col-lg-6 col-sm-12">
+        <div class = "box-card">
+          <p class="title">title</p>
+          <div class = "box-card-chart">
+            <stc-apps-multi-circles-chart 
+              [chartData]="chartData"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<stc-apps-dialog-modal
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
+/>

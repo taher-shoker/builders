@@ -43,6 +43,13 @@ export const appRoutes: Route[] = [
       ),
       canActivate:[AuthGuard]
   },
+  {
+    path : "financial-reporting",
+    loadComponent: () =>
+      import('./views/financial-reporting/financial-reporting.component').then(
+        (m) => m.FinancialReportingComponent
+      )
+  },
   // {
   //   path : "raqami",
   //   loadComponent: () =>
