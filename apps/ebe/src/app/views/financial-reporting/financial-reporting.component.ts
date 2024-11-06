@@ -16,27 +16,64 @@ export class FinancialReportingComponent implements OnInit {
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService);
   visible = false;
-  colors:string[] = ["#4F008C","#B999D1"];
+  colors:string[] = ["#61CBD6" , "#00c48c"];
+  chartData4 = [
+    {
+      title : "Awarded",
+      value : 34,
+      color : "#00C48C"
+    },
+    {
+      title : "Saved/dropped",
+      value : 20,
+      color : "#8E9AA0"
+    },
+    {
+      title : "in progress",
+      value : 79,
+      color : "#4F008C"
+    }
+  ];
+  chartData2 = [
+    {
+      category : "Actual",
+      value : 20
+    },
+    {
+      category : "Spend",
+      value : 40
+    }
+  ]
+  chartData3 = [
+    {
+      category : "Target",
+      value : 200
+    },
+    {
+      category : "Achieved",
+      value : 123
+    }
+  ]
   chartData = [
     {
-      title: 'Research',
+      title: 'AE',
       value: 80,
-      color:"#f00"
+      color:"#B999D1"
     },
     {
-      title: 'Marketing',
+      title: 'AA',
       value: 35,
-      color : "#634"
+      color : "#61CBD6"
     },
     {
-      title: 'Distribution',
+      title: 'SA',
       value: 92,
-      color:"#000"
+      color:"#00C48C"
     },
     {
-      title: 'Human Resources',
-      value: 68,
-      color:"#123"
+      title: 'DG',
+      value: 50,
+      color:"#4F008C"
     },
   ]
   ngOnInit()

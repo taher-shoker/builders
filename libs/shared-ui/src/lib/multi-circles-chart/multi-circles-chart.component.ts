@@ -1,26 +1,35 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import {RadarChart , RadarCursor , AxisRendererCircular , AxisRendererRadial , RadarColumnSeries} from '@amcharts/amcharts5/radar';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import * as am5 from '@amcharts/amcharts5';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'stc-apps-multi-circles-chart',
   standalone: false,
   templateUrl: './multi-circles-chart.component.html',
   styleUrl: './multi-circles-chart.component.scss',
 })
-export class MultiCirclesChartComponent implements OnInit {
+export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
+  chartdiv_id = '';
+  chartDivId:any;
   @Input({required : true}) chartData!:{
     title:string;
     value:number;
     color:string;
   }[];
   maxWidth = 100;
+  constructor(
+    public dom_s: DomSanitizer,
+  ){}
   ngOnInit(): void {
+    this.chartdiv_id = `${Math.random()}_chart_id`;
+  }
+  ngAfterViewInit(): void {
     this.solidGaugeChart();
   }
   solidGaugeChart() {
-    const root = am5.Root.new('solidGaugeChart');
+    const root = am5.Root.new(this.chartdiv_id);
 
     // Set themes
     // https://www.amcharts.com/docs/v5/concepts/themes/
@@ -32,10 +41,11 @@ export class MultiCirclesChartComponent implements OnInit {
       RadarChart.new(root, {
         panX: false,
         panY: false,
-        innerRadius: am5.percent(20),
+        innerRadius: am5.percent(30),
         startAngle: -90,
         endAngle: 270,
-        // radius:am5.percent(80)
+        radius:am5.percent(80),
+        layout: root.verticalLayout,
       })
     );
     if(root._logo)
@@ -48,47 +58,12 @@ export class MultiCirclesChartComponent implements OnInit {
         title: d.title,
         value: d.value,
         full: this.maxWidth,
+        value2: this.maxWidth - d.value,
         columnSettings: {
           fill: am5.color(d.color),
         },
       })
-    })
-    // Data
-    // const data = [
-    //   {
-    //     category: 'Research',
-    //     value: 80,
-    //     full: this.maxWidth,
-    //     columnSettings: {
-    //       fill: am5.color("#543"),
-    //     },
-    //   },
-    //   {
-    //     category: 'Marketing',
-    //     value: 35,
-    //     full: this.maxWidth,
-    //     columnSettings: {
-    //       fill: am5.color("#634"),
-    //     },
-    //   },
-    //   {
-    //     category: 'Distribution',
-    //     value: 92,
-    //     full: this.maxWidth,
-    //     columnSettings: {
-    //       fill: am5.color("#000"),
-    //     },
-    //   },
-    //   {
-    //     category: 'Human Resources',
-    //     value: 68,
-    //     full: this.maxWidth,
-    //     columnSettings: {
-    //       fill: am5.color("#123"),
-    //     },
-    //   },
-    // ];
-
+    })    
     // Add cursor
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Cursor
     const cursor = chart.set(
@@ -155,7 +130,6 @@ export class MultiCirclesChartComponent implements OnInit {
     );
 
     yAxis.data.setAll(data);
-
     // Create series
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Adding_series
     const series1 = chart.series.push(
@@ -163,14 +137,17 @@ export class MultiCirclesChartComponent implements OnInit {
         xAxis: xAxis,
         yAxis: yAxis,
         clustered: false,
-        valueXField: 'full',
+        valueXField: 'value2',
         categoryYField: 'title',
         fill: root.interfaceColors.get('alternativeBackground'),
+        // rotation : 331
       })
     );
-
     series1.data.setAll(data);
-
+    // series1.columns.template.states.create("click", {
+    //   shiftRadius: 0,
+    //   scale: 2,
+    // })
     const series2 = chart.series.push(
       RadarColumnSeries.new(root, {
         xAxis: xAxis,
@@ -180,7 +157,6 @@ export class MultiCirclesChartComponent implements OnInit {
         categoryYField: 'title',
       })
     );
-
     series2.columns.template.setAll({
       width: am5.p100,
       strokeOpacity: 0,
@@ -188,15 +164,48 @@ export class MultiCirclesChartComponent implements OnInit {
       cornerRadius: 0,
       templateField: 'columnSettings',
     });
+    series2.columns.template.states.create("hover", {
+      scale: 1.1  // Scale up by 10% on hover
+    });
     series1.columns.template.setAll({
       width: am5.p100,
-      fillOpacity: 0.08,
+      fillOpacity: 1,
+      fill : am5.color("#ebebeb"),
       strokeOpacity: 0,
       cornerRadius: 0,
+      tooltipText: '{title}: {value2}%'
     });
-
+    series1.columns.template.adapters.add("rotation", function(rotation, target) {
+      const data:any = target.dataItem?.dataContext;
+      if(data)
+      {
+        return 360 - ((data.value2 / 100) * 360)
+      }
+      return rotation;
+    });
+    
     series2.data.setAll(data);
-
+    const legend = chart.children.push(am5.Legend.new(root, {
+      nameField: "categoryY",
+      centerX: am5.percent(50),
+      x: am5.percent(55),
+      layout: root.horizontalLayout,
+    }));
+    legend.labels.template.setAll({
+      fill : am5.color("#616161"),
+      fontWeight : "600"
+    })
+    legend.markers.template.setAll({
+      width: 15,
+      height: 15
+    });
+    legend.markerRectangles.template.setAll({
+      cornerRadiusTL: 10,
+      cornerRadiusTR: 10,
+      cornerRadiusBL: 10,
+      cornerRadiusBR: 10
+    });
+    legend.data.setAll(series2.dataItems);
     // Animate chart and series in
     // https://www.amcharts.com/docs/v5/concepts/animations/#Initial_animation
     series1.appear(1000);

@@ -13,13 +13,201 @@
       />
     }
     <div class="row">
-      <div class="col-lg-6 col-sm-12">
+      <div class="col-lg-6 col-md-12 col-sm-12">
         <div class = "box-card">
-          <p class="title">title</p>
-          <div class = "box-card-chart">
-            <stc-apps-multi-circles-chart 
-              [chartData]="chartData"
-            />
+          <p class="main-title mb-0">capex</p>
+          <div class="budget-box">
+            <p class="budget-name">total budget</p>
+            <p class="budget-num">
+              567M
+              <span>sar</span>
+            </p>
+          </div>
+          <div class="spending-cards">
+            <div class="spend-card">
+              <span>spending</span>
+              <p class="spend-num">
+                56M
+                <span>sar</span>
+              </p>
+            </div>
+            <div class="spend-card">
+              <span>accrual</span>
+              <p class="spend-num">
+                56M
+                <span>sar</span>
+              </p>
+            </div>
+          </div>
+          <div class="actual-spending-card">
+            <p class="title">actual spending</p>
+            <div class="wise-capex-card">
+              <p class="title2">GD Wise CAPEX</p>
+              <div class = "box-card-chart">
+                <stc-apps-multi-circles-chart 
+                  [chartData]="chartData"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="tendring-status-card">
+            <p class="title">tendring status</p>
+            <div class="tendring-status-card-box">
+              <div class="total-projects-amount-card">
+                <div class="total-projects">
+                  <p class="total-projects-title">
+                    total projects
+                  </p>
+                  <p class="total-projects-num">
+                    1230
+                  </p>
+                </div>
+                <div class="total-amount">
+                  <p class="total-projects-title">
+                    total amount
+                  </p>
+                  <p class="total-projects-num">
+                    2M SAR
+                  </p>
+                </div>
+              </div>
+              <div class="awarded-card">
+                @for (item of chartData4; track $index) {
+                  <div 
+                    class="awarded-card-item"
+                    [ngStyle]="{
+                      'background' : item.color,
+                      'width' : item.value + '%'
+                    }"
+                  >
+                    {{item.value}}
+                  </div>
+                }
+              </div>
+              <div class="awarded-card-legends">
+              @for (item of chartData4; track $index) {
+                  <div class="legend">
+                    <div 
+                      class="bullet"
+                      [ngStyle]="{
+                        'background' : item.color,
+                      }"
+                    ></div>
+                    <div class="name">{{item.title}}</div>
+                  </div>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12 col-sm-12">
+        <div class = "box-card">
+          <p class="main-title mb-0">opex</p>
+          <div class="budget-box">
+            <p class="budget-name">total budget</p>
+            <p class="budget-num">
+              567M
+              <span>sar</span>
+            </p>
+          </div>
+          <div class="spending-cards">
+            <div class="spend-card">
+              <span>spending</span>
+              <p class="spend-num">
+                56M
+                <span>sar</span>
+              </p>
+            </div>
+            <div class="spend-card">
+              <span>accrual</span>
+              <p class="spend-num">
+                56M
+                <span>sar</span>
+              </p>
+            </div>
+          </div>
+          <div class="actual-spending-card">
+            <p class="title">OPEX Status</p>
+            <div class="wise-capex-card">
+              <div class = "box-card-chart2">
+                <div class="first-chart">
+                  <p class="title2">
+                    spending target
+                  </p>
+                  <div class="chart-container">
+                    <stc-apps-donut-chart 
+                      [data]="chartData2"
+                      [colors]="colors"
+                      [id]="20"
+                      [textInside]="'Spending'"
+                    ></stc-apps-donut-chart>
+                  </div>
+                </div>
+                <div class="second-chart">
+                  <p class="title2">
+                    GEP target
+                  </p>
+                  <div class="chart-container">
+                    <stc-apps-donut-chart 
+                      [data]="chartData3"
+                      [colors]="colors"
+                      [id]="20"
+                      [textInside]="'Achieved'"
+                    ></stc-apps-donut-chart>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tendring-status-card">
+            <p class="title">tendring status</p>
+            <div class="tendring-status-card-box">
+              <div class="total-projects-amount-card">
+                <div class="total-projects">
+                  <p class="total-projects-title">
+                    total projects
+                  </p>
+                  <p class="total-projects-num">
+                    1230
+                  </p>
+                </div>
+                <div class="total-amount">
+                  <p class="total-projects-title">
+                    total amount
+                  </p>
+                  <p class="total-projects-num">
+                    2M SAR
+                  </p>
+                </div>
+              </div>
+              <div class="awarded-card">
+                @for (item of chartData4; track $index) {
+                  <div 
+                    class="awarded-card-item"
+                    [ngStyle]="{
+                      'background' : item.color,
+                      'width' : item.value + '%'
+                    }"
+                  >
+                    {{item.value}}
+                  </div>
+                }
+              </div>
+              <div class="awarded-card-legends">
+              @for (item of chartData4; track $index) {
+                  <div class="legend">
+                    <div 
+                      class="bullet"
+                      [ngStyle]="{
+                        'background' : item.color,
+                      }"
+                    ></div>
+                    <div class="name">{{item.title}}</div>
+                  </div>
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>

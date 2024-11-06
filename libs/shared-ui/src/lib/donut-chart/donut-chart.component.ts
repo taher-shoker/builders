@@ -32,6 +32,8 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
   @Input() textsColor: string = "#4f008c";
   @Input() labelsLines: LabelLine[] = [];
   @Input() trendModuleState: boolean = false;
+  @Input() id!:number;
+  @Input() textInside!:string;
 
   root!: am5.Root;
   direction:string | null = "";
@@ -69,7 +71,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
         root.dispose();
       }
     });
-  };
+  }
   initDonutChart() {
 
     // if(!this.chartdiv_id){
@@ -89,7 +91,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
       paddingRight: 25,
       paddingTop: 25,
       paddingBottom: 25,
-      width: am5.percent(90),
+      width: this.id ? am5.p100 : am5.percent(90),
       // radius: am5.percent(70),
     }));
 
@@ -119,14 +121,19 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
         },
       });
     });
-
+    
     const series = chart.series.push(am5percent.PieSeries.new(this.root, {
       valueField: "value",
       categoryField: "category",
-      alignLabels: false
+      alignLabels: false,
+      radius : this.id ? 18 : 15
     }));
 
-
+    if(this.id)
+    {
+      series.labels.template.set("forceHidden" , true)
+      series.ticks.template.set("forceHidden" , true)
+    }
 
     const allColors: am5.Color[] = [];
     this.colors.forEach((color: string) => {
@@ -142,7 +149,6 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
       text: `[${this.textsColor}][500]{value}%[/]`,
       fontSize: 12
     });
-
 
     series.slices.template.states.create("hover", {
       scale: 1,
@@ -171,7 +177,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
 
     if(this.labelsLines){
 
-      if(!this.labelsLines[0].html){
+      if(!this.labelsLines[0]?.html){
 
         this.labelsLines.forEach((labelLine) => {
           const label = series.children.push(am5.Label.new(this.root, {
@@ -199,7 +205,39 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
     // this.root.numberFormatter.set("numberFormat", "#");
 
     series.get("tooltip")?.label.set("direction" , this.direction == 'ar' ? "rtl" : "ltr");
-
+    if(this.id)
+    {
+      const label = series.children.push(am5.Label.new(this.root, {
+        html: "<div style = 'font-size:1.5rem;font-weight:600;display:block'>212<span style = 'color:#616161;font-size:0.9rem;font-weight:400'>SAR</span></div><div style = 'font-size:1rem;font-weight:600'>"+this.textInside+"</div>",
+        centerX: am5.percent(50),
+        centerY: am5.percent(50),
+        populateText: true
+      }));
+      const legend = chart.children.push(am5.Legend.new(this.root, {
+        nameField: "categoryY",
+        centerX: am5.percent(45),
+        x: am5.percent(45),
+        layout: this.root.horizontalLayout,
+      }));
+      legend.labels.template.setAll({
+        fill : am5.color("#616161"),
+        fontWeight : "600",
+      })
+      legend.markers.template.setAll({
+        width: 15,
+        height: 15
+      });
+      legend.valueLabels.template.setAll({
+        forceHidden : true
+      });
+      legend.markerRectangles.template.setAll({
+        cornerRadiusTL: 10,
+        cornerRadiusTR: 10,
+        cornerRadiusBL: 10,
+        cornerRadiusBR: 10
+      });
+      legend.data.setAll(series.dataItems);
+    }
 
     chart.appear(1000, 100);
   }
