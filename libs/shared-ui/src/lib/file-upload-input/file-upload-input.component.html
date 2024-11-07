@@ -2,7 +2,7 @@
   @if(!selectedFile || (selectedFile && fileSizeNum > 50)) {
   <input
     type="file"
-    accept=".csv"
+    [accept]="fileType"
     class="file-upload-input"
     hidden
     #fileUploadInput
@@ -11,7 +11,7 @@
   <div class="file-upload-image" (click)="fileUploadInput.click()">
     <img src="assets/images/upload-solid2.svg" />
     <p>choose file to upload</p>
-    <span>supported formats: CSV</span>
+    <span>supported formats: {{fileType === '.csv' ? 'CSV' : 'xlsx'}}</span>
   </div>
   @if(fileSizeNum > 50) {
   <small>The FileSize must not exceed 50MB</small>

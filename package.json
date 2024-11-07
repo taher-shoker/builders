@@ -23,6 +23,7 @@
     "@types/uuid": "^9.0.2",
     "angular-resizable-element": "^3.3.2",
     "angular-uuid": "^0.0.4",
+    "angular2-uuid": "^1.1.1",
     "bootstrap": "^5.0.0",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",

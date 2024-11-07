@@ -82,6 +82,7 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
 import { NewLinePipe } from './newLine.pipe';
 import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
+import { SharedService } from './shared.service';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
@@ -139,8 +140,8 @@ const components = [
 
 @NgModule({
   declarations: [...components],
-  exports: [...components, ...modules],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  exports: [...components, ...modules ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' } , SharedService],
   imports: [
     CommonModule,
     ConfirmDialogModule,
