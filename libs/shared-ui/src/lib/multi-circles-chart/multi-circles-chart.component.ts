@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit} from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges} from '@angular/core';
 import * as am5xy from '@amcharts/amcharts5/xy'
 import {RadarChart , RadarCursor , AxisRendererCircular , AxisRendererRadial , RadarColumnSeries} from '@amcharts/amcharts5/radar';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
@@ -19,65 +19,66 @@ interface ChartData
   templateUrl: './multi-circles-chart.component.html',
   styleUrl: './multi-circles-chart.component.scss',
 })
-export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
+export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
   // chartdiv_id = '';
   // chartDivId:any;
   chartDivId: any;
-  chartdiv_id = '';
+  chartdiv_id = `${Math.random()}_chart_id`;
   chartData!:ChartData[];
-  // @Input({required : true}) chartData!:ChartData[];
+  root: am5.Root | null = null;
+  @Input({required : true}) chartData2:ChartData[] = [];
   // @Input() chartData2:any;
   maxWidth = 100;
   constructor(
     public dom_s: DomSanitizer,
     private financialService:SharedService
   ){}
-  ngOnInit(): void {
-    // this.chartdiv_id = `${Math.random()}_chart_id`;
-    this.chartdiv_id = `${UUID.UUID()}_pie_chart_id`;
-    this.chartDivId = this.dom_s.bypassSecurityTrustHtml(
-      `<div id='${this.chartdiv_id}' style='height: 100%'></div>`
-    );
+  ngOnChanges(changes: SimpleChanges): void {
+    if (this.root) {
+      this.root.dispose();
+      this.root = null;
+    }
+    if(changes['chartData2'] && changes['chartData2'].currentValue.length !== 0)
+    {
+      this.solidGaugeChart();
+    }
   }
-  ngAfterViewInit(): void {
-    this.financialService.chartData.subscribe(res => {
-      if(res && res.length !== 0)
-      {
-        this.chartData = res;
-        this.solidGaugeChart();
-      }
-    })
+  ngOnDestroy(): void {
+    if (this.root) {
+      this.root.dispose();
+    }
   }
   solidGaugeChart() {
-    const root = am5.Root.new(this.chartdiv_id);
+    // const root = am5.Root.new(this.chartdiv_id);
+    this.root = am5.Root.new(this.chartdiv_id);
 
     // Set themes
     // https://www.amcharts.com/docs/v5/concepts/themes/
-    root.setThemes([am5themes_Animated.new(root)]);
+    this.root.setThemes([am5themes_Animated.new(this.root)]);
     // Create chart
     // https://www.amcharts.com/docs/v5/charts/radar-chart/
-    const chart = root.container.children.push(
-      RadarChart.new(root, {
+    const chart = this.root.container.children.push(
+      RadarChart.new(this.root, {
         panX: false,
         panY: false,
         innerRadius: am5.percent(30),
         startAngle: -90,
         endAngle: 270,
         radius:am5.percent(80),
-        layout: root.verticalLayout,
+        layout: this.root.verticalLayout,
       })
     );
-    if(root._logo)
+    if(this.root._logo)
     {
-      root._logo.dispose();
+      this.root._logo.dispose();
     }
-    const arr1:number[] = this.chartData.map(item => item.value1);
-    const arr2:number[] = this.chartData.map(item => item.value2);
+    const arr1:number[] = this.chartData2.map(item => item.value1);
+    const arr2:number[] = this.chartData2.map(item => item.value2);
     const maxValue1 = Math.max(...arr1);
     const maxValue2 = Math.max(...arr2);
     const maxOverall = Math.max(maxValue1, maxValue2);
     const data:any[] = []
-    this.chartData.forEach(d => {
+    this.chartData2.forEach(d => {
       data.push({
         title: d.title,
         value1: d.value1,
@@ -93,17 +94,17 @@ export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Cursor
     const cursor = chart.set(
       'cursor',
-      RadarCursor.new(root, {
+      RadarCursor.new(this.root, {
         behavior: 'zoomX',
       })
     );
 
     cursor.lineY.set('visible', false);
     cursor.lineX.set('visible', false);
-    root.numberFormatter.set("numberFormat", "#.#a");
+    this.root.numberFormatter.set("numberFormat", "#.#a");
     // Create axes and their renderers
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Adding_axes
-    const xRenderer = AxisRendererCircular.new(root, {
+    const xRenderer = AxisRendererCircular.new(this.root, {
       //minGridDistance: 50
     });
 
@@ -118,18 +119,18 @@ export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
       forceHidden: true,
     });
     const xAxis = chart.xAxes.push(
-      am5xy.ValueAxis.new(root, {
+      am5xy.ValueAxis.new(this.root, {
         renderer: xRenderer,
         min: 0,
         max: maxOverall,
         // max: maxOverall,
         strictMinMax: true,
         numberFormat: "#'%'",
-        // tooltip: am5.Tooltip.new(root, {}),
+        // tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
 
-    const yRenderer = AxisRendererRadial.new(root, {
+    const yRenderer = AxisRendererRadial.new(this.root, {
       minGridDistance: 20
     });
 
@@ -148,7 +149,7 @@ export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
     });
 
     const yAxis = chart.yAxes.push(
-      am5xy.CategoryAxis.new(root, {
+      am5xy.CategoryAxis.new(this.root, {
         categoryField: 'title',
         renderer: yRenderer,
       })
@@ -158,13 +159,13 @@ export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
     // Create series
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Adding_series
     const series1 = chart.series.push(
-      RadarColumnSeries.new(root, {
+      RadarColumnSeries.new(this.root, {
         xAxis: xAxis,
         yAxis: yAxis,
         clustered: false,
         valueXField: 'value2',
         categoryYField: 'title',
-        fill: root.interfaceColors.get('alternativeBackground'),
+        fill: this.root.interfaceColors.get('alternativeBackground'),
         // rotation : 331
       })
     );
@@ -174,7 +175,7 @@ export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
     //   scale: 2,
     // })
     const series2 = chart.series.push(
-      RadarColumnSeries.new(root, {
+      RadarColumnSeries.new(this.root, {
         xAxis: xAxis,
         yAxis: yAxis,
         clustered: false,
@@ -215,11 +216,11 @@ export class MultiCirclesChartComponent implements OnInit , AfterViewInit{
     });
     
     series2.data.setAll(data);
-    const legend = chart.children.push(am5.Legend.new(root, {
+    const legend = chart.children.push(am5.Legend.new(this.root, {
       nameField: "categoryY",
       centerX: am5.percent(50),
       x: am5.percent(55),
-      layout: root.gridLayout,
+      layout: this.root.gridLayout,
     }));
     legend.labels.template.setAll({
       fill : am5.color("#616161"),

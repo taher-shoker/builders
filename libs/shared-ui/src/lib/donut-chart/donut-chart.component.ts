@@ -33,6 +33,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
   @Input() labelsLines: LabelLine[] = [];
   @Input() trendModuleState: boolean = false;
   @Input() id!:number;
+  @Input() overallNumber!:number;
   @Input() textInside!:string;
 
   root!: am5.Root;
@@ -126,7 +127,7 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
       valueField: "value",
       categoryField: "category",
       alignLabels: false,
-      radius : this.id ? 18 : 15
+      radius : this.id ? 18 : 15,
     }));
 
     if(this.id)
@@ -207,12 +208,15 @@ export class DonutChartComponent implements AfterViewInit , OnDestroy, OnChanges
     series.get("tooltip")?.label.set("direction" , this.direction == 'ar' ? "rtl" : "ltr");
     if(this.id)
     {
-      const label = series.children.push(am5.Label.new(this.root, {
-        html: "<div style = 'font-size:1.5rem;font-weight:600;display:block'>212<span style = 'color:#616161;font-size:0.9rem;font-weight:400'>SAR</span></div><div style = 'font-size:1rem;font-weight:600'>"+this.textInside+"</div>",
-        centerX: am5.percent(50),
-        centerY: am5.percent(50),
-        populateText: true
-      }));
+      this.root.numberFormatter.set("numberFormat", "#.#a");
+      series.slices.template.set("tooltipText", "{category}: {value}");
+      // const label = series.children.push(am5.Label.new(this.root, {
+      //   html: "<div style = 'font-size:1.5rem;font-weight:600;display:block'>"+ this.overallNumber +"<span style = 'color:#616161;font-size:0.9rem;font-weight:400'>SAR</span></div><div style = 'font-size:1rem;font-weight:600'>"+this.textInside+"</div>",
+      //   centerX: am5.percent(50),
+      //   centerY: am5.percent(50),
+      //   populateText: true,
+      //   oversizedBehavior: "fit"
+      // }));
       const legend = chart.children.push(am5.Legend.new(this.root, {
         nameField: "categoryY",
         centerX: am5.percent(45),

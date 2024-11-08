@@ -7,8 +7,8 @@ import { FileModel } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { FinancialReportingService } from '../../services/financial-reporting.service';
 import { Subject, takeUntil } from 'rxjs';
-import { CapexOpex, CapexOpexChart, CapexOpexModel } from '../../models/financial.mode';
-
+import { CapexOpex, CapexOpexChart, CapexOpexModel, Tendering } from '../../models/financial.mode';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
@@ -27,7 +27,12 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   capexOverallData!:CapexOpex;
   opexOverallData!:CapexOpex;
   sharedService = inject(SharedService);
-  chartData4 = [
+  toastr = inject(ToastrService);
+  opexTenderingChart:{
+    title:string;
+    value:number;
+    color:string;
+  }[] = [
     {
       title : "Awarded",
       value : 40,
@@ -44,27 +49,21 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
       color : "#4F008C"
     }
   ];
-  chartData2 = [
-    {
-      category : "Accural",
-      value : 20
-    },
-    {
-      category : "Spend",
-      value : 40
-    }
-  ]
-  chartData3 = [
-    {
-      category : "Target",
-      value : 200
-    },
-    {
-      category : "Achieved",
-      value : 123
-    }
-  ]
+  capexTenderingChart:{
+    title:string;
+    value:number;
+    color:string;
+  }[] = [];
+  chartData2:{
+    category:string;
+    value:number
+  }[] = []
+  chartData3:{
+    category:string;
+    value:number
+  }[] = []
   chartData:CapexOpexChart[] = []
+  chartData4:CapexOpexChart[] = []
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
@@ -77,8 +76,12 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     });
     this.getFinancialReportingData();
   }
+  capexTendringData!:Tendering;
+  opexTendringData!:Tendering;
   private getFinancialReportingData()
   {
+    this.chartData4 = [];
+    this.chartData = [];
     this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
         console.log(res);
@@ -86,7 +89,64 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
         this.capexOverallData = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "capex" && data.expenditureSubtype === "overall")[0];
         this.opexOverallData = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "opex" && data.expenditureSubtype === "overall")[0];
         const capexChartData:CapexOpex[] = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "capex" && data.expenditureSubtype !== "overall")
+        const opexChartData:CapexOpex[] = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "opex" && data.expenditureSubtype !== "overall")
+        this.capexTendringData = this.capexOpexData.tendering.filter((data:Tendering) => data.expenditureType === "capex")[0]
+        this.opexTendringData = this.capexOpexData.tendering.filter((data:Tendering) => data.expenditureType === "opex")[0]
+        this.chartData2 = [
+          {
+            category : "Accural",
+            value : +opexChartData[0].accrualAmount
+          },
+          {
+            category : "Spend",
+            value : +opexChartData[0].spendAmount
+          }
+        ]
+        this.chartData3 = [
+          {
+            category : "Target",
+            value : opexChartData[0].gepTarget ? opexChartData[0].gepTarget : 0
+          },
+          {
+            category : "Achieved",
+            value : opexChartData[0].gepAchieved ? opexChartData[0].gepAchieved : 0
+          }
+        ]
         const colors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C"];
+        this.capexTenderingChart = [
+          {
+            title : "Awarded",
+            value : +this.capexTendringData.awardedProjects,
+            color : "#00C48C"
+          },
+          {
+            title : "Saved/dropped",
+            value : +this.capexTendringData.savedDroppedProjects,
+            color : "#8E9AA0"
+          },
+          {
+            title : "in progress",
+            value : +this.capexTendringData.inProgressProjects,
+            color : "#4F008C"
+          }
+        ]
+        this.opexTenderingChart = [
+          {
+            title : "Awarded",
+            value : +this.opexTendringData.awardedProjects,
+            color : "#00C48C"
+          },
+          {
+            title : "Saved/dropped",
+            value : +this.opexTendringData.savedDroppedProjects,
+            color : "#8E9AA0"
+          },
+          {
+            title : "in progress",
+            value : +this.opexTendringData.inProgressProjects,
+            color : "#4F008C"
+          }
+        ]
         capexChartData.forEach((data2:CapexOpex , index:number) => {
           this.chartData.push({
             title: data2.expenditureSubtype,
@@ -95,8 +155,8 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
             color:colors[index]
           })
         })
-        this.sharedService.chartData.next(this.chartData);
-        console.log(this.chartData);
+        this.chartData4 = [...this.chartData];
+        // this.sharedService.chartData.next(this.chartData);
       }
     })
   }
@@ -106,22 +166,23 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   }
   downloadTemplate()
   {
-    console.log('download');
-  }
-  downloadFile(data: string, filename: string) {
-    const blob = new Blob([data], { type: 'text/csv' });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    a.click();
-    window.URL.revokeObjectURL(url);
+    this.financialReportingService.downloadFinancialReportingData();
   }
   importData(file:FileModel)
   {
     if(file)
     {
       console.log(file);
+      this.financialReportingService.uploadCadSummaryFile(file).subscribe({
+        next:() => {
+          this.getFinancialReportingData();
+          this.toastr.success("The File is Saved Successfully");
+          this.visible = false;
+        },
+        error : () => {
+          this.visible = false;
+        }
+      })
     }
   }
   onHide()
