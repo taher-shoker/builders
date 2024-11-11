@@ -29,14 +29,14 @@
               <div class="spend-card">
                 <span>spending</span>
                 <p class="spend-num">
-                  {{capexOverallData.spendAmount}}
+                  {{capexOverallData.spendPercentage}}
                   <span>sar</span>
                 </p>
               </div>
               <div class="spend-card">
                 <span>accrual</span>
                 <p class="spend-num">
-                  {{capexOverallData.accrualAmount}}
+                  {{capexOverallData.accrualPercentage}}
                   <span>sar</span>
                 </p>
               </div>
@@ -129,14 +129,14 @@
               <div class="spend-card">
                 <span>spending</span>
                 <p class="spend-num">
-                  {{opexOverallData.spendAmount}}
+                  {{opexOverallData.spendPercentage}}
                   <span>sar</span>
                 </p>
               </div>
               <div class="spend-card">
                 <span>accrual</span>
                 <p class="spend-num">
-                  {{opexOverallData.accrualAmount}}
+                  {{opexOverallData.accrualPercentage}}
                   <span>sar</span>
                 </p>
               </div>
@@ -158,7 +158,7 @@
                         [colors]="colors"
                         [id]="20"
                         [textInside]="'Spending'"
-                        [overallNumber]="opexOverallData && opexOverallData.gepTarget ? +opexOverallData.gepTarget : 0"
+                        [overallNumber]="opexOverallData && opexOverallData.totalSpendingTarget ? +opexOverallData.totalSpendingTarget : 0"
                       ></stc-apps-donut-chart>
                     }
                   </div>
@@ -175,7 +175,7 @@
                         [colors]="colors"
                         [id]="20"
                         [textInside]="'Achieved'"
-                        [overallNumber]="opexOverallData && opexOverallData.gepAchieved ? +opexOverallData.gepAchieved : 0"
+                        [overallNumber]="opexOverallData && opexOverallData.totalGepTarget ? +opexOverallData.totalGepTarget : 0"
                       ></stc-apps-donut-chart>
                     }
                   </div>

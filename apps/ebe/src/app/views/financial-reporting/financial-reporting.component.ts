@@ -87,19 +87,19 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
         console.log(res);
         this.capexOpexData = res;
         this.capexOverallData = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "capex" && data.expenditureSubtype === "overall")[0];
-        this.opexOverallData = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "opex" && data.expenditureSubtype === "overall")[0];
         const capexChartData:CapexOpex[] = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "capex" && data.expenditureSubtype !== "overall")
         const opexChartData:CapexOpex[] = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "opex" && data.expenditureSubtype !== "overall")
+        this.opexOverallData = opexChartData[0];
         this.capexTendringData = this.capexOpexData.tendering.filter((data:Tendering) => data.expenditureType === "capex")[0]
         this.opexTendringData = this.capexOpexData.tendering.filter((data:Tendering) => data.expenditureType === "opex")[0]
         this.chartData2 = [
           {
             category : "Accural",
-            value : +opexChartData[0].accrualAmount
+            value : +opexChartData[0].accrualPercentage
           },
           {
             category : "Spend",
-            value : +opexChartData[0].spendAmount
+            value : +opexChartData[0].spendPercentage
           }
         ]
         this.chartData3 = [
@@ -150,12 +150,13 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
         capexChartData.forEach((data2:CapexOpex , index:number) => {
           this.chartData.push({
             title: data2.expenditureSubtype,
-            value1: +data2.spendAmount,
-            value2: +data2.accrualAmount,
+            value1: +data2.spendPercentage,
+            value2: +data2.accrualPercentage,
             color:colors[index]
           })
         })
         this.chartData4 = [...this.chartData];
+        console.log(this.chartData4);
         // this.sharedService.chartData.next(this.chartData);
       }
     })

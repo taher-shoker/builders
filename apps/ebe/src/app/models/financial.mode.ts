@@ -21,11 +21,13 @@ export interface CapexOpexChart
 }
 export interface CapexOpex
 {
-  accrualAmount:string;
+  accrualPercentage:string;
   expenditureSubtype:string;
   expenditureType:string;
   gepAchieved:number | null;
   gepTarget:number | null;
-  spendAmount:string;
+  spendPercentage:string;
   totalBudget:string;
+  totalGepTarget:number | null;
+  totalSpendingTarget:number | null;
 }

@@ -2,7 +2,7 @@ import { Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { PSRService } from '../../../../services/psr.services';
+import { PSRService } from '../../../../services/psr.service';
 import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
 import { ActivatedRoute } from '@angular/router';

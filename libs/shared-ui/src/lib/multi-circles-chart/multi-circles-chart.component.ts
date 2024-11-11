@@ -76,7 +76,8 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
     const arr2:number[] = this.chartData2.map(item => item.value2);
     const maxValue1 = Math.max(...arr1);
     const maxValue2 = Math.max(...arr2);
-    const maxOverall = Math.max(maxValue1, maxValue2);
+    const maxOverall = Math.max(maxValue1, maxValue2) < 100 ? 100 : Math.max(maxValue1, maxValue2) > 100 && Math.max(maxValue1, maxValue2) <= 1000 ? Math.max(maxValue1, maxValue2) + 100 : Math.max(maxValue1, maxValue2) > 1000 && Math.max(maxValue1, maxValue2) < 1000000 ? Math.max(maxValue1, maxValue2) + 10000 : Math.max(maxValue1, maxValue2) + 100000;
+    console.log(maxOverall);
     const data:any[] = []
     this.chartData2.forEach(d => {
       data.push({
@@ -84,7 +85,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
         value1: d.value1,
         value3: d.value2,
         full: this.maxWidth,
-        value2: maxOverall,
+        value2: maxOverall - d.value1,
         columnSettings: {
           fill: am5.color(d.color),
         },
@@ -122,7 +123,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       am5xy.ValueAxis.new(this.root, {
         renderer: xRenderer,
         min: 0,
-        max: maxOverall,
+        max: maxOverall < 100 ? 100 : maxOverall,
         // max: maxOverall,
         strictMinMax: true,
         numberFormat: "#'%'",
@@ -208,9 +209,10 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
     });
     series1.columns.template.adapters.add("rotation", function(rotation, target) {
       const data:any = target.dataItem?.dataContext;
+      // console.log(data);
       if(data)
       {
-        return 360 - ((data.value2 / 100) * 360)
+        return 360 - ((data.value2 / maxOverall) * 360)
       }
       return rotation;
     });
