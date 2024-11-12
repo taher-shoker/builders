@@ -7,7 +7,7 @@ import { FileModel } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { FinancialReportingService } from '../../services/financial-reporting.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
-import { CapexOpex, CapexOpexChart, CapexOpexModel, Tendering } from '../../models/financial.mode';
+import { CapexModel, CapexOpexModel, TenderingModel } from '../../models/financial.mode';
 import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-financial-reporting',
@@ -24,10 +24,9 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   colors:string[] = ["#61CBD6" , "#00c48c"];
   endSubs$:Subject<boolean> = new Subject();
   capexOpexData!:CapexOpexModel;
-  capexOverallData!:CapexOpex;
-  opexOverallData!:CapexOpex;
   sharedService = inject(SharedService);
   toastr = inject(ToastrService);
+  chartColors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
   opexTenderingChart:{
     title:string;
     value:number;
@@ -54,16 +53,22 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     value:number;
     color:string;
   }[] = [];
-  chartData2:{
+  spendingTargetChart:{
     category:string;
     value:number
   }[] = []
-  chartData3:{
+  gepTargetChart:{
     category:string;
     value:number
-  }[] = []
-  chartData:CapexOpexChart[] = []
-  chartData4:CapexOpexChart[] = []
+  }[] = [];
+  capexChartData:{
+    title: string,
+    value1: number,
+    value2: number,
+    color:string
+  }[] = [];
+  capexTenderingData!:TenderingModel;
+  opexTenderingData!:TenderingModel;
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
@@ -90,88 +95,82 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     });
     this.getFinancialReportingData();
   }
-  capexTendringData!:Tendering;
-  opexTendringData!:Tendering;
   private getFinancialReportingData()
   {
-    this.chartData4 = [];
-    this.chartData = [];
     this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
-        console.log(res);
         this.capexOpexData = res;
-        this.capexOverallData = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "capex" && data.expenditureSubtype === "overall")[0];
-        const capexChartData:CapexOpex[] = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "capex" && data.expenditureSubtype !== "overall")
-        const opexChartData:CapexOpex[] = this.capexOpexData.capexOpex.filter((data:CapexOpex) => data.expenditureType === "opex" && data.expenditureSubtype !== "overall")
-        this.opexOverallData = opexChartData[0];
-        this.capexTendringData = this.capexOpexData.tendering.filter((data:Tendering) => data.expenditureType === "capex")[0]
-        this.opexTendringData = this.capexOpexData.tendering.filter((data:Tendering) => data.expenditureType === "opex")[0]
-        this.chartData2 = [
-          {
-            category : "Accural",
-            value : +opexChartData[0].accrualPercentage
-          },
-          {
-            category : "Spend",
-            value : +opexChartData[0].spendPercentage
-          }
-        ]
-        this.chartData3 = [
-          {
-            category : "Target",
-            value : opexChartData[0].gepTarget ? opexChartData[0].gepTarget : 0
-          },
-          {
-            category : "Achieved",
-            value : opexChartData[0].gepAchieved ? opexChartData[0].gepAchieved : 0
-          }
-        ]
-        const colors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
+        this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType === 'capex')[0]
+        this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType === 'opex')[0]
+        const chartData:{
+          title: string,
+          value1: number,
+          value2: number,
+          color:string
+        }[] = []
+        this.capexOpexData.capex.forEach((data2:CapexModel , index:number) => {
+          chartData.push({
+            title: data2.expenditureSubtype,
+            value1: +data2.spendPercentage,
+            value2: +data2.accrualPercentage,
+            color:this.chartColors[index]
+          })
+        })
+        this.capexChartData = [...chartData];
         this.capexTenderingChart = [
           {
             title : "Awarded",
-            value : +this.capexTendringData.awardedProjects,
+            value : +this.capexTenderingData.awardedProjects,
             color : "#00C48C"
           },
           {
             title : "Saved/dropped",
-            value : +this.capexTendringData.savedDroppedProjects,
+            value : +this.capexTenderingData.savedDroppedProjects,
             color : "#8E9AA0"
           },
           {
             title : "in progress",
-            value : +this.capexTendringData.inProgressProjects,
+            value : +this.capexTenderingData.inProgressProjects,
             color : "#4F008C"
           }
         ]
         this.opexTenderingChart = [
           {
             title : "Awarded",
-            value : +this.opexTendringData.awardedProjects,
+            value : +this.opexTenderingData.awardedProjects,
             color : "#00C48C"
           },
           {
             title : "Saved/dropped",
-            value : +this.opexTendringData.savedDroppedProjects,
+            value : +this.opexTenderingData.savedDroppedProjects,
             color : "#8E9AA0"
           },
           {
             title : "in progress",
-            value : +this.opexTendringData.inProgressProjects,
+            value : +this.opexTenderingData.inProgressProjects,
             color : "#4F008C"
           }
         ]
-        capexChartData.forEach((data2:CapexOpex , index:number) => {
-          this.chartData.push({
-            title: data2.expenditureSubtype,
-            value1: +data2.spendPercentage,
-            value2: +data2.accrualPercentage,
-            color:colors[index]
-          })
-        })
-        this.chartData4 = [...this.chartData];
-        console.log(this.chartData4);
-        // this.sharedService.chartData.next(this.chartData);
+        this.spendingTargetChart = [
+          {
+            category : "Accural",
+            value : +this.capexOpexData.opex[0].accrualPercentage
+          },
+          {
+            category : "Spend",
+            value : +this.capexOpexData.opex[0].spendPercentage
+          }
+        ]
+        this.gepTargetChart = [
+          {
+            category : "Target",
+            value : this.capexOpexData.opex[0].gepTargetPercentage ? this.capexOpexData.opex[0].gepTargetPercentage : 0
+          },
+          {
+            category : "Achieved",
+            value : this.capexOpexData.opex[0].gepAchievedPercentage ? this.capexOpexData.opex[0].gepAchievedPercentage : 0
+          }
+        ]
       }
     })
   }

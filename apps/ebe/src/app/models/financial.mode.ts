@@ -1,33 +1,36 @@
 export interface CapexOpexModel
 {
-  capexOpex:CapexOpex[];
-  tendering:Tendering[]
+  capex:CapexModel[];
+  opex:OpexModel[];
+  tendering:TenderingModel[]
 }
-export interface Tendering
+export interface CapexModel
 {
-  awardedProjects:string;
-  expenditureType:string;
-  inProgressProjects:string;
-  savedDroppedProjects:string;
-  totalAmount:string;
-  totalProjects:string;
-}
-export interface CapexOpexChart
-{
-  title:string;
-  value1:number;
-  value2:number;
-  color:string;
-}
-export interface CapexOpex
-{
-  accrualPercentage:string;
+  accrual:string;
+  accrualPercentage:number;
   expenditureSubtype:string;
-  expenditureType:string;
-  gepAchieved:number | null;
-  gepTarget:number | null;
-  spendPercentage:string;
+  spendPercentage:number;
+  spending:string;
   totalBudget:string;
-  totalGepTarget:number | null;
-  totalSpendingTarget:number | null;
+}
+export interface OpexModel
+{
+  accrual:string;
+  accrualPercentage:number;
+  gepAchievedPercentage:number;
+  gepTargetPercentage:number;
+  spendPercentage:number;
+  spending:string;
+  totalBudget:string;
+  totalGepTarget:number;
+  totalSpendingTarget:number;
+}
+export interface TenderingModel
+{
+  awardedProjects:number;
+  expenditureType:string;
+  inProgressProjects:number;
+  savedDroppedProjects:number;
+  totalAmount:string;
+  totalProjects:number;
 }

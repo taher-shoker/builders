@@ -16,12 +16,12 @@
       <div class="col-lg-6 col-md-12 col-sm-12">
         <div class = "box-card">
           <p class="main-title mb-0">capex</p>
-          @if(capexOverallData)
+          @if(capexOpexData)
           {
             <div class="budget-box">
               <p class="budget-name">total budget</p>
               <p class="budget-num">
-                {{capexOverallData.totalBudget}}
+                {{capexOpexData.capex[0].totalBudget}}
                 <span>sar</span>
               </p>
             </div>
@@ -29,14 +29,14 @@
               <div class="spend-card">
                 <span>spending</span>
                 <p class="spend-num">
-                  {{capexOverallData.spendPercentage}}
+                  {{capexOpexData.capex[0].spending}}
                   <span>sar</span>
                 </p>
               </div>
               <div class="spend-card">
                 <span>accrual</span>
                 <p class="spend-num">
-                  {{capexOverallData.accrualPercentage}}
+                  {{capexOpexData.capex[0].accrual}}
                   <span>sar</span>
                 </p>
               </div>
@@ -44,13 +44,13 @@
           }
           <div class="actual-spending-card">
             <p class="title">actual spending</p>
-            @if(chartData4)
+            @if(capexChartData)
             {
             <div class="wise-capex-card">
               <p class="title2">GD Wise CAPEX</p>
                 <div class = "box-card-chart">
                   <stc-apps-multi-circles-chart 
-                    [chartData2]="chartData4"
+                    [chartData2]="capexChartData"
                   />
                 </div>
               </div>
@@ -58,7 +58,7 @@
           </div>
           <div class="tendring-status-card">
             <p class="title">tendring status</p>
-            @if(capexTendringData)
+            @if(capexTenderingData)
             {
               <div class="tendring-status-card-box">
                 <div class="total-projects-amount-card">
@@ -67,7 +67,7 @@
                       total projects
                     </p>
                     <p class="total-projects-num">
-                      {{capexTendringData.totalProjects}}
+                      {{capexTenderingData.totalProjects}}
                     </p>
                   </div>
                   <div class="total-amount">
@@ -75,12 +75,12 @@
                       total amount
                     </p>
                     <p class="total-projects-num">
-                      {{capexTendringData.totalAmount}} SAR
+                      {{capexTenderingData.totalAmount}} SAR
                     </p>
                   </div>
                 </div>
                 <div class="awarded-card">
-                  @if(capexTenderingChart)
+                  @if(capexTenderingData)
                   {
                     @for (item of capexTenderingChart; track $index) {
                       <div 
@@ -116,12 +116,12 @@
       <div class="col-lg-6 col-md-12 col-sm-12">
         <div class = "box-card">
           <p class="main-title mb-0">opex</p>
-          @if(opexOverallData)
+          @if(capexOpexData)
           {
             <div class="budget-box">
               <p class="budget-name">total budget</p>
               <p class="budget-num">
-                {{opexOverallData.totalBudget}}
+                {{capexOpexData.opex[0].totalBudget}}
                 <span>sar</span>
               </p>
             </div>
@@ -129,14 +129,14 @@
               <div class="spend-card">
                 <span>spending</span>
                 <p class="spend-num">
-                  {{opexOverallData.spendPercentage}}
+                  {{capexOpexData.opex[0].spending}}
                   <span>sar</span>
                 </p>
               </div>
               <div class="spend-card">
                 <span>accrual</span>
                 <p class="spend-num">
-                  {{opexOverallData.accrualPercentage}}
+                  {{capexOpexData.opex[0].accrual}}
                   <span>sar</span>
                 </p>
               </div>
@@ -151,14 +151,14 @@
                     spending target
                   </p>
                   <div class="chart-container">
-                    @if(chartData2)
+                    @if(spendingTargetChart)
                     {
                       <stc-apps-donut-chart 
-                        [data]="chartData2"
+                        [data]="spendingTargetChart"
                         [colors]="colors"
                         [id]="20"
                         [textInside]="'Spending'"
-                        [overallNumber]="opexOverallData && opexOverallData.totalSpendingTarget ? +opexOverallData.totalSpendingTarget : 0"
+                        [overallNumber]="capexOpexData.opex[0].totalSpendingTarget"
                       ></stc-apps-donut-chart>
                     }
                   </div>
@@ -168,14 +168,14 @@
                     GEP target
                   </p>
                   <div class="chart-container">
-                    @if(chartData3)
+                    @if(gepTargetChart)
                     {
                       <stc-apps-donut-chart 
-                        [data]="chartData3"
+                        [data]="gepTargetChart"
                         [colors]="colors"
                         [id]="20"
                         [textInside]="'Achieved'"
-                        [overallNumber]="opexOverallData && opexOverallData.totalGepTarget ? +opexOverallData.totalGepTarget : 0"
+                        [overallNumber]="capexOpexData.opex[0].totalGepTarget"
                       ></stc-apps-donut-chart>
                     }
                   </div>
@@ -185,7 +185,7 @@
           </div>
           <div class="tendring-status-card">
             <p class="title">tendring status</p>
-            @if(opexTendringData)
+            @if(opexTenderingData)
             {
               <div class="tendring-status-card-box">
                 <div class="total-projects-amount-card">
@@ -194,7 +194,7 @@
                       total projects
                     </p>
                     <p class="total-projects-num">
-                      {{opexTendringData.totalProjects}}
+                      {{opexTenderingData.totalProjects}}
                     </p>
                   </div>
                   <div class="total-amount">
@@ -202,7 +202,7 @@
                       total amount
                     </p>
                     <p class="total-projects-num">
-                      {{opexTendringData.totalAmount}} SAR
+                      {{opexTenderingData.totalAmount}} SAR
                     </p>
                   </div>
                 </div>
