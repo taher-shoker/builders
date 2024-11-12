@@ -209,7 +209,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       cornerRadius: 0,
       // tooltipText: '{title}: {value3}'
       // tooltipText: 'Spending: {value3} SAR'
-      tooltipText: 'Spending: {value2} SAR'
+      tooltipText: 'Spending: {value3} SAR'
     });
     series1.columns.template.adapters.add("rotation", function(rotation, target) {
       const data:any = target.dataItem?.dataContext;
