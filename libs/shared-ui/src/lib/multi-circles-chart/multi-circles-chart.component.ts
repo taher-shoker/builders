@@ -76,7 +76,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
     const arr2:number[] = this.chartData2.map(item => item.value2);
     const maxValue1 = Math.max(...arr1);
     const maxValue2 = Math.max(...arr2);
-    const maxOverall = Math.max(maxValue1, maxValue2) < 100 ? 100 : Math.max(maxValue1, maxValue2) > 100 && Math.max(maxValue1, maxValue2) <= 1000 ? Math.max(maxValue1, maxValue2) + 100 : Math.max(maxValue1, maxValue2) > 1000 && Math.max(maxValue1, maxValue2) < 1000000 ? Math.max(maxValue1, maxValue2) + 10000 : Math.max(maxValue1, maxValue2) + 100000;
+    const maxOverall = Math.max(maxValue1, maxValue2) <= 100 ? 100 : Math.max(maxValue1, maxValue2) > 100 && Math.max(maxValue1, maxValue2) <= 1000 ? Math.max(maxValue1, maxValue2) + 100 : Math.max(maxValue1, maxValue2) > 1000 && Math.max(maxValue1, maxValue2) <= 1000000 ? Math.max(maxValue1, maxValue2) + 10000 : Math.max(maxValue1, maxValue2) + 100000;
     console.log(maxOverall);
     const data:any[] = []
     this.chartData2.forEach(d => {
@@ -164,6 +164,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
         xAxis: xAxis,
         yAxis: yAxis,
         clustered: false,
+        // valueXField: 'value2',
         valueXField: 'value2',
         categoryYField: 'title',
         fill: this.root.interfaceColors.get('alternativeBackground'),
@@ -187,7 +188,8 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
     series2.columns.template.setAll({
       width: am5.p100,
       strokeOpacity: 0,
-      tooltipText: '{title}: {valueX}',
+      // tooltipText: '{title}: {valueX}',
+      tooltipText: 'Accural: {valueX} SAR',
       cornerRadius: 0,
       templateField: 'columnSettings',
     });
@@ -205,7 +207,9 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       fill : am5.color("#ebebeb"),
       strokeOpacity: 0,
       cornerRadius: 0,
-      tooltipText: '{title}: {value3}'
+      // tooltipText: '{title}: {value3}'
+      // tooltipText: 'Spending: {value3} SAR'
+      tooltipText: 'Spending: {value2} SAR'
     });
     series1.columns.template.adapters.add("rotation", function(rotation, target) {
       const data:any = target.dataItem?.dataContext;

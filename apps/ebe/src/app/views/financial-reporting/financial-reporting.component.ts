@@ -6,7 +6,7 @@ import { SharedUiModule , SharedService} from '@stc-apps/shared-ui';
 import { FileModel } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { FinancialReportingService } from '../../services/financial-reporting.service';
-import { Subject, takeUntil } from 'rxjs';
+import { Observable, Subject, takeUntil } from 'rxjs';
 import { CapexOpex, CapexOpexChart, CapexOpexModel, Tendering } from '../../models/financial.mode';
 import { ToastrService } from 'ngx-toastr';
 @Component({
@@ -67,6 +67,20 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
+  // myObservable$ = new Observable(observer => {
+  //   observer.next(1);
+  //   observer.next(2);
+  //   observer.next(3);
+  // }).subscribe({
+  //   next : (res) => {
+  //     console.log(res);
+  //   }
+  // });
+  // myPromise = new Promise((resolve , reject) => {
+  //   resolve(1);
+  //   resolve(2);
+  //   resolve(3);
+  // }).then(res => console.log(res))
   ngOnInit()
   {
     this.scorecardService.getCurrentMode().subscribe({
@@ -112,7 +126,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
             value : opexChartData[0].gepAchieved ? opexChartData[0].gepAchieved : 0
           }
         ]
-        const colors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C"];
+        const colors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
         this.capexTenderingChart = [
           {
             title : "Awarded",
