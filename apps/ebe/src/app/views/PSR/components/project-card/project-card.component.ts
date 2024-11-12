@@ -4,16 +4,31 @@ import { PSRChartDataModel, PSRDataModel } from '../../../../models/psr.model';
 import { SharedUiModule } from "@stc-apps/shared-ui";
 import { RouterModule } from '@angular/router';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'stc-apps-psr-project-card',
   standalone: true,
-  imports: [CommonModule , SharedUiModule , RouterModule , OverlayPanelModule],
+  imports: [CommonModule , SharedUiModule , RouterModule , OverlayPanelModule , MenuModule],
   templateUrl: './project-card.component.html',
   styleUrl: './project-card.component.scss',
 })
 export class PSRProjectCardComponent implements OnChanges {
   maxTextLength = 0;
+  items = [
+    {
+        items: [
+            {
+                label: 'Edit',
+                icon: 'pi pi-pen-to-square'
+            },
+            {
+                label: 'Delete',
+                icon: 'pi pi-trash'
+            }
+        ]
+    }
+];
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
   project:InputSignal<PSRDataModel> = input.required<PSRDataModel>();

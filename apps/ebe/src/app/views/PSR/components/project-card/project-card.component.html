@@ -1,10 +1,27 @@
 <section class="project-container">
-  <p class="project-container-header"
-  (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
-  (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
-  >
-    {{ project().sector }}
-  </p>
+  <div class = "project-container-head">
+    <p class="project-container-header"
+    (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+    (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
+    >
+      {{ project().sector }}
+    </p>
+    <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
+    <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
+      <ng-template pTemplate="item" let-item>
+        <div class="menu-container">
+          <div 
+            class="menu-item"
+            [class.edit-btn]="item.label === 'Edit'"
+            [class.delete-btn]="item.label === 'Delete'"
+          >
+            <i [class]="item.icon"></i>
+            <p>{{item.label}}</p>
+          </div>
+        </div>
+      </ng-template>
+    </p-menu>
+  </div>
   <div class="project-container-chart mt-5">
     <stc-apps-multi-circles-progress-bar
       [chartData]="chartData"

@@ -5,9 +5,16 @@
           (export)="downloadTemplate()"
         />
     } 
-    <p class = "psr-tabview-header">
-        Data Governance Strategic Projects Execution (Executive View)
-    </p>
+    <div class = "psr-head">
+        <p class = "psr-tabview-header">
+            Data Governance Strategic Projects Execution (Executive View)
+        </p>
+        <button>
+            <!-- <i class = "pi pi-plus"></i> -->
+             <img src="assets/images/plus-icon.svg" alt="">
+            add new program
+        </button>
+    </div>
     @if(!isEmpty())
     {
         <div class="project-container">
