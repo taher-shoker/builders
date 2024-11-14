@@ -100,8 +100,8 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
         this.capexOpexData = res;
-        this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType === 'capex')[0]
-        this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType === 'opex')[0]
+        this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]
+        this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'opex')[0]
         const chartData:{
           title: string,
           value1: number,
@@ -117,40 +117,46 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
           })
         })
         this.capexChartData = [...chartData];
-        this.capexTenderingChart = [
-          {
-            title : "Awarded",
-            value : +this.capexTenderingData.awardedProjects,
-            color : "#00C48C"
-          },
-          {
-            title : "Saved/dropped",
-            value : +this.capexTenderingData.savedDroppedProjects,
-            color : "#8E9AA0"
-          },
-          {
-            title : "in progress",
-            value : +this.capexTenderingData.inProgressProjects,
-            color : "#4F008C"
-          }
-        ]
-        this.opexTenderingChart = [
-          {
-            title : "Awarded",
-            value : +this.opexTenderingData.awardedProjects,
-            color : "#00C48C"
-          },
-          {
-            title : "Saved/dropped",
-            value : +this.opexTenderingData.savedDroppedProjects,
-            color : "#8E9AA0"
-          },
-          {
-            title : "in progress",
-            value : +this.opexTenderingData.inProgressProjects,
-            color : "#4F008C"
-          }
-        ]
+        if(this.capexTenderingData)
+        {
+          this.capexTenderingChart = [
+            {
+              title : "Awarded",
+              value : +this.capexTenderingData.awardedProjects,
+              color : "#00C48C"
+            },
+            {
+              title : "Saved/dropped",
+              value : +this.capexTenderingData.savedDroppedProjects,
+              color : "#8E9AA0"
+            },
+            {
+              title : "in progress",
+              value : +this.capexTenderingData.inProgressProjects,
+              color : "#4F008C"
+            }
+          ]
+        }
+        if(this.opexTenderingData)
+        {
+          this.opexTenderingChart = [
+            {
+              title : "Awarded",
+              value : +this.opexTenderingData.awardedProjects,
+              color : "#00C48C"
+            },
+            {
+              title : "Saved/dropped",
+              value : +this.opexTenderingData.savedDroppedProjects,
+              color : "#8E9AA0"
+            },
+            {
+              title : "in progress",
+              value : +this.opexTenderingData.inProgressProjects,
+              color : "#4F008C"
+            }
+          ]
+        }
         this.spendingTargetChart = [
           {
             category : "Accural",
@@ -161,6 +167,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
             value : +this.capexOpexData.opex[0].spendPercentage
           }
         ]
+        console.log(this.spendingTargetChart);
         this.gepTargetChart = [
           {
             category : "Target",

@@ -158,7 +158,7 @@
                         [colors]="colors"
                         [id]="20"
                         [textInside]="'Spending'"
-                        [overallNumber]="capexOpexData.opex[0].totalSpendingTarget"
+                        [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalSpendingTarget : 0"
                       ></stc-apps-donut-chart>
                     }
                   </div>
@@ -175,7 +175,7 @@
                         [colors]="colors"
                         [id]="20"
                         [textInside]="'Achieved'"
-                        [overallNumber]="capexOpexData.opex[0].totalGepTarget"
+                        [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalGepTarget : 0"
                       ></stc-apps-donut-chart>
                     }
                   </div>

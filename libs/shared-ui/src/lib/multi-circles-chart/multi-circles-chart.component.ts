@@ -90,7 +90,9 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
           fill: am5.color(d.color),
         },
       })
-    })    
+    })
+    console.log(this.chartData2);
+    console.log(data);
     // Add cursor
     // https://www.amcharts.com/docs/v5/charts/radar-chart/#Cursor
     const cursor = chart.set(
@@ -209,7 +211,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       cornerRadius: 0,
       // tooltipText: '{title}: {value3}'
       // tooltipText: 'Spending: {value3} SAR'
-      tooltipText: 'Spending: {value2} SAR'
+      tooltipText: 'Spending: {value3} SAR'
     });
     series1.columns.template.adapters.add("rotation", function(rotation, target) {
       const data:any = target.dataItem?.dataContext;
@@ -226,13 +228,40 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       nameField: "categoryY",
       centerX: am5.percent(50),
       x: am5.percent(55),
-      layout: this.root.gridLayout,
+      // layout: this.root.gridLayout,
+      layout: this.root.horizontalLayout,
+      tooltip: am5.Tooltip.new(this.root, {})
     }));
     legend.labels.template.setAll({
       fill : am5.color("#616161"),
       fontWeight : "600",
-      // width : 20
+      oversizedBehavior : "truncate",
+      maxWidth : 50
+    });
+    // Add tooltip to each legend item
+    legend.itemContainers.template.set("tooltipText", "{name}");
+    const tooltipColors:am5.Color[] = [];
+    this.chartData2.forEach(d => {
+      tooltipColors.push(am5.color(d.color));
     })
+    console.log(legend.itemContainers);
+    legend.itemContainers.template.adapters.add("tooltip", (tooltip, target, key) => {
+      const index = legend.dataItems.indexOf(target.dataItem as am5.DataItem<any>);
+      // const labelWidth = target?.children?.getIndex(0)?.width();
+      // if (labelWidth && labelWidth > 100)
+      // {
+        legend.get("tooltip")?.get("background")?.setAll({
+          fill: tooltipColors[index % tooltipColors.length],
+          fillOpacity: 1,
+          strokeWidth: 0
+        });
+      // } else {
+      //   legend.get("tooltip")?.set("forceHidden" , true);
+      // }
+
+      return tooltip;
+    });
+    // For more advanced tooltips, use a function to access custom properties
     legend.itemContainers.template.setAll({
       paddingBottom: 10, // Reduces the vertical space between items
       paddingTop: 0,
@@ -240,7 +269,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       paddingLeft: 0,
       marginRight: 0, // Additional option to control horizontal space
       marginLeft: 0
-  });
+    });
     legend.markers.template.setAll({
       width: 15,
       height: 15

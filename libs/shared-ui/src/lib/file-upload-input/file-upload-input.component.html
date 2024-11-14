@@ -18,7 +18,12 @@
   } } @else {
   <div class="file-upload-file-details">
     <div class="file-info">
-      <img src="assets/images/csv.png" width="35" />
+      @if(fileType === '.csv')
+      {
+        <img src="assets/images/csv.png" width="35" />
+      } @else {
+        <img src="assets/images/excel.png" width="35" />
+      }
       <span>
         {{ selectedFile.name }} <br />
         <span>{{ fileSize }}</span>
