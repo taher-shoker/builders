@@ -236,7 +236,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       fill : am5.color("#616161"),
       fontWeight : "600",
       oversizedBehavior : "truncate",
-      maxWidth : 100
+      maxWidth : 50
     });
     // Add tooltip to each legend item
     legend.itemContainers.template.set("tooltipText", "{name}");
