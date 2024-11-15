@@ -1,0 +1,114 @@
+<section class="psr-form">
+  <div class="psr-form-header">
+    <div>
+      <stc-apps-page-header [mainTitle]="'PSR Add Progect'" />
+    </div>
+  </div>
+  <div class="psr-form-body">
+    <div class="psr-form-body-header">
+      <div class="psr-form-body-header-left">
+        <img src="assets/images/close-circle3.svg" alt="" />
+        <span>{{isEditMode ? 'edit' : 'add'}} program</span>
+      </div>
+      <div class="psr-form-body-header-right">
+        <img src="assets/images/close-circle2.svg" (click)="goBack()" alt="" />
+      </div>
+    </div>
+    <form class="psr-form-body-form" [formGroup]="addProgramForm">
+      <div class="psr-form-body-form-projects" formArrayName="programs">
+        @for (program of programsList.controls; track program;let index =
+        $index) {
+        <div class="form-wrapper position-relative" [formGroupName]="index">
+          <div class="delete-program-img">
+            <img
+              src="assets/images/close-circle2.svg"
+              alt=""
+              (click)="deleteProgram(index)"
+            />
+          </div>
+          <div class="form-group">
+            <label for="programName">prgram name</label>
+            <input
+              type="text"
+              id="programName"
+              placeholder="Enter Name of Program"
+              formControlName="program"
+              [class.invalid-input]='(program.get("program")?.hasError("required") && program.get("program")?.touched) || (program.get("program")?.hasError("noSpaces") && program.get("program")?.dirty)'
+            />
+            @if((program.get("program")?.hasError("required") && program.get("program")?.touched) || (program.get("program")?.hasError("noSpaces") && program.get("program")?.dirty)) {
+              <small class="error-msg error-msg2">prgram name is required</small>
+            }
+          </div>
+          <div class="form-group" style = "margin-top: 30px;">
+            <label for="projectAbb">prgram abbreviation</label>
+            <input
+              type="text"
+              id="projectAbb"
+              placeholder="Enter the Abbreviation of Program"
+              formControlName="abbrev"
+              [class.invalid-input]='(program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)'
+            />
+            @if((program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)) {
+              <small class="error-msg error-msg2">prgram abbreviation is required</small>
+            }
+          </div>
+          <div class="form-group" style = "margin-top: 30px;">
+            <label for="desc">description</label>
+            <textarea
+              id="desc"
+              placeholder="Write Description"
+              rows="4"
+              formControlName="description"
+              [class.invalid-input]='(program.get("description")?.hasError("required") && program.get("description")?.touched) || (program.get("description")?.hasError("noSpaces") && program.get("description")?.dirty)'
+            ></textarea>
+            @if((program.get("description")?.hasError("required") && program.get("description")?.touched) || (program.get("description")?.hasError("noSpaces") && program.get("description")?.dirty)) {
+              <small class="error-msg error-msg2">description is required</small>
+            }
+          </div>
+        </div>
+        }
+      </div>
+    </form>
+    @if(!isEditMode)
+    {
+      <button class="add-project-btn" type="button" (click)="addNewProgramForm()">
+        <img src="assets/images/add-square2.svg" alt="" />
+        <span>add new program</span>
+      </button>
+    }
+    <div class="save-cancel-btns">
+      <button class="cancel-btn" (click)="goBack()" type="button">
+        cancel
+      </button>
+      <button
+        class="save-btn"
+        (click)="save()"
+        [disabled]="programsList.invalid || programsList.length === 0"
+        [class.disabled-btn]="programsList.invalid || programsList.length === 0"
+        >
+        {{isEditMode ? 'save' : 'add program'}}
+      </button>
+    </div>
+  </div>
+</section>
+<stc-apps-confirm-dialog [key]="'edit-program'">
+  <div class="edit-program-dialog">
+    <div class="header">
+      <p class="delete-record-header">save updates?</p>
+      <img src="assets/images/_action-icon.svg" (click)="close()" alt="" />
+    </div>
+    <div class="body">
+      <img src="assets/images/exclamation-triangle-dark.svg" alt="">
+      <p class="delete-record-content">
+        Are you sure you want to save these changes?
+      </p>
+    </div>
+    <!-- <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p> -->
+    <div class="buttons mt-4">
+      <button (click)="close()" class="cancel">cancel</button>
+      <button class="delete" (click)="editProgram()">save changes</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>

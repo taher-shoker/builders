@@ -7,11 +7,12 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { FileModel } from '../../../../models/scorecard.model';
 import { PSRService } from '../../../../services/psr.service';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'stc-apps-tab-details',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , EditModeViewComponent],
+  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , EditModeViewComponent , RouterLink],
   templateUrl: './tab-details.component.html',
   styleUrl: './tab-details.component.scss',
 })
@@ -23,6 +24,8 @@ export class TabDetailsComponent implements OnInit{
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService)
   psrService = inject(PSRService);
+  router = inject(Router);
+  route = inject(ActivatedRoute);
   ngOnInit(): void {
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
@@ -61,5 +64,11 @@ export class TabDetailsComponent implements OnInit{
   onHide()
   {
     this.visible = false;
+  }
+  gotoaddForm()
+  {
+    // this.router.navigate(['add-project'] , { relativeTo: this.route })
+    // this.router.navigate(['/.envpsr/add-project'])
+    // this.router.navigateByUrl('/psr/add-project')
   }
 }

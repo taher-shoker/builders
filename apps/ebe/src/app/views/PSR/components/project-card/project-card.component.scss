@@ -122,3 +122,79 @@
     }
   }
 }
+.delete-program-dialog
+{
+  padding:0px 20px 0px;
+  text-align: center;
+  min-width:500px;
+  min-height:172px;
+  .header
+  {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    img
+    {
+      width: 40px;
+      cursor:pointer;
+    }
+  }
+  .body
+  {
+    display: flex;
+    align-items: center;
+    gap:10px;
+  }
+  p
+  {
+    margin: 0;
+    @extend .stcFont;
+    &.delete-record-header
+    {
+      color:var(--stc-lighter-black-color);
+      font-weight: 600;
+      text-transform: capitalize;
+      margin:15px 0;
+      font-size: 19px;
+    }
+    &.delete-record-content
+    {
+      @extend .stcFont;
+      color:var(--stc-lighter-grey-color2);
+      font-size: 17px;
+    }
+    &.delete-record-warning
+    {
+      color:var( --stc-red-color);
+      margin:15px 0;
+      font-size: 16px;
+    }
+  }
+  .buttons
+  {
+    display: flex;
+    justify-content: flex-end;
+    gap:25px;
+    button
+    {
+      border:0;
+      background-color:transparent;
+      border-radius: 5px;
+      width:150px;
+      height:40px;
+      color:var(--stc-dark-grey-color2);
+      text-transform: capitalize;
+      @extend .stcFont;
+      font-weight: 500;
+      &.delete
+      {
+        background-color: var(--stc-purple-color);
+        color:var(--stc-white-color);
+      }
+      &.cancel
+      {
+        width: 80px;
+      }
+    }
+  }
+}

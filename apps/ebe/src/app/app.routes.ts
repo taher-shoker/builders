@@ -11,7 +11,7 @@ export const appRoutes: Route[] = [
     loadComponent: () =>
       import('./views/scorecard/scorecard.component').then(
         (m) => m.ScorecardComponent
-      ),
+      )
   },
   {
     path : "strategy-program",
@@ -64,7 +64,21 @@ export const appRoutes: Route[] = [
         (m) => m.PSRComponent
     )
   },
-    {
+  {
+    path : "psr/add-project",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+  },
+  {
+    path : "psr/edit-project/:id",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+  },
+  {
     path : "psr/:id",
     loadComponent: () =>
       import('./views/PSR/components/psr-details-page/psr-details-page.component').then(
