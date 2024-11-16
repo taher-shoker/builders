@@ -8,6 +8,7 @@ import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-v
 import { FileModel } from '../../../../models/scorecard.model';
 import { PSRService } from '../../../../services/psr.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FormBuilder, Validators } from '@angular/forms';
 
 @Component({
   selector: 'stc-apps-tab-details',
@@ -26,6 +27,7 @@ export class TabDetailsComponent implements OnInit{
   psrService = inject(PSRService);
   router = inject(Router);
   route = inject(ActivatedRoute);
+  fb = inject(FormBuilder);
   ngOnInit(): void {
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {

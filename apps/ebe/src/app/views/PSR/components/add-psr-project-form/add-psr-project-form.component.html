@@ -16,8 +16,7 @@
     </div>
     <form class="psr-form-body-form" [formGroup]="addProgramForm">
       <div class="psr-form-body-form-projects" formArrayName="programs">
-        @for (program of programsList.controls; track program;let index =
-        $index) {
+        @for (program of programsList.controls; track program;let index = $index) {
         <div class="form-wrapper position-relative" [formGroupName]="index">
           <div class="delete-program-img">
             <img
@@ -26,16 +25,45 @@
               (click)="deleteProgram(index)"
             />
           </div>
-          <div class="form-group">
+          @for (programInput of formControlLabel(); track programInput;let index = $index) {
+            <div 
+              class="form-group"
+              [ngStyle]="{'margin-top' : !$first ? '30px' : '0'}"
+            >
+              <label [for]="programInput">{{programInput}}</label>
+              @if(programInput !== 'description')
+              {
+                <input
+                  type="text"
+                  [id]="programInput"
+                  [placeholder]="'Enter ' + programInput"
+                  [formControlName]="programInput"
+                  [class.invalid-input]='(program.get(programInput)?.hasError("required") && program.get(programInput)?.touched) || (program.get(programInput)?.hasError("noSpaces") && program.get(programInput)?.dirty)'
+                />
+              } @else {
+                <textarea
+                  [id]="programInput"
+                  placeholder="Write Description"
+                  rows="4"
+                  [formControlName]="programInput"
+                  [class.invalid-input]='(program.get(programInput)?.hasError("required") && program.get(programInput)?.touched) || (program.get(programInput)?.hasError("noSpaces") && program.get(programInput)?.dirty)'
+                ></textarea>
+              }
+              @if((program.get(programInput)?.hasError("required") && program.get(programInput)?.touched) || (program.get(programInput)?.hasError("noSpaces") && program.get(programInput)?.dirty)) {
+                <small class="error-msg error-msg2">{{programInput}} is required</small>
+              }
+            </div>
+          }
+          <!-- <div class="form-group">
             <label for="programName">prgram name</label>
             <input
               type="text"
               id="programName"
               placeholder="Enter Name of Program"
-              formControlName="program"
-              [class.invalid-input]='(program.get("program")?.hasError("required") && program.get("program")?.touched) || (program.get("program")?.hasError("noSpaces") && program.get("program")?.dirty)'
+              formControlName="program name"
+              [class.invalid-input]='(program.get("program name")?.hasError("required") && program.get("program name")?.touched) || (program.get("program name")?.hasError("noSpaces") && program.get("program name")?.dirty)'
             />
-            @if((program.get("program")?.hasError("required") && program.get("program")?.touched) || (program.get("program")?.hasError("noSpaces") && program.get("program")?.dirty)) {
+            @if((program.get("program name")?.hasError("required") && program.get("program name")?.touched) || (program.get("program name")?.hasError("noSpaces") && program.get("program name")?.dirty)) {
               <small class="error-msg error-msg2">prgram name is required</small>
             }
           </div>
@@ -45,10 +73,10 @@
               type="text"
               id="projectAbb"
               placeholder="Enter the Abbreviation of Program"
-              formControlName="abbrev"
-              [class.invalid-input]='(program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)'
+              formControlName="prgram abbreviation"
+              [class.invalid-input]='(program.get("prgram abbreviation")?.hasError("required") && program.get("prgram abbreviation")?.touched) || (program.get("prgram abbreviation")?.hasError("noSpaces") && program.get("prgram abbreviation")?.dirty)'
             />
-            @if((program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)) {
+            @if((program.get("prgram abbreviation")?.hasError("required") && program.get("prgram abbreviation")?.touched) || (program.get("prgram abbreviation")?.hasError("noSpaces") && program.get("prgram abbreviation")?.dirty)) {
               <small class="error-msg error-msg2">prgram abbreviation is required</small>
             }
           </div>
@@ -64,7 +92,7 @@
             @if((program.get("description")?.hasError("required") && program.get("description")?.touched) || (program.get("description")?.hasError("noSpaces") && program.get("description")?.dirty)) {
               <small class="error-msg error-msg2">description is required</small>
             }
-          </div>
+          </div> -->
         </div>
         }
       </div>
@@ -83,9 +111,9 @@
       <button
         class="save-btn"
         (click)="save()"
-        [disabled]="programsList.invalid || programsList.length === 0"
-        [class.disabled-btn]="programsList.invalid || programsList.length === 0"
         >
+        <!-- [disabled]="programsList.invalid || programsList.length === 0"
+        [class.disabled-btn]="programsList.invalid || programsList.length === 0" -->
         {{isEditMode ? 'save' : 'add program'}}
       </button>
     </div>

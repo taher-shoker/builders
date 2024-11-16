@@ -8,7 +8,8 @@ import { PageHeaderComponent } from '../../../../components/pageHeader/page-head
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ConfirmationService } from 'primeng/api';
 import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
-import { ActivatedRoute, Params } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { PSRService } from '../../../../services/psr.service';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
@@ -21,7 +22,9 @@ export class AddPsrProjectFormComponent implements OnInit {
   private location = inject(Location);
   activatedRoute = inject(ActivatedRoute);
   private confirmationService = inject(ConfirmationService);
+  psrService = inject(PSRService)
   formBuilder = inject(FormBuilder);
+  router = inject(Router);
   addProgramForm!: FormGroup;
   isEditMode = false;
   ngOnInit(): void {
@@ -46,11 +49,30 @@ export class AddPsrProjectFormComponent implements OnInit {
     return isValid ? null : { noSpaces: true };
   }
   createProjectFormGroup(): FormGroup {
-    return this.formBuilder.group({
-      program: [null,[Validators.required , this.noSpacesValidator]],
-      abbrev: [null, [Validators.required , this.noSpacesValidator]],
-      description: [null, [Validators.required , this.noSpacesValidator]]
-    });
+    if(this.router.url.startsWith("/psr/edit-project"))
+    {
+      return this.formBuilder.group({
+        "program name": [null,[Validators.required , this.noSpacesValidator]],
+        "prgram abbreviation": [null, [Validators.required , this.noSpacesValidator]],
+        "description": [null, [Validators.required , this.noSpacesValidator]],
+      });
+    } else {
+      return this.formBuilder.group({
+        "program name": [null,[Validators.required , this.noSpacesValidator]],
+        "prgram owner": [null, [this.noSpacesValidator]],
+        "vendor": [null, [Validators.required , this.noSpacesValidator]],
+        "project stage": [null, [Validators.required , this.noSpacesValidator]],
+        "indicator": [null, [Validators.required , this.noSpacesValidator]],
+        "background color": [null, [Validators.required , this.noSpacesValidator]],
+        "domain": [null, [Validators.required , this.noSpacesValidator]],
+        "start date": [null, [Validators.required , this.noSpacesValidator]],
+        "end date": [null, [Validators.required , this.noSpacesValidator]],
+        "PO amount": [null, [Validators.required , this.noSpacesValidator]],
+        "actual spending": [null, [Validators.required , this.noSpacesValidator]],
+        "planned percentage": [null, [Validators.required , this.noSpacesValidator , Validators.max(100)]],
+        "actual percentage": [null, [this.noSpacesValidator , Validators.max(100)]],
+      });
+    }
   }
   get programsList(): FormArray {
     return this.addProgramForm.get('programs') as FormArray;
@@ -68,6 +90,7 @@ export class AddPsrProjectFormComponent implements OnInit {
   }
   save()
   {
+    console.log(this.programsList);
     if(this.programsList.valid)
     {
       console.log(this.programsList.value);
@@ -90,5 +113,9 @@ export class AddPsrProjectFormComponent implements OnInit {
   close()
   {
     this.confirmationService.close()
+  }
+  formControlLabel()
+  {
+    return Object.keys(this.createProjectFormGroup().controls)
   }
 }

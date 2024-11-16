@@ -90,6 +90,7 @@
                 color: #8E9AA0;
                 font-weight: 400;
                 @extend .stcFont;
+                text-transform: capitalize;
               }
               &.invalid-input
               {

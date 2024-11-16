@@ -1,10 +1,17 @@
 import { inject, Injectable } from '@angular/core';
 import { ChartDetails, ColumnsSchema, PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
 @Injectable({ providedIn: 'root' })
 export class PSRService {
+  programForm!:FormGroup;
+  noSpacesValidator(control: AbstractControl): ValidationErrors | null {
+    const isWhitespace = (control.value || '').trim().length === 0;
+    const isValid = !isWhitespace;
+    return isValid ? null : { noSpaces: true };
+  }
   tableHeader:ColumnsSchema[] = [
       {
         key : "id",
