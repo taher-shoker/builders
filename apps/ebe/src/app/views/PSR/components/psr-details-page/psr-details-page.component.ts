@@ -5,7 +5,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.service';
 import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , SharedUiModule , ProjectDetailsCardComponent , EditModeViewComponent],
+  imports: [CommonModule , PageHeaderComponent , SharedUiModule , ProjectDetailsCardComponent , EditModeViewComponent , RouterLink],
   templateUrl: './psr-details-page.component.html',
   styleUrl: './psr-details-page.component.scss',
 })

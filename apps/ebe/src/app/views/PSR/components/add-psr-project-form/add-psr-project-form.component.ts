@@ -49,7 +49,8 @@ export class AddPsrProjectFormComponent implements OnInit {
     return isValid ? null : { noSpaces: true };
   }
   createProjectFormGroup(): FormGroup {
-    if(this.router.url.startsWith("/psr/edit-project"))
+    console.log(this.isEditMode);
+    if(this.router.url.startsWith("/psr/add-program"))
     {
       return this.formBuilder.group({
         "program name": [null,[Validators.required , this.noSpacesValidator]],

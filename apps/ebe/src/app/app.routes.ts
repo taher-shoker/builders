@@ -65,6 +65,13 @@ export const appRoutes: Route[] = [
     )
   },
   {
+    path : "psr/add-program",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+  },
+  {
     path : "psr/add-project",
     loadComponent: () =>
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
@@ -72,7 +79,7 @@ export const appRoutes: Route[] = [
     ),
   },
   {
-    path : "psr/edit-project/:id",
+    path : "psr/edit-program/:id",
     loadComponent: () =>
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
         (m) => m.AddPsrProjectFormComponent

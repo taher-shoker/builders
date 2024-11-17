@@ -18,11 +18,18 @@
         @if(!isEmpty)
         {
           <div class="projects-container">
-            <p class = "psr-tabview-header">
-              {{PSRDetailsData ? PSRDetailsData[0].gd : ''}}
-            </p>
+            <div class = "psr-head">
+              <p class = "psr-tabview-header">
+                {{PSRDetailsData ? PSRDetailsData[0].gd : ''}}
+              </p>
+              <button routerLink="/psr/add-project">
+                  <!-- <i class = "pi pi-plus"></i> -->
+                   <img src="assets/images/plus-icon.svg" alt="">
+                  add new project
+              </button>
+          </div>
             <div class="project-cards-container">
-              @for (proj of PSRDetailsData; track $index) {
+              @for (proj of PSRDetailsData; track proj.gd) {
                 <div class="project-card">
                   <stc-apps-project-details-card 
                     [projectData]="proj"
