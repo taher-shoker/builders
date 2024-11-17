@@ -57,9 +57,9 @@
       }
       .spending-cards
       {
-        display: flex;
-        align-items: center;
-        gap:15px;
+        // display: flex;
+        // align-items: center;
+        // gap:15px;
         .spend-card
         {
           box-shadow: 0px 2.79px 2.79px 0px #0000000A;
@@ -78,10 +78,22 @@
           .spend-num
           {
             color:#000;
-            font-size: 2.2rem;
+            font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 0;
             margin-top: 10px;
+            @media all and (min-width:1367px) and (max-width:1440px)
+            {
+              font-size: 1.5rem;
+            }
+            @media all and (min-width:1281px) and (max-width:1366px)
+            {
+              font-size: 1.4rem;
+            }
+            @media all and (max-width:1280px)
+            {
+              font-size: 1.2rem;
+            }
             span
             {
               color:var(--stc-grey-dark-color);

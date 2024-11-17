@@ -25,20 +25,24 @@
                 <span>sar</span>
               </p>
             </div>
-            <div class="spending-cards">
-              <div class="spend-card">
-                <span>spending</span>
-                <p class="spend-num">
-                  {{capexOpexData.capex[0].spending}}
-                  <span>sar</span>
-                </p>
+            <div class="row spending-cards">
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="spend-card">
+                  <span>spending</span>
+                  <p class="spend-num">
+                    {{capexOpexData.capex[0].spending}}
+                    <span>sar</span>
+                  </p>
+                </div>
               </div>
-              <div class="spend-card">
-                <span>accrual</span>
-                <p class="spend-num">
-                  {{capexOpexData.capex[0].accrual}}
-                  <span>sar</span>
-                </p>
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="spend-card">
+                  <span>accrual</span>
+                  <p class="spend-num">
+                    {{capexOpexData.capex[0].accrual}}
+                    <span>sar</span>
+                  </p>
+                </div>
               </div>
             </div>
           }
@@ -87,7 +91,8 @@
                         class="awarded-card-item"
                         [ngStyle]="{
                           'background' : item.color,
-                          'width' : item.value > 100 ? '100%' : item.value + '%'
+                          'width' : item.value + '%',
+                          'flex' : item.value
                         }"
                       >
                         {{item.value}}
@@ -125,20 +130,24 @@
                 <span>sar</span>
               </p>
             </div>
-            <div class="spending-cards">
-              <div class="spend-card">
-                <span>spending</span>
-                <p class="spend-num">
-                  {{capexOpexData.opex[0].spending}}
-                  <span>sar</span>
-                </p>
+            <div class="row spending-cards">
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="spend-card">
+                  <span>spending</span>
+                  <p class="spend-num">
+                    {{capexOpexData.opex[0].spending}}
+                    <span>sar</span>
+                  </p>
+                </div>
               </div>
-              <div class="spend-card">
-                <span>accrual</span>
-                <p class="spend-num">
-                  {{capexOpexData.opex[0].accrual}}
-                  <span>sar</span>
-                </p>
+              <div class="col-lg-6 col-md-12 col-sm-12">
+                <div class="spend-card">
+                  <span>accrual</span>
+                  <p class="spend-num">
+                    {{capexOpexData.opex[0].accrual}}
+                    <span>sar</span>
+                  </p>
+                </div>
               </div>
             </div>
           }
@@ -160,7 +169,7 @@
                         [textInside]="'Spending'"
                         [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalSpendingTarget : 0"
                       ></stc-apps-donut-chart>
-                    }
+                    } 
                   </div>
                 </div>
                 <div class="second-chart">
@@ -212,7 +221,8 @@
                       class="awarded-card-item"
                       [ngStyle]="{
                         'background' : item.color,
-                        'width' : item.value > 100 ? '100%' : item.value + '%'
+                        'width' : item.value + '%',
+                        'flex' : item.value
                       }"
                     >
                       {{item.value}}

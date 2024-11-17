@@ -191,7 +191,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       width: am5.p100,
       strokeOpacity: 0,
       // tooltipText: '{title}: {valueX}',
-      tooltipText: 'Accural: {valueX} SAR',
+      tooltipText: 'Accural: {value3} SAR',
       cornerRadius: 0,
       templateField: 'columnSettings',
     });
@@ -211,7 +211,7 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       cornerRadius: 0,
       // tooltipText: '{title}: {value3}'
       // tooltipText: 'Spending: {value3} SAR'
-      tooltipText: 'Spending: {value3} SAR'
+      tooltipText: 'Spending: {value1} SAR'
     });
     series1.columns.template.adapters.add("rotation", function(rotation, target) {
       const data:any = target.dataItem?.dataContext;
@@ -228,15 +228,15 @@ export class MultiCirclesChartComponent implements OnChanges , OnDestroy{
       nameField: "categoryY",
       centerX: am5.percent(50),
       x: am5.percent(55),
-      // layout: this.root.gridLayout,
-      layout: this.root.horizontalLayout,
+      layout: this.root.gridLayout,
+      // layout: this.root.horizontalLayout,
       tooltip: am5.Tooltip.new(this.root, {})
     }));
     legend.labels.template.setAll({
       fill : am5.color("#616161"),
       fontWeight : "600",
       oversizedBehavior : "truncate",
-      maxWidth : 50
+      maxWidth : 40
     });
     // Add tooltip to each legend item
     legend.itemContainers.template.set("tooltipText", "{name}");
