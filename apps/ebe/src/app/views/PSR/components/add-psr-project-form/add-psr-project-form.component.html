@@ -8,7 +8,7 @@
     <div class="psr-form-body-header">
       <div class="psr-form-body-header-left">
         <img src="assets/images/close-circle3.svg" alt="" />
-        <span>{{isEditMode ? 'edit' : 'add'}} program</span>
+        <span>{{ isEditMode ? 'edit' : 'add' }} {{inPSRForm ? 'program' : 'project'}}</span>
       </div>
       <div class="psr-form-body-header-right">
         <img src="assets/images/close-circle2.svg" (click)="goBack()" alt="" />
@@ -16,7 +16,8 @@
     </div>
     <form class="psr-form-body-form" [formGroup]="addProgramForm">
       <div class="psr-form-body-form-projects" formArrayName="programs">
-        @for (program of programsList.controls; track program;let index = $index) {
+        @for (program of programsList.controls; track program;let index =
+        $index) {
         <div class="form-wrapper position-relative" [formGroupName]="index">
           <div class="delete-program-img">
             <img
@@ -25,96 +26,346 @@
               (click)="deleteProgram(index)"
             />
           </div>
-          @for (programInput of formControlLabel(); track programInput;let index = $index) {
-            <div 
-              class="form-group"
-              [ngStyle]="{'margin-top' : !$first ? '30px' : '0'}"
-            >
-              <label [for]="programInput">{{programInput}}</label>
-              @if(programInput !== 'description')
-              {
+          @if(inPSRForm)
+          {
+            <div class="psr-page-form">
+              <div class="form-group">
+                <label for="programName">prgram name</label>
                 <input
                   type="text"
-                  [id]="programInput"
-                  [placeholder]="'Enter ' + programInput"
-                  [formControlName]="programInput"
-                  [class.invalid-input]='(program.get(programInput)?.hasError("required") && program.get(programInput)?.touched) || (program.get(programInput)?.hasError("noSpaces") && program.get(programInput)?.dirty)'
+                  id="programName"
+                  placeholder="Enter Name of Program"
+                  formControlName="sector"
+                  [class.invalid-input]='(program.get("sector")?.hasError("required") && program.get("sector")?.touched) || (program.get("sector")?.hasError("noSpaces") && program.get("sector")?.dirty)'
                 />
-              } @else {
+                @if((program.get("sector")?.hasError("required") && program.get("sector")?.touched) || (program.get("sector")?.hasError("noSpaces") && program.get("sector")?.dirty)) {
+                  <small class="error-msg error-msg2">prgram name is required</small>
+                }
+              </div>
+              <!-- <div class="form-group" style = "margin-top: 30px;">
+                <label for="projectAbb">prgram abbreviation</label>
+                <input
+                  type="text"
+                  id="projectAbb"
+                  placeholder="Enter the Abbreviation of Program"
+                  formControlName="abbrev"
+                  [class.invalid-input]='(program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)'
+                />
+                @if((program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)) {
+                  <small class="error-msg error-msg2">prgram abbreviation is required</small>
+                }
+              </div> -->
+              <div class="form-group" style = "margin-top: 30px;">
+                <label for="desc">description</label>
                 <textarea
-                  [id]="programInput"
+                  id="desc"
                   placeholder="Write Description"
                   rows="4"
-                  [formControlName]="programInput"
-                  [class.invalid-input]='(program.get(programInput)?.hasError("required") && program.get(programInput)?.touched) || (program.get(programInput)?.hasError("noSpaces") && program.get(programInput)?.dirty)'
+                  formControlName="details"
+                  [class.invalid-input]='(program.get("details")?.hasError("required") && program.get("details")?.touched) || (program.get("details")?.hasError("noSpaces") && program.get("details")?.dirty)'
                 ></textarea>
-              }
-              @if((program.get(programInput)?.hasError("required") && program.get(programInput)?.touched) || (program.get(programInput)?.hasError("noSpaces") && program.get(programInput)?.dirty)) {
-                <small class="error-msg error-msg2">{{programInput}} is required</small>
-              }
+                @if((program.get("details")?.hasError("required") && program.get("details")?.touched) || (program.get("details")?.hasError("noSpaces") && program.get("details")?.dirty)) {
+                  <small class="error-msg error-msg2">description is required</small>
+                }
+              </div>
+            </div>
+          } @else {
+            <div class="psr-details-page-form">
+              <div class="form-group">
+                <label for="projectName">project name</label>
+                <input
+                  type="text"
+                  id="projectName"
+                  placeholder="Enter Name of Project"
+                  formControlName="project"
+                  [class.invalid-input]='(program.get("project")?.hasError("required") && program.get("project")?.touched) || (program.get("project")?.hasError("noSpaces") && program.get("project")?.dirty)'
+                />
+                @if((program.get("project")?.hasError("required") && program.get("project")?.touched) || (program.get("project")?.hasError("noSpaces") && program.get("project")?.dirty)) {
+                  <small class="error-msg error-msg2">project name is required</small>
+                }
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="projectOwner">project owner</label>
+                    <input
+                      type="text"
+                      id="projectOwner"
+                      placeholder="Add Project Owner"
+                      formControlName="owner"
+                      />
+                      <!-- [class.invalid-input]='(program.get("owner")?.hasError("required") && program.get("owner")?.touched) || (program.get("owner")?.hasError("noSpaces") && program.get("owner")?.dirty)' -->
+                    <!-- @if((program.get("owner")?.hasError("required") && program.get("owner")?.touched) || (program.get("owner")?.hasError("noSpaces") && program.get("owner")?.dirty)) {
+                      <small class="error-msg error-msg2">project owner is required</small>
+                    } -->
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="vendor">vendor</label>
+                    <input
+                      type="text"
+                      id="vendor"
+                      placeholder="Add KPMG"
+                      formControlName="vendor"
+                      [class.invalid-input]='(program.get("vendor")?.hasError("required") && program.get("vendor")?.touched) || (program.get("vendor")?.hasError("noSpaces") && program.get("vendor")?.dirty)'
+                    />
+                    @if((program.get("vendor")?.hasError("required") && program.get("vendor")?.touched) || (program.get("vendor")?.hasError("noSpaces") && program.get("vendor")?.dirty)) {
+                      <small class="error-msg error-msg2">vendor is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="stage">project stage</label>
+                    <input
+                      type="text"
+                      id="stage"
+                      placeholder="Add Execution"
+                      formControlName="stage"
+                      [class.invalid-input]='(program.get("stage")?.hasError("required") && program.get("stage")?.touched) || (program.get("stage")?.hasError("noSpaces") && program.get("stage")?.dirty)'
+                    />
+                    @if((program.get("stage")?.hasError("required") && program.get("stage")?.touched) || (program.get("stage")?.hasError("noSpaces") && program.get("stage")?.dirty)) {
+                      <small class="error-msg error-msg2">project stage is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="health">project health</label>
+                    <input
+                      type="text"
+                      id="health"
+                      placeholder="Add Project Health"
+                      formControlName="health"
+                      [class.invalid-input]='(program.get("health")?.hasError("required") && program.get("health")?.touched) || (program.get("health")?.hasError("noSpaces") && program.get("health")?.dirty)'
+                    />
+                    @if((program.get("health")?.hasError("required") && program.get("health")?.touched) || (program.get("health")?.hasError("noSpaces") && program.get("health")?.dirty)) {
+                      <small class="error-msg error-msg2">project health is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="startDate">start date</label>
+                    <p-calendar 
+                      formControlName="startDate" 
+                      [inputId]="'startDate'"
+                      [showIcon]="false"
+                      class = "startDate-calendar"
+                      placeholder="Add Start Date"
+                      [class.invalid-date]='(program.get("startDate")?.hasError("required") && program.get("startDate")?.touched)'
+                      dateFormat="dd/mm/yy"
+                      [showButtonBar]="false"
+                      (ngModelChange)="changeStartDate($event)"
+                    />
+                      <!-- appendTo="div" -->
+                    <!-- <input
+                      type="text"
+                      id="startDate"
+                      placeholder="Add Start Date"
+                      formControlName="startDate"
+                      [class.invalid-input]='(program.get("startDate")?.hasError("required") && program.get("startDate")?.touched) || (program.get("startDate")?.hasError("noSpaces") && program.get("startDate")?.dirty)'
+                    /> -->
+
+                    @if((program.get("startDate")?.hasError("required") && program.get("startDate")?.touched) || (program.get("startDate")?.hasError("noSpaces") && program.get("startDate")?.dirty)) {
+                      <small class="error-msg error-msg2">start date is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="endDate">end date</label>
+                    <p-calendar 
+                      formControlName="endDate" 
+                      [inputId]="'endDate'"
+                      [showIcon]="false"
+                      class = "startDate-calendar"
+                      placeholder="Add End Date"
+                      dateFormat="dd/mm/yy"
+                      [class.invalid-date]='(program.get("endDate")?.hasError("required") && program.get("endDate")?.touched) || (messageHint && currentFormIndex === index) || program.hasError("startDateAfterEndDate")'
+                      [showButtonBar]="false"
+                      (ngModelChange)="changeEndDate($event , index)"
+                    />
+                    <!-- <input
+                      type="text"
+                      id="endDate"
+                      placeholder="Add End Date"
+                      formControlName="endDate"
+                      [class.invalid-input]='(program.get("endDate")?.hasError("required") && program.get("endDate")?.touched) || (program.get("endDate")?.hasError("noSpaces") && program.get("endDate")?.dirty)'
+                    /> -->
+                    @if((program.get("endDate")?.hasError("required") && program.get("endDate")?.touched) || (program.get("endDate")?.hasError("noSpaces") && program.get("endDate")?.dirty)) {
+                      <small class="error-msg error-msg2">end date is required</small>
+                    }
+                    @if(messageHint && currentFormIndex === index)
+                    {
+                      <small class="error-msg error-msg2">{{messageHint}}</small>
+                    }
+                    @if(program.hasError("startDateAfterEndDate"))
+                    {
+                      <small class="error-msg error-msg2">end date is less than start date</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="POAmount">PO amount</label>
+                    <input
+                      type="number"
+                      id="POAmount"
+                      placeholder="Add PO Amount"
+                      formControlName="POAmount"
+                      (keydown)="preventInvalidInput($event)" 
+                      [class.invalid-input]='(program.get("POAmount")?.hasError("required") && program.get("POAmount")?.touched)'
+                    />
+                    @if((program.get("POAmount")?.hasError("required") && program.get("POAmount")?.touched)) {
+                      <small class="error-msg error-msg2">PO Amount is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="actualSpending">actual spending</label>
+                    <input
+                      type="number"
+                      id="actualSpending"
+                      placeholder="Add Actual in SAR"
+                      formControlName="actualSpending"
+                      (keydown)="preventInvalidInput($event)" 
+                      [class.invalid-input]='(program.get("actualSpending")?.hasError("required") && program.get("actualSpending")?.touched)'
+                    />
+                    @if((program.get("actualSpending")?.hasError("required") && program.get("actualSpending")?.touched)) {
+                      <small class="error-msg error-msg2">actual Spending is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="actualPercentage">actual in percentage %</label>
+                    <input
+                      type="number"
+                      id="actualPercentage"
+                      placeholder="Add Actual in Percentage"
+                      formControlName="actualPercentage"
+                      (keydown)="preventInvalidInput($event)" 
+                      [class.invalid-input]='program.get("actualPercentage")?.hasError("max")'
+                    />
+                    @if(program.get("actualPercentage")?.hasError("max")) {
+                      <small class="error-msg error-msg2">the max value is 100</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="plannedPercentage">planned in percentage %</label>
+                    <input
+                      type="number"
+                      id="plannedPercentage"
+                      placeholder="Add Palnned in Percentage"
+                      formControlName="plannedPercentage"
+                      (keydown)="preventInvalidInput($event)" 
+                      [class.invalid-input]='program.get("plannedPercentage")?.hasError("max")'
+                    />
+                    @if(program.get("plannedPercentage")?.hasError("max")) {
+                      <small class="error-msg error-msg2">the max value is 100</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="domain">domain</label>
+                    <input
+                      type="text"
+                      id="domain"
+                      placeholder="Add Domain"
+                      formControlName="domain"
+                      [class.invalid-input]='(program.get("domain")?.hasError("required") && program.get("domain")?.touched) || (program.get("domain")?.hasError("noSpaces") && program.get("domain")?.dirty)'
+                    />
+                    @if((program.get("domain")?.hasError("required") && program.get("domain")?.touched) || (program.get("domain")?.hasError("noSpaces") && program.get("domain")?.dirty)) {
+                      <small class="error-msg error-msg2">domain name is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="indicator">indicator</label>
+                    <p-dropdown 
+                      id = "indicator"
+                      formControlName="indicator" 
+                      [options]="indicators"
+                      optionLabel="name"
+                      placeholder="Select Indicator" 
+                      class = "indicator-dropdown"
+                      [class.invalid-dropdown]='(program.get("indicator")?.hasError("required") && program.get("indicator")?.touched)'
+                    />
+                    @if((program.get("indicator")?.hasError("required") && program.get("indicator")?.touched)) {
+                      <small class="error-msg error-msg2">indicator is required</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="background">background color</label>
+                    <p-dropdown 
+                      id = "background"
+                      formControlName="background" 
+                      [options]="colors"
+                      optionLabel="name"
+                      placeholder="Select Background Color" 
+                      class = "indicator-dropdown"
+                      (ngModelChange)="selectBackground($event)"
+                      [class.invalid-dropdown]='(program.get("background")?.hasError("required") && program.get("background")?.touched)'
+                    >
+                    <ng-template pTemplate="selectedItem">
+                      <div class="background-item">
+                        <span
+                          class = 'background-bullet'
+                          [ngStyle]="{
+                            'background' : selectedBackground.code
+                          }"
+                        ></span>
+                        <div>{{ selectedBackground.name }}</div>
+                      </div>
+                    </ng-template>
+                    <ng-template let-country pTemplate="item">
+                      <div class="background-item">
+                        <span
+                          class = 'background-bullet'
+                          [ngStyle]="{
+                            'background' : country.code
+                          }"
+                        ></span>
+                        <div>{{ country.name }}</div>
+                      </div>
+                    </ng-template>
+                    </p-dropdown>
+                    @if((program.get("background")?.hasError("required") && program.get("background")?.touched)) {
+                      <small class="error-msg error-msg2">background color is required</small>
+                    }
+                  </div>
+                </div>
+              </div>
             </div>
           }
-          <!-- <div class="form-group">
-            <label for="programName">prgram name</label>
-            <input
-              type="text"
-              id="programName"
-              placeholder="Enter Name of Program"
-              formControlName="program name"
-              [class.invalid-input]='(program.get("program name")?.hasError("required") && program.get("program name")?.touched) || (program.get("program name")?.hasError("noSpaces") && program.get("program name")?.dirty)'
-            />
-            @if((program.get("program name")?.hasError("required") && program.get("program name")?.touched) || (program.get("program name")?.hasError("noSpaces") && program.get("program name")?.dirty)) {
-              <small class="error-msg error-msg2">prgram name is required</small>
-            }
-          </div>
-          <div class="form-group" style = "margin-top: 30px;">
-            <label for="projectAbb">prgram abbreviation</label>
-            <input
-              type="text"
-              id="projectAbb"
-              placeholder="Enter the Abbreviation of Program"
-              formControlName="prgram abbreviation"
-              [class.invalid-input]='(program.get("prgram abbreviation")?.hasError("required") && program.get("prgram abbreviation")?.touched) || (program.get("prgram abbreviation")?.hasError("noSpaces") && program.get("prgram abbreviation")?.dirty)'
-            />
-            @if((program.get("prgram abbreviation")?.hasError("required") && program.get("prgram abbreviation")?.touched) || (program.get("prgram abbreviation")?.hasError("noSpaces") && program.get("prgram abbreviation")?.dirty)) {
-              <small class="error-msg error-msg2">prgram abbreviation is required</small>
-            }
-          </div>
-          <div class="form-group" style = "margin-top: 30px;">
-            <label for="desc">description</label>
-            <textarea
-              id="desc"
-              placeholder="Write Description"
-              rows="4"
-              formControlName="description"
-              [class.invalid-input]='(program.get("description")?.hasError("required") && program.get("description")?.touched) || (program.get("description")?.hasError("noSpaces") && program.get("description")?.dirty)'
-            ></textarea>
-            @if((program.get("description")?.hasError("required") && program.get("description")?.touched) || (program.get("description")?.hasError("noSpaces") && program.get("description")?.dirty)) {
-              <small class="error-msg error-msg2">description is required</small>
-            }
-          </div> -->
         </div>
         }
       </div>
     </form>
-    @if(!isEditMode)
-    {
-      <button class="add-project-btn" type="button" (click)="addNewProgramForm()">
-        <img src="assets/images/add-square2.svg" alt="" />
-        <span>add new program</span>
-      </button>
+    @if(!isEditMode) {
+    <button class="add-project-btn" type="button" (click)="addNewProgramForm()">
+      <img src="assets/images/add-square2.svg" alt="" />
+      <span>add new {{inPSRForm ? 'program' : 'project'}}</span>
+    </button>
     }
     <div class="save-cancel-btns">
       <button class="cancel-btn" (click)="goBack()" type="button">
         cancel
       </button>
-      <button
-        class="save-btn"
-        (click)="save()"
-        >
-        <!-- [disabled]="programsList.invalid || programsList.length === 0"
-        [class.disabled-btn]="programsList.invalid || programsList.length === 0" -->
-        {{isEditMode ? 'save' : 'add program'}}
+      <button class="save-btn" (click)="save()"
+      [disabled]="programsList.invalid"
+      [class.disabled-btn]="programsList.invalid"
+      >
+        {{ isEditMode ? 'save' : inPSRForm ? 'add program' : 'add project' }}
       </button>
     </div>
   </div>
@@ -126,7 +377,7 @@
       <img src="assets/images/_action-icon.svg" (click)="close()" alt="" />
     </div>
     <div class="body">
-      <img src="assets/images/exclamation-triangle-dark.svg" alt="">
+      <img src="assets/images/exclamation-triangle-dark.svg" alt="" />
       <p class="delete-record-content">
         Are you sure you want to save these changes?
       </p>

@@ -73,6 +73,7 @@
               font-size: 1.1rem;
               text-transform: capitalize;
               font-weight: 500;
+              width: fit-content;
             }
             input
             {
@@ -90,7 +91,7 @@
                 color: #8E9AA0;
                 font-weight: 400;
                 @extend .stcFont;
-                text-transform: capitalize;
+                // text-transform: capitalize;
               }
               &.invalid-input
               {
@@ -247,4 +248,90 @@
       }
     }
   }
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove the spinner in Firefox */
+input[type='number'] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+::ng-deep .indicator-dropdown
+{
+  .p-dropdown
+  {
+    width: 100% !important; 
+    margin-top: 7px !important;
+    padding:1px 0px !important;
+    border:0 !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    border-radius: 10px !important;
+    background-color: var(--stc-lighter-grey-color) !important;
+    border:1px solid var(--stc-lighter-grey-color) !important;
+    @extend .stcFont;
+  }
+  &.invalid-dropdown
+  {
+    .p-dropdown
+    {
+      border-color:red !important;
+    }
+  }
+  .p-dropdown-items
+  {
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+}
+::ng-deep .startDate-calendar
+{
+  .p-calendar
+  {
+    width: 100% !important;
+    input
+    {
+      border:0 !important;
+      outline: 0 !important;
+      box-shadow: none !important;
+      border-radius: 10px !important;
+      margin-top: 7px !important;
+      background-color: var(--stc-lighter-grey-color) !important;
+      border:1px solid var(--stc-lighter-grey-color) !important;
+      padding:0 15px !important;
+      height: 51px !important;
+      @extend .stcFont;
+    }
+  }
+  .p-datepicker {
+    min-width: 300px !important;
+    min-height: 200px !important;
+  }
+  &.invalid-date
+  {
+    .p-calendar
+    {
+      input
+      {
+        border-color:red !important;
+      }
+    }
+  }
+}
+.background-item
+{
+  display: flex;
+  align-items: center;
+  gap:5px;
+}
+.background-bullet
+{
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
 }

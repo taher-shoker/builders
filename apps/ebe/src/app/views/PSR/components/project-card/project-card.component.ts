@@ -59,7 +59,7 @@ export class PSRProjectCardComponent implements OnChanges {
   gotoEditPage()
   {
     // this.router.navigateByUrl(`/psr/edit-project/${this.project().sector}`);
-    this.router.navigate(['edit-project' , this.project().sector] , { relativeTo: this.route })
+    this.router.navigate(['edit-program' , this.project().sector] , { relativeTo: this.route })
   }
   showDeleteDialog()
   {
@@ -75,5 +75,8 @@ export class PSRProjectCardComponent implements OnChanges {
   {
     console.log(this.project());
     this.close();
+  }
+  gotoProjectDetailsPage(){
+   localStorage.setItem("sector" , this.project().sector) 
   }
 }
