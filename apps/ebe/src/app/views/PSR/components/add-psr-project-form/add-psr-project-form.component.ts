@@ -13,6 +13,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PSRService } from '../../../../services/psr.service';
 import { CalendarModule } from 'primeng/calendar';
 import { FormInputComponent } from '../form-input/form-input.component';
+import { AddProjectModel } from '../../../../models/psr.model';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
@@ -92,15 +93,15 @@ export class AddPsrProjectFormComponent implements OnInit {
     {
       this.inPSRForm = true;
       return this.formBuilder.group({
-        "sector": [null,[Validators.required , this.noSpacesValidator]],
+        "sector": ['test',[Validators.required , this.noSpacesValidator]],
         // "abbrev": [null, [Validators.required , this.noSpacesValidator]],
-        "details": [null, [Validators.required , this.noSpacesValidator]],
+        "details": ['fgdf', [Validators.required , this.noSpacesValidator]],
       });
     } else {
       this.inPSRForm = false;
       return this.formBuilder.group({
         "project": [null,[Validators.required , this.noSpacesValidator]],
-        "owner": [null, [this.noSpacesValidator]],
+        "owner": [null],
         "vendor": [null, [Validators.required , this.noSpacesValidator]],
         "stage": [null, [Validators.required , this.noSpacesValidator]],
         "health": [null, [Validators.required , this.noSpacesValidator]],
@@ -116,9 +117,23 @@ export class AddPsrProjectFormComponent implements OnInit {
       } , { validators: [this.dateValidator] });
     }
   }
-  changeStartDate(startDate:Date)
+  getErrorMessage(program:AbstractControl , controlName: string): string {
+    const control = program.get(controlName);
+    let errorMag = ''
+    if (control?.touched && (control?.hasError('required') || control?.hasError('noSpaces'))) {
+      errorMag = 'This field is required.';
+    }
+    else if (control?.hasError('max'))
+    {
+      errorMag = `This field has max value ${control.errors ? control.errors['max'].max : 100}`;
+    }
+    return errorMag;
+  }
+  changeStartDate(program:AbstractControl , startDate:Date)
   {
-    console.log(startDate);
+    // console.log(startDate);
+    // program.get('startDate')?.value;
+    // console.log(program.get('startDate'));
     if(startDate)
     {
       this.messageHint = "";
@@ -136,10 +151,6 @@ export class AddPsrProjectFormComponent implements OnInit {
     } else {
       this.messageHint = "";
     }
-    // if(program.get("startDate")?.hasError("required"))
-    // {
-
-    // }
   }
   preventInvalidInput(event: KeyboardEvent): void {
     const invalidKeys = ['e', 'E', '+', '-'];
@@ -161,19 +172,39 @@ export class AddPsrProjectFormComponent implements OnInit {
   {
     this.programsList.push(this.createProjectFormGroup());
   }
+  formatDate(date:Date):string
+  {
+    const startDate = new Date(date);
+    const startMonth = startDate.getMonth() + 1;
+    const startDay = startDate.getDate();
+    const startYear = startDate.getFullYear();
+    return `${startYear}-${startMonth < 10 ? '0' + startMonth : startMonth}-${startDay < 10 ? '0' + startDay : startDay}`;
+  }
   save()
   {
+    const addedProjects:AddProjectModel[] = [];
     if(this.programsList.valid)
     {
-      console.log(this.programsList.value);
-      console.log(this.sectorName);
-      // console.log(this.programsList.value[0].startDate);
-      // const date = new Date(this.programsList.value[0].startDate);
-      // const month = date.getMonth() + 1; // Months are zero-indexed
-      // const day = date.getDate();
-      // const year = date.getFullYear();
-      // const formattedDate = `${day}/${month}/${year}`;
-      // console.log(formattedDate);
+      this.programsList.value.forEach((data:any) => {
+        const formattedStartDate = this.formatDate(data.startDate);
+        const formattedEndDate = this.formatDate(data.endDate);
+        addedProjects.push({
+          sector : this.sectorName,
+          gd : data.project,
+          projectName : data.project,
+          projectOwner : data.owner,
+          vendor : data.vendor,
+          projectStage : data.stage,
+          indicator : data.indicator.value.name,
+          backgroundColor : data.background.name,
+          domain : data.domain,
+          startDate : formattedStartDate,
+          endDate : formattedEndDate,
+          poAmount : data.POAmount,
+          actualSpending : data.actualSpending
+        })
+      })
+      console.log("addedProjects => " , addedProjects);
       if(this.isEditMode)
       {
         this.confirmationService.confirm({

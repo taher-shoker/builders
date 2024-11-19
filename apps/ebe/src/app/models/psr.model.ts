@@ -68,4 +68,20 @@ export interface ColumnsSchema {
     key: string;
     type: 'text' | 'date' | 'actions' | 'custom';
     label: string;
-  }
+}
+export interface AddProjectModel
+{
+    sector: string, 
+    gd: string , 
+    projectName : string,
+    projectOwner : string ,
+    vendor : string ,
+    projectStage : string ,
+    indicator : string ,
+    backgroundColor : string ,
+    domain : string ,
+    startDate : string ,
+    endDate : string ,
+    poAmount : string ,
+    actualSpending : string
+}

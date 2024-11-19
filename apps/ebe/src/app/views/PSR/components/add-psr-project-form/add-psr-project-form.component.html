@@ -30,154 +30,131 @@
           {
             <div class="psr-page-form">
               <div class="form-group">
-                <stc-apps-form-input />
-                <!-- <label for="programName">prgram name</label>
-                <input
-                  type="text"
-                  id="programName"
-                  placeholder="Enter Name of Program"
-                  formControlName="sector"
-                  [class.invalid-input]='(program.get("sector")?.hasError("required") && program.get("sector")?.touched) || (program.get("sector")?.hasError("noSpaces") && program.get("sector")?.dirty)'
+                <stc-apps-form-input 
+                  [type]="'text'"
+                  formControlName = "sector"
+                  [id]="'programName'"
+                  [placeholder]="'Enter Name of Program'"
+                  [errorMessage]="getErrorMessage(program , 'sector')"
+                  labelName = "prgram name"
+                  inputType = "text"
+                  [inputValue]="program.get('sector')?.value"
                 />
-                @if((program.get("sector")?.hasError("required") && program.get("sector")?.touched) || (program.get("sector")?.hasError("noSpaces") && program.get("sector")?.dirty)) {
-                  <small class="error-msg error-msg2">prgram name is required</small>
-                } -->
               </div>
-              <!-- <div class="form-group" style = "margin-top: 30px;">
-                <label for="projectAbb">prgram abbreviation</label>
-                <input
-                  type="text"
-                  id="projectAbb"
-                  placeholder="Enter the Abbreviation of Program"
-                  formControlName="abbrev"
-                  [class.invalid-input]='(program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)'
-                />
-                @if((program.get("abbrev")?.hasError("required") && program.get("abbrev")?.touched) || (program.get("abbrev")?.hasError("noSpaces") && program.get("abbrev")?.dirty)) {
-                  <small class="error-msg error-msg2">prgram abbreviation is required</small>
-                }
-              </div> -->
               <div class="form-group" style = "margin-top: 30px;">
-                <label for="desc">description</label>
-                <textarea
-                  id="desc"
-                  placeholder="Write Description"
-                  rows="4"
-                  formControlName="details"
-                  [class.invalid-input]='(program.get("details")?.hasError("required") && program.get("details")?.touched) || (program.get("details")?.hasError("noSpaces") && program.get("details")?.dirty)'
-                ></textarea>
-                @if((program.get("details")?.hasError("required") && program.get("details")?.touched) || (program.get("details")?.hasError("noSpaces") && program.get("details")?.dirty)) {
-                  <small class="error-msg error-msg2">description is required</small>
-                }
+                <stc-apps-form-input 
+                  [type]="'text'"
+                  formControlName = "details"
+                  [id]="'programName'"
+                  [placeholder]="'Write Description'"
+                  [errorMessage]="getErrorMessage(program , 'details')"
+                  labelName = "description"
+                  inputType = "textarea"
+                  [inputValue]="program.get('details')?.value"
+                />
               </div>
             </div>
           } @else {
             <div class="psr-details-page-form">
               <div class="form-group">
-                <label for="projectName">project name</label>
-                <input
-                  type="text"
-                  id="projectName"
-                  placeholder="Enter Name of Project"
-                  formControlName="project"
-                  [class.invalid-input]='(program.get("project")?.hasError("required") && program.get("project")?.touched) || (program.get("project")?.hasError("noSpaces") && program.get("project")?.dirty)'
+                <stc-apps-form-input 
+                  [type]="'text'"
+                  formControlName = "project"
+                  [id]="'projectName'"
+                  [placeholder]="'Enter Name of Project'"
+                  [errorMessage]="getErrorMessage(program , 'project')"
+                  labelName = "project name"
+                  inputType = "text"
+                  [inputValue]="program.get('project')?.value"
                 />
-                @if((program.get("project")?.hasError("required") && program.get("project")?.touched) || (program.get("project")?.hasError("noSpaces") && program.get("project")?.dirty)) {
-                  <small class="error-msg error-msg2">project name is required</small>
-                }
               </div>
               <div class="row">
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="projectOwner">project owner</label>
-                    <input
-                      type="text"
-                      id="projectOwner"
-                      placeholder="Add Project Owner"
-                      formControlName="owner"
-                      />
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "owner"
+                      [id]="'projectOwner'"
+                      [placeholder]="'Add Project Owner'"
+                      [errorMessage]="getErrorMessage(program , 'owner')"
+                      labelName = "Project Owner"
+                      inputType = "text"
+                      [inputValue]="program.get('owner')?.value"
+                    />
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="vendor">vendor</label>
-                    <input
-                      type="text"
-                      id="vendor"
-                      placeholder="Add KPMG"
-                      formControlName="vendor"
-                      [class.invalid-input]='(program.get("vendor")?.hasError("required") && program.get("vendor")?.touched) || (program.get("vendor")?.hasError("noSpaces") && program.get("vendor")?.dirty)'
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "vendor"
+                      [id]="'vendor'"
+                      [placeholder]="'Add KPMG'"
+                      [errorMessage]="getErrorMessage(program , 'vendor')"
+                      labelName = "vendor"
+                      inputType = "text"
+                      [inputValue]="program.get('vendor')?.value"
                     />
-                    @if((program.get("vendor")?.hasError("required") && program.get("vendor")?.touched) || (program.get("vendor")?.hasError("noSpaces") && program.get("vendor")?.dirty)) {
-                      <small class="error-msg error-msg2">vendor is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="stage">project stage</label>
-                    <input
-                      type="text"
-                      id="stage"
-                      placeholder="Add Execution"
-                      formControlName="stage"
-                      [class.invalid-input]='(program.get("stage")?.hasError("required") && program.get("stage")?.touched) || (program.get("stage")?.hasError("noSpaces") && program.get("stage")?.dirty)'
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "stage"
+                      [id]="'stage'"
+                      [placeholder]="'Add Execution'"
+                      [errorMessage]="getErrorMessage(program , 'stage')"
+                      labelName = "project stage"
+                      inputType = "text"
+                      [inputValue]="program.get('stage')?.value"
                     />
-                    @if((program.get("stage")?.hasError("required") && program.get("stage")?.touched) || (program.get("stage")?.hasError("noSpaces") && program.get("stage")?.dirty)) {
-                      <small class="error-msg error-msg2">project stage is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="health">project health</label>
-                    <input
-                      type="text"
-                      id="health"
-                      placeholder="Add Project Health"
-                      formControlName="health"
-                      [class.invalid-input]='(program.get("health")?.hasError("required") && program.get("health")?.touched) || (program.get("health")?.hasError("noSpaces") && program.get("health")?.dirty)'
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "health"
+                      [id]="'health'"
+                      [placeholder]="'Add Project Health'"
+                      [errorMessage]="getErrorMessage(program , 'health')"
+                      labelName = "project health"
+                      inputType = "text"
+                      [inputValue]="program.get('health')?.value"
                     />
-                    @if((program.get("health")?.hasError("required") && program.get("health")?.touched) || (program.get("health")?.hasError("noSpaces") && program.get("health")?.dirty)) {
-                      <small class="error-msg error-msg2">project health is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="startDate">start date</label>
-                    <p-calendar 
-                      formControlName="startDate" 
-                      [inputId]="'startDate'"
-                      [showIcon]="false"
-                      class = "startDate-calendar"
-                      placeholder="Add Start Date"
-                      [class.invalid-date]='(program.get("startDate")?.hasError("required") && program.get("startDate")?.touched)'
-                      dateFormat="dd/mm/yy"
-                      [showButtonBar]="false"
-                      (ngModelChange)="changeStartDate($event)"
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "startDate"
+                      [id]="'startDate'"
+                      [placeholder]="'Add Start Date'"
+                      [errorMessage]="getErrorMessage(program , 'startDate')"
+                      labelName = "start date"
+                      inputType = "date"
+                      [inputValue]="program.get('startDate')?.value"
+                      (changeDate)="changeStartDate(program , $event)"
                     />
-                    @if((program.get("startDate")?.hasError("required") && program.get("startDate")?.touched) || (program.get("startDate")?.hasError("noSpaces") && program.get("startDate")?.dirty)) {
-                      <small class="error-msg error-msg2">start date is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="endDate">end date</label>
-                    <p-calendar 
-                      formControlName="endDate" 
-                      [inputId]="'endDate'"
-                      [showIcon]="false"
-                      class = "startDate-calendar"
-                      placeholder="Add End Date"
-                      dateFormat="dd/mm/yy"
-                      [class.invalid-date]='(program.get("endDate")?.hasError("required") && program.get("endDate")?.touched) || (messageHint && currentFormIndex === index) || program.hasError("startDateAfterEndDate")'
-                      [showButtonBar]="false"
-                      (ngModelChange)="changeEndDate($event , index)"
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "endDate"
+                      [id]="'endDate'"
+                      [placeholder]="'Add End Date'"
+                      [errorMessage]="getErrorMessage(program , 'endDate')"
+                      labelName = "end date"
+                      inputType = "date"
+                      [inputValue]="program.get('endDate')?.value"
+                      (changeDate)="changeEndDate($event , index)"
+                      [isBeforeStartDate]='program.hasError("startDateAfterEndDate")'
+                      [isBeforeStartDate2]="messageHint !== '' && currentFormIndex === index"
                     />
-                    @if((program.get("endDate")?.hasError("required") && program.get("endDate")?.touched) || (program.get("endDate")?.hasError("noSpaces") && program.get("endDate")?.dirty)) {
-                      <small class="error-msg error-msg2">end date is required</small>
-                    }
                     @if(messageHint && currentFormIndex === index)
                     {
                       <small class="error-msg error-msg2">{{messageHint}}</small>
@@ -190,98 +167,87 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="POAmount">PO amount</label>
-                    <input
-                      type="number"
-                      id="POAmount"
-                      placeholder="Add PO Amount"
-                      formControlName="POAmount"
-                      (keydown)="preventInvalidInput($event)" 
-                      [class.invalid-input]='(program.get("POAmount")?.hasError("required") && program.get("POAmount")?.touched)'
+                    <stc-apps-form-input 
+                      [type]="'number'"
+                      formControlName = "POAmount"
+                      [id]="'POAmount'"
+                      [placeholder]="'Add PO Amount'"
+                      [errorMessage]="getErrorMessage(program , 'POAmount')"
+                      labelName = "PO amount"
+                      inputType = "text"
+                      [inputValue]="program.get('POAmount')?.value"
                     />
-                    @if((program.get("POAmount")?.hasError("required") && program.get("POAmount")?.touched)) {
-                      <small class="error-msg error-msg2">PO Amount is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="actualSpending">actual spending</label>
-                    <input
-                      type="number"
-                      id="actualSpending"
-                      placeholder="Add Actual in SAR"
-                      formControlName="actualSpending"
-                      (keydown)="preventInvalidInput($event)" 
-                      [class.invalid-input]='(program.get("actualSpending")?.hasError("required") && program.get("actualSpending")?.touched)'
+                    <stc-apps-form-input 
+                      [type]="'number'"
+                      formControlName = "actualSpending"
+                      [id]="'actualSpending'"
+                      [placeholder]="'Add Actual in SAR'"
+                      [errorMessage]="getErrorMessage(program , 'actualSpending')"
+                      labelName = "actual spending"
+                      inputType = "text"
+                      [inputValue]="program.get('actualSpending')?.value"
                     />
-                    @if((program.get("actualSpending")?.hasError("required") && program.get("actualSpending")?.touched)) {
-                      <small class="error-msg error-msg2">actual Spending is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="actualPercentage">actual in percentage %</label>
-                    <input
-                      type="number"
-                      id="actualPercentage"
-                      placeholder="Add Actual in Percentage"
-                      formControlName="actualPercentage"
-                      (keydown)="preventInvalidInput($event)" 
-                      [class.invalid-input]='program.get("actualPercentage")?.hasError("max")'
+                    <stc-apps-form-input 
+                      [type]="'number'"
+                      formControlName = "actualPercentage"
+                      [id]="'actualPercentage'"
+                      [placeholder]="'Add Actual in Percentage'"
+                      [errorMessage]="getErrorMessage(program , 'actualPercentage')"
+                      labelName = "actual in percentage %"
+                      inputType = "text"
+                      [inputValue]="program.get('actualPercentage')?.value"
                     />
-                    @if(program.get("actualPercentage")?.hasError("max")) {
-                      <small class="error-msg error-msg2">the max value is 100</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="plannedPercentage">planned in percentage %</label>
-                    <input
-                      type="number"
-                      id="plannedPercentage"
-                      placeholder="Add Palnned in Percentage"
-                      formControlName="plannedPercentage"
-                      (keydown)="preventInvalidInput($event)" 
-                      [class.invalid-input]='program.get("plannedPercentage")?.hasError("max")'
+                    <stc-apps-form-input 
+                      [type]="'number'"
+                      formControlName = "plannedPercentage"
+                      [id]="'plannedPercentage'"
+                      [placeholder]="'Add Palnned in Percentage'"
+                      [errorMessage]="getErrorMessage(program , 'plannedPercentage')"
+                      labelName = "planned in percentage %"
+                      inputType = "text"
+                      [inputValue]="program.get('plannedPercentage')?.value"
                     />
-                    @if(program.get("plannedPercentage")?.hasError("max")) {
-                      <small class="error-msg error-msg2">the max value is 100</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="domain">domain</label>
-                    <input
-                      type="text"
-                      id="domain"
-                      placeholder="Add Domain"
-                      formControlName="domain"
-                      [class.invalid-input]='(program.get("domain")?.hasError("required") && program.get("domain")?.touched) || (program.get("domain")?.hasError("noSpaces") && program.get("domain")?.dirty)'
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "domain"
+                      [id]="'domain'"
+                      [placeholder]="'Add Domain'"
+                      [errorMessage]="getErrorMessage(program , 'domain')"
+                      labelName = "domain"
+                      inputType = "text"
+                      [inputValue]="program.get('domain')?.value"
                     />
-                    @if((program.get("domain")?.hasError("required") && program.get("domain")?.touched) || (program.get("domain")?.hasError("noSpaces") && program.get("domain")?.dirty)) {
-                      <small class="error-msg error-msg2">domain name is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <label for="indicator">indicator</label>
-                    <p-dropdown 
-                      id = "indicator"
-                      formControlName="indicator" 
-                      [options]="indicators"
-                      optionLabel="name"
-                      placeholder="Select Indicator" 
-                      class = "indicator-dropdown"
-                      [class.invalid-dropdown]='(program.get("indicator")?.hasError("required") && program.get("indicator")?.touched)'
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "indicator"
+                      [id]="'indicator'"
+                      [placeholder]="'Select Indicator'"
+                      [errorMessage]="getErrorMessage(program , 'indicator')"
+                      labelName = "indicator"
+                      inputType = "dropdown"
+                      [inputValue]="program.get('indicator')?.value?.value"
+                      [dropdownOptions]="indicators"
                     />
-                    @if((program.get("indicator")?.hasError("required") && program.get("indicator")?.touched)) {
-                      <small class="error-msg error-msg2">indicator is required</small>
-                    }
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
