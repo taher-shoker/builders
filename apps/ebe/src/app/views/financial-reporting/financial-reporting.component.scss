@@ -257,3 +257,13 @@
     }
   }
 }
+.empty-data-message
+{
+  text-transform: capitalize;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color:var(--stc-purple-color);
+}

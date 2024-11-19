@@ -97,7 +97,8 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   }
   private getFinancialReportingData()
   {
-    this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
+    // this.capexOpexData = {"opex":[],"capex":[],"tendering":[]};
+    this.financialReportingService.getFinancialReportingData().subscribe({
       next : (res:CapexOpexModel) => {
         this.capexOpexData = res;
         this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]
@@ -157,27 +158,37 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
             }
           ]
         }
-        this.spendingTargetChart = [
-          {
-            category : "Accural",
-            value : +this.capexOpexData.opex[0].accrualPercentage
-          },
-          {
-            category : "Spend",
-            value : +this.capexOpexData.opex[0].spendPercentage
-          }
-        ]
-        console.log(this.spendingTargetChart);
-        this.gepTargetChart = [
-          {
-            category : "Target",
-            value : this.capexOpexData.opex[0].gepTargetPercentage ? this.capexOpexData.opex[0].gepTargetPercentage : 0
-          },
-          {
-            category : "Achieved",
-            value : this.capexOpexData.opex[0].gepAchievedPercentage ? this.capexOpexData.opex[0].gepAchievedPercentage : 0
-          }
-        ]
+        // console.log(res);
+        // console.log(this.capexTenderingData);
+        // console.log(this.opexTenderingData);
+        // console.log(this.capexTenderingChart);
+        // console.log(this.opexTenderingChart);
+        if(this.capexOpexData.opex[0] && this.capexOpexData.opex[0].accrualPercentage)
+        {
+          this.spendingTargetChart = [
+            {
+              category : "Accural",
+              value : +this.capexOpexData.opex[0].accrualPercentage
+            },
+            {
+              category : "Spend",
+              value : +this.capexOpexData.opex[0].spendPercentage
+            }
+          ]
+        }
+        if(this.capexOpexData.opex[0] && this.capexOpexData.opex[0].gepTargetPercentage)
+        {
+          this.gepTargetChart = [
+            {
+              category : "Target",
+              value : this.capexOpexData.opex[0].gepTargetPercentage ? this.capexOpexData.opex[0].gepTargetPercentage : 0
+            },
+            {
+              category : "Achieved",
+              value : this.capexOpexData.opex[0].gepAchievedPercentage ? this.capexOpexData.opex[0].gepAchievedPercentage : 0
+            }
+          ]
+        }
       }
     })
   }
