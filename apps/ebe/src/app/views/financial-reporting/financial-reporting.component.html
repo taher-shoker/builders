@@ -18,38 +18,47 @@
           <p class="main-title mb-0">capex</p>
           @if(capexOpexData)
           {
-            <div class="budget-box">
-              <p class="budget-name">total budget</p>
-              <p class="budget-num">
-                {{capexOpexData.capex[0].totalBudget}}
-                <span>sar</span>
-              </p>
-            </div>
+            @if(capexOpexData.capex[0] && capexOpexData.capex[0].totalBudget)
+            {
+              <div class="budget-box">
+                <p class="budget-name">total budget</p>
+                <p class="budget-num">
+                  {{capexOpexData.capex[0].totalBudget}}
+                  <span>sar</span>
+                </p>
+              </div>
+            }
             <div class="row spending-cards">
               <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="spend-card">
-                  <span>spending</span>
-                  <p class="spend-num">
-                    {{capexOpexData.capex[0].spending}}
-                    <span>sar</span>
-                  </p>
-                </div>
+                @if(capexOpexData.capex[0] && capexOpexData.capex[0].spending)
+                {
+                  <div class="spend-card">
+                    <span>spending</span>
+                    <p class="spend-num">
+                      {{capexOpexData.capex[0].spending}}
+                      <span>sar</span>
+                    </p>
+                  </div>
+                }
               </div>
               <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="spend-card">
-                  <span>accrual</span>
-                  <p class="spend-num">
-                    {{capexOpexData.capex[0].accrual}}
-                    <span>sar</span>
-                  </p>
-                </div>
+                @if(capexOpexData.capex[0] && capexOpexData.capex[0].accrual)
+                {
+                  <div class="spend-card">
+                    <span>accrual</span>
+                    <p class="spend-num">
+                      {{capexOpexData.capex[0].accrual}}
+                      <span>sar</span>
+                    </p>
+                  </div>
+                }
               </div>
             </div>
           }
           <div class="actual-spending-card">
-            <p class="title">actual spending</p>
-            @if(capexChartData)
+            @if(capexChartData && capexChartData.length !== 0)
             {
+            <p class="title">actual spending</p>
             <div class="wise-capex-card">
               <p class="title2">GD Wise CAPEX</p>
                 <div class = "box-card-chart">
@@ -61,9 +70,9 @@
             }
           </div>
           <div class="tendring-status-card">
-            <p class="title">tendring status</p>
             @if(capexTenderingData)
             {
+              <p class="title">tendring status</p>
               <div class="tendring-status-card-box">
                 <div class="total-projects-amount-card">
                   <div class="total-projects">
@@ -116,6 +125,10 @@
               </div>
             }
           </div>
+          @if(capexOpexData && capexOpexData.capex.length === 0 && capexOpexData.opex.length === 0 && capexOpexData.tendering.length === 0)
+          {
+            <p class = "empty-data-message">there is no capex data</p>
+          }
         </div>
       </div>
       <div class="col-lg-6 col-md-12 col-sm-12">
@@ -123,79 +136,91 @@
           <p class="main-title mb-0">opex</p>
           @if(capexOpexData)
           {
-            <div class="budget-box">
-              <p class="budget-name">total budget</p>
-              <p class="budget-num">
-                {{capexOpexData.opex[0].totalBudget}}
-                <span>sar</span>
-              </p>
-            </div>
+            @if(capexOpexData.opex[0] && capexOpexData.opex[0].totalBudget)
+            {
+              <div class="budget-box">
+                <p class="budget-name">total budget</p>
+                <p class="budget-num">
+                  {{capexOpexData.opex[0].totalBudget}}
+                  <span>sar</span>
+                </p>
+              </div>
+            }
             <div class="row spending-cards">
               <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="spend-card">
-                  <span>spending</span>
-                  <p class="spend-num">
-                    {{capexOpexData.opex[0].spending}}
-                    <span>sar</span>
-                  </p>
-                </div>
+                @if(capexOpexData.opex[0] && capexOpexData.opex[0].spending)
+                {
+                  <div class="spend-card">
+                    <span>spending</span>
+                    <p class="spend-num">
+                      {{capexOpexData.opex[0].spending}}
+                      <span>sar</span>
+                    </p>
+                  </div>
+                }
               </div>
               <div class="col-lg-6 col-md-12 col-sm-12">
-                <div class="spend-card">
-                  <span>accrual</span>
-                  <p class="spend-num">
-                    {{capexOpexData.opex[0].accrual}}
-                    <span>sar</span>
-                  </p>
-                </div>
+                @if(capexOpexData.opex[0] && capexOpexData.opex[0].accrual)
+                {
+                  <div class="spend-card">
+                    <span>accrual</span>
+                    <p class="spend-num">
+                      {{capexOpexData.opex[0].accrual}}
+                      <span>sar</span>
+                    </p>
+                  </div>
+                }
               </div>
             </div>
           }
           <div class="actual-spending-card">
-            <p class="title">OPEX Status</p>
-            <div class="wise-capex-card">
-              <div class = "box-card-chart2">
-                <div class="first-chart">
-                  <p class="title2">
-                    spending target
-                  </p>
-                  <div class="chart-container">
-                    @if(spendingTargetChart)
-                    {
-                      <stc-apps-donut-chart 
-                        [data]="spendingTargetChart"
-                        [colors]="colors"
-                        [id]="20"
-                        [textInside]="'Spending'"
-                        [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalSpendingTarget : 0"
-                      ></stc-apps-donut-chart>
-                    } 
+            @if(spendingTargetChart && spendingTargetChart.length !== 0 && gepTargetChart && gepTargetChart.length !== 0)
+            {
+              <p class="title">OPEX Status</p>
+              <div class="wise-capex-card">
+                <div class = "box-card-chart2">
+                  <div class="first-chart">
+                    <p class="title2">
+                      spending target
+                    </p>
+                    <div class="chart-container">
+                      @if(spendingTargetChart && spendingTargetChart.length !== 0)
+                      {
+                        <stc-apps-donut-chart 
+                          [data]="spendingTargetChart"
+                          [colors]="colors"
+                          [id]="20"
+                          [textInside]="'Spending'"
+                          [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalSpendingTarget : 0"
+                        ></stc-apps-donut-chart>
+                      } 
+                    </div>
                   </div>
-                </div>
-                <div class="second-chart">
-                  <p class="title2">
-                    GEP target
-                  </p>
-                  <div class="chart-container">
-                    @if(gepTargetChart)
-                    {
-                      <stc-apps-donut-chart 
-                        [data]="gepTargetChart"
-                        [colors]="colors"
-                        [id]="20"
-                        [textInside]="'Achieved'"
-                        [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalGepTarget : 0"
-                      ></stc-apps-donut-chart>
-                    }
+                  <div class="second-chart">
+                    <p class="title2">
+                      GEP target
+                    </p>
+                    <div class="chart-container">
+                      @if(gepTargetChart && gepTargetChart.length !== 0)
+                      {
+                        <stc-apps-donut-chart 
+                          [data]="gepTargetChart"
+                          [colors]="colors"
+                          [id]="20"
+                          [textInside]="'Achieved'"
+                          [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalGepTarget : 0"
+                        ></stc-apps-donut-chart>
+                      }
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            }
           </div>
           <div class="tendring-status-card">
-            <p class="title">tendring status</p>
             @if(opexTenderingData)
             {
+              <p class="title">tendring status</p>
               <div class="tendring-status-card-box">
                 <div class="total-projects-amount-card">
                   <div class="total-projects">
@@ -245,6 +270,10 @@
               </div>
             }
           </div>
+          @if(capexOpexData && capexOpexData.opex.length === 0 && capexOpexData.opex.length === 0 && capexOpexData.tendering.length === 0)
+          {
+            <p class = "empty-data-message">there is no opex data</p>
+          }
         </div>
       </div>
     </div>
