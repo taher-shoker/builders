@@ -12,10 +12,11 @@ import { AbstractControl, FormArray, FormBuilder, FormGroup, ReactiveFormsModule
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PSRService } from '../../../../services/psr.service';
 import { CalendarModule } from 'primeng/calendar';
+import { FormInputComponent } from '../form-input/form-input.component';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
-  imports: [CommonModule, PageHeaderComponent , SharedUiModule , ReactiveFormsModule , DropdownModule , CalendarModule],
+  imports: [CommonModule, PageHeaderComponent , SharedUiModule , ReactiveFormsModule , DropdownModule , CalendarModule , FormInputComponent],
   templateUrl: './add-psr-project-form.component.html',
   styleUrl: './add-psr-project-form.component.scss',
   providers : [ConfirmationService]

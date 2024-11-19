@@ -30,7 +30,8 @@
           {
             <div class="psr-page-form">
               <div class="form-group">
-                <label for="programName">prgram name</label>
+                <stc-apps-form-input />
+                <!-- <label for="programName">prgram name</label>
                 <input
                   type="text"
                   id="programName"
@@ -40,7 +41,7 @@
                 />
                 @if((program.get("sector")?.hasError("required") && program.get("sector")?.touched) || (program.get("sector")?.hasError("noSpaces") && program.get("sector")?.dirty)) {
                   <small class="error-msg error-msg2">prgram name is required</small>
-                }
+                } -->
               </div>
               <!-- <div class="form-group" style = "margin-top: 30px;">
                 <label for="projectAbb">prgram abbreviation</label>
