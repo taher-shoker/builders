@@ -94,10 +94,6 @@
                       placeholder="Add Project Owner"
                       formControlName="owner"
                       />
-                      <!-- [class.invalid-input]='(program.get("owner")?.hasError("required") && program.get("owner")?.touched) || (program.get("owner")?.hasError("noSpaces") && program.get("owner")?.dirty)' -->
-                    <!-- @if((program.get("owner")?.hasError("required") && program.get("owner")?.touched) || (program.get("owner")?.hasError("noSpaces") && program.get("owner")?.dirty)) {
-                      <small class="error-msg error-msg2">project owner is required</small>
-                    } -->
                   </div>
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -159,15 +155,6 @@
                       [showButtonBar]="false"
                       (ngModelChange)="changeStartDate($event)"
                     />
-                      <!-- appendTo="div" -->
-                    <!-- <input
-                      type="text"
-                      id="startDate"
-                      placeholder="Add Start Date"
-                      formControlName="startDate"
-                      [class.invalid-input]='(program.get("startDate")?.hasError("required") && program.get("startDate")?.touched) || (program.get("startDate")?.hasError("noSpaces") && program.get("startDate")?.dirty)'
-                    /> -->
-
                     @if((program.get("startDate")?.hasError("required") && program.get("startDate")?.touched) || (program.get("startDate")?.hasError("noSpaces") && program.get("startDate")?.dirty)) {
                       <small class="error-msg error-msg2">start date is required</small>
                     }
@@ -187,13 +174,6 @@
                       [showButtonBar]="false"
                       (ngModelChange)="changeEndDate($event , index)"
                     />
-                    <!-- <input
-                      type="text"
-                      id="endDate"
-                      placeholder="Add End Date"
-                      formControlName="endDate"
-                      [class.invalid-input]='(program.get("endDate")?.hasError("required") && program.get("endDate")?.touched) || (program.get("endDate")?.hasError("noSpaces") && program.get("endDate")?.dirty)'
-                    /> -->
                     @if((program.get("endDate")?.hasError("required") && program.get("endDate")?.touched) || (program.get("endDate")?.hasError("noSpaces") && program.get("endDate")?.dirty)) {
                       <small class="error-msg error-msg2">end date is required</small>
                     }
