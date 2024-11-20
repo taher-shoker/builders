@@ -18,6 +18,7 @@
         @if(!isEmpty)
         {
           <div class="projects-container">
+<<<<<<< HEAD
             <div class = "psr-head">
               <p class = "psr-tabview-header">
                 {{PSRDetailsData ? PSRDetailsData[0].gd : ''}}
@@ -28,6 +29,11 @@
                   add new project
               </button>
           </div>
+=======
+            <p class = "psr-tabview-header">
+              {{selectedGD ? selectedGD[0].gd : ''}}
+            </p>
+>>>>>>> ebe/strategy-program
             <div class="project-cards-container">
               @for (proj of PSRDetailsData; track proj.gd) {
                 <div class="project-card">
