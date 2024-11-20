@@ -19,7 +19,7 @@
         {
           <div class="projects-container">
             <p class = "psr-tabview-header">
-              {{groupName ? groupName : ''}}
+              {{selectedGD ? selectedGD[0].gd : ''}}
             </p>
             <div class="project-cards-container">
               @for (proj of PSRDetailsData; track $index) {

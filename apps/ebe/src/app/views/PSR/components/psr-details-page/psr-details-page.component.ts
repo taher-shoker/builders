@@ -54,6 +54,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
     this.endSubs$.complete();
   }
   isEmpty!:boolean;
+  selectedGD:any;
   private getProjectDetails(group:string)
   {
     this.psrServices.getExecuteProjectDetailsData(group).pipe(takeUntil(this.endSubs$)).subscribe({
@@ -65,6 +66,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         })
         // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
         this.PSRDetailsData = res
+        this.selectedGD = this.PSRDetailsData.filter(d => d.gd !== null)
         if(this.PSRDetailsData.length === 0)
         {
           this.isEmpty = true;
