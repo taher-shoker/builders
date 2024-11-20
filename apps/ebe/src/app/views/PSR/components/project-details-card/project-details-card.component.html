@@ -1,17 +1,35 @@
-<section class="project">
-  <p 
-    class="project-title"
-    (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
-    (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
-  >
-    {{ projectData().projectName | truncateWord:11 }}
-  </p>
-  @if(titleArr && titleArr.length > 11)
-  {
-    <p-overlayPanel #overlayPanel2 dismissable="true">
-      <section class="popover-section2">{{projectData().projectName}}</section>
-    </p-overlayPanel>
-  }
+<section class="project position-relative">
+  <div class="project-head">
+    <p 
+      class="project-title"
+      (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
+    >
+      {{ projectData().projectName | truncateWord:11 }}
+    </p>
+    <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
+    <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
+      <ng-template pTemplate="item" let-item>
+        <div class="menu-container">
+          <div 
+            class="menu-item"
+            [class.edit-btn]="item.label === 'Edit'"
+            [class.delete-btn]="item.label === 'Delete'"
+            (click)="item.label === 'Edit' ? gotoEditPage() : showDeleteDialog()"
+          >
+            <i [class]="item.icon"></i>
+            <p>{{item.label}}</p>
+          </div>
+        </div>
+      </ng-template>
+    </p-menu>
+    @if(titleArr && titleArr.length > 11)
+    {
+      <p-overlayPanel #overlayPanel2 dismissable="true">
+        <section class="popover-section2">{{projectData().projectName}}</section>
+      </p-overlayPanel>
+    }
+  </div>
   <div class="project-statuses-cards">
     @if(projectData() && projectData().projectOwner) {
     <stc-apps-kpi-status-card

@@ -5,7 +5,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.service';
 import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
@@ -22,6 +22,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   @ViewChild(ProjectDetailsCardComponent) child?: ProjectDetailsCardComponent;
   psrServices = inject(PSRService)
   router = inject(ActivatedRoute)
+  route = inject(Router)
   PSRDetailsData!:PSRProjectDetailsModel[];
   endSubs$:Subject<PSRProjectDetailsModel[]> = new Subject();
   toastr = inject(ToastrService);
@@ -67,6 +68,10 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
         this.PSRDetailsData = res
         this.selectedGD = this.PSRDetailsData.filter(d => d.gd !== null)
+        if(!localStorage.getItem("gd"))
+        {
+          localStorage.setItem("gd" , this.selectedGD[0].gd)
+        }
         if(this.PSRDetailsData.length === 0)
         {
           this.isEmpty = true;
@@ -75,6 +80,10 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         }
       }
     })
+  }
+  gotoAddForm()
+  {
+    this.route.navigateByUrl("/psr/add-project")
   }
   values:AddProjectForm[] = [];
   addRecordInTable(values:AddProjectForm)

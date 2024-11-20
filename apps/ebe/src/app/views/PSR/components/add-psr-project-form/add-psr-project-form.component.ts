@@ -33,11 +33,13 @@ export class AddPsrProjectFormComponent implements OnInit {
   isEditMode = false;
   inPSRForm = false;
   sectorName = "";
+  gdName = "";
   ngOnInit(): void {
     this.addProgramForm = this.formBuilder.group({
       programs: this.formBuilder.array([]),
     });
     this.sectorName = localStorage.getItem("sector") || "";
+    this.gdName = localStorage.getItem("gd") || "";
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
         if(Object.keys(param).length !== 0)
@@ -93,9 +95,9 @@ export class AddPsrProjectFormComponent implements OnInit {
     {
       this.inPSRForm = true;
       return this.formBuilder.group({
-        "sector": ['test',[Validators.required , this.noSpacesValidator]],
+        "sector": [null,[Validators.required , this.noSpacesValidator]],
         // "abbrev": [null, [Validators.required , this.noSpacesValidator]],
-        "details": ['fgdf', [Validators.required , this.noSpacesValidator]],
+        "details": [null, [Validators.required , this.noSpacesValidator]],
       });
     } else {
       this.inPSRForm = false;
@@ -185,26 +187,6 @@ export class AddPsrProjectFormComponent implements OnInit {
     const addedProjects:AddProjectModel[] = [];
     if(this.programsList.valid)
     {
-      this.programsList.value.forEach((data:any) => {
-        const formattedStartDate = this.formatDate(data.startDate);
-        const formattedEndDate = this.formatDate(data.endDate);
-        addedProjects.push({
-          sector : this.sectorName,
-          gd : data.project,
-          projectName : data.project,
-          projectOwner : data.owner,
-          vendor : data.vendor,
-          projectStage : data.stage,
-          indicator : data.indicator.value.name,
-          backgroundColor : data.background.name,
-          domain : data.domain,
-          startDate : formattedStartDate,
-          endDate : formattedEndDate,
-          poAmount : data.POAmount,
-          actualSpending : data.actualSpending
-        })
-      })
-      console.log("addedProjects => " , addedProjects);
       if(this.isEditMode)
       {
         this.confirmationService.confirm({
@@ -212,6 +194,31 @@ export class AddPsrProjectFormComponent implements OnInit {
         });
       } else {
         // call add api here
+        this.programsList.value.forEach((data:any) => {
+          if(!this.inPSRForm)
+          {
+            const formattedStartDate = this.formatDate(data.startDate);
+            const formattedEndDate = this.formatDate(data.endDate);
+            addedProjects.push({
+              sector : this.sectorName,
+              gd : this.gdName,
+              projectName : data.project,
+              projectOwner : data.owner,
+              vendor : data.vendor,
+              projectStage : data.stage,
+              indicator : data.indicator.value.name,
+              backgroundColor : data.background.name,
+              domain : data.domain,
+              startDate : formattedStartDate,
+              endDate : formattedEndDate,
+              poAmount : data.POAmount,
+              actualSpending : data.actualSpending
+            })
+            console.log("addedProjects => " , addedProjects);
+          } else {
+            console.log(this.programsList.value);
+          }
+        })
       }
     }
   }

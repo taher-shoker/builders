@@ -9,11 +9,13 @@ import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { PSRService } from '../../../../services/psr.service';
 import { UserGroup } from '../../../../models/scorecard.model';
+import { MenuModule } from 'primeng/menu';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
-  imports: [CommonModule , SharedUiModule , OverlayPanelModule , DialogModule , AddProjectFormComponent , ConfirmDialogModule],
+  imports: [CommonModule , SharedUiModule , OverlayPanelModule , DialogModule , AddProjectFormComponent , ConfirmDialogModule , MenuModule],
   templateUrl: './project-details-card.component.html',
   styleUrl: './project-details-card.component.scss',
   providers : [ConfirmationService , DatePipe]
@@ -25,8 +27,35 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   userRoles:InputSignal<UserGroup> = input.required<UserGroup>();
   @Output() addRecordInTable:EventEmitter<AddProjectForm> = new EventEmitter();
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
+  router = inject(Router)
+  route = inject(ActivatedRoute)
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
   data!:ProgressInfo;
+  items = [
+    {
+      items: [
+          {
+                label: 'Edit',
+                icon: 'pi pi-pen-to-square'
+            },
+            {
+                label: 'Delete',
+                icon: 'pi pi-trash'
+            }
+        ]
+    }
+  ];
+  gotoEditPage()
+  {
+    this.router.navigateByUrl(`/psr/edit-project/${this.projectData().projectName}`);
+    // this.router.navigate(['edit-program' , this.projectData().projectName] , { relativeTo: this.route })
+  }
+  showDeleteDialog()
+  {
+    this.confirmationService.confirm({
+      key: 'delete-program'
+    });
+  }
   toastr = inject(ToastrService);
   showPopover = false;
   tableHeader!:ColumnsSchema[];

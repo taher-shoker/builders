@@ -86,6 +86,13 @@ export const appRoutes: Route[] = [
     ),
   },
   {
+    path : "psr/edit-project/:id",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+  },
+  {
     path : "psr/:id",
     loadComponent: () =>
       import('./views/PSR/components/psr-details-page/psr-details-page.component').then(

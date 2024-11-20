@@ -274,3 +274,59 @@
   font-weight: 600;
   font-size: 17px;
 }
+::ng-deep .p-menu
+{
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 150px !important;
+  .p-menu-list
+  {
+    margin: 0 !important;
+    padding:0px 0 0 !important;
+  }
+  .p-submenu-header
+  {
+    display: none !important;
+  }
+  .menu-item
+  {
+    display: flex;
+    align-items: center;
+    gap:10px;
+    padding-left: 15px;
+    // margin-bottom: 10px;
+    height:40px;
+    line-height: 40px;
+    @extend .stcFont;
+    cursor: pointer;
+    p
+    {
+      margin: 0;
+      position: relative;
+      top:2px;
+    }
+    &.edit-btn
+    {
+      i , p
+      {
+        color:var(--stc-grey-dark-color);
+      }
+    }
+    &.delete-btn
+    {
+      i , p
+      {
+        color:var(--stc-red-color2);
+      }
+    }
+  }
+}
+.pi-ellipsis-v
+{
+  position: absolute;
+      top:20px;
+      right:15px;
+      font-size: 20px;
+      cursor: pointer;
+      color:#D9D9D9;
+}
