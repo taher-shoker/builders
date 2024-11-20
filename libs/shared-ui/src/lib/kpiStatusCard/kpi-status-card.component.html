@@ -2,6 +2,7 @@
   [class.achieved]="kpiType() === 'achieved' || kpiType() === 'domain'"
   [class.not-achieved]="kpiType() === 'not-achieved' || kpiType() === 'vendor'"
   [class.actual]="kpiType() === 'actual' || kpiType() === 'owner-name'"
+  [class.actual2]="kpiType() === 'owner-name'"
   [class.weight]="kpiType() === 'weight'"
   [class.in-progress]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'in progress'"
   [class.completed]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'completed'"
