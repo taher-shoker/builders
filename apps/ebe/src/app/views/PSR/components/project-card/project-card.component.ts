@@ -21,8 +21,8 @@ export class PSRProjectCardComponent implements OnChanges {
   chartData!:PSRChartDataModel;
   ngOnChanges(): void {    
     this.chartData = {
-      actual : this.project().actual,
-      planned : this.project().planned
+      actual : this.project().actual ? this.project().actual : 0,
+      planned : this.project().planned ? this.project().planned : 0
     }
     const textArr:string[] = this.project().details?.trim()?.split(' ') ?? [];
     const filteredArray = textArr.filter(item => item !== '');

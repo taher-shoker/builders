@@ -12,9 +12,13 @@
     p
     {
       margin: 0;
-      font-size:1.3rem;
+      font-size:1.2rem;
       font-weight:600;
       display:block;
+      @media all and (max-width:1400px)
+      {
+        font-size: 1rem;
+      }
       span
       {
         color:#616161;
