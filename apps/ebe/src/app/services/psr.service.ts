@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { ChartDetails, ColumnsSchema, PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
+import { AddProgramModel, ChartDetails, ColumnsSchema, PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -75,6 +75,13 @@ export class PSRService {
       return this.http.put<ChartDetails[]>(
         `${environment.apiUrl}/business-excellence/psr/executiveViewData/cards/${id}/chart-details`,
         body
+      );
+  }
+  addNewProject(data:AddProgramModel[]):Observable<any>
+  {
+      return this.http.post<any>(
+        `${environment.apiUrl}/business-excellence/psr/add/executive`,
+        data
       );
   }
   uploadFile(pageType:string , selectedFile: any , groupName?:string): Observable<any> {

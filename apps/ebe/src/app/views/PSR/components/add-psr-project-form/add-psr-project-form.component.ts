@@ -217,6 +217,11 @@ export class AddPsrProjectFormComponent implements OnInit {
             console.log("addedProjects => " , addedProjects);
           } else {
             console.log(this.programsList.value);
+            this.psrService.addNewProject(this.programsList.value).subscribe({
+              next : (res) => {
+                this.goBack();
+              }
+            })
           }
         })
       }
