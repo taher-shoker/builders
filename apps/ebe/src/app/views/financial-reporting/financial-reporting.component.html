@@ -1,7 +1,7 @@
 <section class="financial-reporting">
   <div class="financial-reporting-header">
     <stc-apps-page-header
-      mainTitle = "Financial Reporting"
+      mainTitle = ""
       secondaryTitle = ""
     />
   </div>
@@ -12,6 +12,7 @@
         (export)="downloadTemplate()"
       />
     }
+    <p class="main-page-title">financial status</p>
     <div class="row">
       <div class="col-lg-6 col-md-12 col-sm-12">
         <div class = "box-card">
@@ -33,7 +34,7 @@
                 @if(capexOpexData.capex[0] && capexOpexData.capex[0].spending)
                 {
                   <div class="spend-card">
-                    <span>spending</span>
+                    <span>spent</span>
                     <p class="spend-num">
                       {{capexOpexData.capex[0].spending}}
                       <span>sar</span>
@@ -62,8 +63,12 @@
             <div class="wise-capex-card">
               <p class="title2">GD Wise CAPEX</p>
                 <div class = "box-card-chart">
-                  <stc-apps-multi-circles-chart 
+                  <!-- <stc-apps-multi-circles-chart 
                     [chartData2]="capexChartData"
+                  /> -->
+                  <stc-apps-clustered-column-chart 
+                    [chartData]="capexChartData"
+                    [showLabel]="true"
                   />
                 </div>
               </div>
@@ -151,7 +156,7 @@
                 @if(capexOpexData.opex[0] && capexOpexData.opex[0].spending)
                 {
                   <div class="spend-card">
-                    <span>spending</span>
+                    <span>spent</span>
                     <p class="spend-num">
                       {{capexOpexData.opex[0].spending}}
                       <span>sar</span>
@@ -186,13 +191,17 @@
                     <div class="chart-container">
                       @if(spendingTargetChart && spendingTargetChart.length !== 0)
                       {
-                        <stc-apps-donut-chart 
+                        <stc-apps-bar-chart
+                          [data]="spendingTargetChart"
+                          [isFinancialStatus]=true
+                        />
+                        <!-- <stc-apps-donut-chart 
                           [data]="spendingTargetChart"
                           [colors]="colors"
                           [id]="20"
                           [textInside]="'Spending'"
                           [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalSpendingTarget : 0"
-                        ></stc-apps-donut-chart>
+                        ></stc-apps-donut-chart> -->
                       } 
                     </div>
                   </div>
@@ -203,13 +212,18 @@
                     <div class="chart-container">
                       @if(gepTargetChart && gepTargetChart.length !== 0)
                       {
-                        <stc-apps-donut-chart 
+                        <stc-apps-bar-chart
+                          [data]="gepTargetChart"
+                          [isFinancialStatus]="true"
+                          [showYaxis]="true"
+                        />
+                        <!-- <stc-apps-donut-chart 
                           [data]="gepTargetChart"
                           [colors]="colors"
                           [id]="20"
                           [textInside]="'Achieved'"
                           [overallNumber]="capexOpexData && capexOpexData.opex ? capexOpexData.opex[0].totalGepTarget : 0"
-                        ></stc-apps-donut-chart>
+                        ></stc-apps-donut-chart> -->
                       }
                     </div>
                   </div>

@@ -1,6 +1,15 @@
 .financial-reporting
 {
   padding:20px 30px;
+  .main-page-title
+  {
+    font-size: 25px;
+    font-weight: bold;
+    text-transform: capitalize;
+    color:#000;
+    margin: 0;
+    margin-bottom: 15px;
+  }
   &-body
   {
     background-color: var(--stc-white-color);

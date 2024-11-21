@@ -83,6 +83,7 @@ import { DialogModule as primengDialogModule } from 'primeng/dialog';
 import { NewLinePipe } from './newLine.pipe';
 import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
 import { SharedService } from './shared.service';
+import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
@@ -135,7 +136,8 @@ const components = [
   DialogModalComponent,
   FileUploadInputComponent,
   NewLinePipe,
-  MultiCirclesChartComponent
+  MultiCirclesChartComponent,
+  ClusteredColumnChartComponent
 ];
 
 @NgModule({
