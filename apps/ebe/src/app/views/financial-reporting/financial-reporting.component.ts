@@ -117,7 +117,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
             color:this.chartColors[index]
           })
         })
-        this.capexChartData = [...chartData];
+        this.capexChartData = [...chartData];        
         if(this.capexTenderingData)
         {
           this.capexTenderingChart = [

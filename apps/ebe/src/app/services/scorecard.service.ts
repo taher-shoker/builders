@@ -19,8 +19,18 @@ export class ScorecardService {
   private readonly navItems: NavLinks[] = [
     {
       id: 1,
-      name: 'scorecard',
+      name: 'sector scorecard',
       url: '/scorecard',
+    },
+    {
+      id: 5,
+      name: 'Financial Status',
+      url: '/financial-reporting',
+    },
+    {
+      id: 4,
+      name: 'project execution',
+      url: '/psr',
     },
     {
       id: 2,
@@ -32,16 +42,6 @@ export class ScorecardService {
     //   name: 'raqami',
     //   url: '/raqami',
     // },
-    {
-      id: 4,
-      name: 'PSR',
-      url: '/psr',
-    },
-    {
-      id: 5,
-      name: 'Financial Reporting',
-      url: '/financial-reporting',
-    },
   ];
   getUserGroups(): string {
     return this.cookieService.get('MODERN_SYSTEM_USER') || '';

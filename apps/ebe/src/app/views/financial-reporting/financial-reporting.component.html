@@ -1,7 +1,7 @@
 <section class="financial-reporting">
   <div class="financial-reporting-header">
     <stc-apps-page-header
-      mainTitle = "Financial Reporting"
+      mainTitle = ""
       secondaryTitle = ""
     />
   </div>
@@ -12,6 +12,7 @@
         (export)="downloadTemplate()"
       />
     }
+    <p class="main-page-title">financial status</p>
     <div class="row">
       <div class="col-lg-6 col-md-12 col-sm-12">
         <div class = "box-card">
@@ -62,9 +63,10 @@
             <div class="wise-capex-card">
               <p class="title2">GD Wise CAPEX</p>
                 <div class = "box-card-chart">
-                  <stc-apps-multi-circles-chart 
+                  <!-- <stc-apps-multi-circles-chart 
                     [chartData2]="capexChartData"
-                  />
+                  /> -->
+                  <stc-apps-clustered-column-chart />
                 </div>
               </div>
             }
@@ -151,7 +153,7 @@
                 @if(capexOpexData.opex[0] && capexOpexData.opex[0].spending)
                 {
                   <div class="spend-card">
-                    <span>spending</span>
+                    <span>spend</span>
                     <p class="spend-num">
                       {{capexOpexData.opex[0].spending}}
                       <span>sar</span>
