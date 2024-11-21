@@ -209,9 +209,9 @@ export class AddPsrProjectFormComponent implements OnInit {
         });
       } else {
         // call add api here
-        this.programsList.value.forEach((data:any) => {
-          if(!this.inPSRForm)
-          {
+        if(!this.inPSRForm)
+        {
+          this.programsList.value.forEach((data:any) => {
             const formattedStartDate = this.formatDate(data.startDate);
             const formattedEndDate = this.formatDate(data.endDate);
             addedProjects.push({
@@ -229,18 +229,18 @@ export class AddPsrProjectFormComponent implements OnInit {
               poAmount : data.POAmount,
               actualSpending : data.actualSpending
             })
-            console.log("addedProjects => " , addedProjects);
-          } else {
-            console.log(this.programsList.value);
-            this.psrService.addNewProject(this.programsList.value).subscribe({
-              next : () => {
-                this.confirmationService.confirm({
-                  key: 'added-sector-success'
-                });
-              }
-            })
-          }
-        })
+          })
+          console.log("addedProjects => " , addedProjects);
+        } else {
+          // console.log(this.programsList.value);
+          this.psrService.addNewProject(this.programsList.value).subscribe({
+            next : () => {
+              this.confirmationService.confirm({
+                key: 'added-sector-success'
+              });
+            }
+          })   
+        }
       }
     }
   }

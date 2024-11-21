@@ -80,7 +80,7 @@ export class PSRService {
   addNewProject(data:AddProgramModel[]):Observable<any>
   {
       return this.http.post<any>(
-        `${environment.apiUrl}/business-excellence/psr/add/executive`,
+        `${environment.apiUrl}/business-excellence/psr/executive`,
         data
       );
   }
@@ -93,7 +93,7 @@ export class PSRService {
   }
   deleteProgram(programId:number):Observable<any>
   {
-      return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/delete/executive/${programId}`);
+      return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/executive/${programId}`);
   }
   getProgramById(id:number):Observable<PSRDataModel>
   {

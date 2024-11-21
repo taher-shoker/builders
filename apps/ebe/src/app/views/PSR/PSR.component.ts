@@ -71,6 +71,7 @@ export class PSRComponent implements OnInit , OnDestroy {
     this.psrServices.deleteProgram(id).subscribe({
       next : () => {
         this.getExecuteViewData();
+        this.toastr.success("The Program is Deleted Successfully");
       }
     })
   }
