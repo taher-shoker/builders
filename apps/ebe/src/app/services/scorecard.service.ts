@@ -19,7 +19,7 @@ export class ScorecardService {
   private readonly navItems: NavLinks[] = [
     {
       id: 1,
-      name: 'sector scorecard',
+      name: 'sector scorecards',
       url: '/scorecard',
     },
     {
@@ -34,7 +34,7 @@ export class ScorecardService {
     },
     {
       id: 2,
-      name: 'CAD strategy program',
+      name: 'CAD strategy programs',
       url: '/strategy-program',
     },
     // {

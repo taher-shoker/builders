@@ -54,12 +54,14 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     color:string;
   }[] = [];
   spendingTargetChart:{
-    category:string;
-    value:number
+    name:string;
+    value:number,
+    color?:string
   }[] = []
   gepTargetChart:{
-    category:string;
-    value:number
+    name:string;
+    value:number,
+    color?:string
   }[] = [];
   capexChartData:{
     title: string,
@@ -100,7 +102,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     // this.capexOpexData = {"opex":[],"capex":[],"tendering":[]};
     this.financialReportingService.getFinancialReportingData().subscribe({
       next : (res:CapexOpexModel) => {
-        this.capexOpexData = res;
+        this.capexOpexData = res;     
         this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]
         this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'opex')[0]
         const chartData:{
@@ -167,25 +169,30 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
         {
           this.spendingTargetChart = [
             {
-              category : "Accural",
-              value : +this.capexOpexData.opex[0].accrualPercentage
+              name : "Accural",
+              value : +this.capexOpexData.opex[0].accrualPercentage,
+              color : "#4F008C"
             },
             {
-              category : "Spend",
-              value : +this.capexOpexData.opex[0].spendPercentage
+              name : "Spent",
+              value : +this.capexOpexData.opex[0].spendPercentage,
+              color : "#00B050"
             }
           ]
         }
+        console.log(this.spendingTargetChart);
         if(this.capexOpexData.opex[0] && this.capexOpexData.opex[0].gepTargetPercentage)
         {
           this.gepTargetChart = [
             {
-              category : "Target",
-              value : this.capexOpexData.opex[0].gepTargetPercentage ? this.capexOpexData.opex[0].gepTargetPercentage : 0
+              name : "Target",
+              value : this.capexOpexData.opex[0].gepTargetPercentage ? this.capexOpexData.opex[0].gepTargetPercentage : 0,
+              color : "#4F008C"
             },
             {
-              category : "Achieved",
-              value : this.capexOpexData.opex[0].gepAchievedPercentage ? this.capexOpexData.opex[0].gepAchievedPercentage : 0
+              name : "Achieved",
+              value : this.capexOpexData.opex[0].gepAchievedPercentage ? this.capexOpexData.opex[0].gepAchievedPercentage : 0,
+              color : "#00B050"
             }
           ]
         }
