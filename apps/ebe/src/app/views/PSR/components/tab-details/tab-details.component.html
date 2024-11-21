@@ -1,10 +1,10 @@
 <section class="psr-tabview">
-    @if(currentMode === 'editMode') {
+    <!-- @if(currentMode === 'editMode') {
         <stc-apps-edit-mode-view 
           (import)="showDialog()"
           (export)="downloadTemplate()"
         />
-    } 
+    }  -->
     <div class = "psr-head">
         <p class = "psr-tabview-header">
             Strategic Projects - Executive View
@@ -22,6 +22,7 @@
                 <div class="project-container-card">
                     <stc-apps-psr-project-card 
                         [project]="project"
+                        (ProgramId)="getProgramId($event)"
                     />
                 </div>
             }

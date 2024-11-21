@@ -13,7 +13,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PSRService } from '../../../../services/psr.service';
 import { CalendarModule } from 'primeng/calendar';
 import { FormInputComponent } from '../form-input/form-input.component';
-import { AddProjectModel } from '../../../../models/psr.model';
+import { AddProgramModel, AddProjectModel, PSRDataModel } from '../../../../models/psr.model';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
@@ -33,8 +33,15 @@ export class AddPsrProjectFormComponent implements OnInit {
   isEditMode = false;
   inPSRForm = false;
   sectorName = "";
+  programId = 0;
   gdName = "";
   ngOnInit(): void {
+    if(this.router.url.startsWith("/psr/add-program") || this.router.url.startsWith("/psr/edit-program"))
+    {
+      this.inPSRForm = true;
+    } else {
+      this.inPSRForm = false;
+    }
     this.addProgramForm = this.formBuilder.group({
       programs: this.formBuilder.array([]),
     });
@@ -45,6 +52,15 @@ export class AddPsrProjectFormComponent implements OnInit {
         if(Object.keys(param).length !== 0)
         {
           this.isEditMode = true;
+          if(this.inPSRForm)
+          {
+            if(param['id'])
+            {
+              this.programId = +param['id'];
+
+              this.getValuesById(+param['id']);
+            }
+          }
         } else {
           this.isEditMode = false;
         }
@@ -96,7 +112,6 @@ export class AddPsrProjectFormComponent implements OnInit {
       this.inPSRForm = true;
       return this.formBuilder.group({
         "sector": [null,[Validators.required , this.noSpacesValidator]],
-        // "abbrev": [null, [Validators.required , this.noSpacesValidator]],
         "details": [null, [Validators.required , this.noSpacesValidator]],
       });
     } else {
@@ -218,8 +233,10 @@ export class AddPsrProjectFormComponent implements OnInit {
           } else {
             console.log(this.programsList.value);
             this.psrService.addNewProject(this.programsList.value).subscribe({
-              next : (res) => {
-                this.goBack();
+              next : () => {
+                this.confirmationService.confirm({
+                  key: 'added-sector-success'
+                });
               }
             })
           }
@@ -227,10 +244,32 @@ export class AddPsrProjectFormComponent implements OnInit {
       }
     }
   }
+  private getValuesById(id:number)
+  {
+    this.psrService.getProgramById(id).subscribe({
+      next : (res:PSRDataModel) => {
+        this.programsList.controls[0].get("sector")?.setValue(res.sector);
+        this.programsList.controls[0].get("details")?.setValue(res.details);
+      }
+    })
+  }
+  private editProgramData(data:AddProgramModel)
+  {
+    this.psrService.editProgram(data , this.programId).subscribe({
+      next:() => {
+        this.confirmationService.confirm({
+          key: 'added-sector-success'
+        });
+      }
+    })
+  }
   editProgram()
   {
     // call edit api here
-    console.log(this.programsList.value);
+    if(this.inPSRForm)
+    {
+      this.editProgramData(this.programsList.value[0]);
+    }
     this.close();
   }
   close()

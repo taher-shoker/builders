@@ -307,3 +307,41 @@ input[type='number'] {
   border-radius: 50%;
   display: inline-block;
 }
+.dialog-container {
+  padding: 10px 30px 30px;
+  text-align: center;
+  min-width: 500px;
+  min-height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-around;
+  img {
+    width: 75px;
+  }
+  p {
+    margin: 0;
+    color: var(--stc-lighter-black-color);
+    font-weight: 500;
+    @extend .stcFont;
+    margin: 15px 0;
+    font-size: 19px;
+    text-transform: capitalize;
+  }
+  .buttons {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    button {
+      border: 0;
+      background-color: #609d50;
+      border-radius: 5px;
+      width: 132px;
+      height: 48px;
+      color: #ffffff;
+      text-transform: capitalize;
+      @extend .stcFont;
+      font-weight: 500;
+    }
+  }
+}

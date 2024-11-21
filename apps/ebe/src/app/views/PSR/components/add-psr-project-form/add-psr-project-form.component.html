@@ -329,12 +329,20 @@
         Are you sure you want to save these changes?
       </p>
     </div>
-    <!-- <p class="delete-record-warning">
-      This action is permanent and cannot be undone!
-    </p> -->
     <div class="buttons mt-4">
       <button (click)="close()" class="cancel">cancel</button>
       <button class="delete" (click)="editProgram()">save changes</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-confirm-dialog [key]="'added-sector-success'">
+  <div class="dialog-container">
+    <img src="assets/images/tick-circle.svg" alt="" />
+    <p class="delete-record-content">
+      the projects is updated successfully
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="goBack()">ok</button>
     </div>
   </div>
 </stc-apps-confirm-dialog>

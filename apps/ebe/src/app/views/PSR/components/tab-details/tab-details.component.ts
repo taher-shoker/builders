@@ -4,16 +4,16 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRProjectCardComponent } from "../project-card/project-card.component";
 import { PSRDataModel } from '../../../../models/psr.model';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
+// import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { FileModel } from '../../../../models/scorecard.model';
 import { PSRService } from '../../../../services/psr.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
-import { FormBuilder, Validators } from '@angular/forms';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'stc-apps-tab-details',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , EditModeViewComponent , RouterLink],
+  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , RouterLink],
   templateUrl: './tab-details.component.html',
   styleUrl: './tab-details.component.scss',
 })
@@ -21,6 +21,7 @@ export class TabDetailsComponent implements OnInit{
   @Output() getUploadedFile:EventEmitter<FileModel> = new EventEmitter();
   visible = false;
   projects:InputSignal<PSRDataModel[]> = input.required<PSRDataModel[]>();
+  @Output() ProgramId:EventEmitter<number> = new EventEmitter();
   isEmpty:InputSignal<boolean> = input.required<boolean>();
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService)
@@ -38,6 +39,10 @@ export class TabDetailsComponent implements OnInit{
   showDialog()
   {
     this.visible = true;
+  }
+  getProgramId(id:number)
+  {
+    this.ProgramId.emit(id);
   }
   downloadTemplate()
   {

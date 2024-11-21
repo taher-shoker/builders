@@ -66,6 +66,14 @@ export class PSRComponent implements OnInit , OnDestroy {
       }
     })
   }
+  deleteProgram(id:number)
+  {
+    this.psrServices.deleteProgram(id).subscribe({
+      next : () => {
+        this.getExecuteViewData();
+      }
+    })
+  }
   getClickedTap(tab:TapModel)
   {
     this.currentTab = tab;

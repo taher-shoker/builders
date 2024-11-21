@@ -1,5 +1,6 @@
 export interface PSRDataModel
 {
+    id:number;
     planned:number;
     sector:string;
     actual:number;
@@ -73,6 +74,7 @@ export interface ColumnsSchema {
 }
 export interface AddProgramModel
 {
+    id?:number;
     sector:string;
     details:string;
 }

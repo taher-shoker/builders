@@ -1,4 +1,4 @@
-import { Component, inject, input, InputSignal, OnChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, input, InputSignal, OnChanges, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PSRChartDataModel, PSRDataModel } from '../../../../models/psr.model';
 import { SharedUiModule } from "@stc-apps/shared-ui";
@@ -17,6 +17,7 @@ import { ConfirmationService } from 'primeng/api';
 export class PSRProjectCardComponent implements OnChanges {
   router = inject(Router);
   route = inject(ActivatedRoute);
+  @Output() ProgramId:EventEmitter<number> = new EventEmitter();
   maxTextLength = 0;
   items = [
     {
@@ -59,7 +60,7 @@ export class PSRProjectCardComponent implements OnChanges {
   gotoEditPage()
   {
     // this.router.navigateByUrl(`/psr/edit-project/${this.project().sector}`);
-    this.router.navigate(['edit-program' , this.project().sector] , { relativeTo: this.route })
+    this.router.navigate(['edit-program' , this.project().id] , { relativeTo: this.route })
   }
   showDeleteDialog()
   {
@@ -74,6 +75,7 @@ export class PSRProjectCardComponent implements OnChanges {
   deleteProgram()
   {
     console.log(this.project());
+    this.ProgramId.emit(this.project().id);
     this.close();
   }
   gotoProjectDetailsPage(){

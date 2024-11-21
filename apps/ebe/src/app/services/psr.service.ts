@@ -84,6 +84,21 @@ export class PSRService {
         data
       );
   }
+  editProgram(data:AddProgramModel , programId:number):Observable<any>
+  {
+      return this.http.put<any>(
+        `${environment.apiUrl}/business-excellence/psr/edit/executive/${programId}`,
+        data
+      );
+  }
+  deleteProgram(programId:number):Observable<any>
+  {
+      return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/delete/executive/${programId}`);
+  }
+  getProgramById(id:number):Observable<PSRDataModel>
+  {
+    return this.http.get<PSRDataModel>(`${environment.apiUrl}/business-excellence/psr/executive/${id}`);
+  }
   uploadFile(pageType:string , selectedFile: any , groupName?:string): Observable<any> {
     const formData = new FormData();
     formData.append('multipartFile', selectedFile, selectedFile.name);
