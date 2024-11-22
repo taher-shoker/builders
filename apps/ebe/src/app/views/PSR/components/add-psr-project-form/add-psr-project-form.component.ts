@@ -13,7 +13,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PSRService } from '../../../../services/psr.service';
 import { CalendarModule } from 'primeng/calendar';
 import { FormInputComponent } from '../form-input/form-input.component';
-import { AddProgramModel, AddProjectModel, PSRDataModel } from '../../../../models/psr.model';
+import { AddProgramModel, AddProjectModel, PSRDataModel, PSRProjectDetailsModel } from '../../../../models/psr.model';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
@@ -45,20 +45,28 @@ export class AddPsrProjectFormComponent implements OnInit {
     this.addProgramForm = this.formBuilder.group({
       programs: this.formBuilder.array([]),
     });
-    this.sectorName = localStorage.getItem("sector") || "";
-    this.gdName = localStorage.getItem("gd") || "";
+    // this.sectorName = localStorage.getItem("sector") || "";
+    // this.gdName = localStorage.getItem("gd") || "";
+    const url = this.router.url;
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
-        if(Object.keys(param).length !== 0)
+        if(param['sector'] && param['group'])
+        {
+          this.sectorName = param['sector'];
+          this.gdName = param['group'];
+        }
+        if(!url.startsWith("/psr/add"))
         {
           this.isEditMode = true;
-          if(this.inPSRForm)
+          if(param['id'] && this.inPSRForm)
           {
-            if(param['id'])
+            this.programId = +param['id'];
+            this.getValuesById(+param['id']);
+          } else {
+            console.log(param);
+            if(param['sector'] && param['projId'])
             {
-              this.programId = +param['id'];
-
-              this.getValuesById(+param['id']);
+              this.getProjectValuesById(param['sector'] , +param['projId']);
             }
           }
         } else {
@@ -129,10 +137,31 @@ export class AddPsrProjectFormComponent implements OnInit {
         "endDate": [null, [Validators.required]],
         "POAmount": [null, [Validators.required]],
         "actualSpending": [null, [Validators.required]],
-        "plannedPercentage": [null, [Validators.max(100)]],
-        "actualPercentage": [null, [Validators.max(100)]],
+        // "plannedPercentage": [null, [Validators.max(100)]],
+        // "actualPercentage": [null, [Validators.max(100)]],
       } , { validators: [this.dateValidator] });
     }
+  }
+  private getProjectValuesById(gd:string , id:number)
+  {
+    this.psrService.getProjectById(gd , id).subscribe({
+      next : (res:PSRProjectDetailsModel) => {
+        console.log(res);
+        this.programsList.controls[0].get("project")?.setValue(res.projectName);
+        this.programsList.controls[0].get("owner")?.setValue(res.projectOwner);
+        this.programsList.controls[0].get("vendor")?.setValue(res.vendor);
+        this.programsList.controls[0].get("stage")?.setValue(res.projectStage);
+        this.programsList.controls[0].get("health")?.setValue(res.domain);
+        // this.programsList.controls[0].get("indicator")?.setValue(res.vendor);
+        // this.programsList.controls[0].get("background")?.setValue(res.vendor);
+        this.programsList.controls[0].get("domain")?.setValue(res.domain);
+        // this.programsList.controls[0].get("startDate")?.setValue(res.vendor);
+        // this.programsList.controls[0].get("endDate")?.setValue(res.vendor);
+        this.programsList.controls[0].get("POAmount")?.setValue(res.poAmount);
+        this.programsList.controls[0].get("actualSpending")?.setValue(res.actualSpending);
+        // this.programsList.controls[0].get("details")?.setValue(res.details);
+      }
+    })
   }
   getErrorMessage(program:AbstractControl , controlName: string): string {
     const control = program.get(controlName);
@@ -231,9 +260,16 @@ export class AddPsrProjectFormComponent implements OnInit {
             })
           })
           console.log("addedProjects => " , addedProjects);
+          this.psrService.addNewProject(addedProjects).subscribe({
+            next : () => {
+              this.confirmationService.confirm({
+                key: 'added-sector-success'
+              });
+            }
+          })  
         } else {
           // console.log(this.programsList.value);
-          this.psrService.addNewProject(this.programsList.value).subscribe({
+          this.psrService.addNewProgram(this.programsList.value).subscribe({
             next : () => {
               this.confirmationService.confirm({
                 key: 'added-sector-success'

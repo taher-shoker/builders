@@ -216,10 +216,27 @@
     <p class="delete-record-warning">
       This action is permanent and cannot be undone!
     </p>
-    <div class="buttons">
+    <div class="buttons mt-5">
       <button class="delete" (click)="deleteRecordRow()">yes. delete</button>
       <button (click)="close()" class="cancel">cancel</button>
     </div>
   </div>
 </stc-apps-confirm-dialog>
 }
+<stc-apps-confirm-dialog [key]="'delete-program'">
+  <div class="dialog-container">
+    <img src="assets/images/close-circle.svg" alt="" />
+    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-content">
+      Are you sure you want to <br />
+      delete {{projectData().projectName}} project?
+    </p>
+    <!-- <p class="delete-record-warning">
+      This action is permanent and cannot be undone!
+    </p> -->
+    <div class="buttons mt-5">
+      <button class="delete" (click)="deleteProjectData(projectData().id)">yes. delete</button>
+      <button (click)="close()" class="cancel">cancel</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { AddProgramModel, ChartDetails, ColumnsSchema, PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
+import { AddProgramModel, AddProjectModel, ChartDetails, ColumnsSchema, PSRDataModel, PSRProjectDetailsModel } from '../models/psr.model';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
@@ -77,10 +77,17 @@ export class PSRService {
         body
       );
   }
-  addNewProject(data:AddProgramModel[]):Observable<any>
+  addNewProgram(data:AddProgramModel[]):Observable<any>
   {
       return this.http.post<any>(
         `${environment.apiUrl}/business-excellence/psr/executive`,
+        data
+      );
+  }
+  addNewProject(data:AddProjectModel[]):Observable<any>
+  {
+      return this.http.post<any>(
+        `${environment.apiUrl}/business-excellence/psr/executive-data`,
         data
       );
   }
@@ -93,11 +100,19 @@ export class PSRService {
   }
   deleteProgram(programId:number):Observable<any>
   {
-      return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/executive/${programId}`);
+    return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/executive/${programId}`);
+  }
+  deleteProject(projectId:number):Observable<any>
+  {
+    return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/executive-data/${projectId}`);
   }
   getProgramById(id:number):Observable<PSRDataModel>
   {
     return this.http.get<PSRDataModel>(`${environment.apiUrl}/business-excellence/psr/executive/${id}`);
+  }
+  getProjectById(gd:string , id:number):Observable<PSRProjectDetailsModel>
+  {
+    return this.http.get<PSRProjectDetailsModel>(`${environment.apiUrl}/business-excellence/psr/psr-data/group/${gd}/${id}`);
   }
   uploadFile(pageType:string , selectedFile: any , groupName?:string): Observable<any> {
     const formData = new FormData();

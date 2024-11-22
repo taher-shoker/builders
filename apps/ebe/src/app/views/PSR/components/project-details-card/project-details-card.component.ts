@@ -11,7 +11,7 @@ import { PSRService } from '../../../../services/psr.service';
 import { UserGroup } from '../../../../models/scorecard.model';
 import { MenuModule } from 'primeng/menu';
 import { ToastrService } from 'ngx-toastr';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
@@ -45,9 +45,17 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
         ]
     }
   ];
+  activatedRoute = inject(ActivatedRoute);
   gotoEditPage()
   {
-    this.router.navigateByUrl(`/psr/edit-project/${this.projectData().projectName}`);
+    this.activatedRoute.params.subscribe({
+      next : (param:Params) => {
+        if(param['id'])
+        {
+          this.router.navigateByUrl(`/psr/edit-project/${param['id']}/${this.projectData().gd}/${this.projectData().id}`);
+        }
+      }
+    })
     // this.router.navigate(['edit-program' , this.projectData().projectName] , { relativeTo: this.route })
   }
   showDeleteDialog()
@@ -319,5 +327,16 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     const filteredArray = this.tableHeader.filter(obj => obj.key !== '');
     this.tableHeader = filteredArray;
     this.isDisabled = false;    
+  }
+  @Output() deleteProject:EventEmitter<number> = new EventEmitter();
+  deleteProjectData(id:number)
+  {
+    this.deleteProject.emit(id)
+    this.confirmationService.close()
+    // this.psrServices.deleteProject(id).subscribe({
+    //   next : () => {
+
+    //   }
+    // })
   }
 }

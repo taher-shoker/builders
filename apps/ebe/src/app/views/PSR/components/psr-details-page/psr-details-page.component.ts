@@ -68,10 +68,10 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
         this.PSRDetailsData = res
         this.selectedGD = this.PSRDetailsData.filter(d => d.gd !== null)
-        if(!localStorage.getItem("gd"))
-        {
-          localStorage.setItem("gd" , this.selectedGD[0].gd)
-        }
+        // if(!localStorage.getItem("gd"))
+        // {
+        //   localStorage.setItem("gd" , this.selectedGD[0].gd)
+        // }
         if(this.PSRDetailsData.length === 0)
         {
           this.isEmpty = true;
@@ -81,9 +81,18 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
       }
     })
   }
+  deleteProject(id:number)
+  {
+    this.psrServices.deleteProject(id).subscribe({
+      next : () => {
+        this.toastr.success("The Project is Deleted Successfully");
+        this.getProjectDetails(this.groupName);
+      }
+    })
+  }
   gotoAddForm()
   {
-    this.route.navigateByUrl("/psr/add-project")
+    this.route.navigateByUrl(`/psr/add-project/${this.groupName}/${this.selectedGD[0].gd}`)
   }
   values:AddProjectForm[] = [];
   addRecordInTable(values:AddProjectForm)

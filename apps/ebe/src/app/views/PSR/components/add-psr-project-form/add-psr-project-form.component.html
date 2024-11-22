@@ -1,7 +1,7 @@
 <section class="psr-form">
   <div class="psr-form-header">
     <div>
-      <stc-apps-page-header [mainTitle]="'PSR Add Progect'" />
+      <stc-apps-page-header [mainTitle]="'PSR Add Program'" />
     </div>
   </div>
   <div class="psr-form-body">
@@ -19,13 +19,16 @@
         @for (program of programsList.controls; track program;let index =
         $index) {
         <div class="form-wrapper position-relative" [formGroupName]="index">
-          <div class="delete-program-img">
-            <img
-              src="assets/images/close-circle2.svg"
-              alt=""
-              (click)="deleteProgram(index)"
-            />
-          </div>
+          @if(!isEditMode)
+          {
+            <div class="delete-program-img">
+              <img
+                src="assets/images/close-circle2.svg"
+                alt=""
+                (click)="deleteProgram(index)"
+              />
+            </div>
+          }
           @if(inPSRForm)
           {
             <div class="psr-page-form">
@@ -161,7 +164,7 @@
                     }
                     @if(program.hasError("startDateAfterEndDate"))
                     {
-                      <small class="error-msg error-msg2">end date is less than start date</small>
+                      <small class="error-msg error-msg2">The End date must be after or equal the start date</small>
                     }
                   </div>
                 </div>
@@ -193,7 +196,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <stc-apps-form-input 
                       [type]="'number'"
@@ -206,8 +209,8 @@
                       [inputValue]="program.get('actualPercentage')?.value"
                     />
                   </div>
-                </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                </div> -->
+                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <stc-apps-form-input 
                       [type]="'number'"
@@ -220,7 +223,7 @@
                       [inputValue]="program.get('plannedPercentage')?.value"
                     />
                   </div>
-                </div>
+                </div> -->
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <stc-apps-form-input 
