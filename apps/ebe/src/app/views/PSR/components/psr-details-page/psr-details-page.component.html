@@ -22,7 +22,7 @@
               <p class = "psr-tabview-header">
                 {{selectedGD ? selectedGD[0].gd : ''}}
               </p>
-            <button (click)="gotoAddForm()">
+            <button (click)="gotoAddForm()"  class = "add-program-btn">
                 <!-- <i class = "pi pi-plus"></i> -->
                  <img src="assets/images/plus-icon.svg" alt="">
                 add new project
@@ -43,6 +43,11 @@
             </div>
           </div>
         } @else {
+          <button (click)="gotoAddForm()" class = "add-program-btn ms-auto">
+            <!-- <i class = "pi pi-plus"></i> -->
+             <img src="assets/images/plus-icon.svg" alt="">
+            add new project
+          </button>
           <p class = "empty-data-msg">
             there are no data for this project
           </p>

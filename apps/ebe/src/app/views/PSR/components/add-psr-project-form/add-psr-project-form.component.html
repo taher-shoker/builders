@@ -114,7 +114,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <stc-apps-form-input 
                       [type]="'text'"
@@ -127,7 +127,7 @@
                       [inputValue]="program.get('health')?.value"
                     />
                   </div>
-                </div>
+                </div> -->
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <stc-apps-form-input 
@@ -170,8 +170,18 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <stc-apps-form-input 
+                    <!-- <stc-apps-form-input 
                       [type]="'number'"
+                      formControlName = "POAmount"
+                      [id]="'POAmount'"
+                      [placeholder]="'Add PO Amount'"
+                      [errorMessage]="getErrorMessage(program , 'POAmount')"
+                      labelName = "PO amount"
+                      inputType = "text"
+                      [inputValue]="program.get('POAmount')?.value"
+                    /> -->
+                    <stc-apps-form-input 
+                      [type]="'text'"
                       formControlName = "POAmount"
                       [id]="'POAmount'"
                       [placeholder]="'Add PO Amount'"
@@ -184,8 +194,18 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <stc-apps-form-input 
+                    <!-- <stc-apps-form-input 
                       [type]="'number'"
+                      formControlName = "actualSpending"
+                      [id]="'actualSpending'"
+                      [placeholder]="'Add Actual in SAR'"
+                      [errorMessage]="getErrorMessage(program , 'actualSpending')"
+                      labelName = "actual spending"
+                      inputType = "text"
+                      [inputValue]="program.get('actualSpending')?.value"
+                    /> -->
+                    <stc-apps-form-input 
+                      [type]="'text'"
                       formControlName = "actualSpending"
                       [id]="'actualSpending'"
                       [placeholder]="'Add Actual in SAR'"
@@ -248,7 +268,7 @@
                       [errorMessage]="getErrorMessage(program , 'indicator')"
                       labelName = "indicator"
                       inputType = "dropdown"
-                      [inputValue]="program.get('indicator')?.value?.value"
+                      [inputValue]="program.get('indicator')?.value?.value ? program.get('indicator')?.value?.value : program.get('indicator')?.value"
                       [dropdownOptions]="indicators"
                     />
                   </div>
@@ -271,7 +291,7 @@
                         <span
                           class = 'background-bullet'
                           [ngStyle]="{
-                            'background' : selectedBackground.code
+                            'background' : selectedBackground.name
                           }"
                         ></span>
                         <div>{{ selectedBackground.name }}</div>
@@ -282,10 +302,10 @@
                         <span
                           class = 'background-bullet'
                           [ngStyle]="{
-                            'background' : country.code
+                            'background' : country.name
                           }"
                         ></span>
-                        <div>{{ country.name }}</div>
+                        <div style = "text-transform:capitalize;">{{ country.name }}</div>
                       </div>
                     </ng-template>
                     </p-dropdown>

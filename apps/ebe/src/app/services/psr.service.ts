@@ -94,7 +94,7 @@ export class PSRService {
   editProgram(data:AddProgramModel , programId:number):Observable<any>
   {
       return this.http.put<any>(
-        `${environment.apiUrl}/business-excellence/psr/edit/executive/${programId}`,
+        `${environment.apiUrl}/business-excellence/psr/executive/${programId}`,
         data
       );
   }
@@ -109,6 +109,12 @@ export class PSRService {
   getProgramById(id:number):Observable<PSRDataModel>
   {
     return this.http.get<PSRDataModel>(`${environment.apiUrl}/business-excellence/psr/executive/${id}`);
+  }
+  updateProject(projectId:number , project:AddProjectModel):Observable<any>
+  {
+    return this.http.put<any>(`${environment.apiUrl}//business-excellence/psr/executive-data/${projectId}`,
+      project
+    );
   }
   getProjectById(gd:string , id:number):Observable<PSRProjectDetailsModel>
   {

@@ -35,6 +35,7 @@ export class AddPsrProjectFormComponent implements OnInit {
   sectorName = "";
   programId = 0;
   gdName = "";
+  projectId = ""
   ngOnInit(): void {
     if(this.router.url.startsWith("/psr/add-program") || this.router.url.startsWith("/psr/edit-program"))
     {
@@ -47,6 +48,7 @@ export class AddPsrProjectFormComponent implements OnInit {
     });
     // this.sectorName = localStorage.getItem("sector") || "";
     // this.gdName = localStorage.getItem("gd") || "";
+    
     const url = this.router.url;
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
@@ -66,6 +68,7 @@ export class AddPsrProjectFormComponent implements OnInit {
             console.log(param);
             if(param['sector'] && param['projId'])
             {
+              this.projectId = param['projId']
               this.getProjectValuesById(param['sector'] , +param['projId']);
             }
           }
@@ -92,10 +95,10 @@ export class AddPsrProjectFormComponent implements OnInit {
     };
   }
   colors = [
-    { name: 'Green', code: 'green' },
-    { name: 'Red', code: 'red' },
-    { name: 'Yellow', code: 'yellow' },
-    { name: 'Grey', code: 'grey' }
+    { name: 'green', code: 'G' },
+    { name: 'red', code: 'R' },
+    { name: 'yellow', code: 'Y' },
+    { name: 'grey', code: 'E' }
   ];
   indicators = [
     { name: 'A', code: 'A' },
@@ -129,7 +132,7 @@ export class AddPsrProjectFormComponent implements OnInit {
         "owner": [null],
         "vendor": [null, [Validators.required , this.noSpacesValidator]],
         "stage": [null, [Validators.required , this.noSpacesValidator]],
-        "health": [null, [Validators.required , this.noSpacesValidator]],
+        // "health": [null, [Validators.required , this.noSpacesValidator]],
         "indicator": [null, [Validators.required]],
         "background": [null, [Validators.required]],
         "domain": [null, [Validators.required , this.noSpacesValidator]],
@@ -147,16 +150,22 @@ export class AddPsrProjectFormComponent implements OnInit {
     this.psrService.getProjectById(gd , id).subscribe({
       next : (res:PSRProjectDetailsModel) => {
         console.log(res);
+        console.log(res.backgroundColor);
+        let selectedBackgroundColor = this.colors.filter(c => c.code === res.backgroundColor);
+        if(selectedBackgroundColor.length === 0)
+        {
+          selectedBackgroundColor = [{ name: 'grey', code: 'E' }]
+        }
         this.programsList.controls[0].get("project")?.setValue(res.projectName);
         this.programsList.controls[0].get("owner")?.setValue(res.projectOwner);
         this.programsList.controls[0].get("vendor")?.setValue(res.vendor);
         this.programsList.controls[0].get("stage")?.setValue(res.projectStage);
-        this.programsList.controls[0].get("health")?.setValue(res.domain);
-        // this.programsList.controls[0].get("indicator")?.setValue(res.vendor);
-        // this.programsList.controls[0].get("background")?.setValue(res.vendor);
+        // this.programsList.controls[0].get("health")?.setValue(res.domain);
+        this.programsList.controls[0].get("indicator")?.setValue(res.indicator);
+        this.programsList.controls[0].get("background")?.setValue(selectedBackgroundColor[0]);
         this.programsList.controls[0].get("domain")?.setValue(res.domain);
-        // this.programsList.controls[0].get("startDate")?.setValue(res.vendor);
-        // this.programsList.controls[0].get("endDate")?.setValue(res.vendor);
+        this.programsList.controls[0].get("startDate")?.setValue(new Date(res.startDate));
+        this.programsList.controls[0].get("endDate")?.setValue(new Date(res.endDate));
         this.programsList.controls[0].get("POAmount")?.setValue(res.poAmount);
         this.programsList.controls[0].get("actualSpending")?.setValue(res.actualSpending);
         // this.programsList.controls[0].get("details")?.setValue(res.details);
@@ -250,8 +259,8 @@ export class AddPsrProjectFormComponent implements OnInit {
               projectOwner : data.owner,
               vendor : data.vendor,
               projectStage : data.stage,
-              indicator : data.indicator.value.name,
-              backgroundColor : data.background.name,
+              indicator : data.indicator.value,
+              backgroundColor : data.background.code,
               domain : data.domain,
               startDate : formattedStartDate,
               endDate : formattedEndDate,
@@ -259,7 +268,7 @@ export class AddPsrProjectFormComponent implements OnInit {
               actualSpending : data.actualSpending
             })
           })
-          console.log("addedProjects => " , addedProjects);
+          // console.log("addedProjects => " , addedProjects);
           this.psrService.addNewProject(addedProjects).subscribe({
             next : () => {
               this.confirmationService.confirm({
@@ -305,6 +314,32 @@ export class AddPsrProjectFormComponent implements OnInit {
     if(this.inPSRForm)
     {
       this.editProgramData(this.programsList.value[0]);
+    } else {
+      const updatedObj = this.programsList.value[0];
+      const formattedStartDate = this.formatDate(updatedObj.startDate);
+      const formattedEndDate = this.formatDate(updatedObj.endDate);
+      const addedProjects:AddProjectModel = {
+        sector : this.sectorName,
+        gd : this.gdName,
+        projectName : updatedObj.project,
+        projectOwner : updatedObj.owner,
+        vendor : updatedObj.vendor,
+        projectStage : updatedObj.stage,
+        indicator : updatedObj.indicator,
+        backgroundColor : updatedObj.background.code,
+        domain : updatedObj.domain,
+        startDate : formattedStartDate,
+        endDate : formattedEndDate,
+        poAmount : updatedObj.POAmount,
+        actualSpending : updatedObj.actualSpending
+      };
+      this.psrService.updateProject(+this.projectId , addedProjects).subscribe({
+        next:() => {
+          this.confirmationService.confirm({
+            key: 'added-sector-success'
+          });
+        }
+      })
     }
     this.close();
   }
