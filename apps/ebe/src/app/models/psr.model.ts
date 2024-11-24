@@ -28,7 +28,7 @@ export interface PSRProjectDetailsModel
     projectStage:string;
     sector:string;
     startDate:string;
-    vactual:number;
+    vactual:number;  
     vendor:string;
     vplanned:number;
 }
