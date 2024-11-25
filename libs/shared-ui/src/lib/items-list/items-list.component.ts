@@ -6,6 +6,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
   selector: 'stc-apps-items-list',
   templateUrl: './items-list.component.html',
   styleUrls: ['./items-list.component.scss'],
+  standalone : false
 })
 export class ItemsListComponent {
   @Output() itemClicked : EventEmitter<any> = new EventEmitter<any>();

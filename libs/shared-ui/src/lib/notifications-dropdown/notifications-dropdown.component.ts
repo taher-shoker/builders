@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output, input } from '@angular/core';
   selector: 'stc-apps-notifications-dropdown',
   templateUrl: './notifications-dropdown.component.html',
   styleUrl: './notifications-dropdown.component.scss',
+  standalone : false
 })
 export class NotificationsDropdownComponent {
   @Input() items!: any[];

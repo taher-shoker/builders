@@ -12,6 +12,7 @@ import { ControlValueAccessorDirective } from '../control-value-accessor.directi
   selector: 'stc-apps-checkbox',
   templateUrl: './checkbox.component.html',
   styleUrl: './checkbox.component.scss',
+  standalone : false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -13,6 +13,7 @@ import { DialogService } from './dialog.service';
   templateUrl: './dialog.component.html',
   styleUrls: ['./dialog.component.scss'],
   encapsulation: ViewEncapsulation.None,
+  standalone : false
 })
 export class DialogComponent implements OnInit, OnDestroy {
   @Input() id?: string;

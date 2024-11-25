@@ -13,6 +13,7 @@ import { NavItem } from './header.model';
   selector: 'stc-apps-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  standalone : false
 })
 export class HeaderComponent {
   @Input() userName: string | undefined;

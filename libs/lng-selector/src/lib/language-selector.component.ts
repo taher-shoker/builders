@@ -8,6 +8,7 @@ import { LanguageManagerService } from './language-manager.service';
   selector: 'stc-apps-language-selector',
   templateUrl: './language-selector.component.html',
   styleUrls: ['./language-selector.component.scss'],
+  standalone : false
 })
 export class LanguageSelectorComponent {
   public appSettings: AppSettings = appSettings;

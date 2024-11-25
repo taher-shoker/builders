@@ -7,7 +7,7 @@ import { DialogModule } from 'primeng/dialog';
 import { AddProjectFormComponent } from '../add-project-form/add-project-form.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { PSRService } from '../../../../services/psr.services';
+import { PSRService } from '../../../../services/psr.service';
 import { UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 @Component({

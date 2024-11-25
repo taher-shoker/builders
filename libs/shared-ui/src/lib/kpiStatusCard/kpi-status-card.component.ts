@@ -1,4 +1,5 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, input, InputSignal, ViewChild } from '@angular/core';
+import { OverlayPanel } from 'primeng/overlaypanel';
 @Component({
   selector: 'stc-apps-kpi-status-card',
   standalone: false,
@@ -10,4 +11,5 @@ export class KpiStatusCardComponent{
   kpiType:InputSignal<string> = input.required<string>();
   domainIndicator:InputSignal<string> = input<string>('');
   domainIndicatorColor:InputSignal<string> = input<string>('');
+  @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
 }

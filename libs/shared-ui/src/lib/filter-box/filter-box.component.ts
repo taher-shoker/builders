@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
   selector: 'stc-apps-filter-box',
   templateUrl: './filter-box.component.html',
   styleUrls: ['./filter-box.component.scss'],
+  standalone : false
 })
 export class FilterBoxComponent {
   @Input()

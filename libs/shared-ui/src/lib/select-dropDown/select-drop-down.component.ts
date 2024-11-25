@@ -23,6 +23,7 @@ interface Option {
   selector: 'stc-apps-select-drop-down',
   templateUrl: './select-drop-down.component.html',
   styleUrls: ['./select-drop-down.component.scss'],
+  standalone : false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

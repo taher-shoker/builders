@@ -5,6 +5,7 @@ import { Component, Input } from '@angular/core';
   selector: 'stc-apps-counter-card',
   templateUrl: './counter-card.component.html',
   styleUrls: ['./counter-card.component.scss'],
+  standalone : false
 })
 export class CounterCardComponent {
   @Input({required: true}) count = 0;

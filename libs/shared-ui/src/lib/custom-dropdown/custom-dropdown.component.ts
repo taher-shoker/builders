@@ -33,6 +33,7 @@ export interface Item {
   selector: 'stc-apps-custom-dropdown',
   templateUrl: './custom-dropdown.component.html',
   styleUrls: ['./custom-dropdown.component.scss'],
+  standalone : false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
