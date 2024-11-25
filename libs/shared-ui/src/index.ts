@@ -1,4 +1,5 @@
 export * from './lib/shared-ui.module';
+export * from './lib/shared.service';
 
 export * from './lib/filter-box/filter-box.component';
 

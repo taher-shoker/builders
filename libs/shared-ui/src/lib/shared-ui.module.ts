@@ -83,6 +83,10 @@ import { DialogModalComponent } from './file-upload-dialog/dialog.component';
 import { FileUploadInputComponent } from './file-upload-input/file-upload-input.component';
 import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
+import { NewLinePipe } from './newLine.pipe';
+import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
+import { SharedService } from './shared.service';
+import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 // const modules = [BreadCrumbModule, MatIconModule];
 
@@ -137,13 +141,16 @@ const components = [
   ConfirmDialogComponent,
   TruncateWordPipe,
   DialogModalComponent,
-  FileUploadInputComponent
+  FileUploadInputComponent,
+  NewLinePipe,
+  MultiCirclesChartComponent,
+  ClusteredColumnChartComponent
 ];
 
 @NgModule({
   declarations: [...components],
-  exports: [...components, ...modules],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  exports: [...components, ...modules ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' } , SharedService],
   imports: [
     CommonModule,
     ConfirmDialogModule,

@@ -5,6 +5,7 @@ import Quill from 'quill';
 @Component({
   selector: 'stc-apps-text-editor-quill',
   template: `<div [id]="editorId"></div>`,
+  standalone : false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

@@ -16,6 +16,7 @@ interface FileModel
 })
 export class DialogModalComponent {
   @Input({required : true}) visible!:boolean;
+  @Input() fileType = ".csv";
   @Output() ImportedFile:EventEmitter<FileModel> = new EventEmitter();
   @Output() onhide:EventEmitter<boolean> = new EventEmitter();
   selectedFile!:FileModel | null;

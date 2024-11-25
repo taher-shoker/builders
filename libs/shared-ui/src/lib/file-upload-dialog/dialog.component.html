@@ -15,6 +15,7 @@
   <stc-apps-file-upload-input 
     [isHidden]="isHidden"
     (uploadedFile)="getUploadedFile($event)"
+    [fileType]="fileType"
   />
   <ng-template pTemplate="footer">
     <footer>

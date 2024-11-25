@@ -12,7 +12,8 @@ export interface PSRChartDataModel
 }
 export interface PSRProjectDetailsModel
 {
-    actual:string;
+    actualSpending:string;
+    // actual:string;
     backgroundColor?:string;
     chartDetails:ChartDetails[];
     domain:string;
@@ -23,10 +24,11 @@ export interface PSRProjectDetailsModel
     poAmount:string;
     projectName:string;
     projectOwner:string;
-    projectStatus:string;
+    // projectStatus:string;
+    projectStage:string;
     sector:string;
     startDate:string;
-    vactual:number;
+    vactual:number;  
     vendor:string;
     vplanned:number;
 }

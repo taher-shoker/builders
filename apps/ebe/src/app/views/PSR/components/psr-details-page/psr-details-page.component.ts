@@ -2,7 +2,7 @@ import { Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { PSRService } from '../../../../services/psr.services';
+import { PSRService } from '../../../../services/psr.service';
 import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
 import { ActivatedRoute } from '@angular/router';
@@ -54,6 +54,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
     this.endSubs$.complete();
   }
   isEmpty!:boolean;
+  selectedGD:any;
   private getProjectDetails(group:string)
   {
     this.psrServices.getExecuteProjectDetailsData(group).pipe(takeUntil(this.endSubs$)).subscribe({
@@ -65,6 +66,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         })
         // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
         this.PSRDetailsData = res
+        this.selectedGD = this.PSRDetailsData.filter(d => d.gd !== null)
         if(this.PSRDetailsData.length === 0)
         {
           this.isEmpty = true;

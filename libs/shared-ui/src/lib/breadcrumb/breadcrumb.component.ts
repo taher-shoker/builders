@@ -9,6 +9,7 @@ import { Breadcrumb } from './breadcrumb.model';
   selector: 'stc-apps-breadcrumb',
   templateUrl: './breadcrumb.component.html',
   styleUrls: ['./breadcrumb.component.scss'],
+  standalone : false
 })
 export class BreadcrumbComponent {
   @Input() colorText: 'white' | 'black' = 'black';

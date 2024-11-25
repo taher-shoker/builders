@@ -10,6 +10,7 @@ import {
   selector: 'stc-apps-progress-circle',
   templateUrl: './progress-circle.component.html',
   styleUrls: ['./progress-circle.component.scss'],
+  standalone : false
 })
 export class ProgressCircleComponent {
   progressValue: InputSignal<number> = input(0);

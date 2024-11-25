@@ -27,6 +27,7 @@ export interface DateRange{
   selector: 'stc-apps-date-picker-range',
   templateUrl: './date-picker-range.component.html',
   styleUrls: ['./date-picker-range.component.scss'],
+  standalone : false
   // providers: [
   //   {
   //     provide: DateAdapter,

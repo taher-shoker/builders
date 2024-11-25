@@ -25,6 +25,7 @@ export interface LineChartData {
   selector: 'stc-apps-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
+  standalone : false
 })
 export class LineChartComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges

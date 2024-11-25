@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
   name: 'filterArray',
+  standalone : false
 })
 export class FilterArrayPipe implements PipeTransform {
   transform(items: any[], filterStr: string): any[] {

@@ -23,9 +23,9 @@
       [kpiStatus]="projectData().vendor"
       [kpiType]="'vendor'"
     />
-     @if(projectData() && projectData().projectStatus) {
+     @if(projectData() && projectData().projectStage) {
     <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().projectStatus!"
+      [kpiStatus]="projectData().projectStage!"
       [kpiType]="'status'"
     />
     } @if(projectData() && projectData().domain) {
@@ -70,7 +70,7 @@
         <div class="project-timelines-timeline-data-end">
           <p class="project-timelines-timeline-data-start-title">actual</p>
           <p class="project-timelines-timeline-data-start-info">
-            {{ projectData().actual ? projectData().actual : 'N/A' }}
+            {{ projectData().actualSpending ? projectData().actualSpending : 'N/A' }}
           </p>
         </div>
       </div>

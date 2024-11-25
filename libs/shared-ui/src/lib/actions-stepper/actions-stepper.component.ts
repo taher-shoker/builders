@@ -35,6 +35,7 @@ export interface Step {
   selector: 'stc-apps-actions-stepper',
   templateUrl: './actions-stepper.component.html',
   styleUrls: ['./actions-stepper.component.scss'],
+  standalone : false
 })
 export class ActionsStepperComponent {
   @Output() stepperAction: EventEmitter<{

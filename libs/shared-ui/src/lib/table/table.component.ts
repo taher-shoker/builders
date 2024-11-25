@@ -58,6 +58,7 @@ const ELEMENT_DATA: PeriodicElement[] = [
   selector: 'stc-apps-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
+  standalone : false
 })
 export class TableComponent implements OnInit {
   displayedColumns: string[] = COLUMNS_SCHEMA.map((col) => col.key);
