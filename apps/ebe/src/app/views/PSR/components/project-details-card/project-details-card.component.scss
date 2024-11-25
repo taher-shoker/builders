@@ -330,3 +330,18 @@
       cursor: pointer;
       color:#D9D9D9;
 }
+.poamount-popover-section
+{
+  color:var(--stc-purple-light-color);
+  font-weight: 500;
+  max-width: 250px;
+  word-break: break-all;
+}
+.truncate
+{
+  max-width: 70px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}

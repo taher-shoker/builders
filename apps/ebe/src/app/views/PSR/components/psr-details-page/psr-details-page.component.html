@@ -9,12 +9,12 @@
       <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
     </div>
       <div class="scored-card-section-tap-details">
-        @if(currentMode === 'editMode') {
+        <!-- @if(currentMode === 'editMode') {
           <stc-apps-edit-mode-view 
             (import)="showDialog()"
             (export)="downloadTemplate()"
           />
-        }
+        } -->
         @if(!isEmpty)
         {
           <div class="projects-container">
@@ -22,11 +22,14 @@
               <p class = "psr-tabview-header">
                 {{selectedGD ? selectedGD[0].gd : ''}}
               </p>
-            <button (click)="gotoAddForm()"  class = "add-program-btn">
-                <!-- <i class = "pi pi-plus"></i> -->
-                 <img src="assets/images/plus-icon.svg" alt="">
-                add new project
-            </button>
+              @if(isAllowed)
+              {
+                <button (click)="gotoAddForm()"  class = "add-program-btn">
+                    <!-- <i class = "pi pi-plus"></i> -->
+                     <img src="assets/images/plus-icon.svg" alt="">
+                    add new project
+                </button>
+              }
             </div>
             <div class="project-cards-container">
               @for (proj of PSRDetailsData; track proj.gd) {
@@ -37,6 +40,7 @@
                     (closePopupEmit)="closePopup($event)"
                     [userRoles]="userRoles"
                     (deleteProject)="deleteProject($event)"
+                    [isAllowed]="isAllowed"
                   />
                 </div>
               }

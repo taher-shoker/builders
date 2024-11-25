@@ -5,24 +5,27 @@
       (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
       (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
     >
-      {{ projectData().projectName | truncateWord:11 }}
+      {{ projectData().projectName | truncateWord:7 }}
     </p>
-    <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
-    <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
-      <ng-template pTemplate="item" let-item>
-        <div class="menu-container">
-          <div 
-            class="menu-item"
-            [class.edit-btn]="item.label === 'Edit'"
-            [class.delete-btn]="item.label === 'Delete'"
-            (click)="item.label === 'Edit' ? gotoEditPage() : showDeleteDialog()"
-          >
-            <i [class]="item.icon"></i>
-            <p>{{item.label}}</p>
+    @if(isAllowed())
+    {
+      <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
+      <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
+        <ng-template pTemplate="item" let-item>
+          <div class="menu-container">
+            <div 
+              class="menu-item"
+              [class.edit-btn]="item.label === 'Edit'"
+              [class.delete-btn]="item.label === 'Delete'"
+              (click)="item.label === 'Edit' ? gotoEditPage() : showDeleteDialog()"
+            >
+              <i [class]="item.icon"></i>
+              <p>{{item.label}}</p>
+            </div>
           </div>
-        </div>
-      </ng-template>
-    </p-menu>
+        </ng-template>
+      </p-menu>
+    }
     @if(titleArr && titleArr.length > 11)
     {
       <p-overlayPanel #overlayPanel2 dismissable="true">
@@ -80,15 +83,33 @@
       <div class="project-timelines-timeline-data">
         <div class="project-timelines-timeline-data-start">
           <p class="project-timelines-timeline-data-start-title">PO amount</p>
-          <p class="project-timelines-timeline-data-start-info">
-            {{ projectData().poAmount ? projectData().poAmount : 'N/A' }}
+          <p 
+            class="project-timelines-timeline-data-start-info truncate"
+            (mouseenter)="overlayPanel4 ? overlayPanel4.show($event) : ''" 
+            (mouseleave)="overlayPanel4 ? overlayPanel4.hide() : ''"
+          >
+            {{projectData().poAmount ? projectData().poAmount : 'N/A'}}
+            @if(projectData().poAmount && projectData().poAmount.toString().length >= 10){
+              <p-overlayPanel #overlayPanel4 dismissable="true">
+                <section class="poamount-popover-section" [innerHTML]="projectData().poAmount"></section>
+              </p-overlayPanel>
+            }
           </p>
         </div>
         <span class="line"></span>
         <div class="project-timelines-timeline-data-end">
           <p class="project-timelines-timeline-data-start-title">actual</p>
-          <p class="project-timelines-timeline-data-start-info">
+          <p 
+            class="project-timelines-timeline-data-start-info truncate"
+            (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
+            (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
+          >
             {{ projectData().actualSpending ? projectData().actualSpending : 'N/A' }}
+            @if(projectData().actualSpending && projectData().actualSpending.toString().length >= 10){
+              <p-overlayPanel #overlayPanel3 dismissable="true">
+                <section class="poamount-popover-section" [innerHTML]="projectData().actualSpending"></section>
+              </p-overlayPanel>
+            }
           </p>
         </div>
       </div>

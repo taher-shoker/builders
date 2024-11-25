@@ -31,6 +31,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   groupName = "";
   username = "";
   userRoles!:UserGroup;
+  isAllowed = false;
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
     this.username = this.scorecardService.getUsername();
@@ -40,6 +41,8 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
       },
     });
     this.userRoles = this.scorecardService.userRoles;
+    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
+    console.log(this.userRoles);
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({
       next : (param) => {

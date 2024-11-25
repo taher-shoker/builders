@@ -70,6 +70,7 @@ export const appRoutes: Route[] = [
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
         (m) => m.AddPsrProjectFormComponent
     ),
+    canActivate:[AuthGuard]
   },
   {
     path : "psr/add-project/:sector/:group",
@@ -77,6 +78,7 @@ export const appRoutes: Route[] = [
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
         (m) => m.AddPsrProjectFormComponent
     ),
+    canActivate:[AuthGuard]
   },
   {
     path : "psr/edit-program/:id",
@@ -84,6 +86,7 @@ export const appRoutes: Route[] = [
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
         (m) => m.AddPsrProjectFormComponent
     ),
+    canActivate:[AuthGuard]
   },
   {
     path : "psr/edit-project/:sector/:group/:projId",
@@ -91,6 +94,7 @@ export const appRoutes: Route[] = [
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
         (m) => m.AddPsrProjectFormComponent
     ),
+    canActivate:[AuthGuard]
   },
   {
     path : "psr/:id",

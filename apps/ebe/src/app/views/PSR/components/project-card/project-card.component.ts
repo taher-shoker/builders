@@ -17,6 +17,7 @@ import { ConfirmationService } from 'primeng/api';
 export class PSRProjectCardComponent implements OnChanges {
   router = inject(Router);
   route = inject(ActivatedRoute);
+  isAllowed = input<boolean>()
   @Output() ProgramId:EventEmitter<number> = new EventEmitter();
   maxTextLength = 0;
   items = [

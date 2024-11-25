@@ -9,11 +9,14 @@
         <p class = "psr-tabview-header">
             Strategic Projects - Executive View
         </p>
-        <button routerLink="add-program">
-            <!-- <i class = "pi pi-plus"></i> -->
-             <img src="assets/images/plus-icon.svg" alt="">
-            add new program
-        </button>
+        @if(isAllowed)
+        {
+            <button routerLink="add-program">
+                <!-- <i class = "pi pi-plus"></i> -->
+                 <img src="assets/images/plus-icon.svg" alt="">
+                add new program
+            </button>
+        }
     </div>
     @if(!isEmpty())
     {
@@ -23,6 +26,7 @@
                     <stc-apps-psr-project-card 
                         [project]="project"
                         (ProgramId)="getProgramId($event)"
+                        [isAllowed]="isAllowed"
                     />
                 </div>
             }

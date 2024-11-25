@@ -23,12 +23,15 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   @Input() isAdded!:boolean;
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
+  @ViewChild('overlayPanel3') overlayPanel3!: OverlayPanel;
+  @ViewChild('overlayPanel4') overlayPanel4!: OverlayPanel;
   projectData:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
   userRoles:InputSignal<UserGroup> = input.required<UserGroup>();
   @Output() addRecordInTable:EventEmitter<AddProjectForm> = new EventEmitter();
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
   router = inject(Router)
   route = inject(ActivatedRoute)
+  isAllowed = input<boolean>()
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
   data!:ProgressInfo;
   items = [

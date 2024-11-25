@@ -5,7 +5,7 @@ import { PSRProjectCardComponent } from "../project-card/project-card.component"
 import { PSRDataModel } from '../../../../models/psr.model';
 import { ScorecardService } from '../../../../services/scorecard.service';
 // import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
-import { FileModel } from '../../../../models/scorecard.model';
+import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { PSRService } from '../../../../services/psr.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
@@ -29,7 +29,11 @@ export class TabDetailsComponent implements OnInit{
   router = inject(Router);
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
+  userRoles!:UserGroup;
+  isAllowed = false;
   ngOnInit(): void {
+    this.userRoles = this.scorecardService.userRoles;
+    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;

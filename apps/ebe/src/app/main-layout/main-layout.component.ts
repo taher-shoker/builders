@@ -39,7 +39,9 @@ export class MainLayoutComponent implements OnInit {
       },
     });
     this.userRoles = this.checkSystem(this.userData.userGroups);
-    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
+    console.log(this.userRoles.roles);
+    
+    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
     this.scorecardService.userRoles = this.userRoles;
     console.log("currentSystem => " , this.currentSystem);
     console.log("userData => " , this.userData);
