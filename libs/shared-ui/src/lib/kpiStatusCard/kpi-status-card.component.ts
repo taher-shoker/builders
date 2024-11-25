@@ -12,4 +12,6 @@ export class KpiStatusCardComponent{
   domainIndicator:InputSignal<string> = input<string>('');
   domainIndicatorColor:InputSignal<string> = input<string>('');
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
+  @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
+  @ViewChild('overlayPanel3') overlayPanel3!: OverlayPanel;
 }

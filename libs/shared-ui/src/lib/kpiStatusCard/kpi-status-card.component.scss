@@ -99,3 +99,11 @@ div
   font-weight: 500;
   max-width: 250px;
 }
+.kpi-status3
+{
+  max-width: 70px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: block;
+}

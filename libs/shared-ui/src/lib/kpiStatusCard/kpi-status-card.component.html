@@ -35,18 +35,48 @@
     weight : {{kpiStatus()}}%
   }
   @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved' || kpiType() === 'vendor' || kpiType() === 'owner-name' || kpiType() === 'status'){
-    {{kpiStatus()}}
+    <span
+        (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+        (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
+        class = "kpi-status3"
+      >
+        {{kpiStatus().toString()}}
+      </span>
+      @if(kpiStatus().toString().length >= 10){
+        <p-overlayPanel #overlayPanel2 dismissable="true">
+          <section class="popover-section" [innerHTML]="kpiStatus().toString()"></section>
+        </p-overlayPanel>
+      }
     @if(kpiType() === 'vendor' && !kpiStatus())
     {
       N/A
     }
   }
   @if(kpiType() === 'domain'){
-    @if(domainIndicator())
+    <!-- @if(domainIndicator())
     {
       <span class = 'domainIndicator' [ngStyle]="{'background' : domainIndicatorColor()}">{{domainIndicator()}}</span>
     }
-    {{kpiStatus()}}
+    {{kpiStatus()}} -->
+    <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px">
+      @if(domainIndicator())
+      {
+        <span class = 'domainIndicator' [ngStyle]="{'background' : domainIndicatorColor()}">{{domainIndicator()}}</span>
+      }
+      <span
+          (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
+          (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
+          class = "kpi-status3"
+          style = "color:#00c48c"
+        >
+          {{kpiStatus()}}
+        </span>
+        @if(kpiStatus().toString().length >= 10){
+          <p-overlayPanel #overlayPanel3 dismissable="true">
+            <section class="popover-section" [innerHTML]="kpiStatus()"></section>
+          </p-overlayPanel>
+        }
+    </div>
   }
   @if(kpiType() === 'actualStatus'){
     ActualStatus : {{kpiStatus()}}%

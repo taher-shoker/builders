@@ -129,8 +129,8 @@ export class AddPsrProjectFormComponent implements OnInit {
       this.inPSRForm = false;
       return this.formBuilder.group({
         "project": [null,[Validators.required , this.noSpacesValidator]],
-        "owner": [null],
-        "vendor": [null, [Validators.required , this.noSpacesValidator]],
+        "owner": [null , [Validators.required , this.noSpacesValidator]],
+        "vendor": [null],
         "stage": [null, [Validators.required , this.noSpacesValidator]],
         // "health": [null, [Validators.required , this.noSpacesValidator]],
         "indicator": [null, [Validators.required]],
