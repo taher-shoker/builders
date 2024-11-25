@@ -3,7 +3,7 @@
   (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
   (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
   >
-    {{ project().sector | uppercase }}
+    {{ project().sector }}
   </p>
   <div class="project-container-chart mt-5">
     <stc-apps-multi-circles-progress-bar
@@ -20,7 +20,7 @@
   </div>
   <!-- {{maxTextLength}} -->
   <p class="project-container-description">
-    {{ project().details | truncateWord:20}}
+    {{ project().details | truncateWord:18}}
     @if(maxTextLength > 20)
     {
       <a (click)="displayDrilldown()" class = "read-more">read more</a>

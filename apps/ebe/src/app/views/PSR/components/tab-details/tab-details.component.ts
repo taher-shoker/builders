@@ -6,7 +6,7 @@ import { PSRDataModel } from '../../../../models/psr.model';
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { FileModel } from '../../../../models/scorecard.model';
-import { PSRService } from '../../../../services/psr.services';
+import { PSRService } from '../../../../services/psr.service';
 
 @Component({
   selector: 'stc-apps-tab-details',

@@ -21,6 +21,7 @@ export interface ProgressCircleData {
   selector: 'stc-apps-progress-circle-chart',
   templateUrl: './progress-circle-chart.component.html',
   styleUrls: ['./progress-circle-chart.component.scss'],
+  standalone : false
 })
 export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterViewInit, OnChanges{
   @Output() sliceClick: EventEmitter<string> = new EventEmitter<string>();
@@ -71,7 +72,7 @@ export class ProgressCircleChartComponent implements OnInit, OnDestroy , AfterVi
         root.dispose();
       }
     });
-  };
+  }
   displayProgressCircleChart() {
     this.maybeDisposeRoot(this.chartdiv_id);
     this.root = am5.Root.new(this.chartdiv_id);

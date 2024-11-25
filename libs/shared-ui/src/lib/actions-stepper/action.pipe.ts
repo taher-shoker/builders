@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'displayCaption'
+  name: 'displayCaption',
+  standalone : false
 })
 export class DisplayCaptionPipe implements PipeTransform {
   transform(value: { uniqueTitle: string, displayCaption: string } | string): string {

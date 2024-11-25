@@ -34,6 +34,7 @@ export const APP_DATE_FORMATS = {
 @Component({
   selector: 'stc-apps-date-picker',
   templateUrl: './date-picker.component.html',
+  standalone : false,
   styleUrls: ['./date-picker.component.scss'],
   providers: [
     {

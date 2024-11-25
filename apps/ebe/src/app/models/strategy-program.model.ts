@@ -1,12 +1,13 @@
 export interface StrategyProgramKpiDetailsModel
 {
   strategyProjectName:string;
-  objective:number;
+  keyResultNumber:number;
   description:string;
   weight:number;
   status:string;
   actualStatus:number;
-  projects:StrategyProgramKpiProjectsDetailsModel[]
+  projects:StrategyProgramKpiProjectsDetailsModel[];
+  keyResultName:string;
 }
 export interface StrategyProgramKpiProjectsDetailsModel
 {
