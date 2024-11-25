@@ -12,6 +12,7 @@ import { ControlValueAccessorDirective } from '../control-value-accessor.directi
   selector: 'stc-apps-textarea',
   templateUrl: './textarea.component.html',
   styleUrls: ['./textarea.component.scss'],
+  standalone : false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

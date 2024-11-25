@@ -49,6 +49,9 @@
         font-weight: bold;
         @extend .stcFont;
         font-size: 28px;
+        @media screen and (max-width:1230px) {
+          font-size: 19px;
+        }
       }
     }
   }
@@ -62,6 +65,13 @@
   @extend .stcFont;
   font-weight: 500;
 }
+.second-card
+{
+  @media all and (max-width:900px)
+  {
+    margin-top: 25px;
+  }
+}
 .kpi-container
 {
   display: grid;
@@ -71,6 +81,10 @@
   @media all and (min-width:3000px)
   {
     grid-template-columns: repeat(auto-fill, minmax(420px, 1fr));
+  }
+  @media all and (min-width:1650px) and (max-width:1700px) 
+  {
+    grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
   }
   .kpi-container-card
   {

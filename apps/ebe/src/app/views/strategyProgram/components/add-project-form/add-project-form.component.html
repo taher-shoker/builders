@@ -44,10 +44,10 @@
             <small class="error-msg">this field is required</small>
             } @if(project.get("project")?.hasError("maxlength")) {
             <small class="error-msg"
-              >this field has maxLength 50 characters</small
+              >this field has maxLength 300 characters</small
             >
             }
-            <small class = "project-name-length">{{project.get("project")?.value ? project.get("project")?.value.trim().length : 0}}/50</small>
+            <small class = "project-name-length">{{project.get("project")?.value ? project.get("project")?.value.trim().length : 0}}/300</small>
           </div>
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">

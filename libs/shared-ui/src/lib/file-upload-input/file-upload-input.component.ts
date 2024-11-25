@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, OnChanges, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, input, OnChanges, OnInit, Output } from '@angular/core';
 interface FileModel
 {
   lastModified:number;
@@ -17,6 +17,7 @@ interface FileModel
 export class FileUploadInputComponent implements OnChanges , OnInit{
   selectedFile!:FileModel | null;
   @Output() uploadedFile:EventEmitter<FileModel | null> = new EventEmitter();
+  @Input() fileType = ".csv";
   isHidden = input<boolean>();
   fileSize = '';
   fileSizeNum = 0;

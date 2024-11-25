@@ -3,7 +3,8 @@
 import { Directive, Input, Output, EventEmitter, HostListener } from '@angular/core';
 
 @Directive({
-  selector: '[appSortableTable]'
+  selector: '[appSortableTable]',
+  standalone : false
 })
 export class SortableTableDirective {
   @Input() appSortableTable:any;

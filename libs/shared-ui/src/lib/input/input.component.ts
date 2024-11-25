@@ -14,6 +14,7 @@ export interface FormFieldValue {
   selector: 'stc-apps-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
+  standalone : false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

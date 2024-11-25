@@ -22,6 +22,7 @@ export interface WeeklyLineChartData {
   selector: 'stc-apps-weekly-line-chart',
   templateUrl: './weekly-line-chart.component.html',
   styleUrls: ['./weekly-line-chart.component.scss'],
+  standalone : false
 })
 export class WeeklyLineChartComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges

@@ -31,7 +31,7 @@
       class="financial-scorecard-header-title"
       [class.mt-4]="!first"
       (mouseenter)="showPopup(scorecard.title)"
-      (mouseleave)="overlayPanel2.hide()"
+      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
       >
       <!-- (click)="text()" -->
       {{ scorecard.title | truncateWord : 13 }}

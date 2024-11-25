@@ -2,6 +2,7 @@
   [class.achieved]="kpiType() === 'achieved' || kpiType() === 'domain'"
   [class.not-achieved]="kpiType() === 'not-achieved' || kpiType() === 'vendor'"
   [class.actual]="kpiType() === 'actual' || kpiType() === 'owner-name'"
+  [class.actual2]="kpiType() === 'owner-name'"
   [class.weight]="kpiType() === 'weight'"
   [class.in-progress]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'in progress'"
   [class.completed]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'completed'"
@@ -14,7 +15,21 @@
     <img class="arrow" src="assets/images/arrow-up.gif" />
   }
   @if(kpiType() === 'actual'){
-    Actual : {{kpiStatus()}}%
+    Actual : {{kpiStatus()}}
+    @if(domainIndicator() !== '#')
+    {
+      <span
+        (mouseenter)="overlayPanel ? overlayPanel.show($event) : ''" 
+        (mouseleave)="overlayPanel ? overlayPanel.hide() : ''"
+      >
+        {{domainIndicator() | truncateWord:2}}
+      </span>
+      @if(domainIndicator().split(" ").length > 2){
+        <p-overlayPanel #overlayPanel dismissable="true">
+          <section class="popover-section" [innerHTML]="domainIndicator()"></section>
+        </p-overlayPanel>
+      }
+    }
   }
   @if(kpiType() === 'weight'){
     weight : {{kpiStatus()}}%
