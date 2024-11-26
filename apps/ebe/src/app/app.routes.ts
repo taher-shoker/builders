@@ -73,7 +73,7 @@ export const appRoutes: Route[] = [
     canActivate:[AuthGuard]
   },
   {
-    path : "psr/add-project/:sector/:group",
+    path : "psr/add-project/:sector",
     loadComponent: () =>
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
         (m) => m.AddPsrProjectFormComponent
@@ -89,7 +89,7 @@ export const appRoutes: Route[] = [
     canActivate:[AuthGuard]
   },
   {
-    path : "psr/edit-project/:sector/:group/:projId",
+    path : "psr/edit-project/:sector/:projId",
     loadComponent: () =>
       import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
         (m) => m.AddPsrProjectFormComponent

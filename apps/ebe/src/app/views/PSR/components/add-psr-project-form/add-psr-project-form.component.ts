@@ -52,10 +52,9 @@ export class AddPsrProjectFormComponent implements OnInit {
     const url = this.router.url;
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
-        if(param['sector'] && param['group'])
+        if(param['sector'])
         {
           this.sectorName = param['sector'];
-          this.gdName = param['group'];
         }
         if(!url.startsWith("/psr/add"))
         {
@@ -134,7 +133,7 @@ export class AddPsrProjectFormComponent implements OnInit {
         "stage": [null, [Validators.required , this.noSpacesValidator]],
         // "health": [null, [Validators.required , this.noSpacesValidator]],
         "indicator": [null, [Validators.required]],
-        "background": [null, [Validators.required]],
+        "background": [this.colors[this.colors.length - 1], [Validators.required]],
         "domain": [null, [Validators.required , this.noSpacesValidator]],
         "startDate": [null, [Validators.required]],
         "endDate": [null, [Validators.required]],
@@ -149,8 +148,6 @@ export class AddPsrProjectFormComponent implements OnInit {
   {
     this.psrService.getProjectById(gd , id).subscribe({
       next : (res:PSRProjectDetailsModel) => {
-        console.log(res);
-        console.log(res.backgroundColor);
         let selectedBackgroundColor = this.colors.filter(c => c.code === res.backgroundColor);
         if(selectedBackgroundColor.length === 0)
         {
@@ -169,6 +166,12 @@ export class AddPsrProjectFormComponent implements OnInit {
         this.programsList.controls[0].get("POAmount")?.setValue(res.poAmount);
         this.programsList.controls[0].get("actualSpending")?.setValue(res.actualSpending);
         // this.programsList.controls[0].get("details")?.setValue(res.details);
+      },
+      error : (error) => {
+        if(error)
+        {
+          this.programsList.controls[0].reset();
+        }
       }
     })
   }
@@ -199,7 +202,7 @@ export class AddPsrProjectFormComponent implements OnInit {
   changeEndDate(endDate:Date , index:number)
   {
     this.currentFormIndex = index;
-    console.log(this.programsList.controls[index]);
+    // console.log(this.programsList.controls[index]);
     if(this.programsList.controls[index].get("startDate")?.hasError("required"))
     {
       this.messageHint = "Please select the Start Date First"
@@ -254,7 +257,6 @@ export class AddPsrProjectFormComponent implements OnInit {
             const formattedEndDate = this.formatDate(data.endDate);
             addedProjects.push({
               sector : this.sectorName,
-              gd : this.gdName,
               projectName : data.project,
               projectOwner : data.owner,
               vendor : data.vendor,
@@ -320,12 +322,12 @@ export class AddPsrProjectFormComponent implements OnInit {
       const formattedEndDate = this.formatDate(updatedObj.endDate);
       const addedProjects:AddProjectModel = {
         sector : this.sectorName,
-        gd : this.gdName,
+        // gd : this.gdName,
         projectName : updatedObj.project,
         projectOwner : updatedObj.owner,
         vendor : updatedObj.vendor,
         projectStage : updatedObj.stage,
-        indicator : updatedObj.indicator,
+        indicator : updatedObj.indicator.value ? updatedObj.indicator.value : updatedObj.indicator,
         backgroundColor : updatedObj.background.code,
         domain : updatedObj.domain,
         startDate : formattedStartDate,

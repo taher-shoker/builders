@@ -5,7 +5,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.service';
 import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
@@ -14,7 +14,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , SharedUiModule , ProjectDetailsCardComponent , EditModeViewComponent , RouterLink],
+  imports: [CommonModule , PageHeaderComponent , SharedUiModule , ProjectDetailsCardComponent , EditModeViewComponent],
   templateUrl: './psr-details-page.component.html',
   styleUrl: './psr-details-page.component.scss',
 })
@@ -32,6 +32,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   username = "";
   userRoles!:UserGroup;
   isAllowed = false;
+  isAdmin = false;
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
     this.username = this.scorecardService.getUsername();
@@ -42,6 +43,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
     });
     this.userRoles = this.scorecardService.userRoles;
     this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
+    this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
     console.log(this.userRoles);
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({
@@ -95,7 +97,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   }
   gotoAddForm()
   {
-    this.route.navigateByUrl(`/psr/add-project/${this.groupName}/${this.selectedGD[0].gd}`)
+    this.route.navigateByUrl(`/psr/add-project/${this.groupName}`)
   }
   values:AddProjectForm[] = [];
   addRecordInTable(values:AddProjectForm)

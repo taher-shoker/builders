@@ -55,7 +55,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       next : (param:Params) => {
         if(param['id'])
         {
-          this.router.navigateByUrl(`/psr/edit-project/${param['id']}/${this.projectData().gd}/${this.projectData().id}`);
+          this.router.navigateByUrl(`/psr/edit-project/${param['id']}/${this.projectData().id}`);
         }
       }
     })

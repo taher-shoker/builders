@@ -29,7 +29,7 @@
         <span>{{ userName() ? userName() : "" }}</span>
       </div>
     </div>
-    @if(isAdmin()){
+    @if((isAdmin()) || (isPMO() && !currentUrl.startsWith("/psr"))){
       <div class="edit-mode-switch-btn">
         <span>Edit Mode : </span>
         <div class="form-check form-switch">

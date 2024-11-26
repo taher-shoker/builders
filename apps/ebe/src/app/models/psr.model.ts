@@ -81,7 +81,7 @@ export interface AddProgramModel
 export interface AddProjectModel
 {
     sector: string, 
-    gd: string , 
+    // gd: string , 
     projectName : string,
     projectOwner : string ,
     vendor : string ,

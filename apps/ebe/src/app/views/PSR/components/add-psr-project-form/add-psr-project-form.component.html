@@ -283,7 +283,6 @@
                       optionLabel="name"
                       placeholder="Select Background Color" 
                       class = "indicator-dropdown"
-                      (ngModelChange)="selectBackground($event)"
                       [class.invalid-dropdown]='(program.get("background")?.hasError("required") && program.get("background")?.touched)'
                     >
                     <ng-template pTemplate="selectedItem">
@@ -291,10 +290,10 @@
                         <span
                           class = 'background-bullet'
                           [ngStyle]="{
-                            'background' : selectedBackground.name
+                            'background' : program.get('background')?.value?.name
                           }"
                         ></span>
-                        <div>{{ selectedBackground.name }}</div>
+                        <div>{{ program.get('background')?.value?.name }}</div>
                       </div>
                     </ng-template>
                     <ng-template let-country pTemplate="item">

@@ -9,11 +9,12 @@ import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { PSRService } from '../../../../services/psr.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
+import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 
 @Component({
   selector: 'stc-apps-tab-details',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , RouterLink],
+  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , RouterLink , EditModeViewComponent],
   templateUrl: './tab-details.component.html',
   styleUrl: './tab-details.component.scss',
 })
@@ -31,9 +32,11 @@ export class TabDetailsComponent implements OnInit{
   fb = inject(FormBuilder);
   userRoles!:UserGroup;
   isAllowed = false;
+  isAdmin = false;
   ngOnInit(): void {
     this.userRoles = this.scorecardService.userRoles;
     this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
+    this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;

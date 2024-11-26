@@ -9,12 +9,12 @@
       <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
     </div>
       <div class="scored-card-section-tap-details">
-        <!-- @if(currentMode === 'editMode') {
+        @if(currentMode === 'editMode' && isAdmin) {
           <stc-apps-edit-mode-view 
             (import)="showDialog()"
             (export)="downloadTemplate()"
           />
-        } -->
+        }
         @if(!isEmpty)
         {
           <div class="projects-container">
@@ -47,11 +47,14 @@
             </div>
           </div>
         } @else {
-          <button (click)="gotoAddForm()" class = "add-program-btn ms-auto">
-            <!-- <i class = "pi pi-plus"></i> -->
-             <img src="assets/images/plus-icon.svg" alt="">
-            add new project
-          </button>
+          @if(isAllowed)
+          {
+            <button (click)="gotoAddForm()" class = "add-program-btn ms-auto">
+              <!-- <i class = "pi pi-plus"></i> -->
+               <img src="assets/images/plus-icon.svg" alt="">
+              add new project
+            </button>
+          }
           <p class = "empty-data-msg">
             there are no data for this project
           </p>
