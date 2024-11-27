@@ -61,6 +61,20 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   }
   isEmpty!:boolean;
   selectedGD:any;
+  addChartData(e:boolean)
+  {
+    if(e)
+    {
+      this.getProjectDetails(this.groupName);
+    }
+  }
+  deleteTableRecord(e:boolean)
+  {
+    if(e)
+    {
+      this.getProjectDetails(this.groupName);
+    }
+  }
   private getProjectDetails(group:string)
   {
     this.psrServices.getExecuteProjectDetailsData(group).pipe(takeUntil(this.endSubs$)).subscribe({

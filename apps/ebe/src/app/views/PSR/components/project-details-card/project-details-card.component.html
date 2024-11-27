@@ -116,22 +116,21 @@
     </div>
   </div>
   <div class="project-chart-card">
-    @if(projectData().vactual && projectData().vplanned) {
     @if(projectData().chartDetails.length !== 0) {
-    <p class="project-chart-card-details" (click)="displayDrilldown()">
-      details
-    </p>
-    } @else {
-    <p
-      class="project-chart-card-details empty-details-btn"
-      (click)="showAddRecordForm2()"
-      [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
-    >
-      <img src="assets/images/add-square.svg" alt="" />
-      <span> add details </span>
-    </p>
-    }
-
+      <p class="project-chart-card-details" (click)="displayDrilldown()">
+        details
+      </p>
+      } @else {
+      <p
+        class="project-chart-card-details empty-details-btn"
+        (click)="showAddRecordForm2()"
+        [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
+      >
+        <img src="assets/images/add-square.svg" alt="" />
+        <span> add details </span>
+      </p>
+      }
+    @if((projectData().vactual) && (projectData().vplanned)) {
     <div
       class="project-chart-card-chart position-relative"
       style="margin: 0 20px"

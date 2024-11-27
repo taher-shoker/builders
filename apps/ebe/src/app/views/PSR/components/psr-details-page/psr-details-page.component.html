@@ -20,7 +20,7 @@
           <div class="projects-container">
             <div class="head">
               <p class = "psr-tabview-header">
-                {{selectedGD ? selectedGD[0].gd : ''}}
+                {{selectedGD && selectedGD[0] && selectedGD[0].gd ? selectedGD[0].gd : ''}}
               </p>
               @if(isAllowed)
               {
@@ -41,6 +41,8 @@
                     [userRoles]="userRoles"
                     (deleteProject)="deleteProject($event)"
                     [isAllowed]="isAllowed"
+                    (addChartData)="addChartData($event)"
+                    (deleteTableRecord)="deleteTableRecord($event)"
                   />
                 </div>
               }

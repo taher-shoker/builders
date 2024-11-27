@@ -41,7 +41,7 @@
   </div>
   <!-- {{maxTextLength}} -->
   <p class="project-container-description">
-    {{ project().details | truncateWord:18}}
+    {{ project().details | truncateWord:6}}
     @if(maxTextLength > 20)
     {
       <a (click)="displayDrilldown()" class = "read-more">read more</a>

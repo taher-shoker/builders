@@ -175,6 +175,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   {
     this.confirmationService.close()
   }
+  @Output() deleteTableRecord:EventEmitter<boolean> = new EventEmitter()
   deleteRecordRow()
   {
     // this.newData.chartDetails = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
@@ -190,6 +191,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
         next : (res) => {
           this.toastr.success("The record is deleted Successfully");
+          this.deleteTableRecord.emit(true);
           this.newData.chartDetails = res;
           this.projectData().chartDetails = res;
           this.isEditMode = false;
@@ -290,6 +292,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.showAddRecordForm();
     this.isDisabled = false;
   }
+  @Output() addChartData:EventEmitter<boolean> = new EventEmitter()
   saveData()
   {
     const isExists = this.tableHeader.filter(val => val.key === '')[0]
@@ -315,6 +318,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
       next : (res) => {
         this.toastr.success("The table is updated Successfully");
+        this.addChartData.emit(true);
         this.newData.chartDetails = res;
         this.projectData().chartDetails = res;
         this.isEditMode = false;
