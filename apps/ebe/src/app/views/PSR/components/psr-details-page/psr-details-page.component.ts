@@ -111,7 +111,8 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   }
   gotoAddForm()
   {
-    this.route.navigateByUrl(`/psr/add-project/${this.groupName}`)
+    const program = encodeURIComponent(this.groupName)
+    this.route.navigateByUrl(`/psr/add-project/${program}`)
   }
   values:AddProjectForm[] = [];
   addRecordInTable(values:AddProjectForm)

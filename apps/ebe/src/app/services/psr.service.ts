@@ -53,7 +53,7 @@ export class PSRService {
   getExecuteProjectDetailsData(groupName:string):Observable<PSRProjectDetailsModel[]>
   {
     return this.http.get<PSRProjectDetailsModel[]>(
-      `${environment.apiUrl}/business-excellence/psr/executiveViewData/groups/${groupName}`
+      `${environment.apiUrl}/business-excellence/psr/executiveViewData/groups?groupName=${groupName}`
     );
   }
   downloadExecutiveViewTemplate():Observable<string>
@@ -66,7 +66,7 @@ export class PSRService {
   downloadProjectDetailsTemplate(projectName:string):Observable<string>
   {
     return this.http.get<string>(
-      `${environment.apiUrl}/business-excellence/psr/executiveViewData/groups/${projectName}/download`,
+      `${environment.apiUrl}/business-excellence/psr/executiveViewData/groups/download?groupName=${projectName}`,
       { observe: 'body', responseType: 'text' as 'json' }
     );
   }
@@ -118,7 +118,7 @@ export class PSRService {
   }
   getProjectById(gd:string , id:number):Observable<PSRProjectDetailsModel>
   {
-    return this.http.get<PSRProjectDetailsModel>(`${environment.apiUrl}/business-excellence/psr/psr-data/group/${gd}/${id}`);
+    return this.http.get<PSRProjectDetailsModel>(`${environment.apiUrl}/business-excellence/psr/psr-data/group/${id}?groupName=${gd}`);
   }
   uploadFile(pageType:string , selectedFile: any , groupName?:string): Observable<any> {
     const formData = new FormData();
@@ -131,7 +131,7 @@ export class PSRService {
       );
     }
     return this.http.post<any>(
-      `${environment.apiUrl}/business-excellence/psr/executiveViewData/upload/${groupName}`,
+      `${environment.apiUrl}/business-excellence/psr/executiveViewData/upload?groupName=${groupName}`,
       formData
     );
   }

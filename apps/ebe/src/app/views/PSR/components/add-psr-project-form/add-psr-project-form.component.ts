@@ -109,10 +109,17 @@ export class AddPsrProjectFormComponent implements OnInit {
     this.selectedBackground = e;
   }
   dateValidator(formGroup: FormGroup): { [key: string]: boolean } | null {
-    const startDate = formGroup.get('startDate')?.value;
-    const endDate = formGroup.get('endDate')?.value;
-    if (startDate && endDate && new Date(startDate) > new Date(endDate)) {
-      return { startDateAfterEndDate: true };
+    const startDateForm = formGroup.get('startDate')?.value;
+    const endDateForm = formGroup.get('endDate')?.value;
+    if (endDateForm && startDateForm){
+      const startDate = new Date(startDateForm)
+      const endDate = new Date(endDateForm)
+      const startOnlyDate = new Date(startDate.getFullYear(), startDate.getMonth(), startDate.getDate());
+      const endOnlyDate = new Date(endDate.getFullYear(), endDate.getMonth(), endDate.getDate());
+      if(startOnlyDate > endOnlyDate)
+      {
+        return { startDateAfterEndDate: true };
+      }
     }
     return null;
   }
@@ -202,7 +209,6 @@ export class AddPsrProjectFormComponent implements OnInit {
   changeEndDate(endDate:Date , index:number)
   {
     this.currentFormIndex = index;
-    // console.log(this.programsList.controls[index]);
     if(this.programsList.controls[index].get("startDate")?.hasError("required"))
     {
       this.messageHint = "Please select the Start Date First"

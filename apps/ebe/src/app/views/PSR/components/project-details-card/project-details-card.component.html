@@ -41,7 +41,7 @@
     />
     }
     <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().vendor"
+      [kpiStatus]="projectData() && projectData().vendor ? projectData().vendor : 'N/A'"
       [kpiType]="'vendor'"
     />
      @if(projectData() && projectData().projectStage) {
@@ -130,7 +130,7 @@
         <span> add details </span>
       </p>
       }
-    @if((projectData().vactual) && (projectData().vplanned)) {
+    @if((projectData().vactual || projectData().vactual === 0) && (projectData().vplanned || projectData().vplanned === 0)) {
     <div
       class="project-chart-card-chart position-relative"
       style="margin: 0 20px"

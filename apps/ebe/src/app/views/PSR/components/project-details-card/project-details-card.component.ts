@@ -55,7 +55,8 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       next : (param:Params) => {
         if(param['id'])
         {
-          this.router.navigateByUrl(`/psr/edit-project/${param['id']}/${this.projectData().id}`);
+          const program = encodeURIComponent(param['id'])
+          this.router.navigateByUrl(`/psr/edit-project/${program}/${this.projectData().id}`);
         }
       }
     })
@@ -196,7 +197,8 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
           this.projectData().chartDetails = res;
           this.isEditMode = false;
           this.formValues = []
-        },
+          this.overlayPanel.hide()
+        },  
         error : (error) => {
           if(error)
           {
