@@ -23,7 +23,7 @@ export class FormInputComponent implements ControlValueAccessor {
   @Input({required : true})id!:string;
   @Input({required : true})placeholder!:string | null;
   @Input({required : true})errorMessage!:string;
-  @Input()dropdownOptions!:{name:string , code:string}[];
+  @Input()dropdownOptions!:{name:string , code:string | null}[];
   @Input()isBeforeStartDate = false;
   @Input()isBeforeStartDate2 = false;
   @Input()inputValue = "";

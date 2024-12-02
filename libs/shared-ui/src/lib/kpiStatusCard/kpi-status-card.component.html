@@ -16,15 +16,15 @@
   }
   @if(kpiType() === 'actual'){
     Actual : {{kpiStatus()}}
-    @if(domainIndicator() !== '#')
+    @if(domainIndicator() && domainIndicator() !== '#')
     {
       <span
         (mouseenter)="overlayPanel ? overlayPanel.show($event) : ''" 
         (mouseleave)="overlayPanel ? overlayPanel.hide() : ''"
       >
-        {{domainIndicator() | truncateWord:2}}
+        {{domainIndicator() || '' | truncateWord:2}}
       </span>
-      @if(domainIndicator().split(" ").length > 2){
+      @if(domainIndicator()!.split(" ").length > 2){
         <p-overlayPanel #overlayPanel dismissable="true">
           <section class="popover-section" [innerHTML]="domainIndicator()"></section>
         </p-overlayPanel>
@@ -61,7 +61,13 @@
     <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px">
       @if(domainIndicator())
       {
-        <span class = 'domainIndicator' [ngStyle]="{'background' : domainIndicatorColor()}">{{domainIndicator()}}</span>
+        <span 
+          class = 'domainIndicator' 
+          [ngStyle]="{
+            'background' : domainIndicatorColor(),
+            'font-size' : domainIndicator() === 'N/A' ? '12px' : '14px'
+          }"
+        >{{domainIndicator()}}</span>
       }
       <span
           (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 

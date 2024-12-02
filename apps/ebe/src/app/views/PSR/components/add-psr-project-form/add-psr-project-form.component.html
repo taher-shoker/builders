@@ -92,7 +92,7 @@
                       [type]="'text'"
                       formControlName = "vendor"
                       [id]="'vendor'"
-                      [placeholder]="'Add KPMG'"
+                      [placeholder]="'Add Vendor'"
                       [errorMessage]="getErrorMessage(program , 'vendor')"
                       labelName = "vendor"
                       inputType = "text"
@@ -106,7 +106,7 @@
                       [type]="'text'"
                       formControlName = "stage"
                       [id]="'stage'"
-                      [placeholder]="'Add Execution'"
+                      [placeholder]="'Add Project Stage'"
                       [errorMessage]="getErrorMessage(program , 'stage')"
                       labelName = "project stage"
                       inputType = "text"
@@ -114,20 +114,6 @@
                     />
                   </div>
                 </div>
-                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
-                  <div class="form-group" style = "margin-top: 30px;">
-                    <stc-apps-form-input 
-                      [type]="'text'"
-                      formControlName = "health"
-                      [id]="'health'"
-                      [placeholder]="'Add Project Health'"
-                      [errorMessage]="getErrorMessage(program , 'health')"
-                      labelName = "project health"
-                      inputType = "text"
-                      [inputValue]="program.get('health')?.value"
-                    />
-                  </div>
-                </div> -->
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <stc-apps-form-input 
@@ -170,16 +156,6 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <!-- <stc-apps-form-input 
-                      [type]="'number'"
-                      formControlName = "POAmount"
-                      [id]="'POAmount'"
-                      [placeholder]="'Add PO Amount'"
-                      [errorMessage]="getErrorMessage(program , 'POAmount')"
-                      labelName = "PO amount"
-                      inputType = "text"
-                      [inputValue]="program.get('POAmount')?.value"
-                    /> -->
                     <stc-apps-form-input 
                       [type]="'text'"
                       formControlName = "POAmount"
@@ -194,16 +170,6 @@
                 </div>
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
-                    <!-- <stc-apps-form-input 
-                      [type]="'number'"
-                      formControlName = "actualSpending"
-                      [id]="'actualSpending'"
-                      [placeholder]="'Add Actual in SAR'"
-                      [errorMessage]="getErrorMessage(program , 'actualSpending')"
-                      labelName = "actual spending"
-                      inputType = "text"
-                      [inputValue]="program.get('actualSpending')?.value"
-                    /> -->
                     <stc-apps-form-input 
                       [type]="'text'"
                       formControlName = "actualSpending"
@@ -216,34 +182,6 @@
                     />
                   </div>
                 </div>
-                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
-                  <div class="form-group" style = "margin-top: 30px;">
-                    <stc-apps-form-input 
-                      [type]="'number'"
-                      formControlName = "actualPercentage"
-                      [id]="'actualPercentage'"
-                      [placeholder]="'Add Actual in Percentage'"
-                      [errorMessage]="getErrorMessage(program , 'actualPercentage')"
-                      labelName = "actual in percentage %"
-                      inputType = "text"
-                      [inputValue]="program.get('actualPercentage')?.value"
-                    />
-                  </div>
-                </div> -->
-                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
-                  <div class="form-group" style = "margin-top: 30px;">
-                    <stc-apps-form-input 
-                      [type]="'number'"
-                      formControlName = "plannedPercentage"
-                      [id]="'plannedPercentage'"
-                      [placeholder]="'Add Palnned in Percentage'"
-                      [errorMessage]="getErrorMessage(program , 'plannedPercentage')"
-                      labelName = "planned in percentage %"
-                      inputType = "text"
-                      [inputValue]="program.get('plannedPercentage')?.value"
-                    />
-                  </div>
-                </div> -->
                 <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <stc-apps-form-input 
@@ -273,7 +211,7 @@
                     />
                   </div>
                 </div>
-                <div class="col-lg-6 col-md-6 col-sm-12">
+                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
                   <div class="form-group" style = "margin-top: 30px;">
                     <label for="background">background color</label>
                     <p-dropdown 
@@ -312,7 +250,7 @@
                       <small class="error-msg error-msg2">background color is required</small>
                     }
                   </div>
-                </div>
+                </div> -->
               </div>
             </div>
           }
@@ -361,7 +299,18 @@
   <div class="dialog-container">
     <img src="assets/images/tick-circle.svg" alt="" />
     <p class="delete-record-content">
-      the {{inPSRForm ? 'program' : 'project'}} is updated successfully
+      the {{inPSRForm ? programsList.value.length > 1 ? 'programs are ' : 'program is ' : addedProjects.length > 1 ? 'projects are ' : 'project is '}} created successfully
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="goBack()">ok</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-confirm-dialog [key]="'edit-sector-success'">
+  <div class="dialog-container">
+    <img src="assets/images/tick-circle.svg" alt="" />
+    <p class="delete-record-content">
+      the {{inPSRForm ? programsList.value.length > 1 ? 'programs are ' : 'program is ' : addedProjects.length > 1 ? 'projects are ' : 'project is '}} updated successfully
     </p>
     <div class="buttons">
       <button class="delete" (click)="goBack()">ok</button>

@@ -21,7 +21,7 @@ export interface PSRProjectDetailsModel
     endDate:string;
     gd:string;
     id:number;
-    indicator:string;
+    indicator:string | null;
     poAmount:string;
     projectName:string;
     projectOwner:string;
@@ -86,8 +86,8 @@ export interface AddProjectModel
     projectOwner : string ,
     vendor : string ,
     projectStage : string ,
-    indicator : string ,
-    backgroundColor : string ,
+    indicator : string | null,
+    // backgroundColor : string ,
     domain : string ,
     startDate : string ,
     endDate : string ,

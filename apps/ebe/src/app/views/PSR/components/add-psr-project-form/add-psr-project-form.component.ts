@@ -102,7 +102,8 @@ export class AddPsrProjectFormComponent implements OnInit {
   indicators = [
     { name: 'A', code: 'A' },
     { name: 'G', code: 'G' },
-    { name: 'R', code: 'R' }
+    { name: 'R', code: 'R' },
+    { name: 'N/A', code: null }
   ];
   selectedBackground!:{name:string , code:string};
   selectBackground(e:{name:string , code:string}){
@@ -139,8 +140,8 @@ export class AddPsrProjectFormComponent implements OnInit {
         "vendor": [null],
         "stage": [null, [Validators.required , this.noSpacesValidator]],
         // "health": [null, [Validators.required , this.noSpacesValidator]],
-        "indicator": [null, [Validators.required]],
-        "background": [this.colors[this.colors.length - 1], [Validators.required]],
+        "indicator": ["N/A"],
+        // "background": [this.colors[this.colors.length - 1], [Validators.required]],
         "domain": [null, [Validators.required , this.noSpacesValidator]],
         "startDate": [null, [Validators.required]],
         "endDate": [null, [Validators.required]],
@@ -155,18 +156,18 @@ export class AddPsrProjectFormComponent implements OnInit {
   {
     this.psrService.getProjectById(gd , id).subscribe({
       next : (res:PSRProjectDetailsModel) => {
-        let selectedBackgroundColor = this.colors.filter(c => c.code === res.backgroundColor);
-        if(selectedBackgroundColor.length === 0)
-        {
-          selectedBackgroundColor = [{ name: 'grey', code: 'E' }]
-        }
+        // let selectedBackgroundColor = this.colors.filter(c => c.code === res.backgroundColor);
+        // if(selectedBackgroundColor.length === 0)
+        // {
+        //   selectedBackgroundColor = [{ name: 'grey', code: 'E' }]
+        // }
         this.programsList.controls[0].get("project")?.setValue(res.projectName);
         this.programsList.controls[0].get("owner")?.setValue(res.projectOwner);
         this.programsList.controls[0].get("vendor")?.setValue(res.vendor);
         this.programsList.controls[0].get("stage")?.setValue(res.projectStage);
         // this.programsList.controls[0].get("health")?.setValue(res.domain);
         this.programsList.controls[0].get("indicator")?.setValue(res.indicator);
-        this.programsList.controls[0].get("background")?.setValue(selectedBackgroundColor[0]);
+        // this.programsList.controls[0].get("background")?.setValue(selectedBackgroundColor[0]);
         this.programsList.controls[0].get("domain")?.setValue(res.domain);
         this.programsList.controls[0].get("startDate")?.setValue(new Date(res.startDate));
         this.programsList.controls[0].get("endDate")?.setValue(new Date(res.endDate));
@@ -244,11 +245,12 @@ export class AddPsrProjectFormComponent implements OnInit {
     const startYear = startDate.getFullYear();
     return `${startYear}-${startMonth < 10 ? '0' + startMonth : startMonth}-${startDay < 10 ? '0' + startDay : startDay}`;
   }
+  addedProjects:AddProjectModel[] = [];
   save()
   {
-    const addedProjects:AddProjectModel[] = [];
     if(this.programsList.valid)
     {
+      this.addedProjects = []
       if(this.isEditMode)
       {
         this.confirmationService.confirm({
@@ -261,14 +263,13 @@ export class AddPsrProjectFormComponent implements OnInit {
           this.programsList.value.forEach((data:any) => {
             const formattedStartDate = this.formatDate(data.startDate);
             const formattedEndDate = this.formatDate(data.endDate);
-            addedProjects.push({
+            this.addedProjects.push({
               sector : this.sectorName,
               projectName : data.project,
               projectOwner : data.owner,
               vendor : data.vendor,
               projectStage : data.stage,
-              indicator : data.indicator.value,
-              backgroundColor : data.background.code,
+              indicator : data.indicator === 'N/A' ? null : data.indicator.value,
               domain : data.domain,
               startDate : formattedStartDate,
               endDate : formattedEndDate,
@@ -276,8 +277,8 @@ export class AddPsrProjectFormComponent implements OnInit {
               actualSpending : data.actualSpending
             })
           })
-          // console.log("addedProjects => " , addedProjects);
-          this.psrService.addNewProject(addedProjects).subscribe({
+          // console.log("addedProjects => " , this.addedProjects);
+          this.psrService.addNewProject(this.addedProjects).subscribe({
             next : () => {
               this.confirmationService.confirm({
                 key: 'added-sector-success'
@@ -311,7 +312,7 @@ export class AddPsrProjectFormComponent implements OnInit {
     this.psrService.editProgram(data , this.programId).subscribe({
       next:() => {
         this.confirmationService.confirm({
-          key: 'added-sector-success'
+          key: 'edit-sector-success'
         });
       }
     })
@@ -326,6 +327,11 @@ export class AddPsrProjectFormComponent implements OnInit {
       const updatedObj = this.programsList.value[0];
       const formattedStartDate = this.formatDate(updatedObj.startDate);
       const formattedEndDate = this.formatDate(updatedObj.endDate);
+      console.log(updatedObj.indicator);
+      // if(updatedObj.indicator.value === 'N/A')
+      // {
+      //   updatedObj.indicator = null;
+      // }
       const addedProjects:AddProjectModel = {
         sector : this.sectorName,
         // gd : this.gdName,
@@ -333,8 +339,8 @@ export class AddPsrProjectFormComponent implements OnInit {
         projectOwner : updatedObj.owner,
         vendor : updatedObj.vendor,
         projectStage : updatedObj.stage,
-        indicator : updatedObj.indicator.value ? updatedObj.indicator.value : updatedObj.indicator,
-        backgroundColor : updatedObj.background.code,
+        indicator : updatedObj.indicator.value ? updatedObj.indicator.value === 'N/A' ? null : updatedObj.indicator.value : updatedObj.indicator,
+        // backgroundColor : updatedObj.background.code,
         domain : updatedObj.domain,
         startDate : formattedStartDate,
         endDate : formattedEndDate,
@@ -344,7 +350,7 @@ export class AddPsrProjectFormComponent implements OnInit {
       this.psrService.updateProject(+this.projectId , addedProjects).subscribe({
         next:() => {
           this.confirmationService.confirm({
-            key: 'added-sector-success'
+            key: 'edit-sector-success'
           });
         }
       })

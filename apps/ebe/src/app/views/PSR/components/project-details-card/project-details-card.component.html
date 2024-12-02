@@ -53,8 +53,8 @@
     <stc-apps-kpi-status-card
       [kpiStatus]="projectData().domain"
       [kpiType]="'domain'"
-      [domainIndicator]="projectData().indicator"
-      [domainIndicatorColor]="projectData().backgroundColor?.toLowerCase() === 'r' ? '#FF0000' : projectData().backgroundColor?.toLowerCase() === 'g' ? '#00C48C' : projectData().backgroundColor?.toLowerCase() === 'y' ? '#ECB027' : '#bbbbbb'"
+      [domainIndicator]="projectData().indicator ? projectData().indicator : 'N/A'"
+      [domainIndicatorColor]="projectData().indicator?.toLowerCase() === 'r' ? '#FF0000' : projectData().indicator?.toLowerCase() === 'g' ? '#00C48C' : projectData().indicator?.toLowerCase() === 'a' ? '#ECB027' : '#bbbbbb'"
     />
     <!-- [domainIndicatorColor]="'#00C48C'" -->
     }
@@ -228,10 +228,9 @@
 <stc-apps-confirm-dialog [key]="'delete-record'">
   <div class="dialog-container">
     <img src="assets/images/close-circle.svg" alt="" />
-    <p class="delete-record-header">delete project?</p>
+    <p class="delete-record-header">delete Major Activities/Deliverable?</p>
     <p class="delete-record-content">
-      Are you sure you want to <br />
-      delete this project?
+      Are you sure you want to delete this <br> Major Activities/Deliverable?
     </p>
     <p class="delete-record-warning">
       This action is permanent and cannot be undone!
