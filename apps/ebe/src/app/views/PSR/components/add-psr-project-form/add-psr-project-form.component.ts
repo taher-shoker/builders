@@ -166,7 +166,12 @@ export class AddPsrProjectFormComponent implements OnInit {
         this.programsList.controls[0].get("vendor")?.setValue(res.vendor);
         this.programsList.controls[0].get("stage")?.setValue(res.projectStage);
         // this.programsList.controls[0].get("health")?.setValue(res.domain);
-        this.programsList.controls[0].get("indicator")?.setValue(res.indicator);
+        if(res.indicator)
+        {
+          this.programsList.controls[0].get("indicator")?.setValue(res.indicator);
+        } else {
+          this.programsList.controls[0].get("indicator")?.setValue('N/A');
+        }
         // this.programsList.controls[0].get("background")?.setValue(selectedBackgroundColor[0]);
         this.programsList.controls[0].get("domain")?.setValue(res.domain);
         this.programsList.controls[0].get("startDate")?.setValue(new Date(res.startDate));
@@ -328,10 +333,10 @@ export class AddPsrProjectFormComponent implements OnInit {
       const formattedStartDate = this.formatDate(updatedObj.startDate);
       const formattedEndDate = this.formatDate(updatedObj.endDate);
       console.log(updatedObj.indicator);
-      // if(updatedObj.indicator.value === 'N/A')
-      // {
-      //   updatedObj.indicator = null;
-      // }
+      if(updatedObj.indicator.value === 'N/A' || updatedObj.indicator === 'N/A')
+      {
+        updatedObj.indicator = null;
+      }
       const addedProjects:AddProjectModel = {
         sector : this.sectorName,
         // gd : this.gdName,
@@ -339,7 +344,7 @@ export class AddPsrProjectFormComponent implements OnInit {
         projectOwner : updatedObj.owner,
         vendor : updatedObj.vendor,
         projectStage : updatedObj.stage,
-        indicator : updatedObj.indicator.value ? updatedObj.indicator.value === 'N/A' ? null : updatedObj.indicator.value : updatedObj.indicator,
+        indicator : updatedObj.indicator && updatedObj.indicator.value ? updatedObj.indicator.value : updatedObj.indicator,
         // backgroundColor : updatedObj.background.code,
         domain : updatedObj.domain,
         startDate : formattedStartDate,
@@ -347,6 +352,8 @@ export class AddPsrProjectFormComponent implements OnInit {
         poAmount : updatedObj.POAmount,
         actualSpending : updatedObj.actualSpending
       };
+      // console.log(updatedObj);
+      // console.log(addedProjects);
       this.psrService.updateProject(+this.projectId , addedProjects).subscribe({
         next:() => {
           this.confirmationService.confirm({
