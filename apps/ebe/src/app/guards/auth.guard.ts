@@ -5,6 +5,6 @@ export const AuthGuard:CanActivateFn = () => {
     const scorecardService = inject(ScorecardService);
     const router = inject(Router);
     const userRoles = scorecardService.userRoles;
-    const isAdmin = userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
-    return isAdmin ? true : router.navigateByUrl("/strategy-program")
+    const isAdmin = userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS"  || role.roleName === "BE_PMO");
+    return isAdmin ? true : router.navigateByUrl("/")
 }
