@@ -5,7 +5,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.service';
 import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
@@ -22,6 +22,7 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   @ViewChild(ProjectDetailsCardComponent) child?: ProjectDetailsCardComponent;
   psrServices = inject(PSRService)
   router = inject(ActivatedRoute)
+  route = inject(Router)
   PSRDetailsData!:PSRProjectDetailsModel[];
   endSubs$:Subject<PSRProjectDetailsModel[]> = new Subject();
   toastr = inject(ToastrService);
@@ -30,6 +31,8 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   groupName = "";
   username = "";
   userRoles!:UserGroup;
+  isAllowed = false;
+  isAdmin = false;
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
     this.username = this.scorecardService.getUsername();
@@ -39,6 +42,9 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
       },
     });
     this.userRoles = this.scorecardService.userRoles;
+    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
+    this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
+    console.log(this.userRoles);
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({
       next : (param) => {
@@ -55,6 +61,20 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
   }
   isEmpty!:boolean;
   selectedGD:any;
+  addChartData(e:boolean)
+  {
+    if(e)
+    {
+      this.getProjectDetails(this.groupName);
+    }
+  }
+  deleteTableRecord(e:boolean)
+  {
+    if(e)
+    {
+      this.getProjectDetails(this.groupName);
+    }
+  }
   private getProjectDetails(group:string)
   {
     this.psrServices.getExecuteProjectDetailsData(group).pipe(takeUntil(this.endSubs$)).subscribe({
@@ -67,6 +87,10 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
         this.PSRDetailsData = res
         this.selectedGD = this.PSRDetailsData.filter(d => d.gd !== null)
+        // if(!localStorage.getItem("gd"))
+        // {
+        //   localStorage.setItem("gd" , this.selectedGD[0].gd)
+        // }
         if(this.PSRDetailsData.length === 0)
         {
           this.isEmpty = true;
@@ -75,6 +99,20 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
         }
       }
     })
+  }
+  deleteProject(id:number)
+  {
+    this.psrServices.deleteProject(id).subscribe({
+      next : () => {
+        this.toastr.success("The Project is Deleted Successfully");
+        this.getProjectDetails(this.groupName);
+      }
+    })
+  }
+  gotoAddForm()
+  {
+    const program = encodeURIComponent(this.groupName)
+    this.route.navigateByUrl(`/psr/add-project/${program}`)
   }
   values:AddProjectForm[] = [];
   addRecordInTable(values:AddProjectForm)
