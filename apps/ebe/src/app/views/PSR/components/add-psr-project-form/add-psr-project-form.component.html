@@ -1,0 +1,319 @@
+<section class="psr-form">
+  <div class="psr-form-header">
+    <div>
+      <stc-apps-page-header [mainTitle]="'PSR Add Program'" />
+    </div>
+  </div>
+  <div class="psr-form-body">
+    <div class="psr-form-body-header">
+      <div class="psr-form-body-header-left">
+        <img src="assets/images/close-circle3.svg" alt="" />
+        <span>{{ isEditMode ? 'edit' : 'add' }} {{inPSRForm ? 'program' : 'project'}}</span>
+      </div>
+      <div class="psr-form-body-header-right">
+        <img src="assets/images/close-circle2.svg" (click)="goBack()" alt="" />
+      </div>
+    </div>
+    <form class="psr-form-body-form" [formGroup]="addProgramForm">
+      <div class="psr-form-body-form-projects" formArrayName="programs">
+        @for (program of programsList.controls; track program;let index =
+        $index) {
+        <div class="form-wrapper position-relative" [formGroupName]="index">
+          @if(!isEditMode)
+          {
+            <div class="delete-program-img">
+              <img
+                src="assets/images/close-circle2.svg"
+                alt=""
+                (click)="deleteProgram(index)"
+              />
+            </div>
+          }
+          @if(inPSRForm)
+          {
+            <div class="psr-page-form">
+              <div class="form-group">
+                <stc-apps-form-input 
+                  [type]="'text'"
+                  formControlName = "sector"
+                  [id]="'programName'"
+                  [placeholder]="'Enter Name of Program'"
+                  [errorMessage]="getErrorMessage(program , 'sector')"
+                  labelName = "prgram name"
+                  inputType = "text"
+                  [inputValue]="program.get('sector')?.value"
+                />
+              </div>
+              <div class="form-group" style = "margin-top: 30px;">
+                <stc-apps-form-input 
+                  [type]="'text'"
+                  formControlName = "details"
+                  [id]="'programName'"
+                  [placeholder]="'Write Description'"
+                  [errorMessage]="getErrorMessage(program , 'details')"
+                  labelName = "description"
+                  inputType = "textarea"
+                  [inputValue]="program.get('details')?.value"
+                />
+              </div>
+            </div>
+          } @else {
+            <div class="psr-details-page-form">
+              <div class="form-group">
+                <stc-apps-form-input 
+                  [type]="'text'"
+                  formControlName = "project"
+                  [id]="'projectName'"
+                  [placeholder]="'Enter Name of Project'"
+                  [errorMessage]="getErrorMessage(program , 'project')"
+                  labelName = "project name"
+                  inputType = "text"
+                  [inputValue]="program.get('project')?.value"
+                />
+              </div>
+              <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "owner"
+                      [id]="'projectOwner'"
+                      [placeholder]="'Add Project Owner'"
+                      [errorMessage]="getErrorMessage(program , 'owner')"
+                      labelName = "Project Owner"
+                      inputType = "text"
+                      [inputValue]="program.get('owner')?.value"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "vendor"
+                      [id]="'vendor'"
+                      [placeholder]="'Add Vendor'"
+                      [errorMessage]="getErrorMessage(program , 'vendor')"
+                      labelName = "vendor"
+                      inputType = "text"
+                      [inputValue]="program.get('vendor')?.value"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "stage"
+                      [id]="'stage'"
+                      [placeholder]="'Add Project Stage'"
+                      [errorMessage]="getErrorMessage(program , 'stage')"
+                      labelName = "project stage"
+                      inputType = "text"
+                      [inputValue]="program.get('stage')?.value"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "startDate"
+                      [id]="'startDate'"
+                      [placeholder]="'Add Start Date'"
+                      [errorMessage]="getErrorMessage(program , 'startDate')"
+                      labelName = "start date"
+                      inputType = "date"
+                      [inputValue]="program.get('startDate')?.value"
+                      (changeDate)="changeStartDate(program , $event)"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "endDate"
+                      [id]="'endDate'"
+                      [placeholder]="'Add End Date'"
+                      [errorMessage]="getErrorMessage(program , 'endDate')"
+                      labelName = "end date"
+                      inputType = "date"
+                      [inputValue]="program.get('endDate')?.value"
+                      (changeDate)="changeEndDate($event , index)"
+                      [isBeforeStartDate]='program.hasError("startDateAfterEndDate")'
+                      [isBeforeStartDate2]="messageHint !== '' && currentFormIndex === index"
+                    />
+                    @if(messageHint && currentFormIndex === index)
+                    {
+                      <small class="error-msg error-msg2">{{messageHint}}</small>
+                    }
+                    @if(program.hasError("startDateAfterEndDate"))
+                    {
+                      <small class="error-msg error-msg2">The End date must be after or equal the start date</small>
+                    }
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "POAmount"
+                      [id]="'POAmount'"
+                      [placeholder]="'Add PO Amount'"
+                      [errorMessage]="getErrorMessage(program , 'POAmount')"
+                      labelName = "PO amount"
+                      inputType = "text"
+                      [inputValue]="program.get('POAmount')?.value"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "actualSpending"
+                      [id]="'actualSpending'"
+                      [placeholder]="'Add Actual in SAR'"
+                      [errorMessage]="getErrorMessage(program , 'actualSpending')"
+                      labelName = "actual spending"
+                      inputType = "text"
+                      [inputValue]="program.get('actualSpending')?.value"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "domain"
+                      [id]="'domain'"
+                      [placeholder]="'Add Domain'"
+                      [errorMessage]="getErrorMessage(program , 'domain')"
+                      labelName = "domain"
+                      inputType = "text"
+                      [inputValue]="program.get('domain')?.value"
+                    />
+                  </div>
+                </div>
+                <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <stc-apps-form-input 
+                      [type]="'text'"
+                      formControlName = "indicator"
+                      [id]="'indicator'"
+                      [placeholder]="'Select Indicator'"
+                      [errorMessage]="getErrorMessage(program , 'indicator')"
+                      labelName = "indicator"
+                      inputType = "dropdown"
+                      [inputValue]="program.get('indicator')?.value?.value ? program.get('indicator')?.value?.value : program.get('indicator')?.value"
+                      [dropdownOptions]="indicators"
+                    />
+                  </div>
+                </div>
+                <!-- <div class="col-lg-6 col-md-6 col-sm-12">
+                  <div class="form-group" style = "margin-top: 30px;">
+                    <label for="background">background color</label>
+                    <p-dropdown 
+                      id = "background"
+                      formControlName="background" 
+                      [options]="colors"
+                      optionLabel="name"
+                      placeholder="Select Background Color" 
+                      class = "indicator-dropdown"
+                      [class.invalid-dropdown]='(program.get("background")?.hasError("required") && program.get("background")?.touched)'
+                    >
+                    <ng-template pTemplate="selectedItem">
+                      <div class="background-item">
+                        <span
+                          class = 'background-bullet'
+                          [ngStyle]="{
+                            'background' : program.get('background')?.value?.name
+                          }"
+                        ></span>
+                        <div>{{ program.get('background')?.value?.name }}</div>
+                      </div>
+                    </ng-template>
+                    <ng-template let-country pTemplate="item">
+                      <div class="background-item">
+                        <span
+                          class = 'background-bullet'
+                          [ngStyle]="{
+                            'background' : country.name
+                          }"
+                        ></span>
+                        <div style = "text-transform:capitalize;">{{ country.name }}</div>
+                      </div>
+                    </ng-template>
+                    </p-dropdown>
+                    @if((program.get("background")?.hasError("required") && program.get("background")?.touched)) {
+                      <small class="error-msg error-msg2">background color is required</small>
+                    }
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          }
+        </div>
+        }
+      </div>
+    </form>
+    @if(!isEditMode) {
+    <button class="add-project-btn" type="button" (click)="addNewProgramForm()">
+      <img src="assets/images/add-square2.svg" alt="" />
+      <span>add new {{inPSRForm ? 'program' : 'project'}}</span>
+    </button>
+    }
+    <div class="save-cancel-btns">
+      <button class="cancel-btn" (click)="goBack()" type="button">
+        cancel
+      </button>
+      <button class="save-btn" (click)="save()"
+      [disabled]="programsList.invalid"
+      [class.disabled-btn]="programsList.invalid"
+      >
+        {{ isEditMode ? 'save' : inPSRForm ? 'add program' : 'add project' }}
+      </button>
+    </div>
+  </div>
+</section>
+<stc-apps-confirm-dialog [key]="'edit-program'">
+  <div class="edit-program-dialog">
+    <div class="header">
+      <p class="delete-record-header">save updates?</p>
+      <img src="assets/images/_action-icon.svg" (click)="close()" alt="" />
+    </div>
+    <div class="body">
+      <img src="assets/images/exclamation-triangle-dark.svg" alt="" />
+      <p class="delete-record-content">
+        Are you sure you want to save these changes?
+      </p>
+    </div>
+    <div class="buttons mt-4">
+      <button (click)="close()" class="cancel">cancel</button>
+      <button class="delete" (click)="editProgram()">save changes</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-confirm-dialog [key]="'added-sector-success'">
+  <div class="dialog-container">
+    <img src="assets/images/tick-circle.svg" alt="" />
+    <p class="delete-record-content">
+      the {{inPSRForm ? programsList.value.length > 1 ? 'programs are ' : 'program is ' : addedProjects.length > 1 ? 'projects are ' : 'project is '}} created successfully
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="goBack()">ok</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>
+<stc-apps-confirm-dialog [key]="'edit-sector-success'">
+  <div class="dialog-container">
+    <img src="assets/images/tick-circle.svg" alt="" />
+    <p class="delete-record-content">
+      the {{inPSRForm ? programsList.value.length > 1 ? 'programs are ' : 'program is ' : addedProjects.length > 1 ? 'projects are ' : 'project is '}} updated successfully
+    </p>
+    <div class="buttons">
+      <button class="delete" (click)="goBack()">ok</button>
+    </div>
+  </div>
+</stc-apps-confirm-dialog>

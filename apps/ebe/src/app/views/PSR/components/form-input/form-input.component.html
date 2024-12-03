@@ -1,0 +1,61 @@
+<div class="position-relative">
+  @if(labelName) {
+  <label [for]="id">{{ labelName }}</label>
+  } @if(inputType === 'text') {
+  <input
+    [type]="type"
+    [id]="id"
+    [placeholder]="placeholder"
+    (input)="onInputChange($event)"
+    (blur)="onTouched()"
+    [class.invalid-input]="errorMessage"
+    [value]="inputValue"
+    (keydown)="type === 'number' ? preventInvalidInput($event) : null"
+  />
+  } 
+  @else if(inputType === 'textarea') {
+  <textarea
+    [id]="id"
+    [placeholder]="placeholder"
+    rows="4"
+    [class.invalid-input]="errorMessage"
+    (input)="onInputChange($event)"
+    (blur)="onTouched()"
+    [value]="inputValue"
+  ></textarea>
+  }
+  @else if(inputType === 'dropdown') {
+    <p-dropdown 
+      [id]="id"
+      [options]="dropdownOptions"
+      optionLabel="name"
+      optionValue="name"
+      [placeholder]="placeholder || ''" 
+      class = "indicator-dropdown"
+      [class.invalid-dropdown]='errorMessage'
+      (onChange)="onInputChange($event)"
+      (onBlur)="onTouched()"
+      [(ngModel)]="inputValue"
+    />
+  }
+  @if(inputType === 'date') {
+    <p-calendar 
+      [inputId]="id"
+      [showIcon]="false"
+      class = "startDate-calendar"
+      [placeholder]="placeholder || ''"
+      [class.invalid-date]="errorMessage || isBeforeStartDate2 || isBeforeStartDate"
+      dateFormat="dd/mm/yy"
+      [showButtonBar]="false"
+      (onSelect)="changeStartDate($event);onInputChange($event)"
+      (onBlur)="onTouched()"
+      [(ngModel)]="inputValue"
+    />
+  }
+</div>
+<small
+  *ngIf="errorMessage"
+  class="error-msg"
+  [ngStyle]="{ bottom: inputType === 'textarea' ? '-17px' : '-25px' }"
+  >{{ errorMessage }}</small
+>

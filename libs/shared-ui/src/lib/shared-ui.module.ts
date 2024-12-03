@@ -82,6 +82,9 @@ import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
 import { DoubleLineChartComponent } from './double-line-chart/double-line-chart.component';
 import { NewLinePipe } from './newLine.pipe';
+import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
+import { SharedService } from './shared.service';
+import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 
 const components = [
@@ -134,13 +137,15 @@ const components = [
   DialogModalComponent,
   FileUploadInputComponent,
   DoubleLineChartComponent,
-  NewLinePipe
+  NewLinePipe,
+  MultiCirclesChartComponent,
+  ClusteredColumnChartComponent
 ];
 
 @NgModule({
   declarations: [...components],
-  exports: [...components, ...modules],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
+  exports: [...components, ...modules ],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' } , SharedService],
   imports: [
     CommonModule,
     ConfirmDialogModule,
