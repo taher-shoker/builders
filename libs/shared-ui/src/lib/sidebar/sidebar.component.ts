@@ -28,9 +28,12 @@ export class SidebarComponent implements OnInit{
   editModeChecked!:boolean;
   logoSrc = input.required<string>({alias : 'logoSrc'})
   isAdmin = input.required<boolean>()
+  isPMO = input<boolean>()
   usernameImage = input<string>()
   userName = input<string>()
   router = inject(Router)
+  isAllowed = false;
+  currentUrl = "";
   // tabChanged = input<boolean>()
   // isEditModeChecked = input<boolean>()
   sidebarLinks = input.required<SidebarLinksModel[]>()
@@ -43,10 +46,13 @@ export class SidebarComponent implements OnInit{
     this.router.events.subscribe({
       next : (res) => {
         if (res instanceof NavigationStart) {
+          console.log(res);
+          this.currentUrl = res.url;
           this.editModeChecked = false;
         }
       }
     })
+
   }
   // ngOnDestory()
   // {
