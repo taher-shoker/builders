@@ -10,6 +10,8 @@ import { PSRService } from '../../../../services/psr.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
+import { FileModel } from '../../../../models/scorecard.model';
+import { PSRService } from '../../../../services/psr.service';
 
 @Component({
   selector: 'stc-apps-tab-details',
