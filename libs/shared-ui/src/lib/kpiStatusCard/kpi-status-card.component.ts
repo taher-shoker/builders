@@ -9,7 +9,9 @@ import { OverlayPanel } from 'primeng/overlaypanel';
 export class KpiStatusCardComponent{
   kpiStatus:InputSignal<number | string | boolean> = input.required<number | string | boolean>();
   kpiType:InputSignal<string> = input.required<string>();
-  domainIndicator:InputSignal<string> = input<string>('');
+  domainIndicator:InputSignal<string | null> = input<string | null>('');
   domainIndicatorColor:InputSignal<string> = input<string>('');
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
+  @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
+  @ViewChild('overlayPanel3') overlayPanel3!: OverlayPanel;
 }

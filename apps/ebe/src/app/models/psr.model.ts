@@ -1,5 +1,6 @@
 export interface PSRDataModel
 {
+    id:number;
     planned:number;
     sector:string;
     actual:number;
@@ -20,7 +21,7 @@ export interface PSRProjectDetailsModel
     endDate:string;
     gd:string;
     id:number;
-    indicator:string;
+    indicator:string | null;
     poAmount:string;
     projectName:string;
     projectOwner:string;
@@ -70,4 +71,26 @@ export interface ColumnsSchema {
     key: string;
     type: 'text' | 'date' | 'actions' | 'custom';
     label: string;
-  }
+}
+export interface AddProgramModel
+{
+    id?:number;
+    sector:string;
+    details:string;
+}
+export interface AddProjectModel
+{
+    sector: string, 
+    // gd: string , 
+    projectName : string,
+    projectOwner : string ,
+    vendor : string ,
+    projectStage : string ,
+    indicator : string | null,
+    // backgroundColor : string ,
+    domain : string ,
+    startDate : string ,
+    endDate : string ,
+    poAmount : string ,
+    actualSpending : string
+}
