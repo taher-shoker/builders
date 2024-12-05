@@ -1,0 +1,16 @@
+.main-layout {
+    display: flex;
+    height: 100vh;
+    width: 100%;
+
+    &_header {
+        margin-left: 273px;
+        width: calc(100% - 273px);
+    }
+
+    &_container {
+        background: var(--whiteColor);
+        padding: 30px;
+        border-radius: 25px;
+    }
+}
