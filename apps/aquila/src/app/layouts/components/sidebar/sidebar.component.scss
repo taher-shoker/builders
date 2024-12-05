@@ -1,0 +1,65 @@
+.sidebar {
+    width: 273px;
+    height: 100vh;
+    background: linear-gradient(155.96deg, var(--stc-color) -9.19%, var(--semiPurbleColor) 116.13%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    padding: 45px 0;
+    font-family: stc forward-light;
+
+    &_logo {
+        margin-bottom: 20px;
+        padding-left: 40px;
+    }
+
+    &_developed-by {
+        display: flex;
+        align-items: center;
+        margin-bottom: 40px;
+        padding-left: 40px;
+        font-size: 12px;
+
+        span {
+            color: var(--whiteColor);
+            margin-inline-end: 7px;
+        }
+    }
+
+    &_list {
+        list-style-type: none;
+        padding-inline-start: 0;
+
+        li {
+            padding: 10px;
+            position: relative;
+
+            a {
+                color: var(--whiteColor);
+                text-decoration: none;
+                display: block;
+                padding: 8px 0 8px 40px;
+                width: calc(100% - 40px);
+                font-size: 18px;
+            }
+
+            &:hover {
+                background: rgba(255, 55, 94, 0.1);
+
+                a {
+                    color: var(--stc-pink-color);
+                    // font-size: 24px;
+                }
+            }
+
+            &.active {
+                background: rgba(255, 55, 94, 0.1);
+
+                a {
+                    color: var(--stc-pink-color);
+                }
+            }
+        }
+
+    }
+}
