@@ -7,10 +7,10 @@ import { Component } from '@angular/core';
 })
 export class SidebarComponent {
   menuItems = [
-    { label: 'API test', link: 'user/api-test' },
-    { label: 'Test history', link: '' },
-    { label: 'API Standard', link: '' },
-    { label: 'Settings', link: '' },
-    { label: 'Logout', link: '' },
+    { label: 'API test', link: 'api-test' },
+    { label: 'Test history', link: 'test-history' },
+    { label: 'API Standard', link: '#' },
+    { label: 'Settings', link: '#' },
+    { label: 'Logout', link: '#' },
   ];
 }
