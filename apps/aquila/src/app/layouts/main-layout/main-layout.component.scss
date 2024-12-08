@@ -8,9 +8,11 @@
         width: calc(100% - 273px);
     }
 
+
+
     &_container {
-        background: var(--whiteColor);
-        padding: 30px;
+        background-color: var(--whiteColor);
+        padding: 18px 14px;
         border-radius: 25px;
     }
 }

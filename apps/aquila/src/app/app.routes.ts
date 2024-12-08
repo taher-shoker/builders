@@ -7,14 +7,18 @@ export const appRoutes: Route[] = [
     component: MainLayoutComponent,
     children: [
       {
-        path: 'admin',
-        loadChildren: () =>
-          import('./views/admin/admin.module').then((m) => m.AdminModule),
+        path: 'api-test',
+        loadComponent: () =>
+          import('./features/api-test/api-test.component').then(
+            (m) => m.ApiTestComponent
+          ),
       },
       {
-        path: 'user',
-        loadChildren: () =>
-          import('./views/user/user.module').then((m) => m.UserModule),
+        path: 'test-history',
+        loadComponent: () =>
+          import('./features/test-history/test-history.component').then(
+            (m) => m.TestHistoryComponent
+          ),
       },
     ],
   },
