@@ -107,3 +107,13 @@ div
   text-overflow: ellipsis;
   display: block;
 }
+.domainIndicator-status
+{
+  background-color: var(--stc-green-light-color);
+  padding: 0px 10px;
+  height: 45px;
+  line-height: 45px;
+  color: #000000;
+  border-radius: 10px;
+  display: inline-block;
+}

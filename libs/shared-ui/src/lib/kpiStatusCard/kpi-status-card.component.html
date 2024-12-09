@@ -52,23 +52,21 @@
       N/A
     }
   }
+  @if(kpiType() === 'indicator')
+  {
+    <div class = "domainIndicator-status">
+      <span 
+        class = 'domainIndicator' 
+        [ngStyle]="{
+          'background' : domainIndicatorColor(),
+          'font-size' : kpiStatus() === 'N/A' ? '12px' : '14px'
+        }"
+      >{{kpiStatus()}}</span>
+    </div>
+  }
   @if(kpiType() === 'domain'){
-    <!-- @if(domainIndicator())
-    {
-      <span class = 'domainIndicator' [ngStyle]="{'background' : domainIndicatorColor()}">{{domainIndicator()}}</span>
-    }
-    {{kpiStatus()}} -->
-    <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px">
-      @if(domainIndicator())
-      {
-        <span 
-          class = 'domainIndicator' 
-          [ngStyle]="{
-            'background' : domainIndicatorColor(),
-            'font-size' : domainIndicator() === 'N/A' ? '12px' : '14px'
-          }"
-        >{{domainIndicator()}}</span>
-      }
+    <!-- <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px"> -->
+    <div class = "p-0">
       <span
           (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
           (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
