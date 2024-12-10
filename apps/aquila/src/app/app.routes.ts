@@ -20,6 +20,20 @@ export const appRoutes: Route[] = [
             (m) => m.TestHistoryComponent
           ),
       },
+      {
+        path: 'api-standard-list',
+        loadComponent: () =>
+          import(
+            './features/api-standard-list/api-standard-list.component'
+          ).then((m) => m.ApiStandardListComponent),
+      },
+      {
+        path: 'api-standard-form',
+        loadComponent: () =>
+          import(
+            './features/api-standard-form/api-standard-form.component'
+          ).then((m) => m.ApiStandardFormComponent),
+      },
     ],
   },
 ];
