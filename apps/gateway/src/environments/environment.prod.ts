@@ -1,7 +1,7 @@
 export const environment = {
   production: true,
   apiUrl: '/cem/reporting/apigateway/api/v2/admin',
-  tpLogInUrl: '/reporting-api',
+  tpLogInUrl: '/cem/reporting/new/apigateway/reporting-api',
   systems: {
     ceo_system:
       '/cem/reporting/apigateway/api/auth/authenticatehub?hub_username=',
@@ -17,6 +17,6 @@ export const environment = {
     strategic_dashboard: '/cem/reporting/strategic_dashboard/',
     chat_bi: '/cem/reporting/chat_bi/',
   },
-  sso_url: '/reporting-api/saml/saml/login',
+  sso_url: '/cem/reporting/apigateway/api/v2/admin/saml2/authenticate/stc',
   languageFilesPath: '/cem/reporting/assets/i18n/',
 };
