@@ -28,9 +28,12 @@
           <div class="col-md-8 offset-md-2">
             <ul class="apps-box " *ngIf="getGrantedSystems()">
               <li *ngFor="let item of apps">
-                <a href={{item.systemUrl}}>
+                <!-- <a href={{item.systemUrl}}>
+
+                </a> -->
+                <span (click)="navigateItem(item.systemUrl)">
                   {{item.displayName}}
-                </a>
+                </span>
               </li>
             </ul>
           </div>

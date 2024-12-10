@@ -15,6 +15,7 @@ export const environment = {
     business_excellence_system: '/cem/reporting/business-excellence-workspace/',
     score_card_report_db: '/cem/reporting/score-card-report/',
     strategic_dashboard: '/cem/reporting/strategic_dashboard/',
+    chat_bi: '/cem/reporting/chat_bi/',
   },
   sso_url: '/reporting-api/saml/saml/login',
   languageFilesPath: '/cem/reporting/assets/i18n/',

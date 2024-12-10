@@ -144,7 +144,8 @@ export class AuthService {
       res.dto.systems.includes('Dynamic_Report_Flow') ||
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
       res.dto.systems.includes('Score_Card_Report_DB') ||
-      res.dto.systems.includes('Strategic_Dashboard')
+      res.dto.systems.includes('Strategic_Dashboard') ||
+      res.dto.systems.includes('ChatBI')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -159,12 +160,11 @@ export class AuthService {
    * @param res - User data response
    */
   private handleMultipleSystemAccess(res: UserData) {
+    console.log(res.dto);
     this.loggedInUser = {
-      name: res.dto.displayName,
       id: res.dto.id,
       email: res.dto.username,
       username: res.dto.username,
-      jobTitle: '',
       userGroups: res.dto.userGroupedMenusDTO,
     };
     if (res.dto.systems.includes('TP_DashboardUsers')) {
@@ -181,7 +181,8 @@ export class AuthService {
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
       res.dto.systems.includes('Jira_Dahsboard') ||
       res.dto.systems.includes('Score_Card_Report_DB') ||
-      res.dto.systems.includes('Strategic_Dashboard')
+      res.dto.systems.includes('Strategic_Dashboard') ||
+      res.dto.systems.includes('ChatBI')
     ) {
       this.setLoggedInUser();
     }
@@ -221,6 +222,9 @@ export class AuthService {
     }
     if (res.dto.systems.includes('Strategic_Dashboard')) {
       this.gratnedSystems.push('Strategic_Dashboard');
+    }
+    if (res.dto.systems.includes('ChatBI')) {
+      this.gratnedSystems.push('ChatBI');
     }
     this.setLoggedInUser();
   }
@@ -291,6 +295,7 @@ export class AuthService {
         environment.systems.business_excellence_system,
       Score_Card_Report_DB: environment.systems.score_card_report_db,
       Strategic_Dashboard: environment.systems.strategic_dashboard,
+      Chat_Bi: environment.systems.chat_bi,
     };
     const url = systemUrls[system];
     if (url) {
@@ -407,6 +412,7 @@ export class AuthService {
                   window.location.origin + environment.systems.tp_system,
                 name: 'TP Dashboard',
                 displayName: 'TP Dashboard',
+                mobileView: false,
               });
               break;
             case 'CEO_DashboardUsers':
@@ -416,6 +422,7 @@ export class AuthService {
                   this.cookieService.get('ceo-username'),
                 name: 'CCEX Workspace',
                 displayName: 'CCEX Workspace',
+                mobileView: true,
               });
               break;
             case 'FRAUD_ManagementUsers':
@@ -425,6 +432,7 @@ export class AuthService {
                   window.location.origin + environment.systems.fraud_system,
                 name: 'Fraud Management Workspace',
                 displayName: 'Fraud Management Workspace',
+                mobileView: false,
               });
               break;
             case 'DI_Management':
@@ -434,6 +442,7 @@ export class AuthService {
                   window.location.origin + environment.systems.di_system,
                 name: 'DT Workspace',
                 displayName: 'DT Workspace',
+                mobileView: false,
               });
               break;
             case 'DI_Milestones':
@@ -444,6 +453,7 @@ export class AuthService {
                   environment.systems.di_milestones_system,
                 name: 'DT Milestones Validation',
                 displayName: 'DT Milestones Validation',
+                mobileView: false,
               });
               break;
             case 'Dynamic_Report_Flow':
@@ -454,6 +464,7 @@ export class AuthService {
                   environment.systems.dynamic_rf_system,
                 name: 'Dynamic Report Flow',
                 displayName: 'Dynamic Report Flow',
+                mobileView: false,
               });
               break;
             case 'Business_Excellence_Dashboard':
@@ -464,6 +475,7 @@ export class AuthService {
                   environment.systems.business_excellence_system,
                 name: 'Business Excellence Dashboard',
                 displayName: 'Business Excellence Dashboard',
+                mobileView: false,
               });
               break;
             case 'Jira_Dahsboard':
@@ -473,6 +485,7 @@ export class AuthService {
                   window.location.origin + environment.systems.jira_system,
                 name: 'Jira Dashboard',
                 displayName: 'Jira Dashboard',
+                mobileView: false,
               });
               break;
             case 'Score_Card_Report_DB':
@@ -483,6 +496,7 @@ export class AuthService {
                   environment.systems.score_card_report_db,
                 name: 'Score Card Report',
                 displayName: 'Score Card Report',
+                mobileView: false,
               });
               break;
             case 'Strategic_Dashboard':
@@ -493,6 +507,16 @@ export class AuthService {
                   environment.systems.strategic_dashboard,
                 name: 'Strategic Dashboard',
                 displayName: 'Strategic Dashboard',
+                mobileView: false,
+              });
+              break;
+            case 'ChatBI':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl: window.location.origin + environment.systems.chat_bi,
+                name: 'Chat BI',
+                displayName: 'Chat BI',
+                mobileView: true,
               });
               break;
             default:
