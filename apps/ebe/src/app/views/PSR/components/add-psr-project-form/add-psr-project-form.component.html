@@ -44,6 +44,20 @@
                   [inputValue]="program.get('sector')?.value"
                 />
               </div>
+              <div class="form-group mt-4">
+                <stc-apps-form-input 
+                  [type]="'text'"
+                  formControlName = "plannedDate"
+                  [id]="'currentDate'"
+                  [showIcon]="true"
+                  [placeholder]="'Add Current Date'"
+                  [errorMessage]="getErrorMessage(program , 'plannedDate')"
+                  labelName = "planned date"
+                  inputType = "date"
+                  [inputValue]="program.get('plannedDate')?.value"
+                  (changeDate)="changeStartDate(program , $event)"
+                />
+              </div>
               <div class="form-group" style = "margin-top: 30px;">
                 <stc-apps-form-input 
                   [type]="'text'"

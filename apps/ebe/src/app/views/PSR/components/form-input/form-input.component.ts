@@ -21,6 +21,7 @@ export class FormInputComponent implements ControlValueAccessor {
   @Input({required : true})type!:string;
   @Input({required : true})inputType!:string;
   @Input({required : true})id!:string;
+  @Input()showIcon = false;
   @Input({required : true})placeholder!:string | null;
   @Input({required : true})errorMessage!:string;
   @Input()dropdownOptions!:{name:string , code:string | null}[];
