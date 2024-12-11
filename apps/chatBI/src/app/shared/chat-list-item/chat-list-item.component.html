@@ -1,0 +1,33 @@
+<div
+  class="chat-list-item"
+  [ngClass]="
+    messageType() === 1 ? 'justify-content-end' : 'justify-content-start'
+  "
+>
+  @if (messageType() === 0 ) {
+  <div class="chat-list-item_query-profile">
+    <img
+      class="chat-list-item_photo"
+      src="assets/images/chatProfile.svg"
+      alt=""
+    />
+  </div>
+  }
+
+  <div class="chat-list-item_query-info">
+    <div
+      class="message"
+      [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
+    >
+      {{ message() }}
+    </div>
+    <div
+      class="date"
+      [ngStyle]="{
+        'text-align': messageType() === 1 ? 'end' : 'left'
+      }"
+    >
+      {{ messageDate() }}
+    </div>
+  </div>
+</div>

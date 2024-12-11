@@ -1,0 +1,35 @@
+.header {
+  padding: 12px;
+  border-bottom: 2px solid var(--stc-arrow-grey);
+  .back-button {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: --darkPurpleColor; /* Blue color for the arrow */
+    padding: 10px;
+    display: inline-flex;
+    align-items: center;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+  .title {
+    padding-top: 10px;
+    font-weight: 500;
+    font-family: 'stc forward-medium';
+    font-size: 18px;
+    line-height: 21.6px;
+    width: 100%;
+    text-align: center;
+    color: var(--stc-color);
+  }
+}
+@media (max-width: 600px) {
+  .header {
+    .title {
+      width: 75%;
+    }
+  }
+}
