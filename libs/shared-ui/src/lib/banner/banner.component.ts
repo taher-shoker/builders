@@ -6,6 +6,7 @@ import { BannerData, BannerDataService } from './banner.service';
   selector: 'stc-apps-banner',
   templateUrl: './banner.component.html',
   styleUrls: ['./banner.component.scss'],
+  standalone : false
 })
 export class BannerComponent {
   @Input() userName = '';

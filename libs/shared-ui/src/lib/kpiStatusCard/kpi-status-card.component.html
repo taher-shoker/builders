@@ -2,6 +2,7 @@
   [class.achieved]="kpiType() === 'achieved' || kpiType() === 'domain'"
   [class.not-achieved]="kpiType() === 'not-achieved' || kpiType() === 'vendor'"
   [class.actual]="kpiType() === 'actual' || kpiType() === 'owner-name'"
+  [class.actual2]="kpiType() === 'owner-name'"
   [class.weight]="kpiType() === 'weight'"
   [class.in-progress]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'in progress'"
   [class.completed]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'completed'"
@@ -14,24 +15,74 @@
     <img class="arrow" src="assets/images/arrow-up.gif" />
   }
   @if(kpiType() === 'actual'){
-    Actual : {{kpiStatus()}}%
+    Actual : {{kpiStatus()}}
+    @if(domainIndicator() && domainIndicator() !== '#')
+    {
+      <span
+        (mouseenter)="overlayPanel ? overlayPanel.show($event) : ''" 
+        (mouseleave)="overlayPanel ? overlayPanel.hide() : ''"
+      >
+        {{domainIndicator() || '' | truncateWord:2}}
+      </span>
+      @if(domainIndicator()!.split(" ").length > 2){
+        <p-overlayPanel #overlayPanel dismissable="true">
+          <section class="popover-section" [innerHTML]="domainIndicator()"></section>
+        </p-overlayPanel>
+      }
+    }
   }
   @if(kpiType() === 'weight'){
     weight : {{kpiStatus()}}%
   }
   @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved' || kpiType() === 'vendor' || kpiType() === 'owner-name' || kpiType() === 'status'){
-    {{kpiStatus()}}
+    <span
+        (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+        (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
+        class = "kpi-status3"
+      >
+        {{kpiStatus().toString()}}
+      </span>
+      @if(kpiStatus().toString().length >= 10){
+        <p-overlayPanel #overlayPanel2 dismissable="true">
+          <section class="popover-section" [innerHTML]="kpiStatus().toString()"></section>
+        </p-overlayPanel>
+      }
     @if(kpiType() === 'vendor' && !kpiStatus())
     {
       N/A
     }
   }
   @if(kpiType() === 'domain'){
-    @if(domainIndicator())
+    <!-- @if(domainIndicator())
     {
       <span class = 'domainIndicator' [ngStyle]="{'background' : domainIndicatorColor()}">{{domainIndicator()}}</span>
     }
-    {{kpiStatus()}}
+    {{kpiStatus()}} -->
+    <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px">
+      @if(domainIndicator())
+      {
+        <span 
+          class = 'domainIndicator' 
+          [ngStyle]="{
+            'background' : domainIndicatorColor(),
+            'font-size' : domainIndicator() === 'N/A' ? '12px' : '14px'
+          }"
+        >{{domainIndicator()}}</span>
+      }
+      <span
+          (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
+          (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
+          class = "kpi-status3"
+          style = "color:#00c48c"
+        >
+          {{kpiStatus()}}
+        </span>
+        @if(kpiStatus().toString().length >= 10){
+          <p-overlayPanel #overlayPanel3 dismissable="true">
+            <section class="popover-section" [innerHTML]="kpiStatus()"></section>
+          </p-overlayPanel>
+        }
+    </div>
   }
   @if(kpiType() === 'actualStatus'){
     ActualStatus : {{kpiStatus()}}%

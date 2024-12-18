@@ -75,7 +75,7 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
           this.strategyService.getStrategyProgramDetails(this.title).subscribe({
             next: (res: StrategyProgramKpiDetailsModel[]) => {
               this.prevProjects = res.filter(
-                (val) => val.objective === this.objectiveNumber
+                (val) => val.keyResultNumber === this.objectiveNumber
               )[0].projects;
               if (this.prevProjects.length !== 0) {
                 this.prevProjects.forEach((proj) => {
@@ -89,12 +89,13 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
         }
       },
     });
+    console.log(this.projectsList.controls);
   }
   createProjectFormGroup(data?:StrategyProgramKpiProjectsDetailsModel): FormGroup {
     return this.formBuilder.group({
       project: [
         data && data.project ? data.project : null,
-        [Validators.required, this.noSpacesValidator, Validators.maxLength(50)],
+        [Validators.required, this.noSpacesValidator, Validators.maxLength(300)],
       ],
       actual: [data && (data.actual || data.actual === 0) ? data.actual : null, [Validators.required, this.rangeValidator]],
       planned: [data && (data.planned || data.planned === 0) ? data.planned : null, [Validators.required, this.rangeValidator]],

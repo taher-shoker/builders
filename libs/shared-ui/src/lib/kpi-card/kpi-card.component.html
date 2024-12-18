@@ -25,14 +25,15 @@
     <stc-apps-kpi-status-card
       [kpiStatus]="kpiData().actual!"
       [kpiType]="'actual'"
+      [domainIndicator]="kpiData().unit"
     />
     }
   </div>
   @if(kpiData().details && kpiData().details?.length !== 0)
   {
     <p class="kpi-details" [class.short-text]="maxTextLength < 9">
-      {{kpiData().details! | truncateWord:9}}
-      @if(maxTextLength >= 9)
+      {{kpiData().details! | truncateWord:6}}
+      @if(maxTextLength >= 6)
       {
         <a (click)="displayDrilldown()">read more</a>
       }
@@ -54,7 +55,17 @@
           <div class="weight-card">
             <p class="weight2">unit</p>
             <span>:</span>
-            <p class="weight-val">{{ kpiData().unit }}</p>
+            <p 
+              class="weight-val"
+              (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
+              (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
+            >{{ kpiData().unit | truncateWord:2 }}</p>
+            @if(kpiData().unit.split(" ").length > 2)
+            {
+              <p-overlayPanel #overlayPanel3 dismissable="true">
+                <section class="unit-popover-section">{{kpiData().unit}}</section>
+              </p-overlayPanel>
+            }
           </div>
         </div>
       </div>
@@ -97,7 +108,7 @@
 @if(kpiData().details)
 {
   <p-overlayPanel #overlayPanel dismissable="true">
-    <section class="popover-section">{{kpiData().details}}</section>
+    <section class="popover-section" [innerHTML]="kpiData().details! | newLine"></section>
   </p-overlayPanel>
 }
 @if(kpiData().title.length > 20)

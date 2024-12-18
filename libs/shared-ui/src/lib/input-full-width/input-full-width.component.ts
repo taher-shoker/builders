@@ -7,6 +7,7 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
   selector: 'stc-apps-input-full-width',
   templateUrl: './input-full-width.component.html',
   styleUrls: ['./input-full-width.component.scss'],
+  standalone : false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,

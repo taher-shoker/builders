@@ -1,1 +1,11 @@
-<div [id]="chartdiv_id" class='donutChart'></div>
+<div [id]="chartdiv_id" class='donutChart'>
+  @if(id){
+    <div class = "centered-label">
+      <p>
+        {{overallNumber}}
+        <span>SAR</span>
+      </p>
+      <span class = "sub-title">{{textInside}}</span>
+    </div>
+  }
+</div>

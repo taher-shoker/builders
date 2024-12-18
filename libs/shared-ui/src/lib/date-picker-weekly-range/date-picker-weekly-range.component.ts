@@ -9,6 +9,7 @@ import { LanguageManagerService } from '@stc-apps/lng-selector';
   selector: 'stc-apps-date-picker-weekly-range',
   templateUrl: './date-picker-weekly-range.component.html',
   styleUrls: ['./date-picker-weekly-range.component.scss'],
+  standalone : false
 })
 export class DatePickerWeeklyRangeComponent implements OnInit {
   @Output() dateRange: EventEmitter<YearRangeObj> =

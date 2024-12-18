@@ -7,13 +7,15 @@ import { DialogModule } from 'primeng/dialog';
 import { AddProjectFormComponent } from '../add-project-form/add-project-form.component';
 import { ConfirmationService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { PSRService } from '../../../../services/psr.services';
+import { PSRService } from '../../../../services/psr.service';
 import { UserGroup } from '../../../../models/scorecard.model';
+import { MenuModule } from 'primeng/menu';
 import { ToastrService } from 'ngx-toastr';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
-  imports: [CommonModule , SharedUiModule , OverlayPanelModule , DialogModule , AddProjectFormComponent , ConfirmDialogModule],
+  imports: [CommonModule , SharedUiModule , OverlayPanelModule , DialogModule , AddProjectFormComponent , ConfirmDialogModule , MenuModule],
   templateUrl: './project-details-card.component.html',
   styleUrl: './project-details-card.component.scss',
   providers : [ConfirmationService , DatePipe]
@@ -21,12 +23,51 @@ import { ToastrService } from 'ngx-toastr';
 export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   @Input() isAdded!:boolean;
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
+  @ViewChild('overlayPanel3') overlayPanel3!: OverlayPanel;
+  @ViewChild('overlayPanel4') overlayPanel4!: OverlayPanel;
   projectData:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
   userRoles:InputSignal<UserGroup> = input.required<UserGroup>();
   @Output() addRecordInTable:EventEmitter<AddProjectForm> = new EventEmitter();
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
+  router = inject(Router)
+  route = inject(ActivatedRoute)
+  isAllowed = input<boolean>()
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
   data!:ProgressInfo;
+  items = [
+    {
+      items: [
+          {
+                label: 'Edit',
+                icon: 'pi pi-pen-to-square'
+            },
+            {
+                label: 'Delete',
+                icon: 'pi pi-trash'
+            }
+        ]
+    }
+  ];
+  activatedRoute = inject(ActivatedRoute);
+  gotoEditPage()
+  {
+    this.activatedRoute.params.subscribe({
+      next : (param:Params) => {
+        if(param['id'])
+        {
+          const program = encodeURIComponent(param['id'])
+          this.router.navigateByUrl(`/psr/edit-project/${program}/${this.projectData().id}`);
+        }
+      }
+    })
+    // this.router.navigate(['edit-program' , this.projectData().projectName] , { relativeTo: this.route })
+  }
+  showDeleteDialog()
+  {
+    this.confirmationService.confirm({
+      key: 'delete-program'
+    });
+  }
   toastr = inject(ToastrService);
   showPopover = false;
   tableHeader!:ColumnsSchema[];
@@ -135,6 +176,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   {
     this.confirmationService.close()
   }
+  @Output() deleteTableRecord:EventEmitter<boolean> = new EventEmitter()
   deleteRecordRow()
   {
     // this.newData.chartDetails = this.newData.chartDetails.filter(val => val.major !== this.deletedData.major);
@@ -150,11 +192,13 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
         next : (res) => {
           this.toastr.success("The record is deleted Successfully");
+          this.deleteTableRecord.emit(true);
           this.newData.chartDetails = res;
           this.projectData().chartDetails = res;
           this.isEditMode = false;
           this.formValues = []
-        },
+          this.overlayPanel.hide()
+        },  
         error : (error) => {
           if(error)
           {
@@ -250,6 +294,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.showAddRecordForm();
     this.isDisabled = false;
   }
+  @Output() addChartData:EventEmitter<boolean> = new EventEmitter()
   saveData()
   {
     const isExists = this.tableHeader.filter(val => val.key === '')[0]
@@ -275,6 +320,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
       next : (res) => {
         this.toastr.success("The table is updated Successfully");
+        this.addChartData.emit(true);
         this.newData.chartDetails = res;
         this.projectData().chartDetails = res;
         this.isEditMode = false;
@@ -290,5 +336,16 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
     const filteredArray = this.tableHeader.filter(obj => obj.key !== '');
     this.tableHeader = filteredArray;
     this.isDisabled = false;    
+  }
+  @Output() deleteProject:EventEmitter<number> = new EventEmitter();
+  deleteProjectData(id:number)
+  {
+    this.deleteProject.emit(id)
+    this.confirmationService.close()
+    // this.psrServices.deleteProject(id).subscribe({
+    //   next : () => {
+
+    //   }
+    // })
   }
 }

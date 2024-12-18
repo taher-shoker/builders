@@ -38,6 +38,7 @@ export interface YearRangeObj{
   selector: 'stc-apps-date-picker-weekly',
   templateUrl: './date-picker-weekly.component.html',
   styleUrls: ['./date-picker-weekly.component.scss'],
+  standalone : false,
   providers: [
     {
       provide: DateAdapter,

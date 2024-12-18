@@ -1,13 +1,23 @@
 <section class="psr-tabview">
-    @if(currentMode === 'editMode') {
+    @if(currentMode === 'editMode' && isAdmin) {
         <stc-apps-edit-mode-view 
           (import)="showDialog()"
           (export)="downloadTemplate()"
         />
     } 
-    <p class = "psr-tabview-header">
-        Data Governance Strategic Projects Execution (Executive View)
-    </p>
+    <div class = "psr-head">
+        <p class = "psr-tabview-header">
+            Strategic Projects - Executive View
+        </p>
+        @if(isAllowed)
+        {
+            <button routerLink="add-program">
+                <!-- <i class = "pi pi-plus"></i> -->
+                 <img src="assets/images/plus-icon.svg" alt="">
+                add new program
+            </button>
+        }
+    </div>
     @if(!isEmpty())
     {
         <div class="project-container">
@@ -15,6 +25,8 @@
                 <div class="project-container-card">
                     <stc-apps-psr-project-card 
                         [project]="project"
+                        (ProgramId)="getProgramId($event)"
+                        [isAllowed]="isAllowed"
                     />
                 </div>
             }

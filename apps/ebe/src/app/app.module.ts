@@ -29,7 +29,7 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 //   },
 // });
 @NgModule({
-  declarations: [AppComponent, NxWelcomeComponent, MainLayoutComponent],
+  declarations: [AppComponent, MainLayoutComponent],
   imports: [
     BrowserModule,
     RouterModule.forRoot(appRoutes),

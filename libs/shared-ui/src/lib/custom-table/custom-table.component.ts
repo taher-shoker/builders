@@ -43,6 +43,7 @@ export interface PaginationConfig {
   selector: 'stc-apps-custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
+  standalone : false
 })
 export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =

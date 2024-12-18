@@ -25,6 +25,7 @@ export interface PaginationEvent {
   selector: 'stc-apps-paginator',
   templateUrl: './paginator.component.html',
   styleUrls: ['./paginator.component.scss'],
+  standalone : false
 })
 export class PaginatorComponent implements OnInit, OnChanges {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =

@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 export const appRoutes: Route[] = [
   {
     path : "",
@@ -10,7 +11,7 @@ export const appRoutes: Route[] = [
     loadComponent: () =>
       import('./views/scorecard/scorecard.component').then(
         (m) => m.ScorecardComponent
-      ),
+      )
   },
   {
     path : "strategy-program",
@@ -32,6 +33,7 @@ export const appRoutes: Route[] = [
       import('./views/strategyProgram/components/add-project-form/add-project-form.component').then(
         (m) => m.AddProjectFormComponent
       ),
+      canActivate:[AuthGuard]
   },
   {
     path : "strategy-project-form/:id",
@@ -39,6 +41,14 @@ export const appRoutes: Route[] = [
       import('./views/strategyProgram/components/add-project-form/add-project-form.component').then(
         (m) => m.AddProjectFormComponent
       ),
+      canActivate:[AuthGuard]
+  },
+  {
+    path : "financial-reporting",
+    loadComponent: () =>
+      import('./views/financial-reporting/financial-reporting.component').then(
+        (m) => m.FinancialReportingComponent
+      )
   },
   // {
   //   path : "raqami",
@@ -54,7 +64,39 @@ export const appRoutes: Route[] = [
         (m) => m.PSRComponent
     )
   },
-    {
+  {
+    path : "psr/add-program",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+    canActivate:[AuthGuard]
+  },
+  {
+    path : "psr/add-project/:sector",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+    canActivate:[AuthGuard]
+  },
+  {
+    path : "psr/edit-program/:id",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+    canActivate:[AuthGuard]
+  },
+  {
+    path : "psr/edit-project/:sector/:projId",
+    loadComponent: () =>
+      import('./views/PSR/components/add-psr-project-form/add-psr-project-form.component').then(
+        (m) => m.AddPsrProjectFormComponent
+    ),
+    canActivate:[AuthGuard]
+  },
+  {
     path : "psr/:id",
     loadComponent: () =>
       import('./views/PSR/components/psr-details-page/psr-details-page.component').then(

@@ -15,8 +15,9 @@
         [usernameImage]="userNameLogo"
         [userName]="userData ? userData.name : ''"
         (currentMode)="getCurrentMode($event)"
-        [userRoles]="userRoles"
+        [isAdmin]="isAllowed"
         (logoutFun)="logout()"
+        [isPMO]="isPMO"
         />
     </div>
     <div class="main-layout-content-page">
