@@ -41,7 +41,6 @@ export class HomeComponent implements OnInit {
         this.filterAppsForMobile();
       }
     }
-    console.log(this.apps);
     return this.isGrantedSystemSettled();
   }
 

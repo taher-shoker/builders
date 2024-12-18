@@ -117,6 +117,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.userService.getCurrentSystem() === 'ChatBI' ||
       this.userService.getCurrentSystem() === 'Strategic_Dashboard'
     ) {
       // this.columnssSchema = th;
@@ -230,6 +231,7 @@ export class UsersComponent implements OnInit, AfterViewInit {
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.userService.getCurrentSystem() === 'ChatBI' ||
       this.userService.getCurrentSystem() === 'Score_Card_Report_DB' ||
       this.userService.getCurrentSystem() === 'Strategic_Dashboard'
     ) {
@@ -365,18 +367,11 @@ export class UsersComponent implements OnInit, AfterViewInit {
         this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
       ) {
         this.teams = this.userService.getTeams();
-      }
-      // else if (
-      //   this.userService.getCurrentSystem() === 'Strategic_Dashboard'
-      // ) {
-      //   this.teams = this.userService.getTeams();
-      // }
-      else {
+      } else {
         this.teams = this.userService
           .getTeams()
           .filter((x) => x.roleName == (value as Role).groupName);
       }
-
       this.dataSource.data = this.list.filter((x) =>
         this.userService
           .getUserPrivilege(x)

@@ -1,46 +1,35 @@
 <div class="login">
-  <div class="shape4"></div>
-  <div class="container-fluid">
-    <div class="row align-items-center">
-      <div class="col-md-5   ">
-
-
-        <div class="card">
-          <div class="shape1"></div>
-          <div class="shape2"></div>
-          <div class="shape3"></div>
-
-          <div class="card-img">
-            <img src="assets/images/login/stc.png" alt="stc" />
+  <div class="card">
+    <div class="card-img">
+      <img src="assets/images/login/stc.png" alt="stc" />
+    </div>
+    <div class="shape3"></div>
+    <div class="card-body">
+      <h4 class="">{{ 'login_with_email' | translate }}</h4>
+      <p>Welcome back , let’s discover the applications</p>
+    </div>
+  </div>
+  <div class="form ">
+    <div class="row">
+      <div class="col-md-6 offset-md-3">
+        <form [formGroup]="form" (keydown)="keyDownFunction($event)">
+          <div class="mb-2">
+            <stc-apps-input [inputName]="'email'" [className]="'stc-input outline-input'"
+              [inputPlaceholder]="'Enter your email'" [inputId]="'email'" formControlName="username"
+              [inputIcon]="'fa-user'"></stc-apps-input>
           </div>
-          <h4 class="">{{ 'login_with_email' | translate }}</h4>
-          <p>Welcome back , let’s discover the applications</p>
-
-        </div>
-      </div>
-      <div class="col-md-7  ">
-        <div class="row">
-          <div class="col-md-6 offset-md-3">
-            <form [formGroup]="form" (keydown)="keyDownFunction($event)">
-              <div class="mb-2">
-                <stc-apps-input [inputName]="'email'" [className]="'stc-input outline-input'"
-                  [inputPlaceholder]="'Enter your email'" [inputId]="'email'" formControlName="username"
-                  [inputIcon]="'fa-user'"></stc-apps-input>
-              </div>
-              <div class="mb-2">
-                <stc-apps-input [inputType]="'password'" [inputId]="'password'" [inputName]="'Password'"
-                  [className]="'stc-input outline-input'" [inputPlaceholder]="'Enter password'" [inputId]="'password'"
-                  formControlName="password" [inputIcon]="'fa-lock'"></stc-apps-input>
-              </div>
-
-              <stc-apps-button [loading]="authService.isLoading" [buttonText]="'login' | translate"
-                [buttonType]="'primary'" [buttonDisable]="false" (btnClick)="onSubmit()"></stc-apps-button>
-            </form>
-            <span class="divider-line my-4">{{ 'or' | translate }}</span>
-            <stc-apps-button [buttonType]="'stc-color-outline'" [buttonText]="'login_with_stc' | translate"
-              [buttonDisable]="false" (btnClick)="loginWithSSO()"></stc-apps-button>
+          <div class="mb-2">
+            <stc-apps-input [inputType]="'password'" [inputId]="'password'" [inputName]="'Password'"
+              [className]="'stc-input outline-input'" [inputPlaceholder]="'Enter password'" [inputId]="'password'"
+              formControlName="password" [inputIcon]="'fa-lock'"></stc-apps-input>
           </div>
-        </div>
+
+          <stc-apps-button [loading]="authService.isLoading" [buttonText]="'login' | translate" [buttonType]="'primary'"
+            [buttonDisable]="false" (btnClick)="onSubmit()"></stc-apps-button>
+        </form>
+        <span class="divider-line my-4">{{ 'or' | translate }}</span>
+        <stc-apps-button [buttonType]="'stc-color-outline'" [buttonText]="'login_with_stc' | translate"
+          [buttonDisable]="false" (btnClick)="loginWithSSO()"></stc-apps-button>
       </div>
     </div>
   </div>

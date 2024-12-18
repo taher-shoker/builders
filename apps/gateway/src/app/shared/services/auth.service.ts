@@ -26,7 +26,7 @@ export class AuthService {
 
   user = new BehaviorSubject<User | null>(null);
 
-  loggedInUser!: LoggedUser | null;
+  loggedInUser: LoggedUser | null = null;
 
   loggedUserStream: BehaviorSubject<LoggedUser | null> =
     new BehaviorSubject<LoggedUser | null>(null);
@@ -79,20 +79,15 @@ export class AuthService {
    * Checks if the current user has admin role.
    * @returns True if the user has an admin role, otherwise false
    */
-  isAdminUser() {
-    const user =
-      this.getLoggedInUser().getValue() || this.cookieService.get('token');
+  isAdminUser(): boolean {
+    const user = this.loggedInUser || this.cookieService.get('token');
+    const isAdminRole =
+      this.loggedInUser?.userGroups[0]?.roles[0]?.roleName.includes('ADMINS') ??
+      false;
 
-    const isAdminRole = this.loggedUserStream
-      .getValue()
-      ?.userGroups[0].roles[0].roleName.includes('ADMINS');
-
-    if (user != null && isAdminRole == true) {
-      return true;
-    } else {
-      return false;
-    }
+    return user != null && isAdminRole;
   }
+
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);
     this.user.next(user);
@@ -160,13 +155,6 @@ export class AuthService {
    * @param res - User data response
    */
   private handleMultipleSystemAccess(res: UserData) {
-    console.log(res.dto);
-    this.loggedInUser = {
-      id: res.dto.id,
-      email: res.dto.username,
-      username: res.dto.username,
-      userGroups: res.dto.userGroupedMenusDTO,
-    };
     if (res.dto.systems.includes('TP_DashboardUsers')) {
       this.handleTPSysNeeds(res);
     }
