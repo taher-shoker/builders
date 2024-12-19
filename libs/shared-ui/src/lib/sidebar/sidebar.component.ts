@@ -1,22 +1,27 @@
-import { Component, EventEmitter, inject, input, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  InputSignal,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { SidebarLinksModel } from './sidebarLinks.model';
 import { NavigationStart, Router } from '@angular/router';
-export interface UserGroup
-{
-  id:number;
-  groupName:string;
-  roles:UserGroupRoles[];
+export interface UserGroup {
+  id: number;
+  groupName: string;
+  roles: UserGroupRoles[];
 }
-export interface UserGroupRoles
-{
-  id:number;
-  roleName:string;
-  system:UserGroupSystem;
+export interface UserGroupRoles {
+  id: number;
+  roleName: string;
+  system: UserGroupSystem;
 }
-export interface UserGroupSystem
-{
-  id:number;
-  name:string;
+export interface UserGroupSystem {
+  id: number;
+  name: string;
 }
 @Component({
   selector: 'stc-apps-sidebar',
@@ -24,53 +29,53 @@ export interface UserGroupSystem
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
-export class SidebarComponent implements OnInit{
-  editModeChecked!:boolean;
-  logoSrc = input.required<string>({alias : 'logoSrc'})
-  isAdmin = input.required<boolean>()
-  isPMO = input<boolean>()
-  usernameImage = input<string>()
-  userName = input<string>()
-  router = inject(Router)
+export class SidebarComponent implements OnInit {
+  editModeChecked!: boolean;
+  logoSrc = input.required<string>({ alias: 'logoSrc' });
+  secondLogoSrc = input<string>('');
+  isAdmin = input.required<boolean>();
+  isPMO = input<boolean>();
+  usernameImage = input<string>();
+  userName = input<string>();
+  router = inject(Router);
+  height: InputSignal<string> = input<string>('100%');
   isAllowed = false;
-  currentUrl = "";
+  currentUrl = '';
   // tabChanged = input<boolean>()
   // isEditModeChecked = input<boolean>()
-  sidebarLinks = input.required<SidebarLinksModel[]>()
-  activeMode:'editMode' | 'viewMode' = 'viewMode';
-  @Output() currentMode:EventEmitter<'editMode' | 'viewMode'> = new EventEmitter();
-  @Output() logoutFun:EventEmitter<boolean> = new EventEmitter();
-  ngOnInit()
-  {
+  sidebarLinks = input.required<SidebarLinksModel[]>();
+  activeMode: 'editMode' | 'viewMode' = 'viewMode';
+  @Output() currentMode: EventEmitter<'editMode' | 'viewMode'> =
+    new EventEmitter();
+  @Output() logoutFun: EventEmitter<boolean> = new EventEmitter();
+
+  ngOnInit() {
     this.currentMode.emit(this.activeMode);
     this.router.events.subscribe({
-      next : (res) => {
+      next: (res) => {
         if (res instanceof NavigationStart) {
-          console.log(res);
+          // console.log(res);
           this.currentUrl = res.url;
           this.editModeChecked = false;
         }
-      }
-    })
-
+      },
+    });
   }
   // ngOnDestory()
   // {
   //   this.activeMode = 'viewMode';
   //   this.editModeChecked = false;
   // }
-  switchEditMode()
-  {
-    if(this.editModeChecked === true)
-    {
+  switchEditMode() {
+    if (this.editModeChecked === true) {
       this.activeMode = 'editMode';
     } else {
       this.activeMode = 'viewMode';
     }
     this.currentMode.emit(this.activeMode);
   }
-  logout()
-  {
+
+  logout() {
     this.logoutFun.emit();
   }
 }
