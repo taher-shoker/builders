@@ -1,98 +1,74 @@
-<div class="api-test-form">
-  <form [formGroup]="apiTestForm">
-    <div formArrayName="tests">
-      @for (test of tests.controls; let i = $index; track test) {
-      <div [formGroupName]="i">
-        @if (!isTestRunning(i)) {
-        <div class="api-test-form_controls">
-          <!-- Remove Button -->
-          <a type="button" (click)="removeTest(i)">
-            <img
-              src="assets/images/close-circle.svg"
-              alt="Remove Icon"
-              class="button-icon"
-            />
-          </a>
-          <!-- API Link Input -->
-          <div class="form-group">
-            <textarea
-              type="text"
-              class="form-control"
-              id="apiLink-{{ i }}"
-              formControlName="apiLink"
-              placeholder="Paste API link"
-            ></textarea>
-          </div>
-
-          <!-- Standard Dropdown -->
-          <div class="form-group">
-            <select
-              class="form-control"
-              id="standard-{{ i }}"
-              formControlName="standard"
-            >
-              <option value="" selected>Select Standard</option>
-              <option *ngFor="let standard of standards" [value]="standard">
-                {{ standard }}
-              </option>
-            </select>
-          </div>
-        </div>
-        } @else {
-        <div class="api-test-form_status">
-          <div><span>Test ID:</span> #{{ getTestId(i) }}</div>
-          <div><span>API Name:</span> {{ test.get('apiLink')?.value }}</div>
-          <div>
-            <span>Standard Name:</span> {{ test.get('standard')?.value }}
-          </div>
-          <div><span>Over all Results:</span> {{ getOverallResult(i) }}</div>
-
-          <!-- <div class="loader" *ngIf="isLoading"></div> -->
-          <button type="button" (click)="cancelTest(i)">
-            <img
-              src="assets/images/close-circle.svg"
-              alt="Remove Icon"
-              class="button-icon"
-            />Cancel
-          </button>
-        </div>
-        }
+<div class="api-test">
+  <div class="api-test_filter" [formGroup]="apiTestForm">
+    <h5>Paste API link then select standard from list</h5>
+    <div class="api-test_filter_fields">
+      <div class="form-group">
+        <label for="apiLinkInput">API Link</label>
+        <mat-form-field appearance="fill">
+          <input
+            matInput
+            type="text"
+            id="apiLinkInput"
+            class="form-control"
+            formControlName="apiLink"
+            placeholder="Paste API link"
+          />
+          <span matPrefix>http://</span>
+        </mat-form-field>
       </div>
+      <div class="form-group">
+        <label for="apiLinkInput">Standard</label>
+        <mat-form-field>
+          <mat-select class="form-control" formControlName="standard">
+            <mat-option value="" selected>Select Standard</mat-option>
+            <mat-option *ngFor="let standard of standards" [value]="standard">
+              {{ standard }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <stc-apps-button
+        [buttonText]="'Add To Queue'"
+        [buttonType]="'stc-color-outline'"
+        [buttonDisable]="apiTestForm.invalid"
+        (click)="sendToQueue()"
+      ></stc-apps-button>
+      <stc-apps-button
+        [buttonText]="'Add & Run'"
+        [buttonType]="'primary'"
+        [buttonDisable]="apiTestForm.invalid"
+      ></stc-apps-button>
+    </div>
+  </div>
+
+  <div class="api-test_lists">
+    <stc-apps-status-list
+      [title]="'Queue - In Progress'"
+      [items]="queueItems"
+      (itemsChange)="onItemsChange($event)"
+      (completedItemsChange)="onCompletedItemsChange($event)"
+    ></stc-apps-status-list>
+    <stc-apps-status-list
+      [title]="'Completed Tests'"
+      [items]="completedItems"
+      (itemSelected)="onCompletedItemClick($event)"
+    ></stc-apps-status-list>
+  </div>
+
+  <div class="api-test_result">
+    <div class="api-test_result_header">
+      <h5>Result of selected test</h5>
+      @if (tableData.length > 0) {
+      <stc-apps-button
+        [buttonText]="'Export result'"
+        [buttonType]="'stc-color-outline'"
+      ></stc-apps-button>
       }
     </div>
-
-    <!-- Add New and Run Buttons -->
-    <div class="api-test-form_actions">
-      <button
-        (click)="addTest()"
-        [disabled]="!isLastTestValid()"
-        [ngClass]="{
-          'btn-enabled-add': isLastTestValid(),
-          'btn-disabled-add': !isLastTestValid()
-        }"
-      >
-        <img
-          src="assets/images/add-circle.svg"
-          alt="Add Icon"
-          class="button-icon"
-        />
-        Add new API test
-      </button>
-      <button
-        (click)="runTests()"
-        [disabled]="!apiTestForm.valid"
-        [ngClass]="{
-          'btn-enabled-run': apiTestForm.valid,
-          'btn-disabled-run': !apiTestForm.valid
-        }"
-      >
-        <img
-          src="assets/images/video-circle.svg"
-          alt="Run Icon"
-          class="button-icon"
-        />
-        Run
-      </button>
-    </div>
-  </form>
+    <stc-apps-table-list
+      [dataSource]="tableData"
+      [columnSchema]="columnsSchema"
+      [noDataMessage]="'Pick a Completed  Test to View Its Result'"
+    ></stc-apps-table-list>
+  </div>
 </div>

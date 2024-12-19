@@ -1,17 +1,34 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
-  FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { SharedUiModule } from '@stc-apps/shared-ui';
+import { StatusListComponent } from '../../shared/components/status-list/status-list.component';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { TableListComponent } from '../../shared/components/table-list/table-list.component';
+import { ApiStandard } from '.././../shared/models/standards.models';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 
 @Component({
   selector: 'stc-apps-api-test',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    SharedUiModule,
+    StatusListComponent,
+    MatFormFieldModule,
+    MatInputModule,
+    MatSelectModule,
+    TableListComponent,
+  ],
   templateUrl: './api-test.component.html',
   styleUrls: ['./api-test.component.scss'],
 })
@@ -19,96 +36,95 @@ export class ApiTestComponent {
   private fb = inject(FormBuilder);
   apiTestForm: FormGroup = new FormGroup({});
   standards: string[] = ['Standard A', 'Standard B', 'Standard C'];
-  isRunning: boolean[] = [];
-  testResults: any[] = [];
-  isLoading = false;
+  queueItems: {
+    id: number;
+    apiLink: string;
+    standard: string;
+    standardList: string[];
+    hasRun?: boolean;
+  }[] = [];
+
+  completedItems: {
+    id: number;
+    apiLink: string;
+    standard: string;
+    standardList: string[];
+    hasRun?: boolean;
+  }[] = [];
+
+  tableData: ApiStandard[] = [];
+
+  columnsSchema: ColumnsSchema[] = [
+    { key: 'id', type: 'text', label: 'Test ID' },
+    { key: 'description', type: 'text', label: 'Test Description' },
+    { key: 'result', type: 'text', label: 'Result' },
+    { key: 'recommendation', type: 'text', label: 'Recommendation' },
+  ];
+
+  displayedColumns: string[] = this.columnsSchema.map((col) => col.key);
 
   constructor() {
     this.apiTestForm = this.fb.group({
-      tests: this.fb.array([this.createTestGroup()]),
-    });
-
-    this.isRunning = [false];
-    this.testResults = [
-      {
-        testId: this.generateTestId(),
-        apiName: '',
-        standardName: '',
-        overallResult: 'Not started',
-      },
-    ];
-  }
-
-  get tests(): FormArray {
-    return this.apiTestForm.get('tests') as FormArray;
-  }
-
-  createTestGroup(): FormGroup {
-    return this.fb.group({
       apiLink: ['', Validators.required],
       standard: ['', Validators.required],
     });
   }
 
-  // Add a new test row
-  addTest(): void {
-    this.tests.push(this.createTestGroup());
-    this.isRunning.push(false);
-    this.testResults.push({
-      testId: this.generateTestId(),
-      apiName: '',
-      standardName: '',
-      overallResult: 'Not started',
-    });
-  }
+  sendToQueue(): void {
+    const apiLink = this.apiTestForm.get('apiLink')?.value;
+    const standard = this.apiTestForm.get('standard')?.value;
 
-  // Remove a test row
-  removeTest(index: number): void {
-    this.tests.removeAt(index);
-    this.isRunning.splice(index, 1);
-    this.testResults.splice(index, 1);
-  }
-
-  isLastTestValid(): boolean {
-    if (this.tests.length === 0) {
-      return true;
+    if (apiLink && standard) {
+      this.queueItems.push({
+        id: this.generateId(),
+        standardList: this.standards,
+        ...this.apiTestForm.value,
+      });
+      this.apiTestForm.reset({
+        standard: '',
+      });
     }
-
-    const lastTest = this.tests.at(this.tests.length - 1);
-    return lastTest ? lastTest.valid : false;
   }
 
-  isTestRunning(index: number): boolean {
-    return this.isRunning[index] === true;
+  private generateId(): number {
+    return Math.floor(Math.random() * 1000000);
   }
 
-  runTests() {
-    this.isLoading = true;
-    this.isRunning.forEach((_, index) => {
-      this.isRunning[index] = true;
-      this.testResults[index] = {
-        testId: this.generateTestId(),
-        apiName: this.apiTestForm.controls[index]?.get('apiName'),
-        standardName: this.apiTestForm.controls[index]?.get('standard'),
-        overallResult: 'Still in progress',
-      };
-    });
+  onItemsChange(
+    updatedItems: {
+      id: number;
+      apiLink: string;
+      standard: string;
+      standardList: string[];
+      hasRun?: boolean;
+      hasCompleted?: boolean;
+    }[]
+  ): void {
+    const finishedItems = updatedItems
+      .filter((item) => item.hasRun)
+      .map((item) => ({
+        id: item.id,
+        apiLink: item.apiLink,
+        standard: item.standard,
+        standardList: [item.standard],
+        hasRun: true,
+      }));
+    this.queueItems = finishedItems;
   }
 
-  getTestId(index: number): string {
-    return this.testResults[index]?.testId || 'N/A';
+  onCompletedItemsChange(completedItems: any[]) {
+    this.completedItems = [...this.completedItems, ...completedItems];
   }
 
-  generateTestId() {
-    return Math.floor(Math.random() * 10000000);
-  }
-
-  cancelTest(index: number) {
-    this.isRunning[index] = false;
-    this.testResults[index].overallResult = 'Cancelled';
-  }
-
-  getOverallResult(index: number): string {
-    return this.testResults[index]?.overallResult || 'Not started';
+  onCompletedItemClick(item: any): void {
+    const updatedData: any[] = [
+      {
+        id: item.id,
+        description: `API Link: ${item.apiLink}, Standard: ${item.standard}`,
+        result: 'Sample Result',
+        recommendation: 'Sample Recommendation',
+      },
+    ];
+    this.tableData = updatedData;
   }
 }
