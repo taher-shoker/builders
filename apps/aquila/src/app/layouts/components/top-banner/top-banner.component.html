@@ -1,0 +1,19 @@
+<div class="top-banner">
+  <div class="top-banner_welcome">
+    <p>
+      Welcome Back, <strong> {{ userName }}</strong>
+    </p>
+    <img src="assets/images/Waving Hand.svg" alt="" />
+  </div>
+  <div class="top-banner_actions">
+    <p-button icon="pi pi-bell" class="notification-icon" [text]="true">
+    </p-button>
+    <stc-apps-header
+      [userName]="userName"
+      [logoSrc]="logoSrc()"
+      [allItems]="[]"
+      [sidebarLogoSrc]="logoSrc()"
+      [showLang]="false"
+    ></stc-apps-header>
+  </div>
+</div>

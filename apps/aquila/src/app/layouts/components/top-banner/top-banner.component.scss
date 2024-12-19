@@ -1,0 +1,41 @@
+.top-banner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--whiteColor);
+
+
+    &_welcome {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-inline-start: 40px;
+    }
+
+    &_actions {
+        display: flex;
+        align-items: center;
+
+        p-button {
+            ::ng-deep {
+                span {
+                    font-size: 24px;
+                    color: var(--darkPurpleColor);
+                }
+            }
+        }
+
+        stc-apps-header {
+            ::ng-deep {
+                .navbar {
+                    padding-inline-start: 0;
+                }
+
+                .left-box {
+                    display: none !important;
+                }
+
+            }
+        }
+    }
+}

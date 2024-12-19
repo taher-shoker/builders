@@ -38,7 +38,7 @@ export class SidebarComponent implements OnInit {
   usernameImage = input<string>();
   userName = input<string>();
   router = inject(Router);
-  height: InputSignal<string> = input<string>('100%');
+  justifyContent = input('space-between');
   isAllowed = false;
   currentUrl = '';
   // tabChanged = input<boolean>()
