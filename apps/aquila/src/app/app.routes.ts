@@ -7,6 +7,11 @@ export const appRoutes: Route[] = [
     component: MainLayoutComponent,
     children: [
       {
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'api-test',
+      },
+      {
         path: 'api-test',
         loadComponent: () =>
           import('./features/api-test/api-test.component').then(

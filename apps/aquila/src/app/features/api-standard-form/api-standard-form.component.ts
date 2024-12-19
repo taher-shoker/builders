@@ -43,7 +43,8 @@ export class ApiStandardFormComponent {
 
   onSubmit(): void {
     if (this.form.valid) {
-      console.log(this.form.value);
+      const newStandard = this.form.value;
+      this.router.navigate(['api-standard-list'], { state: { newStandard } });
     }
   }
 

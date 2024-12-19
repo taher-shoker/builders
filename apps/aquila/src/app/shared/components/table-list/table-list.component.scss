@@ -11,14 +11,16 @@
             }
         }
 
+        .p-paginator {
+            justify-content: flex-end
+        }
+
         tbody {
             max-height: 220px;
             overflow: auto;
         }
 
-        .p-dropdown-items {
-            padding: 0;
-        }
+
     }
 
     tr:not(.table-header) td {
