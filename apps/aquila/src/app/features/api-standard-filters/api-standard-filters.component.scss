@@ -1,0 +1,23 @@
+.api-standard_filters {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+::ng-deep {
+    .p-datepicker {
+        table {
+            width: max-content;
+
+            tbody {
+                tr:not(.table-header) {
+                    border: none;
+
+                    td {
+                        padding: 0;
+                    }
+                }
+            }
+        }
+    }
+}

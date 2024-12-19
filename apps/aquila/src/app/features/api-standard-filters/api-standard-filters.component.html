@@ -1,0 +1,49 @@
+<form [formGroup]="filterForm" class="api-standard_filters">
+  <!-- Search by Standard Name -->
+  <div class="filter-field">
+    <p-iconField iconPosition="left">
+      <p-inputIcon styleClass="pi pi-search" />
+      <input type="text" pInputText placeholder="Search by Standard Name" />
+    </p-iconField>
+  </div>
+
+  <!-- Publish Date -->
+  <div class="filter-field">
+    <p-calendar
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      inputId="icondisplay"
+      placeholder="Publish Date"
+    />
+  </div>
+
+  <!-- Latest Update Date -->
+  <div class="filter-field">
+    <p-calendar
+      formControlName="latestUpdateDate"
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      inputId="icondisplay"
+      placeholder="Latest Update Date"
+    />
+  </div>
+
+  <!-- Business Area Dropdown -->
+  <div class="filter-field">
+    <p-dropdown
+      formControlName="businessArea"
+      [options]="businessAreaOptions"
+      optionLabel="label"
+      placeholder="Business Area"
+    ></p-dropdown>
+  </div>
+
+  <!-- Sort Buttons -->
+  <div class="sort-buttons">
+    <p-dropdown
+      [options]="sortOptions"
+      optionLabel="label"
+      placeholder="Sort"
+    ></p-dropdown>
+  </div>
+</form>
