@@ -18,25 +18,15 @@
             gap: 25px;
             align-items: end;
 
-            .form-group {
+            >div {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
                 flex: 1;
 
-                label {
-                    margin-bottom: 8px;
-                }
-
-                span {
-                    padding: 0 10px;
-                    color: #6B7280;
-                }
-            }
-
-            mat-form-field {
-                border: 1px solid #D1D5DB;
-
                 ::ng-deep {
-                    .mat-mdc-form-field-subscript-wrapper {
-                        display: none;
+                    .p-dropdown {
+                        width: 100%;
                     }
                 }
             }
@@ -72,16 +62,43 @@
                 color: var(--darkPurbleColor);
                 margin: 0;
             }
-        }
 
-        stc-apps-custom-table {
-            ::ng-deep {
-                .table-header {
-                    background-color: #E5E7EB;
-                }
+            p-splitbutton {
+                ::ng-deep {
+                    .p-splitbutton-defaultbutton {
+                        border-right: none;
+                        padding-right: 0;
+                        color: #64748B;
+                        font-weight: 700;
+                    }
 
-                .arrows-holder {
-                    display: none;
+                    .p-splitbutton-menubutton {
+                        border-left: none;
+                        padding-left: 0;
+                        color: #64748B;
+                    }
+
+                    p-tieredmenu {
+                        ul {
+                            padding-inline-start: 0;
+
+                            li {
+                                a {
+                                    text-decoration: none;
+                                    display: flex;
+                                    justify-content: space-between;
+
+                                    .p-menuitem-icon {
+                                        order: 2;
+                                    }
+
+                                    .p-menuitem-text {
+                                        order: 1;
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -8,13 +8,15 @@ import {
 } from '@angular/forms';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { StatusListComponent } from '../../shared/components/status-list/status-list.component';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
 import { TableListComponent } from '../../shared/components/table-list/table-list.component';
 import { ApiStandard } from '.././../shared/models/standards.models';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { InputTextModule } from 'primeng/inputtext';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { DropdownModule } from 'primeng/dropdown';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
 @Component({
   selector: 'stc-apps-api-test',
@@ -24,10 +26,12 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
     ReactiveFormsModule,
     SharedUiModule,
     StatusListComponent,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
+    InputTextModule,
     TableListComponent,
+    InputGroupModule,
+    InputGroupAddonModule,
+    DropdownModule,
+    SplitButtonModule,
   ],
   templateUrl: './api-test.component.html',
   styleUrls: ['./api-test.component.scss'],
@@ -36,6 +40,27 @@ export class ApiTestComponent {
   private fb = inject(FormBuilder);
   apiTestForm: FormGroup = new FormGroup({});
   standards: string[] = ['Standard A', 'Standard B', 'Standard C'];
+  standardOptions = this.standards.map((standard) => ({
+    label: standard,
+    value: standard,
+  }));
+  exportItems = [
+    {
+      icon: 'pi pi-download',
+      label: 'Standard PDF',
+      command: () => this.downloadFile('/path/to/standard.pdf', 'Standard PDF'),
+    },
+    {
+      label: 'CTK script',
+      icon: 'pi pi-download',
+      command: () => this.downloadFile('/path/to/ctk-script.js', 'CTK script'),
+    },
+    {
+      label: 'Swagger',
+      icon: 'pi pi-download',
+      command: () => this.downloadFile('/path/to/swagger.json', 'Swagger'),
+    },
+  ];
   queueItems: {
     id: number;
     apiLink: string;
@@ -50,6 +75,7 @@ export class ApiTestComponent {
     standard: string;
     standardList: string[];
     hasRun?: boolean;
+    hasCompleted?: boolean;
   }[] = [];
 
   tableData: ApiStandard[] = [];
@@ -86,6 +112,41 @@ export class ApiTestComponent {
     }
   }
 
+  sendToQueueAndRun() {
+    const apiLink = this.apiTestForm.get('apiLink')?.value;
+    const standard = this.apiTestForm.get('standard')?.value;
+
+    if (apiLink && standard) {
+      const newItem = {
+        id: this.generateId(),
+        standardList: this.standards,
+        ...this.apiTestForm.value,
+        hasRun: true,
+      };
+
+      this.queueItems = this.queueItems.map((item) => ({
+        ...item,
+        hasRun: true,
+      }));
+
+      this.queueItems.push(newItem);
+
+      setTimeout(() => {
+        this.queueItems.forEach((item) => {
+          this.completedItems.push({
+            ...item,
+            hasCompleted: true,
+          });
+        });
+        this.queueItems = [];
+      }, 3000);
+
+      this.apiTestForm.reset({
+        standard: '',
+      });
+    }
+  }
+
   private generateId(): number {
     return Math.floor(Math.random() * 1000000);
   }
@@ -112,6 +173,12 @@ export class ApiTestComponent {
     this.queueItems = finishedItems;
   }
 
+  onQueueItemSelect(item: any): void {
+    this.apiTestForm.patchValue({
+      standard: item.standard,
+    });
+  }
+
   onCompletedItemsChange(completedItems: any[]) {
     this.completedItems = [...this.completedItems, ...completedItems];
   }
@@ -126,5 +193,16 @@ export class ApiTestComponent {
       },
     ];
     this.tableData = updatedData;
+  }
+
+  onStandardChange(event: { value: any; index: number }) {
+    this.queueItems[event.index].standard = event.value;
+  }
+
+  downloadFile(path: string, fileName: string) {
+    const link = document.createElement('a');
+    link.href = path;
+    link.download = fileName;
+    link.click();
   }
 }
