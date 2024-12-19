@@ -1,0 +1,48 @@
+.table {
+    ::ng-deep {
+        .p-datatable-thead {
+            background-color: #F9FAFB;
+            border-top: 1px solid #cbcbcb;
+
+            tr {
+                th {
+                    padding: 14px;
+                }
+            }
+        }
+
+        tbody {
+            max-height: 220px;
+            overflow: auto;
+        }
+
+        .p-dropdown-items {
+            padding: 0;
+        }
+    }
+
+    tr:not(.table-header) td {
+        color: #4B5563;
+    }
+
+    &_actions {
+        button {
+            background: transparent;
+
+            ::ng-deep {
+                span {
+                    color: #4B5563;
+                    font-size: 20px;
+                }
+            }
+        }
+    }
+
+    &_no-data-message {
+        width: 100%;
+        height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}

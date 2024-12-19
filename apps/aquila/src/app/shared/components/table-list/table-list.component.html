@@ -1,0 +1,52 @@
+<p-table
+  [value]="dataSource()"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [paginator]="dataSource().length > 0"
+  [rows]="10"
+  [scrollable]="true"
+  [responsive]="true"
+  class="table"
+  [rowsPerPageOptions]="[10, 25, 50]"
+>
+  <ng-template pTemplate="header">
+    @if (dataSource().length >0) {
+    <tr>
+      @for (column of displayedColumns(); track column) {
+      <th>{{ column.label }}</th>
+      }
+    </tr>
+    }
+  </ng-template>
+
+  <ng-template pTemplate="body" let-rowData let-columns="columns">
+    <tr>
+      @for (column of displayedColumns(); track column) { @if (column.key ===
+      'actions') {
+      <td>
+        <div class="table_actions">
+          @for (action of tableActions(); track action) {
+          <button
+            pButton
+            pRipple
+            type="button"
+            icon="{{ action }}"
+            class="p-button-rounded p-button-text"
+          ></button>
+          }
+        </div>
+      </td>
+      } @else {
+      <td>{{ rowData[column.key] }}</td>
+      } }
+    </tr>
+  </ng-template>
+
+  <!-- No Data Message -->
+  <ng-template pTemplate="emptymessage">
+    <td [attr.colspan]="displayedColumns().length">
+      <div class="table_no-data-message">
+        <span>{{ noDataMessage() }}</span>
+      </div>
+    </td>
+  </ng-template>
+</p-table>
