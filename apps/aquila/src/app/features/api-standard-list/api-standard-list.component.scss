@@ -3,6 +3,9 @@
 .api-standared {
     @extend .component-wrapper;
     border-radius: 6.25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 
     mat-icon {
         height: auto;
@@ -18,63 +21,18 @@
 
         h3 {
             flex: 1;
+            color: #212121;
+            font-weight: 600;
         }
 
-        &_actions {
-            display: flex;
-            flex: 1;
-
-
-            .search-filter {
-                margin-inline-end: 24px;
-
-                ::ng-deep {
-                    .mdc-text-field {
-                        border-radius: 10px !important;
+        stc-apps-button {
+            ::ng-deep {
+                button {
+                    i {
+                        font-size: 15px;
                     }
                 }
             }
-
-            .date-filter {
-                width: fit-content;
-
-                ::ng-deep {
-                    .mdc-text-field {
-                        padding: 0;
-                        border-radius: 10px !important;
-                    }
-
-                    .mat-mdc-form-field-infix {
-                        width: 70px;
-                    }
-                }
-            }
-
-
-
-            button {
-                margin-inline-start: 24px;
-                width: 100%;
-                background: var(--stc-pink-color);
-                color: var(--whiteColor);
-                padding: 16.5px;
-                height: fit-content;
-                border-radius: 10px;
-                font-size: 18px;
-
-                img {
-                    margin-inline-end: 10px;
-                    filter: invert(1) brightness(3);
-                }
-
-            }
-        }
-    }
-
-    &_table {
-        button {
-            font-size: 18px;
-            font-family: stc forward-regular;
         }
     }
 
@@ -82,33 +40,6 @@
         &_header {
             flex-direction: column;
             align-items: flex-start;
-
-            &_actions {
-                width: 100%;
-                justify-content: space-between;
-                flex-direction: column;
-
-                .search-filter,
-                .date-filter {
-                    width: 100%;
-                    margin-bottom: 12px;
-                }
-
-                button {
-                    width: 100%;
-                    margin-inline-start: 0;
-                }
-            }
-        }
-
-        &_table {
-            margin-top: 20px;
-        }
-    }
-
-    @media (max-width: 768px) {
-        &_table {
-            overflow-x: auto;
         }
     }
 
@@ -118,21 +49,6 @@
                 font-size: 18px;
                 margin-bottom: 12px;
             }
-
-            &_actions {
-                button {
-                    font-size: 16px;
-                }
-
-                .search-filter,
-                .date-filter {
-                    max-width: 100%;
-                }
-            }
-        }
-
-        &_table table {
-            font-size: 14px;
         }
     }
 }

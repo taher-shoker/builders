@@ -1,65 +1,77 @@
-import { AfterViewInit, Component, inject, ViewChild } from '@angular/core';
+import { Component, computed, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDatepickerModule } from '@angular/material/datepicker';
 import { Router } from '@angular/router';
-import { ApiStandard } from '../../core/models/standards.models';
+import { ApiStandard } from '../../shared/models/standards.models';
+import { TableListComponent } from '../../shared/components/table-list/table-list.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { ApiStandardFiltersComponent } from '../api-standard-filters/api-standard-filters.component';
 
 @Component({
   selector: 'stc-apps-api-standard-list',
   standalone: true,
   imports: [
     CommonModule,
-    MatPaginatorModule,
-    MatTableModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
-    MatDatepickerModule,
     SharedUiModule,
+    TableListComponent,
+    ApiStandardFiltersComponent,
   ],
   templateUrl: './api-standard-list.component.html',
   styleUrls: ['./api-standard-list.component.scss'],
 })
-export class ApiStandardListComponent implements AfterViewInit {
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+export class ApiStandardListComponent implements OnInit {
   router = inject(Router);
-  dataSource: MatTableDataSource<ApiStandard>;
+  el = inject(ElementRef<HTMLElement>);
+  dataSource: ApiStandard[];
+  newStandard!: ApiStandard;
   ELEMENT_DATA: ApiStandard[] = [
     {
-      standardName: 'Standard 1',
+      apiName: 'Standard 1',
       version: 'v1.0',
+      businessArea: 'Business Area',
       lastUpdate: new Date(),
       publishDate: new Date(),
     },
     {
-      standardName: 'Standard 2',
+      apiName: 'Standard 2',
       version: 'v2.1',
+      businessArea: 'Business Area',
       lastUpdate: new Date(),
       publishDate: new Date(),
     },
   ];
+
   displayedColumns: string[] = [
-    'standardName',
+    'apiName',
     'version',
-    'lastUpdate',
+    'businessArea',
     'publishDate',
-    'actions',
+    'lastUpdate',
   ];
 
-  constructor() {
-    this.dataSource = new MatTableDataSource<ApiStandard>(this.ELEMENT_DATA);
-  }
+  columnsSchema: ColumnsSchema[] = [
+    { key: 'apiName', type: 'text', label: 'Name' },
+    { key: 'version', type: 'text', label: 'Version' },
+    { key: 'businessArea', type: 'text', label: 'Business Area' },
+    { key: 'publishDate', type: 'text', label: 'Publish Date' },
+    { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
+  ];
 
-  ngAfterViewInit(): void {
-    this.dataSource.paginator = this.paginator;
+  tableActions = computed(() => {
+    const actions = ['pi pi-eye', 'pi pi-pen-to-square'];
+    return actions;
+  });
+
+  constructor() {
+    this.dataSource = this.ELEMENT_DATA;
+  }
+  ngOnInit(): void {
+    const newStandard = history.state.newStandard;
+    if (newStandard) {
+      this.newStandard = newStandard;
+      this.dataSource.push(this.newStandard);
+    }
   }
 
   onAddStandard(): void {
@@ -69,4 +81,8 @@ export class ApiStandardListComponent implements AfterViewInit {
   onEditStandard(standard: ApiStandard) {
     this.router.navigate(['api-standard-form'], { state: { standard } });
   }
+
+  onFiltersChanged(filters: any) {}
+
+  onSortChanged(direction: 'asc' | 'desc') {}
 }

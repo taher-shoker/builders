@@ -1,99 +1,26 @@
 <div class="api-standared">
   <div class="api-standared_header">
-    <h3>API Standards</h3>
-    <div class="api-standared_header_actions">
-      <mat-form-field class="search-filter">
-        <mat-icon matPrefix>
-          <img src="assets/images/search.svg" />
-        </mat-icon>
-        <input matInput placeholder="Search for standard" />
-      </mat-form-field>
-
-      <mat-form-field class="date-filter">
-        <input matInput [matDatepicker]="picker" hidden />
-        <mat-datepicker-toggle matSuffix [for]="picker">
-          <button mat-icon-button>
-            <mat-icon>calendar_today</mat-icon>
-          </button>
-        </mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
-      </mat-form-field>
-      <button mat-button (click)="onAddStandard()">
-        <img
-          src="assets/images/add-circle.svg"
-          alt="Add Icon"
-          class="button-icon"
-        />
-
-        Add new standard
-      </button>
-    </div>
+    <h3>Standards</h3>
+    <stc-apps-button
+      [buttonText]="'Add Standard'"
+      [buttonType]="'primary'"
+      [buttonIcon]="'fa-plus'"
+      (click)="onAddStandard()"
+    ></stc-apps-button>
   </div>
+  <div class="api-standard_filters">
+    <stc-apps-api-standard-filters
+      (filtersChanged)="onFiltersChanged($event)"
+      (sortChanged)="onSortChanged($event)"
+    ></stc-apps-api-standard-filters>
+  </div>
+
   <div class="api-standared_table">
-    <table mat-table [dataSource]="dataSource" matSort>
-      <ng-container matColumnDef="standardName">
-        <th mat-header-cell *matHeaderCellDef>Name</th>
-        <td mat-cell *matCellDef="let element">{{ element.standardName }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="version">
-        <th mat-header-cell *matHeaderCellDef>Version</th>
-        <td mat-cell *matCellDef="let element">{{ element.version }}</td>
-      </ng-container>
-
-      <ng-container matColumnDef="lastUpdate">
-        <th mat-header-cell *matHeaderCellDef>Last Update</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.lastUpdate | date }}
-        </td>
-      </ng-container>
-      <ng-container matColumnDef="publishDate">
-        <th mat-header-cell *matHeaderCellDef>Publish date</th>
-        <td mat-cell *matCellDef="let element">
-          {{ element.publishDate | date }}
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="actions">
-        <th mat-header-cell *matHeaderCellDef></th>
-        <td mat-cell *matCellDef="let element">
-          <button mat-button color="primary" (click)="onEditStandard(element)">
-            <mat-icon>
-              <img src="assets/images/edit.svg" />
-            </mat-icon>
-            Edit
-          </button>
-        </td>
-      </ng-container>
-
-      <ng-container matColumnDef="noData">
-        <td
-          mat-footer-cell
-          *matFooterCellDef
-          [attr.colspan]="displayedColumns.length"
-        >
-          <div class="no-data-message">
-            <span>No API standards available</span>
-          </div>
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-      <tr
-        mat-footer-row
-        *matFooterRowDef="['noData']"
-        [style.display]="dataSource.data.length === 0 ? '' : 'none'"
-      ></tr>
-    </table>
-
-    <mat-paginator
-      #paginator
-      [pageSizeOptions]="[5, 10, 20]"
-      pageSize="5"
-      showFirstLastButtons
-      aria-label="Select page of periodic elements"
-    >
-    </mat-paginator>
+    <stc-apps-table-list
+      [dataSource]="dataSource"
+      [columnSchema]="columnsSchema"
+      [tableActions]="tableActions()"
+      [noDataMessage]="'No API standards available'"
+    ></stc-apps-table-list>
   </div>
 </div>
