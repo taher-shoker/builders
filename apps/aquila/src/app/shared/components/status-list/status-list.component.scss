@@ -1,0 +1,87 @@
+@import '../../../../styles/shared-styles.scss';
+
+.status-list {
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+
+        h5 {
+            color: var(--darkPurbleColor);
+        }
+
+        stc-apps-button {
+            ::ng-deep {
+                button {
+                    color: var(--whiteColor);
+                }
+            }
+        }
+    }
+
+    &_items {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        height: 430px;
+        overflow-y: auto;
+        padding-right: 16px;
+
+        .card {
+            padding: 0;
+            height: auto;
+
+            &-header {
+                display: flex;
+                justify-content: space-between;
+                padding: 11px 15px;
+
+                button {
+                    width: auto;
+                    padding: 0;
+                }
+            }
+
+            &-body {
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+
+                span {
+                    padding: 0 10px;
+                    color: #6B7280;
+                }
+
+                mat-form-field {
+                    border: 1px solid #D1D5DB;
+
+                    ::ng-deep {
+                        .mat-mdc-form-field-subscript-wrapper {
+                            display: none;
+                        }
+                    }
+                }
+
+                ::ng-deep {
+                    .p-dropdown {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+
+    &_empty {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: fit-content;
+        gap: 5px;
+        margin: 130px auto;
+
+        p {
+            color: var(--grey-color);
+        }
+    }
+}

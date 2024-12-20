@@ -103,7 +103,10 @@ export class ApiTestComponent {
     if (apiLink && standard) {
       this.queueItems.push({
         id: this.generateId(),
-        standardList: this.standards,
+        standardList: this.standards.map((s) => ({
+          label: s,
+          value: s,
+        })),
         ...this.apiTestForm.value,
       });
       this.apiTestForm.reset({

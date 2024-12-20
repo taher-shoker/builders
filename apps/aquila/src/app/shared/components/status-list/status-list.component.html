@@ -1,0 +1,67 @@
+<div class="status-list">
+  <div class="status-list_header">
+    <h5>{{ title() }}</h5>
+    @if (title() == 'Queue - In Progress') {
+    <stc-apps-button
+      [buttonText]="'Run all'"
+      [buttonType]="'warn'"
+      [buttonDisable]="items().length <= 0"
+      (click)="runAll()"
+    ></stc-apps-button>
+    }
+  </div>
+  <div class="status-list_items">
+    @for (item of items(); let i = $index; track item) {
+    <div class="card" (click)="onItemClick(item)">
+      <div class="card-header">
+        <strong>ID: #{{ item.id }}</strong>
+        <!-- Remove button -->
+        @if (!item.hasRun) {
+        <button class="btn" (click)="removeItem(i)">
+          <img src="assets/images/remove-icon.svg" />
+        </button>
+        } @else if (item.hasRun && !item.hasCompleted) {
+        <div class="spinner">
+          <mat-spinner diameter="24"></mat-spinner>
+        </div>
+        }
+      </div>
+      <div class="card-body">
+        @if(item.hasRun) {
+        <!-- API Link  -->
+        <p><strong>API Link:</strong> {{ item.apiLink }}</p>
+        <!-- Standard -->
+        <p><strong>Selected Standard:</strong> {{ item.standard }}</p>
+        } @else {
+        <!-- API Link  -->
+        <div class="filter-field">
+          <p-inputGroup>
+            <p-inputGroupAddon>http://</p-inputGroupAddon>
+            <input
+              type="text"
+              [value]="item.apiLink"
+              pInputText
+              placeholder="API link"
+            />
+          </p-inputGroup>
+        </div>
+        <!-- Standard -->
+        <div class="filter-field">
+          <p-dropdown
+            [options]="item.standardList"
+            [(ngModel)]="item.standard"
+            (onChange)="onStandardChanged(item.standard, i)"
+            placeholder="Select Standard"
+          ></p-dropdown>
+        </div>
+        }
+      </div>
+    </div>
+    } @empty {
+    <div class="status-list_empty">
+      <img src="assets/images/no notification.svg" />
+      <p>We don't have a {{ title() }} right now</p>
+    </div>
+    }
+  </div>
+</div>
