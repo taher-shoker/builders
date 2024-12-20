@@ -38,4 +38,13 @@
             }
         }
     }
+
+    @media screen and (max-width: 768px) {
+        flex-direction: column;
+        padding-top: 25px;
+
+        &_welcome {
+            padding-inline-start: 0;
+        }
+    }
 }
