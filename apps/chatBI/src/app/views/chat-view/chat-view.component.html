@@ -1,13 +1,18 @@
 <div class="chat-view">
   <stc-apps-header [title]="'ChatBI'"></stc-apps-header>
-  <div class="chat-view_messages-container">
+  <div #scrollContainer class="chat-view_messages-container">
     <div class="background"></div>
-    <stc-apps-chat-list-item></stc-apps-chat-list-item>
-    <stc-apps-chat-list-item [messageType]="1"></stc-apps-chat-list-item>
-    <!-- <stc-apps-chat-list-item
-      [messageType]="0"
-      [message]="message"
-    ></stc-apps-chat-list-item> -->
+    @for (message of messages; track $index) {
+    <stc-apps-chat-list-item
+      [@fadeIn]="message.messageType === 0"
+      [message]="message.content"
+      [messageDate]="message.date"
+      [messageType]="message.messageType"
+      [images]="message.images ?? ['']"
+      [isLoading]="pendingFlag()"
+    >
+    </stc-apps-chat-list-item>
+    }
   </div>
 
   <div
@@ -16,6 +21,7 @@
   >
     <textarea
       class="textarea"
+      (keydown.enter)="onEnter($event)"
       [(ngModel)]="newMessage"
       placeholder="Ask me anything..."
       (focus)="onFocus()"
@@ -33,7 +39,11 @@
     </div>
     <div class="button-container">
       <img
-        [ngClass]="{ disabled: newMessage.length > 512 || !newMessage.trim()}"
+        [ngClass]="{
+          disabled:
+            newMessage.length > 512 || !newMessage.trim() || pendingFlag()
+        }"
+        (click)="sendMessage()"
         src="assets/images/Vector.svg"
         alt=""
       />

@@ -1,4 +1,4 @@
-import { Component, input, InputSignal } from '@angular/core';
+import { Component, effect, input, InputSignal } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-chat-list-item',
@@ -6,7 +6,15 @@ import { Component, input, InputSignal } from '@angular/core';
   styleUrl: './chat-list-item.component.scss',
 })
 export class ChatListItemComponent {
-  message: InputSignal<string> = input('Voice Quality In the last day?');
-  messageDate: InputSignal<string> = input('16:46 PM');
+  message: InputSignal<string> = input('');
+  messageDate: InputSignal<string> = input('');
   messageType: InputSignal<number> = input(0);
+  images: InputSignal<string[]> = input(['']);
+  isLoading: InputSignal<boolean> = input(false);
+  constructor(){
+    effect(()=>{
+      console.log(this.isLoading());
+      
+    })
+  }
 }

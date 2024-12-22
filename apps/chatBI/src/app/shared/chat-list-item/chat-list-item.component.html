@@ -8,7 +8,7 @@
   <div class="chat-list-item_query-profile">
     <img
       class="chat-list-item_photo"
-      src="assets/images/chatProfile.svg"
+      src="assets/images/chatProfile.jpg"
       alt=""
     />
   </div>
@@ -19,8 +19,21 @@
       class="message"
       [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
     >
-      {{ message() }}
+      @if (isLoading()&&messageType()===0 &&message()=='') {
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      } @else {
+      <div [innerHTML]="message()"></div>
+
+      @if (messageType() === 0 && images()) { @for (image of images(); track
+      $index) {
+      <img class="chatImage d-block" [src]="image" alt="" />
+      } } }
     </div>
+
     <div
       class="date"
       [ngStyle]="{
