@@ -53,10 +53,10 @@ export class ChatViewComponent {
   }
   getCurrentTime(): string {
     const now = new Date();
-    let hours = now.getHours();
+    const hours = now.getHours();
     const minutes = now.getMinutes().toString().padStart(2, '0');
     const amPm = hours >= 12 ? 'PM' : 'AM';
-    hours = hours % 12 || 12;
+    // hours = hours % 12 || 12;
     const currentTime = `${hours
       .toString()
       .padStart(2, '0')}:${minutes} ${amPm}`;
@@ -89,6 +89,9 @@ export class ChatViewComponent {
           date: this.getCurrentTime(),
         }
       );
+      setTimeout(() => {
+        this.scrollToBottom();
+      });
       this.apiVar = this.newMessage;
       this.newMessage = ''; // Clear input field
       this.pendingFlag.set(true);
@@ -111,14 +114,16 @@ export class ChatViewComponent {
         error: () => {
           this.messages.pop();
           this.messages.push({
-            content:
-              'Known information:\nAt 00:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 84\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 654.95796 Erl\n    Active Users at Riyadh: 52763\n    Data Traffic at Riyadh: 2.17275 TB\nAt 01:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 53\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 205.03497 Erl\n    Active Users at Riyadh: 39911\n    Data Traffic at Riyadh: 1.80321 TB\nAt 02:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 10\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 130.02969 Erl\n    Active Users at Riyadh: 33039\n    Data Traffic at Riyadh: 1.4192 TB\nAt 03:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 18\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 92.38938 Erl\n    Active Users at Riyadh: 28019\n    Data Traffic at Riyadh: 1.20904 TB\nAt 04:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 66\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 188.33307 Erl\n    Active Users at Riyadh: 30021\n    Data Traffic at Riyadh: 0.94607 TB\nAt 05:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 11\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 183.31764 Erl\n    Active Users at Riyadh: 31953\n    Data Traffic at Riyadh: 0.98048 TB\nAt 06:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 64\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 388.80548 Erl\n    Active Users at Riyadh: 38653\n    Data Traffic at Riyadh: 1.18173 TB\nAt 07:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 78\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 541.23754 Erl\n    Active Users at Riyadh: 44888\n    Data Traffic at Riyadh: 1.25982 TB\nAt 08:00 on December 22, 2024 Network statistics at Riyadh:\n    Total Throughput at Riyadh: 58\n    Statistics VoLTE Traffic at Riyadh: 0 second\n    2G Voice Traffic at Riyadh: 724.41902 Erl\n    Active Users at Riyadh: 47248\n    Data Traffic at Riyadh: 1.2919 TB\n',
+            content: 'Something went wrong! Please try again.',
             messageType: 0,
             date: this.getCurrentTime(),
           });
           console.log('case of error');
           this.apiVar = ''; // Clear input field
           this.pendingFlag.set(false);
+          setTimeout(() => {
+            this.scrollToBottom();
+          });
         },
       });
     }
