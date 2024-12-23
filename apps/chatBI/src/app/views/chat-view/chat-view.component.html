@@ -23,6 +23,7 @@
     <textarea
       class="textarea"
       (keydown.enter)="onEnter($event)"
+      (input)="adjustHeight($event)"
       [(ngModel)]="newMessage"
       placeholder="Ask me anything..."
       (focus)="onFocus()"

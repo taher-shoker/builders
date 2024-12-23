@@ -16,6 +16,6 @@ const modules = [
 @NgModule({
   declarations: [...components],
   imports: [...modules],
-  exports: [...components, RouterModule],
+  exports: [...components],
 })
 export class ChatViewModule {}

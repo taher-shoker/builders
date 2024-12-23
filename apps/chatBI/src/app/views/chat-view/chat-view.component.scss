@@ -8,6 +8,7 @@ p {
   flex-direction: column;
   height: 100vh;
   font-family: 'stc forward-regular';
+  
   &_messages-container {
     overflow-y: scroll;
     height: auto;
@@ -34,7 +35,7 @@ p {
     box-shadow: 5px 4px 20px 0px #00000021;
     border-radius: 30px;
     width: 95%;
-    height: 69px;
+    max-height: 124px;
     display: flex;
     align-items: center;
     transition: border 0.3s;
@@ -42,14 +43,14 @@ p {
     font-weight: 400;
     font-size: 13px;
     .textarea {
-      margin: 0px 12px 0px 24px;
+      margin: 0px 0px 0px 24px;
       font-family: 'stc forward-regular';
       background-color: transparent;
       border: none;
       width: 90%;
-    //  height: 50%;
+      overflow: hidden;
       resize: none;
-      overflow: auto;
+
       color: var(--fontGreyColor);
       font-weight: 400;
       font-size: 13px;

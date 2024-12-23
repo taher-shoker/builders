@@ -149,11 +149,12 @@ export class ChatViewComponent {
   get remainingChars(): number {
     return this.maxLength - this.newMessage.length;
   }
-  // adjustHeight(event: Event) {
-  //   const textarea = event.target as HTMLTextAreaElement;
-  //   textarea.style.height = 'fit-content'; // Reset height
+  adjustHeight(event: Event) {
+    const textarea = event.target as HTMLTextAreaElement;
+    textarea.style.height = 'auto'; // Reset height
 
-  //   textarea.style.height = `${textarea.scrollHeight}px`; // Set to scroll height
-  //   console.log(textarea.style.height);
-  // }
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 124)}px`; // Set to scroll height
+
+    console.log(textarea.style.height);
+  }
 }
