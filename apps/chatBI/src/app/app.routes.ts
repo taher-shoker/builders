@@ -1,15 +1,15 @@
 import { Route } from '@angular/router';
-import { ChatViewComponent } from './views/chat-view/chat-view.component';
-import { StartChatViewComponent } from './views/start-chat-view/start-chat-view.component';
+import { authGuard } from './services/guards/auth.guard';
 
 export const appRoutes: Route[] = [
-  { path: '', redirectTo: 'startChat', pathMatch: 'full' },
+  { path: '', redirectTo: '/startChat', pathMatch: 'full' },
   {
     path: 'startChat',
     loadChildren: () =>
       import('./views/start-chat-view/start-chat-view.module').then(
         (m) => m.StartChatViewModule
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'chatView',
@@ -17,5 +17,7 @@ export const appRoutes: Route[] = [
       import('./views/chat-view/chat-view.module').then(
         (m) => m.ChatViewModule
       ),
+    canActivate: [authGuard],
   },
+  { path: '**', redirectTo: '/startChat' },
 ];

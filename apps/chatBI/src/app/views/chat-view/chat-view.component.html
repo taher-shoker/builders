@@ -1,8 +1,9 @@
 <div class="chat-view">
   <stc-apps-header [title]="'ChatBI'"></stc-apps-header>
   <div #scrollContainer class="chat-view_messages-container">
+    @if (messages.length==0) {
     <div class="background"></div>
-    @for (message of messages; track $index) {
+    } @for (message of messages; track $index) {
     <stc-apps-chat-list-item
       [@fadeIn]="message.messageType === 0"
       [message]="message.content"

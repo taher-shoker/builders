@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'stc-apps-header',
@@ -8,10 +9,11 @@ import { Component, input, InputSignal } from '@angular/core';
 })
 export class HeaderComponent {
   title: InputSignal<string> = input('');
-  constructor(private location: Location) {}
+  constructor(private location: Location, private router: Router) {}
   goBack() {
     setTimeout(() => {
       this.location.back();
     }, 300);
+    // this.router.navigate(['/startChat'])
   }
 }

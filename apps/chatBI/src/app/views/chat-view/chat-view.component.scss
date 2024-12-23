@@ -3,16 +3,16 @@ p {
 }
 
 .chat-view {
-  // display: flex;
-  // flex-direction: column;
-  height: 100vh;
-  position: fixed;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   font-family: 'stc forward-regular';
   &_messages-container {
-    height: 80%;
     overflow-y: scroll;
+    height: auto;
     padding: 10px;
+    margin-bottom: 80px;
     .background {
       position: absolute;
       top: 45%;
@@ -26,7 +26,11 @@ p {
     }
   }
   &_input-container {
-    margin: auto;
+    position: fixed;
+    bottom: 2rem;
+    left: 2rem;
+    z-index: 999;
+    background-color: var(--whiteColor);
     box-shadow: 5px 4px 20px 0px #00000021;
     border-radius: 30px;
     width: 95%;
@@ -43,12 +47,13 @@ p {
       background-color: transparent;
       border: none;
       width: 90%;
-      height: 50%;
+    //  height: 50%;
       resize: none;
+      overflow: auto;
       color: var(--fontGreyColor);
       font-weight: 400;
       font-size: 13px;
-      overflow: hidden;
+
       outline: none;
     }
     .textarea::placeholder {
@@ -92,12 +97,10 @@ p {
 // Media queries for responsiveness
 @media screen and (max-width: 600px) and (min-width: 300px) {
   .chat-view {
-    &_messages-container {
-      height: 75%;
-    }
     &_input-container {
+      left: 0.5rem !important;
       .textarea {
-        width: 70%;
+        width: 100%;
       }
       .text-area-actions {
         margin: 0px;

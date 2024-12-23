@@ -35,14 +35,11 @@ export class ChatViewComponent {
     private location: Location,
     private chatService: ChatService,
     private datePipe: DatePipe
-  ) {}
+  ) {
+    console.log(this.messages);
+  }
   private scrollToBottom(): void {
     try {
-      console.log(
-        'inside scroll',
-        this.scrollContainer.nativeElement.scrollHeight
-      );
-
       this.scrollContainer.nativeElement.scrollTo({
         top: this.scrollContainer.nativeElement.scrollHeight,
         behavior: 'smooth',
@@ -95,16 +92,26 @@ export class ChatViewComponent {
       this.apiVar = this.newMessage;
       this.newMessage = ''; // Clear input field
       this.pendingFlag.set(true);
-      console.log(this.messages);
+
       this.chatService.sendMessage({ content: this.apiVar }).subscribe({
         next: (result: responseBody) => {
           this.messages.pop();
-          this.messages.push({
-            content: result.data.content,
-            messageType: 0,
-            date: this.getTime(result.timestamp),
-            images: result.data.images ?? '',
-          });
+          if (result.data !== null) {
+            this.messages.push({
+              content: result.data.content,
+              messageType: 0,
+              date: this.getTime(result.timestamp),
+              images: result.data.images ?? '',
+            });
+          } else {
+            this.messages.push({
+              content: result.message,
+              messageType: 0,
+              date: this.getTime(result.timestamp),
+              images: [],
+            });
+          }
+
           this.apiVar = '';
           this.pendingFlag.set(false);
           setTimeout(() => {
@@ -118,7 +125,7 @@ export class ChatViewComponent {
             messageType: 0,
             date: this.getCurrentTime(),
           });
-          console.log('case of error');
+
           this.apiVar = ''; // Clear input field
           this.pendingFlag.set(false);
           setTimeout(() => {
@@ -134,7 +141,6 @@ export class ChatViewComponent {
   }
   onFocus(): void {
     this.isFocused = true;
-    console.log(this.isFocused);
   }
 
   onBlur(): void {

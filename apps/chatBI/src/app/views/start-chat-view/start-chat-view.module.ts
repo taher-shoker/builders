@@ -7,5 +7,6 @@ import { appRoutes } from './start-chat-view.routes';
 @NgModule({
   declarations: [StartChatViewComponent],
   imports: [CommonModule, RouterModule.forChild(appRoutes)],
+  exports: [RouterModule,StartChatViewComponent],
 })
 export class StartChatViewModule {}

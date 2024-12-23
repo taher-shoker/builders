@@ -1,5 +1,5 @@
 export interface responseBody {
-  data: data;
+  data: data | null;
   message: string;
   resultCode: string;
   timestamp: string;
