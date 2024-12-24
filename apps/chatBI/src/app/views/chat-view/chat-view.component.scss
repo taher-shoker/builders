@@ -64,13 +64,13 @@ p {
     }
     .counter-btn-container {
       display: flex;
-      width: 100%;
+      width: 20%;
       justify-content: end;
       .text-area-actions {
         display: flex;
         justify-content: end;
         margin-left: 24px;
-        width: 10%;
+
         .textarea-counter {
           margin-right: 8px;
         }
@@ -116,6 +116,7 @@ p {
         width: 80%;
       }
       .counter-btn-container {
+        width: 100%;
         margin-bottom: 12px;
         .text-area-actions {
           margin: 0px;
