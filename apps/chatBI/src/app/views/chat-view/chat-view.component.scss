@@ -80,7 +80,7 @@ p {
     color: var(--fontGreyColor);
     font-weight: 400;
     font-size: 13px;
-    position: absolute;
+    position: fixed;
     bottom: 10px;
     display: flex;
     justify-content: end;
@@ -116,6 +116,21 @@ p {
     }
     .text-area-actions {
       margin-left: 24px;
+    }
+  }
+}
+@media screen and (max-width:900px) and (min-width: 600px) {
+  .chat-view {
+    &_input-container {
+      left: 0.8rem !important;
+    }
+  }
+}
+
+@media screen and (max-width: 1150px) and (min-width: 600px) {
+  .chat-view {
+    .button-container {
+      margin-right: 24px;
     }
   }
 }

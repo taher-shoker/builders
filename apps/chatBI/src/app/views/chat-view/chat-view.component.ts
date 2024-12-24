@@ -22,6 +22,7 @@ import { animate, style, transition, trigger } from '@angular/animations';
 })
 export class ChatViewComponent {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
+  @ViewChild('textarea') private textArea!: HTMLTextAreaElement;
   messages: chatArray[] = [];
   newMessage = '';
   maxLength = 512;
@@ -31,13 +32,7 @@ export class ChatViewComponent {
 
   // this flas represents wether the api respond or not.
   pendingFlag = signal(false);
-  constructor(
-    private location: Location,
-    private chatService: ChatService,
-    private datePipe: DatePipe
-  ) {
-    console.log(this.messages);
-  }
+  constructor(private chatService: ChatService) {}
   private scrollToBottom(): void {
     try {
       this.scrollContainer.nativeElement.scrollTo({
@@ -59,13 +54,20 @@ export class ChatViewComponent {
       .padStart(2, '0')}:${minutes} ${amPm}`;
     return currentTime;
   }
-  getTime(dateTimeString: string): string {
+  getTimeFromFullDate(dateTimeString: string): string {
     let time = dateTimeString.split('T')[1].split('.')[0]; // Extracts HH:MM:SS
     time = `${time.split(':')[0]}:${time.split(':')[1]}`;
     const hours = +time.split(':')[0];
     const amPm = hours >= 12 ? 'PM' : 'AM';
     time = `${time} ${amPm}`;
     return time; // Output: "08:46:00"
+  }
+  reset() {
+    this.apiVar = '';
+    this.pendingFlag.set(false);
+    setTimeout(() => {
+      this.scrollToBottom();
+    });
   }
   sendMessage() {
     if (
@@ -92,7 +94,11 @@ export class ChatViewComponent {
       this.apiVar = this.newMessage;
       this.newMessage = ''; // Clear input field
       this.pendingFlag.set(true);
-
+      // Resting the text area height.
+      const textarea = document.getElementById('textarea');
+      if (textarea) {
+        textarea.style.height = 'auto';
+      }
       this.chatService.sendMessage({ content: this.apiVar }).subscribe({
         next: (result: responseBody) => {
           this.messages.pop();
@@ -100,23 +106,18 @@ export class ChatViewComponent {
             this.messages.push({
               content: result.data.content,
               messageType: 0,
-              date: this.getTime(result.timestamp),
+              date: this.getTimeFromFullDate(result.timestamp),
               images: result.data.images ?? '',
             });
           } else {
             this.messages.push({
               content: result.message,
               messageType: 0,
-              date: this.getTime(result.timestamp),
+              date: this.getTimeFromFullDate(result.timestamp),
               images: [],
             });
           }
-
-          this.apiVar = '';
-          this.pendingFlag.set(false);
-          setTimeout(() => {
-            this.scrollToBottom();
-          });
+          this.reset();
         },
         error: () => {
           this.messages.pop();
@@ -125,12 +126,7 @@ export class ChatViewComponent {
             messageType: 0,
             date: this.getCurrentTime(),
           });
-
-          this.apiVar = ''; // Clear input field
-          this.pendingFlag.set(false);
-          setTimeout(() => {
-            this.scrollToBottom();
-          });
+          this.reset();
         },
       });
     }
@@ -143,7 +139,7 @@ export class ChatViewComponent {
     this.isFocused = true;
   }
 
-  onBlur(): void {
+  onBlur(event: Event): void {
     this.isFocused = false;
   }
   get remainingChars(): number {
@@ -152,9 +148,6 @@ export class ChatViewComponent {
   adjustHeight(event: Event) {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto'; // Reset height
-
     textarea.style.height = `${Math.min(textarea.scrollHeight, 90)}px`; // Set to scroll height
-
-    console.log(textarea.style.height);
   }
 }

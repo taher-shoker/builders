@@ -21,13 +21,14 @@
     [ngClass]="{ focused: isFocused, error: newMessage.length > 512 }"
   >
     <textarea
+      id="textarea"
       class="textarea scroll"
       (keydown.enter)="onEnter($event)"
       (input)="adjustHeight($event)"
       [(ngModel)]="newMessage"
       placeholder="Ask me anything..."
       (focus)="onFocus()"
-      (blur)="onBlur()"
+      (blur)="onBlur($event)"
     >
     </textarea>
 
