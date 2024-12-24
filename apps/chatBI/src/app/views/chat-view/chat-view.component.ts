@@ -153,7 +153,7 @@ export class ChatViewComponent {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto'; // Reset height
 
-    textarea.style.height = `${Math.min(textarea.scrollHeight, 124)}px`; // Set to scroll height
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 90)}px`; // Set to scroll height
 
     console.log(textarea.style.height);
   }

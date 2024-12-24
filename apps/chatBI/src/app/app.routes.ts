@@ -13,7 +13,6 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'chatView',
-    pathMatch:'full',
     loadChildren: () =>
       import('./views/chat-view/chat-view.module').then(
         (m) => m.ChatViewModule

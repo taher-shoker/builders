@@ -1,6 +1,9 @@
 p {
   margin: 0px;
 }
+.scroll::-webkit-scrollbar {
+  display: none;
+}
 
 .chat-view {
   width: 100%;
@@ -8,7 +11,7 @@ p {
   flex-direction: column;
   height: 100vh;
   font-family: 'stc forward-regular';
-  
+
   &_messages-container {
     overflow-y: scroll;
     height: auto;
@@ -35,7 +38,7 @@ p {
     box-shadow: 5px 4px 20px 0px #00000021;
     border-radius: 30px;
     width: 95%;
-    max-height: 124px;
+    max-height: 135px;
     display: flex;
     align-items: center;
     transition: border 0.3s;
@@ -43,18 +46,15 @@ p {
     font-weight: 400;
     font-size: 13px;
     .textarea {
-      margin: 0px 0px 0px 24px;
+      margin: 10px 0px 12px 24px;
       font-family: 'stc forward-regular';
       background-color: transparent;
       border: none;
       width: 90%;
-      overflow: hidden;
       resize: none;
-
       color: var(--fontGreyColor);
       font-weight: 400;
       font-size: 13px;
-
       outline: none;
     }
     .textarea::placeholder {
@@ -62,22 +62,28 @@ p {
       font-weight: 400;
       font-size: 13px;
     }
-    .text-area-actions {
+    .counter-btn-container {
       display: flex;
+      width: 100%;
       justify-content: end;
-      margin-left: 24px;
-      width: 10%;
-      .textarea-counter {
-        margin-right: 8px;
+      .text-area-actions {
+        display: flex;
+        justify-content: end;
+        margin-left: 24px;
+        width: 10%;
+        .textarea-counter {
+          margin-right: 8px;
+        }
       }
-    }
-    .button-container {
-      margin-right: 32px;
-      height: 100%;
-      display: flex;
-      align-items: center;
-      img {
-        cursor: pointer;
+      .button-container {
+        margin-top: 3px;
+        margin-right: 32px;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        img {
+          cursor: pointer;
+        }
       }
     }
   }
@@ -95,17 +101,26 @@ p {
   filter: opacity(0.6) invert(0.5);
   cursor: not-allowed !important;
 }
+
 // Media queries for responsiveness
 @media screen and (max-width: 600px) and (min-width: 300px) {
   .chat-view {
+    &_messages-container {
+      margin-bottom: 120px;
+    }
     &_input-container {
+      display: block;
       left: 0.5rem !important;
       .textarea {
-        width: 100%;
+        margin-bottom: 0px;
+        width: 80%;
       }
-      .text-area-actions {
-        margin: 0px;
-        width: 50%;
+      .counter-btn-container {
+        margin-bottom: 12px;
+        .text-area-actions {
+          margin: 0px;
+          width: 50%;
+        }
       }
     }
   }
