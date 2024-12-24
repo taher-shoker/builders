@@ -11,6 +11,7 @@ p {
   flex-direction: column;
   height: 100vh;
   font-family: 'stc forward-regular';
+  position: relative;
 
   &_messages-container {
     overflow-y: scroll;
@@ -31,7 +32,7 @@ p {
   }
   &_input-container {
     position: fixed;
-    bottom: 2rem;
+    bottom: 2.5rem;
     left: 2rem;
     z-index: 999;
     background-color: var(--whiteColor);
@@ -62,32 +63,34 @@ p {
       font-weight: 400;
       font-size: 13px;
     }
-    .counter-btn-container {
+    .button-container {
+      margin-top: 3px;
+      margin-left: 9px;
+      height: 100%;
       display: flex;
-      width: 20%;
+      align-items: center;
       justify-content: end;
-      .text-area-actions {
-        display: flex;
-        justify-content: end;
-        margin-left: 24px;
-
-        .textarea-counter {
-          margin-right: 8px;
-        }
-      }
-      .button-container {
-        margin-top: 3px;
-        margin-right: 32px;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        img {
-          cursor: pointer;
-        }
+      width: 6%;
+      img {
+        cursor: pointer;
       }
     }
   }
+  .text-area-actions {
+    color: var(--fontGreyColor);
+    font-weight: 400;
+    font-size: 13px;
+    position: absolute;
+    bottom: 10px;
+    display: flex;
+    justify-content: end;
+    margin-left: 48px;
+    .textarea-counter {
+      margin-right: 8px;
+    }
+  }
 }
+
 .focused {
   border: 1px solid var(--stc-color);
 }
@@ -105,24 +108,14 @@ p {
 // Media queries for responsiveness
 @media screen and (max-width: 600px) and (min-width: 300px) {
   .chat-view {
-    &_messages-container {
-      margin-bottom: 120px;
-    }
     &_input-container {
-      display: block;
       left: 0.5rem !important;
       .textarea {
-        margin-bottom: 0px;
         width: 80%;
       }
-      .counter-btn-container {
-        width: 100%;
-        margin-bottom: 12px;
-        .text-area-actions {
-          margin: 0px;
-          width: 50%;
-        }
-      }
+    }
+    .text-area-actions {
+      margin-left: 24px;
     }
   }
 }

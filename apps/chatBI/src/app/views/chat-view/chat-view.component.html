@@ -30,26 +30,25 @@
       (blur)="onBlur()"
     >
     </textarea>
-    <div class="counter-btn-container">
-      <div class="text-area-actions">
-        <div
-          class="textarea-counter"
-          [ngClass]="{ 'error-text': newMessage.length > 512 }"
-        >
-          <p>{{ newMessage.length }} / {{ maxLength }}</p>
-        </div>
-      </div>
-      <div class="button-container">
-        <img
-          [ngClass]="{
-            disabled:
-              newMessage.length > 512 || !newMessage.trim() || pendingFlag()
-          }"
-          (click)="sendMessage()"
-          src="assets/images/Vector.svg"
-          alt=""
-        />
-      </div>
+
+    <div class="button-container">
+      <img
+        [ngClass]="{
+          disabled:
+            newMessage.length > 512 || !newMessage.trim() || pendingFlag()
+        }"
+        (click)="sendMessage()"
+        src="assets/images/Vector.svg"
+        alt=""
+      />
+    </div>
+  </div>
+  <div class="text-area-actions">
+    <div
+      class="textarea-counter"
+      [ngClass]="{ 'error-text': newMessage.length > 512 }"
+    >
+      <p>{{ newMessage.length }} / {{ maxLength }}</p>
     </div>
   </div>
 </div>
