@@ -1,0 +1,88 @@
+<section class="raqami-kpi-card">
+    <p class="raqami-kpi-card-title">
+        {{raqamiKpiData().kpiName | truncateWord:5}}
+        @if(titleArr.length > 5){
+            <span class = "read-more" (click)="displayDrilldown()">read more</span>
+            <p-overlayPanel #overlayPanel2 dismissable="true">
+                <section class="popover-section2">{{raqamiKpiData().kpiName}}</section>
+            </p-overlayPanel>
+        }
+    </p>
+    <div class="raqami-kpi-card-cards">
+        @if(raqamiKpiData().actual)
+        {
+            <stc-apps-kpi-status-card
+                [kpiStatus]="raqamiKpiData().actual"
+                [kpiType]="'actual'"
+            />
+        }
+        @if(raqamiKpiData().status)
+        {
+            <stc-apps-kpi-status-card
+                [kpiStatus]="raqamiKpiData().status"
+                [kpiType]="'output'"
+            />
+        }
+        @if(raqamiKpiData().theme)
+        {
+            <stc-apps-kpi-status-card
+                [kpiStatus]="raqamiKpiData().theme"
+                [kpiType]="'theme'"
+            />
+        }
+    </div>
+    <div class = "raqami-kpi-card-weights">
+        <div class="raqami-kpi-card-weights-weight">
+            <p class="weight-name">
+                KPI Weight (%)
+            </p>
+            <p class="weight-num">
+                {{raqamiKpiData().weight}}
+                @if(raqamiKpiData().unit === '%')
+                {
+                    %
+                }
+            </p>
+        </div>
+        <div class="raqami-kpi-card-weights-um">
+            <p class="weight-name">
+                UoM
+            </p>
+            <p class="weight-num">
+                {{raqamiKpiData().unit}}
+            </p>
+        </div>
+    </div>
+    <div class="raqami-kpi-card-baselines">
+        <div class="raqami-kpi-card-baselines-baseline">
+            <div class="raqami-kpi-card-baselines-baseline-title">
+                baseline
+            </div>
+            <div class="raqami-kpi-card-baselines-baseline-year">
+                {{raqamiKpiData().baseline.year}}
+            </div>
+            <div class="raqami-kpi-card-baselines-baseline-val">
+                {{raqamiKpiData().baseline.value}}
+                {{raqamiKpiData().unit === "%" && raqamiKpiData().baseline.value ? "%" : ""}}
+            </div>
+        </div>
+        <div class="raqami-kpi-card-baselines-target">
+            <div class="raqami-kpi-card-baselines-baseline-title">
+                target
+            </div>
+            <div class = "targets">
+                @for (item of raqamiKpiData().targets; track $index) {
+                    <div>
+                        <div class="raqami-kpi-card-baselines-baseline-year">
+                            {{item.year}}
+                        </div>
+                        <div class="raqami-kpi-card-baselines-baseline-val">
+                            {{item.value ? item.value : "-"}}
+                            {{raqamiKpiData().unit === "%" && item.value ? "%" : ""}}
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
