@@ -1,7 +1,15 @@
-import { Component, EventEmitter, inject, input, InputSignal, OnInit, Output } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  InputSignal,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { PSRProjectCardComponent } from "../project-card/project-card.component";
+import { PSRProjectCardComponent } from '../project-card/project-card.component';
 import { PSRDataModel } from '../../../../models/psr.model';
 import { ScorecardService } from '../../../../services/scorecard.service';
 // import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
@@ -10,56 +18,64 @@ import { PSRService } from '../../../../services/psr.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
-import { FileModel } from '../../../../models/scorecard.model';
-import { PSRService } from '../../../../services/psr.service';
 
 @Component({
   selector: 'stc-apps-tab-details',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, PSRProjectCardComponent , RouterLink , EditModeViewComponent],
+  imports: [
+    CommonModule,
+    SharedUiModule,
+    PSRProjectCardComponent,
+    RouterLink,
+    EditModeViewComponent,
+  ],
   templateUrl: './tab-details.component.html',
   styleUrl: './tab-details.component.scss',
 })
-export class TabDetailsComponent implements OnInit{
-  @Output() getUploadedFile:EventEmitter<FileModel> = new EventEmitter();
+export class TabDetailsComponent implements OnInit {
+  @Output() getUploadedFile: EventEmitter<FileModel> = new EventEmitter();
   visible = false;
-  projects:InputSignal<PSRDataModel[]> = input.required<PSRDataModel[]>();
-  @Output() ProgramId:EventEmitter<number> = new EventEmitter();
-  isEmpty:InputSignal<boolean> = input.required<boolean>();
+  projects: InputSignal<PSRDataModel[]> = input.required<PSRDataModel[]>();
+  @Output() ProgramId: EventEmitter<number> = new EventEmitter();
+  isEmpty: InputSignal<boolean> = input.required<boolean>();
   currentMode!: 'editMode' | 'viewMode';
-  scorecardService = inject(ScorecardService)
+  scorecardService = inject(ScorecardService);
   psrService = inject(PSRService);
   router = inject(Router);
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
-  userRoles!:UserGroup;
+  userRoles!: UserGroup;
   isAllowed = false;
   isAdmin = false;
   ngOnInit(): void {
     this.userRoles = this.scorecardService.userRoles;
-    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
-    this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
+    this.isAllowed = this.userRoles.roles.some(
+      (role) =>
+        role.roleName === 'BE_EDITORS' ||
+        role.roleName === 'ADMINS' ||
+        role.roleName === 'BE_PMO'
+    );
+    this.isAdmin = this.userRoles.roles.some(
+      (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+    );
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
       },
     });
   }
-  showDialog()
-  {
+  showDialog() {
     this.visible = true;
   }
-  getProgramId(id:number)
-  {
+  getProgramId(id: number) {
     this.ProgramId.emit(id);
   }
-  downloadTemplate()
-  {
+  downloadTemplate() {
     this.psrService.downloadExecutiveViewTemplate().subscribe({
-      next : (res) => {
+      next: (res) => {
         this.downloadFile(res, `psrProjects.csv`);
-      }
-    })
+      },
+    });
   }
   downloadFile(data: string, filename: string) {
     const blob = new Blob([data], { type: 'text/csv' });
@@ -70,19 +86,15 @@ export class TabDetailsComponent implements OnInit{
     a.click();
     window.URL.revokeObjectURL(url);
   }
-  importData(file:FileModel | null)
-  {
-    if(file)
-    {
+  importData(file: FileModel | null) {
+    if (file) {
       this.getUploadedFile.emit(file);
     }
   }
-  onHide()
-  {
+  onHide() {
     this.visible = false;
   }
-  gotoaddForm()
-  {
+  gotoaddForm() {
     // this.router.navigate(['add-project'] , { relativeTo: this.route })
     // this.router.navigate(['/.envpsr/add-project'])
     // this.router.navigateByUrl('/psr/add-project')
