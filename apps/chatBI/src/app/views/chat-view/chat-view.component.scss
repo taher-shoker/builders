@@ -12,7 +12,7 @@ p {
   height: 100vh;
   font-family: 'stc forward-regular';
   position: relative;
-
+  background-color: var(--stc-light-grey-color);
   &_messages-container {
     overflow-y: scroll;
     height: auto;
@@ -24,7 +24,7 @@ p {
       left: 0;
       width: 100%;
       height: 200px;
-      background-image: url('../../../assets/images/chatBIBackground.svg');
+      // background-image: url('../../../assets/images/chatBIBackground.svg');
       background-size: contain;
       background-position: center center;
       background-repeat: no-repeat;
@@ -119,7 +119,7 @@ p {
     }
   }
 }
-@media screen and (max-width:900px) and (min-width: 600px) {
+@media screen and (max-width: 900px) and (min-width: 600px) {
   .chat-view {
     &_input-container {
       left: 0.8rem !important;

@@ -69,15 +69,18 @@ p {
       }
     }
     .sender-message {
-      background: var(--stc-color);
+      background: var(--stcCoralColor);
+      // background: var(--stc-color);
       color: var(--whiteColor);
       border-top-right-radius: 0px;
       margin-left: 40px;
     }
     .receiver-message {
-      background: var(--stc-light-grey-color);
+      // background: var(--stc-light-grey-color);
+      background: var(--stc-color);
 
-      color: var(--stc-light-black);
+      color: #ffff;
+      // color: var(--stc-light-black);
 
       border-bottom-left-radius: 0px;
     }
