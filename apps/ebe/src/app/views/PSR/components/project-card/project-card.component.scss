@@ -198,3 +198,17 @@
     }
   }
 }
+.planned-date
+{
+  margin-top: 25px;
+  @extend .stcFont;
+  color:var(--stc-grey-dark-color);
+  font-weight: 500;
+  font-size: 17px;
+  text-transform: capitalize;
+  span
+  {
+    font-weight: bold;
+    color:var(--stc-dark-blue-color);
+  }
+}

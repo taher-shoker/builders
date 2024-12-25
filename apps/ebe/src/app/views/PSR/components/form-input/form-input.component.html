@@ -50,6 +50,8 @@
       (onSelect)="changeStartDate($event);onInputChange($event)"
       (onBlur)="onTouched()"
       [(ngModel)]="inputValue"
+      [iconDisplay]="'input'" 
+      [showIcon]="showIcon"
     />
   }
 </div>

@@ -44,6 +44,13 @@ export const appRoutes: Route[] = [
       canActivate:[AuthGuard]
   },
   {
+    path : "raqami",
+    loadComponent: () =>
+      import('./views/raqami/raqami.component').then(
+        (m) => m.RaqamiComponent
+      ),
+  },
+  {    
     path : "financial-reporting",
     loadComponent: () =>
       import('./views/financial-reporting/financial-reporting.component').then(

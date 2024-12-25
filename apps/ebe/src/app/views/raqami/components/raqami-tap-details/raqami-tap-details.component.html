@@ -1,0 +1,26 @@
+<div class="raqami-details-section">
+  @if(currentMode === 'editMode') {
+    <stc-apps-edit-mode-view 
+      (import)="showDialog()"
+      (export)="downloadTemplate()"
+    />
+  }
+  @if(currentTap().name === 'A1'){
+  <stc-apps-a1-tap 
+    [raqamiKpiData]="raqamiKpiData"
+  />
+  } @else if(currentTap().name === 'A2'){
+  <stc-apps-a2-tap 
+    [A1Data]="raqamiA2Data"
+  />
+  } @else if(currentTap().name === 'A3'){
+  <stc-apps-a3-tap 
+    [raqamiA3Data]="raqamiA3Data"
+  />
+  }
+</div>
+<stc-apps-dialog-modal 
+  [visible]="visible"
+  (ImportedFile)="ImportFile($event)"
+  (onhide)="visible = false"
+/>
