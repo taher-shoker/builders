@@ -1,12 +1,16 @@
 import { Component, computed, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { Router } from '@angular/router';
-import { ApiStandard } from '../../shared/models/standards.models';
+import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ApiStandard,
+  GetStandardsResponse,
+} from '../../shared/models/standards.models';
 import { TableListComponent } from '../../shared/components/table-list/table-list.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { ApiStandardFiltersComponent } from '../api-standard-filters/api-standard-filters.component';
+import { StandardsService } from '../../shared/services/standards.service';
 
 @Component({
   selector: 'stc-apps-api-standard-list',
@@ -21,7 +25,10 @@ import { ApiStandardFiltersComponent } from '../api-standard-filters/api-standar
   styleUrls: ['./api-standard-list.component.scss'],
 })
 export class ApiStandardListComponent implements OnInit {
-  router = inject(Router);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  private standardsService = inject(StandardsService);
+
   el = inject(ElementRef<HTMLElement>);
   dataSource: ApiStandard[];
   newStandard!: ApiStandard;
@@ -67,6 +74,8 @@ export class ApiStandardListComponent implements OnInit {
     this.dataSource = this.ELEMENT_DATA;
   }
   ngOnInit(): void {
+    this.loadStandards();
+
     const newStandard = history.state.newStandard;
     if (newStandard) {
       this.newStandard = newStandard;
@@ -75,14 +84,46 @@ export class ApiStandardListComponent implements OnInit {
   }
 
   onAddStandard(): void {
-    this.router.navigate(['api-standard-form']);
+    this.router.navigate(['create-standard'], {
+      relativeTo: this.route,
+    });
   }
 
-  onEditStandard(standard: ApiStandard) {
-    this.router.navigate(['api-standard-form'], { state: { standard } });
+  private loadStandards(): void {
+    this.standardsService.getStandards().subscribe({
+      next: (response: GetStandardsResponse) => {
+        this.dataSource = response.data.standards;
+      },
+      error: (err) => {
+        console.error('Error fetching standards:', err);
+      },
+    });
   }
 
-  onFiltersChanged(filters: any) {}
+  onActionHandler(event: { actionType: string; rowData: ApiStandard }): void {
+    const { actionType, rowData } = event;
+
+    switch (actionType) {
+      case 'pi pi-eye':
+        this.router.navigate(['view-standard'], {
+          relativeTo: this.route,
+          state: { standard: rowData, viewMode: true },
+        });
+        break;
+      case 'pi pi-pen-to-square':
+        this.router.navigate(['edit-standard'], {
+          relativeTo: this.route,
+          state: { standard: rowData, editMode: true },
+        });
+        break;
+      default:
+        console.warn('Unknown action type:', actionType);
+    }
+  }
+
+  onFiltersChanged(filters: any) {
+    console.log(filters);
+  }
 
   onSortChanged(direction: 'asc' | 'desc') {}
 }

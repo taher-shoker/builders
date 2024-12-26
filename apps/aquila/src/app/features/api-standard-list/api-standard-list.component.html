@@ -21,6 +21,7 @@
       [columnSchema]="columnsSchema"
       [tableActions]="tableActions()"
       [noDataMessage]="'No API standards available'"
+      (actionClick)="onActionHandler($event)"
     ></stc-apps-table-list>
   </div>
 </div>
