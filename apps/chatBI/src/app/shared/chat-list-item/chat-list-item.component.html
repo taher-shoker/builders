@@ -38,7 +38,12 @@
 
       @if (messageType() === 0 && images()) { @for (image of images(); track
       $index) {
-      <img class="chatImage d-block" [src]="image" alt="" />
+      <img
+        class="chatImage d-block"
+        [src]="image"
+        alt=""
+        (click)="imageClick(image)"
+      />
       } } }
     </div>
 

@@ -1,8 +1,21 @@
 <div class="popup-overlay">
-  <div #container class="popup-content" (click)="$event.stopPropagation()">
+  <div class="popup-content" (click)="$event.stopPropagation()">
     <button #close class="close-btn" (click)="closeImagePopup()">
       <i class="fas fa-times"></i>
     </button>
-    <img [src]="selectedImage()" alt="Zoomed Image" class="zoomed-image" />
+    <div #container>
+      <img
+        #img
+        [src]="selectedImage()"
+        class="zoomed-image"
+        alt="Zoomed Image"
+        (click)="handleImageTap($event)"
+        (mousedown)="onMouseDown($event)"
+        (mouseup)="onMouseUp()"
+        (mousemove)="mouseMoveHandler($event)"
+        (touchstart)="onTouchStart($event)"
+        (touchmove)="onTouchMove($event)"
+      />
+    </div>
   </div>
 </div>

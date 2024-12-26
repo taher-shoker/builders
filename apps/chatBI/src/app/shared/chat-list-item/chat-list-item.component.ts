@@ -8,8 +8,11 @@ import { Component, effect, input, InputSignal } from '@angular/core';
   animations: [
     trigger('fadeIn', [
       transition(':enter', [
-        style({ transform: 'translateY(200px)',opacity: 0.7}),
-        animate('800ms ease-in-out', style({ transform: 'translateY(0)',opacity: 1 })),
+        style({ transform: 'translateY(200px)', opacity: 0.7 }),
+        animate(
+          '800ms ease-in-out',
+          style({ transform: 'translateY(0)', opacity: 1 })
+        ),
       ]),
     ]),
   ],
@@ -28,7 +31,6 @@ export class ChatListItemComponent {
     });
   }
   imageClick(image: string) {
-    console.log(image);
     this.selectedImage = image;
     this.showPopUp = true;
   }
