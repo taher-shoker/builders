@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -6,8 +6,15 @@ import { Router } from '@angular/router';
   templateUrl: './start-chat-view.component.html',
   styleUrl: './start-chat-view.component.scss',
 })
-export class StartChatViewComponent {
+export class StartChatViewComponent implements OnInit {
+  isAnimated = false;
   constructor(private router: Router) {}
+  ngOnInit() {
+    // Trigger the animation after the component is initialized
+    setTimeout(() => {
+      this.isAnimated = true;
+    }, 100); // Delay for smoother animation (optional)
+  }
   startChatNavigation() {
     this.router.navigate(['/chatView']);
   }

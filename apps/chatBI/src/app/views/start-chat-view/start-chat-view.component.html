@@ -1,4 +1,6 @@
 <div class="start-chat-view">
+  <div class="bg-1"></div>
+  <div class="bg-2"></div>
   <!-- <img
     class="start-chat-view_logo"
     src="https://lottie.host/e628837f-01c2-4c6f-ad2e-586fb95ad53a/epC5K1RQB3.json"
@@ -8,14 +10,22 @@
     height="300"
     src="https://lottie.host/embed/3e28cc70-fb23-400f-82e8-cfc0b8ef4623/EW37aQGMye.lottie"
   ></iframe>
-  <img width="50" src="assets/images/stc-logo-white.png" alt="" />
-  <div class="start-chat-view_header1">Welcome To</div>
-  <div class="start-chat-view_header2">CEM Chat AI</div>
-  <div class="start-chat-view_desc">
-    Start chatting with CEM Chat AI now you can ask me any CEM related
-    information.
-  </div>
-  <div class="start-chat-view_btn">
-    <button (click)="startChatNavigation()">Start Chat</button>
+
+  <div [ngClass]="{ 'animate-text': isAnimated }">
+    <img
+      class="animated-text"
+      width="50"
+      src="assets/images/stc-logo-white.png"
+      alt=""
+    />
+    <div class="start-chat-view_header1 animated-text">Welcome To</div>
+    <div class="start-chat-view_header2 animated-text">CEM Chat AI</div>
+    <div class="start-chat-view_desc animated-text">
+      Start chatting with CEM Chat AI now you can ask me any CEM related
+      information.
+    </div>
+    <div class="start-chat-view_btn animated-text">
+      <button (click)="startChatNavigation()">Start Chat</button>
+    </div>
   </div>
 </div>

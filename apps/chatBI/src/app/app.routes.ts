@@ -19,5 +19,7 @@ export const appRoutes: Route[] = [
       ),
     canActivate: [authGuard],
   },
-  { path: '**', redirectTo: 'startChat' },
+  { path: '**', redirectTo: 'startChat', pathMatch: 'full' },
+
+  
 ];

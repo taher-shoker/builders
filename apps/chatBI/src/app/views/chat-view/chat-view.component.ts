@@ -1,26 +1,21 @@
 import { DatePipe, Location } from '@angular/common';
-import { Component, ElementRef, signal, ViewChild } from '@angular/core';
+import { animate, style, transition, trigger } from '@angular/animations';
+import {
+  Component,
+  ElementRef,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { ChatService } from './services/chat.service';
 import { chatArray, responseBody } from './models/chatModel';
-import { animate, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'stc-apps-chat-view',
   templateUrl: './chat-view.component.html',
   styleUrl: './chat-view.component.scss',
-  animations: [
-    trigger('fadeIn', [
-      transition(':enter', [
-        style({ opacity: 0, transform: 'translateY(20px)' }),
-        animate(
-          '400ms ease-out',
-          style({ opacity: 1, transform: 'translateY(0)' })
-        ),
-      ]),
-    ]),
-  ],
 })
-export class ChatViewComponent {
+export class ChatViewComponent implements OnInit {
   @ViewChild('scrollContainer') private scrollContainer!: ElementRef;
   @ViewChild('textarea') private textArea!: HTMLTextAreaElement;
   messages: chatArray[] = [];
@@ -32,6 +27,14 @@ export class ChatViewComponent {
 
   // this flas represents wether the api respond or not.
   pendingFlag = signal(false);
+  isAnimated = false;
+
+  ngOnInit() {
+    // Trigger the animation after the component is initialized
+    setTimeout(() => {
+      this.isAnimated = true;
+    }, 100); // Delay for smoother animation (optional)
+  }
   constructor(private chatService: ChatService) {}
   private scrollToBottom(): void {
     try {

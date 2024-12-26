@@ -1,0 +1,8 @@
+<div class="popup-overlay">
+  <div #container class="popup-content" (click)="$event.stopPropagation()">
+    <button #close class="close-btn" (click)="closeImagePopup()">
+      <i class="fas fa-times"></i>
+    </button>
+    <img [src]="selectedImage()" alt="Zoomed Image" class="zoomed-image" />
+  </div>
+</div>

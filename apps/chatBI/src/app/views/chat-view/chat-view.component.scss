@@ -13,9 +13,12 @@ p {
   font-family: 'stc forward-regular';
   position: relative;
   background-color: var(--stc-light-grey-color);
+  .list-item {
+    height: 100%;
+  }
   &_messages-container {
     overflow-y: scroll;
-    height: auto;
+    height: 100%;
     padding: 10px;
     margin-bottom: 95px;
     .background {
