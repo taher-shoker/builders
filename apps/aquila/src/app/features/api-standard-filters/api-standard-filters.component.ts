@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DropdownModule } from 'primeng/dropdown';
@@ -7,6 +7,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-api-standard-filters',
@@ -24,7 +25,7 @@ import { IconFieldModule } from 'primeng/iconfield';
   templateUrl: './api-standard-filters.component.html',
   styleUrls: ['./api-standard-filters.component.scss'],
 })
-export class ApiStandardFiltersComponent {
+export class ApiStandardFiltersComponent implements OnInit {
   fb = inject(FormBuilder);
   @Output() filtersChanged = new EventEmitter<any>();
   @Output() sortChanged = new EventEmitter<'asc' | 'desc'>();
@@ -44,17 +45,19 @@ export class ApiStandardFiltersComponent {
 
   selectedSortOption: { label: string; value: string } | null = null;
 
-  constructor() {
+  ngOnInit(): void {
     this.filterForm = this.fb.group({
-      standardName: [''],
-      publishDate: [null],
-      latestUpdateDate: [null],
+      name: [''],
+      publishUpdate: [null],
+      lastUpdate: [null],
       businessArea: [''],
     });
 
-    this.filterForm.valueChanges.subscribe((filters) => {
-      this.filtersChanged.emit(filters);
-    });
+    this.filterForm.valueChanges
+      .pipe(debounceTime(300))
+      .subscribe((filters) => {
+        this.filtersChanged.emit(filters);
+      });
   }
 
   onSort(direction: 'asc' | 'desc') {

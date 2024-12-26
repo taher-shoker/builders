@@ -3,7 +3,12 @@
   <div class="filter-field">
     <p-iconField iconPosition="left">
       <p-inputIcon styleClass="pi pi-search" />
-      <input type="text" pInputText placeholder="Search by Standard Name" />
+      <input
+        type="text"
+        pInputText
+        formControlName="name"
+        placeholder="Search by Standard Name"
+      />
     </p-iconField>
   </div>
 
@@ -14,13 +19,14 @@
       [showIcon]="true"
       inputId="icondisplay"
       placeholder="Publish Date"
+      formControlName="publishUpdate"
     />
   </div>
 
   <!-- Latest Update Date -->
   <div class="filter-field">
     <p-calendar
-      formControlName="latestUpdateDate"
+      formControlName="lastUpdate"
       [iconDisplay]="'input'"
       [showIcon]="true"
       inputId="icondisplay"
