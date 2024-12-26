@@ -12,7 +12,7 @@ p {
   width: 5px;
   height: 5px;
   margin: 0 5px;
-  background-color: #333;
+  background-color: var(--whiteColor);
   border-radius: 50%;
   animation: bounce 1.5s infinite ease-in-out;
 }
