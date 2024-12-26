@@ -1,5 +1,12 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { Component, computed, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  EventEmitter,
+  input,
+  Output,
+} from '@angular/core';
 import { ApiStandard } from '../../models/standards.models';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 
@@ -19,6 +26,10 @@ export class TableListComponent {
   columnSchema = input<ColumnsSchema[]>([]);
   noDataMessage = input<string>('');
   tableActions = input<string[]>([]);
+  @Output() actionClick = new EventEmitter<{
+    actionType: string;
+    rowData: ApiStandard;
+  }>();
 
   displayedColumns = computed(() => {
     const columns = this.columnSchema();
@@ -27,4 +38,8 @@ export class TableListComponent {
     }
     return columns;
   });
+
+  onActionClick(actionType: string, rowData: ApiStandard): void {
+    this.actionClick.emit({ actionType, rowData });
+  }
 }
