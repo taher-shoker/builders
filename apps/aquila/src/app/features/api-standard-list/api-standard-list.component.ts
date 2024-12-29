@@ -84,7 +84,7 @@ export class ApiStandardListComponent implements OnInit {
   }
 
   onAddStandard(): void {
-    this.router.navigate(['create-standard'], {
+    this.router.navigate(['add-standard'], {
       relativeTo: this.route,
     });
   }

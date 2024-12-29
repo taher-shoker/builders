@@ -9,7 +9,7 @@
           <input
             type="text"
             pInputText
-            formControlName="apiLink"
+            formControlName="apiUrl"
             placeholder="Paste API link Here"
           />
         </p-inputGroup>
@@ -18,7 +18,7 @@
         <label>Standard</label>
         <p-dropdown
           [options]="standardOptions"
-          formControlName="standard"
+          formControlName="standardId"
           optionLabel="label"
           optionValue="value"
           placeholder="Select Standard"
@@ -59,7 +59,11 @@
     <div class="api-test_result_header">
       <h5>Result of selected test</h5>
       @if (tableData.length > 0) {
-      <p-splitButton label="Export result" [model]="exportItems" outlined />
+      <stc-apps-split-button
+        [label]="'Export result'"
+        [model]="exportItems"
+        [outlined]="true"
+      ></stc-apps-split-button>
       }
     </div>
     <stc-apps-table-list
