@@ -24,7 +24,7 @@
     }
 
     tr:not(.table-header) td {
-        color: #4B5563;
+        color: var(--dark-slate-gray);
     }
 
     &_actions {
@@ -33,7 +33,7 @@
 
             ::ng-deep {
                 span {
-                    color: #4B5563;
+                    color: var(--dark-slate-gray);
                     font-size: 20px;
                 }
             }

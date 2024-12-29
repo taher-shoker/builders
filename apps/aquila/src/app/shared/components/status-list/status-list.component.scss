@@ -41,6 +41,15 @@
                     width: auto;
                     padding: 0;
                 }
+
+                p {
+                    color: var(--grey-color);
+                }
+
+                strong {
+                    font-family: 'stc forward-bold';
+                    text-transform: capitalize;
+                }
             }
 
             &-body {
@@ -68,6 +77,24 @@
                         width: 100%;
                     }
                 }
+            }
+        }
+
+        .selected-card {
+            border: 2px solid var(--stc-pink-light-color);
+            border-radius: 8px;
+            transition: border 0.3s ease;
+
+            .text-success {
+                background-color: #d4edda;
+                padding: 5px 10px;
+                border-radius: 4px;
+            }
+
+            .text-danger {
+                background-color: #f8d7da;
+                padding: 5px 10px;
+                border-radius: 4px;
             }
         }
     }
