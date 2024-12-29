@@ -44,6 +44,10 @@ export class SidebarComponent implements OnInit {
   // tabChanged = input<boolean>()
   // isEditModeChecked = input<boolean>()
   sidebarLinks = input.required<SidebarLinksModel[]>();
+  routerLinkActiveOptions = input({
+    exact: true,
+  });
+
   activeMode: 'editMode' | 'viewMode' = 'viewMode';
   @Output() currentMode: EventEmitter<'editMode' | 'viewMode'> =
     new EventEmitter();
