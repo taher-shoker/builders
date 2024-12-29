@@ -502,8 +502,8 @@ export class AuthService {
               this.setLoggedInUser();
               this.passedSystems.push({
                 systemUrl: window.location.origin + environment.systems.chat_bi,
-                name: 'Chat BI',
-                displayName: 'Chat BI',
+                name: 'CEM Chat AI',
+                displayName: 'CEM Chat AI',
                 mobileView: true,
               });
               break;
