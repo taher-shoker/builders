@@ -1,0 +1,36 @@
+p-splitbutton {
+    ::ng-deep {
+        .p-splitbutton {
+            height: -webkit-fill-available;
+        }
+
+        .p-splitbutton-defaultbutton {
+            border-right: none;
+            border-radius: 8px 0 0 8px;
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        .p-splitbutton-menubutton {
+            border-left: none;
+            padding-left: 0;
+            border-radius: 0 8px 8px 0;
+
+            &:focus {
+                box-shadow: none;
+            }
+        }
+
+        .p-button {
+            &-primary:not(.p-button-outlined) {
+                background-color: var(--stc-color);
+            }
+
+            &-primary.p-button-outlined {
+                color: var(--stc-color);
+            }
+        }
+    }
+}
