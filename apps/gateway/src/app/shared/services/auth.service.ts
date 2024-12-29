@@ -283,7 +283,7 @@ export class AuthService {
         environment.systems.business_excellence_system,
       Score_Card_Report_DB: environment.systems.score_card_report_db,
       Strategic_Dashboard: environment.systems.strategic_dashboard,
-      Chat_Bi: environment.systems.chat_bi,
+      ChatBI: environment.systems.chat_bi,
     };
     const url = systemUrls[system];
     if (url) {
