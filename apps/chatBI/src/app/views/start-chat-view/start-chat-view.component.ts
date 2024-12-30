@@ -40,21 +40,73 @@ export class StartChatViewComponent implements OnInit {
   }
   startChatNavigation() {
     // this.initializeSpeech();
-    this.playAudio(this.displayName);
+    // this.playAudio(this.displayName);
+    this.playBackgroundAudio(this.displayName);
     this.router.navigate(['/chatView']);
   }
 
-  playAudio(name: string) {
-    const audio = new Audio(`${this.audioUrl}${name}.wav`);
-    audio
-      .play()
-      .then(() => {
-        console.log('Audio playback started');
+  playTimeout: any;
+
+  // playAudio(name: string) {
+  //   // const audio = new Audio(`${this.audioUrl}${name}.wav`);
+  //   // audio
+  //   //   .play()
+  //   //   .then(() => {
+  //   //     console.log('Audio playback started');
+  //   //   })
+  //   //   .catch((error) => {
+  //   //     const audio = new Audio(`${this.audioUrl}welcome.wav`);
+  //   //     audio.play();
+  //   //     console.error('Error playing audio:', error);
+  //   //   });
+
+  //   clearTimeout(this.playTimeout);
+
+  //   this.playTimeout = setTimeout(() => {
+  //     const audio = new Audio(`${this.audioUrl}${name}.wav`);
+  //     // audio.preload = 'auto';
+  //     // audio.loop = true;
+  //     audio.volume = 0.5;
+
+  //     audio.addEventListener('canplaythrough', () => {
+  //       audio.play().catch((error) => {
+  //         // const audio = new Audio(`${this.audioUrl}welcome.wav`);
+  //         // // audio.preload = 'auto';
+  //         // // audio.loop = true;
+  //         // audio.volume = 0.5;
+  //         // audio.play();
+  //         console.error('Error playing audio:', error);
+  //       });
+  //     });
+
+  //     audio.addEventListener('error', (error) => {
+  //       const audio = new Audio(`${this.audioUrl}welcome.wav`);
+  //       // audio.preload = 'auto';
+  //       // audio.loop = true;
+  //       // audio.volume = 0.5;
+  //       audio.play();
+  //       console.error('Error playing audio:', error);
+  //     });
+  //   }, 300); // Delay play by 300ms
+  // }
+
+  playBackgroundAudio(name: string) {
+    const audioContext = new (window.AudioContext ||
+      (window as any).webkitAudioContext)();
+    const source = audioContext.createBufferSource();
+
+    fetch(`${this.audioUrl}${name}.wav`)
+      .then((response) => response.arrayBuffer())
+      .then((buffer) => audioContext.decodeAudioData(buffer))
+      .then((decodedData) => {
+        source.buffer = decodedData;
+        source.connect(audioContext.destination);
+        // source.loop = true;
+        source.start(0);
       })
       .catch((error) => {
-        const audio = new Audio(`${this.audioUrl}welcome.wav`);
-        audio.play();
-        console.error('Error playing audio:', error);
+        this.playBackgroundAudio('welcome');
+        console.error('Error loading audio with Web Audio API:', error);
       });
   }
 
