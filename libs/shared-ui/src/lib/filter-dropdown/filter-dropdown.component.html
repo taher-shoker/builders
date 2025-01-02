@@ -1,0 +1,18 @@
+<p-dropdown
+  [options]="dropdownOptions()"
+  [ngModel]="selectedValue()"
+  (onChange)="onValueChange($event.value)"
+  optionLabel="label"
+  [filter]="true"
+  filterBy="label"
+  [showClear]="true"
+  [placeholder]="placeholder()"
+  appendTo="body"
+>
+  <ng-template pTemplate="selectedItem" let-selectedOption>
+    <div>{{ selectedOption?.label }}</div>
+  </ng-template>
+  <ng-template let-option pTemplate="item">
+    <div>{{ option.label }}</div>
+  </ng-template>
+</p-dropdown>
