@@ -90,14 +90,7 @@ export class ApiStandardListComponent implements OnInit {
   }
 
   private loadStandards(): void {
-    this.standardsService.getStandards().subscribe({
-      next: (response: GetStandardsResponse) => {
-        this.dataSource = response.data.standards;
-      },
-      error: (err) => {
-        console.error('Error fetching standards:', err);
-      },
-    });
+    this.standardsService.getStandards().catch((error) => {});
   }
 
   onActionHandler(event: { actionType: string; rowData: ApiStandard }): void {
@@ -107,13 +100,13 @@ export class ApiStandardListComponent implements OnInit {
       case 'pi pi-eye':
         this.router.navigate(['view-standard'], {
           relativeTo: this.route,
-          state: { standard: rowData, viewMode: true },
+          state: { standard: rowData },
         });
         break;
       case 'pi pi-pen-to-square':
-        this.router.navigate(['edit-standard'], {
+        this.router.navigate([`edit-standard`], {
           relativeTo: this.route,
-          state: { standard: rowData, editMode: true },
+          state: { standard: rowData, isEditMode: true },
         });
         break;
       default:

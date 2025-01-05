@@ -89,6 +89,13 @@ import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-
 import { SharedService } from './shared.service';
 import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
 import { SplitButtonComponent } from './split-button/split-button.component';
+import { InputGroupComponent } from './input-group/input-group.component';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputTextModule } from 'primeng/inputtext';
+import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.component';
+import { DropdownModule } from 'primeng/dropdown';
+
 const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
 // const modules = [BreadCrumbModule, MatIconModule];
 
@@ -148,6 +155,8 @@ const components = [
   MultiCirclesChartComponent,
   ClusteredColumnChartComponent,
   SplitButtonComponent,
+  InputGroupComponent,
+  FilterDropdownComponent,
 ];
 
 @NgModule({
@@ -186,6 +195,10 @@ const components = [
     CalendarModule,
     primengDialogModule,
     SplitButtonModule,
+    InputGroupAddonModule,
+    InputGroupModule,
+    InputTextModule,
+    DropdownModule,
   ],
 })
 export class SharedUiModule {}

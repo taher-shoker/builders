@@ -32,13 +32,23 @@ export const appRoutes: Route[] = [
             './features/api-standard-list/api-standard-list.component'
           ).then((m) => m.ApiStandardListComponent),
       },
-      ...['api-standard-list/:action'].map((path) => ({
+      ...[
+        'api-standard-list/edit-standard',
+        'api-standard-list/add-standard',
+      ].map((path) => ({
         path,
         loadComponent: () =>
           import(
             './features/api-standard-form/api-standard-form.component'
           ).then((m) => m.ApiStandardFormComponent),
       })),
+      {
+        path: 'api-standard-list/view-standard',
+        loadComponent: () =>
+          import(
+            './features/api-standard-details/api-standard-details.component'
+          ).then((m) => m.ApiStandardDetailsComponent),
+      },
     ],
   },
 ];

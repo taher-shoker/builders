@@ -54,7 +54,7 @@ export class ApiStandardDetailsComponent implements OnInit {
 
   onEdit(item: any) {
     this.router.navigate([`/api-standard-list/edit-standard`], {
-      state: { standard: item },
+      state: { standard: item, isEditMode: true },
     });
   }
 
