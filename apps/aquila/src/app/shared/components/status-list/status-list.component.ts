@@ -9,9 +9,6 @@ import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InputTextModule } from 'primeng/inputtext';
-import { DropdownModule } from 'primeng/dropdown';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputGroupModule } from 'primeng/inputgroup';
 import { FormsModule } from '@angular/forms';
 
 @Component({
@@ -21,31 +18,32 @@ import { FormsModule } from '@angular/forms';
     CommonModule,
     SharedUiModule,
     MatProgressSpinnerModule,
-    DropdownModule,
     InputTextModule,
-    InputGroupModule,
-    InputGroupAddonModule,
     FormsModule,
   ],
   templateUrl: './status-list.component.html',
   styleUrls: ['./status-list.component.scss'],
 })
 export class StatusListComponent {
-  title: InputSignal<string> = input('');
+  title = input<string>('');
   items: InputSignal<
     {
       id: number;
-      apiLink: string;
-      standard: string;
-      standardList: string[];
+      apiUrl: string;
+      standardId: any;
+      version: string;
+      standardList: any[];
       hasRun?: boolean;
       hasCompleted?: boolean;
+      date?: Date;
+      result?: string;
     }[]
   > = input<
     {
       id: number;
-      apiLink: string;
-      standard: string;
+      apiUrl: string;
+      standardId: string;
+      version: string;
       standardList: string[];
       hasRun?: boolean;
     }[]
@@ -53,27 +51,42 @@ export class StatusListComponent {
 
   completedItems: {
     id: number;
-    apiLink: string;
-    standard: string;
+    apiUrl: string;
+    standardId: string;
+    version: string;
     standardList: string[];
     hasRun?: boolean;
     hasCompleted?: boolean;
+    date?: number;
+    time?: number;
   }[] = [];
   @Output() itemsChange = new EventEmitter<
     {
       id: number;
-      apiLink: string;
-      standard: string;
+      apiUrl: string;
+      standardId: string;
+      version: string;
       standardList: string[];
       hasRun?: boolean;
+    }[]
+  >();
+
+  @Output() removedItems = new EventEmitter<
+    {
+      id: number;
+      apiUrl: string;
+      standardId: string;
+      version: string;
+      standardList: string[];
     }[]
   >();
 
   @Output() completedItemsChange = new EventEmitter<
     {
       id: number;
-      apiLink: string;
-      standard: string;
+      apiUrl: string;
+      standardId: string;
+      version: string;
       standardList: string[];
       hasRun?: boolean;
       hasCompleted?: boolean;
@@ -82,35 +95,37 @@ export class StatusListComponent {
 
   @Output() addAndRunItem = new EventEmitter<{
     id: number;
-    apiLink: string;
-    standard: string;
+    apiUrl: string;
+    standardId: string;
+    version: string;
     standardList: string[];
   }>();
 
   @Output() itemSelected = new EventEmitter<{
     id: number;
-    apiLink: string;
-    standard: string;
+    apiUrl: string;
+    standardId: string;
+    version: string;
     standardList: string[];
   }>();
   @Output() standardChanged = new EventEmitter<{ value: any; index: number }>();
+  selectedItem: any;
 
   removeItem(index: number): void {
     const updatedItems = [...this.items()];
     updatedItems.splice(index, 1);
-    this.itemsChange.emit(updatedItems);
+    this.removedItems.emit(updatedItems);
   }
 
   runAll(): void {
     const updatedItems = this.items().map((item) => ({
       ...item,
       hasRun: true,
+      date: new Date(),
+      result: 'pass',
     }));
 
-    console.log(updatedItems);
-
     this.itemsChange.emit(updatedItems);
-
     setTimeout(() => {
       this.moveToCompleted(updatedItems);
     }, 3000);
@@ -124,7 +139,7 @@ export class StatusListComponent {
         hasCompleted: true,
       }));
 
-    this.completedItems.push(...completedItems);
+    this.completedItems.unshift(...completedItems);
     this.completedItemsChange.emit(completedItems);
 
     const remainingItems = updatedItems.filter((item) => !item.hasRun);
@@ -133,7 +148,8 @@ export class StatusListComponent {
 
   onItemClick(item: any): void {
     if (this.title() === 'Completed Tests') {
-      this.itemSelected.emit(item);
+      this.selectedItem = this.selectedItem === item ? null : item;
+      this.itemSelected.emit(this.selectedItem);
     }
   }
 

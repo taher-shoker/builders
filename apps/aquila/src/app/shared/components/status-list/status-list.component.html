@@ -12,7 +12,11 @@
   </div>
   <div class="status-list_items">
     @for (item of items(); let i = $index; track item) {
-    <div class="card" (click)="onItemClick(item)">
+    <div
+      class="card"
+      [ngClass]="{ 'selected-card': selectedItem === item }"
+      (click)="onItemClick(item)"
+    >
       <div class="card-header">
         <strong>ID: #{{ item.id }}</strong>
         <!-- Remove button -->
@@ -24,35 +28,43 @@
         <div class="spinner">
           <mat-spinner diameter="24"></mat-spinner>
         </div>
+        } @else {
+        <p>{{ item.date | date : 'd MMM yy, h:mm a' }}</p>
+        <strong
+          [ngClass]="{
+            'text-success': item.result === 'pass',
+            'text-danger': item.result === 'fail'
+          }"
+          >{{ item.result }}</strong
+        >
         }
       </div>
       <div class="card-body">
         @if(item.hasRun) {
         <!-- API Link  -->
-        <p><strong>API Link:</strong> {{ item.apiLink }}</p>
+        <p><strong>API Link:</strong> {{ item.apiUrl }}</p>
         <!-- Standard -->
-        <p><strong>Selected Standard:</strong> {{ item.standard }}</p>
+        <p>
+          <strong>Selected Standard:</strong>
+          {{ item.standardId?.value || item?.standardId }}
+        </p>
         } @else {
         <!-- API Link  -->
         <div class="filter-field">
-          <p-inputGroup>
-            <p-inputGroupAddon>http://</p-inputGroupAddon>
-            <input
-              type="text"
-              [value]="item.apiLink"
-              pInputText
-              placeholder="API link"
-            />
-          </p-inputGroup>
+          <stc-apps-input-group
+            [placeholder]="'API link'"
+            [addonText]="'http://'"
+            [(ngModel)]="item.apiUrl"
+          ></stc-apps-input-group>
         </div>
         <!-- Standard -->
         <div class="filter-field">
-          <p-dropdown
-            [options]="item.standardList"
-            [(ngModel)]="item.standard"
-            (onChange)="onStandardChanged(item.standard, i)"
-            placeholder="Select Standard"
-          ></p-dropdown>
+          <stc-apps-filter-dropdown
+            [dropdownOptions]="item.standardList"
+            [placeholder]="'Select Standard'"
+            [selectedValue]="item.standardId"
+            (valueChange)="onStandardChanged($event, i)"
+          ></stc-apps-filter-dropdown>
         </div>
         }
       </div>
