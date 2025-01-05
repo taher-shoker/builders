@@ -4,26 +4,20 @@
     <div class="api-test_filter_fields">
       <div>
         <label for="apiLinkInput">API Link</label>
-        <p-inputGroup>
-          <p-inputGroupAddon>http://</p-inputGroupAddon>
-          <input
-            type="text"
-            pInputText
-            formControlName="apiUrl"
-            placeholder="Paste API link Here"
-          />
-        </p-inputGroup>
+        <stc-apps-input-group
+          [placeholder]="'Paste API link Here'"
+          [addonText]="'http://'"
+          formControlName="apiUrl"
+        ></stc-apps-input-group>
       </div>
       <div>
         <label>Standard</label>
-        <p-dropdown
-          [options]="standardOptions"
-          formControlName="standardId"
-          optionLabel="label"
-          optionValue="value"
-          placeholder="Select Standard"
-          appendTo="body"
-        />
+        <stc-apps-filter-dropdown
+          [dropdownOptions]="standardsDropdown"
+          [placeholder]="'Select a Standard'"
+          [selectedValue]="selectedStandard"
+          (valueChange)="onStandardChanged($event)"
+        ></stc-apps-filter-dropdown>
       </div>
       <stc-apps-button
         [buttonText]="'Add To Queue'"
@@ -45,6 +39,7 @@
       [title]="'Queue - In Progress'"
       [items]="queueItems"
       (itemsChange)="onItemsChange($event)"
+      (removedItems)="onRemoveItem($event)"
       (completedItemsChange)="onCompletedItemsChange($event)"
       (standardChanged)="onStandardChange($event)"
     ></stc-apps-status-list>
@@ -66,10 +61,21 @@
       ></stc-apps-split-button>
       }
     </div>
-    <stc-apps-table-list
-      [dataSource]="tableData"
-      [columnSchema]="columnsSchema"
-      [noDataMessage]="'Pick a Completed  Test to View Its Result'"
-    ></stc-apps-table-list>
+    <div class="api-test_result_content">
+      @if (tableData.length > 0) {
+      <div class="iframe-container">
+        <iframe
+          sandbox="allow-same-origin allow-scripts allow-popups allow-forms "
+          width="100%"
+          height="800"
+          [src]="html"
+        ></iframe>
+      </div>
+      } @else {
+      <div class="api-test_no-data-message">
+        <p>Pick a Completed Test to View Its Result</p>
+      </div>
+      }
+    </div>
   </div>
 </div>
