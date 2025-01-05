@@ -1,0 +1,53 @@
+<stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+
+<div class="api-standard-details">
+  <div class="api-standard-details_overview">
+    <h3>{{ details().name }}</h3>
+    <div class="api-standard-details_fields">
+      <div class="form-group">
+        <label>Version</label>
+        <p>{{ details().version }}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Business Area</label>
+        <p>{{ details().businessArea }}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Publish Date</label>
+        <p>{{ details().publishUpdate | date }}</p>
+      </div>
+
+      <div class="form-group">
+        <label>Latest Update Date</label>
+        <p>{{ details().businessArea }}</p>
+      </div>
+      <button
+        pButton
+        class="p-button-text send-btn"
+        type="button"
+        (click)="openApiSpecifications()"
+      >
+        Open API Specifications
+        <img src="assets/images/send.svg" alt="Send Icon" />
+      </button>
+    </div>
+    <div class="api-standard-details_actions">
+      <stc-apps-button
+        buttonText="Edit"
+        [buttonType]="'default'"
+        [buttonIcon]="'pi pi-pencil'"
+        [buttonType]="'stc-color-outline'"
+        (click)="onEdit(details())"
+      >
+      </stc-apps-button>
+      <stc-apps-split-button
+        [label]="'Download'"
+        [labelIcon]="'pi pi-download'"
+        [model]="exportItems"
+        [outlined]="false"
+      ></stc-apps-split-button>
+    </div>
+  </div>
+</div>
