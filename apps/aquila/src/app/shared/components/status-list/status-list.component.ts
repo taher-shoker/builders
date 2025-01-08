@@ -31,7 +31,6 @@ export class StatusListComponent {
       id: number;
       apiUrl: string;
       standardId: any;
-      version: string;
       standardList: any[];
       hasRun?: boolean;
       hasCompleted?: boolean;
@@ -43,7 +42,6 @@ export class StatusListComponent {
       id: number;
       apiUrl: string;
       standardId: string;
-      version: string;
       standardList: string[];
       hasRun?: boolean;
     }[]
@@ -53,7 +51,6 @@ export class StatusListComponent {
     id: number;
     apiUrl: string;
     standardId: string;
-    version: string;
     standardList: string[];
     hasRun?: boolean;
     hasCompleted?: boolean;
@@ -64,8 +61,7 @@ export class StatusListComponent {
     {
       id: number;
       apiUrl: string;
-      standardId: string;
-      version: string;
+      standardId: any;
       standardList: string[];
       hasRun?: boolean;
     }[]
@@ -76,7 +72,6 @@ export class StatusListComponent {
       id: number;
       apiUrl: string;
       standardId: string;
-      version: string;
       standardList: string[];
     }[]
   >();
@@ -85,7 +80,7 @@ export class StatusListComponent {
     {
       id: number;
       apiUrl: string;
-      standardId: string;
+      standardId: any;
       version: string;
       standardList: string[];
       hasRun?: boolean;
@@ -124,7 +119,6 @@ export class StatusListComponent {
       date: new Date(),
       result: 'pass',
     }));
-
     this.itemsChange.emit(updatedItems);
     setTimeout(() => {
       this.moveToCompleted(updatedItems);

@@ -46,7 +46,13 @@
         <!-- Standard -->
         <p>
           <strong>Selected Standard:</strong>
-          {{ item.standardId?.value || item?.standardId }}
+          {{
+            item.standardId?.name +
+              ' - ' +
+              item.standardId.domain +
+              ' - ' +
+              item.standardId?.version
+          }}
         </p>
         } @else {
         <!-- API Link  -->

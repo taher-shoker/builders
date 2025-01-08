@@ -9,16 +9,12 @@ import {
 } from '@angular/forms';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { StatusListComponent } from '../../shared/components/status-list/status-list.component';
-import {
-  ApiStandard,
-  GetStandardsResponse,
-} from '.././../shared/models/standards.models';
+import { Standard } from '.././../shared/models/standards.models';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { InputTextModule } from 'primeng/inputtext';
 import { StandardsService } from '../../shared/services/standards.service';
 import { RunTestService } from '../../shared/services/run-test.service';
-import { RunTestRequest } from '../../shared/models/run-test.models';
 import { map } from 'rxjs';
 import { AccordionModule } from 'primeng/accordion';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -44,13 +40,16 @@ export class ApiTestComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private fb = inject(FormBuilder);
 
-  apiTestForm: FormGroup = new FormGroup({});
-  standards: string[] = ['Standard A', 'Standard B', 'Standard C'];
+  apiTestForm: FormGroup = this.fb.group({
+    apiUrl: ['', Validators.required],
+    standardId: ['', Validators.required],
+  });
+
   standardsDropdown: { label: string; value: string }[] = [];
 
-  selectedStandard: string | null = null;
+  selectedStandard: any;
   sanitizedUrl: SafeResourceUrl | null = null;
-  // standards: ApiStandard[] = [];
+  standards: Standard[] = [];
   standardOptions = this.standards.map((standard) => ({
     label: standard,
     value: standard,
@@ -76,8 +75,8 @@ export class ApiTestComponent implements OnInit {
     id: number;
     apiUrl: string;
     standardId: any;
-    version: string;
-    standardList: string[];
+    standardList: any[];
+    domain?: string;
     hasRun?: boolean;
   }[] = [];
 
@@ -85,15 +84,14 @@ export class ApiTestComponent implements OnInit {
     id: number;
     apiUrl: string;
     standardId: any;
-    version: string;
-    standardList: string[];
+    standardList: any[];
     hasRun?: boolean;
     hasCompleted?: boolean;
     date?: Date;
     result?: string;
   }[] = [];
 
-  tableData: ApiStandard[] = [];
+  tableData: any[] = [];
   columnsSchema: ColumnsSchema[] = [
     { key: 'id', type: 'text', label: 'Test ID' },
     { key: 'description', type: 'text', label: 'Test Description' },
@@ -103,32 +101,29 @@ export class ApiTestComponent implements OnInit {
 
   displayedColumns: string[] = this.columnsSchema.map((col) => col.key);
   displayPageName: string | null = null;
-  tabs: any[] = [];
   html!: any;
 
   ngOnInit(): void {
-    this.apiTestForm = this.fb.group({
-      apiUrl: ['', Validators.required],
-      standardId: ['', Validators.required],
-      version: ['v.5', Validators.required],
-    });
-
-    this.standardsDropdown = this.standards.map((standard) => ({
-      label: standard,
-      value: standard,
-    }));
+    this.loadStandards();
   }
 
-  // private loadStandards(): void {
-  //   this.standardsService.getStandards().subscribe({
-  //     next: (response: GetStandardsResponse) => {
-  //       this.standards = response.data.standards;
-  //     },
-  //     error: (err) => {
-  //       console.error('Error fetching standards:', err);
-  //     },
-  //   });
-  // }
+  private loadStandards(): void {
+    this.standardsService
+      .getStandards()
+      .then((response) => {
+        this.standards = response.standardDtoList;
+        this.standardsDropdown = this.standards.map((standard) => ({
+          label: `${standard.name} - ${standard.domain} `,
+          name: standard.name,
+          domain: standard.domain,
+          version: standard.version,
+          value: standard.standardId,
+        }));
+      })
+      .catch((error) => {
+        console.error('Error loading standards:', error);
+      });
+  }
 
   sendToQueue(): void {
     const { apiUrl, standardId } = this.apiTestForm.value;
@@ -136,35 +131,23 @@ export class ApiTestComponent implements OnInit {
     if (apiUrl && standardId) {
       this.queueItems.unshift({
         id: this.generateId(),
-        standardList: this.standards.map((s) => ({
-          label: s,
-          value: s,
-        })),
+        standardList: this.standardsDropdown,
         ...this.apiTestForm.value,
       });
-      this.apiTestForm.reset({
-        version: 'v.5',
-      });
+      this.apiTestForm.reset();
       this.selectedStandard = null;
     }
   }
 
   sendToQueueAndRun() {
-    const apiUrl = this.apiTestForm.get('apiUrl')?.value;
-    const standardId = this.apiTestForm.get('standardId')?.value;
+    const { apiUrl, standardId } = this.apiTestForm.value;
 
     if (apiUrl && standardId) {
-      const standardIdValue =
-        standardId && typeof standardId === 'object' && standardId.value
-          ? standardId.value
-          : standardId;
-      console.log(standardIdValue);
-
       const newItem = {
         id: this.generateId(),
-        standardList: this.standards,
+        standardList: this.standardsDropdown,
         ...this.apiTestForm.value,
-        standardId: standardIdValue,
+        standardId: this.selectedStandard,
         hasRun: true,
       };
 
@@ -174,7 +157,6 @@ export class ApiTestComponent implements OnInit {
       }));
 
       this.queueItems.unshift(newItem);
-
       setTimeout(() => {
         this.handleRunTestBatch(this.queueItems).subscribe({
           next: (response) => {
@@ -199,9 +181,7 @@ export class ApiTestComponent implements OnInit {
         });
 
         this.queueItems = [];
-        this.apiTestForm.reset({
-          version: 'v.5',
-        });
+        this.apiTestForm.reset();
         this.selectedStandard = null;
       }, 3000);
     }
@@ -215,9 +195,8 @@ export class ApiTestComponent implements OnInit {
     updatedItems: {
       id: number;
       apiUrl: string;
-      standardId: any;
-      version: string;
-      standardList: string[];
+      standardId: { name: string; version: string; domain: string };
+      standardList: any[];
       hasRun?: boolean;
     }[]
   ): void {
@@ -226,29 +205,20 @@ export class ApiTestComponent implements OnInit {
       .map((item) => ({
         id: item?.id,
         apiUrl: item.apiUrl,
-        version: item.version,
-        standardId: item.standardId || item.standardId.value,
-        standardList: [item.standardId],
+        standardId: {
+          label: `${item.standardId?.name} - ${item.standardId?.domain} - ${item.standardId?.version} `,
+          name: item.standardId.name,
+          version: item.standardId.version,
+          domain: item.standardId.domain,
+        },
+        standardList: this.standardsDropdown,
         hasRun: true,
       }));
     this.queueItems = finishedItems;
-    console.log(finishedItems);
 
     if (finishedItems.length > 0) {
       this.handleRunTestBatch(finishedItems).subscribe({
-        next: ({ items }) => {
-          // items.forEach((item) => {
-          //   const updatedItemIndex = this.queueItems.findIndex(
-          //     (queueItem) => queueItem.id === item.id
-          //   );
-          //   if (updatedItemIndex !== -1) {
-          //     this.queueItems[updatedItemIndex] = {
-          //       ...this.queueItems[updatedItemIndex],
-          //       hasCompleted: true,
-          //     };
-          //   }
-          // });
-        },
+        next: ({ items }) => {},
       });
     }
   }
@@ -262,15 +232,16 @@ export class ApiTestComponent implements OnInit {
     items: {
       id: number;
       apiUrl: string;
-      standardId: string;
-      version: string;
+      standardId: { name: string; version: string; domain: string };
     }[]
   ) {
-    const requests: RunTestRequest[] = items.map((item) => ({
+    const requests: any[] = items.map((item) => ({
       apiUrl: item.apiUrl,
-      standardId: item.standardId,
-      version: item.version,
+      standardId: item.standardId?.name,
+      version: item.standardId?.version,
     }));
+
+    console.log(requests);
 
     return this.runTestService.runMultipleTests(requests).pipe(
       map((response) => ({
@@ -280,32 +251,8 @@ export class ApiTestComponent implements OnInit {
     );
   }
 
-  handleRunTest(item: {
-    id: number;
-    apiUrl: string;
-    standardId: string;
-    version: string;
-  }) {
-    const request: RunTestRequest[] = [
-      {
-        apiUrl: item.apiUrl,
-        standardId: item.standardId,
-        version: item.version,
-      },
-    ];
-
-    return this.runTestService.runMultipleTests(request).pipe(
-      map((response) => ({
-        itemId: item.id,
-        response,
-      }))
-    );
-  }
-
   onStandardChanged(option: any) {
     console.log(option);
-    console.log(option.value);
-
     this.apiTestForm.patchValue({
       standardId: option,
     });
@@ -317,8 +264,6 @@ export class ApiTestComponent implements OnInit {
   }
 
   onCompletedItemClick(item: any): void {
-    console.log(item);
-
     if (item) {
       const updatedData: any[] = [
         {
@@ -329,19 +274,7 @@ export class ApiTestComponent implements OnInit {
         },
       ];
       this.tableData = updatedData;
-      this.tabs = [
-        {
-          header: `Test ID: ${item.id}`,
-          icon: 'pi pi-verified',
-          date: item.date,
-          result: item.result,
-          content: [
-            { label: 'Standard:', value: item.standardId },
-            { label: 'API:', value: item.apiUrl },
-            { label: 'ID:', value: item.id },
-          ],
-        },
-      ];
+
       this.html = this.sanitizer.bypassSecurityTrustResourceUrl(
         'http://qeemanet-my.sharepoint.com/personal/mohamed_amin_qeema_net/_layouts/15/embed.aspx?UniqueId=85611aea-5caf-4461-92b4-91fb05934f2b'
       );
@@ -355,7 +288,7 @@ export class ApiTestComponent implements OnInit {
   }
 
   onStandardChange(event: { value: any; index: number }) {
-    this.queueItems[event.index].standardId = event.value.value;
+    this.queueItems[event.index].standardId = event.value;
   }
 
   downloadFile(path: string, fileName: string) {
