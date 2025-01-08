@@ -10,9 +10,19 @@
   appendTo="body"
 >
   <ng-template pTemplate="selectedItem" let-selectedOption>
-    <div>{{ selectedOption?.label }}</div>
+    <div class="flex-container">
+      <span>{{ selectedOption?.label }}</span>
+      @if (selectedOption?.version) {
+      <span>{{ selectedOption?.version }}</span>
+      }
+    </div>
   </ng-template>
   <ng-template let-option pTemplate="item">
-    <div>{{ option.label }}</div>
+    <div class="flex-container">
+      <span>{{ option.label }}</span>
+      @if (option?.version) {
+      <span>{{ option?.version }}</span>
+      }
+    </div>
   </ng-template>
 </p-dropdown>
