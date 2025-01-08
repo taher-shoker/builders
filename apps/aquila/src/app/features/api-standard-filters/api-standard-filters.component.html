@@ -36,20 +36,21 @@
 
   <!-- Business Area Dropdown -->
   <div class="filter-field">
-    <p-dropdown
-      formControlName="businessArea"
-      [options]="businessAreaOptions"
-      optionLabel="label"
-      placeholder="Business Area"
-    ></p-dropdown>
+    <stc-apps-filter-dropdown
+      [dropdownOptions]="businessAreaOptions()"
+      [placeholder]="'Business Area'"
+      [selectedValue]="filterForm.get('businessArea')?.value"
+      (valueChange)="onBusinessAreaChange($event)"
+    ></stc-apps-filter-dropdown>
   </div>
 
   <!-- Sort Buttons -->
-  <div class="sort-buttons">
-    <p-dropdown
-      [options]="sortOptions"
-      optionLabel="label"
-      placeholder="Sort"
-    ></p-dropdown>
+  <div class="filter-field">
+    <stc-apps-filter-dropdown
+      [dropdownOptions]="sortOptions"
+      [placeholder]="'Sort'"
+      [selectedValue]="selectedSortOption"
+      (valueChange)="onSortChange($event)"
+    ></stc-apps-filter-dropdown>
   </div>
 </form>

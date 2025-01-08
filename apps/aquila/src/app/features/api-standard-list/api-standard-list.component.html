@@ -12,12 +12,13 @@
     <stc-apps-api-standard-filters
       (filtersChanged)="onFiltersChanged($event)"
       (sortChanged)="onSortChanged($event)"
+      [businessAreaOptions]="businessAreaOptions"
     ></stc-apps-api-standard-filters>
   </div>
 
   <div class="api-standared_table">
     <stc-apps-table-list
-      [dataSource]="dataSource"
+      [dataSource]="standards"
       [columnSchema]="columnsSchema"
       [tableActions]="tableActions()"
       [noDataMessage]="'No API standards available'"

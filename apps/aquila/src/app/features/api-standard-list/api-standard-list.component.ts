@@ -2,10 +2,7 @@ import { Component, computed, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  ApiStandard,
-  GetStandardsResponse,
-} from '../../shared/models/standards.models';
+import { Standard } from '../../shared/models/standards.models';
 import { TableListComponent } from '../../shared/components/table-list/table-list.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
@@ -30,57 +27,31 @@ export class ApiStandardListComponent implements OnInit {
   private standardsService = inject(StandardsService);
 
   el = inject(ElementRef<HTMLElement>);
-  dataSource: ApiStandard[];
-  newStandard!: ApiStandard;
-  ELEMENT_DATA: ApiStandard[] = [
-    {
-      apiName: 'Standard 1',
-      version: 'v1.0',
-      businessArea: 'Business Area',
-      lastUpdate: new Date(),
-      publishDate: new Date(),
-    },
-    {
-      apiName: 'Standard 2',
-      version: 'v2.1',
-      businessArea: 'Business Area',
-      lastUpdate: new Date(),
-      publishDate: new Date(),
-    },
-  ];
+  standards: Standard[] = [];
+  isLoading = false;
 
   displayedColumns: string[] = [
-    'apiName',
+    'name',
     'version',
     'businessArea',
-    'publishDate',
+    'publishUpdate',
     'lastUpdate',
   ];
 
   columnsSchema: ColumnsSchema[] = [
-    { key: 'apiName', type: 'text', label: 'Name' },
+    { key: 'name', type: 'text', label: 'Name' },
     { key: 'version', type: 'text', label: 'Version' },
     { key: 'businessArea', type: 'text', label: 'Business Area' },
-    { key: 'publishDate', type: 'text', label: 'Publish Date' },
+    { key: 'publishUpdate', type: 'text', label: 'Publish Date' },
     { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
   ];
 
-  tableActions = computed(() => {
-    const actions = ['pi pi-eye', 'pi pi-pen-to-square'];
-    return actions;
-  });
+  tableActions = computed(() => ['pi pi-eye', 'pi pi-pen-to-square']);
+  businessAreaOptions: { label: string; value: string }[] = [];
+  originalStandards: Standard[] = [];
 
-  constructor() {
-    this.dataSource = this.ELEMENT_DATA;
-  }
   ngOnInit(): void {
     this.loadStandards();
-
-    const newStandard = history.state.newStandard;
-    if (newStandard) {
-      this.newStandard = newStandard;
-      this.dataSource.push(this.newStandard);
-    }
   }
 
   onAddStandard(): void {
@@ -90,10 +61,49 @@ export class ApiStandardListComponent implements OnInit {
   }
 
   private loadStandards(): void {
-    this.standardsService.getStandards().catch((error) => {});
+    this.standardsService
+      .getStandards()
+      .then((response) => {
+        this.originalStandards = response.standardDtoList;
+        this.standards = this.originalStandards;
+        this.businessAreaOptions = response.standardDtoList.map((area) => ({
+          label: area.businessArea,
+          value: area.businessArea,
+        }));
+      })
+      .catch((error) => {});
   }
 
-  onActionHandler(event: { actionType: string; rowData: ApiStandard }): void {
+  private applyFilters(
+    standards: Standard[],
+    filters?: Record<string, unknown>
+  ): Standard[] {
+    if (!filters) {
+      return standards;
+    }
+
+    return standards.filter((standard) => {
+      const nameMatch =
+        !filters['name'] ||
+        standard.name
+          .toLowerCase()
+          .includes((filters['name'] as string).toLowerCase());
+      const publishUpdateMatch =
+        !filters['publishUpdate'] ||
+        standard.publishUpdate === filters['publishUpdate'];
+      const lastUpdateMatch =
+        !filters['lastUpdate'] || standard.lastUpdate === filters['lastUpdate'];
+      const businessAreaMatch =
+        !filters['businessArea'] ||
+        standard.businessArea === filters['businessArea'];
+
+      return (
+        nameMatch && publishUpdateMatch && lastUpdateMatch && businessAreaMatch
+      );
+    });
+  }
+
+  onActionHandler(event: { actionType: string; rowData: Standard }): void {
     const { actionType, rowData } = event;
 
     switch (actionType) {
@@ -104,7 +114,7 @@ export class ApiStandardListComponent implements OnInit {
         });
         break;
       case 'pi pi-pen-to-square':
-        this.router.navigate([`edit-standard`], {
+        this.router.navigate(['edit-standard'], {
           relativeTo: this.route,
           state: { standard: rowData, isEditMode: true },
         });
@@ -114,9 +124,20 @@ export class ApiStandardListComponent implements OnInit {
     }
   }
 
-  onFiltersChanged(filters: any) {
-    console.log(filters);
+  onFiltersChanged(filters: Record<string, unknown>): void {
+    this.standards = this.applyFilters(this.originalStandards, filters);
   }
 
-  onSortChanged(direction: 'asc' | 'desc') {}
+  onSortChanged(direction: { label: string; value: 'asc' | 'desc' }): void {
+    const sortedStandards = [...this.standards].sort((a, b) => {
+      const nameA = a.name.toLowerCase();
+      const nameB = b.name.toLowerCase();
+
+      return direction.value === 'asc'
+        ? nameA.localeCompare(nameB, 'en', { sensitivity: 'base' })
+        : nameB.localeCompare(nameA, 'en', { sensitivity: 'base' });
+    });
+
+    this.standards = sortedStandards;
+  }
 }
