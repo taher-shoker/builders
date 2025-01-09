@@ -57,18 +57,14 @@ export class ApiTestComponent implements OnInit {
   exportItems = [
     {
       icon: 'pi pi-download',
-      label: 'Standard PDF',
+      label: 'PDF',
       command: () => this.downloadFile('/path/to/standard.pdf', 'Standard PDF'),
     },
     {
-      label: 'CTK script',
       icon: 'pi pi-download',
-      command: () => this.downloadFile('/path/to/ctk-script.js', 'CTK script'),
-    },
-    {
-      label: 'Swagger',
-      icon: 'pi pi-download',
-      command: () => this.downloadFile('/path/to/swagger.json', 'Swagger'),
+      label: 'HTML',
+      command: () =>
+        this.downloadFile('/path/to/documentation.html', 'Documentation HTML'),
     },
   ];
   queueItems: {
@@ -292,6 +288,14 @@ export class ApiTestComponent implements OnInit {
   }
 
   downloadFile(path: string, fileName: string) {
+    const allowedExtensions = ['.pdf', '.html'];
+    const fileExtension = path.slice(path.lastIndexOf('.')).toLowerCase();
+
+    if (!allowedExtensions.includes(fileExtension)) {
+      console.error('Invalid file type. Only PDF and HTML files are allowed.');
+      return;
+    }
+
     const link = document.createElement('a');
     link.href = path;
     link.download = fileName;
