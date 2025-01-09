@@ -66,10 +66,16 @@ export class ApiStandardListComponent implements OnInit {
       .then((response) => {
         this.originalStandards = response.standardDtoList;
         this.standards = this.originalStandards;
-        this.businessAreaOptions = response.standardDtoList.map((area) => ({
-          label: area.businessArea,
-          value: area.businessArea,
-        }));
+        const uniqueBusinessAreas = new Set(
+          response.standardDtoList.map((area) => area.businessArea)
+        );
+
+        this.businessAreaOptions = Array.from(uniqueBusinessAreas).map(
+          (area) => ({
+            label: area,
+            value: area,
+          })
+        );
       })
       .catch((error) => {});
   }
@@ -116,7 +122,10 @@ export class ApiStandardListComponent implements OnInit {
       case 'pi pi-pen-to-square':
         this.router.navigate(['edit-standard'], {
           relativeTo: this.route,
-          state: { standard: rowData, isEditMode: true },
+          state: {
+            standard: rowData,
+            isEditMode: true,
+          },
         });
         break;
       default:

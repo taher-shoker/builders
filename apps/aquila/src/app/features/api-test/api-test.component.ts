@@ -220,7 +220,6 @@ export class ApiTestComponent implements OnInit {
   }
 
   onRemoveItem(remainingItems: any) {
-    console.log(remainingItems);
     this.queueItems = remainingItems;
   }
 
@@ -237,8 +236,6 @@ export class ApiTestComponent implements OnInit {
       version: item.standardId?.version,
     }));
 
-    console.log(requests);
-
     return this.runTestService.runMultipleTests(requests).pipe(
       map((response) => ({
         response,
@@ -248,7 +245,6 @@ export class ApiTestComponent implements OnInit {
   }
 
   onStandardChanged(option: any) {
-    console.log(option);
     this.apiTestForm.patchValue({
       standardId: option,
     });
