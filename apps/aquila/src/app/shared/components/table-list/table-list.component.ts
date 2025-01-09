@@ -1,18 +1,18 @@
-/* eslint-disable @nx/enforce-module-boundaries */
 import {
   Component,
   computed,
-  effect,
   EventEmitter,
   input,
+  OnInit,
   Output,
 } from '@angular/core';
-import { ApiStandard } from '../../models/standards.models';
+// eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
+import { Standard } from '../../models/standards.models';
 
 @Component({
   selector: 'stc-apps-table-list',
@@ -21,14 +21,14 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [TableModule, ButtonModule, CommonModule],
 })
-export class TableListComponent {
-  dataSource = input<ApiStandard[]>([]);
+export class TableListComponent implements OnInit {
+  dataSource = input<Standard[]>([]);
   columnSchema = input<ColumnsSchema[]>([]);
   noDataMessage = input<string>('');
   tableActions = input<string[]>([]);
   @Output() actionClick = new EventEmitter<{
     actionType: string;
-    rowData: ApiStandard;
+    rowData: any;
   }>();
 
   displayedColumns = computed(() => {
@@ -39,7 +39,22 @@ export class TableListComponent {
     return columns;
   });
 
-  onActionClick(actionType: string, rowData: ApiStandard): void {
+  currentPage = 0;
+  rowsPerPage = 10;
+
+  ngOnInit(): void {
+    const savedPage = localStorage.getItem('currentPage');
+    if (savedPage) {
+      this.currentPage = parseInt(savedPage, 10);
+    }
+  }
+
+  onActionClick(actionType: string, rowData: any): void {
     this.actionClick.emit({ actionType, rowData });
+  }
+
+  onPageChange(event: { first: number; rows: number }): void {
+    this.currentPage = event.first / event.rows;
+    localStorage.setItem('currentPage', this.currentPage.toString());
   }
 }
