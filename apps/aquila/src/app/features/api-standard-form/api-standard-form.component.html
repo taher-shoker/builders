@@ -4,20 +4,6 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="api-standard-form_container">
       <div class="api-standard-form_fields">
-        <!-- Standard Link -->
-        <div class="form-group full-width">
-          <label>Standard Link</label>
-          <stc-apps-input-group
-            [placeholder]="'Paste Standard link'"
-            [addonText]="'http://'"
-            formControlName="standardLink"
-          ></stc-apps-input-group>
-          @if ( form.get('standardLink')?.invalid &&
-          form.get('standardLink')?.touched) {
-          <small class="p-error"> Standard Link is required. </small>
-          }
-        </div>
-
         <!-- Standard Name -->
         <div class="form-group">
           <label for="name">Standard Name</label>
@@ -28,8 +14,11 @@
             placeholder="Add Name"
             formControlName="name"
           />
-          @if ( form.get('name')?.invalid && form.get('name')?.touched) {
+          @if ( form.get('name')?.touched &&
+          form.get('name')?.errors?.['required']) {
           <small class="p-error"> Standard Name is required. </small>
+          } @if (form.get('name')?.errors?.['pattern']) {
+          <small class="p-error">Standard Name cannot contain spaces.</small>
           }
         </div>
 
@@ -78,6 +67,21 @@
           @if (form.get('businessArea')?.invalid &&
           form.get('businessArea')?.touched) {
           <small class="p-error"> Business Area is required. </small>
+          }
+        </div>
+
+        <!-- domain -->
+        <div class="form-group">
+          <label for="domain">Domain</label>
+          <input
+            id="domain"
+            type="text"
+            pInputText
+            placeholder="Add Domain"
+            formControlName="domain"
+          />
+          @if (form.get('domain')?.invalid && form.get('domain')?.touched) {
+          <small class="p-error">Domain is required. </small>
           }
         </div>
       </div>

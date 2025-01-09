@@ -44,6 +44,7 @@ export class ApiStandardFormComponent implements OnInit {
   private router = inject(Router);
   private messageService = inject(MessageService);
   private standardsService = inject(StandardsService);
+
   form: FormGroup = new FormGroup({});
   isEditMode = false;
   acceptedTypes: string[] = [
@@ -61,53 +62,93 @@ export class ApiStandardFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.fb.group({
-      standardLink: ['', Validators.required],
-      name: ['', Validators.required],
+      standardId: ['', [Validators.required, Validators.pattern(/^\S*$/)]],
+      name: ['', [Validators.required, Validators.pattern(/^\S*$/)]],
       version: ['', Validators.required],
       publishUpdate: ['', Validators.required],
       businessArea: ['', Validators.required],
+      domain: ['', Validators.required],
       file: [[], Validators.required],
     });
-    if (history.state && history.state.standard) {
+    this.isEditMode = history.state.isEditMode;
+    if (this.isEditMode && history.state.standard) {
       const standardData = history.state.standard;
       this.form.patchValue({
         ...standardData,
-        name: standardData.apiName,
       });
     }
-    this.isEditMode = history.state.isEditMode;
+
+    if (!this.isEditMode) {
+      this.form.get('name')?.valueChanges.subscribe((name) => {
+        if (name) {
+          const standardId = this.generateStandardId(name);
+          this.form
+            .get('standardId')
+            ?.setValue(standardId, { emitEvent: false });
+        }
+      });
+    }
   }
 
   onSubmit(): void {
-    if (this.form.valid) {
-      const formData = new FormData();
-
-      Object.keys(this.form.value).forEach((key) => {
-        if (key !== 'file') {
-          formData.append(key, this.form.get(key)?.value);
-        }
-      });
-
-      const files = this.form.get('file')?.value;
-      if (files && files.length > 0) {
-        files.forEach((file: File) => {
-          formData.append('file', file, file.name);
-        });
-      }
-
-      this.standardsService.uploadStandard(formData).catch(
-        (error) => {}
-        // next: (response) => {
-        //   this.router.navigate(['api-standard-list']);
-        // },
-        // error: (err) => {
-        //   console.error('Error adding standard:', err);
-        // },
-      );
-    } else {
+    if (this.form.invalid) {
       this.form.markAllAsTouched();
       return;
     }
+    const formData = this.prepareFormData();
+    this.standardsService
+      .uploadStandard(formData)
+      .then((response) => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Standard added successfully',
+        });
+        this.router.navigate(['api-standard-list']);
+      })
+      .catch((error) => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to add standard',
+        });
+        console.error('Error adding standard:', error);
+      });
+  }
+
+  private prepareFormData(): FormData {
+    const formData = new FormData();
+
+    Object.keys(this.form.value).forEach((key) => {
+      if (key !== 'file') {
+        let value = this.form.get(key)?.value;
+        if (key === 'publishUpdate' && value instanceof Date) {
+          value = this.formatDate(value);
+        }
+        formData.append(key, value);
+      }
+    });
+
+    // Append files to FormData
+    const files = this.form.get('file')?.value;
+    if (files && files.length > 0) {
+      files.forEach((file: File) => {
+        formData.append('file', file, file.name);
+      });
+    }
+    return formData;
+  }
+
+  private generateStandardId(name: string): string {
+    return name.replace(/^-+|-+$/g, '');
+  }
+
+  private formatDate(date: Date): string {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
   }
 
   onCancel(): void {
@@ -127,8 +168,7 @@ export class ApiStandardFormComponent implements OnInit {
     const files = event.files;
     this.uploadedFiles = files;
     this.form.get('file')?.patchValue(files);
-    for (const file of files) {
-    }
+    this.form.get('file')?.updateValueAndValidity();
   }
 
   onFileSelect(event: any) {
@@ -146,6 +186,7 @@ export class ApiStandardFormComponent implements OnInit {
     if (this.acceptedTypes.includes(fileExtension)) {
       this.uploadedFiles = [selectedFile];
       this.form.get('file')?.setValue(this.uploadedFiles);
+      this.form.get('file')?.updateValueAndValidity();
     } else {
       this.messageService.add({
         severity: 'warn',
