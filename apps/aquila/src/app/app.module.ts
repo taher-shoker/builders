@@ -5,10 +5,15 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { environment } from '../environments/environment';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
+import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -34,6 +39,7 @@ export const provideTranslation = () => ({
       HttpClientModule,
       TranslateModule.forRoot(provideTranslation()),
     ]),
+    { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     DatePipe,
   ],
   bootstrap: [AppComponent],
