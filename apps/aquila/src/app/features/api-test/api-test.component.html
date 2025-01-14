@@ -1,4 +1,5 @@
 <div class="api-test">
+  <p-toast />
   <div class="api-test_filter" [formGroup]="apiTestForm">
     <h5>Paste API link then select standard from list</h5>
     <div class="api-test_filter_fields">
@@ -40,7 +41,6 @@
       [items]="queueItems"
       (itemsChange)="onItemsChange($event)"
       (removedItems)="onRemoveItem($event)"
-      (completedItemsChange)="onCompletedItemsChange($event)"
       (standardChanged)="onStandardChange($event)"
     ></stc-apps-status-list>
     <stc-apps-status-list
@@ -63,12 +63,12 @@
     </div>
     <div class="api-test_result_content">
       @if (tableData.length > 0) {
-      <div class="iframe-container">
+      <div class="iframe-container" id="iframe-container">
         <iframe
-          sandbox="allow-same-origin allow-scripts allow-popups allow-forms "
+          id="api-test-iframe"
           width="100%"
           height="800"
-          [src]="html"
+          [src]="getSafeUrl(selectedItem.summaryFileHtml)"
         ></iframe>
       </div>
       } @else {

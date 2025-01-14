@@ -15,9 +15,10 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
 import { InputTextModule } from 'primeng/inputtext';
 import { StandardsService } from '../../shared/services/standards.service';
 import { RunTestService } from '../../shared/services/run-test.service';
-import { map } from 'rxjs';
 import { AccordionModule } from 'primeng/accordion';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+import { MessageService } from 'primeng/api';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'stc-apps-api-test',
@@ -30,7 +31,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
     InputTextModule,
     FormsModule,
     AccordionModule,
+    ToastModule,
   ],
+  providers: [MessageService],
   templateUrl: './api-test.component.html',
   styleUrls: ['./api-test.component.scss'],
 })
@@ -39,14 +42,13 @@ export class ApiTestComponent implements OnInit {
   private runTestService = inject(RunTestService);
   private sanitizer = inject(DomSanitizer);
   private fb = inject(FormBuilder);
+  private messageService = inject(MessageService);
 
   apiTestForm: FormGroup = this.fb.group({
     apiUrl: ['', Validators.required],
     standardId: ['', Validators.required],
   });
-
   standardsDropdown: { label: string; value: string }[] = [];
-
   selectedStandard: any;
   sanitizedUrl: SafeResourceUrl | null = null;
   standards: Standard[] = [];
@@ -54,19 +56,9 @@ export class ApiTestComponent implements OnInit {
     label: standard,
     value: standard,
   }));
-  exportItems = [
-    {
-      icon: 'pi pi-download',
-      label: 'PDF',
-      command: () => this.downloadFile('/path/to/standard.pdf', 'Standard PDF'),
-    },
-    {
-      icon: 'pi pi-download',
-      label: 'HTML',
-      command: () =>
-        this.downloadFile('/path/to/documentation.html', 'Documentation HTML'),
-    },
-  ];
+
+  exportItems: { icon: string; label: string; command: () => void }[] = [];
+
   queueItems: {
     id: number;
     apiUrl: string;
@@ -98,6 +90,7 @@ export class ApiTestComponent implements OnInit {
   displayedColumns: string[] = this.columnsSchema.map((col) => col.key);
   displayPageName: string | null = null;
   html!: any;
+  selectedItem: any = null;
 
   ngOnInit(): void {
     this.loadStandards();
@@ -129,6 +122,7 @@ export class ApiTestComponent implements OnInit {
         id: this.generateId(),
         standardList: this.standardsDropdown,
         ...this.apiTestForm.value,
+        standardId: this.selectedStandard,
       });
       this.apiTestForm.reset();
       this.selectedStandard = null;
@@ -145,42 +139,73 @@ export class ApiTestComponent implements OnInit {
         ...this.apiTestForm.value,
         standardId: this.selectedStandard,
         hasRun: true,
+        hasCompleted: false,
       };
+
+      this.apiTestForm.reset();
+      this.selectedStandard = null;
 
       this.queueItems = this.queueItems.map((item) => ({
         ...item,
         hasRun: true,
+        hasCompleted: false,
       }));
 
       this.queueItems.unshift(newItem);
-      setTimeout(() => {
-        this.handleRunTestBatch(this.queueItems).subscribe({
-          next: (response) => {
-            console.log(`Test completed successfully:`, response);
-          },
-          error: (err) => {
-            console.error(`Error during test execution:`, err);
-          },
-          complete: () => {
-            console.log('All tests processed.');
-            this.queueItems = [];
-          },
-        });
 
-        this.queueItems.forEach((item) => {
-          this.completedItems.unshift({
-            ...item,
-            hasCompleted: true,
-            date: new Date(),
-            result: 'pass',
+      this.handleRunTestBatch(this.queueItems)
+        .then(({ response, items }) => {
+          if (!response || !items) return;
+
+          const updatedCompletedItems = items.map((item, index) => {
+            const responseItem = response.testResults[index];
+
+            return {
+              ...item,
+              hasCompleted: true,
+              date: new Date(),
+              standardList: item.standardList,
+              parentTestId: responseItem?.parentTestId,
+              result: responseItem?.result ? 'pass' : 'faild',
+              summaryFileJson: responseItem?.summaryFileHtml,
+              summaryFileHtml: responseItem?.summaryFileHtml,
+              standardId: item.standardId,
+            };
           });
-        });
 
-        this.queueItems = [];
-        this.apiTestForm.reset();
-        this.selectedStandard = null;
-      }, 3000);
+          this.completedItems = [
+            ...updatedCompletedItems,
+            ...this.completedItems,
+          ];
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Tests completed successfully',
+          });
+
+          this.queueItems = [];
+          this.apiTestForm.reset();
+          this.selectedStandard = null;
+        })
+        .catch((error) => {
+          console.error('API failed:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to run tests',
+          });
+
+          this.queueItems = this.queueItems.map((item) => ({
+            ...item,
+            hasRun: false,
+            hasCompleted: false,
+          }));
+        });
     }
+  }
+
+  getSafeUrl(url: string): SafeResourceUrl {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
   private generateId(): number {
@@ -191,7 +216,7 @@ export class ApiTestComponent implements OnInit {
     updatedItems: {
       id: number;
       apiUrl: string;
-      standardId: { name: string; version: string; domain: string };
+      standardId: any;
       standardList: any[];
       hasRun?: boolean;
     }[]
@@ -202,20 +227,68 @@ export class ApiTestComponent implements OnInit {
         id: item?.id,
         apiUrl: item.apiUrl,
         standardId: {
-          label: `${item.standardId?.name} - ${item.standardId?.domain} - ${item.standardId?.version} `,
+          label: `${item.standardId?.name} - ${item.standardId?.domain}`,
           name: item.standardId.name,
-          version: item.standardId.version,
           domain: item.standardId.domain,
+          version: item.standardId.version,
+          value: item.standardId.value,
         },
-        standardList: this.standardsDropdown,
+        standardList: item.standardList,
         hasRun: true,
+        hasCompleted: false,
       }));
+
     this.queueItems = finishedItems;
 
     if (finishedItems.length > 0) {
-      this.handleRunTestBatch(finishedItems).subscribe({
-        next: ({ items }) => {},
-      });
+      this.handleRunTestBatch(finishedItems)
+        .then(({ response, items }) => {
+          if (!response || !items) return;
+
+          const updatedCompletedItems = items.map((item, index) => {
+            const responseItem = response.testResults[index];
+            return {
+              ...item,
+              parentTestId: responseItem?.parentTestId,
+              standardList: item.standardList,
+              hasCompleted: true,
+              date: new Date(),
+              result: responseItem?.result ? 'pass' : 'faild',
+              summaryFileJson: responseItem?.summaryFileJson,
+              summaryFileHtml: responseItem?.summaryFileHtml,
+              standardId: item.standardId,
+            };
+          });
+
+          this.completedItems = [
+            ...updatedCompletedItems,
+            ...this.completedItems,
+          ];
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Tests completed successfully',
+          });
+
+          this.queueItems = [];
+          this.apiTestForm.reset();
+          this.selectedStandard = null;
+        })
+        .catch((error) => {
+          console.error('API failed:', error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to run tests',
+          });
+
+          this.queueItems = this.queueItems.map((item) => ({
+            ...item,
+            hasRun: false,
+            hasCompleted: false,
+            standardId: this.selectedStandard,
+          }));
+        });
     }
   }
 
@@ -228,6 +301,7 @@ export class ApiTestComponent implements OnInit {
       id: number;
       apiUrl: string;
       standardId: { name: string; version: string; domain: string };
+      standardList: any[];
     }[]
   ) {
     const requests: any[] = items.map((item) => ({
@@ -236,12 +310,9 @@ export class ApiTestComponent implements OnInit {
       version: item.standardId?.version,
     }));
 
-    return this.runTestService.runMultipleTests(requests).pipe(
-      map((response) => ({
-        response,
-        items,
-      }))
-    );
+    return this.runTestService.runMultipleTests(requests).then((response) => {
+      return { response, items };
+    });
   }
 
   onStandardChanged(option: any) {
@@ -256,6 +327,7 @@ export class ApiTestComponent implements OnInit {
   }
 
   onCompletedItemClick(item: any): void {
+    this.selectedItem = item;
     if (item) {
       const updatedData: any[] = [
         {
@@ -266,13 +338,33 @@ export class ApiTestComponent implements OnInit {
         },
       ];
       this.tableData = updatedData;
-
-      this.html = this.sanitizer.bypassSecurityTrustResourceUrl(
-        'http://qeemanet-my.sharepoint.com/personal/mohamed_amin_qeema_net/_layouts/15/embed.aspx?UniqueId=85611aea-5caf-4461-92b4-91fb05934f2b'
-      );
+      this.updateExportItems(item);
     } else {
       this.tableData = [];
+      this.exportItems = [];
     }
+  }
+
+  updateExportItems(item: any): void {
+    if (!item) {
+      this.exportItems = [];
+      return;
+    }
+
+    this.exportItems = [
+      {
+        icon: 'pi pi-download',
+        label: 'PDF',
+        command: () =>
+          this.downloadFile(item.summaryFileJson, 'Standard PDF.pdf'),
+      },
+      {
+        icon: 'pi pi-download',
+        label: 'HTML',
+        command: () =>
+          this.downloadFile(item.summaryFileHtml, 'Documentation HTML.html'),
+      },
+    ];
   }
 
   getIconClass(result: string): string {
@@ -284,17 +376,29 @@ export class ApiTestComponent implements OnInit {
   }
 
   downloadFile(path: string, fileName: string) {
-    const allowedExtensions = ['.pdf', '.html'];
     const fileExtension = path.slice(path.lastIndexOf('.')).toLowerCase();
 
-    if (!allowedExtensions.includes(fileExtension)) {
-      console.error('Invalid file type. Only PDF and HTML files are allowed.');
-      return;
-    }
+    let mimeType: string;
 
-    const link = document.createElement('a');
-    link.href = path;
-    link.download = fileName;
-    link.click();
+    switch (fileExtension) {
+      case '.pdf':
+        mimeType = 'application/pdf';
+        break;
+      case '.html':
+        mimeType = 'text/html';
+        break;
+      default:
+        mimeType = 'application/octet-stream';
+        break;
+    }
+    const blob = new Blob([path], { type: mimeType });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 }
