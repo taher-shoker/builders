@@ -26,26 +26,7 @@ import { FormsModule } from '@angular/forms';
 })
 export class StatusListComponent {
   title = input<string>('');
-  items: InputSignal<
-    {
-      id: number;
-      apiUrl: string;
-      standardId: any;
-      standardList: any[];
-      hasRun?: boolean;
-      hasCompleted?: boolean;
-      date?: Date;
-      result?: string;
-    }[]
-  > = input<
-    {
-      id: number;
-      apiUrl: string;
-      standardId: string;
-      standardList: string[];
-      hasRun?: boolean;
-    }[]
-  >([]);
+  items: InputSignal<any> = input<[]>([]);
 
   completedItems: {
     id: number;
@@ -76,18 +57,6 @@ export class StatusListComponent {
     }[]
   >();
 
-  @Output() completedItemsChange = new EventEmitter<
-    {
-      id: number;
-      apiUrl: string;
-      standardId: any;
-      version: string;
-      standardList: string[];
-      hasRun?: boolean;
-      hasCompleted?: boolean;
-    }[]
-  >();
-
   @Output() addAndRunItem = new EventEmitter<{
     id: number;
     apiUrl: string;
@@ -113,16 +82,14 @@ export class StatusListComponent {
   }
 
   runAll(): void {
-    const updatedItems = this.items().map((item) => ({
+    const updatedItems = this.items().map((item: any) => ({
       ...item,
       hasRun: true,
       date: new Date(),
       result: 'pass',
     }));
     this.itemsChange.emit(updatedItems);
-    setTimeout(() => {
-      this.moveToCompleted(updatedItems);
-    }, 3000);
+    this.moveToCompleted(updatedItems);
   }
 
   moveToCompleted(updatedItems: any[]): void {
@@ -134,10 +101,6 @@ export class StatusListComponent {
       }));
 
     this.completedItems.unshift(...completedItems);
-    this.completedItemsChange.emit(completedItems);
-
-    const remainingItems = updatedItems.filter((item) => !item.hasRun);
-    this.itemsChange.emit(remainingItems);
   }
 
   onItemClick(item: any): void {

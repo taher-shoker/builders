@@ -18,7 +18,9 @@
       (click)="onItemClick(item)"
     >
       <div class="card-header">
-        <strong>ID: #{{ item.id }}</strong>
+        @if (item?.parentTestId) {
+        <strong>ID: #{{ item?.parentTestId }}</strong>
+        }
         <!-- Remove button -->
         @if (!item.hasRun) {
         <button class="btn" (click)="removeItem(i)">
@@ -29,11 +31,11 @@
           <mat-spinner diameter="24"></mat-spinner>
         </div>
         } @else {
-        <p>{{ item.date | date : 'd MMM yy, h:mm a' }}</p>
+        <!-- <p>{{ item.date | date : 'd MMM yy, h:mm a' }}</p> -->
         <strong
           [ngClass]="{
             'text-success': item.result === 'pass',
-            'text-danger': item.result === 'fail'
+            'text-danger': item.result === 'faild'
           }"
           >{{ item.result }}</strong
         >
