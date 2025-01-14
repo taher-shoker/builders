@@ -17,6 +17,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbsComponent } from '../../shared/components/breadcrumbs/breadcrumbs.component';
 import { MessageService } from 'primeng/api';
+import { timer } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-api-standard-form',
@@ -104,13 +105,18 @@ export class ApiStandardFormComponent implements OnInit {
           summary: 'Success',
           detail: 'Standard added successfully',
         });
-        this.router.navigate(['api-standard-list']);
+        timer(2000).subscribe(() => {
+          this.router.navigate(['api-standard-list']);
+        });
       })
       .catch((error) => {
+        const errorResponse = JSON.parse(error.error);
+        const errorMessage =
+          errorResponse?.errorMessage || 'Failed to add standard';
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to add standard',
+          detail: errorMessage,
         });
         console.error('Error adding standard:', error);
       });
