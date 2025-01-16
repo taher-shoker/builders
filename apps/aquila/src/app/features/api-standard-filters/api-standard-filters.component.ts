@@ -77,6 +77,10 @@ export class ApiStandardFiltersComponent implements OnInit {
   }
 
   onBusinessAreaChange(selectedItem: any): void {
-    this.filterForm.get('businessArea')?.setValue(selectedItem.value);
+    if (selectedItem && selectedItem.value) {
+      this.filterForm.get('businessArea')?.setValue(selectedItem.value);
+    } else {
+      this.filterForm.get('businessArea')?.setValue(null);
+    }
   }
 }
