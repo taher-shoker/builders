@@ -13,19 +13,21 @@ import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { Standard } from '../../models/standards.models';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'stc-apps-table-list',
   templateUrl: './table-list.component.html',
   styleUrls: ['./table-list.component.scss'],
   standalone: true,
-  imports: [TableModule, ButtonModule, CommonModule],
+  imports: [TableModule, ButtonModule, CommonModule, TooltipModule],
 })
 export class TableListComponent implements OnInit {
   dataSource = input<Standard[]>([]);
   columnSchema = input<ColumnsSchema[]>([]);
   noDataMessage = input<string>('');
-  tableActions = input<string[]>([]);
+  tableActions = input<{ action: string; title: string }[]>([]);
+  actionsDisabled = input<boolean>(false);
   @Output() actionClick = new EventEmitter<{
     actionType: string;
     rowData: any;
@@ -50,7 +52,9 @@ export class TableListComponent implements OnInit {
   }
 
   onActionClick(actionType: string, rowData: any): void {
-    this.actionClick.emit({ actionType, rowData });
+    if (!this.actionsDisabled()) {
+      this.actionClick.emit({ actionType, rowData });
+    }
   }
 
   onPageChange(event: { first: number; rows: number }): void {

@@ -31,9 +31,12 @@
             pButton
             pRipple
             type="button"
-            icon="{{ action }}"
+            icon="{{ action.action }}"
             class="p-button-rounded p-button-text"
-            (click)="onActionClick(action, rowData)"
+            [disabled]="actionsDisabled()"
+            [pTooltip]="action.title"
+            tooltipPosition="top"
+            (click)="onActionClick(action.action, rowData)"
           ></button>
           }
         </div>
