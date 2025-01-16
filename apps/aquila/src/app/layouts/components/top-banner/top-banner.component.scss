@@ -3,6 +3,7 @@
     justify-content: space-between;
     align-items: center;
     background: var(--whiteColor);
+    position: relative;
 
 
     &_welcome {
@@ -13,14 +14,43 @@
     }
 
     &_actions {
-        display: flex;
-        align-items: center;
+        display: grid;
+        grid-template-columns: auto 1fr;
+        gap: 40px;
 
-        p-button {
+        // p-button {
+        //     ::ng-deep {
+        //         button {
+        //             &:focus {
+        //                 box-shadow: none;
+        //             }
+        //         }
+
+        //         span {
+        //             font-size: 24px;
+        //             color: var(--darkPurpleColor);
+        //         }
+        //     }
+        // }
+
+        p-speeddial {
+            position: relative;
+            z-index: 2;
+
             ::ng-deep {
-                span {
-                    font-size: 24px;
-                    color: var(--darkPurpleColor);
+                .p-speeddial-direction-up {
+                    flex-direction: column;
+                }
+
+                button {
+                    box-shadow: none;
+                    border: none;
+
+                    span {
+                        font-size: 24px;
+                        margin-top: 0.5rem;
+                        color: var(--darkPurpleColor);
+                    }
                 }
             }
         }
@@ -47,4 +77,16 @@
             padding-inline-start: 0;
         }
     }
+}
+
+stc-apps-notifications-list {
+    position: absolute;
+    top: 50px;
+    z-index: 1000;
+    background-color: var(--whiteColor);
+    border: 1px solid #ccc;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: auto;
+    max-height: 400px;
+    overflow-y: auto;
 }

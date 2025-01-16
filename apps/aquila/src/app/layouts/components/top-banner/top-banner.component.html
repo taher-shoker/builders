@@ -6,8 +6,27 @@
     <img src="assets/images/Waving Hand.svg" alt="" />
   </div>
   <div class="top-banner_actions">
-    <p-button icon="pi pi-bell" class="notification-icon" [text]="true">
-    </p-button>
+    <!-- <p-button
+      icon="pi pi-bell"
+      class="notification-icon"
+      [text]="true"
+      (click)="toggleNotifications()"
+    >
+    </p-button> -->
+
+    <p-speedDial
+      [model]="[]"
+      direction="up"
+      transitionDelay="80"
+      showIcon="pi pi-bell"
+      hideIcon="pi pi-bell"
+      buttonClassName="p-button-outlined"
+      (onVisibleChange)="toggleNotifications()"
+    />
+
+    @if (showNotifications) {
+    <stc-apps-notifications-list></stc-apps-notifications-list>
+    }
     <stc-apps-header
       [userName]="userName"
       [logoSrc]="logoSrc()"
