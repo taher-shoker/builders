@@ -14,8 +14,11 @@
     @for (item of items(); let i = $index; track item) {
     <div
       class="card"
-      [ngClass]="{ 'selected-card': selectedItem === item }"
-      (click)="onItemClick(item)"
+      [ngClass]="{
+        'selected-card': selectedItem === item,
+        dimmed: item.result === 'failed'
+      }"
+      (click)="item.result !== 'failed' && onItemClick(item)"
     >
       <div class="card-header">
         @if (item?.parentTestId) {
@@ -35,7 +38,7 @@
         <strong
           [ngClass]="{
             'text-success': item.result === 'pass',
-            'text-danger': item.result === 'faild'
+            'text-danger': item.result === 'failed'
           }"
           >{{ item.result }}</strong
         >
@@ -51,7 +54,7 @@
           {{
             item.standardId?.name +
               ' - ' +
-              item.standardId.domain +
+              item.standardId?.domain +
               ' - ' +
               item.standardId?.version
           }}

@@ -32,6 +32,10 @@
             padding: 0;
             height: auto;
 
+            &.dimmed {
+                cursor: not-allowed;
+            }
+
             &-header {
                 display: flex;
                 justify-content: space-between;
@@ -54,7 +58,10 @@
                 strong {
                     font-family: 'stc forward-bold';
                     text-transform: capitalize;
+                    margin-left: auto;
                 }
+
+
             }
 
             &-body {

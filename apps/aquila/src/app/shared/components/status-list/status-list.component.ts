@@ -10,6 +10,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { InputTextModule } from 'primeng/inputtext';
 import { FormsModule } from '@angular/forms';
+import { QueueItem } from '../../models/run-test.models';
 
 @Component({
   selector: 'stc-apps-status-list',
@@ -25,55 +26,16 @@ import { FormsModule } from '@angular/forms';
   styleUrls: ['./status-list.component.scss'],
 })
 export class StatusListComponent {
-  title = input<string>('');
-  items: InputSignal<any> = input<[]>([]);
-
-  completedItems: {
-    id: number;
-    apiUrl: string;
-    standardId: string;
-    standardList: string[];
-    hasRun?: boolean;
-    hasCompleted?: boolean;
-    date?: number;
-    time?: number;
-  }[] = [];
-  @Output() itemsChange = new EventEmitter<
-    {
-      id: number;
-      apiUrl: string;
-      standardId: any;
-      standardList: string[];
-      hasRun?: boolean;
-    }[]
-  >();
-
-  @Output() removedItems = new EventEmitter<
-    {
-      id: number;
-      apiUrl: string;
-      standardId: string;
-      standardList: string[];
-    }[]
-  >();
-
-  @Output() addAndRunItem = new EventEmitter<{
-    id: number;
-    apiUrl: string;
-    standardId: string;
-    version: string;
-    standardList: string[];
-  }>();
-
-  @Output() itemSelected = new EventEmitter<{
-    id: number;
-    apiUrl: string;
-    standardId: string;
-    version: string;
-    standardList: string[];
-  }>();
+  title: InputSignal<string> = input<string>('');
+  items: InputSignal<QueueItem[]> = input<QueueItem[]>([]);
+  @Output() itemsChange = new EventEmitter<QueueItem[]>();
+  @Output() removedItems = new EventEmitter<QueueItem[]>();
+  @Output() addAndRunItem = new EventEmitter<QueueItem>();
+  @Output() itemSelected = new EventEmitter<QueueItem>();
   @Output() standardChanged = new EventEmitter<{ value: any; index: number }>();
-  selectedItem: any;
+
+  completedItems: QueueItem[] = [];
+  selectedItem: QueueItem | null = null;
 
   removeItem(index: number): void {
     const updatedItems = [...this.items()];
@@ -82,7 +44,7 @@ export class StatusListComponent {
   }
 
   runAll(): void {
-    const updatedItems = this.items().map((item: any) => ({
+    const updatedItems = this.items().map((item) => ({
       ...item,
       hasRun: true,
       date: new Date(),
@@ -92,7 +54,7 @@ export class StatusListComponent {
     this.moveToCompleted(updatedItems);
   }
 
-  moveToCompleted(updatedItems: any[]): void {
+  moveToCompleted(updatedItems: QueueItem[]): void {
     const completedItems = updatedItems
       .filter((item) => item.hasRun)
       .map((item) => ({
@@ -103,10 +65,10 @@ export class StatusListComponent {
     this.completedItems.unshift(...completedItems);
   }
 
-  onItemClick(item: any): void {
+  onItemClick(item: QueueItem): void {
     if (this.title() === 'Completed Tests') {
       this.selectedItem = this.selectedItem === item ? null : item;
-      this.itemSelected.emit(this.selectedItem);
+      this.itemSelected.emit(this.selectedItem as QueueItem);
     }
   }
 
