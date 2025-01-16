@@ -46,7 +46,10 @@ export class ApiStandardListComponent implements OnInit {
     { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
   ];
 
-  tableActions = computed(() => ['pi pi-eye', 'pi pi-pen-to-square']);
+  tableActions = computed(() => [
+    { action: 'pi pi-eye', title: 'View Details' },
+    { action: 'pi pi-pen-to-square', title: 'Edit' },
+  ]);
   businessAreaOptions: { label: string; value: string }[] = [];
   originalStandards: Standard[] = [];
 
@@ -61,9 +64,8 @@ export class ApiStandardListComponent implements OnInit {
   }
 
   private loadStandards(): void {
-    this.standardsService
-      .getStandards()
-      .then((response) => {
+    this.standardsService.getStandards().subscribe({
+      next: (response) => {
         this.originalStandards = response.standardDtoList;
         this.standards = this.originalStandards;
         const uniqueBusinessAreas = new Set(
@@ -76,8 +78,11 @@ export class ApiStandardListComponent implements OnInit {
             value: area,
           })
         );
-      })
-      .catch((error) => {});
+      },
+      error: (error) => {
+        console.error('Error loading standards:', error);
+      },
+    });
   }
 
   private applyFilters(
@@ -138,6 +143,10 @@ export class ApiStandardListComponent implements OnInit {
   }
 
   onSortChanged(direction: { label: string; value: 'asc' | 'desc' }): void {
+    if (!direction || !direction.value) {
+      return;
+    }
+
     const sortedStandards = [...this.standards].sort((a, b) => {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();

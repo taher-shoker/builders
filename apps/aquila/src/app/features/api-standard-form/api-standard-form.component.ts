@@ -17,7 +17,7 @@ import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
 import { BreadcrumbsComponent } from '../../shared/components/breadcrumbs/breadcrumbs.component';
 import { MessageService } from 'primeng/api';
-import { timer } from 'rxjs';
+import { catchError, of, switchMap, tap, timer } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-api-standard-form',
@@ -80,7 +80,7 @@ export class ApiStandardFormComponent implements OnInit {
     }
 
     if (!this.isEditMode) {
-      this.form.get('name')?.valueChanges.subscribe((name) => {
+      this.form.get('name')?.valueChanges.subscribe((name: string) => {
         if (name) {
           const standardId = this.generateStandardId(name);
           this.form
@@ -99,27 +99,36 @@ export class ApiStandardFormComponent implements OnInit {
     const formData = this.prepareFormData();
     this.standardsService
       .uploadStandard(formData)
-      .then((response) => {
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Success',
-          detail: 'Standard added successfully',
-        });
-        timer(2000).subscribe(() => {
-          this.router.navigate(['api-standard-list']);
-        });
-      })
-      .catch((error) => {
-        const errorResponse = JSON.parse(error.error);
-        const errorMessage =
-          errorResponse?.errorMessage || 'Failed to add standard';
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Error',
-          detail: errorMessage,
-        });
-        console.error('Error adding standard:', error);
-      });
+      .pipe(
+        tap(() => {
+          this.messageService.add({
+            severity: 'success',
+            summary: 'Success',
+            detail: 'Standard added successfully',
+          });
+          timer(1000)
+            .pipe(
+              switchMap(() => {
+                this.router.navigate(['api-standard-list']);
+                return of(null);
+              })
+            )
+            .subscribe();
+        }),
+        catchError((error) => {
+          const errorResponse = JSON.parse(error.error);
+          const errorMessage =
+            errorResponse?.errorMessage || 'Failed to add standard';
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: errorMessage,
+          });
+          console.error('Error adding standard:', error);
+          return of(null);
+        })
+      )
+      .subscribe();
   }
 
   private prepareFormData(): FormData {
