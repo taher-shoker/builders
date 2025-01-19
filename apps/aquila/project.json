@@ -45,10 +45,32 @@
           ],
           "outputHashing": "all"
         },
+        "staging": {
+          "fileReplacements": [
+            {
+              "replace": "apps/aquila/src/environments/environment.ts",
+              "with": "apps/aquila/src/environments/environment.stage.ts"
+            }
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "5mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "8kb",
+              "maximumError": "10kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
         "development": {
           "optimization": false,
           "extractLicenses": false,
-          "sourceMap": true
+          "sourceMap": true,
+          "namedChunks": true
         }
       },
       "defaultConfiguration": "production"
