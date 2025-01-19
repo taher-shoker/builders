@@ -1,4 +1,4 @@
-@import '../../../styles/shared-styles.scss';
+@import '../../../../styles/shared-styles.scss';
 
 .activity-monitoring {
     @extend .component-wrapper;
@@ -25,5 +25,25 @@
                 }
             }
         }
+    }
+
+    &_list {
+        span {
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 700;
+
+            &.status-success {
+                color: #22C55E;
+                background: #E0FFEE;
+            }
+
+            &.status-failed {
+                color: #FF4D4F;
+                background: #FFEDED;
+            }
+        }
+
+
     }
 }

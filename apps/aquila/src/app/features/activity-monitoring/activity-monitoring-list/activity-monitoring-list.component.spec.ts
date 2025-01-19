@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ActivityMonitoringComponent } from './activity-monitoring.component';
+import { ActivityMonitoringComponent } from './activity-monitoring-list.component';
 
 describe('ActivityMonitoringComponent', () => {
   let component: ActivityMonitoringComponent;
@@ -8,7 +8,7 @@ describe('ActivityMonitoringComponent', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ActivityMonitoringComponent]
+      imports: [ActivityMonitoringComponent],
     });
     fixture = TestBed.createComponent(ActivityMonitoringComponent);
     component = fixture.componentInstance;

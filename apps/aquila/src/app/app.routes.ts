@@ -47,7 +47,7 @@ export const appRoutes: Route[] = [
         path: 'activity-monitoring',
         loadComponent: () =>
           import(
-            './features/activity-monitoring/activity-monitoring.component'
+            './features/activity-monitoring/activity-monitoring-list/activity-monitoring.component'
           ).then((m) => m.ActivityMonitoringComponent),
       },
     ],

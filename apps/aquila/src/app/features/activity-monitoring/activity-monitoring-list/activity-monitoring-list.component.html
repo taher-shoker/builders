@@ -1,0 +1,33 @@
+<div class="activity-monitoring">
+  <div class="activity-monitoring_header">
+    <h3>Activity Monitoring</h3>
+    <stc-apps-split-button
+      [label]="'Export'"
+      [labelIcon]="'pi pi-upload'"
+      [buttonSeverity]="'primary'"
+    ></stc-apps-split-button>
+  </div>
+  <div class="activity-monitoring_filters">
+    @if (dataSource.length > 0) {
+    <stc-apps-activity-monitoring-filters />
+    }
+  </div>
+  <div class="activity-monitoring_list">
+    <stc-apps-table-list
+      [dataSource]="dataSource"
+      [columnSchema]="columnsSchema"
+      [noDataMessage]="'No activity monitoring available'"
+    >
+      <ng-template #statusCustomTemplate let-row>
+        <span
+          [ngClass]="{
+            'status-success': row.status === 'Success',
+            'status-failed': row.status === 'Failed'
+          }"
+        >
+          {{ row.status }}
+        </span>
+      </ng-template>
+    </stc-apps-table-list>
+  </div>
+</div>
