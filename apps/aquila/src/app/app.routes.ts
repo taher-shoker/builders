@@ -49,6 +49,13 @@ export const appRoutes: Route[] = [
             './features/api-standard-details/api-standard-details.component'
           ).then((m) => m.ApiStandardDetailsComponent),
       },
+      {
+        path: 'activity-monitoring',
+        loadComponent: () =>
+          import(
+            './features/activity-monitoring/activity-monitoring.component'
+          ).then((m) => m.ActivityMonitoringComponent),
+      },
     ],
   },
 ];

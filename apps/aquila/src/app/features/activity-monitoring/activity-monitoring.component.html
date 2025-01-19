@@ -1,0 +1,17 @@
+<div class="activity-monitoring">
+  <div class="activity-monitoring_header">
+    <h3>Activity Monitoring</h3>
+    <stc-apps-split-button
+      [label]="'Export'"
+      [labelIcon]="'pi pi-cloud-upload'"
+      [buttonSeverity]="'primary'"
+    ></stc-apps-split-button>
+  </div>
+  <div class="activity-monitoring_list">
+    <stc-apps-table-list
+      [dataSource]="[]"
+      [columnSchema]="columnsSchema"
+      [noDataMessage]="'No activity monitoring available'"
+    ></stc-apps-table-list>
+  </div>
+</div>

@@ -1,0 +1,29 @@
+@import '../../../styles/shared-styles.scss';
+
+.activity-monitoring {
+    @extend .component-wrapper;
+    border-radius: 6.25px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+
+        h3 {
+            color: #212121;
+            font-weight: 600;
+        }
+
+        stc-apps-split-button {
+            ::ng-deep {
+                button {
+                    span {
+                        font-size: 15px;
+                    }
+                }
+            }
+        }
+    }
+}
