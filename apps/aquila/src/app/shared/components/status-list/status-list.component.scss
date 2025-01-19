@@ -31,6 +31,7 @@
         .card {
             padding: 0;
             height: auto;
+            cursor: pointer;
 
             &.dimmed {
                 cursor: not-allowed;
@@ -58,7 +59,10 @@
                 strong {
                     font-family: 'stc forward-bold';
                     text-transform: capitalize;
-                    margin-left: auto;
+
+                    &.text-danger {
+                        margin-left: auto;
+                    }
                 }
 
 

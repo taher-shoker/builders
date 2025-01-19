@@ -10,6 +10,7 @@ import {
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { StatusListComponent } from '../../shared/components/status-list/status-list.component';
 import { Standard } from '.././../shared/models/standards.models';
+import { QueueItem } from '.././../shared/models/run-test.models';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { InputTextModule } from 'primeng/inputtext';
@@ -19,6 +20,7 @@ import { AccordionModule } from 'primeng/accordion';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { catchError, firstValueFrom, of } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-api-test',
@@ -49,8 +51,8 @@ export class ApiTestComponent implements OnInit {
     standardId: ['', Validators.required],
   });
   standardsDropdown: { label: string; value: string }[] = [];
-  selectedStandard: any;
-  sanitizedUrl: SafeResourceUrl | null = null;
+  selectedStandard: Standard | null = null;
+  sanitizedUrl!: SafeResourceUrl;
   standards: Standard[] = [];
   standardOptions = this.standards.map((standard) => ({
     label: standard,
@@ -58,26 +60,8 @@ export class ApiTestComponent implements OnInit {
   }));
 
   exportItems: { icon: string; label: string; command: () => void }[] = [];
-
-  queueItems: {
-    id: number;
-    apiUrl: string;
-    standardId: any;
-    standardList: any[];
-    domain?: string;
-    hasRun?: boolean;
-  }[] = [];
-
-  completedItems: {
-    id: number;
-    apiUrl: string;
-    standardId: any;
-    standardList: any[];
-    hasRun?: boolean;
-    hasCompleted?: boolean;
-    date?: Date;
-    result?: string;
-  }[] = [];
+  queueItems: QueueItem[] = [];
+  completedItems: QueueItem[] = [];
 
   tableData: any[] = [];
   columnsSchema: ColumnsSchema[] = [
@@ -89,8 +73,7 @@ export class ApiTestComponent implements OnInit {
 
   displayedColumns: string[] = this.columnsSchema.map((col) => col.key);
   displayPageName: string | null = null;
-  html!: any;
-  selectedItem: any = null;
+  selectedItem: any | null = null;
 
   ngOnInit(): void {
     this.loadStandards();
@@ -99,37 +82,99 @@ export class ApiTestComponent implements OnInit {
   private loadStandards(): void {
     this.standardsService
       .getStandards()
-      .then((response) => {
-        this.standards = response.standardDtoList;
-        this.standardsDropdown = this.standards.map((standard) => ({
-          label: `${standard.name} - ${standard.domain} `,
-          name: standard.name,
-          domain: standard.domain,
-          version: standard.version,
-          value: standard.standardId,
-        }));
-      })
-      .catch((error) => {
-        console.error('Error loading standards:', error);
+      .pipe(
+        catchError((error) => {
+          console.error('Error loading standards:', error);
+          return of(null);
+        })
+      )
+      .subscribe((response) => {
+        if (response) {
+          this.standards = response.standardDtoList;
+          this.standardsDropdown = this.standards.map((standard) => ({
+            label: `${standard.name} - ${standard.domain} `,
+            name: standard.name,
+            domain: standard.domain,
+            version: standard.version,
+            value: standard.standardId,
+          }));
+        }
       });
+  }
+
+  private resetForm(): void {
+    this.apiTestForm.reset();
+  }
+
+  private handleTestCompletion(response: any, items: QueueItem[]): void {
+    const updatedCompletedItems = items.map((item, index) => {
+      const responseItem = response.testResults[index];
+      const result = responseItem?.testStatus === 'FAILURE' ? 'failed' : 'pass';
+
+      return {
+        ...item,
+        hasCompleted: true,
+        date: new Date(),
+        standardList: item.standardList,
+        parentTestId: responseItem?.parentTestId,
+        result: result,
+        summaryFileJson: responseItem?.summaryFileJson || '',
+        summaryFileHtml: responseItem?.summaryFileHtml || '',
+        standardId: item?.standardId,
+      };
+    });
+
+    this.completedItems = [...updatedCompletedItems, ...this.completedItems];
+    this.messageService.add({
+      severity: 'success',
+      summary: 'Success',
+      detail: 'Tests completed successfully',
+    });
+
+    this.queueItems = [];
+    this.resetForm();
+    this.selectedStandard = null;
+  }
+
+  private handleTestError(error: any): void {
+    console.error('API failed:', error.message);
+    let errorMessage = 'Failed to run tests';
+
+    if (error.error && error.error.errorMessage) {
+      errorMessage = error.error.errorMessage;
+    }
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: errorMessage,
+    });
+
+    this.queueItems = this.queueItems.map((item) => ({
+      ...item,
+      hasRun: false,
+      hasCompleted: false,
+    }));
   }
 
   sendToQueue(): void {
     const { apiUrl, standardId } = this.apiTestForm.value;
 
     if (apiUrl && standardId) {
-      this.queueItems.unshift({
+      const newItem = {
         id: this.generateId(),
         standardList: this.standardsDropdown,
         ...this.apiTestForm.value,
         standardId: this.selectedStandard,
-      });
-      this.apiTestForm.reset();
+        hasRun: false,
+        hasCompleted: false,
+      };
+      this.queueItems.unshift(newItem);
+      this.resetForm();
       this.selectedStandard = null;
     }
   }
 
-  sendToQueueAndRun() {
+  async sendToQueueAndRun() {
     const { apiUrl, standardId } = this.apiTestForm.value;
 
     if (apiUrl && standardId) {
@@ -142,65 +187,30 @@ export class ApiTestComponent implements OnInit {
         hasCompleted: false,
       };
 
-      this.apiTestForm.reset();
-      this.selectedStandard = null;
-
-      this.queueItems = this.queueItems.map((item) => ({
-        ...item,
-        hasRun: true,
-        hasCompleted: false,
-      }));
-
       this.queueItems.unshift(newItem);
 
-      this.handleRunTestBatch(this.queueItems)
-        .then(({ response, items }) => {
-          if (!response || !items) return;
+      const itemsToRun = [
+        newItem,
+        ...this.queueItems.slice(1).map((item) => ({
+          ...item,
+          hasRun: true,
+          hasCompleted: false,
+        })),
+      ];
 
-          const updatedCompletedItems = items.map((item, index) => {
-            const responseItem = response.testResults[index];
+      try {
+        const response = await firstValueFrom(
+          this.handleRunTestBatch(itemsToRun)
+        );
+        if (response) {
+          this.handleTestCompletion(response, itemsToRun);
+        }
+      } catch (error) {
+        this.handleTestError(error);
+      }
 
-            return {
-              ...item,
-              hasCompleted: true,
-              date: new Date(),
-              standardList: item.standardList,
-              parentTestId: responseItem?.parentTestId,
-              result: responseItem?.result ? 'pass' : 'faild',
-              summaryFileJson: responseItem?.summaryFileHtml,
-              summaryFileHtml: responseItem?.summaryFileHtml,
-              standardId: item.standardId,
-            };
-          });
-
-          this.completedItems = [
-            ...updatedCompletedItems,
-            ...this.completedItems,
-          ];
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Tests completed successfully',
-          });
-
-          this.queueItems = [];
-          this.apiTestForm.reset();
-          this.selectedStandard = null;
-        })
-        .catch((error) => {
-          console.error('API failed:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to run tests',
-          });
-
-          this.queueItems = this.queueItems.map((item) => ({
-            ...item,
-            hasRun: false,
-            hasCompleted: false,
-          }));
-        });
+      this.resetForm();
+      this.selectedStandard = null;
     }
   }
 
@@ -212,124 +222,62 @@ export class ApiTestComponent implements OnInit {
     return Math.floor(Math.random() * 1000000);
   }
 
-  onItemsChange(
-    updatedItems: {
-      id: number;
-      apiUrl: string;
-      standardId: any;
-      standardList: any[];
-      hasRun?: boolean;
-    }[]
-  ): void {
-    const finishedItems = updatedItems
-      .filter((item) => item.hasRun)
-      .map((item) => ({
-        id: item?.id,
-        apiUrl: item.apiUrl,
-        standardId: {
-          label: `${item.standardId?.name} - ${item.standardId?.domain}`,
-          name: item.standardId.name,
-          domain: item.standardId.domain,
-          version: item.standardId.version,
-          value: item.standardId.value,
-        },
-        standardList: item.standardList,
-        hasRun: true,
-        hasCompleted: false,
-      }));
+  async onItemsChange(updatedItems: QueueItem[]): Promise<void> {
+    const itemsToRun = updatedItems.map((item) => ({
+      ...item,
+      hasRun: true,
+      hasCompleted: false,
+      standardId: item.standardId || this.selectedStandard,
+    }));
 
-    this.queueItems = finishedItems;
-
-    if (finishedItems.length > 0) {
-      this.handleRunTestBatch(finishedItems)
-        .then(({ response, items }) => {
-          if (!response || !items) return;
-
-          const updatedCompletedItems = items.map((item, index) => {
-            const responseItem = response.testResults[index];
-            return {
-              ...item,
-              parentTestId: responseItem?.parentTestId,
-              standardList: item.standardList,
-              hasCompleted: true,
-              date: new Date(),
-              result: responseItem?.result ? 'pass' : 'faild',
-              summaryFileJson: responseItem?.summaryFileJson,
-              summaryFileHtml: responseItem?.summaryFileHtml,
-              standardId: item.standardId,
-            };
-          });
-
-          this.completedItems = [
-            ...updatedCompletedItems,
-            ...this.completedItems,
-          ];
-          this.messageService.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'Tests completed successfully',
-          });
-
-          this.queueItems = [];
-          this.apiTestForm.reset();
-          this.selectedStandard = null;
-        })
-        .catch((error) => {
-          console.error('API failed:', error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Failed to run tests',
-          });
-
-          this.queueItems = this.queueItems.map((item) => ({
-            ...item,
-            hasRun: false,
-            hasCompleted: false,
-            standardId: this.selectedStandard,
-          }));
-        });
+    if (itemsToRun.length > 0) {
+      this.queueItems = itemsToRun;
+      try {
+        const response = await firstValueFrom(
+          this.handleRunTestBatch(itemsToRun)
+        );
+        if (response) {
+          this.handleTestCompletion(response, itemsToRun);
+        }
+      } catch (error) {
+        this.handleTestError(error);
+      }
     }
   }
 
-  onRemoveItem(remainingItems: any) {
+  onRemoveItem(remainingItems: QueueItem[]) {
     this.queueItems = remainingItems;
   }
 
-  handleRunTestBatch(
-    items: {
-      id: number;
-      apiUrl: string;
-      standardId: { name: string; version: string; domain: string };
-      standardList: any[];
-    }[]
-  ) {
-    const requests: any[] = items.map((item) => ({
+  handleRunTestBatch(items: QueueItem[]) {
+    const requests = items.map((item) => ({
       apiUrl: item.apiUrl,
-      standardId: item.standardId?.name,
-      version: item.standardId?.version,
+      standardId: item.standardId?.name || '',
+      version: item.standardId?.version || '',
     }));
 
-    return this.runTestService.runMultipleTests(requests).then((response) => {
-      return { response, items };
-    });
+    return this.runTestService.runMultipleTests(requests).pipe(
+      catchError((error) => {
+        throw error;
+      })
+    );
   }
 
-  onStandardChanged(option: any) {
+  onStandardChanged(option: Standard) {
     this.apiTestForm.patchValue({
       standardId: option,
     });
     this.selectedStandard = option;
   }
 
-  onCompletedItemsChange(completedItems: any[]) {
+  onCompletedItemsChange(completedItems: QueueItem[]) {
     this.completedItems = [...this.completedItems, ...completedItems];
   }
 
-  onCompletedItemClick(item: any): void {
+  onCompletedItemClick(item: QueueItem): void {
     this.selectedItem = item;
     if (item) {
-      const updatedData: any[] = [
+      this.tableData = [
         {
           id: item.id,
           description: `API Link: ${item.apiUrl}, Standard: ${item.standardId}`,
@@ -337,7 +285,6 @@ export class ApiTestComponent implements OnInit {
           recommendation: 'Sample Recommendation',
         },
       ];
-      this.tableData = updatedData;
       this.updateExportItems(item);
     } else {
       this.tableData = [];
@@ -345,7 +292,7 @@ export class ApiTestComponent implements OnInit {
     }
   }
 
-  updateExportItems(item: any): void {
+  updateExportItems(item: QueueItem): void {
     if (!item) {
       this.exportItems = [];
       return;
@@ -356,13 +303,13 @@ export class ApiTestComponent implements OnInit {
         icon: 'pi pi-download',
         label: 'PDF',
         command: () =>
-          this.downloadFile(item.summaryFileJson, 'Standard PDF.pdf'),
+          this.downloadFile(item.summaryFileJson!, 'Standard PDF.pdf'),
       },
       {
         icon: 'pi pi-download',
         label: 'HTML',
         command: () =>
-          this.downloadFile(item.summaryFileHtml, 'Documentation HTML.html'),
+          this.downloadFile(item.summaryFileHtml!, 'Documentation HTML.html'),
       },
     ];
   }
@@ -371,26 +318,18 @@ export class ApiTestComponent implements OnInit {
     return result === 'pass' ? 'pi pi-verified' : 'pi pi-times-circle';
   }
 
-  onStandardChange(event: { value: any; index: number }) {
+  onStandardChange(event: { value: Standard; index: number }) {
     this.queueItems[event.index].standardId = event.value;
   }
 
   downloadFile(path: string, fileName: string) {
     const fileExtension = path.slice(path.lastIndexOf('.')).toLowerCase();
+    const mimeTypes: Record<string, string> = {
+      '.pdf': 'application/pdf',
+      '.html': 'text/html',
+    };
+    const mimeType = mimeTypes[fileExtension] || 'application/octet-stream';
 
-    let mimeType: string;
-
-    switch (fileExtension) {
-      case '.pdf':
-        mimeType = 'application/pdf';
-        break;
-      case '.html':
-        mimeType = 'text/html';
-        break;
-      default:
-        mimeType = 'application/octet-stream';
-        break;
-    }
     const blob = new Blob([path], { type: mimeType });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
