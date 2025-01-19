@@ -1,0 +1,17 @@
+.activity-monitoring_filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    .filter-field {
+        position: relative;
+        flex: 1;
+
+        p-inputGroup {
+            button {
+                background: var(--stc-color);
+                border: none;
+            }
+        }
+    }
+}

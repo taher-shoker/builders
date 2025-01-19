@@ -1,0 +1,31 @@
+<form [formGroup]="filterForm" class="activity-monitoring_filters">
+  <!-- Search with Email -->
+  <div class="filter-field">
+    <p-inputGroup>
+      <input type="text" pInputText placeholder="Search with Email" />
+      <button type="button" pButton icon="pi pi-search"></button>
+    </p-inputGroup>
+  </div>
+
+  <!-- User Role -->
+  <stc-apps-filter-dropdown
+    [placeholder]="'User Role'"
+  ></stc-apps-filter-dropdown>
+
+  <!-- Status -->
+  <stc-apps-filter-dropdown [placeholder]="'Status'"></stc-apps-filter-dropdown>
+
+  <!-- Action -->
+  <stc-apps-filter-dropdown [placeholder]="'Action'"></stc-apps-filter-dropdown>
+
+  <!-- Select Date -->
+  <div class="filter-field">
+    <p-calendar
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      inputId="icondisplay"
+      placeholder="Select Date"
+      [showClear]="true"
+    />
+  </div>
+</form>
