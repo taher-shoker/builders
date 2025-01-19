@@ -12,7 +12,6 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
 import { TableModule } from 'primeng/table';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { Standard } from '../../models/standards.models';
 import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
@@ -23,7 +22,7 @@ import { TooltipModule } from 'primeng/tooltip';
   imports: [TableModule, ButtonModule, CommonModule, TooltipModule],
 })
 export class TableListComponent implements OnInit {
-  dataSource = input<Standard[]>([]);
+  dataSource = input<any[]>([]);
   columnSchema = input<ColumnsSchema[]>([]);
   noDataMessage = input<string>('');
   tableActions = input<{ action: string; title: string }[]>([]);
