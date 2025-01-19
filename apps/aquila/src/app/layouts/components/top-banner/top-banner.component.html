@@ -25,7 +25,12 @@
     />
 
     @if (showNotifications) {
-    <stc-apps-notifications-list></stc-apps-notifications-list>
+    <stc-apps-notifications-list
+      [ngStyle]="
+        notifications.length > 0 ? { right: '0', minWidth: '25rem' } : {}
+      "
+      [notifications]="notifications"
+    ></stc-apps-notifications-list>
     }
     <stc-apps-header
       [userName]="userName"
