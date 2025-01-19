@@ -7,7 +7,6 @@ import {
   Validators,
 } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
-import { StandardsService } from '../../shared/services/standards.service';
 import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { ButtonModule } from 'primeng/button';
@@ -15,9 +14,10 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { InputTextareaModule } from 'primeng/inputtextarea';
 import { FileUploadModule } from 'primeng/fileupload';
 import { ToastModule } from 'primeng/toast';
-import { BreadcrumbsComponent } from '../../shared/components/breadcrumbs/breadcrumbs.component';
 import { MessageService } from 'primeng/api';
 import { catchError, of, switchMap, tap, timer } from 'rxjs';
+import { BreadcrumbsComponent } from '../../../shared/components/breadcrumbs/breadcrumbs.component';
+import { StandardsService } from '../../../shared/services/standards.service';
 
 @Component({
   selector: 'stc-apps-api-standard-form',
