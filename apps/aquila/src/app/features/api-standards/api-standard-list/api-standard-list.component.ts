@@ -2,12 +2,12 @@ import { Component, computed, ElementRef, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Standard } from '../../shared/models/standards.models';
-import { TableListComponent } from '../../shared/components/table-list/table-list.component';
+import { Standard } from '../../../shared/models/standards.models';
+import { TableListComponent } from '../../../shared/components/table-list/table-list.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { ApiStandardFiltersComponent } from '../api-standard-filters/api-standard-filters.component';
-import { StandardsService } from '../../shared/services/standards.service';
+import { StandardsService } from '../../../shared/services/standards.service';
 
 @Component({
   selector: 'stc-apps-api-standard-list',
