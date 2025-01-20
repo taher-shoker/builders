@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InputIconModule } from 'primeng/inputicon';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -24,7 +24,36 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
   templateUrl: './activity-monitoring-filters.component.html',
   styleUrls: ['./activity-monitoring-filters.component.scss'],
 })
-export class ActivityMonitoringFiltersComponent {
+export class ActivityMonitoringFiltersComponent implements OnInit {
+  @Output() filtersChanged = new EventEmitter<any>();
   filterForm: FormGroup = new FormGroup({});
   fb = inject(FormBuilder);
+
+  userRoleOptions = [
+    { label: 'User', value: 'User' },
+    { label: 'Admin', value: 'Admin' },
+  ];
+  statusOptions = [
+    { label: 'Success', value: 'Success' },
+    { label: 'Failed', value: 'Failed' },
+  ];
+  actionOptions = [
+    { label: 'Login', value: 'Login' },
+    { label: 'Add standard', value: 'Add standard' },
+    { label: 'Update standard', value: 'Update standard' },
+  ];
+
+  ngOnInit(): void {
+    this.filterForm = this.fb.group({
+      email: [''],
+      userRole: [''],
+      status: [''],
+      action: [''],
+      date: [''],
+    });
+
+    this.filterForm.valueChanges.subscribe((values) => {
+      this.filtersChanged.emit(values);
+    });
+  }
 }

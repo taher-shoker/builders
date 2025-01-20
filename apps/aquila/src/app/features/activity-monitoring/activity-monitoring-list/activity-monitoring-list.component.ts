@@ -64,6 +64,7 @@ export class ActivityMonitoringListComponent implements AfterViewInit {
       status: 'Failed',
     },
   ];
+  filteredDataSource = this.dataSource;
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -79,6 +80,22 @@ export class ActivityMonitoringListComponent implements AfterViewInit {
           complexViewTemp: this.statusCustomTemplate,
         },
       ];
+    });
+  }
+
+  onFiltersChanged(filters: any) {
+    this.filteredDataSource = this.dataSource.filter((item) => {
+      return (
+        (!filters.email ||
+          item.email.toLowerCase().includes(filters.email.toLowerCase())) &&
+        (!filters.userRole?.value ||
+          item.userRole === filters.userRole.value) &&
+        (!filters.status?.value || item.status === filters.status.value) &&
+        (!filters.action?.value || item.action === filters.action.value) &&
+        (!filters.date ||
+          new Date(item.dateTime).toDateString() ===
+            new Date(filters.date).toDateString())
+      );
     });
   }
 }

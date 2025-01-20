@@ -9,12 +9,14 @@
   </div>
   <div class="activity-monitoring_filters">
     @if (dataSource.length > 0) {
-    <stc-apps-activity-monitoring-filters />
+    <stc-apps-activity-monitoring-filters
+      (filtersChanged)="onFiltersChanged($event)"
+    />
     }
   </div>
   <div class="activity-monitoring_list">
     <stc-apps-table-list
-      [dataSource]="dataSource"
+      [dataSource]="filteredDataSource"
       [columnSchema]="columnsSchema"
       [noDataMessage]="'No activity monitoring available'"
     >

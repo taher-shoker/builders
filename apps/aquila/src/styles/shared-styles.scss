@@ -52,3 +52,11 @@
         }
     }
 }
+
+@mixin calendar-styles {
+    p-calendar {
+        timesicon {
+            margin: 0 10px;
+        }
+    }
+}

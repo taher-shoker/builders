@@ -1,3 +1,5 @@
+@import '../../../../styles/shared-styles.scss';
+
 .api-standard_filters {
     display: flex;
     flex-wrap: wrap;
@@ -23,9 +25,5 @@
         }
     }
 
-    p-calendar {
-        timesicon {
-            margin: 0 10px;
-        }
-    }
+    @include calendar-styles;
 }

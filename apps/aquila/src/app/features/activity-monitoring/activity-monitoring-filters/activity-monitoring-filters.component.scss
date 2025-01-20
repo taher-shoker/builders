@@ -1,3 +1,5 @@
+@import '../../../../styles/shared-styles.scss';
+
 .activity-monitoring_filters {
     display: flex;
     flex-wrap: wrap;
@@ -13,5 +15,11 @@
                 border: none;
             }
         }
+
+        ::ng-deep {
+            @include calendar-styles;
+        }
     }
+
+
 }

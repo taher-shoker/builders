@@ -2,7 +2,12 @@
   <!-- Search with Email -->
   <div class="filter-field">
     <p-inputGroup>
-      <input type="text" pInputText placeholder="Search with Email" />
+      <input
+        type="text"
+        pInputText
+        placeholder="Search with Email"
+        formControlName="email"
+      />
       <button type="button" pButton icon="pi pi-search"></button>
     </p-inputGroup>
   </div>
@@ -10,13 +15,23 @@
   <!-- User Role -->
   <stc-apps-filter-dropdown
     [placeholder]="'User Role'"
+    formControlName="userRole"
+    [dropdownOptions]="userRoleOptions"
   ></stc-apps-filter-dropdown>
 
   <!-- Status -->
-  <stc-apps-filter-dropdown [placeholder]="'Status'"></stc-apps-filter-dropdown>
+  <stc-apps-filter-dropdown
+    [placeholder]="'Status'"
+    formControlName="status"
+    [dropdownOptions]="statusOptions"
+  ></stc-apps-filter-dropdown>
 
   <!-- Action -->
-  <stc-apps-filter-dropdown [placeholder]="'Action'"></stc-apps-filter-dropdown>
+  <stc-apps-filter-dropdown
+    [placeholder]="'Action'"
+    formControlName="action"
+    [dropdownOptions]="actionOptions"
+  ></stc-apps-filter-dropdown>
 
   <!-- Select Date -->
   <div class="filter-field">
@@ -26,6 +41,7 @@
       inputId="icondisplay"
       placeholder="Select Date"
       [showClear]="true"
+      formControlName="date"
     />
   </div>
 </form>
