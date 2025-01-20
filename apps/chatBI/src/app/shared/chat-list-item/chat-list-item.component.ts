@@ -1,5 +1,6 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import { Component, effect, input, InputSignal } from '@angular/core';
+import { sqlData } from '../../views/chat-view/models/chatModel';
 
 @Component({
   selector: 'stc-apps-chat-list-item',
@@ -22,19 +23,28 @@ export class ChatListItemComponent {
   messageDate: InputSignal<string> = input('');
   messageType: InputSignal<number> = input(0);
   images: InputSignal<string[]> = input(['']);
+  showType: InputSignal<string> = input('');
+  sqlData: InputSignal<sqlData> = input({} as sqlData);
   isLoading: InputSignal<boolean> = input(false);
   showPopUp = false;
   selectedImage = '';
+  processedMessage = '';
+  popUpClick = false;
   constructor() {
     effect(() => {
-      console.log(this.isLoading());
+      if (this.message()) {
+        this.processedMessage = this.replaceNull(this.message());
+      }
     });
   }
-  imageClick(image: string) {
-    this.selectedImage = image;
+
+  replaceNull(input: string | null): string {
+    return input?.replace(/null/g, '') || '';
+  }
+  showPopUpOnClick() {
     this.showPopUp = true;
   }
-  onPopupClose() {
+  closePopUp() {
     this.showPopUp = false;
   }
 }

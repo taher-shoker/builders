@@ -1,14 +1,18 @@
 <div class="chat-view">
   <stc-apps-header [title]="'CEM Chat AI'"></stc-apps-header>
   <div #scrollContainer class="chat-view_messages-container">
-    @if (messages.length==0) {
+    @if (messagesList.length==0) {
     <div class="background"></div>
-    } @for (message of messages; track $index) {
+    } @for (message of messagesList; track $index) {
     <stc-apps-chat-list-item
       [message]="message.content"
       [messageDate]="message.date"
       [messageType]="message.messageType"
       [images]="message.images ?? ['']"
+      [showType]="message.showType ?? ''"
+      [sqlData]="
+        message.sqlData ?? { xList: [], yList: [], title: '' }
+      "
       [isLoading]="pendingFlag()"
     >
     </stc-apps-chat-list-item>

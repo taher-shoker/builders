@@ -1,10 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie';
 
@@ -16,12 +10,12 @@ import { CookieService } from 'ngx-cookie';
 export class StartChatViewComponent implements OnInit {
   isAnimated = false;
   displayName = '';
-  @ViewChild('speechButton', { static: true })
-  speechButton!: ElementRef<HTMLButtonElement>;
 
   textToSpeak = 'Welcome ';
 
   audioUrl = 'assets/audios/';
+  @ViewChild('speechButton', { static: true })
+  speechButton!: ElementRef<HTMLButtonElement>;
 
   constructor(private router: Router, private cookieService: CookieService) {}
 
@@ -31,10 +25,10 @@ export class StartChatViewComponent implements OnInit {
     ).name;
 
     this.textToSpeak += this.displayName;
-    // Trigger the animation after the component is initialized
+
     setTimeout(() => {
       this.isAnimated = true;
-    }, 100); // Delay for smoother animation (optional)
+    }, 100);
 
     this.speechButton.nativeElement.click();
   }

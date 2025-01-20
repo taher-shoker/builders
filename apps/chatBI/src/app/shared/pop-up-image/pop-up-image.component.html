@@ -3,19 +3,12 @@
     <button #close class="close-btn" (click)="closeImagePopup()">
       <i class="fas fa-times"></i>
     </button>
-    <div #container>
-      <img
-        #img
-        [src]="selectedImage()"
-        class="zoomed-image"
-        alt="Zoomed Image"
-        (click)="handleImageTap($event)"
-        (mousedown)="onMouseDown($event)"
-        (mouseup)="onMouseUp()"
-        (mousemove)="mouseMoveHandler($event)"
-        (touchstart)="onTouchStart($event)"
-        (touchmove)="onTouchMove($event)"
-      />
+    <div class="w-100">
+      <stc-apps-chart-controller
+        [sqlData]="chartData()"
+        [showType]="chartType()"
+        [popUpClick]="popUpClick"
+      ></stc-apps-chart-controller>
     </div>
   </div>
 </div>

@@ -1,6 +1,6 @@
 import {
-  AfterViewInit,
   Component,
+  effect,
   ElementRef,
   EventEmitter,
   input,
@@ -9,7 +9,8 @@ import {
   Output,
   ViewChild,
 } from '@angular/core';
-import Hammer from 'hammerjs';
+import { sqlData } from '../../views/chat-view/models/chatModel';
+
 @Component({
   selector: 'stc-apps-pop-up-image',
   templateUrl: './pop-up-image.component.html',
@@ -17,32 +18,36 @@ import Hammer from 'hammerjs';
 })
 export class PopUpImageComponent implements OnDestroy {
   selectedImage: InputSignal<string> = input('');
+  chartType: InputSignal<string> = input('');
+  chartData: InputSignal<sqlData> = input({} as sqlData);
+  popUpClick = true;
   lastTap = 0;
   isZoomed = false;
-  pos = { top: 0, left: 0, x: 0, y: 0 };
-  @ViewChild('container') 'container': ElementRef;
-  @ViewChild('img') 'img': ElementRef;
-  private scale = 1;
-  private lastScale = 1;
+  imagePosition = { top: 0, left: 0, x: 0, y: 0 };
   private isDragging = false;
   private startX = 0;
   private startY = 0;
-  private translateX = 0; // To store X-axis movement
-  private translateY = 0; // To store Y-axis movement
-
+  private translateX = 0;
+  private translateY = 0;
+  @ViewChild('imageContainer') 'imageContainer': ElementRef;
+  @ViewChild('imageTag') 'imageTag': ElementRef;
   // eslint-disable-next-line @angular-eslint/no-output-native
-  @Output() close = new EventEmitter<void>(); // Declare the Output Event
+  @Output() close = new EventEmitter<void>();
+  constructor() {
+    effect(() => {
+      console.log('popUp component', this.chartType());
+    });
+  }
+
   ngOnDestroy() {
     this.isDragging = false;
   }
   closeImagePopup() {
-    //close pop up logic
     this.close.emit();
   }
   handleImageTap(event: MouseEvent) {
     const currentTime = new Date().getTime();
     const tapInterval = currentTime - this.lastTap;
-
     // If the interval between two taps is less than 300ms, consider it a double-tap
     if (tapInterval < 300 && tapInterval > 0) {
       this.onClick(event);
@@ -51,51 +56,45 @@ export class PopUpImageComponent implements OnDestroy {
     this.lastTap = currentTime;
   }
   onClick(e: any) {
-    console.log(e.clientY, e.clientX);
     this.isZoomed = !this.isZoomed;
-    const zoomWidth = window.innerWidth > 900 ? '150%' : '200%';
-    console.log('inner width',zoomWidth);
-    
+
     if (this.isZoomed) {
-      this.isDragging = true;
-      this.container.nativeElement.style.overflow = 'hidden';
-      this.img.nativeElement.style.width = zoomWidth;
-      this.img.nativeElement.style.cursor = 'zoom-out';
-      this.img.nativeElement.style.left = `-${e.clientX}`;
-      this.img.nativeElement.style.top = `-${e.clientY}`;
+      this.zoomImage(e);
     } else {
-      this.isDragging = false;
-      this.container.nativeElement.style.overflow = 'hidden';
-      this.img.nativeElement.style.width = '100%';
-      this.img.nativeElement.style.cursor = 'zoom-in';
-      this.img.nativeElement.style.transform = '';
+      this.unZoomImage();
     }
   }
+  zoomImage(e: any) {
+    const zoomWidth = window.innerWidth > 900 ? '150%' : '200%';
+    this.isDragging = true;
+    this.imageContainer.nativeElement.style.overflow = 'hidden';
+    this.imageTag.nativeElement.style.width = zoomWidth;
+    this.imageTag.nativeElement.style.cursor = 'zoom-out';
+    this.imageTag.nativeElement.style.left = `-${e.clientX}`;
+    this.imageTag.nativeElement.style.top = `-${e.clientY}`;
+  }
+  unZoomImage() {
+    this.isDragging = false;
+    this.imageContainer.nativeElement.style.overflow = 'hidden';
+    this.imageTag.nativeElement.style.width = '100%';
+    this.imageTag.nativeElement.style.cursor = 'zoom-in';
+    this.imageTag.nativeElement.style.transform = '';
+  }
   onMouseDown(e: any) {
-    this.pos = {
-      // The current scroll
-      left: this.container.nativeElement.scrollLeft,
-      top: this.container.nativeElement.scrollTop,
-      // Get the current mouse position
+    this.imagePosition = {
+      left: this.imageContainer.nativeElement.scrollLeft,
+      top: this.imageContainer.nativeElement.scrollTop,
       x: e.clientX,
       y: e.clientY,
     };
   }
-  onMouseUp() {
-    // this.isDragging = false;
-  }
   mouseMoveHandler(e: any) {
-    // How far the mouse has been moved
-    const dx = (e.clientX - this.pos.x) * 2;
-    const dy = (e.clientY - this.pos.y) * 2;
-
-    // Scroll the element
-    this.container.nativeElement.scrollTop = this.pos.top - dy;
-    this.container.nativeElement.scrollLeft = this.pos.left - dx;
+    const dx = (e.clientX - this.imagePosition.x) * 2;
+    const dy = (e.clientY - this.imagePosition.y) * 2;
+    this.imageContainer.nativeElement.scrollTop = this.imagePosition.top - dy;
+    this.imageContainer.nativeElement.scrollLeft = this.imagePosition.left - dx;
   }
   onTouchStart(event: TouchEvent) {
-    console.log('inside touch start');
-
     if (this.isDragging && event.touches.length === 1) {
       const touch = event.touches[0];
       this.startX = touch.clientX - this.translateX;
@@ -112,11 +111,10 @@ export class PopUpImageComponent implements OnDestroy {
       if (x > -320 && x < 0) {
         console.log('true');
         this.translateX = x;
-        this.img.nativeElement.style.transform = `translate(${x}px)`;
+        this.imageTag.nativeElement.style.transform = `translate(${x}px)`;
       }
     }
   }
-
   toggleZoom(image: HTMLElement) {
     if (image.classList.contains('zoomed')) {
       image.classList.remove('zoomed'); // Remove zoom

@@ -12,11 +12,10 @@
 }
 
 .popup-content {
-  padding: 12px;
   background: #fff;
   border-radius: 8px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
-  max-width: 95%;
+  width: 94%;
   touch-action: none;
   display: flex;
   justify-content: center;
@@ -28,8 +27,8 @@
   transition: transform 0.3s ease;
   border-radius: 8px;
 
-  touch-action: none; /* Disable touch gestures like scrolling */
-  user-select: none; /* Disable text selection during drag */
+  touch-action: none; 
+  user-select: none; 
 }
 
 .close-btn {
