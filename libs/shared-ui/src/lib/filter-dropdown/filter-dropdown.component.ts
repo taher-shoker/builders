@@ -1,5 +1,6 @@
 import {
   Component,
+  effect,
   EventEmitter,
   forwardRef,
   input,
@@ -32,6 +33,12 @@ export class FilterDropdownComponent implements ControlValueAccessor {
   value: any;
   onChange: any = () => {};
   onTouched: any = () => {};
+
+  constructor() {
+    effect(() => {
+      this.value = this.selectedValue();
+    });
+  }
 
   writeValue(value: any): void {
     this.value = value;
