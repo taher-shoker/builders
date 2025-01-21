@@ -25,7 +25,7 @@
 
   <div
     class="chat-list-item_query-info"
-    [ngClass]="messageType() === 0 && !isLoading() && sqlData() ? 'w-100' : ''"
+    [ngClass]="messageType() === 0 && showType() !== '' ? 'w-100' : ''"
   >
     <div
       class="message"

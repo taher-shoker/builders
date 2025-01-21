@@ -33,7 +33,7 @@ export class ChartControllerComponent {
             });
         });
       } else if (this.showType() == 'table') {
-        console.log('table');
+        console.log('table', this.handleTableData());
 
         this.chartData = this.handleTableData();
       } else if (this.showType() == 'line') {
@@ -85,8 +85,8 @@ export class ChartControllerComponent {
     const data: any = this.sqlData().rows?.map((row) => {
       const transformedRow: any = {};
       for (const key in row) {
-        const newKey = key.replace(/ /g, '_');
-        transformedRow[newKey] = row[key];
+        // const newKey = key.replace(/ /g, '_');
+        transformedRow[key] = row[key];
       }
       return transformedRow;
     });
