@@ -1,10 +1,13 @@
-FROM nginx:alpine
+FROM nginx
+WORKDIR /app
 
-# Remove default nginx website
-RUN rm -rf /usr/share/nginx/html/*
+RUN groupadd -r -g 1001 demo && useradd  -m -u 8877 -r -g demo demo
 
-# Copy output directory from builder to nginx image.
-COPY dist/out/ /usr/share/nginx/html/
+RUN chown -R demo:demo /app && chmod -R 755 /app && chown -R demo:demo /var/cache/nginx && \
+        chown -R demo:demo /var/log/nginx && chown -R demo:demo /etc/nginx/conf.d
+RUN touch /var/run/nginx.pid && chown  demo:demo /var/run/nginx.pid
+USER demo
 
-# Copy nginx configuration file.
-COPY ./nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY dist/apps/aquila/browser /app
+EXPOSE 9090
