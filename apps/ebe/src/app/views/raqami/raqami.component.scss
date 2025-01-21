@@ -1,0 +1,24 @@
+@import '../../../styles/fonts';
+.raqami-section
+{
+    padding:20px 30px;
+    &-header
+    {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        .hands-img
+        {
+        position: relative;
+        top:15px;
+        }
+    }
+    &-tap-details
+    {
+        background-color: var(--stc-white-color);
+        border-radius:20px;
+        padding:20px;
+        position: relative;
+        color:#000;
+    }
+}

@@ -1,6 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
-import { NavLinks, UserGroup, UserGroupRoles, UserModel } from '../models/scorecard.model';
+import {
+  NavLinks,
+  UserGroup,
+  UserGroupRoles,
+  UserModel,
+} from '../models/scorecard.model';
 import { NavigationStart, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 @Component({
@@ -18,16 +23,17 @@ export class MainLayoutComponent implements OnInit {
   scorecardService = inject(ScorecardService);
   authService = inject(AuthService);
   router = inject(Router);
-  currentSystem!:string[];
+  currentSystem!: string;
   navItems!: NavLinks[];
   userData!: UserModel;
   userRoles!: UserGroup;
-  isAllowed!:boolean;
-  isPMO!:boolean;
+  isAllowed!: boolean;
+  isPMO!: boolean;
   ngOnInit(): void {
-    this.currentSystem = JSON.parse(decodeURIComponent(this.scorecardService.getCurrentSystem()));
-    // this.userData = this.scorecardService.getUserGroups();
-    this.userData = JSON.parse(decodeURIComponent(this.scorecardService.getUserGroups()));
+    this.currentSystem = this.scorecardService.getCurrentSystem();
+    this.userData = JSON.parse(
+      decodeURIComponent(this.scorecardService.getUserGroups())
+    );
     this.scorecardService.setUsername(this.userData.name);
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
@@ -40,19 +46,22 @@ export class MainLayoutComponent implements OnInit {
       },
     });
     this.userRoles = this.checkSystem(this.userData.userGroups);
-    console.log(this.userRoles.roles);
-    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
-    this.isPMO = this.userRoles.roles.some(role => role.roleName === "BE_PMO");
+    this.isAllowed = this.userRoles.roles.some(
+      (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+    );
+    this.isPMO = this.userRoles.roles.some(
+      (role) => role.roleName === 'BE_PMO'
+    );
     this.scorecardService.userRoles = this.userRoles;
-    console.log("currentSystem => " , this.currentSystem);
-    console.log("userData => " , this.userData);
   }
   private checkSystem(groups: UserGroup[]): UserGroup {
     const matchingGroup = groups.find((group: UserGroup) => {
       return group.roles.some((role: UserGroupRoles) => {
-        return this.currentSystem.includes(role.system.name);
+        return this.currentSystem === role.system.name;
       });
     });
+    console.log(this.currentSystem);
+    console.log(matchingGroup);
     if (matchingGroup) {
       return matchingGroup;
     } else {

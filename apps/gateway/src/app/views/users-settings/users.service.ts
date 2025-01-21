@@ -139,6 +139,7 @@ export class UsersService {
     if (
       this.getCurrentSystem() === 'DI_Milestones' ||
       this.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.getCurrentSystem() === 'ChatBI' ||
       this.getCurrentSystem() === 'Score_Card_Report_DB' ||
       this.getCurrentSystem() === 'Strategic_Dashboard'
     ) {

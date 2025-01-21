@@ -1,5 +1,5 @@
 import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
@@ -13,6 +13,7 @@ import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-v
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
+import { Subject, takeUntil } from 'rxjs';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -36,17 +37,21 @@ export interface KpiProjectsDetailsModel
   templateUrl: './kpi-details.component.html',
   styleUrl: './kpi-details.component.scss',
 })
-export class KpiDetailsComponentTsComponent implements OnInit {
+export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   currentId!:string;
   currentMode!: 'editMode' | 'viewMode';
   activatedRoute = inject(ActivatedRoute);
   strategyProgramService = inject(StrategyProgramService);
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
+  endSubs$:Subject<any> = new Subject();
   private confirmationService = inject(ConfirmationService);
   private scorecardService = inject(ScorecardService);
   constructor(private router:Router){}
   toastr = inject(ToastrService);
   isEmpty!:boolean;
+  ngOnDestroy(): void {
+    this.endSubs$.complete();
+  }
   userRoles!:UserGroup;
   isAllowed!:boolean;
   ngOnInit(): void {
@@ -67,7 +72,7 @@ export class KpiDetailsComponentTsComponent implements OnInit {
   }
   private getStrategyProgramDetails(strategyName:string)
   {
-    this.strategyProgramService.getStrategyProgramDetails(strategyName).subscribe({
+    this.strategyProgramService.getStrategyProgramDetails(strategyName).pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:StrategyProgramKpiDetailsModel[]) => {
         this.StrategyProgramData = res;
         if(this.StrategyProgramData.length === 0)

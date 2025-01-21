@@ -19,6 +19,7 @@ export class PSRProjectCardComponent implements OnChanges {
   route = inject(ActivatedRoute);
   isAllowed = input<boolean>()
   @Output() ProgramId:EventEmitter<number> = new EventEmitter();
+  months:string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   maxTextLength = 0;
   items = [
     {
@@ -49,6 +50,14 @@ export class PSRProjectCardComponent implements OnChanges {
     const filteredArray = textArr.filter(item => item !== '');
     this.maxTextLength = filteredArray.length;
     // console.log(filteredArray);
+  }
+  formatDate(date:string)
+  {
+    const fullDate = date.split("-");
+    const day = fullDate[2];
+    const monthName = this.months[+fullDate[1] - 1];
+    const year = fullDate[0];
+    return `${day} ${monthName}-${year}`;
   }
   displayDrilldown()
   {

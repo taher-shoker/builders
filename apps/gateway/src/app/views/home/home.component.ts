@@ -45,13 +45,15 @@ export class HomeComponent implements OnInit {
   }
 
   private filterAppsForMobile(): void {
-    this.apps = this.apps.filter(
-      (app) =>
-        !app.displayName?.includes('DT') && !app.displayName?.includes('Fraud')
-    );
+    this.apps = this.apps.filter((app) => app.mobileView);
   }
 
   public isGrantedSystemSettled(): boolean {
     return !!this.cookieService.get('granted-systems');
+  }
+  navigateItem(url?: string) {
+    if (url) {
+      window.open(url, '_self');
+    }
   }
 }

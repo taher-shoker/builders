@@ -84,6 +84,7 @@ import { DialogModalComponent } from './file-upload-dialog/dialog.component';
 import { FileUploadInputComponent } from './file-upload-input/file-upload-input.component';
 import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
+import { DoubleLineChartComponent } from './double-line-chart/double-line-chart.component';
 import { NewLinePipe } from './newLine.pipe';
 import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
 import { SharedService } from './shared.service';
@@ -151,6 +152,7 @@ const components = [
   TruncateWordPipe,
   DialogModalComponent,
   FileUploadInputComponent,
+  DoubleLineChartComponent,
   NewLinePipe,
   MultiCirclesChartComponent,
   ClusteredColumnChartComponent,
