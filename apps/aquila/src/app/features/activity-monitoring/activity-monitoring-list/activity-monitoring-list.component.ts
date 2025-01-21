@@ -1,6 +1,8 @@
 import {
   AfterViewInit,
   Component,
+  inject,
+  OnInit,
   TemplateRef,
   ViewChild,
 } from '@angular/core';
@@ -10,6 +12,8 @@ import { TableListComponent } from '../../../shared/components/table-list/table-
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ActivityMonitoringFiltersComponent } from '../activity-monitoring-filters/activity-monitoring-filters.component';
+import { ActivityMonitoringService } from '../services/activity-monitoring.service';
+import { ChipModule } from 'primeng/chip';
 
 @Component({
   selector: 'stc-apps-activity-monitoring',
@@ -19,14 +23,34 @@ import { ActivityMonitoringFiltersComponent } from '../activity-monitoring-filte
     TableListComponent,
     SharedUiModule,
     ActivityMonitoringFiltersComponent,
+    ChipModule,
   ],
   templateUrl: './activity-monitoring-list.component.html',
   styleUrls: ['./activity-monitoring-list.component.scss'],
 })
-export class ActivityMonitoringListComponent implements AfterViewInit {
+export class ActivityMonitoringListComponent implements OnInit, AfterViewInit {
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: TemplateRef<any>;
+  activityMonitoringService = inject(ActivityMonitoringService);
   columnsSchema: ColumnsSchema[] = [];
+  appliedFilters: { key: string; label: string; value: any }[] = [];
 
+  exportItems = [
+    {
+      icon: 'pi pi-download',
+      label: 'PDF',
+      command: () =>
+        this.downloadFile('path/to/summaryFileJson', 'Activity Monitoring.pdf'),
+    },
+    {
+      icon: 'pi pi-download',
+      label: 'HTML',
+      command: () =>
+        this.downloadFile(
+          'path/to/summaryFileHtml',
+          'Activity Monitoring.html'
+        ),
+    },
+  ];
   dataSource = [
     {
       email: 'john.doe@example.com',
@@ -65,6 +89,11 @@ export class ActivityMonitoringListComponent implements AfterViewInit {
     },
   ];
   filteredDataSource = this.dataSource;
+  activities: any[] = [];
+
+  ngOnInit(): void {
+    this.loadActivities();
+  }
 
   ngAfterViewInit(): void {
     setTimeout(() => {
@@ -83,7 +112,30 @@ export class ActivityMonitoringListComponent implements AfterViewInit {
     });
   }
 
+  loadActivities(start?: number, end?: number): void {
+    this.activityMonitoringService.getActivities(start, end).subscribe(
+      (data: any) => {
+        this.activities = data;
+      },
+      (error) => {
+        console.error('Error fetching activities:', error);
+      }
+    );
+  }
+
   onFiltersChanged(filters: any) {
+    this.appliedFilters = [];
+
+    Object.keys(filters).forEach((key) => {
+      if (filters[key]) {
+        this.appliedFilters.push({
+          key,
+          label: this.getFilterLabel(key),
+          value: filters[key].value || filters[key],
+        });
+      }
+    });
+
     this.filteredDataSource = this.dataSource.filter((item) => {
       return (
         (!filters.email ||
@@ -97,5 +149,59 @@ export class ActivityMonitoringListComponent implements AfterViewInit {
             new Date(filters.date).toDateString())
       );
     });
+  }
+
+  removeFilter(
+    filter: { key: string; label: string; value: any },
+    filtersComponent: ActivityMonitoringFiltersComponent
+  ) {
+    this.appliedFilters = this.appliedFilters.filter(
+      (f) => f.key !== filter.key
+    );
+    filtersComponent.resetFilterControl(filter.key);
+
+    this.onFiltersChanged(filtersComponent.filterForm.value);
+  }
+
+  clearFilters(filtersComponent: ActivityMonitoringFiltersComponent) {
+    this.appliedFilters = [];
+    filtersComponent.resetAllFilters();
+    this.onFiltersChanged(filtersComponent.filterForm.value);
+  }
+
+  getFilterLabel(key: string): string {
+    switch (key) {
+      case 'email':
+        return 'Email';
+      case 'userRole':
+        return 'User Role';
+      case 'status':
+        return 'Status';
+      case 'action':
+        return 'Action';
+      case 'date':
+        return 'Date';
+      default:
+        return key;
+    }
+  }
+
+  downloadFile(path: string, fileName: string) {
+    const fileExtension = path.slice(path.lastIndexOf('.')).toLowerCase();
+    const mimeTypes: Record<string, string> = {
+      '.pdf': 'application/pdf',
+      '.html': 'text/html',
+    };
+    const mimeType = mimeTypes[fileExtension] || 'application/octet-stream';
+
+    const blob = new Blob([path], { type: mimeType });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    window.URL.revokeObjectURL(url);
   }
 }

@@ -27,6 +27,23 @@
         }
     }
 
+    &_filters {
+        &_applied {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            stc-apps-button {
+                ::ng-deep {
+                    button {
+                        color: var(--stc-color);
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
+
     &_list {
         span {
             padding: 10px 20px;

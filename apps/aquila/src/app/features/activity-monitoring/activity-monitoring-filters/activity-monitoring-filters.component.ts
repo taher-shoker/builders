@@ -56,4 +56,14 @@ export class ActivityMonitoringFiltersComponent implements OnInit {
       this.filtersChanged.emit(values);
     });
   }
+
+  resetFilterControl(controlName: string) {
+    this.filterForm.get(controlName)?.reset(null);
+    this.filtersChanged.emit(this.filterForm.value);
+  }
+
+  resetAllFilters() {
+    this.filterForm.reset();
+    this.filtersChanged.emit(this.filterForm.value);
+  }
 }

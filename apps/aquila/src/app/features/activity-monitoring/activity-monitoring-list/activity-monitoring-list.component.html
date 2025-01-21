@@ -5,15 +5,39 @@
       [label]="'Export'"
       [labelIcon]="'pi pi-upload'"
       [buttonSeverity]="'primary'"
+      [model]="exportItems"
     ></stc-apps-split-button>
   </div>
+  @if (dataSource.length > 0) {
   <div class="activity-monitoring_filters">
-    @if (dataSource.length > 0) {
     <stc-apps-activity-monitoring-filters
+      #filters
       (filtersChanged)="onFiltersChanged($event)"
     />
+  </div>
+
+  <div class="activity-monitoring_filters_applied">
+    @for (filter of appliedFilters; track filter) {
+    <p-chip
+      [label]="
+        filter.label +
+        ': ' +
+        (filter.key === 'date'
+          ? (filter.value | date : 'mediumDate')
+          : filter.value)
+      "
+      [removable]="true"
+      (onRemove)="removeFilter(filter, filters)"
+    ></p-chip>
+    } @if (appliedFilters.length > 0) {
+    <stc-apps-button
+      [buttonText]="'Clear Filters'"
+      [buttonType]="'default'"
+      (click)="clearFilters(filters)"
+    ></stc-apps-button>
     }
   </div>
+  }
   <div class="activity-monitoring_list">
     <stc-apps-table-list
       [dataSource]="filteredDataSource"
