@@ -79,26 +79,29 @@ export class ChatViewComponent implements OnInit {
     this.pendingFlag.set(true);
     this.resetTextArea();
 
-    this.chatService.sendMessage({ content: this.modelQuery }).subscribe({
-      next: (result: responseBody) => {
-        this.handleModelResponse({
-          content: result.data !== null ? result.data.content : result.message,
-          messageType: 0,
-          date: this.getTimeFromFullDate(result.timestamp),
-          images: result.data !== null ? result.data.images : [],
-          showType: result.data?.showType,
-          sqlData: result.data?.sqlData,
-        });
-      },
-      error: () => {
-        this.handleModelResponse({
-          content: 'Something went wrong! Please try again.',
-          messageType: 0,
-          date: this.getCurrentTime(),
-          images: [],
-        });
-      },
-    });
+    this.chatService
+      .sendMessage({ content: this.modelQuery})
+      .subscribe({
+        next: (result: responseBody) => {
+          this.handleModelResponse({
+            content:
+              result.data !== null ? result.data.content : result.message,
+            messageType: 0,
+            date: this.getTimeFromFullDate(result.timestamp),
+            images: result.data !== null ? result.data.images : [],
+            showType: result.data?.showType,
+            sqlData: result.data?.sqlData,
+          });
+        },
+        error: () => {
+          this.handleModelResponse({
+            content: 'Something went wrong! Please try again.',
+            messageType: 0,
+            date: this.getCurrentTime(),
+            images: [],
+          });
+        },
+      });
   }
   validateSentMessage() {
     return (

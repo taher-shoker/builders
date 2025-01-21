@@ -68,15 +68,15 @@ export class ChartControllerComponent {
     return combined;
   }
   handleLineChartData(): any[] {
-    const values = this.sqlData().xList.map((date) => {
-      const fullDate = `${date}`;
-      const yListKey = this.sqlData()?.yListKey ?? 'time';
-      const entry = this.sqlData().yList.find(
-        (item) => item[yListKey] === fullDate
-      );
+    const values = this.sqlData().xList.map((date, index) => {
+      // const fullDate = `${date}`;
+      // const yListKey = this.sqlData()?.yListKey ?? 'time';
+      // const entry = this.sqlData().yList.find(
+      //   (item) => item[yListKey] === fullDate
+      // );
       return {
         x: date,
-        value: entry ? entry.value : 0,
+        value: this.sqlData().yList[index].value,
       };
     });
     return values;

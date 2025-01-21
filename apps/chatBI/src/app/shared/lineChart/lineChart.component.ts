@@ -91,7 +91,7 @@ export class LineChartComponent implements OnInit {
         valueYField: 'value',
         categoryXField: 'x',
         tooltip: am5.Tooltip.new(this.root, {
-          labelText: '{categoryX}: {valueY}',
+          labelText: '{valueY}',
         }),
       })
     );

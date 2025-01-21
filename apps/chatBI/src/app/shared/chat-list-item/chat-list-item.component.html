@@ -31,7 +31,7 @@
       class="message"
       [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
     >
-      @if (isLoading() && messageType()===0 && message()=='') {
+      @if (isLoading() && messageType()===0 && message()==''&&showType()=='') {
       <div class="loading-dots">
         <div class="dot"></div>
         <div class="dot"></div>
