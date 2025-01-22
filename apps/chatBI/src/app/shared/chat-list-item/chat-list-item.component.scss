@@ -49,6 +49,8 @@ p {
     align-items: end;
     margin-right: 5px;
     img {
+      width: 24px;
+      height: 24px;
       margin-bottom: 15px;
     }
   }
@@ -77,8 +79,8 @@ p {
       .zoom-in-btn {
         position: absolute;
         z-index: 999;
-        bottom: 55px; 
-        right: 40px; 
+        bottom: 55px;
+        right: 40px;
         background-color: var(--stc-color);
         color: white;
         border: none;
