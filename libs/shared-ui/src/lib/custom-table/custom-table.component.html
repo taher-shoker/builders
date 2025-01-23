@@ -6,11 +6,19 @@
       @for(header of headers(); track header){
       <th
         (click)="changeCurrentSortingColumn(header.key)"
-        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }"
+        [ngStyle]="{
+          'font-family': fontFamily() ? fontFamily() : '',
+          'text-align': activityLogTable ? 'center' : 'left'
+        }"
       >
-        <div class="header-cell-holder">
+        <div 
+          class="header-cell-holder"
+          [ngStyle]="{
+            'justify-content': activityLogTable ? 'center' : 'left'
+          }"
+        >
           <div>{{ header.label }}</div>
-          @if (sort && header.key !== 'actions') {
+          @if (sort && header.key !== 'actions' && !activityLogTable) {
           <div class="arrows-holder">
             <div>
               <i
@@ -37,12 +45,15 @@
       }
     </tr>
     <tr class="mat-row" *ngIf="items.length === 0">
-      <td class="mat-cell" [attr.colspan]="headers().length">
-        <div class="message-box">
-          <img src="assets/Group 590.png" alt="" />
-          <h3>{{ 'No data found' }}</h3>
-        </div>
-      </td>
+      @if(!activityLogTable)
+      {
+        <td class="mat-cell" [attr.colspan]="headers().length">
+          <div class="message-box">
+            <img src="assets/Group 590.png" alt="" />
+            <h3>{{ 'No data found' }}</h3>
+          </div>
+        </td>
+      }
     </tr>
 
     @if(itemsInView){
@@ -137,7 +148,7 @@
 }
 @if(psrTable() && items.length === 0) {
 <p [ngStyle]="{ 'font-family': fontFamily() }" class="empty-details">
-  there are no details
+  there are no data
 </p>
 } @if(psrTable() && userRoles() !== "BE_VIEWERS") {
 <button
@@ -146,8 +157,8 @@
   [ngStyle]="{ 'font-family': fontFamily() }"
   (click)="addNewRecord()"
 >
-  <img src="assets/images/add-square.svg" alt="" />
-  <span> add new record </span>
+  <img [src]="activityLogTable ? 'assets/images/eye.svg' : 'assets/images/add-square.svg'" alt="" />
+  <span> {{activityLogTable ? 'show all activity logs' : 'add new record'}} </span>
 </button>
 } @if(paginate && length > 0){
 <stc-apps-paginator
@@ -189,7 +200,8 @@
       "
       [class.psrTabldLevel]="psrTable() && header.label === 'Completion Level'"
       [ngStyle]="{
-        'font-family': fontFamily() && psrTable() ? fontFamily() : ''
+        'font-family': fontFamily() && psrTable() ? fontFamily() : '',
+        'color' : header.key === 'time' ? '#8E9AA0' : '#363636'
       }"
     >
       @if(!isEditMode()) { @if(header.key === '' && userRoles() !==

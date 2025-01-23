@@ -1,0 +1,27 @@
+<p-overlayPanel 
+  #activityLogsPanel 
+  dismissable="false"
+  appendTo="body"
+  styleClass="activity-logs-panel"
+>
+    <div class="activity-logs-table">
+      <div class="activity-logs-table-header">
+        <p>activity logs</p>
+        <i
+            class="pi pi-times-circle"
+            (click)="closeActivityLogsPopup()"
+            style="margin-right: 1px"
+          ></i>
+      </div>
+      <div class = "table-container">
+        <stc-apps-custom-table
+        [headers]="activityLogsTableHeader()"
+        [items]="activityLogsTableBody()"
+        [psrTable]="true"
+        [fontFamily]="'STCForwardFont'"
+        [activityLogTable]="true"
+        (addRecord)="gotoActivityLogs()"
+      />
+      </div>
+    </div>
+  </p-overlayPanel>

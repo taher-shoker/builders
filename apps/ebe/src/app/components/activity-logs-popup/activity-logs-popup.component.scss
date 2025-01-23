@@ -1,0 +1,44 @@
+@import '../../../styles/fonts.scss';
+.activity-logs-table
+{
+  width:750px;
+}
+.activity-logs-table-header
+{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  p
+  {
+    margin: 0;
+    text-transform: capitalize;
+    @extend .stcFont;
+    font-weight: 500;
+    color:var(--stc-purple-color);
+    font-size: 1.1rem;
+  }
+  i
+  {
+    font-size: 25px;
+    cursor: pointer;
+  }
+}
+.table-container
+{
+  max-height: 250px;
+  overflow-y: auto;
+}
+::ng-deep .activity-logs-panel
+{
+  &::after , &::before
+  {
+    bottom: 100% !important;
+    left: calc(var(--overlayArrowLeft, 0) + 6.25rem) !important;
+    content: " " !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+  }
+}

@@ -30,6 +30,9 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
 import { Subject } from 'rxjs';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import {ActivityLogsPopupComponent} from "../../../../components/activity-logs-popup/activity-logs-popup.component";
+import { DatePipe } from '@angular/common';
 interface filterOption
 {
   month:number;
@@ -45,8 +48,10 @@ interface filterOption
     MatFormFieldModule,
     MatSelectModule,
     EditModeViewComponent,
-    OverlayPanelModule
-  ],
+    OverlayPanelModule,
+    ActivityLogsPopupComponent
+    
+],
   templateUrl: './tap-details.component.html',
   styleUrl: './tap-details.component.scss',
 })
@@ -57,6 +62,8 @@ export class TapDetailsComponent implements OnInit {
   currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
   visible = false;
   endSubs$:Subject<ScorecardModel[]> = new Subject();
+  activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableBody:any;
   selectedFile!:FileModel | null;
   currentClickedTap: InputSignal<TapModel> = input.required<TapModel>();
   isEmpty: InputSignal<boolean> = input.required<boolean>();
@@ -77,8 +84,57 @@ export class TapDetailsComponent implements OnInit {
       this.monthsArr.push(monthObject);
     }
   }
+  constructor(private datePipe: DatePipe){}
   ngOnInit(): void {    
     console.log(window.innerWidth);
+    this.activityLogsTableBody = [
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+      },
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+      },
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+      },
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+      },
+    ]
+    this.activityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      {
+        key : "details",
+        type : "text",
+        label : "Activity Details"
+      },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+    ]
     const yearsArr: { name: string; id: number }[] = [];
     const currYear: number = new Date().getFullYear();
     for (let index = 2024; index <= currYear; index++) {
@@ -148,8 +204,18 @@ export class TapDetailsComponent implements OnInit {
       this.overlayPanel2.show(event)
     }
   }
+  showActivityLogsPopup = false;
   showActivityLogs()
   {
-    this.activityLogsPanel.toggle(event);
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  closeActivityLogsPopup()
+  {
+    this.activityLogsPanel.hide();
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
   }
 }

@@ -72,6 +72,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() paginate: boolean = false;
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
+  @Input() activityLogTable: boolean = true;
   @Input() length!: number;
   @Input() currentPage: number = 1;
 

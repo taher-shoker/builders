@@ -1,6 +1,6 @@
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -152,7 +152,7 @@ const components = [
 @NgModule({
   declarations: [...components],
   exports: [...components, ...modules ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' } , SharedService],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' } , SharedService , DatePipe],
   imports: [
     CommonModule,
     ConfirmDialogModule,

@@ -68,9 +68,12 @@
   (ImportedFile)="importData($event)"
   (onhide)="onHide()"
 />
-<p-overlayPanel #activityLogsPanel dismissable="true">
-  <section class="popover-section">test</section>
-</p-overlayPanel>
+<stc-apps-activity-logs-popup 
+  [activityLogsTableHeader]="activityLogsTableHeader"
+  [activityLogsTableBody]="activityLogsTableBody"
+  [showPopup]="showActivityLogsPopup"
+  (popupClosed)="popupClosed()"
+/>
 <!-- <p-dialog
   [modal]="true"
   [(visible)]="visible"
