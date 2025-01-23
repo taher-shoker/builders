@@ -1,5 +1,3 @@
-import { DatePipe, Location } from '@angular/common';
-import { animate, style, transition, trigger } from '@angular/animations';
 import {
   Component,
   ElementRef,
@@ -18,6 +16,7 @@ import { chatArray, responseBody, sqlData } from './models/chatModel';
 export class ChatViewComponent implements OnInit {
   @ViewChild('scrollContainer') private scrollableContainer!: ElementRef;
   messagesList: chatArray[] = [];
+  hideQuestions = false;
   newMessage = '';
   maxLength = 512;
   isFocused = false;
@@ -26,7 +25,7 @@ export class ChatViewComponent implements OnInit {
   // this flag represents wether the api respond or not.
   pendingFlag = signal(false);
   isAnimated = false;
-
+  textareaHeight = 128;
   ngOnInit() {
     setTimeout(() => {
       this.isAnimated = true;
@@ -44,7 +43,19 @@ export class ChatViewComponent implements OnInit {
   onBlur(event: Event): void {
     this.isFocused = false;
   }
-
+  setSuggestedQuestion(question: string) {
+    this.resetTextArea();
+    this.newMessage = question;
+    this.textareaHeight = 128;
+  }
+  hideQuestionsAction() {
+    this.hideQuestions = !this.hideQuestions;
+    if (!this.hideQuestions) {
+      setTimeout(() => {
+        this.scrollToBottom();
+      });
+    }
+  }
   get remainingChars(): number {
     return this.maxLength - this.newMessage.length;
   }
@@ -52,6 +63,14 @@ export class ChatViewComponent implements OnInit {
     const textarea = event.target as HTMLTextAreaElement;
     textarea.style.height = 'auto'; // Reset height
     textarea.style.height = `${Math.min(textarea.scrollHeight, 90)}px`; // Set to scroll height
+    if (textarea.scrollHeight < 100) {
+      this.textareaHeight = textarea.scrollHeight + 76;
+    } else if (textarea.scrollHeight == 100) {
+      this.textareaHeight = textarea.scrollHeight + 65;
+    } else {
+      // eslint-disable-next-line no-self-assign
+      this.textareaHeight = this.textareaHeight;
+    }
   }
 
   sendMessage() {
@@ -78,7 +97,6 @@ export class ChatViewComponent implements OnInit {
     this.newMessage = '';
     this.pendingFlag.set(true);
     this.resetTextArea();
-    console.log(this.messagesList);
 
     this.chatService.sendMessage({ content: this.modelQuery }).subscribe({
       next: (result: responseBody) => {
