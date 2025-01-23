@@ -5,7 +5,7 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { FileModel, TapModel } from '../../models/scorecard.model';
 import { PSRService } from '../../services/psr.service';
 import { TabDetailsComponent } from './components/tab-details/tab-details.component';
-import { PSRProjectCardComponent } from './components/project-card/project-card.component';
+// import { PSRProjectCardComponent } from './components/project-card/project-card.component';
 import { PSRDataModel } from '../../models/psr.model';
 import { Subject, takeUntil } from 'rxjs';
 import { ScorecardService } from '../../services/scorecard.service';
@@ -13,7 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-psr',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , SharedUiModule , TabDetailsComponent , PSRProjectCardComponent],
+  imports: [CommonModule , PageHeaderComponent , SharedUiModule , TabDetailsComponent],
   templateUrl: './PSR.component.html',
   styleUrl: './PSR.component.scss',
 })
@@ -54,6 +54,32 @@ export class PSRComponent implements OnInit , OnDestroy {
   }
   private getExecuteViewData()
   {
+  //   this.psrData = [
+  //     {
+  //         "id": 1,
+  //         "sector": "Advance Analytics",
+  //         "actual": 69.0,
+  //         "planned": null,
+  //         "details": "8 Projects and Initiative Details",
+  //         "plannedDate": null
+  //     },
+  //     {
+  //         "id": 2,
+  //         "sector": "Analytics Enablement",
+  //         "actual": 70.0,
+  //         "planned": null,
+  //         "details": "25 Projects and Initiative Details",
+  //         "plannedDate": null
+  //     },
+  //     {
+  //         "id": 3,
+  //         "sector": "Data Governance",
+  //         "actual": 91.0,
+  //         "planned": null,
+  //         "details": "3 Projects and Initiative Details",
+  //         "plannedDate": null
+  //     }
+  // ]
     this.psrServices.getExecuteViewData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:PSRDataModel[]) => {
         if(res.length === 0)

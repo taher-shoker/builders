@@ -51,13 +51,17 @@ export class PSRProjectCardComponent implements OnChanges {
     this.maxTextLength = filteredArray.length;
     // console.log(filteredArray);
   }
-  formatDate(date:string)
+  formatDate(date:string | null)
   {
-    const fullDate = date.split("-");
-    const day = fullDate[2];
-    const monthName = this.months[+fullDate[1] - 1];
-    const year = fullDate[0];
-    return `${day} ${monthName}-${year}`;
+    if(date)
+    {
+      const fullDate = date.split("-");
+      const day = fullDate[2];
+      const monthName = this.months[+fullDate[1] - 1];
+      const year = fullDate[0];
+      return `${day} ${monthName}-${year}`;
+    }
+    return '';
   }
   displayDrilldown()
   {

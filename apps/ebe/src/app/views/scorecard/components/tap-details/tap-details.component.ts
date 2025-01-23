@@ -52,6 +52,7 @@ interface filterOption
 })
 export class TapDetailsComponent implements OnInit {
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
+  @ViewChild('activityLogsPanel') activityLogsPanel!: OverlayPanel;
   scorcardData: InputSignal<ScorecardModel[]> = input.required<ScorecardModel[]>();
   currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
   visible = false;
@@ -146,5 +147,9 @@ export class TapDetailsComponent implements OnInit {
       this.hoverTitle = title;
       this.overlayPanel2.show(event)
     }
+  }
+  showActivityLogs()
+  {
+    this.activityLogsPanel.toggle(event);
   }
 }

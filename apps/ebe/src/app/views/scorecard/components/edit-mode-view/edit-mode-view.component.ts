@@ -11,6 +11,7 @@ import { CommonModule } from '@angular/common';
 export class EditModeViewComponent {
   @Output() import:EventEmitter<boolean> = new EventEmitter();
   @Output() export:EventEmitter<boolean> = new EventEmitter();
+  @Output() showActivityLogs:EventEmitter<boolean> = new EventEmitter();
   showDialog()
   {
     this.import.emit()
@@ -18,5 +19,9 @@ export class EditModeViewComponent {
   downloadTemplate()
   {
     this.export.emit()
+  }
+  activityLogs()
+  {
+    this.showActivityLogs.emit()
   }
 }

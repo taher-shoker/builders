@@ -3,6 +3,7 @@
   <stc-apps-edit-mode-view
     (import)="showDialog()"
     (export)="downloadTemplate()"
+    (showActivityLogs)="showActivityLogs()"
   />
   }
   <form
@@ -67,6 +68,9 @@
   (ImportedFile)="importData($event)"
   (onhide)="onHide()"
 />
+<p-overlayPanel #activityLogsPanel dismissable="true">
+  <section class="popover-section">test</section>
+</p-overlayPanel>
 <!-- <p-dialog
   [modal]="true"
   [(visible)]="visible"
