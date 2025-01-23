@@ -9,23 +9,23 @@ import { TableChartComponent } from './table/tableChart.component';
 import { MatTableModule } from '@angular/material/table';
 import { LineChartComponent } from './lineChart/lineChart.component';
 import { ChartControllerComponent } from './chart-controller/chartController.component';
+import { SuggestedQuestionComponent } from './suggested-question/suggestedQuestion.component';
 
 const components = [
   ChatListItemComponent,
   HeaderComponent,
   PopUpImageComponent,
+  BarChartComponent,
+  PieChartComponent,
+  TableChartComponent,
+  LineChartComponent,
+  ChartControllerComponent,
+  SuggestedQuestionComponent,
 ];
 const modules = [CommonModule, MatTableModule];
 
 @NgModule({
-  declarations: [
-    ...components,
-    BarChartComponent,
-    PieChartComponent,
-    TableChartComponent,
-    LineChartComponent,
-    ChartControllerComponent,
-  ],
+  declarations: [...components],
   imports: [...modules],
   exports: [...components, ...modules],
 })

@@ -4,7 +4,15 @@ p {
 .scroll::-webkit-scrollbar {
   display: none;
 }
-
+.suggested-questions::-webkit-scrollbar {
+  display: none;
+}
+.messages-list-questions-margin {
+  margin-bottom: 240px;
+}
+.messages-list-margin {
+  margin-bottom: 130px;
+}
 .chat-view {
   width: 100%;
   display: flex;
@@ -17,10 +25,10 @@ p {
     height: 100%;
   }
   &_messages-container {
-    overflow-y: scroll;
+    overflow: auto;
     height: 100%;
     padding: 10px;
-    margin-bottom: 95px;
+
     .background {
       position: absolute;
       top: 45%;
@@ -49,6 +57,14 @@ p {
     color: var(--fontGreyColor);
     font-weight: 400;
     font-size: 13px;
+    .suggested-questions {
+      overflow-x: scroll;
+      white-space: nowrap;
+      width: fit-content;
+      position: fixed;
+
+      left: 3rem;
+    }
     .textarea {
       margin: 10px 0px 12px 24px;
       font-family: 'stc forward-regular';
@@ -73,7 +89,12 @@ p {
       display: flex;
       align-items: center;
       justify-content: end;
-      width: 6%;
+
+      .questions-controller {
+        width: 24px;
+        height: 24px;
+        margin-right: 12px;
+      }
       img {
         cursor: pointer;
       }
@@ -113,8 +134,11 @@ p {
   .chat-view {
     &_input-container {
       left: 0.5rem !important;
+      .suggested-questions {
+        left: 1rem !important;
+      }
       .textarea {
-        width: 80%;
+        width: 70%;
       }
     }
     .text-area-actions {

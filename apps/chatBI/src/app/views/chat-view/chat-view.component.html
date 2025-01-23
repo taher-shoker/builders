@@ -1,6 +1,12 @@
 <div class="chat-view">
   <stc-apps-header [title]="'CEM Chat AI'"></stc-apps-header>
-  <div #scrollContainer class="chat-view_messages-container">
+  <div
+    #scrollContainer
+    class="chat-view_messages-container"
+    [ngClass]="
+      !hideQuestions ? 'messages-list-questions-margin' : 'messages-list-margin'
+    "
+  >
     @if (messagesList.length==0) {
     <div class="background"></div>
     } @for (message of messagesList; track $index) {
@@ -10,9 +16,7 @@
       [messageType]="message.messageType"
       [images]="message.images ?? ['']"
       [showType]="message.showType ?? ''"
-      [sqlData]="
-        message.sqlData ?? { xList: [], yList: [], title: '' }
-      "
+      [sqlData]="message.sqlData ?? { xList: [], yList: [], title: '' }"
       [isLoading]="pendingFlag()"
     >
     </stc-apps-chat-list-item>
@@ -23,6 +27,13 @@
     class="chat-view_input-container"
     [ngClass]="{ focused: isFocused, error: newMessage.length > 512 }"
   >
+    <div class="suggested-questions w-100" [style.bottom.px]="textareaHeight">
+      <stc-apps-suggested-question
+        [hideQuestion]="hideQuestions"
+        (sendQuestionEvent)="setSuggestedQuestion($event)"
+      ></stc-apps-suggested-question>
+    </div>
+
     <textarea
       id="textarea"
       class="textarea scroll"
@@ -36,6 +47,16 @@
     </textarea>
 
     <div class="button-container">
+      <img
+        (click)="hideQuestionsAction()"
+        class="questions-controller"
+        [src]="
+          !hideQuestions
+            ? 'assets/images/inactive-questions.png'
+            : 'assets/images/active-questions.png'
+        "
+        alt=""
+      />
       <img
         [ngClass]="{
           disabled:
