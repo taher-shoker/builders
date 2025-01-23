@@ -36,11 +36,26 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   cdr = inject(ChangeDetectorRef);
   logoSrc!: string;
   isAllowed!: boolean;
+  isSidebarVisible = true;
+  private mediaQueryListener!: () => void;
+
+  toggleSidebar() {
+    this.isSidebarVisible = !this.isSidebarVisible;
+    console.log('Sidebar visibility:', this.isSidebarVisible);
+  }
 
   ngAfterViewInit(): void {
     this.loaderService.isLoading$.subscribe((res) => {
       this.cdr.detectChanges();
     });
+
+    const mediaQuery = window.matchMedia('(min-width: 768px)');
+    this.mediaQueryListener = () => {
+      if (mediaQuery.matches) {
+        this.isSidebarVisible = true;
+      }
+    };
+    mediaQuery.addEventListener('change', this.mediaQueryListener);
   }
 
   ngOnInit(): void {
