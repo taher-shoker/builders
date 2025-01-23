@@ -21,6 +21,13 @@ export const appRoutes: Route[] = [
       ),
   },
   {
+    path: 'activity-logs',
+    loadComponent: () =>
+      import('./views/activity-logs/activity-logs.component').then(
+        (m) => m.ActivityLogsComponent
+      ),
+  },
+  {
     path: 'strategy-program/:kpiId',
     loadComponent: () =>
       import(

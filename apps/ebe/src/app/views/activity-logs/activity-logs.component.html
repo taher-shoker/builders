@@ -1,0 +1,31 @@
+<section class="activity-log-section">
+  <div class = "activity-log-section-header">
+      <stc-apps-page-header
+        mainTitle = "Activity Log Center"
+        secondaryTitle = ""
+      />
+  
+    </div>
+    <div 
+        class="scored-card-section-taps"
+      >
+        <stc-apps-tabview
+          [tabsData]="scorecardsTaps"
+          [tabColor]="'#ffffff'"
+          [clickedtabColor]="'#ffffff'"
+          [tabBackground]="'#FFFFFF0D'"
+          [clickedtabBackground]="'#FF375E'"
+          [fontFamily]="'STCForwardFont'"
+        />       
+      </div>
+      <div class="scored-card-section-tap-details">
+        <div class="projects-container">        <stc-apps-custom-table
+        [headers]="tableHeader"
+        [items]="tableData"
+        [activityTable]="true"
+        [fontFamily]="'STCForwardFont'"
+       />
+      </div>
+      </div>
+     
+    </section>

@@ -60,6 +60,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   headers = input.required<ColumnsSchema[]>();
   psrTable = input<boolean>();
+  activityTable = input<boolean>();
   fontFamily = input<string>();
 
   @Input({ required: true }) items!: any[];
