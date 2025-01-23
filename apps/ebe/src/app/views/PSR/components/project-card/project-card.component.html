@@ -40,7 +40,7 @@
     />
   </div>
   <!-- {{maxTextLength}} -->
-  <p class = "planned-date">planned date: <span>{{ formatDate(project().plannedDate)}}</span></p>
+  <p class = "planned-date">planned date: <span>{{ project() && project().plannedDate ? formatDate(project().plannedDate) : ''}}</span></p>
   <p class="project-container-description">
     {{ project().details | truncateWord:6}}
     @if(maxTextLength > 20)

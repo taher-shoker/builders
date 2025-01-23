@@ -353,7 +353,10 @@ export class AddPsrProjectFormComponent implements OnInit {
       next: (res: PSRDataModel) => {
         this.programsList.controls[0].get('sector')?.setValue(res.sector);
         this.programsList.controls[0].get('details')?.setValue(res.details);
-        this.programsList.controls[0].get('plannedDate')?.setValue(new Date(res.plannedDate));
+        if(res.plannedDate)
+        {
+          this.programsList.controls[0].get('plannedDate')?.setValue(new Date(res.plannedDate));
+        }
       },
     });
   }
