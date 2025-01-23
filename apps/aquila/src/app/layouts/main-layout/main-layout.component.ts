@@ -6,7 +6,7 @@ import {
   inject,
   OnInit,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { NavigationStart, Router, RouterModule } from '@angular/router';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ApiTestIconComponent } from 'apps/aquila/src/assets/icons/api-test-icon/api-test-icon.component';
@@ -32,14 +32,14 @@ import { LoaderComponent } from '../components/loader/loader.component';
 export class MainLayoutComponent implements OnInit, AfterViewInit {
   loaderService = inject(LoaderService);
   cdr = inject(ChangeDetectorRef);
+  router = inject(Router);
   logoSrc!: string;
   isAllowed!: boolean;
-  isSidebarVisible = true;
+  isSidebarVisible = false;
   private mediaQueryListener!: () => void;
 
   toggleSidebar() {
     this.isSidebarVisible = !this.isSidebarVisible;
-    console.log('Sidebar visibility:', this.isSidebarVisible);
   }
 
   ngAfterViewInit(): void {
@@ -58,6 +58,17 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.logoSrc = 'assets/images/stc-logo.svg';
+    if (window.innerWidth > 768) {
+      this.isSidebarVisible = true;
+    }
+
+    this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        if (window.innerWidth <= 768) {
+          this.isSidebarVisible = false;
+        }
+      }
+    });
   }
 
   navItems = [

@@ -9,11 +9,12 @@
         cursor: pointer;
         padding: 10px;
         font-size: 24px;
-
         z-index: 1001;
+        position: absolute;
+        top: 10px;
 
         @media (max-width: 768px) {
-            display: block;
+            display: flex;
         }
     }
 
@@ -32,7 +33,7 @@
                     z-index: 1000;
                     visibility: visible;
                     opacity: 1;
-                    padding-top: 1.5rem;
+                    padding-top: 25px;
 
                     @media all and (max-width: 1024px) {
                         width: 250px;
