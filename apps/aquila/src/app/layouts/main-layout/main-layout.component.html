@@ -3,7 +3,17 @@
 }
 
 <div class="main-layout">
-  <div class="main-layout_sidebar">
+  <div
+    class="main-layout_hamburger-menu"
+    (click)="toggleSidebar()"
+    [ngStyle]="{
+      color: isSidebarVisible ? 'var(--whiteColor)' : 'var(--stc-color)'
+    }"
+  >
+    <i class="pi pi-bars"></i>
+  </div>
+
+  <div class="main-layout_sidebar" [ngClass]="{ hidden: !isSidebarVisible }">
     <stc-apps-sidebar
       [logoSrc]="logoSrc"
       [sidebarLinks]="navItems"
