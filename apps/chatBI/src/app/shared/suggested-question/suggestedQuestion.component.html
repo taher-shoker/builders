@@ -1,8 +1,7 @@
-<div
-  class="question-holder"
-  [@questionAnimation]="hideQuestion() ? 'hidden' : 'visible'"
->
+@if (!hideQuestion()) {
+<div class="question-holder">
   @for (question of questions; track $index) {
   <p class="question" (click)="sendQuestion(question)">{{ question }}</p>
   }
 </div>
+}

@@ -1,5 +1,5 @@
 <div class="chat-view">
-  <stc-apps-header [title]="'CEM Chat AI'"></stc-apps-header>
+  <stc-apps-header [title]="'CEM Copilot'"></stc-apps-header>
   <div
     #scrollContainer
     class="chat-view_messages-container"
@@ -25,15 +25,12 @@
 
   <div
     class="chat-view_input-container"
-    [ngClass]="{ focused: isFocused, error: newMessage.length > 512 }"
+    [ngClass]="{
+      focused: isFocused,
+      error: newMessage.length > 512,
+      'input-filed-bottom': hideQuestions
+    }"
   >
-    <div class="suggested-questions w-100" [style.bottom.px]="textareaHeight">
-      <stc-apps-suggested-question
-        [hideQuestion]="hideQuestions"
-        (sendQuestionEvent)="setSuggestedQuestion($event)"
-      ></stc-apps-suggested-question>
-    </div>
-
     <textarea
       id="textarea"
       class="textarea scroll"
@@ -48,16 +45,6 @@
 
     <div class="button-container">
       <img
-        (click)="hideQuestionsAction()"
-        class="questions-controller"
-        [src]="
-          !hideQuestions
-            ? 'assets/images/inactive-questions.png'
-            : 'assets/images/active-questions.png'
-        "
-        alt=""
-      />
-      <img
         [ngClass]="{
           disabled:
             newMessage.length > 512 || !newMessage.trim() || pendingFlag()
@@ -68,12 +55,33 @@
       />
     </div>
   </div>
-  <div class="text-area-actions">
+  <div
+    class="text-area-actions"
+    [ngClass]="{ 'text-area-actions-bottom': hideQuestions }"
+  >
     <div
       class="textarea-counter"
       [ngClass]="{ 'error-text': newMessage.length > 512 }"
     >
       <p>{{ newMessage.length }} / {{ maxLength }}</p>
     </div>
+    <div class="questions-controller-holder">
+      <img
+        (click)="hideQuestionsAction()"
+        class="questions-controller"
+        [src]="
+          !hideQuestions
+            ? 'assets/images/active-questions.png'
+            : 'assets/images/inactive-questions.png'
+        "
+        alt=""
+      />
+    </div>
+  </div>
+  <div class="suggested-questions w-100">
+    <stc-apps-suggested-question
+      [hideQuestion]="hideQuestions"
+      (sendQuestionEvent)="setSuggestedQuestion($event)"
+    ></stc-apps-suggested-question>
   </div>
 </div>

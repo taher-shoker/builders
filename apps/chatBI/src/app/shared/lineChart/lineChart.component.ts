@@ -104,16 +104,34 @@ export class LineChartComponent implements OnInit {
 
     series.data.setAll(data);
     xAxis.data.setAll(data);
+
     const showBullets = () => {
       series.bullets.push(() => {
+        const bulletContainer = am5.Container.new(this.root, {});
+
+        const circle = am5.Circle.new(this.root, {
+          radius: 5,
+          fill: series.get('fill'),
+          stroke: this.root.interfaceColors.get('background'),
+          strokeWidth: 1,
+        });
+        bulletContainer.children.push(circle);
+
+        if (this.popUpClick()) {
+          const label = am5.Label.new(this.root, {
+            text: '{valueY}',
+            centerX: am5.percent(50),
+            centerY: am5.percent(120),
+            populateText: true,
+            fontSize: 12,
+            fill: am5.color('#000000'),
+          });
+
+          bulletContainer.children.push(label);
+        }
+
         return am5.Bullet.new(this.root, {
-          sprite: am5.Circle.new(this.root, {
-            radius: 5,
-            fill: series.get('fill'),
-            stroke: this.root.interfaceColors.get('background'),
-            strokeWidth: 1,
-            tooltip: am5.Tooltip.new(this.root, {}),
-          }),
+          sprite: bulletContainer,
         });
       });
     };

@@ -1,3 +1,6 @@
+.popup-chart-width::-webkit-scrollbar {
+  width: 900px;
+}
 .popup-overlay {
   position: fixed;
   top: 0;
@@ -18,17 +21,21 @@
   width: 94%;
   touch-action: none;
   display: flex;
+
   justify-content: center;
 }
-
+.popup-chart-width {
+  width: 1024px;
+  overflow: auto;
+}
 .zoomed-image {
   width: 100%;
   cursor: zoom-in;
   transition: transform 0.3s ease;
   border-radius: 8px;
 
-  touch-action: none; 
-  user-select: none; 
+  touch-action: none;
+  user-select: none;
 }
 
 .close-btn {

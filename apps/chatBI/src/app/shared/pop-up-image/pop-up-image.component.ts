@@ -20,7 +20,6 @@ export class PopUpImageComponent implements OnDestroy {
   selectedImage: InputSignal<string> = input('');
   chartType: InputSignal<string> = input('');
   chartData: InputSignal<sqlData> = input({} as sqlData);
-  popUpClick = true;
   lastTap = 0;
   isZoomed = false;
   imagePosition = { top: 0, left: 0, x: 0, y: 0 };
@@ -29,6 +28,7 @@ export class PopUpImageComponent implements OnDestroy {
   private startY = 0;
   private translateX = 0;
   private translateY = 0;
+  popUpClicked = true;
   @ViewChild('imageContainer') 'imageContainer': ElementRef;
   @ViewChild('imageTag') 'imageTag': ElementRef;
   // eslint-disable-next-line @angular-eslint/no-output-native
@@ -44,6 +44,7 @@ export class PopUpImageComponent implements OnDestroy {
   }
   closeImagePopup() {
     this.close.emit();
+    this.popUpClicked = false;
   }
   handleImageTap(event: MouseEvent) {
     const currentTime = new Date().getTime();

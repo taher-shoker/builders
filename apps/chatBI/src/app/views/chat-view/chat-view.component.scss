@@ -1,6 +1,9 @@
 p {
   margin: 0px;
 }
+.chat-view_messages-container::-webkit-scrollbar {
+  width: 8px;
+}
 .scroll::-webkit-scrollbar {
   display: none;
 }
@@ -12,6 +15,12 @@ p {
 }
 .messages-list-margin {
   margin-bottom: 130px;
+}
+.input-filed-bottom {
+  bottom: 4.5rem !important;
+}
+.text-area-actions-bottom {
+  bottom: 2rem !important;
 }
 .chat-view {
   width: 100%;
@@ -43,7 +52,7 @@ p {
   }
   &_input-container {
     position: fixed;
-    bottom: 2.5rem;
+    bottom: 9.5rem;
     left: 2rem;
     z-index: 999;
     background-color: var(--whiteColor);
@@ -57,14 +66,7 @@ p {
     color: var(--fontGreyColor);
     font-weight: 400;
     font-size: 13px;
-    .suggested-questions {
-      overflow-x: scroll;
-      white-space: nowrap;
-      width: fit-content;
-      position: fixed;
 
-      left: 3rem;
-    }
     .textarea {
       margin: 10px 0px 12px 24px;
       font-family: 'stc forward-regular';
@@ -89,29 +91,38 @@ p {
       display: flex;
       align-items: center;
       justify-content: end;
-
-      .questions-controller {
-        width: 24px;
-        height: 24px;
-        margin-right: 12px;
-      }
+      width: 6%;
       img {
         cursor: pointer;
       }
     }
   }
   .text-area-actions {
+    width: 100%;
     color: var(--fontGreyColor);
     font-weight: 400;
     font-size: 13px;
     position: fixed;
-    bottom: 10px;
+    bottom: 7.5rem;
     display: flex;
-    justify-content: end;
+    justify-content: space-between;
     margin-left: 48px;
     .textarea-counter {
       margin-right: 8px;
     }
+    .questions-controller {
+      width: 24px;
+      height: 24px;
+      margin-right: 94px;
+    }
+  }
+  .suggested-questions {
+    overflow-x: scroll;
+    white-space: nowrap;
+    width: fit-content;
+    position: fixed;
+    bottom: 1rem;
+    left: 3rem;
   }
 }
 
@@ -134,15 +145,23 @@ p {
   .chat-view {
     &_input-container {
       left: 0.5rem !important;
-      .suggested-questions {
-        left: 1rem !important;
-      }
+
       .textarea {
         width: 70%;
       }
+      .button-container {
+        width: 15%;
+      }
     }
+
     .text-area-actions {
       margin-left: 24px;
+      .questions-controller {
+        margin-right: 42px !important;
+      }
+    }
+    .suggested-questions {
+      left: 1rem !important;
     }
   }
 }
