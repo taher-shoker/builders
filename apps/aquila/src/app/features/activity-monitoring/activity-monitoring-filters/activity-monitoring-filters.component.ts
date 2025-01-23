@@ -49,7 +49,7 @@ export class ActivityMonitoringFiltersComponent implements OnInit {
       userRole: [''],
       status: [''],
       action: [''],
-      date: [''],
+      date: [null],
     });
 
     this.filterForm.valueChanges.subscribe((values) => {
