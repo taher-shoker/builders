@@ -37,6 +37,16 @@ export class ScorecardService {
       name: 'CAD strategy programs',
       url: '/strategy-program',
     },
+    {
+      id: 3,
+      name: 'raqami',
+      url: '/raqami',
+    },
+    // {
+    //   id: 4,
+    //   name: 'PSR',
+    //   url: '/psr',
+    // },
     // {
     //   id: 3,
     //   name: 'raqami',

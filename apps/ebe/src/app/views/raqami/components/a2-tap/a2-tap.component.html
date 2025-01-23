@@ -1,0 +1,71 @@
+<section class="a2-section">
+    <div class="a2-section-header">
+        <p class="a2-section-header-title">
+            analytics amplification
+        </p>
+        <div class = "d-flex align-items-center" style = "gap:25px">
+            <div class="a2-section-header-targets">
+                <p>target</p>
+                <span class = "target"></span>
+            </div>
+            <div class="a2-section-header-actual">
+                <p>actual</p>
+                <span class = "actual"></span>
+            </div>
+        </div>
+    </div>
+    @for (item of A1Data(); track $index;let count = $count;let last = $last) {
+        <div class="a2-section-body" [class.mb-5]="count !== 1 && !last">
+            <p class="a2-section-body-title">
+                {{item.title}}
+            </p>
+            <div class="a2-section-body-cards">
+                <p class="a2-section-body-cards-owner">
+                    {{item.owner}}
+                </p>
+                <p class="a2-section-body-cards-project">
+                    {{item.project}}
+                </p>
+            </div>
+            <div class="a2-section-body-content">
+                <div class="a2-section-body-content-data">
+                    <div class = "content">
+                        <div class="weight-container">
+                            <p class="title">KPI Weight</p>
+                            <p class="value">{{item.kpiWeight}}%</p>
+                        </div>
+                        <div class="weight-container">
+                            <p class="title">UoM</p>
+                            <p class="value">{{item.UoM}}</p>
+                        </div>
+                    </div>
+                    <div class = "content">
+                        <div class="weight-container">
+                            <p class="title">Baseline</p>
+                            <p class="value">{{item.baseLine.year}} <span class = "column">:</span> {{item.baseLine.val}}</p>
+                        </div>
+                    </div>
+                    <div class = "content mb-0">
+                        <div class="weight-container w-100">
+                            <p class="title">Target</p>
+                            <div class="data">
+                            @for (target of item.targets; track $index) {
+                                    <div class="text">
+                                        <div class="year">{{target.year}}</div>
+                                        <div class="val">{{target.val}}</div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="a2-section-body-content-chart" style = "height: 349px;">
+                    <stc-apps-double-line-chart 
+                        [chartData]="item.chartData"
+                        [colors]="colors"
+                    />
+                </div>
+            </div>
+        </div>
+    }
+</section>

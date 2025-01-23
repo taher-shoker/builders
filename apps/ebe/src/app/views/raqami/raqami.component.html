@@ -1,1 +1,27 @@
-<p>raqami works!</p>
+<div class="raqami-section">
+  <div class="raqami-section-header">
+    <div>
+      <stc-apps-page-header
+        [mainTitle]="'raqami'"
+        [secondaryTitle]="''"
+      />
+      <div class="raqami-section-taps">
+        <stc-apps-tabview
+          [tabsData]="raqamiTaps"
+          [tabColor]="'#ffffff'"
+          [clickedtabColor]="'#ffffff'"
+          [tabBackground]="'#FFFFFF0D'"
+          [clickedtabBackground]="'#FF375E'"
+          (clickedTap)="getClickedTap($event)"
+          [fontFamily]="'STCForwardFont'"
+        />
+      </div>
+    </div>
+    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
+  </div>
+  <div class="raqami-section-tap-details">
+    <stc-apps-raqami-tap-details 
+      [currentTap]="clickedTap"
+    />
+</div>
+</div>
