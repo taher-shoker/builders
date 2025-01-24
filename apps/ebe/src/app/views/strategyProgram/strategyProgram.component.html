@@ -11,6 +11,7 @@
       <stc-apps-edit-mode-view 
         (import)="showDialog()"
         (export)="downloadTemplate()"
+        (showActivityLogs)="showActivityLogs()"
       />
     }
     <p class = "strategy-program-section-details-title">execution status</p>
@@ -73,5 +74,11 @@
   [visible]="visible"
   (ImportedFile)="ImportFile($event)"
   (onhide)="visible = false"
+/>
+<stc-apps-activity-logs-popup 
+  [activityLogsTableHeader]="activityLogsTableHeader"
+  [activityLogsTableBody]="activityLogsTableBody"
+  [showPopup]="showActivityLogsPopup"
+  (popupClosed)="popupClosed()"
 />
 <!-- <p>strategy-program works!</p> -->

@@ -49,6 +49,8 @@ export class MainLayoutComponent implements OnInit {
     this.isAllowed = this.userRoles.roles.some(
       (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
     );
+    console.log(this.userRoles);
+    this.authService.userRoles.next(this.userRoles);
     this.isPMO = this.userRoles.roles.some(
       (role) => role.roleName === 'BE_PMO'
     );
@@ -60,8 +62,8 @@ export class MainLayoutComponent implements OnInit {
         return this.currentSystem === role.system.name;
       });
     });
-    console.log(this.currentSystem);
-    console.log(matchingGroup);
+    // console.log(this.currentSystem);
+    // console.log(matchingGroup);
     if (matchingGroup) {
       return matchingGroup;
     } else {

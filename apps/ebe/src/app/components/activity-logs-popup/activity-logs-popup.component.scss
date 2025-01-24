@@ -42,3 +42,24 @@
     pointer-events: none !important;
   }
 }
+::ng-deep .action-Popup
+{
+  // left: 375px !important;
+  // top: 400px !important;
+  right: 295px !important;
+  left: auto !important;
+  top: 22px !important;
+  &::before
+  {
+    content: "" !important;
+    top: 6.5% !important;
+    left: 101.2% !important;
+    transform: rotate(270deg) !important;
+    border-top: 20px solid #fff !important;
+    border-bottom: 0 !important;
+  }
+  &::after
+  {
+    display: none !important;
+  }
+}

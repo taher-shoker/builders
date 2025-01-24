@@ -1,8 +1,10 @@
-<p-overlayPanel 
+<div class = "overlay-container" style = "position:relative;" #overlay>
+  <p-overlayPanel 
   #activityLogsPanel 
   dismissable="false"
-  appendTo="body"
+  [appendTo]="isActionPopup() ? overlay : 'body'"
   styleClass="activity-logs-panel"
+  [styleClass]="isActionPopup() ? 'action-Popup' : ''"
 >
     <div class="activity-logs-table">
       <div class="activity-logs-table-header">
@@ -25,3 +27,4 @@
       </div>
     </div>
   </p-overlayPanel>
+</div>

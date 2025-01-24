@@ -33,6 +33,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import {ActivityLogsPopupComponent} from "../../../../components/activity-logs-popup/activity-logs-popup.component";
 import { DatePipe } from '@angular/common';
+import { ActivityLog } from '../../../../models/activity-logs';
 interface filterOption
 {
   month:number;
@@ -57,13 +58,12 @@ interface filterOption
 })
 export class TapDetailsComponent implements OnInit {
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
-  @ViewChild('activityLogsPanel') activityLogsPanel!: OverlayPanel;
   scorcardData: InputSignal<ScorecardModel[]> = input.required<ScorecardModel[]>();
   currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
   visible = false;
   endSubs$:Subject<ScorecardModel[]> = new Subject();
   activityLogsTableHeader!:ColumnsSchema[];
-  activityLogsTableBody:any;
+  activityLogsTableBody!:ActivityLog[];
   selectedFile!:FileModel | null;
   currentClickedTap: InputSignal<TapModel> = input.required<TapModel>();
   isEmpty: InputSignal<boolean> = input.required<boolean>();
@@ -92,25 +92,25 @@ export class TapDetailsComponent implements OnInit {
         username:"Hamed Rahed",
         type:"import",
         details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
       },
       {
         username:"Hamed Rahed",
         type:"import",
         details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
       },
       {
         username:"Hamed Rahed",
         type:"import",
         details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
       },
       {
         username:"Hamed Rahed",
         type:"import",
         details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
       },
     ]
     this.activityLogsTableHeader = [
@@ -209,10 +209,6 @@ export class TapDetailsComponent implements OnInit {
   {
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
-  }
-  closeActivityLogsPopup()
-  {
-    this.activityLogsPanel.hide();
   }
   popupClosed()
   {

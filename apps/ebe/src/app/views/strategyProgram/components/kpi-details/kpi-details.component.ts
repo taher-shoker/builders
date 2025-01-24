@@ -1,5 +1,5 @@
 import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
@@ -7,13 +7,18 @@ import { AccordionModule } from 'primeng/accordion';
 import { StrategyProgramService } from '../../../../services/strategy-program.service';
 import { SharedUiModule } from "@stc-apps/shared-ui";
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import {ActivityLogsPopupComponent} from "../../../../components/activity-logs-popup/activity-logs-popup.component";
+import { DatePipe } from '@angular/common';
+import { ActivityLog } from '../../../../models/activity-logs';
+import { TieredMenuModule } from 'primeng/tieredmenu';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -29,9 +34,11 @@ export interface KpiProjectsDetailsModel
     AccordionModule,
     SharedUiModule,
     ButtonModule,
-    DialogModule,
+    ActivityLogsPopupComponent,
     RouterModule,
-    EditModeViewComponent
+    EditModeViewComponent,
+    OverlayPanelModule,
+    TieredMenuModule
   ],
   providers : [ConfirmationService],
   templateUrl: './kpi-details.component.html',
@@ -40,14 +47,18 @@ export interface KpiProjectsDetailsModel
 export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   currentId!:string;
   currentMode!: 'editMode' | 'viewMode';
+  @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   activatedRoute = inject(ActivatedRoute);
   strategyProgramService = inject(StrategyProgramService);
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
+  activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableBody!:ActivityLog[];
   endSubs$:Subject<any> = new Subject();
   private confirmationService = inject(ConfirmationService);
   private scorecardService = inject(ScorecardService);
-  constructor(private router:Router){}
+  constructor(private router:Router , private datePipe:DatePipe){}
   toastr = inject(ToastrService);
+  menuItems:any[] = [];
   isEmpty!:boolean;
   ngOnDestroy(): void {
     this.endSubs$.complete();
@@ -69,6 +80,83 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
         this.getStrategyProgramDetails(this.currentId);
       },
     });
+    this.menuItems = [
+      {
+        label: 'activity log',
+        icon: "pi pi-clock"
+      },
+      {
+        label: 'show deleted projects',
+        icon: "pi pi-eye"
+      }
+    ];
+    this.activityLogsTableBody = [
+      {
+        username:"Hamed Rahed1",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+      {
+        username:"Hamed Rahed2",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+      {
+        username:"Hamed Rahed3",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+      {
+        username:"Hamed Rahed4",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+    ]
+    this.activityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      {
+        key : "details",
+        type : "text",
+        label : "Activity Details"
+      },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+    ]
+  }
+  showActivityLogsPopup = false;
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
+    // this.actionsPanel.hide();
+  }
+  menuActions(label:string)
+  {
+    console.log(label);
+    if(label === 'activity log')
+    {
+      this.showActivityLogs();
+    }
   }
   private getStrategyProgramDetails(strategyName:string)
   {
@@ -87,8 +175,14 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   isTapOpened!: boolean;
   currentTabIndex!: number;
   getCurrentIndex(index: boolean) {
-    console.log(index);
+    // console.log(index);
     this.isTapOpened = index;
+    this.actionsPanel.hide();
+  }
+  closeAccordion()
+  {
+    this.actionsPanel.hide();
+    this.showActivityLogsPopup = false
   }
   getIndex(index: number | number[]) {
     this.currentTabIndex = typeof index === 'number' ? index : 0;
@@ -143,6 +237,11 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   showDialog()
   {
     this.visible = true;
+  }
+  showActionsPopup()
+  {
+    this.actionsPanel.toggle(event);
+    this.showActivityLogsPopup = false;
   }
   downloadTemplate()
   {

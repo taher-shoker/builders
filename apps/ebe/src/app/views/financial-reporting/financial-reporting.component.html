@@ -10,6 +10,7 @@
       <stc-apps-edit-mode-view
         (import)="showDialog()"
         (export)="downloadTemplate()"
+        (showActivityLogs)="showActivityLogs()"
       />
     }
     <p class="main-page-title">financial status</p>
@@ -298,4 +299,10 @@
   (ImportedFile)="importData($event)"
   (onhide)="onHide()"
   fileType='.xlsx'
+/>
+<stc-apps-activity-logs-popup 
+  [activityLogsTableHeader]="activityLogsTableHeader"
+  [activityLogsTableBody]="activityLogsTableBody"
+  [showPopup]="showActivityLogsPopup"
+  (popupClosed)="popupClosed()"
 />

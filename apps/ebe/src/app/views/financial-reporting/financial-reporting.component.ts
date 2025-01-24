@@ -9,10 +9,15 @@ import { FinancialReportingService } from '../../services/financial-reporting.se
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CapexModel, CapexOpexModel, TenderingModel } from '../../models/financial.mode';
 import { ToastrService } from 'ngx-toastr';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import {ActivityLogsPopupComponent} from "../../components/activity-logs-popup/activity-logs-popup.component";
+import { DatePipe } from '@angular/common';
+import { ActivityLog } from '../../models/activity-logs';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule],
+  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule , ActivityLogsPopupComponent],
   templateUrl: './financial-reporting.component.html',
   styleUrl: './financial-reporting.component.scss',
 })
@@ -26,6 +31,8 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   capexOpexData!:CapexOpexModel;
   sharedService = inject(SharedService);
   toastr = inject(ToastrService);
+  activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableBody!:ActivityLog[];
   chartColors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
   opexTenderingChart:{
     title:string;
@@ -74,6 +81,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
+  constructor(private datePipe:DatePipe){}
   // myObservable$ = new Observable(observer => {
   //   observer.next(1);
   //   observer.next(2);
@@ -96,11 +104,69 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
       },
     });
     this.getFinancialReportingData();
+    this.activityLogsTableBody = [
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+      {
+        username:"Hamed Rahed",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
+      },
+    ]
+    this.activityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      {
+        key : "details",
+        type : "text",
+        label : "Activity Details"
+      },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+    ]
+  }
+  showActivityLogsPopup = false;
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
   }
   private getFinancialReportingData()
   {
     // this.capexOpexData = {"opex":[],"capex":[],"tendering":[]};
-    this.financialReportingService.getFinancialReportingData().subscribe({
+    this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
         this.capexOpexData = res;     
         this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]

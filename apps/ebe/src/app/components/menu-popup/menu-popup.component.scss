@@ -1,0 +1,50 @@
+@import '../../../styles/fonts.scss';
+.icon-container
+{
+    background-color: #EAEAEA;
+    border-radius:10px;
+    width:30px;
+    height:45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+::ng-deep .activity-logs
+{
+  padding: 0 !important;
+  width: 240px !important;
+  background: #fff !important;
+  opacity: 1 !important;
+  // .p-menuitem-link[aria-hidden="true"] {
+  //   aria-hidden: false !important;
+  // }
+  .p-menu-list
+  {
+    padding-left: 0 !important;
+    padding-bottom: 0 !important;
+    margin: 0 !important;
+  }
+  .activity-logs-menu-container
+  {
+    .menu-item
+    {
+      display: flex;
+      align-items: center;
+      gap:10px;
+      padding-left: 15px;
+      height:55px;
+      cursor: pointer;
+      i
+      {
+        font-size: 1.1rem;
+      }
+      p
+      {
+        text-transform: capitalize;
+        margin-bottom: 0;
+        font-size: 1rem;
+        @extend .stcFont;
+      }
+    }
+  }
+}

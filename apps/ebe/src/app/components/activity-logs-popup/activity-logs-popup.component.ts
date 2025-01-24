@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { SharedUiModule } from "../../../../../../libs/shared-ui/src/lib/shared-ui.module";
 import { ColumnsSchema } from '../../models/psr.model';
+import { ActivityLog } from '../../models/activity-logs';
 @Component({
   selector: 'stc-apps-activity-logs-popup',
   standalone: true,
@@ -13,8 +14,9 @@ import { ColumnsSchema } from '../../models/psr.model';
 export class ActivityLogsPopupComponent {
   @ViewChild('activityLogsPanel') activityLogsPanel!: OverlayPanel;
   activityLogsTableHeader:InputSignal<ColumnsSchema[]> = input.required<ColumnsSchema[]>();
-  activityLogsTableBody:InputSignal<any[]> = input.required<any[]>();
+  activityLogsTableBody:InputSignal<ActivityLog[]> = input.required<ActivityLog[]>();
   showPopup:InputSignal<boolean> = input.required<boolean>();
+  isActionPopup:InputSignal<boolean> = input<boolean>(false);
   @Output() popupClosed:EventEmitter<boolean> = new EventEmitter(false);
   closeActivityLogsPopup()
   {
