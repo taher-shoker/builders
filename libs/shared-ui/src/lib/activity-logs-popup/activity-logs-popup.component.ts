@@ -1,6 +1,7 @@
-import { Component, effect, EventEmitter, input, InputSignal, Output, ViewChild } from '@angular/core';
+import { Component, effect, EventEmitter, inject, input, InputSignal, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { Router } from '@angular/router';
 export interface ColumnsSchema {
   key: string;
   type: 'text' | 'date' | 'actions' | 'custom';
@@ -28,6 +29,7 @@ export class ActivityLogsPopupComponent {
   isActionPopup2:InputSignal<boolean> = input<boolean>(false);
   isProjectActionPopup:InputSignal<boolean> = input<boolean>(false);
   @Output() popupClosed:EventEmitter<boolean> = new EventEmitter(false);
+  router = inject(Router)
   closeActivityLogsPopup()
   {
     this.activityLogsPanel.hide();
@@ -45,5 +47,6 @@ export class ActivityLogsPopupComponent {
   }
   gotoActivityLogs(){
     console.log('gotoActivityLogs');
+    this.router.navigateByUrl("/activity-logs");
   }
 }

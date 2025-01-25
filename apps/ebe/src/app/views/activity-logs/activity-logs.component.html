@@ -1,6 +1,6 @@
 <section class="activity-log-section">
   <div class="activity-log-section-header">
-    <div class = "content">
+    <div class="content">
       <stc-apps-page-header mainTitle="Activity Log Center" secondaryTitle="" />
       <div class="activity-log-section-taps">
         <stc-apps-tabview
@@ -14,41 +14,79 @@
         />
       </div>
     </div>
-    <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
   </div>
   <div class="activity-log-section-tap-details">
     <div class="projects-container">
       <div class="filter-inputs">
         <div class="form-group">
           <div class="search-input">
-            <i class = "pi pi-search"></i>
-            <input 
-              type="text" 
-              placeholder = "Search by User Email"
+            <i class="pi pi-search"></i>
+            <input
+              type="text"
+              placeholder="Search by User Email"
               [(ngModel)]="searchKeyword"
-            >
+            />
           </div>
         </div>
         <div class="form-group">
-          <p-dropdown 
-            [options]="actionTypes" 
-            [(ngModel)]="selectedType" 
-            optionLabel="name" 
+          <p-dropdown
+            [options]="actionTypes"
+            [(ngModel)]="selectedType"
+            optionLabel="name"
             placeholder="Action Type"
-            styleClass = "action-types-dropdown" 
-            dropdownIcon = "pi pi-sort-down-fill"
+            styleClass="action-types-dropdown"
+            dropdownIcon="pi pi-sort-down-fill"
             (ngModelChange)="selectActionType($event)"
           />
         </div>
         <div class="form-group">
-          <p-calendar 
-            [(ngModel)]="activityLogDate" 
-            [iconDisplay]="'input'" 
-            [showIcon]="true" 
+          <p-calendar
+            [(ngModel)]="activityLogDate"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
             inputId="icondisplay"
-            styleClass = "activity-log-date"
+            styleClass="activity-log-date"
+            placeholder="Date"
           />
         </div>
+      </div>
+      <div class="activity-logs-table">
+        <p-table
+          [value]="activityLogsData"
+          [paginator]="true"
+          [rows]="5"
+          [tableStyle]="{ 'min-width': '50rem' }"
+          (onPage)="changePage($event)"
+          styleClass = "logs-table"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+          [showCurrentPageReport]="true"
+        >
+          <ng-template pTemplate="header">
+            <tr>
+              @for(head of activityLogsHeader;track head)
+              {
+                <th>{{head}}</th>
+              }
+            </tr>
+          </ng-template>
+          <ng-template pTemplate="body" let-log>
+            <tr>
+              <td>{{ log.username }}</td>
+              <td>{{ log.activityType }}</td>
+              <td>{{ log.activityDetails }}</td>
+              <td>{{ log.timeStamp }}</td>
+              @if(activityLogsHeader.includes("new value"))
+              {
+                <td>{{ log.newValue ? log.newValue : '-' }}</td>
+              }
+              @if(activityLogsHeader.includes("old value"))
+              {
+                <td>{{ log.oldValue ? log.oldValue : '-' }}</td>
+              }
+            </tr>
+          </ng-template>
+        </p-table>
       </div>
     </div>
   </div>
