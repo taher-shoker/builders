@@ -1,7 +1,11 @@
-@import '../../../styles/fonts.scss';
+@import '../../../../../apps/ebe/src/styles/fonts.scss';
 .activity-logs-table
 {
   width:750px;
+  &.projectActionPopup
+  {
+    width:1000px;
+  }
 }
 .activity-logs-table-header
 {
@@ -49,6 +53,25 @@
   right: 295px !important;
   left: auto !important;
   top: 22px !important;
+  &::before
+  {
+    content: "" !important;
+    top: 6.5% !important;
+    left: 101.2% !important;
+    transform: rotate(270deg) !important;
+    border-top: 20px solid #fff !important;
+    border-bottom: 0 !important;
+  }
+  &::after
+  {
+    display: none !important;
+  }
+}
+::ng-deep .action-Popup2
+{
+  right: 260px !important;
+  left: auto !important;
+  top: 46px !important;
   &::before
   {
     content: "" !important;

@@ -1,29 +1,46 @@
 <section class="project-container">
-  <div class = "project-container-head">
-    <p class="project-container-header"
-    (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
-    (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
+  <div class="project-container-head">
+    <p
+      class="project-container-header"
+      (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''"
+      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
     >
       {{ project().sector }}
     </p>
-    @if(isAllowed())
-    {
-      <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
-      <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
-        <ng-template pTemplate="item" let-item>
-          <div class="menu-container">
-            <div 
-              class="menu-item"
-              [class.edit-btn]="item.label === 'Edit'"
-              [class.delete-btn]="item.label === 'Delete'"
-              (click)="item.label === 'Edit' ? gotoEditPage() : showDeleteDialog()"
-            >
-              <i [class]="item.icon"></i>
-              <p>{{item.label}}</p>
-            </div>
-          </div>
-        </ng-template>
-      </p-menu>
+    @if(isAllowed()) {
+    <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
+    <p-overlayPanel
+      #actionsPanel
+      dismissable="false"
+      [appendTo]="'body'"
+      styleClass="project-actions-logs"
+    >
+      <div class="actions-logs-table">
+        @for (item of items; track $index) {
+        <div
+          class="action"
+          [class.delete-btn]="item.label === 'Delete'"
+          (click)="
+            item.label === 'Edit'
+              ? gotoEditPage()
+              : item.label === 'Delete'
+              ? showDeleteDialog()
+              : showActivityLogs()
+          "
+        >
+          <i [class]="item.icon"></i>
+          <p>{{ item.label }}</p>
+        </div>
+        }
+      </div>
+    </p-overlayPanel>
+    <stc-apps-activity-logs-popup
+      [activityLogsTableHeader]="activityLogsTableHeader()"
+      [activityLogsTableBody]="activityLogsTableBody()"
+      [showPopup]="showActivityLogsPopup"
+      (popupClosed)="popupClosed()"
+      [isProjectActionPopup]="true"
+    />
     }
   </div>
   <div class="project-container-chart mt-5">
@@ -40,35 +57,38 @@
     />
   </div>
   <!-- {{maxTextLength}} -->
-  <p class = "planned-date">planned date: <span>{{ project() && project().plannedDate ? formatDate(project().plannedDate) : ''}}</span></p>
+  <p class="planned-date">
+    planned date:
+    <span>{{
+      project() && project().plannedDate
+        ? formatDate(project().plannedDate)
+        : ''
+    }}</span>
+  </p>
   <p class="project-container-description">
-    {{ project().details | truncateWord:6}}
-    @if(maxTextLength > 20)
-    {
-      <a (click)="displayDrilldown()" class = "read-more">read more</a>
+    {{ project().details | truncateWord : 6 }}
+    @if(maxTextLength > 20) {
+    <a (click)="displayDrilldown()" class="read-more">read more</a>
     }
   </p>
   <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
-  <a 
-    class="project-container-details-link" 
-    [routerLink]="['/psr/' , project().sector]"
+  <a
+    class="project-container-details-link"
+    [routerLink]="['/psr/', project().sector]"
     (click)="gotoProjectDetailsPage()"
   >
     <span>more details</span>
     <img src="assets/images/arrow-right.svg" alt="" />
   </a>
 </section>
-@if(project().details)
-{
-  <p-overlayPanel #overlayPanel dismissable="true">
-    <section class="popover-section">{{project().details}}</section>
-  </p-overlayPanel>
-}
-@if(project().sector.length > 20)
-{
-  <p-overlayPanel #overlayPanel2 dismissable="true">
-    <section class="popover-section">{{project().sector | uppercase}}</section>
-  </p-overlayPanel>
+@if(project().details) {
+<p-overlayPanel #overlayPanel dismissable="true">
+  <section class="popover-section">{{ project().details }}</section>
+</p-overlayPanel>
+} @if(project().sector.length > 20) {
+<p-overlayPanel #overlayPanel2 dismissable="true">
+  <section class="popover-section">{{ project().sector | uppercase }}</section>
+</p-overlayPanel>
 }
 <stc-apps-confirm-dialog [key]="'delete-program'">
   <div class="delete-program-dialog">
@@ -77,9 +97,9 @@
       <img src="assets/images/_action-icon.svg" (click)="close()" alt="" />
     </div>
     <div class="body">
-      <img src="assets/images/exclamation-triangle.svg" alt="">
+      <img src="assets/images/exclamation-triangle.svg" alt="" />
       <p class="delete-record-content">
-        Are you sure you want to delete {{project().sector}} program?
+        Are you sure you want to delete {{ project().sector }} program?
       </p>
     </div>
     <!-- <p class="delete-record-warning">

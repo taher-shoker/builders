@@ -3,6 +3,7 @@
         <stc-apps-edit-mode-view 
           (import)="showDialog()"
           (export)="downloadTemplate()"
+          [showActivityLogsButton]="false"
         />
     } 
     <div class = "psr-head">
@@ -11,11 +12,26 @@
         </p>
         @if(isAllowed)
         {
-            <button routerLink="add-program">
-                <!-- <i class = "pi pi-plus"></i> -->
-                 <img src="assets/images/plus-icon.svg" alt="">
-                add new program
-            </button>
+            <div style = "display:flex">
+                <button routerLink="add-program" style = "margin-right:15px;">
+                    <!-- <i class = "pi pi-plus"></i> -->
+                     <img src="assets/images/plus-icon.svg" alt="">
+                    add new program
+                </button>
+                <stc-apps-menu-popup 
+                    [menuItems]="menuItems"
+                    (onClick)="actionButton($event)"
+                    [hidePopup]="showActivityLogsPopup"
+                />
+                <stc-apps-activity-logs-popup 
+                    [activityLogsTableHeader]="activityLogsTableHeader"
+                    [activityLogsTableBody]="activityLogsTableBody"
+                    [showPopup]="showActivityLogsPopup"
+                    (popupClosed)="popupClosed()"
+                    [isActionPopup]="false"
+                    [isActionPopup2]="true"
+                />
+            </div>
         }
     </div>
     @if(!isEmpty())
@@ -27,6 +43,8 @@
                         [project]="project"
                         (ProgramId)="getProgramId($event)"
                         [isAllowed]="isAllowed"
+                        [activityLogsTableHeader]="projectActivityLogsTableHeader"
+                        [activityLogsTableBody]="projectActivityLogsTableBody"
                     />
                 </div>
             }

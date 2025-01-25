@@ -11,13 +11,12 @@ import { CapexModel, CapexOpexModel, TenderingModel } from '../../models/financi
 import { ToastrService } from 'ngx-toastr';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
-import {ActivityLogsPopupComponent} from "../../components/activity-logs-popup/activity-logs-popup.component";
 import { DatePipe } from '@angular/common';
 import { ActivityLog } from '../../models/activity-logs';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule , ActivityLogsPopupComponent],
+  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule],
   templateUrl: './financial-reporting.component.html',
   styleUrl: './financial-reporting.component.scss',
 })

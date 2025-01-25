@@ -1,6 +1,18 @@
 import { Component, EventEmitter, input, InputSignal, OnInit, Output, ViewChild } from '@angular/core';
 import { ProgressInfo } from '../progress-bar/progress-bar.component';
 import { OverlayPanel } from 'primeng/overlaypanel';
+export interface ColumnsSchema {
+  key: string;
+  type: 'text' | 'date' | 'actions' | 'custom';
+  label: string;
+}
+export interface ActivityLog
+{
+  username:string,
+  type:string,
+  details:string,
+  time:string
+}
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -14,12 +26,36 @@ export interface KpiProjectsDetailsModel
   styleUrl: './project-card.component.scss',
 })
 export class ProjectCardComponent implements OnInit{
+  @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
+  activityLogsTableHeader = input.required<ColumnsSchema[]>();
+  activityLogsTableBody = input.required<ActivityLog[]>();
   projectData:InputSignal<KpiProjectsDetailsModel> = input.required<KpiProjectsDetailsModel>();
   data!:ProgressInfo;
   @Output() edit:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
   @Output() delete:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   titleArr:string[] = [];
+  showActivityLogsPopup = false;
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
+  }
+  showActionsPopup()
+  {
+    this.actionsPanel.toggle(event);
+    this.showActivityLogsPopup = false;
+  }
+  closeAccordion()
+  {
+    this.actionsPanel.hide();
+    this.showActivityLogsPopup = false
+  }
   ngOnInit()
   {
     this.data = {

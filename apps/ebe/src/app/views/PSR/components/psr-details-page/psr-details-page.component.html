@@ -24,11 +24,26 @@
               </p>
               @if(isAllowed)
               {
-                <button (click)="gotoAddForm()"  class = "add-program-btn">
+                <div style = "display:flex">
+                  <button (click)="gotoAddForm()"  class = "add-program-btn" style = "margin-right:15px;">
                     <!-- <i class = "pi pi-plus"></i> -->
                      <img src="assets/images/plus-icon.svg" alt="">
                     add new project
-                </button>
+                  </button>
+                  <stc-apps-menu-popup 
+                      [menuItems]="menuItems"
+                      (onClick)="actionButton($event)"
+                      [hidePopup]="showActivityLogsPopup"
+                  />
+                  <stc-apps-activity-logs-popup 
+                      [activityLogsTableHeader]="activityLogsTableHeader"
+                      [activityLogsTableBody]="activityLogsTableBody"
+                      [showPopup]="showActivityLogsPopup"
+                      (popupClosed)="popupClosed()"
+                      [isActionPopup]="false"
+                      [isActionPopup2]="true"
+                  />
+                </div>
               }
             </div>
             <div class="project-cards-container">
@@ -43,6 +58,8 @@
                     [isAllowed]="isAllowed"
                     (addChartData)="addChartData($event)"
                     (deleteTableRecord)="deleteTableRecord($event)"
+                    [activityLogsTableHeader]="projectActivityLogsTableHeader"
+                    [activityLogsTableBody]="projectActivityLogsTableBody"
                   />
                 </div>
               }

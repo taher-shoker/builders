@@ -9,40 +9,77 @@
     align-items: center;
     justify-content: center;
 }
-::ng-deep .activity-logs
+// ::ng-deep .activity-logs
+// {
+//   padding: 0 !important;
+//   width: 240px !important;
+//   background: #fff !important;
+//   opacity: 1 !important;
+//   // .p-menuitem-link[aria-hidden="true"] {
+//   //   aria-hidden: false !important;
+//   // }
+//   .p-menu-list
+//   {
+//     padding-left: 0 !important;
+//     padding-bottom: 0 !important;
+//     margin: 0 !important;
+//   }
+//   .activity-logs-menu-container
+//   {
+//     .menu-item
+//     {
+//       display: flex;
+//       align-items: center;
+//       gap:10px;
+//       padding-left: 15px;
+//       height:55px;
+//       cursor: pointer;
+//       i
+//       {
+//         font-size: 1.1rem;
+//       }
+//       p
+//       {
+//         text-transform: capitalize;
+//         margin-bottom: 0;
+//         font-size: 1rem;
+//         @extend .stcFont;
+//       }
+//     }
+//   }
+// }
+::ng-deep .actions-logs
 {
-  padding: 0 !important;
-  width: 240px !important;
-  background: #fff !important;
-  opacity: 1 !important;
-  // .p-menuitem-link[aria-hidden="true"] {
-  //   aria-hidden: false !important;
-  // }
-  .p-menu-list
+  .p-overlaypanel-content
   {
-    padding-left: 0 !important;
-    padding-bottom: 0 !important;
-    margin: 0 !important;
+    width: 240px;
+    padding: 0px;
+    border-radius: 5px;
+    overflow: hidden;
   }
-  .activity-logs-menu-container
+  .actions-logs-table
   {
-    .menu-item
+    .action
     {
       display: flex;
       align-items: center;
+      height:50px;
       gap:10px;
-      padding-left: 15px;
-      height:55px;
+      transition: .3s;
+      padding: 10px;
       cursor: pointer;
       i
       {
-        font-size: 1.1rem;
+        font-size: 1rem;
+      }
+      &:hover
+      {
+        background-color:#F5F6FA;
       }
       p
       {
+        margin: 0;
         text-transform: capitalize;
-        margin-bottom: 0;
-        font-size: 1rem;
         @extend .stcFont;
       }
     }

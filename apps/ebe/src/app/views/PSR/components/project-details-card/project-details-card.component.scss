@@ -345,3 +345,45 @@
   text-overflow: ellipsis;
   display: block;
 }
+::ng-deep .project-card-actions-logs
+{
+  // margin: 0 !important;
+  // margin-left:-15px !important;
+  // margin-top:15px !important;
+  // left: 668.8px !important;
+  // left: 43.7% !important;
+  // top:350px !important;
+  .p-overlaypanel-content
+  {
+    width: 230px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 5px;
+    .action
+    {
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      height:40px;
+      cursor: pointer;
+      gap:10px;
+      transition: .4s;
+      &:hover
+      {
+        background-color: #F5F6FA;
+      }
+      p
+      {
+        margin: 0;
+      }
+      &.delete-btn
+      {
+        p , i
+        {
+          color:#FF1A1A;
+        }
+      }
+    }
+  }
+}

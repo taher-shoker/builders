@@ -88,6 +88,7 @@ import { NewLinePipe } from './newLine.pipe';
 import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
 import { SharedService } from './shared.service';
 import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
+import { ActivityLogsPopupComponent } from './activity-logs-popup/activity-logs-popup.component';
 const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
 // const modules = [BreadCrumbModule, MatIconModule];
 
@@ -146,7 +147,8 @@ const components = [
   DoubleLineChartComponent,
   NewLinePipe,
   MultiCirclesChartComponent,
-  ClusteredColumnChartComponent
+  ClusteredColumnChartComponent,
+  ActivityLogsPopupComponent
 ];
 
 @NgModule({

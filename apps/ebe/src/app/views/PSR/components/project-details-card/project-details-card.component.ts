@@ -12,6 +12,7 @@ import { UserGroup } from '../../../../models/scorecard.model';
 import { MenuModule } from 'primeng/menu';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivityLog } from '../../../../models/activity-logs';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
@@ -31,23 +32,37 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   @Output() closePopupEmit:EventEmitter<number> = new EventEmitter();
   router = inject(Router)
   route = inject(ActivatedRoute)
-  isAllowed = input<boolean>()
+  isAllowed = input<boolean>();
+  activityLogsTableHeader = input.required<ColumnsSchema[]>();
+  activityLogsTableBody = input.required<ActivityLog[]>();
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
+  @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   data!:ProgressInfo;
   items = [
     {
-      items: [
-          {
-                label: 'Edit',
-                icon: 'pi pi-pen-to-square'
-            },
-            {
-                label: 'Delete',
-                icon: 'pi pi-trash'
-            }
-        ]
-    }
-  ];
+          label: 'Edit',
+          icon: 'pi pi-pen-to-square'
+      },
+      {
+          label: 'Delete',
+          icon: 'pi pi-trash'
+      },
+      {
+          label: 'Activity Logs',
+          icon: 'pi pi-clock'
+      }
+  ]
+  showActivityLogsPopup = false;
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
+  }
   activatedRoute = inject(ActivatedRoute);
   gotoEditPage()
   {

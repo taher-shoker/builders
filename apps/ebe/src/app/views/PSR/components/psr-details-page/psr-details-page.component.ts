@@ -1,9 +1,12 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild} from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.service';
-import { AddProjectForm, PSRProjectDetailsModel } from '../../../../models/psr.model';
+import {
+  AddProjectForm,
+  PSRProjectDetailsModel,
+} from '../../../../models/psr.model';
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
@@ -11,28 +14,63 @@ import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-v
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
+import { MenuPopupComponent } from 'apps/ebe/src/app/components/menu-popup/menu-popup.component';
+import { ActivityLog, ColumnsSchema } from '../../../../models/activity-logs';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , SharedUiModule , ProjectDetailsCardComponent , EditModeViewComponent],
+  imports: [
+    CommonModule,
+    PageHeaderComponent,
+    SharedUiModule,
+    ProjectDetailsCardComponent,
+    EditModeViewComponent,
+    MenuPopupComponent,
+  ],
   templateUrl: './psr-details-page.component.html',
   styleUrl: './psr-details-page.component.scss',
 })
-export class PsrDetailsPageComponent implements OnInit , OnDestroy {
+export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   @ViewChild(ProjectDetailsCardComponent) child?: ProjectDetailsCardComponent;
-  psrServices = inject(PSRService)
-  router = inject(ActivatedRoute)
-  route = inject(Router)
-  PSRDetailsData!:PSRProjectDetailsModel[];
-  endSubs$:Subject<PSRProjectDetailsModel[]> = new Subject();
+  psrServices = inject(PSRService);
+  router = inject(ActivatedRoute);
+  route = inject(Router);
+  PSRDetailsData!: PSRProjectDetailsModel[];
+  endSubs$: Subject<PSRProjectDetailsModel[]> = new Subject();
+  activityLogsTableHeader!: ColumnsSchema[];
+  activityLogsTableBody!: ActivityLog[];
+  projectActivityLogsTableHeader!: ColumnsSchema[];
+  projectActivityLogsTableBody!: ActivityLog[];
   toastr = inject(ToastrService);
   currentMode!: 'editMode' | 'viewMode';
-  scorecardService = inject(ScorecardService)
-  groupName = "";
-  username = "";
-  userRoles!:UserGroup;
+  scorecardService = inject(ScorecardService);
+  groupName = '';
+  username = '';
+  userRoles!: UserGroup;
   isAllowed = false;
+  datePipe = inject(DatePipe);
   isAdmin = false;
+  menuItems = [
+    {
+      label: 'activity log',
+      icon: 'pi pi-clock',
+    },
+    {
+      label: 'show deleted projects',
+      icon: 'pi pi-eye',
+    },
+  ];
+  showActivityLogsPopup = false;
+  popupClosed() {
+    this.showActivityLogsPopup = false;
+  }
+  actionButton(label: string) {
+    if (label === 'activity log') {
+      this.showActivityLogsPopup = !this.showActivityLogsPopup;
+    } else {
+      this.route.navigateByUrl("/deleted-projects/projects");
+    }
+  }
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
     this.username = this.scorecardService.getUsername();
@@ -42,84 +80,197 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
       },
     });
     this.userRoles = this.scorecardService.userRoles;
-    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS" || role.roleName === "BE_PMO");
-    this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
+    this.isAllowed = this.userRoles.roles.some(
+      (role) =>
+        role.roleName === 'BE_EDITORS' ||
+        role.roleName === 'ADMINS' ||
+        role.roleName === 'BE_PMO'
+    );
+    this.isAdmin = this.userRoles.roles.some(
+      (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+    );
     console.log(this.userRoles);
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({
-      next : (param) => {
+      next: (param) => {
         this.groupName = param['id'];
-        if(this.groupName)
-        {
+        if (this.groupName) {
           this.getProjectDetails(this.groupName);
         }
-      }
-    })
+      },
+    });
+    this.activityLogsTableBody = [
+      {
+        username: 'Hamed Rahed',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+      },
+      {
+        username: 'Hamed Rahed',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+      },
+      {
+        username: 'Hamed Rahed',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+      },
+      {
+        username: 'Hamed Rahed',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+      },
+    ];
+    this.activityLogsTableHeader = [
+      {
+        key: 'username',
+        type: 'text',
+        label: 'User Name',
+      },
+      {
+        key: 'type',
+        type: 'text',
+        label: 'Activity Type',
+      },
+      {
+        key: 'details',
+        type: 'text',
+        label: 'Activity Details',
+      },
+      {
+        key: 'time',
+        type: 'text',
+        label: 'Time Stamp',
+      },
+    ];
+    this.projectActivityLogsTableBody = [
+      {
+        username: 'Hamed Rahed1',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue: 'old value1',
+        newValue: 'new value1',
+      },
+      {
+        username: 'Hamed Rahed2',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue: 'old value2',
+        newValue: 'new value2',
+      },
+      {
+        username: 'Hamed Rahed3',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue: 'old value3',
+        newValue: 'new value3',
+      },
+      {
+        username: 'Hamed Rahed4',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue: 'old value4',
+        newValue: 'new value4',
+      },
+    ];
+    this.projectActivityLogsTableHeader = [
+      {
+        key: 'username',
+        type: 'text',
+        label: 'User Name',
+      },
+      {
+        key: 'type',
+        type: 'text',
+        label: 'Activity Type',
+      },
+      {
+        key: 'details',
+        type: 'text',
+        label: 'Activity Details',
+      },
+      {
+        key: 'time',
+        type: 'text',
+        label: 'Time Stamp',
+      },
+      {
+        key: 'oldValue',
+        type: 'text',
+        label: 'Old Value',
+      },
+      {
+        key: 'newValue',
+        type: 'text',
+        label: 'New Value',
+      },
+    ];
   }
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
-  isEmpty!:boolean;
-  selectedGD:any;
-  addChartData(e:boolean)
-  {
-    if(e)
-    {
+  isEmpty!: boolean;
+  selectedGD: any;
+  addChartData(e: boolean) {
+    if (e) {
       this.getProjectDetails(this.groupName);
     }
   }
-  deleteTableRecord(e:boolean)
-  {
-    if(e)
-    {
+  deleteTableRecord(e: boolean) {
+    if (e) {
       this.getProjectDetails(this.groupName);
     }
   }
-  private getProjectDetails(group:string)
-  {
-    this.psrServices.getExecuteProjectDetailsData(group).pipe(takeUntil(this.endSubs$)).subscribe({
-      next : (res:PSRProjectDetailsModel[]) => {
-        res.forEach(res2 => {
-          res2.chartDetails.forEach(res3 => {
-            res3.deleteAction = 'delete';
-          })
-        })
-        // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
-        this.PSRDetailsData = res
-        this.selectedGD = this.PSRDetailsData.filter(d => d.gd !== null)
-        // if(!localStorage.getItem("gd"))
-        // {
-        //   localStorage.setItem("gd" , this.selectedGD[0].gd)
-        // }
-        if(this.PSRDetailsData.length === 0)
-        {
-          this.isEmpty = true;
-        } else {
-          this.isEmpty = false;
-        }
-      }
-    })
+  private getProjectDetails(group: string) {
+    this.psrServices
+      .getExecuteProjectDetailsData(group)
+      .pipe(takeUntil(this.endSubs$))
+      .subscribe({
+        next: (res: PSRProjectDetailsModel[]) => {
+          res.forEach((res2) => {
+            res2.chartDetails.forEach((res3) => {
+              res3.deleteAction = 'delete';
+            });
+          });
+          // this.PSRDetailsData = res.filter(res2 => res2.gd !== null);
+          this.PSRDetailsData = res;
+          this.selectedGD = this.PSRDetailsData.filter((d) => d.gd !== null);
+          // if(!localStorage.getItem("gd"))
+          // {
+          //   localStorage.setItem("gd" , this.selectedGD[0].gd)
+          // }
+          if (this.PSRDetailsData.length === 0) {
+            this.isEmpty = true;
+          } else {
+            this.isEmpty = false;
+          }
+        },
+      });
   }
-  deleteProject(id:number)
-  {
+  deleteProject(id: number) {
     this.psrServices.deleteProject(id).subscribe({
-      next : () => {
-        this.toastr.success("The Project is Deleted Successfully");
+      next: () => {
+        this.toastr.success('The Project is Deleted Successfully');
         this.getProjectDetails(this.groupName);
-      }
-    })
+      },
+    });
   }
-  gotoAddForm()
-  {
-    const program = encodeURIComponent(this.groupName)
-    this.route.navigateByUrl(`/psr/add-project/${program}`)
+  gotoAddForm() {
+    const program = encodeURIComponent(this.groupName);
+    this.route.navigateByUrl(`/psr/add-project/${program}`);
   }
-  values:AddProjectForm[] = [];
-  addRecordInTable(values:AddProjectForm)
-  {
+  values: AddProjectForm[] = [];
+  addRecordInTable(values: AddProjectForm) {
     this.values.push(values);
-    if(this.values.length !== 0)
-    {
+    if (this.values.length !== 0) {
       // const clickedProj = this.PSRDetailsData.filter(proj => {
       //   proj.chartDetails.filter(proj2 => proj2.id === values.id)[0]
       // })[0];
@@ -129,28 +280,28 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
       // clickedProj.chartDetails.push(values);
     }
   }
-  removeElementsFromArray(array1:AddProjectForm[], array2:AddProjectForm[]) {
-    return array2.filter(item => !array1.includes(item));
+  removeElementsFromArray(array1: AddProjectForm[], array2: AddProjectForm[]) {
+    return array2.filter((item) => !array1.includes(item));
   }
-  closePopup(e:number)
-  {
-    const clickedProj = this.PSRDetailsData.filter(proj => proj.id === e)[0];
-    const result = this.removeElementsFromArray(this.values, clickedProj.chartDetails);
+  closePopup(e: number) {
+    const clickedProj = this.PSRDetailsData.filter((proj) => proj.id === e)[0];
+    const result = this.removeElementsFromArray(
+      this.values,
+      clickedProj.chartDetails
+    );
     clickedProj.chartDetails = result;
   }
   visible = false;
-  showDialog()
-  {
+  showDialog() {
     this.visible = true;
   }
-  downloadTemplate()
-  {
+  downloadTemplate() {
     // const groupName = this.PSRDetailsData[0].group;
     this.psrServices.downloadProjectDetailsTemplate(this.groupName).subscribe({
-      next : (res) => {
+      next: (res) => {
         this.downloadFile(res, `${this.groupName}.csv`);
-      }
-    })
+      },
+    });
   }
   downloadFile(data: string, filename: string) {
     const blob = new Blob([data], { type: 'text/csv' });
@@ -161,21 +312,21 @@ export class PsrDetailsPageComponent implements OnInit , OnDestroy {
     a.click();
     window.URL.revokeObjectURL(url);
   }
-  importData(file:FileModel | null)
-  {
-    this.psrServices.uploadFile("executiveViewData" , file , this.groupName).subscribe({
-      next : () => {
-        this.getProjectDetails(this.groupName);
-        this.toastr.success("The File is Saved Successfully");
-        this.visible = false;
-      },
-      error : () => {
-        this.visible = false;
-      }
-    })
+  importData(file: FileModel | null) {
+    this.psrServices
+      .uploadFile('executiveViewData', file, this.groupName)
+      .subscribe({
+        next: () => {
+          this.getProjectDetails(this.groupName);
+          this.toastr.success('The File is Saved Successfully');
+          this.visible = false;
+        },
+        error: () => {
+          this.visible = false;
+        },
+      });
   }
-  onHide()
-  {
+  onHide() {
     this.visible = false;
   }
 }

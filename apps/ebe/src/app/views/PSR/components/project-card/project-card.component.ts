@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, input, InputSignal, OnChanges, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, input, InputSignal, OnChanges, OnInit, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PSRChartDataModel, PSRDataModel } from '../../../../models/psr.model';
 import { SharedUiModule } from "@stc-apps/shared-ui";
@@ -6,6 +6,8 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmationService } from 'primeng/api';
+import { DatePipe } from '@angular/common';
+import { ActivityLog , ColumnsSchema } from '../../../../models/activity-logs';
 @Component({
   selector: 'stc-apps-psr-project-card',
   standalone: true,
@@ -14,33 +16,51 @@ import { ConfirmationService } from 'primeng/api';
   styleUrl: './project-card.component.scss',
   providers : [ConfirmationService]
 })
-export class PSRProjectCardComponent implements OnChanges {
+export class PSRProjectCardComponent implements OnChanges , OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
-  isAllowed = input<boolean>()
+  isAllowed = input<boolean>();
+  datePipe = inject(DatePipe);
+  activityLogsTableHeader = input.required<ColumnsSchema[]>();
+  activityLogsTableBody = input.required<ActivityLog[]>();
   @Output() ProgramId:EventEmitter<number> = new EventEmitter();
   months:string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   maxTextLength = 0;
   items = [
     {
-        items: [
-            {
-                label: 'Edit',
-                icon: 'pi pi-pen-to-square'
-            },
-            {
-                label: 'Delete',
-                icon: 'pi pi-trash'
-            }
-        ]
+        label: 'Edit',
+        icon: 'pi pi-pen-to-square'
+    },
+    {
+        label: 'Delete',
+        icon: 'pi pi-trash'
+    },
+    {
+        label: 'Activity Logs',
+        icon: 'pi pi-clock'
     }
-];
+]
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
+  @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
   project:InputSignal<PSRDataModel> = input.required<PSRDataModel>();
   colors:string[] = ['#4F008C' , '#B999D1'];
   chartData!:PSRChartDataModel;
   private confirmationService = inject(ConfirmationService);
+  ngOnInit(): void {
+    
+  }
+  showActivityLogsPopup = false;
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
+  }
   ngOnChanges(): void {    
     this.chartData = {
       actual : this.project().actual ? this.project().actual : 0,
@@ -50,6 +70,10 @@ export class PSRProjectCardComponent implements OnChanges {
     const filteredArray = textArr.filter(item => item !== '');
     this.maxTextLength = filteredArray.length;
     // console.log(filteredArray);
+  }
+  openActionsMenu()
+  {
+    this.actionsPanel.toggle(event);
   }
   formatDate(date:string | null)
   {
@@ -78,6 +102,7 @@ export class PSRProjectCardComponent implements OnChanges {
   }
   showDeleteDialog()
   {
+    this.actionsPanel.hide()
     this.confirmationService.confirm({
       key: 'delete-program'
     });

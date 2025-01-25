@@ -50,6 +50,26 @@ export const appRoutes: Route[] = [
       ).then((m) => m.AddProjectFormComponent),
     canActivate: [AuthGuard],
   },
+  {
+    path: 'deleted-projects',
+    loadComponent: () =>
+      import(
+        './views/deleted-project-page/deleted-projects-page.component'
+      ).then((m) => m.DeletedProjectsPageComponent),
+      canActivate: [AuthGuard],
+      children:[
+        {
+          path:"programs",
+          loadComponent:() => import('./views/deleted-project-page/deleted-programs/deleted-programs.component')
+          .then((m) => m.DeletedProgramsComponent)
+        },
+        {
+          path:"projects",
+          loadComponent:() => import('./views/deleted-project-page/deleted-projects/deleted-projects.component')
+          .then((m) => m.DeletedProjectsComponent)
+        },
+      ]
+    },
   // {
   //   path : "raqami",
   //   loadComponent: () =>

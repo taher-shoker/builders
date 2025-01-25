@@ -2,11 +2,11 @@
   <p-overlayPanel 
   #activityLogsPanel 
   dismissable="false"
-  [appendTo]="isActionPopup() ? overlay : 'body'"
+  [appendTo]="(isActionPopup() || isActionPopup2()) ? overlay : 'body'"
   styleClass="activity-logs-panel"
-  [styleClass]="isActionPopup() ? 'action-Popup' : ''"
+  [styleClass]="isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : ''"
 >
-    <div class="activity-logs-table">
+    <div class="activity-logs-table" [class.projectActionPopup]="isProjectActionPopup()">
       <div class="activity-logs-table-header">
         <p>activity logs</p>
         <i

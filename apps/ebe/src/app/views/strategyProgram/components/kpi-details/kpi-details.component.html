@@ -96,7 +96,11 @@
           <div class="row">
             @for (project of kpi.projects; track project.project) {
             <div class="col-lg-4 col-md-6 col-sm-12">
-              <stc-apps-project-card [projectData]="project" />
+              <stc-apps-project-card 
+                [projectData]="project" 
+                [activityLogsTableHeader]="projectActivityLogsTableHeader"
+                [activityLogsTableBody]="projectActivityLogsTableBody"
+              />
               <!-- (delete)="deleteProject($event , kpi.projects , kpi)" -->
               <!-- (edit)="editProject($event , kpi , project)" -->
             </div>

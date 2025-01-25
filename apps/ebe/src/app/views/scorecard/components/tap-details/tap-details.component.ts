@@ -31,7 +31,6 @@ import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.componen
 import { Subject } from 'rxjs';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
-import {ActivityLogsPopupComponent} from "../../../../components/activity-logs-popup/activity-logs-popup.component";
 import { DatePipe } from '@angular/common';
 import { ActivityLog } from '../../../../models/activity-logs';
 interface filterOption
@@ -49,9 +48,7 @@ interface filterOption
     MatFormFieldModule,
     MatSelectModule,
     EditModeViewComponent,
-    OverlayPanelModule,
-    ActivityLogsPopupComponent
-    
+    OverlayPanelModule
 ],
   templateUrl: './tap-details.component.html',
   styleUrl: './tap-details.component.scss',

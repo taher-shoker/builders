@@ -12,7 +12,6 @@ import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
-import {ActivityLogsPopupComponent} from "../../components/activity-logs-popup/activity-logs-popup.component";
 import { DatePipe } from '@angular/common';
 import { ActivityLog } from '../../models/activity-logs';
 @Component({
@@ -24,7 +23,6 @@ import { ActivityLog } from '../../models/activity-logs';
     SharedUiModule,
     StrategyKpiCardComponent,
     EditModeViewComponent,
-    ActivityLogsPopupComponent,
     OverlayPanelModule
   ],
   templateUrl: './strategyProgram.component.html',

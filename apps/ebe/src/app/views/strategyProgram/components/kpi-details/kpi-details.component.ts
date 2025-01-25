@@ -15,10 +15,8 @@ import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
-import {ActivityLogsPopupComponent} from "../../../../components/activity-logs-popup/activity-logs-popup.component";
 import { DatePipe } from '@angular/common';
 import { ActivityLog } from '../../../../models/activity-logs';
-import { TieredMenuModule } from 'primeng/tieredmenu';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -34,11 +32,9 @@ export interface KpiProjectsDetailsModel
     AccordionModule,
     SharedUiModule,
     ButtonModule,
-    ActivityLogsPopupComponent,
     RouterModule,
     EditModeViewComponent,
-    OverlayPanelModule,
-    TieredMenuModule
+    OverlayPanelModule
   ],
   providers : [ConfirmationService],
   templateUrl: './kpi-details.component.html',
@@ -53,6 +49,8 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
   activityLogsTableHeader!:ColumnsSchema[];
   activityLogsTableBody!:ActivityLog[];
+  projectActivityLogsTableHeader!:ColumnsSchema[];
+  projectActivityLogsTableBody!:ActivityLog[];
   endSubs$:Subject<any> = new Subject();
   private confirmationService = inject(ConfirmationService);
   private scorecardService = inject(ScorecardService);
@@ -116,6 +114,72 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
         time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
       },
     ]
+    this.projectActivityLogsTableBody = [
+      {
+        username:"Hamed Rahed1",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
+        oldValue : "old value",
+        newValue : "new value"
+      },
+      {
+        username:"Hamed Rahed2",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
+        oldValue : "old value",
+        newValue : "new value"
+      },
+      {
+        username:"Hamed Rahed3",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
+        oldValue : "old value",
+        newValue : "new value"
+      },
+      {
+        username:"Hamed Rahed4",
+        type:"import",
+        details:"financial of scorecards",
+        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
+        oldValue : "old value",
+        newValue : "new value"
+      },
+    ]
+    this.projectActivityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      {
+        key : "details",
+        type : "text",
+        label : "Activity Details"
+      },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+      {
+        key : "oldValue",
+        type : "text",
+        label : "Old Value"
+      },
+      {
+        key : "newValue",
+        type : "text",
+        label : "New Value"
+      },
+    ]
     this.activityLogsTableHeader = [
       {
         key : "username",
@@ -149,6 +213,8 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   {
     this.showActivityLogsPopup = false;
     // this.actionsPanel.hide();
+    // console.log('test');
+    
   }
   menuActions(label:string)
   {
@@ -156,6 +222,8 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     if(label === 'activity log')
     {
       this.showActivityLogs();
+    } else {
+
     }
   }
   private getStrategyProgramDetails(strategyName:string)
