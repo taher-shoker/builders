@@ -1,6 +1,117 @@
 @import '../../../styles/fonts';
-.activity-log-section
+::ng-deep .activity-log-section
 {
   padding:20px 30px;
-
+  &-header
+  {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .hands-img
+  {
+    position: relative;
+    top:15px;
+  }
+  .projects-container
+  {
+    background-color: var(--stc-white-color);
+    border-radius:20px;
+    padding:20px;
+    position: relative;
+    color:#000;
+    .filter-inputs
+    {
+      display: flex;
+      align-items: center;
+      gap:15px;
+      .search-input
+      {
+        background-color:#F5F6FA;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap:10px;
+        padding-left: 10px;
+        i
+        {
+          color:var(--stc-grey-dark-color);
+        }
+        input
+        {
+          border-radius: 10px;
+          border:0;
+          background-color:#F5F6FA;
+          outline: 0;
+          box-shadow: none;
+          height:45px;
+          @extend .stcFont;
+          &::placeholder
+          {
+            @extend .stcFont;
+            color:var(--stc-grey-dark-color);
+          }
+        }
+      }
+    }
+  }
+}
+::ng-deep .p-dropdown
+{
+  height: 45px !important;
+  border: 0 !important;
+  background:#F5F6FA !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-radius:10px !important;
+  width:200px !important;
+}
+::ng-deep .action-types-dropdown
+{
+  .p-dropdown-trigger-icon
+  {
+    color:var(--stc-purple-color);
+  }
+  .p-dropdown-items
+  {
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .p-dropdown-label
+  {
+    @extend .stcFont;
+    color:var(--stc-grey-dark-color);
+  }
+  .p-dropdown-items
+  {
+    margin: 0;
+    padding: 0;
+  }
+}
+::ng-deep .p-calendar
+{
+  height: 45px !important;
+  .p-inputtext
+  {
+    border: 0 !important;
+    background:#F5F6FA !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    @extend .stcFont;
+    color:var(--stc-grey-dark-color) !important;
+    border-radius:10px !important;
+  }
+  .p-datepicker-icon
+  {
+    svg
+    {
+      width: 19px;
+      height: 19px;
+      position: relative;
+      top: -2px;
+    }
+  }
+}
+::ng-deep .activity-log-date
+{
 }

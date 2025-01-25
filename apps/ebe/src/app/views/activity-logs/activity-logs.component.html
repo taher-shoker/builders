@@ -1,31 +1,55 @@
 <section class="activity-log-section">
-  <div class = "activity-log-section-header">
-      <stc-apps-page-header
-        mainTitle = "Activity Log Center"
-        secondaryTitle = ""
-      />
-  
-    </div>
-    <div 
-        class="scored-card-section-taps"
-      >
+  <div class="activity-log-section-header">
+    <div class = "content">
+      <stc-apps-page-header mainTitle="Activity Log Center" secondaryTitle="" />
+      <div class="activity-log-section-taps">
         <stc-apps-tabview
-          [tabsData]="scorecardsTaps"
+          [tabsData]="scorecardsTaps()"
           [tabColor]="'#ffffff'"
           [clickedtabColor]="'#ffffff'"
           [tabBackground]="'#FFFFFF0D'"
           [clickedtabBackground]="'#FF375E'"
           [fontFamily]="'STCForwardFont'"
-        />       
+          (clickedTap)="getCurrentTap($event)"
+        />
       </div>
-      <div class="scored-card-section-tap-details">
-        <div class="projects-container">        <stc-apps-custom-table
-        [headers]="tableHeader"
-        [items]="tableData"
-        [activityTable]="true"
-        [fontFamily]="'STCForwardFont'"
-       />
+    </div>
+    <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+  </div>
+  <div class="activity-log-section-tap-details">
+    <div class="projects-container">
+      <div class="filter-inputs">
+        <div class="form-group">
+          <div class="search-input">
+            <i class = "pi pi-search"></i>
+            <input 
+              type="text" 
+              placeholder = "Search by User Email"
+              [(ngModel)]="searchKeyword"
+            >
+          </div>
+        </div>
+        <div class="form-group">
+          <p-dropdown 
+            [options]="actionTypes" 
+            [(ngModel)]="selectedType" 
+            optionLabel="name" 
+            placeholder="Action Type"
+            styleClass = "action-types-dropdown" 
+            dropdownIcon = "pi pi-sort-down-fill"
+            (ngModelChange)="selectActionType($event)"
+          />
+        </div>
+        <div class="form-group">
+          <p-calendar 
+            [(ngModel)]="activityLogDate" 
+            [iconDisplay]="'input'" 
+            [showIcon]="true" 
+            inputId="icondisplay"
+            styleClass = "activity-log-date"
+          />
+        </div>
       </div>
-      </div>
-     
-    </section>
+    </div>
+  </div>
+</section>

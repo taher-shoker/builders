@@ -223,8 +223,11 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     {
       this.showActivityLogs();
     } else {
-
     }
+  }
+  showDeletedProjects()
+  {
+    this.router.navigateByUrl("/deleted-projects/cad-projects");
   }
   private getStrategyProgramDetails(strategyName:string)
   {
@@ -245,7 +248,10 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   getCurrentIndex(index: boolean) {
     // console.log(index);
     this.isTapOpened = index;
-    this.actionsPanel.hide();
+    if(this.actionsPanel)
+    {
+      this.actionsPanel.hide();
+    }
   }
   closeAccordion()
   {

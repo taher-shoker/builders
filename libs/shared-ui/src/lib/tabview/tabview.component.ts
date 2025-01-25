@@ -34,7 +34,7 @@ export class TabviewComponent implements OnChanges{
       this.data = this.tabsData().slice(0,5);
     }
   }
-  toggleTaps(index:number , tap:string)
+  toggleTaps(index:number , tap:string , tab:TabsDataModel)
   {
     const d = {
       id : index,
@@ -42,7 +42,7 @@ export class TabviewComponent implements OnChanges{
       value :tap
     }
     this.currentClickedTapIndex = index;
-    this.clickedTap.emit(d)
+    this.clickedTap.emit(tab)
   }
   showMore()
   {

@@ -68,7 +68,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
     if (label === 'activity log') {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
     } else {
-      this.route.navigateByUrl("/deleted-projects/projects");
+      this.route.navigateByUrl("/deleted-projects/psr-projects");
     }
   }
   ngOnInit(): void {

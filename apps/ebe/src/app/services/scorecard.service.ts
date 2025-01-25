@@ -38,11 +38,11 @@ export class ScorecardService {
       name: 'CAD strategy programs',
       url: '/strategy-program',
     },
-    // {
-    //   id: 6,
-    //   name: 'Activity Log Center',
-    //   url: '/activity-logs',
-    // },
+    {
+      id: 6,
+      name: 'Activity Log Center',
+      url: '/activity-logs',
+    },
     // {
     //   id: 3,
     //   name: 'raqami',

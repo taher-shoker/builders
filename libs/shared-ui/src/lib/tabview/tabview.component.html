@@ -31,7 +31,7 @@
       <!-- <div *ngFor="let tab of tabsData(); let index = index"> -->
         <div
           [class.clickedTap]="currentClickedTapIndex === index"
-          (click)="toggleTaps(index, tab.name)"
+          (click)="toggleTaps(index, tab.name , tab)"
           (mouseenter)="onHover = true;hoveredTap = index"
           (mouseleave)="onHover = false"
           [ngStyle]="{
