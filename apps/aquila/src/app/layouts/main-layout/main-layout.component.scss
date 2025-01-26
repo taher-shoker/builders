@@ -10,8 +10,15 @@
         padding: 10px;
         font-size: 24px;
         z-index: 1001;
-        position: absolute;
+        position: fixed;
         top: 10px;
+        left: 10px;
+        border-radius: 8px;
+
+        &:not(.sidebar-open) {
+            background-color: var(--whiteColor);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
 
         @media (max-width: 768px) {
             display: flex;

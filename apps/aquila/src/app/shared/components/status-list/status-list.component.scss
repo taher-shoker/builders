@@ -2,31 +2,27 @@
 
 .status-list {
     &_header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 24px;
+        @include flex-between-center;
+        margin-bottom: $gap-medium;
 
         h5 {
             color: var(--darkPurbleColor);
         }
 
         stc-apps-button {
-            ::ng-deep {
-                button {
-                    color: var(--whiteColor);
-                }
+            ::ng-deep button {
+                color: var(--whiteColor);
+                @include button-font-size;
             }
         }
     }
 
     &_items {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
+        @include flex-column;
+        gap: $gap-medium;
         height: 430px;
         overflow-y: auto;
-        padding-right: 16px;
+        padding-right: $gap-medium;
 
         .card {
             padding: 0;
@@ -38,8 +34,7 @@
             }
 
             &-header {
-                display: flex;
-                justify-content: space-between;
+                @include flex-between-center;
                 padding: 11px 15px;
 
                 button {
@@ -69,9 +64,8 @@
             }
 
             &-body {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
+                @include flex-column;
+                gap: $gap-xxs;
 
                 span {
                     padding: 0 10px;
@@ -116,15 +110,18 @@
     }
 
     &_empty {
-        display: flex;
-        flex-direction: column;
+        @include flex-column;
         align-items: center;
         width: fit-content;
-        gap: 5px;
+        gap: $gap-tiny;
         margin: 130px auto;
 
         p {
             color: var(--grey-color);
+
+            @media screen and (max-width: $breakpoint-xl) {
+                font-size: $font-size-small;
+            }
         }
     }
 }

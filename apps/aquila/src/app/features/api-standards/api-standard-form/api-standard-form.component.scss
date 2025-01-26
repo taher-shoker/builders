@@ -2,29 +2,31 @@
 
 .api-standard-form {
     @extend .component-wrapper;
-    padding: 25px;
+    padding: $gap-large;
 
     &_container {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
+        @include flex-column;
+        gap: $gap-xl;
 
         label {
             display: block;
             color: var(--dark-slate-gray);
-            margin-bottom: 5px;
+            margin-bottom: $gap-tiny;
             font-family: 'stc forward-medium';
+
+            @media screen and (max-width: $breakpoint-xl) {
+                font-size: $font-size-small;
+            }
         }
     }
 
     &_fields {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px 50px;
+        @include responsive-gap(20px 50px);
 
         .form-group {
-            display: flex;
-            flex-direction: column;
+            @include flex-column;
 
             &.full-width {
                 grid-column: span 2;
@@ -32,33 +34,33 @@
 
             p {
                 color: var(--dark-slate-gray);
-                font-size: 14px;
+                font-size: $font-size-small;
             }
 
             ::ng-deep {
 
                 input,
                 p-calendar span {
-                    width: 100%;
+                    width: $full-width;
                 }
+            }
+
+            @media screen and (max-width: $breakpoint-xl) {
+                font-size: $font-size-small;
             }
         }
 
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: $breakpoint-md) {
             grid-template-columns: 1fr;
 
-            .form-group {
-                &.full-width {
-                    grid-column: span 1;
-                }
+            .form-group.full-width {
+                grid-column: span 1;
             }
         }
     }
 
-
-
     &_upload {
-        width: 100%;
+        width: $full-width;
 
         ::ng-deep {
             .p-fileupload {
@@ -66,28 +68,28 @@
                     display: none;
                 }
 
-                .p-fileupload-content {
-                    .drag-drop-area {
-                        display: flex;
-                        flex-direction: column;
-                        align-items: center;
-                        gap: 6px;
-                        margin-top: 20px;
+                .p-fileupload-content .drag-drop-area {
+                    @include flex-column;
+                    align-items: center;
+                    gap: $gap-tiny;
+                    margin-top: $gap-medium;
 
-                        i {
-                            display: block;
-                            font-size: 20px;
+                    i {
+                        display: block;
+                        font-size: $font-size-large;
+                    }
+
+                    span {
+                        color: var(--gray-medium);
+
+                        @media screen and (max-width: $breakpoint-xl) {
+                            font-size: $font-size-small;
                         }
 
-                        span {
-                            color: var(--gray-medium);
-
-                            a {
-                                color: var(--stc-color);
-                                text-decoration: none;
-                                font-weight: 700;
-
-                            }
+                        a {
+                            color: var(--stc-color);
+                            text-decoration: none;
+                            font-weight: 700;
                         }
                     }
                 }
@@ -96,7 +98,7 @@
             .p-fileupload-choose,
             .p-button {
                 background: var(--stc-color);
-                padding: 10.5px 13.5px;
+                padding: $gap-tiny $gap-xxs;
             }
 
             stc-apps-button button {
@@ -106,23 +108,32 @@
             .p-fileupload-files>div {
                 display: grid;
                 grid-template-columns: repeat(2, 1fr);
+
+                @media screen and (max-width: $breakpoint-md) {
+                    grid-template-columns: 2fr;
+                    justify-items: center;
+                }
             }
         }
 
         .file-upload-info {
             color: var(--gray-medium);
-            margin-top: 8px;
+            margin-top: $gap-xxs;
+
+            @media screen and (max-width: $breakpoint-xl) {
+                font-size: $font-size-small;
+            }
         }
 
         .file {
             &-item {
                 display: flex;
                 align-items: center;
-                justify-content: space-between;
                 border: 1px solid #E7E7E7;
                 border-radius: 8px;
-                padding: 10px;
+                padding: $gap-xs;
                 margin: 1%;
+                width: max-content;
             }
 
             &-name {
@@ -133,7 +144,7 @@
                 display: flex;
 
                 img {
-                    margin-inline-end: 10px;
+                    margin-inline-end: $gap-xs;
                 }
             }
         }
@@ -143,11 +154,15 @@
         display: flex;
         justify-content: flex-end;
         flex-wrap: wrap;
-        margin-top: 32px;
-        gap: 10px;
+        margin-top: $gap-xl;
+        gap: $gap-xs;
 
         stc-apps-button {
             min-width: 8rem;
+
+            ::ng-deep button {
+                @include button-font-size;
+            }
         }
     }
 }
