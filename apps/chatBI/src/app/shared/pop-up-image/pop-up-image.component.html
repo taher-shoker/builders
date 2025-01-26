@@ -4,7 +4,6 @@
     [ngClass]="
       chartType() === 'line' || chartType() === 'bar' ? 'popup-chart-width' : ''
     "
-    style="-webkit-overflow-scrolling: touch;overflow-y: scroll;"
     (click)="$event.stopPropagation()"
   >
     <button #close class="close-btn" (click)="closeImagePopup()">

@@ -49,8 +49,8 @@ export class BarChartComponent implements OnInit {
 
     const chart = this.root.container.children.push(
       am5xy.XYChart.new(this.root, {
-        panX: false,
-        panY: false,
+        panX: true,
+        panY: true,
         paddingLeft: 0,
         wheelX: 'panX',
         wheelY: 'zoomX',
@@ -128,16 +128,20 @@ export class BarChartComponent implements OnInit {
         width: am5.percent(90),
         tooltipY: 0,
         strokeOpacity: 0,
-        showTooltipOn: this.popUpClick() ? 'always' : 'click',
       });
       if (this.popUpClick()) {
+        series.columns.template.setAll({
+          showTooltipOn: 'always',
+        });
         series.columns.template.setup = (target) => {
           target.set('tooltip', am5.Tooltip.new(this.root, {}));
         };
+        series.columns.template.setAll({
+          width: 60,
+        });
+        chart.set('width', 1024);
       }
-      series.columns.template.setAll({
-        width: 40
-      })
+     
       series.data.setAll(data);
 
       series.appear();
