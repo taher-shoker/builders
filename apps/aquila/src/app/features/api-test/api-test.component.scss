@@ -37,6 +37,9 @@
 
                 @media screen and (max-width: 768px) {
                     flex: 1;
+                    white-space: nowrap;
+                    min-width: 120px;
+                    font-size: 14px;
                 }
             }
 

@@ -1,6 +1,6 @@
 <p-table
   [value]="dataSource()"
-  [tableStyle]="{ 'min-width': '50rem' }"
+  [tableStyle]="dataSource().length > 0 ? { 'min-width': '50rem' } : {}"
   [paginator]="dataSource().length > 0"
   [rows]="10"
   [scrollable]="true"

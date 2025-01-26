@@ -6,6 +6,7 @@
   <div
     class="main-layout_hamburger-menu"
     (click)="toggleSidebar()"
+    [ngClass]="{ 'sidebar-open': isSidebarVisible }"
     [ngStyle]="{
       color: isSidebarVisible ? 'var(--whiteColor)' : 'var(--stc-color)'
     }"

@@ -12,7 +12,24 @@
         }
 
         .p-paginator {
-            justify-content: flex-end
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: 8px;
+            padding: 10px;
+
+            .p-paginator-pages {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 4px;
+            }
+
+            .p-paginator-element {
+                min-width: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
         }
 
         tbody {
