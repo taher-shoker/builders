@@ -69,8 +69,9 @@ export class LineChartComponent implements OnInit {
         tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
+    const rotateLabels = data.length > 10;
     xAxis.get('renderer').labels.template.setAll({
-      rotation: window.innerWidth < 768 ? -45 : 0,
+      rotation: window.innerWidth < 768 || rotateLabels ? -45 : 0,
       fontSize: window.innerWidth < 768 ? 10 : 12,
       paddingTop: window.innerWidth < 768 ? 10 : 0,
       fill: am5.color('#a1a1a1'),
@@ -119,7 +120,7 @@ export class LineChartComponent implements OnInit {
         bulletContainer.children.push(circle);
 
         if (this.popUpClick()) {
-          chart.set('width', 1024);
+          // chart.set('width', 1024);
           const label = am5.Label.new(this.root, {
             text: '{valueY}',
             centerX: am5.percent(50),
@@ -154,7 +155,7 @@ export class LineChartComponent implements OnInit {
     const legendFontWeight = window.innerWidth < 768 ? 'bold' : 'normal';
     legend.labels.template.setAll({
       fontSize: legendFontSize,
-      maxWidth: window.innerWidth < 768 ? 200 : 200, 
+      maxWidth: window.innerWidth < 768 ? 200 : 200,
       oversizedBehavior: 'wrap',
       fontWeight: legendFontWeight,
     });
@@ -178,8 +179,8 @@ export class LineChartComponent implements OnInit {
 
       const axisRenderer = xAxis.get('renderer') as am5xy.AxisRendererX;
       axisRenderer.labels.template.setAll({
-        rotation: screenWidth < 768 ? -45 : 0,
-        fontSize: screenWidth < 768 ? 8 : 12,
+        rotation: screenWidth < 768 || rotateLabels ? -45 : 0,
+        fontSize: screenWidth < 768 ? 8 : 10,
         paddingTop: screenWidth < 768 ? 10 : 0,
       });
     });

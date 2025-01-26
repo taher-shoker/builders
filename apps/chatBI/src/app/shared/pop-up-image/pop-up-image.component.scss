@@ -21,7 +21,7 @@
   width: 94%;
   touch-action: none;
   display: flex;
-
+  box-sizing: border-box;
   justify-content: center;
 }
 .popup-chart-width {
@@ -45,7 +45,7 @@
   width: 36px;
   height: 36px;
   background-color: black !important;
-  border: none; 
+  border: none;
   border-radius: 50%;
   position: fixed;
   z-index: 10000;
@@ -65,5 +65,5 @@
 }
 .zoomed {
   transform: scale(1.5);
-  cursor: zoom-out; 
+  cursor: zoom-out;
 }
