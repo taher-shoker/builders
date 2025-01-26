@@ -28,7 +28,6 @@
   width: 1024px;
   overflow: auto;
   max-width: 100%;
-  -webkit-overflow-scrolling: touch;
   pointer-events: auto;
   touch-action: pan-x;
 }
@@ -46,6 +45,9 @@
   height: 36px;
   background-color: black !important;
   border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 50%;
   position: fixed;
   z-index: 10000;
