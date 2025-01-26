@@ -140,7 +140,7 @@ export class BarChartComponent implements OnInit {
         series.columns.template.setAll({
           width: 60,
         });
-        chart.set('width', 1024);
+        // chart.set('width', 1024);
       }
 
       series.data.setAll(data);
