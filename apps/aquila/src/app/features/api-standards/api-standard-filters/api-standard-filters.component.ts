@@ -61,7 +61,7 @@ export class ApiStandardFiltersComponent implements OnInit {
       name: [''],
       publishUpdate: [null],
       lastUpdate: [null],
-      businessArea: [''],
+      businessArea: [null],
     });
 
     this.filterForm.valueChanges

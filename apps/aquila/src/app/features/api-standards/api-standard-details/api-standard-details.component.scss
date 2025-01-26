@@ -1,13 +1,12 @@
 @import '../../../../styles/shared-styles.scss';
 
 .api-standard-details {
-    padding: 25px;
+    padding: $gap-large;
     @extend .component-wrapper;
 
     &_overview {
-        display: flex;
-        flex-direction: column;
-        gap: 32px;
+        @include flex-column;
+        gap: $gap-large;
 
         h3 {
             color: var(--darkColor);
@@ -22,20 +21,18 @@
             padding: 0;
 
             img {
-                margin-inline-start: 4px;
+                margin-inline-start: $gap-tiny;
             }
         }
-
     }
 
     &_fields {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
-        gap: 20px 50px;
+        @include responsive-gap(20px 50px);
 
         .form-group {
-            display: flex;
-            flex-direction: column;
+            @include flex-column;
 
             &.full-width {
                 grid-column: span 2;
@@ -43,25 +40,23 @@
 
             p {
                 color: var(--dark-slate-gray);
-                font-size: 14px;
+                font-size: $font-size-small;
             }
 
             ::ng-deep {
 
                 input,
                 p-calendar span {
-                    width: 100%;
+                    width: $full-width;
                 }
             }
         }
 
-        @media screen and (max-width: 768px) {
+        @media screen and (max-width: $breakpoint-md) {
             grid-template-columns: 1fr;
 
-            .form-group {
-                &.full-width {
-                    grid-column: span 1;
-                }
+            .form-group.full-width {
+                grid-column: span 1;
             }
         }
     }
@@ -70,13 +65,16 @@
         display: flex;
         justify-content: flex-end;
         flex-wrap: wrap;
-        margin-top: 32px;
-        gap: 10px;
+        margin-top: $gap-xl;
+        gap: $gap-xs;
 
-        stc-apps-button {
+        stc-apps-button ::ng-deep button {
             min-width: 8rem;
+            @include button-font-size;
         }
 
-
+        stc-apps-split-button ::ng-deep p-splitbutton button {
+            @include button-font-size;
+        }
     }
 }

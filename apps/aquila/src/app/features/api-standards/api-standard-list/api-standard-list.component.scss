@@ -3,50 +3,49 @@
 .api-standared {
     @extend .component-wrapper;
     border-radius: 6.25px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    @include flex-column;
+    gap: $gap-large;
 
     mat-icon {
         height: auto;
 
         img {
-            width: 100%;
+            width: $full-width;
         }
     }
 
     &_header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        @include flex-between-center;
         flex-wrap: wrap;
-        gap: 10px;
+        gap: $gap-xs;
+
+        @media (max-width: $breakpoint-sm) {
+            @include flex-column;
+        }
 
         h3 {
             flex: 1;
             color: #212121;
             font-weight: 600;
+
+            @media (max-width: $breakpoint-lg) {
+                font-size: $font-size-large;
+            }
+
+            @media (max-width: $breakpoint-sm) {
+                font-size: $font-size-large;
+            }
         }
 
         stc-apps-button {
             ::ng-deep {
                 button {
+                    @include button-font-size;
+
                     i {
-                        font-size: 15px;
+                        font-size: $font-size-small;
                     }
                 }
-            }
-        }
-    }
-
-    @media (max-width: 480px) {
-        &_header {
-            flex-direction: column;
-            align-items: flex-start;
-
-            h3 {
-                font-size: 20px;
-                margin-bottom: 12px;
             }
         }
     }

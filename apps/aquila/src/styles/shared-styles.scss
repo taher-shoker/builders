@@ -1,3 +1,59 @@
+$full-width: 100%;
+$gap-xl: 32px;
+$gap-large: 25px;
+$gap-medium: 16px;
+$gap-small: 15px;
+$gap-xs: 10px;
+$gap-xxs: 8px;
+$gap-tiny: 5px;
+
+$font-size-xl: 24px;
+$font-size-large: 20px;
+$font-size-default: 16px;
+$font-size-small: 14px;
+
+$breakpoint-xl: 1400px;
+$breakpoint-lg: 990px;
+$breakpoint-md: 768px;
+$breakpoint-sm: 480px;
+
+%common-cell-styles {
+    @media (max-width: $breakpoint-xl) {
+        font-size: $font-size-small;
+    }
+}
+
+@mixin button-font-size {
+    font-size: $font-size-default;
+
+    @media(max-width: $breakpoint-xl) {
+        font-size: $font-size-small;
+    }
+}
+
+@mixin responsive-gap($gap) {
+    gap: $gap;
+
+    @media screen and (max-width: $breakpoint-xl) {
+        gap: $gap-small;
+    }
+
+    @media screen and (max-width: $breakpoint-md) {
+        gap: $gap-xs;
+    }
+}
+
+@mixin flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+@mixin flex-between-center {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
 .component-wrapper {
     z-index: 1;
     position: relative;
