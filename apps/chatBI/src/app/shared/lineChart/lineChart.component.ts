@@ -43,7 +43,7 @@ export class LineChartComponent implements OnInit {
         panX: true,
         panY: true,
         wheelX: 'panX',
-        wheelY: 'zoomX',
+        wheelY: 'none',
         pinchZoomX: true,
         layout: this.root.verticalLayout,
       })
@@ -118,6 +118,7 @@ export class LineChartComponent implements OnInit {
         bulletContainer.children.push(circle);
 
         if (this.popUpClick()) {
+          chart.set('width', 1024);
           const label = am5.Label.new(this.root, {
             text: '{valueY}',
             centerX: am5.percent(50),
@@ -167,5 +168,13 @@ export class LineChartComponent implements OnInit {
       });
     });
     // window.addEventListener('resize', adjustLegendPosition);
+    // if (this.popUpClick()) {
+    //   chart.set(
+    //     'scrollbarX',
+    //     am5.Scrollbar.new(this.root, {
+    //       orientation: 'horizontal',
+    //     })
+    //   );
+    // }
   }
 }

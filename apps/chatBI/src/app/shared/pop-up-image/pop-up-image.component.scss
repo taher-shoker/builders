@@ -27,6 +27,11 @@
 .popup-chart-width {
   width: 1024px;
   overflow: auto;
+  max-width: 100%;
+  touch-action: auto;
+  -webkit-overflow-scrolling: touch;
+  pointer-events: auto;
+  touch-action: pan-x;
 }
 .zoomed-image {
   width: 100%;
