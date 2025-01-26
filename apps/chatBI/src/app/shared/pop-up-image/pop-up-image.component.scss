@@ -28,7 +28,6 @@
   width: 1024px;
   overflow: auto;
   max-width: 100%;
-  touch-action: auto;
   -webkit-overflow-scrolling: touch;
   pointer-events: auto;
   touch-action: pan-x;
@@ -38,7 +37,6 @@
   cursor: zoom-in;
   transition: transform 0.3s ease;
   border-radius: 8px;
-
   touch-action: none;
   user-select: none;
 }
@@ -49,8 +47,8 @@
   background-color: black !important;
   border: none; 
   border-radius: 50%;
-  position: absolute;
-  z-index: 999;
+  position: fixed;
+  z-index: 10000;
   top: 17px;
   right: 10px;
   border: none;
@@ -66,6 +64,6 @@
   opacity: 0.5;
 }
 .zoomed {
-  transform: scale(1.5); /* Adjust scale for zoom */
-  cursor: zoom-out; /* Changes cursor when zoomed */
+  transform: scale(1.5);
+  cursor: zoom-out; 
 }
