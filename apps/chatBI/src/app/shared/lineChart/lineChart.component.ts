@@ -40,11 +40,11 @@ export class LineChartComponent implements OnInit {
     this.root.setThemes([am5themes_Animated.new(this.root)]);
     const chart = this.root.container.children.push(
       am5xy.XYChart.new(this.root, {
-        panX: true,
-        panY: true,
-        wheelX: 'panX',
+        panX: false,
+        panY: false,
+        wheelX: 'none',
         wheelY: 'none',
-        pinchZoomX: true,
+        pinchZoomX: false,
         layout: this.root.verticalLayout,
       })
     );
@@ -57,6 +57,7 @@ export class LineChartComponent implements OnInit {
     });
     chart.get('colors')?.set('colors', allColors);
     const cursor = chart.set('cursor', am5xy.XYCursor.new(this.root, {}));
+
     cursor.lineY.set('visible', false);
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(this.root, {
@@ -149,6 +150,15 @@ export class LineChartComponent implements OnInit {
     );
 
     legend.data.setAll(chart.series.values);
+    const legendFontSize = window.innerWidth < 768 ? 12 : 14;
+    const legendFontWeight = window.innerWidth < 768 ? 'bold' : 'normal';
+    legend.labels.template.setAll({
+      fontSize: legendFontSize,
+      maxWidth: window.innerWidth < 768 ? 200 : 200, 
+      oversizedBehavior: 'wrap',
+      fontWeight: legendFontWeight,
+    });
+
     chart.appear(1000, 100);
     const adjustLegendPosition = () => {
       if (window.innerWidth <= 800) {
@@ -157,16 +167,23 @@ export class LineChartComponent implements OnInit {
         showBullets();
       }
     };
+    series.strokes.template.setAll({
+      strokeWidth: window.innerWidth < 768 ? 3 : 2,
+    });
+
+    const pixelRatio = window.devicePixelRatio || 1;
+    //chart.set('scale', pixelRatio);
     window.addEventListener('resize', () => {
       const screenWidth = window.innerWidth;
 
       const axisRenderer = xAxis.get('renderer') as am5xy.AxisRendererX;
       axisRenderer.labels.template.setAll({
         rotation: screenWidth < 768 ? -45 : 0,
-        fontSize: screenWidth < 768 ? 10 : 12,
+        fontSize: screenWidth < 768 ? 8 : 12,
         paddingTop: screenWidth < 768 ? 10 : 0,
       });
     });
+
     // window.addEventListener('resize', adjustLegendPosition);
     // if (this.popUpClick()) {
     //   chart.set(

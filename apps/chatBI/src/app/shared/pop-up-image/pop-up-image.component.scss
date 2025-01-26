@@ -44,14 +44,19 @@
 }
 
 .close-btn {
-  position: fixed;
+  width: 36px;
+  height: 36px;
+  background-color: black !important;
+  border: none; 
+  border-radius: 50%;
+  position: absolute;
   z-index: 999;
   top: 17px;
   right: 10px;
   border: none;
   outline: none;
   background: none;
-  color: var(--stc-color);
+  color: var(--whiteColor);
   i {
     font-size: 24px;
   }
