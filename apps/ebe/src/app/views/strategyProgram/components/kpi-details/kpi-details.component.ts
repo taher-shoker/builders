@@ -126,9 +126,9 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
       {
         username:"Hamed Rahed2",
         type:"import",
-        details:"financial of scorecards",
+        details:"financial",
         time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
+        oldValue : "old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value",
         newValue : "new value"
       },
       {

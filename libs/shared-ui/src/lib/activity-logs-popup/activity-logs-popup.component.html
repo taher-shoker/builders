@@ -1,30 +1,109 @@
-<div class = "overlay-container" style = "position:relative;" #overlay>
-  <p-overlayPanel 
-  #activityLogsPanel 
-  dismissable="false"
-  [appendTo]="(isActionPopup() || isActionPopup2()) ? overlay : 'body'"
-  styleClass="activity-logs-panel"
-  [styleClass]="isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : ''"
->
-    <div class="activity-logs-table" [class.projectActionPopup]="isProjectActionPopup()">
+<div class="overlay-container" style="position: relative" #overlay>
+  <p-overlayPanel
+    #activityLogsPanel
+    dismissable="false"
+    [appendTo]="isActionPopup() || isActionPopup2() ? overlay : 'body'"
+    styleClass="activity-logs-panel"
+    [styleClass]="
+      isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : ''
+    "
+  >
+    <div
+      class="activity-logs-table"
+      [class.projectActionPopup]="isProjectActionPopup()"
+    >
       <div class="activity-logs-table-header">
         <p>activity logs</p>
         <i
-            class="pi pi-times-circle"
-            (click)="closeActivityLogsPopup()"
-            style="margin-right: 1px"
-          ></i>
+          class="pi pi-times-circle"
+          (click)="closeActivityLogsPopup()"
+          style="margin-right: 1px"
+        ></i>
       </div>
-      <div class = "table-container">
-        <stc-apps-custom-table
-        [headers]="activityLogsTableHeader()"
-        [items]="activityLogsTableBody()"
-        [psrTable]="true"
-        [fontFamily]="'STCForwardFont'"
-        [activityLogTable]="true"
-        (addRecord)="gotoActivityLogs()"
-      />
+      <div class="table-container">
+        <!-- <stc-apps-custom-table
+          [headers]="activityLogsTableHeader()"
+          [items]="activityLogsTableBody()"
+          [psrTable]="true"
+          [fontFamily]="'STCForwardFont'"
+          [activityLogTable]="true"
+          (addRecord)="gotoActivityLogs()"
+        /> -->
+        <table>
+          <thead>
+            <tr>
+              @for (item of activityLogsTableHeader(); track $index) {
+                <th>{{item.label}}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of activityLogsTableBody(); track $index) {
+              <tr>
+                <td>{{item.username | truncateWord:2}}
+                  @if(item.username.split(" ").length > 2)
+                  {
+                    <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
+                    <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
+                      <section class="long-title-popover-section">{{ item.username }}</section>
+                    </p-overlayPanel>
+                  }</td>
+                <td>{{item.type}}</td>
+                <td>
+                  {{item.details | truncateWord:2}}
+                  @if(item.details.split(" ").length > 2)
+                  {
+                    <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
+                    <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
+                      <section class="long-title-popover-section">{{ item.details }}</section>
+                    </p-overlayPanel>
+                  }
+                </td>
+                <td class = "time">{{item.time}}</td>
+                @if(item.newValue)
+                {
+                  <td>
+                    {{item.newValue | truncateWord:2}}
+                    @if(item.newValue.split(" ").length > 2)
+                    {
+                      <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
+                      <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
+                        <section class="long-title-popover-section">{{ item.newValue }}</section>
+                      </p-overlayPanel>
+                    }
+                  </td>
+                }
+                @if(item.oldValue)
+                {
+                  <td>
+                    {{item.oldValue | truncateWord:2}}
+                    @if(item.oldValue.split(" ").length > 2)
+                    {
+                      <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
+                      <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
+                        <section class="long-title-popover-section">{{ item.oldValue }}</section>
+                      </p-overlayPanel>
+                    }
+                  </td>
+                }
+              </tr>
+            }
+          </tbody>
+        </table>
       </div>
+      <button
+        type="button"
+        class="show-activity-logs-btn"
+        (click)="showAllActivityLog()"
+      >
+        <img
+          src="assets/images/eye.svg"
+          alt=""
+        />
+        <span>
+          show all activity logs
+        </span>
+      </button>
     </div>
   </p-overlayPanel>
 </div>

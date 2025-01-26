@@ -86,9 +86,9 @@ export class TapDetailsComponent implements OnInit {
     console.log(window.innerWidth);
     this.activityLogsTableBody = [
       {
-        username:"Hamed Rahed",
+        username:"Hamed Rahed Adel",
         type:"import",
-        details:"financial of scorecards",
+        details:"financial of scorecards financial of scorecards financial of scorecards financial of scorecards",
         time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
       },
       {

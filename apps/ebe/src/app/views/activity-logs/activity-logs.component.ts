@@ -7,6 +7,7 @@ import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
 import { TableModule } from 'primeng/table';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 interface ActionType {
   id:string;
   name:string;
@@ -14,7 +15,7 @@ interface ActionType {
 @Component({
   selector: 'stc-apps-activity-logs',
   standalone: true,
-  imports: [CommonModule, PageHeaderComponent, SharedUiModule , DropdownModule , FormsModule , CalendarModule , TableModule],
+  imports: [CommonModule, PageHeaderComponent, SharedUiModule , DropdownModule , FormsModule , CalendarModule , TableModule , OverlayPanelModule],
   templateUrl: './activity-logs.component.html',
   styleUrl: './activity-logs.component.scss',
   providers : [DatePipe],
@@ -248,6 +249,10 @@ export class ActivityLogsComponent {
       this.activityLogsHeader = ["user name" , "activity type" , "activity details" , "time stamp" , "old value" , "new value"]
     }
   } 
+  displayDrilldown()
+  {
+
+  }
   changePage(e:any)
   {
     console.log(e);

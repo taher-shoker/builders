@@ -170,3 +170,21 @@
     }
   }
 }
+::ng-deep .longTitlePanel
+{
+  .p-overlaypanel-content
+  {
+    padding: 10px;
+  }
+}
+.read-more-btn
+{
+  color:var(--stc-purple-color);
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+.long-title-popover-section
+{
+  max-width:300px;
+  // word-break: break-all;
+}

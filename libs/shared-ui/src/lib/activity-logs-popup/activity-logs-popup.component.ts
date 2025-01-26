@@ -12,7 +12,9 @@ export interface ActivityLog
   username:string,
   type:string,
   details:string,
-  time:string
+  time:string,
+  oldValue?:string;
+  newValue?:string;
 }
 @Component({
   selector: 'stc-apps-activity-logs-popup',
@@ -45,8 +47,8 @@ export class ActivityLogsPopupComponent {
       }
     })
   }
-  gotoActivityLogs(){
-    console.log('gotoActivityLogs');
+  showAllActivityLog()
+  {
     this.router.navigateByUrl("/activity-logs");
   }
 }

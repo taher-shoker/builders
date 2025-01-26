@@ -135,7 +135,7 @@ export class TabDetailsComponent implements OnInit {
         type:"import",
         details:"financial of scorecards",
         time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
+        oldValue : "old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value",
         newValue : "new value"
       },
       {
