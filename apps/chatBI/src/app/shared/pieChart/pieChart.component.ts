@@ -122,6 +122,33 @@ export class PieChartComponent implements OnInit {
         });
       }
     };
+    series.slices.template.setAll({
+      strokeWidth: window.innerWidth < 768 ? 2 : 1,
+      stroke: am5.color('#ffffff'),
+    });
+    series.labels.template.setAll({
+      fontSize: window.innerWidth < 768 ? 12 : 14,
+      oversizedBehavior: 'wrap',
+      maxWidth: 100,
+      textAlign: 'center',
+    });
+    series.set('radius', am5.percent(window.innerWidth < 768 ? 90 : 100));
+
+    series.slices.template.set('tooltipText', '{category}: {value}');
+    series.slices.template.setAll({
+      tooltipPosition: 'pointer',
+      tooltip: am5.Tooltip.new(this.root, {
+        pointerOrientation: 'horizontal',
+        labelText: '{category}: {value}',
+      }),
+    });
+    const legendFontSize = window.innerWidth < 768 ? 12 : 14;
+    const legendFontWeight = window.innerWidth < 768 ? 'bold' : 'normal';
+
+    legend.labels.template.setAll({
+      fontSize: legendFontSize,
+      fontWeight: legendFontWeight,
+    });
     adjustLegendPosition();
     series.appear(1000, 100);
     window.addEventListener('resize', adjustLegendPosition);

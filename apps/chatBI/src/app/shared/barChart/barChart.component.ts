@@ -49,11 +49,12 @@ export class BarChartComponent implements OnInit {
 
     const chart = this.root.container.children.push(
       am5xy.XYChart.new(this.root, {
-        panX: true,
-        panY: true,
+        panX: false,
+        panY: false,
         paddingLeft: 0,
-        wheelX: 'panX',
-        wheelY: 'zoomX',
+        wheelX: 'none',
+        wheelY: 'none',
+        pinchZoomX: false,
         layout: this.root.verticalLayout,
       })
     );
@@ -141,7 +142,7 @@ export class BarChartComponent implements OnInit {
         });
         chart.set('width', 1024);
       }
-     
+
       series.data.setAll(data);
 
       series.appear();
@@ -160,6 +161,14 @@ export class BarChartComponent implements OnInit {
       });
       series.set('fill', am5.color(color));
       legend.data.push(series);
+      const legendFontSize = window.innerWidth < 768 ? 12 : 14;
+      const legendFontWeight = window.innerWidth < 768 ? 'bold' : 'normal';
+      legend.labels.template.setAll({
+        fontSize: legendFontSize,
+        maxWidth: window.innerWidth < 768 ? 200 : 200,
+        oversizedBehavior: 'wrap',
+        fontWeight: legendFontWeight,
+      });
     };
     this.indicators()?.map((indicator, index) => {
       makeSeries(
