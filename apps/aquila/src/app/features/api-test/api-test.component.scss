@@ -1,55 +1,71 @@
 @import '../../../styles/shared-styles.scss';
 
 .api-test {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+    @include flex-column;
+    gap: $gap-medium;
+
+    h5 {
+        margin: 0;
+        color: var(--grey-color);
+    }
 
     &_filter {
         @extend .component-wrapper;
 
         h5 {
-            color: var(--grey-color);
-            margin-bottom: 25px;
+            margin-bottom: $gap-large;
         }
 
         &_fields {
             display: flex;
-            gap: 25px;
+            @include responsive-gap($gap-large);
             align-items: end;
 
             >div {
-                display: flex;
-                flex-direction: column;
-                gap: 8px;
+                @include flex-column;
+                gap: $gap-xxs;
                 flex: 1;
 
-                ::ng-deep {
-                    .p-dropdown {
-                        width: 100%;
+                ::ng-deep .p-dropdown {
+                    width: $full-width;
+                }
+
+                @media(max-width: $breakpoint-xl) {
+                    gap: $gap-tiny;
+
+                    >label,
+                    ::ng-deep {
+
+                        stc-apps-input-group p-inputgroup,
+                        stc-apps-filter-dropdown p-dropdown .p-inputtext {
+                            font-size: $font-size-small;
+                        }
                     }
                 }
             }
 
             stc-apps-button {
-                flex: 0.3;
-                margin-top: 10px;
+                flex: 0.5;
+                margin-top: $gap-xs;
 
-                @media screen and (max-width: 768px) {
+                ::ng-deep button {
+                    @include button-font-size;
+                }
+
+                @media(max-width: $breakpoint-md) {
                     flex: 1;
+                    white-space: nowrap;
+                    min-width: 120px;
                 }
             }
 
-            @media screen and (max-width: 990px) {
+            @media(max-width: $breakpoint-lg) {
                 flex-direction: column;
                 align-items: baseline;
 
-                >div {
-                    width: 100%;
-                }
-
+                >div,
                 stc-apps-button {
-                    width: 100%;
+                    width: $full-width;
                 }
             }
         }
@@ -57,7 +73,7 @@
 
     &_lists {
         display: flex;
-        gap: 16px;
+        gap: $gap-medium;
         background: initial;
 
         stc-apps-status-list {
@@ -65,7 +81,7 @@
             @extend .component-wrapper;
         }
 
-        @media screen and (max-width: 990px) {
+        @media(max-width: $breakpoint-lg) {
             flex-direction: column;
         }
     }
@@ -74,20 +90,17 @@
         @extend .component-wrapper;
 
         &_header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
+            @include flex-between-center;
+            margin-bottom: $gap-medium;
 
             h5 {
                 color: var(--darkPurbleColor);
-                margin: 0;
             }
         }
     }
 
     &_no-data-message {
-        width: 100%;
+        width: $full-width;
         height: 220px;
         display: flex;
         align-items: center;
@@ -95,6 +108,17 @@
 
         p {
             color: var(--grey-color);
+        }
+    }
+}
+
+@media screen and (max-width: $breakpoint-xl) {
+    .api-test {
+
+        h5,
+        &_filter_fields>div>label,
+        &_no-data-message p {
+            font-size: $font-size-small;
         }
     }
 }

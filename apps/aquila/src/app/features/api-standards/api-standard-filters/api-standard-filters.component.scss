@@ -1,29 +1,20 @@
 @import '../../../../styles/shared-styles.scss';
 
 .api-standard_filters {
+    @include calendar-styles;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
-}
+    gap: $gap-xxs;
 
+    .filter-field {
+        @media screen and (max-width: $breakpoint-xl) {
+            font-size: $font-size-small;
 
-
-::ng-deep {
-    .p-datepicker {
-        table {
-            width: max-content;
-
-            tbody {
-                tr:not(.table-header) {
-                    border: none;
-
-                    td {
-                        padding: 0;
-                    }
+            ::ng-deep {
+                stc-apps-filter-dropdown p-dropdown .p-inputtext {
+                    font-size: $font-size-small;
                 }
             }
         }
     }
-
-    @include calendar-styles;
 }

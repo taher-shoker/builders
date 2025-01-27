@@ -1,26 +1,48 @@
+@import '../../../../styles/shared-styles.scss';
+
 .table {
     ::ng-deep {
         .p-datatable-thead {
             background-color: #F9FAFB;
             border-top: 1px solid #cbcbcb;
 
-            tr {
-                th {
-                    padding: 14px;
-                }
+            tr th {
+                padding: $gap-medium;
+                @extend %common-cell-styles;
             }
         }
 
+        .p-datatable-tbody tr td {
+            padding: $gap-xs;
+            @extend %common-cell-styles;
+        }
+
         .p-paginator {
-            justify-content: flex-end
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+            gap: $gap-xxs;
+            padding: $gap-xs;
+
+            .p-paginator-pages {
+                display: flex;
+                flex-wrap: wrap;
+                gap: $gap-tiny;
+            }
+
+            .p-paginator-element {
+                min-width: 32px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                @extend %common-cell-styles;
+            }
         }
 
         tbody {
             max-height: 220px;
             overflow: auto;
         }
-
-
     }
 
     tr:not(.table-header) td {
@@ -31,17 +53,15 @@
         button {
             background: transparent;
 
-            ::ng-deep {
-                span {
-                    color: var(--dark-slate-gray);
-                    font-size: 20px;
-                }
+            ::ng-deep span {
+                color: var(--dark-slate-gray);
+                font-size: 20px;
             }
         }
     }
 
     &_no-data-message {
-        width: 100%;
+        width: $full-width;
         height: 220px;
         display: flex;
         align-items: center;
