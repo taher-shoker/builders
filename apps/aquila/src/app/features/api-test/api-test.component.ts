@@ -301,9 +301,9 @@ export class ApiTestComponent implements OnInit {
     this.exportItems = [
       {
         icon: 'pi pi-download',
-        label: 'PDF',
+        label: 'JSON',
         command: () =>
-          this.downloadFile(item.summaryFileJson!, 'Standard PDF.pdf'),
+          this.downloadFile(item.summaryFileJson!, 'Standard JSON.json'),
       },
       {
         icon: 'pi pi-download',
