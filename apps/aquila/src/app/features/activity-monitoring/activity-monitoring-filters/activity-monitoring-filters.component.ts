@@ -34,8 +34,8 @@ export class ActivityMonitoringFiltersComponent implements OnInit {
     { label: 'Admin', value: 'Admin' },
   ];
   statusOptions = [
-    { label: 'Success', value: 'Success' },
-    { label: 'Failed', value: 'Failed' },
+    { label: 'Success', value: 'SUCCESS' },
+    { label: 'Failed', value: 'FAILED' },
   ];
   actionOptions = [
     { label: 'Login', value: 'Login' },
@@ -45,11 +45,11 @@ export class ActivityMonitoringFiltersComponent implements OnInit {
 
   ngOnInit(): void {
     this.filterForm = this.fb.group({
-      email: [''],
+      createdBy: [''],
       userRole: [''],
       status: [''],
-      action: [''],
-      date: [null],
+      actionName: [''],
+      startedAt: [null],
     });
 
     this.filterForm.valueChanges.subscribe((values) => {

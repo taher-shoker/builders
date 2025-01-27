@@ -3,7 +3,7 @@
 .activity-monitoring_filters {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    @include responsive-gap($gap-medium);
 
     .filter-field {
         position: relative;
@@ -18,8 +18,24 @@
 
         ::ng-deep {
             @include calendar-styles;
+
+            .p-datepicker {
+                padding: 0;
+            }
+
+            .p-timepicker {
+
+                .p-hour-picker,
+                .p-minute-picker,
+                .p-second-picker,
+                .p-ampm-picker {
+
+                    span {
+                        // color: var(--stc-color);
+                        font-size: $font-size-small;
+                    }
+                }
+            }
         }
     }
-
-
 }

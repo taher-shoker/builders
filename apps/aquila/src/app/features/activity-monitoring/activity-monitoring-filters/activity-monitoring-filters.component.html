@@ -6,7 +6,7 @@
         type="text"
         pInputText
         placeholder="Search with Email"
-        formControlName="email"
+        formControlName="createdBy"
       />
       <button type="button" pButton icon="pi pi-search"></button>
     </p-inputGroup>
@@ -29,7 +29,7 @@
   <!-- Action -->
   <stc-apps-filter-dropdown
     [placeholder]="'Action'"
-    formControlName="action"
+    formControlName="actionName"
     [dropdownOptions]="actionOptions"
   ></stc-apps-filter-dropdown>
 
@@ -41,7 +41,10 @@
       inputId="icondisplay"
       placeholder="Select Date"
       [showClear]="true"
-      formControlName="date"
+      formControlName="startedAt"
+      [showTime]="true"
+      [timeOnly]="false"
+      [hourFormat]="'12'"
     />
   </div>
 </form>
