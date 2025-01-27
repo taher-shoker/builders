@@ -13,7 +13,7 @@
         }
 
         .p-datatable-tbody tr td {
-            padding: $gap-xs;
+            // padding: $gap-xs;
             @extend %common-cell-styles;
         }
 
