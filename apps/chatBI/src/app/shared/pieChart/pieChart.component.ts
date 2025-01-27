@@ -142,12 +142,15 @@ export class PieChartComponent implements OnInit {
         labelText: '{category}: {value}',
       }),
     });
-    const legendFontSize = window.innerWidth < 768 ? 12 : 14;
+    const legendFontSize = window.innerWidth < 768 ? 10 : 14;
     const legendFontWeight = window.innerWidth < 768 ? 'bold' : 'normal';
 
     legend.labels.template.setAll({
       fontSize: legendFontSize,
       fontWeight: legendFontWeight,
+      maxWidth: 200,
+      marginRight: 12,
+      oversizedBehavior: 'wrap',
     });
     adjustLegendPosition();
     series.appear(1000, 100);
