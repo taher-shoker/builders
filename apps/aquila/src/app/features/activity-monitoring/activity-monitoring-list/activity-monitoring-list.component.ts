@@ -30,6 +30,7 @@ import { ChipModule } from 'primeng/chip';
 })
 export class ActivityMonitoringListComponent implements OnInit, AfterViewInit {
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: TemplateRef<any>;
+  @ViewChild('startedAtTemplate') startedAtTemplate!: TemplateRef<any>;
   activityMonitoringService = inject(ActivityMonitoringService);
   columnsSchema: ColumnsSchema[] = [];
   appliedFilters: { key: string; label: string; value: any }[] = [];
@@ -51,45 +52,9 @@ export class ActivityMonitoringListComponent implements OnInit, AfterViewInit {
         ),
     },
   ];
-  dataSource = [
-    {
-      email: 'john.doe@example.com',
-      userRole: 'User',
-      action: 'Login',
-      dateTime: '2023-10-01 10:30 AM',
-      status: 'Success',
-    },
-    {
-      email: 'jane.smith@example.com',
-      userRole: 'Admin',
-      action: 'Add standard',
-      dateTime: '2023-10-01 11:15 AM',
-      status: 'Success',
-    },
-    {
-      email: 'alice.johnson@example.com',
-      userRole: 'Admin',
-      action: 'Update standard',
-      dateTime: '2023-10-01 12:00 PM',
-      status: 'Failed',
-    },
-    {
-      email: 'bob.brown@example.com',
-      userRole: 'Admin',
-      action: 'Add standard',
-      dateTime: '2023-10-01 01:45 PM',
-      status: 'Success',
-    },
-    {
-      email: 'charlie.davis@example.com',
-      userRole: 'User',
-      action: 'Login',
-      dateTime: '2023-10-01 02:30 PM',
-      status: 'Failed',
-    },
-  ];
+
+  dataSource: any[] = [];
   filteredDataSource = this.dataSource;
-  activities: any[] = [];
 
   ngOnInit(): void {
     this.loadActivities();
@@ -98,10 +63,15 @@ export class ActivityMonitoringListComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     setTimeout(() => {
       this.columnsSchema = [
-        { key: 'email', type: 'text', label: 'Email' },
+        { key: 'createdBy', type: 'text', label: 'Email' },
         { key: 'userRole', type: 'text', label: 'User Role' },
-        { key: 'action', type: 'text', label: 'Action' },
-        { key: 'dateTime', type: 'text', label: 'Date & Time' },
+        { key: 'actionName', type: 'text', label: 'Action' },
+        {
+          key: 'startedAt',
+          type: 'custom',
+          label: 'Date & Time',
+          complexViewTemp: this.startedAtTemplate,
+        },
         {
           key: 'status',
           type: 'custom',
@@ -112,10 +82,11 @@ export class ActivityMonitoringListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  loadActivities(start?: number, end?: number): void {
+  loadActivities(start = 0, end = 50): void {
     this.activityMonitoringService.getActivities(start, end).subscribe(
-      (data: any) => {
-        this.activities = data;
+      (response: any) => {
+        this.dataSource = response.userActivities || [];
+        this.filteredDataSource = response.userActivities || [];
       },
       (error) => {
         console.error('Error fetching activities:', error);
@@ -137,16 +108,25 @@ export class ActivityMonitoringListComponent implements OnInit, AfterViewInit {
     });
 
     this.filteredDataSource = this.dataSource.filter((item) => {
+      const itemDate = new Date(item.startedAt);
+      console.log(item);
+
       return (
-        (!filters.email ||
-          item.email.toLowerCase().includes(filters.email.toLowerCase())) &&
+        (!filters.createdBy ||
+          item.createdBy
+            .toLowerCase()
+            .includes(filters.createdBy.toLowerCase())) &&
         (!filters.userRole?.value ||
           item.userRole === filters.userRole.value) &&
         (!filters.status?.value || item.status === filters.status.value) &&
-        (!filters.action?.value || item.action === filters.action.value) &&
-        (!filters.date ||
-          new Date(item.dateTime).toDateString() ===
-            new Date(filters.date).toDateString())
+        (!filters.actionName?.value ||
+          item.actionName === filters.actionName.value) &&
+        (!filters.startedAt ||
+          (itemDate.getFullYear() === filters.startedAt.getFullYear() &&
+            itemDate.getMonth() === filters.startedAt.getMonth() &&
+            itemDate.getDate() === filters.startedAt.getDate() &&
+            itemDate.getHours() === filters.startedAt.getHours() &&
+            itemDate.getMinutes() === filters.startedAt.getMinutes()))
       );
     });
   }

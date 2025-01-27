@@ -22,8 +22,8 @@
       [label]="
         filter.label +
         ': ' +
-        (filter.key === 'date'
-          ? (filter.value | date : 'mediumDate')
+        (filter.key === 'startedAt'
+          ? (filter.value | date : 'dd MMM yyyy \'at\' hh:mm a')
           : filter.value)
       "
       [removable]="true"
@@ -47,12 +47,15 @@
       <ng-template #statusCustomTemplate let-row>
         <span
           [ngClass]="{
-            'status-success': row.status === 'Success',
-            'status-failed': row.status === 'Failed'
+            'status-success': row.status === 'SUCCESS',
+            'status-failed': row.status === 'FAILED'
           }"
         >
           {{ row.status }}
         </span>
+      </ng-template>
+      <ng-template #startedAtTemplate let-row>
+        {{ row.startedAt | date : "dd MMM yyyy 'at' hh:mm a" }}
       </ng-template>
     </stc-apps-table-list>
   </div>

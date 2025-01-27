@@ -3,27 +3,19 @@
 .activity-monitoring {
     @extend .component-wrapper;
     border-radius: 6.25px;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    @include flex-column;
+    @include responsive-gap($gap-medium);
 
     &_header {
-        display: flex;
-        justify-content: space-between;
+        @include flex-between-center;
 
         h3 {
             color: #212121;
             font-weight: 600;
         }
 
-        stc-apps-split-button {
-            ::ng-deep {
-                button {
-                    span {
-                        font-size: 15px;
-                    }
-                }
-            }
+        stc-apps-split-button ::ng-deep p-splitbutton button {
+            @include button-font-size;
         }
     }
 
@@ -31,13 +23,13 @@
         &_applied {
             display: flex;
             align-items: center;
-            gap: 8px;
+            @include responsive-gap($gap-xxs);
 
             stc-apps-button {
                 ::ng-deep {
                     button {
                         color: var(--stc-color);
-                        font-size: 14px;
+                        @include button-font-size;
                     }
                 }
             }
@@ -46,7 +38,7 @@
 
     &_list {
         span {
-            padding: 10px 20px;
+            padding: $gap-xs $gap-large;
             border-radius: 6px;
             font-weight: 700;
 
@@ -60,7 +52,5 @@
                 background: #FFEDED;
             }
         }
-
-
     }
 }
