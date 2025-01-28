@@ -30,19 +30,22 @@
                      <img src="assets/images/plus-icon.svg" alt="">
                     add new project
                   </button>
-                  <stc-apps-menu-popup 
-                      [menuItems]="menuItems"
-                      (onClick)="actionButton($event)"
-                      [hidePopup]="showActivityLogsPopup"
-                  />
-                  <stc-apps-activity-logs-popup 
-                      [activityLogsTableHeader]="activityLogsTableHeader"
-                      [activityLogsTableBody]="activityLogsTableBody"
-                      [showPopup]="showActivityLogsPopup"
-                      (popupClosed)="popupClosed()"
-                      [isActionPopup]="false"
-                      [isActionPopup2]="true"
-                  />
+                  @if(isAdmin)
+                  {
+                    <stc-apps-menu-popup 
+                        [menuItems]="menuItems"
+                        (onClick)="actionButton($event)"
+                        [hidePopup]="showActivityLogsPopup"
+                    />
+                    <stc-apps-activity-logs-popup 
+                        [activityLogsTableHeader]="activityLogsTableHeader"
+                        [activityLogsTableBody]="activityLogsTableBody"
+                        [showPopup]="showActivityLogsPopup"
+                        (popupClosed)="popupClosed()"
+                        [isActionPopup]="false"
+                        [isActionPopup2]="true"
+                    />
+                  }
                 </div>
               }
             </div>
@@ -56,6 +59,7 @@
                     [userRoles]="userRoles"
                     (deleteProject)="deleteProject($event)"
                     [isAllowed]="isAllowed"
+                    [isAdmin]="isAdmin"
                     (addChartData)="addChartData($event)"
                     (deleteTableRecord)="deleteTableRecord($event)"
                     [activityLogsTableHeader]="projectActivityLogsTableHeader"

@@ -9,7 +9,7 @@
     <stc-apps-edit-mode-view
       (import)="showDialog()"
       (export)="downloadTemplate()"
-      [showActivityLogsButton]="false"
+      [showActivityLogsButton]="true"
     />
     }
     <p class="strategy-program-section-details-title">
@@ -54,7 +54,7 @@
         @if(isTapOpened && currentTabIndex === index) {
         <div class="header">
           <p class="accordion-container-title mb-0">projects/initiatives</p>
-          @if(isAllowed) {
+          @if(isAdmin) {
           <div class="d-flex gap-3 align-items-center">
             <button (click)="showForm(kpi)">manage projects</button>
             <div class="icon-container" (click)="showActionsPopup()">
@@ -100,6 +100,7 @@
                 [projectData]="project" 
                 [activityLogsTableHeader]="projectActivityLogsTableHeader"
                 [activityLogsTableBody]="projectActivityLogsTableBody"
+                [isAdmin]="isAdmin"
               />
               <!-- (delete)="deleteProject($event , kpi.projects , kpi)" -->
               <!-- (edit)="editProject($event , kpi , project)" -->

@@ -1,5 +1,6 @@
 import { Route } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { IsAdminGuard } from './guards/isAdmin.guard';
 export const appRoutes: Route[] = [
   {
     path: '',
@@ -26,6 +27,7 @@ export const appRoutes: Route[] = [
       import('./views/activity-logs/activity-logs.component').then(
         (m) => m.ActivityLogsComponent
       ),
+    canActivate:[IsAdminGuard]
   },
   {
     path: 'strategy-program/:kpiId',

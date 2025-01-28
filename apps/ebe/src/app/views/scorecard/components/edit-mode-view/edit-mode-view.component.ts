@@ -13,6 +13,7 @@ export class EditModeViewComponent {
   @Output() import:EventEmitter<boolean> = new EventEmitter();
   @Output() export:EventEmitter<boolean> = new EventEmitter();
   @Output() showActivityLogs:EventEmitter<boolean> = new EventEmitter();
+  isAdmin = input<boolean>(false);
   showActivityLogsButton = input<boolean>(true);
   authService = inject(AuthService);
   // isAdmin = false;

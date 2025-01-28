@@ -6,9 +6,12 @@
       <span class="read-more" (click)="displayDrilldown()">read more</span>
       }
     </p>
-    <button class="show-menu-btn" (click)="showActionsPopup()">
-      <i class="pi pi-clock"></i>
-    </button>
+    @if(isAdmin())
+    {
+      <button class="show-menu-btn" (click)="showActionsPopup()">
+        <i class="pi pi-clock"></i>
+      </button>
+    }
     <!-- <button class = "show-menu-btn" [matMenuTriggerFor]="menu">
       <i class="pi pi-ellipsis-v"></i>
     </button>
@@ -38,23 +41,26 @@
   <section class="popover-section">{{ projectData().project }}</section>
 </p-overlayPanel>
 }
-<p-overlayPanel
-      #actionsPanel
-      dismissable="false"
-      appendTo="body"
-      styleClass="actions-logs"
-    >
-      <div class="actions-logs-table">
-        <div class="action" (click)="showActivityLogs()">
-          <i class="pi pi-clock"></i>
-          <p>activity log</p>
+@if(isAdmin())
+{
+  <p-overlayPanel
+        #actionsPanel
+        dismissable="false"
+        appendTo="body"
+        styleClass="actions-logs"
+      >
+        <div class="actions-logs-table">
+          <div class="action" (click)="showActivityLogs()">
+            <i class="pi pi-clock"></i>
+            <p>activity log</p>
+          </div>
         </div>
-      </div>
-    </p-overlayPanel>
-    <stc-apps-activity-logs-popup
-      [activityLogsTableHeader]="activityLogsTableHeader()"
-      [activityLogsTableBody]="activityLogsTableBody()"
-      [showPopup]="showActivityLogsPopup"
-      (popupClosed)="popupClosed()"
-      [isProjectActionPopup]="true"
-    />
+      </p-overlayPanel>
+      <stc-apps-activity-logs-popup
+        [activityLogsTableHeader]="activityLogsTableHeader()"
+        [activityLogsTableBody]="activityLogsTableBody()"
+        [showPopup]="showActivityLogsPopup"
+        (popupClosed)="popupClosed()"
+        [isProjectActionPopup]="true"
+      />
+}

@@ -7,7 +7,6 @@
     >
       {{ project().sector }}
     </p>
-    @if(isAllowed()) {
     <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
     <p-overlayPanel
       #actionsPanel
@@ -41,7 +40,6 @@
       (popupClosed)="popupClosed()"
       [isProjectActionPopup]="true"
     />
-    }
   </div>
   <div class="project-container-chart mt-5">
     <stc-apps-multi-circles-progress-bar

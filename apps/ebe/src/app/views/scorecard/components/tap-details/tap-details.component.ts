@@ -33,6 +33,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { DatePipe } from '@angular/common';
 import { ActivityLog } from '../../../../models/activity-logs';
+import { AuthService } from 'apps/ebe/src/app/services/auth.service';
 interface filterOption
 {
   month:number;
@@ -73,6 +74,8 @@ export class TapDetailsComponent implements OnInit {
   @Output() filterOptions:EventEmitter<filterOption> = new EventEmitter();
   @Output() ImportedFile:EventEmitter<FileModel> = new EventEmitter();
   scorecardService = inject(ScorecardService);
+  isAdmin = false;
+  authServices = inject(AuthService);
   monthsArrPopulator() {
     for (let i = 1; this.monthsArr.length < 12; i++) {
       const date = new Date(2000, i - 1, 10); // 2009-11-10
@@ -83,6 +86,13 @@ export class TapDetailsComponent implements OnInit {
   }
   constructor(private datePipe: DatePipe){}
   ngOnInit(): void {    
+    this.authServices.userRoles.subscribe({
+      next : (role) => {
+        this.isAdmin = role.roles.some(
+          (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+        );
+      }
+    })
     console.log(window.innerWidth);
     this.activityLogsTableBody = [
       {

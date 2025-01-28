@@ -62,10 +62,10 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     this.endSubs$.complete();
   }
   userRoles!:UserGroup;
-  isAllowed!:boolean;
+  isAdmin!:boolean;
   ngOnInit(): void {
     this.userRoles = this.scorecardService.userRoles;
-    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
+    this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
@@ -262,7 +262,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     this.currentTabIndex = typeof index === 'number' ? index : 0;
   }
   showForm(project:StrategyProgramKpiDetailsModel) {
-    if(this.isAllowed)
+    if(this.isAdmin)
     {
       this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.keyResultNumber}`);
       this.strategyProgramService.clickedProjects.next(project.projects);

@@ -19,27 +19,14 @@ import { ActivityLog , ColumnsSchema } from '../../../../models/activity-logs';
 export class PSRProjectCardComponent implements OnChanges , OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
-  isAllowed = input<boolean>();
+  isAdmin = input<boolean>();
   datePipe = inject(DatePipe);
   activityLogsTableHeader = input.required<ColumnsSchema[]>();
   activityLogsTableBody = input.required<ActivityLog[]>();
   @Output() ProgramId:EventEmitter<number> = new EventEmitter();
   months:string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   maxTextLength = 0;
-  items = [
-    {
-        label: 'Edit',
-        icon: 'pi pi-pen-to-square'
-    },
-    {
-        label: 'Delete',
-        icon: 'pi pi-trash'
-    },
-    {
-        label: 'Activity Logs',
-        icon: 'pi pi-clock'
-    }
-]
+  items:any[] = []
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
@@ -48,7 +35,35 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   chartData!:PSRChartDataModel;
   private confirmationService = inject(ConfirmationService);
   ngOnInit(): void {
-    
+    console.log(this.isAdmin());
+    if(this.isAdmin())
+    {
+      this.items = [
+        {
+            label: 'Edit',
+            icon: 'pi pi-pen-to-square'
+        },
+        {
+            label: 'Delete',
+            icon: 'pi pi-trash'
+        },
+        {
+            label: 'Activity Logs',
+            icon: 'pi pi-clock'
+        }
+      ]
+    } else {
+      this.items = [
+        {
+            label: 'Edit',
+            icon: 'pi pi-pen-to-square'
+        },
+        {
+            label: 'Delete',
+            icon: 'pi pi-trash'
+        }
+      ]
+    }
   }
   showActivityLogsPopup = false;
   showActivityLogs()

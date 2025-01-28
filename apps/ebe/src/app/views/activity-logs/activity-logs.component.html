@@ -21,12 +21,14 @@
       <div class="filter-inputs">
         <div class="form-group">
           <div class="search-input">
-            <i class="pi pi-search"></i>
             <input
               type="text"
-              placeholder="Search by User Email"
+              placeholder="Search by Username"
               [(ngModel)]="searchKeyword"
             />
+            <div class = "search-icon" (click)="filterByName()">
+              <i class="pi pi-search"></i>
+            </div>
           </div>
         </div>
         <div class="form-group">
@@ -37,7 +39,7 @@
             placeholder="Action Type"
             styleClass="action-types-dropdown"
             dropdownIcon="pi pi-sort-down-fill"
-            (ngModelChange)="selectActionType($event)"
+            (ngModelChange)="selectActionType()"
           />
         </div>
         <div class="form-group">
@@ -47,55 +49,175 @@
             [showIcon]="true"
             inputId="icondisplay"
             styleClass="activity-log-date"
+            selectionMode="range"
             placeholder="Date"
+            (onClose)="selectDate()"
+            (ngModelChange)="onDateChange($event)"
           />
         </div>
+        <!-- <div class="form-group">
+          <button (click)="applyFilters()" class="apply-filter-btn">
+            apply filters
+          </button>
+        </div> -->
       </div>
       <div class="activity-logs-table">
         <p-table
-          [value]="activityLogsData"
+          [value]="activityLogsResponse().data"
+          [totalRecords]="activityLogsResponse().totalElements"
           [paginator]="true"
-          [rows]="5"
+          [rows]="activityLogsResponse().pageSize"
           [tableStyle]="{ 'min-width': '50rem' }"
           (onPage)="changePage($event)"
-          styleClass = "logs-table"
+          styleClass="logs-table"
           [showCurrentPageReport]="true"
+          [paginator]="false"
           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Activities Logs"
-          >
+        >
           <!-- currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" -->
           <ng-template pTemplate="header">
             <tr>
-              @for(head of activityLogsHeader;track head)
-              {
-                <th>{{head}}</th>
+              @for(head of activityLogsHeader;track head) {
+              <th>{{ head }}</th>
               }
             </tr>
           </ng-template>
-          <ng-template pTemplate="body" let-log>
-            <tr>
-              <td>{{ log.username }}</td>
-              <td>{{ log.activityType }}</td>
-              <td>
-                {{ log.activityDetails | truncateWord:3}}
-                @if(log.activityDetails.length > 33){
-                  <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
-                  <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
-                    <section class="long-title-popover-section">{{ log.activityDetails }}</section>
-                  </p-overlayPanel>
+            <ng-template pTemplate="body" let-log>
+              <tr>
+                @if(log.username)
+                {
+                  <td>{{ log.username | truncateWord:3 }}</td>
+                  @if(log.username.split(" ").length > 3){
+                    <span
+                      class="read-more-btn"
+                      (click)="longTitlePanel.toggle($event)"
+                      >read more</span
+                    >
+                    <p-overlayPanel
+                      styleClass="longTitlePanel"
+                      #longTitlePanel
+                      dismissable="true"
+                    >
+                      <section class="long-title-popover-section">
+                        {{ log.username }}
+                      </section>
+                    </p-overlayPanel>
+                  }
                 }
-              </td>
-              <td>{{ log.timeStamp }}</td>
-              @if(activityLogsHeader.includes("new value"))
-              {
-                <td>{{ log.newValue ? log.newValue : '-' }}</td>
-              }
-              @if(activityLogsHeader.includes("old value"))
-              {
-                <td>{{ log.oldValue ? log.oldValue : '-' }}</td>
-              }
-            </tr>
-          </ng-template>
+                @if(log.activityType)
+                {
+                  <td>
+                    {{ log.activityType | truncateWord : 2 }}
+                    @if(log.activityType.split(" ").length > 2){
+                    <span
+                      class="read-more-btn"
+                      (click)="longTitlePanel.toggle($event)"
+                      >read more</span
+                    >
+                    <p-overlayPanel
+                      styleClass="longTitlePanel"
+                      #longTitlePanel
+                      dismissable="true"
+                    >
+                      <section class="long-title-popover-section">
+                        {{ log.activityType }}
+                      </section>
+                    </p-overlayPanel>
+                    }
+                  </td>
+                }
+                @if(log.activityDetails)
+                {
+                  <td>
+                    {{ log.activityDetails | truncateWord : 2 }}
+                    @if(log.activityDetails.split(" ").length > 2){
+                    <span
+                      class="read-more-btn"
+                      (click)="longTitlePanel.toggle($event)"
+                      >read more</span
+                    >
+                    <p-overlayPanel
+                      styleClass="longTitlePanel"
+                      #longTitlePanel
+                      dismissable="true"
+                    >
+                      <section class="long-title-popover-section">
+                        {{ log.activityDetails }}
+                      </section>
+                    </p-overlayPanel>
+                    }
+                  </td>
+                }
+                @if(log.timestamp)
+                {
+                  <td>{{ transformDate(log.timestamp) }}</td>
+                }
+                @if(activityLogsHeader.includes("new value")) 
+                {
+                  <td>
+                    {{ log.newValue ? (log.newValue | truncateWord:1) : '-' }}
+                    @if(log.newValue && log.newValue.split(" ").length > 1){
+                    <span
+                      class="read-more-btn"
+                      (click)="longTitlePanel.toggle($event)"
+                      >read more</span
+                    >
+                    <p-overlayPanel
+                      styleClass="longTitlePanel"
+                      #longTitlePanel
+                      dismissable="true"
+                    >
+                      <section class="long-title-popover-section">
+                        {{ log.newValue }}
+                      </section>
+                    </p-overlayPanel>
+                    }
+                  </td>
+                } @if(activityLogsHeader.includes("old value")) 
+                {
+                    <td>
+                      {{ log.oldValue ? (log.oldValue | truncateWord:1) : '-' }}
+                    @if(log.oldValue && log.oldValue.split(" ").length > 1){
+                    <span
+                      class="read-more-btn"
+                      (click)="longTitlePanel.toggle($event)"
+                      >read more</span
+                    >
+                    <p-overlayPanel
+                      styleClass="longTitlePanel"
+                      #longTitlePanel
+                      dismissable="true"
+                    >
+                      <section class="long-title-popover-section">
+                        {{ log.oldValue }}
+                      </section>
+                    </p-overlayPanel>
+                  }
+                    </td>
+                }
+              </tr>
+            </ng-template>
+
+            <ng-template pTemplate="emptymessage">
+              <tr>
+                <td colspan="6" class = "empty-data">
+                  there are no data
+                </td>
+              </tr>
+            </ng-template>
         </p-table>
+        <p-paginator
+          (onPageChange)="changePage($event)"
+          [first]="first()"
+          #paginator
+          [rows]="rows()"
+          [totalRecords]="activityLogsResponse().totalElements"
+          [showCurrentPageReport]="true"
+          currentPageReportTemplate="Showing {first} to {last} of {totalRecords} Activity Logs"
+          styleClass="activity-logs-pagination"
+          [pageLinkSize]="5"
+        />
+        <!-- <p class = "empty-data">there are no data</p> -->
       </div>
     </div>
   </div>

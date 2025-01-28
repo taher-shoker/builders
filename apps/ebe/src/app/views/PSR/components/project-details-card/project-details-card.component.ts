@@ -33,25 +33,13 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   router = inject(Router)
   route = inject(ActivatedRoute)
   isAllowed = input<boolean>();
+  isAdmin = input<boolean>();
   activityLogsTableHeader = input.required<ColumnsSchema[]>();
   activityLogsTableBody = input.required<ActivityLog[]>();
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
   @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   data!:ProgressInfo;
-  items = [
-    {
-          label: 'Edit',
-          icon: 'pi pi-pen-to-square'
-      },
-      {
-          label: 'Delete',
-          icon: 'pi pi-trash'
-      },
-      {
-          label: 'Activity Logs',
-          icon: 'pi pi-clock'
-      }
-  ]
+  items:any[] = []
   showActivityLogsPopup = false;
   showActivityLogs()
   {
@@ -99,6 +87,34 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       this.tableHeader = this.psrServices.tableHeader;
     } else {
       this.tableHeader = this.psrServices.tableHeader.filter(val => val.key !== '');
+    }
+    if(this.isAdmin())
+    {
+      this.items = [
+        {
+              label: 'Edit',
+              icon: 'pi pi-pen-to-square'
+          },
+          {
+              label: 'Delete',
+              icon: 'pi pi-trash'
+          },
+          {
+              label: 'Activity Logs',
+              icon: 'pi pi-clock'
+          }
+      ]
+    } else {
+      this.items = [
+        {
+              label: 'Edit',
+              icon: 'pi pi-pen-to-square'
+          },
+          {
+              label: 'Delete',
+              icon: 'pi pi-trash'
+          }
+      ]
     }
   }
   newData!:PSRProjectDetailsModel;

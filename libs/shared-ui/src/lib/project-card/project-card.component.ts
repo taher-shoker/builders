@@ -36,6 +36,7 @@ export class ProjectCardComponent implements OnInit{
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   titleArr:string[] = [];
   showActivityLogsPopup = false;
+  isAdmin = input<boolean>(false)
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
