@@ -47,7 +47,9 @@
             placeholder="Select Publish Date"
             [iconDisplay]="'input'"
             [showIcon]="true"
-            appendTo="body"
+            [showTime]="true"
+            [timeOnly]="false"
+            [hourFormat]="'12'"
           ></p-calendar>
           @if (form.get('publishUpdate')?.invalid &&
           form.get('publishUpdate')?.touched) {
