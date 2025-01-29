@@ -1,25 +1,88 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, OnDestroy } from '@angular/core';
 import { environment } from '../../../../environments/environment.stage';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {
+  BehaviorSubject,
+  debounceTime,
+  distinctUntilChanged,
+  Observable,
+  Subject,
+  switchMap,
+  takeUntil,
+} from 'rxjs';
+import { ActivityApiResponse, ActivityFilters } from '../models/activity.model';
 
 @Injectable({
   providedIn: 'root',
 })
-export class ActivityMonitoringService {
+export class ActivityMonitoringService implements OnDestroy {
   private readonly apiUrl = `${environment.apiUrl}/v1/Activities`;
   private readonly http = inject(HttpClient);
 
-  getActivities(start?: number, end?: number): Observable<any> {
-    let params = new HttpParams();
+  private filterSubject = new BehaviorSubject<ActivityFilters>({});
+  private destroy$ = new Subject<void>();
 
-    if (start !== undefined) {
-      params = params.set('start', start.toString());
-    }
-    if (end !== undefined) {
-      params = params.set('end', end.toString());
+  readonly activities$ = this.filterSubject.pipe(
+    debounceTime(300),
+    distinctUntilChanged(
+      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+    ),
+    switchMap((filters) => this.getActivities(filters)),
+    takeUntil(this.destroy$)
+  );
+
+  constructor() {
+    this.triggerInitialLoad();
+  }
+
+  private triggerInitialLoad() {
+    this.filterSubject.next({});
+  }
+
+  updateFilters(filters: ActivityFilters) {
+    this.filterSubject.next(filters);
+  }
+
+  private getActivities(
+    filters: ActivityFilters
+  ): Observable<ActivityApiResponse> {
+    const processedFilters = this.processFilters(filters);
+    const params = new HttpParams().set('start', '0').set('end', '110');
+
+    return this.http.post<ActivityApiResponse>(this.apiUrl, processedFilters, {
+      params,
+    });
+  }
+
+  private processFilters(filters: ActivityFilters): Partial<ActivityFilters> {
+    const body = { ...filters };
+
+    if (body.startedAt instanceof Date) {
+      body.startedAt = this.formatDateToLocalISO(body.startedAt);
     }
 
-    return this.http.get(this.apiUrl, { params });
+    return Object.fromEntries(
+      Object.entries(body).filter(([_, value]) => value !== '' && value != null)
+    ) as Partial<ActivityFilters>;
+  }
+
+  private formatDateToLocalISO(date: Date): string {
+    const formatNumber = (num: number, digits: number) =>
+      num.toString().padStart(digits, '0');
+
+    const year = date.getFullYear();
+    const month = formatNumber(date.getMonth() + 1, 2);
+    const day = formatNumber(date.getDate(), 2);
+    const hours = formatNumber(date.getHours(), 2);
+    const minutes = formatNumber(date.getMinutes(), 2);
+    const seconds = formatNumber(date.getSeconds(), 2);
+    const milliseconds = formatNumber(date.getMilliseconds(), 3);
+
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }

@@ -7,6 +7,13 @@ import { CalendarModule } from 'primeng/calendar';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { SharedUiModule } from '@stc-apps/shared-ui';
+import {
+  debounceTime,
+  distinctUntilChanged,
+  map,
+  Subject,
+  takeUntil,
+} from 'rxjs';
 
 @Component({
   selector: 'stc-apps-activity-monitoring-filters',
@@ -27,7 +34,8 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 export class ActivityMonitoringFiltersComponent implements OnInit {
   @Output() filtersChanged = new EventEmitter<any>();
   filterForm: FormGroup = new FormGroup({});
-  fb = inject(FormBuilder);
+  private destroy$ = new Subject<void>();
+  private fb = inject(FormBuilder);
 
   userRoleOptions = [
     { label: 'User', value: 'User' },
@@ -38,12 +46,19 @@ export class ActivityMonitoringFiltersComponent implements OnInit {
     { label: 'Failed', value: 'FAILED' },
   ];
   actionOptions = [
-    { label: 'Login', value: 'Login' },
-    { label: 'Add standard', value: 'Add standard' },
-    { label: 'Update standard', value: 'Update standard' },
+    { label: 'getAllStandards', value: 'getAllStandards' },
+    { label: 'runMultipleComplianceTest', value: 'runMultipleComplianceTest' },
+    { label: 'uploadStandardFiles', value: 'uploadStandardFiles' },
+    { label: 'getErrorCode', value: 'getErrorCode' },
+    { label: 'createStandard', value: 'createStandard' },
   ];
 
   ngOnInit(): void {
+    this.initializeForm();
+    this.setupFormSubscription();
+  }
+
+  private initializeForm(): void {
     this.filterForm = this.fb.group({
       createdBy: [''],
       userRole: [''],
@@ -51,10 +66,19 @@ export class ActivityMonitoringFiltersComponent implements OnInit {
       actionName: [''],
       startedAt: [null],
     });
+  }
 
-    this.filterForm.valueChanges.subscribe((values) => {
-      this.filtersChanged.emit(values);
-    });
+  private setupFormSubscription(): void {
+    this.filterForm.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged(
+          (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+        ),
+        map((values) => this.processFormValues(values)),
+        takeUntil(this.destroy$)
+      )
+      .subscribe((values) => this.filtersChanged.emit(values));
   }
 
   resetFilterControl(controlName: string) {
@@ -65,5 +89,15 @@ export class ActivityMonitoringFiltersComponent implements OnInit {
   resetAllFilters() {
     this.filterForm.reset();
     this.filtersChanged.emit(this.filterForm.value);
+  }
+
+  private processFormValues(values: any): any {
+    return {
+      createdBy: values.createdBy,
+      userRole: values.userRole?.value || '',
+      status: values.status?.value || '',
+      actionName: values.actionName?.value || '',
+      startedAt: values.startedAt,
+    };
   }
 }
