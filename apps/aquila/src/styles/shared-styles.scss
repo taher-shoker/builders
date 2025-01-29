@@ -108,3 +108,25 @@ $breakpoint-sm: 480px;
         }
     }
 }
+
+@mixin calendar-styles {
+    p-calendar {
+        timesicon {
+            margin: 0 10px;
+        }
+    }
+}
+
+%timepicker-styles {
+
+    .p-hour-picker,
+    .p-minute-picker,
+    .p-second-picker,
+    .p-ampm-picker {
+        span {
+            // color: var(--stc-color);
+            font-size: $font-size-small;
+            width: auto;
+        }
+    }
+}

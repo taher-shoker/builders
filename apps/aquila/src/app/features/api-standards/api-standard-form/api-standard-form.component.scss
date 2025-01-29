@@ -43,6 +43,10 @@
                 p-calendar span {
                     width: $full-width;
                 }
+
+                .p-timepicker {
+                    @extend %timepicker-styles;
+                }
             }
 
             @media screen and (max-width: $breakpoint-xl) {
@@ -163,6 +167,23 @@
             ::ng-deep button {
                 @include button-font-size;
             }
+
         }
     }
 }
+
+// ::ng-deep {
+//     .p-timepicker {
+
+//         .p-hour-picker,
+//         .p-minute-picker,
+//         .p-second-picker,
+//         .p-ampm-picker {
+
+//             span {
+//                 color: var(--stc-color);
+//                 font-size: $font-size-small;
+//             }
+//         }
+//     }
+// }
