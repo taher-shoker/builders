@@ -10,6 +10,7 @@
       (import)="showDialog()"
       (export)="downloadTemplate()"
       [showActivityLogsButton]="true"
+      (showActivityLogs)="showActivityLogs()"
     />
     }
     <p class="strategy-program-section-details-title">
@@ -67,7 +68,8 @@
               styleClass="actions-logs"
             >
               <div class="actions-logs-table">
-                <div class="action" (click)="showActivityLogs()">
+                <!-- <div class="action" (click)="showActivityLogs()"> -->
+                <div class="action" (click)="showKPIActivityLogs(kpi)">
                   <i class="pi pi-clock"></i>
                   <p>activity log</p>
                 </div>
@@ -122,12 +124,12 @@
     </p-accordion>
   </div>
 </section>
-<!-- <stc-apps-activity-logs-popup
+<stc-apps-activity-logs-popup
   [activityLogsTableHeader]="activityLogsTableHeader"
-  [activityLogsTableBody]="activityLogsTableBody"
+  [activityLogsTableBody]="activityLogsTableBody()"
   [showPopup]="showActivityLogsPopup"
   (popupClosed)="popupClosed()"
-/> -->
+/>
 <!-- <p-dialog
   [modal]="true"
   [(visible)]="visible"

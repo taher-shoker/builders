@@ -25,14 +25,14 @@
                         (onClick)="actionButton($event)"
                         [hidePopup]="showActivityLogsPopup"
                     />
-                    <!-- <stc-apps-activity-logs-popup 
+                    <stc-apps-activity-logs-popup 
                         [activityLogsTableHeader]="activityLogsTableHeader"
-                        [activityLogsTableBody]="activityLogsTableBody"
+                        [activityLogsTableBody]="activityLogsTableBody()"
                         [showPopup]="showActivityLogsPopup"
                         (popupClosed)="popupClosed()"
                         [isActionPopup]="false"
                         [isActionPopup2]="true"
-                    /> -->
+                    />
                 }
             </div>
         }
@@ -46,8 +46,6 @@
                         [project]="project"
                         (ProgramId)="getProgramId($event)"
                         [isAdmin]="isAdmin"
-                        [activityLogsTableHeader]="projectActivityLogsTableHeader"
-                        [activityLogsTableBody]="projectActivityLogsTableBody"
                     />
                 </div>
             }

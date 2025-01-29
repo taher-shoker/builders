@@ -13,6 +13,7 @@
           <stc-apps-edit-mode-view 
             (import)="showDialog()"
             (export)="downloadTemplate()"
+            [showActivityLogsButton]="false"
           />
         }
         @if(!isEmpty)
@@ -37,14 +38,14 @@
                         (onClick)="actionButton($event)"
                         [hidePopup]="showActivityLogsPopup"
                     />
-                    <!-- <stc-apps-activity-logs-popup 
+                    <stc-apps-activity-logs-popup 
                         [activityLogsTableHeader]="activityLogsTableHeader"
-                        [activityLogsTableBody]="activityLogsTableBody"
+                        [activityLogsTableBody]="activityLogsTableBody()"
                         [showPopup]="showActivityLogsPopup"
                         (popupClosed)="popupClosed()"
                         [isActionPopup]="false"
                         [isActionPopup2]="true"
-                    /> -->
+                    />
                   }
                 </div>
               }
@@ -62,8 +63,6 @@
                     [isAdmin]="isAdmin"
                     (addChartData)="addChartData($event)"
                     (deleteTableRecord)="deleteTableRecord($event)"
-                    [activityLogsTableHeader]="projectActivityLogsTableHeader"
-                    [activityLogsTableBody]="projectActivityLogsTableBody"
                     [groupName]="groupName"
                   />
                 </div>

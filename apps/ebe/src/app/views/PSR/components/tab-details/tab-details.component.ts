@@ -6,6 +6,7 @@ import {
   InputSignal,
   OnInit,
   Output,
+  signal,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -19,7 +20,9 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { MenuPopupComponent } from '../../../../components/menu-popup/menu-popup.component';
-import { ActivityLog, ColumnsSchema } from '../../../../models/activity-logs';
+import { ActivityLog, ActivityLogData, ColumnsSchema } from '../../../../models/activity-logs';
+import { ActivityLogService } from '../../../../services/activity-logs.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-tab-details',
@@ -46,10 +49,10 @@ export class TabDetailsComponent implements OnInit {
   psrService = inject(PSRService);
   router = inject(Router);
   activityLogsTableHeader!:ColumnsSchema[];
-  activityLogsTableBody!:ActivityLog[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
   projectActivityLogsTableHeader!:ColumnsSchema[];
   projectActivityLogsTableBody!:ActivityLog[];
-  
+  activityLogService = inject(ActivityLogService);
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
   datePipe = inject(DatePipe);
@@ -71,42 +74,26 @@ export class TabDetailsComponent implements OnInit {
     if(label === 'activity log')
     {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
+      this.getSpecificActivityLog("PSR")
     } else {
       this.router.navigateByUrl("/deleted-projects/programs");
     }
   }
   showActivityLogsPopup = false;
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
   popupClosed()
   {
     this.showActivityLogsPopup = false;
   }
+  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
+    {
+      this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+        next : (activityLogs:ActivityLogData[]) => {
+          this.activityLogsTableBody.set(activityLogs);
+        }
+      })
+    }
   ngOnInit(): void {
-    this.activityLogsTableBody = [
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-    ]
     this.activityLogsTableHeader = [
       {
         key : "username",

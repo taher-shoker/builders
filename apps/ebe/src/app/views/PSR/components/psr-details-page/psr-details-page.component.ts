@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -15,7 +15,8 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 import { MenuPopupComponent } from 'apps/ebe/src/app/components/menu-popup/menu-popup.component';
-import { ActivityLog, ColumnsSchema } from '../../../../models/activity-logs';
+import { ActivityLog, ActivityLogData, ColumnsSchema } from '../../../../models/activity-logs';
+import { ActivityLogService } from '../../../../services/activity-logs.service';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
@@ -38,7 +39,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   PSRDetailsData!: PSRProjectDetailsModel[];
   endSubs$: Subject<PSRProjectDetailsModel[]> = new Subject();
   activityLogsTableHeader!: ColumnsSchema[];
-  activityLogsTableBody!: ActivityLog[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
   projectActivityLogsTableHeader!: ColumnsSchema[];
   projectActivityLogsTableBody!: ActivityLog[];
   toastr = inject(ToastrService);
@@ -50,6 +51,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   isAllowed = false;
   datePipe = inject(DatePipe);
   isAdmin = false;
+  activityLogService = inject(ActivityLogService);
   menuItems = [
     {
       label: 'activity log',
@@ -61,15 +63,26 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
     },
   ];
   showActivityLogsPopup = false;
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
   popupClosed() {
     this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();
   }
   actionButton(label: string) {
     if (label === 'activity log') {
-      this.showActivityLogsPopup = !this.showActivityLogsPopup;
+      this.getSpecificActivityLog("PSR" , this.groupName);
     } else {
       this.route.navigateByUrl("/deleted-projects/psr-projects");
     }
+  }
+  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
+  {
+    this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        this.activityLogsTableBody.set(activityLogs);
+        this.showActivityLogsPopup = !this.showActivityLogsPopup;
+      }
+    })
   }
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
@@ -99,32 +112,6 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
         }
       },
     });
-    this.activityLogsTableBody = [
-      {
-        username: 'Hamed Rahed',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-      },
-      {
-        username: 'Hamed Rahed',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-      },
-      {
-        username: 'Hamed Rahed',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-      },
-      {
-        username: 'Hamed Rahed',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-      },
-    ];
     this.activityLogsTableHeader = [
       {
         key: 'username',
@@ -145,40 +132,6 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
         key: 'time',
         type: 'text',
         label: 'Time Stamp',
-      },
-    ];
-    this.projectActivityLogsTableBody = [
-      {
-        username: 'Hamed Rahed1',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-        oldValue: 'old value1',
-        newValue: 'new value1',
-      },
-      {
-        username: 'Hamed Rahed2',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-        oldValue: 'old value2',
-        newValue: 'new value2',
-      },
-      {
-        username: 'Hamed Rahed3',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-        oldValue: 'old value3',
-        newValue: 'new value3',
-      },
-      {
-        username: 'Hamed Rahed4',
-        type: 'import',
-        details: 'financial of scorecards',
-        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
-        oldValue: 'old value4',
-        newValue: 'new value4',
       },
     ];
     this.projectActivityLogsTableHeader = [

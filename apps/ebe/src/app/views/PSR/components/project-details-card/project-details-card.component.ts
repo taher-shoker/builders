@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Input, input, InputSignal, OnChanges, OnInit , Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, input, InputSignal, OnChanges, OnInit , Output, signal, ViewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { AddProjectForm, ChartDetails, ColumnsSchema, ProgressInfo, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { SharedUiModule } from "@stc-apps/shared-ui";
@@ -12,7 +12,9 @@ import { UserGroup } from '../../../../models/scorecard.model';
 import { MenuModule } from 'primeng/menu';
 import { ToastrService } from 'ngx-toastr';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { ActivityLog } from '../../../../models/activity-logs';
+import { ActivityLog, ActivityLogData } from '../../../../models/activity-logs';
+import { ActivityLogService } from '../../../../services/activity-logs.service';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
@@ -34,22 +36,34 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   route = inject(ActivatedRoute)
   isAllowed = input<boolean>();
   isAdmin = input<boolean>();
-  activityLogsTableHeader = input.required<ColumnsSchema[]>();
-  activityLogsTableBody = input.required<ActivityLog[]>();
+  activityLogsTableHeader = signal<ColumnsSchema[]>([]);
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
   @Output() sendData:EventEmitter<{id:number , data:ChartDetails[]}> = new EventEmitter();
   @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   data!:ProgressInfo;
   items:any[] = []
   showActivityLogsPopup = false;
   groupName = input.required<string>();
+  activityLogService = inject(ActivityLogService);
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
   showActivityLogs()
   {
+    this.getSpecificActivityLog("PSR" , this.projectData().sector , this.projectData().projectName);
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
+  {
+    this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        this.activityLogsTableBody.set(activityLogs);
+      }
+    })
   }
   popupClosed()
   {
     this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();
     this.actionsPanel.hide();
   }
   activatedRoute = inject(ActivatedRoute);
@@ -83,6 +97,38 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   datePipe = inject(DatePipe)
   constructor(private elementRef: ElementRef , private confirmationService: ConfirmationService) {}
   ngOnInit(): void {
+    this.activityLogsTableHeader.set([
+      {
+        key: 'username',
+        type: 'text',
+        label: 'User Name',
+      },
+      {
+        key: 'type',
+        type: 'text',
+        label: 'Activity Type',
+      },
+      {
+        key: 'details',
+        type: 'text',
+        label: 'Activity Details',
+      },
+      {
+        key: 'time',
+        type: 'text',
+        label: 'Time Stamp',
+      },
+      {
+        key: 'oldValue',
+        type: 'text',
+        label: 'Old Value',
+      },
+      {
+        key: 'newValue',
+        type: 'text',
+        label: 'New Value',
+      },
+    ])
     if(this.userRoles().roles[0].roleName !== 'BE_VIEWERS')
     {
       this.tableHeader = this.psrServices.tableHeader;

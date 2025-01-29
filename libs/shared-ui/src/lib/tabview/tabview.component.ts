@@ -28,6 +28,7 @@ export class TabviewComponent implements OnChanges{
   currentClickedTapIndex = 0;
   maxTabs = 0;
   data!:TabsDataModel[];
+  isActivityLogTable = input<boolean>(false)
   ngOnChanges(): void {
     if(this.tabsData())
     {

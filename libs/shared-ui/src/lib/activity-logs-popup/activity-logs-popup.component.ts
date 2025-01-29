@@ -1,4 +1,4 @@
-import { Component, effect, EventEmitter, inject, input, InputSignal, Output, ViewChild } from '@angular/core';
+import { Component, effect, EventEmitter, inject, input, InputSignal, Output, signal, ViewChild } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Router } from '@angular/router';
@@ -35,10 +35,17 @@ export class ActivityLogsPopupComponent {
   @Output() popupClosed:EventEmitter<boolean> = new EventEmitter(false);
   router = inject(Router)
   datePipe = inject(DatePipe);
+  hasNewValue = signal<boolean>(false)
+  hasOldValue = signal<boolean>(false)
   closeActivityLogsPopup()
   {
     this.activityLogsPanel.hide();
     this.popupClosed.emit(true);
+  }
+  ngOnInit()
+  {
+    this.hasNewValue.set(this.activityLogsTableHeader().some(item => item.key === 'newValue'))
+    this.hasOldValue.set(this.activityLogsTableHeader().some(item => item.key === 'oldValue'))    
   }
   constructor(){
     effect(() => {

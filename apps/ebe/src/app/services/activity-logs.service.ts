@@ -32,7 +32,17 @@ export class ActivityLogService {
   }
   getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string):Observable<ActivityLogData[]>
   {
-    let url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}`;
+    let url;
+    if(moduleName === 'CAD')
+    {
+      url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}&activityType=Import,Export`;
+    }
+    else if(moduleName === 'PSR')
+    {
+      url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}&activityType=Add,Import,Export,Delete`;
+    } else {
+      url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}`;
+    }
     if(subModule)
     {
       url += `&subModule=${subModule}`;

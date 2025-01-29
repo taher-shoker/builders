@@ -116,6 +116,13 @@
   padding: 7px 15px !important;
   border-radius: 5px !important;
   transition: 0.3s !important;
-  min-width: 102px !important;
+  // min-width: 102px !important;
   text-align: center !important;
+  &.ActivityLogTable
+  {
+    @media all and (max-width:1500px)
+    {
+      min-width:230px !important;
+    }
+  }
 }

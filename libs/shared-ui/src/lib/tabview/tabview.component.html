@@ -48,6 +48,7 @@
             'font-family': fontFamily() ? fontFamily() : 'Poppins'
           }"
           class="tap"
+          [class.ActivityLogTable]="isActivityLogTable()"
         >
           {{ tab.name }}
         </div>

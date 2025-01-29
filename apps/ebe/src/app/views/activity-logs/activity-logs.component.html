@@ -11,6 +11,7 @@
           [clickedtabBackground]="'#FF375E'"
           [fontFamily]="'STCForwardFont'"
           (clickedTap)="getCurrentTap($event)"
+          [isActivityLogTable]="true"
         />
       </div>
     </div>
@@ -26,7 +27,7 @@
               placeholder="Search by Username"
               [(ngModel)]="searchKeyword"
             />
-            <div class = "search-icon" (click)="filterByName()">
+            <div class="search-icon" (click)="filterByName()">
               <i class="pi pi-search"></i>
             </div>
           </div>
@@ -53,7 +54,8 @@
             placeholder="Date"
             (onClose)="selectDate()"
             (ngModelChange)="onDateChange($event)"
-          />
+            />
+            <!-- [showButtonBar]="true" -->
         </div>
         <!-- <div class="form-group">
           <button (click)="applyFilters()" class="apply-filter-btn">
@@ -82,129 +84,121 @@
               }
             </tr>
           </ng-template>
-            <ng-template pTemplate="body" let-log>
-              <tr>
-                @if(log.username)
-                {
-                  <td>{{ log.username | truncateWord:3 }}</td>
-                  @if(log.username.split(" ").length > 3){
-                    <span
-                      class="read-more-btn"
-                      (click)="longTitlePanel.toggle($event)"
-                      >read more</span
-                    >
-                    <p-overlayPanel
-                      styleClass="longTitlePanel"
-                      #longTitlePanel
-                      dismissable="true"
-                    >
-                      <section class="long-title-popover-section">
-                        {{ log.username }}
-                      </section>
-                    </p-overlayPanel>
-                  }
+          <ng-template pTemplate="body" let-log>
+            <tr>
+              <td>
+                {{ log.username ? (log.username | truncateWord : 3) : '-' }}
+              </td>
+              @if(log.username && log.username.split(" ").length > 3){
+              <span
+                class="read-more-btn"
+                (click)="longTitlePanel.toggle($event)"
+                >read more</span
+              >
+              <p-overlayPanel
+                styleClass="longTitlePanel"
+                #longTitlePanel
+                dismissable="true"
+              >
+                <section class="long-title-popover-section">
+                  {{ log.username }}
+                </section>
+              </p-overlayPanel>
+              }
+              <td>
+                {{
+                  log.activityType ? (log.activityType | truncateWord : 2) : '-'
+                }}
+                @if(log.activityType && log.activityType.split(" ").length > 2){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.activityType }}
+                  </section>
+                </p-overlayPanel>
                 }
-                @if(log.activityType)
-                {
-                  <td>
-                    {{ log.activityType | truncateWord : 2 }}
-                    @if(log.activityType.split(" ").length > 2){
-                    <span
-                      class="read-more-btn"
-                      (click)="longTitlePanel.toggle($event)"
-                      >read more</span
-                    >
-                    <p-overlayPanel
-                      styleClass="longTitlePanel"
-                      #longTitlePanel
-                      dismissable="true"
-                    >
-                      <section class="long-title-popover-section">
-                        {{ log.activityType }}
-                      </section>
-                    </p-overlayPanel>
-                    }
-                  </td>
+              </td>
+              <td>
+                {{
+                  log.activityDetails
+                    ? (log.activityDetails | truncateWord : 2)
+                    : '-'
+                }}
+                @if(log.activityDetails.split(" ").length > 2){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.activityDetails }}
+                  </section>
+                </p-overlayPanel>
                 }
-                @if(log.activityDetails)
-                {
-                  <td>
-                    {{ log.activityDetails | truncateWord : 2 }}
-                    @if(log.activityDetails.split(" ").length > 2){
-                    <span
-                      class="read-more-btn"
-                      (click)="longTitlePanel.toggle($event)"
-                      >read more</span
-                    >
-                    <p-overlayPanel
-                      styleClass="longTitlePanel"
-                      #longTitlePanel
-                      dismissable="true"
-                    >
-                      <section class="long-title-popover-section">
-                        {{ log.activityDetails }}
-                      </section>
-                    </p-overlayPanel>
-                    }
-                  </td>
+              </td>
+              <td>{{ log.timestamp ? transformDate(log.timestamp) : '-' }}</td>
+              @if(activityLogsHeader.includes("new value")) {
+              <td>
+                {{ log.newValue ? (log.newValue | truncateWord : 1) : '-' }}
+                @if(log.newValue && log.newValue.split(" ").length > 1){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.newValue }}
+                  </section>
+                </p-overlayPanel>
                 }
-                @if(log.timestamp)
-                {
-                  <td>{{ transformDate(log.timestamp) }}</td>
+              </td>
+              } @if(activityLogsHeader.includes("old value")) {
+              <td>
+                {{ log.oldValue ? (log.oldValue | truncateWord : 1) : '-' }}
+                @if(log.oldValue && log.oldValue.split(" ").length > 1){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.oldValue }}
+                  </section>
+                </p-overlayPanel>
                 }
-                @if(activityLogsHeader.includes("new value")) 
-                {
-                  <td>
-                    {{ log.newValue ? (log.newValue | truncateWord:1) : '-' }}
-                    @if(log.newValue && log.newValue.split(" ").length > 1){
-                    <span
-                      class="read-more-btn"
-                      (click)="longTitlePanel.toggle($event)"
-                      >read more</span
-                    >
-                    <p-overlayPanel
-                      styleClass="longTitlePanel"
-                      #longTitlePanel
-                      dismissable="true"
-                    >
-                      <section class="long-title-popover-section">
-                        {{ log.newValue }}
-                      </section>
-                    </p-overlayPanel>
-                    }
-                  </td>
-                } @if(activityLogsHeader.includes("old value")) 
-                {
-                    <td>
-                      {{ log.oldValue ? (log.oldValue | truncateWord:1) : '-' }}
-                    @if(log.oldValue && log.oldValue.split(" ").length > 1){
-                    <span
-                      class="read-more-btn"
-                      (click)="longTitlePanel.toggle($event)"
-                      >read more</span
-                    >
-                    <p-overlayPanel
-                      styleClass="longTitlePanel"
-                      #longTitlePanel
-                      dismissable="true"
-                    >
-                      <section class="long-title-popover-section">
-                        {{ log.oldValue }}
-                      </section>
-                    </p-overlayPanel>
-                  }
-                    </td>
-                }
-              </tr>
-            </ng-template>
+              </td>
+              }
+            </tr>
+          </ng-template>
 
-            <ng-template pTemplate="emptymessage">
-              <tr>
-                <td colspan="6" class = "empty-data">
-                  there are no data
-                </td>
-              </tr>
-            </ng-template>
+          <ng-template pTemplate="emptymessage">
+            <tr>
+              <td colspan="6" class="empty-data">there are no data</td>
+            </tr>
+          </ng-template>
         </p-table>
         <p-paginator
           (onPageChange)="changePage($event)"
