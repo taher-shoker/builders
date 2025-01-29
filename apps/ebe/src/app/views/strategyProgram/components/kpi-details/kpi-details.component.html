@@ -79,13 +79,13 @@
                 </div>
               </div>
             </p-overlayPanel>
-            <!-- <stc-apps-activity-logs-popup
+            <stc-apps-activity-logs-popup
               [activityLogsTableHeader]="activityLogsTableHeader"
-              [activityLogsTableBody]="activityLogsTableBody"
+              [activityLogsTableBody]="activityLogsTableBody()"
               [showPopup]="showActivityLogsPopup"
               (popupClosed)="popupClosed()"
               [isActionPopup]="true"
-            /> -->
+            />
             <!-- <stc-apps-menu-popup 
                       [menuItems]="menuItems"
                       (onClick)="menuActions($event)"
@@ -101,8 +101,9 @@
               <stc-apps-project-card 
                 [projectData]="project" 
                 [activityLogsTableHeader]="projectActivityLogsTableHeader"
-                [activityLogsTableBody]="projectActivityLogsTableBody"
+                [activityLogsTableBody]="projectActivityLogsTableBody()"
                 [isAdmin]="isAdmin"
+                (showLogsBtnClick)="showProjectLogs($event , kpi)"
               />
               <!-- (delete)="deleteProject($event , kpi.projects , kpi)" -->
               <!-- (edit)="editProject($event , kpi , project)" -->
@@ -127,8 +128,8 @@
 <stc-apps-activity-logs-popup
   [activityLogsTableHeader]="activityLogsTableHeader"
   [activityLogsTableBody]="activityLogsTableBody()"
-  [showPopup]="showActivityLogsPopup"
-  (popupClosed)="popupClosed()"
+  [showPopup]="showActivityLogsPopup2"
+  (popupClosed)="popupClosed2()"
 />
 <!-- <p-dialog
   [modal]="true"

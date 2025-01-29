@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, InputSignal, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, input, InputSignal, OnInit, Output, ViewChild } from '@angular/core';
 import { ProgressInfo } from '../progress-bar/progress-bar.component';
 import { OverlayPanel } from 'primeng/overlaypanel';
 export interface ColumnsSchema {
@@ -8,10 +8,14 @@ export interface ColumnsSchema {
 }
 export interface ActivityLog
 {
-  username:string,
-  type:string,
-  details:string,
-  time:string
+  id:number;
+    module:string;
+    username:string;
+    activityType:string;
+    activityDetails:string;
+    timestamp:string;
+    oldValue?:string;
+    newValue?:string;
 }
 export interface KpiProjectsDetailsModel
 {
@@ -37,10 +41,12 @@ export class ProjectCardComponent implements OnInit{
   titleArr:string[] = [];
   showActivityLogsPopup = false;
   isAdmin = input<boolean>(false)
+  @Output() showLogsBtnClick:EventEmitter<string> = new EventEmitter()
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
+    this.showLogsBtnClick.emit(this.projectData().project);
   }
   popupClosed()
   {

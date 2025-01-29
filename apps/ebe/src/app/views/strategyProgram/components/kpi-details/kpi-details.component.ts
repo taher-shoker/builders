@@ -51,7 +51,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   activityLogsTableHeader!:ColumnsSchema[];
   activityLogsTableBody = signal<ActivityLogData[]>([]);
   projectActivityLogsTableHeader!:ColumnsSchema[];
-  projectActivityLogsTableBody!:ActivityLog[];
+  projectActivityLogsTableBody = signal<ActivityLogData[]>([]);
   endSubs$:Subject<any> = new Subject();
   private confirmationService = inject(ConfirmationService);
   private scorecardService = inject(ScorecardService);
@@ -90,40 +90,6 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
         icon: "pi pi-eye"
       }
     ];
-    this.projectActivityLogsTableBody = [
-      {
-        username:"Hamed Rahed1",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
-        newValue : "new value"
-      },
-      {
-        username:"Hamed Rahed2",
-        type:"import",
-        details:"financial",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value",
-        newValue : "new value"
-      },
-      {
-        username:"Hamed Rahed3",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
-        newValue : "new value"
-      },
-      {
-        username:"Hamed Rahed4",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
-        newValue : "new value"
-      },
-    ]
     this.projectActivityLogsTableHeader = [
       {
         key : "username",
@@ -180,25 +146,30 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     ]
   }
   showActivityLogsPopup = false;
+  showActivityLogsPopup2 = false;
   $endScorecardActivityLogsSub:Subject<any> = new Subject();
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
+    console.log(this.showActivityLogsPopup2);
     this.getSpecificActivityLog("CAD" , this.currentId);
-    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+    this.showActivityLogsPopup2 = !this.showActivityLogsPopup2;
   }
   showKPIActivityLogs(kpi:StrategyProgramKpiDetailsModel)
   {
-    console.log(kpi);
-    console.log(this.currentId);
-    // this.getSpecificActivityLog("CAD" , this.currentId , kpi.strategyProjectName);
-    // this.showActivityLogsPopup = !this.showActivityLogsPopup;
+    this.getSpecificActivityLog("CAD" , this.currentId , kpi.keyResultName);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
   }
-  private getSpecificActivityLog(moduleName:string , subModule:string , projectName?:string)
+  private getSpecificActivityLog(moduleName:string , subModule:string , projectName?:string , entity?:string)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName , entity).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
-        this.activityLogsTableBody.set(activityLogs);
+        if(entity)
+        {
+          this.projectActivityLogsTableBody.set(activityLogs);
+        } else {
+          this.activityLogsTableBody.set(activityLogs);
+        }
       }
     })
   }
@@ -206,9 +177,18 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   {
     this.$endScorecardActivityLogsSub.complete();
     this.showActivityLogsPopup = false;
-    // this.actionsPanel.hide();
-    // console.log('test');
-    
+    this.actionsPanel.hide();
+  }
+  popupClosed2()
+  {
+    this.$endScorecardActivityLogsSub.complete();
+    this.showActivityLogsPopup2 = false;
+    this.actionsPanel.hide();
+  }
+  showProjectLogs(title:string , kpi:StrategyProgramKpiDetailsModel)
+  {
+    console.log(title);
+    this.getSpecificActivityLog("CAD" , this.currentId , kpi.keyResultName , title);
   }
   menuActions(label:string)
   {

@@ -30,7 +30,7 @@ export class ActivityLogService {
     }
     return this.http.get<ActivityLogRes>(url);
   }
-  getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string):Observable<ActivityLogData[]>
+  getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string):Observable<ActivityLogData[]>
   {
     let url;
     if(moduleName === 'CAD')
@@ -50,6 +50,10 @@ export class ActivityLogService {
     if(projectName)
     {
       url += `&attribute=${projectName}`;
+    }
+    if(entity)
+    {
+      url += `&entity=${entity}`;
     }
     return this.http.get<ActivityLogData[]>(url);
   }
