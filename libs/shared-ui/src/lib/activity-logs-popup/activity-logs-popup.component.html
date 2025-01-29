@@ -40,26 +40,35 @@
           <tbody>
             @for (item of activityLogsTableBody(); track $index) {
               <tr>
-                <td>{{item.username | truncateWord:2}}
-                  @if(item.username.split(" ").length > 2)
-                  {
-                    <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
-                    <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
-                      <section class="long-title-popover-section">{{ item.username }}</section>
-                    </p-overlayPanel>
-                  }</td>
-                <td>{{item.type}}</td>
-                <td>
-                  {{item.details | truncateWord:2}}
-                  @if(item.details.split(" ").length > 2)
-                  {
-                    <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
-                    <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
-                      <section class="long-title-popover-section">{{ item.details }}</section>
-                    </p-overlayPanel>
-                  }
-                </td>
-                <td class = "time">{{item.time}}</td>
+                @if(item.username)
+                {
+                  <td>{{item.username | truncateWord:2}}
+                    @if(item.username.split(" ").length > 2)
+                    {
+                      <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
+                      <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
+                        <section class="long-title-popover-section">{{ item.username }}</section>
+                      </p-overlayPanel>
+                    }</td>
+                }
+                @if(item.activityType)
+                {
+                  <td>{{item.activityType}}</td>
+                }
+                  <td>
+                    {{item.activityDetails ? (item.activityDetails| truncateWord:2) : '-'}}
+                    @if(item.activityDetails && item.activityDetails.split(" ").length > 2)
+                    {
+                      <span class="read-more-btn" (click)="longTitlePanel.toggle($event)">read more</span>
+                      <p-overlayPanel styleClass="longTitlePanel" #longTitlePanel dismissable="true">
+                        <section class="long-title-popover-section">{{ item.activityDetails}}</section>
+                      </p-overlayPanel>
+                    }
+                  </td>
+                @if(item.timestamp)
+                {
+                  <td class = "time">{{transformDate(item.timestamp)}}</td>
+                }
                 @if(item.newValue)
                 {
                   <td>
@@ -86,6 +95,10 @@
                     }
                   </td>
                 }
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class = "empty-data-msg">there are no data</td>
               </tr>
             }
           </tbody>

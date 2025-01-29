@@ -28,12 +28,13 @@ import { ScorecardService } from '../../../../services/scorecard.service';
 // import { DialogModule } from 'primeng/dialog';
 // import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
 import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { DatePipe } from '@angular/common';
-import { ActivityLog } from '../../../../models/activity-logs';
+import { ActivityLog, ActivityLogData } from '../../../../models/activity-logs';
 import { AuthService } from 'apps/ebe/src/app/services/auth.service';
+import { ActivityLogService } from 'apps/ebe/src/app/services/activity-logs.service';
 interface filterOption
 {
   month:number;
@@ -61,8 +62,9 @@ export class TapDetailsComponent implements OnInit {
   visible = false;
   endSubs$:Subject<ScorecardModel[]> = new Subject();
   activityLogsTableHeader!:ColumnsSchema[];
-  activityLogsTableBody!:ActivityLog[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
   selectedFile!:FileModel | null;
+  activityLogServices = inject(ActivityLogService);
   currentClickedTap: InputSignal<TapModel> = input.required<TapModel>();
   isEmpty: InputSignal<boolean> = input.required<boolean>();
   monthsArr: { name: string; id: number }[] = [];
@@ -94,32 +96,6 @@ export class TapDetailsComponent implements OnInit {
       }
     })
     console.log(window.innerWidth);
-    this.activityLogsTableBody = [
-      {
-        username:"Hamed Rahed Adel",
-        type:"import",
-        details:"financial of scorecards financial of scorecards financial of scorecards financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-    ]
     this.activityLogsTableHeader = [
       {
         key : "username",
@@ -215,10 +191,22 @@ export class TapDetailsComponent implements OnInit {
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
+    this.getScorecardActivityLogs("Scorecard");
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
+  private getScorecardActivityLogs(moduleName:string)
+  {
+    this.activityLogServices.getSpecificActivityLog(moduleName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        console.log(activityLogs);
+        this.activityLogsTableBody.set(activityLogs);
+      }
+    })
   }
   popupClosed()
   {
     this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();    
   }
 }

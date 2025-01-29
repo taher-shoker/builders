@@ -321,7 +321,7 @@ export class AddPsrProjectFormComponent implements OnInit {
             });
           });
           // console.log("addedProjects => " , this.addedProjects);
-          this.psrService.addNewProject(this.addedProjects).subscribe({
+          this.psrService.addNewProject(this.addedProjects , this.sectorName).subscribe({
             next: () => {
               this.confirmationService.confirm({
                 key: 'added-sector-success',
@@ -405,7 +405,8 @@ export class AddPsrProjectFormComponent implements OnInit {
       };
       // console.log(updatedObj);
       // console.log(addedProjects);
-      this.psrService.updateProject(+this.projectId, addedProjects).subscribe({
+
+      this.psrService.updateProject(+this.projectId, addedProjects , this.sectorName).subscribe({
         next: () => {
           this.confirmationService.confirm({
             key: 'edit-sector-success',

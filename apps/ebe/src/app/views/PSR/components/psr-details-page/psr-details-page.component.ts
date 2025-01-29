@@ -256,7 +256,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
       });
   }
   deleteProject(id: number) {
-    this.psrServices.deleteProject(id).subscribe({
+    this.psrServices.deleteProject(id , this.groupName).subscribe({
       next: () => {
         this.toastr.success('The Project is Deleted Successfully');
         this.getProjectDetails(this.groupName);

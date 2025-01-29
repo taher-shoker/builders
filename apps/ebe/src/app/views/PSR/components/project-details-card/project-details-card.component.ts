@@ -41,6 +41,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   data!:ProgressInfo;
   items:any[] = []
   showActivityLogsPopup = false;
+  groupName = input.required<string>();
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
@@ -220,7 +221,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
       {
       this.formValues2 = this.formValues2.filter(val => val.id !== this.deletedData.id);
     } else {
-      this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
+      this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails , this.groupName() , this.projectData().projectName).subscribe({
         next : (res) => {
           this.toastr.success("The record is deleted Successfully");
           this.deleteTableRecord.emit(true);
@@ -347,8 +348,8 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
         data.endDate = this.datePipe.transform(data.endDate , "dd/MM/yyyy")
       }
     })
-    // console.log(this.newData.chartDetails);
-    this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails).subscribe({
+    console.log(this.groupName());
+    this.psrServices.addNewChartDetails(this.projectData().id , this.newData.chartDetails , this.groupName() , this.projectData().projectName).subscribe({
       next : (res) => {
         this.toastr.success("The table is updated Successfully");
         this.addChartData.emit(true);

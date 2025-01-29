@@ -37,14 +37,14 @@
                         (onClick)="actionButton($event)"
                         [hidePopup]="showActivityLogsPopup"
                     />
-                    <stc-apps-activity-logs-popup 
+                    <!-- <stc-apps-activity-logs-popup 
                         [activityLogsTableHeader]="activityLogsTableHeader"
                         [activityLogsTableBody]="activityLogsTableBody"
                         [showPopup]="showActivityLogsPopup"
                         (popupClosed)="popupClosed()"
                         [isActionPopup]="false"
                         [isActionPopup2]="true"
-                    />
+                    /> -->
                   }
                 </div>
               }
@@ -64,6 +64,7 @@
                     (deleteTableRecord)="deleteTableRecord($event)"
                     [activityLogsTableHeader]="projectActivityLogsTableHeader"
                     [activityLogsTableBody]="projectActivityLogsTableBody"
+                    [groupName]="groupName"
                   />
                 </div>
               }

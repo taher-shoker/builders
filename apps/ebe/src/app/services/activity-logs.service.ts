@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserGroup } from '../models/scorecard.model';
 import { HttpClient } from '@angular/common/http';
-import { ActivityLogRes } from '../models/activity-logs';
+import { ActivityLogData, ActivityLogRes } from '../models/activity-logs';
 @Injectable({ providedIn: 'root' })
 export class ActivityLogService {
   http = inject(HttpClient);
@@ -29,5 +29,18 @@ export class ActivityLogService {
       url += `&endDate=${endDate}`;
     }
     return this.http.get<ActivityLogRes>(url);
+  }
+  getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string):Observable<ActivityLogData[]>
+  {
+    let url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}`;
+    if(subModule)
+    {
+      url += `&subModule=${subModule}`;
+    }
+    if(projectName)
+    {
+      url += `&attribute=${projectName}`;
+    }
+    return this.http.get<ActivityLogData[]>(url);
   }
 }

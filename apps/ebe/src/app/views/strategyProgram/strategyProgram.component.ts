@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { StrategyProgramService } from '../../services/strategy-program.service';
@@ -13,7 +13,8 @@ import { ToastrService } from 'ngx-toastr';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { DatePipe } from '@angular/common';
-import { ActivityLog } from '../../models/activity-logs';
+import { ActivityLog, ActivityLogData } from '../../models/activity-logs';
+import { ActivityLogService } from '../../services/activity-logs.service';
 @Component({
   selector: 'stc-apps-strategy-program',
   standalone: true,
@@ -34,10 +35,11 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService);
   activityLogsTableHeader!:ColumnsSchema[];
-  activityLogsTableBody!:ActivityLog[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
   endSubs$:Subject<boolean> = new Subject();
   toastr = inject(ToastrService);
   constructor(private datePipe:DatePipe){}
+  activityLogServices = inject(ActivityLogService);
   ngOnInit() {
     // this.strategyProgramData = [];
     console.log("window width => " , window.innerWidth);
@@ -47,32 +49,6 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
         this.currentMode = res;
       },
     });
-    this.activityLogsTableBody = [
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-    ]
     this.activityLogsTableHeader = [
       {
         key : "username",
@@ -150,13 +126,24 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
     window.URL.revokeObjectURL(url);
   }
   showActivityLogsPopup = false;
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
+    this.getScorecardActivityLogs("CAD");
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
   }
   popupClosed()
   {
     this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();
+  }
+  private getScorecardActivityLogs(moduleName:string)
+  {
+    this.activityLogServices.getSpecificActivityLog(moduleName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        this.activityLogsTableBody.set(activityLogs);
+      }
+    })
   }
 }

@@ -1,4 +1,4 @@
-import { Component, inject , OnDestroy, OnInit } from '@angular/core';
+import { Component, inject , OnDestroy, OnInit , signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/edit-mode-view.component';
@@ -12,7 +12,8 @@ import { ToastrService } from 'ngx-toastr';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { DatePipe } from '@angular/common';
-import { ActivityLog } from '../../models/activity-logs';
+import { ActivityLog, ActivityLogData } from '../../models/activity-logs';
+import { ActivityLogService } from '../../services/activity-logs.service';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
@@ -31,7 +32,8 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   sharedService = inject(SharedService);
   toastr = inject(ToastrService);
   activityLogsTableHeader!:ColumnsSchema[];
-  activityLogsTableBody!:ActivityLog[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
+  activityLogService = inject(ActivityLogService);
   chartColors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
   opexTenderingChart:{
     title:string;
@@ -103,32 +105,6 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
       },
     });
     this.getFinancialReportingData();
-    this.activityLogsTableBody = [
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-      {
-        username:"Hamed Rahed",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!
-      },
-    ]
     this.activityLogsTableHeader = [
       {
         key : "username",
@@ -156,11 +132,23 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
+    this.getScorecardActivityLogs("Financial");
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
+  private getScorecardActivityLogs(moduleName:string)
+  {
+    this.activityLogService.getSpecificActivityLog(moduleName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        console.log(activityLogs);
+        this.activityLogsTableBody.set(activityLogs);
+      }
+    })
   }
   popupClosed()
   {
     this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();
   }
   private getFinancialReportingData()
   {

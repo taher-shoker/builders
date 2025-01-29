@@ -1,5 +1,5 @@
 import { Component, effect, EventEmitter, inject, input, InputSignal, Output, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { Router } from '@angular/router';
 export interface ColumnsSchema {
@@ -9,12 +9,14 @@ export interface ColumnsSchema {
 }
 export interface ActivityLog
 {
-  username:string,
-  type:string,
-  details:string,
-  time:string,
-  oldValue?:string;
-  newValue?:string;
+  id:number;
+    module:string;
+    username:string;
+    activityType:string;
+    activityDetails:string;
+    timestamp:string;
+    oldValue?:string;
+    newValue?:string;
 }
 @Component({
   selector: 'stc-apps-activity-logs-popup',
@@ -32,6 +34,7 @@ export class ActivityLogsPopupComponent {
   isProjectActionPopup:InputSignal<boolean> = input<boolean>(false);
   @Output() popupClosed:EventEmitter<boolean> = new EventEmitter(false);
   router = inject(Router)
+  datePipe = inject(DatePipe);
   closeActivityLogsPopup()
   {
     this.activityLogsPanel.hide();
@@ -46,6 +49,10 @@ export class ActivityLogsPopupComponent {
         this.activityLogsPanel.hide();
       }
     })
+  }
+  transformDate(date:string)
+  {
+    return this.datePipe.transform(date, 'dd MMM yyyy \'at\' hh:mm a');
   }
   showAllActivityLog()
   {
