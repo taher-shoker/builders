@@ -109,7 +109,7 @@ export class ApiTestComponent implements OnInit {
   private handleTestCompletion(response: any, items: QueueItem[]): void {
     const updatedCompletedItems = items.map((item, index) => {
       const responseItem = response.testResults[index];
-      const result = responseItem?.testStatus === 'FAILURE' ? 'failed' : 'pass';
+      const result = responseItem?.parentTestId != null ? 'pass' : 'failed';
 
       return {
         ...item,

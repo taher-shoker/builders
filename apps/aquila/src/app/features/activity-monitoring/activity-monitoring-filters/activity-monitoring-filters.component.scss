@@ -24,17 +24,7 @@
             }
 
             .p-timepicker {
-
-                .p-hour-picker,
-                .p-minute-picker,
-                .p-second-picker,
-                .p-ampm-picker {
-
-                    span {
-                        // color: var(--stc-color);
-                        font-size: $font-size-small;
-                    }
-                }
+                @extend %timepicker-styles;
             }
         }
     }
