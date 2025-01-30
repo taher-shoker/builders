@@ -86,6 +86,7 @@
               (popupClosed)="popupClosed()"
               [isProjectActionPopup]="false"
               [isActionPopup]="true"
+              type = "cad"
             />
             <!-- <stc-apps-menu-popup 
                       [menuItems]="menuItems"
@@ -99,13 +100,14 @@
           <div class="row">
             @for (project of kpi.projects; track project.project) {
             <div class="col-lg-4 col-md-6 col-sm-12">
-              <div style = "background-color:#fff;">
+              <div style = "background-color:#fff;border-radius:10px;">
                 <stc-apps-project-card 
                 [projectData]="project" 
                 [activityLogsTableHeader]="projectActivityLogsTableHeader"
                 [activityLogsTableBody]="projectActivityLogsTableBody()"
                 [isAdmin]="isAdmin"
                 (showLogsBtnClick)="showProjectLogs($event , kpi)"
+                (openPanel)="openPanel()"
               />
               </div>
               <!-- (delete)="deleteProject($event , kpi.projects , kpi)" -->
@@ -133,6 +135,7 @@
   [activityLogsTableBody]="activityLogsTableBody()"
   [showPopup]="showActivityLogsPopup2"
   (popupClosed)="popupClosed2()"
+  type = "cad"
 />
 <!-- <p-dialog
   [modal]="true"

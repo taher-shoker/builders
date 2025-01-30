@@ -24,11 +24,16 @@ export class TabviewComponent implements OnChanges{
   clickedtabColor:InputSignal<string> = input<string>('')
   clickedtabBackground:InputSignal<string> = input<string>('')
   tabBackground:InputSignal<string> = input<string>('')
-  @Output() clickedTap:EventEmitter<TabsDataModel> = new EventEmitter()
-  currentClickedTapIndex = 0;
+  @Output() clickedTap:EventEmitter<TabsDataModel> = new EventEmitter();
+  currentIndex = input<number>(0);
+  currentClickedTapIndex!:number;
   maxTabs = 0;
   data!:TabsDataModel[];
-  isActivityLogTable = input<boolean>(false)
+  isActivityLogTable = input<boolean>(false);
+  ngOnInit()
+  {
+    this.currentClickedTapIndex = this.currentIndex();
+  }
   ngOnChanges(): void {
     if(this.tabsData())
     {

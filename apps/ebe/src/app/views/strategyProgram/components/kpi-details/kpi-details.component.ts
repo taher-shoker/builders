@@ -19,6 +19,7 @@ import { DatePipe } from '@angular/common';
 import { ActivityLog, ActivityLogData } from '../../../../models/activity-logs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
 import { MenuPopupComponent } from 'apps/ebe/src/app/components/menu-popup/menu-popup.component';
+import { ProjectCardComponent } from 'libs/shared-ui/src/lib/project-card/project-card.component';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -61,6 +62,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   toastr = inject(ToastrService);
   activityLogService = inject(ActivityLogService)
   @ViewChild(MenuPopupComponent) child?: MenuPopupComponent;
+  @ViewChild(ProjectCardComponent) child2?: ProjectCardComponent;
   menuItems:any[] = [];
   isEmpty!:boolean;
   ngOnDestroy(): void {
@@ -285,13 +287,6 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
       this.router.navigateByUrl(`/strategy-program`);
     }
   }
-  // editProject(kpi:KpiProjectsDetailsModel , project:StrategyProgramKpiDetailsModel , singleproject:StrategyProgramKpiProjectsDetailsModel)
-  // {
-  //   // this.router.navigateByUrl(`/strategy-project-form/${project.project}`);
-  //   this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.objective}`);
-  //   this.strategyProgramService.clickedProjects.next(project.projects);
-  //   this.strategyProgramService.clickedProject.next(singleproject);
-  // }
   deletedProject!:KpiProjectsDetailsModel;
   prevProjects!:KpiProjectsDetailsModel[];
   kpi!:StrategyProgramKpiDetailsModel;
@@ -331,6 +326,16 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   {
     this.actionsPanel.toggle(event);
     this.showActivityLogsPopup = false;
+    if(this.child2)
+    {
+      this.child2.actionsPanel.hide();
+      this.child2.showActivityLogsPopup = false;
+    }
+  }
+  openPanel()
+  {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
   }
   downloadTemplate()
   {

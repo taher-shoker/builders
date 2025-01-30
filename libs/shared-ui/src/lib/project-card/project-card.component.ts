@@ -44,6 +44,7 @@ export class ProjectCardComponent implements OnInit{
   isAdmin = input<boolean>(false)
   isdeleted = input<boolean>(false)
   @Output() showLogsBtnClick:EventEmitter<number> = new EventEmitter()
+  @Output() openPanel:EventEmitter<number> = new EventEmitter()
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
@@ -59,6 +60,7 @@ export class ProjectCardComponent implements OnInit{
   {
     this.actionsPanel.toggle(event);
     this.showActivityLogsPopup = false;
+    this.openPanel.emit();
   }
   closeAccordion()
   {

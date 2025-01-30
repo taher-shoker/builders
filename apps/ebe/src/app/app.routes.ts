@@ -30,6 +30,14 @@ export const appRoutes: Route[] = [
     canActivate:[IsAdminGuard]
   },
   {
+    path: 'activity-logs/:title',
+    loadComponent: () =>
+      import('./views/activity-logs/activity-logs.component').then(
+        (m) => m.ActivityLogsComponent
+      ),
+    canActivate:[IsAdminGuard]
+  },
+  {
     path: 'strategy-program/:kpiId',
     loadComponent: () =>
       import(

@@ -38,6 +38,7 @@ export class ActivityLogsPopupComponent {
   hasNewValue = signal<boolean>(false)
   hasOldValue = signal<boolean>(false)
   hasDetails = signal<boolean>(false)
+  type = input.required<string>()
   closeActivityLogsPopup()
   {
     this.activityLogsPanel?.hide();
@@ -65,6 +66,6 @@ export class ActivityLogsPopupComponent {
   }
   showAllActivityLog()
   {
-    this.router.navigateByUrl("/activity-logs");
+    this.router.navigateByUrl(`/activity-logs/${this.type()}`);
   }
 }
