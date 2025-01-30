@@ -11,6 +11,7 @@ export interface StrategyProgramKpiDetailsModel
 }
 export interface StrategyProgramKpiProjectsDetailsModel
 {
+  id:number;
   project:string;
   actual:number;
   planned:number;

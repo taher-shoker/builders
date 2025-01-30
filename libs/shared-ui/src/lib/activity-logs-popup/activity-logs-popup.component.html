@@ -62,36 +62,60 @@
               @if(item.activityType) {
               <td>{{ item.activityType }}</td>
               }
-              <td>
-                {{
-                  item.activityDetails
-                    ? (item.activityDetails | truncateWord : 2)
-                    : '-'
-                }}
-                @if(item.activityDetails && item.activityDetails.split(" ").length > 2) {
-                <span
-                  class="read-more-btn"
-                  (click)="longTitlePanel.toggle($event)"
-                  >read more</span
-                >
-                <p-overlayPanel
-                  styleClass="longTitlePanel"
-                  #longTitlePanel
-                  dismissable="true"
-                >
-                  <section class="long-title-popover-section">
-                    {{ item.activityDetails }}
-                  </section>
-                </p-overlayPanel>
-                }
-              </td>
+              @if(hasDetails())
+              {
+                <td>
+                  {{
+                    item.activityDetails
+                      ? (item.activityDetails | truncateWord : 2)
+                      : '-'
+                  }}
+                  @if(item.activityDetails && item.activityDetails.split(" ").length > 2) {
+                  <span
+                    class="read-more-btn"
+                    (click)="longTitlePanel.toggle($event)"
+                    >read more</span
+                  >
+                  <p-overlayPanel
+                    styleClass="longTitlePanel"
+                    #longTitlePanel
+                    dismissable="true"
+                  >
+                    <section class="long-title-popover-section">
+                      {{ item.activityDetails }}
+                    </section>
+                  </p-overlayPanel>
+                  }
+                </td>
+              }
               @if(item.timestamp) {
               <td class="time">{{ transformDate(item.timestamp) }}</td>
               } 
+              @if(hasOldValue()) {
+                <td>
+                  {{ item.oldValue ? (item.oldValue | truncateWord : 1) : '-' }}
+                  @if(item.oldValue && item.oldValue.split(" ").length >= 1) {
+                  <span
+                    class="read-more-btn"
+                    (click)="longTitlePanel.toggle($event)"
+                    >read more</span
+                  >
+                  <p-overlayPanel
+                    styleClass="longTitlePanel"
+                    #longTitlePanel
+                    dismissable="true"
+                  >
+                    <section class="long-title-popover-section">
+                      {{ item.oldValue }}
+                    </section>
+                  </p-overlayPanel>
+                  }
+                </td>
+                }
               @if(hasNewValue()) {
               <td>
-                {{ item.newValue ? (item.newValue | truncateWord : 2) : '-' }}
-                @if(item.newValue && item.newValue.split(" ").length > 2) {
+                {{ item.newValue ? (item.newValue | truncateWord : 1) : '-' }}
+                @if(item.newValue && item.newValue.split(" ").length >= 1) {
                 <span
                   class="read-more-btn"
                   (click)="longTitlePanel.toggle($event)"
@@ -108,27 +132,7 @@
                 </p-overlayPanel>
                 }
               </td>
-              } @if(hasOldValue()) {
-              <td>
-                {{ item.oldValue ? (item.oldValue | truncateWord : 2) : '-' }}
-                @if(item.oldValue && item.oldValue.split(" ").length > 2) {
-                <span
-                  class="read-more-btn"
-                  (click)="longTitlePanel.toggle($event)"
-                  >read more</span
-                >
-                <p-overlayPanel
-                  styleClass="longTitlePanel"
-                  #longTitlePanel
-                  dismissable="true"
-                >
-                  <section class="long-title-popover-section">
-                    {{ item.oldValue }}
-                  </section>
-                </p-overlayPanel>
-                }
-              </td>
-              }
+              } 
             </tr>
             } @empty {
             <tr>

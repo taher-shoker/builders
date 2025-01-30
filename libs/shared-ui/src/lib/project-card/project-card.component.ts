@@ -19,6 +19,7 @@ export interface ActivityLog
 }
 export interface KpiProjectsDetailsModel
 {
+  id:number;
   project:string;
   actual:number;
   planned:number;
@@ -41,12 +42,12 @@ export class ProjectCardComponent implements OnInit{
   titleArr:string[] = [];
   showActivityLogsPopup = false;
   isAdmin = input<boolean>(false)
-  @Output() showLogsBtnClick:EventEmitter<string> = new EventEmitter()
+  @Output() showLogsBtnClick:EventEmitter<number> = new EventEmitter()
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
-    this.showLogsBtnClick.emit(this.projectData().project);
+    this.showLogsBtnClick.emit(this.projectData().id);
   }
   popupClosed()
   {

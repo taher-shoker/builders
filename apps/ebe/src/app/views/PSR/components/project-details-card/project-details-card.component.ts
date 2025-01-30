@@ -54,7 +54,7 @@ export class ProjectDetailsCardComponent implements OnInit , OnChanges{
   }
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , 'Import,Export,Add,Edit,Delete' , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
       }

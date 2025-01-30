@@ -45,6 +45,10 @@ export class ActivityLogsComponent {
   previousDate: Date[] | null = null;
   actionTypes:ActionType[] = [
     {
+      name:"All",
+      id:'All'
+    },
+    {
       name:"Import",
       id:'Import'
     },
@@ -96,7 +100,7 @@ export class ActivityLogsComponent {
       }
     ])
     this.currentTap.set(this.scorecardsTaps()[0]);
-    this.activityLogsHeader = ["user name" , "action type" , "activity details" , "time stamp"];
+    this.activityLogsHeader = ["user name" , "activity type" , "time stamp"];
     this.getAllActivityLogs(this.currentTap().value , 0 , 10);
   }
   loading = false;
@@ -129,9 +133,9 @@ export class ActivityLogsComponent {
     // this.searchKeyword = "";
     if(clickedTap.value === 'Scorecard' || clickedTap.value === 'Financial')
     {
-      this.activityLogsHeader = ["user name" , "action type" , "activity details" , "time stamp"]
+      this.activityLogsHeader = ["user name" , "activity type" , "time stamp"]
     } else {
-      this.activityLogsHeader = ["user name" , "action type" , "activity details" , "time stamp" , "old value" , "new value"]
+      this.activityLogsHeader = ["user name" , "activity type" , "activity details" , "time stamp" , "old value" , "new value"]
     }
     this.first.set(0);
     // this.getAllActivityLogs(clickedTap.value , 0 , 10);
@@ -173,7 +177,12 @@ export class ActivityLogsComponent {
         this.endDate = this.formatDate(this.activityLogDate[1])
       }
     }
-    this.getAllActivityLogs(this.currentTap().value , this.currentPage() , 10 , this.searchKeyword , this.selectedType?.name , this.startDate , this.endDate);
+    if(this.selectedType?.id !== 'All')
+    {
+      this.getAllActivityLogs(this.currentTap().value , this.currentPage() , 10 , this.searchKeyword , this.selectedType?.name , this.startDate , this.endDate);
+    } else {
+      this.getAllActivityLogs(this.currentTap().value , this.currentPage() , 10 , this.searchKeyword , this.startDate , this.endDate);
+    }
   }
   selectDate()
   {

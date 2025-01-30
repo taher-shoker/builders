@@ -116,11 +116,11 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
         type : "text",
         label : "Activity Type"
       },
-      {
-        key : "details",
-        type : "text",
-        label : "Activity Details"
-      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
       {
         key : "time",
         type : "text",
@@ -138,7 +138,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   $endScorecardActivityLogsSub:Subject<any> = new Subject();
   private getScorecardActivityLogs(moduleName:string)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         console.log(activityLogs);
         this.activityLogsTableBody.set(activityLogs);

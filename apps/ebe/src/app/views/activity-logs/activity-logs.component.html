@@ -27,6 +27,9 @@
               placeholder="Search by Username"
               [(ngModel)]="searchKeyword"
             />
+            <div class="remove-text" (click)="searchKeyword = ''">
+              <i class = "pi pi-times"></i>
+            </div>
             <div class="search-icon" (click)="filterByName()">
               <i class="pi pi-search"></i>
             </div>
@@ -37,7 +40,7 @@
             [options]="actionTypes"
             [(ngModel)]="selectedType"
             optionLabel="name"
-            placeholder="Action Type"
+            placeholder="Activity Type"
             styleClass="action-types-dropdown"
             dropdownIcon="pi pi-sort-down-fill"
             (ngModelChange)="selectActionType()"
@@ -54,8 +57,8 @@
             placeholder="Date"
             (onClose)="selectDate()"
             (ngModelChange)="onDateChange($event)"
+            [showButtonBar]="true"
             />
-            <!-- [showButtonBar]="true" -->
         </div>
         <!-- <div class="form-group">
           <button (click)="applyFilters()" class="apply-filter-btn">
@@ -88,23 +91,23 @@
             <tr>
               <td>
                 {{ log.username ? (log.username | truncateWord : 3) : '-' }}
+                @if(log.username && log.username.split(" ").length > 3){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.username }}
+                  </section>
+                </p-overlayPanel>
+                }
               </td>
-              @if(log.username && log.username.split(" ").length > 3){
-              <span
-                class="read-more-btn"
-                (click)="longTitlePanel.toggle($event)"
-                >read more</span
-              >
-              <p-overlayPanel
-                styleClass="longTitlePanel"
-                #longTitlePanel
-                dismissable="true"
-              >
-                <section class="long-title-popover-section">
-                  {{ log.username }}
-                </section>
-              </p-overlayPanel>
-              }
               <td>
                 {{
                   log.activityType ? (log.activityType | truncateWord : 2) : '-'
@@ -126,51 +129,34 @@
                 </p-overlayPanel>
                 }
               </td>
-              <td>
-                {{
-                  log.activityDetails
-                    ? (log.activityDetails | truncateWord : 2)
-                    : '-'
-                }}
-                @if(log.activityDetails.split(" ").length > 2){
-                <span
-                  class="read-more-btn"
-                  (click)="longTitlePanel.toggle($event)"
-                  >read more</span
-                >
-                <p-overlayPanel
-                  styleClass="longTitlePanel"
-                  #longTitlePanel
-                  dismissable="true"
-                >
-                  <section class="long-title-popover-section">
-                    {{ log.activityDetails }}
-                  </section>
-                </p-overlayPanel>
-                }
-              </td>
+              @if(activityLogsHeader.includes("activity details"))
+              {
+                <td>
+                  {{
+                    log.activityDetails
+                      ? (log.activityDetails | truncateWord : 2)
+                      : '-'
+                  }}
+                  @if(log.activityDetails.split(" ").length > 2){
+                  <span
+                    class="read-more-btn"
+                    (click)="longTitlePanel.toggle($event)"
+                    >read more</span
+                  >
+                  <p-overlayPanel
+                    styleClass="longTitlePanel"
+                    #longTitlePanel
+                    dismissable="true"
+                  >
+                    <section class="long-title-popover-section">
+                      {{ log.activityDetails }}
+                    </section>
+                  </p-overlayPanel>
+                  }
+                </td>
+              }
               <td>{{ log.timestamp ? transformDate(log.timestamp) : '-' }}</td>
               @if(activityLogsHeader.includes("new value")) {
-              <td>
-                {{ log.newValue ? (log.newValue | truncateWord : 1) : '-' }}
-                @if(log.newValue && log.newValue.split(" ").length > 1){
-                <span
-                  class="read-more-btn"
-                  (click)="longTitlePanel.toggle($event)"
-                  >read more</span
-                >
-                <p-overlayPanel
-                  styleClass="longTitlePanel"
-                  #longTitlePanel
-                  dismissable="true"
-                >
-                  <section class="long-title-popover-section">
-                    {{ log.newValue }}
-                  </section>
-                </p-overlayPanel>
-                }
-              </td>
-              } @if(activityLogsHeader.includes("old value")) {
               <td>
                 {{ log.oldValue ? (log.oldValue | truncateWord : 1) : '-' }}
                 @if(log.oldValue && log.oldValue.split(" ").length > 1){
@@ -186,6 +172,26 @@
                 >
                   <section class="long-title-popover-section">
                     {{ log.oldValue }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              } @if(activityLogsHeader.includes("old value")) {
+              <td>
+                {{ log.newValue ? (log.newValue | truncateWord : 1) : '-' }}
+                @if(log.newValue && log.newValue.split(" ").length > 1){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.newValue }}
                   </section>
                 </p-overlayPanel>
                 }

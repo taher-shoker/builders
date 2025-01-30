@@ -87,7 +87,7 @@ export class TabDetailsComponent implements OnInit {
   }
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
     {
-      this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
         next : (activityLogs:ActivityLogData[]) => {
           this.activityLogsTableBody.set(activityLogs);
         }
@@ -105,11 +105,11 @@ export class TabDetailsComponent implements OnInit {
         type : "text",
         label : "Activity Type"
       },
-      {
-        key : "details",
-        type : "text",
-        label : "Activity Details"
-      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
       {
         key : "time",
         type : "text",

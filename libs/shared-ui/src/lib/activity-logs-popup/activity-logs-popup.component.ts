@@ -37,15 +37,17 @@ export class ActivityLogsPopupComponent {
   datePipe = inject(DatePipe);
   hasNewValue = signal<boolean>(false)
   hasOldValue = signal<boolean>(false)
+  hasDetails = signal<boolean>(false)
   closeActivityLogsPopup()
   {
-    this.activityLogsPanel.hide();
+    this.activityLogsPanel?.hide();
     this.popupClosed.emit(true);
   }
   ngOnInit()
   {
     this.hasNewValue.set(this.activityLogsTableHeader().some(item => item.key === 'newValue'))
     this.hasOldValue.set(this.activityLogsTableHeader().some(item => item.key === 'oldValue'))    
+    this.hasDetails.set(this.activityLogsTableHeader().some(item => item.key === 'details'))    
   }
   constructor(){
     effect(() => {

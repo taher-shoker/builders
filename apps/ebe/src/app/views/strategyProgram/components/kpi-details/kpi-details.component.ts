@@ -49,6 +49,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   strategyProgramService = inject(StrategyProgramService);
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
   activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableHeader2!:ColumnsSchema[];
   activityLogsTableBody = signal<ActivityLogData[]>([]);
   projectActivityLogsTableHeader!:ColumnsSchema[];
   projectActivityLogsTableBody = signal<ActivityLogData[]>([]);
@@ -143,6 +144,38 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
         type : "text",
         label : "Time Stamp"
       },
+      {
+        key : "oldValue",
+        type : "text",
+        label : "Old Value"
+      },
+      {
+        key : "newValue",
+        type : "text",
+        label : "New Value"
+      },
+    ]
+    this.activityLogsTableHeader2 = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      }
     ]
   }
   showActivityLogsPopup = false;
@@ -152,17 +185,17 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   {
     // this.activityLogsPanel.toggle(event);
     console.log(this.showActivityLogsPopup2);
-    this.getSpecificActivityLog("CAD" , this.currentId);
+    this.getSpecificActivityLog("CAD" , "Import,Export" , this.currentId);
     this.showActivityLogsPopup2 = !this.showActivityLogsPopup2;
   }
   showKPIActivityLogs(kpi:StrategyProgramKpiDetailsModel)
   {
-    this.getSpecificActivityLog("CAD" , this.currentId , kpi.keyResultName);
+    this.getSpecificActivityLog("CAD" , "Import,Export,Add,Edit,Delete" , this.currentId , kpi.keyResultNumber.toString());
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
   }
-  private getSpecificActivityLog(moduleName:string , subModule:string , projectName?:string , entity?:string)
+  private getSpecificActivityLog(moduleName:string , activityType:string , subModule:string , projectName?:string , entity?:string)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName , entity).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , activityType , subModule , projectName , entity).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         if(entity)
         {
@@ -185,10 +218,10 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     this.showActivityLogsPopup2 = false;
     this.actionsPanel.hide();
   }
-  showProjectLogs(title:string , kpi:StrategyProgramKpiDetailsModel)
+  showProjectLogs(id:number , kpi:StrategyProgramKpiDetailsModel)
   {
-    console.log(title);
-    this.getSpecificActivityLog("CAD" , this.currentId , kpi.keyResultName , title);
+    console.log(id);
+    this.getSpecificActivityLog("CAD" , "Add,Edit,Delete" , this.currentId , kpi.keyResultNumber.toString() , id.toString());
   }
   menuActions(label:string)
   {

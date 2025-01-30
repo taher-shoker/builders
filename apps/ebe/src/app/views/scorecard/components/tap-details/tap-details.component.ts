@@ -107,11 +107,11 @@ export class TapDetailsComponent implements OnInit {
         type : "text",
         label : "Activity Type"
       },
-      {
-        key : "details",
-        type : "text",
-        label : "Activity Details"
-      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
       {
         key : "time",
         type : "text",
@@ -197,7 +197,7 @@ export class TapDetailsComponent implements OnInit {
   $endScorecardActivityLogsSub:Subject<any> = new Subject();
   private getScorecardActivityLogs(moduleName:string)
   {
-    this.activityLogServices.getSpecificActivityLog(moduleName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogServices.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         console.log(activityLogs);
         this.activityLogsTableBody.set(activityLogs);

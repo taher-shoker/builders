@@ -77,7 +77,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   }
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Edit,Delete" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
         this.showActivityLogsPopup = !this.showActivityLogsPopup;
@@ -132,6 +132,16 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
         key: 'time',
         type: 'text',
         label: 'Time Stamp',
+      },
+      {
+        key: 'oldValue',
+        type: 'text',
+        label: 'Old Value',
+      },
+      {
+        key: 'newValue',
+        type: 'text',
+        label: 'New Value',
       },
     ];
     this.projectActivityLogsTableHeader = [

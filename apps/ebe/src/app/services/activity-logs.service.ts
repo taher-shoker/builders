@@ -30,26 +30,18 @@ export class ActivityLogService {
     }
     return this.http.get<ActivityLogRes>(url);
   }
-  getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string):Observable<ActivityLogData[]>
+  getSpecificActivityLog(moduleName:string , activityType:string , subModule?:string , projectName?:string , entity?:string):Observable<ActivityLogData[]>
   {
-    let url;
-    if(moduleName === 'CAD')
-    {
-      url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}&activityType=Import,Export`;
-    }
-    else if(moduleName === 'PSR')
-    {
-      url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}&activityType=Add,Import,Export,Delete`;
-    } else {
-      url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}`;
-    }
+    let url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}&activityType=${activityType}`;
     if(subModule)
     {
-      url += `&subModule=${subModule}`;
+      const subMod = encodeURIComponent(subModule);
+      url += `&subModule=${subMod}`;
     }
     if(projectName)
     {
-      url += `&attribute=${projectName}`;
+      const proj = encodeURIComponent(projectName);
+      url += `&attribute=${proj}`;
     }
     if(entity)
     {

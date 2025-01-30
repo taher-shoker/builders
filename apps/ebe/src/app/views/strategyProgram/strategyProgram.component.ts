@@ -60,11 +60,11 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
         type : "text",
         label : "Activity Type"
       },
-      {
-        key : "details",
-        type : "text",
-        label : "Activity Details"
-      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
       {
         key : "time",
         type : "text",
@@ -140,7 +140,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   }
   private getScorecardActivityLogs(moduleName:string)
   {
-    this.activityLogServices.getSpecificActivityLog(moduleName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogServices.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
       }

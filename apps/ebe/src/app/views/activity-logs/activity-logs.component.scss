@@ -111,6 +111,23 @@
     color:var(--stc-grey-dark-color) !important;
     border-radius:10px !important;
   }
+  .p-datepicker-buttonbar .p-button:first-child {
+    display: none;
+  }
+  .p-datepicker-buttonbar
+  {
+    padding: 0 !important;
+  }
+  .p-datepicker-buttonbar .p-button
+  {
+    @extend .stcFont;
+    color:var(--stc-purple-color) !important;
+    font-weight: 500 !important;
+    background-color: transparent !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    margin: auto !important;
+  }
   .p-datepicker-icon
   {
     svg
@@ -233,4 +250,14 @@
   font-size: 1rem;
   padding:9px 25px;
   cursor: pointer;
+}
+.remove-text
+{
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  i
+  {
+    cursor: pointer;
+  }
 }

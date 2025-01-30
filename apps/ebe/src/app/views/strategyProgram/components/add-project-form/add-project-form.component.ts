@@ -91,8 +91,10 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
     });
     console.log(this.projectsList.controls);
   }
+  // newIndex = this.projectsList.length;
   createProjectFormGroup(data?:StrategyProgramKpiProjectsDetailsModel): FormGroup {
     return this.formBuilder.group({
+      id:this.projectsList.length + 1,
       project: [
         data && data.project ? data.project : null,
         [Validators.required, this.noSpacesValidator, Validators.maxLength(300)],
@@ -136,6 +138,7 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
   save() {
     if (this.addProjectForm.valid) {
       const projectArr = this.addProjectForm.value.projects;
+      // console.log(projectArr);
       this.strategyService
         .updateProjects(this.title, this.objectiveNumber, projectArr)
         .subscribe({
