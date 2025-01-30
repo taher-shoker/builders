@@ -2,13 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { GetStandardsResponse } from '../models/standards.models';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment';
+import { environment } from '../../../environments/environment.stage';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StandardsService {
-  private readonly apiUrl = `${environment.apiUrl}/v1/standard`;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/standard`;
   private readonly http = inject(HttpClient);
 
   getStandards(): Observable<GetStandardsResponse> {
