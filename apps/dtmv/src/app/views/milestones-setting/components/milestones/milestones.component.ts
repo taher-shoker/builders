@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
@@ -264,6 +264,12 @@ export class MilestonesComponent
 
     // Store the latest clean params
     this.previousParams = { ...cleanParams };
+    // Convert the value inside activity name to lowercase
+    this.previousParams['activityName']
+      ? (cleanParams['activityName'] =
+          this.previousParams['activityName'].toLowerCase())
+      : '';
+
     // Make the API call with the clean parameters
     this.milestonesService
       .getMilestones(cleanParams)
@@ -429,7 +435,6 @@ export class MilestonesComponent
         saveAs(data, 'milestones.csv');
       });
   }
-
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group({
@@ -439,7 +444,7 @@ export class MilestonesComponent
       status: [null],
       month: [null],
       year: [null],
-      workStream: [null],
+      activityName: [null],
       validationStatus: [null],
     });
   }
