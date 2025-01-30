@@ -21,6 +21,8 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { catchError, firstValueFrom, of } from 'rxjs';
+import { environment } from '../../../environments/environment.stage';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'stc-apps-api-test',
@@ -45,6 +47,7 @@ export class ApiTestComponent implements OnInit {
   private sanitizer = inject(DomSanitizer);
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
+  private http = inject(HttpClient);
 
   apiTestForm: FormGroup = this.fb.group({
     apiUrl: ['', Validators.required],
@@ -52,7 +55,7 @@ export class ApiTestComponent implements OnInit {
   });
   standardsDropdown: { label: string; value: string }[] = [];
   selectedStandard: Standard | null = null;
-  sanitizedUrl!: SafeResourceUrl;
+  sanitizedUrls: Map<string, SafeResourceUrl> = new Map();
   standards: Standard[] = [];
   standardOptions = this.standards.map((standard) => ({
     label: standard,
@@ -118,8 +121,12 @@ export class ApiTestComponent implements OnInit {
         standardList: item.standardList,
         parentTestId: responseItem?.parentTestId,
         result: result,
-        summaryFileJson: responseItem?.summaryFileJson || '',
-        summaryFileHtml: responseItem?.summaryFileHtml || '',
+        summaryFileJson: responseItem?.summaryFileJson
+          ? `${environment.apiUrl}${responseItem.summaryFileJson}`
+          : '',
+        summaryFileHtml: responseItem?.summaryFileHtml
+          ? `${environment.apiUrl}${responseItem.summaryFileHtml}`
+          : '',
         standardId: item?.standardId,
       };
     });
@@ -215,7 +222,13 @@ export class ApiTestComponent implements OnInit {
   }
 
   getSafeUrl(url: string): SafeResourceUrl {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+    if (!this.sanitizedUrls.has(url)) {
+      const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(url);
+      this.sanitizedUrls.set(url, safeUrl);
+      return safeUrl;
+    }
+
+    return this.sanitizedUrls.get(url) as SafeResourceUrl;
   }
 
   private generateId(): number {
@@ -232,6 +245,7 @@ export class ApiTestComponent implements OnInit {
 
     if (itemsToRun.length > 0) {
       this.queueItems = itemsToRun;
+
       try {
         const response = await firstValueFrom(
           this.handleRunTestBatch(itemsToRun)
@@ -302,14 +316,20 @@ export class ApiTestComponent implements OnInit {
       {
         icon: 'pi pi-download',
         label: 'JSON',
-        command: () =>
-          this.downloadFile(item.summaryFileJson!, 'Standard JSON.json'),
+        command: () => {
+          if (item.summaryFileJson) {
+            this.downloadFile(item.summaryFileJson, 'summary.json');
+          }
+        },
       },
       {
         icon: 'pi pi-download',
         label: 'HTML',
-        command: () =>
-          this.downloadFile(item.summaryFileHtml!, 'Documentation HTML.html'),
+        command: () => {
+          if (item.summaryFileHtml) {
+            this.downloadFile(item.summaryFileHtml, 'summary.html');
+          }
+        },
       },
     ];
   }
@@ -322,22 +342,38 @@ export class ApiTestComponent implements OnInit {
     this.queueItems[event.index].standardId = event.value;
   }
 
-  downloadFile(path: string, fileName: string) {
-    const fileExtension = path.slice(path.lastIndexOf('.')).toLowerCase();
-    const mimeTypes: Record<string, string> = {
-      '.pdf': 'application/pdf',
-      '.html': 'text/html',
-    };
-    const mimeType = mimeTypes[fileExtension] || 'application/octet-stream';
+  async downloadFile(url: string, fileName: string) {
+    try {
+      const response = await firstValueFrom(
+        this.http.get(url, { responseType: 'blob' })
+      );
+      const blob = new Blob([response], { type: this.getMimeType(fileName) });
+      const downloadUrl = window.URL.createObjectURL(blob);
+      const anchor = document.createElement('a');
+      anchor.style.display = 'none';
+      anchor.href = downloadUrl;
+      anchor.download = fileName;
+      document.body.appendChild(anchor);
+      anchor.click();
+      document.body.removeChild(anchor);
+      window.URL.revokeObjectURL(downloadUrl);
+    } catch (error) {
+      console.error('Error downloading file:', error);
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Failed to download file',
+      });
+    }
+  }
 
-    const blob = new Blob([path], { type: mimeType });
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = fileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    window.URL.revokeObjectURL(url);
+  private getMimeType(fileName: string): string {
+    const extension = fileName.split('.').pop()?.toLowerCase();
+    const mimeTypes: Record<string, string> = {
+      pdf: 'application/pdf',
+      html: 'text/html',
+      json: 'application/json',
+    };
+    return mimeTypes[extension || ''] || 'application/octet-stream';
   }
 }
