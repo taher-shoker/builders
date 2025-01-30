@@ -9,9 +9,9 @@
     <ul>
       @for (link of sidebarLinks(); track link.id) {
       <li>
+        <!-- [routerLinkActiveOptions]="{ exact: true }" -->
         <a
           routerLinkActive="activeLink"
-          [routerLinkActiveOptions]="{ exact: true }"
           [routerLink]="link.url"
           >{{ link.name }}</a
         >

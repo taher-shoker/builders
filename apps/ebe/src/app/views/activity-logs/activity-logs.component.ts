@@ -134,10 +134,14 @@ export class ActivityLogsComponent {
           this.currentTap.set(this.scorecardsTaps()[2]);
           this.activityLogsHeader = ['user name','activity type','activity details','time stamp','old value','new value'];
           this.tapIndex = 2;
-        } else {
+        } else if(title === 'financial') {
           this.tapIndex = 3;
           this.currentTap.set(this.scorecardsTaps()[3]);
           this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
+        } else {
+          this.currentTap.set(this.scorecardsTaps()[0]);
+          this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
+          this.tapIndex = 0;
         }
       },
     });
@@ -218,7 +222,7 @@ export class ActivityLogsComponent {
       this.currentPage(),
       10,
       this.searchKeyword,
-      this.selectedType?.name,
+      this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
       this.startDate,
       this.endDate
     );
