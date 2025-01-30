@@ -44,7 +44,7 @@
       </th>
       }
     </tr>
-    <tr class="mat-row" *ngIf="items.length === 0">
+    <tr class="mat-row" *ngIf="items && items.length === 0">
       @if(!activityLogTable)
       {
         <td class="mat-cell" [attr.colspan]="headers().length">
@@ -146,11 +146,11 @@
     </tbody>
   </table>
 }
-@if(psrTable() && items.length === 0) {
+@if(psrTable() && items && items.length === 0) {
 <p [ngStyle]="{ 'font-family': fontFamily() }" class="empty-details">
   there are no data
 </p>
-} @if(psrTable() && userRoles() !== "BE_VIEWERS") {
+} @if(psrTable() && userRoles() !== "BE_VIEWERS" && !isDeleted()) {
 <button
   type="button"
   class="add-record-btn"
@@ -205,7 +205,7 @@
       }"
     >
       @if(!isEditMode()) { @if(header.key === '' && userRoles() !==
-      "BE_VIEWERS") {
+      "BE_VIEWERS" && !isDeleted()) {
       <div
         class="delete-btn"
         (click)="deleteRecord(item)"

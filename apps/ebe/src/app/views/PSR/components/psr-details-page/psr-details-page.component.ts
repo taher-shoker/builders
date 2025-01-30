@@ -33,6 +33,7 @@ import { ActivityLogService } from '../../../../services/activity-logs.service';
 })
 export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   @ViewChild(ProjectDetailsCardComponent) child?: ProjectDetailsCardComponent;
+  @ViewChild(MenuPopupComponent) child2?: MenuPopupComponent;
   psrServices = inject(PSRService);
   router = inject(ActivatedRoute);
   route = inject(Router);
@@ -70,9 +71,11 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   }
   actionButton(label: string) {
     if (label === 'activity log') {
+      this.showActivityLogsPopup = !this.showActivityLogsPopup;
       this.getSpecificActivityLog("PSR" , this.groupName);
     } else {
-      this.route.navigateByUrl("/deleted-projects/psr-projects");
+      console.log(this.PSRDetailsData);
+      this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}`);
     }
   }
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
@@ -80,12 +83,19 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
     this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Edit,Delete" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
-        this.showActivityLogsPopup = !this.showActivityLogsPopup;
       }
     })
   }
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        if(this.child2)
+        {
+          this.child2.actionsPanel.hide()
+        }
+      }
+    })
     this.username = this.scorecardService.getUsername();
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {

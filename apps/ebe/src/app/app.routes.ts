@@ -66,12 +66,12 @@ export const appRoutes: Route[] = [
           .then((m) => m.DeletedProgramsComponent)
         },
         {
-          path:"psr-projects",
+          path:"psr-projects/:title",
           loadComponent:() => import('./views/deleted-project-page/deleted-psr-projects/deleted-psr-projects.component')
           .then((m) => m.DeletedPsrProjectsComponent)
         },
         {
-          path:"cad-projects",
+          path:"cad-projects/:id/:resNum",
           loadComponent:() => import('./views/deleted-project-page/deleted-cad-project/deleted-cad-project.component')
           .then((m) => m.DeletedCadProjectComponent)
         },

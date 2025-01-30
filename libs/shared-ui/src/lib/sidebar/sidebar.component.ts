@@ -40,6 +40,7 @@ export class SidebarComponent implements OnInit{
   activeMode:'editMode' | 'viewMode' = 'viewMode';
   @Output() currentMode:EventEmitter<'editMode' | 'viewMode'> = new EventEmitter();
   @Output() logoutFun:EventEmitter<boolean> = new EventEmitter();
+  @Output() toggleSwitchBtn:EventEmitter<boolean> = new EventEmitter();
   ngOnInit()
   {
     this.currentMode.emit(this.activeMode);
@@ -61,6 +62,7 @@ export class SidebarComponent implements OnInit{
   // }
   switchEditMode()
   {
+    this.toggleSwitchBtn.emit();
     if(this.editModeChecked === true)
     {
       this.activeMode = 'editMode';

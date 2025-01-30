@@ -1,7 +1,7 @@
 @import '../../../../../apps/ebe/src/styles/fonts';
 .project-card
 {
-  background-color: #fff;
+  // background-color: #fff;
   border-radius:10px;
   text-align: left;
   padding:15px;
@@ -79,4 +79,24 @@
 .popover-section
 {
   max-width: 300px;
+}
+::ng-deep .actions-logs12 .p-overlaypanel-content
+{
+    width: 200px;
+    padding:10px;
+    cursor: pointer;
+    .actions-logs-table
+    {
+        .action
+        {
+            display: flex;
+            align-items: center;
+            gap:10px;
+            p
+            {
+                margin: 0;
+                text-transform: capitalize;
+            }
+        }
+    }
 }

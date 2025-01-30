@@ -42,6 +42,7 @@ export class ProjectCardComponent implements OnInit{
   titleArr:string[] = [];
   showActivityLogsPopup = false;
   isAdmin = input<boolean>(false)
+  isdeleted = input<boolean>(false)
   @Output() showLogsBtnClick:EventEmitter<number> = new EventEmitter()
   showActivityLogs()
   {

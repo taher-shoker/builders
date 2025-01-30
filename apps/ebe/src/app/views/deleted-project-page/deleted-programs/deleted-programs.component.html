@@ -1,1 +1,15 @@
-<p>deleted-programs works!</p>
+<div class="deleted-programs">
+    <p class = "main-title">Strategic Projects - Executive View</p>
+    <div class="deleted-programs-cards">
+        @for (program of deletedPrograms(); track $index){
+          <div class = "deleted-programs-cards-card">
+            <stc-apps-psr-project-card 
+              [project]="program"
+              (ProgramId)="getProgramId($event)"
+              [isAdmin]="true"
+              [isDeleted]="true"
+            />
+          </div>
+        }
+    </div>
+</div>

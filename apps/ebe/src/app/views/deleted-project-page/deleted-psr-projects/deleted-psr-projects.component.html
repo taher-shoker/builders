@@ -1,1 +1,18 @@
-<p>deleted-psr-projects works!</p>
+<div class="deleted-projects">
+  <div class="main-title">
+    <p>{{ pageTitle }}</p>
+  </div>
+  <div class="deleted-projects-cards">
+    @for (project of deletedPSRProject(); track $index){
+        <stc-apps-project-details-card
+            [projectData]="project"
+            [userRoles]="userRoles"
+            [groupName]="''"
+            [isAllowed]="true"
+            [isAdmin]="true"
+            [isDeleted]="true"
+            [isDeleted]="true"
+        />
+    }
+  </div>
+</div>

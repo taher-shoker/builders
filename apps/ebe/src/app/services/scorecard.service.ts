@@ -14,6 +14,7 @@ import { CookieService } from 'ngx-cookie';
 export class ScorecardService {
   private currMode: BehaviorSubject<'editMode' | 'viewMode'> =
     new BehaviorSubject<'editMode' | 'viewMode'>('viewMode');
+  toggleSwitchBtn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
   private currUsername = '';
   userRoles!: UserGroup;
   http = inject(HttpClient);

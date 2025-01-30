@@ -22,6 +22,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
   isAdmin = input<boolean>();
+  isDeleted = input<boolean>(false);
   datePipe = inject(DatePipe);
   activityLogsTableHeader = signal<ColumnsSchema[]>([]);
   activityLogsTableBody = signal<ActivityLogData[]>([]);
@@ -73,20 +74,30 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
     console.log(this.isAdmin());
     if(this.isAdmin())
     {
-      this.items = [
-        {
-            label: 'Edit',
-            icon: 'pi pi-pen-to-square'
-        },
-        {
-            label: 'Delete',
-            icon: 'pi pi-trash'
-        },
-        {
-            label: 'Activity Logs',
-            icon: 'pi pi-clock'
-        }
-      ]
+      if(this.isDeleted())
+      {
+        this.items = [
+          {
+              label: 'Activity Logs',
+              icon: 'pi pi-clock'
+          }
+        ]
+      } else {
+        this.items = [
+          {
+              label: 'Edit',
+              icon: 'pi pi-pen-to-square'
+          },
+          {
+              label: 'Delete',
+              icon: 'pi pi-trash'
+          },
+          {
+              label: 'Activity Logs',
+              icon: 'pi pi-clock'
+          }
+        ]
+      }
     } else {
       this.items = [
         {
@@ -104,7 +115,8 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   $endScorecardActivityLogsSub:Subject<any> = new Subject();
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Edit,Delete" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    
+    this.activityLogService.getSpecificActivityLog(moduleName , this.isDeleted() ? "Add,Edit,Delete" : "Add,Edit" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
       }

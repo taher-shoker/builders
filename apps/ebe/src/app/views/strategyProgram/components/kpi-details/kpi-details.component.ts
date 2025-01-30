@@ -18,6 +18,7 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
 import { DatePipe } from '@angular/common';
 import { ActivityLog, ActivityLogData } from '../../../../models/activity-logs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
+import { MenuPopupComponent } from 'apps/ebe/src/app/components/menu-popup/menu-popup.component';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -59,6 +60,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   constructor(private router:Router , private datePipe:DatePipe){}
   toastr = inject(ToastrService);
   activityLogService = inject(ActivityLogService)
+  @ViewChild(MenuPopupComponent) child?: MenuPopupComponent;
   menuItems:any[] = [];
   isEmpty!:boolean;
   ngOnDestroy(): void {
@@ -67,6 +69,12 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   userRoles!:UserGroup;
   isAdmin!:boolean;
   ngOnInit(): void {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.actionsPanel?.hide();
+        this.showActivityLogsPopup = false;
+      }
+    })
     this.userRoles = this.scorecardService.userRoles;
     this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
     this.scorecardService.getCurrentMode().subscribe({
@@ -144,16 +152,16 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
         type : "text",
         label : "Time Stamp"
       },
-      {
-        key : "oldValue",
-        type : "text",
-        label : "Old Value"
-      },
-      {
-        key : "newValue",
-        type : "text",
-        label : "New Value"
-      },
+      // {
+      //   key : "oldValue",
+      //   type : "text",
+      //   label : "Old Value"
+      // },
+      // {
+      //   key : "newValue",
+      //   type : "text",
+      //   label : "New Value"
+      // },
     ]
     this.activityLogsTableHeader2 = [
       {
@@ -190,7 +198,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   }
   showKPIActivityLogs(kpi:StrategyProgramKpiDetailsModel)
   {
-    this.getSpecificActivityLog("CAD" , "Import,Export,Add,Edit,Delete" , this.currentId , kpi.keyResultNumber.toString());
+    this.getSpecificActivityLog("CAD" , "Add,Delete" , this.currentId , kpi.keyResultNumber.toString());
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
   }
   private getSpecificActivityLog(moduleName:string , activityType:string , subModule:string , projectName?:string , entity?:string)
@@ -221,7 +229,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   showProjectLogs(id:number , kpi:StrategyProgramKpiDetailsModel)
   {
     console.log(id);
-    this.getSpecificActivityLog("CAD" , "Add,Edit,Delete" , this.currentId , kpi.keyResultNumber.toString() , id.toString());
+    this.getSpecificActivityLog("CAD" , "Add,Edit" , this.currentId , kpi.keyResultNumber.toString() , id.toString());
   }
   menuActions(label:string)
   {
@@ -232,9 +240,9 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     } else {
     }
   }
-  showDeletedProjects()
+  showDeletedProjects(kpi:StrategyProgramKpiDetailsModel)
   {
-    this.router.navigateByUrl("/deleted-projects/cad-projects");
+    this.router.navigateByUrl(`/deleted-projects/cad-projects/${this.currentId}/${kpi.keyResultNumber}`);
   }
   private getStrategyProgramDetails(strategyName:string)
   {

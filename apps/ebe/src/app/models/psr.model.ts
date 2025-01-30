@@ -1,6 +1,6 @@
 export interface PSRDataModel
 {
-    id:number;
+    id?:number;
     planned:number | null;
     sector:string;
     actual:number;

@@ -70,6 +70,10 @@ export class MainLayoutComponent implements OnInit {
       throw new Error('No user group found for the current system');
     }
   }
+  toggleSwitchBtn()
+  {
+    this.scorecardService.toggleSwitchBtn.next(true);
+  }
   getCurrentMode(mode: 'editMode' | 'viewMode') {
     this.scorecardService.setEditMode(mode);
   }

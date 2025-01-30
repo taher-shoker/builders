@@ -7,6 +7,7 @@ import {
   OnInit,
   Output,
   signal,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -59,6 +60,7 @@ export class TabDetailsComponent implements OnInit {
   userRoles!: UserGroup;
   isAllowed = false;
   isAdmin = false;
+  @ViewChild(MenuPopupComponent) child?: MenuPopupComponent;
   menuItems = [
     {
       label: 'activity log',
@@ -87,7 +89,7 @@ export class TabDetailsComponent implements OnInit {
   }
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
     {
-      this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Delete" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
         next : (activityLogs:ActivityLogData[]) => {
           this.activityLogsTableBody.set(activityLogs);
         }
@@ -197,6 +199,14 @@ export class TabDetailsComponent implements OnInit {
         this.currentMode = res;
       },
     });
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        if(this.child)
+        {
+          this.child.actionsPanel.hide()
+        }
+      }
+    })
   }
   showDialog() {
     this.visible = true;

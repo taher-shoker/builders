@@ -24,6 +24,7 @@
                         [menuItems]="menuItems"
                         (onClick)="actionButton($event)"
                         [hidePopup]="showActivityLogsPopup"
+                        (hide)="showActivityLogsPopup = false"
                     />
                     <stc-apps-activity-logs-popup 
                         [activityLogsTableHeader]="activityLogsTableHeader"

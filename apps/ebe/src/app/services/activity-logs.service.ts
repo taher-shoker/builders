@@ -6,6 +6,9 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { UserGroup } from '../models/scorecard.model';
 import { HttpClient } from '@angular/common/http';
 import { ActivityLogData, ActivityLogRes } from '../models/activity-logs';
+import { DeletedProgram } from '../models/deleted-items';
+import { PSRProjectDetailsModel } from '../models/psr.model';
+import { StrategyProgramKpiDetailsModel } from '../models/strategy-program.model';
 @Injectable({ providedIn: 'root' })
 export class ActivityLogService {
   http = inject(HttpClient);
@@ -48,5 +51,17 @@ export class ActivityLogService {
       url += `&entity=${entity}`;
     }
     return this.http.get<ActivityLogData[]>(url);
+  }
+  getDeletedPrograms(moduleName:string , isDetails:boolean):Observable<DeletedProgram[]>
+  {
+    return this.http.get<DeletedProgram[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}`);
+  }
+  getPSRDeletedProjects(moduleName:string , isDetails:boolean):Observable<PSRProjectDetailsModel[]>
+  {
+    return this.http.get<PSRProjectDetailsModel[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}`);
+  }
+  getCADDeletedProjects(moduleName:string , isDetails:boolean):Observable<StrategyProgramKpiDetailsModel[]>
+  {
+    return this.http.get<StrategyProgramKpiDetailsModel[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}`);
   }
 }

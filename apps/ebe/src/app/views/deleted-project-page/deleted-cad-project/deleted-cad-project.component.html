@@ -1,1 +1,19 @@
-<p>deleted-cad-project works!</p>
+<div class="deleted-cad-projects">
+    <p class="main-title">Strategic objectives to Key Results Mapping</p>
+    <div class="deleted-cad-projects-cards">
+        @for(project of cadProjects(); track $index){
+            @for(project2 of project.projects; track $index){
+                <div class = "deleted-cad-projects-cards-card">
+                    <stc-apps-project-card 
+                        [projectData]="project2" 
+                        [isAdmin]="true"
+                        [activityLogsTableHeader]="projectActivityLogsTableHeader"
+                        [activityLogsTableBody]="projectActivityLogsTableBody()"
+                        (showLogsBtnClick)="showProjectLogs($event)"
+                        [isdeleted]="true"
+                    />
+                </div>
+            }
+        }
+    </div>
+</div>

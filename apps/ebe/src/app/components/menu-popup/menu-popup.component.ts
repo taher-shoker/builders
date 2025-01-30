@@ -19,6 +19,11 @@ export class MenuPopupComponent {
   menuItems = input.required<MenuItems[]>();
   hidePopup = input.required<boolean>();
   @Output() onClick:EventEmitter<string> = new EventEmitter();
+  @Output() hide:EventEmitter<any> = new EventEmitter();
+  hidePanel()
+  {
+    this.hide.emit();
+  }
   menuActions(label:string)
   {
     this.onClick.emit(label)

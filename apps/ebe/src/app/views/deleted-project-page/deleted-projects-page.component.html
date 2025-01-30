@@ -2,7 +2,7 @@
     <div class="deleted-items-section-header">
       <div>
         <stc-apps-page-header
-          [mainTitle]="'deleted projects'"
+          [mainTitle]="'deleted ' + currentUrl"
           [secondaryTitle]="''"
           [isDeletedProject]="true"
         />
@@ -10,7 +10,7 @@
       <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
     </div>
     <div class="deleted-items-section-content">
-        <p class = "main-title">Strategic Projects - Executive View</p>
+        <!-- <p class = "main-title">Strategic Projects - Executive View</p> -->
         <router-outlet />
     </div>
   </section>

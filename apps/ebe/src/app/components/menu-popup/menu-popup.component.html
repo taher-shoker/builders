@@ -6,6 +6,7 @@
   dismissable="false"
   appendTo="body"
   styleClass="actions-logs"
+  (onHide)="hidePanel()"
 >
   <div class="actions-logs-table">
     @for (item of menuItems(); track $index) {
