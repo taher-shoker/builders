@@ -75,7 +75,7 @@
    {
      <a
        class="project-container-details-link"
-       [routerLink]="['/psr/', project().sector]"
+       [routerLink]="['/psr/', project().sector , project().id]"
        (click)="gotoProjectDetailsPage()"
      >
        <span>more details</span>

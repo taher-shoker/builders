@@ -144,7 +144,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'psr/:id',
+    path: 'psr/:id/:sectorId',
     loadComponent: () =>
       import(
         './views/PSR/components/psr-details-page/psr-details-page.component'

@@ -1,6 +1,6 @@
 <div class="deleted-projects">
   <div class="main-title">
-    <p>{{ pageTitle }}</p>
+    <p>{{ pageTitle !== 'null' ? pageTitle : '' }}</p>
   </div>
   <div class="deleted-projects-cards">
     @for (project of deletedPSRProject(); track $index){

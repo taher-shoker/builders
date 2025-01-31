@@ -80,8 +80,8 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.getSpecificActivityLog(
       'PSR',
       'Add,Edit',
-      this.projectData().sector,
-      this.projectData().projectName
+      this.sectorId,
+      this.projectData().id.toString()
     );
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
@@ -109,9 +109,9 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.$endScorecardActivityLogsSub.complete();
     this.actionsPanel.hide();
   }
-  activatedRoute = inject(ActivatedRoute);
+  sectorId:string = ''
   gotoEditPage() {
-    this.activatedRoute.params.subscribe({
+    this.route.params.subscribe({
       next: (param: Params) => {
         if (param['id']) {
           const program = encodeURIComponent(param['id']);
@@ -150,11 +150,19 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   isEditMode!: boolean;
   psrServices = inject(PSRService);
   datePipe = inject(DatePipe);
+  activeRoute = inject(ActivatedRoute);
   constructor(
     private elementRef: ElementRef,
     private confirmationService: ConfirmationService
   ) {}
   ngOnInit(): void {
+    this.route.params.subscribe({
+      next: (param: Params) => {
+        if (param['sectorId']) {
+          this.sectorId = param['sectorId'];
+        }
+      },
+    });
     this.activityLogsTableHeader.set([
       {
         key: 'username',
@@ -523,7 +531,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.getSpecificActivityLog(
       'PSR',
       'Add,Edit,Delete',
-      this.projectData().sector,
+      this.sectorId,
       this.projectData().projectName,
       this.projectData().id.toString()
     );

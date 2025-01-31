@@ -107,11 +107,11 @@ export class TabDetailsComponent implements OnInit {
         type : "text",
         label : "Activity Type"
       },
-      // {
-      //   key : "details",
-      //   type : "text",
-      //   label : "Activity Details"
-      // },
+      {
+        key : "details",
+        type : "text",
+        label : "Activity Details"
+      },
       {
         key : "time",
         type : "text",

@@ -126,7 +126,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   {
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
-    this.getSpecificActivityLog("PSR" , this.project().sector)
+    this.getSpecificActivityLog("PSR" , this.project().id.toString())
   }
   popupClosed()
   {
