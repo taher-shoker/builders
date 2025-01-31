@@ -16,4 +16,8 @@
             }
         }
     </div>
+    @if(cadProjects().length === 0)
+    {
+        <p class = "empty-data-msg">there are no deleted projects</p>
+    }
 </div>

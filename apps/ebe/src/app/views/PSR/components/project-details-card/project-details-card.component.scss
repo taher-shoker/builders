@@ -387,3 +387,24 @@
     }
   }
 }
+.activity-logs-button
+{
+  border:0;
+  background-color: #8E9AA0;
+  color:#fff;
+  outline: 0;
+  box-shadow: none;
+  display: flex;
+  align-items: center;
+  gap:5px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-size: 1rem;
+  padding:7px 20px;
+  span
+  {
+    text-transform: capitalize;
+    color:#fff;
+    text-decoration: none;
+  }
+}

@@ -71,14 +71,17 @@
     }
   </p>
   <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
-  <a
-    class="project-container-details-link"
-    [routerLink]="['/psr/', project().sector]"
-    (click)="gotoProjectDetailsPage()"
-  >
-    <span>more details</span>
-    <img src="assets/images/arrow-right.svg" alt="" />
-  </a>
+   @if(!isDeleted())
+   {
+     <a
+       class="project-container-details-link"
+       [routerLink]="['/psr/', project().sector]"
+       (click)="gotoProjectDetailsPage()"
+     >
+       <span>more details</span>
+       <img src="assets/images/arrow-right.svg" alt="" />
+     </a>
+   }
 </section>
 @if(project().details) {
 <p-overlayPanel #overlayPanel dismissable="true">

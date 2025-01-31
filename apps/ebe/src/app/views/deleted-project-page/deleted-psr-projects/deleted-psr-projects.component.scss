@@ -30,3 +30,14 @@
     }
   }
 }
+.empty-data-msg
+{
+    text-align: center;
+    @extend .stcFont;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--stc-purple-light-color);
+    width: 100%;
+}

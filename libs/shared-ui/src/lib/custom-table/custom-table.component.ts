@@ -76,6 +76,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() length!: number;
   @Input() currentPage: number = 1;
   isDeleted = input<boolean>(false)
+  showLogs = input<boolean>(false)
 
   isEditMode = input<boolean>();
   userRoles = input<string>();

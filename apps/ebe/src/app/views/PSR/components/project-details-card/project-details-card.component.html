@@ -230,6 +230,21 @@
           <span>edit</span>
         </div>
         }
+        @if(!isEditMode && newData.chartDetails && newData.chartDetails.length !== 0 &&
+        userRoles().roles[0].roleName !== "BE_VIEWERS" && !isDeleted()) {
+          <button class = "activity-logs-button" (click)="showDeliverablesActivityLogs()">
+            <img src="assets/images/History.svg" />
+            <span>activity log</span>
+          </button>
+          <stc-apps-activity-logs-popup
+            [activityLogsTableHeader]="activityLogsTableHeader()"
+            [activityLogsTableBody]="activityLogsTableBody()"
+            [showPopup]="showActivityLogsPopup3"
+            (popupClosed)="popupClosed3()"
+            [isProjectActionPopup]="true"
+            type = "psr"
+          />
+        }
       </div>
     </div>
     <stc-apps-custom-table

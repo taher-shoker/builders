@@ -79,6 +79,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   showActivityLogs() {
     this.getSpecificActivityLog(
       'PSR',
+      'Add,Edit',
       this.projectData().sector,
       this.projectData().projectName
     );
@@ -87,14 +88,18 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   private getSpecificActivityLog(
     moduleName: string,
+    activityType:string,
     subModule?: string,
-    projectName?: string
+    projectName?: string,
+    entity?:string
   ) {
     this.activityLogService
-      .getSpecificActivityLog(moduleName, 'Add,Edit', subModule, projectName)
+      .getSpecificActivityLog(moduleName, activityType , subModule, projectName , entity)
       .pipe(takeUntil(this.$endScorecardActivityLogsSub))
       .subscribe({
         next: (activityLogs: ActivityLogData[]) => {
+          console.log(activityLogs);
+          
           this.activityLogsTableBody.set(activityLogs);
         },
       });
@@ -511,5 +516,23 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
 
     //   }
     // })
+  }
+  showActivityLogsPopup3 = false;
+  showDeliverablesActivityLogs()
+  {
+    this.getSpecificActivityLog(
+      'PSR',
+      'Add,Edit,Delete',
+      this.projectData().sector,
+      this.projectData().projectName,
+      this.projectData().id.toString()
+    );
+    console.log("this.projectData().sector => " , this.projectData().sector);
+    console.log("this.projectData().projectName => " , this.projectData().projectName);
+    this.showActivityLogsPopup3 = !this.showActivityLogsPopup3;
+  }
+  popupClosed3()
+  {
+    this.showActivityLogsPopup3 = false;
   }
 }
