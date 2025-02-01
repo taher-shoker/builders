@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivityLogService } from '../../../services/activity-logs.service';
-import { StrategyProgramKpiDetailsModel } from '../../../models/strategy-program.model';
+import { StrategyProgramKpiDetailsModel, StrategyProgramKpiProjectsDetailsModel } from '../../../models/strategy-program.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ActivityLogData, ColumnsSchema } from '../../../models/activity-logs';
 import { Subject, takeUntil } from 'rxjs';
@@ -16,7 +16,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DeletedCadProjectComponent {
   activityLogService = inject(ActivityLogService);
-  cadProjects = signal<StrategyProgramKpiDetailsModel[]>([]);
+  cadProjects = signal<StrategyProgramKpiProjectsDetailsModel[]>([]);
   $endScorecardActivityLogsSub:Subject<any> = new Subject();
   projectActivityLogsTableHeader:ColumnsSchema[] = [
     {
@@ -56,18 +56,18 @@ export class DeletedCadProjectComponent {
   keyNumber = '';
   ngOnInit()
   {
-    this.getCADProjects("CAD" , true);
     this.router.params.subscribe({
       next:(param) => {
         this.programTitle = param['id'];
         this.keyNumber = param['resNum'];
+        this.getCADProjects("CAD" , true);
       }
     })
   }
   private getCADProjects(moduleName:string , isDetails:boolean)
   {
-    this.activityLogService.getCADDeletedProjects(moduleName , isDetails).subscribe({
-      next : (res:StrategyProgramKpiDetailsModel[]) => {
+    this.activityLogService.getCADDeletedProjects(moduleName , isDetails , this.programTitle , this.keyNumber).subscribe({
+      next : (res:StrategyProgramKpiProjectsDetailsModel[]) => {
         this.cadProjects.set(res)
       }
     })

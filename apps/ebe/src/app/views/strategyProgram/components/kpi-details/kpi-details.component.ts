@@ -269,6 +269,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     {
       this.actionsPanel.hide();
     }
+    this.showActivityLogsPopup = false;
   }
   closeAccordion()
   {

@@ -12,7 +12,7 @@
       <i class = "pi pi-ellipsis-v" (click)="actionsPanel.toggle($event)"></i>
       <p-overlayPanel
       #actionsPanel
-      dismissable="false"
+      dismissable="true"
       [appendTo]="'body'"
       styleClass="project-card-actions-logs"
     >
@@ -42,6 +42,8 @@
       (popupClosed)="popupClosed()"
       [isProjectActionPopup]="true"
       type = "psr"
+      [isDismissable]="true"
+      (popupHide)="showActivityLogsPopup = false"
     />
       <!-- <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
       <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
@@ -189,7 +191,7 @@
     }
   </div>
 </section>
-<p-overlayPanel #overlayPanel dismissable="false">
+<p-overlayPanel #overlayPanel dismissable="true">
   <section
     class="popover-section"
     [ngStyle]="{
@@ -243,6 +245,8 @@
             (popupClosed)="popupClosed3()"
             [isProjectActionPopup]="true"
             type = "psr"
+            [isDismissable]="true"
+            (popupHide)="showActivityLogsPopup3 = false"
           />
         }
       </div>

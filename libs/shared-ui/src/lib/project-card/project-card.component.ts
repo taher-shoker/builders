@@ -58,8 +58,8 @@ export class ProjectCardComponent implements OnInit{
   }
   showActionsPopup()
   {
-    this.actionsPanel.toggle(event);
     this.showActivityLogsPopup = false;
+    this.actionsPanel.toggle(event);
     this.openPanel.emit();
   }
   closeAccordion()

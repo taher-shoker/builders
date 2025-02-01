@@ -8,7 +8,7 @@ import { HttpClient } from '@angular/common/http';
 import { ActivityLogData, ActivityLogRes } from '../models/activity-logs';
 import { DeletedProgram } from '../models/deleted-items';
 import { PSRProjectDetailsModel } from '../models/psr.model';
-import { StrategyProgramKpiDetailsModel } from '../models/strategy-program.model';
+import { StrategyProgramKpiDetailsModel, StrategyProgramKpiProjectsDetailsModel } from '../models/strategy-program.model';
 @Injectable({ providedIn: 'root' })
 export class ActivityLogService {
   http = inject(HttpClient);
@@ -60,8 +60,8 @@ export class ActivityLogService {
   {
     return this.http.get<PSRProjectDetailsModel[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}`);
   }
-  getCADDeletedProjects(moduleName:string , isDetails:boolean):Observable<StrategyProgramKpiDetailsModel[]>
+  getCADDeletedProjects(moduleName:string , isDetails:boolean , subModule:string , keyResultNumber:string):Observable<StrategyProgramKpiProjectsDetailsModel[]>
   {
-    return this.http.get<StrategyProgramKpiDetailsModel[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}`);
+    return this.http.get<StrategyProgramKpiProjectsDetailsModel[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}&subModule=${encodeURIComponent(subModule)}&keyResultNumber=${keyResultNumber}`);
   }
 }

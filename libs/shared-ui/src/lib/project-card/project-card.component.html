@@ -45,7 +45,7 @@
 {
   <p-overlayPanel
         #actionsPanel
-        dismissable="false"
+        dismissable="true"
         appendTo="body"
         styleClass="actions-logs12"
       >
@@ -56,12 +56,16 @@
           </div>
         </div>
       </p-overlayPanel>
-      <stc-apps-activity-logs-popup
-        [activityLogsTableHeader]="activityLogsTableHeader()"
-        [activityLogsTableBody]="activityLogsTableBody()"
-        [showPopup]="showActivityLogsPopup"
-        (popupClosed)="popupClosed()"
-        [isProjectActionPopup]="true"
-        type = "cad"
-      />
+      @if(showActivityLogsPopup)
+      {
+        <stc-apps-activity-logs-popup
+          [activityLogsTableHeader]="activityLogsTableHeader()"
+          [activityLogsTableBody]="activityLogsTableBody()"
+          [showPopup]="showActivityLogsPopup"
+          (popupClosed)="popupClosed()"
+          [isProjectActionPopup]="true"
+          type = "cad"
+          [isDismissable]="true"
+        />
+      }
 }

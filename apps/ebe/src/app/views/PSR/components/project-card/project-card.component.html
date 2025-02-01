@@ -10,7 +10,7 @@
     <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
     <p-overlayPanel
       #actionsPanel
-      dismissable="false"
+      dismissable="true"
       [appendTo]="'body'"
       styleClass="project-actions-logs"
     >
@@ -40,6 +40,8 @@
       (popupClosed)="popupClosed()"
       [isProjectActionPopup]="true"
       type = "psr"
+      [isDismissable]="true"
+      (popupHide)="showActivityLogsPopup = false"
     />
   </div>
   <div class="project-container-chart mt-5">

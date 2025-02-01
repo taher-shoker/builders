@@ -33,16 +33,22 @@ export class ActivityLogsPopupComponent {
   isActionPopup2:InputSignal<boolean> = input<boolean>(false);
   isProjectActionPopup:InputSignal<boolean> = input<boolean>(false);
   @Output() popupClosed:EventEmitter<boolean> = new EventEmitter(false);
+  @Output() popupHide:EventEmitter<boolean> = new EventEmitter(false);
   router = inject(Router)
   datePipe = inject(DatePipe);
   hasNewValue = signal<boolean>(false)
   hasOldValue = signal<boolean>(false)
   hasDetails = signal<boolean>(false)
   type = input.required<string>()
+  isDismissable = input<boolean>(false);
   closeActivityLogsPopup()
   {
     this.activityLogsPanel?.hide();
     this.popupClosed.emit(true);
+  }
+  hidePopup()
+  {
+    this.popupHide.emit()
   }
   ngOnInit()
   {
@@ -52,6 +58,7 @@ export class ActivityLogsPopupComponent {
   }
   constructor(){
     effect(() => {
+      console.log(this.showPopup());
       if(this.showPopup())
       {
         this.activityLogsPanel.show(event);

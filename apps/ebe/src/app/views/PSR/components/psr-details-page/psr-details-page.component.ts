@@ -75,7 +75,12 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
       this.getSpecificActivityLog("PSR" , this.groupName);
     } else {
       console.log(this.PSRDetailsData);
-      this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}`);
+      if(this.PSRDetailsData.length !== 0 && this.PSRDetailsData[0].gd)
+      {
+        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}`);
+      } else {
+        this.route.navigateByUrl(`/deleted-projects/psr-projects`);
+      }
     }
   }
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)

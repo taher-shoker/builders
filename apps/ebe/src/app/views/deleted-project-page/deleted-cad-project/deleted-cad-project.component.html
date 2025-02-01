@@ -2,10 +2,9 @@
     <p class="main-title">Strategic objectives to Key Results Mapping</p>
     <div class="deleted-cad-projects-cards">
         @for(project of cadProjects(); track $index){
-            @for(project2 of project.projects; track $index){
                 <div class = "deleted-cad-projects-cards-card">
                     <stc-apps-project-card 
-                        [projectData]="project2" 
+                        [projectData]="project" 
                         [isAdmin]="true"
                         [activityLogsTableHeader]="projectActivityLogsTableHeader"
                         [activityLogsTableBody]="projectActivityLogsTableBody()"
@@ -13,7 +12,6 @@
                         [isdeleted]="true"
                     />
                 </div>
-            }
         }
     </div>
     @if(cadProjects().length === 0)

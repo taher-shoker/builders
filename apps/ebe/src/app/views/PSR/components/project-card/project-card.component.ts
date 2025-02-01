@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { ActivityLog , ActivityLogData, ColumnsSchema } from '../../../../models/activity-logs';
 import { Subject, takeUntil } from 'rxjs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
+import { ScorecardService } from '../../../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-psr-project-card',
   standalone: true,
@@ -38,7 +39,13 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   colors:string[] = ['#4F008C' , '#B999D1'];
   chartData!:PSRChartDataModel;
   private confirmationService = inject(ConfirmationService);
+  scorecardService = inject(ScorecardService)
   ngOnInit(): void {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.showActivityLogsPopup = false;
+      }
+    })
     this.activityLogsTableHeader.set([
       {
         key : "username",
@@ -71,7 +78,6 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
         label : "New Value"
       },
     ])
-    console.log(this.isAdmin());
     if(this.isAdmin())
     {
       if(this.isDeleted())

@@ -67,7 +67,7 @@ export class TabDetailsComponent implements OnInit {
       icon: "pi pi-clock"
     },
     {
-      label: 'show deleted projects',
+      label: 'show deleted programs',
       icon: "pi pi-eye"
     }
   ];

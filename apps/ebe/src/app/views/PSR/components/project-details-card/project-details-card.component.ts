@@ -34,6 +34,7 @@ import { ActivatedRoute, Params, Router } from '@angular/router';
 import { ActivityLog, ActivityLogData } from '../../../../models/activity-logs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ScorecardService } from '../../../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-project-details-card',
   standalone: true,
@@ -76,6 +77,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   groupName = input.required<string>();
   activityLogService = inject(ActivityLogService);
   $endScorecardActivityLogsSub: Subject<any> = new Subject();
+  scorecardService = inject(ScorecardService);
   showActivityLogs() {
     this.getSpecificActivityLog(
       'PSR',
@@ -156,6 +158,11 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     private confirmationService: ConfirmationService
   ) {}
   ngOnInit(): void {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.showActivityLogsPopup = false;
+      }
+    })
     this.route.params.subscribe({
       next: (param: Params) => {
         if (param['sectorId']) {
@@ -337,6 +344,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   deletedData!: ChartDetails;
   deleteRecord(e: ChartDetails) {
+    this.showActivityLogsPopup3 = false;
     this.deletedData = e;
     this.confirmationService.confirm({
       key: 'delete-record',
@@ -472,6 +480,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   @Output() addChartData: EventEmitter<boolean> = new EventEmitter();
   saveData() {
+    this.showActivityLogsPopup3 = false;
     const isExists = this.tableHeader.filter((val) => val.key === '')[0];
     if (!isExists) {
       this.tableHeader.push({
@@ -514,6 +523,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     const filteredArray = this.tableHeader.filter((obj) => obj.key !== '');
     this.tableHeader = filteredArray;
     this.isDisabled = false;
+    this.showActivityLogsPopup3 = false;
   }
   @Output() deleteProject: EventEmitter<number> = new EventEmitter();
   deleteProjectData(id: number) {
@@ -532,7 +542,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       'PSR',
       'Add,Edit,Delete',
       this.sectorId,
-      this.projectData().projectName,
+      this.projectData().id.toString(),
       this.projectData().id.toString()
     );
     console.log("this.projectData().sector => " , this.projectData().sector);
