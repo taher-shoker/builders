@@ -74,12 +74,12 @@ export const appRoutes: Route[] = [
           .then((m) => m.DeletedProgramsComponent)
         },
         {
-          path:"psr-projects/:title",
+          path:"psr-projects/:title/:sector",
           loadComponent:() => import('./views/deleted-project-page/deleted-psr-projects/deleted-psr-projects.component')
           .then((m) => m.DeletedPsrProjectsComponent)
         },
         {
-          path:"psr-projects",
+          path:"psr-projects/:sector",
           loadComponent:() => import('./views/deleted-project-page/deleted-psr-projects/deleted-psr-projects.component')
           .then((m) => m.DeletedPsrProjectsComponent)
         },

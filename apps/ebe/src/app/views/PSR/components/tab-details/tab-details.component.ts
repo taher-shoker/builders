@@ -76,7 +76,7 @@ export class TabDetailsComponent implements OnInit {
     if(label === 'activity log')
     {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
-      this.getSpecificActivityLog("PSR")
+      this.getSpecificActivityLog("PSR" , '' , '' , '' , true)
     } else {
       this.router.navigateByUrl("/deleted-projects/programs");
     }
@@ -87,9 +87,9 @@ export class TabDetailsComponent implements OnInit {
   {
     this.showActivityLogsPopup = false;
   }
-  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
+  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean)
     {
-      this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Delete" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Delete" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
         next : (activityLogs:ActivityLogData[]) => {
           this.activityLogsTableBody.set(activityLogs);
         }

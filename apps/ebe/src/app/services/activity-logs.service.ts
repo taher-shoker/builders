@@ -33,7 +33,7 @@ export class ActivityLogService {
     }
     return this.http.get<ActivityLogRes>(url);
   }
-  getSpecificActivityLog(moduleName:string , activityType:string , subModule?:string , projectName?:string , entity?:string):Observable<ActivityLogData[]>
+  getSpecificActivityLog(moduleName:string , activityType:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean):Observable<ActivityLogData[]>
   {
     let url = `${environment.apiUrl}/business-excellence/log/recent?module=${moduleName}&activityType=${activityType}`;
     if(subModule)
@@ -50,15 +50,19 @@ export class ActivityLogService {
     {
       url += `&entity=${entity}`;
     }
+    if(showParentData)
+    {
+      url += `&fetchOnlyParent=${showParentData}`;
+    }
     return this.http.get<ActivityLogData[]>(url);
   }
   getDeletedPrograms(moduleName:string , isDetails:boolean):Observable<DeletedProgram[]>
   {
     return this.http.get<DeletedProgram[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}`);
   }
-  getPSRDeletedProjects(moduleName:string , isDetails:boolean):Observable<PSRProjectDetailsModel[]>
+  getPSRDeletedProjects(moduleName:string , subModule:string , isDetails:boolean):Observable<PSRProjectDetailsModel[]>
   {
-    return this.http.get<PSRProjectDetailsModel[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&isDetails=${isDetails}`);
+    return this.http.get<PSRProjectDetailsModel[]>(`${environment.apiUrl}/business-excellence/log/deleted?module=${moduleName}&subModule=${subModule}&isDetails=${isDetails}`);
   }
   getCADDeletedProjects(moduleName:string , isDetails:boolean , subModule:string , keyResultNumber:string):Observable<StrategyProgramKpiProjectsDetailsModel[]>
   {

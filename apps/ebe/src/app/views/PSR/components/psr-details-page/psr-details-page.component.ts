@@ -72,25 +72,27 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   actionButton(label: string) {
     if (label === 'activity log') {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
-      this.getSpecificActivityLog("PSR" , this.groupName);
+      this.getSpecificActivityLog("PSR" , this.groupName2 , '' , '' , false);
     } else {
-      console.log(this.PSRDetailsData);
+      // console.log(this.PSRDetailsData);
+      // console.log(this.groupName);
       if(this.PSRDetailsData.length !== 0 && this.PSRDetailsData[0].gd)
       {
-        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}`);
+        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}/${this.groupName2}`);
       } else {
-        this.route.navigateByUrl(`/deleted-projects/psr-projects`);
+        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.groupName}`);
       }
     }
   }
-  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
+  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Edit,Delete" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Edit,Delete" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
       }
     })
   }
+  groupName2 = ''
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
     this.scorecardService.toggleSwitchBtn.subscribe({
@@ -121,6 +123,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({
       next: (param) => {
+        this.groupName2 = param['sectorId'];
         this.groupName = param['id'];
         if (this.groupName) {
           this.getProjectDetails(this.groupName);

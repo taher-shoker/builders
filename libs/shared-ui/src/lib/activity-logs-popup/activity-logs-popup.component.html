@@ -1,7 +1,8 @@
 <div class="overlay-container" style="position: relative" #overlay>
+  <!-- [dismissable]="isDismissable()" -->
   <p-overlayPanel
     #activityLogsPanel
-    [dismissable]="isDismissable()"
+    dismissable = "false"
     [appendTo]="isActionPopup() || isActionPopup2() ? overlay : 'body'"
     styleClass="activity-logs-panel"
     [styleClass]="

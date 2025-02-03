@@ -99,6 +99,11 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   // }).then(res => console.log(res))
   ngOnInit()
   {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.showActivityLogsPopup = false;
+      }
+    })
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
@@ -155,6 +160,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     // this.capexOpexData = {"opex":[],"capex":[],"tendering":[]};
     this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
+        console.log(res);
         this.capexOpexData = res;     
         this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]
         this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'opex')[0]

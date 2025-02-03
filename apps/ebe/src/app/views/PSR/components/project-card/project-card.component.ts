@@ -44,6 +44,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
     this.scorecardService.toggleSwitchBtn.subscribe({
       next : (res) => {
         this.showActivityLogsPopup = false;
+        this.actionsPanel?.hide();
       }
     })
     this.activityLogsTableHeader.set([

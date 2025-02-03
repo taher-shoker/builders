@@ -21,6 +21,7 @@ export class DeletedPsrProjectsComponent {
   deletedPSRProject = signal<PSRProjectDetailsModel[]>([]);
   userRoles!: UserGroup;
   scorecardService = inject(ScorecardService);
+  sector = '';
   ngOnInit()
   {
     this.userRoles = this.scorecardService.userRoles;
@@ -29,12 +30,16 @@ export class DeletedPsrProjectsComponent {
       {
         this.pageTitle = params.get("title")!;
       }
+      if(params && params.get("sector"))
+      {
+        this.sector = params.get("sector")!;
+      }
     });
     this.getPSRDeletedProjects("PSR" , true)
   }
   private getPSRDeletedProjects(moduleName:string , isDetails:boolean)
   {
-    this.activityLogService.getPSRDeletedProjects(moduleName , isDetails).subscribe({
+    this.activityLogService.getPSRDeletedProjects(moduleName , this.sector , isDetails).subscribe({
       next : (res:PSRProjectDetailsModel[]) => {
         console.log(res);
         this.deletedPSRProject.set(res);

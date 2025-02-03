@@ -83,7 +83,9 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       'PSR',
       'Add,Edit',
       this.sectorId,
-      this.projectData().id.toString()
+      this.projectData().id.toString(),
+      '',
+      true
     );
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
@@ -93,10 +95,11 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     activityType:string,
     subModule?: string,
     projectName?: string,
-    entity?:string
+    entity?:string,
+    showParentData?:boolean
   ) {
     this.activityLogService
-      .getSpecificActivityLog(moduleName, activityType , subModule, projectName , entity)
+      .getSpecificActivityLog(moduleName, activityType , subModule, projectName , entity , showParentData)
       .pipe(takeUntil(this.$endScorecardActivityLogsSub))
       .subscribe({
         next: (activityLogs: ActivityLogData[]) => {
@@ -161,6 +164,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.scorecardService.toggleSwitchBtn.subscribe({
       next : (res) => {
         this.showActivityLogsPopup = false;
+        this.actionsPanel?.hide();
       }
     })
     this.route.params.subscribe({

@@ -187,10 +187,13 @@ export class ActivityLogsComponent {
   getCurrentTap(clickedTap: TapModel) {
     this.currentTap.set(clickedTap);
     this.currentPage.set(0);
-    // this.selectedType = null;
-    // this.startDate = "";
-    // this.endDate = "";
-    // this.searchKeyword = "";
+    this.selectedType = {
+      name: 'All',
+      id: 'All',
+    };
+    this.startDate = "";
+    this.endDate = "";
+    this.searchKeyword = "";
     if (clickedTap.value === 'Scorecard' || clickedTap.value === 'Financial') {
       this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
     } else {

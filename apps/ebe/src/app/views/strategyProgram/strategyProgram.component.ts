@@ -41,6 +41,11 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   constructor(private datePipe:DatePipe){}
   activityLogServices = inject(ActivityLogService);
   ngOnInit() {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.showActivityLogsPopup = false;
+      }
+    })
     // this.strategyProgramData = [];
     console.log("window width => " , window.innerWidth);
     this.getStrategyProgramSummary();
@@ -79,6 +84,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   private getStrategyProgramSummary() {
     this.strategyProgramService.getStrategyProgramSummary().pipe(takeUntil(this.endSubs$)).subscribe({
       next: (res: StrategyProgramModel) => {
+        console.log(res);
         this.strategyProgramData = res;
         if (this.strategyProgramData.cadStrategyProgramDTO.length === 0) {
           this.isEmptyData = true;

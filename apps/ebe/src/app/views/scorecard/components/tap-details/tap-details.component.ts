@@ -88,6 +88,11 @@ export class TapDetailsComponent implements OnInit {
   }
   constructor(private datePipe: DatePipe){}
   ngOnInit(): void {    
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.showActivityLogsPopup = false;
+      }
+    })
     this.authServices.userRoles.subscribe({
       next : (role) => {
         this.isAdmin = role.roles.some(

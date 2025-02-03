@@ -10,9 +10,10 @@
     <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
     <p-overlayPanel
       #actionsPanel
-      dismissable="true"
+      dismissable="false"
       [appendTo]="'body'"
       styleClass="project-actions-logs"
+      (onHide)="showActivityLogsPopup = false"
     >
       <div class="actions-logs-table">
         @for (item of items; track $index) {

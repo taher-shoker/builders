@@ -76,7 +76,7 @@ export class DeletedCadProjectComponent {
   {
     if(id)
     {
-      this.getSpecificActivityLog("CAD" , "Add,Edit" , this.programTitle , this.keyNumber , id.toString());
+      this.getSpecificActivityLog("CAD" , "Add,Edit,Delete" , this.programTitle , this.keyNumber , id.toString());
     }
   }
   private getSpecificActivityLog(moduleName:string , activityType:string , subModule:string , projectName?:string , entity?:string)
