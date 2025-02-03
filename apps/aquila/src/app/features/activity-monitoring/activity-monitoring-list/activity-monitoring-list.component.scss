@@ -52,5 +52,12 @@
                 background: #FFEDED;
             }
         }
+
+        ::ng-deep {
+            .custom-paginator {
+                display: flex;
+                justify-content: end;
+            }
+        }
     }
 }

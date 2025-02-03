@@ -41,6 +41,9 @@
       [dataSource]="filteredDataSource"
       [columnSchema]="columnsSchema"
       [noDataMessage]="'No activity monitoring available'"
+      [enablePagination]="false"
+      [totalCount]="totalRecords"
+      (pageChange)="onPageChange($event)"
     >
       <ng-template #statusCustomTemplate let-row>
         <span
@@ -56,5 +59,16 @@
         {{ row.startedAt | date : "dd MMM yyyy 'at' hh:mm a" }}
       </ng-template>
     </stc-apps-table-list>
+
+    <p-paginator
+      [first]="first"
+      [rows]="rows"
+      [totalRecords]="totalRecords"
+      (onPageChange)="onPageChange($event)"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      styleClass="mt-3 custom-paginator"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+    ></p-paginator>
   </div>
 </div>

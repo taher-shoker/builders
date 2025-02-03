@@ -3,6 +3,7 @@ import { environment } from '../../../../environments/environment.stage';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import {
   BehaviorSubject,
+  combineLatest,
   debounceTime,
   distinctUntilChanged,
   Observable,
@@ -16,18 +17,36 @@ import { ActivityApiResponse, ActivityFilters } from '../models/activity.model';
   providedIn: 'root',
 })
 export class ActivityMonitoringService implements OnDestroy {
-  private readonly apiUrl = `${environment.apiUrl}/v1/Activities`;
+  private readonly apiUrl = `${environment.apiUrl}/api/v1/Activities`;
   private readonly http = inject(HttpClient);
 
   private filterSubject = new BehaviorSubject<ActivityFilters>({});
+  private paginationSubject = new BehaviorSubject<{
+    pageNumber: number;
+    pageSize: number;
+  }>({
+    pageNumber: 1,
+    pageSize: 10,
+  });
   private destroy$ = new Subject<void>();
 
-  readonly activities$ = this.filterSubject.pipe(
-    debounceTime(300),
-    distinctUntilChanged(
-      (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+  readonly activities$ = combineLatest([
+    this.filterSubject.pipe(
+      distinctUntilChanged(
+        (prev, curr) => JSON.stringify(prev) === JSON.stringify(curr)
+      )
     ),
-    switchMap((filters) => this.getActivities(filters)),
+    this.paginationSubject.pipe(
+      distinctUntilChanged(
+        (prev, curr) =>
+          prev.pageNumber === curr.pageNumber && prev.pageSize === curr.pageSize
+      )
+    ),
+  ]).pipe(
+    debounceTime(300),
+    switchMap(([filters, pagination]) =>
+      this.getActivities(filters, pagination.pageNumber, pagination.pageSize)
+    ),
     takeUntil(this.destroy$)
   );
 
@@ -43,15 +62,26 @@ export class ActivityMonitoringService implements OnDestroy {
     this.filterSubject.next(filters);
   }
 
-  private getActivities(
-    filters: ActivityFilters
-  ): Observable<ActivityApiResponse> {
-    const processedFilters = this.processFilters(filters);
-    const params = new HttpParams().set('start', '0').set('end', '110');
+  updatePagination(pageNumber: number, pageSize: number): void {
+    this.paginationSubject.next({ pageNumber, pageSize });
+  }
 
-    return this.http.post<ActivityApiResponse>(this.apiUrl, processedFilters, {
-      params,
-    });
+  private getActivities(
+    filters: ActivityFilters,
+    pageNumber: number,
+    pageSize: number
+  ): Observable<ActivityApiResponse> {
+    const params = new HttpParams()
+      .set('pageNumber', pageNumber.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.post<ActivityApiResponse>(
+      this.apiUrl,
+      this.processFilters(filters),
+      {
+        params,
+      }
+    );
   }
 
   private processFilters(filters: ActivityFilters): Partial<ActivityFilters> {

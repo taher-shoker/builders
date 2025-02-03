@@ -17,5 +17,5 @@ export type ActivityFilters = Partial<
 
 export interface ActivityApiResponse {
   userActivities: Activity[];
-  totalCount?: number;
+  count: number;
 }
