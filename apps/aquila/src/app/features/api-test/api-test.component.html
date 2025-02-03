@@ -1,0 +1,82 @@
+<div class="api-test">
+  <p-toast />
+  <div class="api-test_filter" [formGroup]="apiTestForm">
+    <h5>Paste API link then select standard from list</h5>
+    <div class="api-test_filter_fields">
+      <div>
+        <label for="apiLinkInput">API Link</label>
+        <stc-apps-input-group
+          [placeholder]="'Paste API link Here'"
+          [addonText]="'http://'"
+          formControlName="apiUrl"
+        ></stc-apps-input-group>
+      </div>
+      <div>
+        <label>Standard</label>
+        <stc-apps-filter-dropdown
+          [dropdownOptions]="standardsDropdown"
+          [placeholder]="'Select a Standard'"
+          [selectedValue]="selectedStandard"
+          (valueChange)="onStandardChanged($event)"
+        ></stc-apps-filter-dropdown>
+      </div>
+      <stc-apps-button
+        [buttonText]="'Add To Queue'"
+        [buttonType]="'stc-color-outline'"
+        [buttonDisable]="apiTestForm.invalid"
+        (click)="sendToQueue()"
+      ></stc-apps-button>
+      <stc-apps-button
+        [buttonText]="'Add & Run'"
+        [buttonType]="'primary'"
+        [buttonDisable]="apiTestForm.invalid"
+        (click)="sendToQueueAndRun()"
+      ></stc-apps-button>
+    </div>
+  </div>
+
+  <div class="api-test_lists">
+    <stc-apps-status-list
+      [title]="'Queue - In Progress'"
+      [items]="queueItems"
+      (itemsChange)="onItemsChange($event)"
+      (removedItems)="onRemoveItem($event)"
+      (standardChanged)="onStandardChange($event)"
+    ></stc-apps-status-list>
+    <stc-apps-status-list
+      [title]="'Completed Tests'"
+      [items]="completedItems"
+      (itemSelected)="onCompletedItemClick($event)"
+    ></stc-apps-status-list>
+  </div>
+
+  <div class="api-test_result">
+    <div class="api-test_result_header">
+      <h5>Result of selected test</h5>
+      @if (tableData.length > 0) {
+      <stc-apps-split-button
+        [label]="'Export result'"
+        [model]="exportItems"
+        [outlined]="true"
+      ></stc-apps-split-button>
+      }
+    </div>
+    <div class="api-test_result_content">
+      @if (tableData.length > 0) {
+      <div class="iframe-container" id="iframe-container">
+        <iframe
+          id="api-test-iframe"
+          width="100%"
+          height="800"
+          [src]="getSafeUrl(selectedItem.summaryFileHtml)"
+          loading="lazy"
+        ></iframe>
+      </div>
+      } @else {
+      <div class="api-test_no-data-message">
+        <p>Pick a Completed Test to View Its Result</p>
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,127 @@
+@import '../../../../styles/shared-styles.scss';
+
+.status-list {
+    &_header {
+        @include flex-between-center;
+        margin-bottom: $gap-medium;
+
+        h5 {
+            color: var(--darkPurbleColor);
+        }
+
+        stc-apps-button {
+            ::ng-deep button {
+                color: var(--whiteColor);
+                @include button-font-size;
+            }
+        }
+    }
+
+    &_items {
+        @include flex-column;
+        gap: $gap-medium;
+        height: 430px;
+        overflow-y: auto;
+        padding-right: $gap-medium;
+
+        .card {
+            padding: 0;
+            height: auto;
+            cursor: pointer;
+
+            &.dimmed {
+                cursor: not-allowed;
+            }
+
+            &-header {
+                @include flex-between-center;
+                padding: 11px 15px;
+
+                button {
+                    width: auto;
+                    padding: 0;
+                    margin-left: auto;
+                }
+
+                .spinner {
+                    margin-left: auto;
+                }
+
+                p {
+                    color: var(--grey-color);
+                }
+
+                strong {
+                    font-family: 'stc forward-bold';
+                    text-transform: capitalize;
+
+                    &.text-danger {
+                        margin-left: auto;
+                    }
+                }
+
+
+            }
+
+            &-body {
+                @include flex-column;
+                gap: $gap-xxs;
+
+                span {
+                    padding: 0 10px;
+                    color: #6B7280;
+                }
+
+                mat-form-field {
+                    border: 1px solid #D1D5DB;
+
+                    ::ng-deep {
+                        .mat-mdc-form-field-subscript-wrapper {
+                            display: none;
+                        }
+                    }
+                }
+
+                ::ng-deep {
+                    .p-dropdown {
+                        width: 100%;
+                    }
+                }
+            }
+        }
+
+        .selected-card {
+            border: 2px solid var(--stc-pink-light-color);
+            border-radius: 8px;
+            transition: border 0.3s ease;
+
+            .text-success {
+                background-color: #d4edda;
+                padding: 5px 10px;
+                border-radius: 4px;
+            }
+
+            .text-danger {
+                background-color: #f8d7da;
+                padding: 5px 10px;
+                border-radius: 4px;
+            }
+        }
+    }
+
+    &_empty {
+        @include flex-column;
+        align-items: center;
+        width: fit-content;
+        gap: $gap-tiny;
+        margin: 130px auto;
+
+        p {
+            color: var(--grey-color);
+
+            @media screen and (max-width: $breakpoint-xl) {
+                font-size: $font-size-small;
+            }
+        }
+    }
+}

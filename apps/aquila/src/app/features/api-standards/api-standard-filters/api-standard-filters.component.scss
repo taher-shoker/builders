@@ -1,0 +1,37 @@
+@import '../../../../styles/shared-styles.scss';
+
+.api-standard_filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: $gap-xxs;
+
+    .filter-field {
+        @media screen and (max-width: $breakpoint-xl) {
+            font-size: $font-size-small;
+
+            ::ng-deep {
+                stc-apps-filter-dropdown p-dropdown .p-inputtext {
+                    font-size: $font-size-small;
+                }
+            }
+        }
+    }
+}
+
+::ng-deep {
+    .p-datepicker table {
+        width: max-content;
+
+        tbody tr:not(.table-header) {
+            border: none;
+
+            td {
+                padding: 0;
+            }
+        }
+    }
+
+    p-calendar timesicon {
+        margin: 0 $gap-xs;
+    }
+}

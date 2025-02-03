@@ -1,3 +1,4 @@
+import { SplitButtonModule } from 'primeng/splitbutton';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -15,9 +16,9 @@ import { ModeToggleModule } from '@stc-apps/mode-toggle';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
 
-import {MatIconModule} from '@angular/material/icon';
-import {MatMenuModule} from '@angular/material/menu';
-import {MatButtonModule} from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatButtonModule } from '@angular/material/button';
 
 import { ButtonComponent } from './button/button.component';
 import { HeaderComponent } from './header/header.component';
@@ -88,7 +89,15 @@ import { NewLinePipe } from './newLine.pipe';
 import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
 import { SharedService } from './shared.service';
 import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
-const modules = [BreadCrumbModule, MatIconModule , CalendarModule];
+import { SplitButtonComponent } from './split-button/split-button.component';
+import { InputGroupComponent } from './input-group/input-group.component';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputTextModule } from 'primeng/inputtext';
+import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.component';
+import { DropdownModule } from 'primeng/dropdown';
+
+const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
 // const modules = [BreadCrumbModule, MatIconModule];
 
 const components = [
@@ -146,13 +155,16 @@ const components = [
   DoubleLineChartComponent,
   NewLinePipe,
   MultiCirclesChartComponent,
-  ClusteredColumnChartComponent
+  ClusteredColumnChartComponent,
+  SplitButtonComponent,
+  InputGroupComponent,
+  FilterDropdownComponent,
 ];
 
 @NgModule({
   declarations: [...components],
-  exports: [...components, ...modules ],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' } , SharedService],
+  exports: [...components, ...modules],
+  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, SharedService],
   imports: [
     CommonModule,
     ConfirmDialogModule,
@@ -183,7 +195,12 @@ const components = [
     MatIconModule,
     MatButtonModule,
     CalendarModule,
-    primengDialogModule
-  ]
+    primengDialogModule,
+    SplitButtonModule,
+    InputGroupAddonModule,
+    InputGroupModule,
+    InputTextModule,
+    DropdownModule,
+  ],
 })
 export class SharedUiModule {}
