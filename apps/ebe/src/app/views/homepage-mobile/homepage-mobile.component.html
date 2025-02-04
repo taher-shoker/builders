@@ -1,0 +1,16 @@
+<div class="home-section">
+  <stc-apps-user-info [userImage]="userImage()" [username]="userName()" />
+  <div class="stc-logo">
+    <img src="assets/images/stc-logo.svg" alt="" />
+  </div>
+  <p class="main-title">corporate analytics & data sector</p>
+  <div class="tabs-cards">
+    <div class="row">
+        @for (tap of tapsData(); track tap.id) {
+            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                <stc-apps-tab-card [tabData]="tap" (currentTap)="getCurrentTap($event)" />
+            </div>
+        }
+    </div>
+  </div>
+</div>

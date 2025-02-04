@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
 import {
   NavLinks,
@@ -8,6 +8,7 @@ import {
 } from '../models/scorecard.model';
 import { NavigationStart, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { DeviceService } from '../services/device.service';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -15,7 +16,6 @@ import { AuthService } from '../services/auth.service';
   styleUrl: './main-layout.component.scss',
 })
 export class MainLayoutComponent implements OnInit {
-  // @ViewChild(SidebarComponent) child?: SidebarComponent;
   logoSrc!: string;
   userName!: string;
   userNameLogo!: string;
@@ -29,11 +29,15 @@ export class MainLayoutComponent implements OnInit {
   userRoles!: UserGroup;
   isAllowed!: boolean;
   isPMO!: boolean;
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
   ngOnInit(): void {
     this.currentSystem = this.scorecardService.getCurrentSystem();
     this.userData = JSON.parse(
       decodeURIComponent(this.scorecardService.getUserGroups())
     );
+    this.isMobile.set(this.deviceService.isMobile());
+    console.log(this.isMobile());
     this.scorecardService.setUsername(this.userData.name);
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
@@ -62,8 +66,6 @@ export class MainLayoutComponent implements OnInit {
         return this.currentSystem === role.system.name;
       });
     });
-    // console.log(this.currentSystem);
-    // console.log(matchingGroup);
     if (matchingGroup) {
       return matchingGroup;
     } else {
@@ -77,20 +79,6 @@ export class MainLayoutComponent implements OnInit {
   getCurrentMode(mode: 'editMode' | 'viewMode') {
     this.scorecardService.setEditMode(mode);
   }
-  // decodeToken(token: string) {
-  //   const base64Url = token.split('.')[1];
-  //   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  //   const jsonPayload = decodeURIComponent(
-  //     window
-  //       .atob(base64)
-  //       .split('')
-  //       .map(function (c) {
-  //         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //       })
-  //       .join('')
-  //   );
-  //   return JSON.parse(jsonPayload);
-  // }
   logout() {
     this.authService.logout();
   }
