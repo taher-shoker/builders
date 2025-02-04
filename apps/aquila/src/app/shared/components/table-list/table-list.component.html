@@ -41,6 +41,15 @@
           }
         </div>
       </td>
+      } @else if (column.complexViewTemp) {
+      <td>
+        <ng-container
+          *ngTemplateOutlet="
+            column.complexViewTemp;
+            context: { $implicit: rowData }
+          "
+        ></ng-container>
+      </td>
       } @else {
       <td>{{ rowData[column.key] }}</td>
       } }
