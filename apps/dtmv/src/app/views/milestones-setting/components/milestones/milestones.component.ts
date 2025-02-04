@@ -457,18 +457,21 @@ export class MilestonesComponent
 
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
-    this.form = this.formBuilder.group({
-      milestoneName: [null],
-      milestoneId: [null],
-      teamName: [null],
-      status: [null],
-      startDateFrom: [null],
-      startDateTo: [null],
-      endDateFrom: [null],
-      endDateTo: [null],
-      workStream: [null],
-      validationStatus: [null],
-    });
+    this.form = this.formBuilder.group(
+      {
+        milestoneName: [null],
+        milestoneId: [null],
+        teamName: [null],
+        status: [null],
+        startDateFrom: [null],
+        startDateTo: [null],
+        endDateFrom: [null],
+        endDateTo: [null],
+        workStream: [null],
+        validationStatus: [null],
+      },
+      { validators: this.dateRangeValidator }
+    );
   }
   get startDateFrom() {
     return this.form.get('startDateFrom');
@@ -490,14 +493,12 @@ export class MilestonesComponent
     const endFrom = control.get('endDateFrom')?.value;
     const endTo = control.get('endDateTo')?.value;
 
-    if ((startFrom && !startTo) || (!startFrom && startTo)) {
-      return { startRangeIncomplete: true };
-    } else if ((endFrom && !endTo) || (!endFrom && endTo)) {
-      return { endRangeIncomplete: true };
+    if (
+      (startFrom && endFrom && new Date(startFrom) > new Date(endFrom)) ||
+      (startTo && endTo && new Date(startTo) > new Date(endTo))
+    ) {
+      return { invalidDateRange: true };
     }
-    // if (new Date(start) > new Date(end)) {
-    //   return { invalidDateRange: true };
-    // }
 
     return null;
   }
