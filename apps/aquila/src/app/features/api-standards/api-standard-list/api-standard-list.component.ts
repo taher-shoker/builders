@@ -89,21 +89,21 @@ export class ApiStandardListComponent implements OnInit {
     standards: Standard[],
     filters?: Record<string, unknown>
   ): Standard[] {
-    if (!filters) {
-      return standards;
-    }
-
+    if (!filters) return standards;
     return standards.filter((standard) => {
       const nameMatch =
         !filters['name'] ||
         standard.name
           .toLowerCase()
-          .includes((filters['name'] as string).toLowerCase());
+          .includes(String(filters['name']).toLowerCase());
+
       const publishUpdateMatch =
         !filters['publishUpdate'] ||
         standard.publishUpdate === filters['publishUpdate'];
+
       const lastUpdateMatch =
         !filters['lastUpdate'] || standard.lastUpdate === filters['lastUpdate'];
+
       const businessAreaMatch =
         !filters['businessArea'] ||
         standard.businessArea === filters['businessArea'];
@@ -112,6 +112,26 @@ export class ApiStandardListComponent implements OnInit {
         nameMatch && publishUpdateMatch && lastUpdateMatch && businessAreaMatch
       );
     });
+  }
+
+  private formatDate(date: Date | string): string {
+    if (typeof date === 'string') {
+      return date;
+    }
+
+    return (
+      [
+        date.getFullYear(),
+        String(date.getMonth() + 1).padStart(2, '0'),
+        String(date.getDate()).padStart(2, '0'),
+      ].join('-') +
+      'T' +
+      [
+        String(date.getHours()).padStart(2, '0'),
+        String(date.getMinutes()).padStart(2, '0'),
+        String(date.getSeconds()).padStart(2, '0'),
+      ].join(':')
+    );
   }
 
   onActionHandler(event: { actionType: string; rowData: Standard }): void {
@@ -139,7 +159,24 @@ export class ApiStandardListComponent implements OnInit {
   }
 
   onFiltersChanged(filters: Record<string, unknown>): void {
-    this.standards = this.applyFilters(this.originalStandards, filters);
+    const processedFilters = { ...filters };
+
+    if (processedFilters['publishUpdate']) {
+      processedFilters['publishUpdate'] = this.formatDate(
+        processedFilters['publishUpdate'] as Date
+      );
+    }
+
+    if (processedFilters['lastUpdate'] instanceof Date) {
+      processedFilters['lastUpdate'] = this.formatDate(
+        processedFilters['lastUpdate'] as Date
+      );
+    }
+
+    this.standards = this.applyFilters(
+      this.originalStandards,
+      processedFilters
+    );
   }
 
   onSortChanged(direction: { label: string; value: 'asc' | 'desc' }): void {
