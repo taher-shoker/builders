@@ -16,5 +16,11 @@
                 }
             }
         }
+
+        ::ng-deep {
+            .p-timepicker {
+                @extend %timepicker-styles;
+            }
+        }
     }
 }
