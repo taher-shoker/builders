@@ -74,9 +74,11 @@ export class ApiStandardFormComponent implements OnInit {
     this.isEditMode = history.state.isEditMode;
     if (this.isEditMode && history.state.standard) {
       const standardData = history.state.standard;
-      this.form.patchValue({
+      const patchedData = {
         ...standardData,
-      });
+        publishUpdate: new Date(standardData.publishUpdate),
+      };
+      this.form.patchValue(patchedData);
     }
 
     if (!this.isEditMode) {

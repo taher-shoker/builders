@@ -1,7 +1,7 @@
 <p-table
   [value]="dataSource()"
   [tableStyle]="dataSource().length > 0 ? { 'min-width': '50rem' } : {}"
-  [paginator]="dataSource().length > 0"
+  [paginator]="enablePagination() && dataSource().length > 0"
   [rows]="10"
   [scrollable]="true"
   [responsive]="true"
