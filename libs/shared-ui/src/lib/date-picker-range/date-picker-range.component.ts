@@ -7,6 +7,9 @@ import {
   OnInit,
   OnChanges,
   SimpleChanges,
+  InputSignal,
+  input,
+  effect,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
@@ -66,6 +69,7 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
   @Input() endDate!: Date;
 
   firstDateRange!: Date | null;
+  resetFormFlag: InputSignal<boolean> = input(false);
 
   dateFormGroup = new FormGroup({
     start: new FormControl(this.startDate),
@@ -73,10 +77,18 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
   });
   ngOnInit(): void {
     // this.disableInput=false;
+
     this.dateFormGroup.valueChanges.subscribe((value) => {
       console.log(value);
 
       this.datePickerChangeEvent.emit(value);
+    });
+  }
+  constructor() {
+    effect(() => {
+      if (this.resetFormFlag()) {
+        this.resetForm();
+      }
     });
   }
 
@@ -105,5 +117,8 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
 
   filteredDays(calendarDate: Date): boolean {
     return calendarDate < new Date() && calendarDate >= new Date('2023-1-1');
+  }
+  resetForm() {
+    this.dateFormGroup.reset();
   }
 }

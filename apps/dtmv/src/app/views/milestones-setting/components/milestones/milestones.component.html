@@ -209,6 +209,7 @@
           <label for="" style="margin-bottom: 6px"> Start Date </label>
 
           <stc-apps-date-picker-range
+            [resetFormFlag]="resetFormFlag"
             [disableInput]="true"
             (datePickerChangeEvent)="datePickerChanged($event, 'startDate')"
           >
@@ -219,6 +220,7 @@
           <label for="" style="margin-bottom: 6px"> End Date </label>
 
           <stc-apps-date-picker-range
+            [resetFormFlag]="resetFormFlag"
             [disableInput]="true"
             (datePickerChangeEvent)="datePickerChanged($event, 'endDate')"
           >

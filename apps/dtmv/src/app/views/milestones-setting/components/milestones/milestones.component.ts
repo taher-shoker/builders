@@ -325,6 +325,7 @@ export class MilestonesComponent
 
   clearFormFilter() {
     this.form.reset();
+    this.resetFormFlag = true;
     this.filterForm = {};
     this.fetchMilestones({ page: 0 });
     this.dialogService.close();
@@ -438,7 +439,10 @@ export class MilestonesComponent
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
+  resetFormFlag = false;
+
   toggleFilter() {
+    this.resetFormFlag = false;
     this.dialogService.open('filter-Modal');
   }
 
