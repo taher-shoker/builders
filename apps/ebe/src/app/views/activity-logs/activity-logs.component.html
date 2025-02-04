@@ -16,7 +16,11 @@
         />
       </div>
     </div>
-    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
+    <button class = "export-button" (click)="exportActivityLogsData()">
+      <img class="export-img" src="assets/images/export2.svg" alt="" />
+      <span>export all</span>
+    </button>
+    <!-- <img class="hands-img" src="assets/images/hands-img.svg" alt="" /> -->
   </div>
   <div class="activity-log-section-tap-details">
     <div class="projects-container">
@@ -42,18 +46,54 @@
             [(ngModel)]="selectedType"
             optionLabel="name"
             placeholder="Activity Type"
-            styleClass="action-types-dropdown"
+            [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
             dropdownIcon="pi pi-sort-down-fill"
             (ngModelChange)="selectActionType()"
           />
         </div>
+        @if(currentTap().value === 'CAD' || currentTap().value === 'PSR')
+        {
+          <div class="form-group">
+            <p-dropdown
+              [options]="actionTypes"
+              [(ngModel)]="selectedType"
+              optionLabel="name"
+              placeholder="Program"
+              [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
+              dropdownIcon="pi pi-sort-down-fill"
+              (ngModelChange)="selectActionType()"
+            />
+          </div>
+          <div class="form-group">
+            <p-dropdown
+              [options]="actionTypes"
+              [(ngModel)]="selectedType"
+              optionLabel="name"
+              placeholder="Key Result"
+              [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
+              dropdownIcon="pi pi-sort-down-fill"
+              (ngModelChange)="selectActionType()"
+            />
+          </div>
+          <div class="form-group">
+            <p-dropdown
+              [options]="actionTypes"
+              [(ngModel)]="selectedType"
+              optionLabel="name"
+              placeholder="Project"
+              [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
+              dropdownIcon="pi pi-sort-down-fill"
+              (ngModelChange)="selectActionType()"
+            />
+          </div>
+        }
         <div class="form-group">
           <p-calendar
             [(ngModel)]="activityLogDate"
             [iconDisplay]="'input'"
             [showIcon]="true"
             inputId="icondisplay"
-            styleClass="activity-log-date"
+            [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'activity-log-date' : 'activity-log-date2'"
             selectionMode="range"
             placeholder="Date"
             (onClose)="selectDate()"

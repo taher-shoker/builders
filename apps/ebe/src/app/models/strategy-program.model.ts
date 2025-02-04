@@ -28,6 +28,7 @@ export interface StrategyProgramModel
 }
 export interface StrategyProgramKpiModel
 {
+  id:number;
   strategyProjectName:string;
   currentProgress:number;
   totalWeight:number;

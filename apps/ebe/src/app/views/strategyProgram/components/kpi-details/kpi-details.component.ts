@@ -44,6 +44,7 @@ export interface KpiProjectsDetailsModel
   styleUrl: './kpi-details.component.scss',
 })
 export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
+  programName!:string;
   currentId!:string;
   currentMode!: 'editMode' | 'viewMode';
   @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
@@ -86,9 +87,9 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     });
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
-        this.currentId = param['kpiId'];
-        // this.isEmpty = true;
-        this.getStrategyProgramDetails(this.currentId);
+        this.programName = param['programName'];
+        this.currentId = param['programId'];
+        this.getStrategyProgramDetails(this.programName);
       },
     });
     this.menuItems = [
@@ -340,9 +341,9 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   }
   downloadTemplate()
   {
-    this.strategyProgramService.downloadStrategyProgramDetails(this.currentId).subscribe({
+    this.strategyProgramService.downloadStrategyProgramDetails(this.programName).subscribe({
       next : (response) => {
-        this.downloadFile(response, `${this.currentId}.csv`);
+        this.downloadFile(response, `${this.programName}.csv`);
       }
     })
   }

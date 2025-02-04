@@ -157,10 +157,13 @@
   </div>
   <div class="project-chart-card">
     <div style = "display: flex;align-items: center;justify-content: space-between;">
-      <button class = "activity-logs-button" (click)="showDeliverablesActivityLogs()">
-        <img src="assets/images/History.svg" />
-        <span>activity log</span>
-      </button>
+      @if(isAdmin())
+      {
+        <button class = "activity-logs-button" (click)="showDeliverablesActivityLogs()">
+          <img src="assets/images/History.svg" />
+          <span>activity log</span>
+        </button>
+      }
       <stc-apps-activity-logs-popup
         [activityLogsTableHeader]="activityLogsTableHeader()"
         [activityLogsTableBody]="activityLogsTableBody()"

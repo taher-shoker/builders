@@ -72,7 +72,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   actionButton(label: string) {
     if (label === 'activity log') {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
-      this.getSpecificActivityLog("PSR" , this.groupName2 , '' , '' , false);
+      this.getSpecificActivityLog("PSR" , this.groupName2 , '' , '' , true);
     } else {
       // console.log(this.PSRDetailsData);
       // console.log(this.groupName);
@@ -80,7 +80,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
       {
         this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}/${this.groupName2}`);
       } else {
-        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.groupName}`);
+        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.groupName2}`);
       }
     }
   }
@@ -93,6 +93,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
     })
   }
   groupName2 = ''
+  isPMO = false;
   ngOnInit(): void {
     // this.toastr.success("The File is Saved Successfully");
     this.scorecardService.toggleSwitchBtn.subscribe({
@@ -115,6 +116,9 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
         role.roleName === 'BE_EDITORS' ||
         role.roleName === 'ADMINS' ||
         role.roleName === 'BE_PMO'
+    );
+    this.isPMO = this.userRoles.roles.some(
+      (role) => role.roleName === 'BE_PMO'
     );
     this.isAdmin = this.userRoles.roles.some(
       (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'

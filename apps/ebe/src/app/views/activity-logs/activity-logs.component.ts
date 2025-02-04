@@ -187,10 +187,7 @@ export class ActivityLogsComponent {
   getCurrentTap(clickedTap: TapModel) {
     this.currentTap.set(clickedTap);
     this.currentPage.set(0);
-    this.selectedType = {
-      name: 'All',
-      id: 'All',
-    };
+    this.selectedType = null;
     this.startDate = "";
     this.endDate = "";
     this.searchKeyword = "";
@@ -206,7 +203,7 @@ export class ActivityLogsComponent {
       this.currentPage(),
       10,
       this.searchKeyword,
-      this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
+      '',
       this.startDate,
       this.endDate
     );
@@ -288,5 +285,9 @@ export class ActivityLogsComponent {
   }
   onDateChange(newDate: Date[] | null) {
     this.activityLogDate = newDate;
+  }
+  exportActivityLogsData()
+  {
+    console.log('export logs');
   }
 }

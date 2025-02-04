@@ -24,6 +24,7 @@
     {
       display: flex;
       align-items: center;
+      flex-wrap: wrap;
       gap:15px;
       .search-input
       {
@@ -54,11 +55,12 @@
           outline: 0;
           box-shadow: none;
           height:45px;
-          width:220px;
+          width:165px;
           @extend .stcFont;
           &::placeholder
           {
             @extend .stcFont;
+            // font-size: 14px;
             color:var(--stc-grey-dark-color);
           }
         }
@@ -74,9 +76,8 @@
   outline: 0 !important;
   box-shadow: none !important;
   border-radius:10px !important;
-  width:200px !important;
 }
-::ng-deep .action-types-dropdown
+::ng-deep .action-types-dropdown , ::ng-deep .action-types-dropdown2
 {
   .p-dropdown-trigger-icon
   {
@@ -98,7 +99,15 @@
     padding: 0;
   }
 }
-::ng-deep .p-calendar
+::ng-deep .action-types-dropdown2
+{
+  width:160px !important;
+}
+::ng-deep .action-types-dropdown
+{
+  width:200px !important;
+}
+::ng-deep .activity-log-date , ::ng-deep .activity-log-date2
 {
   height: 45px !important;
   .p-inputtext
@@ -110,6 +119,7 @@
     @extend .stcFont;
     color:var(--stc-grey-dark-color) !important;
     border-radius:10px !important;
+    width:160px !important;
   }
   .p-datepicker-buttonbar .p-button:first-child {
     display: none;
@@ -137,6 +147,20 @@
       position: relative;
       top: -2px;
     }
+  }
+}
+::ng-deep .activity-log-date
+{
+  .p-inputtext
+  {
+    width:200px !important;
+  }
+}
+::ng-deep .activity-log-date2
+{
+  .p-inputtext
+  {
+    width:160px !important;
   }
 }
 .activity-logs-table
@@ -259,5 +283,24 @@
   i
   {
     cursor: pointer;
+  }
+}
+.export-button
+{
+  background-color: transparent;
+  border:1px solid var(--stc-pink-color);
+  color:var(--stc-pink-color);
+  border-radius:5px;
+  padding:7px 20px;
+  @extend .stcFont;
+  text-transform: capitalize;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  span
+  {
+    height: 21px;
   }
 }

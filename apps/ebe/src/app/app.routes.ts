@@ -38,7 +38,7 @@ export const appRoutes: Route[] = [
     canActivate:[IsAdminGuard]
   },
   {
-    path: 'strategy-program/:kpiId',
+    path: 'strategy-program/:programName/:programId',
     loadComponent: () =>
       import(
         './views/strategyProgram/components/kpi-details/kpi-details.component'
