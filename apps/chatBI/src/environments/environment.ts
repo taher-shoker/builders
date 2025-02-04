@@ -1,8 +1,9 @@
 export const environment = {
-  production: false,
-  apiUrl: 'http://localhost:9084/cem/reporting/apigateway/api/',
-  reportApiUrl: 'http://localhost:9084/cem/reporting/apigateway/api/auth',
+  production: true,
+  apiUrl: 'https://cemeye.stc.com.sa/cem/reporting/apigateway/api/',
   authUrl: 'http://localhost:9084',
-  languageFilesPath: '/assets/i18n/',
-  loginPath: '/login',
+  reportApiUrl: 'https://cemeye.stc.com.sa/cem/reporting/apigateway/api/auth',
+  languageFilesPath:
+    'https://cemeye.stc.com.sa/cem/reporting/score-card-report/assets/i18n/',
+  loginPath: 'https://cemeye.stc.com.sa/cem/reporting/',
 };
