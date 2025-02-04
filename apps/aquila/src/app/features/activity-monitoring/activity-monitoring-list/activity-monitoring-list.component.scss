@@ -1,0 +1,63 @@
+@import '../../../../styles/shared-styles.scss';
+
+.activity-monitoring {
+    @extend .component-wrapper;
+    border-radius: 6.25px;
+    @include flex-column;
+    @include responsive-gap($gap-medium);
+
+    &_header {
+        @include flex-between-center;
+
+        h3 {
+            color: #212121;
+            font-weight: 600;
+        }
+
+        stc-apps-split-button ::ng-deep p-splitbutton button {
+            @include button-font-size;
+        }
+    }
+
+    &_filters {
+        &_applied {
+            display: flex;
+            align-items: center;
+            @include responsive-gap($gap-xxs);
+
+            stc-apps-button {
+                ::ng-deep {
+                    button {
+                        color: var(--stc-color);
+                        @include button-font-size;
+                    }
+                }
+            }
+        }
+    }
+
+    &_list {
+        span {
+            padding: $gap-xs $gap-large;
+            border-radius: 6px;
+            font-weight: 700;
+
+            &.status-success {
+                color: #22C55E;
+                background: #E0FFEE;
+            }
+
+            &.status-failed {
+                color: #FF4D4F;
+                background: #FFEDED;
+            }
+        }
+
+        ::ng-deep {
+            .custom-paginator {
+                display: flex;
+                justify-content: end;
+            }
+        }
+    }
+}

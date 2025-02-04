@@ -1,7 +1,7 @@
 <p-table
   [value]="dataSource()"
   [tableStyle]="dataSource().length > 0 ? { 'min-width': '50rem' } : {}"
-  [paginator]="dataSource().length > 0"
+  [paginator]="enablePagination() && dataSource().length > 0"
   [rows]="10"
   [scrollable]="true"
   [responsive]="true"
@@ -40,6 +40,15 @@
           ></button>
           }
         </div>
+      </td>
+      } @else if (column.complexViewTemp) {
+      <td>
+        <ng-container
+          *ngTemplateOutlet="
+            column.complexViewTemp;
+            context: { $implicit: rowData }
+          "
+        ></ng-container>
       </td>
       } @else {
       <td>{{ rowData[column.key] }}</td>

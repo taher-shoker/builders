@@ -1,0 +1,50 @@
+<form [formGroup]="filterForm" class="activity-monitoring_filters">
+  <!-- Search with Email -->
+  <div class="filter-field">
+    <p-inputGroup>
+      <input
+        type="text"
+        pInputText
+        placeholder="Search with Email"
+        formControlName="createdBy"
+      />
+      <button type="button" pButton icon="pi pi-search"></button>
+    </p-inputGroup>
+  </div>
+
+  <!-- User Role -->
+  <stc-apps-filter-dropdown
+    [placeholder]="'User Role'"
+    formControlName="userRole"
+    [dropdownOptions]="userRoleOptions"
+  ></stc-apps-filter-dropdown>
+
+  <!-- Status -->
+  <stc-apps-filter-dropdown
+    [placeholder]="'Status'"
+    formControlName="status"
+    [dropdownOptions]="statusOptions"
+  ></stc-apps-filter-dropdown>
+
+  <!-- Action -->
+  <stc-apps-filter-dropdown
+    [placeholder]="'Action'"
+    formControlName="actionName"
+    [dropdownOptions]="actionOptions"
+  ></stc-apps-filter-dropdown>
+
+  <!-- Select Date -->
+  <div class="filter-field">
+    <p-calendar
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      inputId="icondisplay"
+      placeholder="Select Date"
+      [showClear]="true"
+      formControlName="startedAt"
+      [showTime]="true"
+      [timeOnly]="false"
+      [hourFormat]="'12'"
+    />
+  </div>
+</form>

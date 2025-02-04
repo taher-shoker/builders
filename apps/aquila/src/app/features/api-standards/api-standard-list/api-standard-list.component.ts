@@ -1,4 +1,13 @@
-import { Component, computed, ElementRef, inject, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,16 +30,18 @@ import { StandardsService } from '../../../shared/services/standards.service';
   templateUrl: './api-standard-list.component.html',
   styleUrls: ['./api-standard-list.component.scss'],
 })
-export class ApiStandardListComponent implements OnInit {
-  private router = inject(Router);
-  private route = inject(ActivatedRoute);
-  private standardsService = inject(StandardsService);
+export class ApiStandardListComponent implements OnInit, AfterViewInit {
+  @ViewChild('publishUpdateTemplate')
+  publishUpdateTemplate!: TemplateRef<unknown>;
+  private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
+  private readonly standardsService = inject(StandardsService);
 
-  el = inject(ElementRef<HTMLElement>);
+  readonly el = inject(ElementRef<HTMLElement>);
   standards: Standard[] = [];
   isLoading = false;
 
-  displayedColumns: string[] = [
+  readonly displayedColumns: string[] = [
     'name',
     'version',
     'businessArea',
@@ -38,15 +49,9 @@ export class ApiStandardListComponent implements OnInit {
     'lastUpdate',
   ];
 
-  columnsSchema: ColumnsSchema[] = [
-    { key: 'name', type: 'text', label: 'Name' },
-    { key: 'version', type: 'text', label: 'Version' },
-    { key: 'businessArea', type: 'text', label: 'Business Area' },
-    { key: 'publishUpdate', type: 'text', label: 'Publish Date' },
-    { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
-  ];
+  columnsSchema: ColumnsSchema[] = [];
 
-  tableActions = computed(() => [
+  readonly tableActions = computed(() => [
     { action: 'pi pi-eye', title: 'View Details' },
     { action: 'pi pi-pen-to-square', title: 'Edit' },
   ]);
@@ -55,6 +60,25 @@ export class ApiStandardListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStandards();
+  }
+
+  ngAfterViewInit(): void {
+    this.initializeColumnsSchema();
+  }
+
+  private initializeColumnsSchema(): void {
+    this.columnsSchema = [
+      { key: 'name', type: 'text', label: 'Name' },
+      { key: 'version', type: 'text', label: 'Version' },
+      { key: 'businessArea', type: 'text', label: 'Business Area' },
+      {
+        key: 'publishUpdate',
+        type: 'custom',
+        label: 'Publish Date',
+        complexViewTemp: this.publishUpdateTemplate,
+      },
+      { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
+    ];
   }
 
   onAddStandard(): void {
@@ -68,16 +92,12 @@ export class ApiStandardListComponent implements OnInit {
       next: (response) => {
         this.originalStandards = response.standardDtoList;
         this.standards = this.originalStandards;
-        const uniqueBusinessAreas = new Set(
-          response.standardDtoList.map((area) => area.businessArea)
-        );
-
-        this.businessAreaOptions = Array.from(uniqueBusinessAreas).map(
-          (area) => ({
-            label: area,
-            value: area,
-          })
-        );
+        this.businessAreaOptions = Array.from(
+          new Set(response.standardDtoList.map((area) => area.businessArea))
+        ).map((area) => ({
+          label: area,
+          value: area,
+        }));
       },
       error: (error) => {
         console.error('Error loading standards:', error);
@@ -89,73 +109,101 @@ export class ApiStandardListComponent implements OnInit {
     standards: Standard[],
     filters?: Record<string, unknown>
   ): Standard[] {
-    if (!filters) {
+    if (!filters || Object.values(filters).every((value) => !value)) {
       return standards;
     }
 
     return standards.filter((standard) => {
-      const nameMatch =
-        !filters['name'] ||
-        standard.name
-          .toLowerCase()
-          .includes((filters['name'] as string).toLowerCase());
-      const publishUpdateMatch =
-        !filters['publishUpdate'] ||
-        standard.publishUpdate === filters['publishUpdate'];
-      const lastUpdateMatch =
-        !filters['lastUpdate'] || standard.lastUpdate === filters['lastUpdate'];
-      const businessAreaMatch =
-        !filters['businessArea'] ||
-        standard.businessArea === filters['businessArea'];
+      const matches = {
+        name:
+          !filters['name'] ||
+          standard.name
+            .toLowerCase()
+            .includes(String(filters['name']).toLowerCase()),
+        publishUpdate:
+          !filters['publishUpdate'] ||
+          this.formatDate(standard.publishUpdate as Date).slice(0, -3) ===
+            this.formatDate(filters['publishUpdate'] as Date),
+        lastUpdate:
+          !filters['lastUpdate'] ||
+          this.formatDate(standard.lastUpdate as Date).slice(0, -3) ===
+            this.formatDate(filters['lastUpdate'] as Date).slice(0, -3),
+        businessArea:
+          !filters['businessArea'] ||
+          standard.businessArea === filters['businessArea'],
+      };
 
-      return (
-        nameMatch && publishUpdateMatch && lastUpdateMatch && businessAreaMatch
-      );
+      return Object.values(matches).every(Boolean);
     });
+  }
+
+  private formatDate(date: Date | string): string {
+    if (typeof date === 'string') {
+      return date;
+    }
+
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(date.getDate()).padStart(2, '0')}T${String(
+      date.getHours()
+    ).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}`;
   }
 
   onActionHandler(event: { actionType: string; rowData: Standard }): void {
     const { actionType, rowData } = event;
 
-    switch (actionType) {
-      case 'pi pi-eye':
+    const actions: Record<string, () => Promise<boolean>> = {
+      'pi pi-eye': () =>
         this.router.navigate(['view-standard'], {
           relativeTo: this.route,
           state: { standard: rowData },
-        });
-        break;
-      case 'pi pi-pen-to-square':
+        }),
+      'pi pi-pen-to-square': () =>
         this.router.navigate(['edit-standard'], {
           relativeTo: this.route,
           state: {
             standard: rowData,
             isEditMode: true,
           },
-        });
-        break;
-      default:
-        console.warn('Unknown action type:', actionType);
+        }),
+    };
+
+    const action = actions[actionType as keyof typeof actions];
+    if (action) {
+      action();
+    } else {
+      console.warn('Unknown action type:', actionType);
     }
   }
-
   onFiltersChanged(filters: Record<string, unknown>): void {
-    this.standards = this.applyFilters(this.originalStandards, filters);
+    const processedFilters = {
+      ...filters,
+      publishUpdate: filters['publishUpdate']
+        ? this.formatDate(filters['publishUpdate'] as Date)
+        : null,
+      lastUpdate: filters['lastUpdate']
+        ? this.formatDate(filters['lastUpdate'] as Date)
+        : null,
+    };
+
+    this.standards = this.applyFilters(
+      this.originalStandards,
+      processedFilters
+    );
   }
 
   onSortChanged(direction: { label: string; value: 'asc' | 'desc' }): void {
-    if (!direction || !direction.value) {
+    if (!direction?.value) {
       return;
     }
 
-    const sortedStandards = [...this.standards].sort((a, b) => {
+    this.standards = [...this.standards].sort((a, b) => {
       const nameA = a.name.toLowerCase();
       const nameB = b.name.toLowerCase();
-
       return direction.value === 'asc'
         ? nameA.localeCompare(nameB, 'en', { sensitivity: 'base' })
         : nameB.localeCompare(nameA, 'en', { sensitivity: 'base' });
     });
-
-    this.standards = sortedStandards;
   }
 }

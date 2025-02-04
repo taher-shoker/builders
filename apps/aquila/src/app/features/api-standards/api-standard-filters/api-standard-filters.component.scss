@@ -1,6 +1,7 @@
 @import '../../../../styles/shared-styles.scss';
 
 .api-standard_filters {
+    @include calendar-styles;
     display: flex;
     flex-wrap: wrap;
     gap: $gap-xxs;
@@ -15,23 +16,13 @@
                 }
             }
         }
-    }
-}
 
-::ng-deep {
-    .p-datepicker table {
-        width: max-content;
+        ::ng-deep {
+            @include calendar-styles;
 
-        tbody tr:not(.table-header) {
-            border: none;
-
-            td {
-                padding: 0;
+            .p-timepicker {
+                @extend %timepicker-styles;
             }
         }
-    }
-
-    p-calendar timesicon {
-        margin: 0 $gap-xs;
     }
 }

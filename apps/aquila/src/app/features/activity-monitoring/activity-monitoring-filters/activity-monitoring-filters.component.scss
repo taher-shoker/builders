@@ -1,0 +1,31 @@
+@import '../../../../styles/shared-styles.scss';
+
+.activity-monitoring_filters {
+    display: flex;
+    flex-wrap: wrap;
+    @include responsive-gap($gap-medium);
+
+    .filter-field {
+        position: relative;
+        flex: 1;
+
+        p-inputGroup {
+            button {
+                background: var(--stc-color);
+                border: none;
+            }
+        }
+
+        ::ng-deep {
+            @include calendar-styles;
+
+            .p-datepicker {
+                padding: 0;
+            }
+
+            .p-timepicker {
+                @extend %timepicker-styles;
+            }
+        }
+    }
+}
