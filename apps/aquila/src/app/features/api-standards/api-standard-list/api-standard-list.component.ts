@@ -115,34 +115,46 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
     standards: Standard[],
     filters?: Record<string, unknown>
   ): Standard[] {
-    if (
-      !filters ||
-      Object.keys(filters).length === 0 ||
-      Object.values(filters).every((value) => !value)
-    ) {
+    if (!filters || Object.values(filters).every((value) => !value)) {
       return standards;
     }
+
     return standards.filter((standard) => {
-      const nameMatch =
-        !filters['name'] ||
-        standard.name
-          .toLowerCase()
-          .includes(String(filters['name']).toLowerCase());
+      let matches = true;
 
-      const publishUpdateMatch =
-        !filters['publishUpdate'] ||
-        standard.publishUpdate === filters['publishUpdate'];
+      if (filters['name']) {
+        matches =
+          matches &&
+          standard.name
+            .toLowerCase()
+            .includes(String(filters['name']).toLowerCase());
+      }
 
-      const lastUpdateMatch =
-        !filters['lastUpdate'] || standard.lastUpdate === filters['lastUpdate'];
+      if (filters['publishUpdate']) {
+        const filterDate = this.formatDate(filters['publishUpdate'] as Date);
+        const standardDate = this.formatDate(
+          standard.publishUpdate as Date
+        ).slice(0, -3);
+        matches = matches && standardDate === filterDate;
+      }
 
-      const businessAreaMatch =
-        !filters['businessArea'] ||
-        standard.businessArea === filters['businessArea'];
+      if (filters['lastUpdate']) {
+        const filterDate = this.formatDate(filters['lastUpdate'] as Date).slice(
+          0,
+          -3
+        );
+        const standardDate = this.formatDate(standard.lastUpdate as Date).slice(
+          0,
+          -3
+        );
+        matches = matches && standardDate === filterDate;
+      }
 
-      return (
-        nameMatch && publishUpdateMatch && lastUpdateMatch && businessAreaMatch
-      );
+      if (filters['businessArea']) {
+        matches = matches && standard.businessArea === filters['businessArea'];
+      }
+
+      return matches;
     });
   }
 
@@ -153,7 +165,6 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
 
     const hours = date.getHours();
     const minutes = date.getMinutes();
-    const seconds = '00';
 
     return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
       2,
@@ -161,7 +172,7 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
     )}-${String(date.getDate()).padStart(2, '0')}T${String(hours).padStart(
       2,
       '0'
-    )}:${String(minutes).padStart(2, '0')}:${seconds}`;
+    )}:${String(minutes).padStart(2, '0')}`;
   }
 
   onActionHandler(event: { actionType: string; rowData: Standard }): void {
@@ -197,7 +208,7 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
       );
     }
 
-    if (processedFilters['lastUpdate'] instanceof Date) {
+    if (processedFilters['lastUpdate']) {
       processedFilters['lastUpdate'] = this.formatDate(
         processedFilters['lastUpdate'] as Date
       );
