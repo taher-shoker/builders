@@ -17,27 +17,11 @@
         }
 
         ::ng-deep {
+            @include calendar-styles;
+
             .p-timepicker {
                 @extend %timepicker-styles;
             }
         }
-    }
-}
-
-::ng-deep {
-    .p-datepicker table {
-        width: max-content;
-
-        tbody tr:not(.table-header) {
-            border: none;
-
-            td {
-                padding: 0;
-            }
-        }
-    }
-
-    p-calendar timesicon {
-        margin: 0 $gap-xs;
     }
 }

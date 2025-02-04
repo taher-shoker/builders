@@ -1,4 +1,13 @@
-import { Component, computed, ElementRef, inject, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  computed,
+  ElementRef,
+  inject,
+  OnInit,
+  TemplateRef,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -21,7 +30,9 @@ import { StandardsService } from '../../../shared/services/standards.service';
   templateUrl: './api-standard-list.component.html',
   styleUrls: ['./api-standard-list.component.scss'],
 })
-export class ApiStandardListComponent implements OnInit {
+export class ApiStandardListComponent implements OnInit, AfterViewInit {
+  @ViewChild('publishUpdateTemplate')
+  publishUpdateTemplate!: TemplateRef<unknown>;
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   private standardsService = inject(StandardsService);
@@ -38,13 +49,7 @@ export class ApiStandardListComponent implements OnInit {
     'lastUpdate',
   ];
 
-  columnsSchema: ColumnsSchema[] = [
-    { key: 'name', type: 'text', label: 'Name' },
-    { key: 'version', type: 'text', label: 'Version' },
-    { key: 'businessArea', type: 'text', label: 'Business Area' },
-    { key: 'publishUpdate', type: 'text', label: 'Publish Date' },
-    { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
-  ];
+  columnsSchema: ColumnsSchema[] = [];
 
   tableActions = computed(() => [
     { action: 'pi pi-eye', title: 'View Details' },
@@ -55,6 +60,27 @@ export class ApiStandardListComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadStandards();
+  }
+
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.initializeColumnsSchema();
+    });
+  }
+
+  private initializeColumnsSchema(): void {
+    this.columnsSchema = [
+      { key: 'name', type: 'text', label: 'Name' },
+      { key: 'version', type: 'text', label: 'Version' },
+      { key: 'businessArea', type: 'text', label: 'Business Area' },
+      {
+        key: 'publishUpdate',
+        type: 'custom',
+        label: 'Publish Date',
+        complexViewTemp: this.publishUpdateTemplate,
+      },
+      { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
+    ];
   }
 
   onAddStandard(): void {
@@ -89,7 +115,13 @@ export class ApiStandardListComponent implements OnInit {
     standards: Standard[],
     filters?: Record<string, unknown>
   ): Standard[] {
-    if (!filters) return standards;
+    if (
+      !filters ||
+      Object.keys(filters).length === 0 ||
+      Object.values(filters).every((value) => !value)
+    ) {
+      return standards;
+    }
     return standards.filter((standard) => {
       const nameMatch =
         !filters['name'] ||
@@ -119,19 +151,17 @@ export class ApiStandardListComponent implements OnInit {
       return date;
     }
 
-    return (
-      [
-        date.getFullYear(),
-        String(date.getMonth() + 1).padStart(2, '0'),
-        String(date.getDate()).padStart(2, '0'),
-      ].join('-') +
-      'T' +
-      [
-        String(date.getHours()).padStart(2, '0'),
-        String(date.getMinutes()).padStart(2, '0'),
-        String(date.getSeconds()).padStart(2, '0'),
-      ].join(':')
-    );
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    const seconds = '00';
+
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(
+      2,
+      '0'
+    )}-${String(date.getDate()).padStart(2, '0')}T${String(hours).padStart(
+      2,
+      '0'
+    )}:${String(minutes).padStart(2, '0')}:${seconds}`;
   }
 
   onActionHandler(event: { actionType: string; rowData: Standard }): void {
