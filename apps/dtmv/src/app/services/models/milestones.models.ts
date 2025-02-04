@@ -184,7 +184,9 @@ export interface HighlightImpactReport {
   status: string;
   clarityStrategicProgramReflectionLevel: ReflectionLevel[];
   erpStatus: string;
+  dataEnablmentStatus: string;
   erpStatusReflectionLevel: ReflectionLevel[];
+  dataEnablmentStatusReflectionLevel: ReflectionLevel[];
 }
 
 export interface HighlightImpartReportResponse extends HighlightImpactReport {
@@ -277,7 +279,9 @@ export interface ReportData {
   diScore: number;
   editedBy: string;
   erpStatus: string;
+  dataEnablmentStatus: string;
   erpStatusReflectionLevel: ReflectionLevel;
+  dataEnablmentStatusReflectionLevel: ReflectionLevel;
   status: string;
   stcDiScore: number;
   supportNeeded: string;
