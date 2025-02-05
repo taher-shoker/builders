@@ -15,8 +15,8 @@
 
 .svg-loader {
     animation: rotate 2s linear infinite;
-    width: 12rem;
-    height: 12rem;
+    width: min(12rem, 20vw);
+    height: min(12rem, 20vw);
 }
 
 .path {
