@@ -9,9 +9,21 @@
     &_header {
         @include flex-between-center;
 
+        @media (max-width: $breakpoint-sm) {
+            @include flex-column;
+        }
+
         h3 {
             color: #212121;
             font-weight: 600;
+
+            @media (max-width: $breakpoint-lg) {
+                font-size: $font-size-large;
+            }
+
+            @media (max-width: $breakpoint-sm) {
+                font-size: $font-size-large;
+            }
         }
 
         stc-apps-split-button ::ng-deep p-splitbutton button {
@@ -57,6 +69,10 @@
             .custom-paginator {
                 display: flex;
                 justify-content: end;
+
+                @media (max-width: $breakpoint-sm) {
+                    font-size: $font-size-small;
+                }
             }
         }
     }
