@@ -64,3 +64,29 @@
   top: -177px;
   right: 5px;
 }
+.scored-card-section-mobile
+{
+  background-color: #f5f6fa;
+  &-header
+  {
+    background-color: #fff;
+    .header
+    {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding:15px;
+      p
+      {
+        margin: 0;
+        color:var(--stc-light-grey-color3);
+        @extend .stcFont;
+      }
+      i
+      {
+        color:var(--stc-light-grey-color3);
+        cursor: pointer;
+      }
+    }
+  }
+}

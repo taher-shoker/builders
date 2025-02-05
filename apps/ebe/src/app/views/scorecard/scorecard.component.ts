@@ -19,6 +19,9 @@ import { PageHeaderComponent } from '../../components/pageHeader/page-header.com
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { DeviceService } from '../../services/device.service';
+import { Location } from '@angular/common';
+import { DateModalComponent } from '../../components/date-modal/date-modal.component';
 interface FilteredOptions {
   month: number;
   year: number;
@@ -31,6 +34,7 @@ interface FilteredOptions {
     SharedUiModule,
     PageHeaderComponent,
     CommonModule,
+    DateModalComponent
   ],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
@@ -43,11 +47,20 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   scorecardsTaps!: TapModel[];
   toastr = inject(ToastrService);
   isEmpty = false;
+  
+  currentMonth:number = new Date().getMonth();
+  currentYear:number = new Date().getFullYear();
+  currentMonthName:string = '';
   filtersOptions!: FilteredOptions;
   scorecardService = inject(ScorecardService);
   @ViewChild(TapDetailsComponent) child?: TapDetailsComponent;
   currYear = new Date().getFullYear();
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
+  location = inject(Location);
   ngOnInit(): void {
+    
+    this.isMobile.set(this.deviceService.isMobile());
     this.getInitScorecardsTaps(
       new Date().getMonth() + 1,
       new Date().getFullYear(),
@@ -171,5 +184,9 @@ export class ScorecardComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+  goBack()
+  {
+    this.location.back();
   }
 }

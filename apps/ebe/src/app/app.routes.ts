@@ -2,6 +2,7 @@ import { Route } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { IsAdminGuard } from './guards/isAdmin.guard';
 import { IsMobileGuard } from './guards/isMobile.guard';
+import { IsNotMobileGuard } from './guards/isNotMobile.guard';
 function getDefaultRedirect() {
   return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'home' : 'scorecard';
 }
@@ -32,6 +33,7 @@ export const appRoutes: Route[] = [
       import('./views/strategyProgram/strategyProgram.component').then(
         (m) => m.StrategyProgramComponent
       ),
+      canActivate : [IsNotMobileGuard]
   },
   {
     path: 'activity-logs',
@@ -39,7 +41,7 @@ export const appRoutes: Route[] = [
       import('./views/activity-logs/activity-logs.component').then(
         (m) => m.ActivityLogsComponent
       ),
-    canActivate:[IsAdminGuard]
+    canActivate:[IsAdminGuard , IsNotMobileGuard]
   },
   {
     path: 'activity-logs/:title',
@@ -47,7 +49,7 @@ export const appRoutes: Route[] = [
       import('./views/activity-logs/activity-logs.component').then(
         (m) => m.ActivityLogsComponent
       ),
-    canActivate:[IsAdminGuard]
+    canActivate:[IsAdminGuard , IsNotMobileGuard]
   },
   {
     path: 'strategy-program/:programName/:programId',
@@ -55,6 +57,7 @@ export const appRoutes: Route[] = [
       import(
         './views/strategyProgram/components/kpi-details/kpi-details.component'
       ).then((m) => m.KpiDetailsComponentTsComponent),
+      canActivate:[IsNotMobileGuard]
   },
   {
     path: 'strategy-project-form/:title/:objective',
@@ -62,7 +65,7 @@ export const appRoutes: Route[] = [
       import(
         './views/strategyProgram/components/add-project-form/add-project-form.component'
       ).then((m) => m.AddProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'strategy-project-form/:id',
@@ -70,7 +73,7 @@ export const appRoutes: Route[] = [
       import(
         './views/strategyProgram/components/add-project-form/add-project-form.component'
       ).then((m) => m.AddProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'deleted-projects',
@@ -78,7 +81,7 @@ export const appRoutes: Route[] = [
       import(
         './views/deleted-project-page/deleted-projects-page.component'
       ).then((m) => m.DeletedProjectsPageComponent),
-      canActivate: [AuthGuard],
+      canActivate: [AuthGuard , IsNotMobileGuard],
       children:[
         {
           path:"programs",
@@ -134,7 +137,7 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'psr/add-project/:sector',
@@ -142,7 +145,7 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'psr/edit-program/:id',
@@ -150,7 +153,7 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'psr/edit-project/:sector/:projId',
@@ -158,7 +161,7 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'psr/:id/:sectorId',

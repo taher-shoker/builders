@@ -1,34 +1,49 @@
-<section class="scored-card-section">
-  <div class="scored-card-section-header">
-    <div>
-      <stc-apps-page-header
-        [mainTitle]="'N-2 Scorecards ' + currYear"
-        [secondaryTitle]="'- corporate analytics & data sector'"
-      />
-      <div 
-        class="scored-card-section-taps"
-      >
-        <stc-apps-tabview
-          [tabsData]="scorecardsTaps"
-          [tabColor]="'#ffffff'"
-          [clickedtabColor]="'#ffffff'"
-          [tabBackground]="'#FFFFFF0D'"
-          [clickedtabBackground]="'#FF375E'"
-          (clickedTap)="getClickedTap($event)"
-          [fontFamily]="'STCForwardFont'"
+@if(!isMobile())
+{
+  <section class="scored-card-section">
+    <div class="scored-card-section-header">
+      <div>
+        <stc-apps-page-header
+          [mainTitle]="'N-2 Scorecards ' + currYear"
+          [secondaryTitle]="'- corporate analytics & data sector'"
+        />
+        <div 
+          class="scored-card-section-taps"
+        >
+          <stc-apps-tabview
+            [tabsData]="scorecardsTaps"
+            [tabColor]="'#ffffff'"
+            [clickedtabColor]="'#ffffff'"
+            [tabBackground]="'#FFFFFF0D'"
+            [clickedtabBackground]="'#FF375E'"
+            (clickedTap)="getClickedTap($event)"
+            [fontFamily]="'STCForwardFont'"
+          />
+        </div>
+      </div>
+      <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+    </div>
+    <div class="scored-card-section-tap-details">
+        <stc-apps-tap-details 
+          [scorcardData]="kpisData()" 
+          [currentMode]="currentMode"
+          [currentClickedTap]="currentClickedTapData"
+          (filterOptions)="getFiltersOptions($event)"
+          [isEmpty]="isEmpty"
+          (ImportedFile)="getImportedFile($event)"
+        />
+    </div>
+  </section>
+} @else {
+  <section class="scored-card-section-mobile">
+    <div class="scored-card-section-mobile-header">
+      <div class="header">
+        <i class = "pi pi-arrow-left" (click)="goBack()"></i>
+        <stc-apps-date-modal 
+          [currentMonth]="currentMonth"
+          [currentYear]="currentYear"
         />
       </div>
     </div>
-    <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
-  </div>
-  <div class="scored-card-section-tap-details">
-      <stc-apps-tap-details 
-        [scorcardData]="kpisData()" 
-        [currentMode]="currentMode"
-        [currentClickedTap]="currentClickedTapData"
-        (filterOptions)="getFiltersOptions($event)"
-        [isEmpty]="isEmpty"
-        (ImportedFile)="getImportedFile($event)"
-      />
-  </div>
-</section>
+  </section>
+}

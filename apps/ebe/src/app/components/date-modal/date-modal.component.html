@@ -1,0 +1,24 @@
+<div class="date" (click)="showDialog('bottom')">
+  <div class="date-dropdown">
+    <p>{{ currentMonthName }} {{ currentYear() }}</p>
+    <img src="assets/images/mobile/arrow-down.svg" />
+  </div>
+</div>
+<p-dialog 
+  header="Edit Profile"
+  [modal]="true"
+  [(visible)]="visible"
+  [position]="position"
+  styleClass = "date-modal"
+  dismissableMask="true"
+  transitionOptions = "300ms cubic-bezier(0, 0, 0.2, 1)"
+  resizable = 'false'
+>
+  <ng-template pTemplate="header">
+    <div class="inline-flex align-items-center justify-content-center gap-2">
+        <span class="font-bold white-space-nowrap">
+            Amy Elsner
+        </span>
+    </div>
+  </ng-template>
+</p-dialog>

@@ -6,6 +6,9 @@ import { HomePageTap } from '../../models/homepage-mobile';
 import { TabCardComponent } from './components/tab-card/tab-card.component';
 import { Router, RouterModule } from '@angular/router';
 import { ScorecardService } from '../../services/scorecard.service';
+import { HomeService } from '../../services/home.service';
+import { DashboardData } from '../../models/dashboard';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'stc-apps-homepage-mobile',
   standalone: true,
@@ -19,38 +22,54 @@ export class HomepageMobileComponent {
   router = inject(Router);
   userData!: UserModel;
   scorecardService = inject(ScorecardService);
+  homeService = inject(HomeService);
+  dashboardData!:DashboardData;
+  endSubs$:Subject<any> = new Subject();
   ngOnInit()
   {
     this.userData = JSON.parse(
       decodeURIComponent(this.scorecardService.getUserGroups())
     );
-    this.tapsData.set([
-      {
-        id : 1,
-        title : "sector scorecard",
-        subTitle : "track performance metrices",
-        verticalNumber : 5,
-        kpisNumber : 20,
-        image : "assets/images/mobile/scorecard-icon.svg"
-      },
-      {
-        id : 2,
-        title : "project execution",
-        subTitle : "measures projects progress",
-        rNumber : 8,
-        aNumber : 3,
-        gNumber : 15,
-        image : "assets/images/mobile/project-execution-icon.svg"
-      },
-      {
-        id : 3,
-        title : "financial status",
-        subTitle : "monitor actual spending",
-        capexSpend : "459M",
-        opexSpend : "24M",
-        image : "assets/images/mobile/financial-icon.svg"
-      },
-    ])
+    this.getDashboardData();
+  }
+  ngOnDestroy()
+  {
+    this.endSubs$.complete();
+  }
+  private getDashboardData()
+  {
+    this.homeService.getDashboardData().pipe(takeUntil(this.endSubs$)).subscribe({
+      next :(res:DashboardData) => {
+        this.dashboardData = res;
+        this.tapsData.set([
+          {
+            id : 1,
+            title : "sector scorecard",
+            subTitle : "track performance metrices",
+            verticalNumber : res.scorecard.numberOfVerticals,
+            kpisNumber : res.scorecard.numberOfKPIs,
+            image : "assets/images/mobile/scorecard-icon.svg"
+          },
+          {
+            id : 2,
+            title : "project execution",
+            subTitle : "measures projects progress",
+            rNumber : res.psrDetail.numberOfRIndicator,
+            aNumber : res.psrDetail.numberOfAIndicator,
+            gNumber : res.psrDetail.numberOfGIndicator,
+            image : "assets/images/mobile/project-execution-icon.svg"
+          },
+          {
+            id : 3,
+            title : "financial status",
+            subTitle : "monitor actual spending",
+            capexSpend : res.financial.capexSpent,
+            opexSpend : res.financial.opexSpent,
+            image : "assets/images/mobile/financial-icon.svg"
+          },
+        ])
+      }
+    })
   }
   getCurrentTap(tap:HomePageTap)
   {
