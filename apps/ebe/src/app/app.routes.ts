@@ -1,10 +1,14 @@
 import { Route } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
 import { IsAdminGuard } from './guards/isAdmin.guard';
+import { IsMobileGuard } from './guards/isMobile.guard';
+function getDefaultRedirect() {
+  return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'home' : 'scorecard';
+}
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'home',
+    redirectTo: getDefaultRedirect(),
     pathMatch: 'full',
   },
   {
@@ -13,6 +17,7 @@ export const appRoutes: Route[] = [
       import('./views/homepage-mobile/homepage-mobile.component').then(
         (m) => m.HomepageMobileComponent
       ),
+    canActivate : [IsMobileGuard]
   },
   {
     path: 'scorecard',
