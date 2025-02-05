@@ -4,8 +4,15 @@ import { IsAdminGuard } from './guards/isAdmin.guard';
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'scorecard',
+    redirectTo: 'home',
     pathMatch: 'full',
+  },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./views/homepage-mobile/homepage-mobile.component').then(
+        (m) => m.HomepageMobileComponent
+      ),
   },
   {
     path: 'scorecard',

@@ -1,5 +1,5 @@
 <div class="home-section">
-  <stc-apps-user-info [userImage]="userImage()" [username]="userName()" />
+  <stc-apps-user-info [userImage]="userImage()" [username]="userData ? userData.name : ''" />
   <div class="stc-logo">
     <img src="assets/images/stc-logo.svg" alt="" />
   </div>
@@ -13,4 +13,5 @@
         }
     </div>
   </div>
+  <!-- <router-outlet /> -->
 </div>

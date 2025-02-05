@@ -28,8 +28,6 @@
       </div>
     </div>
   } @else {
-    <stc-apps-homepage-mobile 
-      [userName]="userData ? userData.name : ''"
-    />
+    <router-outlet></router-outlet>
   }
 </section>
