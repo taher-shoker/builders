@@ -357,9 +357,9 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   {
     if(uploadFile)
     {
-      this.strategyProgramService.uploadCadSummaryDetailsFile(uploadFile , this.currentId).subscribe({
+      this.strategyProgramService.uploadCadSummaryDetailsFile(uploadFile , this.programName).subscribe({
         next : () => {
-          this.getStrategyProgramDetails(this.currentId);
+          this.getStrategyProgramDetails(this.programName);
           this.visible = false;
           this.toastr.success("The File is Saved Successfully");
         },

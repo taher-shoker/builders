@@ -75,19 +75,7 @@ export class ActivityLogsComponent {
     {
       name: 'Export',
       id: 'Export',
-    },
-    {
-      name: 'Add',
-      id: 'Add',
-    },
-    {
-      name: 'Edit',
-      id: 'Edit',
-    },
-    {
-      name: 'Delete',
-      id: 'Delete',
-    },
+    }
   ];
   constructor(private renderer: Renderer2) {}
   tapIndex = 0;
@@ -186,11 +174,56 @@ export class ActivityLogsComponent {
   }
   getCurrentTap(clickedTap: TapModel) {
     this.currentTap.set(clickedTap);
+    if(clickedTap.value === 'CAD' || clickedTap.value === 'PSR')
+    {
+      this.actionTypes = [
+        {
+          name: 'All',
+          id: 'All',
+        },
+        {
+          name: 'Import',
+          id: 'Import',
+        },
+        {
+          name: 'Export',
+          id: 'Export',
+        },
+        {
+          name: 'Add',
+          id: 'Add',
+        },
+        {
+          name: 'Edit',
+          id: 'Edit',
+        },
+        {
+          name: 'Delete',
+          id: 'Delete',
+        },
+      ];
+    } else {
+      this.actionTypes = [
+        {
+          name: 'All',
+          id: 'All',
+        },
+        {
+          name: 'Import',
+          id: 'Import',
+        },
+        {
+          name: 'Export',
+          id: 'Export',
+        }
+      ];
+    }
     this.currentPage.set(0);
     this.selectedType = null;
     this.startDate = "";
     this.endDate = "";
     this.searchKeyword = "";
+    this.activityLogDate = null;
     if (clickedTap.value === 'Scorecard' || clickedTap.value === 'Financial') {
       this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
     } else {
@@ -263,6 +296,7 @@ export class ActivityLogsComponent {
         this.currentPage(),
         10,
         this.searchKeyword,
+        '',
         this.startDate,
         this.endDate
       );
@@ -288,6 +322,6 @@ export class ActivityLogsComponent {
   }
   exportActivityLogsData()
   {
-    console.log('export logs');
+    this.activityLogsServices.downloadActivityLogsData();
   }
 }

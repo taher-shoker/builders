@@ -44,7 +44,7 @@
       >
         {{kpiStatus().toString()}}
       </span>
-      @if(kpiStatus().toString().length >= 10){
+      @if(kpiStatus().toString().length >= 8){
         <p-overlayPanel #overlayPanel2 dismissable="true">
           <section class="popover-section" [innerHTML]="kpiStatus().toString()"></section>
         </p-overlayPanel>
