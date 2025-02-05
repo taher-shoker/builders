@@ -191,6 +191,7 @@ export class ActivityLogsComponent {
     this.startDate = "";
     this.endDate = "";
     this.searchKeyword = "";
+    this.activityLogDate = null;
     if (clickedTap.value === 'Scorecard' || clickedTap.value === 'Financial') {
       this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
     } else {

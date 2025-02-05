@@ -16,10 +16,10 @@
         />
       </div>
     </div>
-    <button class = "export-button" (click)="exportActivityLogsData()">
+    <!-- <button class = "export-button" (click)="exportActivityLogsData()">
       <img class="export-img" src="assets/images/export2.svg" alt="" />
       <span>export all</span>
-    </button>
+    </button> -->
     <!-- <img class="hands-img" src="assets/images/hands-img.svg" alt="" /> -->
   </div>
   <div class="activity-log-section-tap-details">
@@ -51,7 +51,7 @@
             (ngModelChange)="selectActionType()"
           />
         </div>
-        @if(currentTap().value === 'CAD' || currentTap().value === 'PSR')
+        <!-- @if(currentTap().value === 'CAD' || currentTap().value === 'PSR')
         {
           <div class="form-group">
             <p-dropdown
@@ -86,7 +86,7 @@
               (ngModelChange)="selectActionType()"
             />
           </div>
-        }
+        } -->
         <div class="form-group">
           <p-calendar
             [(ngModel)]="activityLogDate"
