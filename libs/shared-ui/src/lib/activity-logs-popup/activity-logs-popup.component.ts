@@ -41,6 +41,7 @@ export class ActivityLogsPopupComponent {
   hasDetails = signal<boolean>(false)
   type = input.required<string>()
   isDismissable = input<boolean>(false);
+  isPSRProject = input<boolean>(false);
   closeActivityLogsPopup()
   {
     this.activityLogsPanel?.hide();

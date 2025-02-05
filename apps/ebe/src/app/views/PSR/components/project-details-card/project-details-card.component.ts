@@ -82,7 +82,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   showActivityLogs() {
     this.getSpecificActivityLog(
       'PSR',
-      'Add,Edit',
+      'Add,Edit,Delete',
       this.sectorId,
       this.projectData().id.toString(),
       '',

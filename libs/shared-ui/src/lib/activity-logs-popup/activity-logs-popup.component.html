@@ -6,7 +6,7 @@
     [appendTo]="isActionPopup() || isActionPopup2() ? overlay : 'body'"
     styleClass="activity-logs-panel"
     [styleClass]="
-      isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : ''
+      isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : isPSRProject() ? 'PSRProject' : ''
     "
     (onHide)="hidePopup()"
   >

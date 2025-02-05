@@ -86,7 +86,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   }
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean)
   {
-    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Edit,Delete" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Delete" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
       }

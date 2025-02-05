@@ -99,7 +99,7 @@ export class ActivityLogService {
   downloadActivityLogsData() {
     this.http
       .get<any>(
-        `${environment.apiUrl}/business-excellence/financial/download`,
+        `${environment.apiUrl}/business-excellence/log/download`,
         { responseType: 'blob' as 'json' }
       )
       .subscribe({
