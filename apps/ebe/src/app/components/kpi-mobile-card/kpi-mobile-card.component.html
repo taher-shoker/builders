@@ -1,0 +1,81 @@
+<section class="kpi">
+  <p class="kpi-title">
+    {{ kpi().title | truncateWord : 3 }}
+    @if(kpi().title.split(' ').length >= 3) {
+    <span class="read-more-btn" (click)="textOverlayPanel.toggle($event)"
+      >read more</span
+    >
+    <p-overlayPanel
+      #textOverlayPanel
+      dismissable="true"
+      styleClass="kpi-title-popover"
+    >
+      <section class="kpi-title-popover-section">{{ kpi().title }}</section>
+    </p-overlayPanel>
+    }
+  </p>
+  @if(kpi().unit) {
+  <p class="kpi-unit">
+    <span>unit: </span>
+    {{ kpi().unit }}
+  </p>
+  }
+  <div class="kpi-statuses">
+    @if(kpi() && kpi().achievedStatus) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="kpi().achievedStatus!"
+      [kpiType]="'achieved'"
+      [isMobile]="true"
+    />
+    } @if(kpi() && kpi().formula) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="kpi().formula!"
+      [kpiType]="'not-achieved'"
+      [isMobile]="true"
+    />
+    } @if(kpi() && kpi().actual) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="kpi().actual!"
+      [kpiType]="'actual'"
+      [domainIndicator]="kpi().unit"
+      [isMobile]="true"
+    />
+    }
+  </div>
+  <div class="kpi-targets targets">
+    <div class="kpi-targets-left">
+        <span>target</span>
+        <p>
+            {{kpi().target}}
+            @if(kpi().unit === '%')
+            {
+                %
+            }
+        </p>
+    </div>
+    <div class="kpi-targets-right">
+        <span>weight</span>
+        <p>{{kpi().weight}}%</p>
+    </div>
+  </div>
+  <div class="kpi-targets kpi-weights">
+    <div class="kpi-targets-left w-100 weight">
+        <span>baseline</span>
+        <p>
+            {{kpi().baseline}}
+            @if(kpi().unit === '%')
+            {
+                %
+            }
+        </p>
+    </div>
+    <div class="kpi-targets-right w-100 weight">
+        <span>ceiling</span>
+        <p>{{kpi().ceiling}}%</p>
+    </div>
+    <div class="kpi-targets-right w-100">
+        <span>threshold</span>
+        <p>{{kpi().threshold}}%</p>
+    </div>
+  </div>
+</section>

@@ -1,46 +1,76 @@
-@if(!isMobile())
-{
-  <section class="scored-card-section">
-    <div class="scored-card-section-header">
-      <div>
-        <stc-apps-page-header
-          [mainTitle]="'N-2 Scorecards ' + currYear"
-          [secondaryTitle]="'- corporate analytics & data sector'"
+@if(!isMobile()) {
+<section class="scored-card-section">
+  <div class="scored-card-section-header">
+    <div>
+      <stc-apps-page-header
+        [mainTitle]="'N-2 Scorecards ' + currYear"
+        [secondaryTitle]="'- corporate analytics & data sector'"
+      />
+      <div class="scored-card-section-taps">
+        <stc-apps-tabview
+          [tabsData]="scorecardsTaps"
+          [tabColor]="'#ffffff'"
+          [clickedtabColor]="'#ffffff'"
+          [tabBackground]="'#FFFFFF0D'"
+          [clickedtabBackground]="'#FF375E'"
+          (clickedTap)="getClickedTap($event)"
+          [fontFamily]="'STCForwardFont'"
         />
-        <div 
-          class="scored-card-section-taps"
-        >
-          <stc-apps-tabview
-            [tabsData]="scorecardsTaps"
-            [tabColor]="'#ffffff'"
-            [clickedtabColor]="'#ffffff'"
-            [tabBackground]="'#FFFFFF0D'"
-            [clickedtabBackground]="'#FF375E'"
-            (clickedTap)="getClickedTap($event)"
-            [fontFamily]="'STCForwardFont'"
-          />
-        </div>
       </div>
-      <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
     </div>
-    <div class="scored-card-section-tap-details">
-        <stc-apps-tap-details 
-          [scorcardData]="kpisData()" 
-          [currentMode]="currentMode"
-          [currentClickedTap]="currentClickedTapData"
-          (filterOptions)="getFiltersOptions($event)"
-          [isEmpty]="isEmpty"
-          (ImportedFile)="getImportedFile($event)"
-        />
-    </div>
-  </section>
+    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
+  </div>
+  <div class="scored-card-section-tap-details">
+    <stc-apps-tap-details
+      [scorcardData]="kpisData()"
+      [currentMode]="currentMode"
+      [currentClickedTap]="currentClickedTapData"
+      (filterOptions)="getFiltersOptions($event)"
+      [isEmpty]="isEmpty"
+      (ImportedFile)="getImportedFile($event)"
+    />
+  </div>
+</section>
 } @else {
-  <section class="scored-card-section-mobile">
-    <div class="scored-card-section-mobile-header">
-      <div class="header">
-        <i class = "pi pi-arrow-left" (click)="goBack()"></i>
-        <stc-apps-date-modal />
-      </div>
+<section class="scored-card-section-mobile">
+  <div class="scored-card-section-mobile-header">
+    <div class="header">
+      <i class="pi pi-arrow-left" (click)="goBack()"></i>
+      <stc-apps-date-modal [isSuccess]="isSuccess" (filteredDate)="applyDateFilterInMobileView($event)" />
     </div>
-  </section>
+    <div class="main-titles">
+      <p class="header-title">N-2 scorecard {{ currentYear }}</p>
+      <p class="sub-title">corporate analytics & data sector</p>
+    </div>
+  </div>
+  <div class="scored-card-section-mobile-body">
+    <stc-apps-tabview
+      [tabsData]="scorecardsTaps"
+      [tabColor]="'#6C6C89'"
+      [clickedtabColor]="'#ffffff'"
+      [tabBackground]="'#ffffff'"
+      [clickedtabBackground]="'#FF375E'"
+      (clickedTap)="getClickedTapInMobile($event)"
+      [fontFamily]="'STCForwardFont'"
+      [isMobile]="true"
+    />
+    <div class="tab-content pb-3" style = "color:#000">
+      @if(!isEmpty)
+      {
+          @for (kpi of kpisData(); track $index) {
+            <div class = "kpi-content">
+              <p class = "kpis-title mb-2">{{kpi.title}}</p>
+              <div class = "kpis-mobile-container mb-3">
+                @for (kpiItem of kpi.kpiDataDTO; track $index) {
+                  <stc-apps-kpi-mobile-card [kpi]="kpiItem" />
+                }
+              </div>
+            </div>
+          }
+      } @else {
+        <p class = "empty-data-msg">there are no data</p>
+      }
+    </div>
+  </div>
+</section>
 }

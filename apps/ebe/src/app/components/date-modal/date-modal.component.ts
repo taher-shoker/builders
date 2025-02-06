@@ -33,6 +33,7 @@ export class DateModalComponent {
   visible: boolean = false;
   position!: Position;
   selectedDate!: Date;
+  isSuccess = input<boolean>()
   @Output() filteredDate:EventEmitter<Date> = new EventEmitter();
   months: string[] = [
     'Jan',
@@ -60,7 +61,12 @@ export class DateModalComponent {
   }
   hideModal()
   {
-    this.selectedDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    console.log(this.isSuccess());
+    if(this.isSuccess() === false)
+    {
+      this.selectedDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+      this.setDefaultDate(this.selectedDate);
+    }
   }
   showDialog(position: Position) {
     this.position = position;

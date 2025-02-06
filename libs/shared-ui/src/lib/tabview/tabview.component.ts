@@ -19,6 +19,7 @@ export class TabviewComponent implements OnChanges{
   activeIndex = 0;
   tabColor:InputSignal<string> = input<string>('')
   fontFamily:InputSignal<string> = input<string>('')
+  isMobile:InputSignal<boolean> = input<boolean>(false)
   onHover = false;
   hoveredTap = 0;
   clickedtabColor:InputSignal<string> = input<string>('')

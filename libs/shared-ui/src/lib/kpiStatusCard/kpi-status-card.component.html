@@ -11,10 +11,16 @@
   [class.status]="kpiType() === 'status'"
   [class.output]="kpiType() === 'output'"
   [class.theme]="kpiType() === 'theme'"
+  [class.in-mobile-screen]="isMobile()"
 >
   @if(kpiType() === 'achieved'){
     Over Achieved
-    <img class="arrow" src="assets/images/arrow-up.gif" />
+    @if(!isMobile())
+    {
+      <img class="arrow" src="assets/images/arrow-up.gif" />
+    } @else {
+      <img class="arrow mobile-arrow" src="assets/images/mobile/Course Up.svg" />
+    }
   }
   @if(kpiType() === 'actual'){
     Actual : {{kpiStatus()}}

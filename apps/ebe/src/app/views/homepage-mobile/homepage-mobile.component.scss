@@ -1,11 +1,11 @@
 @import '../../../styles/fonts.scss';
 .home-section
 {
-    background:url(../../../assets/images/mobile/Splash.png);
+    background:url(../../../assets/images/mobile/Splash.svg); 
     background-repeat: no-repeat;
     background-size: cover;
-    // height:100%;
-    padding:40px 20px 20px;
+    height:100%;
+    padding:40px 20px 25px;
     .stc-logo
     {
         img

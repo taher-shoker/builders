@@ -1,0 +1,104 @@
+@import '../../../styles/fonts.scss';
+.kpi
+{
+    background-color: #fff;
+    border-radius: 15px;
+    padding: 15px;
+    // margin-bottom: 20px;
+    &-title
+    {
+        color:var(--stc-grey-color2);
+        @extend .stcFont;
+        font-size: 16px;
+        font-weight: 500;
+        margin-bottom:0;
+    }
+    &-unit
+    {
+        @extend .stcFont;
+        font-size: 0.7rem;
+        color:var(--stc-grey-color2);
+        font-weight: 600;
+        margin-top: 5px;
+        span
+        {
+            font-weight:500;
+            text-transform: capitalize;
+            color:var(--stc-light-grey-color3);
+        }
+    }
+}
+.read-more-btn
+{
+    text-decoration: underline;
+    font-size: 13px;   
+}
+::ng-deep .kpi-title-popover
+{
+    .p-overlaypanel-content
+    {
+        max-width:280px;
+        padding: 10px;
+    }
+}
+.kpi-title-popover-section
+{
+    @extend .stcFont;
+    font-size:15px;
+    color:var(--stc-grey-color2);
+    font-weight: 500;
+}
+.kpi-statuses
+{
+    display: flex;
+    align-items: center;
+    gap:10px;
+    flex-wrap: wrap;
+}
+.kpi-targets
+{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border:1px solid #D1D1DB;
+    border-radius:10px;
+    padding: 10px 20px;
+    margin-top: 20px;
+    p
+    {
+        margin: 0;
+    }
+    &-left , &-right
+    {
+        text-align: center;
+        span
+        {
+            @extend .stcFont;
+            color:var(--stc-light-grey-color2);
+            text-transform: capitalize;
+            font-size: 15px;
+            font-weight: 500;
+        }
+        p
+        {
+            @extend .stcFont;
+            color:var(--stc-grey-color2);
+            text-transform: capitalize;
+            font-size: 20px;
+            font-weight: 600;
+            padding-top: 5px;
+        }
+    }
+}
+.targets
+{
+    padding:20px;
+}
+.kpi-weights
+{
+    padding:10px 0;
+    .weight
+    {
+        border-right:1px solid #D1D1DB;
+    }
+}

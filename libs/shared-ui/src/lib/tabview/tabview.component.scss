@@ -126,3 +126,20 @@
     }
   }
 }
+::ng-deep .mobile-view
+{
+  .p-tabview-nav-next , .p-tabview-nav-prev
+  {
+    display: none;
+  }
+  .p-tabview-nav li a
+  {
+    gap:15px !important;
+  }
+  .tap
+  {
+    box-shadow: 0px 2px 4px -1px #1212170F;
+    // box-shadow: 0px 4px 6px -1px #12121714;
+    font-size: 16px !important;
+  }
+}

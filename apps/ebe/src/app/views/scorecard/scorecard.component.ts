@@ -23,6 +23,7 @@ import { DeviceService } from '../../services/device.service';
 import { Location } from '@angular/common';
 import { DateModalComponent } from '../../components/date-modal/date-modal.component';
 import { Router } from '@angular/router';
+import { KpiMobileCardComponent } from '../../components/kpi-mobile-card/kpi-mobile-card.component';
 interface FilteredOptions {
   month: number;
   year: number;
@@ -35,7 +36,8 @@ interface FilteredOptions {
     SharedUiModule,
     PageHeaderComponent,
     CommonModule,
-    DateModalComponent
+    DateModalComponent,
+    KpiMobileCardComponent
   ],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
@@ -45,6 +47,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   endSubs$: Subject<ScorecardModel[]> = new Subject();
   kpisData: WritableSignal<ScorecardModel[]> = signal([]);
   currentClickedTapData!: TapModel;
+  currentClickedTapDataInMobile!: TapModel;
   scorecardsTaps!: TapModel[];
   toastr = inject(ToastrService);
   isEmpty = false;
@@ -79,13 +82,31 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     //   }
     // })
   }
+  filteredMonth!:number;
+  filteredYear!:number;
+  applyDateFilterInMobileView(selectedDate:Date)
+  {
+    this.filteredMonth = selectedDate.getMonth() + 1;
+    this.filteredYear = selectedDate.getFullYear()
+    this.getScorecardData(this.filteredMonth , this.filteredYear , this.currentClickedTapData.name);
+  }
+  getClickedTapInMobile(clickedTap:TapModel)
+  {
+    this.filteredMonth = this.filteredMonth ? this.filteredMonth : new Date().getMonth() + 1 
+    this.filteredYear = this.filteredYear ? this.filteredYear : new Date().getFullYear()    
+    this.currentClickedTapData = clickedTap;
+    this.getScorecardData(this.filteredMonth , this.filteredYear , this.currentClickedTapData.name);
+  }
+  isSuccess!:boolean;
   private getScorecardData(month: number, year: number, tapName?: string) {
+    this.kpisData.set([]);
     this.scorecardService
-      .getScorecardData(month, year, tapName)
-      .pipe(takeUntil(this.endSubs$))
-      .subscribe({
-        next: (scorecards: ScorecardModel[]) => {
+    .getScorecardData(month, year, tapName)
+    .pipe(takeUntil(this.endSubs$))
+    .subscribe({
+      next: (scorecards: ScorecardModel[]) => {
           console.log(scorecards);
+          this.isSuccess = true;
           if (scorecards.length === 0) {
             this.isEmpty = true;
           } else {
@@ -93,6 +114,9 @@ export class ScorecardComponent implements OnInit, OnDestroy {
             this.isEmpty = false;
           }
         },
+        error : (err) => {
+          this.isSuccess = false;
+        }
       });
   }
   ngOnDestroy() {
