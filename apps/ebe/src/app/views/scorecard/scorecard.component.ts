@@ -22,6 +22,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DeviceService } from '../../services/device.service';
 import { Location } from '@angular/common';
 import { DateModalComponent } from '../../components/date-modal/date-modal.component';
+import { Router } from '@angular/router';
 interface FilteredOptions {
   month: number;
   year: number;
@@ -57,7 +58,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   currYear = new Date().getFullYear();
   isMobile = signal<boolean>(false);
   deviceService = inject(DeviceService);
-  location = inject(Location);
+  router = inject(Router);
   ngOnInit(): void {
     
     this.isMobile.set(this.deviceService.isMobile());
@@ -187,6 +188,6 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   }
   goBack()
   {
-    this.location.back();
+    this.router.navigateByUrl("/");
   }
 }
