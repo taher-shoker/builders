@@ -29,6 +29,15 @@ const routes: Routes = [
             (m) => m.CategoryModule
           ),
       },
+      {
+        path: 'dashboard',
+        data: { breadcrumb: 'dashboard' },
+        canActivate: [ProcessAdminGuard], // Apply ProcessAdminGuard here
+        loadChildren: () =>
+          import('../../views/dashboard/dy-dashboard.module').then(
+            (m) => m.DyDashboardModule
+          ),
+      },
     ],
   },
 ];
