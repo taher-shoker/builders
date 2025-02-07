@@ -67,51 +67,6 @@
 .scored-card-section-mobile
 {
   background-color: #f5f6fa;
-  &-header
-  {
-    background-color: #fff;
-    padding:15px;
-    box-shadow: 0px 1px 2px 0px #1212170D;
-    .header
-    {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      p
-      {
-        margin: 0;
-        color:var(--stc-light-grey-color3);
-        @extend .stcFont;
-      }
-      i
-      {
-        color:var(--stc-light-grey-color3);
-        cursor: pointer;
-      }
-    }
-    .main-titles
-    {
-      margin-top: 10px;
-      p
-      {
-        margin: 0;
-        @extend .stcFont;
-      }
-      .header-title
-      {
-        color:var(--stc-grey-color2);
-        font-size: 1.1rem;
-        text-transform: capitalize;
-      }
-      .sub-title
-      {
-        color:var(--stc-light-grey-color4);
-        font-size: 0.9rem;
-        text-transform: capitalize;
-        margin-top: 5px;
-      }
-    }
-  }
   &-body
   {
     padding:15px;

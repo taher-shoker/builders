@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, input , InputSignal, OnChanges , Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, input , InputSignal, OnChanges , Output, ViewChild, ViewEncapsulation } from '@angular/core';
 import { TabsDataModel } from './tabsData.model';
 @Component({
   selector: 'stc-apps-tabview',

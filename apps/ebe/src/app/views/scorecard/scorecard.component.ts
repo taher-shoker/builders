@@ -21,9 +21,9 @@ import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
 import { DeviceService } from '../../services/device.service';
 import { Location } from '@angular/common';
-import { DateModalComponent } from '../../components/date-modal/date-modal.component';
 import { Router } from '@angular/router';
 import { KpiMobileCardComponent } from '../../components/kpi-mobile-card/kpi-mobile-card.component';
+import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
 interface FilteredOptions {
   month: number;
   year: number;
@@ -36,8 +36,8 @@ interface FilteredOptions {
     SharedUiModule,
     PageHeaderComponent,
     CommonModule,
-    DateModalComponent,
-    KpiMobileCardComponent
+    KpiMobileCardComponent,
+    MobileViewHeaderComponent
   ],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',

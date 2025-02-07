@@ -48,12 +48,19 @@
     color:var(--stc-grey-color2);
     font-weight: 500;
 }
-.kpi-statuses
-{
+.kpi-statuses { 
     display: flex;
     align-items: center;
-    gap:10px;
-    flex-wrap: wrap;
+    gap: 10px;
+    overflow-x: auto; 
+    white-space: nowrap;
+    padding-bottom: 10px; 
+    scroll-snap-type: x mandatory;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.kpi-statuses::-webkit-scrollbar {
+    display: none;
 }
 .kpi-targets
 {
@@ -93,6 +100,7 @@
 .targets
 {
     padding:20px;
+    margin-top: 10px;
 }
 .kpi-weights
 {

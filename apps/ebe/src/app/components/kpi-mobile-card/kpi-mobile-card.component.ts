@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { KpiModel } from '../../models/scorecard.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+
 @Component({
   selector: 'stc-apps-kpi-mobile-card',
   standalone: true,
@@ -13,4 +14,5 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 export class KpiMobileCardComponent {
   kpi:InputSignal<KpiModel> = input.required<KpiModel>();
   @ViewChild('textOverlayPanel') textOverlayPanel!: OverlayPanel;
+  activeIndex: number = 0;
 }

@@ -14,10 +14,12 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
 import { DatePipe } from '@angular/common';
 import { ActivityLog, ActivityLogData } from '../../models/activity-logs';
 import { ActivityLogService } from '../../services/activity-logs.service';
+import { DeviceService } from '../../services/device.service';
+import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule],
+  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule , MobileViewHeaderComponent],
   templateUrl: './financial-reporting.component.html',
   styleUrl: './financial-reporting.component.scss',
 })
@@ -35,6 +37,13 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   activityLogsTableBody = signal<ActivityLogData[]>([]);
   activityLogService = inject(ActivityLogService);
   chartColors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
+  selectedTap:string = 'capex';
+  selectTap(tap:string)
+  {
+    this.selectedTap = tap;
+  }
   opexTenderingChart:{
     title:string;
     value:number;
@@ -99,6 +108,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   // }).then(res => console.log(res))
   ngOnInit()
   {
+    this.isMobile.set(this.deviceService.isMobile())
     this.scorecardService.toggleSwitchBtn.subscribe({
       next : (res) => {
         this.showActivityLogsPopup = false;
