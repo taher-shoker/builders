@@ -36,6 +36,7 @@ import {
   UploadResponse,
 } from '../../dy-reports.service';
 import { Location } from '@angular/common';
+import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
@@ -61,13 +62,27 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   selectedOptions: string[] = [];
   customRangeSLA: { name: number; id: number }[] = [];
   categories: WritableSignal<Category[]> = signal([]);
-
   paramsId!: string;
   paramsMode!: string;
   paramsFlowId!: string;
   paramsRequestTaskId!: string;
   availableUsers: WritableSignal<User[]> = signal([]);
+  SchedulingTypes: { id: string; name: string }[] = [
+    { id: 'monthly', name: 'Monthly' },
+    { id: 'weekly', name: 'Weekly' },
+    { id: 'custom', name: 'custom' },
+  ];
 
+  monthNumbers: { id: number; name: string }[] = [];
+  weeklyDays: { id: string; name: string }[] = [
+    { id: 'sunday', name: 'Sunday' },
+    { id: '1', name: 'Monday' },
+    { id: '2', name: 'Tuesday' },
+    { id: '3', name: 'Wednesday' },
+    { id: '4', name: 'Thursday' },
+    { id: '5', name: 'Friday' },
+    { id: '6', name: 'Saturday' },
+  ];
   constructor(
     private _formBuilder: FormBuilder,
     private reportsService: ReportsService,
@@ -85,7 +100,21 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       }
     }
   }
+  generateNumbers() {
+    const monthNums = [];
 
+    for (let n = 1; n <= 31; n++) {
+      monthNums.push({ id: n, name: n.toString() });
+    }
+    this.monthNumbers = monthNums;
+  }
+  handleScheduleType(type: any) {
+    console.log(type);
+  }
+  handledateChange(event: MatDatepickerInputEvent<Date>) {
+    console.log(event.value);
+    console.log(this.form.get('startDate')?.value);
+  }
   ngOnInit(): void {
     // this.initForm();
     // this.loadInitialData();
@@ -95,6 +124,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.populateCustomSLA();
     this.getCategories();
     this.fetchDataOfReportAndEditIfExists();
+    this.generateNumbers();
   }
 
   private noWhitespaceValidator(control: FormControl) {
@@ -138,6 +168,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       creatorEmail: [''],
       attachments: [[], Validators.required],
       requestApprovals: this._formBuilder.array([]),
+      autoScheduling: [false],
+      schedulingType: [''],
+      monthNumber: [''],
+      weeklyDay: [''],
+      startDate: [''],
+      endDate: [''],
+      customDate: [''],
     });
   }
 
