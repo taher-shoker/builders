@@ -7,8 +7,16 @@
 
     .filter-field {
         position: relative;
-        flex: 1 1 300px;
+        // flex: 1 1 300px;
         min-width: 0;
+
+        &:first-child {
+            flex: 1 1 300px;
+        }
+
+        &:not(:first-child) {
+            flex: 1 1 200px;
+        }
 
         p-inputGroup {
             button {
