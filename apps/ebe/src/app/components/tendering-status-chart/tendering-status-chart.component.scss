@@ -1,0 +1,35 @@
+.awarded-card {
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    color: #fff;
+    gap: 1px;
+    &-item {
+      height: 35px;
+      line-height: 35px;
+      min-width: 6%;
+      text-align: center;
+    }
+    &-legends {
+      display: flex;
+      align-items: center;
+      gap: 25px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+      .legend {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .bullet {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+      }
+      .name {
+        color: #616161;
+        text-transform: capitalize;
+        font-weight: 500;
+      }
+    }
+  }

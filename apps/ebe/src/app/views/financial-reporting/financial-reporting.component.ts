@@ -1,4 +1,4 @@
-import { Component, inject , OnDestroy, OnInit , signal} from '@angular/core';
+import { Component, inject , OnDestroy, OnInit , signal, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/edit-mode-view.component';
@@ -16,15 +16,18 @@ import { ActivityLog, ActivityLogData } from '../../models/activity-logs';
 import { ActivityLogService } from '../../services/activity-logs.service';
 import { DeviceService } from '../../services/device.service';
 import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
+import { TenderingStatusChartComponent } from '../../components/tendering-status-chart/tendering-status-chart.component';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule , MobileViewHeaderComponent],
+  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule , MobileViewHeaderComponent , TenderingStatusChartComponent],
   templateUrl: './financial-reporting.component.html',
   styleUrl: './financial-reporting.component.scss',
 })
 export class FinancialReportingComponent implements OnInit , OnDestroy{
   currentMode!: 'editMode' | 'viewMode';
+  @ViewChild('capexOverlay') capexOverlay!: OverlayPanel;
+  @ViewChild('opexOverlay') opexOverlay!: OverlayPanel;
   scorecardService = inject(ScorecardService);
   financialReportingService = inject(FinancialReportingService);
   visible = false;
