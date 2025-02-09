@@ -4,6 +4,7 @@
     <p-iconField iconPosition="left">
       <p-inputIcon styleClass="pi pi-search" />
       <input
+        id="standardName"
         type="text"
         pInputText
         formControlName="name"
@@ -17,13 +18,13 @@
     <p-calendar
       [iconDisplay]="'input'"
       [showIcon]="true"
-      inputId="icondisplay"
       placeholder="Publish Date"
       formControlName="publishUpdate"
       [showClear]="true"
       [showTime]="true"
       [timeOnly]="false"
       [hourFormat]="'12'"
+      inputId="publishUpdate"
     />
   </div>
 
@@ -33,9 +34,9 @@
       formControlName="lastUpdate"
       [iconDisplay]="'input'"
       [showIcon]="true"
-      inputId="icondisplay"
       placeholder="Latest Update Date"
       [showClear]="true"
+      inputId="lastUpdate"
     />
   </div>
 

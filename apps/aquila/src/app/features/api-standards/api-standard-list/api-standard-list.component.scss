@@ -49,4 +49,14 @@
             }
         }
     }
+
+    p-confirmdialog {
+        ::ng-deep {
+            .p-dialog-footer {
+                button {
+                    @extend %button-focus;
+                }
+            }
+        }
+    }
 }

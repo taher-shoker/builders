@@ -51,6 +51,10 @@
 
     tr:not(.table-header) td {
         color: var(--dark-slate-gray);
+
+        @media screen and (max-width: $breakpoint-xl) {
+            font-size: $font-size-small;
+        }
     }
 
     &_actions {
@@ -61,6 +65,8 @@
                 color: var(--dark-slate-gray);
                 font-size: 20px;
             }
+
+            @extend %button-focus;
         }
     }
 

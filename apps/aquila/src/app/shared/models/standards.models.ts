@@ -1,4 +1,5 @@
 export interface Standard {
+  id: string;
   standardId: string;
   name: string;
   version: string;

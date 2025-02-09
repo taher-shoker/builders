@@ -12,13 +12,14 @@
   </div>
   <div class="status-list_items">
     @for (item of items(); let i = $index; track item) {
+
     <div
       class="card"
       [ngClass]="{
         'selected-card': selectedItem === item,
-        dimmed: item.result === 'failed'
+        dimmed: !item.parentTestId
       }"
-      (click)="item.result !== 'failed' && onItemClick(item)"
+      (click)="item.parentTestId && onItemClick(item)"
     >
       <div class="card-header">
         @if (item?.parentTestId) {
@@ -38,7 +39,7 @@
         <strong
           [ngClass]="{
             'text-success': item.result === 'pass',
-            'text-danger': item.result === 'failed'
+            'text-danger': item.result === 'failed',
           }"
           >{{ item.result }}</strong
         >

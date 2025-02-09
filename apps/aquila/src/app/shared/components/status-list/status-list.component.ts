@@ -67,8 +67,8 @@ export class StatusListComponent {
 
   onItemClick(item: QueueItem): void {
     if (this.title() === 'Completed Tests') {
-      this.selectedItem = this.selectedItem === item ? null : item;
-      this.itemSelected.emit(this.selectedItem as QueueItem);
+      this.selectedItem = item;
+      this.itemSelected.emit(item);
     }
   }
 
