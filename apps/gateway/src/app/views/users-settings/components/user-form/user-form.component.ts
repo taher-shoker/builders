@@ -123,6 +123,7 @@ export class UserFormComponent implements OnInit, OnChanges {
           : Validators.required,
       ],
       userDelegates: [[]],
+      escalationManager: [[]],
       viewer: [''],
       editor: [''],
       pmo: [''],
