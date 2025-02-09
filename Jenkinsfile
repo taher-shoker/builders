@@ -16,8 +16,8 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "/usr/local/nodejs/bin/npm install"
-					sh "/usr/local/nodejs/bin/npx nx run chatBI:build --configuration=production"
+                    sh "../lib/node_modules/npm/bin/npm-cli.js install"
+					sh "../lib/node_modules/npm/bin/npx-cli.js nx run chatBI:build --configuration=production"
                 }
             }
         }
