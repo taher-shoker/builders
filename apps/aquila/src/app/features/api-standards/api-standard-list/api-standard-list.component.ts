@@ -17,6 +17,9 @@ import { TableListComponent } from '../../../shared/components/table-list/table-
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { ApiStandardFiltersComponent } from '../api-standard-filters/api-standard-filters.component';
 import { StandardsService } from '../../../shared/services/standards.service';
+import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'stc-apps-api-standard-list',
@@ -26,9 +29,12 @@ import { StandardsService } from '../../../shared/services/standards.service';
     SharedUiModule,
     TableListComponent,
     ApiStandardFiltersComponent,
+    ConfirmDialogModule,
+    ToastModule,
   ],
   templateUrl: './api-standard-list.component.html',
   styleUrls: ['./api-standard-list.component.scss'],
+  providers: [ConfirmationService, MessageService],
 })
 export class ApiStandardListComponent implements OnInit, AfterViewInit {
   @ViewChild('publishUpdateTemplate')
@@ -36,6 +42,8 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly standardsService = inject(StandardsService);
+  private readonly confirmationService = inject(ConfirmationService);
+  private readonly messageService = inject(MessageService);
 
   readonly el = inject(ElementRef<HTMLElement>);
   standards: Standard[] = [];
@@ -53,7 +61,7 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
 
   readonly tableActions = computed(() => [
     { action: 'pi pi-eye', title: 'View Details' },
-    { action: 'pi pi-pen-to-square', title: 'Edit' },
+    { action: 'pi pi-trash', title: 'Delete' },
   ]);
   businessAreaOptions: { label: string; value: string }[] = [];
   originalStandards: Standard[] = [];
@@ -153,20 +161,13 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
   onActionHandler(event: { actionType: string; rowData: Standard }): void {
     const { actionType, rowData } = event;
 
-    const actions: Record<string, () => Promise<boolean>> = {
+    const actions: Record<string, () => void> = {
       'pi pi-eye': () =>
         this.router.navigate(['view-standard'], {
           relativeTo: this.route,
           state: { standard: rowData },
         }),
-      'pi pi-pen-to-square': () =>
-        this.router.navigate(['edit-standard'], {
-          relativeTo: this.route,
-          state: {
-            standard: rowData,
-            isEditMode: true,
-          },
-        }),
+      'pi pi-trash': () => this.confirmDelete(rowData),
     };
 
     const action = actions[actionType as keyof typeof actions];
@@ -176,6 +177,39 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
       console.warn('Unknown action type:', actionType);
     }
   }
+
+  private confirmDelete(standard: Standard): void {
+    this.confirmationService.confirm({
+      message: `Are you sure you want to delete ${standard.name}?`,
+      header: 'Delete Standard',
+      icon: 'pi pi-info-circle',
+      acceptButtonStyleClass: 'p-button-danger p-button-text',
+      rejectButtonStyleClass: 'p-button-text p-button-text',
+      acceptIcon: 'none',
+      rejectIcon: 'none',
+      accept: () => {
+        this.standardsService.deleteStandard(standard.id).subscribe({
+          next: () => {
+            this.loadStandards();
+            this.messageService.add({
+              severity: 'success',
+              summary: 'Success',
+              detail: `${standard.name} has been deleted successfully`,
+            });
+          },
+          error: (error) => {
+            console.error('Error deleting standard:', error);
+            this.messageService.add({
+              severity: 'error',
+              summary: 'Error',
+              detail: 'Failed to delete the standard',
+            });
+          },
+        });
+      },
+    });
+  }
+
   onFiltersChanged(filters: Record<string, unknown>): void {
     const processedFilters = {
       ...filters,

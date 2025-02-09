@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { ApiStandardComponent } from './api-standard-list.component';
+import { ApiStandardListComponent } from './api-standard-list.component';
 
 describe('ApiStandardComponent', () => {
-  let component: ApiStandardComponent;
-  let fixture: ComponentFixture<ApiStandardComponent>;
+  let component: ApiStandardListComponent;
+  let fixture: ComponentFixture<ApiStandardListComponent>;
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [ApiStandardComponent],
+      imports: [ApiStandardListComponent],
     });
-    fixture = TestBed.createComponent(ApiStandardComponent);
+    fixture = TestBed.createComponent(ApiStandardListComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
