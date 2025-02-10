@@ -67,6 +67,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   paramsFlowId!: string;
   paramsRequestTaskId!: string;
   availableUsers: WritableSignal<User[]> = signal([]);
+  startDate: Date | null = new Date();
+  endDate!: Date | null;
   SchedulingTypes: { id: string; name: string }[] = [
     { id: 'monthly', name: 'Monthly' },
     { id: 'weekly', name: 'Weekly' },
@@ -100,21 +102,102 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       }
     }
   }
-  generateNumbers() {
-    const monthNums = [];
 
-    for (let n = 1; n <= 31; n++) {
-      monthNums.push({ id: n, name: n.toString() });
-    }
-    this.monthNumbers = monthNums;
-  }
   handleScheduleType(type: any) {
     console.log(type);
   }
-  handledateChange(event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value);
-    console.log(this.form.get('startDate')?.value);
+
+  FilterEndDate = (d: Date | null): boolean => {
+    if (d === null) return false; // null dates are not allowed
+
+    if (this.startDate) {
+      const previousDays = new Date(this.startDate);
+      const dateWithDays = new Date(d);
+      const day = dateWithDays.getDay();
+      return d >= previousDays && day !== 5 && day !== 6;
+    }
+
+    return true;
+  };
+  DisableSpecificDays = (d: Date | null): boolean => {
+    if (d === null) return false;
+    const dateWithdays = new Date(d);
+    const day = dateWithdays.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    return day !== 5 && day !== 6; // Disable Sunday (0) and Saturday (6)
+  };
+  handelChangeDate(event: MatDatepickerInputEvent<Date>, type: string) {
+    if (type === 'start') {
+      this.startDate = null;
+      this.endDate = null;
+      this.startDate = event.value;
+      this.form.get('endDate')?.reset();
+    } else {
+      this.endDate = event.value;
+      if (this.startDate && this.endDate) {
+        if (this.form.get('schedulingType')?.value.id === 'monthly') {
+          this.getDaysBetweenDatesArray(this.startDate, this.endDate);
+        } else {
+          this.getUniqueDayNamesBetweenDates(this.startDate, this.endDate);
+        }
+      }
+    }
   }
+
+  getDaysBetweenDatesArray(startDate: Date, endDate: Date): void {
+    const daySet = new Set<number>();
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dayNumber = currentDate.getDate();
+      const dayName = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+      });
+
+      // Exclude Friday and Saturday
+      if (dayName !== 'Friday' && dayName !== 'Saturday') {
+        daySet.add(dayNumber);
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Convert Set to array, sort it, and map to desired format
+    this.monthNumbers = Array.from(daySet)
+      .sort((a, b) => a - b)
+      .map((day) => ({ id: day, name: day.toString() }));
+  }
+
+  getUniqueDayNamesBetweenDates(
+    startDate: string | Date,
+    endDate: string | Date
+  ): void {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const daySet = new Set<string>();
+    const currentDate = new Date(start);
+
+    while (currentDate <= end) {
+      const dayName = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+      });
+
+      // Exclude Friday and Saturday
+      if (dayName !== 'Friday' && dayName !== 'Saturday') {
+        daySet.add(dayName); // Store unique day names
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Define the desired order starting from Sunday
+    const weekOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+
+    // Sort based on predefined order
+    this.weeklyDays = Array.from(daySet)
+      .sort((a, b) => weekOrder.indexOf(a) - weekOrder.indexOf(b))
+      .map((day) => ({ id: day, name: day }));
+  }
+
   ngOnInit(): void {
     // this.initForm();
     // this.loadInitialData();
@@ -124,7 +207,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.populateCustomSLA();
     this.getCategories();
     this.fetchDataOfReportAndEditIfExists();
-    this.generateNumbers();
   }
 
   private noWhitespaceValidator(control: FormControl) {

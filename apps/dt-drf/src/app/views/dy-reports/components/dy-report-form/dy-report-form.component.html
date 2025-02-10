@@ -70,13 +70,15 @@
         </div>
         }@else {
         <div class="col-md-2">
-          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
-            [inputName]="'Start Date' " formControlName="startDate">
+          <stc-apps-date-picker [myFilter]="DisableSpecificDays" [className]="'custom-input'" [inputPlaceholder]="''"
+            [inputId]="'activationDate'" [inputName]="'Start Date' " formControlName="startDate"
+            (selectChange)="handelChangeDate($event,'start')">
           </stc-apps-date-picker>
         </div>
         <div class="col-md-2">
-          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
-            [inputName]="'End Date'" formControlName="endDate" (selectChange)="handledateChange($event)">
+          <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
+            [inputId]="'activationDate'" [inputName]="'End Date'" formControlName="endDate"
+            (selectChange)="handelChangeDate($event,'end')">
           </stc-apps-date-picker>
         </div>
         }
