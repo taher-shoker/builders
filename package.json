@@ -32,6 +32,7 @@
     "ng-circle-progress": "^1.7.1",
     "ngx-cookie": "^6.0.1",
     "ngx-cookie-service": "^16.0.0",
+    "ngx-owl-carousel-o": "^19.0.0",
     "ngx-quill": "^25.3.2",
     "ngx-spinner": "^16.0.2",
     "ngx-toastr": "^17.0.2",

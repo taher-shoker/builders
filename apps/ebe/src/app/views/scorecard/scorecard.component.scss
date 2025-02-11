@@ -22,9 +22,13 @@
   }
   &-header
   {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
+    // display: flex;
+    // justify-content: space-between;
+    // align-items: flex-end;
+    display: grid;
+    grid-template-columns: 80% calc(20% - 30px);
+    gap: 30px;
+    align-items: center;
     .hands-img
     {
       position: relative;

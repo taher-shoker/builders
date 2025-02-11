@@ -5,7 +5,7 @@ import { CookieService } from 'ngx-cookie';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { UserGroup } from '../models/scorecard.model';
 import { HttpClient } from '@angular/common/http';
-import { ActivityLogData, ActivityLogRes } from '../models/activity-logs';
+import { ActivityLogData, ActivityLogRes, KeyResult, KeyResultProject, Program } from '../models/activity-logs';
 import { DeletedProgram } from '../models/deleted-items';
 import { PSRProjectDetailsModel } from '../models/psr.model';
 import saveAs from 'file-saver';
@@ -23,7 +23,10 @@ export class ActivityLogService {
     username?: string,
     activityType?: string,
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    programName?:number  | null,
+    keyResult?:string | null,
+    projectName?:string | null
   ): Observable<ActivityLogRes> {
     let url = `${environment.apiUrl}/business-excellence/log?module=${moduleName}&page=${page}&pageSize=${pageSize}`;
     if (username) {
@@ -37,6 +40,15 @@ export class ActivityLogService {
     }
     if (endDate) {
       url += `&endDate=${endDate}`;
+    }
+    if (programName) {
+      url += `&subModule=${programName}`;
+    }
+    if (keyResult) {
+      url += `&attribute=${keyResult}`;
+    }
+    if (projectName) {
+      url += `&entity=${projectName}`;
     }
     return this.http.get<ActivityLogRes>(url);
   }
@@ -110,5 +122,17 @@ export class ActivityLogService {
           saveAs(blob, 'activity-logs.xlsx');
         },
       });
+  }
+  getProgramsData(moduleName:string):Observable<Program[]>
+  {
+    return this.http.get<Program[]>(`${environment.apiUrl}/business-excellence/${moduleName}/activity-log/programs`);
+  }
+  getKeyResultsData():Observable<KeyResult[]>
+  {
+    return this.http.get<KeyResult[]>(`${environment.apiUrl}/business-excellence/cad/activity-log/key-results`);
+  }
+  getKeyResultProjectsData(moduleName:string):Observable<KeyResultProject[]>
+  {
+    return this.http.get<KeyResultProject[]>(`${environment.apiUrl}/business-excellence/${moduleName}/activity-log/projects`);
   }
 }
