@@ -17,6 +17,9 @@ import { ToastrService } from 'ngx-toastr';
 import { MenuPopupComponent } from 'apps/ebe/src/app/components/menu-popup/menu-popup.component';
 import { ActivityLog, ActivityLogData, ColumnsSchema } from '../../../../models/activity-logs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
+import { DeviceService } from '../../../../services/device.service';
+import { MobileViewHeaderComponent } from '../../../../components/mobile-view-header/mobile-view-header.component';
+import { MobileProjectCardComponent } from '../mobile-project-card/mobile-project-card.component';
 @Component({
   selector: 'stc-apps-psr-details-page',
   standalone: true,
@@ -27,6 +30,8 @@ import { ActivityLogService } from '../../../../services/activity-logs.service';
     ProjectDetailsCardComponent,
     EditModeViewComponent,
     MenuPopupComponent,
+    MobileViewHeaderComponent,
+    MobileProjectCardComponent
   ],
   templateUrl: './psr-details-page.component.html',
   styleUrl: './psr-details-page.component.scss',
@@ -53,6 +58,8 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   datePipe = inject(DatePipe);
   isAdmin = false;
   activityLogService = inject(ActivityLogService);
+  isMobile = signal<boolean>(false)
+  deviceService = inject(DeviceService);
   menuItems = [
     {
       label: 'activity log',
@@ -95,7 +102,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   groupName2 = ''
   isPMO = false;
   ngOnInit(): void {
-    // this.toastr.success("The File is Saved Successfully");
+    this.isMobile.set(this.deviceService.isMobile());
     this.scorecardService.toggleSwitchBtn.subscribe({
       next : (res) => {
         if(this.child2)
@@ -111,18 +118,21 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
       },
     });
     this.userRoles = this.scorecardService.userRoles;
-    this.isAllowed = this.userRoles.roles.some(
-      (role) =>
-        role.roleName === 'BE_EDITORS' ||
-        role.roleName === 'ADMINS' ||
-        role.roleName === 'BE_PMO'
-    );
-    this.isPMO = this.userRoles.roles.some(
-      (role) => role.roleName === 'BE_PMO'
-    );
-    this.isAdmin = this.userRoles.roles.some(
-      (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
-    );
+    if(this.userRoles && this.userRoles.roles)
+    {
+      this.isAllowed = this.userRoles.roles.some(
+        (role) =>
+          role.roleName === 'BE_EDITORS' ||
+          role.roleName === 'ADMINS' ||
+          role.roleName === 'BE_PMO'
+      );
+      this.isPMO = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_PMO'
+      );
+      this.isAdmin = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+      );
+    }
     console.log(this.userRoles);
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({

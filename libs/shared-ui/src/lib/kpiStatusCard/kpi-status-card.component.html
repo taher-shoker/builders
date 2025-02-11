@@ -12,18 +12,22 @@
   [class.output]="kpiType() === 'output'"
   [class.theme]="kpiType() === 'theme'"
   [class.in-mobile-screen]="isMobile()"
+  class = "status-container"
 >
   @if(kpiType() === 'achieved'){
-    Over Achieved
-    @if(!isMobile())
-    {
-      <img class="arrow" src="assets/images/arrow-up.gif" />
-    } @else {
-      <img class="arrow mobile-arrow" src="assets/images/mobile/Course Up.svg" />
-    }
+    <div class="card3">
+      Over Achieved
+      @if(!isMobile())
+      {
+        <img class="arrow" src="assets/images/arrow-up.gif" />
+      } @else {
+        <img class="arrow mobile-arrow" src="assets/images/mobile/Course Up.svg" />
+      }
+    </div>
   }
   @if(kpiType() === 'actual'){
-    Actual : {{kpiStatus()}}
+    <div class="card3">
+      Actual : {{kpiStatus()}}
     @if(domainIndicator() && domainIndicator() !== '#')
     {
       <span
@@ -38,12 +42,16 @@
         </p-overlayPanel>
       }
     }
+    </div>
   }
   @if(kpiType() === 'weight'){
-    weight : {{kpiStatus()}}%
+    <div class="card3">
+      weight : {{kpiStatus()}}%
+    </div>
   }
   @if(kpiType() === 'in-progress' || kpiType() === 'not-achieved' || kpiType() === 'vendor' || kpiType() === 'owner-name' || kpiType() === 'status'){
-    <span
+    <div class="card3">
+      <span
         (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
         (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
         class = "kpi-status3"
@@ -59,10 +67,11 @@
     {
       N/A
     }
+    </div>
   }
   @if(kpiType() === 'indicator')
   {
-    <div class = "domainIndicator-status">
+    <div class = "domainIndicator-status card3" [class.status-in-mobile]="isMobile()">
       <span 
         class = 'domainIndicator' 
         [ngStyle]="{
@@ -74,7 +83,7 @@
   }
   @if(kpiType() === 'domain'){
     <!-- <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px"> -->
-    <div class = "p-0">
+    <div class = "card3">
       <span
           (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
           (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
@@ -91,6 +100,8 @@
     </div>
   }
   @if(kpiType() === 'actualStatus'){
-    ActualStatus : {{kpiStatus()}}%
+    <div class="card3">
+      ActualStatus : {{kpiStatus()}}%
+    </div>
   }
 </div>

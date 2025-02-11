@@ -1,5 +1,5 @@
 import { Component, EventEmitter, inject, input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { DateModalComponent } from '../date-modal/date-modal.component';
 import { Router } from '@angular/router';
 @Component({
@@ -12,12 +12,19 @@ import { Router } from '@angular/router';
 export class MobileViewHeaderComponent {
   isSuccess = input.required<boolean>();
   showDateModal = input<boolean>();
+  isPSRDetails = input<boolean>(false);
   headerTitle = input.required<string>()
   router = inject(Router);
+  location = inject(Location);
   @Output() applyFilters:EventEmitter<Date> = new EventEmitter()
   goBack()
   {
-    this.router.navigateByUrl("/");
+    if(!this.isPSRDetails())
+    {
+      this.router.navigateByUrl("/");
+    } else {
+      this.location.back();
+    }
   }
   applyDateFilterInMobileView(e:Date)
   {

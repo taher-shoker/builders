@@ -1,0 +1,50 @@
+@import '../../../../../styles/fonts.scss';
+.project
+{
+    background-color: #fff;
+    padding: 15px;
+    border-radius:10px;
+    margin-bottom: 20px;
+    &-name
+    {
+        color:var(--stc-grey-color2);
+        @extend .stcFont;
+        font-weight: 600;
+        font-size: 17px;
+    }
+    &-statuses
+    {
+        display: flex;
+        align-items: center;
+        gap:10px;
+        flex-wrap: wrap;
+    }
+    &-chart
+    {
+        height:220px;
+        &-empty-data
+        {
+            color:var(--stc-grey-color2);
+            @extend .stcFont;
+            font-weight: 600;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height:100%;
+        }
+    }
+    &-view-details-btn
+    {
+        background-color: #FAFAFA;
+        width:100%;
+        border-radius:5px;
+        border:0;
+        padding:5px 0;
+        color:var(--stc-grey-color2);
+        @extend .stcFont;
+        font-weight: 500;
+        font-size: 15px;
+        text-transform: capitalize;
+    }
+}

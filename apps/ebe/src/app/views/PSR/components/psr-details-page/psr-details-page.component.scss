@@ -154,3 +154,18 @@
       padding:5px;
   }
 }
+.psr-details-page-mobile-view
+{
+  background-color: #f5f6fa;
+  &-body
+  {
+    padding: 15px;
+    .page-title
+    {
+      color:var(--stc-grey-color2);
+      @extend .stcFont;
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+}

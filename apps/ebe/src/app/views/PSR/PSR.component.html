@@ -1,32 +1,44 @@
+@if(!isMobile()) {
 <section class="scored-card-section">
-    <div class="scored-card-section-header">
-      <div>
-        <stc-apps-page-header
-          [mainTitle]="'PSR'"
-          [secondaryTitle]="''"
+  <div class="scored-card-section-header">
+    <div>
+      <stc-apps-page-header [mainTitle]="'PSR'" [secondaryTitle]="''" />
+    </div>
+    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
+  </div>
+  <div class="scored-card-section-tap-details">
+    <div class="projects-container">
+      <stc-apps-tab-details
+        [projects]="psrData"
+        [isEmpty]="isEmpty"
+        (getUploadedFile)="getUploadedFile($event)"
+        (ProgramId)="deleteProgram($event)"
+      />
+    </div>
+  </div>
+</section>
+} @else {
+<div class="psr-mobile-view">
+  <div class="psr-mobile-view-header">
+    <stc-apps-mobile-view-header
+      [isSuccess]="false"
+      [showDateModal]="false"
+      [headerTitle]="'Project Execution'"
+    />
+  </div>
+  <div class="psr-mobile-view-body">
+    <p class="page-title">Strategic Projects - Executive View</p>
+    <div class="programs row">
+      @for (project of psrData; track project.sector) {
+      <div class="project-container-card col-lg-4 col-md-6 col-sm-12 col-xs-12">
+        <stc-apps-psr-project-card
+          [project]="project"
+          (ProgramId)="getProgramId($event)"
+          [isMobile]="isMobile()"
         />
-        <!-- <div class="scored-card-section-taps">
-          <stc-apps-tabview
-            [tabsData]="PSRTaps"
-            [tabColor]="'#ffffff'"
-            [clickedtabColor]="'#ffffff'"
-            [tabBackground]="'#FFFFFF0D'"
-            [clickedtabBackground]="'#FF375E'"
-            (clickedTap)="getClickedTap($event)"
-            [fontFamily]="'STCForwardFont'"
-          />
-        </div> -->
       </div>
-      <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+      }
     </div>
-    <div class="scored-card-section-tap-details">
-      <div class="projects-container">
-          <stc-apps-tab-details 
-            [projects]="psrData"
-            [isEmpty]="isEmpty"
-            (getUploadedFile)="getUploadedFile($event)"
-            (ProgramId)="deleteProgram($event)"
-          />
-      </div>
-    </div>
-  </section>
+  </div>
+</div>
+}

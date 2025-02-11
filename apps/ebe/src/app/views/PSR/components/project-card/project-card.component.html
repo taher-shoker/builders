@@ -1,51 +1,55 @@
-<section class="project-container">
+<section class="project-container" [class.project-container-in-mobile]="isMobile()">
   <div class="project-container-head">
     <p
       class="project-container-header"
+      [class.mobile-view-title]="isMobile()"
       (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''"
       (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
     >
       {{ project().sector }}
     </p>
-    <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
-    <p-overlayPanel
-      #actionsPanel
-      dismissable="false"
-      [appendTo]="'body'"
-      styleClass="project-actions-logs"
-      (onHide)="showActivityLogsPopup = false"
-    >
-      <div class="actions-logs-table">
-        @for (item of items; track $index) {
-        <div
-          class="action"
-          [class.delete-btn]="item.label === 'Delete'"
-          (click)="
-            item.label === 'Edit'
-              ? gotoEditPage()
-              : item.label === 'Delete'
-              ? showDeleteDialog()
-              : showActivityLogs()
-          "
-        >
-          <i [class]="item.icon"></i>
-          <p>{{ item.label }}</p>
+    @if(!isMobile())
+    {
+      <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
+      <p-overlayPanel
+        #actionsPanel
+        dismissable="false"
+        [appendTo]="'body'"
+        styleClass="project-actions-logs"
+        (onHide)="showActivityLogsPopup = false"
+      >
+        <div class="actions-logs-table">
+          @for (item of items; track $index) {
+          <div
+            class="action"
+            [class.delete-btn]="item.label === 'Delete'"
+            (click)="
+              item.label === 'Edit'
+                ? gotoEditPage()
+                : item.label === 'Delete'
+                ? showDeleteDialog()
+                : showActivityLogs()
+            "
+          >
+            <i [class]="item.icon"></i>
+            <p>{{ item.label }}</p>
+          </div>
+          }
         </div>
-        }
-      </div>
-    </p-overlayPanel>
-    <stc-apps-activity-logs-popup
-      [activityLogsTableHeader]="activityLogsTableHeader()"
-      [activityLogsTableBody]="activityLogsTableBody()"
-      [showPopup]="showActivityLogsPopup"
-      (popupClosed)="popupClosed()"
-      [isProjectActionPopup]="true"
-      type = "psr"
-      [isDismissable]="true"
-      (popupHide)="showActivityLogsPopup = false"
-    />
+      </p-overlayPanel>
+      <stc-apps-activity-logs-popup
+        [activityLogsTableHeader]="activityLogsTableHeader()"
+        [activityLogsTableBody]="activityLogsTableBody()"
+        [showPopup]="showActivityLogsPopup"
+        (popupClosed)="popupClosed()"
+        [isProjectActionPopup]="true"
+        type = "psr"
+        [isDismissable]="true"
+        (popupHide)="showActivityLogsPopup = false"
+      />
+    }
   </div>
-  <div class="project-container-chart mt-5">
+  <div class="project-container-chart" [class.mt-5]="!isMobile()" [class.mobile-view-chart]="isMobile()">
     <stc-apps-multi-circles-progress-bar
       [chartData]="chartData"
       [colors]="colors"
@@ -59,32 +63,38 @@
     />
   </div>
   <!-- {{maxTextLength}} -->
-  <p class="planned-date">
-    planned date:
-    <span>{{
-      project() && project().plannedDate
-        ? formatDate(project().plannedDate)
-        : ''
-    }}</span>
-  </p>
-  <p class="project-container-description">
-    {{ project().details | truncateWord : 6 }}
-    @if(maxTextLength > 20) {
-    <a (click)="displayDrilldown()" class="read-more">read more</a>
-    }
-  </p>
-  <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
-   @if(!isDeleted())
-   {
-     <a
-       class="project-container-details-link"
-       [routerLink]="['/psr/', project().sector , project().id]"
-       (click)="gotoProjectDetailsPage()"
-     >
-       <span>more details</span>
-       <img src="assets/images/arrow-right.svg" alt="" />
-     </a>
-   }
+  <div [class.project-card-info]="isMobile()">
+    <p class="planned-date">
+      planned date:
+      <span>{{
+        project() && project().plannedDate
+          ? formatDate(project().plannedDate)
+          : ''
+      }}</span>
+    </p>
+    <p class="project-container-description">
+      {{ project().details | truncateWord : isMobile() ? 2 : 6 }}
+      @if(project().details.split(" ").length >= 2) {
+      <a (click)="displayDrilldown()" class="read-more">read more</a>
+      }
+    </p>
+    <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
+     @if(!isDeleted())
+     {
+       <a
+         class="project-container-details-link"
+         [routerLink]="['/psr/', project().sector , project().id]"
+         (click)="gotoProjectDetailsPage()"
+         [class.project-container-details-link-mobile]="isMobile()"
+       >
+         <span>more details</span>
+         @if(!isMobile())
+         {
+           <img src="assets/images/arrow-right.svg" alt="" />
+         }
+       </a>
+     }
+  </div>
 </section>
 @if(project().details) {
 <p-overlayPanel #overlayPanel dismissable="true">

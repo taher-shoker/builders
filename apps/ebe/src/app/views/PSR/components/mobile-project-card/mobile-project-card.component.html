@@ -1,0 +1,59 @@
+<section class="project">
+  <p class="project-name">{{ project().projectName }}</p>
+  <div class="project-statuses">
+    @if(project() && project().projectOwner) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().projectOwner!"
+      [kpiType]="'owner-name'"
+      [isMobile]="true"
+    />
+    }
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project() && project().vendor ? project().vendor : 'N/A'"
+      [kpiType]="'vendor'"
+      [isMobile]="true"
+    />
+    @if(project() && project().projectStage) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().projectStage!"
+      [kpiType]="'status'"
+      [isMobile]="true"
+    />
+    }
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().indicator ? project().indicator! : 'N/A'"
+      [kpiType]="'indicator'"
+      [isMobile]="true"
+      [domainIndicatorColor]="
+        project().indicator?.toLowerCase() === 'r'
+          ? '#FF0000'
+          : project().indicator?.toLowerCase() === 'g'
+          ? '#00C48C'
+          : project().indicator?.toLowerCase() === 'a'
+          ? '#ECB027'
+          : '#bbbbbb'
+      "
+    />
+    @if(project() && project().domain) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().domain"
+      [kpiType]="'domain'"
+      [isMobile]="true"
+    />
+    }
+  </div>
+  <div class="project-chart">
+    @if((project().vactual || project().vactual === 0) && (project().vplanned || project().vplanned === 0)){
+      <stc-apps-progress-bar
+        [data]="data"
+        [isPSRProject]="true"
+        [fontFamily]="'STCForwardFont'"
+      />
+    } @else {
+      <p class = "project-chart-empty-data">N/A</p>
+    }
+  </div>
+  @if((project().vactual || project().vactual === 0) && (project().vplanned || project().vplanned === 0)){
+    <button class = "project-view-details-btn" (click)="showDeliverablesTable()">view more details</button>
+  }
+</section>

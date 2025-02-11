@@ -1,13 +1,16 @@
 @import '../../../../../apps/ebe/src/styles/fonts.scss';
-div
+.status-container
 {
   // text-transform: capitalize;
   font-size: 14px;
   font-weight: 600;
-  padding:0px 10px;
   height:45px;
   line-height:45px;
   color:#000000;
+  .card3
+  {
+    padding:0px 10px;
+  }
   &.in-mobile-screen
   {
     height:30px;
@@ -15,10 +18,10 @@ div
     border-radius:5px;
     font-size: 13px;
   }
-  @media all and (max-width:1250px)
-  {
-    padding:0px 14px;
-  }
+  // @media all and (max-width:1250px)
+  // {
+  //   padding:0px 14px;
+  // }
   @media all and (min-width:1251px) and (max-width:1400px)
   {
     padding:0px 7px;
@@ -140,4 +143,16 @@ div
   color: #000000;
   border-radius: 10px;
   display: inline-block;
+}
+.status-in-mobile
+{
+  border-radius: 5px;
+  height: auto;
+  line-height: inherit;
+  padding:0 5px !important;
+  span
+  {
+    font-size: 14px;
+    border-radius: 50%;
+  }
 }

@@ -33,12 +33,15 @@ export class MainLayoutComponent implements OnInit {
   deviceService = inject(DeviceService);
   ngOnInit(): void {
     this.currentSystem = this.scorecardService.getCurrentSystem();
-    this.userData = JSON.parse(
-      decodeURIComponent(this.scorecardService.getUserGroups())
-    );
+    if(this.scorecardService.getUserGroups())
+    {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.isMobile.set(this.deviceService.isMobile());
     console.log(this.isMobile());
-    this.scorecardService.setUsername(this.userData.name);
+    this.scorecardService.setUsername(this.userData?.name);
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.navItems = this.scorecardService.getNavLinks();
@@ -49,15 +52,23 @@ export class MainLayoutComponent implements OnInit {
         }
       },
     });
-    this.userRoles = this.checkSystem(this.userData.userGroups);
-    this.isAllowed = this.userRoles.roles.some(
-      (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
-    );
-    console.log(this.userRoles);
+    if(this.userData && this.userData.userGroups)
+    {
+      this.userRoles = this.checkSystem(this.userData.userGroups);
+    }
+    if(this.userRoles && this.userRoles.roles)
+    {
+      this.isAllowed = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+      );
+    }
     this.authService.userRoles.next(this.userRoles);
-    this.isPMO = this.userRoles.roles.some(
-      (role) => role.roleName === 'BE_PMO'
-    );
+    if(this.userRoles && this.userRoles.roles)
+    {
+      this.isPMO = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_PMO'
+      );
+    }
     this.scorecardService.userRoles = this.userRoles;
   }
   private checkSystem(groups: UserGroup[]): UserGroup {
