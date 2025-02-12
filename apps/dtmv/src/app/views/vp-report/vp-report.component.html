@@ -254,12 +254,14 @@
                       <h5 class="me-2">Data Enablment Status</h5>
                       <div
                         class="cards"
-                        *ngIf="reportData()?.dataEnablmentStatusReflectionLevel"
+                        *ngIf="
+                          reportData()?.dataEnablementStatusReflectionLevel
+                        "
                       >
                         <ng-container
                           *ngFor="
                             let item of reportData()
-                              ?.dataEnablmentStatusReflectionLevel
+                              ?.dataEnablementStatusReflectionLevel
                           "
                         >
                           <stc-apps-puls-card
@@ -271,8 +273,8 @@
 
                     <p class="wrap-text">
                       {{
-                        reportData()?.dataEnablmentStatus
-                          ? reportData()?.dataEnablmentStatus
+                        reportData()?.dataEnablementStatus
+                          ? reportData()?.dataEnablementStatus
                           : '-'
                       }}
                     </p>

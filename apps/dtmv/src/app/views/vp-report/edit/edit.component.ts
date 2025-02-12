@@ -130,8 +130,8 @@ export class EditComponent implements OnInit {
         clarityStrategicProgramReflectionLevel: new FormControl(null),
         erpStatus: new FormControl('', Validators.maxLength(1000)),
         erpStatusReflectionLevel: new FormControl(null),
-        dataEnablmentStatus: new FormControl('', Validators.maxLength(1000)),
-        dataEnablmentStatusReflectionLevel: new FormControl(null),
+        dataEnablementStatus: new FormControl('', Validators.maxLength(1000)),
+        dataEnablementStatusReflectionLevel: new FormControl(null),
       }),
       commentForm: new FormGroup({
         comment: new FormControl(''),
@@ -311,16 +311,16 @@ export class EditComponent implements OnInit {
     this.form.get('dataForm')?.get('erpStatus')?.setValue(formData.erpStatus);
     this.form
       .get('dataForm')
-      ?.get('dataEnablmentStatus')
-      ?.setValue(formData.dataEnablmentStatus);
+      ?.get('dataEnablementStatus')
+      ?.setValue(formData.dataEnablementStatus);
     this.form
       .get('dataForm')
       ?.get('erpStatusReflectionLevel')
       ?.setValue(formData.erpStatusReflectionLevel);
     this.form
       .get('dataForm')
-      ?.get('dataEnablmentStatusReflectionLevel')
-      ?.setValue(formData.dataEnablmentStatusReflectionLevel);
+      ?.get('dataEnablementStatusReflectionLevel')
+      ?.setValue(formData.dataEnablementStatusReflectionLevel);
     this.destroyQuillEditor();
     this.reviewMode.set(true);
     this.buildQuillEditor();
@@ -470,9 +470,9 @@ export class EditComponent implements OnInit {
       status,
       clarityStrategicProgramReflectionLevel,
       erpStatus,
-      dataEnablmentStatus,
+      dataEnablementStatus,
       erpStatusReflectionLevel,
-      dataEnablmentStatusReflectionLevel,
+      dataEnablementStatusReflectionLevel,
     } = this.form.get('dataForm')!.value;
     const editingData: HighlightImpactReport = {
       actual: actual || 0,
@@ -494,10 +494,10 @@ export class EditComponent implements OnInit {
       clarityStrategicProgramReflectionLevel:
         clarityStrategicProgramReflectionLevel || null,
       erpStatus: erpStatus || '',
-      dataEnablmentStatus: dataEnablmentStatus || '',
+      dataEnablementStatus: dataEnablementStatus || '',
       erpStatusReflectionLevel: erpStatusReflectionLevel || null,
-      dataEnablmentStatusReflectionLevel:
-        dataEnablmentStatusReflectionLevel || null,
+      dataEnablementStatusReflectionLevel:
+        dataEnablementStatusReflectionLevel || null,
       team: this.selectedTeam(),
       year: this.selectedYear(),
     };
@@ -534,9 +534,9 @@ export class EditComponent implements OnInit {
       status,
       clarityStrategicProgramReflectionLevel,
       erpStatus,
-      dataEnablmentStatus,
+      dataEnablementStatus,
       erpStatusReflectionLevel,
-      dataEnablmentStatusReflectionLevel,
+      dataEnablementStatusReflectionLevel,
     } = this.form.get('dataForm')!.value;
     const params = [
       {
@@ -617,7 +617,7 @@ export class EditComponent implements OnInit {
       },
       {
         name: 'data_enablment_status',
-        value: dataEnablmentStatus,
+        value: dataEnablementStatus,
       },
       {
         name: 'erp_status_reflection_level',
@@ -627,8 +627,8 @@ export class EditComponent implements OnInit {
       },
       {
         name: 'data_enablment_status_reflection_level',
-        value: dataEnablmentStatusReflectionLevel
-          ? dataEnablmentStatusReflectionLevel?.join(',')
+        value: dataEnablementStatusReflectionLevel
+          ? dataEnablementStatusReflectionLevel?.join(',')
           : null,
       },
     ].filter((param: { name: string; value: string }) => param.value !== null);
