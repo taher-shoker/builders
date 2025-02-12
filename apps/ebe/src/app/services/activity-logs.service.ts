@@ -127,12 +127,28 @@ export class ActivityLogService {
   {
     return this.http.get<Program[]>(`${environment.apiUrl}/business-excellence/${moduleName}/activity-log/programs`);
   }
-  getKeyResultsData():Observable<KeyResult[]>
+  getKeyResultsData(programId?:string):Observable<KeyResult[]>
   {
+    if(programId)
+    {
+      return this.http.get<KeyResult[]>(`${environment.apiUrl}/business-excellence/cad/activity-log/key-results?programId=${programId}`);
+    }
     return this.http.get<KeyResult[]>(`${environment.apiUrl}/business-excellence/cad/activity-log/key-results`);
   }
-  getKeyResultProjectsData(moduleName:string):Observable<KeyResultProject[]>
+  getKeyResultProjectsData(moduleName:string , programId?:string , keyResultNumber?:string):Observable<KeyResultProject[]>
   {
+    if(programId && !keyResultNumber)
+    {
+      return this.http.get<KeyResultProject[]>(`${environment.apiUrl}/business-excellence/${moduleName}/activity-log/projects?programId=${programId}`);
+    }
+    else if(!programId && keyResultNumber)
+    {
+      return this.http.get<KeyResultProject[]>(`${environment.apiUrl}/business-excellence/${moduleName}/activity-log/projects?keyResultNumber=${keyResultNumber}`);
+    }
+    else if(programId && keyResultNumber)
+    {
+      return this.http.get<KeyResultProject[]>(`${environment.apiUrl}/business-excellence/${moduleName}/activity-log/projects?programId=${programId}&keyResultNumber=${keyResultNumber}`);
+    }
     return this.http.get<KeyResultProject[]>(`${environment.apiUrl}/business-excellence/${moduleName}/activity-log/projects`);
   }
 }
