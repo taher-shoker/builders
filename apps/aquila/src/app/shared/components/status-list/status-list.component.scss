@@ -5,8 +5,18 @@
         @include flex-between-center;
         margin-bottom: $gap-medium;
 
+        @media screen and (max-width: $breakpoint-md) {
+            flex-direction: column;
+            gap: $gap-small;
+        }
+
         h5 {
             color: var(--darkPurbleColor);
+            margin: 0;
+
+            @media screen and (max-width: $breakpoint-sm) {
+                font-size: $font-size-medium;
+            }
         }
 
         stc-apps-button {
@@ -24,10 +34,20 @@
         overflow-y: auto;
         padding-right: $gap-medium;
 
+        @media screen and (max-width: $breakpoint-md) {
+            padding-right: $gap-small;
+            height: calc(100vh - 250px);
+        }
+
         .card {
             padding: 0;
             height: auto;
             cursor: pointer;
+            transition: all 0.3s ease;
+
+            @media screen and (max-width: $breakpoint-sm) {
+                font-size: $font-size-small;
+            }
 
             &.dimmed {
                 cursor: not-allowed;
@@ -36,6 +56,8 @@
             &-header {
                 @include flex-between-center;
                 padding: 11px 15px;
+                flex-wrap: wrap;
+                gap: $gap-xxs;
 
                 button {
                     width: auto;
@@ -52,6 +74,10 @@
                             color: #6B7280;
                             font-size: $font-size-medium;
                             padding: 0;
+                        }
+
+                        @media screen and (max-width: $breakpoint-sm) {
+                            padding: 6px;
                         }
                     }
                 }
@@ -107,16 +133,24 @@
             border-radius: 8px;
             transition: border 0.3s ease;
 
-            .text-success {
-                background-color: #d4edda;
+            .text-success,
+            .text-danger {
                 padding: 5px 10px;
                 border-radius: 4px;
+
+                @media screen and (max-width: $breakpoint-sm) {
+                    padding: 3px 6px;
+                    font-size: $font-size-small;
+                }
+            }
+
+            .text-success {
+                background-color: #d4edda;
+
             }
 
             .text-danger {
                 background-color: #f8d7da;
-                padding: 5px 10px;
-                border-radius: 4px;
             }
         }
 
@@ -133,11 +167,20 @@
         gap: $gap-tiny;
         margin: 130px auto;
 
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         p {
             color: var(--grey-color);
 
             @media screen and (max-width: $breakpoint-xl) {
                 font-size: $font-size-small;
+            }
+
+            @media screen and (max-width: $breakpoint-sm) {
+                font-size: $font-size-xs;
             }
         }
     }
