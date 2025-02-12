@@ -47,6 +47,7 @@ export interface KeyResult
 {
     keyResultNumber:number;
     keyResultName:string;
+    programId:number;
 }
 export interface KeyResultProject
 {

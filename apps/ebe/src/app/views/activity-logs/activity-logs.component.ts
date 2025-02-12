@@ -82,7 +82,7 @@ export class ActivityLogsComponent {
   keyResultsData = signal<KeyResult[]>([]);
   keyResultProjectsData = signal<KeyResultProject[]>([]);
   selectedProgram:number | null = null;
-  selectedKeyResult:string | null= null;
+  selectedKeyResult:KeyResult | null= null;
   selectedKeyResultProject:string | null= null;
   constructor(private renderer: Renderer2) {}
   tapIndex = 0;
@@ -194,8 +194,12 @@ export class ActivityLogsComponent {
           sector : 'All'
         }
       ])
-      this.activityLogsServices.getProgramsData(tap).subscribe({
+      this.activityLogsServices.getProgramsData(tap).pipe(takeUntil(this.endSubs$)).subscribe({
         next : (res) => {
+          // const transformedData = res.map(item => ({
+          //   ...item,
+          //   sector: item.sector ?? " "  // Replace null with " "
+          // }));
           this.programsData.update(v => v.concat(res));
         }
       })
@@ -206,10 +210,11 @@ export class ActivityLogsComponent {
     this.keyResultsData.set([
       {
         keyResultNumber : -1000,
-        keyResultName : "All"
+        keyResultName : "All",
+        programId : -1000
       }
     ])
-    this.activityLogsServices.getKeyResultsData().subscribe({
+    this.activityLogsServices.getKeyResultsData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res) => {
         this.keyResultsData.update(v => v.concat(res));
       }
@@ -227,7 +232,7 @@ export class ActivityLogsComponent {
           projectName : 'All'
         }
       ])
-      this.activityLogsServices.getKeyResultProjectsData(tap).subscribe({
+      this.activityLogsServices.getKeyResultProjectsData(tap).pipe(takeUntil(this.endSubs$)).subscribe({
         next : (res) => {
           this.keyResultProjectsData.update(v => v.concat(res));
         }
@@ -362,9 +367,6 @@ export class ActivityLogsComponent {
     if (this.selectedType?.id !== 'All') {
       if(this.currentTap().value === 'PSR')
       {
-        console.log('sdf');
-        console.log(this.selectedKeyResultProject);
-        
         this.getAllActivityLogs(
           this.currentTap().value,
           this.currentPage(),
@@ -386,8 +388,8 @@ export class ActivityLogsComponent {
           this.selectedType?.name,
           this.startDate,
           this.endDate,
-          this.selectedProgram && this.selectedProgram !== id? this.selectedProgram : null,
-          this.selectedKeyResult && +this.selectedKeyResult !== id ? this.selectedKeyResult : null,
+          this.selectedProgram && this.selectedProgram !== id? this.selectedProgram : this.selectedProgramIdFromKeyRes ? this.selectedProgramIdFromKeyRes : null,
+          this.selectedKeyResult && +this.selectedKeyResult.keyResultNumber !== id ? this.selectedKeyResult.keyResultNumber.toString() : null,
           this.selectedKeyResultProject && this.selectedKeyResultProject !== id.toString()? this.selectedKeyResultProject : null
         );
       }
@@ -400,18 +402,20 @@ export class ActivityLogsComponent {
         '',
         this.startDate,
         this.endDate,
-        this.selectedProgram  && this.selectedProgram !== id? this.selectedProgram : null,
-        this.selectedKeyResult && +this.selectedKeyResult !== id? this.selectedKeyResult : null,
+        this.selectedProgram  && this.selectedProgram !== id? this.selectedProgram : this.selectedProgramIdFromKeyRes ? this.selectedProgramIdFromKeyRes : null,
+        this.selectedKeyResult && +this.selectedKeyResult.keyResultNumber !== id? this.selectedKeyResult.keyResultNumber.toString() : null,
         this.selectedKeyResultProject && this.selectedKeyResultProject !== id.toString()? this.selectedKeyResultProject : null
       );
     }
   }
+  selectedProgramIdFromKeyRes = 0;
   selectProgramType()
   {
     this.applyFilters();
   }
-  selectKeyResultType()
+  selectKeyResultType(e:KeyResult)
   {
+    this.selectedProgramIdFromKeyRes = e.programId;
     this.applyFilters();
   }
   selectKeyResultProjectType()

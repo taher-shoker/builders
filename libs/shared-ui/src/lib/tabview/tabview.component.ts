@@ -33,7 +33,7 @@ export class TabviewComponent implements OnChanges{
   responsiveOptions: any[] | undefined;
   data!:TabsDataModel[];
   isActivityLogTable = input<boolean>(false);
-  showArrows = true;
+  showArrows!:boolean;
   ngOnInit()
   {
     this.currentClickedTapIndex = this.currentIndex();

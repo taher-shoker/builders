@@ -30,9 +30,12 @@
   </p-tabPanel>
 </p-tabView> -->
 <div class="tabs-container">
-  <div class="prev-button" (click)="scrollTabs(-1)" *ngIf="showArrows">
-    <i class = "pi pi-angle-left"></i>
-  </div>
+  @if(showArrows)
+  {
+    <div class="prev-button" (click)="scrollTabs(-1)">
+      <i class = "pi pi-angle-left"></i>
+    </div>
+  }
   <div class="tabs-wrapper" #tabsContainer>
     <div class="tabs" #tabs>
       <div *ngFor="let tab of tabsData(); let index = index">
@@ -62,7 +65,10 @@
       </div>
     </div>
   </div>
-  <div class="prev-button" (click)="scrollTabs(1)" *ngIf="showArrows">
-    <i class = "pi pi-angle-right"></i>
-  </div>
+  @if(showArrows)
+  {
+    <div class="prev-button" (click)="scrollTabs(1)">
+      <i class = "pi pi-angle-right"></i>
+    </div>
+  }
 </div>

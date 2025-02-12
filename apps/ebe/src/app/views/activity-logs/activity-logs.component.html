@@ -17,7 +17,7 @@
       </div>
     </div>
     <button class="export-button" (click)="exportActivityLogsData()">
-      <img class="export-img" src="assets/images/export2.svg" alt="" />
+      <img class="export-img" src="assets/images/export3.svg" alt="" />
       <span>export all</span>
     </button>
     <!-- <img class="hands-img" src="assets/images/hands-img.svg" alt="" /> -->
@@ -74,11 +74,11 @@
         </div>
         @if(currentTap().value !== 'PSR') {
         <div class="form-group">
+          <!-- optionValue="keyResultNumber" -->
           <p-dropdown
             [options]="keyResultsData()"
             [(ngModel)]="selectedKeyResult"
             optionLabel="keyResultName"
-            optionValue="keyResultNumber"
             placeholder="Key Result"
             [styleClass]="
               currentTap().value !== 'CAD'
@@ -86,7 +86,7 @@
                 : 'action-types-dropdown2'
             "
             dropdownIcon="pi pi-sort-down-fill"
-            (ngModelChange)="selectKeyResultType()"
+            (ngModelChange)="selectKeyResultType($event)"
           />
         </div>
         }
