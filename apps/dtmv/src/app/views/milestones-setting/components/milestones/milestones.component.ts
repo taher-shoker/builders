@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
-import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
@@ -279,6 +279,27 @@ export class MilestonesComponent
       });
   }
 
+  formatDate(date: Date): string | null {
+    if (date == null) return null;
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  datePickerChanged(
+    event: { start: Date; end: Date },
+    formControlType: string
+  ) {
+    const from = `${formControlType}From`;
+    const to = `${formControlType}To`;
+    this.form.patchValue({
+      [from]: this.formatDate(event.start),
+      [to]: this.formatDate(event.end),
+    });
+
+    console.log(this.form.value);
+  }
   paginate(event: PaginationEvent) {
     this.fetchMilestones({ page: event.currentPage - 1 });
   }
@@ -310,6 +331,7 @@ export class MilestonesComponent
 
   clearFormFilter() {
     this.form.reset();
+    this.resetFormFlag = true;
     this.filterForm = {};
     this.fetchMilestones({ page: 0 });
     this.dialogService.close();
@@ -423,7 +445,10 @@ export class MilestonesComponent
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
+  resetFormFlag = false;
+
   toggleFilter() {
+    this.resetFormFlag = false;
     this.dialogService.open('filter-Modal');
   }
 
@@ -444,7 +469,7 @@ export class MilestonesComponent
       status: [null],
       month: [null],
       year: [null],
-      activityName: [null],
+      workStream: [null],
       validationStatus: [null],
     });
   }

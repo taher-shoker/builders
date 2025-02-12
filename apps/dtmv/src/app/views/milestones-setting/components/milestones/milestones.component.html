@@ -192,7 +192,7 @@
   >
     <div class="inputs">
       <div class="row">
-        <div class="col-md-3">
+        <div class="col-md-4">
           <stc-apps-input
             [className]="'custom-input'"
             [inputId]="'milestoneName'"
@@ -204,6 +204,35 @@
           <stc-apps-select-drop-down [label]="'Team'" [options]="allTeams" formControlName="team"
             [outputValue]="'name'"></stc-apps-select-drop-down>
         </div> -->
+
+        <div class="col-md-4">
+          <label for="" style="margin-bottom: 6px"> Start Date </label>
+
+          <stc-apps-date-picker-range
+            [resetFormFlag]="resetFormFlag"
+            [disableInput]="true"
+            (datePickerChangeEvent)="datePickerChanged($event, 'startDate')"
+          >
+          </stc-apps-date-picker-range>
+        </div>
+
+        <div class="col-md-4">
+          <label for="" style="margin-bottom: 6px"> End Date </label>
+
+          <stc-apps-date-picker-range
+            [resetFormFlag]="resetFormFlag"
+            [disableInput]="true"
+            (datePickerChangeEvent)="datePickerChanged($event, 'endDate')"
+          >
+          </stc-apps-date-picker-range>
+        </div>
+        @if (form.hasError('invalidDateRange')) {
+        <mat-error style="text-align: end">
+          Start date range must be before or equal to the end date range.
+        </mat-error>
+        }
+      </div>
+      <div class="row mt-4">
         <div class="col-md-3">
           <stc-apps-select-drop-down
             [label]="'Status'"
@@ -213,25 +242,6 @@
             [outputValue]="'value'"
           ></stc-apps-select-drop-down>
         </div>
-        <div class="col-md-3">
-          <stc-apps-select-drop-down
-            [label]="'Month'"
-            [options]="monthsArr"
-            formControlName="month"
-            [outputValue]="'id'"
-          ></stc-apps-select-drop-down>
-        </div>
-
-        <div class="col-md-3">
-          <stc-apps-select-drop-down
-            [label]="'Year'"
-            [options]="yearsArr"
-            formControlName="year"
-            [outputValue]="'name'"
-          ></stc-apps-select-drop-down>
-        </div>
-      </div>
-      <div class="row mt-4">
         <div class="col-md-3">
           <stc-apps-select-drop-down
             [label]="'Team'"
@@ -276,7 +286,7 @@
             <stc-apps-button
               [buttonText]="'Apply filter' | translate"
               [buttonType]="'primary'"
-              [buttonDisable]="disabled"
+              [buttonDisable]="disabled || form.invalid"
               (btnClick)="onSubmit()"
               [actionType]="'submit'"
             ></stc-apps-button>
