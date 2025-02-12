@@ -207,11 +207,9 @@ export class ApiTestComponent implements OnInit {
         hasCompleted: false,
       };
 
-      this.queueItems.unshift(newItem);
-
-      const itemsToRun = [
+      this.queueItems = [
         newItem,
-        ...this.queueItems.slice(1).map((item) => ({
+        ...this.queueItems.map((item) => ({
           ...item,
           hasRun: true,
           hasCompleted: false,
@@ -220,13 +218,13 @@ export class ApiTestComponent implements OnInit {
 
       try {
         const response = await firstValueFrom(
-          this.handleRunTestBatch(itemsToRun)
+          this.handleRunTestBatch(this.queueItems)
         );
         if (response) {
-          this.handleTestCompletion(response, itemsToRun);
+          this.handleTestCompletion(response, this.queueItems);
         }
       } catch (error) {
-        this.handleTestError(error, itemsToRun);
+        this.handleTestError(error, this.queueItems);
       }
 
       this.resetForm();
@@ -257,7 +255,10 @@ export class ApiTestComponent implements OnInit {
     }));
 
     if (itemsToRun.length > 0) {
-      // this.queueItems = itemsToRun;
+      this.queueItems = this.queueItems.map((queueItem) => {
+        const updatedItem = itemsToRun.find((item) => item.id === queueItem.id);
+        return updatedItem || queueItem;
+      });
 
       try {
         const response = await firstValueFrom(
