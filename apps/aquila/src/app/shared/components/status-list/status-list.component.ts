@@ -47,7 +47,6 @@ export class StatusListComponent {
     const updatedItem = {
       ...item,
       hasRun: true,
-      hasCompleted: false,
       date: new Date(),
       result: 'pass',
     };

@@ -72,8 +72,9 @@
               item.standardId?.version
           }}
         </p>
+        @if (item.hasCompleted) {
         <span>{{ item.date | date : 'd MMM yyyy, h:mm:ss a' }}</span>
-        } @else {
+        } } @else {
         <!-- API Link  -->
         <div class="filter-field">
           <stc-apps-input-group
