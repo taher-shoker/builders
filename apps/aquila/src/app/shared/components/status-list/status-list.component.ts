@@ -31,7 +31,7 @@ export class StatusListComponent {
   @Output() itemsChange = new EventEmitter<QueueItem[]>();
   @Output() removedItems = new EventEmitter<QueueItem[]>();
   @Output() addAndRunItem = new EventEmitter<QueueItem>();
-  @Output() itemSelected = new EventEmitter<QueueItem>();
+  @Output() itemSelected = new EventEmitter<QueueItem | null>();
   @Output() standardChanged = new EventEmitter<{ value: any; index: number }>();
 
   completedItems: QueueItem[] = [];
@@ -43,10 +43,22 @@ export class StatusListComponent {
     this.removedItems.emit(updatedItems);
   }
 
+  runItem(item: QueueItem): void {
+    const updatedItem = {
+      ...item,
+      hasRun: true,
+      date: new Date(),
+      result: 'pass',
+    };
+    this.itemsChange.emit([updatedItem]);
+    this.moveToCompleted([updatedItem]);
+  }
+
   runAll(): void {
     const updatedItems = this.items().map((item) => ({
       ...item,
       hasRun: true,
+      hasCompleted: false,
       date: new Date(),
       result: 'pass',
     }));
@@ -67,8 +79,8 @@ export class StatusListComponent {
 
   onItemClick(item: QueueItem): void {
     if (this.title() === 'Completed Tests') {
-      this.selectedItem = item;
-      this.itemSelected.emit(item);
+      this.selectedItem = this.selectedItem === item ? null : item;
+      this.itemSelected.emit(this.selectedItem);
     }
   }
 
