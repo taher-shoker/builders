@@ -6,8 +6,8 @@ pipeline {
         WAR_FILE = "/var/lib/jenkins/workspace/chatBI_frontend/dist/apps/chatBI/"
         SERVER_1 = "10.21.196.243"
         SERVER_2 = "10.21.196.244"
-        REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps"
-        BACKUP_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/backup"
+        REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/cem#reporting#chat_bi"
+        BACKUP_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/backup/cem#reporting#chat_bi"
         SSH_USER = "osadmin"
         SSH_PASSWORD = "CEM435@#qeema"
     }
@@ -36,8 +36,8 @@ pipeline {
                                 script {
                                     sh """
                                         sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "
-                                            if [ -f ${REMOTE_DEPLOY_DIR}/${APP_NAME} ]; then 
-                                                mv ${REMOTE_DEPLOY_DIR}/${APP_NAME} ${BACKUP_DIR}/${APP_NAME}-\$(date +'%Y-%m-%d-%H');
+                                            if [ -f ${REMOTE_DEPLOY_DIR} ]; then 
+                                                mv ${REMOTE_DEPLOY_DIR} ${BACKUP_DIR}-\$(date +'%Y-%m-%d-%H');
                                             fi
                                         "
                                     """
@@ -48,7 +48,7 @@ pipeline {
                             steps {
                                 script {
                                     sh """
-                                        sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/${APP_NAME}
+                                        sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}
                                     """
                                 }
                             }
@@ -62,8 +62,8 @@ pipeline {
                                 script {
                                     sh """
                                         sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "
-                                            if [ -f ${REMOTE_DEPLOY_DIR}/${APP_NAME} ]; then 
-                                                mv ${REMOTE_DEPLOY_DIR}/${APP_NAME} ${BACKUP_DIR}/${APP_NAME}-\$(date +'%Y-%m-%d-%H');
+                                            if [ -f ${REMOTE_DEPLOY_DIR} ]; then 
+                                                mv ${REMOTE_DEPLOY_DIR} ${BACKUP_DIR}-\$(date +'%Y-%m-%d-%H');
                                             fi
                                         "
                                     """
@@ -74,7 +74,7 @@ pipeline {
                             steps {
                                 script {
                                     sh """
-                                        sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/${APP_NAME}
+                                        sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}
                                     """
                                 }
                             }
