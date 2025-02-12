@@ -47,7 +47,7 @@ pipeline {
                             steps {
                                 script {
                                     sh """
-                                        sshpass -p "${SSH_PASSWORD}" scp -r "${WAR_FILE}" ${SSH_USER}@${SERVER_1}:"${REMOTE_DEPLOY_DIR}"
+                                        sshpass -p "${SSH_PASSWORD}" scp -r "${WAR_FILE}" ${SSH_USER}@${SERVER_1}:"${REMOTE_DEPLOY_DIR}/"
                                     """
                                 }
                             }
@@ -73,7 +73,7 @@ pipeline {
                             steps {
                                 script {
                                     sh """
-                                        sshpass -p "${SSH_PASSWORD}" scp -r "${WAR_FILE}" ${SSH_USER}@${SERVER_2}:"${REMOTE_DEPLOY_DIR}"
+                                        sshpass -p "${SSH_PASSWORD}" scp -r "${WAR_FILE}" ${SSH_USER}@${SERVER_2}:"${REMOTE_DEPLOY_DIR}/"
                                     """
                                 }
                             }
