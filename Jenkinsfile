@@ -38,7 +38,7 @@ pipeline {
                                         mv ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H');
                                     fi
                                 "
-                                sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
+                                sshpass -p ${SSH_PASSWORD} scp -r ${env.WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
                             """
                         }
                     }
@@ -53,7 +53,7 @@ pipeline {
                                         mv ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H'); 
                                     fi
                                 "
-                                sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
+                                sshpass -p ${SSH_PASSWORD} scp -r ${env.WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
                             """
                         }
                     }
