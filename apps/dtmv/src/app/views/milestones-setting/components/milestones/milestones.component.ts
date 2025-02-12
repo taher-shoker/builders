@@ -6,7 +6,6 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -264,6 +263,12 @@ export class MilestonesComponent
 
     // Store the latest clean params
     this.previousParams = { ...cleanParams };
+    // Convert the value inside activity name to lowercase
+    this.previousParams['activityName']
+      ? (cleanParams['activityName'] =
+          this.previousParams['activityName'].toLowerCase())
+      : '';
+
     // Make the API call with the clean parameters
     this.milestonesService
       .getMilestones(cleanParams)
@@ -291,8 +296,6 @@ export class MilestonesComponent
       [from]: this.formatDate(event.start),
       [to]: this.formatDate(event.end),
     });
-
-    console.log(this.form.value);
   }
   paginate(event: PaginationEvent) {
     this.fetchMilestones({ page: event.currentPage - 1 });
@@ -454,7 +457,6 @@ export class MilestonesComponent
         saveAs(data, 'milestones.csv');
       });
   }
-
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
     this.form = this.formBuilder.group(
@@ -467,7 +469,7 @@ export class MilestonesComponent
         startDateTo: [null],
         endDateFrom: [null],
         endDateTo: [null],
-        workStream: [null],
+        activityName: [null],
         validationStatus: [null],
       },
       { validators: this.dateRangeValidator }
