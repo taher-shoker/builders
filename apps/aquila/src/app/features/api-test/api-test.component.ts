@@ -301,7 +301,7 @@ export class ApiTestComponent implements OnInit {
     this.completedItems = [...this.completedItems, ...completedItems];
   }
 
-  onCompletedItemClick(item: QueueItem): void {
+  onCompletedItemClick(item: QueueItem | null): void {
     this.selectedItem = item;
     if (item) {
       this.tableData = [
