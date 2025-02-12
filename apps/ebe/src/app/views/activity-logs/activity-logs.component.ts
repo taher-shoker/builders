@@ -12,6 +12,7 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { TapModel } from '../../models/scorecard.model';
+import { KeyResult, KeyResultProject, Program } from '../../models/activity-logs';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
@@ -20,7 +21,7 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { ActivityLog, ActivityLogRes } from '../../models/activity-logs';
 import { ActivityLogService } from '../../services/activity-logs.service';
 import { PaginatorModule } from 'primeng/paginator';
-import { Subject, takeUntil } from 'rxjs';
+import { concat, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 interface ActionType {
   id: string;
@@ -77,6 +78,12 @@ export class ActivityLogsComponent {
       id: 'Export',
     }
   ];
+  programsData = signal<Program[]>([]);
+  keyResultsData = signal<KeyResult[]>([]);
+  keyResultProjectsData = signal<KeyResultProject[]>([]);
+  selectedProgram:number | null = null;
+  selectedKeyResult:KeyResult | null= null;
+  selectedKeyResultProject:string | null= null;
   constructor(private renderer: Renderer2) {}
   tapIndex = 0;
   ngOnInit() {
@@ -116,11 +123,11 @@ export class ActivityLogsComponent {
           this.tapIndex = 0;
         } else if (title === 'cad') {
           this.currentTap.set(this.scorecardsTaps()[1]);
-          this.activityLogsHeader = ['user name','activity type','activity details','time stamp','old value','new value'];
+          this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity key result' , 'activity project' , 'activity details','time stamp','old value','new value'];
           this.tapIndex = 1;
         } else if (title === 'psr') {
           this.currentTap.set(this.scorecardsTaps()[2]);
-          this.activityLogsHeader = ['user name','activity type','activity details','time stamp','old value','new value'];
+          this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity project' , 'activity details','time stamp','old value','new value'];
           this.tapIndex = 2;
         } else if(title === 'financial') {
           this.tapIndex = 3;
@@ -143,7 +150,10 @@ export class ActivityLogsComponent {
     username?: string,
     activityType?: string,
     startDate?: string,
-    endDate?: string
+    endDate?: string,
+    programName?:number | null,
+    keyResult?:string | null,
+    projectName?:string | null
   ) {
     this.activityLogsResponse().data = [];
     this.activityLogsServices
@@ -154,7 +164,10 @@ export class ActivityLogsComponent {
         username,
         activityType,
         startDate,
-        endDate
+        endDate,
+        programName,
+        keyResult,
+        projectName
       )
       .pipe(takeUntil(this.endSubs$))
       .subscribe({
@@ -169,11 +182,71 @@ export class ActivityLogsComponent {
         },
       });
   }
+  getProjectFilterData()
+  {
+    let tap = this.currentTap().value.toLowerCase();
+    if(tap === 'psr' || tap === 'cad')
+    {
+      this.programsData.set([
+        {
+          id : -1000,
+          strategyProjectName : "All",
+          sector : 'All'
+        }
+      ])
+      this.activityLogsServices.getProgramsData(tap).pipe(takeUntil(this.endSubs$)).subscribe({
+        next : (res) => {
+          // const transformedData = res.map(item => ({
+          //   ...item,
+          //   sector: item.sector ?? " "  // Replace null with " "
+          // }));
+          this.programsData.update(v => v.concat(res));
+        }
+      })
+    }
+  }
+  getKeyResultFilterData()
+  {
+    this.keyResultsData.set([
+      {
+        keyResultNumber : -1000,
+        keyResultName : "All",
+        programId : -1000
+      }
+    ])
+    this.activityLogsServices.getKeyResultsData().pipe(takeUntil(this.endSubs$)).subscribe({
+      next : (res) => {
+        this.keyResultsData.update(v => v.concat(res));
+      }
+    })
+  }
+  getKeyResultprojectsFilterData()
+  {
+    let tap = this.currentTap().value.toLowerCase();
+    if(tap === 'psr' || tap === 'cad')
+    {
+      this.keyResultProjectsData.set([
+        {
+          id : -1000,
+          name : "All",
+          projectName : 'All'
+        }
+      ])
+      this.activityLogsServices.getKeyResultProjectsData(tap).pipe(takeUntil(this.endSubs$)).subscribe({
+        next : (res) => {
+          this.keyResultProjectsData.update(v => v.concat(res));
+        }
+      })
+    }
+  }
   ngOnDestroy() {
     this.endSubs$.complete();
   }
   getCurrentTap(clickedTap: TapModel) {
     this.currentTap.set(clickedTap);
+    this.getProjectFilterData();
+    this.getKeyResultFilterData();
+    this.getKeyResultprojectsFilterData();
     if(clickedTap.value === 'CAD' || clickedTap.value === 'PSR')
     {
       this.actionTypes = [
@@ -224,10 +297,18 @@ export class ActivityLogsComponent {
     this.endDate = "";
     this.searchKeyword = "";
     this.activityLogDate = null;
+    this.selectedProgram = null;
+    this.selectedKeyResult = null;
+    this.selectedKeyResultProject = null;
     if (clickedTap.value === 'Scorecard' || clickedTap.value === 'Financial') {
       this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
     } else {
-      this.activityLogsHeader = ['user name','activity type','activity details','time stamp','old value','new value'];
+      if(clickedTap.value === 'CAD')
+      {
+        this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity key result' , 'activity project' , 'activity details','time stamp','old value','new value'];
+      } else {
+        this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity project' ,'activity details','time stamp','old value','new value'];
+      }
     }
     this.first.set(0);
     // this.getAllActivityLogs(clickedTap.value , 0 , 10);
@@ -241,8 +322,8 @@ export class ActivityLogsComponent {
       this.endDate
     );
   }
-  transformDate(date: string) {
-    return this.datePipe.transform(date, "dd MMM yyyy 'at' hh:mm a");
+  transformDate(date: string):string {
+    return this.datePipe.transform(date, "dd MMM yyyy 'at' hh:mm a")!;
   }
   startDate = '';
   endDate = '';
@@ -279,17 +360,39 @@ export class ActivityLogsComponent {
         this.endDate = this.formatDate(this.activityLogDate[1]);
       }
     }
-    console.log(this.selectedType);
+    // console.log(this.selectedProgram);
+    // console.log(this.selectedKeyResult);
+    // console.log(this.selectedKeyResultProject);
+    let id = -1000;
     if (this.selectedType?.id !== 'All') {
-      this.getAllActivityLogs(
-        this.currentTap().value,
-        this.currentPage(),
-        10,
-        this.searchKeyword,
-        this.selectedType?.name,
-        this.startDate,
-        this.endDate
-      );
+      if(this.currentTap().value === 'PSR')
+      {
+        this.getAllActivityLogs(
+          this.currentTap().value,
+          this.currentPage(),
+          10,
+          this.searchKeyword,
+          this.selectedType?.name,
+          this.startDate,
+          this.endDate,
+          this.selectedProgram && this.selectedProgram !== id ? this.selectedProgram : null,
+          this.selectedKeyResultProject && this.selectedKeyResultProject.toString() !== id.toString() ? this.selectedKeyResultProject : null,
+          null
+        );
+      } else {
+        this.getAllActivityLogs(
+          this.currentTap().value,
+          this.currentPage(),
+          10,
+          this.searchKeyword,
+          this.selectedType?.name,
+          this.startDate,
+          this.endDate,
+          this.selectedProgram && this.selectedProgram !== id? this.selectedProgram : this.selectedProgramIdFromKeyRes ? this.selectedProgramIdFromKeyRes : null,
+          this.selectedKeyResult && +this.selectedKeyResult.keyResultNumber !== id ? this.selectedKeyResult.keyResultNumber.toString() : null,
+          this.selectedKeyResultProject && this.selectedKeyResultProject !== id.toString()? this.selectedKeyResultProject : null
+        );
+      }
     } else {
       this.getAllActivityLogs(
         this.currentTap().value,
@@ -298,9 +401,26 @@ export class ActivityLogsComponent {
         this.searchKeyword,
         '',
         this.startDate,
-        this.endDate
+        this.endDate,
+        this.selectedProgram  && this.selectedProgram !== id? this.selectedProgram : this.selectedProgramIdFromKeyRes ? this.selectedProgramIdFromKeyRes : null,
+        this.selectedKeyResult && +this.selectedKeyResult.keyResultNumber !== id? this.selectedKeyResult.keyResultNumber.toString() : null,
+        this.selectedKeyResultProject && this.selectedKeyResultProject !== id.toString()? this.selectedKeyResultProject : null
       );
     }
+  }
+  selectedProgramIdFromKeyRes = 0;
+  selectProgramType()
+  {
+    this.applyFilters();
+  }
+  selectKeyResultType(e:KeyResult)
+  {
+    this.selectedProgramIdFromKeyRes = e.programId;
+    this.applyFilters();
+  }
+  selectKeyResultProjectType()
+  {
+    this.applyFilters();
   }
   selectDate() {
     if (this.previousDate !== this.activityLogDate) {

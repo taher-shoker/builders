@@ -16,6 +16,9 @@ export interface ActivityLogData
     timestamp:string;
     oldValue?:string;
     newValue?:string;
+    attribute?:string;
+    entity?:string;
+    subModule?:string;
 }
 export interface ActivityLog
 {
@@ -34,3 +37,21 @@ export interface ColumnsSchema {
     actions?: ('edit' | 'delete' | 'details' | 'updateProgress')[];
     complexViewTemp?: any;
   }
+export interface Program
+{
+    id:number;
+    strategyProjectName:string;
+    sector:string;
+}
+export interface KeyResult
+{
+    keyResultNumber:number;
+    keyResultName:string;
+    programId:number;
+}
+export interface KeyResultProject
+{
+    id:number;
+    name:string;
+    projectName:string;
+}

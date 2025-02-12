@@ -16,8 +16,8 @@
         />
       </div>
     </div>
-    <button class = "export-button" (click)="exportActivityLogsData()">
-      <img class="export-img" src="assets/images/export2.svg" alt="" />
+    <button class="export-button" (click)="exportActivityLogsData()">
+      <img class="export-img" src="assets/images/export3.svg" alt="" />
       <span>export all</span>
     </button>
     <!-- <img class="hands-img" src="assets/images/hands-img.svg" alt="" /> -->
@@ -33,7 +33,7 @@
               [(ngModel)]="searchKeyword"
             />
             <div class="remove-text" (click)="searchKeyword = ''">
-              <i class = "pi pi-times"></i>
+              <i class="pi pi-times"></i>
             </div>
             <div class="search-icon" (click)="filterByName()">
               <i class="pi pi-search"></i>
@@ -46,60 +46,84 @@
             [(ngModel)]="selectedType"
             optionLabel="name"
             placeholder="Activity Type"
-            [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
+            [styleClass]="
+              currentTap().value !== 'CAD'
+                ? 'action-types-dropdown'
+                : 'action-types-dropdown2'
+            "
             dropdownIcon="pi pi-sort-down-fill"
             (ngModelChange)="selectActionType()"
           />
         </div>
-        <!-- @if(currentTap().value === 'CAD' || currentTap().value === 'PSR')
-        {
-          <div class="form-group">
-            <p-dropdown
-              [options]="actionTypes"
-              [(ngModel)]="selectedType"
-              optionLabel="name"
-              placeholder="Program"
-              [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
-              dropdownIcon="pi pi-sort-down-fill"
-              (ngModelChange)="selectActionType()"
-            />
-          </div>
-          <div class="form-group">
-            <p-dropdown
-              [options]="actionTypes"
-              [(ngModel)]="selectedType"
-              optionLabel="name"
-              placeholder="Key Result"
-              [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
-              dropdownIcon="pi pi-sort-down-fill"
-              (ngModelChange)="selectActionType()"
-            />
-          </div>
-          <div class="form-group">
-            <p-dropdown
-              [options]="actionTypes"
-              [(ngModel)]="selectedType"
-              optionLabel="name"
-              placeholder="Project"
-              [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'action-types-dropdown' : 'action-types-dropdown2'"
-              dropdownIcon="pi pi-sort-down-fill"
-              (ngModelChange)="selectActionType()"
-            />
-          </div>
-        } -->
+        @if(currentTap().value === 'CAD' || currentTap().value === 'PSR') {
+        <div class="form-group">
+          <p-dropdown
+            [options]="programsData()"
+            [(ngModel)]="selectedProgram"
+            [optionLabel]=" currentTap().value === 'PSR' ? 'sector' : 'strategyProjectName'"
+            optionValue="id"
+            placeholder="Program"
+            [styleClass]="
+              currentTap().value !== 'CAD' && currentTap().value !== 'PSR'
+                ? 'action-types-dropdown'
+                : 'action-types-dropdown2'
+            "
+            dropdownIcon="pi pi-sort-down-fill"
+            (ngModelChange)="selectProgramType()"
+          />
+        </div>
+        @if(currentTap().value !== 'PSR') {
+        <div class="form-group">
+          <!-- optionValue="keyResultNumber" -->
+          <p-dropdown
+            [options]="keyResultsData()"
+            [(ngModel)]="selectedKeyResult"
+            optionLabel="keyResultName"
+            placeholder="Key Result"
+            [styleClass]="
+              currentTap().value !== 'CAD'
+                ? 'action-types-dropdown'
+                : 'action-types-dropdown2'
+            "
+            dropdownIcon="pi pi-sort-down-fill"
+            (ngModelChange)="selectKeyResultType($event)"
+          />
+        </div>
+        }
+        <div class="form-group">
+          <p-dropdown
+            [options]="keyResultProjectsData()"
+            [(ngModel)]="selectedKeyResultProject"
+            [optionLabel]=" currentTap().value === 'CAD' ? 'name' : 'projectName'"
+            optionValue="id"
+            placeholder="Project"
+            [styleClass]="
+              currentTap().value !== 'CAD' && currentTap().value !== 'PSR'
+                ? 'action-types-dropdown'
+                : 'action-types-dropdown2'
+            "
+            dropdownIcon="pi pi-sort-down-fill"
+            (ngModelChange)="selectKeyResultProjectType()"
+          />
+        </div>
+        }
         <div class="form-group">
           <p-calendar
             [(ngModel)]="activityLogDate"
             [iconDisplay]="'input'"
             [showIcon]="true"
             inputId="icondisplay"
-            [styleClass]="(currentTap().value !== 'CAD' && currentTap().value !== 'PSR') ? 'activity-log-date' : 'activity-log-date2'"
+            [styleClass]="
+              currentTap().value !== 'CAD'
+                ? 'activity-log-date'
+                : 'activity-log-date2'
+            "
             selectionMode="range"
             placeholder="Date"
             (onClose)="selectDate()"
             (ngModelChange)="onDateChange($event)"
             [showButtonBar]="true"
-            />
+          />
         </div>
         <!-- <div class="form-group">
           <button (click)="applyFilters()" class="apply-filter-btn">
@@ -170,15 +194,115 @@
                 </p-overlayPanel>
                 }
               </td>
-              @if(activityLogsHeader.includes("activity details"))
-              {
-                <td>
-                  {{
-                    log.activityDetails
-                      ? (log.activityDetails | truncateWord : 2)
-                      : '-'
-                  }}
-                  @if(log.activityDetails.split(" ").length > 2){
+              @if(activityLogsHeader.includes("activity program")) {
+              <td>
+                {{ log.subModule ? (log.subModule | truncateWord : 2) : '-' }}
+                @if(log.subModule && log.subModule.split(" ").length > 2){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.subModule }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              } @if(activityLogsHeader.includes("activity key result")) {
+              <td>
+                {{ log.attribute ? (log.attribute | truncateWord:2) : '-' }}
+                @if(log.attribute && log.attribute.split(" ").length >= 2){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.attribute }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              } @if(activityLogsHeader.includes("activity project")) {
+              @if(currentTap().value === 'PSR') {
+              <td>
+                {{ log.attribute ? (log.attribute | truncateWord:2) : '-' }}
+                @if(log.attribute && log.attribute.split(" ").length >= 2){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.attribute }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              } @else {
+              <td>
+                {{ log.entity ? (log.entity | truncateWord : 2) : '-' }}
+                @if(log.entity && log.entity.split(" ").length > 2){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.entity }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              } } @if(activityLogsHeader.includes("activity details")) {
+              <td>
+                {{
+                  log.activityDetails
+                    ? (log.activityDetails | truncateWord : 2)
+                    : '-'
+                }}
+                @if(log.activityDetails.split(" ").length > 2){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ log.activityDetails }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              }
+              <td>
+                {{ log.timestamp ? currentTap().value === 'Scorecard' || currentTap().value === 'Financial' ? (transformDate(log.timestamp)) : (transformDate(log.timestamp) | truncateWord:3) : '-' }}
+                @if((currentTap().value !== 'Scorecard' && currentTap().value !== 'Financial') && transformDate(log.timestamp).split(" ").length >= 3){
                   <span
                     class="read-more-btn"
                     (click)="longTitlePanel.toggle($event)"
@@ -190,13 +314,11 @@
                     dismissable="true"
                   >
                     <section class="long-title-popover-section">
-                      {{ log.activityDetails }}
+                      {{ transformDate(log.timestamp) }}
                     </section>
                   </p-overlayPanel>
                   }
-                </td>
-              }
-              <td>{{ log.timestamp ? transformDate(log.timestamp) : '-' }}</td>
+              </td>
               @if(activityLogsHeader.includes("new value")) {
               <td>
                 {{ log.oldValue ? (log.oldValue | truncateWord : 1) : '-' }}
@@ -243,7 +365,7 @@
 
           <ng-template pTemplate="emptymessage">
             <tr>
-              <td colspan="6" class="empty-data">there are no data</td>
+              <td colspan="10" class="empty-data">there are no data</td>
             </tr>
           </ng-template>
         </p-table>

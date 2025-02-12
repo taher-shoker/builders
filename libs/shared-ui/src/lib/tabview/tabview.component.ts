@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, input , InputSignal, OnChanges , Output, ViewChild, ViewEncapsulation } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostListener, input , InputSignal, OnChanges , Output, ViewChild } from '@angular/core';
 import { TabsDataModel } from './tabsData.model';
 @Component({
   selector: 'stc-apps-tabview',
@@ -10,7 +10,7 @@ export class TabviewComponent implements OnChanges{
   // @Input({required : true}) tabsData!:TabsDataModel[];
   tabsData:InputSignal<TabsDataModel[]> = input.required<TabsDataModel[]>()
   @ViewChild('tabsView') tabsView!: ElementRef;
-  tabs = [
+  tabs2 = [
     'Strategic', 'Operational', 'Test07', 'Test', 'Relational', 
     'Financial', 'Test5', 'Tab6', 'Tab5', 'Tab9', 'Test2', 
     'Txt212', 'Tab7', 'Tab8', 'Corporate', 'Tap2', 'Tap3', 
@@ -20,6 +20,8 @@ export class TabviewComponent implements OnChanges{
   tabColor:InputSignal<string> = input<string>('')
   fontFamily:InputSignal<string> = input<string>('')
   isMobile:InputSignal<boolean> = input<boolean>(false)
+  @ViewChild('tabsContainer', { static: false }) tabsContainer!: ElementRef;
+  @ViewChild('tabs', { static: false }) tabs!: ElementRef;
   onHover = false;
   hoveredTap = 0;
   clickedtabColor:InputSignal<string> = input<string>('')
@@ -29,11 +31,14 @@ export class TabviewComponent implements OnChanges{
   currentIndex = input<number>(0);
   currentClickedTapIndex!:number;
   maxTabs = 0;
+  responsiveOptions: any[] | undefined;
   data!:TabsDataModel[];
   isActivityLogTable = input<boolean>(false);
+  showArrows!:boolean;
   ngOnInit()
   {
     this.currentClickedTapIndex = this.currentIndex();
+    
   }
   ngOnChanges(): void {
     if(this.tabsData())
@@ -50,6 +55,23 @@ export class TabviewComponent implements OnChanges{
     }
     this.currentClickedTapIndex = index;
     this.clickedTap.emit(tab)
+  }
+  scrollTabs(direction: number) {
+    const container = this.tabsContainer.nativeElement;
+    const scrollAmount = 150 * direction; // Adjust scroll step
+    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+  @HostListener('window:resize')
+  checkScreenSize() {
+    const container = this.tabsContainer?.nativeElement;
+    const tabs = this.tabs?.nativeElement;
+
+    if (container && tabs) {
+      this.showArrows = tabs.scrollWidth > container.clientWidth;
+    }
+  }
+  ngAfterViewInit() {
+    this.checkScreenSize();
   }
   showMore()
   {

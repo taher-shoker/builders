@@ -4,9 +4,13 @@
   padding:20px 30px;
   &-header
   {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: grid;
+        grid-template-columns: 80% calc(20% - 30px);
+        gap: 30px;
+        align-items: center;
+    // display: flex;
+    // align-items: center;
+    // justify-content: space-between;
   }
   .hands-img
   {
@@ -297,10 +301,11 @@
   font-size: 1rem;
   display: flex;
   align-items: center;
+  width:155px;
   gap: 10px;
   cursor: pointer;
-  span
-  {
-    height: 21px;
-  }
+  // span
+  // {
+  //   height: 21px;
+  // }
 }
