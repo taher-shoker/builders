@@ -133,6 +133,7 @@ export class ApiTestComponent implements OnInit {
           ? `${environment.apiUrl}${responseItem.summaryFileHtml}`
           : '',
         standardId: item?.standardId,
+        testStatus: responseItem?.testStatus,
       };
     });
 
@@ -143,16 +144,17 @@ export class ApiTestComponent implements OnInit {
       detail: 'Tests completed successfully',
     });
 
-    this.queueItems = [];
+    this.queueItems = this.queueItems.filter(
+      (queueItem) => !items.some((item) => item.id === queueItem.id)
+    );
     this.resetForm();
     this.selectedStandard = null;
   }
-
-  private handleTestError(error: any): void {
+  private handleTestError(error: any, failedItems: QueueItem[]): void {
     console.error('API failed:', error.message);
     let errorMessage = 'Failed to run tests';
 
-    if (error.error && error.error.errorMessage) {
+    if (error.error.errorMessage) {
       errorMessage = error.error.errorMessage;
     }
     this.messageService.add({
@@ -161,11 +163,17 @@ export class ApiTestComponent implements OnInit {
       detail: errorMessage,
     });
 
-    this.queueItems = this.queueItems.map((item) => ({
-      ...item,
-      hasRun: false,
-      hasCompleted: false,
-    }));
+    this.queueItems = this.queueItems.map((queueItem) => {
+      const isFailedItem = failedItems.some((item) => item.id === queueItem.id);
+      return isFailedItem
+        ? {
+            ...queueItem,
+            hasRun: false,
+            hasCompleted: false,
+            hasReload: true,
+          }
+        : queueItem;
+    });
   }
 
   sendToQueue(): void {
@@ -218,7 +226,7 @@ export class ApiTestComponent implements OnInit {
           this.handleTestCompletion(response, itemsToRun);
         }
       } catch (error) {
-        this.handleTestError(error);
+        this.handleTestError(error, itemsToRun);
       }
 
       this.resetForm();
@@ -249,7 +257,7 @@ export class ApiTestComponent implements OnInit {
     }));
 
     if (itemsToRun.length > 0) {
-      this.queueItems = itemsToRun;
+      // this.queueItems = itemsToRun;
 
       try {
         const response = await firstValueFrom(
@@ -259,7 +267,7 @@ export class ApiTestComponent implements OnInit {
           this.handleTestCompletion(response, itemsToRun);
         }
       } catch (error) {
-        this.handleTestError(error);
+        this.handleTestError(error, itemsToRun);
       }
     }
   }
