@@ -16,8 +16,7 @@ pipeline {
         stage('Build') {
             steps {
                 script {
-                    sh "nvm use 18"
-                    sh "npm install"
+                    sh "/home/osadmin/.nvm/versions/node/v18.13.0/bin/npm install"
 					//sh "npx nx run chatBI:build --configuration=production"
                 }
             }
