@@ -48,3 +48,21 @@
         text-transform: capitalize;
     }
 }
+::ng-deep .deliverables-table-modal
+{
+    width:100%;
+    margin: 0;
+    outline: 0;
+    box-shadow: none;
+    height:400px;
+    .p-dialog-header
+    {
+        border-top-left-radius:20px;
+        border-top-right-radius:20px;
+    }
+    .p-dialog-content
+    {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}

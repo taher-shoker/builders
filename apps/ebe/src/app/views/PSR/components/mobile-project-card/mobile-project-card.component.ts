@@ -2,17 +2,29 @@ import { Component, input, InputSignal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProgressInfo, PSRProjectDetailsModel } from '../../../../models/psr.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-
+import { DialogModule } from 'primeng/dialog';
+type Position =
+  | 'center'
+  | 'top'
+  | 'bottom'
+  | 'left'
+  | 'right'
+  | 'topleft'
+  | 'topright'
+  | 'bottomleft'
+  | 'bottomright';
 @Component({
   selector: 'stc-apps-mobile-project-card',
   standalone: true,
-  imports: [CommonModule , SharedUiModule],
+  imports: [CommonModule , SharedUiModule , DialogModule],
   templateUrl: './mobile-project-card.component.html',
   styleUrl: './mobile-project-card.component.scss',
 })
 export class MobileProjectCardComponent {
   project:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
   data!: ProgressInfo;
+  visible = false;
+  position!:Position;
   ngOnInit()
   {
     const vactual = this.project().vactual;
@@ -57,8 +69,13 @@ export class MobileProjectCardComponent {
       ],
     };
   }
-  showDeliverablesTable()
+  showDeliverablesTable(position: Position)
   {
-    
+    this.position = position;
+    this.visible = true;
+  }
+  hideModal()
+  {
+
   }
 }

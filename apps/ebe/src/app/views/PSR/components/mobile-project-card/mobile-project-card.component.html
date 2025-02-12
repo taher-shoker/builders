@@ -54,6 +54,23 @@
     }
   </div>
   @if((project().vactual || project().vactual === 0) && (project().vplanned || project().vplanned === 0)){
-    <button class = "project-view-details-btn" (click)="showDeliverablesTable()">view more details</button>
+    <button class = "project-view-details-btn" (click)="showDeliverablesTable('bottom')">view more details</button>
   }
 </section>
+<p-dialog 
+  header="Edit Profile"
+  [modal]="true"
+  [(visible)]="visible"
+  [position]="position"
+  styleClass = "deliverables-table-modal"
+  dismissableMask="true"
+  transitionOptions = "300ms cubic-bezier(0, 0, 0.2, 1)"
+  resizable = 'false'
+  (onHide)="hideModal()"
+  #dateModal
+>
+  <ng-template pTemplate="header"></ng-template>
+  <ng-template pTemplate="content">
+    dfgdfgdfg
+  </ng-template>
+</p-dialog>
