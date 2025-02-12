@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "install": "NODE_OPTIONS='--max-old-space-size=16384' npm i --legacy-peer-deps --force --loglevel silly --no-audit --no-fund",
+    "install": "npm i --legacy-peer-deps --force --loglevel silly --no-audit --no-fund",
     "build:chat:prod": "sudo npx nx run chatBI:build --configuration=production --base-href=/cem/reporting/chat_bi/"
   },
   "private": true,
