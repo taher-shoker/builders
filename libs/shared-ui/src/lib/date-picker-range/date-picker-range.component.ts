@@ -79,8 +79,6 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
     // this.disableInput=false;
 
     this.dateFormGroup.valueChanges.subscribe((value) => {
-      console.log(value);
-
       this.datePickerChangeEvent.emit(value);
     });
   }

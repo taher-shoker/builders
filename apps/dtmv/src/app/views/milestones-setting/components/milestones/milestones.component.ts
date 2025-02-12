@@ -6,13 +6,12 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
@@ -297,8 +296,6 @@ export class MilestonesComponent
       [from]: this.formatDate(event.start),
       [to]: this.formatDate(event.end),
     });
-
-    console.log(this.form.value);
   }
   paginate(event: PaginationEvent) {
     this.fetchMilestones({ page: event.currentPage - 1 });
@@ -462,16 +459,58 @@ export class MilestonesComponent
   }
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
-    this.form = this.formBuilder.group({
-      milestoneName: [null],
-      milestoneId: [null],
-      teamName: [null],
-      status: [null],
-      month: [null],
-      year: [null],
-      workStream: [null],
-      validationStatus: [null],
-    });
+    this.form = this.formBuilder.group(
+      {
+        milestoneName: [null],
+        milestoneId: [null],
+        teamName: [null],
+        status: [null],
+        startDateFrom: [null],
+        startDateTo: [null],
+        endDateFrom: [null],
+        endDateTo: [null],
+        activityName: [null],
+        validationStatus: [null],
+      },
+      { validators: this.dateRangeValidator }
+    );
+  }
+  get startDateFrom() {
+    return this.form.get('startDateFrom');
+  }
+
+  get startDateTo() {
+    return this.form.get('startDateTo');
+  }
+  get endDateFrom() {
+    return this.form.get('endDateFrom');
+  }
+
+  get endDateTo() {
+    return this.form.get('endDateTo');
+  }
+  dateRangeValidator(control: AbstractControl) {
+    const startFrom = control.get('startDateFrom')?.value;
+    const startTo = control.get('startDateTo')?.value;
+    const endFrom = control.get('endDateFrom')?.value;
+    const endTo = control.get('endDateTo')?.value;
+
+    if (
+      (startFrom && endFrom && new Date(startFrom) > new Date(endFrom)) ||
+      (startTo && endTo && new Date(startTo) > new Date(endTo))
+    ) {
+      return { invalidDateRange: true };
+    }
+
+    return null;
+  }
+  numericDateValidator(control: AbstractControl) {
+    const dateValue = control.value;
+    return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(
+      dateValue
+    ) || dateValue == null
+      ? null
+      : { invalidDateFormat: true };
   }
 
   OnChangesForm() {
