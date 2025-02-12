@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_NAME = "cem#reporting#chat_bi"
-        WAR_FILE = "/var/lib/jenkins/workspace/chatBI_frontend/dist/apps/chatBI/"
+        WAR_FILE = "/var/lib/jenkins/workspace/chatBI_frontend/dist/apps/chatBI/*"
         SERVER_1 = "10.21.196.243"
         SERVER_2 = "10.21.196.244"
         REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/cem#reporting#chat_bi"
