@@ -4,7 +4,7 @@
   "license": "MIT",
   "scripts": {
     "install": "npm i --legacy-peer-deps --force --loglevel silly --no-audit --no-fund --ignore-scripts",
-    "build:chat:prod": "sudo npx nx run chatBI:build --configuration=production --base-href=/cem/reporting/chat_bi/"
+    "build:chat:prod": "npx nx run chatBI:build --configuration=production --base-href=/cem/reporting/chat_bi/"
   },
   "private": true,
   "dependencies": {
