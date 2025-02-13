@@ -53,8 +53,8 @@
       </div>
       <div class="row mt-7 ">
         <div class="col-md-2 align-self-center">
-          <stc-apps-checkbox [className]="'custom-input'" [name]="'auto Scheduling'" formControlName="autoScheduling"
-            [label]="'auto Scheduling'"></stc-apps-checkbox>
+          <stc-apps-checkbox [className]="'custom-input'" [name]="'autoScheduling'" formControlName="autoScheduling"
+            [label]="'auto Scheduling'" (selectChange)="handleCheck($event)"></stc-apps-checkbox>
         </div>
         @if(form.get('autoScheduling')?.value){
         <div class="col-md-3">
@@ -62,7 +62,7 @@
           <stc-apps-select-drop-down formControlName="schedulingType" [label]="'Scheduling Type'"
             [options]="SchedulingTypes" (selectChange)="handleScheduleType($event)"></stc-apps-select-drop-down>
         </div>
-        @if(form.get('schedulingType')?.value.id === 'custom'){
+        @if (form.get('schedulingType')?.value) {@if(form.get('schedulingType')?.value.id === 'custom'){
         <div class="col-md-2">
           <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
             [inputName]="'Custom Date'" formControlName="customDate">
@@ -96,6 +96,7 @@
             [options]="weeklyDays"></stc-apps-select-drop-down>
         </div>
 
+        }
         }
 
 

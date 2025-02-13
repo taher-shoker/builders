@@ -76,15 +76,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   ];
 
   monthNumbers: { id: number; name: string }[] = [];
-  weeklyDays: { id: string; name: string }[] = [
-    { id: 'sunday', name: 'Sunday' },
-    { id: '1', name: 'Monday' },
-    { id: '2', name: 'Tuesday' },
-    { id: '3', name: 'Wednesday' },
-    { id: '4', name: 'Thursday' },
-    { id: '5', name: 'Friday' },
-    { id: '6', name: 'Saturday' },
-  ];
+  weeklyDays: { id: string; name: string }[] = [];
   constructor(
     private _formBuilder: FormBuilder,
     private reportsService: ReportsService,
@@ -105,6 +97,13 @@ export class DyReportFormComponent implements OnInit, OnChanges {
 
   handleScheduleType(type: any) {
     console.log(type);
+    this.restDateFields();
+  }
+  restDateFields() {
+    this.form.get('startDate')?.reset();
+    this.form.get('endDate')?.reset();
+    this.weeklyDays = [];
+    this.monthNumbers = [];
   }
 
   FilterEndDate = (d: Date | null): boolean => {
@@ -667,6 +666,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         .get('customSLA')
         ?.setValidators(value ? Validators.required : null);
       this.form.get('customSLA')?.updateValueAndValidity();
+    } else if (name === 'autoScheduling') {
+      this.form.get('schedulingType')?.reset();
+      this.restDateFields();
     }
   }
   uploadClick() {
