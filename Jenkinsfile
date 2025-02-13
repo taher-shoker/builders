@@ -60,32 +60,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Restart Services') {
-            parallel {
-                stage('Restart Service on Server 243') {
-                    steps {
-                        script {
-                            sh """
-                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} " ${REMOTE_DEPLOY_DIR}/restart.sh"
-                            """
-                        }
-                    }
-                }
-
-                stage('Restart Service on Server 244') {
-                    steps {
-                        script {
-                            sh """
-                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} " ${REMOTE_DEPLOY_DIR}/restart.sh"
-                            """
-                        }
-                    }
-                }
-            }
-        }
     }
-
     post {
         always {
             echo 'Pipeline execution complete.'
