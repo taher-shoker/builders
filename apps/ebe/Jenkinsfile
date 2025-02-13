@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         APP_NAME = "business-excellence-workspace"
-        WAR_FILE = "/var/lib/jenkins/workspace/business-excellence-workspace_frontend/dist/apps/ebe/"
+        WAR_FILE = "/var/lib/jenkins/workspace/stc-apps/dist/apps/ebe/"
         SERVER_1 = "10.21.196.243"
         SERVER_2 = "10.21.196.244"
         REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps"
@@ -85,7 +85,7 @@ pipeline {
         //     steps {
         //         script {
         //             sh """
-        //                 sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
+        //                 sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_ebe.sh"
         //             """
         //         }
         //     }
@@ -105,7 +105,7 @@ pipeline {
         //     steps {
         //         script {
         //             sh """
-        //                 sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
+        //                 sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_ebe.sh"
         //             """
         //         }
         //     }
