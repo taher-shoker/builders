@@ -39,7 +39,7 @@ pipeline {
             }
         }
         
-        stage('Rename 243') {
+        stage('Rename & Backup 243') {
             steps {
                 script {
                     sh """
@@ -59,7 +59,7 @@ pipeline {
             }
         }
         
-        stage('Rename 244') {
+        stage('Rename & Backup 244') {
             steps {
                 script {
                     sh """
