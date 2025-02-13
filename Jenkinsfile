@@ -7,7 +7,7 @@ pipeline {
         SERVER_1 = "10.21.196.243"
         SERVER_2 = "10.21.196.244"
         REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/cem/reporting"
-        BACKUP_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/backup/cem/reporting"
+        BACKUP_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/backup"
         SSH_USER = "osadmin"
         SSH_PASSWORD = "CEM435@#qeema"
     }
@@ -35,7 +35,7 @@ pipeline {
                             sh """
                                 sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "
                                     if [ -f ${REMOTE_DEPLOY_DIR}/chatBI/ ]; then 
-                                        mv ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H');
+                                        mv -r ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H');
                                     fi
                                 "
                                 sshpass -p ${SSH_PASSWORD} scp -r ${env.WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
@@ -50,7 +50,7 @@ pipeline {
                             sh """
                                 sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "
                                     if [ -f ${REMOTE_DEPLOY_DIR}/chatBI/ ]; then 
-                                        mv ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H'); 
+                                        mv -r ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H'); 
                                     fi
                                 "
                                 sshpass -p ${SSH_PASSWORD} scp -r ${env.WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
