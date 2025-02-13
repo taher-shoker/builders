@@ -64,6 +64,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   router = inject(Router);
   route = inject(ActivatedRoute);
   isAllowed = input<boolean>();
+  isPMO = input<boolean>(false);
   isDeleted = input<boolean>(false);
   isAdmin = input<boolean>();
   activityLogsTableHeader = signal<ColumnsSchema[]>([]);
@@ -81,7 +82,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   showActivityLogs() {
     this.getSpecificActivityLog(
       'PSR',
-      'Add,Edit',
+      'Add,Edit,Delete',
       this.sectorId,
       this.projectData().id.toString(),
       '',
@@ -247,6 +248,15 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
           label: 'Delete',
           icon: 'pi pi-trash',
         },
+      ];
+    }
+    if(this.isPMO())
+    {
+      this.items = [
+        {
+          label: 'Edit',
+          icon: 'pi pi-pen-to-square',
+        }
       ];
     }
   }

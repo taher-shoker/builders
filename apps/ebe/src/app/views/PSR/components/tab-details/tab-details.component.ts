@@ -76,7 +76,7 @@ export class TabDetailsComponent implements OnInit {
     if(label === 'activity log')
     {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
-      this.getSpecificActivityLog("PSR" , '' , '' , '' , true)
+      this.getSpecificActivityLog("PSR_executive" , '' , '' , '' ,  true)
     } else {
       this.router.navigateByUrl("/deleted-projects/programs");
     }
@@ -95,6 +95,7 @@ export class TabDetailsComponent implements OnInit {
         }
       })
     }
+    isPMO = false;
   ngOnInit(): void {
     this.activityLogsTableHeader = [
       {
@@ -191,6 +192,7 @@ export class TabDetailsComponent implements OnInit {
         role.roleName === 'ADMINS' ||
         role.roleName === 'BE_PMO'
     );
+    this.isPMO = this.userRoles.roles.some((role) => role.roleName === 'BE_PMO');
     this.isAdmin = this.userRoles.roles.some(
       (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
     );

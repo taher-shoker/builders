@@ -6,7 +6,7 @@
     [appendTo]="isActionPopup() || isActionPopup2() ? overlay : 'body'"
     styleClass="activity-logs-panel"
     [styleClass]="
-      isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : ''
+      isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : isPSRProject() ? 'PSRProject' : ''
     "
     (onHide)="hidePopup()"
   >
@@ -43,8 +43,8 @@
             @for (item of activityLogsTableBody(); track $index) {
             <tr>
               <td>
-                {{ item.username ? (item.username | truncateWord : 2) : '-' }}
-                @if(item.username.split(" ").length > 2) {
+                {{ item && item.username ? (item.username | truncateWord : 2) : '-' }}
+                @if(item && item.username.split(" ").length > 2) {
                 <span
                   class="read-more-btn"
                   (click)="longTitlePanel.toggle($event)"
@@ -61,18 +61,18 @@
                 </p-overlayPanel>
                 }
               </td>
-              @if(item.activityType) {
+              @if(item && item.activityType) {
               <td>{{ item.activityType }}</td>
               }
               @if(hasDetails())
               {
                 <td>
                   {{
-                    item.activityDetails
+                    item && item.activityDetails
                       ? (item.activityDetails | truncateWord : 2)
                       : '-'
                   }}
-                  @if(item.activityDetails && item.activityDetails.split(" ").length > 2) {
+                  @if(item && item.activityDetails && item.activityDetails.split(" ").length > 2) {
                   <span
                     class="read-more-btn"
                     (click)="longTitlePanel.toggle($event)"
@@ -90,13 +90,13 @@
                   }
                 </td>
               }
-              @if(item.timestamp) {
+              @if(item && item.timestamp) {
               <td class="time">{{ transformDate(item.timestamp) }}</td>
               } 
               @if(hasOldValue()) {
                 <td>
-                  {{ item.oldValue ? (item.oldValue | truncateWord : 1) : '-' }}
-                  @if(item.oldValue && item.oldValue.split(" ").length >= 1) {
+                  {{ item && item.oldValue ? (item.oldValue | truncateWord : 1) : '-' }}
+                  @if(item && item.oldValue && item.oldValue.split(" ").length >= 1) {
                   <span
                     class="read-more-btn"
                     (click)="longTitlePanel.toggle($event)"
@@ -116,8 +116,8 @@
                 }
               @if(hasNewValue()) {
               <td>
-                {{ item.newValue ? (item.newValue | truncateWord : 1) : '-' }}
-                @if(item.newValue && item.newValue.split(" ").length >= 1) {
+                {{ item && item.newValue ? (item.newValue | truncateWord : 1) : '-' }}
+                @if(item && item.newValue && item.newValue.split(" ").length >= 1) {
                 <span
                   class="read-more-btn"
                   (click)="longTitlePanel.toggle($event)"

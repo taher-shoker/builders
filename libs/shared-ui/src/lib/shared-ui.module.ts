@@ -97,6 +97,7 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.component';
 import { DropdownModule } from 'primeng/dropdown';
+import { CarouselModule } from 'ngx-owl-carousel-o';
 
 const components = [
   ButtonComponent,
@@ -204,6 +205,7 @@ const components = [
     InputGroupModule,
     InputTextModule,
     DropdownModule,
+    CarouselModule,
   ],
 })
 export class SharedUiModule {}

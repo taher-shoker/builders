@@ -23,6 +23,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
   isAdmin = input<boolean>();
+  isPMO = input<boolean>(false);
   isDeleted = input<boolean>(false);
   datePipe = inject(DatePipe);
   activityLogsTableHeader = signal<ColumnsSchema[]>([]);
@@ -117,13 +118,22 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
         }
       ]
     }
+    if(this.isPMO())
+    {
+      this.items = [
+        {
+            label: 'Edit',
+            icon: 'pi pi-pen-to-square'
+        }
+      ]
+    }
   }
   showActivityLogsPopup = false;
   $endScorecardActivityLogsSub:Subject<any> = new Subject();
-  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string)
+  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean)
   {
     
-    this.activityLogService.getSpecificActivityLog(moduleName , this.isDeleted() ? "Add,Edit,Delete" : "Add,Edit" , subModule , projectName).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+    this.activityLogService.getSpecificActivityLog(moduleName , this.isDeleted() ? "Add,Edit,Delete" : "Add,Edit" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
       }
@@ -133,7 +143,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   {
     // this.activityLogsPanel.toggle(event);
     this.showActivityLogsPopup = !this.showActivityLogsPopup;
-    this.getSpecificActivityLog("PSR" , this.project().id.toString())
+    this.getSpecificActivityLog("PSR_executive" , this.project().id.toString() , '' , '' , true)
   }
   popupClosed()
   {
