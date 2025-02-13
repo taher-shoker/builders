@@ -49,7 +49,7 @@ interface ActionType {
 export class ActivityLogsComponent {
   currentTap = signal<TapModel>({} as TapModel);
   scorecardsTaps = signal<TapModel[]>([]);
-
+  @ViewChild('dateFormGroup', { read: ElementRef }) dateFormGroup!: ElementRef;
   selectedType!: ActionType | null;
   activityLogDate: Date[] | null = null;
   searchKeyword: any;
@@ -242,6 +242,7 @@ export class ActivityLogsComponent {
     let tap = this.currentTap().value.toLowerCase();
     if(tap === 'psr' || tap === 'cad')
     {
+      this.programsData.set([])
       this.activityLogsServices.getProgramsData(tap).pipe(takeUntil(this.endSubs$)).subscribe({
         next : (res) => {
           if(res.length !== 0)
@@ -253,6 +254,7 @@ export class ActivityLogsComponent {
                 sector : 'All'
               }
             ])
+            
             // const transformedData = res.map(item => ({
             //   ...item,
             //   sector: item.sector ?? " "  // Replace null with " "
@@ -265,6 +267,7 @@ export class ActivityLogsComponent {
   }
   getKeyResultFilterData(programId?:string)
   {
+    this.keyResultsData.set([])
     this.activityLogsServices.getKeyResultsData(programId).pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res) => {
         if(res.length !== 0)
@@ -286,6 +289,7 @@ export class ActivityLogsComponent {
     let tap = this.currentTap().value.toLowerCase();
     if(tap === 'psr' || tap === 'cad')
     {
+      this.keyResultProjectsData.set([])
       this.activityLogsServices.getKeyResultProjectsData(tap , programId , keyResultNumber).pipe(takeUntil(this.endSubs$)).subscribe({
         next : (res) => {
           if(res.length !== 0)
@@ -425,6 +429,14 @@ export class ActivityLogsComponent {
       }
     }
     let id = -1000;
+    if(this.keyResultProjectsData().length === 0)
+      {
+        this.selectedKeyResultProject = null;
+      }
+    if(this.keyResultsData().length === 0)
+      {
+        this.selectedKeyResult = null;
+      }
     if(this.currentTap().value === 'CAD')
     {
       this.getAllActivityLogs(
@@ -458,6 +470,14 @@ export class ActivityLogsComponent {
   selectedProgramIdFromKeyRes:number | null = null;
   selectProgramType()
   {
+    if(this.keyResultProjectsData().length === 0)
+    {
+      this.selectedKeyResultProject = null;
+    }
+    if(this.keyResultsData().length === 0)
+      {
+        this.selectedKeyResult = null;
+      }
     if(this.selectedProgram && this.selectedProgram !== -1000)
     {
       if(this.currentTap().value === 'CAD')
