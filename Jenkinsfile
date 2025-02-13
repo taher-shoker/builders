@@ -29,46 +29,42 @@ pipeline {
             }
         }
         
-        stage('Deployment') {
-            parallel {
-                stage('Deploy on Server 243') {
-                    steps {
-                        script {
-                            sh """
-                                sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
-                            """
-                        }
-                    }
+        stage('Deploy on Server 243') {
+            steps {
+                script {
+                    sh """
+                        sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
+                    """
                 }
-                
-                stage('Rename 243') {
-                    steps {
-                        script {
-                            sh """
-                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
-                            """
-                        }
-                    }
+            }
+        }
+        
+        stage('Rename 243') {
+            steps {
+                script {
+                    sh """
+                        sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
+                    """
                 }
-                
-                stage('Deploy on Server 244') {
-                    steps {
-                        script {
-                            sh """
-                                sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
-                            """
-                        }
-                    }
+            }
+        }
+        
+        stage('Deploy on Server 244') {
+            steps {
+                script {
+                    sh """
+                        sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
+                    """
                 }
-                
-                stage('Rename 244') {
-                    steps {
-                        script {
-                            sh """
-                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
-                            """
-                        }
-                    }
+            }
+        }
+        
+        stage('Rename 244') {
+            steps {
+                script {
+                    sh """
+                        sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
+                    """
                 }
             }
         }
