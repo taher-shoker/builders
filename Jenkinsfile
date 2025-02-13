@@ -6,7 +6,7 @@ pipeline {
         WAR_FILE = "/var/lib/jenkins/workspace/chatBI_frontend/dist/apps/chatBI/"
         SERVER_1 = "10.21.196.243"
         SERVER_2 = "10.21.196.244"
-        REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/cem/reporting"
+        REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps"
         BACKUP_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/backup"
         SSH_USER = "osadmin"
         SSH_PASSWORD = "CEM435@#qeema"
@@ -20,6 +20,7 @@ pipeline {
                 }
             }
         }
+        
         stage('Build') {
             steps {
                 script {
@@ -27,33 +28,44 @@ pipeline {
                 }
             }
         }
-        stage('Backup and Deploy') {
+        
+        stage('Deployment') {
             parallel {
-                stage('Backup and Deploy on Server 243') {
+                stage('Deploy on Server 243') {
                     steps {
                         script {
                             sh """
-                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "
-                                    if [ -f ${REMOTE_DEPLOY_DIR}/chatBI/ ]; then 
-                                        mv -r ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H');
-                                    fi
-                                "
-                                sshpass -p ${SSH_PASSWORD} scp -r ${env.WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
+                                sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
                             """
                         }
                     }
                 }
-
-                stage('Backup and Deploy on Server 244') {
+                
+                stage('Rename 243') {
                     steps {
                         script {
                             sh """
-                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "
-                                    if [ -f ${REMOTE_DEPLOY_DIR}/chatBI/ ]; then 
-                                        mv -r ${REMOTE_DEPLOY_DIR}/chatBI/ ${BACKUP_DIR}/chatBI-\$(date +'%Y-%m-%d-%H'); 
-                                    fi
-                                "
-                                sshpass -p ${SSH_PASSWORD} scp -r ${env.WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
+                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
+                            """
+                        }
+                    }
+                }
+                
+                stage('Deploy on Server 244') {
+                    steps {
+                        script {
+                            sh """
+                                sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
+                            """
+                        }
+                    }
+                }
+                
+                stage('Rename 244') {
+                    steps {
+                        script {
+                            sh """
+                                sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
                             """
                         }
                     }
@@ -61,6 +73,7 @@ pipeline {
             }
         }
     }
+    
     post {
         always {
             echo 'Pipeline execution complete.'
