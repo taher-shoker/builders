@@ -1,0 +1,107 @@
+.start-chat-view {
+  position: relative;
+  background-color: var(--stc-color);
+  text-align: center;
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-family: 'stc forward-regular';
+  .bg-1,
+  .bg-2 {
+    position: absolute;
+    width: 100%;
+
+    background-repeat: no-repeat;
+  }
+  .bg-1 {
+    top: 0;
+    height: 100%;
+    background-image: url('../../../assets/images/bg-1.png');
+
+    background-position: top right;
+  }
+  .bg-2 {
+    height: 90%;
+    bottom: 0;
+    background-image: url('../../../assets/images/bg-2.png');
+    background-position: bottom left;
+  }
+  &_logo {
+    margin: 24px 0px;
+  }
+  &_header1 {
+    margin: 24px 0px;
+    font-family: 'stc forward-medium';
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 24px;
+    // color: var(--stc-black500);
+    color: #ffff;
+  }
+  &_header2 {
+    font-family: 'stc forward-medium';
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 38.4px;
+    // color: var(--stc-color);
+    color: #ffff;
+    margin-top: 2vh;
+  }
+  &_desc {
+    margin: 24px 45px;
+    font-weight: 400;
+    font-size: 14px;
+    line-height: 18px;
+    color: #ffff;
+    // color: var(--stc-greyColor);
+  }
+  button {
+    border: none;
+    outline: none;
+    // background-color: var(--stc-purpleColor);
+    background-color: #ffff;
+    color: var(--stc-color);
+    // color: var(--whiteColor);
+    padding: 10.5px 17.5px;
+    border-radius: 6px;
+    font-family: 'stc forward-bold';
+  }
+}
+.animated-text {
+  position: relative;
+  transform: translateY(150px); /* Start off the screen */
+  opacity: 0;
+  transition: transform 1.5s ease-out, opacity 1.5s ease-out;
+}
+
+/* Apply animation when the class 'animate-text' is added */
+.animate-text .animated-text {
+  position: relative;
+  transform: translateY(0); /* Move to final position */
+  opacity: 1; /* Fade in */
+}
+
+.fade-in-text {
+  animation: fadeIn 2s ease-in-out, slideIn 2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-150px);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
