@@ -1,0 +1,87 @@
+<div class="chat-view">
+  <stc-apps-header [title]="'CEM Copilot'"></stc-apps-header>
+  <div
+    #scrollContainer
+    class="chat-view_messages-container"
+    [ngClass]="
+      !hideQuestions ? 'messages-list-questions-margin' : 'messages-list-margin'
+    "
+  >
+    @if (messagesList.length==0) {
+    <div class="background"></div>
+    } @for (message of messagesList; track $index) {
+    <stc-apps-chat-list-item
+      [message]="message.content"
+      [messageDate]="message.date"
+      [messageType]="message.messageType"
+      [images]="message.images ?? ['']"
+      [showType]="message.showType ?? ''"
+      [sqlData]="message.sqlData ?? { xList: [], yList: [], title: '' }"
+      [isLoading]="pendingFlag()"
+    >
+    </stc-apps-chat-list-item>
+    }
+  </div>
+
+  <div
+    class="chat-view_input-container"
+    [ngClass]="{
+      focused: isFocused,
+      error: newMessage.length > 512,
+      'input-filed-bottom': hideQuestions
+    }"
+  >
+    <textarea
+      id="textarea"
+      class="textarea scroll"
+      (keydown.enter)="onEnter($event)"
+      (input)="adjustHeight($event)"
+      [(ngModel)]="newMessage"
+      placeholder="Ask me anything..."
+      (focus)="onFocus()"
+      (blur)="onBlur($event)"
+    >
+    </textarea>
+
+    <div class="button-container">
+      <img
+        [ngClass]="{
+          disabled:
+            newMessage.length > 512 || !newMessage.trim() || pendingFlag()
+        }"
+        (click)="sendMessage()"
+        src="assets/images/Vector.svg"
+        alt=""
+      />
+    </div>
+  </div>
+  <div
+    class="text-area-actions"
+    [ngClass]="{ 'text-area-actions-bottom': hideQuestions }"
+  >
+    <div
+      class="textarea-counter"
+      [ngClass]="{ 'error-text': newMessage.length > 512 }"
+    >
+      <p>{{ newMessage.length }} / {{ maxLength }}</p>
+    </div>
+    <div class="questions-controller-holder">
+      <img
+        (click)="hideQuestionsAction()"
+        class="questions-controller"
+        [src]="
+          !hideQuestions
+            ? 'assets/images/active-questions.png'
+            : 'assets/images/inactive-questions.png'
+        "
+        alt=""
+      />
+    </div>
+  </div>
+  <div class="suggested-questions w-100">
+    <stc-apps-suggested-question
+      [hideQuestion]="hideQuestions"
+      (sendQuestionEvent)="setSuggestedQuestion($event)"
+    ></stc-apps-suggested-question>
+  </div>
+</div>
