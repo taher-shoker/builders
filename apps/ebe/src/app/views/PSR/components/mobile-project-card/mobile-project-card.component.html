@@ -1,8 +1,8 @@
 <section class="project">
   <p class="project-name">
-    {{ project().projectName | truncateWord : 2}}
+    {{ project().projectName | truncateWord : 3}}
     <!-- {{ kpi().title | truncateWord : 3 }} -->
-    @if(project().projectName.split(' ').length >= 2) {
+    @if(project().projectName.split(' ').length >= 3) {
     <span class="read-more-btn" (click)="textOverlayPanel.toggle($event)"
       >read more</span
     >

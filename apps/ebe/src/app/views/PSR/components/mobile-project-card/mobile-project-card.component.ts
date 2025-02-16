@@ -85,7 +85,7 @@ export class MobileProjectCardComponent {
   {
     this.position = position;
     this.visible = true;
-    console.log(this.project());
+    // console.log(this.project());
   }
   hideModal()
   {

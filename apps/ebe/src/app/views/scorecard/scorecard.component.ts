@@ -105,7 +105,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     .pipe(takeUntil(this.endSubs$))
     .subscribe({
       next: (scorecards: ScorecardModel[]) => {
-          console.log(scorecards);
+          // console.log(scorecards);
           this.isSuccess = true;
           if (scorecards.length === 0) {
             this.isEmpty = true;
@@ -156,7 +156,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.endSubs$))
       .subscribe({
         next: (scorecards: ScorecardModel[]) => {
-          console.log(scorecards);
+          // console.log(scorecards);
           const data: TapModel[] = [];
           scorecards.forEach((scorecard, index) => {
             scorecard.kpiDataDTO.forEach((kpi) => {

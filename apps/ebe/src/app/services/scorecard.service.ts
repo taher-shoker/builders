@@ -107,7 +107,7 @@ export class ScorecardService {
       let isAllowed = matchingGroup.roles.some(
         (role:any) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
       );
-      console.log(isAllowed);
+      // console.log(isAllowed);
       return isAllowed ? this.navItems : allNavs;
     }
     return [];

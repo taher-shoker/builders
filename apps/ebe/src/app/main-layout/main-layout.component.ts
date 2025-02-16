@@ -40,7 +40,7 @@ export class MainLayoutComponent implements OnInit {
       );
     }
     this.isMobile.set(this.deviceService.isMobile());
-    console.log(this.isMobile());
+    // console.log(this.isMobile());
     this.scorecardService.setUsername(this.userData?.name);
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
