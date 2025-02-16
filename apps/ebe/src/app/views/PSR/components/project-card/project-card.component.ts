@@ -205,7 +205,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   }
   deleteProgram()
   {
-    console.log(this.project());
+    // console.log(this.project());
     this.ProgramId.emit(this.project().id);
     this.close();
   }

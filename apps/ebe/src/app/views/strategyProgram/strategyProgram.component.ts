@@ -47,7 +47,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
       }
     })
     // this.strategyProgramData = [];
-    console.log("window width => " , window.innerWidth);
+    // console.log("window width => " , window.innerWidth);
     this.getStrategyProgramSummary();
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
@@ -84,7 +84,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   private getStrategyProgramSummary() {
     this.strategyProgramService.getStrategyProgramSummary().pipe(takeUntil(this.endSubs$)).subscribe({
       next: (res: StrategyProgramModel) => {
-        console.log(res);
+        // console.log(res);
         this.strategyProgramData = res;
         if (this.strategyProgramData.cadStrategyProgramDTO.length === 0) {
           this.isEmptyData = true;

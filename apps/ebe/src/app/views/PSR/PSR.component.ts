@@ -84,7 +84,6 @@ export class PSRComponent implements OnInit , OnDestroy {
   getClickedTap(tab:TapModel)
   {
     this.currentTab = tab;
-    console.log(tab);
   }
   getProgramId(id:any)
   {

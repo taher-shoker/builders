@@ -158,7 +158,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   {
     this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
-        console.log(activityLogs);
+        // console.log(activityLogs);
         this.activityLogsTableBody.set(activityLogs);
       }
     })
@@ -173,7 +173,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     // this.capexOpexData = {"opex":[],"capex":[],"tendering":[]};
     this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
-        console.log(res);
+        // console.log(res);
         this.capexOpexData = res;     
         this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]
         this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'opex')[0]
@@ -252,7 +252,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
             }
           ]
         }
-        console.log(this.spendingTargetChart);
+        // console.log(this.spendingTargetChart);
         if(this.capexOpexData.opex[0] && this.capexOpexData.opex[0].gepTargetPercentage)
         {
           this.gepTargetChart = [
@@ -283,7 +283,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   {
     if(file)
     {
-      console.log(file);
+      // console.log(file);
       this.financialReportingService.uploadCadSummaryFile(file).subscribe({
         next:() => {
           this.getFinancialReportingData();

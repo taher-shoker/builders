@@ -133,7 +133,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
         (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
       );
     }
-    console.log(this.userRoles);
+    // console.log(this.userRoles);
     // this.PSRDetailsData = this.psrServices.PSRDetailsData;
     this.router.params.subscribe({
       next: (param) => {

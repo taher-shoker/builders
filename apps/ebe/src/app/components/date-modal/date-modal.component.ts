@@ -61,7 +61,6 @@ export class DateModalComponent {
   }
   hideModal()
   {
-    console.log(this.isSuccess());
     if(this.isSuccess() === false)
     {
       this.selectedDate = new Date(new Date().getFullYear(), new Date().getMonth(), 1);

@@ -82,7 +82,7 @@ export class AddPsrProjectFormComponent implements OnInit {
             this.programId = +param['id'];
             this.getValuesById(+param['id']);
           } else {
-            console.log(param);
+            // console.log(param);
             if (param['sector'] && param['projId']) {
               this.projectId = param['projId'];
               this.getProjectValuesById(param['sector'], +param['projId']);
@@ -378,7 +378,7 @@ export class AddPsrProjectFormComponent implements OnInit {
       const updatedObj = this.programsList.value[0];
       const formattedStartDate = this.formatDate(updatedObj.startDate);
       const formattedEndDate = this.formatDate(updatedObj.endDate);
-      console.log(updatedObj.indicator);
+      // console.log(updatedObj.indicator);
       if (
         updatedObj.indicator.value === 'N/A' ||
         updatedObj.indicator === 'N/A'
