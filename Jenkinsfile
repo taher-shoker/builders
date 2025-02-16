@@ -7,11 +7,6 @@ pipeline {
     }
 
     stages {
-        stage('Checkout Code') {
-            steps {
-                git branch: 'main', url: 'git@gitlab.stc.com.sa:mohfibrahim/stc-apps.git'
-            }
-        }
 
         stage('Install Dependencies') {
             steps {
