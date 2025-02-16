@@ -452,15 +452,68 @@ export class ActivityLogsComponent {
     this.first.set(e.first);
     this.rows.set(e.rows);
     this.currentPage.set(e.page);
-    this.getAllActivityLogs(
-      this.currentTap().value,
-      this.currentPage(),
-      10,
-      this.searchKeyword,
-      this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
-      this.startDate,
-      this.endDate
-    );
+    let id = -1000;
+    // this.getAllActivityLogs(
+    //   this.currentTap().value,
+    //   this.currentPage(),
+    //   10,
+    //   this.searchKeyword,
+    //   this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
+    //   this.startDate,
+    //   this.endDate
+    // );
+    if (this.currentTap().value === 'CAD') {
+      this.getAllActivityLogs(
+        this.currentTap().value,
+        this.currentPage(),
+        10,
+        this.searchKeyword,
+        this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
+        this.startDate,
+        this.endDate,
+        this.selectedProgram && this.selectedProgram !== id
+          ? this.selectedProgram
+          : this.selectedProgramIdFromKeyRes
+          ? this.selectedProgramIdFromKeyRes
+          : null,
+        this.selectedKeyResult?.keyResultName !== 'All'
+          ? this.selectedKeyResult?.keyResultNumber.toString()
+          : null,
+        this.selectedKeyResultProject &&
+          this.selectedKeyResultProject.toString() !== id.toString()
+          ? this.selectedKeyResultProject
+          : null
+      );
+    } else if (this.currentTap().value === 'PSR') {
+      this.getAllActivityLogs(
+        this.currentTap().value,
+        this.currentPage(),
+        10,
+        this.searchKeyword,
+        this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
+        this.startDate,
+        this.endDate,
+        this.selectedProgram && this.selectedProgram !== id
+          ? this.selectedProgram
+          : this.selectedProgramIdFromKeyRes
+          ? this.selectedProgramIdFromKeyRes
+          : null,
+        this.selectedKeyResultProject &&
+          this.selectedKeyResultProject.toString() !== id.toString()
+          ? this.selectedKeyResultProject
+          : null
+      );
+    } else {
+      this.getAllActivityLogs(
+        this.currentTap().value,
+        this.currentPage(),
+        10,
+        this.searchKeyword,
+        this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
+        this.startDate,
+        this.endDate
+      )
+    }
   }
   formatDate(date: Date): string {
     const year = date.getFullYear();
