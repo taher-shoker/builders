@@ -403,6 +403,7 @@ export class ActivityLogsComponent {
     this.selectedProgram = null;
     this.selectedKeyResult = null;
     this.selectedKeyResultProject = null;
+    this.selectedProgramIdFromKeyRes = null;
     if (clickedTap.value === 'Scorecard' || clickedTap.value === 'Financial') {
       this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
     } else {
@@ -542,6 +543,9 @@ export class ActivityLogsComponent {
       this.selectedKeyResult = null;
     }
     if (this.currentTap().value === 'CAD') {
+      // console.log(this.selectedKeyResult);
+      // console.log(this.selectedProgram);
+      // console.log(this.selectedProgramIdFromKeyRes);
       this.getAllActivityLogs(
         this.currentTap().value,
         this.currentPage(),
@@ -650,6 +654,7 @@ export class ActivityLogsComponent {
   filterByName() {
     // if(this.searchKeyword)
     // {
+    // console.log(this.selectedKeyResult);
     this.applyFilters();
     // }
   }
