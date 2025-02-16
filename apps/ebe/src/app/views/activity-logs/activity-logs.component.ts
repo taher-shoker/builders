@@ -12,7 +12,11 @@ import { CommonModule, DatePipe } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { TapModel } from '../../models/scorecard.model';
-import { KeyResult, KeyResultProject, Program } from '../../models/activity-logs';
+import {
+  KeyResult,
+  KeyResultProject,
+  Program,
+} from '../../models/activity-logs';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { CalendarModule } from 'primeng/calendar';
@@ -49,7 +53,7 @@ interface ActionType {
 export class ActivityLogsComponent {
   currentTap = signal<TapModel>({} as TapModel);
   scorecardsTaps = signal<TapModel[]>([]);
-
+  @ViewChild('dateFormGroup', { read: ElementRef }) dateFormGroup!: ElementRef;
   selectedType!: ActionType | null;
   activityLogDate: Date[] | null = null;
   searchKeyword: any;
@@ -76,14 +80,14 @@ export class ActivityLogsComponent {
     {
       name: 'Export',
       id: 'Export',
-    }
+    },
   ];
   programsData = signal<Program[]>([]);
   keyResultsData = signal<KeyResult[]>([]);
   keyResultProjectsData = signal<KeyResultProject[]>([]);
-  selectedProgram:number | null = null;
-  selectedKeyResult:KeyResult | null= null;
-  selectedKeyResultProject:string | null= null;
+  selectedProgram: number | null = null;
+  selectedKeyResult: KeyResult | null = null;
+  selectedKeyResultProject: string | null = null;
   constructor(private renderer: Renderer2) {}
   tapIndex = 0;
   ngOnInit() {
@@ -119,11 +123,25 @@ export class ActivityLogsComponent {
         let title = param['title'];
         if (title === 'scorecard') {
           this.currentTap.set(this.scorecardsTaps()[0]);
-          this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
+          this.activityLogsHeader = [
+            'user name',
+            'activity type',
+            'time stamp',
+          ];
           this.tapIndex = 0;
         } else if (title === 'cad') {
           this.currentTap.set(this.scorecardsTaps()[1]);
-          this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity key result' , 'activity project' , 'activity details','time stamp','old value','new value'];
+          this.activityLogsHeader = [
+            'user name',
+            'activity type',
+            'activity program',
+            'activity key result',
+            'activity project',
+            'activity details',
+            'time stamp',
+            'old value',
+            'new value',
+          ];
           this.tapIndex = 1;
           this.actionTypes = [
             {
@@ -153,7 +171,16 @@ export class ActivityLogsComponent {
           ];
         } else if (title === 'psr') {
           this.currentTap.set(this.scorecardsTaps()[2]);
-          this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity project' , 'activity details','time stamp','old value','new value'];
+          this.activityLogsHeader = [
+            'user name',
+            'activity type',
+            'activity program',
+            'activity project',
+            'activity details',
+            'time stamp',
+            'old value',
+            'new value',
+          ];
           this.tapIndex = 2;
           this.actionTypes = [
             {
@@ -181,13 +208,21 @@ export class ActivityLogsComponent {
               id: 'Delete',
             },
           ];
-        } else if(title === 'financial') {
+        } else if (title === 'financial') {
           this.tapIndex = 3;
           this.currentTap.set(this.scorecardsTaps()[3]);
-          this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
+          this.activityLogsHeader = [
+            'user name',
+            'activity type',
+            'time stamp',
+          ];
         } else {
           this.currentTap.set(this.scorecardsTaps()[0]);
-          this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
+          this.activityLogsHeader = [
+            'user name',
+            'activity type',
+            'time stamp',
+          ];
           this.tapIndex = 0;
         }
         this.getProgramFilterData();
@@ -206,9 +241,9 @@ export class ActivityLogsComponent {
     activityType?: string,
     startDate?: string,
     endDate?: string,
-    programName?:number | null,
-    keyResult?:string | null,
-    projectName?:string | null
+    programName?: number | null,
+    keyResult?: string | null,
+    projectName?: string | null
   ) {
     this.activityLogsResponse().data = [];
     this.activityLogsServices
@@ -237,70 +272,75 @@ export class ActivityLogsComponent {
         },
       });
   }
-  getProgramFilterData()
-  {
+  getProgramFilterData() {
     let tap = this.currentTap().value.toLowerCase();
-    if(tap === 'psr' || tap === 'cad')
-    {
-      this.activityLogsServices.getProgramsData(tap).pipe(takeUntil(this.endSubs$)).subscribe({
-        next : (res) => {
-          if(res.length !== 0)
-          {
-            this.programsData.set([
-              {
-                id : -1000,
-                strategyProjectName : "All",
-                sector : 'All'
-              }
-            ])
-            // const transformedData = res.map(item => ({
-            //   ...item,
-            //   sector: item.sector ?? " "  // Replace null with " "
-            // }));
-            this.programsData.update(v => v.concat(res));
-          }
-        }
-      })
+    if (tap === 'psr' || tap === 'cad') {
+      this.programsData.set([]);
+      this.activityLogsServices
+        .getProgramsData(tap)
+        .pipe(takeUntil(this.endSubs$))
+        .subscribe({
+          next: (res) => {
+            if (res.length !== 0) {
+              this.programsData.set([
+                {
+                  id: -1000,
+                  strategyProjectName: 'All',
+                  sector: 'All',
+                },
+              ]);
+
+              // const transformedData = res.map(item => ({
+              //   ...item,
+              //   sector: item.sector ?? " "  // Replace null with " "
+              // }));
+              this.programsData.update((v) => v.concat(res));
+            }
+          },
+        });
     }
   }
-  getKeyResultFilterData(programId?:string)
-  {
-    this.activityLogsServices.getKeyResultsData(programId).pipe(takeUntil(this.endSubs$)).subscribe({
-      next : (res) => {
-        if(res.length !== 0)
-        {
-          this.keyResultsData.set([
-            {
-              keyResultNumber : -1000,
-              keyResultName : "All",
-              programId : -1000
-            }
-          ])
-          this.keyResultsData.update(v => v.concat(res));
-        }
-      }
-    })
-  }
-  getKeyResultprojectsFilterData(programId?:string , keyResultNumber?:string)
-  {
-    let tap = this.currentTap().value.toLowerCase();
-    if(tap === 'psr' || tap === 'cad')
-    {
-      this.activityLogsServices.getKeyResultProjectsData(tap , programId , keyResultNumber).pipe(takeUntil(this.endSubs$)).subscribe({
-        next : (res) => {
-          if(res.length !== 0)
-          {
-            this.keyResultProjectsData.set([
+  getKeyResultFilterData(programId?: string) {
+    this.keyResultsData.set([]);
+    this.activityLogsServices
+      .getKeyResultsData(programId)
+      .pipe(takeUntil(this.endSubs$))
+      .subscribe({
+        next: (res) => {
+          if (res.length !== 0) {
+            this.keyResultsData.set([
               {
-                id : -1000,
-                name : "All",
-                projectName : 'All'
-              }
-            ])
-            this.keyResultProjectsData.update(v => v.concat(res));
+                keyResultNumber: -1000,
+                keyResultName: 'All',
+                programId: -1000,
+              },
+            ]);
+            this.keyResultsData.update((v) => v.concat(res));
           }
-        }
-      })
+        },
+      });
+  }
+  getKeyResultprojectsFilterData(programId?: string, keyResultNumber?: string) {
+    let tap = this.currentTap().value.toLowerCase();
+    if (tap === 'psr' || tap === 'cad') {
+      this.keyResultProjectsData.set([]);
+      this.activityLogsServices
+        .getKeyResultProjectsData(tap, programId, keyResultNumber)
+        .pipe(takeUntil(this.endSubs$))
+        .subscribe({
+          next: (res) => {
+            if (res.length !== 0) {
+              this.keyResultProjectsData.set([
+                {
+                  id: -1000,
+                  name: 'All',
+                  projectName: 'All',
+                },
+              ]);
+              this.keyResultProjectsData.update((v) => v.concat(res));
+            }
+          },
+        });
     }
   }
   ngOnDestroy() {
@@ -311,8 +351,7 @@ export class ActivityLogsComponent {
     this.getProgramFilterData();
     this.getKeyResultFilterData();
     this.getKeyResultprojectsFilterData();
-    if(clickedTap.value === 'CAD' || clickedTap.value === 'PSR')
-    {
+    if (clickedTap.value === 'CAD' || clickedTap.value === 'PSR') {
       this.actionTypes = [
         {
           name: 'All',
@@ -352,14 +391,14 @@ export class ActivityLogsComponent {
         {
           name: 'Export',
           id: 'Export',
-        }
+        },
       ];
     }
     this.currentPage.set(0);
     this.selectedType = null;
-    this.startDate = "";
-    this.endDate = "";
-    this.searchKeyword = "";
+    this.startDate = '';
+    this.endDate = '';
+    this.searchKeyword = '';
     this.activityLogDate = null;
     this.selectedProgram = null;
     this.selectedKeyResult = null;
@@ -367,11 +406,29 @@ export class ActivityLogsComponent {
     if (clickedTap.value === 'Scorecard' || clickedTap.value === 'Financial') {
       this.activityLogsHeader = ['user name', 'activity type', 'time stamp'];
     } else {
-      if(clickedTap.value === 'CAD')
-      {
-        this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity key result' , 'activity project' , 'activity details','time stamp','old value','new value'];
+      if (clickedTap.value === 'CAD') {
+        this.activityLogsHeader = [
+          'user name',
+          'activity type',
+          'activity program',
+          'activity key result',
+          'activity project',
+          'activity details',
+          'time stamp',
+          'old value',
+          'new value',
+        ];
       } else {
-        this.activityLogsHeader = ['user name','activity type', 'activity program' , 'activity project' ,'activity details','time stamp','old value','new value'];
+        this.activityLogsHeader = [
+          'user name',
+          'activity type',
+          'activity program',
+          'activity project',
+          'activity details',
+          'time stamp',
+          'old value',
+          'new value',
+        ];
       }
     }
     this.first.set(0);
@@ -386,7 +443,7 @@ export class ActivityLogsComponent {
       this.endDate
     );
   }
-  transformDate(date: string):string {
+  transformDate(date: string): string {
     return this.datePipe.transform(date, "dd MMM yyyy 'at' hh:mm a")!;
   }
   startDate = '';
@@ -425,23 +482,13 @@ export class ActivityLogsComponent {
       }
     }
     let id = -1000;
-    if(this.currentTap().value === 'CAD')
-    {
-      this.getAllActivityLogs(
-        this.currentTap().value,
-        this.currentPage(),
-        10,
-        this.searchKeyword,
-        this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
-        this.startDate,
-        this.endDate,
-        this.selectedProgram && this.selectedProgram !== id? this.selectedProgram : this.selectedProgramIdFromKeyRes ? this.selectedProgramIdFromKeyRes : null,
-        this.selectedKeyResult?.keyResultName !== 'All' ? this.selectedKeyResult?.keyResultNumber.toString() : null,
-        this.selectedKeyResultProject && this.selectedKeyResultProject.toString() !== id.toString()? this.selectedKeyResultProject : null
-      );
+    if (this.keyResultProjectsData().length === 0) {
+      this.selectedKeyResultProject = null;
     }
-    else if(this.currentTap().value === 'PSR')
-    {
+    if (this.keyResultsData().length === 0) {
+      this.selectedKeyResult = null;
+    }
+    if (this.currentTap().value === 'CAD') {
       this.getAllActivityLogs(
         this.currentTap().value,
         this.currentPage(),
@@ -450,46 +497,87 @@ export class ActivityLogsComponent {
         this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
         this.startDate,
         this.endDate,
-        this.selectedProgram && this.selectedProgram !== id? this.selectedProgram : this.selectedProgramIdFromKeyRes ? this.selectedProgramIdFromKeyRes : null,
-        this.selectedKeyResultProject && this.selectedKeyResultProject.toString() !== id.toString()? this.selectedKeyResultProject : null
+        this.selectedProgram && this.selectedProgram !== id
+          ? this.selectedProgram
+          : this.selectedProgramIdFromKeyRes
+          ? this.selectedProgramIdFromKeyRes
+          : null,
+        this.selectedKeyResult?.keyResultName !== 'All'
+          ? this.selectedKeyResult?.keyResultNumber.toString()
+          : null,
+        this.selectedKeyResultProject &&
+          this.selectedKeyResultProject.toString() !== id.toString()
+          ? this.selectedKeyResultProject
+          : null
       );
+    } else if (this.currentTap().value === 'PSR') {
+      this.getAllActivityLogs(
+        this.currentTap().value,
+        this.currentPage(),
+        10,
+        this.searchKeyword,
+        this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
+        this.startDate,
+        this.endDate,
+        this.selectedProgram && this.selectedProgram !== id
+          ? this.selectedProgram
+          : this.selectedProgramIdFromKeyRes
+          ? this.selectedProgramIdFromKeyRes
+          : null,
+        this.selectedKeyResultProject &&
+          this.selectedKeyResultProject.toString() !== id.toString()
+          ? this.selectedKeyResultProject
+          : null
+      );
+    } else {
+      this.getAllActivityLogs(
+        this.currentTap().value,
+        this.currentPage(),
+        10,
+        this.searchKeyword,
+        this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
+        this.startDate,
+        this.endDate
+      )
     }
   }
-  selectedProgramIdFromKeyRes:number | null = null;
-  selectProgramType()
-  {
-    if(this.selectedProgram && this.selectedProgram !== -1000)
-    {
-      if(this.currentTap().value === 'CAD')
-      {
+  selectedProgramIdFromKeyRes: number | null = null;
+  selectProgramType() {
+    if (this.keyResultProjectsData().length === 0) {
+      this.selectedKeyResultProject = null;
+    }
+    if (this.keyResultsData().length === 0) {
+      this.selectedKeyResult = null;
+    }
+    if (this.selectedProgram && this.selectedProgram !== -1000) {
+      if (this.currentTap().value === 'CAD') {
         this.getKeyResultFilterData(this.selectedProgram.toString());
       }
       this.getKeyResultprojectsFilterData(this.selectedProgram.toString());
     } else {
-      if(this.currentTap().value === 'CAD')
-      {
+      if (this.currentTap().value === 'CAD') {
         this.getKeyResultFilterData();
       }
       this.getKeyResultprojectsFilterData();
     }
     this.applyFilters();
   }
-  selectKeyResultType(e:KeyResult)
-  {
-    this.selectedProgramIdFromKeyRes = e.programId !== -1000 ? e.programId : null;
+  selectKeyResultType(e: KeyResult) {
+    this.selectedProgramIdFromKeyRes =
+      e.programId !== -1000 ? e.programId : null;
     let selectedKeyId = e.keyResultNumber !== -1000 ? e.keyResultNumber : null;
     console.log(e);
-    if(selectedKeyId)
-    {
-      if(this.selectedProgram && this.selectedProgram !== -1000)
-      {
-        this.getKeyResultprojectsFilterData(this.selectedProgram.toString() , selectedKeyId.toString());
+    if (selectedKeyId) {
+      if (this.selectedProgram && this.selectedProgram !== -1000) {
+        this.getKeyResultprojectsFilterData(
+          this.selectedProgram.toString(),
+          selectedKeyId.toString()
+        );
       } else {
-        this.getKeyResultprojectsFilterData('' , selectedKeyId.toString());
+        this.getKeyResultprojectsFilterData('', selectedKeyId.toString());
       }
     } else {
-      if(this.selectedProgram && this.selectedProgram !== -1000)
-      {
+      if (this.selectedProgram && this.selectedProgram !== -1000) {
         this.getKeyResultprojectsFilterData(this.selectedProgram.toString());
       } else {
         this.getKeyResultprojectsFilterData();
@@ -497,8 +585,7 @@ export class ActivityLogsComponent {
     }
     this.applyFilters();
   }
-  selectKeyResultProjectType()
-  {
+  selectKeyResultProjectType() {
     this.applyFilters();
   }
   selectDate() {
@@ -519,8 +606,7 @@ export class ActivityLogsComponent {
   onDateChange(newDate: Date[] | null) {
     this.activityLogDate = newDate;
   }
-  exportActivityLogsData()
-  {
+  exportActivityLogsData() {
     this.activityLogsServices.downloadActivityLogsData();
   }
 }

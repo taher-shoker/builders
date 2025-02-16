@@ -1,9 +1,16 @@
 <section
   class="sidebar-section"
   [class.no-username]="!usernameImage && !userName"
+  [ngStyle]="{ 'justify-content': justifyContent() }"
 >
   <div class="sidebar-section-main-image">
     <img [src]="logoSrc()" alt="" />
+    @if (secondLogoSrc()) {
+    <div class="sidebar-section-developed-by">
+      <span class="text">Developed by</span>
+      <img [src]="secondLogoSrc()" alt="Qeema Logo" />
+    </div>
+    }
   </div>
   <div class="sidebar-section-links">
     <ul>
@@ -12,13 +19,19 @@
         <!-- [routerLinkActiveOptions]="{ exact: true }" -->
         <a
           routerLinkActive="activeLink"
+          [routerLinkActiveOptions]="routerLinkActiveOptions()"
           [routerLink]="link.url"
-          >{{ link.name }}</a
+        >
+          @if (link.iconPath) {
+          <ng-container *ngComponentOutlet="link.iconPath"></ng-container>
+          }
+          {{ link.name }}</a
         >
       </li>
       }
     </ul>
   </div>
+
   @if (usernameImage() && userName()) {
   <div class="sidebar-section-username">
     <div class="username-info">
@@ -26,26 +39,26 @@
         <img [src]="usernameImage()" alt="" />
       </div>
       <div class="sidebar-section-username-name">
-        <span>{{ userName() ? userName() : "" }}</span>
+        <span>{{ userName() ? userName() : '' }}</span>
       </div>
     </div>
     @if(isAdmin()){
-      <div class="edit-mode-switch-btn">
-        <span>Edit Mode : </span>
-        <div class="form-check form-switch">
-          <input
-            class="form-check-input"
-            type="checkbox"
-            role="switch"
-            id="flexSwitchCheckDefault"
-            [(ngModel)]="editModeChecked"
-            (change)="switchEditMode()"
-          />
-        </div>
+    <div class="edit-mode-switch-btn">
+      <span>Edit Mode : </span>
+      <div class="form-check form-switch">
+        <input
+          class="form-check-input"
+          type="checkbox"
+          role="switch"
+          id="flexSwitchCheckDefault"
+          [(ngModel)]="editModeChecked"
+          (change)="switchEditMode()"
+        />
       </div>
+    </div>
     }
     <div class="logout-btn" (click)="logout()">
-      <i class = "pi pi-sign-out"></i>
+      <i class="pi pi-sign-out"></i>
       logout
     </div>
   </div>

@@ -1,0 +1,24 @@
+.question-holder {
+  width: 100%;
+  display: flex;
+  align-items: end;
+  transition: all 0.3s ease-in-out;
+
+  p {
+    flex-shrink: 0;
+    margin: 0;
+    margin-right: 12px;
+    font-weight: 400;
+    font-size: 13px;
+    width: fit-content;
+    border-radius: 30px;
+    max-width: 75%;
+    background-color: var(--stc-color);
+    color: var(--whiteColor);
+    padding: 9.5px 22.5px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    cursor: pointer;
+  }
+}

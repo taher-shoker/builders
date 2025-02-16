@@ -1,0 +1,79 @@
+.notification-list {
+    padding: 10px;
+
+    &_header {
+        p-button {
+            ::ng-deep {
+                button {
+                    color: #1A1F36;
+                    font-family: 'stc forward-light';
+                }
+            }
+        }
+    }
+
+    &_unread-indicator {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 12px;
+        height: 12px;
+        border: 2px solid #4E008A;
+        border-radius: 50%;
+        margin-bottom: 10px;
+
+
+        i {
+            color: rgba(78, 0, 138, 0.3);
+            font-size: 12px;
+        }
+    }
+
+    &_item {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 10px;
+        border-bottom: 1px solid #E4E8EE;
+        box-sizing: border-box;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        margin-left: -10px;
+        margin-right: -10px;
+
+        &:last-child {
+            border-bottom: none;
+            margin-bottom: -10px;
+        }
+
+        &:hover {
+            background-color: rgba(78, 0, 138, 0.1);
+        }
+    }
+
+    &_content {
+        flex: 1;
+
+        &_title {
+            font-weight: bold;
+            margin: 0;
+        }
+
+        &_message {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        &_time {
+            margin: 0;
+            font-size: 12px;
+            color: #999;
+        }
+    }
+
+    &_empty {
+        text-align: center;
+        padding: 10px;
+        color: #999;
+    }
+}
