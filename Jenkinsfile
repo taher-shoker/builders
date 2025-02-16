@@ -1,93 +1,38 @@
 pipeline {
     agent any
 
-    environment {
-        APP_NAME = "cem#reporting#chat_bi"
-        WAR_FILE = "target/${APP_NAME}"
-        SERVER_1 = "10.21.196.243"
-        SERVER_2 = "10.21.196.244"
-        REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps"
-        BACKUP_DIR = "/data/tools/apache-tomcat-8.5.59/webapps"
-        SSH_USER = "osadmin"
-        SSH_PASSWORD = "CEM435@#qeema"
+    parameters {
+        string(name: 'NX_APP', defaultValue: '', description: 'Select the app to build')
+        string(name: 'NX_APP_PATH', defaultValue: '', description: 'Select the app path under the apache tomcat')
     }
 
     stages {
-        stage('Build') {
+        stage('Checkout Code') {
+            steps {
+                git branch: 'main', url: 'git@gitlab.stc.com.sa:mohfibrahim/stc-apps.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                sh '/usr/bin/npm install --legacy-peer-deps --no-fund --no-audit'
+            }
+        }
+
+        stage('Build Specific App') {
             steps {
                 script {
-                    sh "/usr/bin/npm install --legacy-peer-deps --no-fund --no-audit"
+                    if (params.NX_APP == '') {
+                        error "You must specify an app to build!"
+                    }
+
+                    if (params.NX_APP_PATH == '') {
+                        error "You must specify an app path to build!"
+                    }
+
+                    sh "npx nx run ${params.NX_APP}:build --configuration=production --base-href=/cem/reporting/${params.NX_APP_PATH}/"
                 }
             }
-        }
-
-        stage('Backup and Deploy') {
-            parallel {
-                stage('Server 1 Operations') {
-                    stages {
-                        stage('Backup WAR 243') {
-                            steps {
-                                script {
-                                    sh """
-                                        sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "
-                                            if [ -f ${REMOTE_DEPLOY_DIR}/cem#reporting#chat_bi ]; then 
-                                                mv ${REMOTE_DEPLOY_DIR}/cem#reporting#chat_bi ${BACKUP_DIR}/cem#reporting#chat_bi-\$(date +'%Y-%m-%d-%H').jar;
-                                            fi
-                                        "
-                                    """
-                                }
-                            }
-                        }
-                        stage('Deploy WAR 243') {
-                            steps {
-                                script {
-                                    sh """
-                                        sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
-                                    """
-                                }
-                            }
-                        }
-                    }
-                }
-                stage('Server 2 Operations') {
-                    stages {
-                        stage('Backup WAR 244') {
-                            steps {
-                                script {
-                                    sh """
-                                        sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "
-                                            if [ -f ${REMOTE_DEPLOY_DIR}/cem#reporting#chat_bi ]; then 
-                                                mv ${REMOTE_DEPLOY_DIR}/cem#reporting#chat_bi ${BACKUP_DIR}/cem#reporting#chat_bi-\$(date +'%Y-%m-%d-%H').jar;
-                                            fi
-                                        "
-                                    """
-                                }
-                            }
-                        }
-                        stage('Deploy WAR 244') {
-                            steps {
-                                script {
-                                    sh """
-                                        sshpass -p ${SSH_PASSWORD} scp ${env.WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
-                                    """
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            echo 'Pipeline execution complete.'
-        }
-        success {
-            echo 'Application deployed successfully on both servers!'
-        }
-        failure {
-            echo 'Pipeline execution failed! Check the logs for details.'
         }
     }
 }
