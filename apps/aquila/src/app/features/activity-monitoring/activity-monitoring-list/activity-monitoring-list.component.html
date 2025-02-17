@@ -47,6 +47,7 @@
     >
       <ng-template #statusCustomTemplate let-row>
         <span
+          class="status-custom"
           [ngClass]="{
             'status-success': row.status === 'SUCCESS',
             'status-failed': row.status === 'FAILED'
@@ -56,7 +57,16 @@
         </span>
       </ng-template>
       <ng-template #startedAtTemplate let-row>
-        {{ row.startedAt | date : "dd MMM yyyy 'at' hh:mm a" }}
+        <span
+          [pTooltip]="
+            (row.startedAt | date : 'dd MMM yyyy \'at\' hh:mm a') || ''
+          "
+          tooltipPosition="right"
+          [tooltipStyleClass]="'tooltip-custom'"
+          [showDelay]="500"
+        >
+          {{ row.startedAt | date : "dd MMM yyyy 'at' hh:mm a" }}
+        </span>
       </ng-template>
     </stc-apps-table-list>
 

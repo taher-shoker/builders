@@ -50,9 +50,13 @@
 
     &_list {
         span {
-            padding: $gap-xs $gap-large;
-            border-radius: 6px;
-            font-weight: 700;
+            @extend %cell-overflow;
+
+            &.status-custom {
+                padding: $gap-xs $gap-large;
+                border-radius: 6px;
+                font-weight: 700;
+            }
 
             &.status-success {
                 color: #22C55E;
