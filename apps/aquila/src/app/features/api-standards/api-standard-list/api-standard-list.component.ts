@@ -20,6 +20,7 @@ import { StandardsService } from '../../../shared/services/standards.service';
 import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'stc-apps-api-standard-list',
@@ -31,6 +32,7 @@ import { ToastModule } from 'primeng/toast';
     ApiStandardFiltersComponent,
     ConfirmDialogModule,
     ToastModule,
+    TooltipModule,
   ],
   templateUrl: './api-standard-list.component.html',
   styleUrls: ['./api-standard-list.component.scss'],
