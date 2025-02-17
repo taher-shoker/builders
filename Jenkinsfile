@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     parameters {
-		choice(name: 'NX_APP', choices: ['chatBI', 'dtmv', 'ebe'], description: 'Select the app to build')
-        choice(name: 'NX_APP_PATH', choices: ['chat_bi', 'business-excellence-workspace', 'ceodashboard' , 'dtmilestones' , 'dtworkspace' , 'dynamic-rf-workspace' , 'fraudworkspace' , 'jiradashboard'], description: 'Select the app path under the apache tomcat')
+		choice(name: 'NX_APP', choices: ['' , 'chatBI', 'dtmv', 'ebe'], description: 'Select the app to build')
+        choice(name: 'NX_APP_PATH', choices: ['' , 'chat_bi', 'business-excellence-workspace', 'ceodashboard' , 'dtmilestones' , 'dtworkspace' , 'dynamic-rf-workspace' , 'fraudworkspace' , 'jiradashboard'], description: 'Select the app path under the apache tomcat')
     }
 
     stages {
