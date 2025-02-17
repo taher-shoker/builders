@@ -80,3 +80,17 @@
     }
   }
 }
+.empty-data-msg2
+{
+  text-align: center;
+  @extend .stcFont;
+  color:var(--stc-purple-color);
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  font-style: oblique;
+  // height: 60vh;
+  height: calc(100vh - 109px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

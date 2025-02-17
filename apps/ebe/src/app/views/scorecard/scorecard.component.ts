@@ -24,6 +24,8 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { KpiMobileCardComponent } from '../../components/kpi-mobile-card/kpi-mobile-card.component';
 import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+
 interface FilteredOptions {
   month: number;
   year: number;
@@ -37,6 +39,7 @@ interface FilteredOptions {
     PageHeaderComponent,
     CommonModule,
     KpiMobileCardComponent,
+    OverlayPanelModule,
     MobileViewHeaderComponent
   ],
   templateUrl: './scorecard.component.html',

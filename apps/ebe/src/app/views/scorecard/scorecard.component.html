@@ -55,7 +55,21 @@
       {
           @for (kpi of kpisData(); track $index) {
             <div class = "kpi-content">
-              <p class = "kpis-title mb-2">{{kpi.title}}</p>
+              <p class = "kpis-title mb-2">
+                {{kpi.title}}
+                <!-- @if(kpi.title.split(' ').length > 3) {
+                  <span class="read-more-btn" (click)="textOverlayPanel.toggle($event)"
+                    >read more</span
+                  >
+                  <p-overlayPanel
+                    #textOverlayPanel
+                    dismissable="true"
+                    styleClass="kpi-title-popover"
+                  >
+                    <section class="kpi-title-popover-section">{{ kpi.title }}</section>
+                  </p-overlayPanel>
+                  } -->
+              </p>
               <div class = "kpis-mobile-container mb-3">
                 @for (kpiItem of kpi.kpiDataDTO; track $index) {
                   <stc-apps-kpi-mobile-card [kpi]="kpiItem" />
