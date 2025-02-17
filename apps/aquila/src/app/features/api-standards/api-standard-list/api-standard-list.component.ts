@@ -51,10 +51,10 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
 
   readonly displayedColumns: string[] = [
     'name',
+    'domain',
     'version',
     'businessArea',
     'publishUpdate',
-    'lastUpdate',
   ];
 
   columnsSchema: ColumnsSchema[] = [];
@@ -77,6 +77,7 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
   private initializeColumnsSchema(): void {
     this.columnsSchema = [
       { key: 'name', type: 'text', label: 'Name' },
+      { key: 'domain', type: 'text', label: 'Domain' },
       { key: 'version', type: 'text', label: 'Version' },
       { key: 'businessArea', type: 'text', label: 'Business Area' },
       {
@@ -85,7 +86,6 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
         label: 'Publish Date',
         complexViewTemp: this.publishUpdateTemplate,
       },
-      { key: 'lastUpdate', type: 'text', label: 'Latest Update Date' },
     ];
   }
 

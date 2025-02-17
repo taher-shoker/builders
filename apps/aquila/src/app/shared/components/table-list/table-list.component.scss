@@ -51,6 +51,7 @@
 
     tr:not(.table-header) td {
         color: var(--dark-slate-gray);
+        padding: $gap-medium;
 
         @media screen and (max-width: $breakpoint-xl) {
             font-size: $font-size-small;
