@@ -3,12 +3,12 @@
   <mat-date-range-input
     [rangePicker]="picker"
     [formGroup]="dateFormGroup"
-    [dateFilter]="filteredDays"
+    [dateFilter]="disableFilterFlag ? disableFilter : filteredDays"
   >
     <input
       [readonly]="disableInput"
       matStartDate
-      placeholder="Start date"
+      placeholder="Start date"    
       formControlName="start"
       (dateChange)="firstValueChanged($event)"
     />
