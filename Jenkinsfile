@@ -1,39 +1,14 @@
+properties([
+    parameters([
+        choice(name: 'NX_APP', choices: ['chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the application to build.'),
+        choice(name: 'NX_APP_PATH', choices: ['chat_bi', 'dtmilestones', 'business-excellence-workspace', 'dynamic-rf-workspace', 'dtworkspace', 'fraudworkspace'], description: 'Select the app path under Apache Tomcat.')
+    ])
+])
+
 pipeline {
     agent any
 
-    parameters {
-        choice(name: 'NX_APP', choices: ['', 'chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the app to build')
-
-        dynamicParam(name: 'NX_APP_PATH', description: 'Select the app path under Apache Tomcat',
-            script: '''
-                def appMapping = [
-                    chatBI: 'chat_bi',
-                    dtmv: 'dtmilestones',
-                    ebe: 'business-excellence-workspace',
-                    'dt-drf': 'dynamic-rf-workspace',
-                    di: 'dtworkspace',
-                    d2d: 'fraudworkspace'
-                ]
-                
-                def selectedApp = NX_APP ?: ''
-                return [appMapping[selectedApp] ?: '']
-            '''
-        )
-    }
-
-        
     stages {
-
-        stage('Validate Selection') {
-            steps {
-                script {
-                    if (!params.NX_APP_PATH) {
-                        error "No valid path found for the selected application '${params.NX_APP}'."
-                    }
-                }
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 sh '/usr/bin/npm install --legacy-peer-deps --no-fund --no-audit'
@@ -105,7 +80,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sshpass -p CEM435@#qeema scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.243:/data/tools/apache-tomcat-8.5.59/webapps/
+                        sshpass -p 'CEM435@#qeema' scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.243:/data/tools/apache-tomcat-8.5.59/webapps/
                     """
                 }
             }
@@ -115,7 +90,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sshpass -p CEM435@#qeema ssh -o StrictHostKeyChecking=no osadmin@10.21.196.243 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+                        sshpass -p 'CEM435@#qeema' ssh -o StrictHostKeyChecking=no osadmin@10.21.196.243 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
                     """
                 }
             }
@@ -125,21 +100,21 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sshpass -p CEM435@#qeema scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.244:/data/tools/apache-tomcat-8.5.59/webapps/
-                    """
-                }
-            }
-        }
-        stage('Backup & Rename 244') {
-            steps {
-                script {
-                    sh """
-                        sshpass -p CEM435@#qeema ssh -o StrictHostKeyChecking=no osadmin@10.21.196.244 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+                        sshpass -p 'CEM435@#qeema' scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.244:/data/tools/apache-tomcat-8.5.59/webapps/
                     """
                 }
             }
         }
 
+        stage('Backup & Rename 244') {
+            steps {
+                script {
+                    sh """
+                        sshpass -p 'CEM435@#qeema' ssh -o StrictHostKeyChecking=no osadmin@10.21.196.244 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+                    """
+                }
+            }
+        }
     }
 
     post {
