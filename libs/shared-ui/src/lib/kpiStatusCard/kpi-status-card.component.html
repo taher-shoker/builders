@@ -9,6 +9,8 @@
   [class.planned]="kpiType() === 'in-progress' && kpiStatus().toString().toLowerCase() === 'planned'"
   [class.actualStatus]="kpiType() === 'actualStatus'"
   [class.status]="kpiType() === 'status'"
+  [class.output]="kpiType() === 'output'"
+  [class.theme]="kpiType() === 'theme'"
 >
   @if(kpiType() === 'achieved'){
     Over Achieved
@@ -42,7 +44,7 @@
       >
         {{kpiStatus().toString()}}
       </span>
-      @if(kpiStatus().toString().length >= 10){
+      @if(kpiStatus().toString().length >= 8){
         <p-overlayPanel #overlayPanel2 dismissable="true">
           <section class="popover-section" [innerHTML]="kpiStatus().toString()"></section>
         </p-overlayPanel>
@@ -52,23 +54,21 @@
       N/A
     }
   }
+  @if(kpiType() === 'indicator')
+  {
+    <div class = "domainIndicator-status">
+      <span 
+        class = 'domainIndicator' 
+        [ngStyle]="{
+          'background' : domainIndicatorColor(),
+          'font-size' : kpiStatus() === 'N/A' ? '12px' : '14px'
+        }"
+      >{{kpiStatus()}}</span>
+    </div>
+  }
   @if(kpiType() === 'domain'){
-    <!-- @if(domainIndicator())
-    {
-      <span class = 'domainIndicator' [ngStyle]="{'background' : domainIndicatorColor()}">{{domainIndicator()}}</span>
-    }
-    {{kpiStatus()}} -->
-    <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px">
-      @if(domainIndicator())
-      {
-        <span 
-          class = 'domainIndicator' 
-          [ngStyle]="{
-            'background' : domainIndicatorColor(),
-            'font-size' : domainIndicator() === 'N/A' ? '12px' : '14px'
-          }"
-        >{{domainIndicator()}}</span>
-      }
+    <!-- <div class = "d-flex align-items-center p-0" style = "line-height:1;gap:5px"> -->
+    <div class = "p-0">
       <span
           (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
           (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"

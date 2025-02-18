@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { StrategyProgramService } from '../../services/strategy-program.service';
@@ -10,7 +10,11 @@ import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/ed
 import { FileModel } from '../../models/scorecard.model';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
-
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { DatePipe } from '@angular/common';
+import { ActivityLog, ActivityLogData } from '../../models/activity-logs';
+import { ActivityLogService } from '../../services/activity-logs.service';
 @Component({
   selector: 'stc-apps-strategy-program',
   standalone: true,
@@ -19,7 +23,8 @@ import { ToastrService } from 'ngx-toastr';
     PageHeaderComponent,
     SharedUiModule,
     StrategyKpiCardComponent,
-    EditModeViewComponent
+    EditModeViewComponent,
+    OverlayPanelModule
   ],
   templateUrl: './strategyProgram.component.html',
   styleUrl: './strategyProgram.component.scss',
@@ -29,9 +34,18 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   strategyProgramData!: StrategyProgramModel;
   currentMode!: 'editMode' | 'viewMode';
   scorecardService = inject(ScorecardService);
+  activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
   endSubs$:Subject<boolean> = new Subject();
   toastr = inject(ToastrService);
+  constructor(private datePipe:DatePipe){}
+  activityLogServices = inject(ActivityLogService);
   ngOnInit() {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.showActivityLogsPopup = false;
+      }
+    })
     // this.strategyProgramData = [];
     console.log("window width => " , window.innerWidth);
     this.getStrategyProgramSummary();
@@ -40,6 +54,28 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
         this.currentMode = res;
       },
     });
+    this.activityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+    ]
   }
   isEmptyData!: boolean;
   ngOnDestroy(): void {
@@ -48,6 +84,7 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
   private getStrategyProgramSummary() {
     this.strategyProgramService.getStrategyProgramSummary().pipe(takeUntil(this.endSubs$)).subscribe({
       next: (res: StrategyProgramModel) => {
+        console.log(res);
         this.strategyProgramData = res;
         if (this.strategyProgramData.cadStrategyProgramDTO.length === 0) {
           this.isEmptyData = true;
@@ -93,5 +130,26 @@ export class StrategyProgramComponent implements OnInit , OnDestroy {
     a.download = filename;
     a.click();
     window.URL.revokeObjectURL(url);
+  }
+  showActivityLogsPopup = false;
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.getScorecardActivityLogs("CAD");
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();
+  }
+  private getScorecardActivityLogs(moduleName:string)
+  {
+    this.activityLogServices.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        this.activityLogsTableBody.set(activityLogs);
+      }
+    })
   }
 }

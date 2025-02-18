@@ -1,0 +1,124 @@
+@import '../../../styles/shared-styles.scss';
+
+.api-test {
+    @include flex-column;
+    gap: $gap-medium;
+
+    h5 {
+        margin: 0;
+        color: var(--grey-color);
+    }
+
+    &_filter {
+        @extend .component-wrapper;
+
+        h5 {
+            margin-bottom: $gap-large;
+        }
+
+        &_fields {
+            display: flex;
+            @include responsive-gap($gap-large);
+            align-items: end;
+
+            >div {
+                @include flex-column;
+                gap: $gap-xxs;
+                flex: 1;
+
+                ::ng-deep .p-dropdown {
+                    width: $full-width;
+                }
+
+                @media(max-width: $breakpoint-xl) {
+                    gap: $gap-tiny;
+
+                    >label,
+                    ::ng-deep {
+
+                        stc-apps-input-group p-inputgroup,
+                        stc-apps-filter-dropdown p-dropdown .p-inputtext {
+                            font-size: $font-size-small;
+                        }
+                    }
+                }
+            }
+
+            stc-apps-button {
+                flex: 0.5;
+                margin-top: $gap-xs;
+
+                ::ng-deep button {
+                    @include button-font-size;
+                }
+
+                @media(max-width: $breakpoint-md) {
+                    flex: 1;
+                    white-space: nowrap;
+                    min-width: 120px;
+                }
+            }
+
+            @media(max-width: $breakpoint-lg) {
+                flex-direction: column;
+                align-items: baseline;
+
+                >div,
+                stc-apps-button {
+                    width: $full-width;
+                }
+            }
+        }
+    }
+
+    &_lists {
+        display: flex;
+        gap: $gap-medium;
+        background: initial;
+
+        stc-apps-status-list {
+            flex: 1;
+            @extend .component-wrapper;
+        }
+
+        @media(max-width: $breakpoint-lg) {
+            flex-direction: column;
+        }
+    }
+
+    &_result {
+        @extend .component-wrapper;
+
+        &_header {
+            @include flex-between-center;
+            margin-bottom: $gap-medium;
+
+            h5 {
+                color: var(--darkPurbleColor);
+            }
+        }
+    }
+
+    &_no-data-message {
+        width: $full-width;
+        height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        p {
+            color: var(--grey-color);
+        }
+    }
+}
+
+@media screen and (max-width: $breakpoint-xl) {
+    .api-test {
+
+        h5,
+        &_filter_fields>div>label,
+        &_no-data-message p {
+            font-size: $font-size-small;
+        }
+    }
+}

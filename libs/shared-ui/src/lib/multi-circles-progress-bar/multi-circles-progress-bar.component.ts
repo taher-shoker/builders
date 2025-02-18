@@ -1,14 +1,14 @@
-import { Component, input , InputSignal, OnInit} from '@angular/core';
+import { Component, input , InputSignal, OnChanges, OnInit, SimpleChanges} from '@angular/core';
 @Component({
   selector: 'stc-apps-multi-circles-progress-bar',
   standalone: false,
   templateUrl: './multi-circles-progress-bar.component.html',
   styleUrl: './multi-circles-progress-bar.component.scss',
 })
-export class MultiCirclesProgressBarComponent implements OnInit{
+export class MultiCirclesProgressBarComponent implements OnInit , OnChanges{
   // plannedNumber = input.required<number>()
   // actualNumber = input.required<number>()
-  chartData:InputSignal<{actual:number , planned:number}> = input.required<{actual:number , planned:number}>()
+  chartData:InputSignal<{actual:number | null , planned:number  | null}> = input.required<{actual:number  | null , planned:number  | null}>()
   colors:InputSignal<string[]> = input.required<string[]>()
   outerRadius:InputSignal<number> = input.required<number>()
   innerRadius:InputSignal<number> = input.required<number>()
@@ -21,8 +21,21 @@ export class MultiCirclesProgressBarComponent implements OnInit{
   actualDegree!:number;
   dataKeys:string[] = []
   ngOnInit(): void {
-    this.plannedDegree = 360 * (this.chartData().planned / 100);
-    this.actualDegree = 360 * (this.chartData().actual / 100);
+    this.plannedDegree = 360 * (
+      this.chartData() && this.chartData().planned ? (this.chartData().planned! / 100) : 0
+    );
+    this.actualDegree = 360 * (
+      this.chartData() && this.chartData().actual ? (this.chartData().actual! / 100) : 0
+    );
+    this.dataKeys = Object.keys(this.chartData());
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.plannedDegree = 360 * (
+      this.chartData() && this.chartData().planned ? (this.chartData().planned! / 100) : 0
+    );
+    this.actualDegree = 360 * (
+      this.chartData() && this.chartData().actual ? (this.chartData().actual! / 100) : 0
+    );
     this.dataKeys = Object.keys(this.chartData());
   }
   get actualStyles() {

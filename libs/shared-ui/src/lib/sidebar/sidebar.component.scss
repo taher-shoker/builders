@@ -1,110 +1,160 @@
 @import '../../../../../apps/ebe/src/styles/fonts.scss';
-.sidebar-section
-{
+@import '../../../../styles/src/scss/core/variables/colors';
+
+.sidebar-section {
   height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   position: fixed;
-  width:20%;
-  @media all and (min-width:1600px) and (max-width:3000px)
-  {
-    width:15%;
+  width: 20%;
+
+  @media all and (min-width:1600px) and (max-width:3000px) {
+    width: 15%;
   }
-  @media all and (min-width:3001px)
-  {
-    width:12%;
+
+  @media all and (min-width:3001px) {
+    width: 12%;
   }
-  &.no-username
-  {
+
+  @media all and (max-width: 1200px) {
+    width: 25%;
+  }
+
+  &.no-username {
     justify-content: stretch;
-    gap:140px;
+    gap: 140px;
   }
-  &-main-image
-  {
-    padding:20px 30px;
+
+  &-main-image {
+    padding: 20px 30px;
   }
-  &-links
-  {
-    ul
-    {
+
+  &-developed-by {
+    display: flex;
+    align-items: center;
+    margin: 20px 0;
+    font-size: 12px;
+
+    span {
+      color: var(--whiteColor);
+      margin-inline-end: 7px;
+    }
+
+    @media all and (max-width: 768px) {
+      flex-direction: column;
+      padding-left: 0;
+      text-align: center;
+
+      span {
+        margin: 0 0 5px 0;
+      }
+    }
+  }
+
+
+
+  &-links {
+    ul {
       margin: 0;
       padding: 0;
       list-style: none;
-      li
-      {
+
+      li {
         margin-bottom: 10px;
-        a
-        {
+
+        a {
           text-decoration: none;
-          color:var(--stc-white-color);
+          color: var(--whiteColor);
           text-transform: capitalize;
           font-size: 18px;
           font-weight: 400;
           display: inline-block;
           @extend .stcFont;
-          padding:10px 30px;
+          padding: 10px 30px;
           transition: .3s;
           width: 100%;
-          &:hover , &.activeLink
-          {
+
+          &:hover,
+          &.activeLink {
             color: var(--stc-pink-color);
             background-color: var(--stc-pink-light-color);
+
+            ::ng-deep {
+              svg {
+                fill: transparent;
+
+                path {
+                  stroke: var(--stc-pink-color);
+                }
+              }
+            }
           }
         }
       }
     }
+
+    @media all and (max-width: 768px) {
+      ul {
+        padding: 0 10px;
+
+        li a {
+          font-size: 16px;
+          padding: 10px;
+        }
+      }
+    }
   }
-  &-username
-  {
+
+  &-username {
     display: flex;
     // align-items: center;
     // justify-content: space-between;
     flex-direction: column;
     align-items: baseline;
     gap: 20px;
-    padding:20px 0px;
-    .username-info
-    {
+    padding: 20px 0px;
+
+    .username-info {
       display: flex;
       align-items: center;
-      gap:20px;
-      padding:0 30px;
+      gap: 20px;
+      padding: 0 30px;
     }
-    .edit-mode-switch-btn
-    {
+
+    .edit-mode-switch-btn {
       display: flex;
       align-items: center;
-      gap:30px;
+      gap: 30px;
       background-color: var(--stc-light-sky-color);
       width: 100%;
-      padding:10px 30px;
-      span
-      {
+      padding: 10px 30px;
+
+      span {
         @extend .stcFont;
       }
-      .form-check
-      {
+
+      .form-check {
         margin-bottom: 0;
         position: relative;
         top: -2px;
-        input
-        {
+
+        input {
           width: 40px;
           height: 20px;
           outline: none;
           box-shadow: none;
-          border:0;
-          &:checked
-          {
-            background-color:#00C48C;
+          border: 0;
+
+          &:checked {
+            background-color: #00C48C;
           }
         }
       }
     }
-    &-name
-    {
-      color:var(--stc-white-color);
+
+    &-name {
+      color: var(--whiteColor);
       // text-transform: capitalize;
       font-weight: 500;
       @extend .stcFont;
@@ -112,14 +162,14 @@
     }
   }
 }
-.logout-btn
-{
+
+.logout-btn {
   display: flex;
   align-items: center;
-  gap:10px;
+  gap: 10px;
   background-color: var(--stc-pink-light-color);
   width: 100%;
-  padding:8px 30px;
+  padding: 8px 30px;
   cursor: pointer;
   @extend .stcFont;
   text-transform: capitalize;

@@ -7,7 +7,7 @@
   &-head
   {
     position: relative;
-    i
+    .pi-ellipsis-v
     {
       position: absolute;
       top:0;
@@ -19,7 +19,8 @@
   }
   &-header {
     font-size: 28px;
-    padding:0 15px;
+    // padding:0 15px;
+    padding: 0 30px 0 15px;
     @extend .boldPoppins;
     color: var(--stc-dark-grey-color);
     overflow: hidden;
@@ -71,15 +72,18 @@
   text-decoration: none;
   text-transform: capitalize;
 }
-::ng-deep .p-overlaypanel
+// ::ng-deep .p-overlaypanel
+// {
+//   margin-left:15px  !important;
+// }
+::ng-deep .psr-popup
 {
-  margin-left:15px  !important;
-}
-::ng-deep .p-menu
-{
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 150px !important;
+  .p-menu
+  {
+    margin: 0 !important;
+    padding: 0 !important;
+    width: 150px !important;
+  }
   .p-menu-list
   {
     margin: 0 !important;
@@ -194,6 +198,62 @@
       &.cancel
       {
         width: 80px;
+      }
+    }
+  }
+}
+.planned-date
+{
+  margin-top: 25px;
+  @extend .stcFont;
+  color:var(--stc-grey-dark-color);
+  font-weight: 500;
+  font-size: 17px;
+  text-transform: capitalize;
+  span
+  {
+    font-weight: bold;
+    color:var(--stc-dark-blue-color);
+  }
+}
+::ng-deep .project-actions-logs
+{
+  // margin: 0 !important;
+  // margin-left:-15px !important;
+  // margin-top:15px !important;
+  // left: 668.8px !important;
+  // left: 43.7% !important;
+  // top:350px !important;
+  .p-overlaypanel-content
+  {
+    width: 230px;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+    border-radius: 5px;
+    .action
+    {
+      padding: 15px;
+      display: flex;
+      align-items: center;
+      height:40px;
+      cursor: pointer;
+      gap:10px;
+      transition: .4s;
+      &:hover
+      {
+        background-color: #F5F6FA;
+      }
+      p
+      {
+        margin: 0;
+      }
+      &.delete-btn
+      {
+        p , i
+        {
+          color:#FF1A1A;
+        }
       }
     }
   }

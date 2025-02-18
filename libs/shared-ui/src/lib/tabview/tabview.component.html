@@ -1,37 +1,10 @@
-<!-- <div class = "tabs-container">
-  <div class="tabs-view-section" #taps>
-    @for (tap of tabsData(); track tap.id;let index = $index){
-      <div
-        class="scored-card-section-taps-tap"
-        [class.clickedTap]="currentClickedTapIndex === index"
-        (click)="toggleTaps(index , tap)"
-        [ngStyle]="{
-          'color' : (currentClickedTapIndex === index) || (onHover && hoveredTap === index) ? clickedtabColor() : tabColor() ,
-          'background' : currentClickedTapIndex === index || (onHover && hoveredTap === index) ? clickedtabBackground() : tabBackground(),
-          'font-family' : fontFamily() ? fontFamily() : 'Poppins'
-        }"
-        (mouseenter)="onHover = true;hoveredTap = index"
-        (mouseleave)="onHover = false"
-      >
-        <span>{{tap.name}}</span>
-      </div>
-    }
-    @if(tabsData() && tabsData().length > 5 && data.length !== tabsData().length)
-    {
-      <i class = "pi pi-ellipsis-h" (click)="showMore()"></i>
-    }
-  </div>
-  
-</div> -->
-
-<p-tabView [(activeIndex)]="activeIndex" [scrollable]="true" #tabsView>
+<!-- <p-tabView [(activeIndex)]="activeIndex" class="custom-tabview" [scrollable]="true" #tabsView>
   <p-tabPanel>
     <ng-template pTemplate="header">
       <div *ngFor="let tab of tabsData(); let index = index">
-      <!-- <div *ngFor="let tab of tabsData(); let index = index"> -->
         <div
           [class.clickedTap]="currentClickedTapIndex === index"
-          (click)="toggleTaps(index, tab.name)"
+          (click)="toggleTaps(index, tab.name , tab)"
           (mouseenter)="onHover = true;hoveredTap = index"
           (mouseleave)="onHover = false"
           [ngStyle]="{
@@ -48,10 +21,54 @@
             'font-family': fontFamily() ? fontFamily() : 'Poppins'
           }"
           class="tap"
+          [class.ActivityLogTable]="isActivityLogTable()"
         >
           {{ tab.name }}
         </div>
       </div>
     </ng-template>
   </p-tabPanel>
-</p-tabView>
+</p-tabView> -->
+<div class="tabs-container">
+  @if(showArrows)
+  {
+    <div class="prev-button" (click)="scrollTabs(-1)">
+      <i class = "pi pi-angle-left"></i>
+    </div>
+  }
+  <div class="tabs-wrapper" #tabsContainer>
+    <div class="tabs" #tabs>
+      <div *ngFor="let tab of tabsData(); let index = index">
+        <div
+          [class.clickedTap]="currentClickedTapIndex === index"
+          (click)="toggleTaps(index, tab.name , tab)"
+          (mouseenter)="onHover = true;hoveredTap = index"
+          (mouseleave)="onHover = false"
+          [ngStyle]="{
+            color:
+              currentClickedTapIndex === index ||
+              (onHover && hoveredTap === index)
+                ? clickedtabColor()
+                : tabColor(),
+            background:
+              currentClickedTapIndex === index ||
+              (onHover && hoveredTap === index)
+                ? clickedtabBackground()
+                : tabBackground(),
+            'font-family': fontFamily() ? fontFamily() : 'Poppins'
+          }"
+          class="tap"
+          [class.ActivityLogTable]="isActivityLogTable()"
+        >
+          {{ tab.name }}
+        </div>
+      </div>
+    </div>
+  </div>
+  @if(showArrows)
+  {
+    <div class="prev-button" (click)="scrollTabs(1)">
+      <i class = "pi pi-angle-right"></i>
+    </div>
+  }
+</div>

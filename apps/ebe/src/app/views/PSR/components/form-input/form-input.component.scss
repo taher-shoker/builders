@@ -132,3 +132,11 @@ textarea {
     margin: 0 !important;
   }
 }
+::ng-deep .p-datepicker-icon
+{
+  svg
+  {
+    width: 20px !important;
+    height:20px !important;
+  }
+}

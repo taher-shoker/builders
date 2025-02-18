@@ -1,0 +1,74 @@
+<div class="activity-monitoring">
+  <div class="activity-monitoring_header">
+    <h3>Activity Monitoring</h3>
+    <stc-apps-split-button
+      [label]="'Export'"
+      [labelIcon]="'pi pi-upload'"
+      [buttonSeverity]="'primary'"
+      [model]="exportItems"
+    ></stc-apps-split-button>
+  </div>
+
+  <div class="activity-monitoring_filters">
+    <stc-apps-activity-monitoring-filters
+      #filters
+      (filtersChanged)="onFiltersChanged($event)"
+    />
+  </div>
+  <div class="activity-monitoring_filters_applied">
+    @for (filter of appliedFilters; track filter) {
+    <p-chip
+      [label]="
+        filter.label +
+        ': ' +
+        (filter.key === 'startedAt'
+          ? ($any(filter.value) | date : 'dd MMM yyyy \'at\' hh:mm a')
+          : filter.value)
+      "
+      [removable]="true"
+      (onRemove)="removeFilter(filter, filters)"
+    ></p-chip>
+    } @if (appliedFilters.length > 0) {
+    <stc-apps-button
+      [buttonText]="'Clear Filters'"
+      [buttonType]="'default'"
+      (click)="clearFilters(filters)"
+    ></stc-apps-button>
+    }
+  </div>
+  <div class="activity-monitoring_list">
+    <stc-apps-table-list
+      [dataSource]="filteredDataSource"
+      [columnSchema]="columnsSchema"
+      [noDataMessage]="'No activity monitoring available'"
+      [enablePagination]="false"
+      [totalCount]="totalRecords"
+      (pageChange)="onPageChange($event)"
+    >
+      <ng-template #statusCustomTemplate let-row>
+        <span
+          [ngClass]="{
+            'status-success': row.status === 'SUCCESS',
+            'status-failed': row.status === 'FAILED'
+          }"
+        >
+          {{ row.status }}
+        </span>
+      </ng-template>
+      <ng-template #startedAtTemplate let-row>
+        {{ row.startedAt | date : "dd MMM yyyy 'at' hh:mm a" }}
+      </ng-template>
+    </stc-apps-table-list>
+
+    <p-paginator
+      [first]="first"
+      [rows]="rows"
+      [totalRecords]="totalRecords"
+      (onPageChange)="onPageChange($event)"
+      [rowsPerPageOptions]="[10, 20, 50]"
+      styleClass="mt-3 custom-paginator"
+      [showCurrentPageReport]="true"
+      currentPageReportTemplate="Showing {first} to {last} of {totalRecords}"
+    ></p-paginator>
+  </div>
+</div>

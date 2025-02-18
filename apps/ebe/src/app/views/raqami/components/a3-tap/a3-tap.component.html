@@ -1,0 +1,55 @@
+<section class="a3-section">
+    <div class="a3-section-header">
+        <p class="a3-section-header-title">
+            monthly targets (analytics services preservation)
+        </p>
+    </div>
+    @for (item of raqamiA3Data(); track $index;let count = $count;let last = $last) {
+        <div class="a3-section-body" [class.mb-4]="count !== 1 && !last">
+            <p class="a3-section-body-title">
+                {{item.title}}
+            </p>
+            <div class="a3-section-body-cards">
+                <p class="a3-section-body-cards-owner">
+                    {{item.project}}
+                </p>
+            </div>
+            <div class="a3-section-body-content mt-3">
+                <div class="a3-section-body-content-data">
+                    <div class = "content">
+                        <div class="weight-container">
+                            <p class="title">KPI Weight</p>
+                            <p class="value">{{item.kpiWeight}}%</p>
+                        </div>
+                        <div class="weight-container">
+                            <p class="title">UoM</p>
+                            <p class="value">{{item.UoM}}</p>
+                        </div>
+                    </div>
+                    <div class = "content">
+                        <div class="weight-container">
+                            <p class="title">Baseline</p>
+                            <p class="value">{{item.baseLine.year}} <span class = "column">:</span> >{{item.baseLine.val}}%</p>
+                        </div>
+                    </div>
+                    <div class = "content mb-0">
+                        <div class="weight-container w-100">
+                            <p class="title">2023 Target achieved by</p>
+                            <div class="data">
+                                <div class="text">
+                                    <div class="year">{{item.target | date:"dd-MM-yyyy"}}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="a3-section-body-content-chart" style = "height: 324px;">
+                    <stc-apps-double-line-chart 
+                        [chartData]="item.chartData"
+                        [colors]="colors"
+                    />
+                </div>
+            </div>
+        </div>
+    }
+</section>

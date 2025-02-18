@@ -1,0 +1,73 @@
+@if (showPopUp) {
+<stc-apps-pop-up-image
+  [chartType]="showType()"
+  [chartData]="sqlData()"
+  (close)="closePopUp()"
+></stc-apps-pop-up-image>
+}
+
+<div
+  class="chat-list-item"
+  [@fadeIn]
+  [ngClass]="
+    messageType() === 1 ? 'justify-content-end' : 'justify-content-start'
+  "
+>
+  @if (messageType() === 0 ) {
+  <div class="chat-list-item_query-profile">
+    <img
+      class="chat-list-item_photo"
+      src="assets/images/Start-chat.png"
+      alt=""
+    />
+  </div>
+  }
+
+  <div
+    class="chat-list-item_query-info"
+    [ngClass]="messageType() === 0 && showType() !== '' ? 'w-100' : ''"
+  >
+    <div
+      class="message"
+      [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
+    >
+      @if (isLoading() && messageType()===0 && message()==''&&showType()=='') {
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      } @else {
+      <div class="message-content" [innerHTML]="processedMessage"></div>
+      @if (showType()!=='') { @if (messageType() === 0) { @if
+      (showType()=='table') {
+      <div>
+        <stc-apps-chart-controller
+          [sqlData]="sqlData()"
+          [showType]="showType()"
+        ></stc-apps-chart-controller>
+      </div>
+      } @else{
+
+      <div>
+        <button (click)="showPopUpOnClick()" class="zoom-in-btn">
+          <i class="fa fa-search-plus"></i>
+        </button>
+        <stc-apps-chart-controller
+          [sqlData]="sqlData()"
+          [showType]="showType()"
+        ></stc-apps-chart-controller>
+      </div>
+      } } }}
+    </div>
+
+    <div
+      class="date"
+      [ngStyle]="{
+        'text-align': messageType() === 1 ? 'end' : 'left'
+      }"
+    >
+      {{ messageDate() }}
+    </div>
+  </div>
+</div>

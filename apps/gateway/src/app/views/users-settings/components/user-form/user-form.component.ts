@@ -117,6 +117,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
         this.userService.getCurrentSystem() ===
           'Business_Excellence_Dashboard' ||
+        this.userService.getCurrentSystem() === 'ChatBI' ||
         this.userService.getCurrentSystem() === 'Strategic_Dashboard'
           ? Validators.nullValidator
           : Validators.required,
@@ -142,177 +143,6 @@ export class UserFormComponent implements OnInit, OnChanges {
     return this.form.get('pmo');
   }
 
-  // onSubmit() {
-  //   if (this.form.valid) {
-  //     let dataForm;
-  //     this.isSubmitLoader = true;
-  //     // Check the current system
-  //     if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         teams: this.form.get('teamDto')?.value.map((e: number) => {
-  //           return { id: e };
-  //         }),
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //       if (this.viewerControl?.value) {
-  //         const viewerObj = this.userService
-  //           .getRoles()
-  //           .filter((r) => r.groupName === 'DT_VP_Dashboard_Viewer')[0];
-  //         dataForm.userGroups.push({ id: viewerObj.id });
-  //         if (this.editorControl?.value) {
-  //           const editorObj = this.userService
-  //             .getRoles()
-  //             .filter((r) => r.groupName === 'DT_VP_Dashboard_Editor')[0];
-  //           dataForm.userGroups.push({ id: editorObj.id });
-  //         }
-  //         if (this.pmoControl?.value) {
-  //           const pmoObj = this.userService
-  //             .getRoles()
-  //             .filter((r) => r.groupName === 'PMO')[0];
-  //           dataForm.userGroups.push({ id: pmoObj.id });
-  //         }
-  //       }
-  //     } else if (
-  //       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
-  //     ) {
-  //       console.log(this.form.get('userDelegates')?.value);
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //         userDelegates:
-  //           this.form.get('userDelegates')?.value &&
-  //           this.form.get('userDelegates')?.value.length > 0
-  //             ? [
-  //                 {
-  //                   delegateName: this.form.get('userDelegates')?.value,
-  //                   systemName: this.userService.getCurrentSystem(),
-  //                 },
-  //               ]
-  //             : [],
-  //       };
-  //     } else if (this.userService.getCurrentSystem() === 'DI_Management') {
-  //       dataForm = {
-  //         userGroups: this.form
-  //           .get('teamDto')
-  //           ?.value.map((g: { id: number; name: string }) => ({ id: g })),
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //     } else if (
-  //       this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
-  //     ) {
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         teams: this.form.get('teamDto')?.value.map((e: number) => {
-  //           return { id: e };
-  //         }),
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //     } else {
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('teamDto')?.value.id }],
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //     }
-
-  //     const onSuccess = (message: string) => {
-  //       this.isSubmitLoader = false;
-  //       this.toastr.success(message);
-  //       this.form.reset();
-  //       this.router.navigate(['./users-setting']);
-  //     };
-
-  //     const handleError = (error: unknown) => {
-  //       this.isSubmitLoader = false;
-  //       console.error('Error:', error);
-  //     };
-
-  //     if (this.isEditing) {
-  //       this.updateUser(
-  //         { id: this.data.id, ...dataForm },
-  //         onSuccess,
-  //         handleError
-  //       );
-  //     } else if (this.addGroups) {
-  //       let data = {
-  //         id: this.userId,
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         teams: [{ id: this.form.get('teamDto')?.value.id }],
-  //       };
-
-  //       const currentSystem = this.userService.getCurrentSystem();
-  //       const teamDtoValue = this.form
-  //         .get('teamDto')
-  //         ?.value.map((t: number) => ({
-  //           id: t,
-  //         }));
-  //       if (currentSystem === 'Score_Card_Report_DB') {
-  //         if (teamDtoValue?.length > 0) {
-  //           data = {
-  //             ...data,
-  //             teams: teamDtoValue,
-  //           };
-  //         }
-  //       } else if (currentSystem === 'DI_Milestones') {
-  //         if (teamDtoValue?.length > 0) {
-  //           data = {
-  //             ...data,
-  //             teams: teamDtoValue,
-  //             userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //           };
-  //           if (this.viewerControl?.value) {
-  //             const viewerObj = this.userService
-  //               .getRoles()
-  //               .filter((r) => r.groupName === 'DT_VP_Dashboard_Viewer')[0];
-  //             dataForm.userGroups.push({ id: viewerObj.id });
-  //             if (this.editorControl?.value) {
-  //               const editorObj = this.userService
-  //                 .getRoles()
-  //                 .filter((r) => r.groupName === 'DT_VP_Dashboard_Editor')[0];
-  //               dataForm.userGroups.push({ id: editorObj.id });
-  //             }
-  //             if (this.pmoControl?.value) {
-  //               const pmoObj = this.userService
-  //                 .getRoles()
-  //                 .filter((r) => r.groupName === 'PMO')[0];
-  //               dataForm.userGroups.push({ id: pmoObj.id });
-  //             }
-  //           }
-  //         }
-  //       } else if (
-  //         currentSystem === 'DI_Management' ||
-  //         currentSystem === 'FRAUD_ManagementUsers'
-  //       ) {
-  //         data = {
-  //           id: this.userId,
-  //           userGroups: [{ id: this.form.get('teamDto')?.value.id }],
-  //           teams: [],
-  //         };
-  //       }
-  //       this.userService.addUserGroup(data).subscribe(() => {
-  //         const email = this.form.get('userDelegates')?.value;
-  //         if (email) {
-  //           this.updateUserDelegate(email);
-  //         }
-  //         onSuccess('User Group is added successfully');
-  //       }, handleError);
-  //     } else {
-  //       this.createUser(dataForm, onSuccess, handleError);
-  //     }
-  //   } else {
-  //     this.markFormFieldsAsTouched();
-  //   }
-  // }
   onSubmit() {
     if (!this.form.valid) {
       this.markFormFieldsAsTouched();
@@ -368,7 +198,10 @@ export class UserFormComponent implements OnInit, OnChanges {
       dataForm = { userGroups, teams, email, name, jobTitle };
     } else if (currentSystem === 'Strategic_Dashboard') {
       dataForm = { userGroups, email, name, jobTitle };
-    } else if (currentSystem === 'Business_Excellence_Dashboard') {
+    } else if (
+      currentSystem === 'Business_Excellence_Dashboard' ||
+      currentSystem === 'ChatBI'
+    ) {
       dataForm = { userGroups, email, name, jobTitle };
     } else {
       dataForm = { userGroups: teams, email, name, jobTitle };
@@ -404,6 +237,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
       if (
         currentSystem === 'Dynamic_Report_Flow' ||
+        currentSystem === 'ChatBI' ||
         currentSystem === 'Business_Excellence_Dashboard'
       ) {
         data = { ...data, teams, userGroups };

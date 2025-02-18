@@ -6,13 +6,12 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
 import { Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
@@ -20,7 +19,6 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import { MilestonesService, PendingTask } from '../../milestones.service';
-import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 import { ToastrService } from 'ngx-toastr';
@@ -34,6 +32,7 @@ import {
   animate,
 } from '@angular/animations';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
+import { UtilitiesService } from 'libs/shared-ui/src/lib/services/utilities.service';
 
 export interface Milestone {
   activityName: string;
@@ -264,6 +263,12 @@ export class MilestonesComponent
 
     // Store the latest clean params
     this.previousParams = { ...cleanParams };
+    // Convert the value inside activity name to lowercase
+    this.previousParams['activityName']
+      ? (cleanParams['activityName'] =
+          this.previousParams['activityName'].toLowerCase())
+      : '';
+
     // Make the API call with the clean parameters
     this.milestonesService
       .getMilestones(cleanParams)
@@ -273,6 +278,25 @@ export class MilestonesComponent
       });
   }
 
+  formatDate(date: Date): string | null {
+    if (date == null) return null;
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+  datePickerChanged(
+    event: { start: Date; end: Date },
+    formControlType: string
+  ) {
+    const from = `${formControlType}From`;
+    const to = `${formControlType}To`;
+    this.form.patchValue({
+      [from]: this.formatDate(event.start),
+      [to]: this.formatDate(event.end),
+    });
+  }
   paginate(event: PaginationEvent) {
     this.fetchMilestones({ page: event.currentPage - 1 });
   }
@@ -304,6 +328,7 @@ export class MilestonesComponent
 
   clearFormFilter() {
     this.form.reset();
+    this.resetFormFlag = true;
     this.filterForm = {};
     this.fetchMilestones({ page: 0 });
     this.dialogService.close();
@@ -417,7 +442,10 @@ export class MilestonesComponent
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
+  resetFormFlag = false;
+
   toggleFilter() {
+    this.resetFormFlag = false;
     this.dialogService.open('filter-Modal');
   }
 
@@ -429,19 +457,60 @@ export class MilestonesComponent
         saveAs(data, 'milestones.csv');
       });
   }
-
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
-    this.form = this.formBuilder.group({
-      milestoneName: [null],
-      milestoneId: [null],
-      teamName: [null],
-      status: [null],
-      month: [null],
-      year: [null],
-      workStream: [null],
-      validationStatus: [null],
-    });
+    this.form = this.formBuilder.group(
+      {
+        milestoneName: [null],
+        milestoneId: [null],
+        teamName: [null],
+        status: [null],
+        startDateFrom: [null],
+        startDateTo: [null],
+        endDateFrom: [null],
+        endDateTo: [null],
+        activityName: [null],
+        validationStatus: [null],
+      },
+      { validators: this.dateRangeValidator }
+    );
+  }
+  get startDateFrom() {
+    return this.form.get('startDateFrom');
+  }
+
+  get startDateTo() {
+    return this.form.get('startDateTo');
+  }
+  get endDateFrom() {
+    return this.form.get('endDateFrom');
+  }
+
+  get endDateTo() {
+    return this.form.get('endDateTo');
+  }
+  dateRangeValidator(control: AbstractControl) {
+    const startFrom = control.get('startDateFrom')?.value;
+    const startTo = control.get('startDateTo')?.value;
+    const endFrom = control.get('endDateFrom')?.value;
+    const endTo = control.get('endDateTo')?.value;
+
+    if (
+      (startFrom && endFrom && new Date(startFrom) > new Date(endFrom)) ||
+      (startTo && endTo && new Date(startTo) > new Date(endTo))
+    ) {
+      return { invalidDateRange: true };
+    }
+
+    return null;
+  }
+  numericDateValidator(control: AbstractControl) {
+    const dateValue = control.value;
+    return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(
+      dateValue
+    ) || dateValue == null
+      ? null
+      : { invalidDateFormat: true };
   }
 
   OnChangesForm() {

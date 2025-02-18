@@ -1,0 +1,73 @@
+@import '../../../../styles/shared-styles.scss';
+
+.api-standared {
+    @extend .component-wrapper;
+    border-radius: 6.25px;
+    @include flex-column;
+    gap: $gap-large;
+
+    mat-icon {
+        height: auto;
+
+        img {
+            width: $full-width;
+        }
+    }
+
+    &_header {
+        @include flex-between-center;
+        flex-wrap: wrap;
+        gap: $gap-xs;
+
+        @media (max-width: $breakpoint-sm) {
+            @include flex-column;
+        }
+
+        h3 {
+            flex: 1;
+            color: #212121;
+            font-weight: 600;
+
+            @media (max-width: $breakpoint-lg) {
+                font-size: $font-size-large;
+            }
+
+            @media (max-width: $breakpoint-sm) {
+                font-size: $font-size-large;
+            }
+        }
+
+        stc-apps-button {
+            ::ng-deep {
+                button {
+                    @include button-font-size;
+
+                    i {
+                        font-size: $font-size-small;
+                    }
+                }
+            }
+        }
+    }
+
+    p-confirmdialog {
+        ::ng-deep {
+            .p-dialog-footer {
+                button {
+                    @extend %button-focus;
+                    border-radius: 10px;
+
+                    &.p-confirm-dialog-reject {
+                        background-color: transparent;
+                        color: var(--stc-color);
+                    }
+
+                    &.p-confirm-dialog-accept {
+                        background-color: var(--stc-color);
+                        color: var(--whiteColor);
+                    }
+                }
+            }
+        }
+    }
+}

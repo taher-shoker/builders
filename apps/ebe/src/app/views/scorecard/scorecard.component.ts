@@ -86,6 +86,10 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   }
   getClickedTap(clickedTap: TapModel) {
     this.currentClickedTapData = clickedTap;
+    if(this.child)
+    {
+      this.child.showActivityLogsPopup = false;
+    }
     if (this.filtersOptions) {
       this.getScorecardData(
         this.filtersOptions.month,

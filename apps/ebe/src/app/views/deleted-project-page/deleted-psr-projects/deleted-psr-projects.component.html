@@ -1,0 +1,22 @@
+<div class="deleted-projects">
+  <div class="main-title">
+    <p>{{ pageTitle !== 'null' ? pageTitle : '' }}</p>
+  </div>
+  <div class="deleted-projects-cards">
+    @for (project of deletedPSRProject(); track $index){
+        <stc-apps-project-details-card
+            [projectData]="project"
+            [userRoles]="userRoles"
+            [groupName]="''"
+            [isAllowed]="true"
+            [isAdmin]="true"
+            [isDeleted]="true"
+            [isDeleted]="true"
+        />
+    }
+  </div>
+  @if(deletedPSRProject().length === 0)
+    {
+      <p class = "empty-data-msg">there are no deleted programs</p>
+    }
+</div>

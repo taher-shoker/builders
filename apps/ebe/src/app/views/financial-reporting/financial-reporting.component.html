@@ -10,6 +10,7 @@
       <stc-apps-edit-mode-view
         (import)="showDialog()"
         (export)="downloadTemplate()"
+        (showActivityLogs)="showActivityLogs()"
       />
     }
     <p class="main-page-title">financial status</p>
@@ -299,3 +300,12 @@
   (onhide)="onHide()"
   fileType='.xlsx'
 />
+<stc-apps-activity-logs-popup 
+  [activityLogsTableHeader]="activityLogsTableHeader"
+  [activityLogsTableBody]="activityLogsTableBody()"
+  [showPopup]="showActivityLogsPopup"
+  (popupClosed)="popupClosed()"
+  type = "financial"
+  />
+  <!-- [isDismissable]="true"
+  (popupHide)="showActivityLogsPopup = false" -->

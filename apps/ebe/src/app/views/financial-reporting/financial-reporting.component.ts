@@ -1,4 +1,4 @@
-import { Component, inject , OnDestroy, OnInit } from '@angular/core';
+import { Component, inject , OnDestroy, OnInit , signal} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/edit-mode-view.component';
@@ -9,10 +9,15 @@ import { FinancialReportingService } from '../../services/financial-reporting.se
 import { Observable, Subject, takeUntil } from 'rxjs';
 import { CapexModel, CapexOpexModel, TenderingModel } from '../../models/financial.mode';
 import { ToastrService } from 'ngx-toastr';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { DatePipe } from '@angular/common';
+import { ActivityLog, ActivityLogData } from '../../models/activity-logs';
+import { ActivityLogService } from '../../services/activity-logs.service';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule],
+  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule],
   templateUrl: './financial-reporting.component.html',
   styleUrl: './financial-reporting.component.scss',
 })
@@ -26,6 +31,9 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   capexOpexData!:CapexOpexModel;
   sharedService = inject(SharedService);
   toastr = inject(ToastrService);
+  activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
+  activityLogService = inject(ActivityLogService);
   chartColors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
   opexTenderingChart:{
     title:string;
@@ -74,6 +82,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
+  constructor(private datePipe:DatePipe){}
   // myObservable$ = new Observable(observer => {
   //   observer.next(1);
   //   observer.next(2);
@@ -90,18 +99,68 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   // }).then(res => console.log(res))
   ngOnInit()
   {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.showActivityLogsPopup = false;
+      }
+    })
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
       },
     });
     this.getFinancialReportingData();
+    this.activityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+    ]
+  }
+  showActivityLogsPopup = false;
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.getScorecardActivityLogs("Financial");
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
+  private getScorecardActivityLogs(moduleName:string)
+  {
+    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        console.log(activityLogs);
+        this.activityLogsTableBody.set(activityLogs);
+      }
+    })
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();
   }
   private getFinancialReportingData()
   {
     // this.capexOpexData = {"opex":[],"capex":[],"tendering":[]};
-    this.financialReportingService.getFinancialReportingData().subscribe({
+    this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
+        console.log(res);
         this.capexOpexData = res;     
         this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]
         this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'opex')[0]

@@ -44,6 +44,16 @@ div
     font-weight: 500;
     border-radius:7px;
   }
+  &.output
+  {
+    background: #FF6A391A;
+    color: #FF6A39;
+  }
+  &.theme
+  {
+    background: #FF375E1A;
+    color: #FF375E;
+  }
   &.completed
   {
     color: #00C48C;
@@ -106,4 +116,14 @@ div
   overflow: hidden;
   text-overflow: ellipsis;
   display: block;
+}
+.domainIndicator-status
+{
+  background-color: var(--stc-green-light-color);
+  padding: 0px 10px;
+  height: 45px;
+  line-height: 45px;
+  color: #000000;
+  border-radius: 10px;
+  display: inline-block;
 }
