@@ -669,3 +669,4 @@ export class ActivityLogsComponent {
     this.activityLogsServices.downloadActivityLogsData();
   }
 }
+``;
