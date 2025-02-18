@@ -2,11 +2,37 @@ pipeline {
     agent any
 
     parameters {
-		choice(name: 'NX_APP', choices: ['' , 'chatBI', 'dtmv', 'ebe'], description: 'Select the app to build')
-        choice(name: 'NX_APP_PATH', choices: ['' , 'chat_bi', 'business-excellence-workspace', 'ceodashboard' , 'dtmilestones' , 'dtworkspace' , 'dynamic-rf-workspace' , 'fraudworkspace' , 'jiradashboard'], description: 'Select the app path under the apache tomcat')
+        choice(name: 'NX_APP', choices: ['', 'chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the app to build')
+
+        dynamicParam(name: 'NX_APP_PATH', description: 'Select the app path under Apache Tomcat',
+            script: '''
+                def appMapping = [
+                    chatBI: 'chat_bi',
+                    dtmv: 'dtmilestones',
+                    ebe: 'business-excellence-workspace',
+                    'dt-drf': 'dynamic-rf-workspace',
+                    di: 'dtworkspace',
+                    d2d: 'fraudworkspace'
+                ]
+                
+                def selectedApp = NX_APP ?: ''
+                return [appMapping[selectedApp] ?: '']
+            '''
+        )
     }
 
+        
     stages {
+
+        stage('Validate Selection') {
+            steps {
+                script {
+                    if (!params.NX_APP_PATH) {
+                        error "No valid path found for the selected application '${params.NX_APP}'."
+                    }
+                }
+            }
+        }
 
         stage('Install Dependencies') {
             steps {
