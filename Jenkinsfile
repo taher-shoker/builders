@@ -1,6 +1,7 @@
 pipeline {
     agent any
 
+    stages {
         stage('Install Dependencies') {
             steps {
                 sh '/usr/bin/npm install --legacy-peer-deps --no-fund --no-audit'
@@ -72,7 +73,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sshpass -p CEM435@#qeema scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.243:/data/tools/apache-tomcat-8.5.59/webapps/
+                        sshpass -p 'CEM435@#qeema' scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.243:/data/tools/apache-tomcat-8.5.59/webapps/
                     """
                 }
             }
@@ -82,7 +83,7 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sshpass -p CEM435@#qeema ssh -o StrictHostKeyChecking=no osadmin@10.21.196.243 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+                        sshpass -p 'CEM435@#qeema' ssh -o StrictHostKeyChecking=no osadmin@10.21.196.243 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
                     """
                 }
             }
@@ -92,21 +93,21 @@ pipeline {
             steps {
                 script {
                     sh """
-                        sshpass -p CEM435@#qeema scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.244:/data/tools/apache-tomcat-8.5.59/webapps/
-                    """
-                }
-            }
-        }
-        stage('Backup & Rename 244') {
-            steps {
-                script {
-                    sh """
-                        sshpass -p CEM435@#qeema ssh -o StrictHostKeyChecking=no osadmin@10.21.196.244 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+                        sshpass -p 'CEM435@#qeema' scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.244:/data/tools/apache-tomcat-8.5.59/webapps/
                     """
                 }
             }
         }
 
+        stage('Backup & Rename 244') {
+            steps {
+                script {
+                    sh """
+                        sshpass -p 'CEM435@#qeema' ssh -o StrictHostKeyChecking=no osadmin@10.21.196.244 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+                    """
+                }
+            }
+        }
     }
 
     post {
