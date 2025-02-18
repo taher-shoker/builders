@@ -6,19 +6,6 @@ pipeline {
         
     }
 
-    environment {
-        NX_MAPPING = """
-            {
-                "chatBI": "chat_bi",
-                "dtmv": "dtmilestones",
-                "ebe": "business-excellence-workspace",
-                "dt-drf": "dynamic-rf-workspace",
-                "di": "dtworkspace",
-                "d2d": "fraudworkspace"
-            }
-        """
-    }
-
     stages {
         stage('Validate Selection') {
             steps {
