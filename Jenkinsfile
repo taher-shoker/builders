@@ -1,7 +1,7 @@
 properties([
     parameters([
         choice(name: 'NX_APP', choices: ['chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the application to build.'),
-        string(name: 'NX_APP_PATH', defaultValue: '', description: 'Select the app path under Apache Tomcat.')
+        choice(name: 'NX_APP_PATH', defaultValue: '', description: 'Select the app path under Apache Tomcat.')
     ])
 ])
 
