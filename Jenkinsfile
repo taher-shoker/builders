@@ -3,32 +3,47 @@ pipeline {
 
     parameters {
         choice(name: 'NX_APP', choices: ['', 'chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the app to build')
-
-        dynamicParam(name: 'NX_APP_PATH', description: 'Select the app path under Apache Tomcat',
-            script: '''
-                def appMapping = [
-                    chatBI: 'chat_bi',
-                    dtmv: 'dtmilestones',
-                    ebe: 'business-excellence-workspace',
-                    'dt-drf': 'dynamic-rf-workspace',
-                    di: 'dtworkspace',
-                    d2d: 'fraudworkspace'
-                ]
-                
-                def selectedApp = NX_APP ?: ''
-                return [appMapping[selectedApp] ?: '']
-            '''
-        )
+        
+        // NX_APP_PATH will be dynamically updated using Active Choices Plugin
+        extendedChoice(name: 'NX_APP_PATH', 
+                       type: 'PT_SINGLE_SELECT', 
+                       description: 'Select the app path under Apache Tomcat', 
+                       groovyScript: '''
+                           def appMapping = [
+                               chatBI: 'chat_bi',
+                               dtmv: 'dtmilestones',
+                               ebe: 'business-excellence-workspace',
+                               'dt-drf': 'dynamic-rf-workspace',
+                               di: 'dtworkspace',
+                               d2d: 'fraudworkspace'
+                           ]
+                           
+                           def selectedApp = NX_APP ?: ''
+                           return [appMapping[selectedApp] ?: '']
+                       ''')
     }
 
-        
     stages {
-
         stage('Validate Selection') {
             steps {
                 script {
-                    if (!params.NX_APP_PATH) {
-                        error "No valid path found for the selected application '${params.NX_APP}'."
+                    // Define mapping between NX_APP and NX_APP_PATH
+                    def appMapping = [
+                        chatBI: 'chat_bi',
+                        dtmv: 'dtmilestones',
+                        ebe: 'business-excellence-workspace',
+                        'dt-drf': 'dynamic-rf-workspace',
+                        di: 'dtworkspace',
+                        d2d: 'fraudworkspace'
+                    ]
+
+                    def selectedApp = params.NX_APP
+                    def selectedPath = params.NX_APP_PATH
+
+                    if (selectedApp && selectedPath) {
+                        if (appMapping[selectedApp] != selectedPath) {
+                            error "Invalid selection: '${selectedApp}' does not match the path '${selectedPath}'. Please select the correct app-path combination."
+                        }
                     }
                 }
             }
