@@ -4,38 +4,27 @@ pipeline {
     parameters {
         choice(name: 'NX_APP', choices: ['', 'chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the app to build')
         
-        // NX_APP_PATH will be dynamically updated using Active Choices Plugin
-        extendedChoice(name: 'NX_APP_PATH', 
-                       type: 'PT_SINGLE_SELECT', 
-                       description: 'Select the app path under Apache Tomcat', 
-                       groovyScript: '''
-                           def appMapping = [
-                               chatBI: 'chat_bi',
-                               dtmv: 'dtmilestones',
-                               ebe: 'business-excellence-workspace',
-                               'dt-drf': 'dynamic-rf-workspace',
-                               di: 'dtworkspace',
-                               d2d: 'fraudworkspace'
-                           ]
-                           
-                           def selectedApp = NX_APP ?: ''
-                           return [appMapping[selectedApp] ?: '']
-                       ''')
+        choice(name: 'NX_APP_PATH', choices: ['', 'chat_bi', 'dtmilestones', 'business-excellence-workspace', 'dynamic-rf-workspace', 'dtworkspace', 'fraudworkspace'], description: 'Select the app path under Apache Tomcat')
+    }
+
+    environment {
+        NX_MAPPING = """
+            {
+                "chatBI": "chat_bi",
+                "dtmv": "dtmilestones",
+                "ebe": "business-excellence-workspace",
+                "dt-drf": "dynamic-rf-workspace",
+                "di": "dtworkspace",
+                "d2d": "fraudworkspace"
+            }
+        """
     }
 
     stages {
         stage('Validate Selection') {
             steps {
                 script {
-                    // Define mapping between NX_APP and NX_APP_PATH
-                    def appMapping = [
-                        chatBI: 'chat_bi',
-                        dtmv: 'dtmilestones',
-                        ebe: 'business-excellence-workspace',
-                        'dt-drf': 'dynamic-rf-workspace',
-                        di: 'dtworkspace',
-                        d2d: 'fraudworkspace'
-                    ]
+                    def appMapping = readJSON text: env.NX_MAPPING
 
                     def selectedApp = params.NX_APP
                     def selectedPath = params.NX_APP_PATH
