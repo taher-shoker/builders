@@ -1,29 +1,6 @@
 pipeline {
     agent any
 
-    parameters {
-        choice(name: 'NX_APP', choices: ['', 'chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the app to build')
-        
-    }
-
-    stages {
-        stage('Validate Selection') {
-            steps {
-                script {
-                    def appMapping = readJSON text: env.NX_MAPPING
-
-                    def selectedApp = params.NX_APP
-                    def selectedPath = params.NX_APP_PATH
-
-                    if (selectedApp && selectedPath) {
-                        if (appMapping[selectedApp] != selectedPath) {
-                            error "Invalid selection: '${selectedApp}' does not match the path '${selectedPath}'. Please select the correct app-path combination."
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
                 sh '/usr/bin/npm install --legacy-peer-deps --no-fund --no-audit'
