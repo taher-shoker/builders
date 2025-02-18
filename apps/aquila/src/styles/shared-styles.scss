@@ -25,6 +25,12 @@ $breakpoint-sm: 480px;
     }
 }
 
+%cell-overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 %button-focus {
     &:focus {
         box-shadow: none;

@@ -8,6 +8,7 @@
 
             tr th {
                 padding: $gap-medium;
+                @extend %cell-overflow;
                 @extend %common-cell-styles;
             }
         }
@@ -15,6 +16,7 @@
         .p-datatable-tbody tr td {
             // padding: $gap-xs;
             @extend %common-cell-styles;
+            @extend %cell-overflow;
         }
 
         .p-paginator {
@@ -51,6 +53,7 @@
 
     tr:not(.table-header) td {
         color: var(--dark-slate-gray);
+        padding: $gap-medium;
 
         @media screen and (max-width: $breakpoint-xl) {
             font-size: $font-size-small;
@@ -76,5 +79,17 @@
         display: flex;
         align-items: center;
         justify-content: center;
+    }
+}
+
+::ng-deep {
+    .p-tooltip {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        max-width: fit-content;
+
+        .p-tooltip-text {
+            font-size: $font-size-small;
+            white-space: pre-wrap;
+        }
     }
 }

@@ -50,11 +50,28 @@
         }
     }
 
+    &_table {
+        span {
+            @extend %cell-overflow;
+        }
+    }
+
     p-confirmdialog {
         ::ng-deep {
             .p-dialog-footer {
                 button {
                     @extend %button-focus;
+                    border-radius: 10px;
+
+                    &.p-confirm-dialog-reject {
+                        background-color: transparent;
+                        color: var(--stc-color);
+                    }
+
+                    &.p-confirm-dialog-accept {
+                        background-color: var(--stc-color);
+                        color: var(--whiteColor);
+                    }
                 }
             }
         }
