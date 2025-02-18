@@ -19,6 +19,13 @@ import { PageHeaderComponent } from '../../components/pageHeader/page-header.com
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
+import { DeviceService } from '../../services/device.service';
+import { Location } from '@angular/common';
+import { Router } from '@angular/router';
+import { KpiMobileCardComponent } from '../../components/kpi-mobile-card/kpi-mobile-card.component';
+import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+
 interface FilteredOptions {
   month: number;
   year: number;
@@ -31,6 +38,9 @@ interface FilteredOptions {
     SharedUiModule,
     PageHeaderComponent,
     CommonModule,
+    KpiMobileCardComponent,
+    OverlayPanelModule,
+    MobileViewHeaderComponent
   ],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
@@ -40,14 +50,24 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   endSubs$: Subject<ScorecardModel[]> = new Subject();
   kpisData: WritableSignal<ScorecardModel[]> = signal([]);
   currentClickedTapData!: TapModel;
+  currentClickedTapDataInMobile!: TapModel;
   scorecardsTaps!: TapModel[];
   toastr = inject(ToastrService);
   isEmpty = false;
+  
+  currentMonth:number = new Date().getMonth();
+  currentYear:number = new Date().getFullYear();
+  currentMonthName:string = '';
   filtersOptions!: FilteredOptions;
   scorecardService = inject(ScorecardService);
   @ViewChild(TapDetailsComponent) child?: TapDetailsComponent;
   currYear = new Date().getFullYear();
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
+  router = inject(Router);
   ngOnInit(): void {
+    
+    this.isMobile.set(this.deviceService.isMobile());
     this.getInitScorecardsTaps(
       new Date().getMonth() + 1,
       new Date().getFullYear(),
@@ -65,13 +85,31 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     //   }
     // })
   }
+  filteredMonth!:number;
+  filteredYear!:number;
+  applyDateFilterInMobileView(selectedDate:Date)
+  {
+    this.filteredMonth = selectedDate.getMonth() + 1;
+    this.filteredYear = selectedDate.getFullYear()
+    this.getScorecardData(this.filteredMonth , this.filteredYear , this.currentClickedTapData.name);
+  }
+  getClickedTapInMobile(clickedTap:TapModel)
+  {
+    this.filteredMonth = this.filteredMonth ? this.filteredMonth : new Date().getMonth() + 1 
+    this.filteredYear = this.filteredYear ? this.filteredYear : new Date().getFullYear()    
+    this.currentClickedTapData = clickedTap;
+    this.getScorecardData(this.filteredMonth , this.filteredYear , this.currentClickedTapData.name);
+  }
+  isSuccess!:boolean;
   private getScorecardData(month: number, year: number, tapName?: string) {
+    this.kpisData.set([]);
     this.scorecardService
-      .getScorecardData(month, year, tapName)
-      .pipe(takeUntil(this.endSubs$))
-      .subscribe({
-        next: (scorecards: ScorecardModel[]) => {
-          console.log(scorecards);
+    .getScorecardData(month, year, tapName)
+    .pipe(takeUntil(this.endSubs$))
+    .subscribe({
+      next: (scorecards: ScorecardModel[]) => {
+          // console.log(scorecards);
+          this.isSuccess = true;
           if (scorecards.length === 0) {
             this.isEmpty = true;
           } else {
@@ -79,6 +117,9 @@ export class ScorecardComponent implements OnInit, OnDestroy {
             this.isEmpty = false;
           }
         },
+        error : (err) => {
+          this.isSuccess = false;
+        }
       });
   }
   ngOnDestroy() {
@@ -118,7 +159,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.endSubs$))
       .subscribe({
         next: (scorecards: ScorecardModel[]) => {
-          console.log(scorecards);
+          // console.log(scorecards);
           const data: TapModel[] = [];
           scorecards.forEach((scorecard, index) => {
             scorecard.kpiDataDTO.forEach((kpi) => {
@@ -171,5 +212,9 @@ export class ScorecardComponent implements OnInit, OnDestroy {
         },
       });
     }
+  }
+  goBack()
+  {
+    this.router.navigateByUrl("/");
   }
 }

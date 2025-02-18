@@ -74,39 +74,43 @@ export class ScorecardService {
     return '';
   }
   getNavLinks(): NavLinks[] {
-    let allNavs:NavLinks[] = [
+    if(this.getUserGroups())
       {
-        id: 1,
-        name: 'sector scorecards',
-        url: '/scorecard',
-      },
-      {
-        id: 5,
-        name: 'Financial Status',
-        url: '/financial-reporting',
-      },
-      {
-        id: 4,
-        name: 'project execution',
-        url: '/psr',
-      },
-      {
-        id: 2,
-        name: 'CAD strategy programs',
-        url: '/strategy-program',
-      }
-    ];
-    let userGroup = JSON.parse(this.getUserGroups());
-    const matchingGroup = userGroup.userGroups.find((group: UserGroup) => {
-      return group.roles.some((role: UserGroupRoles) => {
-        return this.getCurrentSystem() === role.system.name;
+      let allNavs:NavLinks[] = [
+        {
+          id: 1,
+          name: 'sector scorecards',
+          url: '/scorecard',
+        },
+        {
+          id: 5,
+          name: 'Financial Status',
+          url: '/financial-reporting',
+        },
+        {
+          id: 4,
+          name: 'project execution',
+          url: '/psr',
+        },
+        {
+          id: 2,
+          name: 'CAD strategy programs',
+          url: '/strategy-program',
+        }
+      ];
+      let userGroup = JSON.parse(this.getUserGroups());
+      const matchingGroup = userGroup.userGroups.find((group: UserGroup) => {
+        return group.roles.some((role: UserGroupRoles) => {
+          return this.getCurrentSystem() === role.system.name;
+        });
       });
-    });
-    let isAllowed = matchingGroup.roles.some(
-      (role:any) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
-    );
-    console.log(isAllowed);
-    return isAllowed ? this.navItems : allNavs;
+      let isAllowed = matchingGroup.roles.some(
+        (role:any) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+      );
+      // console.log(isAllowed);
+      return isAllowed ? this.navItems : allNavs;
+    }
+    return [];
   }
   setUsername(name: string) {
     this.currUsername = name;

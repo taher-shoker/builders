@@ -68,3 +68,48 @@
   top: -177px;
   right: 5px;
 }
+.scored-card-section-mobile
+{
+  background-color: #f5f6fa;
+  &-body
+  {
+    padding:15px;
+  }
+}
+.empty-data-msg
+{
+  text-align: center;
+  @extend .stcFont;
+  color:var(--stc-purple-color);
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  font-style: oblique;
+  // height: 60vh;
+  height: calc(100vh - 260px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.kpis-title
+{
+  color:var(--stc-grey-color2);
+  @extend .stcFont;
+  // text-align: justify;
+  word-spacing:5px;
+  // text-transform:capitalize;
+  font-size: 18px;
+  font-weight: 500;
+}
+.kpis-mobile-container
+{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 25px;
+  margin-top: 15px;
+  gap:20px;
+}
+.read-more-btn
+{
+    text-decoration: underline;
+    font-size: 13px;   
+}

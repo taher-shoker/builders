@@ -7,22 +7,27 @@
   ><p style="color: white">Loading...</p></ngx-spinner
 >
 <section class="main-layout">
-  <div class="main-layout-content">
-    <div class="main-layout-content-sidebar">
-      <stc-apps-sidebar
-        [logoSrc]="logoSrc"
-        [sidebarLinks]="navItems"
-        [usernameImage]="userNameLogo"
-        [userName]="userData ? userData.name : ''"
-        (currentMode)="getCurrentMode($event)"
-        [isAdmin]="isAllowed"
-        (logoutFun)="logout()"
-        [isPMO]="isPMO"
-        (toggleSwitchBtn)="toggleSwitchBtn()"
-        />
+  @if(!isMobile())
+  {
+    <div class="main-layout-content">
+      <div class="main-layout-content-sidebar">
+        <stc-apps-sidebar
+          [logoSrc]="logoSrc"
+          [sidebarLinks]="navItems"
+          [usernameImage]="userNameLogo"
+          [userName]="userData ? userData.name : ''"
+          (currentMode)="getCurrentMode($event)"
+          [isAdmin]="isAllowed"
+          (logoutFun)="logout()"
+          [isPMO]="isPMO"
+          (toggleSwitchBtn)="toggleSwitchBtn()"
+          />
+      </div>
+      <div class="main-layout-content-page">
+        <router-outlet></router-outlet>
+      </div>
     </div>
-    <div class="main-layout-content-page">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
+  } @else {
+    <router-outlet></router-outlet>
+  }
 </section>

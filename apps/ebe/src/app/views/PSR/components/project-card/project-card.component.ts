@@ -28,6 +28,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   datePipe = inject(DatePipe);
   activityLogsTableHeader = signal<ColumnsSchema[]>([]);
   activityLogsTableBody = signal<ActivityLogData[]>([]);
+  isMobile = input<boolean>(false);
   @Output() ProgramId:EventEmitter<number> = new EventEmitter();
   months:string[] = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
   maxTextLength = 0;
@@ -204,7 +205,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   }
   deleteProgram()
   {
-    console.log(this.project());
+    // console.log(this.project());
     this.ProgramId.emit(this.project().id);
     this.close();
   }

@@ -100,7 +100,7 @@ export class TapDetailsComponent implements OnInit {
         );
       }
     })
-    console.log(window.innerWidth);
+    // console.log(window.innerWidth);
     this.activityLogsTableHeader = [
       {
         key : "username",
@@ -139,13 +139,13 @@ export class TapDetailsComponent implements OnInit {
     return this.filtersForm.get('year');
   }
   selectYear() {
-    console.log('month value => ', this.monthValue?.value);
-    console.log('year value => ', this.yearValue?.value);
+    // console.log('month value => ', this.monthValue?.value);
+    // console.log('year value => ', this.yearValue?.value);
     this.filterOptions.emit(this.filtersForm.value);
   }
   selectMonth() {
-    console.log('month value => ', this.monthValue?.value);
-    console.log('year value => ', this.yearValue?.value);
+    // console.log('month value => ', this.monthValue?.value);
+    // console.log('year value => ', this.yearValue?.value);
     this.filterOptions.emit(this.filtersForm.value);
   }
   showDialog()
@@ -204,7 +204,7 @@ export class TapDetailsComponent implements OnInit {
   {
     this.activityLogServices.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
-        console.log(activityLogs);
+        // console.log(activityLogs);
         this.activityLogsTableBody.set(activityLogs);
       }
     })
