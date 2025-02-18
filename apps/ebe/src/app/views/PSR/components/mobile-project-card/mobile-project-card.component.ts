@@ -1,10 +1,19 @@
-import { Component, inject, input, InputSignal, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  InputSignal,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ProgressInfo, PSRProjectDetailsModel } from '../../../../models/psr.model';
+import {
+  ProgressInfo,
+  PSRProjectDetailsModel,
+} from '../../../../models/psr.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { DialogModule } from 'primeng/dialog';
 import { DatePipe } from '@angular/common';
-import { OverlayPanel , OverlayPanelModule } from 'primeng/overlaypanel';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 
 type Position =
   | 'center'
@@ -19,19 +28,19 @@ type Position =
 @Component({
   selector: 'stc-apps-mobile-project-card',
   standalone: true,
-  imports: [CommonModule , SharedUiModule , DialogModule , OverlayPanelModule],
+  imports: [CommonModule, SharedUiModule, DialogModule, OverlayPanelModule],
   templateUrl: './mobile-project-card.component.html',
   styleUrl: './mobile-project-card.component.scss',
 })
 export class MobileProjectCardComponent {
-  project:InputSignal<PSRProjectDetailsModel> = input.required<PSRProjectDetailsModel>();
+  project: InputSignal<PSRProjectDetailsModel> =
+    input.required<PSRProjectDetailsModel>();
   data!: ProgressInfo;
   visible = false;
-  position!:Position;
+  position!: Position;
   datePipe = inject(DatePipe);
   @ViewChild('textOverlayPanel') textOverlayPanel!: OverlayPanel;
-  ngOnInit()
-  {
+  ngOnInit() {
     const vactual = this.project().vactual;
     const vplanned = this.project().vplanned;
     const difference = Math.abs(vplanned - vactual);
@@ -73,22 +82,13 @@ export class MobileProjectCardComponent {
         },
       ],
     };
-    
   }
-  transformDate(date:string)
-  {
-    const parts = date.split('/');
-    let d = `${parts[2]}-${parts[1]}-${parts[0]}`;
-    return this.datePipe.transform(d , 'dd, MMM yyyy');
+  transformDate(date: string) {
+    return this.datePipe.transform(date, 'dd, MMM yyyy');
   }
-  showDeliverablesTable(position: Position)
-  {
+  showDeliverablesTable(position: Position) {
     this.position = position;
     this.visible = true;
     // console.log(this.project());
-  }
-  hideModal()
-  {
-
   }
 }
