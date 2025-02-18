@@ -13,7 +13,6 @@ import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilsService } from '@stc-apps/lng-selector';
-import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { saveAs } from 'file-saver';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
@@ -29,6 +28,7 @@ import {
   ReportDetails,
 } from '../../dy-reports.service';
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
+import { UtilitiesService } from '../../../../../../../../libs/shared-ui/src/lib/services/utilities.service';
 
 export interface Milestone {
   activityName: string;
