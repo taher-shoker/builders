@@ -1,7 +1,7 @@
 <section class="kpi">
   <p class="kpi-title">
     {{ kpi().title | truncateWord : 3 }}
-    @if(kpi().title.split(' ').length >= 3) {
+    @if(kpi().title.split(' ').length > 3) {
     <span class="read-more-btn" (click)="textOverlayPanel.toggle($event)"
       >read more</span
     >

@@ -134,6 +134,8 @@
           <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
             <stc-apps-mobile-project-card [project]="project" />
           </div>
+        } @empty {
+          <p class = "empty-data-msg2">there are no projects</p>
         }
       </div>
     </div>
