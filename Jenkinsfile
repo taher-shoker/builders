@@ -1,7 +1,35 @@
+properties([
+    parameters([
+        choice(name: 'NX_APP', choices: ['chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the application to build.'),
+        string(name: 'NX_APP_PATH', defaultValue: '', description: 'Select the app path under Apache Tomcat.')
+    ])
+])
+
+def appMapping = [
+    "chatBI": "chat_bi",
+    "dtmv": "dtmilestones",
+    "ebe": "business-excellence-workspace",
+    "dt-drf": "dynamic-rf-workspace",
+    "di": "dtworkspace",
+    "d2d": "fraudworkspace"
+]
+
 pipeline {
     agent any
 
     stages {
+        stage('Set App Path') {
+            steps {
+                script {
+                    if (!appMapping.containsKey(params.NX_APP)) {
+                        error "Invalid app selected!"
+                    }
+                    env.NX_APP_PATH = appMapping[params.NX_APP]
+                    echo "NX_APP_PATH set to: ${env.NX_APP_PATH}"
+                }
+            }
+        }
+        
         stage('Install Dependencies') {
             steps {
                 sh '/usr/bin/npm install --legacy-peer-deps --no-fund --no-audit'
