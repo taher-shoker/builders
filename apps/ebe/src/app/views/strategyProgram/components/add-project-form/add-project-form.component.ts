@@ -89,7 +89,7 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
         }
       },
     });
-    console.log(this.projectsList.controls);
+    // console.log(this.projectsList.controls);
   }
   // newIndex = this.projectsList.length;
   createProjectFormGroup(data?:StrategyProgramKpiProjectsDetailsModel): FormGroup {

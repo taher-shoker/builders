@@ -104,7 +104,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       .pipe(takeUntil(this.$endScorecardActivityLogsSub))
       .subscribe({
         next: (activityLogs: ActivityLogData[]) => {
-          console.log(activityLogs);
+          // console.log(activityLogs);
           
           this.activityLogsTableBody.set(activityLogs);
         },
@@ -430,7 +430,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       });
     }
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
-    console.log(this.newData);
+    // console.log(this.newData);
     this.formValues2 = [];
   }
   closePopup() {
@@ -511,7 +511,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
         data.endDate = this.datePipe.transform(data.endDate, 'dd/MM/yyyy');
       }
     });
-    console.log(this.groupName());
+    // console.log(this.groupName());
     this.psrServices
       .addNewChartDetails(
         this.projectData().id,
@@ -532,7 +532,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       });
   }
   editMode() {
-    console.log('sfd');
+    // console.log('sfd');
     this.isEditMode = true;
     const filteredArray = this.tableHeader.filter((obj) => obj.key !== '');
     this.tableHeader = filteredArray;
@@ -559,8 +559,8 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       this.projectData().id.toString(),
       this.projectData().id.toString()
     );
-    console.log("this.projectData().sector => " , this.projectData().sector);
-    console.log("this.projectData().projectName => " , this.projectData().projectName);
+    // console.log("this.projectData().sector => " , this.projectData().sector);
+    // console.log("this.projectData().projectName => " , this.projectData().projectName);
     this.showActivityLogsPopup3 = !this.showActivityLogsPopup3;
   }
   popupClosed3()

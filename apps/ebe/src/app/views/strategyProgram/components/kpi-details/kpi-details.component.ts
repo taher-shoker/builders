@@ -195,7 +195,7 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   showActivityLogs()
   {
     // this.activityLogsPanel.toggle(event);
-    console.log(this.showActivityLogsPopup2);
+    // console.log(this.showActivityLogsPopup2);
     this.getSpecificActivityLog("CAD" , "Import,Export" , this.currentId);
     this.showActivityLogsPopup2 = !this.showActivityLogsPopup2;
   }
@@ -231,12 +231,12 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   }
   showProjectLogs(id:number , kpi:StrategyProgramKpiDetailsModel)
   {
-    console.log(id);
+    // console.log(id);
     this.getSpecificActivityLog("CAD" , "Add,Edit" , this.currentId , kpi.keyResultNumber.toString() , id.toString());
   }
   menuActions(label:string)
   {
-    console.log(label);
+    // console.log(label);
     if(label === 'activity log')
     {
       this.showActivityLogs();

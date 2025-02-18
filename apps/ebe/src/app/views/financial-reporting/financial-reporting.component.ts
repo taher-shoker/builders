@@ -1,4 +1,4 @@
-import { Component, inject , OnDestroy, OnInit , signal} from '@angular/core';
+import { Component, inject , OnDestroy, OnInit , signal, ViewChild} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/edit-mode-view.component';
@@ -14,15 +14,20 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
 import { DatePipe } from '@angular/common';
 import { ActivityLog, ActivityLogData } from '../../models/activity-logs';
 import { ActivityLogService } from '../../services/activity-logs.service';
+import { DeviceService } from '../../services/device.service';
+import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
+import { TenderingStatusChartComponent } from '../../components/tendering-status-chart/tendering-status-chart.component';
 @Component({
   selector: 'stc-apps-financial-reporting',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule],
+  imports: [CommonModule , PageHeaderComponent , EditModeViewComponent , SharedUiModule , OverlayPanelModule , MobileViewHeaderComponent , TenderingStatusChartComponent],
   templateUrl: './financial-reporting.component.html',
   styleUrl: './financial-reporting.component.scss',
 })
 export class FinancialReportingComponent implements OnInit , OnDestroy{
   currentMode!: 'editMode' | 'viewMode';
+  @ViewChild('capexOverlay') capexOverlay!: OverlayPanel;
+  @ViewChild('opexOverlay') opexOverlay!: OverlayPanel;
   scorecardService = inject(ScorecardService);
   financialReportingService = inject(FinancialReportingService);
   visible = false;
@@ -35,6 +40,13 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   activityLogsTableBody = signal<ActivityLogData[]>([]);
   activityLogService = inject(ActivityLogService);
   chartColors = ["#B999D1" , "#61CBD6" , "#00C48C" , "#4F008C" , "#000"];
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
+  selectedTap:string = 'capex';
+  selectTap(tap:string)
+  {
+    this.selectedTap = tap;
+  }
   opexTenderingChart:{
     title:string;
     value:number;
@@ -99,6 +111,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   // }).then(res => console.log(res))
   ngOnInit()
   {
+    this.isMobile.set(this.deviceService.isMobile())
     this.scorecardService.toggleSwitchBtn.subscribe({
       next : (res) => {
         this.showActivityLogsPopup = false;
@@ -145,7 +158,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   {
     this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export").pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
-        console.log(activityLogs);
+        // console.log(activityLogs);
         this.activityLogsTableBody.set(activityLogs);
       }
     })
@@ -160,7 +173,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
     // this.capexOpexData = {"opex":[],"capex":[],"tendering":[]};
     this.financialReportingService.getFinancialReportingData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:CapexOpexModel) => {
-        console.log(res);
+        // console.log(res);
         this.capexOpexData = res;     
         this.capexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'capex')[0]
         this.opexTenderingData = this.capexOpexData.tendering.filter(d => d.expenditureType.toLowerCase() === 'opex')[0]
@@ -239,7 +252,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
             }
           ]
         }
-        console.log(this.spendingTargetChart);
+        // console.log(this.spendingTargetChart);
         if(this.capexOpexData.opex[0] && this.capexOpexData.opex[0].gepTargetPercentage)
         {
           this.gepTargetChart = [
@@ -270,7 +283,7 @@ export class FinancialReportingComponent implements OnInit , OnDestroy{
   {
     if(file)
     {
-      console.log(file);
+      // console.log(file);
       this.financialReportingService.uploadCadSummaryFile(file).subscribe({
         next:() => {
           this.getFinancialReportingData();

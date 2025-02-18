@@ -16,6 +16,7 @@ import { CookieModule } from 'ngx-cookie';
 import { ToastrModule } from 'ngx-toastr';
 import { ErrorInterceptor } from './interceptors/errors-handler.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
+import { HomepageMobileComponent } from './views/homepage-mobile/homepage-mobile.component';
 // import { HttpUrlInterceptor } from './interceptors/http.interceptor';
 // export function HttpLoaderFactory(http: HttpClient) {
 //   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
@@ -37,7 +38,8 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     SharedUiModule,
     NgxSpinnerModule.forRoot({type : "ball-spin"}),
     CookieModule.withOptions(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    HomepageMobileComponent
   ],
   providers: [
     importProvidersFrom([

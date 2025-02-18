@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -10,10 +10,13 @@ import { PSRDataModel } from '../../models/psr.model';
 import { Subject, takeUntil } from 'rxjs';
 import { ScorecardService } from '../../services/scorecard.service';
 import { ToastrService } from 'ngx-toastr';
+import { DeviceService } from '../../services/device.service';
+import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
+import { PSRProjectCardComponent } from './components/project-card/project-card.component';
 @Component({
   selector: 'stc-apps-psr',
   standalone: true,
-  imports: [CommonModule , PageHeaderComponent , SharedUiModule , TabDetailsComponent],
+  imports: [CommonModule , PageHeaderComponent , SharedUiModule , TabDetailsComponent , MobileViewHeaderComponent , PSRProjectCardComponent],
   templateUrl: './PSR.component.html',
   styleUrl: './PSR.component.scss',
 })
@@ -26,7 +29,10 @@ export class PSRComponent implements OnInit , OnDestroy {
   psrData!:PSRDataModel[];
   endSubs$:Subject<PSRDataModel[]> = new Subject();
   scorecardService = inject(ScorecardService);
+  isMobile = signal<boolean>(false)
+  deviceService = inject(DeviceService);
   ngOnInit(): void {
+    this.isMobile.set(this.deviceService.isMobile());
     this.getExecuteViewData();
   }
   isEmpty!:boolean;
@@ -54,32 +60,6 @@ export class PSRComponent implements OnInit , OnDestroy {
   }
   private getExecuteViewData()
   {
-  //   this.psrData = [
-  //     {
-  //         "id": 1,
-  //         "sector": "Advance Analytics",
-  //         "actual": 69.0,
-  //         "planned": null,
-  //         "details": "8 Projects and Initiative Details",
-  //         "plannedDate": null
-  //     },
-  //     {
-  //         "id": 2,
-  //         "sector": "Analytics Enablement",
-  //         "actual": 70.0,
-  //         "planned": null,
-  //         "details": "25 Projects and Initiative Details",
-  //         "plannedDate": null
-  //     },
-  //     {
-  //         "id": 3,
-  //         "sector": "Data Governance",
-  //         "actual": 91.0,
-  //         "planned": null,
-  //         "details": "3 Projects and Initiative Details",
-  //         "plannedDate": null
-  //     }
-  // ]
     this.psrServices.getExecuteViewData().pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res:PSRDataModel[]) => {
         if(res.length === 0)
@@ -104,6 +84,9 @@ export class PSRComponent implements OnInit , OnDestroy {
   getClickedTap(tab:TapModel)
   {
     this.currentTab = tab;
-    console.log(tab);
+  }
+  getProgramId(id:any)
+  {
+    
   }
 }

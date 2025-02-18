@@ -210,6 +210,10 @@
   font-weight: 500;
   font-size: 17px;
   text-transform: capitalize;
+  @media all and (min-width:576px) and (max-width:600px)
+  {
+    padding:0 15px;
+  }
   span
   {
     font-weight: bold;
@@ -256,5 +260,43 @@
         }
       }
     }
+  }
+}
+.mobile-view-title
+{
+  @extend .stcFont;
+  text-align: left;
+  font-size: 18px;
+}
+.mobile-view-chart
+{
+  border: 1px solid #8e9aa04d;
+  border-radius: 10px;
+  margin:0 20px;
+  padding:45px 0px 15px;
+}
+.project-container-in-mobile
+{
+  margin-bottom: 20px;
+}
+.project-card-info
+{
+  text-align: left;
+  padding:0 15px;
+  p
+  {
+    text-align: left;
+    padding: 0;
+    min-height: auto;
+    a
+    {
+      font-size: 12px;
+    }
+  }
+  .project-container-details-link-mobile
+  {
+    margin:initial;
+    font-weight: 600;
+    font-size: 15px;
   }
 }

@@ -24,6 +24,7 @@ import { MenuPopupComponent } from '../../../../components/menu-popup/menu-popup
 import { ActivityLog, ActivityLogData, ColumnsSchema } from '../../../../models/activity-logs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
 import { Subject, takeUntil } from 'rxjs';
+import { DeviceService } from '../../../../services/device.service';
 
 @Component({
   selector: 'stc-apps-tab-details',
@@ -60,6 +61,8 @@ export class TabDetailsComponent implements OnInit {
   userRoles!: UserGroup;
   isAllowed = false;
   isAdmin = false;
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
   @ViewChild(MenuPopupComponent) child?: MenuPopupComponent;
   menuItems = [
     {
@@ -97,6 +100,7 @@ export class TabDetailsComponent implements OnInit {
     }
     isPMO = false;
   ngOnInit(): void {
+    this.isMobile.set(this.deviceService.isMobile());
     this.activityLogsTableHeader = [
       {
         key : "username",

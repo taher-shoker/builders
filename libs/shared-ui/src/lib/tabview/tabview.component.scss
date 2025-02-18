@@ -94,7 +94,7 @@
         // text-transform: capitalize !important;
         font-size: 18px !important;
         cursor: pointer !important;
-        padding: 7px 15px !important;
+        padding: 7px 0px 7px 15px !important;
         border-radius: 5px !important;
         transition: 0.3s !important;
         min-width: 102px !important;
@@ -124,6 +124,23 @@
     {
       min-width:230px !important;
     }
+  }
+}
+::ng-deep .mobile-view
+{
+  .p-tabview-nav-next , .p-tabview-nav-prev
+  {
+    display: none;
+  }
+  .p-tabview-nav li a
+  {
+    gap:15px !important;
+  }
+  .tap
+  {
+    box-shadow: 0px 2px 4px -1px #1212170F;
+    // box-shadow: 0px 4px 6px -1px #12121714;
+    font-size: 16px !important;
   }
 }
 // ::ng-deep .custom-tabview .p-tabview-nav-container {
