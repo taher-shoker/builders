@@ -4,7 +4,6 @@ pipeline {
     parameters {
         choice(name: 'NX_APP', choices: ['', 'chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the app to build')
         
-        choice(name: 'NX_APP_PATH', choices: ['', 'chat_bi', 'dtmilestones', 'business-excellence-workspace', 'dynamic-rf-workspace', 'dtworkspace', 'fraudworkspace'], description: 'Select the app path under Apache Tomcat')
     }
 
     environment {
