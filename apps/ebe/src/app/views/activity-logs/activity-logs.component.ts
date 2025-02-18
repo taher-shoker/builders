@@ -265,6 +265,7 @@ export class ActivityLogsComponent {
   }
   getKeyResultFilterData(programId?:string)
   {
+    this.keyResultsData.set([])
     this.activityLogsServices.getKeyResultsData(programId).pipe(takeUntil(this.endSubs$)).subscribe({
       next : (res) => {
         if(res.length !== 0)
@@ -285,7 +286,8 @@ export class ActivityLogsComponent {
   {
     let tap = this.currentTap().value.toLowerCase();
     if(tap === 'psr' || tap === 'cad')
-    {
+      {
+      this.keyResultProjectsData.set([])
       this.activityLogsServices.getKeyResultProjectsData(tap , programId , keyResultNumber).pipe(takeUntil(this.endSubs$)).subscribe({
         next : (res) => {
           if(res.length !== 0)
