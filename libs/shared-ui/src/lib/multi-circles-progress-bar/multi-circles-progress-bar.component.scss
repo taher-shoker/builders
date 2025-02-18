@@ -23,18 +23,12 @@ section {
       font-size: 24px;
       top: -30px;
       right: -55px;
-      // &::before
-      // {
-      //     content: "";
-      //     width: 1.5px;
-      //     height: 54px;
-      //     display: inline-block;
-      //     background: #C2C2C2;
-      //     position: absolute;
-      //     transform: rotate(45deg);
-      //     left: -19px;
-      //     top: 22px;
-      // }
+      @media all and (max-width: 360px) {
+        right: -30px;
+      }
+      @media all and (min-width: 576px) and (max-width:720px) {
+        right: -30px;
+      }
     }
     .arrow {
       width: 1.5px;
@@ -45,6 +39,26 @@ section {
       transform: rotate(45deg);
       top: -6px;
       right: 0px;
+      @media all and (max-width: 360px) {
+        width: 1.5px;
+        height: 50px;
+        display: inline-block;
+        background: #c2c2c2;
+        position: absolute;
+        transform: rotate(45deg);
+        top: -6px;
+        right: 10px;
+      }
+      @media all and (min-width: 576px) and (max-width:720px) {
+        width: 1.5px;
+        height: 50px;
+        display: inline-block;
+        background: #c2c2c2;
+        position: absolute;
+        transform: rotate(45deg);
+        top: -6px;
+        right: 10px;
+      }
     }
   }
   .inner-circle {
@@ -64,51 +78,34 @@ section {
       background-color: #fff;
     }
     .tick-arrow2 {
-        position: absolute;
-        color: #565d66;
-        font-weight: bold;
-        font-size: 24px;
-        top: -62px;
-        left: -84px;
-    //   position: absolute;
-    //   color: #565d66;
-    //   font-weight: bold;
-    //   font-size: 24px;
-    //   /* top: -30px; */
-    //   left: -116px;
-    //   @media all and (max-width: 1366px) {
-    //     top: -62px;
-    //     left: -84px;
-    //   }
-      // &::before
-      // {
-      //     content: "";
-      //     width: 1.5px;
-      //     height: 55px;
-      //     display: inline-block;
-      //     background: #C2C2C2;
-      //     position: absolute;
-      //     transform: rotate(90deg);
-      //     left: 98px;
-      //     top: -9px;
-      //     @media all and (max-width:1366px)
-      //     {
-      //         height: 72px;
-      //         transform: rotate(-45deg);
-      //         left: 80px;
-      //         top: 24px;
-      //     }
-      // }
+      position: absolute;
+      color: #565d66;
+      font-weight: bold;
+      font-size: 24px;
+      top: -62px;
+      left: -84px;
+      @media all and (max-width: 360px) {
+        left: -55px;
+      }
+      @media all and (min-width: 576px) and (max-width:720px) {
+        left: -55px;
+      }
     }
     .arrow {
-        width: 1.5px;
-        height: 75px;
-        display: inline-block;
-        background: #c2c2c2;
-        position: absolute;
-        transform: rotate(-45deg);
-        top: -37px;
-        left: -14px;
+      width: 1.5px;
+      height: 75px;
+      display: inline-block;
+      background: #c2c2c2;
+      position: absolute;
+      transform: rotate(-45deg);
+      top: -37px;
+      left: -14px;
+      @media all and (max-width: 360px) {
+        transform: rotate(-38deg);
+      }
+      @media all and (min-width: 576px) and (max-width:720px) {
+        transform: rotate(-38deg);
+      }
     }
   }
 }

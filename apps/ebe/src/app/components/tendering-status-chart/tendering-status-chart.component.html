@@ -1,0 +1,27 @@
+<div class="awarded-card">
+      @for (item of capexTenderingChart();track $index) {
+        <div
+          class="awarded-card-item"
+          [ngStyle]="{
+            background: item.color,
+            width: item.value + '%',
+            flex: item.value
+          }"
+        >
+          {{ item.value }}
+        </div>
+      } 
+  </div>
+  <div class="awarded-card-legends">
+    @for (item of capexTenderingChart(); track $index) {
+    <div class="legend">
+      <div
+        class="bullet"
+        [ngStyle]="{
+                'background' : item.color,
+              }"
+      ></div>
+      <div class="name">{{ item.title }}</div>
+    </div>
+    }
+  </div>

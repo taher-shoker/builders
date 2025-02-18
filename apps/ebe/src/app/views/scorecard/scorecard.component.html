@@ -1,3 +1,4 @@
+@if(!isMobile()) {
 <section class="scored-card-section">
   <div class="scored-card-section-header">
     <div>
@@ -5,9 +6,7 @@
         [mainTitle]="'N-2 Scorecards ' + currYear"
         [secondaryTitle]="'- corporate analytics & data sector'"
       />
-      <div 
-        class="scored-card-section-taps"
-      >
+      <div class="scored-card-section-taps">
         <stc-apps-tabview
           [tabsData]="scorecardsTaps"
           [tabColor]="'#ffffff'"
@@ -19,16 +18,69 @@
         />
       </div>
     </div>
-    <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
   </div>
   <div class="scored-card-section-tap-details">
-      <stc-apps-tap-details 
-        [scorcardData]="kpisData()" 
-        [currentMode]="currentMode"
-        [currentClickedTap]="currentClickedTapData"
-        (filterOptions)="getFiltersOptions($event)"
-        [isEmpty]="isEmpty"
-        (ImportedFile)="getImportedFile($event)"
-      />
+    <stc-apps-tap-details
+      [scorcardData]="kpisData()"
+      [currentMode]="currentMode"
+      [currentClickedTap]="currentClickedTapData"
+      (filterOptions)="getFiltersOptions($event)"
+      [isEmpty]="isEmpty"
+      (ImportedFile)="getImportedFile($event)"
+    />
   </div>
 </section>
+} @else {
+<section class="scored-card-section-mobile">
+  <stc-apps-mobile-view-header 
+    [isSuccess]="isSuccess" 
+    [showDateModal]="true"
+    [headerTitle]="'N-2 scorecard ' + currentYear"
+    (applyFilters)="applyDateFilterInMobileView($event)" 
+  />
+  <div class="scored-card-section-mobile-body">
+    <stc-apps-tabview
+      [tabsData]="scorecardsTaps"
+      [tabColor]="'#6C6C89'"
+      [clickedtabColor]="'#ffffff'"
+      [tabBackground]="'#ffffff'"
+      [clickedtabBackground]="'#FF375E'"
+      (clickedTap)="getClickedTapInMobile($event)"
+      [fontFamily]="'STCForwardFont'"
+      [isMobile]="true"
+    />
+    <div class="tab-content pb-3" style = "color:#000">
+      @if(!isEmpty)
+      {
+          @for (kpi of kpisData(); track $index) {
+            <div class = "kpi-content">
+              <p class = "kpis-title mb-2">
+                {{kpi.title}}
+                <!-- @if(kpi.title.split(' ').length > 3) {
+                  <span class="read-more-btn" (click)="textOverlayPanel.toggle($event)"
+                    >read more</span
+                  >
+                  <p-overlayPanel
+                    #textOverlayPanel
+                    dismissable="true"
+                    styleClass="kpi-title-popover"
+                  >
+                    <section class="kpi-title-popover-section">{{ kpi.title }}</section>
+                  </p-overlayPanel>
+                  } -->
+              </p>
+              <div class = "kpis-mobile-container mb-3">
+                @for (kpiItem of kpi.kpiDataDTO; track $index) {
+                  <stc-apps-kpi-mobile-card [kpi]="kpiItem" />
+                }
+              </div>
+            </div>
+          }
+      } @else {
+        <p class = "empty-data-msg">there are no data</p>
+      }
+    </div>
+  </div>
+</section>
+}

@@ -18,6 +18,7 @@ import { ChipModule } from 'primeng/chip';
 import { Subject, takeUntil } from 'rxjs';
 import { Activity } from '../models/activity.model';
 import { PaginatorModule } from 'primeng/paginator';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'stc-apps-activity-monitoring',
@@ -29,6 +30,7 @@ import { PaginatorModule } from 'primeng/paginator';
     ActivityMonitoringFiltersComponent,
     ChipModule,
     PaginatorModule,
+    TooltipModule,
   ],
   templateUrl: './activity-monitoring-list.component.html',
   styleUrls: ['./activity-monitoring-list.component.scss'],

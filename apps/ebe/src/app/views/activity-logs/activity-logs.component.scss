@@ -309,3 +309,32 @@
   //   height: 21px;
   // }
 }
+// ::ng-deep .p-datepicker {
+//   font-size: 12px; // Reduce font size
+//   width: 200px; // Adjust width if needed
+// }
+
+// ::ng-deep .p-datepicker-header {
+//   padding: 4px; // Reduce header padding
+// }
+
+// ::ng-deep .p-datepicker table {
+//   font-size: 12px; // Reduce font size of dates
+// }
+
+// ::ng-deep .p-datepicker td {
+//   padding: 4px; // Reduce cell padding
+// }
+
+// ::ng-deep .p-datepicker .p-datepicker-prev,
+// ::ng-deep .p-datepicker .p-datepicker-next {
+//   width: 20px;
+//   height: 20px;
+// }
+::ng-deep .p-datepicker {
+  position: absolute !important;
+    top: 100% !important;
+    left: auto !important;
+    z-index: 10000 !important;
+    right: 0% !important;
+}

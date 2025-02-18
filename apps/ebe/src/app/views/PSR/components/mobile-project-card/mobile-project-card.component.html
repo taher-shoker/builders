@@ -1,0 +1,134 @@
+<section class="project">
+  <p class="project-name">
+    {{ project().projectName | truncateWord : 3}}
+    <!-- {{ kpi().title | truncateWord : 3 }} -->
+    @if(project().projectName.split(' ').length >= 3) {
+    <span class="read-more-btn" (click)="textOverlayPanel.toggle($event)"
+      >read more</span
+    >
+    <p-overlayPanel
+      #textOverlayPanel
+      dismissable="true"
+      styleClass="kpi-title-popover"
+    >
+      <section class="kpi-title-popover-section">{{ project().projectName }}</section>
+    </p-overlayPanel>
+    }
+  </p>
+  <div class="project-statuses">
+    @if(project() && project().projectOwner) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().projectOwner!"
+      [kpiType]="'owner-name'"
+      [isMobile]="true"
+    />
+    }
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project() && project().vendor ? project().vendor : 'N/A'"
+      [kpiType]="'vendor'"
+      [isMobile]="true"
+    />
+    @if(project() && project().projectStage) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().projectStage!"
+      [kpiType]="'status'"
+      [isMobile]="true"
+    />
+    }
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().indicator ? project().indicator! : 'N/A'"
+      [kpiType]="'indicator'"
+      [isMobile]="true"
+      [domainIndicatorColor]="
+        project().indicator?.toLowerCase() === 'r'
+          ? '#FF0000'
+          : project().indicator?.toLowerCase() === 'g'
+          ? '#00C48C'
+          : project().indicator?.toLowerCase() === 'a'
+          ? '#ECB027'
+          : '#bbbbbb'
+      "
+    />
+    @if(project() && project().domain) {
+    <stc-apps-kpi-status-card
+      [kpiStatus]="project().domain"
+      [kpiType]="'domain'"
+      [isMobile]="true"
+    />
+    }
+  </div>
+  <div class="project-chart" [class.empty-chart]="!((project().vactual || project().vactual === 0) && (project().vplanned || project().vplanned === 0))">
+    @if((project().vactual || project().vactual === 0) && (project().vplanned || project().vplanned === 0)){
+      <stc-apps-progress-bar
+        [data]="data"
+        [isPSRProject]="true"
+        [fontFamily]="'STCForwardFont'"
+      />
+    } @else {
+      <p class = "project-chart-empty-data">N/A</p>
+    }
+  </div>
+  @if((project().vactual || project().vactual === 0) && (project().vplanned || project().vplanned === 0)){
+    <button class = "project-view-details-btn" (click)="showDeliverablesTable('bottom')">view more details</button>
+  }
+  <p class="spending-status-title">spending status</p>
+  <div class="spending-status-card">
+    <div class="left-side">
+      <p>Actual</p>
+      <span>{{project().actualSpending}}</span>
+    </div>
+    <div class="right-side">
+      <p>PO Amount</p>
+      <span>{{project().poAmount}}</span>
+    </div>
+  </div>
+  <p class="spending-status-title">project timeline</p>
+  <div class="project-timeline-card">
+    <div class="left-side">
+      <p>start date</p>
+      <span>{{transformDate(project().startDate)}}</span>
+    </div>
+    <div class="right-side">
+      <p>end date</p>
+      <span>{{transformDate(project().endDate)}}</span>
+    </div>
+  </div>
+</section>
+<p-dialog 
+  header="Edit Profile"
+  [modal]="true"
+  [(visible)]="visible"
+  [position]="position"
+  styleClass = "deliverables-table-modal"
+  dismissableMask="true"
+  transitionOptions = "300ms cubic-bezier(0, 0, 0.2, 1)"
+  resizable = 'false'
+  (onHide)="hideModal()"
+  #dateModal
+>
+  <ng-template pTemplate="header">
+    <p class="modal-header">details for chart</p>
+  </ng-template>
+  <ng-template pTemplate="content">
+    <div class="deliverable-data">
+      @for (item of project().chartDetails; track item.id){
+        <div class="deliverable-item">
+          <div class="deliverable-item-title">{{item.major}}</div>
+          <div class="deliverable-item-details">
+            <p class="start-date">
+              <!-- Start: <span>{{transformDate(item.startDate!)}}</span> -->
+              Start: <span>{{item.startDate}}</span>
+            </p>
+            <p class="start-date">
+              <!-- End: <span>{{transformDate(item.endDate!)}}</span> -->
+              End: <span>{{item.endDate}}</span>
+            </p>
+            <p class="completion-level">
+              Completion level: <span>{{item.completionLevel}}%</span>
+            </p>
+          </div>
+        </div>
+      }
+    </div>
+  </ng-template>
+</p-dialog>

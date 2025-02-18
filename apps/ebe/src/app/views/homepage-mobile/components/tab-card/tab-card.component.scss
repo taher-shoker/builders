@@ -1,0 +1,106 @@
+@import '../../../../../styles/fonts.scss';
+.tab-card
+{
+    background-color: var(--stc-white-color);
+    border-radius:10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    color:#000;
+    &-top
+    {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid #EBEBEF;
+        padding-bottom: 15px;
+        .left-side
+        {
+            display: flex;
+            align-items: center;
+            gap:10px;
+            p
+            {
+                margin: 0;
+            }
+            .info
+            {
+                p
+                {
+                    color:var(--stc-purple-color);
+                    @extend .stcFont;
+                    text-transform: capitalize;
+                    font-weight: 600;
+                    font-size: 1.1rem;
+                }
+                span
+                {
+                    color:var(--stc-light-grey-color2);
+                    @extend .stcFont;
+                    text-transform: capitalize;
+                    font-weight: 500;
+                    font-size: 0.9rem;
+                }
+            }
+        }
+    }
+    &-bottom
+    {
+        margin-top: 15px;
+        .kpis-tabs-number
+        {
+            background-color: #FAFAFA;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding:5px 0;
+            p
+            {
+                margin: 0;
+                @extend .stcFont;
+            }
+            .vertical-num
+            {
+                display: flex;
+                align-items: center;
+                gap:5px;
+                width: 100%;
+                justify-content: center;
+                .bullet
+                {
+                    width:10px;
+                    height:10px;
+                    border-radius:50%;
+                    &.red
+                    {
+                        background-color: #F53D6B;
+                    }
+                    &.yellow
+                    {
+                        background-color: #FFC233;
+                    }
+                    &.green
+                    {
+                        background-color: #22C55E;
+                    }
+                }
+                span
+                {
+                    @extend .stcFont;
+                    color:#121217;
+                    font-size: 1rem;
+                    font-size: 0.9rem;
+                }
+                p
+                {
+                    color:#6C6C89;
+                    text-transform: capitalize;
+                    font-size: 0.9rem;
+                }
+                &.kpis-num
+                {
+                    border-left:1px solid #EBEBEF;
+                }
+            }
+        }
+    }
+}

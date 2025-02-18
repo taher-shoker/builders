@@ -52,7 +52,14 @@
         ></ng-container>
       </td>
       } @else {
-      <td>{{ rowData[column.key] }}</td>
+      <td
+        [pTooltip]="rowData[column.key]"
+        tooltipPosition="top"
+        [tooltipStyleClass]="'tooltip-custom'"
+        [showDelay]="500"
+      >
+        {{ rowData[column.key] }}
+      </td>
       } }
     </tr>
   </ng-template>
