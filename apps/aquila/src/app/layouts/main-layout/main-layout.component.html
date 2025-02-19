@@ -1,0 +1,36 @@
+@if (loaderService.isLoading$ | async) {
+<stc-apps-loader></stc-apps-loader>
+}
+
+<div class="main-layout">
+  <div
+    class="main-layout_hamburger-menu"
+    (click)="toggleSidebar()"
+    [ngClass]="{ 'sidebar-open': isSidebarVisible }"
+    [ngStyle]="{
+      color: isSidebarVisible ? 'var(--whiteColor)' : 'var(--stc-color)'
+    }"
+  >
+    <i class="pi pi-bars"></i>
+  </div>
+
+  <div class="main-layout_sidebar" [ngClass]="{ hidden: !isSidebarVisible }">
+    <stc-apps-sidebar
+      [logoSrc]="logoSrc"
+      [sidebarLinks]="navItems"
+      [isAdmin]="isAllowed"
+      (logoutFun)="onLogout()"
+      [secondLogoSrc]="'assets/images/qeema-logo.svg'"
+      [justifyContent]="'flex-start'"
+      [routerLinkActiveOptions]="{ exact: false }"
+    />
+  </div>
+
+  <div class="main-layout_header">
+    <stc-apps-top-banner [logoSrc]="logoSrc"></stc-apps-top-banner>
+
+    <div class="main-layout_container">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

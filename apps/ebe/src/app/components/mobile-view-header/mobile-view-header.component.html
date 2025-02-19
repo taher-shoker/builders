@@ -1,0 +1,13 @@
+<div class="scored-card-section-mobile-header">
+    <div class="header">
+      <i class="pi pi-arrow-left" (click)="goBack()"></i>
+      @if(showDateModal())
+      {
+        <stc-apps-date-modal [isSuccess]="isSuccess()" (filteredDate)="applyDateFilterInMobileView($event)" />
+      }
+    </div>
+    <div class="main-titles">
+      <p class="header-title">{{headerTitle()}}</p>
+      <p class="sub-title">corporate analytics & data sector</p>
+    </div>
+</div>

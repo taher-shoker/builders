@@ -1,0 +1,40 @@
+@import '../../../../styles/fonts.scss';
+.deleted-cad-projects
+{
+    .main-title
+    {
+        color: var(--stc-purple-light-color);
+        text-transform: capitalize;
+        font-size: 22px;
+        margin: 0;
+        @extend .blackPoppins;
+    }
+    &-cards
+    {
+        position: relative;
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+        gap: 25px;
+        margin-top: 20px;
+        &-card
+        {
+            background-color: #f2f4f8;
+            border-radius: 10px;
+        }
+        .project-container-card
+        {
+            width:100%;
+        }
+    }
+}
+.empty-data-msg
+{
+    text-align: center;
+    @extend .stcFont;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--stc-purple-light-color);
+    width: 100%;
+}

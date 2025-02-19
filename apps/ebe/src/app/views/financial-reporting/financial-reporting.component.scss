@@ -1,62 +1,53 @@
-.financial-reporting
-{
-  padding:20px 30px;
-  .main-page-title
-  {
+@import '../../../styles/fonts.scss';
+.financial-reporting {
+  padding: 20px 30px;
+  .main-page-title {
     font-size: 25px;
     font-weight: bold;
     text-transform: capitalize;
-    color:#000;
+    color: #000;
     margin: 0;
     margin-bottom: 15px;
   }
-  &-body
-  {
+  &-body {
     background-color: var(--stc-white-color);
-    border-radius:10px;
-    padding:20px;
-    .box-card
-    {
+    border-radius: 10px;
+    padding: 20px;
+    .box-card {
       box-shadow: 0px 0px 10px 0px #00000029;
       // border: 0.9px solid #8E9AA04D;
       border-radius: 5px;
-      padding:15px 20px;
-      color:#000;
-      .main-title
-      {
+      padding: 15px 20px;
+      color: #000;
+      .main-title {
         font-size: 25px;
         font-weight: bold;
         text-transform: uppercase;
-        color:#000;
+        color: #000;
       }
-      .budget-box
-      {
-        box-shadow: 0px 2.79px 2.79px 0px #0000000A;
-        border: 0.63px solid #8E9AA04D;
+      .budget-box {
+        box-shadow: 0px 2.79px 2.79px 0px #0000000a;
+        border: 0.63px solid #8e9aa04d;
         border-radius: 5px;
         padding: 30px 15px;
         margin-top: 20px;
         display: flex;
         align-items: center;
         justify-content: space-between;
-        p
-        {
+        p {
           margin: 0;
-          &.budget-name
-          {
-            color:var(--stc-grey-dark-color);
+          &.budget-name {
+            color: var(--stc-grey-dark-color);
             text-transform: capitalize;
             font-weight: 600;
             font-size: 16px;
           }
-          &.budget-num
-          {
-            color:#000;
+          &.budget-num {
+            color: #000;
             font-size: 2.2rem;
             font-weight: 600;
-            span
-            {
-              color:var(--stc-grey-dark-color);
+            span {
+              color: var(--stc-grey-dark-color);
               font-size: 0.9rem;
               text-transform: uppercase;
               font-weight: 500;
@@ -64,48 +55,40 @@
           }
         }
       }
-      .spending-cards
-      {
+      .spending-cards {
         // display: flex;
         // align-items: center;
         // gap:15px;
-        .spend-card
-        {
-          box-shadow: 0px 2.79px 2.79px 0px #0000000A;
-          border: 0.63px solid #8E9AA04D;
+        .spend-card {
+          box-shadow: 0px 2.79px 2.79px 0px #0000000a;
+          border: 0.63px solid #8e9aa04d;
           border-radius: 5px;
           padding: 10px 25px;
           margin-top: 15px;
           width: 100%;
-          span
-          {
-            color:var(--stc-grey-dark-color);
+          span {
+            color: var(--stc-grey-dark-color);
             text-transform: capitalize;
             font-weight: 600;
             font-size: 16px;
           }
-          .spend-num
-          {
-            color:#000;
+          .spend-num {
+            color: #000;
             font-size: 1.8rem;
             font-weight: 600;
             margin-bottom: 0;
             margin-top: 10px;
-            @media all and (min-width:1367px) and (max-width:1440px)
-            {
+            @media all and (min-width: 1367px) and (max-width: 1440px) {
               font-size: 1.5rem;
             }
-            @media all and (min-width:1281px) and (max-width:1366px)
-            {
+            @media all and (min-width: 1281px) and (max-width: 1366px) {
               font-size: 1.4rem;
             }
-            @media all and (max-width:1280px)
-            {
+            @media all and (max-width: 1280px) {
               font-size: 1.2rem;
             }
-            span
-            {
-              color:var(--stc-grey-dark-color);
+            span {
+              color: var(--stc-grey-dark-color);
               font-size: 0.9rem;
               text-transform: uppercase;
               font-weight: 500;
@@ -113,151 +96,95 @@
           }
         }
       }
-      .actual-spending-card
-      {
-        .title
-        {
+      .actual-spending-card {
+        .title {
           margin: 0;
-          color:var(--stc-purple-color);
+          color: var(--stc-purple-color);
           text-transform: capitalize;
           font-weight: 600;
           font-size: 17px;
           margin-top: 10px;
         }
-        .wise-capex-card
-        {
-          box-shadow: 0px 2.79px 2.79px 0px #0000000A;
-          border: 0.63px solid #8E9AA04D;
+        .wise-capex-card {
+          box-shadow: 0px 2.79px 2.79px 0px #0000000a;
+          border: 0.63px solid #8e9aa04d;
           border-radius: 5px;
           padding: 15px 25px 10px;
-          margin-top:5px;
+          margin-top: 5px;
           width: 100%;
           text-align: center;
-          .title2
-          {
+          .title2 {
             margin: 0;
-            color:var(--stc-grey-dark-color);
+            color: var(--stc-grey-dark-color);
             text-transform: capitalize;
             font-weight: 600;
             font-size: 16px;
           }
         }
       }
-      &-chart
-      {
+      &-chart {
         // margin-top: 30px;
         height: 300px;
       }
-      &-chart2
-      {
+      &-chart2 {
         display: grid;
         grid-template-columns: 50% 50%;
-        .first-chart
-        {
-          .chart-container
-          {
-            border-right: 1px solid #8E9AA04D;
+        .first-chart {
+          .chart-container {
+            border-right: 1px solid #8e9aa04d;
             margin-top: 20px;
             height: 280px;
           }
         }
-        .second-chart
-        {
-          .chart-container
-          {
+        .second-chart {
+          .chart-container {
             margin-top: 20px;
             height: 280px;
           }
         }
       }
-      .tendring-status-card
-      {
-        .title
-        {
+      .tendring-status-card {
+        .title {
           margin: 0;
-          color:var(--stc-purple-color);
+          color: var(--stc-purple-color);
           text-transform: capitalize;
           font-weight: 600;
           font-size: 17px;
           margin-top: 10px;
         }
-        &-box
-        {
-          box-shadow: 0px 2.79px 2.79px 0px #0000000A;
-          border: 0.63px solid #8E9AA04D;
+        &-box {
+          box-shadow: 0px 2.79px 2.79px 0px #0000000a;
+          border: 0.63px solid #8e9aa04d;
           border-radius: 5px;
           padding: 15px 15px 10px;
-          margin-top:5px;
+          margin-top: 5px;
           width: 100%;
           text-align: center;
-          .total-projects-amount-card
-          {
+          .total-projects-amount-card {
             display: grid;
             grid-template-columns: 50% 50%;
             align-items: center;
-            box-shadow: 0px 2.79px 2.79px 0px #0000000A;
-            border: 0.63px solid #8E9AA04D;
+            box-shadow: 0px 2.79px 2.79px 0px #0000000a;
+            border: 0.63px solid #8e9aa04d;
             border-radius: 5px;
             padding: 15px 15px 10px;
-            .total-projects
-            {
-              border-right: 1px solid #8E9AA04D;
+            .total-projects {
+              border-right: 1px solid #8e9aa04d;
             }
-            .total-projects , .total-amount
-            {
-              &-title
-              {
+            .total-projects,
+            .total-amount {
+              &-title {
                 margin: 0;
-                color:var(--stc-grey-dark-color);
+                color: var(--stc-grey-dark-color);
                 text-transform: capitalize;
                 font-weight: 600;
-                font-size: 16px;  
+                font-size: 16px;
               }
-              &-num
-              {
-                color:var(--stc-black-color);
+              &-num {
+                color: var(--stc-black-color);
                 margin-top: 10px;
                 font-weight: 600;
                 font-size: 1.3rem;
-              }
-            }
-          }
-          .awarded-card
-          {
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            color:#fff;
-            gap:1px;
-            &-item
-            {
-              height: 35px;
-              line-height: 35px;
-              min-width: 5%;
-            }
-            &-legends
-            {
-              display: flex;
-              align-items: center;
-              gap:25px;
-              margin-top: 10px;
-              .legend
-              {
-                display: flex;
-                align-items: center;
-                gap:5px;
-              }
-              .bullet
-              {
-                width: 15px;
-                height: 15px;
-                border-radius: 50%;
-              }
-              .name
-              {
-                color:#616161;
-                text-transform: capitalize;
-                font-weight: 500;
               }
             }
           }
@@ -266,13 +193,227 @@
     }
   }
 }
-.empty-data-message
-{
+.empty-data-message {
   text-transform: capitalize;
   text-align: center;
   margin: 0;
   font-style: italic;
   font-size: 1.3rem;
   font-weight: 500;
-  color:var(--stc-purple-color);
+  color: var(--stc-purple-color);
+}
+.financial-reporting-mobile-view {
+  background-color: #f5f6fa;
+  &-body {
+    padding: 15px;
+    .tabs {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      .tab {
+        color: #fff;
+        @extend .stcFont;
+        text-transform: uppercase;
+        box-shadow: 0px 2px 4px -1px #1212170f;
+        box-shadow: 0px 4px 6px -1px #12121714;
+        background-color: #ffffff;
+        border-radius: 5px;
+        font-size: 0.8rem;
+        padding: 5px 15px;
+        color: var(--stc-light-grey-color2);
+        &.active {
+          color: #fff;
+          background-color: var(--stc-pink-color);
+        }
+      }
+    }
+    .tap-content {
+      background-color: #fff;
+      padding: 8px 15px 10px;
+      border-radius: 10px;
+      margin-top: 15px;
+      .main-title {
+        @extend .stcFont;
+        color: var(--stc-grey-color2);
+        margin: 0;
+        font-weight: 600;
+        font-size: 16px;
+        text-transform: uppercase;
+      }
+      .total-budget-card {
+        border-radius: 10px;
+        padding: 10px 15px;
+        margin-top: 10px;
+        background: linear-gradient(
+          90deg,
+          #6e008b 0%,
+          #6b008b 11.11%,
+          #68008b 22.22%,
+          #65008b 33.33%,
+          #61008b 44.44%,
+          #5e008c 55.56%,
+          #5a008c 66.67%,
+          #57008c 77.78%,
+          #53008c 88.89%,
+          #4f008c 100%
+        );
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 72px;
+        p {
+          margin: 0;
+          @extend .stcFont;
+          &.title {
+            text-transform: capitalize;
+            font-weight: 500;
+            font-size: 16px;
+          }
+          &.number {
+            font-size: 24px;
+            font-weight: 500;
+            span {
+              font-weight: 400;
+              font-size: 14px;
+              display: inline-block;
+              padding-left: 0px;
+              text-transform: uppercase;
+            }
+          }
+        }
+      }
+      .capex-spending-card {
+        border: 1px solid #d1d1db;
+        border-radius: 10px;
+        color: #000;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 15px;
+        p {
+          margin: 0;
+          @extend .stcFont;
+        }
+        .capex-spending,
+        .capex-accural {
+          .title {
+            color: #6c6c89;
+            font-weight: 600;
+            font-size: 15px;
+          }
+          .value {
+            color: var(--stc-grey-color2);
+            font-weight: 600;
+            font-size: 24px;
+            margin-top: 5px;
+            span {
+              font-size: 15px;
+            }
+          }
+        }
+      }
+      .actual-spending-card {
+        margin-top: 15px;
+        .title {
+          color: var(--stc-light-grey-color2);
+          @extend .stcFont;
+          font-size: 16px;
+          font-weight: 500;
+          margin-bottom: 10px;
+        }
+        &-chart {
+          border: 1px solid #d1d1db;
+          border-radius: 10px;
+          margin-top: 10px;
+          padding: 10px 15px;
+          .chart-title {
+            text-align: center;
+            color: var(--stc-light-grey-color2);
+            @extend .stcFont;
+            font-size: 15px;
+            font-weight: 600;
+            margin: 0;
+          }
+        }
+      }
+      .box-card-chart2 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .chart-container {
+          height: 300px;
+        }
+        .first-chart , .second-chart
+        {
+          width: 100%;
+        }
+        .first-chart
+        {
+          .chart-container {
+            border-right: 1px solid #8e9aa04d;
+            // margin-top: 20px;
+            // height: 280px;
+          }
+        }
+        .title3 {
+          text-align: center;
+          color: var(--stc-light-grey-color2);
+          @extend .stcFont;
+          font-size: 15px;
+          font-weight: 600;
+          text-transform: capitalize;
+          margin: 0;
+        }
+      }
+      .tendering-status-card
+      {
+        border: 1px solid #d1d1db;
+        border-radius: 10px;
+        color: #000;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding:15px;
+        .left-side , .right-side
+        {
+          width: 100%;
+        }
+        .right-side
+        {
+          padding-left: 25px;
+        }
+        .left-side
+        {
+          border-right: 1px solid #8e9aa04d;
+        }
+        .project-title
+        {
+          color: var(--stc-light-grey-color2);
+          @extend .stcFont;
+          font-size: 15px;
+          font-weight: 600;
+          text-transform: capitalize;
+          margin: 0;
+        }
+        .project-value
+        {
+          color: var(--stc-grey-color2);
+          @extend .stcFont;
+          font-size: 18px;
+          font-weight: 600;
+          text-transform: capitalize;
+          margin: 0;
+          margin-top: 5px;
+          span
+          {
+            color:var(--stc-light-grey-color2);
+            font-size: 13px;
+            font-weight: 500;
+          }
+        }
+      }
+    }
+  }
 }

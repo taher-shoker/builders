@@ -154,3 +154,32 @@
       padding:5px;
   }
 }
+.psr-details-page-mobile-view
+{
+  background-color: #f5f6fa;
+  &-body
+  {
+    padding: 15px;
+    .page-title
+    {
+      color:var(--stc-grey-color2);
+      @extend .stcFont;
+      font-size: 18px;
+      font-weight: 600;
+    }
+  }
+}
+.empty-data-msg2
+{
+  text-align: center;
+  @extend .stcFont;
+  color:var(--stc-purple-color);
+  text-transform: capitalize;
+  font-size: 1.1rem;
+  font-style: oblique;
+  // height: 60vh;
+  height: calc(100vh - 172px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

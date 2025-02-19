@@ -75,7 +75,7 @@ tr:not(.table-header) {
     cursor: pointer;
   }
 }
-.psrTable {
+.psrTable,.activityTable {
   .table-header {
     height: 70px;
     th {
@@ -112,6 +112,12 @@ tr:not(.table-header) {
       font-size: 20px;
     }
   }
+}
+.activityTable
+{
+  td {
+    text-align: left!important;
+  } 
 }
 .empty-details {
   text-align: center;
