@@ -18,7 +18,7 @@ export class HttpInterceptorService implements HttpInterceptor {
     const gToken = this.cookieService.get('tokenGenerated') || null;
     const type = this.cookieService.get('tokenType') || '';
     if (token) {
-      console.log('found');
+      // console.log('found');
       request = request.clone({
         setHeaders: {
           Authorization: `Bearer ${token}`,

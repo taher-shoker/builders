@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ScorecardService } from '../services/scorecard.service';
 import {
   NavLinks,
@@ -8,6 +8,7 @@ import {
 } from '../models/scorecard.model';
 import { NavigationStart, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { DeviceService } from '../services/device.service';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -15,7 +16,6 @@ import { AuthService } from '../services/auth.service';
   styleUrl: './main-layout.component.scss',
 })
 export class MainLayoutComponent implements OnInit {
-  // @ViewChild(SidebarComponent) child?: SidebarComponent;
   logoSrc!: string;
   userName!: string;
   userNameLogo!: string;
@@ -29,12 +29,19 @@ export class MainLayoutComponent implements OnInit {
   userRoles!: UserGroup;
   isAllowed!: boolean;
   isPMO!: boolean;
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
   ngOnInit(): void {
     this.currentSystem = this.scorecardService.getCurrentSystem();
-    this.userData = JSON.parse(
-      decodeURIComponent(this.scorecardService.getUserGroups())
-    );
-    this.scorecardService.setUsername(this.userData.name);
+    if(this.scorecardService.getUserGroups())
+    {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
+    this.isMobile.set(this.deviceService.isMobile());
+    // console.log(this.isMobile());
+    this.scorecardService.setUsername(this.userData?.name);
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.navItems = this.scorecardService.getNavLinks();
@@ -45,13 +52,23 @@ export class MainLayoutComponent implements OnInit {
         }
       },
     });
-    this.userRoles = this.checkSystem(this.userData.userGroups);
-    this.isAllowed = this.userRoles.roles.some(
-      (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
-    );
-    this.isPMO = this.userRoles.roles.some(
-      (role) => role.roleName === 'BE_PMO'
-    );
+    if(this.userData && this.userData.userGroups)
+    {
+      this.userRoles = this.checkSystem(this.userData.userGroups);
+    }
+    if(this.userRoles && this.userRoles.roles)
+    {
+      this.isAllowed = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+      );
+    }
+    this.authService.userRoles.next(this.userRoles);
+    if(this.userRoles && this.userRoles.roles)
+    {
+      this.isPMO = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_PMO'
+      );
+    }
     this.scorecardService.userRoles = this.userRoles;
   }
   private checkSystem(groups: UserGroup[]): UserGroup {
@@ -60,31 +77,19 @@ export class MainLayoutComponent implements OnInit {
         return this.currentSystem === role.system.name;
       });
     });
-    console.log(this.currentSystem);
-    console.log(matchingGroup);
     if (matchingGroup) {
       return matchingGroup;
     } else {
       throw new Error('No user group found for the current system');
     }
   }
+  toggleSwitchBtn()
+  {
+    this.scorecardService.toggleSwitchBtn.next(true);
+  }
   getCurrentMode(mode: 'editMode' | 'viewMode') {
     this.scorecardService.setEditMode(mode);
   }
-  // decodeToken(token: string) {
-  //   const base64Url = token.split('.')[1];
-  //   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  //   const jsonPayload = decodeURIComponent(
-  //     window
-  //       .atob(base64)
-  //       .split('')
-  //       .map(function (c) {
-  //         return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //       })
-  //       .join('')
-  //   );
-  //   return JSON.parse(jsonPayload);
-  // }
   logout() {
     this.authService.logout();
   }

@@ -1,0 +1,11 @@
+<div class="breadcrumbs">
+  <ul>
+    @for (item of breadcrumbs; track item; let i = $index) { @if (!!item) {
+    <li>
+      <a [routerLink]="generateBreadcrumbUrl(i)" class="hover:text-blue-500">{{
+        item
+      }}</a>
+    </li>
+    } }
+  </ul>
+</div>

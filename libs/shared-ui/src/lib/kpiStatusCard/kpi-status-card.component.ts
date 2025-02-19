@@ -14,4 +14,5 @@ export class KpiStatusCardComponent{
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
   @ViewChild('overlayPanel3') overlayPanel3!: OverlayPanel;
+  isMobile = input<boolean>(false)
 }

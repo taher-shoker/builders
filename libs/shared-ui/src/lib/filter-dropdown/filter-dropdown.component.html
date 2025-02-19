@@ -1,0 +1,34 @@
+<p-dropdown
+  [options]="dropdownOptions()"
+  [ngModel]="value"
+  (onChange)="onValueChange($event.value)"
+  optionLabel="label"
+  [filter]="true"
+  filterBy="label"
+  [showClear]="true"
+  [placeholder]="placeholder()"
+  appendTo="body"
+>
+  <ng-template pTemplate="selectedItem" let-selectedOption>
+    <div class="flex-container">
+      <span [pTooltip]="selectedOption?.label" tooltipPosition="right">{{
+        selectedOption?.label
+      }}</span>
+      @if (selectedOption?.version) {
+      <span [pTooltip]="selectedOption?.version" tooltipPosition="right">{{
+        selectedOption?.version
+      }}</span>
+      }
+    </div>
+  </ng-template>
+  <ng-template let-option pTemplate="item">
+    <div class="flex-container">
+      <span [pTooltip]="option?.label" tooltipPosition="right">{{
+        option.label
+      }}</span>
+      @if (option?.version) {
+      <span>{{ option?.version }}</span>
+      }
+    </div>
+  </ng-template>
+</p-dropdown>

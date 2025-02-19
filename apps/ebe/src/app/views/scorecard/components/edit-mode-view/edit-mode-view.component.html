@@ -12,5 +12,16 @@
       <img src="assets/images/upload-solid.svg" />
       <span>import</span>
     </button>
+    @if(showActivityLogsButton())
+    {
+      <button
+        class="financial-scorecard-edit-mode-button activity-log-btn"
+        (click)="activityLogs()"
+      >
+        <!-- (click)="uploader.click()" -->
+        <img src="assets/images/History.svg" />
+        <span>activity log</span>
+      </button>
+    }
     <!-- {{currentClickedTap().name}} -->
   </div>

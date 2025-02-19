@@ -29,7 +29,12 @@
     cursor: pointer;
     &.import-btn
     {
-      background-color: var(--stc-purple-color);
+      background-color:var(--stc-purple-color);
+    }
+    &.activity-log-btn
+    {
+      background-color:var(--stc-grey-dark-color);
+      padding:10px 15px;
     }
     img
     {

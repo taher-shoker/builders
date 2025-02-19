@@ -1,0 +1,33 @@
+<div class="notification-list">
+  @if (notifications().length > 0) {
+  <div class="notification-list_header">
+    <p-button
+      label="Mark all as read"
+      icon="pi pi-check-circle"
+      iconPos="right"
+      styleClass="p-button-text p-button-sm"
+      (click)="markAllAsRead()"
+    ></p-button>
+  </div>
+  } @for (notification of notifications(); track notification) {
+  <div class="notification-list_item">
+    @if (!notification.read) {
+    <div class="notification-list_unread-indicator">
+      <i class="pi pi-circle-fill"></i>
+    </div>
+    }
+
+    <div class="notification-list_content">
+      <p class="notification-list_content_title">{{ notification.title }}</p>
+      <p class="notification-list_content_message">
+        {{ notification.message }}
+      </p>
+      <p class="notification-list_content_time">{{ notification.time }}</p>
+    </div>
+  </div>
+  } @empty {
+  <div class="notification-list_empty">
+    <p>No notifications</p>
+  </div>
+  }
+</div>

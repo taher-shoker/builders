@@ -1,16 +1,16 @@
 export interface PSRDataModel
 {
     id:number;
-    planned:number;
+    planned:number | null;
     sector:string;
     actual:number;
     details:string;
-    plannedDate:string;
+    plannedDate:string | null;
 }
 export interface PSRChartDataModel
 {
-    actual:number;
-    planned:number;
+    actual:number | null;
+    planned:number | null;
 }
 export interface PSRProjectDetailsModel
 {

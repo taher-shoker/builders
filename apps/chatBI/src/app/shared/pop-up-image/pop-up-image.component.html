@@ -1,0 +1,20 @@
+<div class="popup-overlay" (click)="closeImagePopup()">
+  <div
+    class="popup-content"
+    [ngClass]="
+      chartType() === 'line' || chartType() === 'bar' ? 'popup-chart-width' : ''
+    "
+    (click)="$event.stopPropagation()"
+  >
+    <button #close class="close-btn" (click)="closeImagePopup()">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="w-100">
+      <stc-apps-chart-controller
+        [sqlData]="chartData()"
+        [showType]="chartType()"
+        [popUpClick]="popUpClicked"
+      ></stc-apps-chart-controller>
+    </div>
+  </div>
+</div>

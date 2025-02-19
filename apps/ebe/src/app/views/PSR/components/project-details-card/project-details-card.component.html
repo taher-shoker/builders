@@ -9,7 +9,44 @@
     </p>
     @if(isAllowed())
     {
-      <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
+      <i class = "pi pi-ellipsis-v" (click)="actionsPanel.toggle($event)"></i>
+      <p-overlayPanel
+      #actionsPanel
+      dismissable="false"
+      [appendTo]="'body'"
+      styleClass="project-card-actions-logs"
+      (onHide)="showActivityLogsPopup = false"
+    >
+      <div class="actions-logs-table">
+        @for (item of items; track $index) {
+        <div
+          class="action"
+          [class.delete-btn]="item.label === 'Delete'"
+          (click)="
+            item.label === 'Edit'
+              ? gotoEditPage()
+              : item.label === 'Delete'
+              ? showDeleteDialog()
+              : showActivityLogs()
+          "
+        >
+          <i [class]="item.icon"></i>
+          <p>{{ item.label }}</p>
+        </div>
+        }
+      </div>
+    </p-overlayPanel>
+    <stc-apps-activity-logs-popup
+      [activityLogsTableHeader]="activityLogsTableHeader()"
+      [activityLogsTableBody]="activityLogsTableBody()"
+      [showPopup]="showActivityLogsPopup"
+      (popupClosed)="popupClosed()"
+      [isProjectActionPopup]="true"
+      type = "psr"
+      [isDismissable]="true"
+      (popupHide)="showActivityLogsPopup = false"
+    />
+      <!-- <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
       <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
         <ng-template pTemplate="item" let-item>
           <div class="menu-container">
@@ -24,7 +61,7 @@
             </div>
           </div>
         </ng-template>
-      </p-menu>
+      </p-menu> -->
     }
     @if(titleArr && titleArr.length > 11)
     {
@@ -119,20 +156,44 @@
     </div>
   </div>
   <div class="project-chart-card">
-    @if(projectData().chartDetails.length !== 0) {
-      <p class="project-chart-card-details" (click)="displayDrilldown()">
-        details
-      </p>
-      } @else {
-      <p
-        class="project-chart-card-details empty-details-btn"
-        (click)="showAddRecordForm2()"
-        [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
-      >
-        <img src="assets/images/add-square.svg" alt="" />
-        <span> add details </span>
-      </p>
+    <div style = "display: flex;align-items: center;justify-content: space-between;">
+      @if(isAdmin())
+      {
+        <button class = "activity-logs-button" (click)="showDeliverablesActivityLogs()">
+          <img src="assets/images/History.svg" />
+          <span>activity log</span>
+        </button>
       }
+      <stc-apps-activity-logs-popup
+        [activityLogsTableHeader]="activityLogsTableHeader()"
+        [activityLogsTableBody]="activityLogsTableBody()"
+        [showPopup]="showActivityLogsPopup3"
+        (popupClosed)="popupClosed3()"
+        [isProjectActionPopup]="true"
+        type = "psr"
+        [isDismissable]="true"
+        (popupHide)="showActivityLogsPopup3 = false"
+      />
+      @if(projectData().chartDetails && projectData().chartDetails.length !== 0) {
+        <p class="project-chart-card-details" (click)="displayDrilldown()">
+          details
+        </p>
+        } @else {
+          @if(!isDeleted())
+          {
+            <p
+              class="project-chart-card-details empty-details-btn"
+              (click)="showAddRecordForm2()"
+              [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
+            >
+              <img src="assets/images/add-square.svg" alt="" />
+              <span> add details </span>
+            </p>
+          } @else {
+            <p class="project-chart-card-details empty-details-btn" style = "height:21px"></p>
+          }
+        }
+    </div>
     @if((projectData().vactual || projectData().vactual === 0) && (projectData().vplanned || projectData().vplanned === 0)) {
     <div
       class="project-chart-card-chart position-relative"
@@ -154,7 +215,7 @@
   <section
     class="popover-section"
     [ngStyle]="{
-      'padding-right': projectData().chartDetails.length > 4 ? '10px' : '0'
+      'padding-right': projectData().chartDetails && projectData().chartDetails.length > 4 ? '10px' : '0'
     }"
   >
     <div class="header mb-3">
@@ -184,13 +245,17 @@
       <div class="main-title">
         <p>details for chart</p>
         <!-- {{formValues2.length}} -->
-        @if(!isEditMode && newData.chartDetails.length !== 0 &&
-        userRoles().roles[0].roleName !== "BE_VIEWERS") {
+        @if(!isEditMode && newData.chartDetails && newData.chartDetails.length !== 0 &&
+        userRoles().roles[0].roleName !== "BE_VIEWERS" && !isDeleted()) {
         <div class="edit-img" (click)="editMode()">
           <img src="assets/images/edit.svg" alt="" />
           <span>edit</span>
         </div>
         }
+        <!-- @if(!isEditMode && newData.chartDetails && newData.chartDetails.length !== 0 &&
+        userRoles().roles[0].roleName !== "BE_VIEWERS" && !isDeleted()) {
+          
+        } -->
       </div>
     </div>
     <stc-apps-custom-table
@@ -203,6 +268,7 @@
       [isEditMode]="isEditMode"
       (updatedData)="getUpdatedData($event)"
       [userRoles]="userRoles().roles[0].roleName"
+      [isDeleted]="isDeleted()"
     />
   </section>
 </p-overlayPanel>
@@ -219,7 +285,7 @@
   <div>
     <stc-apps-add-project-form
       [id]="
-        projectData().chartDetails.length !== 0
+        projectData().chartDetails && projectData().chartDetails.length !== 0
           ? projectData().chartDetails[projectData().chartDetails.length - 1].id
           : 0
       "
@@ -257,7 +323,7 @@
       This action is permanent and cannot be undone!
     </p> -->
     <div class="buttons mt-5">
-      <button class="delete" (click)="deleteProjectData(projectData().id)">yes. delete</button>
+      <button class="delete" (click)="deleteProjectData(projectData().id);actionsPanel.hide()">yes. delete</button>
       <button (click)="close()" class="cancel">cancel</button>
     </div>
   </div>

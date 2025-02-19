@@ -1,0 +1,37 @@
+.card-view {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 16px;
+}
+
+.card {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.card-content div {
+  margin-bottom: 8px;
+  color: black;
+  strong {
+    font-size: 12px;
+    margin-bottom: 9px;
+    color: var(--stc-greyColor);
+  }
+  span {
+    font-size: 16px;
+    color: var(--stc-color);
+  }
+}
+table {
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  table {
+    display: none;
+  }
+}

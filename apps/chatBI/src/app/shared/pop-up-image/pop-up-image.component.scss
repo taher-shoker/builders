@@ -1,0 +1,71 @@
+.popup-chart-width::-webkit-scrollbar {
+  height: 10px;
+}
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.popup-content {
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+  width: 94%;
+  touch-action: none;
+  display: flex;
+  box-sizing: border-box;
+  justify-content: center;
+}
+.popup-chart-width {
+  width: 1024px;
+  overflow: auto;
+  max-width: 100%;
+  pointer-events: auto;
+  touch-action: pan-x;
+}
+.zoomed-image {
+  width: 100%;
+  cursor: zoom-in;
+  transition: transform 0.3s ease;
+  border-radius: 8px;
+  touch-action: none;
+  user-select: none;
+}
+
+.close-btn {
+  width: 36px;
+  height: 36px;
+  background-color: black !important;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  position: fixed;
+  z-index: 10000;
+  top: 17px;
+  right: 10px;
+  border: none;
+  outline: none;
+  background: none;
+  color: var(--whiteColor);
+  i {
+    font-size: 24px;
+  }
+}
+
+.close-btn:hover {
+  opacity: 0.5;
+}
+.zoomed {
+  transform: scale(1.5);
+  cursor: zoom-out;
+}

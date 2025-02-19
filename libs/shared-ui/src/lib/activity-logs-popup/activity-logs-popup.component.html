@@ -1,0 +1,157 @@
+<div class="overlay-container" style="position: relative" #overlay>
+  <!-- [dismissable]="isDismissable()" -->
+  <p-overlayPanel
+    #activityLogsPanel
+    dismissable = "false"
+    [appendTo]="isActionPopup() || isActionPopup2() ? overlay : 'body'"
+    styleClass="activity-logs-panel"
+    [styleClass]="
+      isActionPopup() ? 'action-Popup' : isActionPopup2() ? 'action-Popup2' : isPSRProject() ? 'PSRProject' : ''
+    "
+    (onHide)="hidePopup()"
+  >
+    <div
+      class="activity-logs-table"
+      [class.projectActionPopup]="isProjectActionPopup()"
+    >
+      <div class="activity-logs-table-header">
+        <p>activity logs</p>
+        <i
+          class="pi pi-times-circle"
+          (click)="closeActivityLogsPopup()"
+          style="margin-right: 1px"
+        ></i>
+      </div>
+      <div class="table-container">
+        <!-- <stc-apps-custom-table
+          [headers]="activityLogsTableHeader()"
+          [items]="activityLogsTableBody()"
+          [psrTable]="true"
+          [fontFamily]="'STCForwardFont'"
+          [activityLogTable]="true"
+          (addRecord)="gotoActivityLogs()"
+        /> -->
+        <table>
+          <thead>
+            <tr>
+              @for (item of activityLogsTableHeader(); track $index) {
+              <th>{{ item.label }}</th>
+              }
+            </tr>
+          </thead>
+          <tbody>
+            @for (item of activityLogsTableBody(); track $index) {
+            <tr>
+              <td>
+                {{ item && item.username ? (item.username | truncateWord : 2) : '-' }}
+                @if(item && item.username.split(" ").length > 2) {
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ item.username }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              @if(item && item.activityType) {
+              <td>{{ item.activityType }}</td>
+              }
+              @if(hasDetails())
+              {
+                <td>
+                  {{
+                    item && item.activityDetails
+                      ? (item.activityDetails | truncateWord : 2)
+                      : '-'
+                  }}
+                  @if(item && item.activityDetails && item.activityDetails.split(" ").length > 2) {
+                  <span
+                    class="read-more-btn"
+                    (click)="longTitlePanel.toggle($event)"
+                    >read more</span
+                  >
+                  <p-overlayPanel
+                    styleClass="longTitlePanel"
+                    #longTitlePanel
+                    dismissable="true"
+                  >
+                    <section class="long-title-popover-section">
+                      {{ item.activityDetails }}
+                    </section>
+                  </p-overlayPanel>
+                  }
+                </td>
+              }
+              @if(item && item.timestamp) {
+              <td class="time">{{ transformDate(item.timestamp) }}</td>
+              } 
+              @if(hasOldValue()) {
+                <td>
+                  {{ item && item.oldValue ? (item.oldValue | truncateWord : 1) : '-' }}
+                  @if(item && item.oldValue && item.oldValue.split(" ").length >= 1) {
+                  <span
+                    class="read-more-btn"
+                    (click)="longTitlePanel.toggle($event)"
+                    >read more</span
+                  >
+                  <p-overlayPanel
+                    styleClass="longTitlePanel"
+                    #longTitlePanel
+                    dismissable="true"
+                  >
+                    <section class="long-title-popover-section">
+                      {{ item.oldValue }}
+                    </section>
+                  </p-overlayPanel>
+                  }
+                </td>
+                }
+              @if(hasNewValue()) {
+              <td>
+                {{ item && item.newValue ? (item.newValue | truncateWord : 1) : '-' }}
+                @if(item && item.newValue && item.newValue.split(" ").length >= 1) {
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ item.newValue }}
+                  </section>
+                </p-overlayPanel>
+                }
+              </td>
+              } 
+            </tr>
+            } @empty {
+            <tr>
+              <td colspan="6" class="empty-data-msg">there are no data</td>
+            </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+      <button
+        type="button"
+        class="show-activity-logs-btn"
+        (click)="showAllActivityLog()"
+      >
+        <img src="assets/images/eye.svg" alt="" />
+        <span> show all activity logs </span>
+      </button>
+    </div>
+  </p-overlayPanel>
+</div>
