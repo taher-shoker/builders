@@ -8,14 +8,15 @@
     <input
       [readonly]="disableInput"
       matStartDate
-      placeholder="Start date"    
+      [placeholder]="disableInput ? '' : 'Start date'"
       formControlName="start"
       (dateChange)="firstValueChanged($event)"
+      (click)="$event.preventDefault()"
     />
     <input
       [readonly]="disableInput"
       matEndDate
-      placeholder="End date"
+      [placeholder]="disableInput ? '' : 'End date'"
       formControlName="end"
       (dateChange)="valueChanged($event)"
     />
