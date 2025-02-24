@@ -77,9 +77,9 @@ export class MobileProjectCardComponent {
   }
   transformDate(date:string)
   {
-    const parts = date.split('/');
-    let d = `${parts[2]}-${parts[1]}-${parts[0]}`;
-    return this.datePipe.transform(d , 'dd, MMM yyyy');
+    // const parts = date.split('/');
+    // let d = `${parts[2]}-${parts[1]}-${parts[0]}`;
+    return this.datePipe.transform(date, 'dd, MMM yyyy');
   }
   showDeliverablesTable(position: Position)
   {
