@@ -19,7 +19,6 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
 import { MatDialog } from '@angular/material/dialog';
 import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import { MilestonesService, PendingTask } from '../../milestones.service';
-import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
 import { ToastrService } from 'ngx-toastr';
@@ -33,6 +32,7 @@ import {
   animate,
 } from '@angular/animations';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
+import { UtilitiesService } from 'libs/shared-ui/src/lib/services/utilities.service';
 
 export interface Milestone {
   activityName: string;
