@@ -34,6 +34,11 @@ export class PSRService {
         label : "end date"
       },
       {
+        key : "weight",
+        type : "text",
+        label : "weight"
+      },
+      {
         key : "completionLevel",
         type : "text",
         label : "Completion Level"
