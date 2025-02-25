@@ -338,11 +338,11 @@ export class MilestonesComponent
     this.milestonesService.setUserTeams().subscribe((res) => {
       this.allTeams = res;
     });
-    if (this.allTeams?.length === 0) {
-      this.milestonesService.setSystemTeams().subscribe((res) => {
-        this.allTeams = res;
-      });
-    }
+    // if (this.allTeams?.length === 0) {
+    //   this.milestonesService.setSystemTeams().subscribe((res) => {
+    //     this.allTeams = res;
+    //   });
+    // }
   }
 
   detailsNavigate(item: any) {
