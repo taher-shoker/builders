@@ -2,7 +2,7 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'stc-apps-category',
@@ -10,30 +10,44 @@ import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.
   styleUrls: ['./dy-dashboard.component.scss'],
 })
 export class DyDashboardComponent implements OnInit {
-  tableData!: any;
-  columnsSchema: ColumnsSchema[] = [
-    {
-      key: 'name',
-      type: 'text',
-      label: 'Category Name',
-    },
-    {
-      key: 'slaDuration',
-      type: 'text',
-      label: 'SLA',
-    },
-
-    {
-      key: 'actions',
-      type: 'actions',
-      actions: ['edit', 'delete'],
-      label: '',
-    },
-  ];
-
-  constructor(public router: Router, public route: ActivatedRoute) {}
+  constructor(
+    public router: Router,
+    public route: ActivatedRoute,
+    public _dashboardService: DashboardService
+  ) {}
 
   ngOnInit(): void {
     console.log('initial');
+    this.getStatisticsData();
+    this.getReportsChartData();
+    this.getReportsSLAChart();
+    this.getReportsCategoryChart();
+    this.getReportsAvgResTime();
+  }
+
+  getStatisticsData() {
+    this._dashboardService.getDashboardStatistics().subscribe((res) => {
+      console.log(res);
+    });
+  }
+  getReportsChartData() {
+    this._dashboardService.getAllReportsChart().subscribe((res) => {
+      console.log(res);
+    });
+  }
+  getReportsSLAChart() {
+    this._dashboardService.getReportsSLA().subscribe((res) => {
+      console.log(res);
+    });
+  }
+  getReportsCategoryChart() {
+    this._dashboardService.getReportsCategory().subscribe((res) => {
+      console.log(res);
+    });
+  }
+  getReportsAvgResTime() {
+    this._dashboardService.getReportsAvgReponse().subscribe((res) => {
+      console.log(res);
+    });
   }
 }
