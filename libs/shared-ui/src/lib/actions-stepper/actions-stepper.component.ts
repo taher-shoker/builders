@@ -1,9 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Actions } from 'apps/dtmv/src/app/services/models/milestones.models';
-import {
-  MilestoneAttachment,
-} from './../../../../../apps/dtmv/src/app/views/milestones-setting/milestones.service';
 import {
   Component,
   ContentChild,
@@ -12,6 +6,66 @@ import {
   Output,
   TemplateRef,
 } from '@angular/core';
+
+export interface MilestoneAttachment {
+  id: number;
+  attachmentType: string;
+  fileName: string;
+  url: string;
+  label: string;
+  note: string;
+  uploadDate: string;
+}
+
+export class Actions {
+  static readonly addEvidence = new Actions('Add Evidence', 'Add Evidence');
+  static readonly addNewProgress = new Actions(
+    'Add New Progress',
+    'Add New Progress'
+  );
+  static readonly addJustification = new Actions(
+    'Add Justification',
+    'Add Justification'
+  );
+  static readonly addOnTrack = new Actions('Add Remarks', 'Add Remarks');
+  static readonly reviewEvidence = new Actions('Approve Evidence', 'Approve');
+  static readonly reviewJustification = new Actions(
+    'Approve Justification',
+    'Approve'
+  );
+  static readonly reviewOnTrack = new Actions('Approve on Track', 'Approve');
+  static readonly updateDTRecord = new Actions(
+    'Update Record',
+    'Update Record'
+  );
+  static readonly initiateUpdateProgress = new Actions(
+    'Update progress',
+    'Update progress'
+  );
+  static readonly approveProgress = new Actions(
+    'Approve progress',
+    'Approve progress'
+  );
+  static readonly returnProgress = new Actions('Return progress', 'Return');
+
+  static readonly returnJustification = new Actions(
+    'Return Justification',
+    'Return'
+  );
+  static readonly returnEvidence = new Actions('Return Evidence', 'Return');
+  static readonly returnOnTrack = new Actions('Return Remarks', 'Return');
+  static readonly noNeed = new Actions('No Need', 'No Need');
+
+  // private to disallow creating other instances of this type
+  private constructor(
+    public readonly uniqueTitle: string,
+    public readonly displayCaption: string
+  ) {}
+
+  toString() {
+    return this.uniqueTitle;
+  }
+}
 
 export interface StepperConfig {
   axis?: 'vertical' | 'horizontal';
@@ -35,7 +89,7 @@ export interface Step {
   selector: 'stc-apps-actions-stepper',
   templateUrl: './actions-stepper.component.html',
   styleUrls: ['./actions-stepper.component.scss'],
-  standalone : false
+  standalone: false,
 })
 export class ActionsStepperComponent {
   @Output() stepperAction: EventEmitter<{

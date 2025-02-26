@@ -123,8 +123,14 @@
               <!-- End: <span>{{transformDate(item.endDate!)}}</span> -->
               End: <span>{{item.endDate}}</span>
             </p>
+            <!-- @if(item.weight)
+            { -->
+              <p class="start-date">
+                Weight: <span>{{item.weight || item.weight === 0 ? item.weight : '-'}}</span>
+              </p>
+            <!-- } -->
             <p class="completion-level">
-              Completion level: <span>{{item.completionLevel}}%</span>
+              Completion level: <span>{{item.completionLevel || item.completionLevel === 0 ? item.completionLevel : '-'}}%</span>
             </p>
           </div>
         </div>

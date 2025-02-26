@@ -29,15 +29,23 @@ export interface UserGroupSystem {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss',
 })
+// export class SidebarComponent implements OnInit{
+//   editModeChecked!:boolean;
+//   logoSrc = input.required<string>({alias : 'logoSrc'})
+//   isAdmin = input.required<boolean>()
+//   isPMO = input<boolean>()
+//   usernameImage = input<string>()
+//   userName = input<string>()
+//   router = inject(Router)
 export class SidebarComponent implements OnInit {
-  editModeChecked!: boolean;
-  logoSrc = input.required<string>({ alias: 'logoSrc' });
+  editModeChecked!:boolean;
+  logoSrc = input.required<string>({alias : 'logoSrc'})
+  isAdmin = input.required<boolean>()
+  isPMO = input<boolean>()
+  usernameImage = input<string>()
+  userName = input<string>()
+  router = inject(Router)
   secondLogoSrc = input<string>('');
-  isAdmin = input.required<boolean>();
-  isPMO = input<boolean>();
-  usernameImage = input<string>();
-  userName = input<string>();
-  router = inject(Router);
   justifyContent = input('space-between');
   isAllowed = false;
   currentUrl = '';

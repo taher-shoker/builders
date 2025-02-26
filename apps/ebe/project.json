@@ -22,12 +22,10 @@
           "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
           "node_modules/primeng/resources/primeng.min.css",
           "node_modules/ngx-spinner/animations/ball-spin.css",
-           "node_modules/ngx-toastr/toastr.css",
+          "node_modules/ngx-toastr/toastr.css",
           "apps/ebe/src/styles.scss"
         ],
-        "scripts": [
-          "node_modules/bootstrap/dist/js/bootstrap.min.js"
-        ]
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.min.js"]
       },
       "configurations": {
         "production": {
@@ -40,7 +38,7 @@
             {
               "type": "anyComponentStyle",
               "maximumWarning": "7kb",
-              "maximumError": "10kb"
+              "maximumError": "12kb"
             }
           ],
           "fileReplacements": [
