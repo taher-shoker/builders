@@ -58,6 +58,7 @@ export interface ChartDetails
     endDate:string | null;
     deleteAction?:string;
     completionLevel:number;
+    weight?:number | null;
 }
 export interface AddProjectForm
 {
@@ -67,6 +68,7 @@ export interface AddProjectForm
     endDate:string | null;
     completionLevel:number;
     deleteAction?:string;
+    weight?:number | null;
 }
 export interface ColumnsSchema {
     key: string;

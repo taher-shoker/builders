@@ -616,7 +616,7 @@ export class EditComponent implements OnInit {
         value: erpStatus,
       },
       {
-        name: 'data_enablment_status',
+        name: 'data_enablement_status',
         value: dataEnablementStatus,
       },
       {
@@ -626,7 +626,7 @@ export class EditComponent implements OnInit {
           : null,
       },
       {
-        name: 'data_enablment_status_reflection_level',
+        name: 'data_enablement_status_reflection_level',
         value: dataEnablementStatusReflectionLevel
           ? dataEnablementStatusReflectionLevel?.join(',')
           : null,

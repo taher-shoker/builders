@@ -262,6 +262,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   newData!: PSRProjectDetailsModel;
   titleArr: string[] = [];
+  // chartData:ChartDetails[] = [];
   ngOnChanges(): void {
     if (this.projectData().projectName) {
       this.titleArr = this.projectData().projectName.split(' ');
@@ -269,6 +270,11 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
     const start = this.projectData().startDate;
     const end = this.projectData().endDate;
+    // this.newData.chartDetails.forEach(d => {
+    //   this.chartData.push({
+
+    //   })
+    // })
     if (start && end) {
       if (
         +start.split('-')[2] &&

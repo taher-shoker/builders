@@ -64,6 +64,7 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
   @Input() inputPlaceholder!: string;
   @Input() required!: boolean;
   @Input() disableInput!: boolean;
+  @Input() disableFilterFlag!: boolean;
   @Input()
   startDate!: Date;
   @Input() endDate!: Date;
@@ -77,6 +78,7 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
   });
   ngOnInit(): void {
     // this.disableInput=false;
+    console.log(this.disableInput);
 
     this.dateFormGroup.valueChanges.subscribe((value) => {
       this.datePickerChangeEvent.emit(value);
@@ -115,6 +117,9 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
 
   filteredDays(calendarDate: Date): boolean {
     return calendarDate < new Date() && calendarDate >= new Date('2023-1-1');
+  }
+  disableFilter(calendarDate: Date): boolean {
+    return true;
   }
   resetForm() {
     this.dateFormGroup.reset();
