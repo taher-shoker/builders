@@ -14,13 +14,10 @@
                   </div>
                 </div>
                 @if (this.reportsService.checkIsProcessAdmin()) {
-                  <div class="col-2">
-                    <stc-apps-button
-                      [buttonText]="'Export'"
-                      [buttonType]="'warn'"
-                      (btnClick)="onExporting()"
-                    ></stc-apps-button>
-                  </div>
+                <div class="col-2">
+                  <stc-apps-button [buttonText]="'Export'" [buttonType]="'warn'"
+                    (btnClick)="onExporting()"></stc-apps-button>
+                </div>
                 }
                 <div class="col-3">
                   <stc-apps-button [buttonText]="'Filter' | translate" [buttonType]="'gray-outline'"
@@ -41,7 +38,7 @@
               [paginate]="true" [applyFilter]="true" [paginationConfig]="{
                 pageCount: 10,
                 showTotal: false,
-                paginationIq: 'smart'
+                paginationIq: 'dumb'
               }" (paginationEvent)="paginate($event)">
             </stc-apps-custom-table>
             }

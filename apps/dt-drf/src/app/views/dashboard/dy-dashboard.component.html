@@ -1,5 +1,28 @@
 <div class="layout">
-  <div class="box">
-    
+  <div class="box edit-box">
+    <div class="counts">
+      <div class="item-c c1">
+        <span>All Reports</span>
+        <p class="">{{statisticData.totalCount}}</p>
+      </div>
+      <div class="item-c c2">
+        <span>Completed</span>
+        <p class="">{{statisticData.completed}}</p>
+      </div>
+      <div class="item-c c3">
+        <span>Pending</span>
+        <p class="">{{statisticData.pending}}</p>
+      </div>
+      <div class="item-c c4">
+        <span>Deleted</span>
+        <p class="">{{statisticData.deleted}}</p>
+      </div>
+
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <stc-apps-bar-chart [data]="allReportsChart"></stc-apps-bar-chart>
+    </div>
   </div>
 </div>
