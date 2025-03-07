@@ -45,7 +45,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 })
 export class DyReportFormComponent implements OnInit, OnChanges {
   @Input() isEditing!: boolean;
-  @Input() reportData!: Report;
+  @Input() reportData!: ReportDetails;
   @Input() readOnly!: boolean;
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
@@ -70,9 +70,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   startDate: Date | null = new Date();
   endDate!: Date | null;
   SchedulingTypes: { id: string; name: string }[] = [
-    { id: 'monthly', name: 'Monthly' },
-    { id: 'weekly', name: 'Weekly' },
-    { id: 'custom', name: 'custom' },
+    { id: 'Monthly', name: 'Monthly' },
+    { id: 'Weekly', name: 'Weekly' },
+    { id: 'CustomDate', name: 'Custom date' },
   ];
 
   monthNumbers: { id: number; name: string }[] = [];
@@ -95,9 +95,9 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     }
   }
 
-  handleScheduleType(type: any) {
-    console.log(type);
+  handleScheduleType(type: string) {
     this.restDateFields();
+    this.handleValidationWithScheduling(type);
   }
   restDateFields() {
     this.form.get('startDate')?.reset();
@@ -133,7 +133,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     } else {
       this.endDate = event.value;
       if (this.startDate && this.endDate) {
-        if (this.form.get('schedulingType')?.value.id === 'monthly') {
+        if (this.form.get('schedulingType')?.value === 'Monthly') {
           this.getDaysBetweenDatesArray(this.startDate, this.endDate);
         } else {
           this.getUniqueDayNamesBetweenDates(this.startDate, this.endDate);
@@ -141,8 +141,18 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       }
     }
   }
+  handleValidationWithScheduling(schedulingType: string) {
+    if (schedulingType === 'Monthly') {
+      this.form.get('monthNumber')?.setValidators([Validators.required]);
+    } else if (schedulingType === 'Weekly') {
+      this.form.get('weeklyDay')?.setValidators([Validators.required]);
+    }
+    this.form.get('monthNumber')?.updateValueAndValidity();
+    this.form.get('weeklyDay')?.updateValueAndValidity();
+  }
 
   getDaysBetweenDatesArray(startDate: Date, endDate: Date): void {
+    console.log(startDate, endDate);
     const daySet = new Set<number>();
     const currentDate = new Date(startDate);
 
@@ -164,6 +174,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.monthNumbers = Array.from(daySet)
       .sort((a, b) => a - b)
       .map((day) => ({ id: day, name: day.toString() }));
+    console.log(this.monthNumbers);
   }
 
   getUniqueDayNamesBetweenDates(
@@ -252,6 +263,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       autoScheduling: [false],
       schedulingType: [''],
       monthNumber: [''],
+      isEscalationEnabled: [false],
+      isReminderActive: [false],
       weeklyDay: [''],
       startDate: [''],
       endDate: [''],
@@ -292,7 +305,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
 
-  private resetFormWithValue(data: Report) {
+  private resetFormWithValue(data: ReportDetails) {
     forkJoin([
       this.reportsService.getUsers(),
       this.reportsService.getCategories(),
@@ -305,8 +318,27 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         creatorEmail: data.creatorEmail || '',
         slaDurationInDays: data.reportSlaDuration || 0,
         initiatorShouldApprove: data.initiatorShouldApprove,
+        autoScheduling: data.requestSchedule.autoScheduling,
+        schedulingType: data.requestSchedule.schedulingType,
+        startDate: data.requestSchedule.startDate,
+        endDate: data.requestSchedule.endDate,
+        isEscalationEnabled: data.isEscalationEnabled,
+        isReminderActive: data.requestSchedule.isReminderActive,
       });
-
+      if (data.requestSchedule.autoScheduling) {
+        // this.handelChangeDate(data.requestSchedule.schedulingType);
+        if (data.requestSchedule.schedulingType === 'Monthly') {
+          this.getDaysBetweenDatesArray(
+            data.requestSchedule.startDate,
+            data.requestSchedule.endDate
+          );
+        } else if (data.requestSchedule.schedulingType === 'Weekly') {
+          this.getUniqueDayNamesBetweenDates(
+            data.requestSchedule.startDate,
+            data.requestSchedule.endDate
+          );
+        }
+      }
       this.uploadedFiles.next(data.attachments);
       // this.form.get('description')?.disable();
       this.form.get('requestCategoryId')?.disable();
@@ -338,6 +370,10 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       slaDurationInDays: data.requestCategory.slaDuration || 0,
       attachments: data.attachments.map((attachment) => attachment.id),
       initiatorShouldApprove: data.initiatorShouldApprove,
+      autoScheduling: data.requestSchedule.autoScheduling,
+      schedulingType: data.requestSchedule.schedulingType,
+      startDate: data.requestSchedule.startDate,
+      endDate: data.requestSchedule.endDate,
     });
 
     Object.keys(this.form.controls).forEach((key) => {
@@ -669,6 +705,14 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     } else if (name === 'autoScheduling') {
       this.form.get('schedulingType')?.reset();
       this.restDateFields();
+      if (value) {
+        this.form.get('schedulingType')?.setValidators([Validators.required]);
+        this.form.get('startDate')?.setValidators([Validators.required]);
+        this.form.get('endDate')?.setValidators([Validators.required]);
+      }
+      this.form.get('schedulingType')?.updateValueAndValidity();
+      this.form.get('startDate')?.updateValueAndValidity;
+      this.form.get('endDate')?.updateValueAndValidity;
     }
   }
   uploadClick() {
