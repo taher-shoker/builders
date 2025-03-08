@@ -88,12 +88,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   disabled = false;
   tableData!: any;
   rowData!: any;
-  reportStatus: { value: string; name: string }[] = [
-    { value: 'pending', name: 'Pending' },
-    { value: 'completed', name: 'Completed' },
-    // { value: 'breached', name: 'Breached' },
-    { value: 'deleted', name: 'Deleted' },
-  ];
+
   monthsArr: any = [];
   yearsArr: any = [];
   columnsSchema?: ColumnsSchema[] = undefined;
@@ -113,7 +108,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
 
   handleDeleteFilter() {
     if (!this.reportsService.userInGroup('System_Process_Admin')) {
-      this.reportStatus.length = 2;
+      this.authService.reportStatus.length = 2;
     }
   }
 

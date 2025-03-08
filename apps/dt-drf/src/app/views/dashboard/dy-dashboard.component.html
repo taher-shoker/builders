@@ -20,9 +20,21 @@
 
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-12">
-      <stc-apps-bar-chart [data]="allReportsChart"></stc-apps-bar-chart>
+  <div class="charts">
+    <div class="row">
+      <div class="col-md-12">
+        <stc-apps-reports-chart></stc-apps-reports-chart>
+      </div>
+      <div class="col-md-6">
+        <stc-apps-reports-sla-chart></stc-apps-reports-sla-chart>
+      </div>
+      <div class="col-md-6">
+        <stc-apps-report-types-chart></stc-apps-report-types-chart>
+      </div>
+      <div class="col-md-12">
+        <stc-apps-avg-response-chart></stc-apps-avg-response-chart>
+      </div>
     </div>
   </div>
+
 </div>

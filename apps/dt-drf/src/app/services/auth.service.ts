@@ -41,7 +41,12 @@ export class AuthService {
     private router: Router,
     private cookieService: CookieService
   ) {}
-
+  reportStatus: { value: string; name: string }[] = [
+    { value: 'pending', name: 'Pending' },
+    { value: 'completed', name: 'Completed' },
+    // { value: 'breached', name: 'Breached' },
+    { value: 'deleted', name: 'Deleted' },
+  ];
   getUserData() {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     const roles = user.userGroups

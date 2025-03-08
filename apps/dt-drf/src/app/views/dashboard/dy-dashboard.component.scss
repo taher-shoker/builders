@@ -5,6 +5,7 @@
 .counts {
   display: flex;
   justify-content: space-around;
+  flex-wrap: wrap;
   .item-c {
     display: flex;
     align-items: center;
@@ -15,6 +16,7 @@
     min-height: 200px;
     border-radius: 5px;
     padding-block: 20px;
+    margin: 16px auto;
     span {
       font-size: 18px;
       font-weight: 600;
@@ -57,4 +59,7 @@
       }
     }
   }
+}
+.charts {
+  padding: 0px 65px;
 }

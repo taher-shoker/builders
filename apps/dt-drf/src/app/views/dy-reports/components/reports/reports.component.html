@@ -94,7 +94,7 @@
     <div class="inputs">
       <div class="row">
         <div class="col-md-4">
-          <stc-apps-select-drop-down [label]="'Status'" [labelValue]="'value'" [options]="reportStatus"
+          <stc-apps-select-drop-down [label]="'Status'" [labelValue]="'value'" [options]="authService.reportStatus"
             formControlName="requestStatus" [outputValue]="'value'"></stc-apps-select-drop-down>
         </div>
         <div class="col-md-4">
