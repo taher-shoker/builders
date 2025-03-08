@@ -1,8 +1,26 @@
 <mat-form-field>
   <mat-label>Enter a date range</mat-label>
-  <mat-date-range-input [rangePicker]="picker" [formGroup]="dateFormGroup" [dateFilter]="filteredDays">
-    <input matStartDate placeholder="Start date" formControlName="start" (dateChange)="firstValueChanged($event)">
-    <input matEndDate placeholder="End date" formControlName="end" (dateChange)="valueChanged($event)"> <!-- Emit when the second input only is changed-->
+  <mat-date-range-input
+    [rangePicker]="picker"
+    [formGroup]="dateFormGroup"
+    [dateFilter]="disableFilterFlag ? disableFilter : filteredDays"
+  >
+    <input
+      [readonly]="disableInput"
+      matStartDate
+      [placeholder]="disableInput ? '' : 'Start date'"
+      formControlName="start"
+      (dateChange)="firstValueChanged($event)"
+      (click)="$event.preventDefault()"
+    />
+    <input
+      [readonly]="disableInput"
+      matEndDate
+      [placeholder]="disableInput ? '' : 'End date'"
+      formControlName="end"
+      (dateChange)="valueChanged($event)"
+    />
+    <!-- Emit when the second input only is changed-->
   </mat-date-range-input>
   <!-- <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint> -->
   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>

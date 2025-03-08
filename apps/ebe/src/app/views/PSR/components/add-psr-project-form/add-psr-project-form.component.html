@@ -41,7 +41,7 @@
                   [errorMessage]="getErrorMessage(program , 'sector')"
                   labelName = "program name"
                   inputType = "text"
-                  [inputValue]="program.get('sector')?.value"
+                  [inputValue]="program && program.get('sector') && program.get('sector')?.value ? program.get('sector')?.value : ''"
                 />
               </div>
               <div class="form-group mt-4">

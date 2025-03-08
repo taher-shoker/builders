@@ -15,6 +15,8 @@ import { SecurityIconComponent } from 'apps/aquila/src/assets/icons/security-ico
 import { TopBannerComponent } from '../components/top-banner/top-banner.component';
 import { LoaderService } from '../../core/services/loader.service';
 import { LoaderComponent } from '../components/loader/loader.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { PresentionIconComponent } from 'apps/aquila/src/assets/icons/presention-icon/presention-icon.component';
 
 @Component({
   selector: 'stc-apps-main-layout',
@@ -83,6 +85,12 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
       name: 'Standard Management',
       url: 'api-standard-list',
       iconPath: SecurityIconComponent,
+    },
+    {
+      id: 3,
+      name: 'Activity Monitoring',
+      url: 'activity-monitoring',
+      iconPath: PresentionIconComponent,
     },
   ];
 

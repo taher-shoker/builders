@@ -463,7 +463,7 @@ export class AuthService {
                   environment.systems.business_excellence_system,
                 name: 'Business Excellence Dashboard',
                 displayName: 'Business Excellence Dashboard',
-                mobileView: false,
+                mobileView: true,
               });
               break;
             case 'Jira_Dahsboard':

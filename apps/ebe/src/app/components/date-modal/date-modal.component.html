@@ -1,0 +1,39 @@
+<div class="date" (click)="showDialog('bottom')">
+  <div class="date-dropdown">
+    <p>{{ currentMonthName }} {{ currentYear }}</p>
+    <img src="assets/images/mobile/arrow-down.svg" />
+  </div>
+</div>
+<p-dialog 
+  header="Edit Profile"
+  [modal]="true"
+  [(visible)]="visible"
+  [position]="position"
+  styleClass = "date-modal"
+  dismissableMask="true"
+  transitionOptions = "300ms cubic-bezier(0, 0, 0.2, 1)"
+  resizable = 'false'
+  (onHide)="hideModal()"
+  #dateModal
+>
+  <ng-template pTemplate="header"></ng-template>
+  <ng-template pTemplate="content">
+    <p-calendar 
+      #calendar
+      class="max-w-full" 
+      [(ngModel)]="selectedDate" 
+      [inline]="true" 
+      [showWeek]="false"
+      dateFormat="mm/yy"
+      view="month"
+      [showButtonBar]="false"
+      [monthNavigator]="true"
+      [yearNavigator]="true"
+      styleClass = "date-calendar"
+      [showIcon]="true"
+    />
+    <button class = "apply-date-button" (click)="applyFilters()">
+      apply
+    </button>
+  </ng-template>
+</p-dialog>

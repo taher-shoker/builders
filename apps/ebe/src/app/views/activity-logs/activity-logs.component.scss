@@ -1,0 +1,340 @@
+@import '../../../styles/fonts';
+::ng-deep .activity-log-section
+{
+  padding:20px 30px;
+  &-header
+  {
+    display: grid;
+        grid-template-columns: 80% calc(20% - 30px);
+        gap: 30px;
+        align-items: center;
+    // display: flex;
+    // align-items: center;
+    // justify-content: space-between;
+  }
+  .hands-img
+  {
+    position: relative;
+    top:15px;
+  }
+  .projects-container
+  {
+    background-color: var(--stc-white-color);
+    border-radius:20px;
+    padding:20px;
+    position: relative;
+    color:#000;
+    .filter-inputs
+    {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap:15px;
+      .search-input
+      {
+        background-color:#F5F6FA;
+        border-radius: 10px;
+        display: flex;
+        // align-items: center;
+        // gap:10px;
+        padding-left: 10px;
+        overflow: hidden;
+        .search-icon
+        {
+          background-color: var(--stc-purple-color);
+          display: flex;
+          align-items: center;
+          padding:0 15px;
+          cursor: pointer;
+          i
+          {
+            color:var(--stc-white-color);
+          }
+        }
+        input
+        {
+          border-radius: 10px;
+          border:0;
+          background-color:#F5F6FA;
+          outline: 0;
+          box-shadow: none;
+          height:45px;
+          width:165px;
+          @extend .stcFont;
+          &::placeholder
+          {
+            @extend .stcFont;
+            // font-size: 14px;
+            color:var(--stc-grey-dark-color);
+          }
+        }
+      }
+    }
+  }
+}
+::ng-deep .p-dropdown
+{
+  height: 45px !important;
+  border: 0 !important;
+  background:#F5F6FA !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-radius:10px !important;
+}
+::ng-deep .action-types-dropdown , ::ng-deep .action-types-dropdown2
+{
+  .p-dropdown-trigger-icon
+  {
+    color:var(--stc-purple-color);
+  }
+  .p-dropdown-items
+  {
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .p-dropdown-label
+  {
+    @extend .stcFont;
+    color:var(--stc-grey-dark-color);
+  }
+  .p-dropdown-items
+  {
+    margin: 0;
+    padding: 0;
+  }
+}
+::ng-deep .action-types-dropdown2
+{
+  width:160px !important;
+}
+::ng-deep .action-types-dropdown
+{
+  width:200px !important;
+}
+::ng-deep .activity-log-date , ::ng-deep .activity-log-date2
+{
+  height: 45px !important;
+  .p-inputtext
+  {
+    border: 0 !important;
+    background:#F5F6FA !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    @extend .stcFont;
+    color:var(--stc-grey-dark-color) !important;
+    border-radius:10px !important;
+    width:160px !important;
+  }
+  .p-datepicker-buttonbar .p-button:first-child {
+    display: none;
+  }
+  .p-datepicker-buttonbar
+  {
+    padding: 0 !important;
+  }
+  .p-datepicker-buttonbar .p-button
+  {
+    @extend .stcFont;
+    color:var(--stc-purple-color) !important;
+    font-weight: 500 !important;
+    background-color: transparent !important;
+    outline: 0 !important;
+    box-shadow: none !important;
+    margin: auto !important;
+  }
+  .p-datepicker-icon
+  {
+    svg
+    {
+      width: 19px;
+      height: 19px;
+      position: relative;
+      top: -2px;
+    }
+  }
+}
+::ng-deep .activity-log-date
+{
+  .p-inputtext
+  {
+    width:200px !important;
+  }
+}
+::ng-deep .activity-log-date2
+{
+  .p-inputtext
+  {
+    width:160px !important;
+  }
+}
+.activity-logs-table
+{
+  margin-top: 20px;
+}
+::ng-deep .logs-table
+{
+  .p-datatable-thead
+  {
+    th
+    {
+      background-color: #ede5f3 !important;
+      text-align: center;
+      text-transform: capitalize;
+      color:var(--stc-purple-color);
+      @extend .stcFont;
+      &:first-child
+      {
+        border-top-left-radius:10px;
+      }
+      &:last-child
+      {
+        border-top-right-radius:10px;
+      }
+    }
+  }
+  .p-datatable-tbody
+  {
+    tr
+    {
+      td
+      {
+        text-transform: capitalize;
+        text-align: center;
+        @extend .stcFont;
+        font-weight: 500;
+      }
+      border-bottom:1px solid #F5F6FA;
+      &:last-child
+      {
+        border-bottom:0;
+      }
+    }
+  }
+  .p-paginator
+  {
+    justify-content: flex-end !important;
+    .p-paginator-element
+    {
+      border-radius:50% !important;
+    }
+    .p-paginator-current
+    {
+      cursor: text;
+      user-select: text;
+    }
+  }
+}
+::ng-deep .longTitlePanel
+{
+  .p-overlaypanel-content
+  {
+    padding: 10px;
+  }
+}
+.read-more-btn
+{
+  color:var(--stc-purple-color);
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+.long-title-popover-section
+{
+  max-width:300px;
+  // word-break: break-all;
+}
+::ng-deep .activity-logs-pagination
+{
+    justify-content: flex-end !important;
+    .p-paginator-element
+    {
+      border-radius:50% !important;
+    }
+    .p-paginator-current
+    {
+      cursor: text;
+      user-select: text;
+    }
+}
+.empty-data
+{
+  text-align: center;
+  @extend .stcFont;
+  color:var(--stc-purple-color);
+  text-transform: capitalize;
+  font-weight:500;
+  font-size: 1.3rem;
+  font-style: italic;
+  padding: 0;
+  padding-top: 23px;
+}
+.apply-filter-btn
+{
+  @extend .stcFont;
+  background-color:var(--stc-purple-color);
+  border:0;
+  border-radius:10px;
+  color:#fff;
+  text-transform: capitalize;
+  font-size: 1rem;
+  padding:9px 25px;
+  cursor: pointer;
+}
+.remove-text
+{
+  display: flex;
+  align-items: center;
+  padding-right: 10px;
+  i
+  {
+    cursor: pointer;
+  }
+}
+.export-button
+{
+  background-color: transparent;
+  border:1px solid var(--stc-pink-color);
+  color:var(--stc-pink-color);
+  border-radius:5px;
+  padding:7px 20px;
+  @extend .stcFont;
+  text-transform: capitalize;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  width:155px;
+  gap: 10px;
+  cursor: pointer;
+  // span
+  // {
+  //   height: 21px;
+  // }
+}
+// ::ng-deep .p-datepicker {
+//   font-size: 12px; // Reduce font size
+//   width: 200px; // Adjust width if needed
+// }
+
+// ::ng-deep .p-datepicker-header {
+//   padding: 4px; // Reduce header padding
+// }
+
+// ::ng-deep .p-datepicker table {
+//   font-size: 12px; // Reduce font size of dates
+// }
+
+// ::ng-deep .p-datepicker td {
+//   padding: 4px; // Reduce cell padding
+// }
+
+// ::ng-deep .p-datepicker .p-datepicker-prev,
+// ::ng-deep .p-datepicker .p-datepicker-next {
+//   width: 20px;
+//   height: 20px;
+// }
+::ng-deep .p-datepicker {
+  position: absolute !important;
+    top: 100% !important;
+    left: auto !important;
+    z-index: 10000 !important;
+    right: 0% !important;
+}

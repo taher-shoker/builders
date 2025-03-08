@@ -1,9 +1,4 @@
-<div
-  class="notification-list"
-  [ngStyle]="
-    notifications().length > 0 ? { right: '0', minWidth: '25rem' } : {}
-  "
->
+<div class="notification-list">
   @if (notifications().length > 0) {
   <div class="notification-list_header">
     <p-button

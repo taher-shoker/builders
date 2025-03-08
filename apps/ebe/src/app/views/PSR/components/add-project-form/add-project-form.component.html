@@ -89,6 +89,25 @@
           }
         </div>
       </div>
+      <div class="col-md-6 mt-3">
+        <div class="form-group">
+          <label for="">weight</label>
+          <input
+            type="number"
+            placeholder="add weight"
+            formControlName="weight"
+            (keypress)="keyPress($event)"
+            min = 0 
+            max = 100
+          />
+          @if(weight?.hasError("required") && weight?.dirty) {
+          <small class="error-msg">weight is required</small>
+          }
+          @if(weight?.value > 100) {
+          <small class="error-msg">weight max number is 100</small>
+          }
+        </div>
+      </div>
     </div>
     <footer>
       <button (click)="closePopup()" type="button" class="cancel-btn">

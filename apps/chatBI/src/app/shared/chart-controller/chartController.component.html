@@ -1,0 +1,32 @@
+<div
+  [ngClass]="{
+    'chart-holder': showType() !== '' && showType() !== 'table',
+    'zoomed-width':
+      (showType() === 'line' || showType() === 'bar') && popUpClick()
+  }"
+>
+  @if (showType() == 'pie') {
+  <stc-apps-pie-chart
+    [chartData]="pieChartData ?? []"
+    [chartTitle]="sqlData().title"
+  ></stc-apps-pie-chart>
+  } @else if (showType() == 'bar') {
+  <stc-apps-bar-chart
+    [chartData]="chartData"
+    [indicators]="indicators"
+    [chartTitle]="sqlData().title"
+    [popUpClick]="popUpClick()"
+  ></stc-apps-bar-chart>
+  } @else if (showType()=='table') {
+  <stc-apps-table-chart
+    [tableData]="chartData"
+    [chartTitle]="sqlData().title"
+  ></stc-apps-table-chart>
+  } @else if(showType()=='line'){
+  <stc-apps-line-chart
+    [chartTitle]="sqlData().title"
+    [chartData]="chartData"
+    [popUpClick]="popUpClick()"
+  ></stc-apps-line-chart>
+  }
+</div>

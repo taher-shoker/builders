@@ -1,8 +1,25 @@
-import { Component, EventEmitter, input, InputSignal, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, EventEmitter, inject, input, InputSignal, OnInit, Output, ViewChild } from '@angular/core';
 import { ProgressInfo } from '../progress-bar/progress-bar.component';
 import { OverlayPanel } from 'primeng/overlaypanel';
+export interface ColumnsSchema {
+  key: string;
+  type: 'text' | 'date' | 'actions' | 'custom';
+  label: string;
+}
+export interface ActivityLog
+{
+  id:number;
+    module:string;
+    username:string;
+    activityType:string;
+    activityDetails:string;
+    timestamp:string;
+    oldValue?:string;
+    newValue?:string;
+}
 export interface KpiProjectsDetailsModel
 {
+  id:number;
   project:string;
   actual:number;
   planned:number;
@@ -14,12 +31,42 @@ export interface KpiProjectsDetailsModel
   styleUrl: './project-card.component.scss',
 })
 export class ProjectCardComponent implements OnInit{
+  @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
+  activityLogsTableHeader = input.required<ColumnsSchema[]>();
+  activityLogsTableBody = input.required<ActivityLog[]>();
   projectData:InputSignal<KpiProjectsDetailsModel> = input.required<KpiProjectsDetailsModel>();
   data!:ProgressInfo;
   @Output() edit:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
   @Output() delete:EventEmitter<KpiProjectsDetailsModel> = new EventEmitter();
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
   titleArr:string[] = [];
+  showActivityLogsPopup = false;
+  isAdmin = input<boolean>(false)
+  isdeleted = input<boolean>(false)
+  @Output() showLogsBtnClick:EventEmitter<number> = new EventEmitter()
+  @Output() openPanel:EventEmitter<number> = new EventEmitter()
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+    this.showLogsBtnClick.emit(this.projectData().id);
+  }
+  popupClosed()
+  {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
+  }
+  showActionsPopup()
+  {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.toggle(event);
+    this.openPanel.emit();
+  }
+  closeAccordion()
+  {
+    this.actionsPanel.hide();
+    this.showActivityLogsPopup = false
+  }
   ngOnInit()
   {
     this.data = {

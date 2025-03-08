@@ -1,10 +1,24 @@
 import { Route } from '@angular/router';
 import { AuthGuard } from './guards/auth.guard';
+import { IsAdminGuard } from './guards/isAdmin.guard';
+import { IsMobileGuard } from './guards/isMobile.guard';
+import { IsNotMobileGuard } from './guards/isNotMobile.guard';
+function getDefaultRedirect() {
+  return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? 'home' : 'scorecard';
+}
 export const appRoutes: Route[] = [
   {
     path: '',
-    redirectTo: 'scorecard',
+    redirectTo: getDefaultRedirect(),
     pathMatch: 'full',
+  },
+  {
+    path: 'home',
+    loadComponent: () =>
+      import('./views/homepage-mobile/homepage-mobile.component').then(
+        (m) => m.HomepageMobileComponent
+      ),
+    canActivate : [IsMobileGuard]
   },
   {
     path: 'scorecard',
@@ -19,13 +33,31 @@ export const appRoutes: Route[] = [
       import('./views/strategyProgram/strategyProgram.component').then(
         (m) => m.StrategyProgramComponent
       ),
+      canActivate : [IsNotMobileGuard]
   },
   {
-    path: 'strategy-program/:kpiId',
+    path: 'activity-logs',
+    loadComponent: () =>
+      import('./views/activity-logs/activity-logs.component').then(
+        (m) => m.ActivityLogsComponent
+      ),
+    canActivate:[IsAdminGuard , IsNotMobileGuard]
+  },
+  {
+    path: 'activity-logs/:title',
+    loadComponent: () =>
+      import('./views/activity-logs/activity-logs.component').then(
+        (m) => m.ActivityLogsComponent
+      ),
+    canActivate:[IsAdminGuard , IsNotMobileGuard]
+  },
+  {
+    path: 'strategy-program/:programName/:programId',
     loadComponent: () =>
       import(
         './views/strategyProgram/components/kpi-details/kpi-details.component'
       ).then((m) => m.KpiDetailsComponentTsComponent),
+      canActivate:[IsNotMobileGuard]
   },
   {
     path: 'strategy-project-form/:title/:objective',
@@ -33,7 +65,7 @@ export const appRoutes: Route[] = [
       import(
         './views/strategyProgram/components/add-project-form/add-project-form.component'
       ).then((m) => m.AddProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'strategy-project-form/:id',
@@ -41,8 +73,38 @@ export const appRoutes: Route[] = [
       import(
         './views/strategyProgram/components/add-project-form/add-project-form.component'
       ).then((m) => m.AddProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
+  {
+    path: 'deleted-projects',
+    loadComponent: () =>
+      import(
+        './views/deleted-project-page/deleted-projects-page.component'
+      ).then((m) => m.DeletedProjectsPageComponent),
+      canActivate: [AuthGuard , IsNotMobileGuard],
+      children:[
+        {
+          path:"programs",
+          loadComponent:() => import('./views/deleted-project-page/deleted-programs/deleted-programs.component')
+          .then((m) => m.DeletedProgramsComponent)
+        },
+        {
+          path:"psr-projects/:title/:sector",
+          loadComponent:() => import('./views/deleted-project-page/deleted-psr-projects/deleted-psr-projects.component')
+          .then((m) => m.DeletedPsrProjectsComponent)
+        },
+        {
+          path:"psr-projects/:sector",
+          loadComponent:() => import('./views/deleted-project-page/deleted-psr-projects/deleted-psr-projects.component')
+          .then((m) => m.DeletedPsrProjectsComponent)
+        },
+        {
+          path:"cad-projects/:id/:resNum",
+          loadComponent:() => import('./views/deleted-project-page/deleted-cad-project/deleted-cad-project.component')
+          .then((m) => m.DeletedCadProjectComponent)
+        },
+      ]
+    },
   // {
   //   path : "raqami",
   //   loadComponent: () =>
@@ -75,7 +137,7 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'psr/add-project/:sector',
@@ -83,7 +145,7 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'psr/edit-program/:id',
@@ -91,7 +153,7 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
     path: 'psr/edit-project/:sector/:projId',
@@ -99,10 +161,10 @@ export const appRoutes: Route[] = [
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
       ).then((m) => m.AddPsrProjectFormComponent),
-    canActivate: [AuthGuard],
+    canActivate: [AuthGuard , IsNotMobileGuard],
   },
   {
-    path: 'psr/:id',
+    path: 'psr/:id/:sectorId',
     loadComponent: () =>
       import(
         './views/PSR/components/psr-details-page/psr-details-page.component'

@@ -1,7 +1,7 @@
 import { SplitButtonModule } from 'primeng/splitbutton';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -82,13 +82,14 @@ import { TruncateWordPipe } from './truncateWord.pipe';
 import { CalendarModule } from 'primeng/calendar';
 import { DialogModalComponent } from './file-upload-dialog/dialog.component';
 import { FileUploadInputComponent } from './file-upload-input/file-upload-input.component';
-import { DialogModule } from '@angular/cdk/dialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
 import { DoubleLineChartComponent } from './double-line-chart/double-line-chart.component';
 import { NewLinePipe } from './newLine.pipe';
 import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
 import { SharedService } from './shared.service';
 import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
+import { ActivityLogsPopupComponent } from './activity-logs-popup/activity-logs-popup.component';
+const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
 import { SplitButtonComponent } from './split-button/split-button.component';
 import { InputGroupComponent } from './input-group/input-group.component';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
@@ -96,9 +97,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { InputTextModule } from 'primeng/inputtext';
 import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.component';
 import { DropdownModule } from 'primeng/dropdown';
-
-const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
-// const modules = [BreadCrumbModule, MatIconModule];
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { UtilitiesService } from './services/utilities.service';
 
 const components = [
   ButtonComponent,
@@ -156,6 +156,7 @@ const components = [
   NewLinePipe,
   MultiCirclesChartComponent,
   ClusteredColumnChartComponent,
+  ActivityLogsPopupComponent,
   SplitButtonComponent,
   InputGroupComponent,
   FilterDropdownComponent,
@@ -164,7 +165,12 @@ const components = [
 @NgModule({
   declarations: [...components],
   exports: [...components, ...modules],
-  providers: [{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }, SharedService],
+  providers: [
+    UtilitiesService,
+    { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
+    SharedService,
+    DatePipe,
+  ],
   imports: [
     CommonModule,
     ConfirmDialogModule,
@@ -201,6 +207,7 @@ const components = [
     InputGroupModule,
     InputTextModule,
     DropdownModule,
+    CarouselModule,
   ],
 })
 export class SharedUiModule {}

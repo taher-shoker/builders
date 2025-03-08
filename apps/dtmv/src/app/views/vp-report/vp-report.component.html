@@ -8,8 +8,13 @@
         <div class="col-md-3" [formGroup]="filterSelect">
           <div class="d-flex flex-wrap align-items-center">
             <span class="label">Year:</span>
-            <stc-apps-select-drop-down formControlName="dateType" [label]="''" [options]="yearsArr"
-              (selectChange)="handleSelectChange($event)" [outputValue]="'name'"></stc-apps-select-drop-down>
+            <stc-apps-select-drop-down
+              formControlName="dateType"
+              [label]="''"
+              [options]="yearsArr"
+              (selectChange)="handleSelectChange($event)"
+              [outputValue]="'name'"
+            ></stc-apps-select-drop-down>
           </div>
         </div>
       </div>
@@ -20,7 +25,10 @@
         <div class="col-md-12">
           <ul class="teams">
             @for(team of allTeams; track team){
-            <li (click)="selectTeam(team.name)" [ngClass]="selectedTeam() === team.name ? 'active' : ''">
+            <li
+              (click)="selectTeam(team.name)"
+              [ngClass]="selectedTeam() === team.name ? 'active' : ''"
+            >
               {{ team.name }}
             </li>
             }
@@ -31,67 +39,92 @@
         <div class="row align-items-center">
           <div class="col-md-9">
             <div class="tabs">
-              <stc-apps-button [buttonText]="'Digital Transformation'"
-                [buttonType]="digitalTransformation() ? 'primary': 'stc-color-outline'"
-                (btnClick)="showDigitalTransformation()"></stc-apps-button>
-              <stc-apps-button [buttonText]="'Clarity Strategic Program'"
-                [buttonType]="digitalTransformation() ? 'stc-color-outline': 'primary'"
-                (btnClick)="showClarityStrateic()"></stc-apps-button>
+              <stc-apps-button
+                [buttonText]="'Digital Transformation'"
+                [buttonType]="
+                  digitalTransformation() ? 'primary' : 'stc-color-outline'
+                "
+                (btnClick)="showDigitalTransformation()"
+              ></stc-apps-button>
+              <stc-apps-button
+                [buttonText]="'Clarity Strategic Program'"
+                [buttonType]="
+                  digitalTransformation() ? 'stc-color-outline' : 'primary'
+                "
+                (btnClick)="showClarityStrateic()"
+              ></stc-apps-button>
             </div>
           </div>
           <div class="col-md-3">
-            <span class="edit-link" *ngIf="!milestonesService.isBusinessSpoc" (click)="goEditPage()">Edit</span>
-
+            <span
+              class="edit-link"
+              *ngIf="!milestonesService.isBusinessSpoc"
+              (click)="goEditPage()"
+              >Edit</span
+            >
           </div>
         </div>
-
       </div>
       <div class="tab-content">
         @if (digitalTransformation()) {
         <ng-container>
-
           <div class="row">
             <div class="col-md-12">
-              <div class="cards" *ngIf="reportData()?.digitalTransformationReflectionLevel">
-                <ng-container *ngFor="let item of reportData()?.digitalTransformationReflectionLevel">
+              <div
+                class="cards"
+                *ngIf="reportData()?.digitalTransformationReflectionLevel"
+              >
+                <ng-container
+                  *ngFor="
+                    let item of reportData()
+                      ?.digitalTransformationReflectionLevel
+                  "
+                >
                   <stc-apps-puls-card [state]="item"></stc-apps-puls-card>
-
                 </ng-container>
-
               </div>
             </div>
-
           </div>
           <div class="row transperant-bg">
             <div class="col-md-3">
               <div class="row">
                 <div class="col-md-12">
-                  <div class="puls-report-value  text-center">
+                  <div class="puls-report-value text-center">
                     <h5>STC DI Score</h5>
-                    <div class="d-flex align-items-center justify-content-center pb-3">
-                      <stc-apps-progress-circle [progressSize]="'5rem'"
-                        [progressValue]="reportData()?.stcDiScore  || 0"></stc-apps-progress-circle>
+                    <div
+                      class="d-flex align-items-center justify-content-center pb-3"
+                    >
+                      <stc-apps-progress-circle
+                        [progressSize]="'5rem'"
+                        [progressValue]="reportData()?.stcDiScore || 0"
+                      ></stc-apps-progress-circle>
                     </div>
                     <!-- <p class="font-bloder">{{ reportData()?.stcDiScore ? reportData()?.stcDiScore + '%' : '-' }}</p> -->
-
-
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="puls-report-value text-center">
-                    <h5>({{selectedTeam()}}) DI Score</h5>
-                    <div class="d-flex align-items-center justify-content-center pb-3">
-                      <stc-apps-progress-circle [progressSize]="'5rem'"
-                        [progressValue]="reportData()?.diScore  || 0"></stc-apps-progress-circle>
+                    <h5>({{ selectedTeam() }}) DI Score</h5>
+                    <div
+                      class="d-flex align-items-center justify-content-center pb-3"
+                    >
+                      <stc-apps-progress-circle
+                        [progressSize]="'5rem'"
+                        [progressValue]="reportData()?.diScore || 0"
+                      ></stc-apps-progress-circle>
                     </div>
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="puls-report-value text-center">
-                    <h5>({{selectedTeam()}}) Charter status</h5>
-                    <div class="d-flex align-items-center justify-content-center pb-3">
-                      <stc-apps-progress-circle [progressSize]="'5rem'"
-                        [progressValue]="reportData()?.charterStatus  || 0"></stc-apps-progress-circle>
+                    <h5>({{ selectedTeam() }}) Charter status</h5>
+                    <div
+                      class="d-flex align-items-center justify-content-center pb-3"
+                    >
+                      <stc-apps-progress-circle
+                        [progressSize]="'5rem'"
+                        [progressValue]="reportData()?.charterStatus || 0"
+                      ></stc-apps-progress-circle>
                     </div>
                   </div>
                 </div>
@@ -102,50 +135,77 @@
                 <div class="col-md-12">
                   <div class="puls-report-value">
                     <h5>Achievements</h5>
-                    <p class="wrap-text">{{reportData()?.achievements ? reportData()?.achievements : '-'}}</p>
+                    <p class="wrap-text">
+                      {{
+                        reportData()?.achievements
+                          ? reportData()?.achievements
+                          : '-'
+                      }}
+                    </p>
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="puls-report-value">
                     <h5>Charter progress</h5>
-                    <p class="wrap-text">{{reportData()?.charterProgress ?
-                      reportData()?.charterProgress : '-'}} </p>
+                    <p class="wrap-text">
+                      {{
+                        reportData()?.charterProgress
+                          ? reportData()?.charterProgress
+                          : '-'
+                      }}
+                    </p>
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="puls-report-value">
                     <h5>Support needed</h5>
-                    <p class="wrap-text"> {{reportData()?.supportNeeded ? reportData()?.supportNeeded : '-'}}</p>
+                    <p class="wrap-text">
+                      {{
+                        reportData()?.supportNeeded
+                          ? reportData()?.supportNeeded
+                          : '-'
+                      }}
+                    </p>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-
         </ng-container>
         }@else {
         <ng-container>
-
           <div class="row">
             <div class="col-md-12">
-              <div class="cards" *ngIf="reportData()?.clarityStrategicProgramReflectionLevel">
-                <ng-container *ngFor="let item of reportData()?.clarityStrategicProgramReflectionLevel">
+              <div
+                class="cards"
+                *ngIf="reportData()?.clarityStrategicProgramReflectionLevel"
+              >
+                <ng-container
+                  *ngFor="
+                    let item of reportData()
+                      ?.clarityStrategicProgramReflectionLevel
+                  "
+                >
                   <stc-apps-puls-card [state]="item"></stc-apps-puls-card>
-
                 </ng-container>
               </div>
             </div>
-
           </div>
           <div class="row transperant-bg">
             <div class="col-md-3">
               <div class="row h-100">
                 <div class="col-md-12">
-                  <div class="puls-report-value  text-center  h-100">
+                  <div class="puls-report-value text-center h-100">
                     <h5>Clarity program progress</h5>
-                    <div class="d-flex align-items-center justify-content-center pb-3">
-                      <stc-apps-progress-circle [progressSize]="'5rem'"
-                        [progressValue]="reportData()?.clarityProgramProgress  || 0"></stc-apps-progress-circle>
+                    <div
+                      class="d-flex align-items-center justify-content-center pb-3"
+                    >
+                      <stc-apps-progress-circle
+                        [progressSize]="'5rem'"
+                        [progressValue]="
+                          reportData()?.clarityProgramProgress || 0
+                        "
+                      ></stc-apps-progress-circle>
                     </div>
                   </div>
                 </div>
@@ -156,39 +216,85 @@
                 <div class="col-md-12">
                   <div class="puls-report-value">
                     <h5>Status</h5>
-                    <p class="wrap-text">{{reportData()?.status ? reportData()?.status : '-'}}</p>
+                    <p class="wrap-text">
+                      {{ reportData()?.status ? reportData()?.status : '-' }}
+                    </p>
                   </div>
                 </div>
                 <div class="col-md-12">
                   <div class="puls-report-value">
                     <div class="d-flex">
                       <h5 class="me-2">ERP Status</h5>
-                      <div class="cards" *ngIf="reportData()?.erpStatusReflectionLevel">
-                        <ng-container *ngFor="let item of reportData()?.erpStatusReflectionLevel">
-                          <stc-apps-puls-card [state]="item"></stc-apps-puls-card>
+                      <div
+                        class="cards"
+                        *ngIf="reportData()?.erpStatusReflectionLevel"
+                      >
+                        <ng-container
+                          *ngFor="
+                            let item of reportData()?.erpStatusReflectionLevel
+                          "
+                        >
+                          <stc-apps-puls-card
+                            [state]="item"
+                          ></stc-apps-puls-card>
                         </ng-container>
                       </div>
                     </div>
 
-                    <p class="wrap-text">{{reportData()?.erpStatus ? reportData()?.erpStatus : '-'}}</p>
+                    <p class="wrap-text">
+                      {{
+                        reportData()?.erpStatus ? reportData()?.erpStatus : '-'
+                      }}
+                    </p>
                   </div>
                 </div>
+                <div class="col-md-12">
+                  <div class="puls-report-value">
+                    <div class="d-flex">
+                      <h5 class="me-2">Data Enablement Status</h5>
+                      <div
+                        class="cards"
+                        *ngIf="
+                          reportData()?.dataEnablementStatusReflectionLevel
+                        "
+                      >
+                        <ng-container
+                          *ngFor="
+                            let item of reportData()
+                              ?.dataEnablementStatusReflectionLevel
+                          "
+                        >
+                          <stc-apps-puls-card
+                            [state]="item"
+                          ></stc-apps-puls-card>
+                        </ng-container>
+                      </div>
+                    </div>
 
+                    <p class="wrap-text">
+                      {{
+                        reportData()?.dataEnablementStatus
+                          ? reportData()?.dataEnablementStatus
+                          : '-'
+                      }}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
-
         </ng-container>
         }
       </div>
-
 
       <div class="row mt-6 mb-4">
         <div class="col-md-4">
           <div class="container-box">
             <h5>Milestone Progress</h5>
             <div class="d-flex justify-content-center">
-              <stc-apps-progress-circle [progressValue]="milestoneProgress() || 0"></stc-apps-progress-circle>
+              <stc-apps-progress-circle
+                [progressValue]="milestoneProgress() || 0"
+              ></stc-apps-progress-circle>
             </div>
           </div>
         </div>
@@ -196,7 +302,9 @@
           <div class="container-box">
             <h5>{{ selectedTeam() }} DT Progress</h5>
             <div class="bar-holder">
-              <stc-apps-progress-bar [data]="progressBarData()"></stc-apps-progress-bar>
+              <stc-apps-progress-bar
+                [data]="progressBarData()"
+              ></stc-apps-progress-bar>
             </div>
           </div>
         </div>
@@ -226,8 +334,11 @@
           <span class="legend-name legend-name-at-risk">At Risk</span>
         </div>
         <div class="chart-holder">
-          <stc-apps-timeline-chart [dtStream]="dtStream" [streamYear]="streamsYear()"
-            [animateMilestones]="true"></stc-apps-timeline-chart>
+          <stc-apps-timeline-chart
+            [dtStream]="dtStream"
+            [streamYear]="streamsYear()"
+            [animateMilestones]="true"
+          ></stc-apps-timeline-chart>
         </div>
         <!--
           @if (i + 1 !== dtStreams().length) {
@@ -242,20 +353,48 @@
           <p class="highlight-title">
             DT Program Highlight
 
-            <span class="edit-link" *ngIf="!milestonesService.isBusinessSpoc" (click)="goEditPage()">Edit</span>
+            <span
+              class="edit-link"
+              *ngIf="!milestonesService.isBusinessSpoc"
+              (click)="goEditPage()"
+              >Edit</span
+            >
           </p>
-          <quill-editor [readOnly]="true" [modules]="{ toolbar: false }"
-            [ngModel]="(reportData()&& reportData()?.highlight&& reportData()?.highlight !=='<p><br></p>') ?reportData()?.highlight: '&nbsp;'"></quill-editor>
+          <quill-editor
+            [readOnly]="true"
+            [modules]="{ toolbar: false }"
+            [ngModel]="
+              reportData() &&
+              reportData()?.highlight &&
+              reportData()?.highlight !== '<p><br></p>'
+                ? reportData()?.highlight
+                : '&nbsp;'
+            "
+          ></quill-editor>
           <!-- <div [innerHTML]="reportData()?.highlight"></div> -->
         </div>
         <div class="col report-col">
           <p class="impact-title">
             Value / Impact
 
-            <span class="edit-link" *ngIf="!milestonesService.isBusinessSpoc" (click)="goEditPage()">Edit</span>
+            <span
+              class="edit-link"
+              *ngIf="!milestonesService.isBusinessSpoc"
+              (click)="goEditPage()"
+              >Edit</span
+            >
           </p>
-          <quill-editor [readOnly]="true" [modules]="{ toolbar: false }"
-            [ngModel]="(reportData()  && reportData()?.valueImpact && reportData()?.valueImpact !=='<p><br></p>' )? reportData()?.valueImpact: '&nbsp;'"></quill-editor>
+          <quill-editor
+            [readOnly]="true"
+            [modules]="{ toolbar: false }"
+            [ngModel]="
+              reportData() &&
+              reportData()?.valueImpact &&
+              reportData()?.valueImpact !== '<p><br></p>'
+                ? reportData()?.valueImpact
+                : '&nbsp;'
+            "
+          ></quill-editor>
           <!-- <div [innerHTML]="reportData()?.valueImpact"></div> -->
         </div>
       </div>

@@ -89,9 +89,22 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
         }
       },
     });
-    console.log(this.projectsList.controls);
+    // console.log(this.projectsList.controls);
   }
+  // newIndex = this.projectsList.length;
   createProjectFormGroup(data?:StrategyProgramKpiProjectsDetailsModel): FormGroup {
+    if(data && data.id)
+    {
+      return this.formBuilder.group({
+        id:data && data.id ? data.id : null,
+        project: [
+          data && data.project ? data.project : null,
+          [Validators.required, this.noSpacesValidator, Validators.maxLength(300)],
+        ],
+        actual: [data && (data.actual || data.actual === 0) ? data.actual : null, [Validators.required, this.rangeValidator]],
+        planned: [data && (data.planned || data.planned === 0) ? data.planned : null, [Validators.required, this.rangeValidator]],
+      });
+    }
     return this.formBuilder.group({
       project: [
         data && data.project ? data.project : null,
@@ -136,6 +149,7 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
   save() {
     if (this.addProjectForm.valid) {
       const projectArr = this.addProjectForm.value.projects;
+      // console.log(projectArr);
       this.strategyService
         .updateProjects(this.title, this.objectiveNumber, projectArr)
         .subscribe({

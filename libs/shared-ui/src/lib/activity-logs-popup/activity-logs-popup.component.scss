@@ -1,0 +1,190 @@
+@import '../../../../../apps/ebe/src/styles/fonts.scss';
+.activity-logs-table
+{
+  width:750px;
+  &.projectActionPopup
+  {
+    width:1000px;
+  }
+}
+.activity-logs-table-header
+{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  p
+  {
+    margin: 0;
+    text-transform: capitalize;
+    @extend .stcFont;
+    font-weight: 500;
+    color:var(--stc-purple-color);
+    font-size: 1.1rem;
+  }
+  i
+  {
+    font-size: 25px;
+    cursor: pointer;
+  }
+}
+.table-container
+{
+  max-height: 250px;
+  overflow-y: auto;
+}
+::ng-deep .activity-logs-panel
+{
+  &::after , &::before
+  {
+    bottom: 100% !important;
+    left: calc(var(--overlayArrowLeft, 0) + 6.25rem) !important;
+    content: " " !important;
+    height: 0 !important;
+    width: 0 !important;
+    position: absolute !important;
+    pointer-events: none !important;
+  }
+}
+::ng-deep .action-Popup
+{
+  // left: 375px !important;
+  // top: 400px !important;
+  right: 295px !important;
+  left: auto !important;
+  top: 22px !important;
+  &::before
+  {
+    content: "" !important;
+    top: 6.5% !important;
+    left: 101.2% !important;
+    transform: rotate(270deg) !important;
+    border-top: 20px solid #fff !important;
+    border-bottom: 0 !important;
+  }
+  &::after
+  {
+    display: none !important;
+  }
+}
+::ng-deep .action-Popup2
+{
+  right: 260px !important;
+  left: auto !important;
+  top: 46px !important;
+  &::before
+  {
+    content: "" !important;
+    top: 6.5% !important;
+    left: 101% !important;
+    transform: rotate(270deg) !important;
+    border-top: 20px solid #fff !important;
+    border-bottom: 0 !important;
+  }
+  &::after
+  {
+    display: none !important;
+  }
+}
+::ng-deep .PSRProject
+{
+  margin-top: 20px !important;
+}
+.show-activity-logs-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  border: 0;
+  font-size: 16px;
+  color: #4f008c;
+  text-decoration: underline;
+  cursor: pointer;
+  margin: 15px auto 0;
+  background-color: transparent;
+  text-transform: capitalize;
+  @extend .stcFont;
+}
+.table-container
+{
+  table
+  {
+    width: 100%;
+    thead
+    {
+      tr
+      {
+        th
+        {
+          text-align: center;
+          color: #4f008c;
+          @extend .stcFont;
+          background-color:#ede5f3;
+          height:55px;
+          &:first-child
+          {
+            border-top-left-radius:10px;
+          }
+          &:last-child
+          {
+            border-top-right-radius:10px;
+          }
+        }
+      }
+    }
+    tbody
+    {
+      tr
+      {
+        padding:0 15px;
+        td
+        {
+          text-align: center;
+          height:55px;
+          border-bottom:1px solid #F5F6FA;
+          color:#363636;
+          @extend .stcFont;
+          &.time
+          {
+            color:#8E9AA0;
+          }
+        }
+        &:last-child
+        {
+          td
+          {
+            border-bottom:0;
+          }
+        }
+      }
+    }
+  }
+}
+::ng-deep .longTitlePanel
+{
+  .p-overlaypanel-content
+  {
+    padding: 10px;
+  }
+}
+.read-more-btn
+{
+  color:var(--stc-purple-color);
+  font-size: 0.7rem;
+  cursor: pointer;
+}
+.long-title-popover-section
+{
+  max-width:300px;
+  // word-break: break-all;
+}
+.empty-data-msg
+{
+  text-align: center;
+  text-transform: capitalize;
+  font-weight: 600;
+  font-style: italic;
+  @extend .stcFont;
+  color: #4f008c !important;
+  font-size: 18px;
+  margin: 0;
+}

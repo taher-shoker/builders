@@ -85,8 +85,20 @@
         }
         .mat-mdc-select-trigger
         {
-          position: relative !important;
-          top:-8px !important;
+          align-items: center !important;
+        }
+        .mat-mdc-text-field-wrapper , .mat-mdc-select-arrow-wrapper
+        {
+          align-items: flex-end !important;
+        }
+        .mat-mdc-form-field-focus-overlay
+        {
+          display: none !important;
+        }
+        .mat-mdc-select-min-line 
+        {
+          display: inline-block;
+          padding-top: 3px;      
         }
       }
     }

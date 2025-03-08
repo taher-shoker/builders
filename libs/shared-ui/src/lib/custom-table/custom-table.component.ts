@@ -60,6 +60,7 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   headers = input.required<ColumnsSchema[]>();
   psrTable = input<boolean>();
+  activityTable = input<boolean>();
   fontFamily = input<string>();
 
   @Input({ required: true }) items!: any[];
@@ -71,8 +72,11 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() paginate: boolean = false;
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
+  @Input() activityLogTable: boolean = true;
   @Input() length!: number;
   @Input() currentPage: number = 1;
+  isDeleted = input<boolean>(false)
+  showLogs = input<boolean>(false)
 
   isEditMode = input<boolean>();
   userRoles = input<string>();

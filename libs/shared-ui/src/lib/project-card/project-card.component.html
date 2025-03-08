@@ -1,11 +1,17 @@
-<div class="project-card mt-4">
+<div class="project-card" [class.mt-4]="!isdeleted()">
   <div class="project-card-header">
-    <p class = "project-card-header-title">
-      {{projectData().project | truncateWord:3}}
+    <p class="project-card-header-title">
+      {{ projectData().project | truncateWord : 3 }}
       @if(titleArr.length > 3){
-        <span class = "read-more" (click)="displayDrilldown()">read more</span>
+      <span class="read-more" (click)="displayDrilldown()">read more</span>
       }
     </p>
+    @if(isAdmin() && projectData().id)
+    {
+      <button class="show-menu-btn" (click)="showActionsPopup()">
+        <i class="pi pi-clock"></i>
+      </button>
+    }
     <!-- <button class = "show-menu-btn" [matMenuTriggerFor]="menu">
       <i class="pi pi-ellipsis-v"></i>
     </button>
@@ -21,7 +27,7 @@
     </mat-menu> -->
   </div>
   <div>
-    <div class="project-card-bar" style = "padding: 0 10px;">
+    <div class="project-card-bar" style="padding: 0 10px">
       <stc-apps-progress-bar
         [data]="data"
         [isProject]="true"
@@ -30,9 +36,37 @@
     </div>
   </div>
 </div>
-@if(titleArr.length > 3)
+@if(titleArr.length > 3) {
+<p-overlayPanel #overlayPanel dismissable="true">
+  <section class="popover-section">{{ projectData().project }}</section>
+</p-overlayPanel>
+}
+@if(isAdmin() && projectData().id)
 {
-  <p-overlayPanel #overlayPanel dismissable="true">
-    <section class="popover-section">{{projectData().project}}</section>
-  </p-overlayPanel>
+  <p-overlayPanel
+        #actionsPanel
+        dismissable="false"
+        appendTo="body"
+        styleClass="actions-logs12"
+      >
+        <div class="actions-logs-table">
+          <div class="action" (click)="showActivityLogs()">
+            <i class="pi pi-clock"></i>
+            <p>activity log</p>
+          </div>
+        </div>
+      </p-overlayPanel>
+      @if(showActivityLogsPopup)
+      {
+        <stc-apps-activity-logs-popup
+          [activityLogsTableHeader]="activityLogsTableHeader()"
+          [activityLogsTableBody]="activityLogsTableBody()"
+          [showPopup]="showActivityLogsPopup"
+          (popupClosed)="popupClosed()"
+          [isProjectActionPopup]="true"
+          type = "cad"
+          [isDismissable]="true"
+          [isPSRProject]="true"
+        />
+      }
 }

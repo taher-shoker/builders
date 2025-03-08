@@ -1,5 +1,5 @@
 import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
-import { Component, inject, OnDestroy, OnInit } from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
@@ -7,13 +7,19 @@ import { AccordionModule } from 'primeng/accordion';
 import { StrategyProgramService } from '../../../../services/strategy-program.service';
 import { SharedUiModule } from "@stc-apps/shared-ui";
 import { ButtonModule } from 'primeng/button';
-import { DialogModule } from 'primeng/dialog';
 import { ConfirmationService } from 'primeng/api';
 import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
 import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { DatePipe } from '@angular/common';
+import { ActivityLog, ActivityLogData } from '../../../../models/activity-logs';
+import { ActivityLogService } from '../../../../services/activity-logs.service';
+import { MenuPopupComponent } from 'apps/ebe/src/app/components/menu-popup/menu-popup.component';
+import { ProjectCardComponent } from 'libs/shared-ui/src/lib/project-card/project-card.component';
 export interface KpiProjectsDetailsModel
 {
   project:string;
@@ -29,34 +35,51 @@ export interface KpiProjectsDetailsModel
     AccordionModule,
     SharedUiModule,
     ButtonModule,
-    DialogModule,
     RouterModule,
-    EditModeViewComponent
+    EditModeViewComponent,
+    OverlayPanelModule
   ],
   providers : [ConfirmationService],
   templateUrl: './kpi-details.component.html',
   styleUrl: './kpi-details.component.scss',
 })
 export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
+  programName!:string;
   currentId!:string;
   currentMode!: 'editMode' | 'viewMode';
+  @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   activatedRoute = inject(ActivatedRoute);
   strategyProgramService = inject(StrategyProgramService);
   StrategyProgramData: StrategyProgramKpiDetailsModel[] = [];
+  activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableHeader2!:ColumnsSchema[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
+  projectActivityLogsTableHeader!:ColumnsSchema[];
+  projectActivityLogsTableBody = signal<ActivityLogData[]>([]);
   endSubs$:Subject<any> = new Subject();
   private confirmationService = inject(ConfirmationService);
   private scorecardService = inject(ScorecardService);
-  constructor(private router:Router){}
+  constructor(private router:Router , private datePipe:DatePipe){}
   toastr = inject(ToastrService);
+  activityLogService = inject(ActivityLogService)
+  @ViewChild(MenuPopupComponent) child?: MenuPopupComponent;
+  @ViewChild(ProjectCardComponent) child2?: ProjectCardComponent;
+  menuItems:any[] = [];
   isEmpty!:boolean;
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
   userRoles!:UserGroup;
-  isAllowed!:boolean;
+  isAdmin!:boolean;
   ngOnInit(): void {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next : (res) => {
+        this.actionsPanel?.hide();
+        this.showActivityLogsPopup = false;
+      }
+    })
     this.userRoles = this.scorecardService.userRoles;
-    this.isAllowed = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
+    this.isAdmin = this.userRoles.roles.some(role => role.roleName === 'BE_EDITORS' || role.roleName === "ADMINS");
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
         this.currentMode = res;
@@ -64,11 +87,165 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
     });
     this.activatedRoute.params.subscribe({
       next: (param: Params) => {
-        this.currentId = param['kpiId'];
-        // this.isEmpty = true;
-        this.getStrategyProgramDetails(this.currentId);
+        this.programName = param['programName'];
+        this.currentId = param['programId'];
+        this.getStrategyProgramDetails(this.programName);
       },
     });
+    this.menuItems = [
+      {
+        label: 'activity log',
+        icon: "pi pi-clock"
+      },
+      {
+        label: 'show deleted projects',
+        icon: "pi pi-eye"
+      }
+    ];
+    this.projectActivityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      {
+        key : "details",
+        type : "text",
+        label : "Activity Details"
+      },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+      {
+        key : "oldValue",
+        type : "text",
+        label : "Old Value"
+      },
+      {
+        key : "newValue",
+        type : "text",
+        label : "New Value"
+      },
+    ]
+    this.activityLogsTableHeader = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      {
+        key : "details",
+        type : "text",
+        label : "Activity Details"
+      },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      },
+      // {
+      //   key : "oldValue",
+      //   type : "text",
+      //   label : "Old Value"
+      // },
+      // {
+      //   key : "newValue",
+      //   type : "text",
+      //   label : "New Value"
+      // },
+    ]
+    this.activityLogsTableHeader2 = [
+      {
+        key : "username",
+        type : "text",
+        label : "User Name"
+      },
+      {
+        key : "type",
+        type : "text",
+        label : "Activity Type"
+      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
+      {
+        key : "time",
+        type : "text",
+        label : "Time Stamp"
+      }
+    ]
+  }
+  showActivityLogsPopup = false;
+  showActivityLogsPopup2 = false;
+  $endScorecardActivityLogsSub:Subject<any> = new Subject();
+  showActivityLogs()
+  {
+    // this.activityLogsPanel.toggle(event);
+    // console.log(this.showActivityLogsPopup2);
+    this.getSpecificActivityLog("CAD" , "Import,Export" , this.currentId);
+    this.showActivityLogsPopup2 = !this.showActivityLogsPopup2;
+  }
+  showKPIActivityLogs(kpi:StrategyProgramKpiDetailsModel)
+  {
+    this.getSpecificActivityLog("CAD" , "Add,Delete" , this.currentId , kpi.keyResultNumber.toString());
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  private getSpecificActivityLog(moduleName:string , activityType:string , subModule:string , projectName?:string , entity?:string)
+  {
+    this.activityLogService.getSpecificActivityLog(moduleName , activityType , subModule , projectName , entity).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
+      next : (activityLogs:ActivityLogData[]) => {
+        if(entity)
+        {
+          this.projectActivityLogsTableBody.set(activityLogs);
+        } else {
+          this.activityLogsTableBody.set(activityLogs);
+        }
+      }
+    })
+  }
+  popupClosed()
+  {
+    this.$endScorecardActivityLogsSub.complete();
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
+  }
+  popupClosed2()
+  {
+    this.$endScorecardActivityLogsSub.complete();
+    this.showActivityLogsPopup2 = false;
+    this.actionsPanel.hide();
+  }
+  showProjectLogs(id:number , kpi:StrategyProgramKpiDetailsModel)
+  {
+    // console.log(id);
+    this.getSpecificActivityLog("CAD" , "Add,Edit" , this.currentId , kpi.keyResultNumber.toString() , id.toString());
+  }
+  menuActions(label:string)
+  {
+    // console.log(label);
+    if(label === 'activity log')
+    {
+      this.showActivityLogs();
+    } else {
+    }
+  }
+  showDeletedProjects(kpi:StrategyProgramKpiDetailsModel)
+  {
+    this.router.navigateByUrl(`/deleted-projects/cad-projects/${this.currentId}/${kpi.keyResultNumber}`);
   }
   private getStrategyProgramDetails(strategyName:string)
   {
@@ -87,14 +264,24 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   isTapOpened!: boolean;
   currentTabIndex!: number;
   getCurrentIndex(index: boolean) {
-    console.log(index);
+    // console.log(index);
     this.isTapOpened = index;
+    if(this.actionsPanel)
+    {
+      this.actionsPanel.hide();
+    }
+    this.showActivityLogsPopup = false;
+  }
+  closeAccordion()
+  {
+    this.actionsPanel.hide();
+    this.showActivityLogsPopup = false
   }
   getIndex(index: number | number[]) {
     this.currentTabIndex = typeof index === 'number' ? index : 0;
   }
   showForm(project:StrategyProgramKpiDetailsModel) {
-    if(this.isAllowed)
+    if(this.isAdmin)
     {
       this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.keyResultNumber}`);
       this.strategyProgramService.clickedProjects.next(project.projects);
@@ -102,13 +289,6 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
       this.router.navigateByUrl(`/strategy-program`);
     }
   }
-  // editProject(kpi:KpiProjectsDetailsModel , project:StrategyProgramKpiDetailsModel , singleproject:StrategyProgramKpiProjectsDetailsModel)
-  // {
-  //   // this.router.navigateByUrl(`/strategy-project-form/${project.project}`);
-  //   this.router.navigateByUrl(`/strategy-project-form/${project.strategyProjectName}/${project.objective}`);
-  //   this.strategyProgramService.clickedProjects.next(project.projects);
-  //   this.strategyProgramService.clickedProject.next(singleproject);
-  // }
   deletedProject!:KpiProjectsDetailsModel;
   prevProjects!:KpiProjectsDetailsModel[];
   kpi!:StrategyProgramKpiDetailsModel;
@@ -144,11 +324,26 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   {
     this.visible = true;
   }
+  showActionsPopup()
+  {
+    this.actionsPanel.toggle(event);
+    this.showActivityLogsPopup = false;
+    if(this.child2)
+    {
+      this.child2.actionsPanel.hide();
+      this.child2.showActivityLogsPopup = false;
+    }
+  }
+  openPanel()
+  {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
+  }
   downloadTemplate()
   {
-    this.strategyProgramService.downloadStrategyProgramDetails(this.currentId).subscribe({
+    this.strategyProgramService.downloadStrategyProgramDetails(this.programName).subscribe({
       next : (response) => {
-        this.downloadFile(response, `${this.currentId}.csv`);
+        this.downloadFile(response, `${this.programName}.csv`);
       }
     })
   }
@@ -162,9 +357,9 @@ export class KpiDetailsComponentTsComponent implements OnInit , OnDestroy {
   {
     if(uploadFile)
     {
-      this.strategyProgramService.uploadCadSummaryDetailsFile(uploadFile , this.currentId).subscribe({
+      this.strategyProgramService.uploadCadSummaryDetailsFile(uploadFile , this.programName).subscribe({
         next : () => {
-          this.getStrategyProgramDetails(this.currentId);
+          this.getStrategyProgramDetails(this.programName);
           this.visible = false;
           this.toastr.success("The File is Saved Successfully");
         },

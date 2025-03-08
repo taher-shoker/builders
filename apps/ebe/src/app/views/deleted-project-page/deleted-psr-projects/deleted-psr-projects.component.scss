@@ -1,0 +1,43 @@
+@import '../../../../styles/fonts.scss';
+.deleted-projects {
+  .main-title {
+    color: var(--stc-purple-light-color);
+    text-transform: capitalize;
+    font-size: 22px;
+    margin: 0;
+    @extend .blackPoppins;
+  }
+  &-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+    gap: 25px;
+    margin-top: 20px;
+    @media all and (min-width: 1700px) and (max-width: 3000px) {
+      // grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    }
+    @media all and (max-width: 1250px) {
+      grid-template-columns: repeat(auto-fill, minmax(430px, 1fr));
+    }
+    @media all and (min-width: 3001px) and (max-width: 4600px) {
+      grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    }
+    @media all and (min-width: 4601px) {
+      grid-template-columns: repeat(auto-fill, minmax(550px, 1fr));
+    }
+    .project-card {
+      width: 100%;
+    }
+  }
+}
+.empty-data-msg
+{
+    text-align: center;
+    @extend .stcFont;
+    font-size: 1.2rem;
+    text-transform: capitalize;
+    font-style: italic;
+    font-weight: 500;
+    color: var(--stc-purple-light-color);
+    width: 100%;
+}

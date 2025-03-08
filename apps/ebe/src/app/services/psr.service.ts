@@ -34,6 +34,11 @@ export class PSRService {
         label : "end date"
       },
       {
+        key : "weight",
+        type : "text",
+        label : "weight"
+      },
+      {
         key : "completionLevel",
         type : "text",
         label : "Completion Level"
@@ -70,10 +75,10 @@ export class PSRService {
       { observe: 'body', responseType: 'text' as 'json' }
     );
   }
-  addNewChartDetails(id:number , body:ChartDetails[]):Observable<ChartDetails[]>
+  addNewChartDetails(id:number , body:ChartDetails[] , groupName:string , programName:string):Observable<ChartDetails[]>
   {
       return this.http.put<ChartDetails[]>(
-        `${environment.apiUrl}/business-excellence/psr/executiveViewData/cards/${id}/chart-details`,
+        `${environment.apiUrl}/business-excellence/psr/executiveViewData/cards/${id}/chart-details?groupName=${groupName}&programName=${programName}`,
         body
       );
   }
@@ -84,10 +89,10 @@ export class PSRService {
         data
       );
   }
-  addNewProject(data:AddProjectModel[]):Observable<any>
+  addNewProject(data:AddProjectModel[] , groupName:string):Observable<any>
   {
       return this.http.post<any>(
-        `${environment.apiUrl}/business-excellence/psr/executive-data`,
+        `${environment.apiUrl}/business-excellence/psr/executive-data?groupName=${groupName}`,
         data
       );
   }
@@ -102,17 +107,17 @@ export class PSRService {
   {
     return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/executive/${programId}`);
   }
-  deleteProject(projectId:number):Observable<any>
+  deleteProject(projectId:number , groupName:string):Observable<any>
   {
-    return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/executive-data/${projectId}`);
+    return this.http.delete<any>(`${environment.apiUrl}/business-excellence/psr/executive-data/${projectId}?groupName=${groupName}`);
   }
   getProgramById(id:number):Observable<PSRDataModel>
   {
     return this.http.get<PSRDataModel>(`${environment.apiUrl}/business-excellence/psr/executive/${id}`);
   }
-  updateProject(projectId:number , project:AddProjectModel):Observable<any>
+  updateProject(projectId:number , project:AddProjectModel , groupName:string):Observable<any>
   {
-    return this.http.put<any>(`${environment.apiUrl}//business-excellence/psr/executive-data/${projectId}`,
+    return this.http.put<any>(`${environment.apiUrl}//business-excellence/psr/executive-data/${projectId}?groupName=${groupName}`,
       project
     );
   }

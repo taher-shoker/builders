@@ -1,4 +1,6 @@
 <div class="api-standared">
+  <p-toast />
+  <p-confirmDialog />
   <div class="api-standared_header">
     <h3>Standards</h3>
     <stc-apps-button
@@ -23,6 +25,19 @@
       [tableActions]="tableActions()"
       [noDataMessage]="'No API standards available'"
       (actionClick)="onActionHandler($event)"
-    ></stc-apps-table-list>
+    >
+      <ng-template #publishUpdateTemplate let-row>
+        <span
+          [pTooltip]="
+            (row.publishUpdate | date : 'dd MMM yyyy \'at\' hh:mm a') || ''
+          "
+          tooltipPosition="right"
+          [tooltipStyleClass]="'tooltip-custom'"
+          [showDelay]="500"
+        >
+          {{ row.publishUpdate | date : "dd MMM yyyy 'at' hh:mm a" }}
+        </span>
+      </ng-template>
+    </stc-apps-table-list>
   </div>
 </div>

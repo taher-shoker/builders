@@ -1,0 +1,21 @@
+<div class="deleted-cad-projects">
+    <p class="main-title">Strategic objectives to Key Results Mapping</p>
+    <div class="deleted-cad-projects-cards">
+        @for(project of cadProjects(); track $index){
+                <div class = "deleted-cad-projects-cards-card">
+                    <stc-apps-project-card 
+                        [projectData]="project" 
+                        [isAdmin]="true"
+                        [activityLogsTableHeader]="projectActivityLogsTableHeader"
+                        [activityLogsTableBody]="projectActivityLogsTableBody()"
+                        (showLogsBtnClick)="showProjectLogs($event)"
+                        [isdeleted]="true"
+                    />
+                </div>
+        }
+    </div>
+    @if(cadProjects().length === 0)
+    {
+        <p class = "empty-data-msg">there are no deleted projects</p>
+    }
+</div>

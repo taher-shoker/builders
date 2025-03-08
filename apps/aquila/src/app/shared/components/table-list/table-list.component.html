@@ -1,14 +1,15 @@
 <p-table
   [value]="dataSource()"
   [tableStyle]="dataSource().length > 0 ? { 'min-width': '50rem' } : {}"
-  [paginator]="dataSource().length > 0"
+  [paginator]="enablePagination() && dataSource().length > 0"
   [rows]="10"
   [scrollable]="true"
-  [responsive]="true"
   class="table"
   [rowsPerPageOptions]="[10, 25, 50]"
   [first]="currentPage * rowsPerPage"
   (onPage)="onPageChange($event)"
+  [showCurrentPageReport]="true"
+  currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
 >
   <ng-template pTemplate="header">
     @if (dataSource().length >0) {
@@ -41,8 +42,24 @@
           }
         </div>
       </td>
+      } @else if (column.complexViewTemp) {
+      <td>
+        <ng-container
+          *ngTemplateOutlet="
+            column.complexViewTemp;
+            context: { $implicit: rowData }
+          "
+        ></ng-container>
+      </td>
       } @else {
-      <td>{{ rowData[column.key] }}</td>
+      <td
+        [pTooltip]="rowData[column.key]"
+        tooltipPosition="top"
+        [tooltipStyleClass]="'tooltip-custom'"
+        [showDelay]="500"
+      >
+        {{ rowData[column.key] }}
+      </td>
       } }
     </tr>
   </ng-template>

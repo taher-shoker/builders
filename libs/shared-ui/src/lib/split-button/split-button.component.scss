@@ -1,7 +1,7 @@
 p-splitbutton {
     ::ng-deep {
         .p-splitbutton {
-            height: -webkit-fill-available;
+            height: 100%;
         }
 
         .p-splitbutton-defaultbutton {
@@ -21,6 +21,10 @@ p-splitbutton {
             &:focus {
                 box-shadow: none;
             }
+
+            @media screen and (max-width: 576px) {
+                padding: 0.5rem;
+            }
         }
 
         .p-button {
@@ -30,6 +34,10 @@ p-splitbutton {
 
             &-primary.p-button-outlined {
                 color: var(--stc-color);
+            }
+
+            @media screen and (max-width: 576px) {
+                font-size: 14px;
             }
         }
     }

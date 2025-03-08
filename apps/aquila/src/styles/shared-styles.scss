@@ -10,7 +10,9 @@ $gap-tiny: 5px;
 $font-size-xl: 24px;
 $font-size-large: 20px;
 $font-size-default: 16px;
+$font-size-medium: 15px;
 $font-size-small: 14px;
+$font-size-xs: 12px;
 
 $breakpoint-xl: 1400px;
 $breakpoint-lg: 990px;
@@ -20,6 +22,18 @@ $breakpoint-sm: 480px;
 %common-cell-styles {
     @media (max-width: $breakpoint-xl) {
         font-size: $font-size-small;
+    }
+}
+
+%cell-overflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+%button-focus {
+    &:focus {
+        box-shadow: none;
     }
 }
 

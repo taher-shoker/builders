@@ -82,7 +82,7 @@ export class AddPsrProjectFormComponent implements OnInit {
             this.programId = +param['id'];
             this.getValuesById(+param['id']);
           } else {
-            console.log(param);
+            // console.log(param);
             if (param['sector'] && param['projId']) {
               this.projectId = param['projId'];
               this.getProjectValuesById(param['sector'], +param['projId']);
@@ -321,7 +321,7 @@ export class AddPsrProjectFormComponent implements OnInit {
             });
           });
           // console.log("addedProjects => " , this.addedProjects);
-          this.psrService.addNewProject(this.addedProjects).subscribe({
+          this.psrService.addNewProject(this.addedProjects , this.sectorName).subscribe({
             next: () => {
               this.confirmationService.confirm({
                 key: 'added-sector-success',
@@ -353,7 +353,10 @@ export class AddPsrProjectFormComponent implements OnInit {
       next: (res: PSRDataModel) => {
         this.programsList.controls[0].get('sector')?.setValue(res.sector);
         this.programsList.controls[0].get('details')?.setValue(res.details);
-        this.programsList.controls[0].get('plannedDate')?.setValue(new Date(res.plannedDate));
+        if(res.plannedDate)
+        {
+          this.programsList.controls[0].get('plannedDate')?.setValue(new Date(res.plannedDate));
+        }
       },
     });
   }
@@ -375,7 +378,7 @@ export class AddPsrProjectFormComponent implements OnInit {
       const updatedObj = this.programsList.value[0];
       const formattedStartDate = this.formatDate(updatedObj.startDate);
       const formattedEndDate = this.formatDate(updatedObj.endDate);
-      console.log(updatedObj.indicator);
+      // console.log(updatedObj.indicator);
       if (
         updatedObj.indicator.value === 'N/A' ||
         updatedObj.indicator === 'N/A'
@@ -402,7 +405,8 @@ export class AddPsrProjectFormComponent implements OnInit {
       };
       // console.log(updatedObj);
       // console.log(addedProjects);
-      this.psrService.updateProject(+this.projectId, addedProjects).subscribe({
+
+      this.psrService.updateProject(+this.projectId, addedProjects , this.sectorName).subscribe({
         next: () => {
           this.confirmationService.confirm({
             key: 'edit-sector-success',

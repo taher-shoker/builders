@@ -6,14 +6,16 @@
       <div>
         <label for="apiLinkInput">API Link</label>
         <stc-apps-input-group
+          id="apiLinkInput"
           [placeholder]="'Paste API link Here'"
           [addonText]="'http://'"
           formControlName="apiUrl"
         ></stc-apps-input-group>
       </div>
       <div>
-        <label>Standard</label>
+        <label for="standardInput">Standard</label>
         <stc-apps-filter-dropdown
+          id="standardInput"
           [dropdownOptions]="standardsDropdown"
           [placeholder]="'Select a Standard'"
           [selectedValue]="selectedStandard"

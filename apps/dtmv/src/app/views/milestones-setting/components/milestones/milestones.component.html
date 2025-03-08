@@ -22,24 +22,41 @@
                   </div>
                 </div> -->
                 <div class="col-3">
-                  <stc-apps-button [buttonText]="'Filter' | translate" [buttonType]="'gray-outline'"
-                    [buttonIcon]="'fa-filter'" (btnClick)="toggleFilter()"></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'Filter' | translate"
+                    [buttonType]="'gray-outline'"
+                    [buttonIcon]="'fa-filter'"
+                    (btnClick)="toggleFilter()"
+                  ></stc-apps-button>
                 </div>
-                <div class="col-3" *ngIf="
+                <div
+                  class="col-3"
+                  *ngIf="
                     !milestonesService.checkIsBusinessSpoc() &&
                     !milestonesService.checkIsDirector()
-                  ">
-                  <stc-apps-button [buttonText]="'Add Milestone' | translate" [buttonType]="'primary'"
-                    [buttonIcon]="'fa-plus-circle'" (btnClick)="addMilestoneNavigate()"></stc-apps-button>
+                  "
+                >
+                  <stc-apps-button
+                    [buttonText]="'Add Milestone' | translate"
+                    [buttonType]="'primary'"
+                    [buttonIcon]="'fa-plus-circle'"
+                    (btnClick)="addMilestoneNavigate()"
+                  ></stc-apps-button>
                 </div>
                 <div class="col-2">
-                  <stc-apps-button [buttonText]="'Export' | translate" [buttonType]="'warn'"
-                    (btnClick)="onExporting()"></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'Export' | translate"
+                    [buttonType]="'warn'"
+                    (btnClick)="onExporting()"
+                  ></stc-apps-button>
                 </div>
 
                 <div class="col-2" *ngIf="showPendingActionsBtn">
-                  <stc-apps-button [buttonText]="'Pending actions'" [buttonType]="'primary'"
-                    (btnClick)="toggleAnimation()"></stc-apps-button>
+                  <stc-apps-button
+                    [buttonText]="'Pending actions'"
+                    [buttonType]="'primary'"
+                    (btnClick)="toggleAnimation()"
+                  ></stc-apps-button>
                 </div>
               </div>
 
@@ -62,109 +79,197 @@
         <div class="row">
           <div class="col-md-12">
             @if(tableData){
-            <stc-apps-custom-table (sortration)="setSorting($event)" [items]="tableData" [headers]="columnsSchema"
-              [length]="milestonesTotalCount" (doAction)="tableAction($event)" [sort]="true" [paginate]="true"
-              [applyFilter]="true" [filterForm]="filterForm" [paginationConfig]="{
-                pageCount: previousParams.numberOfElementsToDisplay ?previousParams.numberOfElementsToDisplay :  configService.getConfig().defaultPageSize ,
-pageSizesOptionals:configService.getConfig().pageSizesOptions,
+            <stc-apps-custom-table
+              (sortration)="setSorting($event)"
+              [items]="tableData"
+              [headers]="columnsSchema"
+              [length]="milestonesTotalCount"
+              (doAction)="tableAction($event)"
+              [activityLogTable]="false"
+              [sort]="true"
+              [paginate]="true"
+              [applyFilter]="true"
+              [filterForm]="filterForm"
+              [paginationConfig]="{
+                pageCount: previousParams.numberOfElementsToDisplay
+                  ? previousParams.numberOfElementsToDisplay
+                  : configService.getConfig().defaultPageSize,
+                pageSizesOptionals: configService.getConfig().pageSizesOptions,
                 showTotal: false,
                 paginationIq: 'smart',
-                showPagePerItems:true,
+                showPagePerItems: true,
                 currentPage: previousParams.page ? previousParams.page + 1 : 1
-              }" (paginationEvent)="paginate($event)" (pageSizeEvent)="setPageItemsCount($event)">
+              }"
+              (paginationEvent)="paginate($event)"
+              (pageSizeEvent)="setPageItemsCount($event)"
+            >
             </stc-apps-custom-table>
 
             }
-            <ng-template #statusCustomTemplate let-header="header" let-item="item">
-              <p class="custom-class-template" [ngClass]="{
+            <ng-template
+              #statusCustomTemplate
+              let-header="header"
+              let-item="item"
+            >
+              <p
+                class="custom-class-template"
+                [ngClass]="{
                   'completed-status': item[header.key] === 'Completed',
                   'delayed-status': item[header.key] === 'Delayed',
                   'on-track-status': item[header.key] === 'On Track',
                   'at-risk-status': item[header.key] === 'At Risk',
                   'planned-status': item[header.key] === 'Planned'
-                }">
+                }"
+              >
                 {{ item[header.key] }}
               </p>
             </ng-template>
 
-            <ng-template #validationCustomTemplate let-header="header" let-item="item">
+            <ng-template
+              #validationCustomTemplate
+              let-header="header"
+              let-item="item"
+            >
               <p>
                 {{
-                item.validationStatus === 'In-Validation'
-                ? 'In Validation'
-                : item.validationStatus
+                  item.validationStatus === 'In-Validation'
+                    ? 'In Validation'
+                    : item.validationStatus
                 }}
               </p>
             </ng-template>
 
-            <ng-template #progressCustomTemplate let-header="header" let-item="item">
+            <ng-template
+              #progressCustomTemplate
+              let-header="header"
+              let-item="item"
+            >
               <p>{{ item.lastApprovedProgress || 0 }}%</p>
             </ng-template>
           </div>
         </div>
       </div>
-      @if (tableCols === 12) { <div [@slideInOut]="pendingActionsShown" class="pending-list-holder"
-        [ngClass]="{'widen-list': isPendingListClosable}">
-        <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems"
-          [closable]="isPendingListClosable" (itemClicked)="detailsNavigate($event)"
-          (closeClicked)="toggleAnimation()"></stc-apps-items-list>
+      @if (tableCols === 12) {
+      <div
+        [@slideInOut]="pendingActionsShown"
+        class="pending-list-holder"
+        [ngClass]="{ 'widen-list': isPendingListClosable }"
+      >
+        <stc-apps-items-list
+          [caption]="'pending_actions' | translate"
+          [items]="allItems"
+          [closable]="isPendingListClosable"
+          (itemClicked)="detailsNavigate($event)"
+          (closeClicked)="toggleAnimation()"
+        ></stc-apps-items-list>
       </div>
-      }
-      @else {
+      } @else {
       <div class="col-md-4">
-        <div [@slideInOut]="pendingActionsShown" class="pending-list-holder"
-          [ngClass]="{'widen-list': isPendingListClosable}">
-          <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems"
-            [closable]="isPendingListClosable" (itemClicked)="detailsNavigate($event)"
-            (closeClicked)="toggleAnimation()"></stc-apps-items-list>
+        <div
+          [@slideInOut]="pendingActionsShown"
+          class="pending-list-holder"
+          [ngClass]="{ 'widen-list': isPendingListClosable }"
+        >
+          <stc-apps-items-list
+            [caption]="'pending_actions' | translate"
+            [items]="allItems"
+            [closable]="isPendingListClosable"
+            (itemClicked)="detailsNavigate($event)"
+            (closeClicked)="toggleAnimation()"
+          ></stc-apps-items-list>
         </div>
       </div>
       }
-
     </div>
   </div>
 </div>
 
 <stc-apps-dialog id="filter-Modal">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" (blur)="(OnChangesForm)" class="p-3 pb-0">
+  <form
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    (blur)="(OnChangesForm)"
+    class="p-3 pb-0"
+  >
     <div class="inputs">
       <div class="row">
-        <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputId]="'milestoneName'" [inputName]="'milestone name'"
-            formControlName="milestoneName"></stc-apps-input>
+        <div class="col-md-4">
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputId]="'milestoneName'"
+            [inputName]="'milestone name'"
+            formControlName="milestoneName"
+          ></stc-apps-input>
         </div>
         <!-- <div class="col-md-3">
           <stc-apps-select-drop-down [label]="'Team'" [options]="allTeams" formControlName="team"
             [outputValue]="'name'"></stc-apps-select-drop-down>
         </div> -->
-        <div class="col-md-3">
-          <stc-apps-select-drop-down [label]="'Status'" [labelValue]="'value'" [options]="milestoneStatus"
-            formControlName="status" [outputValue]="'value'"></stc-apps-select-drop-down>
-        </div>
-        <div class="col-md-3">
-          <stc-apps-select-drop-down [label]="'Month'" [options]="monthsArr" formControlName="month"
-            [outputValue]="'id'"></stc-apps-select-drop-down>
+
+        <div class="col-md-4">
+          <label for="" style="margin-bottom: 6px"> Start Date </label>
+
+          <stc-apps-date-picker-range
+            [resetFormFlag]="resetFormFlag"
+            [disableInput]="true"
+            [disableFilterFlag]="true"
+            (datePickerChangeEvent)="datePickerChanged($event, 'startDate')"
+          >
+          </stc-apps-date-picker-range>
         </div>
 
-        <div class="col-md-3">
-          <stc-apps-select-drop-down [label]="'Year'" [options]="yearsArr" formControlName="year"
-            [outputValue]="'name'"></stc-apps-select-drop-down>
+        <div class="col-md-4">
+          <label for="" style="margin-bottom: 6px"> End Date </label>
+
+          <stc-apps-date-picker-range
+            [resetFormFlag]="resetFormFlag"
+            [disableInput]="true"
+            [disableFilterFlag]="true"
+            (datePickerChangeEvent)="datePickerChanged($event, 'endDate')"
+          >
+          </stc-apps-date-picker-range>
         </div>
+        @if (form.hasError('invalidDateRange')) {
+        <mat-error style="text-align: end">
+          Start date range must be before or equal to the end date range.
+        </mat-error>
+        }
       </div>
       <div class="row mt-4">
         <div class="col-md-3">
-          <stc-apps-select-drop-down [label]="'Team'" [options]="allTeams" formControlName="teamName"
-            [outputValue]="'name'"></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down
+            [label]="'Status'"
+            [labelValue]="'value'"
+            [options]="milestoneStatus"
+            formControlName="status"
+            [outputValue]="'value'"
+          ></stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-select-drop-down
+            [label]="'Team'"
+            [options]="allTeams"
+            formControlName="teamName"
+            [outputValue]="'name'"
+          ></stc-apps-select-drop-down>
         </div>
 
         <div class="col-md-3">
-          <stc-apps-input [className]="'custom-input'" [inputId]="'workStream'" [inputName]="'Work Stream'"
-            formControlName="workStream"></stc-apps-input>
+          <stc-apps-input
+            [className]="'custom-input'"
+            [inputId]="'activityName'"
+            [inputName]="'Activity Name'"
+            formControlName="activityName"
+          ></stc-apps-input>
         </div>
 
         <div class="col-md-3">
-          <stc-apps-select-drop-down [label]="'Validation Status'" [options]="inValidationOption"
-            formControlName="validationStatus" [outputValue]="'value'"></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down
+            [label]="'Validation Status'"
+            [options]="inValidationOption"
+            formControlName="validationStatus"
+            [outputValue]="'value'"
+          ></stc-apps-select-drop-down>
         </div>
       </div>
     </div>
@@ -172,14 +277,22 @@ pageSizesOptionals:configService.getConfig().pageSizesOptions,
       <div class="col-12">
         <div class="row mt-4">
           <div class="col-md-3">
-            <stc-apps-button [buttonText]="'Clear'" [buttonType]="'gray-outline'"
-              (btnClick)="clearFormFilter()"></stc-apps-button>
+            <stc-apps-button
+              [buttonText]="'Clear'"
+              [buttonType]="'gray-outline'"
+              (btnClick)="clearFormFilter()"
+            ></stc-apps-button>
           </div>
           <div class="col-md-6"></div>
 
           <div class="col-md-3">
-            <stc-apps-button [buttonText]="'Apply filter' | translate" [buttonType]="'primary'"
-              [buttonDisable]="disabled" (btnClick)="onSubmit()" [actionType]="'submit'"></stc-apps-button>
+            <stc-apps-button
+              [buttonText]="'Apply filter' | translate"
+              [buttonType]="'primary'"
+              [buttonDisable]="disabled || form.invalid"
+              (btnClick)="onSubmit()"
+              [actionType]="'submit'"
+            ></stc-apps-button>
           </div>
         </div>
       </div>
@@ -193,14 +306,18 @@ pageSizesOptionals:configService.getConfig().pageSizesOptions,
     <strong>#{{ rowData?.id }}</strong>
 
     <span>
-      ' Kindly note you can&lsquo;t roll back this action. Are you sure?'</span>
+      ' Kindly note you can&lsquo;t roll back this action. Are you sure?'</span
+    >
   </p>
 
   <div class="row mt-4">
     <div class="col-md-4 offset-8">
       <div class="d-flex justify-content-end">
-        <stc-apps-button [buttonText]="'cancel'" [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"></stc-apps-button>
+        <stc-apps-button
+          [buttonText]="'cancel'"
+          [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"
+        ></stc-apps-button>
 
         <div class="mx-3"></div>
         <!-- <stc-apps-button [buttonText]="'delete user'" [buttonType]="'primary'"
@@ -210,6 +327,12 @@ pageSizesOptionals:configService.getConfig().pageSizesOptions,
   </div>
 </stc-apps-dialog>
 
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ff375e" type="ball-scale-multiple" [fullScreen]="true">
+<ngx-spinner
+  bdColor="rgba(0, 0, 0, 0.8)"
+  size="medium"
+  color="#ff375e"
+  type="ball-scale-multiple"
+  [fullScreen]="true"
+>
   <p style="color: white">Loading...</p>
 </ngx-spinner>

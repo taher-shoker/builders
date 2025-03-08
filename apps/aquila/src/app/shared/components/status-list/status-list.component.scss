@@ -5,8 +5,18 @@
         @include flex-between-center;
         margin-bottom: $gap-medium;
 
+        @media screen and (max-width: $breakpoint-md) {
+            flex-direction: column;
+            gap: $gap-small;
+        }
+
         h5 {
             color: var(--darkPurbleColor);
+            margin: 0;
+
+            @media screen and (max-width: $breakpoint-sm) {
+                font-size: $font-size-medium;
+            }
         }
 
         stc-apps-button {
@@ -24,10 +34,20 @@
         overflow-y: auto;
         padding-right: $gap-medium;
 
+        @media screen and (max-width: $breakpoint-md) {
+            padding-right: $gap-small;
+            height: calc(100vh - 250px);
+        }
+
         .card {
             padding: 0;
             height: auto;
             cursor: pointer;
+            transition: all 0.3s ease;
+
+            @media screen and (max-width: $breakpoint-sm) {
+                font-size: $font-size-small;
+            }
 
             &.dimmed {
                 cursor: not-allowed;
@@ -36,10 +56,35 @@
             &-header {
                 @include flex-between-center;
                 padding: 11px 15px;
+                flex-wrap: wrap;
+                gap: $gap-xxs;
 
                 button {
                     width: auto;
                     padding: 0;
+                    margin-left: auto;
+
+                    &.reload {
+                        background: var(--whiteColor);
+                        border: 1px solid var(--light-slate-gray);
+                        border-radius: 4px;
+                        padding: 8.31px;
+
+                        i {
+                            color: #6B7280;
+                            font-size: $font-size-medium;
+                            padding: 0;
+                        }
+
+                        @media screen and (max-width: $breakpoint-sm) {
+                            padding: 6px;
+                        }
+                    }
+                }
+
+                .actions {
+                    display: flex;
+                    gap: $gap-xxs;
                     margin-left: auto;
                 }
 
@@ -48,7 +93,7 @@
                 }
 
                 p {
-                    color: var(--grey-color);
+                    font-family: 'stc forward-bold';
                 }
 
                 strong {
@@ -59,21 +104,14 @@
                         margin-left: auto;
                     }
                 }
-
-
             }
 
             &-body {
                 @include flex-column;
                 gap: $gap-xxs;
 
-                span {
-                    padding: 0 10px;
-                    color: #6B7280;
-                }
-
                 mat-form-field {
-                    border: 1px solid #D1D5DB;
+                    border: 1px solid var(--light-slate-gray);
 
                     ::ng-deep {
                         .mat-mdc-form-field-subscript-wrapper {
@@ -95,17 +133,30 @@
             border-radius: 8px;
             transition: border 0.3s ease;
 
-            .text-success {
-                background-color: #d4edda;
+            .text-success,
+            .text-danger {
                 padding: 5px 10px;
                 border-radius: 4px;
+
+                @media screen and (max-width: $breakpoint-sm) {
+                    padding: 3px 6px;
+                    font-size: $font-size-small;
+                }
+            }
+
+            .text-success {
+                background-color: #d4edda;
+
             }
 
             .text-danger {
                 background-color: #f8d7da;
-                padding: 5px 10px;
-                border-radius: 4px;
             }
+        }
+
+        span {
+            color: var(--grey-color);
+            font-size: $font-size-xs;
         }
     }
 
@@ -116,11 +167,20 @@
         gap: $gap-tiny;
         margin: 130px auto;
 
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
         p {
             color: var(--grey-color);
 
             @media screen and (max-width: $breakpoint-xl) {
                 font-size: $font-size-small;
+            }
+
+            @media screen and (max-width: $breakpoint-sm) {
+                font-size: $font-size-xs;
             }
         }
     }

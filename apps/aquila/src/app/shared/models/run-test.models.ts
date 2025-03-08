@@ -47,9 +47,11 @@ export interface QueueItem {
   domain?: string;
   hasRun?: boolean;
   hasCompleted?: boolean;
+  hasReload?: boolean;
   date?: Date;
   result?: string;
   parentTestId?: string;
   summaryFileJson?: string;
   summaryFileHtml?: string;
+  testStatus?: string;
 }

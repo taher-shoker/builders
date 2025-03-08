@@ -5,7 +5,13 @@
 </p>
 <div class="page-header-section-title">
   <p>
-    <span>{{mainTitle()}}</span>
+    <span>
+      @if(isDeletedProject())
+      {
+        <i (click)="returnBack()" class = "pi pi-arrow-left"></i>
+      }
+      {{mainTitle()}}
+    </span>
     @if (secondaryTitle()) {
       {{secondaryTitle()}}
     }
