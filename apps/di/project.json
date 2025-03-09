@@ -51,17 +51,13 @@
             {
               "type": "anyComponentStyle",
               "maximumWarning": "2kb",
-              "maximumError": "4kb"
+              "maximumError": "6kb"
             }
           ],
           "fileReplacements": [
             {
               "replace": "apps/di/src/environments/environment.ts",
               "with": "apps/di/src/environments/environment.prod.ts"
-            },
-            {
-              "replace": "apps/di/src/environments/environment.ts",
-              "with": "apps/di/src/environments/environment.stage.ts"
             }
           ],
           "outputHashing": "all"
