@@ -21,7 +21,6 @@ export class DyDashboardComponent implements OnInit {
   ngOnInit(): void {
     console.log('initial');
     this.getStatisticsData();
-    this.getReportsChartData();
     this.getReportsSLAChart();
     this.getReportsCategoryChart();
     this.getReportsAvgResTime();
@@ -33,12 +32,7 @@ export class DyDashboardComponent implements OnInit {
       this.statisticData = res;
     });
   }
-  getReportsChartData() {
-    this._dashboardService.getAllReportsChart().subscribe((res) => {
-      console.log(res);
-      this.allReportsChart = res;
-    });
-  }
+
   getReportsSLAChart() {
     this._dashboardService.getReportsSLA().subscribe((res) => {
       console.log(res);

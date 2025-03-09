@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Category,
   DashboardService,
+  ReportData,
 } from '../../../../services/dashboard.service';
 import { ReportsService } from '../../../dy-reports/dy-reports.service';
 import { AuthService } from '../../../../services/auth.service';
@@ -21,14 +22,84 @@ export class ReportsChartComponent implements OnInit {
     public authService: AuthService
   ) {}
   categories: WritableSignal<Category[]> = signal([]);
-
+  chartData: {
+    name: string;
+    value: number;
+    color?: string;
+  }[] = [];
+  filter: {
+    dataFrom: string | null;
+    dataTo: string | null;
+    categort: string | null;
+    status: string | null;
+  } = {
+    dataFrom: null,
+    dataTo: null,
+    categort: null,
+    status: null,
+  };
   ngOnInit() {
     this.getCategories();
+    this.getReportsChartData();
+
     console.log('fdf');
   }
   private getCategories() {
     this.reportsService.getCategories().subscribe((res) => {
       this.categories.set(res);
     });
+  }
+  datePickerChanged(event: { start: Date; end: Date }) {
+    if (event.start && event.end) {
+      this.filter = {
+        ...this.filter,
+        dataFrom: this.convertToDateOnly(event.start),
+        dataTo: this.convertToDateOnly(event.end),
+      };
+      this.getReportsChartData(this.filter);
+    }
+  }
+  handleSelect(event: string, controlName: string) {
+    if (controlName === 'status') {
+      this.filter = { ...this.filter, status: event };
+      this.getReportsChartData(this.filter);
+    } else if (controlName === 'category') {
+      this.filter = { ...this.filter, categort: event };
+      this.getReportsChartData(this.filter);
+    }
+    console.log(event);
+  }
+  convertToDateOnly(date: Date | null): string | null {
+    if (!date) return null;
+    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
+  }
+  getReportsChartData(filterData?: any) {
+    this._dashboardService
+      .getAllReportsChart(filterData)
+      .subscribe((res: ReportData[]) => {
+        this.chartData = res.map((item) => ({
+          name: this.getMonthName(item.month) + ' ' + item.year,
+          value: item.count,
+          color: '#4F008C', // Assign colors dynamically
+        }));
+      });
+  }
+
+  getMonthName(month: number): string {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1] || 'Unknown'; // Ensure valid month values
   }
 }

@@ -1,6 +1,6 @@
 .white-box {
   background-color: white;
-  padding: 30px 35px;
+  padding: 30px 25px;
   margin: 20px auto;
   &:first-of-type {
     margin-top: 0;
@@ -8,5 +8,11 @@
   h3 {
     font-size: 18px;
     font-weight: 700;
+  }
+  .noData {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    margin: 30px auto;
   }
 }

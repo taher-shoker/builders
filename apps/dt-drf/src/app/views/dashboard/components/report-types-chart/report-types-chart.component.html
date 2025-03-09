@@ -1,11 +1,22 @@
 <div class="white-box">
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-4">
       <h3>Report Types Distribution Category
       </h3>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-8">
+      <div class="row">
+        <div class="col-md-5">
+          <stc-apps-select-drop-down [label]="''" [matLabel]="'Category'"
+            [options]="categories()"></stc-apps-select-drop-down>
+        </div>
 
+        <div class="col-md-7">
+          <stc-apps-date-picker-range [disableInput]="true" [disableFilterFlag]="true"
+            (datePickerChangeEvent)="datePickerChanged($event)">
+          </stc-apps-date-picker-range>
+        </div>
+      </div>
     </div>
   </div>
 </div>

@@ -5,12 +5,18 @@ import { Injectable } from '@angular/core';
 // import { environment } from 'apps/d2d/src/environments/environment';
 import { CookieService } from 'ngx-cookie';
 import { environment } from '../../environments/environment';
+import { Observable } from 'rxjs';
 
 export interface Category {
   id: number;
   name: string;
   slaDuration: number;
   isDeletable: boolean;
+}
+export interface ReportData {
+  year: number;
+  month: number;
+  count: number;
 }
 
 @Injectable({
@@ -47,25 +53,26 @@ export class DashboardService {
       params,
     });
   }
-  getAllReportsChart(filterData?: any) {
-    // Convert filterData to HttpParams
-    let params = new HttpParams();
-    if (filterData) {
-      Object.entries(filterData).forEach(([key, value]) => {
-        if (
-          value !== undefined &&
-          value !== '' &&
-          (typeof value === 'string' || typeof value === 'number')
-        ) {
-          params = params.append(key, value);
-        }
-      });
-    }
-    // Perform the GET request with the params
-    return this.http.get<any>(`${this.dtUrl}dashboard/reports-per-months`, {
-      params,
-    });
+  getAllReportsChart(
+    filterData?: Record<string, string | number | undefined>
+  ): Observable<ReportData[]> {
+    // Filter out undefined values to ensure only string or number remain
+    const cleanedData = Object.fromEntries(
+      Object.entries(filterData || {}).filter(
+        ([, value]) => value !== undefined && value !== ''
+      )
+    ) as Record<string, string | number>; // Explicitly cast the result
+
+    const params = new HttpParams({ fromObject: cleanedData });
+
+    return this.http.get<ReportData[]>(
+      `${this.dtUrl}dashboard/reports-per-months`,
+      {
+        params,
+      }
+    );
   }
+
   getReportsSLA(filterData?: any) {
     // Convert filterData to HttpParams
     let params = new HttpParams();

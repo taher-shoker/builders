@@ -15,4 +15,7 @@ export class ReportsSlaChartComponent implements OnInit {
   ngOnInit() {
     console.log('fdf');
   }
+  datePickerChanged(event: { start: Date; end: Date }) {
+    console.log(event);
+  }
 }
