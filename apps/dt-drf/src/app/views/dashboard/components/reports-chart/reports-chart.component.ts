@@ -41,8 +41,6 @@ export class ReportsChartComponent implements OnInit {
   ngOnInit() {
     this.getCategories();
     this.getReportsChartData();
-
-    console.log('fdf');
   }
   private getCategories() {
     this.reportsService.getCategories().subscribe((res) => {
@@ -59,6 +57,10 @@ export class ReportsChartComponent implements OnInit {
       this.getReportsChartData(this.filter);
     }
   }
+  convertToDateOnly(date: Date | null): string | null {
+    if (!date) return null;
+    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
+  }
   handleSelect(event: string, controlName: string) {
     if (controlName === 'status') {
       this.filter = { ...this.filter, status: event };
@@ -67,12 +69,8 @@ export class ReportsChartComponent implements OnInit {
       this.filter = { ...this.filter, category: event };
       this.getReportsChartData(this.filter);
     }
-    console.log(event);
   }
-  convertToDateOnly(date: Date | null): string | null {
-    if (!date) return null;
-    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
-  }
+
   getReportsChartData(filterData?: any) {
     this._dashboardService
       .getAllReportsChart(filterData)

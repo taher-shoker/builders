@@ -27,15 +27,13 @@ export class ReportTypesChartComponent implements OnInit {
     color?: string;
   }[] = [];
   filter: {
-    dataFrom: string | null;
-    dataTo: string | null;
+    dateFrom: string | null;
+    dateTo: string | null;
     category: string | null;
-    status: string | null;
   } = {
-    dataFrom: null,
-    dataTo: null,
+    dateFrom: null,
+    dateTo: null,
     category: null,
-    status: null,
   };
   ngOnInit() {
     this.getCategories();
@@ -47,7 +45,18 @@ export class ReportTypesChartComponent implements OnInit {
     });
   }
   datePickerChanged(event: { start: Date; end: Date }) {
-    console.log(event);
+    if (event.start && event.end) {
+      this.filter = {
+        ...this.filter,
+        dateFrom: this.convertToDateOnly(event.start),
+        dateTo: this.convertToDateOnly(event.end),
+      };
+      this.getReportsCategoryChart(this.filter);
+    }
+  }
+  convertToDateOnly(date: Date | null): string | null {
+    if (!date) return null;
+    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
   }
   getMonthName(month: number): string {
     const months = [
@@ -66,21 +75,19 @@ export class ReportTypesChartComponent implements OnInit {
     ];
     return months[month - 1] || 'Unknown'; // Ensure valid month values
   }
-
+  handleSelect(event: string, controlName: string) {
+    if (controlName === 'category') {
+      this.filter = { ...this.filter, category: event };
+      this.getReportsCategoryChart(this.filter);
+    }
+  }
   getReportsCategoryChart(filterData?: any) {
-    this._dashboardService.getReportsCategory(filterData).subscribe(
-      (
-        res: {
-          category: string;
-          count: number;
-        }[]
-      ) => {
-        this.chartData = res.map((item) => ({
-          name: item.category,
-          value: item.count,
-          color: '#4F008C', // Assign colors dynamically
-        }));
-      }
-    );
+    this._dashboardService.getReportsCategory(filterData).subscribe((res) => {
+      this.chartData = res.map((item) => ({
+        name: item.category,
+        value: item.count,
+        color: '#4F008C', // Assign colors dynamically
+      }));
+    });
   }
 }

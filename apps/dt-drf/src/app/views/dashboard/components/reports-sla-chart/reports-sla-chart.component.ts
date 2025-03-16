@@ -13,7 +13,14 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 export class ReportsSlaChartComponent implements OnInit, OnDestroy {
   private root!: am5.Root;
   chartdiv_id = '';
-  chartData: any = [];
+  chartData: { category: string; value: number }[] = [];
+  filter: {
+    dateFrom: string | null;
+    dateTo: string | null;
+  } = {
+    dateFrom: null,
+    dateTo: null,
+  };
   constructor(
     public router: Router,
     public route: ActivatedRoute,
@@ -21,8 +28,8 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
   ) {}
 
   createChart() {
+    this.maybeDisposeRoot(this.chartdiv_id);
     this.root = am5.Root.new(this.chartdiv_id);
-
     this.root.setThemes([am5themes_Animated.new(this.root)]);
 
     const chart = this.root.container.children.push(
@@ -58,7 +65,13 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
 
     series.appear(1000, 100);
   }
-
+  maybeDisposeRoot(divId: string) {
+    am5.array.each(am5.registry.rootElements, function (root: any) {
+      if (root?.dom.id == divId) {
+        root.dispose();
+      }
+    });
+  }
   ngOnDestroy() {
     this.root.dispose();
   }
@@ -68,12 +81,22 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
   }
 
   datePickerChanged(event: { start: Date; end: Date }) {
-    console.log(event);
+    if (event.start && event.end) {
+      this.filter = {
+        ...this.filter,
+        dateFrom: this.convertToDateOnly(event.start),
+        dateTo: this.convertToDateOnly(event.end),
+      };
+      this.getReportsSLAChart(this.filter);
+    }
   }
-
-  getReportsSLAChart() {
-    this._dashboardService.getReportsSLA().subscribe((res) => {
-      this.chartData = res.map((item: any) => ({
+  convertToDateOnly(date: Date | null): string | null {
+    if (!date) return null;
+    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
+  }
+  getReportsSLAChart(filterData?: any) {
+    this._dashboardService.getReportsSLA(filterData).subscribe((res) => {
+      this.chartData = res.map((item) => ({
         category: item.sla,
         value: item.percentage,
       }));

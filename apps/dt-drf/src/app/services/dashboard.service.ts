@@ -6,6 +6,11 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { environment } from '../../environments/environment';
 import { Observable } from 'rxjs';
+import {
+  AvgReportChart,
+  CategoryReportChart,
+  SLAReportChart,
+} from './models/report-flow.model';
 
 export interface Category {
   id: number;
@@ -73,7 +78,9 @@ export class DashboardService {
     );
   }
 
-  getReportsSLA(filterData?: any) {
+  getReportsSLA(
+    filterData?: Record<string, string | number | undefined>
+  ): Observable<SLAReportChart[]> {
     // Convert filterData to HttpParams
     let params = new HttpParams();
     if (filterData) {
@@ -81,55 +88,60 @@ export class DashboardService {
         if (
           value !== undefined &&
           value !== '' &&
-          (typeof value === 'string' || typeof value === 'number')
+          (typeof value === 'string' ||
+            (typeof value === 'number' && value !== null))
         ) {
           params = params.append(key, value);
         }
       });
     }
     // Perform the GET request with the params
-    return this.http.get<any>(`${this.dtUrl}dashboard/reports-sla`, {
-      params,
-    });
+    return this.http.get<SLAReportChart[]>(
+      `${this.dtUrl}dashboard/reports-sla`,
+      {
+        params,
+      }
+    );
   }
 
-  getReportsCategory(filterData?: any) {
+  getReportsCategory(
+    filterData?: Record<string, string | number | undefined>
+  ): Observable<CategoryReportChart[]> {
     // Convert filterData to HttpParams
-    let params = new HttpParams();
-    if (filterData) {
-      Object.entries(filterData).forEach(([key, value]) => {
-        if (
-          value !== undefined &&
-          value !== '' &&
-          (typeof value === 'string' || typeof value === 'number')
-        ) {
-          params = params.append(key, value);
-        }
-      });
-    }
+    const cleanedData = Object.fromEntries(
+      Object.entries(filterData || {}).filter(
+        ([, value]) => value !== undefined && value !== '' && value !== null
+      )
+    ) as Record<string, string | number>; // Explicitly cast the result
+
+    const params = new HttpParams({ fromObject: cleanedData });
     // Perform the GET request with the params
-    return this.http.get<any>(`${this.dtUrl}dashboard/reports-per-category`, {
-      params,
-    });
+    return this.http.get<CategoryReportChart[]>(
+      `${this.dtUrl}dashboard/reports-per-category`,
+      {
+        params,
+      }
+    );
   }
 
-  getReportsAvgReponse(filterData?: any) {
+  getReportsAvgReponse(
+    filterData?: Record<string, string | number | undefined>
+  ): Observable<AvgReportChart[]> {
     // Convert filterData to HttpParams
-    let params = new HttpParams();
-    if (filterData) {
-      Object.entries(filterData).forEach(([key, value]) => {
-        if (
-          value !== undefined &&
-          value !== '' &&
-          (typeof value === 'string' || typeof value === 'number')
-        ) {
-          params = params.append(key, value);
-        }
-      });
-    }
+    const cleanedData = Object.fromEntries(
+      Object.entries(filterData || {}).filter(
+        ([, value]) => value !== undefined && value !== '' && value !== null
+      )
+    ) as Record<string, string | number>; // Explicitly cast the result
+
+    const params = new HttpParams({ fromObject: cleanedData });
     // Perform the GET request with the params
-    return this.http.get<any>(`${this.dtUrl}dashboard/reports-avg-response`, {
-      params,
-    });
+    // Perform the GET request with the params
+    return this.http.get<AvgReportChart[]>(
+      `${this.dtUrl}dashboard/reports-avg-response`,
+      {
+        params,
+      }
+    );
   }
 }

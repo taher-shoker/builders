@@ -25,15 +25,13 @@ export class AvgResponseChartComponent implements OnInit {
     color?: string;
   }[] = [];
   filter: {
-    dataFrom: string | null;
-    dataTo: string | null;
+    dateFrom: string | null;
+    dateTo: string | null;
     category: string | null;
-    status: string | null;
   } = {
-    dataFrom: null,
-    dataTo: null,
+    dateFrom: null,
+    dateTo: null,
     category: null,
-    status: null,
   };
   lineChartColors = ['#45006F', '#FF6A39'];
 
@@ -49,11 +47,28 @@ export class AvgResponseChartComponent implements OnInit {
     });
   }
   datePickerChanged(event: { start: Date; end: Date }) {
-    console.log(event);
+    if (event.start && event.end) {
+      this.filter = {
+        ...this.filter,
+        dateFrom: this.convertToDateOnly(event.start),
+        dateTo: this.convertToDateOnly(event.end),
+      };
+      this.getReportsAvgResTime(this.filter);
+    }
   }
-  getReportsAvgResTime() {
-    this._dashboardService.getReportsAvgReponse().subscribe((res) => {
-      this.chartData = res.map((item: any) => ({
+  convertToDateOnly(date: Date | null): string | null {
+    if (!date) return null;
+    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
+  }
+  handleSelect(event: string, controlName: string) {
+    if (controlName === 'category') {
+      this.filter = { ...this.filter, category: event };
+      this.getReportsAvgResTime(this.filter);
+    }
+  }
+  getReportsAvgResTime(filter?: any) {
+    this._dashboardService.getReportsAvgReponse(filter).subscribe((res) => {
+      this.chartData = res.map((item) => ({
         category: this.getMonthName(item.month) + ' ' + item.year,
         value: item.avgResponseTime,
       }));
