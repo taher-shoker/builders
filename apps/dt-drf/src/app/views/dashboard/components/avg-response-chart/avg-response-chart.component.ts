@@ -19,10 +19,27 @@ export class AvgResponseChartComponent implements OnInit {
   ) {}
 
   categories: WritableSignal<Category[]> = signal([]);
+  chartData: {
+    category: string;
+    value: number;
+    color?: string;
+  }[] = [];
+  filter: {
+    dataFrom: string | null;
+    dataTo: string | null;
+    category: string | null;
+    status: string | null;
+  } = {
+    dataFrom: null,
+    dataTo: null,
+    category: null,
+    status: null,
+  };
+  lineChartColors = ['#45006F', '#FF6A39'];
 
   ngOnInit() {
     this.getCategories();
-
+    this.getReportsAvgResTime();
     console.log('fdf');
   }
 
@@ -33,5 +50,30 @@ export class AvgResponseChartComponent implements OnInit {
   }
   datePickerChanged(event: { start: Date; end: Date }) {
     console.log(event);
+  }
+  getReportsAvgResTime() {
+    this._dashboardService.getReportsAvgReponse().subscribe((res) => {
+      this.chartData = res.map((item: any) => ({
+        category: this.getMonthName(item.month) + ' ' + item.year,
+        value: item.avgResponseTime,
+      }));
+    });
+  }
+  getMonthName(month: number): string {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1] || 'Unknown'; // Ensure valid month values
   }
 }

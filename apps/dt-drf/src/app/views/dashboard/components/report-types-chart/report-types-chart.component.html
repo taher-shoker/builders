@@ -19,4 +19,21 @@
       </div>
     </div>
   </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="">
+        @if(chartData && chartData.length !== 0)
+        {
+        <div class="" style="height: 300px;">
+
+          <stc-apps-bar-chart [data]="chartData" [isFinancialStatus]="false" />
+        </div>}
+        @else {
+        <p class="noData">No Data To Display </p>
+        }
+      </div>
+
+
+    </div>
+  </div>
 </div>

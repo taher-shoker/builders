@@ -265,6 +265,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
       this.userService.addUserGroup(data).subscribe(() => {
         const delegateEmail = this.form.get('userDelegates')?.value;
+        console.log(this.form.get('manager')?.value);
         if (delegateEmail) {
           this.updateUserDelegate(delegateEmail);
         }
@@ -301,6 +302,16 @@ export class UserFormComponent implements OnInit, OnChanges {
           }
           // Additional logic can be added here if needed
         });
+    }
+  }
+  updateUserEscalationManger(data: any) {
+    if (this.addGroups) {
+      this.userService.updateUserManager(this.userId, data).subscribe((res) => {
+        if (!res) {
+          return;
+        }
+        // Additional logic can be added here if needed
+      });
     }
   }
 

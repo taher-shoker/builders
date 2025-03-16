@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import {
   Category,
   DashboardService,
+  ReportData,
 } from '../../../../services/dashboard.service';
 import { ReportsService } from '../../../dy-reports/dy-reports.service';
 
@@ -20,10 +21,25 @@ export class ReportTypesChartComponent implements OnInit {
   ) {}
 
   categories: WritableSignal<Category[]> = signal([]);
-
+  chartData: {
+    name: string;
+    value: number;
+    color?: string;
+  }[] = [];
+  filter: {
+    dataFrom: string | null;
+    dataTo: string | null;
+    category: string | null;
+    status: string | null;
+  } = {
+    dataFrom: null,
+    dataTo: null,
+    category: null,
+    status: null,
+  };
   ngOnInit() {
     this.getCategories();
-    console.log('fdf');
+    this.getReportsCategoryChart();
   }
   private getCategories() {
     this.reportsService.getCategories().subscribe((res) => {
@@ -32,5 +48,39 @@ export class ReportTypesChartComponent implements OnInit {
   }
   datePickerChanged(event: { start: Date; end: Date }) {
     console.log(event);
+  }
+  getMonthName(month: number): string {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1] || 'Unknown'; // Ensure valid month values
+  }
+
+  getReportsCategoryChart(filterData?: any) {
+    this._dashboardService.getReportsCategory(filterData).subscribe(
+      (
+        res: {
+          category: string;
+          count: number;
+        }[]
+      ) => {
+        this.chartData = res.map((item) => ({
+          name: item.category,
+          value: item.count,
+          color: '#4F008C', // Assign colors dynamically
+        }));
+      }
+    );
   }
 }

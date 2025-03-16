@@ -28,14 +28,14 @@ export class ReportsChartComponent implements OnInit {
     color?: string;
   }[] = [];
   filter: {
-    dataFrom: string | null;
-    dataTo: string | null;
-    categort: string | null;
+    dateFrom: string | null;
+    dateTo: string | null;
+    category: string | null;
     status: string | null;
   } = {
-    dataFrom: null,
-    dataTo: null,
-    categort: null,
+    dateFrom: null,
+    dateTo: null,
+    category: null,
     status: null,
   };
   ngOnInit() {
@@ -53,8 +53,8 @@ export class ReportsChartComponent implements OnInit {
     if (event.start && event.end) {
       this.filter = {
         ...this.filter,
-        dataFrom: this.convertToDateOnly(event.start),
-        dataTo: this.convertToDateOnly(event.end),
+        dateFrom: this.convertToDateOnly(event.start),
+        dateTo: this.convertToDateOnly(event.end),
       };
       this.getReportsChartData(this.filter);
     }
@@ -64,7 +64,7 @@ export class ReportsChartComponent implements OnInit {
       this.filter = { ...this.filter, status: event };
       this.getReportsChartData(this.filter);
     } else if (controlName === 'category') {
-      this.filter = { ...this.filter, categort: event };
+      this.filter = { ...this.filter, category: event };
       this.getReportsChartData(this.filter);
     }
     console.log(event);

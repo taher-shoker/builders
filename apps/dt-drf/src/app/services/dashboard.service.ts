@@ -59,7 +59,7 @@ export class DashboardService {
     // Filter out undefined values to ensure only string or number remain
     const cleanedData = Object.fromEntries(
       Object.entries(filterData || {}).filter(
-        ([, value]) => value !== undefined && value !== ''
+        ([, value]) => value !== undefined && value !== '' && value !== null
       )
     ) as Record<string, string | number>; // Explicitly cast the result
 
@@ -128,7 +128,7 @@ export class DashboardService {
       });
     }
     // Perform the GET request with the params
-    return this.http.get<any>(`${this.dtUrl}dashboard/reports-per-category`, {
+    return this.http.get<any>(`${this.dtUrl}dashboard/reports-avg-response`, {
       params,
     });
   }

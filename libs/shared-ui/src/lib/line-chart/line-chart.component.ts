@@ -25,7 +25,7 @@ export interface LineChartData {
   selector: 'stc-apps-line-chart',
   templateUrl: './line-chart.component.html',
   styleUrls: ['./line-chart.component.scss'],
-  standalone : false
+  standalone: false,
 })
 export class LineChartComponent
   implements OnInit, OnDestroy, AfterViewInit, OnChanges
@@ -46,6 +46,7 @@ export class LineChartComponent
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['chartData'] && !changes['chartData'].firstChange) {
       this.chartData = changes['chartData'].currentValue;
+      console.log(this.chartData);
       this.lineChart();
     }
   }
@@ -492,8 +493,8 @@ export class LineChartComponent
     });
 
     series.data.setAll(data);
-    series2?.data.setAll(this.targetData);
-    series3?.data.setAll(this.target2Data);
+    series2?.data?.setAll(this.targetData);
+    series3?.data?.setAll(this.target2Data);
 
     series.bullets.push(() => {
       const circle = am5.Circle.new(this.root, {
