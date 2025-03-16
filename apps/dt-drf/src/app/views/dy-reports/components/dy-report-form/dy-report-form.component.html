@@ -2,30 +2,35 @@
   <form [formGroup]="form" (ngSubmit)="onSubmit()">
     <div class="inputs">
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Report Name'" [inputId]="'reportName'"
             (valueKeyDown)="preventComma($event)" [inputName]="'Report Name'"
             formControlName="reportName"></stc-apps-input>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Enter Description'"
             [inputId]="'description'" (valueKeyDown)="preventComma($event)" [inputName]="'Description'"
             formControlName="description"></stc-apps-input>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-3">
           <stc-apps-custom-dropdown formControlName="requestCategoryId" [label]="'Category'" [list]="categories()"
             [searchable]="true" [displayNameProperty]="'name'" [outputProperty]="'id'" [valueProperty]="'id'"
             (itemSelected)="handleGategory($event)"></stc-apps-custom-dropdown>
         </div>
-      </div>
-      <div class="row mt-7 align-items-center">
         <div class="col-md-3">
           <stc-apps-input [className]="'custom-input'" [inputId]="'slaDurationInDays'"
             (valueKeyDown)="preventComma($event)" [inputName]="'SLA Duration In Days'"
             formControlName="slaDurationInDays"></stc-apps-input>
         </div>
+      </div>
+      <div class="row mt-7 align-items-center">
 
-        <div class="col-md-2">
+        <div class="col-md-3 align-self-center">
+          <stc-apps-checkbox [className]="'custom-input'" [name]="'isEscalationEnabled'"
+            formControlName="isEscalationEnabled" [label]="'Escalation Enabled'"
+            (selectChange)="handleCheck($event)"></stc-apps-checkbox>
+        </div>
+        <div class="col-md-3">
           <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
             formControlName="needMoreDataFromCreator" [name]="'needMoreDataFromCreator'"></stc-apps-checkbox>
         </div>
@@ -33,7 +38,7 @@
           <stc-apps-checkbox *ngIf="form.get('needMoreDataFromCreator')?.value" [label]="'Initiator Should Approve'"
             formControlName="initiatorShouldApprove" [name]="'initiatorShouldApprove'"></stc-apps-checkbox>
         </div>
-        <div class="col-md-4" style="height: 110px" *ngIf="form.get('needMoreDataFromCreator')?.value">
+        <div class="col-md-3" style="height: 110px" *ngIf="form.get('needMoreDataFromCreator')?.value">
           <!-- <stc-apps-select-drop-down
             [label]="'Creator Name'"
             (selectChange)="handelCreator($event)"
@@ -51,52 +56,66 @@
             (unselectItem)="handleUnselectedItem($event, 0)"></stc-apps-custom-dropdown>
         </div>
       </div>
+
       <div class="row mt-7 ">
-        <div class="col-md-2 align-self-center">
-          <stc-apps-checkbox [className]="'custom-input'" [name]="'auto Scheduling'" formControlName="autoScheduling"
-            [label]="'auto Scheduling'"></stc-apps-checkbox>
+        <div class="col-md-3 align-self-center">
+          <stc-apps-checkbox [className]="'custom-input'" [name]="'autoScheduling'" formControlName="autoScheduling"
+            [label]="'auto Scheduling'" (selectChange)="handleCheck($event)"></stc-apps-checkbox>
         </div>
         @if(form.get('autoScheduling')?.value){
         <div class="col-md-3">
 
           <stc-apps-select-drop-down formControlName="schedulingType" [label]="'Scheduling Type'"
-            [options]="SchedulingTypes" (selectChange)="handleScheduleType($event)"></stc-apps-select-drop-down>
+            [options]="SchedulingTypes" (selectChange)="handleScheduleType($event)"
+            [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
-        @if(form.get('schedulingType')?.value.id === 'custom'){
-        <div class="col-md-2">
+
+        @if (form.get('schedulingType')?.value) {@if(form.get('schedulingType')?.value === 'CustomDate'){
+        <div class="col-md-3">
           <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
             [inputName]="'Custom Date'" formControlName="customDate">
           </stc-apps-date-picker>
         </div>
         }@else {
-        <div class="col-md-2">
-          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
-            [inputName]="'Start Date' " formControlName="startDate">
-          </stc-apps-date-picker>
+        <div class="col-md-6">
+          <div class="row">
+            <div class="col-md-6">
+              <stc-apps-date-picker [myFilter]="DisableSpecificDays" [className]="'custom-input'"
+                [inputPlaceholder]="''" [inputId]="'activationDate'" [inputName]="'Start Date' "
+                formControlName="startDate" (selectChange)="handelChangeDate($event,'start')">
+              </stc-apps-date-picker>
+            </div>
+            <div class="col-md-6">
+              <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
+                [inputId]="'activationDate'" [inputName]="'End Date'" formControlName="endDate"
+                (selectChange)="handelChangeDate($event,'end')">
+              </stc-apps-date-picker>
+            </div>
+          </div>
         </div>
-        <div class="col-md-2">
-          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
-            [inputName]="'End Date'" formControlName="endDate" (selectChange)="handledateChange($event)">
-          </stc-apps-date-picker>
-        </div>
+
+
         }
-        @if(form.get('schedulingType')?.value.id === 'monthly'){
+        @if(form.get('schedulingType')?.value === 'Monthly'){
         <div class="col-md-3">
-          <stc-apps-select-drop-down formControlName="monthNumber" [label]="'Month Number'"
-            [options]="monthNumbers"></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down formControlName="monthNumber" [label]="'Month Number'" [options]="monthNumbers"
+            [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
 
         }
-        @else if(form.get('schedulingType')?.value.id === 'weekly'){
+        @else if(form.get('schedulingType')?.value === 'Weekly'){
         <div class="col-md-3">
-
-          <stc-apps-select-drop-down formControlName="weeklyDay" [label]="'Week Day'"
-            [options]="weeklyDays"></stc-apps-select-drop-down>
+          <stc-apps-select-drop-down formControlName="weeklyDay" [label]="'Week Day'" [options]="weeklyDays"
+            [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
 
         }
+        }
 
-
+        <div class="col-md-2 align-self-center">
+          <stc-apps-checkbox [className]="'custom-input'" [name]="'isReminderActive'" formControlName="isReminderActive"
+            [label]="'Reminder Enabled'" (selectChange)="handleCheck($event)"></stc-apps-checkbox>
+        </div>
         }
 
         <!-- <div class="col-md-2">

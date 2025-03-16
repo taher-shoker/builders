@@ -45,7 +45,7 @@ import { MatDatepickerInputEvent } from '@angular/material/datepicker';
 })
 export class DyReportFormComponent implements OnInit, OnChanges {
   @Input() isEditing!: boolean;
-  @Input() reportData!: Report;
+  @Input() reportData!: ReportDetails;
   @Input() readOnly!: boolean;
   @ViewChild('fileUpload') fileUpload!: ElementRef;
 
@@ -67,22 +67,16 @@ export class DyReportFormComponent implements OnInit, OnChanges {
   paramsFlowId!: string;
   paramsRequestTaskId!: string;
   availableUsers: WritableSignal<User[]> = signal([]);
+  startDate: Date | null = new Date();
+  endDate!: Date | null;
   SchedulingTypes: { id: string; name: string }[] = [
-    { id: 'monthly', name: 'Monthly' },
-    { id: 'weekly', name: 'Weekly' },
-    { id: 'custom', name: 'custom' },
+    { id: 'Monthly', name: 'Monthly' },
+    { id: 'Weekly', name: 'Weekly' },
+    { id: 'CustomDate', name: 'Custom date' },
   ];
 
   monthNumbers: { id: number; name: string }[] = [];
-  weeklyDays: { id: string; name: string }[] = [
-    { id: 'sunday', name: 'Sunday' },
-    { id: '1', name: 'Monday' },
-    { id: '2', name: 'Tuesday' },
-    { id: '3', name: 'Wednesday' },
-    { id: '4', name: 'Thursday' },
-    { id: '5', name: 'Friday' },
-    { id: '6', name: 'Saturday' },
-  ];
+  weeklyDays: { id: string; name: string }[] = [];
   constructor(
     private _formBuilder: FormBuilder,
     private reportsService: ReportsService,
@@ -100,21 +94,120 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       }
     }
   }
-  generateNumbers() {
-    const monthNums = [];
 
-    for (let n = 1; n <= 31; n++) {
-      monthNums.push({ id: n, name: n.toString() });
+  handleScheduleType(type: string) {
+    this.restDateFields();
+    this.handleValidationWithScheduling(type);
+  }
+  restDateFields() {
+    this.form.get('startDate')?.reset();
+    this.form.get('endDate')?.reset();
+    this.weeklyDays = [];
+    this.monthNumbers = [];
+  }
+
+  FilterEndDate = (d: Date | null): boolean => {
+    if (d === null) return false; // null dates are not allowed
+
+    if (this.startDate) {
+      const previousDays = new Date(this.startDate);
+      const dateWithDays = new Date(d);
+      const day = dateWithDays.getDay();
+      return d >= previousDays && day !== 5 && day !== 6;
     }
-    this.monthNumbers = monthNums;
+
+    return true;
+  };
+  DisableSpecificDays = (d: Date | null): boolean => {
+    if (d === null) return false;
+    const dateWithdays = new Date(d);
+    const day = dateWithdays.getDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
+    return day !== 5 && day !== 6; // Disable Sunday (0) and Saturday (6)
+  };
+  handelChangeDate(event: MatDatepickerInputEvent<Date>, type: string) {
+    if (type === 'start') {
+      this.startDate = null;
+      this.endDate = null;
+      this.startDate = event.value;
+      this.form.get('endDate')?.reset();
+    } else {
+      this.endDate = event.value;
+      if (this.startDate && this.endDate) {
+        if (this.form.get('schedulingType')?.value === 'Monthly') {
+          this.getDaysBetweenDatesArray(this.startDate, this.endDate);
+        } else {
+          this.getUniqueDayNamesBetweenDates(this.startDate, this.endDate);
+        }
+      }
+    }
   }
-  handleScheduleType(type: any) {
-    console.log(type);
+  handleValidationWithScheduling(schedulingType: string) {
+    if (schedulingType === 'Monthly') {
+      this.form.get('monthNumber')?.setValidators([Validators.required]);
+    } else if (schedulingType === 'Weekly') {
+      this.form.get('weeklyDay')?.setValidators([Validators.required]);
+    }
+    this.form.get('monthNumber')?.updateValueAndValidity();
+    this.form.get('weeklyDay')?.updateValueAndValidity();
   }
-  handledateChange(event: MatDatepickerInputEvent<Date>) {
-    console.log(event.value);
-    console.log(this.form.get('startDate')?.value);
+
+  getDaysBetweenDatesArray(startDate: Date, endDate: Date): void {
+    console.log(startDate, endDate);
+    const daySet = new Set<number>();
+    const currentDate = new Date(startDate);
+
+    while (currentDate <= endDate) {
+      const dayNumber = currentDate.getDate();
+      const dayName = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+      });
+
+      // Exclude Friday and Saturday
+      if (dayName !== 'Friday' && dayName !== 'Saturday') {
+        daySet.add(dayNumber);
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Convert Set to array, sort it, and map to desired format
+    this.monthNumbers = Array.from(daySet)
+      .sort((a, b) => a - b)
+      .map((day) => ({ id: day, name: day.toString() }));
+    console.log(this.monthNumbers);
   }
+
+  getUniqueDayNamesBetweenDates(
+    startDate: string | Date,
+    endDate: string | Date
+  ): void {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    const daySet = new Set<string>();
+    const currentDate = new Date(start);
+
+    while (currentDate <= end) {
+      const dayName = currentDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+      });
+
+      // Exclude Friday and Saturday
+      if (dayName !== 'Friday' && dayName !== 'Saturday') {
+        daySet.add(dayName); // Store unique day names
+      }
+
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    // Define the desired order starting from Sunday
+    const weekOrder = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday'];
+
+    // Sort based on predefined order
+    this.weeklyDays = Array.from(daySet)
+      .sort((a, b) => weekOrder.indexOf(a) - weekOrder.indexOf(b))
+      .map((day) => ({ id: day, name: day }));
+  }
+
   ngOnInit(): void {
     // this.initForm();
     // this.loadInitialData();
@@ -124,7 +217,6 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     this.populateCustomSLA();
     this.getCategories();
     this.fetchDataOfReportAndEditIfExists();
-    this.generateNumbers();
   }
 
   private noWhitespaceValidator(control: FormControl) {
@@ -171,6 +263,8 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       autoScheduling: [false],
       schedulingType: [''],
       monthNumber: [''],
+      isEscalationEnabled: [false],
+      isReminderActive: [false],
       weeklyDay: [''],
       startDate: [''],
       endDate: [''],
@@ -211,7 +305,7 @@ export class DyReportFormComponent implements OnInit, OnChanges {
     });
   }
 
-  private resetFormWithValue(data: Report) {
+  private resetFormWithValue(data: ReportDetails) {
     forkJoin([
       this.reportsService.getUsers(),
       this.reportsService.getCategories(),
@@ -224,8 +318,27 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         creatorEmail: data.creatorEmail || '',
         slaDurationInDays: data.reportSlaDuration || 0,
         initiatorShouldApprove: data.initiatorShouldApprove,
+        autoScheduling: data.requestSchedule.autoScheduling,
+        schedulingType: data.requestSchedule.schedulingType,
+        startDate: data.requestSchedule.startDate,
+        endDate: data.requestSchedule.endDate,
+        isEscalationEnabled: data.isEscalationEnabled,
+        isReminderActive: data.requestSchedule.isReminderActive,
       });
-
+      if (data.requestSchedule.autoScheduling) {
+        // this.handelChangeDate(data.requestSchedule.schedulingType);
+        if (data.requestSchedule.schedulingType === 'Monthly') {
+          this.getDaysBetweenDatesArray(
+            data.requestSchedule.startDate,
+            data.requestSchedule.endDate
+          );
+        } else if (data.requestSchedule.schedulingType === 'Weekly') {
+          this.getUniqueDayNamesBetweenDates(
+            data.requestSchedule.startDate,
+            data.requestSchedule.endDate
+          );
+        }
+      }
       this.uploadedFiles.next(data.attachments);
       // this.form.get('description')?.disable();
       this.form.get('requestCategoryId')?.disable();
@@ -257,6 +370,10 @@ export class DyReportFormComponent implements OnInit, OnChanges {
       slaDurationInDays: data.requestCategory.slaDuration || 0,
       attachments: data.attachments.map((attachment) => attachment.id),
       initiatorShouldApprove: data.initiatorShouldApprove,
+      autoScheduling: data.requestSchedule.autoScheduling,
+      schedulingType: data.requestSchedule.schedulingType,
+      startDate: data.requestSchedule.startDate,
+      endDate: data.requestSchedule.endDate,
     });
 
     Object.keys(this.form.controls).forEach((key) => {
@@ -585,6 +702,17 @@ export class DyReportFormComponent implements OnInit, OnChanges {
         .get('customSLA')
         ?.setValidators(value ? Validators.required : null);
       this.form.get('customSLA')?.updateValueAndValidity();
+    } else if (name === 'autoScheduling') {
+      this.form.get('schedulingType')?.reset();
+      this.restDateFields();
+      if (value) {
+        this.form.get('schedulingType')?.setValidators([Validators.required]);
+        this.form.get('startDate')?.setValidators([Validators.required]);
+        this.form.get('endDate')?.setValidators([Validators.required]);
+      }
+      this.form.get('schedulingType')?.updateValueAndValidity();
+      this.form.get('startDate')?.updateValueAndValidity;
+      this.form.get('endDate')?.updateValueAndValidity;
     }
   }
   uploadClick() {

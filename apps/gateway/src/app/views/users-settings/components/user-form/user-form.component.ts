@@ -26,6 +26,7 @@ import {
   Role,
   Team,
   User,
+  UserDelegate,
   UserGroup,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
@@ -45,7 +46,10 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   teams: Team[] = [];
   allUsers: User[] = [];
-  userDelegate: any[] = [];
+  //userDelegate: any[] = [];
+  userDelegate: WritableSignal<any[]> = signal([]);
+
+  escaltionManager: WritableSignal<any[]> = signal([]);
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   selectedDelegates: any;
@@ -86,7 +90,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.showInputs = false;
     }
     this.handleGrouping();
-    this.getusersList();
+    this.getUsersList();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
@@ -123,12 +127,20 @@ export class UserFormComponent implements OnInit, OnChanges {
           : Validators.required,
       ],
       userDelegates: [[]],
+      manager: [{}],
       viewer: [''],
       editor: [''],
       pmo: [''],
     });
   }
 
+  handleUserDelegate(item: any) {
+    console.log(item);
+    this.escaltionManager.update((managers) =>
+      managers.filter((manager) => manager.email !== item.email)
+    );
+    //gfgfgfg
+  }
   // Getter for viewerControl
   get viewerControl(): AbstractControl | null {
     return this.form.get('viewer');
@@ -191,6 +203,9 @@ export class UserFormComponent implements OnInit, OnChanges {
         userDelegates: userDelegates.length
           ? [{ delegateName: userDelegates, systemName: currentSystem }]
           : [],
+        manager: this.form.get('manager')?.value
+          ? { id: this.form.get('manager')?.value }
+          : null,
       };
     } else if (currentSystem === 'DI_Management') {
       dataForm = { userGroups: teams, email, name, jobTitle };
@@ -233,8 +248,6 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (currentSystem === 'Strategic_Dashboard' && teams?.length > 0) {
         data.teams = null;
       }
-      console.log(userGroups);
-
       if (
         currentSystem === 'Dynamic_Report_Flow' ||
         currentSystem === 'ChatBI' ||
@@ -537,13 +550,14 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
   restFormWithValue(data: User) {
-    this.getusersList();
+    this.getUsersList();
     forkJoin([this.userService.getUsers()]).subscribe(() => {
       this.form.patchValue({
         email: data.email,
         name: data.name,
         jobTitle: data.jobTitle,
         userDelegates: this.data?.userDelegates?.[0]?.delegateName,
+        manager: this.data?.manager?.id,
       });
     });
 
@@ -634,21 +648,21 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
     });
   }
-  getusersList() {
+  getUsersList() {
     this.userService.getUsers().subscribe((res) => {
-      if (res) {
-        this.allUsers = res.filter(
-          (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
-        );
+      if (!res) return;
 
-        if (this.isEditing && this.data) {
-          this.userDelegate = this.allUsers.filter(
-            (l) => l.email !== this.data?.email
-          );
-        } else {
-          this.userDelegate = this.allUsers;
-        }
-      }
+      this.allUsers = res.filter(
+        (user) => user.userGroups?.[0]?.roles?.[0]?.roleName !== 'ADMINS'
+      );
+
+      const updatedUsers =
+        this.isEditing && this.data
+          ? this.allUsers.filter((user) => user.email !== this.data.email)
+          : this.allUsers;
+
+      this.userDelegate.set(updatedUsers); // Update the signal
+      this.escaltionManager.set(updatedUsers);
     });
   }
   closeDialog() {

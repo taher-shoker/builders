@@ -21,7 +21,12 @@ interface UserRole {
 //   groupedMenu: GroupedMenu;
 //   environment: string | null;
 // }
-
+export interface UserDelegate {
+  id: number;
+  name: string;
+  email: string;
+  [key: string]: unknown;
+}
 interface DTO {
   passwordEncrypted: boolean;
   username: string;
@@ -59,6 +64,7 @@ export interface User {
   teams?: UserTeam[];
   roles?: string[];
   userDelegates?: UserDelegates[];
+  manager?: { id: number; email: string; name: string; jobTitle: string };
 }
 export interface UserDelegates {
   delegateName: string;
