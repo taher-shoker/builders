@@ -276,11 +276,16 @@ export class UserFormComponent implements OnInit, OnChanges {
         data = { ...data, userGroups: teams, teams: userGroups };
         delete data.teams;
       }
+      console.log(this.form.get('manager')?.value);
+
       this.userService.addUserGroup(data).subscribe(() => {
         const delegateEmail = this.form.get('userDelegates')?.value;
-        console.log(this.form.get('manager')?.value);
         if (delegateEmail) {
           this.updateUserDelegate(delegateEmail);
+        }
+        const escaltionManager = this.form.get('manager')?.value;
+        if (escaltionManager) {
+          this.updateUserEscalationManger({ id: escaltionManager });
         }
         onSuccess('User Group is added successfully');
       }, handleError);

@@ -97,7 +97,6 @@ export class UsersService {
   }
 
   addUserGroup(data?: Partial<UserGroup>): Observable<User> {
-    console.log(data);
     return this.http.patch<User>(`${this.endpoint}/users/groups`, data);
   }
 
