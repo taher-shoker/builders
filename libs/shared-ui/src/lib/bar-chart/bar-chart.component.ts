@@ -30,6 +30,8 @@ export class BarChartComponent
   @Input() data!: BarChartData[];
   @Input() isFinancialStatus = false;
   @Input() showYaxis = false;
+  @Input() maxWidthLabel = 150;
+
   root!: am5.Root;
   math = Math;
   direction: string | null = '';
@@ -144,7 +146,7 @@ export class BarChartComponent
     });
     xRenderer.labels.template.setAll({
       oversizedBehavior: 'truncate',
-      maxWidth: 50,
+      maxWidth: this.maxWidthLabel,
       fill: am5.color(0x000000),
       fontSize: '1em',
       direction: this.direction == 'ar' ? 'rtl' : 'ltr',

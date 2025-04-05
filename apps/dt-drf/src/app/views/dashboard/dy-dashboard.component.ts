@@ -33,14 +33,7 @@ export class DyDashboardComponent implements OnInit {
   }
   getStatisticsData() {
     this._dashboardService.getDashboardStatistics().subscribe((res) => {
-      console.log(res);
       this.statisticData = res;
-    });
-  }
-
-  getReportsCategoryChart() {
-    this._dashboardService.getReportsCategory().subscribe((res) => {
-      console.log(res);
     });
   }
 }
