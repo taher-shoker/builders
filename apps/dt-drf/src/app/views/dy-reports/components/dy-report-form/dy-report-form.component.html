@@ -30,6 +30,7 @@
             formControlName="isEscalationEnabled" [label]="'Escalation Enabled'"
             (selectChange)="handleCheck($event)"></stc-apps-checkbox>
         </div>
+
         <div class="col-md-3">
           <stc-apps-checkbox (selectChange)="handleCheck($event)" [label]="'Assign Creator '"
             formControlName="needMoreDataFromCreator" [name]="'needMoreDataFromCreator'"></stc-apps-checkbox>
@@ -59,11 +60,15 @@
 
       <div class="row mt-7 ">
         <div class="col-md-3 align-self-center">
+          <stc-apps-checkbox [className]="'custom-input'" [name]="'isReminderActive'" formControlName="isReminderActive"
+            [label]="'Reminder Enabled'" (selectChange)="handleCheck($event)"></stc-apps-checkbox>
+        </div>
+        <div class="col-md-3 align-self-center">
           <stc-apps-checkbox [className]="'custom-input'" [name]="'autoScheduling'" formControlName="autoScheduling"
             [label]="'auto Scheduling'" (selectChange)="handleCheck($event)"></stc-apps-checkbox>
         </div>
         @if(form.get('autoScheduling')?.value){
-        <div class="col-md-3">
+        <div class="col-md-6">
 
           <stc-apps-select-drop-down formControlName="schedulingType" [label]="'Scheduling Type'"
             [options]="SchedulingTypes" (selectChange)="handleScheduleType($event)"
@@ -77,45 +82,38 @@
           </stc-apps-date-picker>
         </div>
         }@else {
-        <div class="col-md-6">
-          <div class="row">
-            <div class="col-md-6">
-              <stc-apps-date-picker [myFilter]="DisableSpecificDays" [className]="'custom-input'"
-                [inputPlaceholder]="''" [inputId]="'activationDate'" [inputName]="'Start Date' "
-                formControlName="startDate" (selectChange)="handelChangeDate($event,'start')">
-              </stc-apps-date-picker>
-            </div>
-            <div class="col-md-6">
-              <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
-                [inputId]="'activationDate'" [inputName]="'End Date'" formControlName="endDate"
-                (selectChange)="handelChangeDate($event,'end')">
-              </stc-apps-date-picker>
-            </div>
-          </div>
+
+        <div class="col-md-4">
+          <stc-apps-date-picker [myFilter]="DisableSpecificDays" [className]="'custom-input'" [inputPlaceholder]="''"
+            [inputId]="'activationDate'" [inputName]="'Start Date' " formControlName="startDate"
+            (selectChange)="handelChangeDate($event,'start')">
+          </stc-apps-date-picker>
         </div>
+        <div class="col-md-4">
+          <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
+            [inputId]="'activationDatee'" [inputName]="'End Date'" formControlName="endDate"
+            (selectChange)="handelChangeDate($event,'end')">
+          </stc-apps-date-picker>
+        </div>
+
 
 
         }
         @if(form.get('schedulingType')?.value === 'Monthly'){
-        <div class="col-md-3">
+        <div class="col-md-4">
           <stc-apps-select-drop-down formControlName="monthNumber" [label]="'Month Number'" [options]="monthNumbers"
             [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
 
         }
         @else if(form.get('schedulingType')?.value === 'Weekly'){
-        <div class="col-md-3">
+        <div class="col-md-4">
           <stc-apps-select-drop-down formControlName="weeklyDay" [label]="'Week Day'" [options]="weeklyDays"
             [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
 
         }
         }
-
-        <div class="col-md-2 align-self-center">
-          <stc-apps-checkbox [className]="'custom-input'" [name]="'isReminderActive'" formControlName="isReminderActive"
-            [label]="'Reminder Enabled'" (selectChange)="handleCheck($event)"></stc-apps-checkbox>
-        </div>
         }
 
         <!-- <div class="col-md-2">

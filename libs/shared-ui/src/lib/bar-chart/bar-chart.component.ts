@@ -143,10 +143,13 @@ export class BarChartComponent
       direction: this.direction == 'ar' ? 'rtl' : 'ltr',
     });
     xRenderer.labels.template.setAll({
+      oversizedBehavior: 'truncate',
+      maxWidth: 50,
       fill: am5.color(0x000000),
       fontSize: '1em',
       direction: this.direction == 'ar' ? 'rtl' : 'ltr',
     });
+
     const series = chart.series.push(
       am5xy.ColumnSeries.new(this.root, {
         name: 'value',
@@ -269,9 +272,7 @@ export class BarChartComponent
     );
     // chart.appear(1000, 100);
   }
-  truncateText(text: string) {
-    return text.length > 9 ? text.substring(0, 10) + '...' : text;
-  }
+
   ngOnDestroy(): void {
     this.root.dispose();
     this.langSub.unsubscribe();

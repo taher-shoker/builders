@@ -11,7 +11,6 @@ import {
   DateAdapter,
   MAT_DATE_FORMATS,
   MAT_DATE_LOCALE,
-  provideNativeDateAdapter,
 } from '@angular/material/core';
 import {
   MomentDateAdapter,
@@ -34,7 +33,7 @@ export const APP_DATE_FORMATS = {
 @Component({
   selector: 'stc-apps-date-picker',
   templateUrl: './date-picker.component.html',
-  standalone : false,
+  standalone: false,
   styleUrls: ['./date-picker.component.scss'],
   providers: [
     {

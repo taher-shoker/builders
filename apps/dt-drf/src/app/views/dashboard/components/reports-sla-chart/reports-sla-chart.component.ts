@@ -4,6 +4,7 @@ import { DashboardService } from '../../../../services/dashboard.service';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'stc-apps-reports-sla-chart',
@@ -21,10 +22,13 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
     dateFrom: null,
     dateTo: null,
   };
+  form!: FormGroup;
+
   constructor(
     public router: Router,
     public route: ActivatedRoute,
-    public _dashboardService: DashboardService
+    public _dashboardService: DashboardService,
+    private _formBuilder: FormBuilder
   ) {}
 
   createChart() {
@@ -76,6 +80,10 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
     this.root.dispose();
   }
   ngOnInit() {
+    this.form = this._formBuilder.group({
+      startDate: [''],
+      endDate: [''],
+    });
     this.chartdiv_id = `${Math.random()}_chart_id`;
     this.getReportsSLAChart();
   }
@@ -89,10 +97,19 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
       };
       this.getReportsSLAChart(this.filter);
     }
+    console.log('this.filter');
   }
   convertToDateOnly(date: Date | null): string | null {
     if (!date) return null;
     return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
+  }
+  reset() {
+    this.filter = { dateFrom: null, dateTo: null };
+    this.form.reset();
+    this.getReportsSLAChart(this.filter);
+  }
+  hasNonNullValue(obj: Record<string, any>): boolean {
+    return Object.values(obj).some((value) => value !== null);
   }
   getReportsSLAChart(filterData?: any) {
     this._dashboardService.getReportsSLA(filterData).subscribe((res) => {

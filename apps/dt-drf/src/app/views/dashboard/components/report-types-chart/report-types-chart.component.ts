@@ -1,11 +1,11 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import { Component, Input, OnInit, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Category,
   DashboardService,
-  ReportData,
 } from '../../../../services/dashboard.service';
 import { ReportsService } from '../../../dy-reports/dy-reports.service';
+import { FormBuilder, FormGroup } from '@angular/forms';
 
 @Component({
   selector: 'stc-apps-report-types-chart',
@@ -13,14 +13,15 @@ import { ReportsService } from '../../../dy-reports/dy-reports.service';
   styleUrls: ['./report-types-chart.component.scss'],
 })
 export class ReportTypesChartComponent implements OnInit {
+  @Input({ required: true }) categories!: WritableSignal<Category[]>;
+
   constructor(
     public router: Router,
     public route: ActivatedRoute,
     public _dashboardService: DashboardService,
-    private reportsService: ReportsService
+    private _formBuilder: FormBuilder
   ) {}
 
-  categories: WritableSignal<Category[]> = signal([]);
   chartData: {
     name: string;
     value: number;
@@ -35,15 +36,17 @@ export class ReportTypesChartComponent implements OnInit {
     dateTo: null,
     category: null,
   };
+  form!: FormGroup;
+
   ngOnInit() {
-    this.getCategories();
+    this.form = this._formBuilder.group({
+      startDate: [''],
+      endDate: [''],
+      category: [''],
+    });
     this.getReportsCategoryChart();
   }
-  private getCategories() {
-    this.reportsService.getCategories().subscribe((res) => {
-      this.categories.set(res);
-    });
-  }
+
   datePickerChanged(event: { start: Date; end: Date }) {
     if (event.start && event.end) {
       this.filter = {
@@ -80,6 +83,14 @@ export class ReportTypesChartComponent implements OnInit {
       this.filter = { ...this.filter, category: event };
       this.getReportsCategoryChart(this.filter);
     }
+  }
+  reset() {
+    this.filter = { category: null, dateFrom: null, dateTo: null };
+    this.form.reset();
+    this.getReportsCategoryChart(this.filter);
+  }
+  hasNonNullValue(obj: Record<string, any>): boolean {
+    return Object.values(obj).some((value) => value !== null);
   }
   getReportsCategoryChart(filterData?: any) {
     this._dashboardService.getReportsCategory(filterData).subscribe((res) => {

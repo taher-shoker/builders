@@ -1,12 +1,18 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Category,
   DashboardService,
   ReportData,
 } from '../../../../services/dashboard.service';
-import { ReportsService } from '../../../dy-reports/dy-reports.service';
 import { AuthService } from '../../../../services/auth.service';
+import { FormGroup, FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'stc-apps-reports-chart',
@@ -14,14 +20,16 @@ import { AuthService } from '../../../../services/auth.service';
   styleUrls: ['./reports-chart.component.scss'],
 })
 export class ReportsChartComponent implements OnInit {
+  @Input({ required: true }) categories!: WritableSignal<Category[]>;
+  form!: FormGroup;
+
   constructor(
     public router: Router,
     public route: ActivatedRoute,
     public _dashboardService: DashboardService,
-    private reportsService: ReportsService,
-    public authService: AuthService
+    public authService: AuthService,
+    private _formBuilder: FormBuilder
   ) {}
-  categories: WritableSignal<Category[]> = signal([]);
   chartData: {
     name: string;
     value: number;
@@ -39,13 +47,13 @@ export class ReportsChartComponent implements OnInit {
     status: null,
   };
   ngOnInit() {
-    this.getCategories();
-    this.getReportsChartData();
-  }
-  private getCategories() {
-    this.reportsService.getCategories().subscribe((res) => {
-      this.categories.set(res);
+    this.form = this._formBuilder.group({
+      startDate: [''],
+      endDate: [''],
+      category: [''],
+      status: [''],
     });
+    this.getReportsChartData();
   }
   datePickerChanged(event: { start: Date; end: Date }) {
     if (event.start && event.end) {
@@ -99,5 +107,19 @@ export class ReportsChartComponent implements OnInit {
       'December',
     ];
     return months[month - 1] || 'Unknown'; // Ensure valid month values
+  }
+
+  reset() {
+    this.filter = {
+      status: null,
+      category: null,
+      dateFrom: null,
+      dateTo: null,
+    };
+    this.form.reset();
+    this.getReportsChartData(this.filter);
+  }
+  hasNonNullValue(obj: Record<string, any>): boolean {
+    return Object.values(obj).some((value) => value !== null);
   }
 }

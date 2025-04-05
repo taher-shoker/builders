@@ -50,13 +50,16 @@
             <ng-template #actionsCustomTemplate let-header="header" let-item="item">
               @for(action of header?.actions; track action; let i = $index){
 
-              @if(action
-              === 'edit' && item?.initiatorEmail === reportsService.getCurrentUser().email && item?.isDeletable ){
+              @if (action === 'edit' &&
+              ((item?.initiatorEmail === reportsService.getCurrentUser().email && item?.isDeletable) ||
+              reportsService.checkIsProcessAdmin())) {
               <div class="edit-option action-option" (click)="handelEditReport(item.id)">
                 <i class="ri-edit-box-line edit-icon"></i>
                 Edit
               </div>
               }
+
+
               @else if (action === 'delete' && (item?.initiatorEmail === reportsService.getCurrentUser().email ||
               this.reportsService.checkIsProcessAdmin()) &&
               item?.isDeletable ) {

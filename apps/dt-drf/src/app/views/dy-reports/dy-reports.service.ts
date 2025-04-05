@@ -136,6 +136,7 @@ export interface ReportDetails {
   initiatorShouldApprove: number;
   requestSchedule: RequestSchedule;
   isEscalationEnabled: boolean;
+  isReminderEnabled: boolean;
 }
 
 export interface RequestSchedule {
@@ -283,6 +284,7 @@ export class ReportsService {
   }
 
   createReportFlow(data: any) {
+    console.log(data);
     return this.http.post(`${this.dtUrl}requests`, data);
   }
 
@@ -389,11 +391,8 @@ export class ReportsService {
     return this.http.get(`${this.dtUrl}/${id}`);
   }
 
-  updateReportFlow(id: number, reportName: string, description: string) {
-    return this.http.patch(`${this.dtUrl}requests/${id}`, {
-      reportName,
-      description,
-    });
+  updateReportFlow(id: number, data: any) {
+    return this.http.patch(`${this.dtUrl}reqhuests/${id}`, data);
   }
 
   deleteReport(id: number) {
@@ -484,7 +483,7 @@ export class ReportsService {
     body: RequestTaskAttributes
   ) {
     return this.http.post(
-      `${this.ticketUrl}${requestId}/${requestTaskId}`,
+      `${this.ticketUrl}${requestId}/${requestTaskId}j`,
       body
     );
   }

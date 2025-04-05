@@ -1,29 +1,38 @@
-import { Component, OnInit, signal, WritableSignal } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnDestroy,
+  OnInit,
+  WritableSignal,
+} from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from '../../../../services/dashboard.service';
-import {
-  Category,
-  ReportsService,
-} from '../../../dy-reports/dy-reports.service';
+import { Category } from '../../../dy-reports/dy-reports.service';
+import * as am5 from '@amcharts/amcharts5';
+import * as am5xy from '@amcharts/amcharts5/xy';
+
+import { FormBuilder, FormGroup } from '@angular/forms';
 @Component({
   selector: 'stc-apps-avg-response-chart',
   templateUrl: './avg-response-chart.component.html',
   styleUrls: ['./avg-response-chart.component.scss'],
 })
-export class AvgResponseChartComponent implements OnInit {
+export class AvgResponseChartComponent implements OnInit, OnDestroy {
+  @Input({ required: true }) categories!: WritableSignal<Category[]>;
+
   constructor(
     public router: Router,
     public route: ActivatedRoute,
     public _dashboardService: DashboardService,
-    private reportsService: ReportsService
+    private _formBuilder: FormBuilder
   ) {}
 
-  categories: WritableSignal<Category[]> = signal([]);
-  chartData: {
-    category: string;
-    value: number;
-    color?: string;
-  }[] = [];
+  private root!: am5.Root;
+  private chart!: am5xy.XYChart;
+  private xAxis!: am5xy.DateAxis<am5xy.AxisRendererX>;
+  private yAxis!: am5xy.ValueAxis<am5xy.AxisRendererY>;
+  chartdi_id = '';
+  chartData: { date: number; value: number }[] = [];
   filter: {
     dateFrom: string | null;
     dateTo: string | null;
@@ -33,18 +42,92 @@ export class AvgResponseChartComponent implements OnInit {
     dateTo: null,
     category: null,
   };
-  lineChartColors = ['#45006F', '#FF6A39'];
-
+  form!: FormGroup;
   ngOnInit() {
-    this.getCategories();
+    this.form = this._formBuilder.group({
+      category: [''],
+      startDate: [''],
+      endDate: [''],
+    });
+    this.chartdi_id = `${Math.random()}_chartId`;
     this.getReportsAvgResTime();
-    console.log('fdf');
   }
 
-  private getCategories() {
-    this.reportsService.getCategories().subscribe((res) => {
-      this.categories.set(res);
-    });
+  initChart(): void {
+    this.maybeDisposeRoot(this.chartdi_id);
+    this.root = am5.Root.new(this.chartdi_id);
+    this.chart = this.root.container.children.push(
+      am5xy.XYChart.new(this.root, {
+        panX: true,
+        panY: true,
+      })
+    );
+
+    // Create X & Y axes
+    this.xAxis = this.chart.xAxes.push(
+      am5xy.DateAxis.new(this.root, {
+        maxDeviation: 0.2,
+        baseInterval: { timeUnit: 'day', count: 1 },
+        renderer: am5xy.AxisRendererX.new(this.root, {}),
+      })
+    );
+
+    this.yAxis = this.chart.yAxes.push(
+      am5xy.ValueAxis.new(this.root, {
+        renderer: am5xy.AxisRendererY.new(this.root, {}),
+      })
+    );
+
+    if (this.root._logo) {
+      this.root._logo.dispose();
+    }
+    // Add cursor
+    this.chart.set(
+      'cursor',
+      am5xy.XYCursor.new(this.root, {
+        xAxis: this.xAxis,
+      })
+    );
+
+    // Add tooltips to axes
+    this.xAxis.set(
+      'tooltip',
+      am5.Tooltip.new(this.root, { themeTags: ['axis'] })
+    );
+    this.yAxis.set(
+      'tooltip',
+      am5.Tooltip.new(this.root, { themeTags: ['axis'] })
+    );
+    const series = this.chart.series.push(
+      am5xy.LineSeries.new(this.root, {
+        xAxis: this.xAxis,
+        yAxis: this.yAxis,
+        valueYField: 'value',
+        valueXField: 'date',
+        tooltip: am5.Tooltip.new(this.root, {}),
+        maskBullets: false,
+        stroke: am5.color('#4f008c'),
+      })
+    );
+
+    // Add bullets (circle markers)
+    series.bullets.push(() =>
+      am5.Bullet.new(this.root, {
+        sprite: am5.Circle.new(this.root, {
+          radius: 5,
+          fill: am5.color('#ff6a39'),
+        }),
+      })
+    );
+
+    series.strokes.template.set('strokeWidth', 2);
+
+    series
+      ?.get('tooltip')
+      ?.label.set('text', 'Average response time: {valueY} Day');
+
+    series.data.setAll(this.chartData);
+    series.appear(1000, 100);
   }
   datePickerChanged(event: { start: Date; end: Date }) {
     if (event.start && event.end) {
@@ -69,26 +152,36 @@ export class AvgResponseChartComponent implements OnInit {
   getReportsAvgResTime(filter?: any) {
     this._dashboardService.getReportsAvgReponse(filter).subscribe((res) => {
       this.chartData = res.map((item) => ({
-        category: this.getMonthName(item.month) + ' ' + item.year,
+        date: new Date(item.year, 0, item.month).getTime(),
         value: item.avgResponseTime,
       }));
+
+      if (this.chartData.length > 0) {
+        this.initChart();
+      } else {
+        this.maybeDisposeRoot(this.chartdi_id);
+      }
     });
   }
-  getMonthName(month: number): string {
-    const months = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
-    return months[month - 1] || 'Unknown'; // Ensure valid month values
+
+  maybeDisposeRoot(divId: string) {
+    am5.array.each(am5.registry.rootElements, function (root: any) {
+      if (root?.dom.id == divId) {
+        root.dispose();
+      }
+    });
+  }
+  reset() {
+    this.filter = { category: null, dateFrom: null, dateTo: null };
+    this.form.reset();
+    this.getReportsAvgResTime(this.filter);
+  }
+  hasNonNullValue(obj: Record<string, any>): boolean {
+    return Object.values(obj).some((value) => value !== null);
+  }
+  ngOnDestroy() {
+    if (this.root) {
+      this.root.dispose();
+    }
   }
 }

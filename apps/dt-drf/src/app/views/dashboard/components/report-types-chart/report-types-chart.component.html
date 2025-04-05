@@ -1,19 +1,27 @@
 <div class="white-box">
   <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-12">
       <h3>Report Types Distribution Category
       </h3>
     </div>
-    <div class="col-md-8">
-      <div class="row">
-        <div class="col-md-5">
-          <stc-apps-select-drop-down [label]="''" [matLabel]="'Category'" [options]="categories()"
-            (selectChange)="handleSelect($event,'category')" [outputValue]="'name'"></stc-apps-select-drop-down>
+    <div class="col-md-12">
+      <div class="row" [formGroup]="form">
+        <div class="col-md-2">
+          @if( hasNonNullValue(this.filter)){
+          <stc-apps-button [buttonText]="'Clear'" [buttonType]="'warn'" (btnClick)="reset()"></stc-apps-button>
+          }
+
+        </div>
+        <div class="col-md-4">
+          <stc-apps-select-drop-down formControlName="category" [label]="''" [matLabel]="'Category'"
+            [options]="categories()" (selectChange)="handleSelect($event,'category')"
+            [outputValue]="'name'"></stc-apps-select-drop-down>
         </div>
 
-        <div class="col-md-7">
+        <div class="col-md-6">
           <stc-apps-date-picker-range [disableInput]="true" [disableFilterFlag]="true"
-            (datePickerChangeEvent)="datePickerChanged($event)">
+            (datePickerChangeEvent)="datePickerChanged($event)" [startDate]="form.get('startDate')?.value"
+            [endDate]="form.get('endDate')?.value">
           </stc-apps-date-picker-range>
         </div>
       </div>
