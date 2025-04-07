@@ -134,13 +134,11 @@ export class UserFormComponent implements OnInit, OnChanges {
     });
   }
 
-  handleUserDelegate(item: any) {
-    console.log(item);
-    this.escaltionManager.update((managers) =>
-      managers.filter((manager) => manager.email !== item.email)
-    );
-    //gfgfgfg
-  }
+  // handleUserDelegate(item: any) {
+  //   this.escaltionManager.update((managers) =>
+  //     managers.filter((manager) => manager.email !== item.email)
+  //   );
+  // }
   // Getter for viewerControl
   get viewerControl(): AbstractControl | null {
     return this.form.get('viewer');

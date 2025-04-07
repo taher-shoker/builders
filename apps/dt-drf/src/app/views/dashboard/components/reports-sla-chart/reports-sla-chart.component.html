@@ -22,8 +22,10 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div [id]="chartdiv_id" style="width: 85%; height: 335px;"></div>
-
+      <div [id]="chartdiv_id" [ngStyle]="{'width': '85%', 'height': chartData.length === 0 ? 'auto' : '340px'}"></div>
+      @if(chartData.length ===0) {
+      <p class="noData" style="height: 326px;">No Data To Display </p>
+      }
     </div>
   </div>
 </div>

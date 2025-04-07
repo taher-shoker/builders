@@ -392,7 +392,7 @@ export class ReportsService {
   }
 
   updateReportFlow(id: number, data: any) {
-    return this.http.patch(`${this.dtUrl}reqhuests/${id}`, data);
+    return this.http.patch(`${this.dtUrl}requests/${id}`, data);
   }
 
   deleteReport(id: number) {
@@ -483,7 +483,7 @@ export class ReportsService {
     body: RequestTaskAttributes
   ) {
     return this.http.post(
-      `${this.ticketUrl}${requestId}/${requestTaskId}j`,
+      `${this.ticketUrl}${requestId}/${requestTaskId}`,
       body
     );
   }
