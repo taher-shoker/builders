@@ -11,6 +11,7 @@
       (export)="downloadTemplate()"
       [showActivityLogsButton]="true"
       (showActivityLogs)="showActivityLogs()"
+      fontFamily="STCForwardFont"
     />
     }
     <p class="strategy-program-section-details-title">
@@ -86,7 +87,7 @@
               (popupClosed)="popupClosed()"
               [isProjectActionPopup]="false"
               [isActionPopup]="true"
-              type = "cad"
+              type="cad"
             />
             <!-- <stc-apps-menu-popup 
                       [menuItems]="menuItems"
@@ -100,15 +101,15 @@
           <div class="row">
             @for (project of kpi.projects; track project.project) {
             <div class="col-lg-4 col-md-6 col-sm-12">
-              <div style = "background-color:#fff;border-radius:10px;">
-                <stc-apps-project-card 
-                [projectData]="project" 
-                [activityLogsTableHeader]="projectActivityLogsTableHeader"
-                [activityLogsTableBody]="projectActivityLogsTableBody()"
-                [isAdmin]="isAdmin"
-                (openPanel)="openPanel()"
-                (showLogsBtnClick)="showProjectLogs($event , kpi)"
-              />
+              <div style="background-color: #fff; border-radius: 10px">
+                <stc-apps-project-card
+                  [projectData]="project"
+                  [activityLogsTableHeader]="projectActivityLogsTableHeader"
+                  [activityLogsTableBody]="projectActivityLogsTableBody()"
+                  [isAdmin]="isAdmin"
+                  (openPanel)="openPanel()"
+                  (showLogsBtnClick)="showProjectLogs($event, kpi)"
+                />
               </div>
               <!-- (delete)="deleteProject($event , kpi.projects , kpi)" -->
               <!-- (edit)="editProject($event , kpi , project)" -->
@@ -135,7 +136,7 @@
   [activityLogsTableBody]="activityLogsTableBody()"
   [showPopup]="showActivityLogsPopup2"
   (popupClosed)="popupClosed2()"
-  type = "cad"
+  type="cad"
 />
 <!-- <p-dialog
   [modal]="true"

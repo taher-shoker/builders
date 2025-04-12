@@ -17,7 +17,6 @@ import {
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { PSRService } from '../../../../services/psr.service';
 import { CalendarModule } from 'primeng/calendar';
-import { FormInputComponent } from '../form-input/form-input.component';
 import {
   AddProgramModel,
   AddProjectModel,
@@ -35,7 +34,6 @@ import {
     ReactiveFormsModule,
     DropdownModule,
     CalendarModule,
-    FormInputComponent,
   ],
   templateUrl: './add-psr-project-form.component.html',
   styleUrl: './add-psr-project-form.component.scss',
@@ -276,20 +274,19 @@ export class AddPsrProjectFormComponent implements OnInit {
   addNewProgramForm() {
     this.programsList.push(this.createProjectFormGroup());
   }
-  formatDate(date: Date , reverse = false): string {
+  formatDate(date: Date, reverse = false): string {
     const startDate = new Date(date);
     const startMonth = startDate.getMonth() + 1;
     const startDay = startDate.getDate();
     const startYear = startDate.getFullYear();
-    if(!reverse)
-    {
+    if (!reverse) {
       return `${startYear}-${startMonth < 10 ? '0' + startMonth : startMonth}-${
         startDay < 10 ? '0' + startDay : startDay
       }`;
     } else {
-      return `${
-        startDay < 10 ? '0' + startDay : startDay
-      }/${startMonth < 10 ? '0' + startMonth : startMonth}/${startYear}`;
+      return `${startDay < 10 ? '0' + startDay : startDay}/${
+        startMonth < 10 ? '0' + startMonth : startMonth
+      }/${startYear}`;
     }
   }
   addedProjects: AddProjectModel[] = [];
@@ -321,16 +318,18 @@ export class AddPsrProjectFormComponent implements OnInit {
             });
           });
           // console.log("addedProjects => " , this.addedProjects);
-          this.psrService.addNewProject(this.addedProjects , this.sectorName).subscribe({
-            next: () => {
-              this.confirmationService.confirm({
-                key: 'added-sector-success',
-              });
-            },
-          });
+          this.psrService
+            .addNewProject(this.addedProjects, this.sectorName)
+            .subscribe({
+              next: () => {
+                this.confirmationService.confirm({
+                  key: 'added-sector-success',
+                });
+              },
+            });
         } else {
-          const newArr:AddProgramModel[] = [];
-          this.programsList.value.forEach((d:ProgramModel) => {
+          const newArr: AddProgramModel[] = [];
+          this.programsList.value.forEach((d: ProgramModel) => {
             newArr.push({
               sector: d.sector,
               details: d.details,
@@ -338,12 +337,12 @@ export class AddPsrProjectFormComponent implements OnInit {
             });
           });
           this.psrService.addNewProgram(newArr).subscribe({
-            next : () => {
+            next: () => {
               this.confirmationService.confirm({
-                key: 'added-sector-success'
+                key: 'added-sector-success',
               });
-            }
-          })
+            },
+          });
         }
       }
     }
@@ -353,9 +352,10 @@ export class AddPsrProjectFormComponent implements OnInit {
       next: (res: PSRDataModel) => {
         this.programsList.controls[0].get('sector')?.setValue(res.sector);
         this.programsList.controls[0].get('details')?.setValue(res.details);
-        if(res.plannedDate)
-        {
-          this.programsList.controls[0].get('plannedDate')?.setValue(new Date(res.plannedDate));
+        if (res.plannedDate) {
+          this.programsList.controls[0]
+            .get('plannedDate')
+            ?.setValue(new Date(res.plannedDate));
         }
       },
     });
@@ -406,13 +406,15 @@ export class AddPsrProjectFormComponent implements OnInit {
       // console.log(updatedObj);
       // console.log(addedProjects);
 
-      this.psrService.updateProject(+this.projectId, addedProjects , this.sectorName).subscribe({
-        next: () => {
-          this.confirmationService.confirm({
-            key: 'edit-sector-success',
-          });
-        },
-      });
+      this.psrService
+        .updateProject(+this.projectId, addedProjects, this.sectorName)
+        .subscribe({
+          next: () => {
+            this.confirmationService.confirm({
+              key: 'edit-sector-success',
+            });
+          },
+        });
     }
     this.close();
   }

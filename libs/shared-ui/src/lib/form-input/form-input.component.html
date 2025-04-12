@@ -1,0 +1,71 @@
+<div class="position-relative">
+  @if(labelName) {
+  <label [for]="id" [ngStyle]="{ 'font-family': fontFamily() }">{{
+    labelName
+  }}</label>
+  } @if(inputType === 'text') {
+  <input
+    [type]="type"
+    [ngStyle]="{ 'font-family': fontFamily() }"
+    [id]="id"
+    [placeholder]="placeholder"
+    (input)="onInputChange($event)"
+    (blur)="onTouched()"
+    [class.invalid-input]="errorMessage"
+    [value]="inputValue"
+    (keydown)="type === 'number' ? preventInvalidInput($event) : null"
+  />
+  } @else if(inputType === 'textarea') {
+  <textarea
+    [id]="id"
+    [ngStyle]="{ 'font-family': fontFamily() }"
+    [placeholder]="placeholder"
+    rows="4"
+    [class.invalid-input]="errorMessage"
+    (input)="onInputChange($event)"
+    (blur)="onTouched()"
+    [value]="inputValue"
+  ></textarea>
+  } @else if(inputType === 'dropdown') {
+  <p-dropdown
+    [id]="id"
+    [options]="dropdownOptions"
+    [ngStyle]="{ 'font-family': fontFamily() }"
+    optionLabel="name"
+    optionValue="name"
+    [placeholder]="placeholder || ''"
+    class="indicator-dropdown"
+    [class.invalid-dropdown]="errorMessage"
+    (onChange)="onInputChange($event)"
+    (onBlur)="onTouched()"
+    [(ngModel)]="inputValue"
+  />
+  } @if(inputType === 'date') {
+  <p-calendar
+    [inputId]="id"
+    [ngStyle]="{ 'font-family': fontFamily() }"
+    [showIcon]="false"
+    class="startDate-calendar"
+    [placeholder]="placeholder || ''"
+    [class.invalid-date]="
+      errorMessage || isBeforeStartDate2 || isBeforeStartDate
+    "
+    dateFormat="dd/mm/yy"
+    [showButtonBar]="false"
+    (onSelect)="changeStartDate($event); onInputChange($event)"
+    (onBlur)="onTouched()"
+    [(ngModel)]="inputValue"
+    [iconDisplay]="'input'"
+    [showIcon]="showIcon"
+  />
+  }
+</div>
+<small
+  *ngIf="errorMessage"
+  class="error-msg"
+  [ngStyle]="{
+    bottom: inputType === 'textarea' ? '-17px' : '-25px',
+    'font-family': fontFamily()
+  }"
+  >{{ errorMessage }}</small
+>

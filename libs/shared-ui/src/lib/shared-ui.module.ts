@@ -99,6 +99,9 @@ import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.compo
 import { DropdownModule } from 'primeng/dropdown';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { UtilitiesService } from './services/utilities.service';
+import { ProgressChartComponent } from './progress-chart/progress-chart.component';
+import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component';
+import { FormInputComponent } from './form-input/form-input.component';
 
 const components = [
   ButtonComponent,
@@ -160,6 +163,9 @@ const components = [
   SplitButtonComponent,
   InputGroupComponent,
   FilterDropdownComponent,
+  ProgressChartComponent,
+  EditModeViewComponent,
+  FormInputComponent,
 ];
 
 @NgModule({
