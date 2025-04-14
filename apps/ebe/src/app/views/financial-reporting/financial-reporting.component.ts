@@ -7,9 +7,8 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { SharedUiModule, SharedService } from '@stc-apps/shared-ui';
-import { FileModel } from '../../models/scorecard.model';
+import { FileModel, UserModel } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { FinancialReportingService } from '../../services/financial-reporting.service';
 import { Observable, Subject, takeUntil } from 'rxjs';
@@ -33,7 +32,6 @@ import { ColumnsSchema } from '../../models/table';
   standalone: true,
   imports: [
     CommonModule,
-    PageHeaderComponent,
     SharedUiModule,
     OverlayPanelModule,
     MobileViewHeaderComponent,
@@ -111,21 +109,13 @@ export class FinancialReportingComponent implements OnInit, OnDestroy {
     this.endSubs$.complete();
   }
   constructor(private datePipe: DatePipe) {}
-  // myObservable$ = new Observable(observer => {
-  //   observer.next(1);
-  //   observer.next(2);
-  //   observer.next(3);
-  // }).subscribe({
-  //   next : (res) => {
-  //     console.log(res);
-  //   }
-  // });
-  // myPromise = new Promise((resolve , reject) => {
-  //   resolve(1);
-  //   resolve(2);
-  //   resolve(3);
-  // }).then(res => console.log(res))
+  userData!: UserModel;
   ngOnInit() {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.isMobile.set(this.deviceService.isMobile());
     this.scorecardService.toggleSwitchBtn.subscribe({
       next: (res) => {

@@ -1,7 +1,12 @@
 @if(!isMobile()) {
 <section class="financial-reporting">
   <div class="financial-reporting-header">
-    <stc-apps-page-header mainTitle="" secondaryTitle="" />
+    <stc-apps-page-header
+      mainTitle=""
+      secondaryTitle=""
+      [username]="userData ? userData.name : ''"
+      [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+    />
   </div>
   <div class="financial-reporting-body">
     @if(currentMode === 'editMode') {

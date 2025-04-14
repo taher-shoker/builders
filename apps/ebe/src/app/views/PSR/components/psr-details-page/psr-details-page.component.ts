@@ -7,7 +7,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.service';
 import {
@@ -18,7 +17,11 @@ import { ProjectDetailsCardComponent } from '../project-details-card/project-det
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { FileModel, UserGroup } from '../../../../models/scorecard.model';
+import {
+  FileModel,
+  UserGroup,
+  UserModel,
+} from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 import { MenuPopupComponent } from '../../../../components/menu-popup/menu-popup.component';
 import {
@@ -35,7 +38,6 @@ import { MobileProjectCardComponent } from '../mobile-project-card/mobile-projec
   standalone: true,
   imports: [
     CommonModule,
-    PageHeaderComponent,
     SharedUiModule,
     ProjectDetailsCardComponent,
     MenuPopupComponent,
@@ -69,6 +71,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   activityLogService = inject(ActivityLogService);
   isMobile = signal<boolean>(false);
   deviceService = inject(DeviceService);
+  userData!: UserModel;
   menuItems = [
     {
       label: 'activity log',
@@ -129,6 +132,11 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   groupName2 = '';
   isPMO = false;
   ngOnInit(): void {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.isMobile.set(this.deviceService.isMobile());
     this.scorecardService.toggleSwitchBtn.subscribe({
       next: (res) => {

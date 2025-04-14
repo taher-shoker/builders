@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { DropdownModule } from 'primeng/dropdown';
 import { CommonModule, Location } from '@angular/common';
-import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ConfirmationService } from 'primeng/api';
 import {
@@ -24,12 +23,13 @@ import {
   PSRDataModel,
   PSRProjectDetailsModel,
 } from '../../../../models/psr.model';
+import { UserModel } from '../../../../models/scorecard.model';
+import { ScorecardService } from '../../../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
   imports: [
     CommonModule,
-    PageHeaderComponent,
     SharedUiModule,
     ReactiveFormsModule,
     DropdownModule,
@@ -53,7 +53,14 @@ export class AddPsrProjectFormComponent implements OnInit {
   programId = 0;
   gdName = '';
   projectId = '';
+  userData!: UserModel;
+  scorecardService = inject(ScorecardService);
   ngOnInit(): void {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     if (
       this.router.url.startsWith('/psr/add-program') ||
       this.router.url.startsWith('/psr/edit-program')

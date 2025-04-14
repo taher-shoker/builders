@@ -102,6 +102,7 @@ import { UtilitiesService } from './services/utilities.service';
 import { ProgressChartComponent } from './progress-chart/progress-chart.component';
 import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component';
 import { FormInputComponent } from './form-input/form-input.component';
+import { PageHeaderComponent } from './pageHeader/page-header.component';
 
 const components = [
   ButtonComponent,
@@ -166,6 +167,7 @@ const components = [
   ProgressChartComponent,
   EditModeViewComponent,
   FormInputComponent,
+  PageHeaderComponent,
 ];
 
 @NgModule({

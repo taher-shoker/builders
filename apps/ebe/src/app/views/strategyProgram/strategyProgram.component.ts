@@ -1,13 +1,12 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { StrategyProgramService } from '../../services/strategy-program.service';
 import { StrategyProgramModel } from '../../models/strategy-program.model';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { StrategyKpiCardComponent } from './components/strategy-kpi-card/strategy-kpi-card.component';
 import { ScorecardService } from '../../services/scorecard.service';
 // import { EditModeViewComponent } from '../scorecard/components/edit-mode-view/edit-mode-view.component';
-import { FileModel } from '../../models/scorecard.model';
+import { FileModel, UserModel } from '../../models/scorecard.model';
 import { Subject, takeUntil } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { OverlayPanelModule } from 'primeng/overlaypanel';
@@ -21,7 +20,6 @@ import { ColumnsSchema } from '../../models/table';
   standalone: true,
   imports: [
     CommonModule,
-    PageHeaderComponent,
     SharedUiModule,
     StrategyKpiCardComponent,
     // EditModeViewComponent,
@@ -41,7 +39,13 @@ export class StrategyProgramComponent implements OnInit, OnDestroy {
   toastr = inject(ToastrService);
   constructor(private datePipe: DatePipe) {}
   activityLogServices = inject(ActivityLogService);
+  userData!: UserModel;
   ngOnInit() {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.scorecardService.toggleSwitchBtn.subscribe({
       next: (res) => {
         this.showActivityLogsPopup = false;

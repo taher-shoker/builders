@@ -8,7 +8,6 @@ import {
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
 import { AccordionModule } from 'primeng/accordion';
 import { StrategyProgramService } from '../../../../services/strategy-program.service';
@@ -16,7 +15,11 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ButtonModule } from 'primeng/button';
 import { ConfirmationService } from 'primeng/api';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { FileModel, UserGroup } from '../../../../models/scorecard.model';
+import {
+  FileModel,
+  UserGroup,
+  UserModel,
+} from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
 import { Subject, takeUntil } from 'rxjs';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
@@ -39,7 +42,6 @@ export interface KpiProjectsDetailsModel {
   standalone: true,
   imports: [
     CommonModule,
-    PageHeaderComponent,
     AccordionModule,
     SharedUiModule,
     ButtonModule,
@@ -71,6 +73,7 @@ export class KpiDetailsComponentTsComponent implements OnInit, OnDestroy {
   activityLogService = inject(ActivityLogService);
   @ViewChild(MenuPopupComponent) child?: MenuPopupComponent;
   @ViewChild(ProjectCardComponent) child2?: ProjectCardComponent;
+  userData!: UserModel;
   menuItems: any[] = [];
   isEmpty!: boolean;
   ngOnDestroy(): void {
@@ -79,6 +82,11 @@ export class KpiDetailsComponentTsComponent implements OnInit, OnDestroy {
   userRoles!: UserGroup;
   isAdmin!: boolean;
   ngOnInit(): void {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.scorecardService.toggleSwitchBtn.subscribe({
       next: (res) => {
         this.actionsPanel?.hide();

@@ -68,9 +68,11 @@ export class ScorecardService {
   }
   getCurrentSystem(): string {
     if (this.cookieService.get('granted-systems')) {
-      const systemName = (
-        JSON.parse(this.cookieService.get('granted-systems')!) as string[]
-      ).find((x) => x === 'Business_Excellence_Dashboard');
+      const systemName =
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        (
+          JSON.parse(this.cookieService.get('granted-systems')!) as string[]
+        ).find((x) => x === 'Business_Excellence_Dashboard');
       return systemName ? systemName : '';
     }
     return '';

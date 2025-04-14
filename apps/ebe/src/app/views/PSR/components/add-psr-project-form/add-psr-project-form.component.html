@@ -1,7 +1,11 @@
 <section class="psr-form">
   <div class="psr-form-header">
     <div>
-      <stc-apps-page-header [mainTitle]="'PSR Add Program'" />
+      <stc-apps-page-header
+        [mainTitle]="'PSR Add Program'"
+        [username]="userData ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
     </div>
   </div>
   <div class="psr-form-body">

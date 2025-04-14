@@ -1,7 +1,11 @@
 <section class="strategy-program-section">
   <div class="strategy-program-section-header">
     <div>
-      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'" />
+      <stc-apps-page-header
+        [mainTitle]="'CAD Strategy Program'"
+        [username]="userData ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
     </div>
   </div>
   <div class="strategy-program-section-details">

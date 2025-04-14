@@ -1,10 +1,10 @@
-@import '../../../styles/fonts';
+// @import '../../../styles/fonts';
 .page-header-section-welcome-text {
   text-transform: capitalize;
   font-size: 19px;
-  @extend .stcFont;
+  // @extend .stcFont;
   span {
-    @extend .mediunPoppins;
+    // @extend .mediunPoppins;
     font-size: 22px;
   }
   img {
@@ -18,14 +18,13 @@
   font-size: 24px;
   text-transform: capitalize;
   font-weight: normal;
-  @extend .stcFont;
+  // @extend .stcFont;
   font-size: 22px;
   span {
     font-size: 27px;
-    @extend .blackPoppins;
+    // @extend .blackPoppins;
   }
-  .pi-arrow-left
-  {
+  .pi-arrow-left {
     display: inline-block;
     font-size: 1.1rem;
     cursor: pointer;
