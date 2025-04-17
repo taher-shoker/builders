@@ -27,6 +27,7 @@ export class LineChartComponent implements OnInit {
       }
     });
   }
+
   ngOnInit(): void {
     this.chartdiv_id = `${Math.random()}_chart_id`;
   }

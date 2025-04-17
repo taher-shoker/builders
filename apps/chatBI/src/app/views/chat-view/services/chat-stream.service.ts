@@ -122,9 +122,10 @@ export class ChatStreamService {
       chunk.stage == 'Deep Thinking' ||
       chunk.stage == 'Business Understanding'
     ) {
-      stageContent = chunk.data?.result?.choices?.[0]?.delta?.content;
+      const content = chunk.data?.result?.choices?.[0]?.delta?.content;
+      stageContent = content;
     } else if (chunk.stage == 'Time Reason') {
-      stageContent = chunk.data?.explain;
+      stageContent = chunk.data?.normalizedTimeQuery;
     } else if (chunk.stage == 'Critical Info') {
       stageContent = chunk.data?.columnContent;
     } else if (chunk.stage == 'SQL Generate') {
