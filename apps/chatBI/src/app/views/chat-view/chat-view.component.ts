@@ -6,7 +6,16 @@ import {
   ViewChild,
 } from '@angular/core';
 import { ChatService } from './services/chat.service';
-import { chatArray, responseBody, sqlData } from './models/chatModel';
+import {
+  chatArray,
+  chunkData,
+  responseBody,
+  sqlData,
+  streamChatArray,
+} from './models/chatModel';
+import { ChatStreamService } from './services/chat-stream.service';
+
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'stc-apps-chat-view',
@@ -14,8 +23,10 @@ import { chatArray, responseBody, sqlData } from './models/chatModel';
   styleUrl: './chat-view.component.scss',
 })
 export class ChatViewComponent implements OnInit {
+  private messageSubscription!: Subscription;
   @ViewChild('scrollContainer') private scrollableContainer!: ElementRef;
   messagesList: chatArray[] = [];
+  messagesStreamList: streamChatArray[] = [];
   hideQuestions = false;
   newMessage = '';
   maxLength = 512;
@@ -26,22 +37,30 @@ export class ChatViewComponent implements OnInit {
   pendingFlag = signal(false);
   isAnimated = false;
   textareaHeight = 128;
+  stage = '';
+  isPaused = false;
   ngOnInit() {
     setTimeout(() => {
       this.isAnimated = true;
     }, 100);
   }
-  constructor(private chatService: ChatService) {}
+  constructor(
+    private chatService: ChatService,
+    private chatStreamService: ChatStreamService
+  ) {}
 
   onEnter(event: any) {
-    event.preventDefault();
-    this.sendMessage();
+    // event.preventDefault();
+    // this.sentStreamMessage();
   }
   onFocus(): void {
     this.isFocused = true;
   }
   onBlur(event: Event): void {
     this.isFocused = false;
+  }
+  togglePause() {
+    this.isPaused = !this.isPaused;
   }
   setSuggestedQuestion(question: string) {
     this.resetTextArea();
@@ -70,6 +89,77 @@ export class ChatViewComponent implements OnInit {
     } else {
       // eslint-disable-next-line no-self-assign
       this.textareaHeight = this.textareaHeight;
+    }
+  }
+  connectToStream() {
+    const chunkStream: chunkData[] = [];
+
+    this.messagesStreamList.push({
+      messageType: 0,
+      content: '',
+    });
+    this.pendingFlag.set(true);
+    this.messageSubscription = this.chatStreamService
+      .getStreamChatMessages(this.modelQuery)
+      .subscribe({
+        next: (chunk) => {
+          if (this.isPaused) return;
+
+          const stageContent =
+            this.chatStreamService.getStageChunkContent(chunk);
+          if (this.stage !== chunk.stage) {
+            const newChunk: chunkData = {
+              stageTitle: chunk.stage,
+              stageContent: stageContent,
+              showType: chunk.data?.showType ?? '',
+              sqlData: chunk.data?.showType
+                ? chunk.data?.sqlData[0]
+                : undefined,
+            };
+            chunkStream.push(newChunk);
+            this.stage = chunk.stage;
+          } else if (this.stage == chunk.stage) {
+            this.chatStreamService.updateAssistantMessage(chunkStream, chunk);
+          }
+          const cloned = chunkStream.map((obj) => ({ ...obj }));
+          this.chatStreamService.chunkStageSubject.next(cloned);
+        },
+        error: (err) => {
+          this.messagesStreamList.push({
+            content: 'Something went wrong! Please try again.',
+            messageType: 0,
+          });
+        },
+        complete: () => {
+          this.reset();
+          const lastResponse =
+            this.messagesStreamList[this.messagesStreamList.length - 1];
+          lastResponse.content = 'stream complete';
+          lastResponse.chunk = chunkStream;
+          console.log('Stream complete', this.messagesStreamList);
+        },
+      });
+  }
+  pauseStream() {
+    this.messageSubscription?.unsubscribe(); // Stops data from arriving
+  }
+  sentStreamMessage() {
+    if (this.newMessage) {
+      this.messagesStreamList.push({
+        content: this.newMessage,
+        messageType: 1,
+      });
+      setTimeout(() => {
+        this.scrollToBottom();
+      });
+      this.resetTextArea();
+      this.modelQuery = this.newMessage;
+      this.newMessage = '';
+      this.connectToStream();
+    } else {
+      this.isPaused = true;
+      this.pendingFlag.set(false);
+      this.pauseStream();
     }
   }
 

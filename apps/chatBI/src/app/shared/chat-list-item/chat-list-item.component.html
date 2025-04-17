@@ -1,11 +1,3 @@
-@if (showPopUp) {
-<stc-apps-pop-up-image
-  [chartType]="showType()"
-  [chartData]="sqlData()"
-  (close)="closePopUp()"
-></stc-apps-pop-up-image>
-}
-
 <div
   class="chat-list-item"
   [@fadeIn]
@@ -23,42 +15,63 @@
   </div>
   }
 
-  <div
-    class="chat-list-item_query-info"
-    [ngClass]="messageType() === 0 && showType() !== '' ? 'w-100' : ''"
-  >
+  <div class="chat-list-item_query-info">
     <div
       class="message"
       [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
     >
-      @if (isLoading() && messageType()===0 && message()==''&&showType()=='') {
+      @if (messageType()===0) {
+      <div
+        class="message-content animate-fade-in"
+        [style.margin-bottom]="isLoading() && message() ? '12px' : '0px'"
+      >
+        @for (messageChunk of message()==''?chunkStream:messagesChunks(); track
+        $index) {
+        <stc-apps-chat-insight-card [title]="messageChunk.stageTitle">
+          @if(messageChunk.stageContent){
+          <div #projected>{{ messageChunk.stageContent }}</div>
+          } @if (messageChunk.showType) { @if (messageChunk.showType=='table') {
+          <stc-apps-chart-controller
+            [sqlData]="
+              messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
+            "
+            [showType]="messageChunk.showType"
+          ></stc-apps-chart-controller>
+          } @else {
+          <div>
+            <button (click)="showPopUpOnClick()" class="zoom-in-btn">
+              <i class="fa fa-search-plus"></i>
+            </button>
+            <stc-apps-chart-controller
+              [sqlData]="
+                messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
+              "
+              [showType]="messageChunk.showType"
+            ></stc-apps-chart-controller>
+          </div>
+          @if (showPopUp) {
+          <stc-apps-pop-up-image
+            [chartType]="messageChunk.showType"
+            [chartData]="
+              messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
+            "
+            (close)="closePopUp()"
+          ></stc-apps-pop-up-image>
+          } } }
+        </stc-apps-chat-insight-card>
+        }
+      </div>
+      @if(isLoading()&&message()==''){
       <div class="loading-dots">
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
-      } @else {
-      <div class="message-content" [innerHTML]="processedMessage"></div>
-      @if (showType()!=='') { @if (messageType() === 0) { @if
-      (showType()=='table') {
+      } } @else if(messageType()===1){
       <div>
-        <stc-apps-chart-controller
-          [sqlData]="sqlData()"
-          [showType]="showType()"
-        ></stc-apps-chart-controller>
+        {{ message() }}
       </div>
-      } @else{
-
-      <div>
-        <button (click)="showPopUpOnClick()" class="zoom-in-btn">
-          <i class="fa fa-search-plus"></i>
-        </button>
-        <stc-apps-chart-controller
-          [sqlData]="sqlData()"
-          [showType]="showType()"
-        ></stc-apps-chart-controller>
-      </div>
-      } } }}
+      }
     </div>
 
     <div

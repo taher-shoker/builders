@@ -1,0 +1,13 @@
+<svg width="40.000000" height="40.000000" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+	<desc>
+			Created with Pixso.
+	</desc>
+	<defs>
+		<linearGradient x1="6.666667" y1="3.999996" x2="35.333336" y2="33.333344" id="paint_linear_1915_9123_0" gradientUnits="userSpaceOnUse">
+			<stop stop-color="#8836D7"/>
+			<stop offset="1.000000" stop-color="#4F008C"/>
+		</linearGradient>
+	</defs>
+	<circle id="椭圆_1861" cx="20.000000" cy="20.000000" r="20.000000" fill="url(#paint_linear_1915_9123_0)" fill-opacity="1.000000"/>
+	<path id="发送_2x" d="M14.76 23.43L14.72 23.4L21.19 17.99L12.58 21.47L9.1 18.33C8.9 18.14 8.82 17.87 8.88 17.6C8.94 17.34 9.15 17.13 9.41 17.06L27.82 12.15C28.08 12.08 28.35 12.15 28.54 12.34C28.72 12.53 28.79 12.81 28.72 13.06L23.82 30.16C23.75 30.41 23.56 30.6 23.31 30.67C23.06 30.74 22.8 30.68 22.61 30.51L17.84 26.22L14.76 29.3L14.76 23.43Z" fill="#FFFFFF" fill-opacity="1.000000" fill-rule="evenodd"/>
+</svg>

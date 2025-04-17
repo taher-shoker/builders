@@ -9,14 +9,13 @@
   >
     @if (messagesList.length==0) {
     <div class="background"></div>
-    } @for (message of messagesList; track $index) {
+    } @for (message of messagesStreamList; track $index) {
     <stc-apps-chat-list-item
       [message]="message.content"
-      [messageDate]="message.date"
       [messageType]="message.messageType"
-      [images]="message.images ?? ['']"
-      [showType]="message.showType ?? ''"
-      [sqlData]="message.sqlData ?? { xList: [], yList: [], title: '' }"
+      [messagesChunks]="
+        message.chunk ? message.chunk : [{ stageTitle: '', stageContent: '' }]
+      "
       [isLoading]="pendingFlag()"
     >
     </stc-apps-chat-list-item>
@@ -37,22 +36,26 @@
       (keydown.enter)="onEnter($event)"
       (input)="adjustHeight($event)"
       [(ngModel)]="newMessage"
-      placeholder="Ask me anything..."
+      placeholder="Enter questions or prompt words"
       (focus)="onFocus()"
       (blur)="onBlur($event)"
     >
     </textarea>
-
+    <!-- [ngClass]="{
+      disabled:
+        newMessage.length > 512 || !newMessage.trim() || pendingFlag()
+    }" -->
     <div class="button-container">
+      @if(newMessage.length < 512 && newMessage.trim()&&!pendingFlag() ||
+      pendingFlag()){
       <img
-        [ngClass]="{
-          disabled:
-            newMessage.length > 512 || !newMessage.trim() || pendingFlag()
-        }"
-        (click)="sendMessage()"
-        src="assets/images/Vector.svg"
+        (click)="sentStreamMessage()"
+        [src]="
+          pendingFlag() ? 'assets/images/stop.svg' : 'assets/images/send.svg'
+        "
         alt=""
       />
+      }
     </div>
   </div>
   <div
