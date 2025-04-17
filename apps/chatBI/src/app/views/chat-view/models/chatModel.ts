@@ -1,15 +1,21 @@
+export interface chunkData {
+  stageTitle: string;
+  stageContent: string;
+  showType?: string;
+  sqlData?: sqlData;
+}
+export interface streamChatArray {
+  messageType: number;
+  content: string;
+  date?: string;
+  chunk?: chunkData[];
+}
+
 export interface responseBody {
   data: data | null;
   message: string;
   resultCode: string;
   timestamp: string;
-}
-export interface data {
-  confidence: number;
-  content: string;
-  showType: string;
-  sqlData: sqlData;
-  images?: string[];
 }
 export interface sqlData {
   xList: any[];
@@ -23,6 +29,15 @@ export interface chatBody {
   content: string;
   showType?: string;
 }
+
+export interface data {
+  confidence: number;
+  content: string;
+  showType: string;
+  sqlData: sqlData;
+  images?: string[];
+}
+
 export interface chatArray {
   content: string;
   date: string;

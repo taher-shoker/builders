@@ -63,7 +63,9 @@ p {
       line-height: 16px;
       border-radius: 25px;
       white-space: pre-wrap;
-
+      .message-content {
+        opacity: 0;
+      }
       .chatImage {
         margin-top: 20px;
         width: 80%;
@@ -117,6 +119,20 @@ p {
       line-height: 16px;
     }
   }
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0s ease-out forwards;
 }
 @media screen and (max-width: 900px) {
   .chat-list-item {
