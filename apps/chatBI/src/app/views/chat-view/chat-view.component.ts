@@ -50,8 +50,8 @@ export class ChatViewComponent implements OnInit {
   ) {}
 
   onEnter(event: any) {
-    // event.preventDefault();
-    // this.sentStreamMessage();
+    event.preventDefault();
+    this.sentStreamMessage();
   }
   onFocus(): void {
     this.isFocused = true;
@@ -104,10 +104,11 @@ export class ChatViewComponent implements OnInit {
       .subscribe({
         next: (chunk) => {
           if (this.isPaused) return;
+          console.log(chunk);
 
           const stageContent =
             this.chatStreamService.getStageChunkContent(chunk);
-          if (this.stage !== chunk.stage) {
+          if (this.stage !== chunk.stage && chunk.stage !== 'COMPLETE') {
             const newChunk: chunkData = {
               stageTitle: chunk.stage,
               stageContent: stageContent,

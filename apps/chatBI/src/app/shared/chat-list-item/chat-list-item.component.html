@@ -29,7 +29,10 @@
         $index) {
         <stc-apps-chat-insight-card [title]="messageChunk.stageTitle">
           @if(messageChunk.stageContent){
-          <div #projected>{{ messageChunk.stageContent }}</div>
+          <div
+            #projected
+            [innerHTML]="messageChunk.stageContent | formatMessage"
+          ></div>
           } @if (messageChunk.showType) { @if (messageChunk.showType=='table') {
           <stc-apps-chart-controller
             [sqlData]="
@@ -39,9 +42,9 @@
           ></stc-apps-chart-controller>
           } @else {
           <div>
-            <button (click)="showPopUpOnClick()" class="zoom-in-btn">
+            <!-- <button (click)="showPopUpOnClick()" class="zoom-in-btn">
               <i class="fa fa-search-plus"></i>
-            </button>
+            </button> -->
             <stc-apps-chart-controller
               [sqlData]="
                 messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
@@ -49,7 +52,7 @@
               [showType]="messageChunk.showType"
             ></stc-apps-chart-controller>
           </div>
-          @if (showPopUp) {
+          <!-- @if (showPopUp) {
           <stc-apps-pop-up-image
             [chartType]="messageChunk.showType"
             [chartData]="
@@ -57,7 +60,9 @@
             "
             (close)="closePopUp()"
           ></stc-apps-pop-up-image>
-          } } }
+          } -->
+
+          } }
         </stc-apps-chat-insight-card>
         }
       </div>
