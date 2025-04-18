@@ -1,9 +1,12 @@
+.slider-wrapper {
+  touch-action: pan-y;
+  user-select: none;
+}
 .card-group {
   display: none;
   flex-direction: column;
   margin-top: 12px;
-  transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out,
-    visibility 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
 
   &.active {
     display: flex;

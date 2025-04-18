@@ -135,6 +135,8 @@ export class ChatStreamService {
       stageContent = chunk.data?.sql;
     } else if (chunk.stage == 'Data Query') {
       stageContent = chunk.data?.content;
+    } else if (chunk.stage == 'Diagnostic Analysis') {
+      stageContent = chunk.data?.message;
     } else {
       stageContent = '';
     }

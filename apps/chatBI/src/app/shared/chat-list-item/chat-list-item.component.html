@@ -20,7 +20,7 @@
       class="message"
       [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
     >
-      @if (messageType()===0) {
+      @if (messageType()===0 && message()!== errorMessage) {
       <div
         class="message-content animate-fade-in"
         [style.margin-bottom]="isLoading() && message() ? '12px' : '0px'"
@@ -72,9 +72,9 @@
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
-      } } @else if(messageType()===1){
+      } } @else{
       <div>
-        {{ message() }}
+        <div [innerHTML]="message() | formatMessage"></div>
         @if(newChat()){
         <stc-apps-slider
           (questionEvent)="questionClick($event)"

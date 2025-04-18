@@ -44,7 +44,7 @@ export class ChatListItemComponent implements OnChanges {
   isLoading: InputSignal<boolean> = input(false);
   @Output() questionEvent = new EventEmitter<string>();
   chunkStream: chunkData[] = [];
-
+  errorMessage = 'Something went wrong! Please try again.';
   showPopUp = false;
   selectedImage = '';
   processedMessage = '';
