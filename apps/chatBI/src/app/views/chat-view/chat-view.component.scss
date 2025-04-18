@@ -52,7 +52,7 @@ p {
   }
   &_input-container {
     position: fixed;
-    bottom: 9.5rem;
+    bottom: 3rem;
     left: 2rem;
     z-index: 999;
     background-color: var(--whiteColor);
@@ -68,7 +68,7 @@ p {
     font-size: 13px;
 
     .textarea {
-      margin: 10px 0px 12px 24px;
+      margin: 10px 0px 12px 28px;
       font-family: 'stc forward-regular';
       background-color: transparent;
       border: none;
@@ -103,7 +103,7 @@ p {
     font-weight: 400;
     font-size: 13px;
     position: fixed;
-    bottom: 7.5rem;
+    bottom: 1rem;
     display: flex;
     justify-content: space-between;
     margin-left: 48px;

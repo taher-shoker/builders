@@ -8,9 +8,11 @@ import {
 import {
   Component,
   effect,
+  EventEmitter,
   input,
   InputSignal,
   OnChanges,
+  Output,
   signal,
   SimpleChanges,
 } from '@angular/core';
@@ -36,9 +38,11 @@ import { ChatStreamService } from '../../views/chat-view/services/chat-stream.se
 export class ChatListItemComponent implements OnChanges {
   message: InputSignal<string> = input('');
   messageDate: InputSignal<string> = input('');
+  newChat: InputSignal<boolean> = input(false);
   messagesChunks: InputSignal<chunkData[]> = input([{} as chunkData]);
   messageType: InputSignal<number> = input(0);
   isLoading: InputSignal<boolean> = input(false);
+  @Output() questionEvent = new EventEmitter<string>();
   chunkStream: chunkData[] = [];
 
   showPopUp = false;
@@ -100,5 +104,9 @@ export class ChatListItemComponent implements OnChanges {
   }
   closePopUp() {
     this.showPopUp = false;
+  }
+  questionClick(question: string) {
+    console.log(question);
+    this.questionEvent.emit(question);
   }
 }

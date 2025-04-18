@@ -122,7 +122,10 @@ export class ChatStreamService {
       chunk.stage == 'Deep Thinking' ||
       chunk.stage == 'Business Understanding'
     ) {
-      const content = chunk.data?.result?.choices?.[0]?.delta?.content;
+      const content =
+        typeof chunk.data?.result?.choices?.[0]?.delta?.content == 'string'
+          ? chunk.data?.result?.choices?.[0]?.delta?.content
+          : '';
       stageContent = content;
     } else if (chunk.stage == 'Time Reason') {
       stageContent = chunk.data?.normalizedTimeQuery;

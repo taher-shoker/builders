@@ -7,6 +7,7 @@ export interface chunkData {
 export interface streamChatArray {
   messageType: number;
   content: string;
+  newChat?: boolean;
   date?: string;
   chunk?: chunkData[];
 }

@@ -2,6 +2,7 @@ p {
   margin: 0;
 }
 .loading-dots {
+  margin-top: 12px;
   display: inline-block;
   font-size: 24px;
   text-align: center;
@@ -9,10 +10,10 @@ p {
 
 .dot {
   display: inline-block;
-  width: 5px;
-  height: 5px;
+  width: 4px;
+  height: 4px;
   margin: 0 5px;
-  background-color: var(--whiteColor);
+  background-color: var(--stcCoralColor);
   border-radius: 50%;
   animation: bounce 1.5s infinite ease-in-out;
 }
@@ -94,16 +95,16 @@ p {
       }
     }
     .sender-message {
-      background: var(--stcCoralColor);
+      background: var(--stc-chat-purple-color);
       // background: var(--stc-color);
       color: var(--whiteColor);
-      border-top-right-radius: 0px;
+      // border-top-right-radius: 0px;
       margin-left: 40px;
     }
     .receiver-message {
-      background: var(--stc-color);
-      color: #ffff;
-      border-bottom-left-radius: 0px;
+      background: var(--whiteColor);
+      color: var(--blackColor);
+      // border-bottom-left-radius: 0px;
     }
     .empty-receiver-message {
       width: 80%;

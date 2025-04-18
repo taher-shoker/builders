@@ -1,0 +1,44 @@
+.card-group {
+  display: none;
+  flex-direction: column;
+  margin-top: 12px;
+  transition: opacity 0.3s ease-in-out, max-height 0.3s ease-in-out,
+    visibility 0.3s ease-in-out;
+
+  &.active {
+    display: flex;
+  }
+}
+
+.card {
+  color: var(--blackColor);
+  background: var(--whiteColor);
+  padding: 1rem;
+  border-radius: 12px !important;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 10;
+
+  .dot {
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.5;
+    cursor: pointer;
+
+    &.active {
+      background: #f87171;
+      opacity: 1;
+    }
+  }
+}

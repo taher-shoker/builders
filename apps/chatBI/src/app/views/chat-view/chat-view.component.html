@@ -1,11 +1,11 @@
 <div class="chat-view">
-  <stc-apps-header [title]="'CEM Copilot'"></stc-apps-header>
+  <stc-apps-header
+    (newChat)="handleNewChat()"
+    [title]="'CEM Copilot'"
+  ></stc-apps-header>
   <div
     #scrollContainer
-    class="chat-view_messages-container"
-    [ngClass]="
-      !hideQuestions ? 'messages-list-questions-margin' : 'messages-list-margin'
-    "
+    class="chat-view_messages-container messages-list-margin"
   >
     @if (messagesList.length==0) {
     <div class="background"></div>
@@ -13,10 +13,12 @@
     <stc-apps-chat-list-item
       [message]="message.content"
       [messageType]="message.messageType"
+      [newChat]="message.newChat ?? false"
       [messagesChunks]="
         message.chunk ? message.chunk : [{ stageTitle: '', stageContent: '' }]
       "
       [isLoading]="pendingFlag()"
+      (questionEvent)="questionClick($event)"
     >
     </stc-apps-chat-list-item>
     }
@@ -36,7 +38,7 @@
       (keydown.enter)="onEnter($event)"
       (input)="adjustHeight($event)"
       [(ngModel)]="newMessage"
-      placeholder="Enter questions or prompt words"
+      [placeholder]="pendingFlag() ? '' : 'Enter questions or prompt words'"
       (focus)="onFocus()"
       (blur)="onBlur($event)"
     >
@@ -49,7 +51,7 @@
       @if(newMessage.length < 512 && newMessage.trim()&&!pendingFlag() ||
       pendingFlag()){
       <img
-        (click)="sentStreamMessage()"
+        (click)="sendStreamMessage()"
         [src]="
           pendingFlag() ? 'assets/images/stop.svg' : 'assets/images/send.svg'
         "
@@ -68,23 +70,5 @@
     >
       <p>{{ newMessage.length }} / {{ maxLength }}</p>
     </div>
-    <div class="questions-controller-holder">
-      <img
-        (click)="hideQuestionsAction()"
-        class="questions-controller"
-        [src]="
-          !hideQuestions
-            ? 'assets/images/active-questions.png'
-            : 'assets/images/inactive-questions.png'
-        "
-        alt=""
-      />
-    </div>
-  </div>
-  <div class="suggested-questions w-100">
-    <stc-apps-suggested-question
-      [hideQuestion]="hideQuestions"
-      (sendQuestionEvent)="setSuggestedQuestion($event)"
-    ></stc-apps-suggested-question>
   </div>
 </div>

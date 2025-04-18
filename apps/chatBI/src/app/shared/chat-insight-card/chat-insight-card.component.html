@@ -3,12 +3,12 @@
     class="d-flex align-items-center cursor-pointer"
     (click)="toggleExpand()"
   >
-    <div class="d-flex align-items-center">
+    <div class="title-holder d-flex align-items-center">
       @if(title()==='Deep Thinking'){
       <span><img src="assets/images/deep thinking.svg" /></span>
       }
 
-      <span class="title w-3 h-3 bg-purple-600 rounded-full mr-2"></span>
+      <span class="title"></span>
       {{ title() }}
     </div>
     <span class="expand-icon">

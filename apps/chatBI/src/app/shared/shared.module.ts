@@ -12,6 +12,7 @@ import { ChartControllerComponent } from './chart-controller/chartController.com
 import { SuggestedQuestionComponent } from './suggested-question/suggestedQuestion.component';
 import { ChatInsightCardComponent } from './chat-insight-card/chat-insight-card.component';
 import { FormatMessagePipe } from './pipes/formatMessage.pipe';
+import { SliderComponent } from './slider/slider.component';
 
 const components = [
   ChatListItemComponent,
@@ -24,11 +25,13 @@ const components = [
   ChartControllerComponent,
   SuggestedQuestionComponent,
   ChatInsightCardComponent,
+  FormatMessagePipe,
+  SliderComponent,
 ];
 const modules = [CommonModule, MatTableModule];
 
 @NgModule({
-  declarations: [...components, FormatMessagePipe],
+  declarations: [...components],
   imports: [...modules],
   exports: [...components, ...modules],
 })
