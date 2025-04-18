@@ -39,6 +39,7 @@ export class ChatViewComponent implements OnInit {
   textareaHeight = 128;
   stage = '';
   isPaused = false;
+  newMessageIsSent = false;
   ngOnInit() {
     setTimeout(() => {
       this.isAnimated = true;
@@ -50,11 +51,12 @@ export class ChatViewComponent implements OnInit {
     private chatStreamService: ChatStreamService
   ) {}
   addingStartMessage() {
+    this.newMessageIsSent = false;
     this.messagesStreamList.push({
       messageType: 1,
       newChat: true,
       content:
-        'Hello this is CEM copilot \n to get the expected results please ask questions in the following sentence structure',
+        '**Hello this is CEM copilot** \n\nTo get the expected results, please ask questions in the following sentence structure',
     });
   }
   onEnter(event: any) {
@@ -83,8 +85,14 @@ export class ChatViewComponent implements OnInit {
       });
     }
   }
+  handlePauseStream() {
+    this.pauseStream();
+    this.isPaused = true;
+    this.pendingFlag.set(false);
+  }
   handleNewChat() {
     this.messagesStreamList = [];
+    this.handlePauseStream();
     this.addingStartMessage();
   }
   questionClick(question: string) {
@@ -128,9 +136,7 @@ export class ChatViewComponent implements OnInit {
               stageTitle: chunk.stage,
               stageContent: stageContent,
               showType: chunk.data?.showType ?? '',
-              sqlData: chunk.data?.showType
-                ? chunk.data?.sqlData
-                : undefined,
+              sqlData: chunk.data?.showType ? chunk.data?.sqlData : undefined,
             };
             chunkStream.push(newChunk);
             this.stage = chunk.stage;
@@ -138,9 +144,15 @@ export class ChatViewComponent implements OnInit {
             this.chatStreamService.updateAssistantMessage(chunkStream, chunk);
           }
           const cloned = chunkStream.map((obj) => ({ ...obj }));
+          setTimeout(() => {
+            this.scrollToBottom();
+          });
           this.chatStreamService.chunkStageSubject.next(cloned);
         },
         error: (err) => {
+          console.log(err);
+          this.messagesStreamList.pop();
+          this.reset();
           this.messagesStreamList.push({
             content: 'Something went wrong! Please try again.',
             messageType: 0,
@@ -157,9 +169,12 @@ export class ChatViewComponent implements OnInit {
       });
   }
   pauseStream() {
+    console.log(this.messageSubscription);
+
     this.messageSubscription?.unsubscribe(); // Stops data from arriving
   }
   sendStreamMessage() {
+    this.newMessageIsSent = true;
     if (this.newMessage) {
       if (this.messagesStreamList[this.messagesStreamList.length - 1].newChat) {
         this.messagesStreamList.pop();
@@ -176,9 +191,7 @@ export class ChatViewComponent implements OnInit {
       this.newMessage = '';
       this.connectToStream();
     } else {
-      this.isPaused = true;
-      this.pendingFlag.set(false);
-      this.pauseStream();
+      this.handlePauseStream();
     }
   }
 

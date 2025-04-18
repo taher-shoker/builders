@@ -2,6 +2,7 @@
   <stc-apps-header
     (newChat)="handleNewChat()"
     [title]="'CEM Copilot'"
+    [newMessageIsSent]="newMessageIsSent"
   ></stc-apps-header>
   <div
     #scrollContainer
@@ -53,7 +54,7 @@
       <img
         (click)="sendStreamMessage()"
         [src]="
-          pendingFlag() ? 'assets/images/stop.svg' : 'assets/images/send.svg'
+          pendingFlag() ? 'assets/images/stop.png' : 'assets/images/send.png'
         "
         alt=""
       />

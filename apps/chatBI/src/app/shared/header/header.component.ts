@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
   title: InputSignal<string> = input('');
-  firstPageFlag: InputSignal<boolean> = input(true);
+  newMessageIsSent: InputSignal<boolean> = input(false);
   @Output() newChat = new EventEmitter<void>();
   constructor(private location: Location, private router: Router) {}
   goBack() {
