@@ -5,7 +5,7 @@
     messageType() === 1 ? 'justify-content-end' : 'justify-content-start'
   "
 >
-  @if (messageType() === 0 ) {
+  <!-- @if (messageType() === 0 ) {
   <div class="chat-list-item_query-profile">
     <img
       class="chat-list-item_photo"
@@ -13,7 +13,7 @@
       alt=""
     />
   </div>
-  }
+  } -->
 
   <div class="chat-list-item_query-info">
     <div
@@ -75,6 +75,11 @@
       } } @else if(messageType()===1){
       <div>
         {{ message() }}
+        @if(newChat()){
+        <stc-apps-slider
+          (questionEvent)="questionClick($event)"
+        ></stc-apps-slider>
+        }
       </div>
       }
     </div>

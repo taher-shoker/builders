@@ -66,6 +66,8 @@ export class ChartControllerComponent {
     return combined;
   }
   handleLineChartData(): any[] {
+    console.log('line chart',this.sqlData());
+    
     const values = this.sqlData().xList.map((date, index) => {
       // const fullDate = `${date}`;
       // const yListKey = this.sqlData()?.yListKey ?? 'time';

@@ -43,15 +43,23 @@ export class ChatViewComponent implements OnInit {
     setTimeout(() => {
       this.isAnimated = true;
     }, 100);
+    this.addingStartMessage();
   }
   constructor(
     private chatService: ChatService,
     private chatStreamService: ChatStreamService
   ) {}
-
+  addingStartMessage() {
+    this.messagesStreamList.push({
+      messageType: 1,
+      newChat: true,
+      content:
+        'Hello this is CEM copilot \n to get the expected results please ask questions in the following sentence structure',
+    });
+  }
   onEnter(event: any) {
     event.preventDefault();
-    this.sentStreamMessage();
+    this.sendStreamMessage();
   }
   onFocus(): void {
     this.isFocused = true;
@@ -74,6 +82,13 @@ export class ChatViewComponent implements OnInit {
         this.scrollToBottom();
       });
     }
+  }
+  handleNewChat() {
+    this.messagesStreamList = [];
+    this.addingStartMessage();
+  }
+  questionClick(question: string) {
+    this.newMessage = question;
   }
   get remainingChars(): number {
     return this.maxLength - this.newMessage.length;
@@ -114,7 +129,7 @@ export class ChatViewComponent implements OnInit {
               stageContent: stageContent,
               showType: chunk.data?.showType ?? '',
               sqlData: chunk.data?.showType
-                ? chunk.data?.sqlData[0]
+                ? chunk.data?.sqlData
                 : undefined,
             };
             chunkStream.push(newChunk);
@@ -144,8 +159,11 @@ export class ChatViewComponent implements OnInit {
   pauseStream() {
     this.messageSubscription?.unsubscribe(); // Stops data from arriving
   }
-  sentStreamMessage() {
+  sendStreamMessage() {
     if (this.newMessage) {
+      if (this.messagesStreamList[this.messagesStreamList.length - 1].newChat) {
+        this.messagesStreamList.pop();
+      }
       this.messagesStreamList.push({
         content: this.newMessage,
         messageType: 1,
