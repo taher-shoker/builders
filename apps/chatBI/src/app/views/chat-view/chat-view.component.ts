@@ -40,6 +40,7 @@ export class ChatViewComponent implements OnInit {
   stage = '';
   isPaused = false;
   newMessageIsSent = false;
+  chunkStream: chunkData[] = [];
   ngOnInit() {
     setTimeout(() => {
       this.isAnimated = true;
@@ -55,8 +56,9 @@ export class ChatViewComponent implements OnInit {
     this.messagesStreamList.push({
       messageType: 1,
       newChat: true,
+      header: 'Hello this is CEM copilot',
       content:
-        '**Hello this is CEM copilot** \n\nTo get the expected results, please ask questions in the following sentence structure',
+        'To get the expected results, please ask questions in the following sentence structure',
     });
   }
   onEnter(event: any) {
@@ -69,26 +71,11 @@ export class ChatViewComponent implements OnInit {
   onBlur(event: Event): void {
     this.isFocused = false;
   }
-  togglePause() {
-    this.isPaused = !this.isPaused;
-  }
-  setSuggestedQuestion(question: string) {
-    this.resetTextArea();
-    this.newMessage = question;
-    this.textareaHeight = 128;
-  }
-  hideQuestionsAction() {
-    this.hideQuestions = !this.hideQuestions;
-    if (!this.hideQuestions) {
-      setTimeout(() => {
-        this.scrollToBottom();
-      });
-    }
-  }
   handlePauseStream() {
     this.pauseStream();
     this.isPaused = true;
     this.pendingFlag.set(false);
+    this.messagesStreamList.length !== 0 ? this.completeStream() : '';
   }
   handleNewChat() {
     this.messagesStreamList = [];
@@ -115,13 +102,13 @@ export class ChatViewComponent implements OnInit {
     }
   }
   connectToStream() {
-    const chunkStream: chunkData[] = [];
-
     this.messagesStreamList.push({
       messageType: 0,
       content: '',
     });
     this.pendingFlag.set(true);
+    this.chunkStream = [];
+    this.stage = '';
     this.messageSubscription = this.chatStreamService
       .getStreamChatMessages(this.modelQuery)
       .subscribe({
@@ -138,16 +125,20 @@ export class ChatViewComponent implements OnInit {
               showType: chunk.data?.showType ?? '',
               sqlData: chunk.data?.showType ? chunk.data?.sqlData : undefined,
             };
-            chunkStream.push(newChunk);
+
+            this.chunkStream.push(newChunk);
             this.stage = chunk.stage;
           } else if (this.stage == chunk.stage) {
-            this.chatStreamService.updateAssistantMessage(chunkStream, chunk);
+            this.chatStreamService.updateAssistantMessage(
+              this.chunkStream,
+              chunk
+            );
           }
-          const cloned = chunkStream.map((obj) => ({ ...obj }));
+          const cloned = this.chunkStream.map((obj) => ({ ...obj }));
+          this.chatStreamService.chunkStageSubject.next(cloned);
           setTimeout(() => {
             this.scrollToBottom();
           });
-          this.chatStreamService.chunkStageSubject.next(cloned);
         },
         error: (err) => {
           console.log(err);
@@ -159,22 +150,26 @@ export class ChatViewComponent implements OnInit {
           });
         },
         complete: () => {
-          this.reset();
-          const lastResponse =
-            this.messagesStreamList[this.messagesStreamList.length - 1];
-          lastResponse.content = 'stream complete';
-          lastResponse.chunk = chunkStream;
+          this.completeStream();
           console.log('Stream complete', this.messagesStreamList);
         },
       });
   }
+  completeStream() {
+    this.reset();
+    const lastResponse =
+      this.messagesStreamList[this.messagesStreamList.length - 1];
+    lastResponse.content = 'stream complete';
+    lastResponse.chunk = this.chunkStream;
+  }
   pauseStream() {
-    console.log(this.messageSubscription);
-
     this.messageSubscription?.unsubscribe(); // Stops data from arriving
   }
   sendStreamMessage() {
     this.newMessageIsSent = true;
+    this.isPaused = false;
+    // if (!this.validateSentMessage()) return;
+
     if (this.newMessage) {
       if (this.messagesStreamList[this.messagesStreamList.length - 1].newChat) {
         this.messagesStreamList.pop();
@@ -195,52 +190,6 @@ export class ChatViewComponent implements OnInit {
     }
   }
 
-  sendMessage() {
-    if (!this.validateSentMessage()) {
-      return;
-    }
-    this.getCurrentTime();
-    this.pushNewMessage({
-      content: this.newMessage,
-      messageType: 1,
-      date: this.getCurrentTime(),
-      images: [],
-    });
-    this.pushNewMessage({
-      content: '',
-      messageType: 0,
-      date: this.getCurrentTime(),
-      images: [],
-    });
-    setTimeout(() => {
-      this.scrollToBottom();
-    });
-    this.modelQuery = this.newMessage;
-    this.newMessage = '';
-    this.pendingFlag.set(true);
-    this.resetTextArea();
-
-    this.chatService.sendMessage({ content: this.modelQuery }).subscribe({
-      next: (result: responseBody) => {
-        this.handleModelResponse({
-          content: result.data !== null ? result.data.content : result.message,
-          messageType: 0,
-          date: this.getTimeFromFullDate(result.timestamp),
-          images: result.data !== null ? result.data.images : [],
-          showType: result.data?.showType,
-          sqlData: result.data?.sqlData,
-        });
-      },
-      error: () => {
-        this.handleModelResponse({
-          content: 'Something went wrong! Please try again.',
-          messageType: 0,
-          date: this.getCurrentTime(),
-          images: [],
-        });
-      },
-    });
-  }
   validateSentMessage() {
     return (
       this.newMessage.trim() &&
@@ -263,21 +212,6 @@ export class ChatViewComponent implements OnInit {
     this.pendingFlag.set(false);
     setTimeout(() => {
       this.scrollToBottom();
-    });
-  }
-  handleModelResponse(newMessage: chatArray) {
-    this.messagesList.pop();
-    this.pushNewMessage(newMessage);
-    this.reset();
-  }
-  pushNewMessage(newMessage: chatArray) {
-    this.messagesList.push({
-      content: newMessage.content,
-      messageType: newMessage.messageType,
-      date: newMessage.date,
-      images: newMessage.images,
-      showType: newMessage.showType ?? '',
-      sqlData: newMessage.sqlData ?? ({} as sqlData),
     });
   }
 

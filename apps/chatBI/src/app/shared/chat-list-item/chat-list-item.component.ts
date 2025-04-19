@@ -1,5 +1,7 @@
 import {
   animate,
+  query,
+  stagger,
   state,
   style,
   transition,
@@ -8,6 +10,7 @@ import {
 import {
   Component,
   effect,
+  ElementRef,
   EventEmitter,
   input,
   InputSignal,
@@ -15,10 +18,10 @@ import {
   Output,
   signal,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { chunkData, sqlData } from '../../views/chat-view/models/chatModel';
 import { ChatStreamService } from '../../views/chat-view/services/chat-stream.service';
-
 @Component({
   selector: 'stc-apps-chat-list-item',
   templateUrl: './chat-list-item.component.html',
@@ -35,8 +38,9 @@ import { ChatStreamService } from '../../views/chat-view/services/chat-stream.se
     ]),
   ],
 })
-export class ChatListItemComponent implements OnChanges {
+export class ChatListItemComponent {
   message: InputSignal<string> = input('');
+  header: InputSignal<string> = input('');
   messageDate: InputSignal<string> = input('');
   newChat: InputSignal<boolean> = input(false);
   messagesChunks: InputSignal<chunkData[]> = input([{} as chunkData]);
@@ -49,15 +53,33 @@ export class ChatListItemComponent implements OnChanges {
   selectedImage = '';
   processedMessage = '';
   popUpClick = false;
-  stageList: string[] = [];
-
-  lastText = '';
-  displayedText = '';
-  private bufferQueue: string[] = [];
-  private typingInterval: any;
+  @ViewChild('container') myElementRef!: ElementRef;
+  prevValue = '';
+  messageChunk = '';
+  previousContent = '';
+  newChunk = '';
+  mergedChunks = '';
+  chartShowType = '';
+  chartSqlData = { xList: [], yList: [], title: '' };
   constructor(private chatStreamService: ChatStreamService) {
     this.chatStreamService.chunkStageSubject.subscribe((chunkStream) => {
       this.chunkStream = chunkStream;
+      const stage = this.chunkStream[this.chunkStream.length - 1];
+      const full = stage.stageContent;
+
+      if (full && !full.startsWith(this.previousContent)) {
+        this.previousContent = '';
+        this.newChunk = full;
+      } else {
+        this.newChunk = full?.slice(this.previousContent.length);
+      }
+      if (this.newChunk) {
+        this.mergedChunks = this.newChunk;
+        setTimeout(() => {
+          this.previousContent += this.newChunk;
+          this.newChunk = '';
+        }, 800);
+      }
     });
     // effect(() => {
     //   if (this.message() && this.isLoading()) {
@@ -65,48 +87,29 @@ export class ChatListItemComponent implements OnChanges {
     //   }
     // });
   }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['message']) {
-      const current = this.message();
-
-      // Prevent duplicate work
-      if (current === this.lastText) return;
-
-      if (this.isLoading()) {
-        const newChunk = current.slice(this.lastText.length);
-        //  this.queueNewCharacters(newChunk);
-        this.lastText = current;
-      } else {
-        this.displayedText = current;
-        this.lastText = current;
-      }
-    }
+  onAnimationEnd() {
+    // Merge smoothly once animation is done
+    this.previousContent += this.newChunk;
+    this.newChunk = '';
   }
-  queueNewCharacters(newChunk: string) {
-    this.bufferQueue.push(...newChunk.split(''));
+  trackByContent(index: number, content: string): string {
+    console.log('content', content);
 
-    if (!this.typingInterval) {
-      this.typingInterval = setInterval(() => {
-        if (this.bufferQueue.length > 0) {
-          this.displayedText += this.bufferQueue.shift()!;
-        } else {
-          clearInterval(this.typingInterval);
-          this.typingInterval = null;
-        }
-      }, 20); // adjust speed here
-    }
+    return content; // Changes in content will force re-render
   }
+
   replaceNull(input: string | null): string {
     return input?.replace(/null/g, '') || '';
   }
-  showPopUpOnClick() {
+  showPopUpOnClick(showType: string, sqlData: any) {
     this.showPopUp = true;
+    this.chartShowType = showType;
+    this.chartSqlData = sqlData;
   }
   closePopUp() {
     this.showPopUp = false;
   }
   questionClick(question: string) {
-    console.log(question);
     this.questionEvent.emit(question);
   }
 }

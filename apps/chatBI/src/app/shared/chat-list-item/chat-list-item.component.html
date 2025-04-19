@@ -1,3 +1,10 @@
+@if (showPopUp) {
+<stc-apps-pop-up-image
+  [chartType]="chartShowType"
+  [chartData]="chartSqlData"
+  (close)="closePopUp()"
+></stc-apps-pop-up-image>
+}
 <div
   class="chat-list-item"
   [@fadeIn]
@@ -29,12 +36,50 @@
         $index) {
         <stc-apps-chat-insight-card [title]="messageChunk.stageTitle">
           @if(messageChunk.stageContent){
-          <div
-            #projected
-            [innerHTML]="messageChunk.stageContent | formatMessage"
-          ></div>
+          <div class="stage-content" [class.show]="messageChunk.stageContent">
+            @if($index==chunkStream.length-1 && message()==''){
+            <div
+              class="text-static"
+              [innerHTML]="previousContent | formatMessage"
+            ></div>
+            <div
+              *ngIf="newChunk"
+              class="text-animate"
+              [innerHTML]="newChunk | formatMessage"
+            ></div>
+            <!-- <div class="text-static">
+              <span
+                [innerHTML]="previousContent | formatMessage"
+                *ngIf="!mergedChunks"
+              ></span>
+
+              <span *ngIf="mergedChunks">
+                <span
+                  [innerHTML]="
+                    previousContent.slice(0, -mergedChunks.length)
+                      | formatMessage
+                  "
+                ></span>
+                <span
+                  class="merged-animate"
+                  [innerHTML]="mergedChunks | formatMessage"
+                ></span>
+              </span>
+            </div>
+
+            <div
+              *ngIf="newChunk"
+              class="text-animate"
+              [innerHTML]="newChunk | formatMessage"
+            ></div> -->
+            } @else{
+            <div [innerHTML]="messageChunk.stageContent | formatMessage"></div>
+            }
+          </div>
+
           } @if (messageChunk.showType) { @if (messageChunk.showType=='table') {
           <stc-apps-chart-controller
+            class="position-relative"
             [sqlData]="
               messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
             "
@@ -42,9 +87,14 @@
           ></stc-apps-chart-controller>
           } @else {
           <div>
-            <!-- <button (click)="showPopUpOnClick()" class="zoom-in-btn">
+            <button
+              (click)="
+                showPopUpOnClick(messageChunk.showType, messageChunk.sqlData)
+              "
+              class="zoom-in-btn"
+            >
               <i class="fa fa-search-plus"></i>
-            </button> -->
+            </button>
             <stc-apps-chart-controller
               [sqlData]="
                 messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
@@ -52,16 +102,6 @@
               [showType]="messageChunk.showType"
             ></stc-apps-chart-controller>
           </div>
-          <!-- @if (showPopUp) {
-          <stc-apps-pop-up-image
-            [chartType]="messageChunk.showType"
-            [chartData]="
-              messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
-            "
-            (close)="closePopUp()"
-          ></stc-apps-pop-up-image>
-          } -->
-
           } }
         </stc-apps-chat-insight-card>
         }
@@ -74,6 +114,9 @@
       </div>
       } } @else{
       <div>
+        @if (header()) {
+        <div class="heading">{{ header() }}</div>
+        }
         <div [innerHTML]="message() | formatMessage"></div>
         @if(newChat()){
         <stc-apps-slider
