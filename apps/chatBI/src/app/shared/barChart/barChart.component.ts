@@ -123,7 +123,7 @@ export class BarChartComponent implements OnInit {
           categoryXField: 'xaxis',
         })
       );
-
+      unit = unit ?? '';
       series.columns.template.setAll({
         tooltipText: `{categoryX}:{valueY} ${unit}`,
         width: am5.percent(90),

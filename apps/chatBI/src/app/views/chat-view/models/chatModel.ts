@@ -3,10 +3,13 @@ export interface chunkData {
   stageContent: string;
   showType?: string;
   sqlData?: sqlData;
+  previousContent?: string;
+  newChunk?: string;
 }
 export interface streamChatArray {
   messageType: number;
   content: string;
+  header?: string;
   newChat?: boolean;
   date?: string;
   chunk?: chunkData[];

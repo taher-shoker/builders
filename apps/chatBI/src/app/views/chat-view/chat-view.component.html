@@ -15,6 +15,7 @@
       [message]="message.content"
       [messageType]="message.messageType"
       [newChat]="message.newChat ?? false"
+      [header]="message.header ?? ''"
       [messagesChunks]="
         message.chunk ? message.chunk : [{ stageTitle: '', stageContent: '' }]
       "

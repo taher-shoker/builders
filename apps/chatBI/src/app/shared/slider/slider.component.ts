@@ -56,13 +56,11 @@ export class SliderComponent implements AfterViewInit {
   }
 
   handleSwipe() {
-    const minSwipeDistance = 50; // Minimum distance to consider it a swipe
+    const minSwipeDistance = 50;
 
     if (this.touchStartX - this.touchEndX > minSwipeDistance) {
-      // Swipe left - go to next slide
       this.nextSlide();
     } else if (this.touchEndX - this.touchStartX > minSwipeDistance) {
-      // Swipe right - go to previous slide
       this.prevSlide();
     }
   }

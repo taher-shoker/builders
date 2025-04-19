@@ -1,6 +1,7 @@
 .slider-wrapper {
   touch-action: pan-y;
   user-select: none;
+  font-family: Arial;
 }
 .card-group {
   display: none;
@@ -18,9 +19,10 @@
   background: var(--whiteColor);
   padding: 1rem;
   border-radius: 12px !important;
-  text-align: center;
-  font-size: 0.9rem;
-  font-weight: 500;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
 }
 
 .dots {
@@ -32,15 +34,15 @@
   z-index: 10;
 
   .dot {
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     background: white;
     border-radius: 50%;
     opacity: 0.5;
     cursor: pointer;
 
     &.active {
-      background: #f87171;
+      background: #FF375E;
       opacity: 1;
     }
   }
