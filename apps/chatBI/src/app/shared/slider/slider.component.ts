@@ -16,7 +16,8 @@ import suggestedQuestions from '../../views/chat-view/models/chatModel';
 })
 export class SliderComponent implements AfterViewInit {
   @ViewChild('sliderWrapper') sliderWrapper!: ElementRef;
-
+  currentSlide = 0;
+  transitionStyle = 'transform 0.7s ease';
   activeIndex = signal(0);
   // ngOnInit() {
   //   setInterval(() => {
@@ -33,6 +34,9 @@ export class SliderComponent implements AfterViewInit {
   @Output() questionEvent = new EventEmitter<string>();
   ngAfterViewInit() {
     this.setupSwipeGestures();
+  }
+  getTransform() {
+    return `translateX(-${this.activeIndex() * 100}%)`;
   }
   setupSwipeGestures() {
     const element = this.sliderWrapper.nativeElement;

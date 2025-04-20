@@ -7,6 +7,7 @@
   <div
     #scrollContainer
     class="chat-view_messages-container messages-list-margin"
+    (scroll)="onScroll()"
   >
     @if (messagesList.length==0) {
     <div class="background"></div>
@@ -30,8 +31,9 @@
     class="chat-view_input-container"
     [ngClass]="{
       focused: isFocused,
+      'empty-max-height': !newMessage.trim(),
+      'max-height': newMessage.trim(),
       error: newMessage.length > 512,
-      'input-filed-bottom': hideQuestions
     }"
   >
     <textarea
@@ -43,34 +45,44 @@
       [placeholder]="pendingFlag() ? '' : 'Enter questions or prompt words'"
       (focus)="onFocus()"
       (blur)="onBlur($event)"
+      [ngClass]="{
+        'empty-max-height': !newMessage,
+        'max-height': newMessage.trim(),
+        'text-area-actions-bottom': newMessage.trim()
+      }"
     >
     </textarea>
     <!-- [ngClass]="{
       disabled:
         newMessage.length > 512 || !newMessage.trim() || pendingFlag()
     }" -->
-    <div class="button-container">
-      @if(newMessage.length < 512 && newMessage.trim()&&!pendingFlag() ||
-      pendingFlag()){
-      <img
-        (click)="sendStreamMessage()"
-        [src]="
-          pendingFlag() ? 'assets/images/stop.png' : 'assets/images/send.png'
-        "
-        alt=""
-      />
+
+    <div class="text-area-actions">
+      @if (newMessage.trim()) {
+      <div
+        class="textarea-counter"
+        [ngClass]="{ 'error-text': newMessage.length > 512 }"
+      >
+        <p>{{ newMessage.length }} / {{ maxLength }}</p>
+      </div>
+      } @if (newMessage.length < 512&&
+      newMessage.trim()&&!pendingFlag()||pendingFlag() ) {
+      <div
+        class="button-container"
+        [ngClass]="{
+        'pause-btn': pendingFlag(),
+        
+      }"
+      >
+        <img
+          (click)="sendStreamMessage()"
+          [src]="
+            pendingFlag() ? 'assets/images/stop.png' : 'assets/images/send.png'
+          "
+          alt=""
+        />
+      </div>
       }
-    </div>
-  </div>
-  <div
-    class="text-area-actions"
-    [ngClass]="{ 'text-area-actions-bottom': hideQuestions }"
-  >
-    <div
-      class="textarea-counter"
-      [ngClass]="{ 'error-text': newMessage.length > 512 }"
-    >
-      <p>{{ newMessage.length }} / {{ maxLength }}</p>
     </div>
   </div>
 </div>
