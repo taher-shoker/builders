@@ -55,7 +55,7 @@ p {
   }
   &_input-container {
     position: fixed;
-    bottom: 3rem;
+    bottom: 1rem;
     left: 2rem;
     z-index: 999;
     background-color: rgb(247, 250, 255);
@@ -98,20 +98,22 @@ p {
       position: absolute;
       bottom: 2px;
       display: flex;
+      justify-content: space-between;
+      padding: 0px 10px 0px 30px;
       width: 100%;
       color: var(--fontGreyColor);
       font-weight: 400;
       font-size: 14px;
-      margin-left: 48px;
+      // margin-left: 48px;
       .textarea-counter {
         display: flex;
         align-items: end;
         margin-right: 8px;
       }
       .button-container {
-        width: 75%;
-        text-align: end;
-        margin-bottom: 6px;
+        // width: 81%;
+        // text-align: end;
+        margin-bottom: 5px;
         height: 100%;
         // width: 6%;
         img {
@@ -148,12 +150,12 @@ p {
         width: 70%;
       }
       .button-container {
-        width: 15%;
+        // width: 15%;
       }
     }
 
     .text-area-actions {
-      margin-left: 24px;
+      // margin-left: 24px;
       .questions-controller {
         margin-right: 42px !important;
       }

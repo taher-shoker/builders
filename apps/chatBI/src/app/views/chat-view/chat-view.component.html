@@ -50,6 +50,7 @@
         'max-height': newMessage.trim(),
         'text-area-actions-bottom': newMessage.trim()
       }"
+      [disabled]="pendingFlag()"
     >
     </textarea>
     <!-- [ngClass]="{
@@ -58,20 +59,21 @@
     }" -->
 
     <div class="text-area-actions">
-      @if (newMessage.trim()) {
       <div
         class="textarea-counter"
         [ngClass]="{ 'error-text': newMessage.length > 512 }"
       >
+        @if (newMessage.trim()) {
         <p>{{ newMessage.length }} / {{ maxLength }}</p>
+        }
       </div>
-      } @if (newMessage.length < 512&&
+      @if (newMessage.length < 512&&
       newMessage.trim()&&!pendingFlag()||pendingFlag() ) {
       <div
         class="button-container"
         [ngClass]="{
         'pause-btn': pendingFlag(),
-        
+
       }"
       >
         <img
