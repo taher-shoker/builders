@@ -116,7 +116,6 @@ export class ChatViewComponent implements OnInit {
       .subscribe({
         next: (chunk) => {
           if (this.isPaused) return;
-          console.log(chunk);
 
           const stageContent =
             this.chatStreamService.getStageChunkContent(chunk);
@@ -159,19 +158,21 @@ export class ChatViewComponent implements OnInit {
   }
   onScroll() {
     const el = this.scrollableContainer.nativeElement;
-    const threshold = 100; // pixels from bottom
+    const threshold = 200; // pixels from bottom
+    requestAnimationFrame(() => {
+      const position = el.scrollTop + el.clientHeight;
+      const height = el.scrollHeight;
+      console.log(position, height - threshold);
 
-    const position = el.scrollTop + el.clientHeight;
-    const height = el.scrollHeight;
-
-    this.autoScrollEnabled = position >= height - threshold;
+      this.autoScrollEnabled = position >= height - threshold;
+    });
   }
   completeStream() {
     this.reset();
     const lastResponse =
       this.messagesStreamList[this.messagesStreamList.length - 1];
     lastResponse.content = 'stream complete';
-    console.log(lastResponse.chunk, this.messagesStreamList);
+    // console.log(lastResponse.chunk, this.messagesStreamList);
 
     // if (lastResponse.chunk===undefined) {
     //   this.messagesStreamList.pop();
@@ -215,12 +216,14 @@ export class ChatViewComponent implements OnInit {
   }
   private scrollToBottom(): void {
     try {
-      if (this.autoScrollEnabled) {
-        this.scrollableContainer.nativeElement.scrollTo({
-          top: this.scrollableContainer.nativeElement.scrollHeight,
-          behavior: 'smooth',
-        });
-      }
+      setTimeout(() => {
+        if (this.autoScrollEnabled) {
+          this.scrollableContainer.nativeElement.scrollTo({
+            top: this.scrollableContainer.nativeElement.scrollHeight,
+            behavior: 'smooth',
+          });
+        }
+      });
     } catch (err) {
       console.error('Error scrolling:', err);
     }

@@ -33,7 +33,6 @@ p {
 }
 
 .chat-list-item {
-  position: relative;
   z-index: 999;
   display: flex;
 
@@ -202,6 +201,9 @@ p {
     &_query-info {
       .chatImage {
         width: 100% !important;
+      }
+      .zoom-in-btn{
+        right: 0px !important;
       }
     }
   }
