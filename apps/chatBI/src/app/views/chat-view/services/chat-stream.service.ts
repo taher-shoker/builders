@@ -15,6 +15,9 @@ export class ChatStreamService {
   lastStage = '';
 
   token = this.cookieService.get('token');
+  gToken = this.cookieService.get('tokenGenerated') || null;
+  type = this.cookieService.get('tokenType') || '';
+
   messageStreamUrl = this.baseURL + 'v2/chatBI/message';
   constructor(private http: HttpClient, private cookieService: CookieService) {
     console.log(this.token);
@@ -37,6 +40,8 @@ export class ChatStreamService {
         headers: {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${this.token}`,
+          'Authorization-Generated': `Bearer ${this.gToken}`,
+          'Access-Token-Type': this.type,
         },
         body: JSON.stringify({ content: body }),
       })
