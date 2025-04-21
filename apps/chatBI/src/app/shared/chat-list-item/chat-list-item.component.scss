@@ -75,10 +75,10 @@ p {
         border-radius: 15px;
       }
       .zoom-in-btn {
-        position: absolute;
-        z-index: 999;
-        bottom: 0px;
-        right: 0px;
+        position: fixed;
+        z-index: 9999;
+        right: 0;
+        margin-top: 105%;
         background-color: var(--stc-color);
         color: white;
         border: none;
