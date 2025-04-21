@@ -6,7 +6,9 @@ p {
   font-size: 24px;
   text-align: center;
 }
-
+.sender-message-margin-left {
+  margin-left: 42px;
+}
 .dot {
   display: inline-block;
   width: 8px;
@@ -99,6 +101,7 @@ p {
       font-weight: 700;
     }
     .receiver-message {
+      width: 100%;
       background: var(--whiteColor);
       color: var(--blackColor);
     }
@@ -202,7 +205,7 @@ p {
       .chatImage {
         width: 100% !important;
       }
-      .zoom-in-btn{
+      .zoom-in-btn {
         right: 0px !important;
       }
     }
