@@ -39,7 +39,13 @@
           [title]="messageChunk.stageTitle"
         >
           @if(messageChunk.stageContent){
-          <div class="stage-content" [class.show]="messageChunk.stageContent">
+          <div
+            class="stage-content"
+            [class.show]="messageChunk.stageContent"
+            [ngClass]="{
+              'think-content': messageChunk.stageTitle === 'Deep Thinking'
+            }"
+          >
             @if($index==chunkStream.length-1 && message()==''){
             <div
               class="text-static"
@@ -120,7 +126,10 @@
         @if (header()) {
         <div class="heading">{{ header() }}</div>
         }
-        <div [innerHTML]="message() | formatMessage"></div>
+        <div
+          [ngClass]="{ 'sub-heading': newChat() }"
+          [innerHTML]="message() | formatMessage"
+        ></div>
         @if(newChat()){
         <stc-apps-slider
           (questionEvent)="questionClick($event)"

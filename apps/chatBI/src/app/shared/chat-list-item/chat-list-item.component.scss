@@ -53,7 +53,7 @@ p {
       padding: 15.5px 22.5px;
       max-width: 100%;
       font-weight: 400;
-      font-size: 14px;
+      font-size: 16px;
       line-height: 22px;
       border-radius: 20px;
       font-family: Arial;
@@ -91,11 +91,13 @@ p {
         font-weight: 700;
         line-height: 24px;
         margin-bottom: 12px;
+        padding: 0px 4px;
       }
     }
     .sender-message {
       background: var(--stc-chat-purple-color);
       color: var(--whiteColor);
+      font-weight: 700;
     }
     .receiver-message {
       background: var(--whiteColor);
@@ -129,6 +131,10 @@ p {
   transition: all 0.6s ease-out;
   max-height: 0;
   opacity: 0;
+}
+
+.think-content {
+  color: rgb(98, 98, 98);
 }
 
 .stage-content.show {
@@ -199,4 +205,11 @@ p {
       }
     }
   }
+}
+
+.sub-heading {
+  padding: 0px 4px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
 }
