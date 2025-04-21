@@ -22,10 +22,19 @@
   </div>
   } -->
 
-  <div class="chat-list-item_query-info">
+  <div
+    class="chat-list-item_query-info"
+    [ngClass]="{
+      'w-100': messageType() === 0 && chunkStream.length !== 0
+    }"
+  >
     <div
       class="message"
-      [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
+      [ngClass]="{
+        'sender-message': messageType() === 1,
+        'receiver-message': messageType() === 0,
+        'sender-message-margin-left': messageType() === 1 && !newChat()
+      }"
     >
       @if (messageType()===0 && message()!== errorMessage) {
       <div

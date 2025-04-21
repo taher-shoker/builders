@@ -162,7 +162,6 @@ export class ChatViewComponent implements OnInit {
     requestAnimationFrame(() => {
       const position = el.scrollTop + el.clientHeight;
       const height = el.scrollHeight;
-      console.log(position, height - threshold);
 
       this.autoScrollEnabled = position >= height - threshold;
     });
@@ -172,12 +171,12 @@ export class ChatViewComponent implements OnInit {
     const lastResponse =
       this.messagesStreamList[this.messagesStreamList.length - 1];
     lastResponse.content = 'stream complete';
-    // console.log(lastResponse.chunk, this.messagesStreamList);
-
-    // if (lastResponse.chunk===undefined) {
-    //   this.messagesStreamList.pop();
-    // }
     lastResponse.chunk = this.chunkStream;
+    console.log(lastResponse.chunk, this.messagesStreamList);
+
+    if (lastResponse.chunk?.length === 0) {
+      this.messagesStreamList.pop();
+    }
   }
   pauseStream() {
     this.messageSubscription?.unsubscribe(); // Stops data from arriving
