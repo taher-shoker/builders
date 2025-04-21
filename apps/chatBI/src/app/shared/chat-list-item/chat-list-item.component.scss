@@ -78,7 +78,8 @@ p {
         position: fixed;
         z-index: 9999;
         right: 0;
-        margin-top: 105%;
+        // margin-top: 105%;
+        bottom: 10px;
         background-color: var(--stc-color);
         color: white;
         border: none;

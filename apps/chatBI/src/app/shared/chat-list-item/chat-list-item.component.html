@@ -105,6 +105,12 @@
           ></stc-apps-chart-controller>
           } @else {
           <div>
+            <stc-apps-chart-controller
+              [sqlData]="
+                messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
+              "
+              [showType]="messageChunk.showType"
+            ></stc-apps-chart-controller>
             <button
               (click)="
                 showPopUpOnClick(messageChunk.showType, messageChunk.sqlData)
@@ -113,12 +119,6 @@
             >
               <i class="fa fa-search-plus"></i>
             </button>
-            <stc-apps-chart-controller
-              [sqlData]="
-                messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
-              "
-              [showType]="messageChunk.showType"
-            ></stc-apps-chart-controller>
           </div>
           } }
         </stc-apps-chat-insight-card>
