@@ -34,7 +34,10 @@
       >
         @for (messageChunk of message()==''?chunkStream:messagesChunks(); track
         $index) {
-        <stc-apps-chat-insight-card [title]="messageChunk.stageTitle">
+        <stc-apps-chat-insight-card
+          class="position-relative"
+          [title]="messageChunk.stageTitle"
+        >
           @if(messageChunk.stageContent){
           <div class="stage-content" [class.show]="messageChunk.stageContent">
             @if($index==chunkStream.length-1 && message()==''){

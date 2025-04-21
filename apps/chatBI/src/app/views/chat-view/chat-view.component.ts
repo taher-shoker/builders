@@ -40,6 +40,8 @@ export class ChatViewComponent implements OnInit {
   stage = '';
   isPaused = false;
   newMessageIsSent = false;
+
+  autoScrollEnabled = true;
   chunkStream: chunkData[] = [];
   ngOnInit() {
     setTimeout(() => {
@@ -155,11 +157,25 @@ export class ChatViewComponent implements OnInit {
         },
       });
   }
+  onScroll() {
+    const el = this.scrollableContainer.nativeElement;
+    const threshold = 100; // pixels from bottom
+
+    const position = el.scrollTop + el.clientHeight;
+    const height = el.scrollHeight;
+
+    this.autoScrollEnabled = position >= height - threshold;
+  }
   completeStream() {
     this.reset();
     const lastResponse =
       this.messagesStreamList[this.messagesStreamList.length - 1];
     lastResponse.content = 'stream complete';
+    console.log(lastResponse.chunk, this.messagesStreamList);
+
+    // if (lastResponse.chunk===undefined) {
+    //   this.messagesStreamList.pop();
+    // }
     lastResponse.chunk = this.chunkStream;
   }
   pauseStream() {
@@ -199,10 +215,12 @@ export class ChatViewComponent implements OnInit {
   }
   private scrollToBottom(): void {
     try {
-      this.scrollableContainer.nativeElement.scrollTo({
-        top: this.scrollableContainer.nativeElement.scrollHeight,
-        behavior: 'smooth',
-      });
+      if (this.autoScrollEnabled) {
+        this.scrollableContainer.nativeElement.scrollTo({
+          top: this.scrollableContainer.nativeElement.scrollHeight,
+          behavior: 'smooth',
+        });
+      }
     } catch (err) {
       console.error('Error scrolling:', err);
     }

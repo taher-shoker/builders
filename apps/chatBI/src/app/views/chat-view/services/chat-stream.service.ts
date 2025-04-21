@@ -11,7 +11,7 @@ import { CookieService } from 'ngx-cookie-service';
 })
 export class ChatStreamService {
   chunkStageSubject = new Subject<chunkData[]>();
-  baseURL = environment.apiUrl;
+  baseURL = environment.apiUrl1;
   lastStage = '';
 
   token = this.cookieService.get('token');

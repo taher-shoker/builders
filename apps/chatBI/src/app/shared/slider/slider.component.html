@@ -1,11 +1,17 @@
 <div #sliderWrapper class="slider-wrapper">
   <div
-    class="card-group"
-    *ngFor="let group of chunkedMessages; let i = index"
-    [class.active]="activeIndex() === i"
+    class="slider-track"
+    [style.transform]="getTransform()"
+    [style.transition]="transitionStyle"
   >
-    <div class="card" *ngFor="let msg of group" (click)="cardClick(msg)">
-      {{ msg }}
+    <div
+      class="card-group"
+      *ngFor="let group of chunkedMessages; let i = index"
+      [class.active]="activeIndex() === i"
+    >
+      <div class="card" *ngFor="let msg of group" (click)="cardClick(msg)">
+        {{ msg }}
+      </div>
     </div>
   </div>
 
