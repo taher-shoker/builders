@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { chunkData } from '../models/chatModel';
+import { chunkData, data } from '../models/chatModel';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { environment } from 'apps/chatBI/src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
@@ -136,12 +136,17 @@ export class ChatStreamService {
       stageContent = chunk.data?.normalizedTimeQuery;
     } else if (chunk.stage == 'Critical Info') {
       stageContent = chunk.data?.columnContent;
-    } else if (chunk.stage == 'SQL Generate') {
+    } else if (chunk.stage == 'SQL Generation') {
       stageContent = chunk.data?.sql;
     } else if (chunk.stage == 'Data Query') {
       stageContent = chunk.data?.content !== null ? chunk.data?.content : '';
+    } else if (chunk.stage == 'Visualize based on known information') {
+      stageContent = chunk.data?.content !== null ? chunk.data?.content : '';
     } else if (chunk.stage == 'Diagnostic Analysis') {
       stageContent = chunk.data?.message;
+    } else if (chunk.stage == 'Metadata retrieval') {
+      console.log('Metadata reterival', chunk);
+      stageContent = chunk.data;
     } else {
       stageContent = '';
     }
