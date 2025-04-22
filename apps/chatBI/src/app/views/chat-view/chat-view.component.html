@@ -67,7 +67,7 @@
         <p>{{ newMessage.length }} / {{ maxLength }}</p>
         }
       </div>
-      @if (newMessage.length < 512&&
+      @if (newMessage.length <= 512&&
       newMessage.trim()&&!pendingFlag()||pendingFlag() ) {
       <div
         class="button-container"
