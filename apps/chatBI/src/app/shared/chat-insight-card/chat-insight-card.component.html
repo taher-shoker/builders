@@ -5,7 +5,7 @@
   >
     <div class="title-holder d-flex align-items-center">
       @if(title()==='Deep Thinking'){
-      <span
+      <span class="deep-thinking"
         ><img class="thinking-icon" src="assets/images/deep thinking.svg"
       /></span>
       }
@@ -18,12 +18,7 @@
     </span>
   </div>
 
-  <div
-    *ngIf="isExpanded"
-    [@fadeInOut]
-    class="mt-3 mb-3"
-    style="margin-top: -15px !important"
-  >
+  <div *ngIf="isExpanded" [@fadeInOut] class="mb-3">
     <ng-content></ng-content>
   </div>
 </div>

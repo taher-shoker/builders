@@ -121,6 +121,21 @@ p {
     }
   }
 }
+.sql-block {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: hidden;
+  font-family: monospace;
+  font-size: 12px;
+}
+::ng-deep .sql-keyword {
+  color: var(--stc-chat-purple-color);
+  font-weight: bold;
+}
+::ng-deep .sql-function {
+  color: #ffd700;
+}
+
 .fade-in {
   animation: fadeIn 0.5s ease-in-out;
 }

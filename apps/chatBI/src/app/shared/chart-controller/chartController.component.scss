@@ -6,7 +6,8 @@
   padding-left: 12px;
 }
 .zoomed-width {
-  width: 1024px;
+  width: auto;
+  max-width: 1024px;
   padding: 12px;
   touch-action: pan-x;
 }
