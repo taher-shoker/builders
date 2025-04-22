@@ -13,6 +13,7 @@ import { SuggestedQuestionComponent } from './suggested-question/suggestedQuesti
 import { ChatInsightCardComponent } from './chat-insight-card/chat-insight-card.component';
 import { FormatMessagePipe } from './pipes/formatMessage.pipe';
 import { SliderComponent } from './slider/slider.component';
+import { SqlHighlightPipe } from './pipes/sqlHighlight.pipe';
 
 const components = [
   ChatListItemComponent,
@@ -27,6 +28,7 @@ const components = [
   ChatInsightCardComponent,
   FormatMessagePipe,
   SliderComponent,
+  SqlHighlightPipe,
 ];
 const modules = [CommonModule, MatTableModule];
 

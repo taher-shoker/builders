@@ -91,7 +91,25 @@
               [innerHTML]="newChunk | formatMessage"
             ></div> -->
             } @else{
-            <div [innerHTML]="messageChunk.stageContent | formatMessage"></div>
+            <ng-container
+              *ngIf="
+                messageChunk.stageTitle === 'SQL Generate';
+                else defaultContent
+              "
+            >
+              <div class="sql-block">
+                <div
+                  [innerHTML]="messageChunk.stageContent | sqlHighlight"
+                ></div>
+              </div>
+            </ng-container>
+
+            <ng-template #defaultContent>
+              <div
+                [innerHTML]="messageChunk.stageContent | formatMessage"
+              ></div>
+            </ng-template>
+            <!-- <div [innerHTML]="messageChunk.stageContent | formatMessage"></div> -->
             }
           </div>
 
