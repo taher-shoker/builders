@@ -58,7 +58,7 @@ export class ChatViewComponent implements OnInit {
     this.messagesStreamList.push({
       messageType: 1,
       newChat: true,
-      header: 'Hello this is CEM copilot',
+      header: 'Hello this is TU Brain',
       content:
         'To get the expected results, please ask questions in the following sentence structure',
     });

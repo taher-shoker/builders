@@ -40,3 +40,6 @@ Thumbs.db
 
 .angular
 .nx
+
+/apps/chatBI/src/assets/audios/archive/*
+/apps/chatBI/src/assets/audios/archive2/*
