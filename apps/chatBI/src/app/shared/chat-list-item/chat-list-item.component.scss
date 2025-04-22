@@ -127,6 +127,10 @@ p {
   overflow-x: hidden;
   font-family: monospace;
   font-size: 12px;
+
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
 }
 ::ng-deep .sql-keyword {
   color: var(--stc-chat-purple-color);

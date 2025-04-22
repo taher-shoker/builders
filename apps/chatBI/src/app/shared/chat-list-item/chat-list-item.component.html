@@ -46,6 +46,7 @@
         <stc-apps-chat-insight-card
           class="position-relative"
           [title]="messageChunk.stageTitle"
+          *ngIf="messageChunk.stageTitle !== 'Data Query'"
         >
           @if(messageChunk.stageContent){
           <div
@@ -91,24 +92,29 @@
               [innerHTML]="newChunk | formatMessage"
             ></div> -->
             } @else{
-            <ng-container
-              *ngIf="
-                messageChunk.stageTitle === 'SQL Generate';
-                else defaultContent
-              "
-            >
-              <div class="sql-block">
-                <div
-                  [innerHTML]="messageChunk.stageContent | sqlHighlight"
-                ></div>
-              </div>
-            </ng-container>
+            <ng-container [ngSwitch]="messageChunk.stageTitle">
+              <ng-container *ngSwitchCase="'SQL Generation'">
+                <div class="sql-block">
+                  <div
+                    [innerHTML]="messageChunk.stageContent | sqlHighlight"
+                  ></div>
+                </div>
+              </ng-container>
 
-            <ng-template #defaultContent>
-              <div
-                [innerHTML]="messageChunk.stageContent | formatMessage"
-              ></div>
-            </ng-template>
+              <ng-container *ngSwitchCase="'Metadata retrieval'">
+                <div
+                  style="display: grid"
+                  *ngIf="messageChunk.stageContent"
+                  [innerHTML]="messageChunk.stageContent | jsonParse"
+                ></div>
+              </ng-container>
+
+              <ng-container *ngSwitchDefault>
+                <div
+                  [innerHTML]="messageChunk.stageContent | formatMessage"
+                ></div>
+              </ng-container>
+            </ng-container>
             <!-- <div [innerHTML]="messageChunk.stageContent | formatMessage"></div> -->
             }
           </div>

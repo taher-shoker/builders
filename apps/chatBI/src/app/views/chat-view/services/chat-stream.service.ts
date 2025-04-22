@@ -125,7 +125,9 @@ export class ChatStreamService {
     let stageContent;
     if (
       chunk.stage == 'Deep Thinking' ||
-      chunk.stage == 'Business Understanding'
+      chunk.stage == 'Business Understanding' ||
+      chunk.stage == 'Intention Understanding and Summary' ||
+      chunk.stage == 'Diagnostic Analysis'
     ) {
       const content =
         typeof chunk.data?.result?.choices?.[0]?.delta?.content == 'string'
@@ -142,10 +144,7 @@ export class ChatStreamService {
       stageContent = chunk.data?.content !== null ? chunk.data?.content : '';
     } else if (chunk.stage == 'Visualize based on known information') {
       stageContent = chunk.data?.content !== null ? chunk.data?.content : '';
-    } else if (chunk.stage == 'Diagnostic Analysis') {
-      stageContent = chunk.data?.message;
     } else if (chunk.stage == 'Metadata retrieval') {
-      console.log('Metadata reterival', chunk);
       stageContent = chunk.data;
     } else {
       stageContent = '';

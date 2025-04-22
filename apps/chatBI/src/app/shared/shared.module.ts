@@ -14,6 +14,7 @@ import { ChatInsightCardComponent } from './chat-insight-card/chat-insight-card.
 import { FormatMessagePipe } from './pipes/formatMessage.pipe';
 import { SliderComponent } from './slider/slider.component';
 import { SqlHighlightPipe } from './pipes/sqlHighlight.pipe';
+import { JsonParsePipe } from './pipes/jsonformat.pipe';
 
 const components = [
   ChatListItemComponent,
@@ -29,6 +30,7 @@ const components = [
   FormatMessagePipe,
   SliderComponent,
   SqlHighlightPipe,
+  JsonParsePipe,
 ];
 const modules = [CommonModule, MatTableModule];
 
