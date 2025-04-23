@@ -67,7 +67,11 @@ export class ChatListItemComponent {
       const stage = this.chunkStream[this.chunkStream.length - 1];
       const full = stage.stageContent;
 
-      if (full && !full.startsWith(this.previousContent)) {
+      if (
+        full &&
+        typeof full === 'string' &&
+        !full?.startsWith(this.previousContent)
+      ) {
         this.previousContent = '';
         this.newChunk = full;
       } else {
