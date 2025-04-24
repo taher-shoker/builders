@@ -1,9 +1,9 @@
 <div class="white-box">
   <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
       <h3>Reports SLA</h3>
     </div>
-    <div class="col-md-7">
+    <div class="col-md-8">
       <div class="row">
         <div class="col-md-3">
           @if( hasNonNullValue(this.filter)){
@@ -22,7 +22,7 @@
   </div>
   <div class="row">
     <div class="col-md-12">
-      <div [id]="chartdiv_id" [ngStyle]="{'width': '85%', 'height': chartData.length === 0 ? 'auto' : '340px'}"></div>
+      <div [id]="chartdiv_id" [ngStyle]="{'width': '100%', 'height': chartData.length === 0 ? 'auto' : '340px'}"></div>
       @if(chartData.length ===0) {
       <p class="noData" style="height: 326px;">No Data To Display </p>
       }

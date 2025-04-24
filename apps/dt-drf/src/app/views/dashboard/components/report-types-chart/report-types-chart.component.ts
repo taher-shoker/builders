@@ -4,8 +4,8 @@ import {
   Category,
   DashboardService,
 } from '../../../../services/dashboard.service';
-import { ReportsService } from '../../../dy-reports/dy-reports.service';
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { convertToDateOnly } from '../../../../shared/helpers';
 
 @Component({
   selector: 'stc-apps-report-types-chart',
@@ -48,19 +48,24 @@ export class ReportTypesChartComponent implements OnInit {
   }
 
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (event.start && event.end) {
+    if (
+      event.start &&
+      event.end &&
+      this.filter.dateFrom !== convertToDateOnly(event.start) &&
+      this.filter.dateTo !== convertToDateOnly(event.end)
+    ) {
       this.filter = {
         ...this.filter,
-        dateFrom: this.convertToDateOnly(event.start),
-        dateTo: this.convertToDateOnly(event.end),
+        dateFrom: convertToDateOnly(event.start),
+        dateTo: convertToDateOnly(event.end),
       };
+
       this.getReportsCategoryChart(this.filter);
+      this.form.get('startDate')?.setValue(event.start);
+      this.form.get('endDate')?.setValue(event.end);
     }
   }
-  convertToDateOnly(date: Date | null): string | null {
-    if (!date) return null;
-    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
-  }
+
   getMonthName(month: number): string {
     const months = [
       'January',

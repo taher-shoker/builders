@@ -38,6 +38,7 @@ import {
 } from '../../dy-reports.service';
 import { Location } from '@angular/common';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
+import { NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'stc-apps-dy-report-form',
@@ -69,15 +70,18 @@ export class DyReportFormComponent implements OnInit {
   paramsRequestTaskId!: string;
   availableUsers: WritableSignal<User[]> = signal([]);
   startDate: Date | null = new Date();
-  endDate!: Date | null;
+  endDate: Date | null = new Date();
   SchedulingTypes: { id: string; name: string }[] = [
     { id: 'Monthly', name: 'Monthly' },
     { id: 'Weekly', name: 'Weekly' },
     { id: 'CustomDate', name: 'Custom date' },
   ];
+  today: Date = new Date();
+  tomorrow: Date = new Date(this.today.getTime() + 24 * 60 * 60 * 1000);
 
   monthNumbers: { id: number; name: string }[] = [];
   weeklyDays: { id: string; name: string }[] = [];
+  isLoading: boolean = false;
   constructor(
     private _formBuilder: FormBuilder,
     private reportsService: ReportsService,
@@ -85,7 +89,8 @@ export class DyReportFormComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private configService: ConfigService,
-    private location: Location
+    private location: Location,
+    private spinner: NgxSpinnerService
   ) {}
 
   // ngOnChanges(changes: SimpleChanges): void {
@@ -105,6 +110,9 @@ export class DyReportFormComponent implements OnInit {
   restDateFields() {
     this.form.get('startDate')?.reset();
     this.form.get('endDate')?.reset();
+    this.form.get('monthNumber')?.reset();
+    this.form.get('weeklyDay')?.reset();
+    this.form.get('customDate')?.reset();
     this.weeklyDays = [];
     this.monthNumbers = [];
   }
@@ -112,10 +120,24 @@ export class DyReportFormComponent implements OnInit {
   FilterEndDate = (d: Date | null): boolean => {
     if (d === null) return false; // null dates are not allowed
     if (this.startDate) {
-      const previousDays = new Date(this.startDate);
-      const dateWithDays = new Date(d);
-      const day = dateWithDays.getDay();
-      return d >= previousDays && day !== 5 && day !== 6;
+      const selectedDate = new Date(d);
+      selectedDate.setHours(0, 0, 0, 0);
+      const start = new Date(this.startDate);
+      start.setHours(0, 0, 0, 0);
+
+      const minAllowedDate = new Date(start);
+      const dateLimit =
+        this.form.get('schedulingType')?.value === 'Monthly' ? 30 : 7;
+      minAllowedDate.setDate(start.getDate() + dateLimit); // Start date + 30 days + 1 to exclude the whole window
+      minAllowedDate.setHours(0, 0, 0, 0);
+
+      const day = selectedDate.getDay();
+
+      // Exclude Friday (5) and Saturday (6)
+      if (day === 5 || day === 6) return false;
+
+      // Allow only if selectedDate is AFTER the 30-day window
+      return selectedDate >= minAllowedDate;
     }
 
     return true;
@@ -145,20 +167,44 @@ export class DyReportFormComponent implements OnInit {
     }
   }
   handleValidationWithScheduling(schedulingType: string) {
+    // Helper to update validators
+    const setValidators = (controlName: string, validators: any[]) => {
+      const control = this.form.get(controlName);
+      if (control) {
+        control.setValidators(validators);
+        control.updateValueAndValidity();
+      }
+    };
+
+    // Reset all relevant fields
+    setValidators('monthNumber', []);
+    setValidators('weeklyDay', []);
+    setValidators('startDate', []);
+    setValidators('endDate', []);
+    setValidators('customDate', []);
+
+    // Apply based on type
     if (schedulingType === 'Monthly') {
-      this.form.get('monthNumber')?.setValidators([Validators.required]);
+      setValidators('monthNumber', [Validators.required]);
+      setValidators('startDate', [Validators.required]);
+      setValidators('endDate', [Validators.required]);
     } else if (schedulingType === 'Weekly') {
-      this.form.get('weeklyDay')?.setValidators([Validators.required]);
+      setValidators('weeklyDay', [Validators.required]);
+      setValidators('startDate', [Validators.required]);
+      setValidators('endDate', [Validators.required]);
+    } else {
+      setValidators('customDate', [Validators.required]);
     }
-    this.form.get('monthNumber')?.updateValueAndValidity();
-    this.form.get('weeklyDay')?.updateValueAndValidity();
   }
 
   getDaysBetweenDatesArray(startDate: Date, endDate: Date): void {
     const daySet = new Set<number>();
     const currentDate = new Date(startDate);
-    const date2 = new Date(endDate);
-    while (currentDate <= date2) {
+    currentDate.setHours(0, 0, 0, 0); // normalize time to midnight
+
+    const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0); // normalize time to midnight
+    while (currentDate.getTime() <= end.getTime()) {
       const dayNumber = currentDate.getDate();
       const dayName = currentDate.toLocaleDateString('en-US', {
         weekday: 'long',
@@ -170,8 +216,8 @@ export class DyReportFormComponent implements OnInit {
       }
 
       currentDate.setDate(currentDate.getDate() + 1);
+      currentDate.setHours(0, 0, 0, 0);
     }
-
     // Convert Set to array, sort it, and map to desired format
     this.monthNumbers = Array.from(daySet)
       .sort((a, b) => a - b)
@@ -183,7 +229,9 @@ export class DyReportFormComponent implements OnInit {
     endDate: string | Date
   ): void {
     const start = new Date(startDate);
+    start.setHours(0, 0, 0, 0);
     const end = new Date(endDate);
+    end.setHours(0, 0, 0, 0);
     const daySet = new Set<string>();
     const currentDate = new Date(start);
 
@@ -198,6 +246,7 @@ export class DyReportFormComponent implements OnInit {
       }
 
       currentDate.setDate(currentDate.getDate() + 1);
+      currentDate.setHours(0, 0, 0, 0);
     }
 
     // Define the desired order starting from Sunday
@@ -267,7 +316,7 @@ export class DyReportFormComponent implements OnInit {
       isReminderActive: [false],
       weeklyDay: [''],
       startDate: [''],
-      endDate: ['', Validators.required],
+      endDate: [''],
       customDate: [''],
     });
   }
@@ -278,11 +327,14 @@ export class DyReportFormComponent implements OnInit {
       this.availableUsers.set([...users].sort((a, b) => a.id - b.id)); // Clone the list of available users
     });
   }
-  checkProcessAdmin() {
+  checkProcessAdmin(reportData: any) {
     // this.form.disable();
     this.form.get('endDate')?.disable();
 
-    if (this.reportsService.checkIsProcessAdmin()) {
+    if (
+      this.reportsService.checkIsProcessAdmin() &&
+      reportData?.initiatorEmail !== this.reportsService.getCurrentUser().email
+    ) {
       this.form.get('reportName')?.disable();
       this.form.get('description')?.disable();
     } else {
@@ -296,6 +348,7 @@ export class DyReportFormComponent implements OnInit {
       this.paramsMode = params['mode'];
       this.paramsFlowId = params['flowId']; // Needed for complete task method
       this.paramsRequestTaskId = params['requestTaskId']; // Needed for complete task method
+      this.spinner.show();
 
       if (this.paramsMode === 'edit_report_step' && this.paramsId) {
         this.isEditing = false;
@@ -306,6 +359,7 @@ export class DyReportFormComponent implements OnInit {
           this.reportsService.getReport(this.paramsId).subscribe({
             next: (res) => {
               this.resetFormWithValueForEditStep(res);
+              this.spinner.hide();
             },
             error: (err) => {
               console.log(err);
@@ -324,7 +378,8 @@ export class DyReportFormComponent implements OnInit {
               next: (res) => {
                 if (res) {
                   this.resetFormWithValue(res);
-                  this.checkProcessAdmin();
+                  this.checkProcessAdmin(res);
+                  this.spinner.hide();
                 }
               },
               error: (err) => {
@@ -345,12 +400,14 @@ export class DyReportFormComponent implements OnInit {
       requestCategoryId: data.requestCategory.id,
       needMoreDataFromCreator: !!data.creatorEmail,
       creatorEmail: data.creatorEmail,
-      slaDurationInDays: data.reportSlaDuration || 0,
+      slaDurationInDays:
+        data.requestCategory.slaDuration || data.reportSlaDuration || 0,
       initiatorShouldApprove: data.initiatorShouldApprove,
-      autoScheduling: data.requestSchedule?.autoScheduling,
-      schedulingType: data.requestSchedule?.schedulingType,
+      autoScheduling: data.requestSchedule?.autoScheduling || false,
+      schedulingType: data.requestSchedule?.schedulingType || '',
       startDate: data.requestSchedule?.startDate,
       endDate: data.requestSchedule?.endDate,
+      customDate: data?.requestSchedule?.customDate,
       isEscalationEnabled: data.isEscalationEnabled,
       isReminderActive: data.isReminderEnabled,
     });
@@ -375,13 +432,24 @@ export class DyReportFormComponent implements OnInit {
     this.uploadedFiles.next(data.attachments);
     // this.form.get('description')?.disable();
     this.form.get('requestCategoryId')?.disable();
-    this.form.get('needMoreDataFromCreator')?.disable();
-    this.form.get('creatorEmail')?.disable();
-    this.form.get('initiatorShouldApprove')?.disable();
+    // this.form.get('needMoreDataFromCreator')?.disable();
+    // this.form.get('creatorEmail')?.disable();
+    // this.form.get('initiatorShouldApprove')?.disable();
     this.form.get('attachments')?.disable();
+    if (data.creatorEmail && data.requestSchedule.autoScheduling) {
+      this.form.get('needMoreDataFromCreator')?.disable();
+      // this.form.get('autoScheduling')?.disable();
+    }
+
     const requestApprovalsArray = this.form.get(
       'requestApprovals'
     ) as FormArray;
+    if (data.requestApprovals.length > 0) {
+      data.requestApprovals.forEach((i, index) => {
+        this.customDropdownSelectionChange(i.username, index + 1);
+      });
+    }
+
     if (requestApprovalsArray) {
       requestApprovalsArray.disable(); // Disables the array and all controls within it
     }
@@ -394,14 +462,16 @@ export class DyReportFormComponent implements OnInit {
       description: data.description,
       requestCategoryId: data.requestCategory.id,
       needMoreDataFromCreator: !!data.creatorEmail,
-      creatorEmail: data.creatorEmail || '',
-      slaDurationInDays: data.requestCategory.slaDuration || 0,
+      creatorEmail: data.creatorEmail,
+      slaDurationInDays:
+        data.requestCategory.slaDuration || data.reportSlaDuration || 0,
       attachments: data.attachments.map((attachment) => attachment.id),
       initiatorShouldApprove: data.initiatorShouldApprove,
       autoScheduling: data?.requestSchedule?.autoScheduling,
       schedulingType: data?.requestSchedule?.schedulingType,
       startDate: data?.requestSchedule?.startDate,
       endDate: data?.requestSchedule?.endDate,
+      customDate: data?.requestSchedule?.customDate,
       isEscalationEnabled: data.isEscalationEnabled,
       isReminderActive: data.isReminderEnabled,
     });
@@ -561,13 +631,17 @@ export class DyReportFormComponent implements OnInit {
       return;
     }
     this.isSubmitLoading = true;
+
     const finalData = {
       ...this.form.value,
       initiatorShouldApprove: this.form.value.initiatorShouldApprove ? 1 : 0,
-      needMoreDataFromCreator: this.form.value.needMoreDataFromCreator ? 1 : 0,
+      needMoreDataFromCreator: this.form.value.creatorEmail ? 1 : 0,
+      creatorEmail: this.form.value.creatorEmail,
       startDate: this.convertToUTCISO(this.form.get('startDate')?.value),
       endDate: this.convertToUTCISO(this.form.get('endDate')?.value),
+      customDate: this.convertToUTCISO(this.form.get('customDate')?.value),
     };
+
     const handleSuccess = (message: string) => {
       this.toastr.success(message);
       this.router.navigate(['./home']);
@@ -606,7 +680,7 @@ export class DyReportFormComponent implements OnInit {
           },
           {
             name: 'creator_email',
-            value: this.form.get('creatorEmail')?.value,
+            value: this.form.get('creatorEmail')?.value || '',
           },
           {
             name: 'initiator_should_approve',
@@ -619,6 +693,44 @@ export class DyReportFormComponent implements OnInit {
           {
             name: 'sla_duration',
             value: Number(this.form.get('slaDurationInDays')?.value),
+          },
+          {
+            name: 'is_escalation_enabled',
+            value: this.form.get('isEscalationEnabled')?.value ? 1 : 0,
+          },
+          {
+            name: 'is_reminder_enabled',
+            value: this.form.get('isReminderActive')?.value ? 1 : 0,
+          },
+          {
+            name: 'auto_scheduling',
+            value: this.form.get('autoScheduling')?.value ? 1 : 0,
+          },
+          {
+            name: 'scheduling_type',
+            value: this.form.get('schedulingType')?.value || '',
+          },
+          {
+            name: 'weekly_day',
+            value: this.form.get('weeklyDay')?.value?.toString() ?? '',
+          },
+          {
+            name: 'month_number',
+            value: this.form.get('monthNumber')?.value?.toString() ?? '',
+          },
+          {
+            name: 'start_date',
+            value:
+              this.convertToUTCISO(this.form.get('startDate')?.value) || '',
+          },
+          {
+            name: 'end_date',
+            value: this.convertToUTCISO(this.form.get('endDate')?.value) || '',
+          },
+          {
+            name: 'custom_date',
+            value:
+              this.convertToUTCISO(this.form.get('customDate')?.value) || '',
           },
         ],
       };
@@ -641,7 +753,11 @@ export class DyReportFormComponent implements OnInit {
     }
 
     if (this.isEditing) {
-      let data: any = {
+      const isInitiator =
+        this.reportData()?.initiatorEmail ===
+        this.reportsService.getCurrentUser().email;
+
+      const data = {
         isEscalationEnabled: finalData.isEscalationEnabled,
         autoScheduling: finalData.autoScheduling,
         schedulingType: finalData.schedulingType,
@@ -650,10 +766,18 @@ export class DyReportFormComponent implements OnInit {
         startDate: finalData.startDate,
         endDate: finalData.endDate,
         customDate: finalData.customDate,
+        isReminderActive: finalData.isReminderActive,
+        reportName: isInitiator
+          ? finalData.reportName
+          : this.reportData().reportName,
+        description: isInitiator
+          ? finalData.description
+          : this.reportData().description,
+        creatorEmail: finalData.creatorEmail,
+        needMoreDataFromCreator: finalData.creatorEmail ? 1 : 0,
+        initiatorShouldApprove: finalData.initiatorShouldApprove ? 1 : 0,
       };
-      if (!this.reportsService.checkIsProcessAdmin()) {
-        data = { ...data, reportName: finalData.reportName };
-      }
+
       this.reportsService
         .updateReportFlow(this.reportData().id, data)
         .subscribe({
@@ -753,39 +877,49 @@ export class DyReportFormComponent implements OnInit {
   }
 
   handleCheck({ name, value }: { name: string; value: boolean }) {
+    const setRequired = (controlName: string, required: boolean) => {
+      const control = this.form.get(controlName);
+      if (control) {
+        control.setValidators(required ? [Validators.required] : []);
+        control.updateValueAndValidity();
+      }
+    };
+
     if (name === 'needMoreDataFromCreator') {
       this.handleUnselectedItem(this.creatorSelected, 0);
-      if (value) {
-        this.form.get('creatorEmail')?.setValidators(Validators.required);
-        this.form.get('attachments')?.clearValidators();
-      } else {
+
+      setRequired('creatorEmail', value);
+      setRequired('attachments', !value);
+
+      if (!value) {
         this.form.get('creatorEmail')?.reset();
-        this.form.get('creatorEmail')?.clearValidators();
-        this.form.get('attachments')?.setValidators(Validators.required);
+        this.form.get('initiatorShouldApprove')?.reset();
       }
-      this.form.get('creatorEmail')?.updateValueAndValidity();
-      this.form.get('attachments')?.updateValueAndValidity();
     } else if (name === 'sla') {
-      this.form
-        .get('customSLA')
-        ?.setValidators(value ? Validators.required : null);
-      this.form.get('customSLA')?.updateValueAndValidity();
+      setRequired('customSLA', value);
     } else if (name === 'autoScheduling') {
       this.form.get('schedulingType')?.reset();
-      this.restDateFields();
+      this.restDateFields(); // assuming this is intentional
+
       if (value) {
         this.form.get('needMoreDataFromCreator')?.setValue(true);
-        this.form.get('attachments')?.clearValidators();
-        this.form.get('creatorEmail')?.setValidators(Validators.required);
-        this.form.get('schedulingType')?.setValidators([Validators.required]);
-        this.form.get('startDate')?.setValidators([Validators.required]);
-        this.form.get('endDate')?.setValidators([Validators.required]);
+        this.form.get('needMoreDataFromCreator')?.disable();
+
+        setRequired('creatorEmail', true);
+        setRequired('attachments', false);
+        setRequired('schedulingType', true);
+        setRequired('startDate', true);
+        setRequired('endDate', true);
+      } else {
+        // if (!this.reportData().creatorEmail) {
+        //   this.form.get('needMoreDataFromCreator')?.enable();
+        // }
+        this.form.get('needMoreDataFromCreator')?.enable();
+        setRequired('schedulingType', false);
+        this.handleValidationWithScheduling('customDate');
+
+        setRequired('customDate', false);
       }
-      this.form.get('schedulingType')?.updateValueAndValidity();
-      this.form.get('startDate')?.updateValueAndValidity;
-      this.form.get('endDate')?.updateValueAndValidity;
-      this.form.get('creatorEmail')?.updateValueAndValidity();
-      this.form.get('attachments')?.updateValueAndValidity();
     }
   }
   uploadClick() {

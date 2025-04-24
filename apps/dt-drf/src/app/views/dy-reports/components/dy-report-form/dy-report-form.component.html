@@ -77,8 +77,8 @@
 
         @if (form.get('schedulingType')?.value) {@if(form.get('schedulingType')?.value === 'CustomDate'){
         <div class="col-md-3">
-          <stc-apps-date-picker [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'activationDate'"
-            [inputName]="'Custom Date'" formControlName="customDate">
+          <stc-apps-date-picker [className]="'custom-input'" [myFilter]="DisableSpecificDays" [inputPlaceholder]="''"
+            [inputId]="'activationDate'" [minDate]="tomorrow" [inputName]="'Custom Date'" formControlName="customDate">
           </stc-apps-date-picker>
         </div>
         }@else {
@@ -86,12 +86,12 @@
         <div class="col-md-4">
           <stc-apps-date-picker [myFilter]="DisableSpecificDays" [className]="'custom-input'" [inputPlaceholder]="''"
             [inputId]="'activationDate'" [inputName]="'Start Date' " formControlName="startDate"
-            (selectChange)="handelChangeDate($event,'start')">
+            (selectChange)="handelChangeDate($event,'start')" [minDate]="today">
           </stc-apps-date-picker>
         </div>
         <div class="col-md-4">
-          <stc-apps-date-picker [myFilter]="FilterEndDate" [className]="'custom-input'" [inputPlaceholder]="''"
-            [inputId]="'activationDatee'" [inputName]="'End Date'" formControlName="endDate"
+          <stc-apps-date-picker [disabledInput]="true" [myFilter]="FilterEndDate" [className]="'custom-input'"
+            [inputPlaceholder]="''" [inputId]="'activationDatee'" [inputName]="'End Date'" formControlName="endDate"
             (selectChange)="handelChangeDate($event,'end')">
           </stc-apps-date-picker>
         </div>
@@ -101,7 +101,7 @@
         }
         @if(form.get('schedulingType')?.value === 'Monthly'){
         <div class="col-md-4">
-          <stc-apps-select-drop-down formControlName="monthNumber" [label]="'Month Number'" [options]="monthNumbers"
+          <stc-apps-select-drop-down formControlName="monthNumber" [label]="'Day Number'" [options]="monthNumbers"
             [outputValue]="'id'"></stc-apps-select-drop-down>
         </div>
 
@@ -241,5 +241,9 @@
         </div>
       </div>
     </div>
+
   </form>
 </div>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="white" type="ball-clip-rotate" [fullScreen]="true">
+
+</ngx-spinner>

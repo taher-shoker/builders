@@ -1,10 +1,11 @@
-import { Component, OnInit, OnDestroy, ElementRef } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from '../../../../services/dashboard.service';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { convertToDateOnly } from '../../../../shared/helpers';
 
 @Component({
   selector: 'stc-apps-reports-sla-chart',
@@ -51,12 +52,27 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
       })
     );
 
-    series.slices.template.setAll({
-      strokeWidth: 3,
-      stroke: am5.color(0xffffff),
+    const pieColors = [
+      am5.color('#FF6A39'), // blue
+      am5.color('#4F008C'), // orange
+      am5.color('#4CAF50'), // green
+      am5.color('#FFC107'), // amber
+      am5.color('#9C27B0'), // purple
+      am5.color('#F44336'), // red
+    ];
+    const colorSet = am5.ColorSet.new(this.root, {
+      colors: pieColors,
+      reuse: true, // optional: repeat colors if there are more slices
+    });
+    series.slices.template.adapters.add('fill', (fill, target: any) => {
+      return colorSet.getIndex(series.dataItems.indexOf(target.dataItem));
+    });
+
+    series.slices.template.adapters.add('stroke', () => {
+      return am5.color(0xffffff); // keep white border
     });
     series.labels.template.setAll({
-      fontSize: 14,
+      fontSize: 12,
       text: '{category}:{value}%',
       fontWeight: 'bold',
     });
@@ -89,19 +105,22 @@ export class ReportsSlaChartComponent implements OnInit, OnDestroy {
   }
 
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (event.start && event.end) {
+    if (
+      event.start &&
+      event.end &&
+      this.filter.dateFrom !== convertToDateOnly(event.start) &&
+      this.filter.dateTo !== convertToDateOnly(event.end)
+    ) {
       this.filter = {
         ...this.filter,
-        dateFrom: this.convertToDateOnly(event.start),
-        dateTo: this.convertToDateOnly(event.end),
+        dateFrom: convertToDateOnly(event.start),
+        dateTo: convertToDateOnly(event.end),
       };
+
       this.getReportsSLAChart(this.filter);
+      this.form.get('startDate')?.setValue(event.start);
+      this.form.get('endDate')?.setValue(event.end);
     }
-    console.log('this.filter');
-  }
-  convertToDateOnly(date: Date | null): string | null {
-    if (!date) return null;
-    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
   }
   reset() {
     this.filter = { dateFrom: null, dateTo: null };

@@ -193,6 +193,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
     } else if (currentSystem === 'Dynamic_Report_Flow') {
       const userDelegates = this.form.get('userDelegates')?.value || [];
+      const UserEscaltion = this.form.get('manager')?.value || 0;
       dataForm = {
         userGroups,
         email,
@@ -201,9 +202,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         userDelegates: userDelegates.length
           ? [{ delegateName: userDelegates, systemName: currentSystem }]
           : [],
-        manager: this.form.get('manager')?.value
-          ? { id: this.form.get('manager')?.value }
-          : null,
+        manager: UserEscaltion > 0 ? { id: UserEscaltion } : null,
       };
     } else if (currentSystem === 'DI_Management') {
       dataForm = { userGroups: teams, email, name, jobTitle };
@@ -274,7 +273,6 @@ export class UserFormComponent implements OnInit, OnChanges {
         data = { ...data, userGroups: teams, teams: userGroups };
         delete data.teams;
       }
-      console.log(this.form.get('manager')?.value);
 
       this.userService.addUserGroup(data).subscribe(() => {
         const delegateEmail = this.form.get('userDelegates')?.value;

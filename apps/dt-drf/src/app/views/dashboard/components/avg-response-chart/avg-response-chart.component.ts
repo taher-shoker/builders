@@ -1,3 +1,5 @@
+import * as am5 from '@amcharts/amcharts5';
+import * as am5xy from '@amcharts/amcharts5/xy';
 import {
   Component,
   Input,
@@ -8,10 +10,9 @@ import {
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from '../../../../services/dashboard.service';
 import { Category } from '../../../dy-reports/dy-reports.service';
-import * as am5 from '@amcharts/amcharts5';
-import * as am5xy from '@amcharts/amcharts5/xy';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
+import { convertToDateOnly } from '../../../../shared/helpers';
 @Component({
   selector: 'stc-apps-avg-response-chart',
   templateUrl: './avg-response-chart.component.html',
@@ -129,20 +130,26 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
     series.data.setAll(this.chartData);
     series.appear(1000, 100);
   }
+
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (event.start && event.end) {
+    if (
+      event.start &&
+      event.end &&
+      this.filter.dateFrom !== convertToDateOnly(event.start) &&
+      this.filter.dateTo !== convertToDateOnly(event.end)
+    ) {
       this.filter = {
         ...this.filter,
-        dateFrom: this.convertToDateOnly(event.start),
-        dateTo: this.convertToDateOnly(event.end),
+        dateFrom: convertToDateOnly(event.start),
+        dateTo: convertToDateOnly(event.end),
       };
+
       this.getReportsAvgResTime(this.filter);
+      this.form.get('startDate')?.setValue(event.start);
+      this.form.get('endDate')?.setValue(event.end);
     }
   }
-  convertToDateOnly(date: Date | null): string | null {
-    if (!date) return null;
-    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
-  }
+
   handleSelect(event: string, controlName: string) {
     if (controlName === 'category') {
       this.filter = { ...this.filter, category: event };
@@ -152,7 +159,8 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
   getReportsAvgResTime(filter?: any) {
     this._dashboardService.getReportsAvgReponse(filter).subscribe((res) => {
       this.chartData = res.map((item) => ({
-        date: new Date(item.year, 0, item.month).getTime(),
+        date: new Date(item.year, item.month - 1, 1).getTime() + item.year,
+
         value: item.avgResponseTime,
       }));
 
@@ -163,7 +171,23 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
       }
     });
   }
-
+  getMonthName(month: number): string {
+    const months = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ];
+    return months[month - 1] || 'Unknown'; // Ensure valid month values
+  }
   maybeDisposeRoot(divId: string) {
     am5.array.each(am5.registry.rootElements, function (root: any) {
       if (root?.dom.id == divId) {

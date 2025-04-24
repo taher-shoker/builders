@@ -31,6 +31,7 @@ export class BarChartComponent
   @Input() isFinancialStatus = false;
   @Input() showYaxis = false;
   @Input() maxWidthLabel = 150;
+  @Input() customLabelText = '{categoryX}: {valueY} {info}';
 
   root!: am5.Root;
   math = Math;
@@ -161,7 +162,7 @@ export class BarChartComponent
         categoryXField: 'name',
         tooltip: am5.Tooltip.new(this.root, {
           pointerOrientation: 'horizontal',
-          labelText: '{categoryX}: {valueY} {info}',
+          labelText: this.customLabelText,
         }),
         // fill : am5.color("#4f008c"),
       })

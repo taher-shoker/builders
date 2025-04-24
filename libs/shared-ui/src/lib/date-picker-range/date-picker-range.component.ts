@@ -78,8 +78,6 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
   });
   ngOnInit(): void {
     // this.disableInput=false;
-    console.log(this.disableInput);
-
     this.dateFormGroup.valueChanges.subscribe((value) => {
       this.datePickerChangeEvent.emit(value);
     });
@@ -102,7 +100,9 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
   }
 
   firstValueChanged(event: MatDatepickerInputEvent<Date>) {
-    this.firstDateRange = event.value;
+    if (!this.disableInput && event?.value && this.firstDateRange) {
+      this.firstDateRange = event.value;
+    }
   }
 
   valueChanged(event: MatDatepickerInputEvent<Date>) {

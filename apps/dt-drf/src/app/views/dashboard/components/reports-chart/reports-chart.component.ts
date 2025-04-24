@@ -1,10 +1,4 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, Input, OnInit, WritableSignal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
   Category,
@@ -13,6 +7,7 @@ import {
 } from '../../../../services/dashboard.service';
 import { AuthService } from '../../../../services/auth.service';
 import { FormGroup, FormBuilder } from '@angular/forms';
+import { convertToDateOnly } from '../../../../shared/helpers';
 
 @Component({
   selector: 'stc-apps-reports-chart',
@@ -56,18 +51,22 @@ export class ReportsChartComponent implements OnInit {
     this.getReportsChartData();
   }
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (event.start && event.end) {
+    if (
+      event.start &&
+      event.end &&
+      this.filter.dateFrom !== convertToDateOnly(event.start) &&
+      this.filter.dateTo !== convertToDateOnly(event.end)
+    ) {
       this.filter = {
         ...this.filter,
-        dateFrom: this.convertToDateOnly(event.start),
-        dateTo: this.convertToDateOnly(event.end),
+        dateFrom: convertToDateOnly(event.start),
+        dateTo: convertToDateOnly(event.end),
       };
+
       this.getReportsChartData(this.filter);
+      this.form.get('startDate')?.setValue(event.start);
+      this.form.get('endDate')?.setValue(event.end);
     }
-  }
-  convertToDateOnly(date: Date | null): string | null {
-    if (!date) return null;
-    return new Date(date).toISOString().split('T')[0]; // Extracts YYYY-MM-DD
   }
   handleSelect(event: string, controlName: string) {
     if (controlName === 'status') {

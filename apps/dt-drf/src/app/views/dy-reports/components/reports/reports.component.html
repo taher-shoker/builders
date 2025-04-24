@@ -47,12 +47,16 @@
                 {{ item[header.key] }}
               </p>
             </ng-template>
+            <ng-template #autoSchedulingTemplate let-header="header" let-item="item">
+              <p class="custom-class-template">
+                {{ checkAutoScheduling(item[header.key]) }}
+              </p>
+            </ng-template>
             <ng-template #actionsCustomTemplate let-header="header" let-item="item">
               @for(action of header?.actions; track action; let i = $index){
 
-              @if (action === 'edit' &&
-              ((item?.initiatorEmail === reportsService.getCurrentUser().email && item?.isDeletable) ||
-              reportsService.checkIsProcessAdmin())) {
+              @if (action === 'edit' &&isEditable(item)
+              ) {
               <div class="edit-option action-option" (click)="handelEditReport(item.id)">
                 <i class="ri-edit-box-line edit-icon"></i>
                 Edit
@@ -60,9 +64,9 @@
               }
 
 
-              @else if (action === 'delete' && (item?.initiatorEmail === reportsService.getCurrentUser().email ||
-              this.reportsService.checkIsProcessAdmin()) &&
-              item?.isDeletable ) {
+              @else if (action === 'delete' && (item?.initiatorEmail === reportsService.getCurrentUser().email
+              ||reportsService.checkIsProcessAdmin())
+              && item?.isDeletable) {
 
               <div class="delete-option action-option" (click)="handelDeletReport(item)">
                 <i class="ri-delete-bin-line"></i>
@@ -90,6 +94,7 @@
       </div>
     </div>
   </div>
+
 </div>
 
 <stc-apps-dialog id="filter-Modal">
@@ -124,7 +129,3 @@
     </div>
   </form>
 </stc-apps-dialog>
-
-<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#ff375e" type="ball-scale-multiple" [fullScreen]="true">
-  <p style="color: white">Loading...</p>
-</ngx-spinner>
