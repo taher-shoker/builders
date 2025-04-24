@@ -255,7 +255,6 @@ export class AuthService {
    */
   private handleSingleGrantedSystem(res: LoggedUser) {
     if (this.gratnedSystems.length == 1) {
-      console.log(res.userGroups[0].roles[0].roleName);
       if (
         res.userGroups[0].roles[0].roleName === 'ADMINS'
         // res.userGroups[0].roles[0].roleName === 'BUSINESS_USER'
@@ -502,8 +501,8 @@ export class AuthService {
               this.setLoggedInUser();
               this.passedSystems.push({
                 systemUrl: window.location.origin + environment.systems.chat_bi,
-                name: 'CEM Chat AI',
-                displayName: 'CEM Chat AI',
+                name: 'TU Brain',
+                displayName: 'TU Brain',
                 mobileView: true,
               });
               break;

@@ -71,6 +71,13 @@ export class UsersService {
       { params: this.setSystemParam() }
     );
   }
+  updateUserManager(userId: number, data: { id: string }): Observable<User> {
+    return this.http.patch<User>(
+      `${this.endpoint}/users/manager/${userId}`,
+      data,
+      { params: this.setSystemParam() }
+    );
+  }
 
   deleteUser(id: number): Observable<number> {
     return this.http.delete<number>(`${this.endpoint}/users/${id}`, {
@@ -90,7 +97,6 @@ export class UsersService {
   }
 
   addUserGroup(data?: Partial<UserGroup>): Observable<User> {
-    console.log(data);
     return this.http.patch<User>(`${this.endpoint}/users/groups`, data);
   }
 

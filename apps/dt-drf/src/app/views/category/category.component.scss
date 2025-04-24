@@ -1,24 +1,29 @@
 .f-box {
-    border-radius: 7px;
-    margin-bottom: 16px;
-    .table-title {
-      font-weight: bold;
-      color: var(--stc-color);
-      font-size: 1.35rem;
-    }
+  border-radius: 7px;
+  margin-bottom: 16px;
+  .table-title {
+    font-weight: bold;
+    color: var(--stc-color);
+    font-size: 1.35rem;
+  }
 
-    background-color: white;
-    padding: 20px;
+  background-color: white;
+  padding: 20px;
 
-    .actions {
-      width: 100%;
-      align-items: center;
-      justify-content: space-between;
+  .actions {
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
 
-      .btn {
-        &:first-of-type {
-          margin-inline: 20px;
-        }
+    .btn {
+      &:first-of-type {
+        margin-inline: 20px;
       }
     }
   }
+}
+::ng-deep {
+  .table-header th .header-cell-holder {
+    justify-content: start !important;
+  }
+}

@@ -6,7 +6,19 @@ export interface NewReport {
     username: string;
   };
 }
-
+export interface SLAReportChart {
+  sla: string;
+  percentage: number;
+}
+export interface CategoryReportChart {
+  category: string;
+  count: number;
+}
+export interface AvgReportChart {
+  month: number;
+  year: number;
+  avgResponseTime: number;
+}
 export interface EditReport {
   requestApproval: {
     requestTaskId: number;
@@ -73,7 +85,7 @@ export interface Report {
   slaDurationInDays: number;
   description: string | null;
   reportSlaDuration: number;
-  initiatorShouldApprove: number
+  initiatorShouldApprove: number;
 }
 export interface CurrentAssignee {
   username: string;

@@ -6,7 +6,6 @@ import { Injectable } from '@angular/core';
 import { CookieService } from 'ngx-cookie';
 import { BehaviorSubject, map, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { Report } from '../../services/models/report-flow.model';
 
 export interface User {
   id: number;
@@ -135,8 +134,26 @@ export interface ReportDetails {
   description: string;
   reportSlaDuration: number;
   initiatorShouldApprove: number;
+  requestSchedule: RequestSchedule;
+  isEscalationEnabled: boolean;
+  isReminderEnabled: boolean;
 }
 
+export interface RequestSchedule {
+  autoScheduling: boolean;
+  isReminderActive: boolean;
+  schedulingType: SchedulingType;
+  monthNumber: string | null;
+  weeklyDay: string | null;
+  startDate: Date;
+  endDate: Date;
+  customDate: string | null;
+}
+export enum SchedulingType {
+  Monthly = 'Monthly',
+  Weekly = 'Weekly',
+  CustomDate = 'CustomDate',
+}
 export interface MilestoneAttachment {
   id: number;
   attachmentType: string;
@@ -267,6 +284,7 @@ export class ReportsService {
   }
 
   createReportFlow(data: any) {
+    console.log(data);
     return this.http.post(`${this.dtUrl}requests`, data);
   }
 
@@ -373,11 +391,8 @@ export class ReportsService {
     return this.http.get(`${this.dtUrl}/${id}`);
   }
 
-  updateReportFlow(id: number, reportName: string, description: string) {
-    return this.http.patch(`${this.dtUrl}requests/${id}`, {
-      reportName,
-      description,
-    });
+  updateReportFlow(id: number, data: any) {
+    return this.http.patch(`${this.dtUrl}requests/${id}`, data);
   }
 
   deleteReport(id: number) {

@@ -667,7 +667,11 @@ export class DyReportDetailsComponent implements OnInit {
       .subscribe((res) => {
         console.log('The res of complete task:', res);
         this.isLoadingSteps = false;
-        this.getReportDetails();
+        if (this.reportsService.checkIsProcessAdmin()) {
+          this.getReportDetails();
+        } else {
+          this.router.navigate(['/home']);
+        }
       });
   }
 
