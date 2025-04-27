@@ -348,19 +348,19 @@ export class AuthService {
   applyUserValuesCookies(user: TPUserModel) {
     this.cookieService.put('username', user.username, {
       // httpOnly: true,
-      secure: true,
+      // secure: true,
     });
     this.cookieService.put('token', user.token, {
       // httpOnly: true,
-      secure: true,
+      // secure: true,
     });
     this.cookieService.put('displayName', user.displayName, {
       // httpOnly: true,
-      secure: true,
+      // secure: true,
     });
     this.cookieService.put('userTeam', user.userTeam, {
       // httpOnly: true,
-      secure: true,
+      //secure: true,
     });
     // this.cookieService.put('tokenType', 'Web', {
     //   // httpOnly: true,
