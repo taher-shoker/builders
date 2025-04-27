@@ -54,54 +54,60 @@ export class ChatListItemComponent {
   processedMessage = '';
   popUpClick = false;
   @ViewChild('container') myElementRef!: ElementRef;
-  prevValue = '';
-  messageChunk = '';
+
   previousContent = '';
   newChunk = '';
-  mergedChunks = '';
+  currentStage = '';
+  words: string[] = [];
+  currentWordIndex = 0;
+  isAnimating = false;
+
   chartShowType = '';
   chartSqlData = { xList: [], yList: [], title: '' };
+
   constructor(private chatStreamService: ChatStreamService) {
     this.chatStreamService.chunkStageSubject.subscribe((chunkStream) => {
       this.chunkStream = chunkStream;
       const stage = this.chunkStream[this.chunkStream.length - 1];
-      const full = stage.stageContent;
-
-      if (
-        full &&
-        typeof full === 'string' &&
-        !full?.startsWith(this.previousContent)
-      ) {
-        this.previousContent = '';
-        this.newChunk = full;
-      } else {
-        this.newChunk = full?.slice(this.previousContent.length);
-      }
-      if (this.newChunk) {
-        this.mergedChunks = this.newChunk;
-        setTimeout(() => {
-          this.previousContent += this.newChunk;
-          this.newChunk = '';
-        }, 800);
+      const fullContent = stage.stageContent;
+      const stageTitle = stage.stageTitle;
+      if (fullContent && typeof fullContent === 'string') {
+        if (this.currentStage !== stageTitle) {
+          this.previousContent = '';
+          this.formattingNewChunk(fullContent);
+          this.currentStage = stageTitle;
+        } else {
+          this.formattingNewChunk(fullContent);
+        }
       }
     });
-    // effect(() => {
-    //   if (this.message() && this.isLoading()) {
-    //     this.processedMessage = this.replaceNull(this.message());
-    //   }
-    // });
   }
-  onAnimationEnd() {
-    // Merge smoothly once animation is done
-    this.previousContent += this.newChunk;
-    this.newChunk = '';
-  }
-  trackByContent(index: number, content: string): string {
-    console.log('content', content);
-
-    return content; // Changes in content will force re-render
+  formattingNewChunk(fullContent: string) {
+    this.newChunk = fullContent.slice(this.previousContent.length);
+    this.words = this.newChunk.split(' ');
+    this.currentWordIndex = 0;
+    this.animateWords();
   }
 
+  animateWords() {
+    if (this.isAnimating) return;
+    this.isAnimating = true;
+
+    if (this.words?.length === 0) {
+      this.isAnimating = false;
+      return;
+    }
+
+    const interval = setInterval(() => {
+      if (this.currentWordIndex < this.words.length) {
+        this.previousContent += this.words[this.currentWordIndex] + ' '; // Add word progressively
+        this.currentWordIndex++;
+      } else {
+        clearInterval(interval);
+        this.isAnimating = false;
+      }
+    }, 100);
+  }
   replaceNull(input: string | null): string {
     return input?.replace(/null/g, '') || '';
   }

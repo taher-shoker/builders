@@ -142,7 +142,6 @@ export class ChatViewComponent implements OnInit {
           });
         },
         error: (err) => {
-          console.log(err);
           this.messagesStreamList.pop();
           this.reset();
           this.messagesStreamList.push({
@@ -152,7 +151,6 @@ export class ChatViewComponent implements OnInit {
         },
         complete: () => {
           this.completeStream();
-          console.log('Stream complete', this.messagesStreamList);
         },
       });
   }

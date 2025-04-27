@@ -61,36 +61,7 @@
               class="text-static"
               [innerHTML]="previousContent | formatMessage"
             ></div>
-            <div
-              *ngIf="newChunk"
-              class="text-animate"
-              [innerHTML]="newChunk | formatMessage"
-            ></div>
-            <!-- <div class="text-static">
-              <span
-                [innerHTML]="previousContent | formatMessage"
-                *ngIf="!mergedChunks"
-              ></span>
 
-              <span *ngIf="mergedChunks">
-                <span
-                  [innerHTML]="
-                    previousContent.slice(0, -mergedChunks.length)
-                      | formatMessage
-                  "
-                ></span>
-                <span
-                  class="merged-animate"
-                  [innerHTML]="mergedChunks | formatMessage"
-                ></span>
-              </span>
-            </div>
-
-            <div
-              *ngIf="newChunk"
-              class="text-animate"
-              [innerHTML]="newChunk | formatMessage"
-            ></div> -->
             } @else{
             <ng-container [ngSwitch]="messageChunk.stageTitle">
               <ng-container *ngSwitchCase="'SQL Generation'">
