@@ -1,8 +1,6 @@
 <div>
-  <div
-    class="d-flex align-items-center cursor-pointer"
-    (click)="toggleExpand()"
-  >
+  @if (title()!=='Intention Understanding and Summary') {
+  <div class="d-flex align-items-center cursor-pointer">
     <div class="title-holder d-flex align-items-center">
       @if(title()==='Deep Thinking'){
       <span class="deep-thinking"
@@ -13,12 +11,15 @@
       <span class="title"></span>
       {{ title() }}
     </div>
-    <span class="expand-icon">
+    @if (title()!=='Metadata retrieval' &&title()!=='SQL Generation'
+    &&title()!=='Visualize based on known information') {
+    <span class="expand-icon" (click)="toggleExpand()">
       <i [class]="isExpanded ? 'fas fa-angle-up' : 'fas fa-angle-down'"></i>
     </span>
+    }
   </div>
-
-  <div *ngIf="isExpanded" [@fadeInOut] class="mb-3">
+  }
+  <div *ngIf="isExpanded" class="mb-3">
     <ng-content></ng-content>
   </div>
 </div>
