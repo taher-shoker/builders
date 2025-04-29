@@ -7,7 +7,7 @@ export class FormatMessagePipe implements PipeTransform {
   transform(value: string): string {
     if (!value) return '';
 
-    value = value.replace(/<\/?think>/gi, '');
+    value = value.replace(/(?:<\/?)?think>/gi, '');
 
     value = value.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 

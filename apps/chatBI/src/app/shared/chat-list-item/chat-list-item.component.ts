@@ -61,24 +61,29 @@ export class ChatListItemComponent {
   words: string[] = [];
   currentWordIndex = 0;
   isAnimating = false;
+  loadingDataQueryIndex = -1;
   dataQueryIndex = -1;
   chartShowType = '';
   chartSqlData = { xList: [], yList: [], title: '' };
 
   constructor(private chatStreamService: ChatStreamService) {
+    effect(() => {
+      if (this.messagesChunks()) {
+        this.dataQueryIndex = this.messagesChunks().findIndex(
+          (chunk) => chunk.stageTitle === 'Data Query'
+        );
+      }
+    });
     this.chatStreamService.chunkStageSubject.subscribe((chunkStream) => {
       this.chunkStream = chunkStream;
-      this.dataQueryIndex = this.chunkStream.findIndex(
+      this.loadingDataQueryIndex = this.chunkStream.findIndex(
         (chunk) => chunk.stageTitle === 'Data Query'
       );
-      console.log(this.dataQueryIndex);
 
       const stage = this.chunkStream[this.chunkStream.length - 1];
       const fullContent = stage.stageContent;
       const stageTitle = stage.stageTitle;
-      this.dataQueryIndex = this.chunkStream.findIndex(
-        (chunk) => chunk.stageTitle === 'Data Query'
-      );
+
       if (fullContent && typeof fullContent === 'string') {
         if (this.currentStage !== stageTitle) {
           this.previousContent = '';

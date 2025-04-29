@@ -45,7 +45,11 @@
         $index) {
         <ng-container
           *ngIf="
-            dataQueryIndex === -1 || $index < dataQueryIndex;
+            (message() === '' &&
+              (loadingDataQueryIndex === -1 ||
+                $index < loadingDataQueryIndex)) ||
+              (message() !== '' &&
+                (dataQueryIndex === -1 || $index < dataQueryIndex));
             else startDataQuerySection
           "
         >
@@ -125,7 +129,8 @@
         </ng-container>
 
         <ng-template #startDataQuerySection>
-          @if($index == dataQueryIndex){
+          @if($index == loadingDataQueryIndex && message()=='' ||
+          message()!==''&& dataQueryIndex==$index){
           <stc-apps-chat-insight-card
             class="position-relative"
             [title]="messageChunk.stageTitle"
