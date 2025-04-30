@@ -3,4 +3,9 @@
     <i class="fa fa-arrow-left"></i>
   </button>
   <div class="title">{{ title() }}</div>
+  @if (newMessageIsSent()) {
+  <div (click)="startChat()" class="new-chat-btn">
+    <img src="assets/images/Add.svg" />
+  </div>
+  }
 </div>

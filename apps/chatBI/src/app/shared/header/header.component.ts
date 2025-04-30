@@ -1,5 +1,11 @@
 import { Location } from '@angular/common';
-import { Component, input, InputSignal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  input,
+  InputSignal,
+  Output,
+} from '@angular/core';
 import { Router } from '@angular/router';
 
 @Component({
@@ -9,11 +15,16 @@ import { Router } from '@angular/router';
 })
 export class HeaderComponent {
   title: InputSignal<string> = input('');
+  newMessageIsSent: InputSignal<boolean> = input(false);
+  @Output() newChat = new EventEmitter<void>();
   constructor(private location: Location, private router: Router) {}
   goBack() {
     setTimeout(() => {
       this.location.back();
     }, 300);
     // this.router.navigate(['/startChat'])
+  }
+  startChat() {
+    this.newChat.emit();
   }
 }

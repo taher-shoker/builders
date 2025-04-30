@@ -1,8 +1,9 @@
 <div
   [ngClass]="{
-    'chart-holder': showType() !== '' && showType() !== 'table',
     'zoomed-width':
-      (showType() === 'line' || showType() === 'bar') && popUpClick()
+      (showType() === 'line' || showType() === 'bar') &&
+      popUpClick() &&
+      sqlData().yList[0]?.data?.length > 3
   }"
 >
   @if (showType() == 'pie') {
