@@ -1,23 +1,27 @@
 <div class="chat-view">
-  <stc-apps-header [title]="'CEM Copilot'"></stc-apps-header>
+  <stc-apps-header
+    (newChat)="handleNewChat()"
+    [title]="'TU Brain'"
+    [newMessageIsSent]="newMessageIsSent"
+  ></stc-apps-header>
   <div
     #scrollContainer
-    class="chat-view_messages-container"
-    [ngClass]="
-      !hideQuestions ? 'messages-list-questions-margin' : 'messages-list-margin'
-    "
+    class="chat-view_messages-container messages-list-margin"
+    (scroll)="onScroll()"
   >
     @if (messagesList.length==0) {
     <div class="background"></div>
-    } @for (message of messagesList; track $index) {
+    } @for (message of messagesStreamList; track $index) {
     <stc-apps-chat-list-item
       [message]="message.content"
-      [messageDate]="message.date"
       [messageType]="message.messageType"
-      [images]="message.images ?? ['']"
-      [showType]="message.showType ?? ''"
-      [sqlData]="message.sqlData ?? { xList: [], yList: [], title: '' }"
+      [newChat]="message.newChat ?? false"
+      [header]="message.header ?? ''"
+      [messagesChunks]="
+        message.chunk ? message.chunk : [{ stageTitle: '', stageContent: '' }]
+      "
       [isLoading]="pendingFlag()"
+      (questionEvent)="questionClick($event)"
     >
     </stc-apps-chat-list-item>
     }
@@ -27,8 +31,9 @@
     class="chat-view_input-container"
     [ngClass]="{
       focused: isFocused,
+      'empty-max-height': !newMessage.trim(),
+      'max-height': newMessage.trim(),
       error: newMessage.length > 512,
-      'input-filed-bottom': hideQuestions
     }"
   >
     <textarea
@@ -37,51 +42,49 @@
       (keydown.enter)="onEnter($event)"
       (input)="adjustHeight($event)"
       [(ngModel)]="newMessage"
-      placeholder="Ask me anything..."
+      [placeholder]="pendingFlag() ? '' : 'Enter questions or prompt words'"
       (focus)="onFocus()"
       (blur)="onBlur($event)"
+      [ngClass]="{
+        'empty-max-height': !newMessage,
+        'max-height': newMessage.trim(),
+        'text-area-actions-bottom': newMessage.trim()
+      }"
+      [disabled]="pendingFlag()"
     >
     </textarea>
+    <!-- [ngClass]="{
+      disabled:
+        newMessage.length > 512 || !newMessage.trim() || pendingFlag()
+    }" -->
 
-    <div class="button-container">
-      <img
+    <div class="text-area-actions">
+      <div
+        class="textarea-counter"
+        [ngClass]="{ 'error-text': newMessage.length > 512 }"
+      >
+        @if (newMessage.trim()) {
+        <p>{{ newMessage.length }} / {{ maxLength }}</p>
+        }
+      </div>
+      @if (newMessage.length <= 512&&
+      newMessage.trim()&&!pendingFlag()||pendingFlag() ) {
+      <div
+        class="button-container"
         [ngClass]="{
-          disabled:
-            newMessage.length > 512 || !newMessage.trim() || pendingFlag()
-        }"
-        (click)="sendMessage()"
-        src="assets/images/Vector.svg"
-        alt=""
-      />
+        'pause-btn': pendingFlag(),
+
+      }"
+      >
+        <img
+          (click)="sendStreamMessage()"
+          [src]="
+            pendingFlag() ? 'assets/images/stop.png' : 'assets/images/send.png'
+          "
+          alt=""
+        />
+      </div>
+      }
     </div>
-  </div>
-  <div
-    class="text-area-actions"
-    [ngClass]="{ 'text-area-actions-bottom': hideQuestions }"
-  >
-    <div
-      class="textarea-counter"
-      [ngClass]="{ 'error-text': newMessage.length > 512 }"
-    >
-      <p>{{ newMessage.length }} / {{ maxLength }}</p>
-    </div>
-    <div class="questions-controller-holder">
-      <img
-        (click)="hideQuestionsAction()"
-        class="questions-controller"
-        [src]="
-          !hideQuestions
-            ? 'assets/images/active-questions.png'
-            : 'assets/images/inactive-questions.png'
-        "
-        alt=""
-      />
-    </div>
-  </div>
-  <div class="suggested-questions w-100">
-    <stc-apps-suggested-question
-      [hideQuestion]="hideQuestions"
-      (sendQuestionEvent)="setSuggestedQuestion($event)"
-    ></stc-apps-suggested-question>
   </div>
 </div>

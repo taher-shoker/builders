@@ -6,15 +6,17 @@ p {
   font-size: 24px;
   text-align: center;
 }
-
+.sender-message-margin-left {
+  margin-left: 42px;
+}
 .dot {
   display: inline-block;
-  width: 5px;
-  height: 5px;
+  width: 8px;
+  height: 8px;
   margin: 0 5px;
-  background-color: var(--whiteColor);
+  background-color: var(--stcCoralColor);
   border-radius: 50%;
-  animation: bounce 1.5s infinite ease-in-out;
+  animation: bounce 1s infinite ease-in-out;
 }
 
 .dot:nth-child(1) {
@@ -28,21 +30,14 @@ p {
 .dot:nth-child(3) {
   animation-delay: 0.6s;
 }
-
-@keyframes bounce {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+.typewriter-effect {
+  animation: typing 0.5s steps(40, end) step-end infinite;
 }
+
 .chat-list-item {
-  position: relative;
   z-index: 999;
   display: flex;
-  font-family: 'stc forward-regular';
+
   width: 100%;
   &_query-profile {
     display: flex;
@@ -56,14 +51,17 @@ p {
   }
   &_query-info {
     .message {
-      padding: 15.5px 22.5px;
+      padding: 16px 16px;
       max-width: 100%;
       font-weight: 400;
-      font-size: 13px;
-      line-height: 16px;
-      border-radius: 25px;
+      font-size: 16px;
+      line-height: 22px;
+      border-radius: 20px;
+      font-family: Arial;
       white-space: pre-wrap;
-
+      .message-content {
+        opacity: 0;
+      }
       .chatImage {
         margin-top: 20px;
         width: 80%;
@@ -77,10 +75,11 @@ p {
         border-radius: 15px;
       }
       .zoom-in-btn {
-        position: absolute;
-        z-index: 999;
-        bottom: 55px;
-        right: 40px;
+        position: fixed;
+        z-index: 9999;
+        right: 0;
+        margin-top: -50px;
+        // bottom: 10px;
         background-color: var(--stc-color);
         color: white;
         border: none;
@@ -88,20 +87,24 @@ p {
         font-size: 16px;
         cursor: pointer;
         border-radius: 5px;
-        z-index: 10;
+      }
+      .heading {
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 24px;
+        margin-bottom: 12px;
+        padding: 0px 4px;
       }
     }
     .sender-message {
-      background: var(--stcCoralColor);
-      // background: var(--stc-color);
+      background: var(--stc-chat-purple-color);
       color: var(--whiteColor);
-      border-top-right-radius: 0px;
-      margin-left: 40px;
+      font-weight: 700;
     }
     .receiver-message {
-      background: var(--stc-color);
-      color: #ffff;
-      border-bottom-left-radius: 0px;
+      width: 100%;
+      background: var(--whiteColor);
+      color: var(--blackColor);
     }
     .empty-receiver-message {
       width: 80%;
@@ -118,12 +121,120 @@ p {
     }
   }
 }
+.sql-block {
+  white-space: pre-wrap;
+  word-break: break-word;
+  overflow-x: hidden;
+  font-family: monospace;
+  font-size: 12px;
+
+  background: #f9f9f9;
+  padding: 10px;
+  border-radius: 8px;
+}
+::ng-deep .sql-keyword {
+  color: var(--stc-chat-purple-color);
+  font-weight: bold;
+}
+::ng-deep .sql-function {
+  color: #ffd700;
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.animate-fade-in {
+  animation: fade-in 0s ease-out forwards;
+}
+
+.stage-content {
+  overflow: hidden;
+  transition: all 0.6s ease-out;
+  max-height: 0;
+  opacity: 0;
+}
+
+.think-content {
+  color: rgb(98, 98, 98);
+}
+
+.stage-content.show {
+  max-height: 100%;
+  opacity: 1;
+}
+.text-animate {
+  animation: textAppear 1s ease-out forwards;
+}
+
+.merged-animate {
+  animation: fadeInMerged 1s ease-out;
+  display: inline;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(2px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes textAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes fadeInMerged {
+  from {
+    opacity: 0.3;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
 @media screen and (max-width: 900px) {
   .chat-list-item {
     &_query-info {
       .chatImage {
         width: 100% !important;
       }
+      .zoom-in-btn {
+        right: 0px !important;
+      }
     }
   }
+}
+
+.sub-heading {
+  padding: 0px 4px;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 22px;
 }

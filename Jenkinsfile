@@ -31,6 +31,55 @@ pipeline {
             }
         }
 
+        stage('Build') {
+            steps {
+                script {
+                    sh "npm run build:chat:prod"
+                }
+            }
+        }
+
+		stage('Send Approval Email') {
+            steps {
+                script {
+                    emailext (
+                        subject: "Approval Required: Build #${env.BUILD_NUMBER}",
+                        body: """
+                            <html>
+                                <body>
+                                    <h2>Hello Mohamed Fawzy,</h2>
+                                    <p>Please review the build and approve or reject it.</p>
+                                    <p>
+                                        <strong>Approve:</strong>
+                                        <a href="${env.BUILD_URL}input/Approval/proceed">Click here to Approve</a>
+                                    </p>
+                                    <p>
+                                        <strong>Reject:</strong>
+                                        <a href="${env.BUILD_URL}input/Approval/abort">Click here to Reject</a>
+                                    </p>
+                                    <p>Thank you!</p>
+                                    <p><em>Jenkins Pipeline</em></p>
+                                </body>
+                            </html>
+                        """,
+                        to: 'mohfibrahim.c@stc.com.sa',
+                        mimeType: 'text/html'
+                    )
+                }
+            }
+        }
+        stage('Wait for Approval') {
+            steps {
+                script {
+                    def userInput = input(
+                        id: 'Approval',
+                        message: 'Please approve or reject the build',
+                        parameters: [
+                            choice(name: 'action', choices: ['Approve', 'Reject'], description: 'Approve or Reject the build')
+                        ]
+                    )
+
+
         stage('Send Approval Email') {
             steps {
                 script {
@@ -50,7 +99,6 @@ pipeline {
                             </html>
                         """,
                         to: 'mohfibrahim.c@stc.com.sa',
-                        mimeType: 'text/html'
                     )
                 }
             }
@@ -60,8 +108,8 @@ pipeline {
             steps {
                 script {
                     def userInput = input(
-                        id: 'Approval', 
-                        message: 'Please approve or reject the build', 
+                        id: 'Approval',
+                        message: 'Please approve or reject the build',
                         parameters: [
                             choice(name: 'action', choices: ['Approve', 'Reject'], description: 'Approve or Reject the build')
                         ]
@@ -75,12 +123,13 @@ pipeline {
                 }
             }
         }
-
         stage('Deploy on Server 243') {
             steps {
                 script {
                     sh """
-                        sshpass -p 'CEM435@#qeema' scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.243:/data/tools/apache-tomcat-8.5.59/webapps/
+
+                        sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
+
                     """
                 }
             }
@@ -111,21 +160,13 @@ pipeline {
                 script {
                     sh """
                         sshpass -p 'CEM435@#qeema' ssh -o StrictHostKeyChecking=no osadmin@10.21.196.244 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+
                     """
                 }
-            }
         }
     }
 
     post {
         always {
             echo 'Pipeline execution complete.'
-        }
-        success {
-            echo 'Application deployed successfully!'
-        }
-        failure {
-            echo 'Pipeline execution failed!'
-        }
-    }
 }

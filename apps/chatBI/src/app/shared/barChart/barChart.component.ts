@@ -123,7 +123,7 @@ export class BarChartComponent implements OnInit {
           categoryXField: 'xaxis',
         })
       );
-
+      unit = unit ?? '';
       series.columns.template.setAll({
         tooltipText: `{categoryX}:{valueY} ${unit}`,
         width: am5.percent(90),
@@ -172,7 +172,7 @@ export class BarChartComponent implements OnInit {
     };
     this.indicators()?.map((indicator, index) => {
       makeSeries(
-        indicator.indicatorName + ' (' + indicator.unit + ')',
+        indicator.indicatorName,
         indicator.indicatorName?.replace(/\s+/g, ''),
         this.barChartColors[index],
         indicator.unit
