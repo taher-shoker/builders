@@ -98,6 +98,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.component';
 import { DropdownModule } from 'primeng/dropdown';
 import { CarouselModule } from 'ngx-owl-carousel-o';
+import { UtilitiesService } from './services/utilities.service';
 
 const components = [
   ButtonComponent,
@@ -165,6 +166,7 @@ const components = [
   declarations: [...components],
   exports: [...components, ...modules],
   providers: [
+    UtilitiesService,
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
     SharedService,
     DatePipe,

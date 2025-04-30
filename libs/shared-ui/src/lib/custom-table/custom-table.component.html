@@ -198,7 +198,7 @@
       [class.psrTabldMajor]="
         psrTable() && header.label === 'Major Activities/Deliverables'
       "
-      [class.psrTabldLevel]="psrTable() && header.label === 'Completion Level'"
+      [class.psrTabldLevel]="psrTable() && (header.label === 'Completion Level' || header.label === 'weight')"
       [ngStyle]="{
         'font-family': fontFamily() && psrTable() ? fontFamily() : '',
         'color' : header.key === 'time' ? '#8E9AA0' : '#363636'
@@ -217,7 +217,7 @@
         delete
       </div>
       } @else {
-      {{ item[header.key] }}
+      {{ (header.label === 'Completion Level' || header.label === 'weight') ? item[header.key] || item[header.key] === 0 ? item[header.key] : '-' : item[header.key] ? item[header.key] : '-' }}
       } @if(psrTable() && header.label === 'Completion Level') { % } } @else {
       @if(header.key !== '') { @if(header.key !== 'id') { @if(header.key ===
       'major') {
@@ -234,7 +234,7 @@
       </div>
       } @else {
       <div class="position-relative">
-        @if(header.key === 'completionLevel') {
+        @if(header.key === 'completionLevel' || header.key === 'weight') {
         <input
           type="number"
           [(ngModel)]="item[header.key]"

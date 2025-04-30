@@ -73,9 +73,12 @@
       }}</span>
     </p>
     <p class="project-container-description">
-      {{ project().details | truncateWord : isMobile() ? 2 : 6 }}
-      @if(project().details.split(" ").length >= 2) {
-      <a (click)="displayDrilldown()" class="read-more">read more</a>
+      {{ project().details.trim() | truncateWord : isMobile() ? 2 : 6 }}
+      @if(!isMobile() && project().details.trim().split(" ").length > 6) {
+        <a (click)="displayDrilldown()" class="read-more">read more</a>
+      }
+      @else if(isMobile() && project().details.trim().split(" ").length > 2) {
+        <a (click)="displayDrilldown()" class="read-more">read more</a>
       }
     </p>
     <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->

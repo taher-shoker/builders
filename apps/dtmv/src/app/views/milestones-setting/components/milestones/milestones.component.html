@@ -85,6 +85,7 @@
               [headers]="columnsSchema"
               [length]="milestonesTotalCount"
               (doAction)="tableAction($event)"
+              [activityLogTable]="false"
               [sort]="true"
               [paginate]="true"
               [applyFilter]="true"
@@ -211,6 +212,7 @@
           <stc-apps-date-picker-range
             [resetFormFlag]="resetFormFlag"
             [disableInput]="true"
+            [disableFilterFlag]="true"
             (datePickerChangeEvent)="datePickerChanged($event, 'startDate')"
           >
           </stc-apps-date-picker-range>
@@ -222,6 +224,7 @@
           <stc-apps-date-picker-range
             [resetFormFlag]="resetFormFlag"
             [disableInput]="true"
+            [disableFilterFlag]="true"
             (datePickerChangeEvent)="datePickerChanged($event, 'endDate')"
           >
           </stc-apps-date-picker-range>

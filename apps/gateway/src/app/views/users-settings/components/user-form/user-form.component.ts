@@ -26,6 +26,7 @@ import {
   Role,
   Team,
   User,
+  UserDelegate,
   UserGroup,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
@@ -45,7 +46,10 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   teams: Team[] = [];
   allUsers: User[] = [];
-  userDelegate: any[] = [];
+  //userDelegate: any[] = [];
+  userDelegate: WritableSignal<any[]> = signal([]);
+
+  escaltionManager: WritableSignal<any[]> = signal([]);
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   selectedDelegates: any;
@@ -86,7 +90,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.showInputs = false;
     }
     this.handleGrouping();
-    this.getusersList();
+    this.getUsersList();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
@@ -123,12 +127,18 @@ export class UserFormComponent implements OnInit, OnChanges {
           : Validators.required,
       ],
       userDelegates: [[]],
+      manager: [{}],
       viewer: [''],
       editor: [''],
       pmo: [''],
     });
   }
 
+  // handleUserDelegate(item: any) {
+  //   this.escaltionManager.update((managers) =>
+  //     managers.filter((manager) => manager.email !== item.email)
+  //   );
+  // }
   // Getter for viewerControl
   get viewerControl(): AbstractControl | null {
     return this.form.get('viewer');
@@ -183,6 +193,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
     } else if (currentSystem === 'Dynamic_Report_Flow') {
       const userDelegates = this.form.get('userDelegates')?.value || [];
+      const UserEscaltion = this.form.get('manager')?.value || 0;
       dataForm = {
         userGroups,
         email,
@@ -191,6 +202,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         userDelegates: userDelegates.length
           ? [{ delegateName: userDelegates, systemName: currentSystem }]
           : [],
+        manager: UserEscaltion > 0 ? { id: UserEscaltion } : null,
       };
     } else if (currentSystem === 'DI_Management') {
       dataForm = { userGroups: teams, email, name, jobTitle };
@@ -233,8 +245,6 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (currentSystem === 'Strategic_Dashboard' && teams?.length > 0) {
         data.teams = null;
       }
-      console.log(userGroups);
-
       if (
         currentSystem === 'Dynamic_Report_Flow' ||
         currentSystem === 'ChatBI' ||
@@ -263,10 +273,15 @@ export class UserFormComponent implements OnInit, OnChanges {
         data = { ...data, userGroups: teams, teams: userGroups };
         delete data.teams;
       }
+
       this.userService.addUserGroup(data).subscribe(() => {
         const delegateEmail = this.form.get('userDelegates')?.value;
         if (delegateEmail) {
           this.updateUserDelegate(delegateEmail);
+        }
+        const escaltionManager = this.form.get('manager')?.value;
+        if (escaltionManager) {
+          this.updateUserEscalationManger({ id: escaltionManager });
         }
         onSuccess('User Group is added successfully');
       }, handleError);
@@ -301,6 +316,16 @@ export class UserFormComponent implements OnInit, OnChanges {
           }
           // Additional logic can be added here if needed
         });
+    }
+  }
+  updateUserEscalationManger(data: any) {
+    if (this.addGroups) {
+      this.userService.updateUserManager(this.userId, data).subscribe((res) => {
+        if (!res) {
+          return;
+        }
+        // Additional logic can be added here if needed
+      });
     }
   }
 
@@ -526,13 +551,14 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
   restFormWithValue(data: User) {
-    this.getusersList();
+    this.getUsersList();
     forkJoin([this.userService.getUsers()]).subscribe(() => {
       this.form.patchValue({
         email: data.email,
         name: data.name,
         jobTitle: data.jobTitle,
         userDelegates: this.data?.userDelegates?.[0]?.delegateName,
+        manager: this.data?.manager?.id,
       });
     });
 
@@ -623,21 +649,21 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
     });
   }
-  getusersList() {
+  getUsersList() {
     this.userService.getUsers().subscribe((res) => {
-      if (res) {
-        this.allUsers = res.filter(
-          (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
-        );
+      if (!res) return;
 
-        if (this.isEditing && this.data) {
-          this.userDelegate = this.allUsers.filter(
-            (l) => l.email !== this.data?.email
-          );
-        } else {
-          this.userDelegate = this.allUsers;
-        }
-      }
+      this.allUsers = res.filter(
+        (user) => user.userGroups?.[0]?.roles?.[0]?.roleName !== 'ADMINS'
+      );
+
+      const updatedUsers =
+        this.isEditing && this.data
+          ? this.allUsers.filter((user) => user.email !== this.data.email)
+          : this.allUsers;
+
+      this.userDelegate.set(updatedUsers); // Update the signal
+      this.escaltionManager.set(updatedUsers);
     });
   }
   closeDialog() {

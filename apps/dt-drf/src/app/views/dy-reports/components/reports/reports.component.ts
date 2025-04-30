@@ -13,7 +13,6 @@ import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
 import { UtilsService } from '@stc-apps/lng-selector';
-import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
 import { saveAs } from 'file-saver';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
@@ -29,6 +28,7 @@ import {
   ReportDetails,
 } from '../../dy-reports.service';
 import { ExportDialogComponent } from './export-dialog/export-dialog.component';
+import { UtilitiesService } from '../../../../../../../../libs/shared-ui/src/lib/services/utilities.service';
 
 export interface Milestone {
   activityName: string;
@@ -47,6 +47,7 @@ export interface Milestone {
 export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
   @ViewChild('actionsCustomTemplate') actionsCustomTemplate!: any;
+  @ViewChild('autoSchedulingTemplate') autoSchedulingTemplate!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -88,12 +89,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   disabled = false;
   tableData!: any;
   rowData!: any;
-  reportStatus: { value: string; name: string }[] = [
-    { value: 'pending', name: 'Pending' },
-    { value: 'completed', name: 'Completed' },
-    // { value: 'breached', name: 'Breached' },
-    { value: 'deleted', name: 'Deleted' },
-  ];
+
   monthsArr: any = [];
   yearsArr: any = [];
   columnsSchema?: ColumnsSchema[] = undefined;
@@ -110,10 +106,17 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
     this.yearsArrPopulator();
     this.handleDeleteFilter();
   }
+  isEditable(item: any): boolean {
+    const isInitiator =
+      item?.initiatorEmail === this.reportsService.getCurrentUser().email;
+    const isAdmin = this.reportsService.checkIsProcessAdmin();
+    const isPending = item?.reportFlowStatus === 'pending';
+    return (isInitiator || isAdmin) && isPending;
+  }
 
   handleDeleteFilter() {
     if (!this.reportsService.userInGroup('System_Process_Admin')) {
-      this.reportStatus.length = 2;
+      this.authService.reportStatus.length = 2;
     }
   }
 
@@ -145,6 +148,12 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
         label: 'Initiator Name',
       },
       {
+        key: 'requestScheduleDto',
+        type: 'date',
+        label: 'Auto Scheduling',
+        complexViewTemp: this.autoSchedulingTemplate,
+      },
+      {
         key: 'lastModifiedDate',
         type: 'date',
         label: 'Last Action Date',
@@ -172,7 +181,7 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   paginate(paginationEvent: PaginationEvent) {
-    const filteredForm = this.utilities.filterObject(this.form.value);
+    const filteredForm = this.utilities.filterObject(this.filterObj);
 
     this.reportsService
       .getReports({
@@ -198,7 +207,9 @@ export class ReportsComponent implements OnInit, AfterViewInit, OnDestroy {
       relativeTo: this.route,
     });
   }
-
+  checkAutoScheduling(obj: any): string {
+    return obj?.autoScheduling ? 'Yes' : 'No';
+  }
   handelEditReport(id: number) {
     this.router.navigate(['./edit_report', id], {
       relativeTo: this.route,

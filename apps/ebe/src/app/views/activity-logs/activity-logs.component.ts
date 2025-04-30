@@ -120,7 +120,7 @@ export class ActivityLogsComponent {
     ]);
     this.router.params.subscribe({
       next: (param) => {
-        let title = param['title'];
+        const title = param['title'];
         if (title === 'scorecard') {
           this.currentTap.set(this.scorecardsTaps()[0]);
           this.activityLogsHeader = [
@@ -273,7 +273,7 @@ export class ActivityLogsComponent {
       });
   }
   getProgramFilterData() {
-    let tap = this.currentTap().value.toLowerCase();
+    const tap = this.currentTap().value.toLowerCase();
     if (tap === 'psr' || tap === 'cad') {
       this.programsData.set([]);
       this.activityLogsServices
@@ -321,7 +321,7 @@ export class ActivityLogsComponent {
       });
   }
   getKeyResultprojectsFilterData(programId?: string, keyResultNumber?: string) {
-    let tap = this.currentTap().value.toLowerCase();
+    const tap = this.currentTap().value.toLowerCase();
     if (tap === 'psr' || tap === 'cad') {
       this.keyResultProjectsData.set([]);
       this.activityLogsServices
@@ -453,7 +453,7 @@ export class ActivityLogsComponent {
     this.first.set(e.first);
     this.rows.set(e.rows);
     this.currentPage.set(e.page);
-    let id = -1000;
+    const id = -1000;
     // this.getAllActivityLogs(
     //   this.currentTap().value,
     //   this.currentPage(),
@@ -513,7 +513,7 @@ export class ActivityLogsComponent {
         this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
         this.startDate,
         this.endDate
-      )
+      );
     }
   }
   formatDate(date: Date): string {
@@ -535,7 +535,7 @@ export class ActivityLogsComponent {
         this.endDate = this.formatDate(this.activityLogDate[1]);
       }
     }
-    let id = -1000;
+    const id = -1000;
     if (this.keyResultProjectsData().length === 0) {
       this.selectedKeyResultProject = null;
     }
@@ -595,7 +595,7 @@ export class ActivityLogsComponent {
         this.selectedType?.name !== 'All' ? this.selectedType?.name : '',
         this.startDate,
         this.endDate
-      )
+      );
     }
   }
   selectedProgramIdFromKeyRes: number | null = null;
@@ -622,7 +622,8 @@ export class ActivityLogsComponent {
   selectKeyResultType(e: KeyResult) {
     this.selectedProgramIdFromKeyRes =
       e.programId !== -1000 ? e.programId : null;
-    let selectedKeyId = e.keyResultNumber !== -1000 ? e.keyResultNumber : null;
+    const selectedKeyId =
+      e.keyResultNumber !== -1000 ? e.keyResultNumber : null;
     console.log(e);
     if (selectedKeyId) {
       if (this.selectedProgram && this.selectedProgram !== -1000) {
@@ -668,3 +669,4 @@ export class ActivityLogsComponent {
     this.activityLogsServices.downloadActivityLogsData();
   }
 }
+``;

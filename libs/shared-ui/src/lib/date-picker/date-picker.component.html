@@ -5,9 +5,14 @@
 
   <mat-form-field>
     <input matInput [matDatepicker]="picker" [matDatepickerFilter]="myFilter" (dateChange)="addEvent( $event)"
-      [id]="inputId" [name]="inputName" [formControl]="control" />
+      [id]="inputId" [name]="inputName" [formControl]="control" [min]="minDate" [max]="maxDate"
+      [readonly]='disabledInput' />
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
+    <mat-datepicker #picker [startView]="monthView ? 'multi-year':'month'"
+      (monthSelected)=" monthView ? setMonthAndYear($event, picker) : null" panelClass="example-month-picker">
+    </mat-datepicker>
+
+
     <mat-error *ngIf="control.hasError('required')"> {{"field_required" | translate}}
     </mat-error>
   </mat-form-field>

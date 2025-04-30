@@ -25,7 +25,8 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
       startDate : ['' , Validators.required],
       // endDate : ['' , Validators.required],
       endDate : new FormControl({value:"" , disabled:true} , Validators.required),
-      completion_level : ['' , Validators.required]
+      completion_level : ['' , Validators.required],
+      weight : ['' , Validators.required]
     } , { validators: this.startDateEndDateValidator('startDate', 'endDate') })
   }
   selectStartDate(date:Date | null)
@@ -54,6 +55,10 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
   {
     return this.addProjectForm.get("completion_level");
   }
+  get weight()
+  {
+    return this.addProjectForm.get("weight");
+  }
   keyPress(e:KeyboardEvent)
   {
     if (e.key === 'e' || e.key === '-') {
@@ -80,7 +85,8 @@ export class AddProjectFormComponent implements OnInit , OnChanges{
         major : this.major?.value,
         startDate : this.datePipe.transform(this.startDate?.value , "dd/MM/yyyy"),
         endDate : this.datePipe.transform(this.endDate?.value , "dd/MM/yyyy"),
-        completionLevel : this.completionLevel?.value
+        completionLevel : this.completionLevel?.value,
+        weight : this.weight?.value
       }
       this.getValues.emit(data);
       this.addProjectForm.reset();
