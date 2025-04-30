@@ -26,6 +26,10 @@
     text-align: center;
     color: var(--stc-color);
   }
+  .new-chat-btn {
+    padding-top: 10px;
+    cursor: pointer;
+  }
 }
 @media (max-width: 600px) {
   .header {
@@ -33,4 +37,8 @@
       width: 85%;
     }
   }
+}
+
+.fa .fa-arrow-left {
+  color: black;
 }

@@ -25,7 +25,7 @@ export class ChartControllerComponent {
       } else if (this.showType() == 'bar') {
         console.log('bar');
         this.chartData = this.handleBarChartData();
-        this.sqlData().yList.map((item) => {
+        this.sqlData()?.yList.map((item) => {
           if (item.indicatorName !== 'state date')
             this.indicators.push({
               indicatorName: item.indicatorName,
@@ -37,8 +37,6 @@ export class ChartControllerComponent {
 
         this.chartData = this.handleTableData();
       } else if (this.showType() == 'line') {
-        console.log('hey');
-
         this.chartData = this.handleLineChartData();
       }
     });
@@ -69,16 +67,17 @@ export class ChartControllerComponent {
   }
   handleLineChartData(): any[] {
     const values = this.sqlData().xList.map((date, index) => {
-      // const fullDate = `${date}`;
-      // const yListKey = this.sqlData()?.yListKey ?? 'time';
-      // const entry = this.sqlData().yList.find(
-      //   (item) => item[yListKey] === fullDate
-      // );
-      return {
+      const entry: any = {
         x: date,
-        value: this.sqlData().yList[index].value,
       };
+      this.sqlData().yList.forEach((yItem, yIndex) => {
+        entry[`value${yIndex + 1}`] = +yItem.data[index];
+        entry[`indicatorName${yIndex + 1}`] = yItem.indicatorName;
+      });
+
+      return entry;
     });
+
     return values;
   }
   handleTableData(): any[] {

@@ -33,11 +33,6 @@ export class PopUpImageComponent implements OnDestroy {
   @ViewChild('imageTag') 'imageTag': ElementRef;
   // eslint-disable-next-line @angular-eslint/no-output-native
   @Output() close = new EventEmitter<void>();
-  constructor() {
-    effect(() => {
-      console.log('popUp component', this.chartType());
-    });
-  }
 
   ngOnDestroy() {
     this.isDragging = false;

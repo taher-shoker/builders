@@ -30,7 +30,7 @@ export class StartChatViewComponent implements OnInit {
       this.isAnimated = true;
     }, 100);
 
-    this.speechButton.nativeElement.click();
+    this.speechButton?.nativeElement.click();
   }
   startChatNavigation() {
     // this.initializeSpeech();

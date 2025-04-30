@@ -1,11 +1,10 @@
 @if (showPopUp) {
 <stc-apps-pop-up-image
-  [chartType]="showType()"
-  [chartData]="sqlData()"
+  [chartType]="chartShowType"
+  [chartData]="chartSqlData"
   (close)="closePopUp()"
 ></stc-apps-pop-up-image>
 }
-
 <div
   class="chat-list-item"
   [@fadeIn]
@@ -13,7 +12,7 @@
     messageType() === 1 ? 'justify-content-end' : 'justify-content-start'
   "
 >
-  @if (messageType() === 0 ) {
+  <!-- @if (messageType() === 0 ) {
   <div class="chat-list-item_query-profile">
     <img
       class="chat-list-item_photo"
@@ -21,44 +20,225 @@
       alt=""
     />
   </div>
-  }
+  } -->
 
   <div
     class="chat-list-item_query-info"
-    [ngClass]="messageType() === 0 && showType() !== '' ? 'w-100' : ''"
+    [ngClass]="{
+      'w-100': messageType() === 0 && chunkStream.length !== 0
+    }"
   >
     <div
       class="message"
-      [ngClass]="messageType() === 1 ? 'sender-message' : 'receiver-message'"
+      [ngClass]="{
+        'sender-message': messageType() === 1,
+        'receiver-message': messageType() === 0,
+        'sender-message-margin-left': messageType() === 1 && !newChat()
+      }"
     >
-      @if (isLoading() && messageType()===0 && message()==''&&showType()=='') {
+      @if (messageType()===0 && message()!== errorMessage) {
+      <div
+        class="message-content animate-fade-in"
+        [style.margin-bottom]="isLoading() && message() ? '12px' : '0px'"
+      >
+        @for (messageChunk of message()==''?chunkStream:messagesChunks(); track
+        $index) {
+        <ng-container
+          *ngIf="
+            (message() === '' &&
+              (loadingDataQueryIndex === -1 ||
+                $index < loadingDataQueryIndex)) ||
+              (message() !== '' &&
+                (dataQueryIndex === -1 || $index < dataQueryIndex));
+            else startDataQuerySection
+          "
+        >
+          <stc-apps-chat-insight-card
+            class="position-relative"
+            [title]="messageChunk.stageTitle"
+          >
+            @if(messageChunk.stageContent){
+            <div
+              class="stage-content"
+              [class.show]="messageChunk.stageContent"
+              [ngClass]="{
+                'think-content': messageChunk.stageTitle === 'Deep Thinking'
+              }"
+            >
+              @if($index==chunkStream.length-1 && message()==''){
+              <div
+                class="text-static"
+                [innerHTML]="previousContent | formatMessage"
+              ></div>
+
+              } @else{
+              <ng-container [ngSwitch]="messageChunk.stageTitle">
+                <ng-container *ngSwitchCase="'SQL Generation'">
+                  <div class="sql-block">
+                    <div
+                      [innerHTML]="messageChunk.stageContent | sqlHighlight"
+                    ></div>
+                  </div>
+                </ng-container>
+
+                <ng-container *ngSwitchCase="'Metadata retrieval'">
+                  <div
+                    style="display: grid"
+                    *ngIf="messageChunk.stageContent"
+                    [innerHTML]="messageChunk.stageContent | jsonParse"
+                  ></div>
+                </ng-container>
+
+                <ng-container *ngSwitchDefault>
+                  <div
+                    [innerHTML]="messageChunk.stageContent | formatMessage"
+                  ></div>
+                </ng-container>
+              </ng-container>
+              }
+            </div>
+
+            } @if (messageChunk.showType) { @if (messageChunk.showType=='table')
+            {
+            <stc-apps-chart-controller
+              class="position-relative"
+              [sqlData]="
+                messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
+              "
+              [showType]="messageChunk.showType"
+            ></stc-apps-chart-controller>
+            } @else {
+            <div>
+              <stc-apps-chart-controller
+                [sqlData]="
+                  messageChunk.sqlData ?? { xList: [], yList: [], title: '' }
+                "
+                [showType]="messageChunk.showType"
+              ></stc-apps-chart-controller>
+              <button
+                (click)="
+                  showPopUpOnClick(messageChunk.showType, messageChunk.sqlData)
+                "
+                class="zoom-in-btn"
+              >
+                <i class="fa fa-search-plus"></i>
+              </button>
+            </div>
+            } }
+          </stc-apps-chat-insight-card>
+        </ng-container>
+
+        <ng-template #startDataQuerySection>
+          @if($index == loadingDataQueryIndex && message()=='' ||
+          message()!==''&& dataQueryIndex==$index){
+          <stc-apps-chat-insight-card
+            class="position-relative"
+            [title]="messageChunk.stageTitle"
+          >
+            @for (subMessageChunk of message()==''?chunkStream.slice($index +
+            1):messagesChunks().slice($index + 1); track $index) {
+            <stc-apps-chat-insight-card [title]="subMessageChunk.stageTitle">
+              @if(subMessageChunk.stageContent){
+              <div
+                class="stage-content"
+                [class.show]="subMessageChunk.stageContent"
+              >
+                @if($index==chunkStream.length-1 && message()==''){
+                <div
+                  class="text-static"
+                  [innerHTML]="previousContent | formatMessage"
+                ></div>
+
+                } @else{
+                <ng-container [ngSwitch]="subMessageChunk.stageTitle">
+                  <ng-container *ngSwitchCase="'SQL Generation'">
+                    <div class="sql-block">
+                      <div
+                        [innerHTML]="
+                          subMessageChunk.stageContent | sqlHighlight
+                        "
+                      ></div>
+                    </div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchCase="'Metadata retrieval'">
+                    <div
+                      style="display: grid"
+                      *ngIf="subMessageChunk.stageContent"
+                      [innerHTML]="subMessageChunk.stageContent | jsonParse"
+                    ></div>
+                  </ng-container>
+
+                  <ng-container *ngSwitchDefault>
+                    <div
+                      [innerHTML]="subMessageChunk.stageContent | formatMessage"
+                    ></div>
+                  </ng-container>
+                </ng-container>
+                <!-- <div [innerHTML]="messageChunk.stageContent | formatMessage"></div> -->
+                }
+              </div>
+
+              } @if (subMessageChunk.showType) { @if
+              (subMessageChunk.showType=='table') {
+              <stc-apps-chart-controller
+                class="position-relative"
+                [sqlData]="
+                  subMessageChunk.sqlData ?? { xList: [], yList: [], title: '' }
+                "
+                [showType]="subMessageChunk.showType"
+              ></stc-apps-chart-controller>
+              } @else {
+              <div>
+                <stc-apps-chart-controller
+                  [sqlData]="
+                    subMessageChunk.sqlData ??
+                    { xList: [], yList: [], title: '' }
+                  "
+                  [showType]="subMessageChunk.showType"
+                ></stc-apps-chart-controller>
+                <button
+                  (click)="
+                    showPopUpOnClick(
+                      subMessageChunk.showType,
+                      subMessageChunk.sqlData
+                    )
+                  "
+                  class="zoom-in-btn"
+                >
+                  <i class="fa fa-search-plus"></i>
+                </button>
+              </div>
+              } }
+            </stc-apps-chat-insight-card>
+            }
+          </stc-apps-chat-insight-card>
+          }
+        </ng-template>
+        }
+      </div>
+      @if(isLoading()&&message()==''){
       <div class="loading-dots">
         <div class="dot"></div>
         <div class="dot"></div>
         <div class="dot"></div>
       </div>
-      } @else {
-      <div class="message-content" [innerHTML]="processedMessage"></div>
-      @if (showType()!=='') { @if (messageType() === 0) { @if
-      (showType()=='table') {
+      } } @else{
       <div>
-        <stc-apps-chart-controller
-          [sqlData]="sqlData()"
-          [showType]="showType()"
-        ></stc-apps-chart-controller>
+        @if (header()) {
+        <div class="heading">{{ header() }}</div>
+        }
+        <div
+          [ngClass]="{ 'sub-heading': newChat() }"
+          [innerHTML]="message() | formatMessage"
+        ></div>
+        @if(newChat()){
+        <stc-apps-slider
+          (questionEvent)="questionClick($event)"
+        ></stc-apps-slider>
+        }
       </div>
-      } @else{
-
-      <div>
-        <button (click)="showPopUpOnClick()" class="zoom-in-btn">
-          <i class="fa fa-search-plus"></i>
-        </button>
-        <stc-apps-chart-controller
-          [sqlData]="sqlData()"
-          [showType]="showType()"
-        ></stc-apps-chart-controller>
-      </div>
-      } } }}
+      }
     </div>
 
     <div

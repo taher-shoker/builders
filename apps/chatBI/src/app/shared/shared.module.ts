@@ -10,6 +10,11 @@ import { MatTableModule } from '@angular/material/table';
 import { LineChartComponent } from './lineChart/lineChart.component';
 import { ChartControllerComponent } from './chart-controller/chartController.component';
 import { SuggestedQuestionComponent } from './suggested-question/suggestedQuestion.component';
+import { ChatInsightCardComponent } from './chat-insight-card/chat-insight-card.component';
+import { FormatMessagePipe } from './pipes/formatMessage.pipe';
+import { SliderComponent } from './slider/slider.component';
+import { SqlHighlightPipe } from './pipes/sqlHighlight.pipe';
+import { JsonParsePipe } from './pipes/jsonformat.pipe';
 
 const components = [
   ChatListItemComponent,
@@ -21,6 +26,11 @@ const components = [
   LineChartComponent,
   ChartControllerComponent,
   SuggestedQuestionComponent,
+  ChatInsightCardComponent,
+  FormatMessagePipe,
+  SliderComponent,
+  SqlHighlightPipe,
+  JsonParsePipe,
 ];
 const modules = [CommonModule, MatTableModule];
 
