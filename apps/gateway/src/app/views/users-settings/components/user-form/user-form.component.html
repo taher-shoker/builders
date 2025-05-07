@@ -162,7 +162,7 @@
         </div>
         <div class="row mt-7" *ngIf="
                       showInputs &&
-                      userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||  userService.getCurrentSystem() === 'ChatBI'
+                      userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||  userService.getCurrentSystem() === 'ChatBI'||  userService.getCurrentSystem() === 'TU_BRAIN'
                     ">
           <div class="col-md-5">
             <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"

@@ -140,7 +140,8 @@ export class AuthService {
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
       res.dto.systems.includes('Score_Card_Report_DB') ||
       res.dto.systems.includes('Strategic_Dashboard') ||
-      res.dto.systems.includes('ChatBI')
+      res.dto.systems.includes('ChatBI') ||
+      res.dto.systems.includes('TU_BRAIN')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -170,7 +171,8 @@ export class AuthService {
       res.dto.systems.includes('Jira_Dahsboard') ||
       res.dto.systems.includes('Score_Card_Report_DB') ||
       res.dto.systems.includes('Strategic_Dashboard') ||
-      res.dto.systems.includes('ChatBI')
+      res.dto.systems.includes('ChatBI') ||
+      res.dto.systems.includes('TU_BRAIN')
     ) {
       this.setLoggedInUser();
     }
@@ -213,6 +215,9 @@ export class AuthService {
     }
     if (res.dto.systems.includes('ChatBI')) {
       this.gratnedSystems.push('ChatBI');
+    }
+    if (res.dto.systems.includes('TU_BRAIN')) {
+      this.gratnedSystems.push('TU_BRAIN');
     }
     this.setLoggedInUser();
   }
@@ -283,6 +288,7 @@ export class AuthService {
       Score_Card_Report_DB: environment.systems.score_card_report_db,
       Strategic_Dashboard: environment.systems.strategic_dashboard,
       ChatBI: environment.systems.chat_bi,
+      TU_BRAIN: environment.systems.tu_brain,
     };
     const url = systemUrls[system];
     if (url) {
@@ -503,6 +509,15 @@ export class AuthService {
                 systemUrl: window.location.origin + environment.systems.chat_bi,
                 name: 'TU Brain',
                 displayName: 'TU Brain',
+                mobileView: true,
+              });
+              break;
+            case 'TU_BRAIN':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl: environment.systems.tu_brain,
+                name: 'STC Brain',
+                displayName: 'STC Brain',
                 mobileView: true,
               });
               break;

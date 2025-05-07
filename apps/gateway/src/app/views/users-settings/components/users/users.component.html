@@ -67,7 +67,7 @@
           </div>
           <div class="col-md-5" *ngIf="
               userService.getCurrentSystem() !== 'Dynamic_Report_Flow' &&
-              userService.getCurrentSystem() !== 'Business_Excellence_Dashboard' && userService.getCurrentSystem() !== 'Strategic_Dashboard'&& userService.getCurrentSystem() !== 'ChatBI'
+              userService.getCurrentSystem() !== 'Business_Excellence_Dashboard' && userService.getCurrentSystem() !== 'Strategic_Dashboard'&& userService.getCurrentSystem() !== 'ChatBI'&& userService.getCurrentSystem() !== 'TU_BRAIN'
             ">
             <stc-apps-select-drop-down [inputWidth]="
                 userService.getCurrentSystem() === 'Score_Card_Report_DB'

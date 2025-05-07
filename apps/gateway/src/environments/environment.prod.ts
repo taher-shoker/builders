@@ -16,6 +16,8 @@ export const environment = {
     score_card_report_db: '/cem/reporting/score-card-report/',
     strategic_dashboard: '/cem/reporting/strategic_dashboard/',
     chat_bi: '/cem/reporting/chat_bi/',
+    tu_brain:
+      'https://stcgpt-ui.agreeableriver-7f2a419b.switzerlandnorth.azurecontainerapps.io/login',
   },
   sso_url: '/cem/reporting/apigateway/api/v2/admin/saml2/authenticate/stc',
   languageFilesPath: '/cem/reporting/assets/i18n/',
