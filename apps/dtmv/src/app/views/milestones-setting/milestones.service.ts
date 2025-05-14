@@ -150,7 +150,9 @@ export class MilestonesService {
       params,
     });
   }
-
+  approveBulkTasks(data: number[]) {
+    return this.http.put(`${this.dtUrl}/bulk/approval`, { milestoneIds: data });
+  }
   /**
    * Returns all of the streams of the DTMV system.
    */
@@ -292,11 +294,20 @@ export class MilestonesService {
         )
       );
   }
+  getMilestoneTasks(extraParams?: {
+    [key: string]: boolean | string;
+  }): Observable<PendingTask[]> {
+    let params = this.setSystemParam();
 
-  getMilestoneTasks(): Observable<PendingTask[]> {
-    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`, {
-      params: this.setSystemParam(),
-    });
+    if (extraParams) {
+      for (const key in extraParams) {
+        if (Object.prototype.hasOwnProperty.call(extraParams, key)) {
+          params = params.set(key, extraParams[key]);
+        }
+      }
+    }
+
+    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`, { params });
   }
 
   downloadAttachment(id: number) {

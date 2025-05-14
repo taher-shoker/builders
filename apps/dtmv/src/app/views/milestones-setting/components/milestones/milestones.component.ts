@@ -65,7 +65,7 @@ interface MilestonesParamsFilterration {
       state(
         'out',
         style({
-          right: '-500px',
+          right: '-600px',
         })
       ),
       transition('out => in', [animate('300ms ease-in')]),
@@ -79,6 +79,7 @@ export class MilestonesComponent
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
   @ViewChild('validationCustomTemplate') validationCustomTemplate!: any;
   @ViewChild('progressCustomTemplate') progressCustomTemplate!: any;
+  @ViewChild('actions') actions!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -108,7 +109,8 @@ export class MilestonesComponent
   ];
   previousParams: MilestonesParamsFilterration = {}; // Store previous parameters
   filterForm: any = {};
-
+  showBulkRequests: boolean = false;
+  bulkPremission: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -155,9 +157,14 @@ export class MilestonesComponent
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+    if (this.milestonesService.checkIsDirector()) {
+      this.bulkPremission = true;
+    }
   }
 
   ngAfterViewInit(): void {
+    this.milestonesService.checkIsAdmin();
+    console.log(this.milestonesService.isDTAdmin);
     this.columnsSchema = [
       {
         key: 'teamName',
@@ -216,7 +223,7 @@ export class MilestonesComponent
       {
         key: 'actions',
         type: 'actions',
-        actions: !this.milestonesService.checkIsAdmin()
+        actions: this.milestonesService.isDTAdmin
           ? this.milestonesService.checkIsBusinessSpoc() ||
             this.milestonesService.checkIsDirector()
             ? ['details']
@@ -231,8 +238,8 @@ export class MilestonesComponent
     this.handlePendingActionsList(window.innerWidth);
   }
 
-  getPendingTasks() {
-    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+  getPendingTasks(filters?: { [key: string]: string }) {
+    this.milestonesService.getMilestoneTasks(filters).subscribe((res) => {
       this.allItems = res;
     });
   }
@@ -278,6 +285,18 @@ export class MilestonesComponent
       });
   }
 
+  handleBulk() {
+    this.getPendingTasks({ onlyEligibleForBulkApproval: '1' });
+  }
+  handleCancellation() {
+    this.getPendingTasks({ onlyEligibleForBulkApproval: '0' });
+  }
+  sendIds(arrId: number[]) {
+    console.log(arrId);
+    this.milestonesService.approveBulkTasks(arrId).subscribe((res) => {
+      this.handleCancellation();
+    });
+  }
   formatDate(date: Date): string | null {
     if (date == null) return null;
     const d = new Date(date);
@@ -338,11 +357,6 @@ export class MilestonesComponent
     this.milestonesService.setUserTeams().subscribe((res) => {
       this.allTeams = res;
     });
-    // if (this.allTeams?.length === 0) {
-    //   this.milestonesService.setSystemTeams().subscribe((res) => {
-    //     this.allTeams = res;
-    //   });
-    // }
   }
 
   detailsNavigate(item: any) {
@@ -593,6 +607,7 @@ export class MilestonesComponent
   }
 
   handlePendingActionsList(width: number) {
+    this.milestonesService.checkIsAdmin();
     if (width < 1630) {
       this.tableCols = 12;
       this.showPendingActionsBtn = true;
