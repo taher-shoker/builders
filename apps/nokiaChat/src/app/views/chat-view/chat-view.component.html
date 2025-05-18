@@ -1,0 +1,68 @@
+<div class="chat-view">
+  <app-header
+    [title]="'Nokia Chat'"
+    [newChatScreenFlag]="newChatScreenFlag"
+    (newChat)="handleNewChat()"
+  ></app-header>
+  <div
+    #scrollContainer
+    class="chat-view_messages-container"
+    (scroll)="onScroll()"
+  >
+    @for (message of messageList; track $index) {
+    <app-chat-list-item
+      [message]="message.content"
+      [newChat]="message.newChat ?? false"
+      [header]="message.header ?? ''"
+      [messageType]="message.messageType"
+      [isLoading]="pendingFlag()"
+      (questionEvent)="setSuggestedQuestion($event)"
+    ></app-chat-list-item>
+    }
+  </div>
+  <div
+    class="chat-view_input-container"
+    [ngClass]="{
+      focused: isFocused,
+      
+      'max-height': queryMessage.trim(),
+      error: queryMessage.length > 512,
+    }"
+  >
+    <textarea
+      id="textarea"
+      class="textarea scroll"
+      (keydown.enter)="onEnter($event)"
+      (input)="adjustHeight($event)"
+      [(ngModel)]="queryMessage"
+      [placeholder]="'Ask me anything'"
+      (focus)="onFocus()"
+      (blur)="onBlur($event)"
+      [ngClass]="{
+        'max-height': queryMessage.trim(),
+        
+      }"
+      [disabled]="pendingFlag()"
+    >
+    </textarea>
+
+    <div class="text-area-actions">
+      <div
+        class="button-container"
+        (click)="sendMessage()"
+        [ngClass]="{
+          disabled:
+            queryMessage.length > 512 || !queryMessage.trim() || pendingFlag()
+        }"
+      >
+        <img src="assets/images/Vector.svg" alt="" />
+      </div>
+    </div>
+  </div>
+  <div
+    class="chat-view_textarea-counter"
+    [ngClass]="{ 'error-text': queryMessage.length > 512 }"
+  >
+    <p>{{ queryMessage.length }} / {{ maxLength }}</p>
+  </div>
+</div>

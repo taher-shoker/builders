@@ -1,0 +1,32 @@
+<div class="start-chat-view">
+  <div class="bg-1"></div>
+  <div class="bg-2"></div>
+  <div
+    class="start-chat-view_header1 fade-in-text"
+    [ngClass]="{ 'animate-text': isAnimated }"
+  >
+    Welcome, <span>{{ displayName }}</span>
+  </div>
+  <iframe
+    height="300"
+    src="https://lottie.host/embed/3e28cc70-fb23-400f-82e8-cfc0b8ef4623/EW37aQGMye.lottie"
+    style="border: none"
+  ></iframe>
+
+  <div [ngClass]="{ 'animate-text': isAnimated }">
+    <img
+      class="animated-text"
+      width="50"
+      src="assets/images/stc-logo-white.png"
+      alt=""
+    />
+    <div class="start-chat-view_header2 animated-text">Nokia Chat</div>
+    <div class="start-chat-view_desc animated-text">
+      Start chatting with Nokia Chat now you can ask me any CEM related
+      information.
+    </div>
+    <div class="start-chat-view_btn animated-text">
+      <button (click)="startChatNavigation()">Start Chat</button>
+    </div>
+  </div>
+</div>
