@@ -99,6 +99,12 @@ import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.compo
 import { DropdownModule } from 'primeng/dropdown';
 import { CarouselModule } from 'ngx-owl-carousel-o';
 import { UtilitiesService } from './services/utilities.service';
+import { TableChartComponent } from './chat-charts/table-chart/tableChart.component';
+
+import { PieChartComponent } from './chat-charts/pie-chart/pieChart.component';
+import { ScatterChartComponent } from './chat-charts/scatter-chart/scatterChart.component';
+import { LineChatChartComponent } from './chat-charts/line-chart/lineChart.component';
+import { BarChatChartComponent } from './chat-charts/bar-chart/barChart.component';
 
 const components = [
   ButtonComponent,
@@ -160,6 +166,11 @@ const components = [
   SplitButtonComponent,
   InputGroupComponent,
   FilterDropdownComponent,
+  TableChartComponent,
+  LineChatChartComponent,
+  BarChatChartComponent,
+  PieChartComponent,
+  ScatterChartComponent,
 ];
 
 @NgModule({
