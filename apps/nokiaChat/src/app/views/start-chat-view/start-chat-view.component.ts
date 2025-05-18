@@ -33,7 +33,7 @@ export class StartChatViewComponent {
     this.speechButton?.nativeElement.click();
   }
   startChatNavigation() {
-    this.playBackgroundAudio(this.displayName);
+    //this.playBackgroundAudio(this.displayName);
     this.router.navigate(['/chatView']);
   }
 
