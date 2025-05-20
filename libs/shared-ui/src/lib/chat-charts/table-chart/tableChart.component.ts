@@ -9,9 +9,9 @@ import {
 } from '@angular/core';
 
 @Component({
-  selector: 'stc-apps-table-chart',
+  selector: 'stc-apps-table-chat-chart',
   templateUrl: './tableChart.component.html',
-  styleUrl: './tableChart.component.css',
+  styleUrl: './tableChart.component.scss',
 })
 export class TableChartComponent implements OnInit {
   tableData: InputSignal<any[]> = input([{}]);

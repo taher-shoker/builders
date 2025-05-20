@@ -4,7 +4,7 @@ import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 
 @Component({
-  selector: 'stc-apps-line-chart',
+  selector: 'stc-apps-line-chat-chart',
   templateUrl: './lineChart.component.html',
   styleUrl: './lineChart.component.scss',
 })
@@ -14,6 +14,7 @@ export class LineChatChartComponent implements OnInit {
   chartData: InputSignal<any[]> = input([{}]);
   chartTitle: InputSignal<string> = input('');
   popUpClick: InputSignal<boolean> = input(false);
+  array = ['avgDownStream'];
   constructor() {
     effect(() => {
       if (this.chartData().length > 0) {
@@ -87,8 +88,7 @@ export class LineChatChartComponent implements OnInit {
     const valueKeys = Object.keys(sample).filter((k) => k.startsWith('value'));
 
     valueKeys.forEach((key, index) => {
-      const indicatorName =
-        sample[`indicatorName${index + 1}`] ?? `Series ${index + 1}`;
+      const indicatorName = sample[`indicatorName`] ?? `Series ${index + 1}`;
 
       const series = chart.series.push(
         am5xy.LineSeries.new(this.root, {
@@ -123,7 +123,7 @@ export class LineChatChartComponent implements OnInit {
           const label = am5.Label.new(this.root, {
             text: `{${key}}`,
             centerX: am5.percent(50),
-            centerY: am5.percent(120),
+            centerY: am5.percent(70),
             populateText: true,
             fontSize: 12,
             fill: am5.color('#000000'),

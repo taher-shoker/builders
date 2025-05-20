@@ -11,7 +11,7 @@ import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 
 @Component({
-  selector: 'stc-apps-scatter-chart',
+  selector: 'stc-apps-scatter-chat-chart',
   templateUrl: './scatterChart.component.html',
   styleUrl: './scatterChart.component.scss',
 })
