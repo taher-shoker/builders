@@ -1,11 +1,13 @@
 import { animate, style, transition, trigger } from '@angular/animations';
 import {
   Component,
+  effect,
   EventEmitter,
   input,
   InputSignal,
   Output,
 } from '@angular/core';
+import { sqlData } from '../../views/chat-view/models/chat-view.model';
 
 @Component({
   selector: 'app-chat-list-item',
@@ -31,14 +33,21 @@ export class ChatListItemComponent {
   messageDate: InputSignal<string> = input('');
   newChat: InputSignal<boolean> = input(false);
   isLoading: InputSignal<boolean> = input(false);
-  showType: InputSignal<boolean> = input(false);
-  errorMessage = 'Something went wrong! Please try again.';
-  showPopUp = false;
+  showType: InputSignal<string> = input('');
+  sqlData: InputSignal<sqlData> = input({} as sqlData);
+  sqlReason: InputSignal<string> = input('');
+  sqlQuery: InputSignal<string> = input('');
 
+  showPopUp = false;
+  constructor() {
+    effect(() => {
+      console.log(this.sqlData());
+    });
+  }
   replaceNull(input: string | null): string {
     return input?.replace(/null/g, '') || '';
   }
-  showPopUpOnClick(showType: string, sqlData: any) {
+  showPopUpOnClick() {
     this.showPopUp = true;
   }
   closePopUp() {

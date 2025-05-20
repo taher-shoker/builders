@@ -1,3 +1,11 @@
+@if (showPopUp) {
+<app-zoomed-card-chart
+  [chartData]="sqlData()"
+  [chartType]="showType()"
+  (close)="closePopUp()"
+></app-zoomed-card-chart>
+}
+
 <div
   class="chat-list-item"
   [@fadeIn]
@@ -30,13 +38,28 @@
       }"
     >
       @if (messageType()==='assistant') {
-      <div
-        class="message-content animate-fade-in"
-        [style.margin-bottom]="isLoading() && message() ? '12px' : '0px'"
-      >
-        @if(message()){
-        {{ message() }}
-        }
+      <div class="message-content animate-fade-in">
+        @if(message()||showType()||sqlReason()||sqlQuery()){
+        <p>{{ message() }}</p>
+        <div
+          *ngIf="sqlQuery()"
+          class="sql-block"
+          [innerHTML]="sqlQuery() | sqlHighlight"
+        ></div>
+        <p *ngIf="sqlReason()">{{ sqlReason() }}</p>
+        @if(showType()){
+        <app-chart-controller
+          [sqlData]="sqlData()"
+          [showType]="showType()"
+        ></app-chart-controller>
+        <button
+          *ngIf="showType() !== 'table'"
+          (click)="showPopUpOnClick()"
+          class="zoom-in-btn"
+        >
+          <i class="fa fa-search-plus"></i>
+        </button>
+        } }
       </div>
       @if(isLoading()&&message()==''){
       <div class="loading-dots">

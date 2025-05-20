@@ -15,6 +15,10 @@
       [newChat]="message.newChat ?? false"
       [header]="message.header ?? ''"
       [messageType]="message.messageType"
+      [sqlData]="message.sqlData ?? { xList: [], yList: [], title: '' }"
+      [sqlQuery]="message.sqlQuery ?? ''"
+      [sqlReason]="message.sqlReason ?? ''"
+      [showType]="message.showType??''"
       [isLoading]="pendingFlag()"
       (questionEvent)="setSuggestedQuestion($event)"
     ></app-chat-list-item>

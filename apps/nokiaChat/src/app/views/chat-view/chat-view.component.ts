@@ -5,7 +5,9 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { chatArray } from './models/chat-view.model';
+import { chatArray, responseBody } from './models/chat-view.model';
+import { ChatService } from './services/chat.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat-view',
@@ -25,14 +27,31 @@ export class ChatViewComponent implements OnInit {
   // this flag represents wether the api responded or not.
   pendingFlag = signal(false);
   @ViewChild('scrollContainer') private scrollableContainer!: ElementRef;
+  private apiSubscription: Subscription | undefined;
   ngOnInit() {
     setTimeout(() => {
       this.isAnimated = true;
     }, 100);
     this.addingNewChatMessage();
   }
+  addingNewChatMessage() {
+    this.newChatScreenFlag = true;
+    this.messageList.push({
+      messageType: 'user',
+      newChat: true,
+      header: 'Hello this is Nokia Chat',
+      content:
+        'To get the expected results, please ask questions in the following sentence structure',
+    });
+  }
 
-  constructor() {}
+  handleNewChat() {
+    this.messageList = [];
+    this.addingNewChatMessage();
+    this.apiSubscription?.unsubscribe();
+    this.reset();
+  }
+  constructor(private chatService: ChatService) {}
   onEnter(event: any) {
     event.preventDefault();
   }
@@ -96,6 +115,46 @@ export class ChatViewComponent implements OnInit {
   setSuggestedQuestion(question: string) {
     this.queryMessage = question;
   }
+  handleAssistantResponse(arrayObject: chatArray) {
+    this.messageList.pop();
+    this.messageList.push(arrayObject);
+    console.log(this.messageList);
+
+    this.reset();
+  }
+  hanldeSendMessageSubscription() {
+    this.apiSubscription = this.chatService
+      .sendMessage({ showType: 'bar', content: this.queryModelParam })
+      .subscribe({
+        next: (response: responseBody) => {
+          console.log(response);
+
+          this.handleAssistantResponse({
+            content: response.data.content,
+            messageType: 'assistant',
+            sqlQuery: response.data.sqlQuery,
+            sqlReason: response.data.sqlReason,
+            sqlData: response.data.sqlData ?? {
+              xList: [],
+              yList: [],
+              title: '',
+            },
+            showType: response.data.showType ?? '',
+          });
+        },
+        error: (error) => {
+          this.handleAssistantResponse({
+            content: 'Something went wrong! Please try again.',
+            messageType: 'assistant',
+          });
+        },
+      });
+  }
+  removeSuggestedQuestionsMessage() {
+    if (this.messageList[this.messageList.length - 1].newChat) {
+      this.messageList.pop();
+    }
+  }
   sendMessage() {
     if (
       this.queryMessage.length > 512 ||
@@ -121,27 +180,6 @@ export class ChatViewComponent implements OnInit {
       content: '',
       messageType: 'assistant',
     });
-  }
-  removeSuggestedQuestionsMessage() {
-    if (this.messageList[this.messageList.length - 1].newChat) {
-      this.messageList.pop();
-    }
-  }
-  addingNewChatMessage() {
-    this.newChatScreenFlag = true;
-    this.messageList.push({
-      messageType: 'user',
-      newChat: true,
-      header: 'Hello this is Nokia Chat',
-      content:
-        'To get the expected results, please ask questions in the following sentence structure',
-    });
-  }
-
-  handleNewChat() {
-    this.messageList = [];
-    this.addingNewChatMessage();
-    this.reset();
-    console.log(!this.queryMessage.trim());
+    this.hanldeSendMessageSubscription();
   }
 }
