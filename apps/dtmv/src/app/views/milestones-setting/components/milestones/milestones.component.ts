@@ -49,6 +49,7 @@ interface MilestonesParamsFilterration {
   sortDirection?: string;
   [key: string]: any; // To accommodate any additional form fields from filteredForm
 }
+type AllowedActions = '' | 'edit' | 'details' | 'delete' | 'updateProgress';
 
 @Component({
   selector: 'stc-apps-casses',
@@ -79,7 +80,7 @@ export class MilestonesComponent
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
   @ViewChild('validationCustomTemplate') validationCustomTemplate!: any;
   @ViewChild('progressCustomTemplate') progressCustomTemplate!: any;
-  @ViewChild('actions') actions!: any;
+  // @ViewChild('actions') actions!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -111,6 +112,7 @@ export class MilestonesComponent
   filterForm: any = {};
   showBulkRequests: boolean = false;
   bulkPremission: boolean = false;
+  loadingBulk: boolean = false;
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -148,11 +150,11 @@ export class MilestonesComponent
   allTeams: any = [];
 
   ngOnInit() {
+    this.searchForm();
     this.getMilestones();
     this.getPendingTasks();
     this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
-    this.searchForm();
     this.dialogService.modals = [];
     this.getAllTeams();
     this.monthsArrPopulator();
@@ -161,10 +163,21 @@ export class MilestonesComponent
       this.bulkPremission = true;
     }
   }
+  getActionsBasedOnRole(): AllowedActions[] {
+    if (this.milestonesService.isDTAdmin) {
+      return [];
+    } else if (
+      this.milestonesService.checkIsBusinessSpoc() ||
+      this.milestonesService.checkIsDirector()
+    ) {
+      return ['edit', 'details'];
+    } else {
+      return ['edit', 'delete', 'details'];
+    }
+    //
+  }
 
   ngAfterViewInit(): void {
-    this.milestonesService.checkIsAdmin();
-    console.log(this.milestonesService.isDTAdmin);
     this.columnsSchema = [
       {
         key: 'teamName',
@@ -223,12 +236,7 @@ export class MilestonesComponent
       {
         key: 'actions',
         type: 'actions',
-        actions: this.milestonesService.isDTAdmin
-          ? this.milestonesService.checkIsBusinessSpoc() ||
-            this.milestonesService.checkIsDirector()
-            ? ['details']
-            : ['edit', 'details']
-          : ['edit', 'delete', 'details'],
+        actions: this.getActionsBasedOnRole(),
         label: '',
       },
     ];
@@ -238,45 +246,48 @@ export class MilestonesComponent
     this.handlePendingActionsList(window.innerWidth);
   }
 
-  getPendingTasks(filters?: { [key: string]: string }) {
-    this.milestonesService.getMilestoneTasks(filters).subscribe((res) => {
-      this.allItems = res;
-    });
-  }
+  fetchMilestones(options: any = {}): void {
+    const filteredForm = this.filterForm;
 
-  fetchMilestones(options: any = {}) {
-    const filteredForm = this.form.value;
-    // Start with previousParams
+    // If the form is fully empty, reset all previous filters
+    const isFormEmpty = Object.values(filteredForm).every(
+      (val) => val === null || val === undefined || val === ''
+    );
+    if (isFormEmpty) {
+      this.previousParams = {};
+    }
+
+    // Start with a clone of previous params
     let params: MilestonesParamsFilterration = { ...this.previousParams };
-    // Override properties in previousParams with filteredForm
-    Object.keys(filteredForm).forEach((key) => {
-      if (filteredForm[key] === null) {
-        // Delete property from params if the value in filteredForm is null
+
+    // Apply filters from the form (override or delete)
+    for (const [key, value] of Object.entries(filteredForm)) {
+      if (value === null || value === undefined || value === '') {
         delete params[key];
       } else {
-        // Otherwise, override the previousParam with the value from filteredForm
-        params[key] = filteredForm[key];
+        params[key] = value;
       }
-    });
+    }
 
-    // Override with options
+    // Merge with additional options (override again)
     params = { ...params, ...options };
-    // Remove undefined values
+
+    // Normalize specific field if necessary
+    if (params['activityName']) {
+      params['activityName'] = params['activityName'].toString().toLowerCase();
+    }
+
+    // Final cleanup: remove undefined or empty string
     const cleanParams = Object.fromEntries(
       Object.entries(params).filter(
         ([_, value]) => value !== undefined && value !== ''
       )
     );
 
-    // Store the latest clean params
+    // Save the cleaned params
     this.previousParams = { ...cleanParams };
-    // Convert the value inside activity name to lowercase
-    this.previousParams['activityName']
-      ? (cleanParams['activityName'] =
-          this.previousParams['activityName'].toLowerCase())
-      : '';
 
-    // Make the API call with the clean parameters
+    // Trigger API call
     this.milestonesService
       .getMilestones(cleanParams)
       .pipe(take(1))
@@ -285,16 +296,46 @@ export class MilestonesComponent
       });
   }
 
+  getPendingTasks() {
+    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+      this.allItems = res;
+    });
+  }
+
   handleBulk() {
-    this.getPendingTasks({ onlyEligibleForBulkApproval: '1' });
+    this.showBulkRequests = false;
+    this.loadingBulk = true;
+    this.milestonesService
+      .getMilestoneTasks({ onlyEligibleForBulkApproval: '1' })
+      .subscribe((res) => {
+        if (res.length > 0) {
+          this.showBulkRequests = true;
+        }
+        this.loadingBulk = false;
+        this.allItems = res;
+      });
   }
   handleCancellation() {
-    this.getPendingTasks({ onlyEligibleForBulkApproval: '0' });
+    this.milestonesService
+      .getMilestoneTasks({ onlyEligibleForBulkApproval: '0' })
+      .subscribe((res) => {
+        this.showBulkRequests = false;
+        this.allItems = res;
+      });
   }
   sendIds(arrId: number[]) {
-    console.log(arrId);
-    this.milestonesService.approveBulkTasks(arrId).subscribe((res) => {
-      this.handleCancellation();
+    this.loadingBulk = true;
+    this.milestonesService.approveBulkTasks(arrId).subscribe({
+      next: () => {
+        this.loadingBulk = false;
+        this.toastr.success('Bulk approval completed successfully');
+        this.handleCancellation();
+      },
+      error: () => {
+        this.handleCancellation();
+        this.loadingBulk = false;
+        // this.toastr.error('Something went wrong!');
+      },
     });
   }
   formatDate(date: Date): string | null {
@@ -305,6 +346,7 @@ export class MilestonesComponent
     const day = String(d.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   }
+
   datePickerChanged(
     event: { start: Date; end: Date },
     formControlType: string
@@ -340,7 +382,12 @@ export class MilestonesComponent
   }
 
   onSubmit() {
-    this.filterForm = this.utilities.filterObject(this.form.value);
+    this.filterForm = this.form.value;
+    sessionStorage.setItem(
+      'filterFormMilestones',
+      JSON.stringify(this.filterForm)
+    );
+
     this.fetchMilestones({ page: 0 });
     this.dialogService.close();
   }
@@ -349,6 +396,7 @@ export class MilestonesComponent
     this.form.reset();
     this.resetFormFlag = true;
     this.filterForm = {};
+    sessionStorage.removeItem('filterFormMilestones');
     this.fetchMilestones({ page: 0 });
     this.dialogService.close();
   }
@@ -476,7 +524,6 @@ export class MilestonesComponent
     this.form = this.formBuilder.group(
       {
         milestoneName: [null],
-        milestoneId: [null],
         teamName: [null],
         status: [null],
         startDateFrom: [null],
@@ -488,6 +535,19 @@ export class MilestonesComponent
       },
       { validators: this.dateRangeValidator }
     );
+  }
+  resetForm(data: any) {
+    this.form.setValue({
+      milestoneName: data.milestoneName || null,
+      teamName: data.teamName || null,
+      status: data.status || null,
+      startDateFrom: data.startDateFrom || null,
+      startDateTo: data.startDateTo || null,
+      endDateFrom: data.endDateFrom || null,
+      endDateTo: data.endDateFrom || null,
+      activityName: data.activityName || null,
+      validationStatus: data.validationStatus || null,
+    });
   }
   get startDateFrom() {
     return this.form.get('startDateFrom');
@@ -582,17 +642,20 @@ export class MilestonesComponent
   }
 
   getMilestones() {
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones()
-      .subscribe((res: any) => {
-        this.populateMilestones(res);
-      });
+    const savedFilter = sessionStorage.getItem('filterFormMilestones');
+    const filters = savedFilter ? JSON.parse(savedFilter) : null;
+    if (filters) {
+      this.filterForm = filters;
+      this.fetchMilestones({ page: 0 });
+      this.resetForm(this.filterForm);
+    } else {
+      this.getMilestonesSub = this.milestonesService
+        .getMilestones()
+        .subscribe((res: any) => {
+          this.populateMilestones(res);
+        });
+    }
   }
-
-  // resize(event: UIEvent) {
-  //   const mutatedEvent = event.target as Window;
-  //   this.handlePendingActionsList(mutatedEvent.innerWidth);
-  // }
 
   showPendingActionsBtn: boolean = false;
 

@@ -112,7 +112,8 @@
         <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems"
           [closable]="isPendingListClosable" (itemClicked)="detailsNavigate($event)" (closeClicked)="toggleAnimation()"
           [bulkApprove]="bulkPremission" (bulkApproveEvent)="handleBulk()" [showBulkRequests]="showBulkRequests"
-          (cancelBulk)="handleCancellation()" (submitBulk)="sendIds($event)"></stc-apps-items-list>
+          (cancelBulk)="handleCancellation()" (submitBulk)="sendIds($event)"
+          [loadingItems]="loadingBulk"></stc-apps-items-list>
       </div>
       } @else {
       <div class="col-md-4">
@@ -121,7 +122,8 @@
           <stc-apps-items-list [caption]="'pending_actions' | translate" [items]="allItems"
             [closable]="isPendingListClosable" (itemClicked)="detailsNavigate($event)"
             (closeClicked)="toggleAnimation()" [bulkApprove]="bulkPremission" (bulkApproveEvent)="handleBulk()"
-            [showBulkRequests]="showBulkRequests" (cancelBulk)="handleCancellation()"></stc-apps-items-list>
+            [showBulkRequests]="showBulkRequests" (cancelBulk)="handleCancellation()" (submitBulk)="sendIds($event)"
+            [loadingItems]="loadingBulk"></stc-apps-items-list>
         </div>
       </div>
       }}
@@ -147,7 +149,8 @@
           <label for="" style="margin-bottom: 6px"> Start Date </label>
 
           <stc-apps-date-picker-range [resetFormFlag]="resetFormFlag" [disableInput]="true" [disableFilterFlag]="true"
-            (datePickerChangeEvent)="datePickerChanged($event, 'startDate')">
+            (datePickerChangeEvent)="datePickerChanged($event, 'startDate')"
+            [startDate]="form.get('startDateFrom')?.value" [endDate]="form.get('startDateTo')?.value">
           </stc-apps-date-picker-range>
         </div>
 
@@ -155,7 +158,8 @@
           <label for="" style="margin-bottom: 6px"> End Date </label>
 
           <stc-apps-date-picker-range [resetFormFlag]="resetFormFlag" [disableInput]="true" [disableFilterFlag]="true"
-            (datePickerChangeEvent)="datePickerChanged($event, 'endDate')">
+            (datePickerChangeEvent)="datePickerChanged($event, 'endDate')" [startDate]="form.get('endDateFrom')?.value"
+            [endDate]="form.get('endDateTo')?.value">
           </stc-apps-date-picker-range>
         </div>
         @if (form.hasError('invalidDateRange')) {

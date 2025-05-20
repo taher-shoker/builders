@@ -151,7 +151,9 @@ export class MilestonesService {
     });
   }
   approveBulkTasks(data: number[]) {
-    return this.http.put(`${this.dtUrl}/bulk/approval`, { milestoneIds: data });
+    return this.http.put(`${this.dtUrl}/bulk/appro\val`, {
+      milestoneIds: data,
+    });
   }
   /**
    * Returns all of the streams of the DTMV system.

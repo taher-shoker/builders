@@ -4,7 +4,6 @@ import {
   EventEmitter,
   Input,
   OnChanges,
-  OnInit,
   Output,
   SimpleChanges,
 } from '@angular/core';
@@ -26,7 +25,7 @@ interface Item {
   styleUrls: ['./items-list.component.scss'],
   standalone: false,
 })
-export class ItemsListComponent implements OnChanges {
+export class ItemsListComponent {
   @Output() itemClicked: EventEmitter<any> = new EventEmitter<any>();
   @Output() closeClicked: EventEmitter<void> = new EventEmitter<void>();
   @Output() bulkApproveEvent: EventEmitter<void> = new EventEmitter<void>();
@@ -37,6 +36,8 @@ export class ItemsListComponent implements OnChanges {
   @Input() iconClass = '';
   @Input() bulkApprove = false;
   @Input() showBulkRequests = false;
+  @Input() loadingItems = false;
+
   @Input() closable = false;
   @Input() itemMsg: string = "Milestone's current pending action is :";
 
@@ -44,7 +45,7 @@ export class ItemsListComponent implements OnChanges {
   @Input({ required: true })
   set items(value: any[]) {
     this._items = value?.map((item) => ({ ...item })) || [];
-    this.prepareSelectedItems();
+    //this.prepareSelectedItems();
   }
   get items(): any[] {
     return this._items;
@@ -55,23 +56,13 @@ export class ItemsListComponent implements OnChanges {
 
   constructor(protected dialogService: DialogService) {}
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['bulkApprove'] && this.bulkApprove) {
-      this.prepareSelectedItems();
-    }
-  }
-
   private prepareSelectedItems(): void {
     if (this.bulkApprove && this.items.length > 0) {
       this.selectedItems = [];
       this.items.forEach((item) => {
-        item.selected = true;
+        item.selected = false;
         this.selectedItems.push(item);
       });
-      console.log(
-        'All items selected (via setter or OnChanges):',
-        this.selectedItems
-      );
     }
   }
 
@@ -103,7 +94,6 @@ export class ItemsListComponent implements OnChanges {
   onTaskCheckboxChange(event: Event, item: any): void {
     const isChecked = (event.target as HTMLInputElement).checked;
     item.selected = isChecked;
-
     if (isChecked) {
       const exists = this.selectedItems.some((i) => i.id === item.id);
       if (!exists) {
@@ -112,8 +102,6 @@ export class ItemsListComponent implements OnChanges {
     } else {
       this.selectedItems = this.selectedItems.filter((i) => i.id !== item.id);
     }
-
-    console.log('Selected Items:', this.selectedItems);
   }
 
   notifyParent(): void {
@@ -124,6 +112,5 @@ export class ItemsListComponent implements OnChanges {
   }
   private toggleApproveState(show: boolean): void {
     this.showApproveBtns = show;
-    this.showBulkRequests = show;
   }
 }

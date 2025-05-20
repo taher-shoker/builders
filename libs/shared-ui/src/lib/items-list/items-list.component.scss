@@ -150,3 +150,26 @@
     transition: all 0.3s;
   }
 }
+.header-confirmation {
+  h4 {
+    color: #1d252d;
+    font-size: 32px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    font-family: var(--stc-font-meduim);
+
+    img {
+      margin-right: 10px;
+    }
+  }
+  p {
+    color: #8e9aa0;
+  }
+}
+.no-data {
+  text-align: center;
+  text-transform: capitalize;
+  color: var(--grey-color);
+  margin-top: 120px;
+}
