@@ -39,7 +39,7 @@ export class ChatViewComponent implements OnInit {
     this.messageList.push({
       messageType: 'user',
       newChat: true,
-      header: 'Hello this is Nokia Chat',
+      header: 'Hello this is FNI',
       content:
         'To get the expected results, please ask questions in the following sentence structure',
     });
