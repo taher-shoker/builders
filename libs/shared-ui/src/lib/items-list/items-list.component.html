@@ -25,11 +25,6 @@
       @else {
       <stc-apps-button [buttonText]="'Bulk Approve'" [buttonType]="'primary'" (btnClick)="toggleBulk()"
         [loading]="loadingItems"></stc-apps-button>
-      @if(loadingItems){
-      <div class="spinner">
-        <mat-spinner diameter="24"></mat-spinner>
-      </div>
-      }
 
       }
       }

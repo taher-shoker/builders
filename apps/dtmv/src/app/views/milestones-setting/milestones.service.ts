@@ -151,7 +151,7 @@ export class MilestonesService {
     });
   }
   approveBulkTasks(data: number[]) {
-    return this.http.put(`${this.dtUrl}/bulk/appro\val`, {
+    return this.http.put(`${this.dtUrl}/bulk/approval`, {
       milestoneIds: data,
     });
   }
