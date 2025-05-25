@@ -119,7 +119,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
       this.userService.getCurrentSystem() === 'ChatBI' ||
       this.userService.getCurrentSystem() === 'Strategic_Dashboard' ||
-      this.userService.getCurrentSystem() === 'TU_BRAIN'
+      this.userService.getCurrentSystem() === 'TU_BRAIN' ||
+      this.userService.getCurrentSystem() === 'FNI_Nokia'
     ) {
       // this.columnssSchema = th;
       this.displayedColumns = (this.columnsSchema ?? [])
@@ -235,7 +236,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
       this.userService.getCurrentSystem() === 'ChatBI' ||
       this.userService.getCurrentSystem() === 'Score_Card_Report_DB' ||
       this.userService.getCurrentSystem() === 'Strategic_Dashboard' ||
-      this.userService.getCurrentSystem() === 'TU_BRAIN'
+      this.userService.getCurrentSystem() === 'TU_BRAIN' ||
+      this.userService.getCurrentSystem() === 'FNI_Nokia'
     ) {
       this.privilege = this.userService.allGroups
         .filter(

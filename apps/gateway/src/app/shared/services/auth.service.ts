@@ -141,7 +141,8 @@ export class AuthService {
       res.dto.systems.includes('Score_Card_Report_DB') ||
       res.dto.systems.includes('Strategic_Dashboard') ||
       res.dto.systems.includes('ChatBI') ||
-      res.dto.systems.includes('TU_BRAIN')
+      res.dto.systems.includes('TU_BRAIN') ||
+      res.dto.systems.includes('FNI_Nokia')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -172,7 +173,8 @@ export class AuthService {
       res.dto.systems.includes('Score_Card_Report_DB') ||
       res.dto.systems.includes('Strategic_Dashboard') ||
       res.dto.systems.includes('ChatBI') ||
-      res.dto.systems.includes('TU_BRAIN')
+      res.dto.systems.includes('TU_BRAIN') ||
+      res.dto.systems.includes('FNI_Nokia')
     ) {
       this.setLoggedInUser();
     }
@@ -218,6 +220,9 @@ export class AuthService {
     }
     if (res.dto.systems.includes('TU_BRAIN')) {
       this.gratnedSystems.push('TU_BRAIN');
+    }
+    if (res.dto.systems.includes('FNI_Nokia')) {
+      this.gratnedSystems.push('FNI_Nokia');
     }
     this.setLoggedInUser();
   }
@@ -289,6 +294,7 @@ export class AuthService {
       Strategic_Dashboard: environment.systems.strategic_dashboard,
       ChatBI: environment.systems.chat_bi,
       TU_BRAIN: environment.systems.tu_brain,
+      FNI_Nokia: environment.systems.nokia_chat,
     };
     const url = systemUrls[system];
     if (url) {
@@ -518,6 +524,16 @@ export class AuthService {
                 systemUrl: environment.systems.tu_brain,
                 name: 'STC Brain',
                 displayName: 'STC Brain',
+                mobileView: true,
+              });
+              break;
+            case 'FNI_Nokia':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin + environment.systems.nokia_chat,
+                name: 'Nokia FNI',
+                displayName: 'Nokia FNI',
                 mobileView: true,
               });
               break;
