@@ -148,7 +148,8 @@ export class UsersService {
       this.getCurrentSystem() === 'ChatBI' ||
       this.getCurrentSystem() === 'Score_Card_Report_DB' ||
       this.getCurrentSystem() === 'Strategic_Dashboard' ||
-      this.getCurrentSystem() === 'TU_BRAIN'
+      this.getCurrentSystem() === 'TU_BRAIN' ||
+      this.getCurrentSystem() === 'FNI_Nokia'
     ) {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')

@@ -123,7 +123,8 @@ export class UserFormComponent implements OnInit, OnChanges {
           'Business_Excellence_Dashboard' ||
         this.userService.getCurrentSystem() === 'ChatBI' ||
         this.userService.getCurrentSystem() === 'Strategic_Dashboard' ||
-        this.userService.getCurrentSystem() === 'TU_BRAIN'
+        this.userService.getCurrentSystem() === 'TU_BRAIN' ||
+        this.userService.getCurrentSystem() === 'FNI_Nokia'
           ? Validators.nullValidator
           : Validators.required,
       ],
@@ -214,7 +215,8 @@ export class UserFormComponent implements OnInit, OnChanges {
     } else if (
       currentSystem === 'Business_Excellence_Dashboard' ||
       currentSystem === 'ChatBI' ||
-      currentSystem === 'TU_BRAIN'
+      currentSystem === 'TU_BRAIN' ||
+      currentSystem === 'FNI_Nokia'
     ) {
       dataForm = { userGroups, email, name, jobTitle };
     } else {
@@ -251,9 +253,12 @@ export class UserFormComponent implements OnInit, OnChanges {
         currentSystem === 'Dynamic_Report_Flow' ||
         currentSystem === 'ChatBI' ||
         currentSystem === 'Business_Excellence_Dashboard' ||
-        currentSystem === 'TU_BRAIN'
+        currentSystem === 'TU_BRAIN' ||
+        currentSystem === 'FNI_Nokia'
       ) {
         data = { ...data, teams, userGroups };
+        console.log(data.teams);
+
         delete data.teams;
         // if (this.viewerControl?.value) {
         //   const viewerObj = this.userService
