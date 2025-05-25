@@ -1,0 +1,110 @@
+{
+  "name": "nokiaChat",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/nokiaChat/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/nokiaChat",
+        "index": "apps/nokiaChat/src/index.html",
+        "main": "apps/nokiaChat/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/nokiaChat/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/nokiaChat/src/favicon.ico",
+          "apps/nokiaChat/src/assets",
+          {
+            "input": "libs/shared-ui/src/assets",
+            "glob": "**/*",
+            "output": "assets"
+          }
+        ],
+        "styles": [
+          "apps/nokiaChat/src/styles.scss",
+          "libs/styles/src/index.scss",
+          "node_modules/ngx-toastr/toastr.css",
+          "node_modules/ngx-spinner/animations/ball-scale-multiple.css",
+          "node_modules/quill/dist/quill.snow.css"
+        ],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/nokiaChat/src/environments/environment.ts",
+              "with": "apps/nokiaChat/src/environments/environment.prod.ts"
+            }
+          ],
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "2mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "extractLicenses": false,
+          "vendorChunk": true,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "continuous": true,
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "nokiaChat:build:production"
+        },
+        "development": {
+          "buildTarget": "nokiaChat:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "nokiaChat:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/nokiaChat/jest.config.ts"
+      }
+    },
+    "serve-static": {
+      "continuous": true,
+      "executor": "@nx/web:file-server",
+      "options": {
+        "buildTarget": "nokiaChat:build",
+        "port": 4200,
+        "staticFilePath": "dist/apps/nokiaChat/browser",
+        "spa": true
+      }
+    }
+  }
+}
