@@ -56,6 +56,22 @@
           ],
           "outputHashing": "all"
         },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/nokiaChat/src/environments/environment.ts",
+              "with": "apps/nokiaChat/src/environments/environment.stage.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
         "development": {
           "buildOptimizer": false,
           "optimization": false,
