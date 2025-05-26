@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
-import { chunkData, data } from '../models/chatModel';
+import { chatBody, chunkData, data } from '../models/chatModel';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { environment } from 'apps/chatBI/src/environments/environment';
 import { CookieService } from 'ngx-cookie-service';
@@ -13,7 +13,7 @@ export class ChatStreamService {
   chunkStageSubject = new Subject<chunkData[]>();
   baseURL = environment.apiUrl;
   lastStage = '';
-
+  abortController: AbortController | null = null;
   token = this.cookieService.get('token');
   gToken = this.cookieService.get('tokenGenerated') || null;
   type = this.cookieService.get('tokenType') || '';
@@ -33,8 +33,9 @@ export class ChatStreamService {
       }
     );
   }
-  getStreamChatMessages(body: string): Observable<any> {
+  getStreamChatMessages(body: chatBody): Observable<any> {
     return new Observable((observer) => {
+      this.abortController = new AbortController();
       fetch(this.messageStreamUrl, {
         method: 'POST',
         headers: {
@@ -43,7 +44,8 @@ export class ChatStreamService {
           'Authorization-Generated': `Bearer ${this.gToken}`,
           'Access-Token-Type': this.type,
         },
-        body: JSON.stringify({ content: body }),
+        body: JSON.stringify(body),
+        signal: this.abortController?.signal,
       })
         .then((response) => {
           if (!response.ok || !response.body) {

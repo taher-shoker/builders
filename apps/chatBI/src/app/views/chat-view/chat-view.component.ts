@@ -8,6 +8,7 @@ import {
 import { ChatService } from './services/chat.service';
 import {
   chatArray,
+  chatBody,
   chunkData,
   responseBody,
   sqlData,
@@ -16,6 +17,7 @@ import {
 import { ChatStreamService } from './services/chat-stream.service';
 
 import { Subscription } from 'rxjs';
+import { QuestionService } from './services/questions.service';
 
 @Component({
   selector: 'stc-apps-chat-view',
@@ -40,10 +42,15 @@ export class ChatViewComponent implements OnInit {
   stage = '';
   isPaused = false;
   newMessageIsSent = false;
-
+  conversationID = '';
   autoScrollEnabled = true;
   chunkStream: chunkData[] = [];
+  suggestedQuestions = [];
   ngOnInit() {
+    this.questionService.getSuggestedQuestions().subscribe((data) => {
+      this.suggestedQuestions = data.suggestedQuestions;
+    });
+
     setTimeout(() => {
       this.isAnimated = true;
     }, 100);
@@ -51,7 +58,8 @@ export class ChatViewComponent implements OnInit {
   }
   constructor(
     private chatService: ChatService,
-    private chatStreamService: ChatStreamService
+    private chatStreamService: ChatStreamService,
+    private questionService: QuestionService
   ) {}
   addingStartMessage() {
     this.newMessageIsSent = false;
@@ -80,6 +88,7 @@ export class ChatViewComponent implements OnInit {
     this.messagesStreamList.length !== 0 ? this.completeStream() : '';
   }
   handleNewChat() {
+    this.conversationID = '';
     this.messagesStreamList = [];
     this.handlePauseStream();
     this.addingStartMessage();
@@ -111,15 +120,24 @@ export class ChatViewComponent implements OnInit {
     this.pendingFlag.set(true);
     this.chunkStream = [];
     this.stage = '';
+    const chatBody: chatBody = {
+      content: this.modelQuery,
+      conversationUUID: this.conversationID,
+    };
     this.messageSubscription = this.chatStreamService
-      .getStreamChatMessages(this.modelQuery)
+      .getStreamChatMessages(chatBody)
       .subscribe({
         next: (chunk) => {
           if (this.isPaused) return;
 
           const stageContent =
             this.chatStreamService.getStageChunkContent(chunk);
-          if (this.stage !== chunk.stage && chunk.stage !== 'COMPLETE') {
+
+          if (
+            this.stage !== chunk.stage &&
+            chunk.stage !== 'COMPLETE' &&
+            chunk.stage !== 'Conversation'
+          ) {
             const newChunk: chunkData = {
               stageTitle: chunk.stage,
               stageContent: stageContent,
@@ -134,14 +152,20 @@ export class ChatViewComponent implements OnInit {
               this.chunkStream,
               chunk
             );
+          } else if (chunk.stage === 'Conversation') {
+            this.conversationID = chunk.data.conversationUUID;
+            console.log('heyy', chunk.data.conversationUUID);
           }
-          const cloned = this.chunkStream.map((obj) => ({ ...obj }));
-          this.chatStreamService.chunkStageSubject.next(cloned);
+          if (chunk.stage !== 'Conversation') {
+            const cloned = this.chunkStream.map((obj) => ({ ...obj }));
+            this.chatStreamService.chunkStageSubject.next(cloned);
+          }
+
           setTimeout(() => {
             this.scrollToBottom();
           });
         },
-        error: (err) => {
+        error: () => {
           this.messagesStreamList.pop();
           this.reset();
           this.messagesStreamList.push({
@@ -178,6 +202,8 @@ export class ChatViewComponent implements OnInit {
   }
   pauseStream() {
     this.messageSubscription?.unsubscribe(); // Stops data from arriving
+    this.chatStreamService.abortController?.abort();
+    this.chatStreamService.abortController = null;
   }
   sendStreamMessage() {
     this.newMessageIsSent = true;
