@@ -5,13 +5,7 @@ import {
   transition,
   trigger,
 } from '@angular/animations';
-import {
-  Component,
-  input,
-  InputSignal,
-  OnChanges,
-  OnInit,
-} from '@angular/core';
+import { Component, input, InputSignal, OnChanges } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-chat-insight-card',
@@ -34,11 +28,7 @@ import {
     ]),
   ],
 })
-export class ChatInsightCardComponent implements OnInit, OnChanges {
-  ngOnInit(): void {
-    console.log('onInit');
-  }
-
+export class ChatInsightCardComponent implements OnChanges {
   contentKey = 0;
   newContent: InputSignal<string> = input('');
   title: InputSignal<string> = input('');

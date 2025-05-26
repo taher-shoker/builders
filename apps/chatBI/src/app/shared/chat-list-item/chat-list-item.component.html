@@ -229,12 +229,14 @@
         <div class="heading">{{ header() }}</div>
         }
         <div
+          *ngIf="suggestedQuestions().length !== 0"
           [ngClass]="{ 'sub-heading': newChat() }"
           [innerHTML]="message() | formatMessage"
         ></div>
-        @if(newChat()){
+        @if(newChat() && suggestedQuestions().length !== 0 ){
         <stc-apps-slider
           (questionEvent)="questionClick($event)"
+          [suggestedQuestions]="suggestedQuestions()"
         ></stc-apps-slider>
         }
       </div>
