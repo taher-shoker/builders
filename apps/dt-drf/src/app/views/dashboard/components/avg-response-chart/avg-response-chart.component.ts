@@ -157,17 +157,21 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
       this.alluser.set(res);
     });
   }
+
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (
-      event.start &&
-      event.end &&
-      this.filter.dateFrom !== convertToDateOnly(event.start) &&
-      this.filter.dateTo !== convertToDateOnly(event.end)
-    ) {
+    const newStart = convertToDateOnly(event.start);
+    const newEnd = convertToDateOnly(event.end);
+    if (newStart && newEnd) {
+      if (newStart > newEnd) return;
+    }
+
+    const hasDateChanged = event.start && event.end;
+
+    if (hasDateChanged) {
       this.filter = {
         ...this.filter,
-        dateFrom: convertToDateOnly(event.start),
-        dateTo: convertToDateOnly(event.end),
+        dateFrom: newStart,
+        dateTo: newEnd,
       };
 
       if (this.perUser) {

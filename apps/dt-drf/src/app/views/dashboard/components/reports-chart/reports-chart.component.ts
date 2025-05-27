@@ -50,20 +50,27 @@ export class ReportsChartComponent implements OnInit {
     });
     this.getReportsChartData();
   }
+
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (
+    const newStart = convertToDateOnly(event.start);
+    const newEnd = convertToDateOnly(event.end);
+    if (newStart && newEnd) {
+      if (newStart > newEnd) return;
+    }
+
+    const hasDateChanged =
       event.start &&
-      event.end &&
-      this.filter.dateFrom !== convertToDateOnly(event.start) &&
-      this.filter.dateTo !== convertToDateOnly(event.end)
-    ) {
+      event.end 
+
+    if (hasDateChanged) {
       this.filter = {
         ...this.filter,
-        dateFrom: convertToDateOnly(event.start),
-        dateTo: convertToDateOnly(event.end),
+        dateFrom: newStart,
+        dateTo: newEnd,
       };
 
       this.getReportsChartData(this.filter);
+
       this.form.get('startDate')?.setValue(event.start);
       this.form.get('endDate')?.setValue(event.end);
     }

@@ -48,24 +48,27 @@ export class ReportTypesChartComponent implements OnInit {
   }
 
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (
-      event.start &&
-      event.end &&
-      this.filter.dateFrom !== convertToDateOnly(event.start) &&
-      this.filter.dateTo !== convertToDateOnly(event.end)
-    ) {
+    const newStart = convertToDateOnly(event.start);
+    const newEnd = convertToDateOnly(event.end);
+    if (newStart && newEnd) {
+      if (newStart > newEnd) return;
+    }
+
+    const hasDateChanged = event.start && event.end;
+
+    if (hasDateChanged) {
       this.filter = {
         ...this.filter,
-        dateFrom: convertToDateOnly(event.start),
-        dateTo: convertToDateOnly(event.end),
+        dateFrom: newStart,
+        dateTo: newEnd,
       };
 
       this.getReportsCategoryChart(this.filter);
+
       this.form.get('startDate')?.setValue(event.start);
       this.form.get('endDate')?.setValue(event.end);
     }
   }
-
   getMonthName(month: number): string {
     const months = [
       'January',

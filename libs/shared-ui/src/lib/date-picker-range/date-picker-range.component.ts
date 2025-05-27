@@ -13,10 +13,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatDatepickerInputEvent } from '@angular/material/datepicker';
-// import { NG_VALUE_ACCESSOR } from '@angular/forms';
-// import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/material/core';
-// import { MomentDateAdapter, MAT_MOMENT_DATE_ADAPTER_OPTIONS } from '@angular/material-moment-adapter';
-// import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
+import { debounceTime, distinctUntilChanged } from 'rxjs';
 
 const APP_DATE_FORMATS = {
   parse: {
@@ -40,20 +37,6 @@ export interface DateRange {
   templateUrl: './date-picker-range.component.html',
   styleUrls: ['./date-picker-range.component.scss'],
   standalone: false,
-  // providers: [
-  //   {
-  //     provide: DateAdapter,
-  //     useClass: MomentDateAdapter,
-  //     deps: [MAT_DATE_LOCALE, MAT_MOMENT_DATE_ADAPTER_OPTIONS]
-  //   },
-  //   { provide: MAT_DATE_FORMATS, useValue: APP_DATE_FORMATS },
-
-  //   {
-  //     provide: NG_VALUE_ACCESSOR,
-  //     useExisting: forwardRef(() => DatePickerRangeComponent),
-  //     multi: true,
-  //   },
-  // ],
 })
 export class DatePickerRangeComponent implements OnInit, OnChanges {
   @Output() valueChangedEvent: EventEmitter<DateRange> =
@@ -77,10 +60,25 @@ export class DatePickerRangeComponent implements OnInit, OnChanges {
     end: new FormControl(this.endDate),
   });
   ngOnInit(): void {
-    // this.disableInput=false;
-    this.dateFormGroup.valueChanges.subscribe((value) => {
-      this.datePickerChangeEvent.emit(value);
-    });
+    this.dateFormGroup.valueChanges
+      .pipe(
+        debounceTime(300),
+        distinctUntilChanged((prev, curr) => {
+          const prevStart =
+            prev?.start instanceof Date ? prev.start.getTime() : null;
+          const prevEnd = prev?.end instanceof Date ? prev.end.getTime() : null;
+          const currStart =
+            curr?.start instanceof Date ? curr.start.getTime() : null;
+          const currEnd = curr?.end instanceof Date ? curr.end.getTime() : null;
+
+          return prevStart === currStart && prevEnd === currEnd;
+        })
+      )
+      .subscribe((value) => {
+        if (value?.start instanceof Date && value?.end instanceof Date) {
+          this.datePickerChangeEvent.emit(value);
+        }
+      });
   }
   constructor() {
     effect(() => {
