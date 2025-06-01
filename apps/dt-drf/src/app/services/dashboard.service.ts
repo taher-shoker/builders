@@ -122,4 +122,16 @@ export class DashboardService {
       }
     );
   }
+  getReportsAvgReponsePerUser(
+    filterData?: Record<string, string | number | undefined>
+  ): Observable<AvgReportChart[]> {
+    const params = this.createHttpParams(filterData);
+
+    return this.http.get<AvgReportChart[]>(
+      `${this.dtUrl}dashboard/reports-avg-response-per-user`,
+      {
+        params,
+      }
+    );
+  }
 }

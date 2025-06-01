@@ -5,11 +5,16 @@ import {
   Input,
   OnDestroy,
   OnInit,
+  signal,
   WritableSignal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DashboardService } from '../../../../services/dashboard.service';
-import { Category } from '../../../dy-reports/dy-reports.service';
+import {
+  Category,
+  ReportsService,
+  User,
+} from '../../../dy-reports/dy-reports.service';
 
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { convertToDateOnly } from '../../../../shared/helpers';
@@ -20,12 +25,14 @@ import { convertToDateOnly } from '../../../../shared/helpers';
 })
 export class AvgResponseChartComponent implements OnInit, OnDestroy {
   @Input({ required: true }) categories!: WritableSignal<Category[]>;
+  @Input() perUser = false;
 
   constructor(
     public router: Router,
     public route: ActivatedRoute,
     public _dashboardService: DashboardService,
-    private _formBuilder: FormBuilder
+    private _formBuilder: FormBuilder,
+    protected reportsService: ReportsService
   ) {}
 
   private root!: am5.Root;
@@ -38,20 +45,31 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
     dateFrom: string | null;
     dateTo: string | null;
     category: string | null;
+    user: string | null;
   } = {
     dateFrom: null,
     dateTo: null,
     category: null,
+    user: null,
   };
   form!: FormGroup;
+  alluser!: WritableSignal<User[]>;
   ngOnInit() {
+    this.alluser = signal<User[]>([]);
+
     this.form = this._formBuilder.group({
       category: [''],
+      user: [''],
       startDate: [''],
       endDate: [''],
     });
     this.chartdi_id = `${Math.random()}_chartId`;
-    this.getReportsAvgResTime();
+    if (this.perUser) {
+      this.getReportAvgPeruser();
+      this.getAllUser();
+    } else {
+      this.getReportsAvgResTime();
+    }
   }
 
   initChart(): void {
@@ -68,7 +86,7 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
     this.xAxis = this.chart.xAxes.push(
       am5xy.DateAxis.new(this.root, {
         maxDeviation: 0.2,
-        baseInterval: { timeUnit: 'day', count: 1 },
+        baseInterval: { timeUnit: this.perUser ? 'month' : 'month', count: 1 },
         renderer: am5xy.AxisRendererX.new(this.root, {}),
       })
     );
@@ -125,26 +143,42 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
 
     series
       ?.get('tooltip')
-      ?.label.set('text', 'Average response time: {valueY} Day');
+      ?.label.set(
+        'text',
+        `Average response time: {valueY} ${this.perUser ? 'Hour' : 'Day'}`
+      );
 
     series.data.setAll(this.chartData);
     series.appear(1000, 100);
   }
 
+  getAllUser() {
+    this.reportsService.getUsers().subscribe((res) => {
+      this.alluser.set(res);
+    });
+  }
+
   datePickerChanged(event: { start: Date; end: Date }) {
-    if (
-      event.start &&
-      event.end &&
-      this.filter.dateFrom !== convertToDateOnly(event.start) &&
-      this.filter.dateTo !== convertToDateOnly(event.end)
-    ) {
+    const newStart = convertToDateOnly(event.start);
+    const newEnd = convertToDateOnly(event.end);
+    if (newStart && newEnd) {
+      if (newStart > newEnd) return;
+    }
+
+    const hasDateChanged = event.start && event.end;
+
+    if (hasDateChanged) {
       this.filter = {
         ...this.filter,
-        dateFrom: convertToDateOnly(event.start),
-        dateTo: convertToDateOnly(event.end),
+        dateFrom: newStart,
+        dateTo: newEnd,
       };
 
-      this.getReportsAvgResTime(this.filter);
+      if (this.perUser) {
+        this.getReportAvgPeruser(this.filter);
+      } else {
+        this.getReportsAvgResTime(this.filter);
+      }
       this.form.get('startDate')?.setValue(event.start);
       this.form.get('endDate')?.setValue(event.end);
     }
@@ -153,6 +187,12 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
   handleSelect(event: string, controlName: string) {
     if (controlName === 'category') {
       this.filter = { ...this.filter, category: event };
+    } else if (controlName === 'user') {
+      this.filter = { ...this.filter, user: event };
+    }
+    if (this.perUser) {
+      this.getReportAvgPeruser(this.filter);
+    } else {
       this.getReportsAvgResTime(this.filter);
     }
   }
@@ -160,7 +200,6 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
     this._dashboardService.getReportsAvgReponse(filter).subscribe((res) => {
       this.chartData = res.map((item) => ({
         date: new Date(item.year, item.month - 1, 1).getTime() + item.year,
-
         value: item.avgResponseTime,
       }));
 
@@ -170,6 +209,22 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
         this.maybeDisposeRoot(this.chartdi_id);
       }
     });
+  }
+  getReportAvgPeruser(filter?: any) {
+    this._dashboardService
+      .getReportsAvgReponsePerUser(filter)
+      .subscribe((res) => {
+        this.chartData = res.map((item) => ({
+          date: new Date(item.year, item.month - 1, 1).getTime() + item.year,
+          value: item.avgResponseTime,
+        }));
+
+        if (this.chartData.length > 0) {
+          this.initChart();
+        } else {
+          this.maybeDisposeRoot(this.chartdi_id);
+        }
+      });
   }
   getMonthName(month: number): string {
     const months = [
@@ -196,9 +251,13 @@ export class AvgResponseChartComponent implements OnInit, OnDestroy {
     });
   }
   reset() {
-    this.filter = { category: null, dateFrom: null, dateTo: null };
+    this.filter = { category: null, dateFrom: null, dateTo: null, user: null };
     this.form.reset();
-    this.getReportsAvgResTime(this.filter);
+    if (this.perUser) {
+      this.getReportAvgPeruser(this.filter);
+    } else {
+      this.getReportsAvgResTime(this.filter);
+    }
   }
   hasNonNullValue(obj: Record<string, any>): boolean {
     return Object.values(obj).some((value) => value !== null);
