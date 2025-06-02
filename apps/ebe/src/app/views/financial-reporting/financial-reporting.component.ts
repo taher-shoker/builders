@@ -205,6 +205,44 @@ export class FinancialReportingComponent implements OnInit, OnDestroy {
             }
           );
           this.capexChartData = [...chartData];
+          // this.capexChartData = [
+          //   {
+          //     title: 'AA',
+          //     value1: 70,
+          //     value2: 99,
+          //     color: '#B999D1',
+          //   },
+          //   {
+          //     title: 'DG',
+          //     value1: 1.8,
+          //     value2: 65.67,
+          //     color: '#61CBD6',
+          //   },
+          //   {
+          //     title: 'SA',
+          //     value1: 22,
+          //     value2: 22,
+          //     color: '#00C48C',
+          //   },
+          //   {
+          //     title: 'SA2',
+          //     value1: 22,
+          //     value2: 22,
+          //     color: '#00C48C',
+          //   },
+          //   {
+          //     title: 'SA3',
+          //     value1: 22,
+          //     value2: 22,
+          //     color: '#00C48C',
+          //   },
+          //   {
+          //     title: 'SA4',
+          //     value1: 22,
+          //     value2: 22,
+          //     color: '#00C48C',
+          //   },
+          // ];
           if (this.capexTenderingData) {
             this.capexTenderingChart = [
               {
