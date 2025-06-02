@@ -33,6 +33,7 @@ export interface chatBody {
   content: string;
   showType?: string;
   conversationUUID: string;
+  queryUUID: string;
 }
 
 export interface data {

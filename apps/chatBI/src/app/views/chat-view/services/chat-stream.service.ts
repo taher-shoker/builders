@@ -17,11 +17,10 @@ export class ChatStreamService {
   token = this.cookieService.get('token');
   gToken = this.cookieService.get('tokenGenerated') || null;
   type = this.cookieService.get('tokenType') || '';
+  activeStreamBody: chatBody | null = null;
+  messageStreamUrl = this.baseURL + 'v2/chatBI/v2/message';
 
-  messageStreamUrl = this.baseURL + 'v2/chatBI/message';
-  constructor(private http: HttpClient, private cookieService: CookieService) {
-    console.log(this.token);
-  }
+  constructor(private http: HttpClient, private cookieService: CookieService) {}
   getStreamedResponse(url: string, body: string) {
     return this.http.post(
       url,
@@ -36,6 +35,7 @@ export class ChatStreamService {
   getStreamChatMessages(body: chatBody): Observable<any> {
     return new Observable((observer) => {
       this.abortController = new AbortController();
+      this.activeStreamBody = body;
       fetch(this.messageStreamUrl, {
         method: 'POST',
         headers: {
@@ -63,6 +63,8 @@ export class ChatStreamService {
               .then(({ done, value }) => {
                 if (done) {
                   observer.complete();
+                  this.abortController = null;
+                  this.activeStreamBody = null;
                   return;
                 }
 
@@ -100,12 +102,16 @@ export class ChatStreamService {
 
                 readChunk();
               })
-              .catch((err) => observer.error(err));
+              .catch((err) => {
+                observer.error(err);
+              });
           };
 
           readChunk();
         })
-        .catch((err) => observer.error(err));
+        .catch((err) => {
+          observer.error(err);
+        });
     });
   }
   updateAssistantMessage(chunkStream: any[], chunk: any) {
