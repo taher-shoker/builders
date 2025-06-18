@@ -38,6 +38,13 @@ export class HomeComponent implements OnInit {
       roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO'],
       urlHome: '/home',
     },
+     {
+      name: 'Archived DT Milestones',
+      url: '/archive',
+      icon: 'fa fa-archive',
+      roles: ['all'],
+      urlHome: '/home',
+    },
   ];
   ngOnInit() {
     this.authService.getUserData();

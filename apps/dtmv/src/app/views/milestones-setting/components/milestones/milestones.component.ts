@@ -93,7 +93,7 @@ export class MilestonesComponent
   userSub!: Subscription;
   getAssigneeTasks!: Subscription;
   formChangesSub!: Subscription;
-
+  readOnly = false;
   // Props of the paginator :
   milestonesTotalCount!: number;
 
@@ -126,7 +126,8 @@ export class MilestonesComponent
     private utilities: UtilitiesService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    public configService: ConfigService
+    public configService: ConfigService,
+    private activatedRoute: ActivatedRoute
   ) {}
 
   allItems!: PendingTask[];
@@ -150,6 +151,11 @@ export class MilestonesComponent
   allTeams: any = [];
 
   ngOnInit() {
+    if (this.activatedRoute.snapshot.data['state'] == 'archive')
+      this.readOnly = true;
+    else this.readOnly = false;
+    console.log(this.activatedRoute.snapshot.data['state'], this.readOnly);
+
     this.searchForm();
     this.getMilestones();
     this.getPendingTasks();
