@@ -1,6 +1,12 @@
-import { Component, inject, OnDestroy, OnInit, signal, ViewChild } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { PSRService } from '../../../../services/psr.service';
 import {
@@ -10,12 +16,19 @@ import {
 import { ProjectDetailsCardComponent } from '../project-details-card/project-details-card.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subject, takeUntil } from 'rxjs';
-import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { FileModel, UserGroup } from '../../../../models/scorecard.model';
+import {
+  FileModel,
+  UserGroup,
+  UserModel,
+} from '../../../../models/scorecard.model';
 import { ToastrService } from 'ngx-toastr';
-import { MenuPopupComponent } from 'apps/ebe/src/app/components/menu-popup/menu-popup.component';
-import { ActivityLog, ActivityLogData, ColumnsSchema } from '../../../../models/activity-logs';
+import { MenuPopupComponent } from '../../../../components/menu-popup/menu-popup.component';
+import {
+  ActivityLog,
+  ActivityLogData,
+  ColumnsSchema,
+} from '../../../../models/activity-logs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
 import { DeviceService } from '../../../../services/device.service';
 import { MobileViewHeaderComponent } from '../../../../components/mobile-view-header/mobile-view-header.component';
@@ -25,13 +38,11 @@ import { MobileProjectCardComponent } from '../mobile-project-card/mobile-projec
   standalone: true,
   imports: [
     CommonModule,
-    PageHeaderComponent,
     SharedUiModule,
     ProjectDetailsCardComponent,
-    EditModeViewComponent,
     MenuPopupComponent,
     MobileViewHeaderComponent,
-    MobileProjectCardComponent
+    MobileProjectCardComponent,
   ],
   templateUrl: './psr-details-page.component.html',
   styleUrl: './psr-details-page.component.scss',
@@ -58,8 +69,9 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   datePipe = inject(DatePipe);
   isAdmin = false;
   activityLogService = inject(ActivityLogService);
-  isMobile = signal<boolean>(false)
+  isMobile = signal<boolean>(false);
   deviceService = inject(DeviceService);
+  userData!: UserModel;
   menuItems = [
     {
       label: 'activity log',
@@ -71,7 +83,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
     },
   ];
   showActivityLogsPopup = false;
-  $endScorecardActivityLogsSub:Subject<any> = new Subject();
+  $endScorecardActivityLogsSub: Subject<any> = new Subject();
   popupClosed() {
     this.showActivityLogsPopup = false;
     this.$endScorecardActivityLogsSub.complete();
@@ -79,38 +91,60 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
   actionButton(label: string) {
     if (label === 'activity log') {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
-      this.getSpecificActivityLog("PSR" , this.groupName2 , '' , '' , true);
+      this.getSpecificActivityLog('PSR', this.groupName2, '', '', true);
     } else {
       // console.log(this.PSRDetailsData);
       // console.log(this.groupName);
-      if(this.PSRDetailsData.length !== 0 && this.PSRDetailsData[0].gd)
-      {
-        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}/${this.groupName2}`);
+      if (this.PSRDetailsData.length !== 0 && this.PSRDetailsData[0].gd) {
+        this.route.navigateByUrl(
+          `/deleted-projects/psr-projects/${this.PSRDetailsData[0].gd}/${this.groupName2}`
+        );
       } else {
-        this.route.navigateByUrl(`/deleted-projects/psr-projects/${this.groupName2}`);
+        this.route.navigateByUrl(
+          `/deleted-projects/psr-projects/${this.groupName2}`
+        );
       }
     }
   }
-  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean)
-  {
-    this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Delete" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
-      next : (activityLogs:ActivityLogData[]) => {
-        this.activityLogsTableBody.set(activityLogs);
-      }
-    })
+  private getSpecificActivityLog(
+    moduleName: string,
+    subModule?: string,
+    projectName?: string,
+    entity?: string,
+    showParentData?: boolean
+  ) {
+    this.activityLogService
+      .getSpecificActivityLog(
+        moduleName,
+        'Import,Export,Add,Delete',
+        subModule,
+        projectName,
+        entity,
+        showParentData
+      )
+      .pipe(takeUntil(this.$endScorecardActivityLogsSub))
+      .subscribe({
+        next: (activityLogs: ActivityLogData[]) => {
+          this.activityLogsTableBody.set(activityLogs);
+        },
+      });
   }
-  groupName2 = ''
+  groupName2 = '';
   isPMO = false;
   ngOnInit(): void {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.isMobile.set(this.deviceService.isMobile());
     this.scorecardService.toggleSwitchBtn.subscribe({
-      next : (res) => {
-        if(this.child2)
-        {
-          this.child2.actionsPanel.hide()
+      next: (res) => {
+        if (this.child2) {
+          this.child2.actionsPanel.hide();
         }
-      }
-    })
+      },
+    });
     this.username = this.scorecardService.getUsername();
     this.scorecardService.getCurrentMode().subscribe({
       next: (res: 'editMode' | 'viewMode') => {
@@ -118,8 +152,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
       },
     });
     this.userRoles = this.scorecardService.userRoles;
-    if(this.userRoles && this.userRoles.roles)
-    {
+    if (this.userRoles && this.userRoles.roles) {
       this.isAllowed = this.userRoles.roles.some(
         (role) =>
           role.roleName === 'BE_EDITORS' ||
@@ -251,7 +284,7 @@ export class PsrDetailsPageComponent implements OnInit, OnDestroy {
       });
   }
   deleteProject(id: number) {
-    this.psrServices.deleteProject(id , this.groupName).subscribe({
+    this.psrServices.deleteProject(id, this.groupName).subscribe({
       next: () => {
         this.toastr.success('The Project is Deleted Successfully');
         this.getProjectDetails(this.groupName);

@@ -1,4 +1,4 @@
-@import '../../../../../styles/fonts';
+// @import '../../../../../styles/fonts';
 input[type='number']::-webkit-inner-spin-button,
 input[type='number']::-webkit-outer-spin-button {
   -webkit-appearance: none;
@@ -20,29 +20,28 @@ input {
   margin-top: 7px;
   background-color: var(--stc-lighter-grey-color);
   border: 1px solid var(--stc-lighter-grey-color);
-  @extend .stcFont;
+  // @extend .stcFont;
   &::placeholder {
     color: #8e9aa0;
     font-weight: 400;
-    @extend .stcFont;
+    // @extend .stcFont;
     // text-transform: capitalize;
   }
   &.invalid-input {
     border-color: red;
   }
 }
-.error-msg
-{
-  color:red;
+.error-msg {
+  color: red;
   text-transform: capitalize;
-  @extend .stcFont;
+  // @extend .stcFont;
   position: absolute;
   left: 0;
   bottom: -25px;
 }
 label {
   display: block;
-  @extend .stcFont;
+  // @extend .stcFont;
   color: var(--stc-purple-color);
   font-size: 1.1rem;
   text-transform: capitalize;
@@ -60,83 +59,70 @@ textarea {
   margin-top: 7px;
   background-color: var(--stc-lighter-grey-color);
   border: 1px solid var(--stc-lighter-grey-color);
-  @extend .stcFont;
+  // @extend .stcFont;
   &::placeholder {
     color: #8e9aa0;
     font-weight: 400;
-    @extend .stcFont;
+    // @extend .stcFont;
   }
   &.invalid-input {
     border-color: red;
   }
 }
-::ng-deep .startDate-calendar
-{
-  .p-calendar
-  {
+::ng-deep .startDate-calendar {
+  .p-calendar {
     width: 100% !important;
-    input
-    {
-      border:0 !important;
+    input {
+      border: 0 !important;
       outline: 0 !important;
       box-shadow: none !important;
       border-radius: 10px !important;
       margin-top: 7px !important;
       background-color: var(--stc-lighter-grey-color) !important;
-      border:1px solid var(--stc-lighter-grey-color) !important;
-      padding:0 15px !important;
+      border: 1px solid var(--stc-lighter-grey-color) !important;
+      padding: 0 15px !important;
       height: 51px !important;
-      @extend .stcFont;
+      // @extend .stcFont;
     }
   }
   .p-datepicker {
     min-width: 300px !important;
     min-height: 200px !important;
   }
-  &.invalid-date
-  {
-    .p-calendar
-    {
-      input
-      {
-        border-color:red !important;
+  &.invalid-date {
+    .p-calendar {
+      input {
+        border-color: red !important;
       }
     }
   }
 }
-::ng-deep .indicator-dropdown
-{
-  .p-dropdown
-  {
-    width: 100% !important; 
+::ng-deep .indicator-dropdown {
+  .p-dropdown {
+    width: 100% !important;
     margin-top: 7px !important;
-    padding:1px 0px !important;
-    border:0 !important;
+    padding: 1px 0px !important;
+    border: 0 !important;
     outline: 0 !important;
     box-shadow: none !important;
     border-radius: 10px !important;
     background-color: var(--stc-lighter-grey-color) !important;
-    border:1px solid var(--stc-lighter-grey-color) !important;
-    @extend .stcFont;
+    border: 1px solid var(--stc-lighter-grey-color) !important;
+    // @extend .stcFont;
   }
-  &.invalid-dropdown
-  {
-    .p-dropdown
-    {
-      border-color:red !important;
+  &.invalid-dropdown {
+    .p-dropdown {
+      border-color: red !important;
     }
   }
-  .p-dropdown-items
-  {
+  .p-dropdown-items {
     padding: 0 !important;
     margin: 0 !important;
   }
 }
-::ng-deep .p-datepicker-icon
-{
-  svg
-  {
+::ng-deep .p-datepicker-icon {
+  svg {
     width: 20px !important;
-    height:20px !important;
+    height: 20px !important;
   }
 }

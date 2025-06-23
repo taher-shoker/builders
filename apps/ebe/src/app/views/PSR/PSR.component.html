@@ -2,7 +2,12 @@
 <section class="scored-card-section">
   <div class="scored-card-section-header">
     <div>
-      <stc-apps-page-header [mainTitle]="'PSR'" [secondaryTitle]="''" />
+      <stc-apps-page-header
+        [mainTitle]="'PSR'"
+        [secondaryTitle]="''"
+        [username]="userData ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
     </div>
     <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
   </div>
@@ -38,7 +43,7 @@
         />
       </div>
       } @empty {
-        <p class = "empty-data-msg2">there are no projects</p>
+      <p class="empty-data-msg2">there are no projects</p>
       }
     </div>
   </div>

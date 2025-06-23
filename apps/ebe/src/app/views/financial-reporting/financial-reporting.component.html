@@ -1,7 +1,12 @@
 @if(!isMobile()) {
 <section class="financial-reporting">
   <div class="financial-reporting-header">
-    <stc-apps-page-header mainTitle="" secondaryTitle="" />
+    <stc-apps-page-header
+      mainTitle=""
+      secondaryTitle=""
+      [username]="userData ? userData.name : ''"
+      [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+    />
   </div>
   <div class="financial-reporting-body">
     @if(currentMode === 'editMode') {
@@ -9,6 +14,7 @@
       (import)="showDialog()"
       (export)="downloadTemplate()"
       (showActivityLogs)="showActivityLogs()"
+      fontFamily="STCForwardFont"
     />
     }
     <p class="main-page-title">financial status</p>
@@ -86,9 +92,10 @@
                   </p>
                 </div>
               </div>
-              @if(capexTenderingData)
-              {
-                <stc-apps-tendering-status-chart [capexTenderingChart]="capexTenderingChart" />
+              @if(capexTenderingData) {
+              <stc-apps-progress-chart
+                [capexTenderingChart]="capexTenderingChart"
+              />
               }
             </div>
             }
@@ -204,7 +211,9 @@
                   </p>
                 </div>
               </div>
-              <stc-apps-tendering-status-chart [capexTenderingChart]="opexTenderingChart" />
+              <stc-apps-progress-chart
+                [capexTenderingChart]="opexTenderingChart"
+              />
             </div>
             }
           </div>
@@ -261,13 +270,31 @@
         <p class="title">total budget</p>
         <p
           class="number"
-          (mouseenter)="selectedTap === 'capex' ? capexOverlay ? capexOverlay.toggle($event) : '' : opexOverlay ? opexOverlay.toggle($event) : ''"
-          (mouseleave)="selectedTap === 'capex' ? capexOverlay ? capexOverlay.hide() : '' : opexOverlay ? opexOverlay.hide() : ''"
+          (mouseenter)="
+            selectedTap === 'capex'
+              ? capexOverlay
+                ? capexOverlay.toggle($event)
+                : ''
+              : opexOverlay
+              ? opexOverlay.toggle($event)
+              : ''
+          "
+          (mouseleave)="
+            selectedTap === 'capex'
+              ? capexOverlay
+                ? capexOverlay.hide()
+                : ''
+              : opexOverlay
+              ? opexOverlay.hide()
+              : ''
+          "
         >
           {{
-            capexOpexData ? selectedTap === 'capex'
-              ? (capexOpexData.capex[0].totalBudget | truncateWord : 1)
-              : (capexOpexData.opex[0].totalBudget | truncateWord : 1) : ''
+            capexOpexData
+              ? selectedTap === 'capex'
+                ? (capexOpexData.capex[0].totalBudget | truncateWord : 1)
+                : (capexOpexData.opex[0].totalBudget | truncateWord : 1)
+              : ''
           }}
           <span>sar</span>
         </p>
@@ -275,61 +302,90 @@
       <div class="capex-spending-card">
         <div class="capex-spending">
           <p class="title">
-            {{selectedTap === 'capex' ? 'CAPEX Spending' : 'OPEX Spending'}}
+            {{ selectedTap === 'capex' ? 'CAPEX Spending' : 'OPEX Spending' }}
           </p>
           <p class="value">
-            {{ capexOpexData ? selectedTap === 'capex' ? capexOpexData.capex && capexOpexData.capex[0] && capexOpexData.capex[0].spending ? capexOpexData.capex[0].spending : '' : capexOpexData.opex && capexOpexData.opex[0] && capexOpexData.opex[0].spending ? capexOpexData.opex[0].spending : '' : ''}}
+            {{
+              capexOpexData
+                ? selectedTap === 'capex'
+                  ? capexOpexData.capex &&
+                    capexOpexData.capex[0] &&
+                    capexOpexData.capex[0].spending
+                    ? capexOpexData.capex[0].spending
+                    : ''
+                  : capexOpexData.opex &&
+                    capexOpexData.opex[0] &&
+                    capexOpexData.opex[0].spending
+                  ? capexOpexData.opex[0].spending
+                  : ''
+                : ''
+            }}
           </p>
         </div>
         <div class="capex-accural">
           <p class="title">accural</p>
           <p class="value">
-            {{ capexOpexData ? selectedTap === 'capex' ? capexOpexData.capex && capexOpexData.capex[0] && capexOpexData.capex[0].accrual ? capexOpexData.capex[0].accrual : '' : capexOpexData.opex && capexOpexData.opex[0] && capexOpexData.opex[0].accrual ? capexOpexData.opex[0].accrual : '' : ''}}
+            {{
+              capexOpexData
+                ? selectedTap === 'capex'
+                  ? capexOpexData.capex &&
+                    capexOpexData.capex[0] &&
+                    capexOpexData.capex[0].accrual
+                    ? capexOpexData.capex[0].accrual
+                    : ''
+                  : capexOpexData.opex &&
+                    capexOpexData.opex[0] &&
+                    capexOpexData.opex[0].accrual
+                  ? capexOpexData.opex[0].accrual
+                  : ''
+                : ''
+            }}
             <span>SAR</span>
           </p>
         </div>
       </div>
       <div class="actual-spending-card">
         <p class="title">
-          {{selectedTap === 'capex' ? 'Actual Spending' : 'OPEX Status'}}
+          {{ selectedTap === 'capex' ? 'Actual Spending' : 'OPEX Status' }}
         </p>
         <div class="actual-spending-card-chart">
-          @if(selectedTap === 'capex' && capexChartData && capexChartData.length !== 0) {
-            <p class="chart-title">GD Wise CAPEX</p>
-            <div style = "height:300px;">
-              <stc-apps-clustered-column-chart
-                [chartData]="capexChartData"
-                [showLabel]="true"
-              />
-            </div>
-          }
-          @else if(selectedTap === 'opex' && spendingTargetChart && spendingTargetChart.length !== 0 && gepTargetChart && gepTargetChart.length !== 0) {
-            <div class="box-card-chart2">
-              <div class="first-chart">
-                <p class="title3">spending target</p>
-                <div class="chart-container">
-                  @if(spendingTargetChart && spendingTargetChart.length !== 0)
-                  {
-                  <stc-apps-bar-chart
-                    [data]="spendingTargetChart"
-                    [isFinancialStatus]="true"
-                  />
-                  }
-                </div>
-              </div>
-              <div class="second-chart">
-                <p class="title3">GEP target</p>
-                <div class="chart-container">
-                  @if(gepTargetChart && gepTargetChart.length !== 0) {
-                  <stc-apps-bar-chart
-                    [data]="gepTargetChart"
-                    [isFinancialStatus]="true"
-                    [showYaxis]="true"
-                  />
-                  }
-                </div>
+          @if(selectedTap === 'capex' && capexChartData && capexChartData.length
+          !== 0) {
+          <p class="chart-title">GD Wise CAPEX</p>
+          <div style="height: 300px">
+            <stc-apps-clustered-column-chart
+              [chartData]="capexChartData"
+              [showLabel]="true"
+            />
+          </div>
+          } @else if(selectedTap === 'opex' && spendingTargetChart &&
+          spendingTargetChart.length !== 0 && gepTargetChart &&
+          gepTargetChart.length !== 0) {
+          <div class="box-card-chart2">
+            <div class="first-chart">
+              <p class="title3">spending target</p>
+              <div class="chart-container">
+                @if(spendingTargetChart && spendingTargetChart.length !== 0) {
+                <stc-apps-bar-chart
+                  [data]="spendingTargetChart"
+                  [isFinancialStatus]="true"
+                />
+                }
               </div>
             </div>
+            <div class="second-chart">
+              <p class="title3">GEP target</p>
+              <div class="chart-container">
+                @if(gepTargetChart && gepTargetChart.length !== 0) {
+                <stc-apps-bar-chart
+                  [data]="gepTargetChart"
+                  [isFinancialStatus]="true"
+                  [showYaxis]="true"
+                />
+                }
+              </div>
+            </div>
+          </div>
           }
         </div>
       </div>
@@ -338,7 +394,13 @@
           <p class="project-title">total projects</p>
           <p class="project-value">
             {{
-              selectedTap === 'capex' ? capexTenderingData ? capexTenderingData.totalProjects : '' : opexTenderingData ? opexTenderingData.totalProjects : ''
+              selectedTap === 'capex'
+                ? capexTenderingData
+                  ? capexTenderingData.totalProjects
+                  : ''
+                : opexTenderingData
+                ? opexTenderingData.totalProjects
+                : ''
             }}
           </p>
         </div>
@@ -346,26 +408,35 @@
           <p class="project-title">total amount</p>
           <p class="project-value">
             {{
-              selectedTap === 'capex' ? capexTenderingData ? capexTenderingData.totalAmount : '' : opexTenderingData ? opexTenderingData.totalAmount : ''
+              selectedTap === 'capex'
+                ? capexTenderingData
+                  ? capexTenderingData.totalAmount
+                  : ''
+                : opexTenderingData
+                ? opexTenderingData.totalAmount
+                : ''
             }}
             <span>SAR</span>
           </p>
         </div>
       </div>
-      <stc-apps-tendering-status-chart [capexTenderingChart]="selectedTap === 'capex' ? capexTenderingChart : opexTenderingChart" />
+      <stc-apps-progress-chart
+        [capexTenderingChart]="
+          selectedTap === 'capex' ? capexTenderingChart : opexTenderingChart
+        "
+      />
     </div>
   </div>
 </div>
-}
-@if(capexOpexData && capexOpexData.capex[0].totalBudget.toString().split(" ").length > 1)
-{
+} @if(capexOpexData && capexOpexData.capex[0].totalBudget.toString().split("
+").length > 1) {
 <p-overlayPanel #capexOverlay dismissable="true">
   <section class="popover-section">
     {{ capexOpexData.capex[0].totalBudget }}
   </section>
 </p-overlayPanel>
-} @if(capexOpexData && capexOpexData.opex[0].totalBudget.toString().split(" ").length >
-1) {
+} @if(capexOpexData && capexOpexData.opex[0].totalBudget.toString().split("
+").length > 1) {
 <p-overlayPanel #opexOverlay dismissable="true">
   <section class="popover-section">
     {{ capexOpexData.opex[0].totalBudget }}
