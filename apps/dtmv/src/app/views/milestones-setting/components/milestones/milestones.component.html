@@ -45,7 +45,7 @@
                     (btnClick)="addMilestoneNavigate()"
                   ></stc-apps-button>
                 </div>
-                @if (!readOnly) {
+
                 <div class="col-2">
                   <stc-apps-button
                     [buttonText]="'Export' | translate"
@@ -53,11 +53,14 @@
                     (btnClick)="onExporting()"
                   ></stc-apps-button>
                 </div>
-                }
 
                 <div
                   class="col-2"
-                  *ngIf="showPendingActionsBtn && !milestonesService.isDTAdmin"
+                  *ngIf="
+                    showPendingActionsBtn &&
+                    !milestonesService.isDTAdmin &&
+                    !this.readOnly
+                  "
                 >
                   <stc-apps-button
                     [buttonText]="'Pending actions'"
@@ -156,7 +159,8 @@
           </div>
         </div>
       </div>
-      @if( !this.milestonesService.isDTAdmin){@if (tableCols === 12 ) {
+      @if( !this.milestonesService.isDTAdmin && !this.readOnly){@if (tableCols
+      === 12 ) {
       <div
         [@slideInOut]="pendingActionsShown"
         class="pending-list-holder"

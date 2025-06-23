@@ -21,7 +21,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'archive',
+        path: 'archived-milestones',
         canActivate: [AuthGuard],
         data: { state: 'archive' },
         loadChildren: () =>

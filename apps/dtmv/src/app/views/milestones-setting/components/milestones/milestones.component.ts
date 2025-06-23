@@ -8,12 +8,17 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterEvent,
+} from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
 import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
 import { AuthService } from '../../../../services/auth.service';
-import { Subscription, take } from 'rxjs';
+import { filter, Subscription, take } from 'rxjs';
 import { UtilsService } from '@stc-apps/lng-selector';
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -113,6 +118,7 @@ export class MilestonesComponent
   showBulkRequests: boolean = false;
   bulkPremission: boolean = false;
   loadingBulk: boolean = false;
+  previousPath: string = '';
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -135,7 +141,7 @@ export class MilestonesComponent
     this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
   columnsSchema: ColumnsSchema[] = [];
-
+  private routerSub!: Subscription;
   disabled = false;
   tableData!: any;
   rowData!: any;
@@ -151,9 +157,10 @@ export class MilestonesComponent
   allTeams: any = [];
 
   ngOnInit() {
-    if (this.activatedRoute.snapshot.data['state'] == 'archive')
+    this.previousPath = this.router.url;
+    if (this.activatedRoute.snapshot.data['state'] == 'archive') {
       this.readOnly = true;
-    else this.readOnly = false;
+    } else this.readOnly = false;
     console.log(this.activatedRoute.snapshot.data['state'], this.readOnly);
 
     this.searchForm();
@@ -165,9 +172,36 @@ export class MilestonesComponent
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+    this.detectChangedRoutes();
     if (this.milestonesService.checkIsDirector()) {
       this.bulkPremission = true;
     }
+  }
+  detectChangedRoutes() {
+    this.routerSub = this.router.events
+      .pipe(
+        filter(
+          (event): event is NavigationEnd => event instanceof NavigationEnd
+        )
+      )
+      .subscribe((event) => {
+        const currentPath = event.urlAfterRedirects;
+
+        const switchedBetweenHomeAndArchive =
+          (this.previousPath.includes('/home') &&
+            currentPath.includes('/archive')) ||
+          (this.previousPath.includes('/archive') &&
+            currentPath.includes('/home'));
+
+        if (switchedBetweenHomeAndArchive) {
+          this.form.reset();
+          this.resetFormFlag = true;
+          this.filterForm = {};
+          sessionStorage.removeItem('filterFormMilestones');
+        }
+
+        this.previousPath = currentPath;
+      });
   }
   getActionsBasedOnRole(): AllowedActions[] {
     if (this.milestonesService.isDTAdmin) {
@@ -254,6 +288,7 @@ export class MilestonesComponent
 
   fetchMilestones(options: any = {}): void {
     const filteredForm = this.filterForm;
+    console.log('this.filtered form', this.filterForm);
 
     // If the form is fully empty, reset all previous filters
     const isFormEmpty = Object.values(filteredForm).every(
@@ -292,10 +327,11 @@ export class MilestonesComponent
 
     // Save the cleaned params
     this.previousParams = { ...cleanParams };
+    console.log('clean params', cleanParams);
 
     // Trigger API call
     this.milestonesService
-      .getMilestones(cleanParams)
+      .getMilestones(cleanParams, this.readOnly)
       .pipe(take(1))
       .subscribe((res: any) => {
         this.populateMilestones(res);
@@ -650,17 +686,22 @@ export class MilestonesComponent
   getMilestones() {
     const savedFilter = sessionStorage.getItem('filterFormMilestones');
     const filters = savedFilter ? JSON.parse(savedFilter) : null;
+
     if (filters) {
       this.filterForm = filters;
       this.fetchMilestones({ page: 0 });
       this.resetForm(this.filterForm);
     } else {
       this.getMilestonesSub = this.milestonesService
-        .getMilestones()
+        .getMilestones({}, this.readOnly)
         .subscribe((res: any) => {
           this.populateMilestones(res);
         });
     }
+  }
+  addingArchiveFilter() {
+    if (this.readOnly) this.filterForm.archive = true;
+    else this.filterForm.archive = false;
   }
 
   showPendingActionsBtn: boolean = false;

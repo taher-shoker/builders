@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit {
     },
      {
       name: 'Archived DT Milestones',
-      url: '/archive',
+      url: '/archived-milestones',
       icon: 'fa fa-archive',
       roles: ['all'],
       urlHome: '/home',
