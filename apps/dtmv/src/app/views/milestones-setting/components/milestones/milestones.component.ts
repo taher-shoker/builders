@@ -555,7 +555,7 @@ export class MilestonesComponent
 
   onExporting() {
     this.milestonesService
-      .exportMilestones(this.previousParams)
+      .exportMilestones(this.previousParams, this.readOnly)
       .subscribe((buffer) => {
         const data: Blob = new Blob([buffer]);
         saveAs(data, 'milestones.csv');
