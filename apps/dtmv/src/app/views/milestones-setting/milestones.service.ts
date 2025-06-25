@@ -193,7 +193,10 @@ export class MilestonesService {
     );
   }
 
-  getMilestones(filterData?: any) {
+  getMilestones(filterData?: any, archivedFlag?: boolean) {
+    if (archivedFlag !== undefined) {
+      filterData['archived'] = archivedFlag;
+    }
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });

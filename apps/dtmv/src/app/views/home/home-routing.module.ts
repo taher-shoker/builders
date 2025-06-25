@@ -21,6 +21,15 @@ const routes: Routes = [
           ),
       },
       {
+        path: 'archived-milestones',
+        canActivate: [AuthGuard],
+        data: { state: 'archive' },
+        loadChildren: () =>
+          import('../milestones-setting/milestones-setting.module').then(
+            (m) => m.MilestonesSettingModule
+          ),
+      },
+      {
         path: 'vp-report',
         canActivate: [AuthGuard],
         loadChildren: () =>
