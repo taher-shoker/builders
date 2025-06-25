@@ -33,7 +33,9 @@
                   class="col-3"
                   *ngIf="
                     !milestonesService.checkIsBusinessSpoc() &&
-                    !milestonesService.checkIsDirector()
+                    !milestonesService.checkIsDirector() &&
+                    !milestonesService.isDTAdmin &&
+                    !readOnly
                   "
                 >
                   <stc-apps-button
@@ -43,6 +45,7 @@
                     (btnClick)="addMilestoneNavigate()"
                   ></stc-apps-button>
                 </div>
+
                 <div class="col-2">
                   <stc-apps-button
                     [buttonText]="'Export' | translate"
@@ -51,7 +54,14 @@
                   ></stc-apps-button>
                 </div>
 
-                <div class="col-2" *ngIf="showPendingActionsBtn">
+                <div
+                  class="col-2"
+                  *ngIf="
+                    showPendingActionsBtn &&
+                    !milestonesService.isDTAdmin &&
+                    !this.readOnly
+                  "
+                >
                   <stc-apps-button
                     [buttonText]="'Pending actions'"
                     [buttonType]="'primary'"
@@ -59,7 +69,6 @@
                   ></stc-apps-button>
                 </div>
               </div>
-
               <!-- <ng-container *ngIf="authService.getLoggedInUser()">
                 <div class="col-md-4" *ngIf="
                     authService.getLoggedInUser().roles.includes('CREATORS')
@@ -90,6 +99,7 @@
               [paginate]="true"
               [applyFilter]="true"
               [filterForm]="filterForm"
+              [readOnly]="readOnly"
               [paginationConfig]="{
                 pageCount: previousParams.numberOfElementsToDisplay
                   ? previousParams.numberOfElementsToDisplay
@@ -149,7 +159,8 @@
           </div>
         </div>
       </div>
-      @if (tableCols === 12) {
+      @if( !this.milestonesService.isDTAdmin && !this.readOnly){@if (tableCols
+      === 12 ) {
       <div
         [@slideInOut]="pendingActionsShown"
         class="pending-list-holder"
@@ -161,6 +172,12 @@
           [closable]="isPendingListClosable"
           (itemClicked)="detailsNavigate($event)"
           (closeClicked)="toggleAnimation()"
+          [bulkApprove]="bulkPremission"
+          (bulkApproveEvent)="handleBulk()"
+          [showBulkRequests]="showBulkRequests"
+          (cancelBulk)="handleCancellation()"
+          (submitBulk)="sendIds($event)"
+          [loadingItems]="loadingBulk"
         ></stc-apps-items-list>
       </div>
       } @else {
@@ -176,10 +193,16 @@
             [closable]="isPendingListClosable"
             (itemClicked)="detailsNavigate($event)"
             (closeClicked)="toggleAnimation()"
+            [bulkApprove]="bulkPremission"
+            (bulkApproveEvent)="handleBulk()"
+            [showBulkRequests]="showBulkRequests"
+            (cancelBulk)="handleCancellation()"
+            (submitBulk)="sendIds($event)"
+            [loadingItems]="loadingBulk"
           ></stc-apps-items-list>
         </div>
       </div>
-      }
+      }}
     </div>
   </div>
 </div>
@@ -214,6 +237,8 @@
             [disableInput]="true"
             [disableFilterFlag]="true"
             (datePickerChangeEvent)="datePickerChanged($event, 'startDate')"
+            [startDate]="form.get('startDateFrom')?.value"
+            [endDate]="form.get('startDateTo')?.value"
           >
           </stc-apps-date-picker-range>
         </div>
@@ -226,6 +251,8 @@
             [disableInput]="true"
             [disableFilterFlag]="true"
             (datePickerChangeEvent)="datePickerChanged($event, 'endDate')"
+            [startDate]="form.get('endDateFrom')?.value"
+            [endDate]="form.get('endDateTo')?.value"
           >
           </stc-apps-date-picker-range>
         </div>
@@ -245,7 +272,7 @@
             [outputValue]="'value'"
           ></stc-apps-select-drop-down>
         </div>
-        <div class="col-md-3">
+        <div class="col-md-3" *ngIf="allTeams.length > 0">
           <stc-apps-select-drop-down
             [label]="'Team'"
             [options]="allTeams"

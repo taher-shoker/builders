@@ -1,7 +1,7 @@
 <div class="white-box">
   <div class="row">
     <div class="col-md-5">
-      <h3>Avg Response Time Per Report</h3>
+      <h3>Avg Response Time Per {{perUser ? 'User' : 'Report'}}</h3>
     </div>
     <div class="col-md-7">
       <div class="row" [formGroup]="form">
@@ -12,11 +12,19 @@
           }
 
         </div>
+        @if(perUser){
+        <div class="col-md-5">
+          <stc-apps-select-drop-down [searchMode]="true" formControlName="user" [label]="''" [matLabel]="'User'"
+            [options]="alluser()" (selectChange)="handleSelect($event,'user')"
+            [outputValue]="'email'"></stc-apps-select-drop-down>
+        </div>
+        }@else {
         <div class="col-md-5">
           <stc-apps-select-drop-down formControlName="category" [label]="''" [matLabel]="'Category'"
             [options]="categories()" (selectChange)="handleSelect($event,'category')"
             [outputValue]="'name'"></stc-apps-select-drop-down>
         </div>
+        }
 
         <div class="col-md-5">
           <stc-apps-date-picker-range [disableInput]="true" [disableFilterFlag]="true"

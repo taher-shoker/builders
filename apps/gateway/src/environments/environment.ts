@@ -17,6 +17,7 @@ export const environment = {
     score_card_report_db: '/cem/reporting/score-card-report/',
     strategic_dashboard: '/cem/reporting/strategic_dashboard/',
     chat_bi: '/cem/reporting/chat_bi/',
+    nokia_chat: '/cem/reporting/nokia_chat/',
     tu_brain:
       'https://stcgpt-ui.agreeableriver-7f2a419b.switzerlandnorth.azurecontainerapps.io/login',
   },

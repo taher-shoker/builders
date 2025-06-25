@@ -26,7 +26,7 @@ export interface ColumnsSchema {
   type: 'text' | 'date' | 'actions' | 'custom';
   label: string;
   dateString?: 'longDate';
-  actions?: ('edit' | 'delete' | 'details' | 'updateProgress')[];
+  actions?: ('edit' | 'delete' | 'details' | 'updateProgress' | '')[];
   complexViewTemp?: any;
 }
 
@@ -43,7 +43,7 @@ export interface PaginationConfig {
   selector: 'stc-apps-custom-table',
   templateUrl: './custom-table.component.html',
   styleUrls: ['./custom-table.component.scss'],
-  standalone : false
+  standalone: false,
 })
 export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Output() paginationEvent: EventEmitter<PaginationEvent> =
@@ -72,11 +72,12 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() paginate: boolean = false;
   @Input() paginationConfig!: PaginationConfig;
   @Input() sort: boolean = true;
+  @Input() readOnly: boolean = false;
   @Input() activityLogTable: boolean = true;
   @Input() length!: number;
   @Input() currentPage: number = 1;
-  isDeleted = input<boolean>(false)
-  showLogs = input<boolean>(false)
+  isDeleted = input<boolean>(false);
+  showLogs = input<boolean>(false);
 
   isEditMode = input<boolean>();
   userRoles = input<string>();

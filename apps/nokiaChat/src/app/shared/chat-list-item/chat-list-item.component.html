@@ -1,0 +1,95 @@
+@if (showPopUp) {
+<app-zoomed-card-chart
+  [chartData]="sqlData()"
+  [chartType]="showType()"
+  (close)="closePopUp()"
+></app-zoomed-card-chart>
+}
+
+<div
+  class="chat-list-item"
+  [@fadeIn]
+  [ngClass]="
+    messageType() === 'user' ? 'justify-content-end' : 'justify-content-start'
+  "
+>
+  @if (messageType() === 'assistant' ) {
+  <div class="chat-list-item_query-profile">
+    <img
+      class="chat-list-item_photo"
+      src="assets/images/Start-chat.png"
+      alt=""
+    />
+  </div>
+  }
+
+  <div
+    class="chat-list-item_query-info"
+    [ngClass]="{
+      'w-100': messageType() === 'assistant' && !isLoading()
+    }"
+  >
+    <div
+      class="message"
+      [ngClass]="{
+        'sender-message': messageType() === 'user',
+        'receiver-message': messageType() === 'assistant',
+        'sender-message-margin-left': messageType() === 'user' && !newChat()
+      }"
+    >
+      @if (messageType()==='assistant') {
+      <div class="message-content animate-fade-in">
+        @if(message()||showType()||sqlReason()||sqlQuery()){
+        <p>{{ message() }}</p>
+        <div
+          *ngIf="sqlQuery()"
+          class="sql-block"
+          [innerHTML]="sqlQuery() | sqlHighlight"
+        ></div>
+        <p *ngIf="sqlReason()">{{ sqlReason() }}</p>
+        @if(showType()){
+        <app-chart-controller
+          [sqlData]="sqlData()"
+          [showType]="showType()"
+        ></app-chart-controller>
+        <button
+          *ngIf="showType() !== 'table'"
+          (click)="showPopUpOnClick()"
+          class="zoom-in-btn"
+        >
+          <i class="fa fa-search-plus"></i>
+        </button>
+        } }
+      </div>
+      @if(isLoading()&&message()==''){
+      <div class="loading-dots">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      } } @else{
+      <div class="suggested-questions-message">
+        @if (header()) {
+        <div class="heading">{{ header() }}</div>
+        }
+        <div
+          [ngClass]="{ 'sub-heading': newChat() }"
+          [innerHTML]="message()"
+        ></div>
+        @if(newChat()){
+        <app-slider (questionEvent)="questionClick($event)"></app-slider>
+        }
+      </div>
+      }
+    </div>
+
+    <div
+      class="date"
+      [ngStyle]="{
+        'text-align': messageType() === 'user' ? 'end' : 'left'
+      }"
+    >
+      {{ messageDate() }}
+    </div>
+  </div>
+</div>

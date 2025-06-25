@@ -1,42 +1,30 @@
 @if(!activityTable()) {
- <table cellpadding="10" [class.psrTable]="psrTable()">
+<table cellpadding="10" [class.psrTable]="psrTable()">
   @if(!activityTable()) {
   <tbody>
     <tr class="table-header">
       @for(header of headers(); track header){
-      <th
-        (click)="changeCurrentSortingColumn(header.key)"
-        [ngStyle]="{
+      <th (click)="changeCurrentSortingColumn(header.key)" [ngStyle]="{
           'font-family': fontFamily() ? fontFamily() : '',
           'text-align': activityLogTable ? 'center' : 'left'
-        }"
-      >
-        <div 
-          class="header-cell-holder"
-          [ngStyle]="{
+        }">
+        <div class="header-cell-holder" [ngStyle]="{
             'justify-content': activityLogTable ? 'center' : 'left'
-          }"
-        >
+          }">
           <div>{{ header.label }}</div>
           @if (sort && header.key !== 'actions' && !activityLogTable) {
           <div class="arrows-holder">
             <div>
-              <i
-                class="ri-arrow-left-s-fill hashed-arrow"
-                [ngClass]="{
+              <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{
                   'active-arrow':
                     (currentSortedByColumn$ | async) === header.key &&
                     sortingDirection === 'asc'
-                }"
-              ></i>
-              <i
-                class="ri-arrow-right-s-fill hashed-arrow"
-                [ngClass]="{
+                }"></i>
+              <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{
                   'active-arrow':
                     (currentSortedByColumn$ | async) === header.key &&
                     sortingDirection === 'desc'
-                }"
-              ></i>
+                }"></i>
             </div>
           </div>
           }
@@ -47,23 +35,19 @@
     <tr class="mat-row" *ngIf="items && items.length === 0">
       @if(!activityLogTable)
       {
-        <td class="mat-cell" [attr.colspan]="headers().length">
-          <div class="message-box">
-            <img src="assets/Group 590.png" alt="" />
-            <h3>{{ 'No data found' }}</h3>
-          </div>
-        </td>
+      <td class="mat-cell" [attr.colspan]="headers().length">
+        <div class="message-box">
+          <img src="assets/Group 590.png" alt="" />
+          <h3>{{ 'No data found' }}</h3>
+        </div>
+      </td>
       }
     </tr>
 
     @if(itemsInView){
-    <ng-container
-      *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"></ng-container>
     }@else {
-    <ng-container
-      *ngTemplateOutlet="tableBody; context: { tableItems: items }"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: items }"></ng-container>
     }
   </tbody>
   }
@@ -72,104 +56,77 @@
   <tbody>
     <tr class="table-header">
       @for(header of headers(); track header){
-      <th
-        (click)="changeCurrentSortingColumn(header.key)"
-        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }"
-      >
+      <th (click)="changeCurrentSortingColumn(header.key)"
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }">
         <div class="header-cell-holder">
           <div>{{ header.label }}</div>
         </div>
       </th>
       }
     </tr>
-    <ng-container
-      *ngTemplateOutlet="tableBody; context: { tableItems: items }"
-    ></ng-container>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: items }"></ng-container>
   </tbody>
   }
 </table>}
 @if(activityTable()){
-  <table cellpadding="10" [class.activityTable]="activityTable()">
-    <tbody>
-      <tr class="table-header">
-        @for(header of headers(); track header){
-        <th
-          (click)="changeCurrentSortingColumn(header.key)"
-          [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }"
-        >
-          <div class="header-cell-holder">
-            <div>{{ header.label }}</div>
-            @if (sort && header.key !== 'actions') {
-            <div class="arrows-holder">
-              <div>
-                <i
-                  class="ri-arrow-left-s-fill hashed-arrow"
-                  [ngClass]="{
+<table cellpadding="10" [class.activityTable]="activityTable()">
+  <tbody>
+    <tr class="table-header">
+      @for(header of headers(); track header){
+      <th (click)="changeCurrentSortingColumn(header.key)"
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }">
+        <div class="header-cell-holder">
+          <div>{{ header.label }}</div>
+          @if (sort && header.key !== 'actions') {
+          <div class="arrows-holder">
+            <div>
+              <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{
                     'active-arrow':
                       (currentSortedByColumn$ | async) === header.key &&
                       sortingDirection === 'asc'
-                  }"
-                ></i>
-                <i
-                  class="ri-arrow-right-s-fill hashed-arrow"
-                  [ngClass]="{
+                  }"></i>
+              <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{
                     'active-arrow':
                       (currentSortedByColumn$ | async) === header.key &&
                       sortingDirection === 'desc'
-                  }"
-                ></i>
-              </div>
+                  }"></i>
             </div>
-            }
           </div>
-        </th>
-        }
-      </tr>
-      <tr class="mat-row" *ngIf="items.length === 0">
-        <td class="mat-cell" [attr.colspan]="headers().length">
-          <div class="message-box">
-            <img src="assets/Group 590.png" alt="" />
-            <h3>{{ 'No data found' }}</h3>
-          </div>
-        </td>
-      </tr>
-  
-      @if(itemsInView){
-      <ng-container
-        *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"
-      ></ng-container>
-      }@else {
-      <ng-container
-        *ngTemplateOutlet="tableBody; context: { tableItems: items }"
-      ></ng-container>
+          }
+        </div>
+      </th>
       }
-    </tbody>
-  </table>
+    </tr>
+    <tr class="mat-row" *ngIf="items.length === 0">
+      <td class="mat-cell" [attr.colspan]="headers().length">
+        <div class="message-box">
+          <img src="assets/Group 590.png" alt="" />
+          <h3>{{ 'No data found' }}</h3>
+        </div>
+      </td>
+    </tr>
+
+    @if(itemsInView){
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"></ng-container>
+    }@else {
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: items }"></ng-container>
+    }
+  </tbody>
+</table>
 }
 @if(psrTable() && items && items.length === 0) {
 <p [ngStyle]="{ 'font-family': fontFamily() }" class="empty-details">
   there are no data
 </p>
 } @if(psrTable() && userRoles() !== "BE_VIEWERS" && !isDeleted()) {
-<button
-  type="button"
-  class="add-record-btn"
-  [ngStyle]="{ 'font-family': fontFamily() }"
-  (click)="addNewRecord()"
->
+<button type="button" class="add-record-btn" [ngStyle]="{ 'font-family': fontFamily() }" (click)="addNewRecord()">
   <img [src]="activityLogTable ? 'assets/images/eye.svg' : 'assets/images/add-square.svg'" alt="" />
   <span> add new record </span>
 </button>
 } @if(paginate && length > 0){
-<stc-apps-paginator
-  [showPagePerItems]="showOptionSizePage"
-  (pageSize)="setPageSize($event)"
-  [pageRows]="paginationConfig.pageCount"
-  [activePage]="currentPage"
-  [numbers]="paginationConfig.pageSizesOptionals"
-  [elementsLength]="length"
-  (paginationEvent)="raisePagination($event)"
-></stc-apps-paginator>
+<stc-apps-paginator [showPagePerItems]="showOptionSizePage" (pageSize)="setPageSize($event)"
+  [pageRows]="paginationConfig.pageCount" [activePage]="currentPage" [numbers]="paginationConfig.pageSizesOptionals"
+  [elementsLength]="length" (paginationEvent)="raisePagination($event)"></stc-apps-paginator>
 }
 
 <ng-template #tableBody let-tableItems="tableItems">
@@ -179,55 +136,42 @@
     @for(header of headers(); track header){ @if(header.type !== 'actions' &&
     header.type !== 'custom'){ @if(header.complexViewTemp){
     <td>
-      <ng-container
-        *ngTemplateOutlet="
+      <ng-container *ngTemplateOutlet="
           header.complexViewTemp;
           context: { header: header, item: item }
-        "
-      ></ng-container>
+        "></ng-container>
     </td>
     }@else {
 
-    <td
-      [class.psrTabldID]="
+    <td [class.psrTabldID]="
         psrTable() &&
         (header.label === 'ID' ||
           header.label === 'Start' ||
           header.label === 'Duration')
-      "
-      [class.psrTabldMajor]="
+      " [class.psrTabldMajor]="
         psrTable() && header.label === 'Major Activities/Deliverables'
-      "
-      [class.psrTabldLevel]="psrTable() && (header.label === 'Completion Level' || header.label === 'weight')"
+      " [class.psrTabldLevel]="psrTable() && (header.label === 'Completion Level' || header.label === 'weight')"
       [ngStyle]="{
         'font-family': fontFamily() && psrTable() ? fontFamily() : '',
         'color' : header.key === 'time' ? '#8E9AA0' : '#363636'
-      }"
-    >
+      }">
       @if(!isEditMode()) { @if(header.key === '' && userRoles() !==
       "BE_VIEWERS" && !isDeleted()) {
-      <div
-        class="delete-btn"
-        (click)="deleteRecord(item)"
-        [ngStyle]="{
+      <div class="delete-btn" (click)="deleteRecord(item)" [ngStyle]="{
           'font-family': fontFamily() && psrTable() ? fontFamily() : ''
-        }"
-      >
+        }">
         <img src="assets/images/trash.svg" alt="" />
         delete
       </div>
       } @else {
-      {{ (header.label === 'Completion Level' || header.label === 'weight') ? item[header.key] || item[header.key] === 0 ? item[header.key] : '-' : item[header.key] ? item[header.key] : '-' }}
+      {{ (header.label === 'Completion Level' || header.label === 'weight') ? item[header.key] || item[header.key] === 0
+      ? item[header.key] : '-' : item[header.key] ? item[header.key] : '-' }}
       } @if(psrTable() && header.label === 'Completion Level') { % } } @else {
       @if(header.key !== '') { @if(header.key !== 'id') { @if(header.key ===
       'major') {
       <div class="position-relative">
-        <input
-          type="text"
-          [(ngModel)]="item[header.key]"
-          class="edit-input"
-          (ngModelChange)="inputChanged(item['id'])"
-        />
+        <input type="text" [(ngModel)]="item[header.key]" class="edit-input"
+          (ngModelChange)="inputChanged(item['id'])" />
         @if(item[header.key] === '') {
         <small class="empty-data-msg">This field is required</small>
         }
@@ -235,30 +179,16 @@
       } @else {
       <div class="position-relative">
         @if(header.key === 'completionLevel' || header.key === 'weight') {
-        <input
-          type="number"
-          [(ngModel)]="item[header.key]"
-          class="edit-input"
-          (keypress)="keyPress2($event)"
-          (ngModelChange)="inputChanged(item['id'])"
-          max="100"
-        />
+        <input type="number" [(ngModel)]="item[header.key]" class="edit-input" (keypress)="keyPress2($event)"
+          (ngModelChange)="inputChanged(item['id'])" max="100" />
         } @else {
-        <p-calendar
-          dateFormat="dd/mm/yy"
-          styleClass="custom-calendar2"
-          class="custom-calendar2"
-          appendTo="body"
-          [(ngModel)]="item[header.key]"
-          (ngModelChange)="inputChanged(item['id'])"
-        />
+        <p-calendar dateFormat="dd/mm/yy" styleClass="custom-calendar2" class="custom-calendar2" appendTo="body"
+          [(ngModel)]="item[header.key]" (ngModelChange)="inputChanged(item['id'])" />
         <!-- {{item['endDate']}} -->
         <!-- {{parseDate(item['startDate']) > parseDate(item['endDate'])}}  -->
         @if(parseDate(item['startDate']) > parseDate(item['endDate']) &&
         header.key === 'startDate' && item['endDate'] !== null) {
-        <small class="empty-data-msg empty-data-msg2"
-          >end date must be greater than start date</small
-        >
+        <small class="empty-data-msg empty-data-msg2">end date must be greater than start date</small>
         }
         <!-- <input
                 type="text"
@@ -275,7 +205,7 @@
       {{ item[header.key] }}
       } } }
     </td>
-    } } @else if(header.type === 'actions') {
+    } } @else if(header.type === 'actions' && !readOnly) {
 
     <td>
       <div class="actions-row d-flex">
@@ -286,12 +216,10 @@
         </span>
         <mat-menu #menu="matMenu">
           <div class="menu-btns-wrapper">
-            <ng-container
-              *ngTemplateOutlet="
+            <ng-container *ngTemplateOutlet="
                 btnsTemp;
                 context: { header: header, item: item }
-              "
-            ></ng-container>
+              "></ng-container>
           </div>
         </mat-menu>
 
@@ -312,12 +240,10 @@
 <ng-template #btnsTemp let-header="header" let-item="item">
   <div class="details">
     @if(header.complexViewTemp){
-    <ng-container
-      *ngTemplateOutlet="
+    <ng-container *ngTemplateOutlet="
         header.complexViewTemp;
         context: { header: header, item: item }
-      "
-    ></ng-container>
+      "></ng-container>
 
     } @else { @for(action of header?.actions; track action; let i = $index){
     @if(action === 'edit' && !item.latestWorkflowId){
@@ -327,28 +253,19 @@
     </div>
     } @else if (action === 'delete' && !item.latestWorkflowId) {
 
-    <div
-      class="delete-option action-option"
-      (click)="raiseAction(action, item)"
-    >
+    <div class="delete-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-delete-bin-line"></i>
       Delete
     </div>
     } @else if(action === 'details'){
 
-    <div
-      class="details-option action-option"
-      (click)="raiseAction(action, item)"
-    >
+    <div class="details-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-arrow-right-up-line"></i>
       Show Details
     </div>
     } @else if(action === 'updateProgress' && !item.latestWorkflowId &&
     item.status !== 'Planned' && item.status !== 'Completed'){
-    <div
-      class="update-option action-option"
-      (click)="raiseAction(action, item)"
-    >
+    <div class="update-option action-option" (click)="raiseAction(action, item)">
       <i class="ri-arrow-left-right-line"></i>
       Update Progress
     </div>

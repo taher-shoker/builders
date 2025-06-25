@@ -1,0 +1,12 @@
+.chart-holder {
+  margin-top: 24px;
+  padding: 15.5px 0px;
+  // background-color: #ffff;
+  border-radius: 15px;
+  padding-left: 12px;
+}
+.zoomed-width {
+  width: 1024px;
+  padding: 12px;
+  touch-action: pan-x;
+}
