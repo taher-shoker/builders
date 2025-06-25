@@ -205,7 +205,7 @@
       {{ item[header.key] }}
       } } }
     </td>
-    } } @else if(header.type === 'actions') {
+    } } @else if(header.type === 'actions' && !readOnly) {
 
     <td>
       <div class="actions-row d-flex">
