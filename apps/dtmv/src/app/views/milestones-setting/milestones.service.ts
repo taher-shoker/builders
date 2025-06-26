@@ -201,7 +201,10 @@ export class MilestonesService {
       params: filterData,
     });
   }
-  exportMilestones(filterData?: any) {
+  exportMilestones(filterData?: any, archivedFlag?: boolean) {
+    if (archivedFlag !== undefined) {
+      filterData['archived'] = archivedFlag;
+    }
     return this.http.get(`${this.dtUrl}/export`, {
       params: filterData,
       responseType: 'blob',
