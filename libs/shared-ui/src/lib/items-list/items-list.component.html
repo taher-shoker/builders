@@ -1,50 +1,65 @@
-<div class="pending-tasks" [ngClass]="{'hovering-list': closable}">
-  <div class="header " [ngClass]="bulkApprove ? 'with-bulk':''">
+<div class="pending-tasks" [ngClass]="{ 'hovering-list': closable }">
+  <div class="header" [ngClass]="bulkApprove ? 'with-bulk' : ''">
     @if(closable){
     <span class="x-btn" (click)="notifyParent()">X</span>
     }
     <div class="main-title">
-      <h3>
-        <i [class]="iconClass || 'far fa-clock'"></i> {{ caption }}
-      </h3>
+      <h3><i [class]="iconClass || 'far fa-clock'"></i> {{ caption }}</h3>
 
-      @if (bulkApprove) {
-      @if (showApproveBtns ) {
+      @if (bulkApprove) { @if (showApproveBtns ) {
 
       <div class="bulk-btns">
         <!-- <span class="btn" (click)="cancelApprove()">Cancel</span>
                   <span class="btn" (click)="approveBulk()">Approve</span> -->
-        <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'stc-color-outline'" (btnClick)="cancelApprove()"
-          [buttonDisable]="loadingItems"></stc-apps-button>
-        <stc-apps-button [buttonText]=" 'Approve'" [buttonType]="'primary'" (btnClick)="approveBulk()"
-          [buttonDisable]="loadingItems || items.length === 0 || this.selectedItems.length ===0"></stc-apps-button>
+        <stc-apps-button
+          [buttonText]="'Cancel'"
+          [buttonType]="'stc-color-outline'"
+          (btnClick)="cancelApprove()"
+          [buttonDisable]="loadingItems"
+        ></stc-apps-button>
+        <stc-apps-button
+          [buttonText]="'Approve'"
+          [buttonType]="'primary'"
+          (btnClick)="approveBulk()"
+          [buttonDisable]="
+            loadingItems ||
+            items.length === 0 ||
+            this.selectedItems.length === 0
+          "
+        ></stc-apps-button>
       </div>
 
-      }
+      } @else {
+      <stc-apps-button
+        [buttonText]="'Bulk Approve'"
+        [buttonType]="'primary'"
+        (btnClick)="toggleBulk()"
+        [loading]="loadingItems"
+      ></stc-apps-button>
 
-      @else {
-      <stc-apps-button [buttonText]="'Bulk Approve'" [buttonType]="'primary'" (btnClick)="toggleBulk()"
-        [loading]="loadingItems"></stc-apps-button>
-
-      }
-      }
+      } }
     </div>
-
-
   </div>
   <ul class="tasks">
     @if(items.length > 0){
     <li class="mt-3" *ngFor="let item of items">
-
-      <div class="task" (click)="!showBulkRequests ? clickItem(item) : null"
-        [ngStyle]="!showBulkRequests ? { cursor: 'pointer' } : {}">
+      <div
+        class="task"
+        (click)="!showBulkRequests ? clickItem(item) : null"
+        [ngStyle]="!showBulkRequests ? { cursor: 'pointer' } : {}"
+      >
         <div class="task-header">
           <div class="row">
             <div class="col-6 left-col">
               <div class="text-wrapper">
                 @if(showBulkRequests){
-                <input type="checkbox" class="task-checkbox" (change)="onTaskCheckboxChange($event, item)"
-                  [(ngModel)]="item.selected" (click)="$event.stopPropagation()" />
+                <input
+                  type="checkbox"
+                  class="task-checkbox"
+                  (change)="onTaskCheckboxChange($event, item)"
+                  [(ngModel)]="item.selected"
+                  (click)="$event.stopPropagation()"
+                />
                 }
                 <div class="left-text large-text">
                   {{ item.requestParams.team || item.taskStatus }} –
@@ -53,52 +68,64 @@
               </div>
             </div>
             <div class="col right-col">
-              {{ item.createdDate | date: 'medium' }}
+              {{ item.createdDate | date : 'medium' }}
             </div>
           </div>
         </div>
 
         <div class="task-desc-holder">
           <p class="task-desc">
-            "{{ itemMsg }} <strong>{{ item.taskName }}</strong>"
-            @if (showBulkRequests) {
-            <span class="link-details" (click)="clickItem(item)">Show Details</span>
+            "{{ itemMsg }} <strong>{{ item.taskName }}</strong
+            >" @if (showBulkRequests) {
+            <span class="link-details" (click)="clickItem(item)"
+              >Show Details</span
+            >
             }
-
           </p>
+          @if (bulkApprove) {
+          <div class="progressJustificationsHolder task-desc">
+            <p>"Overall Progress" : <strong> 80.0% </strong></p>
+            <p>"Comment" : <strong> on track</strong></p>
+          </div>
+          }
         </div>
       </div>
-
     </li>
     }@else {
     <li>
-      <p class="no-data">
-        no data found
-      </p>
+      <p class="no-data">no data found</p>
     </li>
     }
-
-
   </ul>
 </div>
 <stc-apps-dialog id="bulk-approve">
   <div class="header-confirmation">
-    <h4 class="h2"><img src="assets/emoji-happy.png" alt="emojy" />
-      Approve Selected Requests</h4>
+    <h4 class="h2">
+      <img src="assets/emoji-happy.png" alt="emojy" /> Approve Selected Requests
+    </h4>
     <p>
-      {{ 'Are you sure? you are going to approve all selected requests' | translate }}
+      {{
+        'Are you sure? you are going to approve all selected requests'
+          | translate
+      }}
     </p>
   </div>
 
   <div class="row mt-4">
     <div class="col-md-5 offset-7">
       <div class="d-flex justify-content-end">
-        <stc-apps-button [buttonText]="'Cancel' | translate" [buttonType]="'gray-outline'"
-          (btnClick)="dialogService.close()"></stc-apps-button>
+        <stc-apps-button
+          [buttonText]="'Cancel' | translate"
+          [buttonType]="'gray-outline'"
+          (btnClick)="dialogService.close()"
+        ></stc-apps-button>
 
         <div class="mx-4"></div>
-        <stc-apps-button [buttonText]="'Confirm Approval' | translate" [buttonType]="'primary'"
-          (btnClick)="onSubmit()"></stc-apps-button>
+        <stc-apps-button
+          [buttonText]="'Confirm Approval' | translate"
+          [buttonType]="'primary'"
+          (btnClick)="onSubmit()"
+        ></stc-apps-button>
       </div>
     </div>
   </div>
