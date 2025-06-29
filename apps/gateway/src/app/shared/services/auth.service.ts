@@ -532,8 +532,8 @@ export class AuthService {
               this.passedSystems.push({
                 systemUrl:
                   window.location.origin + environment.systems.nokia_chat,
-                name: 'Nokia FNI',
-                displayName: 'Nokia FNI',
+                name: 'FNI Vision',
+                displayName: 'FNI Vision',
                 mobileView: true,
               });
               break;
