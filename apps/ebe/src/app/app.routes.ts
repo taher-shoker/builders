@@ -142,6 +142,13 @@ export const appRoutes: Route[] = [
       import('./views/PSR/PSR.component').then((m) => m.PSRComponent),
   },
   {
+    path: 'digital-transformation',
+    loadComponent: () =>
+      import(
+        './views/digital-transformation/digital-transformation.component'
+      ).then((m) => m.DigitalTransformationComponent),
+  },
+  {
     path: 'psr/add-program',
     loadComponent: () =>
       import(

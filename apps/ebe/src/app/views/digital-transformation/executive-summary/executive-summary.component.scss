@@ -1,0 +1,190 @@
+@import '../../../../styles/fonts.scss';
+::ng-deep .executive-summary {
+  .p-accordion-tab {
+    margin-bottom: 15px;
+  }
+  .p-accordion-header-link {
+    text-decoration: none;
+    @extend .stcFont;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    background-color: #fff;
+    color: var(--stc-purple-light-color);
+    border-bottom: 0;
+    border-radius: 10px;
+    transition: 0.3s;
+    border: 0;
+    &:hover {
+      background-color: #fff;
+    }
+    .main-header {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+      img {
+        width: 25px;
+        transition: 0.4s;
+        transform: rotate(180deg);
+      }
+      p {
+        font-weight: bold;
+        font-size: 1rem;
+        margin: 0;
+      }
+    }
+  }
+  .p-accordion-toggle-icon {
+    display: none;
+  }
+  .p-accordion-content {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    border: 0;
+    padding-top: 0;
+  }
+  .p-highlight {
+    transition: 0.3s;
+    border: 0;
+    .p-accordion-header-link {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .main-header {
+      img {
+        transform: rotate(0deg);
+      }
+    }
+  }
+  &-body {
+    background-color: #f3f4f6;
+    border-radius: 10px;
+    // padding: 20px;
+    &-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 0px 20px;
+      .left-side {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        p {
+          margin: 0;
+        }
+        .title2 {
+          font-weight: bold;
+          color: #000;
+          font-size: 1.2rem;
+        }
+        .status {
+          background: #dcfce7;
+          border: 2px solid #bbf7d0;
+          padding: 5px 15px;
+          border-radius: 5px;
+          display: flex;
+          align-items: center;
+          gap: 5px;
+          span {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background-color: #22c55e;
+            display: inline-block;
+          }
+          p {
+            @extend .stcFont;
+            text-transform: capitalize;
+            font-size: 0.9rem;
+            color: #22c55e;
+            position: relative;
+            font-weight: 500;
+            top: 1px;
+          }
+        }
+      }
+      .right-side {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        button {
+          background-color: transparent;
+          border: 0;
+          border-radius: 5px;
+          padding: 10px 15px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          gap: 5px;
+          img {
+            width: 20px;
+          }
+          span {
+            @extend .stcFont;
+            text-transform: capitalize;
+          }
+          &:first-child {
+            background-color: #ff375e;
+            color: #fff;
+          }
+          &:last-child {
+            background-color: #e2e8f0;
+            color: #475569;
+          }
+        }
+      }
+    }
+    &-sub-title {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 10px 20px;
+      // margin-bottom: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      // border-bottom: 2px solid #000;
+      p {
+        margin: 0;
+        @extend .stcFont;
+      }
+      .left-side {
+        p {
+          color: #000;
+          font-size: 1.15rem;
+          font-weight: 600;
+          text-transform: capitalize;
+        }
+      }
+      .right-side {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        img {
+          width: 15px;
+        }
+        p {
+          text-transform: capitalize;
+          color: #64748b;
+          font-size: 1.15rem;
+          span {
+            font-weight: bold;
+            &.actual {
+              color: #22c55e;
+            }
+            &.planned {
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+    &-content {
+      padding: 20px;
+      .executive-summary-card {
+        background-color: #fff;
+        border-radius: 10px;
+        padding: 20px;
+      }
+    }
+  }
+}

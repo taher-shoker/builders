@@ -1,0 +1,28 @@
+<section class="digital-transformation">
+  <stc-apps-page-header
+    [mainTitle]="'Digital Transformation'"
+    [secondaryTitle]="''"
+    [username]="userData ? userData.name : ''"
+    [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+  />
+  <div class="digital-transformation-taps">
+    @if(digitalTransformationTaps().length !== 0){
+    <stc-apps-tabview
+      [tabsData]="digitalTransformationTaps()"
+      [tabColor]="'#ffffff'"
+      [clickedtabColor]="'#ffffff'"
+      [tabBackground]="'#FFFFFF0D'"
+      [clickedtabBackground]="'#FF375E'"
+      (clickedTap)="getClickedTap($event)"
+      [fontFamily]="'STCForwardFont'"
+      [isMobile]="false"
+    />
+    }
+  </div>
+  <!-- <div class="digital-transformation-body">
+    <h4>{{ currTap().name }}</h4>
+  </div> -->
+  @if(currTap().id === 1){
+  <stc-apps-executive-summary></stc-apps-executive-summary>
+  }
+</section>

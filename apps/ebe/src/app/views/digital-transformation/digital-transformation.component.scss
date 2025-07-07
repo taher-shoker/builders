@@ -1,0 +1,13 @@
+@import '../../../styles/fonts';
+.digital-transformation {
+  padding: 20px 30px;
+  &-body {
+    background-color: var(--stc-white-color);
+    border-radius: 20px;
+    padding: 20px;
+    // z-index: 9999999;
+    position: relative;
+    // margin-top:30px;
+    color: #000;
+  }
+}

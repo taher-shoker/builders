@@ -105,6 +105,10 @@ import { PieChartComponent } from './chat-charts/pie-chart/pieChart.component';
 import { ScatterChartComponent } from './chat-charts/scatter-chart/scatterChart.component';
 import { LineChatChartComponent } from './chat-charts/line-chart/lineChart.component';
 import { BarChatChartComponent } from './chat-charts/bar-chart/barChart.component';
+import { PageHeaderComponent } from './pageHeader/page-header.component';
+import { FormInputComponent } from './form-input/form-input.component';
+import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component';
+import { ProgressChartComponent } from './progress-chart/progress-chart.component';
 
 const components = [
   ButtonComponent,
@@ -171,6 +175,10 @@ const components = [
   BarChatChartComponent,
   PieChartComponent,
   ScatterChartComponent,
+  PageHeaderComponent,
+  FormInputComponent,
+  EditModeViewComponent,
+  ProgressChartComponent,
 ];
 
 @NgModule({

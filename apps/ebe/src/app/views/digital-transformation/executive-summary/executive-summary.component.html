@@ -1,0 +1,120 @@
+<section class="executive-summary">
+  <p-accordion [activeIndex]="0">
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <div class="main-header">
+          <p>AI&DS Dashboard</p>
+          <img src="assets/images/arrow-up.svg" alt="" />
+        </div>
+      </ng-template>
+      <div class="executive-summary-body">
+        <div class="executive-summary-body-title">
+          <div class="left-side">
+            <p class="title2">CPU</p>
+            <div class="status">
+              <span></span>
+              <p>on track</p>
+            </div>
+          </div>
+          <div class="right-side">
+            <button>
+              <img src="assets/images/Info Circle.svg" alt="" />
+              <span>highlights</span>
+            </button>
+            <button>
+              <img src="assets/images/Danger.svg" alt="" />
+              <span>Challenges</span>
+            </button>
+          </div>
+        </div>
+        <div class="executive-summary-body-sub-title">
+          <div class="left-side">
+            <p>weight: 65%</p>
+          </div>
+          <div class="right-side">
+            <p>
+              planned:
+              <span class="planned">45%</span>
+            </p>
+            <img src="assets/images/Component 2.svg" alt="" />
+            <p>
+              actual:
+              <span class="actual">32%</span>
+            </p>
+          </div>
+        </div>
+        <div class="executive-summary-body-content">
+          <div class="row">
+            @for (item of data; track $index) {
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="executive-summary-card">
+                <p class="title m-0">
+                  {{ item.title }}
+                </p>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </p-accordionTab>
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <div class="main-header">
+          <p>IT Platforms Dashboard</p>
+          <img src="assets/images/arrow-up.svg" alt="" />
+        </div>
+      </ng-template>
+      <div class="executive-summary-body">
+        <div class="executive-summary-body-title">
+          <div class="left-side">
+            <p class="title2">CPU</p>
+            <div class="status">
+              <span></span>
+              <p>on track</p>
+            </div>
+          </div>
+          <div class="right-side">
+            <button>
+              <img src="assets/images/Info Circle.svg" alt="" />
+              <span>highlights</span>
+            </button>
+            <button>
+              <img src="assets/images/Danger.svg" alt="" />
+              <span>Challenges</span>
+            </button>
+          </div>
+        </div>
+        <div class="executive-summary-body-sub-title">
+          <div class="left-side">
+            <p>weight: 65%</p>
+          </div>
+          <div class="right-side">
+            <p>
+              planned:
+              <span class="planned">45%</span>
+            </p>
+            <img src="assets/images/Component 2.svg" alt="" />
+            <p>
+              actual:
+              <span class="actual">32%</span>
+            </p>
+          </div>
+        </div>
+        <div class="executive-summary-body-content">
+          <div class="row">
+            @for (item of data; track $index) {
+            <div class="col-lg-6 col-md-6 col-sm-12">
+              <div class="executive-summary-card">
+                <p class="title m-0">
+                  {{ item.title }}
+                </p>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+</section>

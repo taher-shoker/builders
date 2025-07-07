@@ -47,6 +47,11 @@ export class ScorecardService {
       name: 'Activity Log Center',
       url: '/activity-logs',
     },
+    {
+      id: 7,
+      name: 'Digital Transformation',
+      url: '/digital-transformation',
+    },
     // {
     //   id: 3,
     //   name: 'raqami',
