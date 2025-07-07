@@ -1,0 +1,38 @@
+<div class="financial-scorecard-edit-mode">
+  <!-- <input type="file" hidden #uploader (change)="getUploadedFile($event)" /> -->
+  <button
+    [ngStyle]="{
+      'font-family': fontFamily()
+    }"
+    class="financial-scorecard-edit-mode-button"
+    (click)="downloadTemplate()"
+  >
+    <img src="assets/images/export.svg" />
+    <span>export</span>
+  </button>
+  <button
+    [ngStyle]="{
+      'font-family': fontFamily()
+    }"
+    class="financial-scorecard-edit-mode-button import-btn"
+    (click)="showDialog()"
+  >
+    <!-- (click)="uploader.click()" -->
+    <img src="assets/images/upload-solid.svg" />
+    <span>import</span>
+  </button>
+  @if(showActivityLogsButton()) {
+  <button
+    [ngStyle]="{
+      'font-family': fontFamily()
+    }"
+    class="financial-scorecard-edit-mode-button activity-log-btn"
+    (click)="activityLogs()"
+  >
+    <!-- (click)="uploader.click()" -->
+    <img src="assets/images/History.svg" />
+    <span>activity log</span>
+  </button>
+  }
+  <!-- {{currentClickedTap().name}} -->
+</div>

@@ -19,9 +19,12 @@ import { FileModel, UserGroup } from '../../../../models/scorecard.model';
 import { PSRService } from '../../../../services/psr.service';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FormBuilder } from '@angular/forms';
-import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { MenuPopupComponent } from '../../../../components/menu-popup/menu-popup.component';
-import { ActivityLog, ActivityLogData, ColumnsSchema } from '../../../../models/activity-logs';
+import {
+  ActivityLog,
+  ActivityLogData,
+  ColumnsSchema,
+} from '../../../../models/activity-logs';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
 import { Subject, takeUntil } from 'rxjs';
 import { DeviceService } from '../../../../services/device.service';
@@ -34,8 +37,7 @@ import { DeviceService } from '../../../../services/device.service';
     SharedUiModule,
     PSRProjectCardComponent,
     RouterLink,
-    EditModeViewComponent,
-    MenuPopupComponent
+    MenuPopupComponent,
   ],
   templateUrl: './tab-details.component.html',
   styleUrl: './tab-details.component.scss',
@@ -50,10 +52,10 @@ export class TabDetailsComponent implements OnInit {
   scorecardService = inject(ScorecardService);
   psrService = inject(PSRService);
   router = inject(Router);
-  activityLogsTableHeader!:ColumnsSchema[];
+  activityLogsTableHeader!: ColumnsSchema[];
   activityLogsTableBody = signal<ActivityLogData[]>([]);
-  projectActivityLogsTableHeader!:ColumnsSchema[];
-  projectActivityLogsTableBody!:ActivityLog[];
+  projectActivityLogsTableHeader!: ColumnsSchema[];
+  projectActivityLogsTableBody!: ActivityLog[];
   activityLogService = inject(ActivityLogService);
   route = inject(ActivatedRoute);
   fb = inject(FormBuilder);
@@ -67,128 +69,141 @@ export class TabDetailsComponent implements OnInit {
   menuItems = [
     {
       label: 'activity log',
-      icon: "pi pi-clock"
+      icon: 'pi pi-clock',
     },
     {
       label: 'show deleted programs',
-      icon: "pi pi-eye"
-    }
+      icon: 'pi pi-eye',
+    },
   ];
-  actionButton(label:string)
-  {
-    if(label === 'activity log')
-    {
+  actionButton(label: string) {
+    if (label === 'activity log') {
       this.showActivityLogsPopup = !this.showActivityLogsPopup;
-      this.getSpecificActivityLog("PSR_executive" , '' , '' , '' ,  true)
+      this.getSpecificActivityLog('PSR_executive', '', '', '', true);
     } else {
-      this.router.navigateByUrl("/deleted-projects/programs");
+      this.router.navigateByUrl('/deleted-projects/programs');
     }
   }
   showActivityLogsPopup = false;
-  $endScorecardActivityLogsSub:Subject<any> = new Subject();
-  popupClosed()
-  {
+  $endScorecardActivityLogsSub: Subject<any> = new Subject();
+  popupClosed() {
     this.showActivityLogsPopup = false;
   }
-  private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean)
-    {
-      this.activityLogService.getSpecificActivityLog(moduleName , "Import,Export,Add,Delete" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
-        next : (activityLogs:ActivityLogData[]) => {
+  private getSpecificActivityLog(
+    moduleName: string,
+    subModule?: string,
+    projectName?: string,
+    entity?: string,
+    showParentData?: boolean
+  ) {
+    this.activityLogService
+      .getSpecificActivityLog(
+        moduleName,
+        'Import,Export,Add,Delete',
+        subModule,
+        projectName,
+        entity,
+        showParentData
+      )
+      .pipe(takeUntil(this.$endScorecardActivityLogsSub))
+      .subscribe({
+        next: (activityLogs: ActivityLogData[]) => {
           this.activityLogsTableBody.set(activityLogs);
-        }
-      })
-    }
-    isPMO = false;
+        },
+      });
+  }
+  isPMO = false;
   ngOnInit(): void {
     this.isMobile.set(this.deviceService.isMobile());
     this.activityLogsTableHeader = [
       {
-        key : "username",
-        type : "text",
-        label : "User Name"
+        key: 'username',
+        type: 'text',
+        label: 'User Name',
       },
       {
-        key : "type",
-        type : "text",
-        label : "Activity Type"
+        key: 'type',
+        type: 'text',
+        label: 'Activity Type',
       },
       {
-        key : "details",
-        type : "text",
-        label : "Activity Details"
+        key: 'details',
+        type: 'text',
+        label: 'Activity Details',
       },
       {
-        key : "time",
-        type : "text",
-        label : "Time Stamp"
+        key: 'time',
+        type: 'text',
+        label: 'Time Stamp',
       },
-    ]
+    ];
     this.projectActivityLogsTableBody = [
       {
-        username:"Hamed Rahed1",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value",
-        newValue : "new value"
+        username: 'Hamed Rahed1',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue:
+          'old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value old value',
+        newValue: 'new value',
       },
       {
-        username:"Hamed Rahed2",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
-        newValue : "new value"
+        username: 'Hamed Rahed2',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue: 'old value',
+        newValue: 'new value',
       },
       {
-        username:"Hamed Rahed3",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
-        newValue : "new value"
+        username: 'Hamed Rahed3',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue: 'old value',
+        newValue: 'new value',
       },
       {
-        username:"Hamed Rahed4",
-        type:"import",
-        details:"financial of scorecards",
-        time:this.datePipe.transform(new Date(), 'dd MMM yyyy \'at\' hh:mm a')!,
-        oldValue : "old value",
-        newValue : "new value"
+        username: 'Hamed Rahed4',
+        type: 'import',
+        details: 'financial of scorecards',
+        time: this.datePipe.transform(new Date(), "dd MMM yyyy 'at' hh:mm a")!,
+        oldValue: 'old value',
+        newValue: 'new value',
       },
-    ]
+    ];
     this.projectActivityLogsTableHeader = [
       {
-        key : "username",
-        type : "text",
-        label : "User Name"
+        key: 'username',
+        type: 'text',
+        label: 'User Name',
       },
       {
-        key : "type",
-        type : "text",
-        label : "Activity Type"
+        key: 'type',
+        type: 'text',
+        label: 'Activity Type',
       },
       {
-        key : "details",
-        type : "text",
-        label : "Activity Details"
+        key: 'details',
+        type: 'text',
+        label: 'Activity Details',
       },
       {
-        key : "time",
-        type : "text",
-        label : "Time Stamp"
+        key: 'time',
+        type: 'text',
+        label: 'Time Stamp',
       },
       {
-        key : "oldValue",
-        type : "text",
-        label : "Old Value"
+        key: 'oldValue',
+        type: 'text',
+        label: 'Old Value',
       },
       {
-        key : "newValue",
-        type : "text",
-        label : "New Value"
+        key: 'newValue',
+        type: 'text',
+        label: 'New Value',
       },
-    ]
+    ];
     this.userRoles = this.scorecardService.userRoles;
     this.isAllowed = this.userRoles.roles.some(
       (role) =>
@@ -196,7 +211,9 @@ export class TabDetailsComponent implements OnInit {
         role.roleName === 'ADMINS' ||
         role.roleName === 'BE_PMO'
     );
-    this.isPMO = this.userRoles.roles.some((role) => role.roleName === 'BE_PMO');
+    this.isPMO = this.userRoles.roles.some(
+      (role) => role.roleName === 'BE_PMO'
+    );
     this.isAdmin = this.userRoles.roles.some(
       (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
     );
@@ -206,13 +223,12 @@ export class TabDetailsComponent implements OnInit {
       },
     });
     this.scorecardService.toggleSwitchBtn.subscribe({
-      next : (res) => {
-        if(this.child)
-        {
-          this.child.actionsPanel.hide()
+      next: (res) => {
+        if (this.child) {
+          this.child.actionsPanel.hide();
         }
-      }
-    })
+      },
+    });
   }
   showDialog() {
     this.visible = true;

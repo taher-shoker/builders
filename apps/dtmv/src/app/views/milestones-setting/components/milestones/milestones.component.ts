@@ -210,9 +210,9 @@ export class MilestonesComponent
       this.milestonesService.checkIsBusinessSpoc() ||
       this.milestonesService.checkIsDirector()
     ) {
-      return ['edit', 'details'];
+      return ['details'];
     } else {
-      return ['edit', 'delete', 'details'];
+      return ['details'];
     }
     //
   }

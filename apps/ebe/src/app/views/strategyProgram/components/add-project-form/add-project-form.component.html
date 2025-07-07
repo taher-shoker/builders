@@ -1,7 +1,11 @@
 <section class="strategy-project-form">
   <div class="strategy-project-form-header">
     <div>
-      <stc-apps-page-header [mainTitle]="'CAD Strategy Program'" />
+      <stc-apps-page-header
+        [mainTitle]="'CAD Strategy Program'"
+        [username]="userData ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
     </div>
   </div>
   <div class="strategy-project-form-card">
@@ -23,12 +27,12 @@
         @for (project of projectsList.controls; track project;let index =
         $index) {
         <div class="form-wrapper" [formGroupName]="index">
-          <div class = "text-end">
+          <div class="text-end">
             <img
               class="close-form"
               src="assets/images/close-circle2.svg"
               alt=""
-              style = "cursor: pointer;"
+              style="cursor: pointer"
               (click)="showDeleteDialog(index)"
             />
           </div>
@@ -50,7 +54,13 @@
               >this field has maxLength 300 characters</small
             >
             }
-            <small class = "project-name-length">{{project.get("project")?.value ? project.get("project")?.value.trim().length : 0}}/300</small>
+            <small class="project-name-length"
+              >{{
+                project.get('project')?.value
+                  ? project.get('project')?.value.trim().length
+                  : 0
+              }}/300</small
+            >
           </div>
           <div class="row">
             <div class="col-lg-6 col-md-6 col-sm-12">
@@ -63,7 +73,8 @@
                   (keypress)="keyPress($event)"
                 />
                 <!-- @if((project.get("actualValue")?.hasError("required") || project.get("actualValue")?.hasError("noSpaces")) && project.dirty)  -->
-                @if(project.get("actual")?.value === null && project.get("actual")?.dirty) {
+                @if(project.get("actual")?.value === null &&
+                project.get("actual")?.dirty) {
                 <small class="error-msg error-msg2"
                   >this field is required</small
                 >
@@ -87,7 +98,8 @@
                   formControlName="planned"
                   (keypress)="keyPress($event)"
                 />
-                @if(project.get("planned")?.value === null && project.get("planned")?.dirty) {
+                @if(project.get("planned")?.value === null &&
+                project.get("planned")?.dirty) {
                 <small class="error-msg error-msg2"
                   >this field is required</small
                 >
@@ -95,8 +107,7 @@
                 <small class="error-msg error-msg2"
                   >you must enter numbers only</small
                 >
-                } @else if(project.get("planned")?.hasError("rangeError"))
-                {
+                } @else if(project.get("planned")?.hasError("rangeError")) {
                 <small class="error-msg error-msg2"
                   >number range must be between 0 and 100</small
                 >
@@ -133,9 +144,7 @@
 <stc-apps-confirm-dialog [key]="'added-project-success'">
   <div class="dialog-container">
     <img src="assets/images/tick-circle.svg" alt="" />
-    <p class="delete-record-content">
-      the projects is updated successfully
-    </p>
+    <p class="delete-record-content">the projects is updated successfully</p>
     <div class="buttons">
       <button class="delete" (click)="goback()">ok</button>
     </div>
