@@ -1,27 +1,43 @@
-import { Component, inject, input, InputSignal, OnChanges, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  InputSignal,
+  OnChanges,
+  OnInit,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FileModel, TapModel } from '../../../../models/scorecard.model';
 import { A1TapComponent } from '../a1-tap/a1-tap.component';
 import { A2TapComponent } from '../a2-tap/a2-tap.component';
 import { A3TapComponent } from '../a3-tap/a3-tap.component';
-import { A2TapData, A3TapData, RaqamiKpiData } from '../../../../models/raqami.model';
+import {
+  A2TapData,
+  A3TapData,
+  RaqamiKpiData,
+} from '../../../../models/raqami.model';
 import { RaqamiService } from '../../../../services/raqami.service';
 import { ScorecardService } from '../../../../services/scorecard.service';
-import { EditModeViewComponent } from '../../../scorecard/components/edit-mode-view/edit-mode-view.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 
 @Component({
   selector: 'stc-apps-raqami-tap-details',
   standalone: true,
-  imports: [CommonModule , A1TapComponent , A2TapComponent , A3TapComponent , EditModeViewComponent , SharedUiModule],
+  imports: [
+    CommonModule,
+    A1TapComponent,
+    A2TapComponent,
+    A3TapComponent,
+    SharedUiModule,
+  ],
   templateUrl: './raqami-tap-details.component.html',
   styleUrl: './raqami-tap-details.component.scss',
 })
-export class RaqamiTapDetailsComponent implements OnInit , OnChanges{
-  raqamiKpiData!:RaqamiKpiData[];
-  raqamiA2Data!:A2TapData[];
-  raqamiA3Data!:A3TapData[];
-  currentTap:InputSignal<TapModel> = input.required<TapModel>();
+export class RaqamiTapDetailsComponent implements OnInit, OnChanges {
+  raqamiKpiData!: RaqamiKpiData[];
+  raqamiA2Data!: A2TapData[];
+  raqamiA3Data!: A3TapData[];
+  currentTap: InputSignal<TapModel> = input.required<TapModel>();
   private raqamiService = inject(RaqamiService);
   currentMode!: 'editMode' | 'viewMode';
   visible = false;
@@ -34,37 +50,28 @@ export class RaqamiTapDetailsComponent implements OnInit , OnChanges{
     });
   }
   ngOnChanges(): void {
-    if(this.currentTap().name === 'A1')
-    {
+    if (this.currentTap().name === 'A1') {
       this.raqamiKpiData = this.raqamiService.raqamiKpiData;
-      this.raqamiA2Data = []
-      this.raqamiA3Data = []
-    }
-    else if(this.currentTap().name === 'A2')
-    {
+      this.raqamiA2Data = [];
+      this.raqamiA3Data = [];
+    } else if (this.currentTap().name === 'A2') {
       this.raqamiA2Data = this.raqamiService.raqamiA2Data;
-      this.raqamiKpiData = []
-      this.raqamiA3Data = []
-    }
-    else if(this.currentTap().name === 'A3')
-    {
+      this.raqamiKpiData = [];
+      this.raqamiA3Data = [];
+    } else if (this.currentTap().name === 'A3') {
       this.raqamiA3Data = this.raqamiService.raqamiA3Data;
-      this.raqamiKpiData = []
-      this.raqamiA2Data = []
+      this.raqamiKpiData = [];
+      this.raqamiA2Data = [];
     }
   }
-  showDialog()
-  {
+  showDialog() {
     this.visible = true;
   }
-  downloadTemplate()
-  {
+  downloadTemplate() {
     console.log('dfsfs');
   }
-  ImportFile(uploadFile:FileModel | null)
-  {
-    if(uploadFile)
-    {
+  ImportFile(uploadFile: FileModel | null) {
+    if (uploadFile) {
       console.log(uploadFile);
       console.log(this.currentTap());
     }

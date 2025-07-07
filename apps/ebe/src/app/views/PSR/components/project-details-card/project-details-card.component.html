@@ -1,16 +1,15 @@
 <section class="project position-relative">
   <div class="project-head">
-    <p 
+    <p
       class="project-title"
-      (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''" 
+      (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''"
       (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
     >
-      {{ projectData().projectName | truncateWord:7 }}
+      {{ projectData().projectName | truncateWord : 7 }}
     </p>
-    @if(isAllowed())
-    {
-      <i class = "pi pi-ellipsis-v" (click)="actionsPanel.toggle($event)"></i>
-      <p-overlayPanel
+    @if(isAllowed()) {
+    <i class="pi pi-ellipsis-v" (click)="actionsPanel.toggle($event)"></i>
+    <p-overlayPanel
       #actionsPanel
       dismissable="false"
       [appendTo]="'body'"
@@ -42,11 +41,11 @@
       [showPopup]="showActivityLogsPopup"
       (popupClosed)="popupClosed()"
       [isProjectActionPopup]="true"
-      type = "psr"
+      type="psr"
       [isDismissable]="true"
       (popupHide)="showActivityLogsPopup = false"
     />
-      <!-- <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
+    <!-- <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
       <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
         <ng-template pTemplate="item" let-item>
           <div class="menu-container">
@@ -62,12 +61,12 @@
           </div>
         </ng-template>
       </p-menu> -->
-    }
-    @if(titleArr && titleArr.length > 11)
-    {
-      <p-overlayPanel #overlayPanel2 dismissable="true">
-        <section class="popover-section2">{{projectData().projectName}}</section>
-      </p-overlayPanel>
+    } @if(titleArr && titleArr.length > 11) {
+    <p-overlayPanel #overlayPanel2 dismissable="true">
+      <section class="popover-section2">
+        {{ projectData().projectName }}
+      </section>
+    </p-overlayPanel>
     }
   </div>
   <div class="project-statuses-cards">
@@ -78,19 +77,29 @@
     />
     }
     <stc-apps-kpi-status-card
-      [kpiStatus]="projectData() && projectData().vendor ? projectData().vendor : 'N/A'"
+      [kpiStatus]="
+        projectData() && projectData().vendor ? projectData().vendor : 'N/A'
+      "
       [kpiType]="'vendor'"
     />
-     @if(projectData() && projectData().projectStage) {
+    @if(projectData() && projectData().projectStage) {
     <stc-apps-kpi-status-card
       [kpiStatus]="projectData().projectStage!"
       [kpiType]="'status'"
     />
-    } 
+    }
     <stc-apps-kpi-status-card
       [kpiStatus]="projectData().indicator ? projectData().indicator! : 'N/A'"
       [kpiType]="'indicator'"
-      [domainIndicatorColor]="projectData().indicator?.toLowerCase() === 'r' ? '#FF0000' : projectData().indicator?.toLowerCase() === 'g' ? '#00C48C' : projectData().indicator?.toLowerCase() === 'a' ? '#ECB027' : '#bbbbbb'"
+      [domainIndicatorColor]="
+        projectData().indicator?.toLowerCase() === 'r'
+          ? '#FF0000'
+          : projectData().indicator?.toLowerCase() === 'g'
+          ? '#00C48C'
+          : projectData().indicator?.toLowerCase() === 'a'
+          ? '#ECB027'
+          : '#bbbbbb'
+      "
     />
     @if(projectData() && projectData().domain) {
     <stc-apps-kpi-status-card
@@ -123,32 +132,44 @@
       <div class="project-timelines-timeline-data">
         <div class="project-timelines-timeline-data-start">
           <p class="project-timelines-timeline-data-start-title">PO amount</p>
-          <p 
+          <p
             class="project-timelines-timeline-data-start-info truncate"
-            (mouseenter)="overlayPanel4 ? overlayPanel4.show($event) : ''" 
+            (mouseenter)="overlayPanel4 ? overlayPanel4.show($event) : ''"
             (mouseleave)="overlayPanel4 ? overlayPanel4.hide() : ''"
           >
-            {{projectData().poAmount ? projectData().poAmount : 'N/A'}}
-            @if(projectData().poAmount && projectData().poAmount.toString().length >= 10){
-              <p-overlayPanel #overlayPanel4 dismissable="true">
-                <section class="poamount-popover-section" [innerHTML]="projectData().poAmount"></section>
-              </p-overlayPanel>
+            {{ projectData().poAmount ? projectData().poAmount : 'N/A' }}
+            @if(projectData().poAmount &&
+            projectData().poAmount.toString().length >= 10){
+            <p-overlayPanel #overlayPanel4 dismissable="true">
+              <section
+                class="poamount-popover-section"
+                [innerHTML]="projectData().poAmount"
+              ></section>
+            </p-overlayPanel>
             }
           </p>
         </div>
         <span class="line"></span>
         <div class="project-timelines-timeline-data-end">
           <p class="project-timelines-timeline-data-start-title">actual</p>
-          <p 
+          <p
             class="project-timelines-timeline-data-start-info truncate"
-            (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''" 
+            (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''"
             (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
           >
-            {{ projectData().actualSpending ? projectData().actualSpending : 'N/A' }}
-            @if(projectData().actualSpending && projectData().actualSpending.toString().length >= 10){
-              <p-overlayPanel #overlayPanel3 dismissable="true">
-                <section class="poamount-popover-section" [innerHTML]="projectData().actualSpending"></section>
-              </p-overlayPanel>
+            {{
+              projectData().actualSpending
+                ? projectData().actualSpending
+                : 'N/A'
+            }}
+            @if(projectData().actualSpending &&
+            projectData().actualSpending.toString().length >= 10){
+            <p-overlayPanel #overlayPanel3 dismissable="true">
+              <section
+                class="poamount-popover-section"
+                [innerHTML]="projectData().actualSpending"
+              ></section>
+            </p-overlayPanel>
             }
           </p>
         </div>
@@ -156,13 +177,17 @@
     </div>
   </div>
   <div class="project-chart-card">
-    <div style = "display: flex;align-items: center;justify-content: space-between;">
-      @if(isAdmin())
-      {
-        <button class = "activity-logs-button" (click)="showDeliverablesActivityLogs()">
-          <img src="assets/images/History.svg" />
-          <span>activity log</span>
-        </button>
+    <div
+      style="display: flex; align-items: center; justify-content: space-between"
+    >
+      @if(isAdmin()) {
+      <button
+        class="activity-logs-button"
+        (click)="showDeliverablesActivityLogs()"
+      >
+        <img src="assets/images/History.svg" />
+        <span>activity log</span>
+      </button>
       }
       <stc-apps-activity-logs-popup
         [activityLogsTableHeader]="activityLogsTableHeader()"
@@ -170,31 +195,33 @@
         [showPopup]="showActivityLogsPopup3"
         (popupClosed)="popupClosed3()"
         [isProjectActionPopup]="true"
-        type = "psr"
+        type="psr"
         [isDismissable]="true"
         (popupHide)="showActivityLogsPopup3 = false"
       />
-      @if(projectData().chartDetails && projectData().chartDetails.length !== 0) {
-        <p class="project-chart-card-details" (click)="displayDrilldown()">
-          details
-        </p>
-        } @else {
-          @if(!isDeleted())
-          {
-            <p
-              class="project-chart-card-details empty-details-btn"
-              (click)="showAddRecordForm2()"
-              [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
-            >
-              <img src="assets/images/add-square.svg" alt="" />
-              <span> add details </span>
-            </p>
-          } @else {
-            <p class="project-chart-card-details empty-details-btn" style = "height:21px"></p>
-          }
-        }
+      @if(projectData().chartDetails && projectData().chartDetails.length !== 0)
+      {
+      <p class="project-chart-card-details" (click)="displayDrilldown()">
+        details
+      </p>
+      } @else { @if(!isDeleted()) {
+      <p
+        class="project-chart-card-details empty-details-btn"
+        (click)="showAddRecordForm2()"
+        [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
+      >
+        <img src="assets/images/add-square.svg" alt="" />
+        <span> add details </span>
+      </p>
+      } @else {
+      <p
+        class="project-chart-card-details empty-details-btn"
+        style="height: 21px"
+      ></p>
+      } }
     </div>
-    @if((projectData().vactual || projectData().vactual === 0) && (projectData().vplanned || projectData().vplanned === 0)) {
+    @if((projectData().vactual || projectData().vactual === 0) &&
+    (projectData().vplanned || projectData().vplanned === 0)) {
     <div
       class="project-chart-card-chart position-relative"
       style="margin: 0 20px"
@@ -215,7 +242,10 @@
   <section
     class="popover-section"
     [ngStyle]="{
-      'padding-right': projectData().chartDetails && projectData().chartDetails.length > 4 ? '10px' : '0'
+      'padding-right':
+        projectData().chartDetails && projectData().chartDetails.length > 4
+          ? '10px'
+          : '0'
     }"
   >
     <div class="header mb-3">
@@ -245,8 +275,9 @@
       <div class="main-title">
         <p>details for chart</p>
         <!-- {{formValues2.length}} -->
-        @if(!isEditMode && newData.chartDetails && newData.chartDetails.length !== 0 &&
-        userRoles().roles[0].roleName !== "BE_VIEWERS" && !isDeleted()) {
+        @if(!isEditMode && newData.chartDetails && newData.chartDetails.length
+        !== 0 && userRoles().roles[0].roleName !== "BE_VIEWERS" && !isDeleted())
+        {
         <div class="edit-img" (click)="editMode()">
           <img src="assets/images/edit.svg" alt="" />
           <span>edit</span>
@@ -299,7 +330,8 @@
     <img src="assets/images/close-circle.svg" alt="" />
     <p class="delete-record-header">delete Major Activities/Deliverable?</p>
     <p class="delete-record-content">
-      Are you sure you want to delete this <br> Major Activities/Deliverable?
+      Are you sure you want to delete this <br />
+      Major Activities/Deliverable?
     </p>
     <p class="delete-record-warning">
       This action is permanent and cannot be undone!
@@ -317,13 +349,18 @@
     <p class="delete-record-header">delete project?</p>
     <p class="delete-record-content">
       Are you sure you want to <br />
-      delete {{projectData().projectName}} project?
+      delete {{ projectData().projectName }} project?
     </p>
     <!-- <p class="delete-record-warning">
       This action is permanent and cannot be undone!
     </p> -->
     <div class="buttons mt-5">
-      <button class="delete" (click)="deleteProjectData(projectData().id);actionsPanel.hide()">yes. delete</button>
+      <button
+        class="delete"
+        (click)="deleteProjectData(projectData().id); actionsPanel.hide()"
+      >
+        yes. delete
+      </button>
       <button (click)="close()" class="cancel">cancel</button>
     </div>
   </div>

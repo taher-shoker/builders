@@ -1,4 +1,7 @@
-<section class="project-container" [class.project-container-in-mobile]="isMobile()">
+<section
+  class="project-container"
+  [class.project-container-in-mobile]="isMobile()"
+>
   <div class="project-container-head">
     <p
       class="project-container-header"
@@ -8,48 +11,51 @@
     >
       {{ project().sector }}
     </p>
-    @if(!isMobile())
-    {
-      <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
-      <p-overlayPanel
-        #actionsPanel
-        dismissable="false"
-        [appendTo]="'body'"
-        styleClass="project-actions-logs"
-        (onHide)="showActivityLogsPopup = false"
-      >
-        <div class="actions-logs-table">
-          @for (item of items; track $index) {
-          <div
-            class="action"
-            [class.delete-btn]="item.label === 'Delete'"
-            (click)="
-              item.label === 'Edit'
-                ? gotoEditPage()
-                : item.label === 'Delete'
-                ? showDeleteDialog()
-                : showActivityLogs()
-            "
-          >
-            <i [class]="item.icon"></i>
-            <p>{{ item.label }}</p>
-          </div>
-          }
+    @if(!isMobile()) {
+    <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
+    <p-overlayPanel
+      #actionsPanel
+      dismissable="false"
+      [appendTo]="'body'"
+      styleClass="project-actions-logs"
+      (onHide)="showActivityLogsPopup = false"
+    >
+      <div class="actions-logs-table">
+        @for (item of items; track $index) {
+        <div
+          class="action"
+          [class.delete-btn]="item.label === 'Delete'"
+          (click)="
+            item.label === 'Edit'
+              ? gotoEditPage()
+              : item.label === 'Delete'
+              ? showDeleteDialog()
+              : showActivityLogs()
+          "
+        >
+          <i [class]="item.icon"></i>
+          <p>{{ item.label }}</p>
         </div>
-      </p-overlayPanel>
-      <stc-apps-activity-logs-popup
-        [activityLogsTableHeader]="activityLogsTableHeader()"
-        [activityLogsTableBody]="activityLogsTableBody()"
-        [showPopup]="showActivityLogsPopup"
-        (popupClosed)="popupClosed()"
-        [isProjectActionPopup]="true"
-        type = "psr"
-        [isDismissable]="true"
-        (popupHide)="showActivityLogsPopup = false"
-      />
+        }
+      </div>
+    </p-overlayPanel>
+    <stc-apps-activity-logs-popup
+      [activityLogsTableHeader]="activityLogsTableHeader()"
+      [activityLogsTableBody]="activityLogsTableBody()"
+      [showPopup]="showActivityLogsPopup"
+      (popupClosed)="popupClosed()"
+      [isProjectActionPopup]="true"
+      type="psr"
+      [isDismissable]="true"
+      (popupHide)="showActivityLogsPopup = false"
+    />
     }
   </div>
-  <div class="project-container-chart" [class.mt-5]="!isMobile()" [class.mobile-view-chart]="isMobile()">
+  <div
+    class="project-container-chart"
+    [class.mt-5]="!isMobile()"
+    [class.mobile-view-chart]="isMobile()"
+  >
     <stc-apps-multi-circles-progress-bar
       [chartData]="chartData"
       [colors]="colors"
@@ -73,30 +79,27 @@
       }}</span>
     </p>
     <p class="project-container-description">
-      {{ project().details.trim() | truncateWord : isMobile() ? 2 : 6 }}
+      {{ project().details.trim() | truncateWord : (isMobile() ? 2 : 6) }}
       @if(!isMobile() && project().details.trim().split(" ").length > 6) {
-        <a (click)="displayDrilldown()" class="read-more">read more</a>
-      }
-      @else if(isMobile() && project().details.trim().split(" ").length > 2) {
-        <a (click)="displayDrilldown()" class="read-more">read more</a>
+      <a (click)="displayDrilldown()" class="read-more">read more</a>
+      } @else if(isMobile() && project().details.trim().split(" ").length > 2) {
+      <a (click)="displayDrilldown()" class="read-more">read more</a>
       }
     </p>
     <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
-     @if(!isDeleted())
-     {
-       <a
-         class="project-container-details-link"
-         [routerLink]="['/psr/', project().sector , project().id]"
-         (click)="gotoProjectDetailsPage()"
-         [class.project-container-details-link-mobile]="isMobile()"
-       >
-         <span>more details</span>
-         @if(!isMobile())
-         {
-           <img src="assets/images/arrow-right.svg" alt="" />
-         }
-       </a>
-     }
+    @if(!isDeleted()) {
+    <a
+      class="project-container-details-link"
+      [routerLink]="['/psr/', project().sector, project().id]"
+      (click)="gotoProjectDetailsPage()"
+      [class.project-container-details-link-mobile]="isMobile()"
+    >
+      <span>more details</span>
+      @if(!isMobile()) {
+      <img src="assets/images/arrow-right.svg" alt="" />
+      }
+    </a>
+    }
   </div>
 </section>
 @if(project().details) {

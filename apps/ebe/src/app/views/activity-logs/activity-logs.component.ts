@@ -9,9 +9,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
-import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { TapModel } from '../../models/scorecard.model';
+import { TapModel, UserModel } from '../../models/scorecard.model';
 import {
   KeyResult,
   KeyResultProject,
@@ -27,6 +26,7 @@ import { ActivityLogService } from '../../services/activity-logs.service';
 import { PaginatorModule } from 'primeng/paginator';
 import { concat, Subject, takeUntil } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { ScorecardService } from '../../services/scorecard.service';
 interface ActionType {
   id: string;
   name: string;
@@ -36,7 +36,6 @@ interface ActionType {
   standalone: true,
   imports: [
     CommonModule,
-    PageHeaderComponent,
     SharedUiModule,
     DropdownModule,
     FormsModule,
@@ -90,7 +89,14 @@ export class ActivityLogsComponent {
   selectedKeyResultProject: string | null = null;
   constructor(private renderer: Renderer2) {}
   tapIndex = 0;
+  userData!: UserModel;
+  scorecardService = inject(ScorecardService);
   ngOnInit() {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.scorecardsTaps.set([
       {
         id: 1,
