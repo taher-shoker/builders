@@ -344,12 +344,11 @@
         .chart-container {
           height: 300px;
         }
-        .first-chart , .second-chart
-        {
+        .first-chart,
+        .second-chart {
           width: 100%;
         }
-        .first-chart
-        {
+        .first-chart {
           .chart-container {
             border-right: 1px solid #8e9aa04d;
             // margin-top: 20px;
@@ -366,8 +365,7 @@
           margin: 0;
         }
       }
-      .tendering-status-card
-      {
+      .tendering-status-card {
         border: 1px solid #d1d1db;
         border-radius: 10px;
         color: #000;
@@ -375,21 +373,18 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding:15px;
-        .left-side , .right-side
-        {
+        padding: 15px;
+        .left-side,
+        .right-side {
           width: 100%;
         }
-        .right-side
-        {
+        .right-side {
           padding-left: 25px;
         }
-        .left-side
-        {
+        .left-side {
           border-right: 1px solid #8e9aa04d;
         }
-        .project-title
-        {
+        .project-title {
           color: var(--stc-light-grey-color2);
           @extend .stcFont;
           font-size: 15px;
@@ -397,8 +392,7 @@
           text-transform: capitalize;
           margin: 0;
         }
-        .project-value
-        {
+        .project-value {
           color: var(--stc-grey-color2);
           @extend .stcFont;
           font-size: 18px;
@@ -406,9 +400,8 @@
           text-transform: capitalize;
           margin: 0;
           margin-top: 5px;
-          span
-          {
-            color:var(--stc-light-grey-color2);
+          span {
+            color: var(--stc-light-grey-color2);
             font-size: 13px;
             font-weight: 500;
           }

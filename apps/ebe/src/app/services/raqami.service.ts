@@ -3,133 +3,134 @@ import { TapModel } from '../models/scorecard.model';
 import { A2TapData, A3TapData, RaqamiKpiData } from '../models/raqami.model';
 @Injectable({ providedIn: 'root' })
 export class RaqamiService {
-  private raqamiTaps:TapModel[] = [
-        {
-          id : 1,
-          name : "A1",
-          value : "A1"
-        },
-        {
-          id : 2,
-          name : "A2",
-          value : "A2"
-        },
-        {
-          id : 3,
-          name : "A3",
-          value : "A3"
-        }
+  private raqamiTaps: TapModel[] = [
+    {
+      id: 1,
+      name: 'A1',
+      value: 'A1',
+    },
+    {
+      id: 2,
+      name: 'A2',
+      value: 'A2',
+    },
+    {
+      id: 3,
+      name: 'A3',
+      value: 'A3',
+    },
   ];
-  raqamiKpiData:RaqamiKpiData[] = [
+  raqamiKpiData: RaqamiKpiData[] = [
     {
-      kpiName : "%of analytics capabilities implemented in alignment with northstar to-be architecture analytics roadmap",
-      actual : 81,
-      status : "output",
-      theme : "D",
-      weight : 20,
-      unit : "%",
-      baseline : {
-        year : 2024,
-        value : 54
+      kpiName:
+        '%of analytics capabilities implemented in alignment with northstar to-be architecture analytics roadmap',
+      actual: 81,
+      status: 'output',
+      theme: 'D',
+      weight: 20,
+      unit: '%',
+      baseline: {
+        year: 2024,
+        value: 54,
       },
-      targets : [
+      targets: [
         {
-          year : 2024,
-          value : 96
+          year: 2024,
+          value: 96,
         },
         {
-          year : 2025,
-          value : 100
+          year: 2025,
+          value: 100,
         },
         {
-          year : 2026,
-          value : null
-        }
-      ]
-    },
-    {
-      kpiName : "#of developed advanced analytics use cases",
-      actual : 124,
-      status : "output",
-      theme : "D",
-      weight : 20,
-      unit : "#",
-      baseline : {
-        year : 2024,
-        value : 130
-      },
-      targets : [
-        {
-          year : 2024,
-          value : 154
-        },
-        {
-          year : 2025,
-          value : 178
-        },
-        {
-          year : 2026,
-          value : 202
-        }
-      ]
-    },
-    {
-      kpiName : "#self-service capability enabled for BU/FU",
-      actual : 35,
-      status : "output",
-      theme : "D",
-      weight : 20,
-      unit : "#",
-      baseline : {
-        year : 2024,
-        value : 36
-      },
-      targets : [
-        {
-          year : 2024,
-          value : 41
-        },
-        {
-          year : 2025,
-          value : 46
-        },
-        {
-          year : 2026,
-          value : 51
-        }
-      ]
-    },
-  ]
-  getRaqamiTaps():TapModel[]
-  {
-    return this.raqamiTaps;
-  }
-  raqamiA2Data:A2TapData[] = [
-    {
-      title : "(AA2-1) MSAR Potential value creation via analytics based use cases",
-      owner : "Nabeel M.Alhaider",
-      project : "Cumulative YTD",
-      kpiWeight : 20,
-      UoM : "%",
-      baseLine : {
-        year : 2024,
-        val : 15
-      },
-      targets : [
-        {
-          year : 2023,
-          val : "1186"
-        },
-        {
-          year : 2024,
-          val : "TED"
-        },
-        {
-          year : 2025,
-          val : "TED"
+          year: 2026,
+          value: null,
         },
       ],
-      chartData : [
+    },
+    {
+      kpiName: '#of developed advanced analytics use cases',
+      actual: 124,
+      status: 'output',
+      theme: 'D',
+      weight: 20,
+      unit: '#',
+      baseline: {
+        year: 2024,
+        value: 130,
+      },
+      targets: [
+        {
+          year: 2024,
+          value: 154,
+        },
+        {
+          year: 2025,
+          value: 178,
+        },
+        {
+          year: 2026,
+          value: 202,
+        },
+      ],
+    },
+    {
+      kpiName: '#self-service capability enabled for BU/FU',
+      actual: 35,
+      status: 'output',
+      theme: 'D',
+      weight: 20,
+      unit: '#',
+      baseline: {
+        year: 2024,
+        value: 36,
+      },
+      targets: [
+        {
+          year: 2024,
+          value: 41,
+        },
+        {
+          year: 2025,
+          value: 46,
+        },
+        {
+          year: 2026,
+          value: 51,
+        },
+      ],
+    },
+  ];
+  getRaqamiTaps(): TapModel[] {
+    return this.raqamiTaps;
+  }
+  raqamiA2Data: A2TapData[] = [
+    {
+      title:
+        '(AA2-1) MSAR Potential value creation via analytics based use cases',
+      owner: 'Nabeel M.Alhaider',
+      project: 'Cumulative YTD',
+      kpiWeight: 20,
+      UoM: '%',
+      baseLine: {
+        year: 2024,
+        val: 15,
+      },
+      targets: [
+        {
+          year: 2023,
+          val: '1186',
+        },
+        {
+          year: 2024,
+          val: 'TED',
+        },
+        {
+          year: 2025,
+          val: 'TED',
+        },
+      ],
+      chartData: [
         {
           month: 'Jan',
           value1: 1000,
@@ -190,33 +191,34 @@ export class RaqamiService {
           value1: 7545,
           value2: 4563,
         },
-      ]
+      ],
     },
     {
-      title : "(AA2-2) # of analytics partners/vendors managed & assessed for R&D",
-      owner : "Nabeel M.Alhaider",
-      project : "Cumulative YTD",
-      kpiWeight : 15,
-      UoM : "%",
-      baseLine : {
-        year : 2023,
-        val : 15
+      title:
+        '(AA2-2) # of analytics partners/vendors managed & assessed for R&D',
+      owner: 'Nabeel M.Alhaider',
+      project: 'Cumulative YTD',
+      kpiWeight: 15,
+      UoM: '%',
+      baseLine: {
+        year: 2023,
+        val: 15,
       },
-      targets : [
+      targets: [
         {
-          year : 2023,
-          val : "20"
+          year: 2023,
+          val: '20',
         },
         {
-          year : 2024,
-          val : "25"
+          year: 2024,
+          val: '25',
         },
         {
-          year : 2025,
-          val : "TBD"
+          year: 2025,
+          val: 'TBD',
         },
       ],
-      chartData : [
+      chartData: [
         {
           month: 'Jan',
           value1: 1000000,
@@ -277,33 +279,33 @@ export class RaqamiService {
           value1: 86234344,
           value2: 23452342,
         },
-      ]
+      ],
     },
     {
-      title : "(AA2-3) # of productionized AI/ML models through MLOps",
-      owner : "Nabeel M.Alhaider",
-      project : "Cumulative YTD",
-      kpiWeight : 15,
-      UoM : "%",
-      baseLine : {
-        year : 2023,
-        val : 15
+      title: '(AA2-3) # of productionized AI/ML models through MLOps',
+      owner: 'Nabeel M.Alhaider',
+      project: 'Cumulative YTD',
+      kpiWeight: 15,
+      UoM: '%',
+      baseLine: {
+        year: 2023,
+        val: 15,
       },
-      targets : [
+      targets: [
         {
-          year : 2023,
-          val : "20"
+          year: 2023,
+          val: '20',
         },
         {
-          year : 2024,
-          val : "25"
+          year: 2024,
+          val: '25',
         },
         {
-          year : 2025,
-          val : "TBD"
+          year: 2025,
+          val: 'TBD',
         },
       ],
-      chartData : [
+      chartData: [
         {
           month: 'Jan',
           value1: 200,
@@ -364,21 +366,22 @@ export class RaqamiService {
           value1: 765,
           value2: 453,
         },
-      ]
-    }
-  ]
-  raqamiA3Data:A3TapData[] = [
+      ],
+    },
+  ];
+  raqamiA3Data: A3TapData[] = [
     {
-      title : "(AA2-1) MSAR Potential value creation via analytics based use cases",
-      project : "Cumulative YTD",
-      kpiWeight : 20,
-      UoM : "%",
-      baseLine : {
-        year : 2024,
-        val : 15
+      title:
+        '(AA2-1) MSAR Potential value creation via analytics based use cases',
+      project: 'Cumulative YTD',
+      kpiWeight: 20,
+      UoM: '%',
+      baseLine: {
+        year: 2024,
+        val: 15,
       },
-      target:new Date(),
-      chartData : [
+      target: new Date(),
+      chartData: [
         {
           month: 'Jan',
           value1: 10,
@@ -427,19 +430,20 @@ export class RaqamiService {
           month: 'Dec',
           value1: 34,
         },
-      ]
+      ],
     },
     {
-      title : "(AA2-2) # of analytics partners/vendors managed & assessed for R&D",
-      project : "Cumulative YTD",
-      kpiWeight : 15,
-      UoM : "%",
-      baseLine : {
-        year : 2023,
-        val : 15
+      title:
+        '(AA2-2) # of analytics partners/vendors managed & assessed for R&D',
+      project: 'Cumulative YTD',
+      kpiWeight: 15,
+      UoM: '%',
+      baseLine: {
+        year: 2023,
+        val: 15,
       },
-      target:new Date(),
-      chartData : [
+      target: new Date(),
+      chartData: [
         {
           month: 'Jan',
           value1: 20,
@@ -488,19 +492,19 @@ export class RaqamiService {
           month: 'Dec',
           value1: 86,
         },
-      ]
+      ],
     },
     {
-      title : "(AA2-3) # of productionized AI/ML models through MLOps",
-      project : "Cumulative YTD",
-      kpiWeight : 15,
-      UoM : "%",
-      baseLine : {
-        year : 2023,
-        val : 15
+      title: '(AA2-3) # of productionized AI/ML models through MLOps',
+      project: 'Cumulative YTD',
+      kpiWeight: 15,
+      UoM: '%',
+      baseLine: {
+        year: 2023,
+        val: 15,
       },
-      target:new Date(),
-      chartData : [
+      target: new Date(),
+      chartData: [
         {
           month: 'Jan',
           value1: 200,
@@ -549,7 +553,7 @@ export class RaqamiService {
           month: 'Dec',
           value1: 765,
         },
-      ]
-    }
-  ]
+      ],
+    },
+  ];
 }

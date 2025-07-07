@@ -1,17 +1,18 @@
 <section class="deleted-items-section">
-    <div class="deleted-items-section-header">
-      <div>
-        <stc-apps-page-header
-          [mainTitle]="'deleted ' + currentUrl"
-          [secondaryTitle]="''"
-          [isDeletedProject]="true"
-        />
-      </div>
-      <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+  <div class="deleted-items-section-header">
+    <div>
+      <stc-apps-page-header
+        [mainTitle]="'deleted ' + currentUrl"
+        [secondaryTitle]="''"
+        [isDeletedProject]="true"
+        [username]="userData ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
     </div>
-    <div class="deleted-items-section-content">
-        <!-- <p class = "main-title">Strategic Projects - Executive View</p> -->
-        <router-outlet />
-    </div>
-  </section>
-  
+    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
+  </div>
+  <div class="deleted-items-section-content">
+    <!-- <p class = "main-title">Strategic Projects - Executive View</p> -->
+    <router-outlet />
+  </div>
+</section>
