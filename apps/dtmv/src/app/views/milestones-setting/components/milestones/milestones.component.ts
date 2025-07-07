@@ -220,8 +220,8 @@ export class MilestonesComponent
           ? this.milestonesService.checkIsBusinessSpoc() ||
             this.milestonesService.checkIsDirector()
             ? ['details']
-            : ['edit', 'details']
-          : ['edit', 'delete', 'details'],
+            : ['details']
+          : ['details'],
         label: '',
       },
     ];
