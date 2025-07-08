@@ -1,0 +1,13 @@
+.executive-summary-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .progress-bar {
+    height: 200px;
+  }
+}

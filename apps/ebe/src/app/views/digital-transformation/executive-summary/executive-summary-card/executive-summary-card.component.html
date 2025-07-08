@@ -1,0 +1,32 @@
+<div class="executive-summary-card">
+  <div class="head">
+    <p class="title m-0">
+      {{ executiveCard().title }}
+    </p>
+    <stc-apps-status-card
+      [status]="executiveCard().status"
+      [backgroundColor]="
+        executiveCard().status.toLowerCase() === 'at risk'
+          ? '#FEF9C3'
+          : '#dcfce7'
+      "
+      [textColor]="
+        executiveCard().status.toLowerCase() === 'at risk'
+          ? '#EAB308'
+          : '#22c55e'
+      "
+      [borderColor]="
+        executiveCard().status.toLowerCase() === 'at risk'
+          ? '#FEF08A'
+          : '#bbf7d0'
+      "
+    />
+  </div>
+  <div class="progress-bar">
+    <stc-apps-progress-bar
+      [data]="data"
+      [isPSRProject]="true"
+      [fontFamily]="'STCForwardFont'"
+    />
+  </div>
+</div>

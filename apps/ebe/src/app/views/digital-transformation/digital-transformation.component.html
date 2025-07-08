@@ -23,6 +23,8 @@
     <h4>{{ currTap().name }}</h4>
   </div> -->
   @if(currTap().id === 1){
-  <stc-apps-executive-summary></stc-apps-executive-summary>
+  <stc-apps-executive-summary />
+  } @else if(currTap().id === 2){
+  <stc-apps-qa-compilance />
   }
 </section>

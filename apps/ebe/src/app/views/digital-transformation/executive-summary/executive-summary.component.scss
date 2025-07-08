@@ -57,8 +57,13 @@
     }
   }
   &-body {
-    background-color: #f3f4f6;
-    border-radius: 10px;
+    // background-color: #f3f4f6;
+    // border-radius: 10px;
+    &-container {
+      background-color: #f3f4f6;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
     // padding: 20px;
     &-title {
       display: flex;
@@ -77,31 +82,6 @@
           color: #000;
           font-size: 1.2rem;
         }
-        .status {
-          background: #dcfce7;
-          border: 2px solid #bbf7d0;
-          padding: 5px 15px;
-          border-radius: 5px;
-          display: flex;
-          align-items: center;
-          gap: 5px;
-          span {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background-color: #22c55e;
-            display: inline-block;
-          }
-          p {
-            @extend .stcFont;
-            text-transform: capitalize;
-            font-size: 0.9rem;
-            color: #22c55e;
-            position: relative;
-            font-weight: 500;
-            top: 1px;
-          }
-        }
       }
       .right-side {
         display: flex;
@@ -115,6 +95,7 @@
           display: flex;
           align-items: center;
           cursor: pointer;
+          font-size: 0.9rem;
           gap: 5px;
           img {
             width: 20px;
@@ -122,6 +103,8 @@
           span {
             @extend .stcFont;
             text-transform: capitalize;
+            position: relative;
+            top: 1px;
           }
           &:first-child {
             background-color: #ff375e;
@@ -150,7 +133,7 @@
       .left-side {
         p {
           color: #000;
-          font-size: 1.15rem;
+          font-size: 1rem;
           font-weight: 600;
           text-transform: capitalize;
         }
@@ -165,7 +148,7 @@
         p {
           text-transform: capitalize;
           color: #64748b;
-          font-size: 1.15rem;
+          font-size: 1rem;
           span {
             font-weight: bold;
             &.actual {
@@ -180,11 +163,6 @@
     }
     &-content {
       padding: 20px;
-      .executive-summary-card {
-        background-color: #fff;
-        border-radius: 10px;
-        padding: 20px;
-      }
     }
   }
 }

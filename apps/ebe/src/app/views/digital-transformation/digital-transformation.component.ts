@@ -12,10 +12,16 @@ import { ScorecardService } from '../../services/scorecard.service';
 import { DigitalTransformationService } from '../../services/digital-transformation.service';
 import { DigitalTransformationTapModel } from '../../models/digital-transformation';
 import { ExecutiveSummaryComponent } from './executive-summary/executive-summary.component';
+import { QACompilanceComponent } from './qa-compilance/qa-compilance.component';
 @Component({
   selector: 'stc-apps-digital-transformation',
   standalone: true,
-  imports: [CommonModule, SharedUiModule, ExecutiveSummaryComponent],
+  imports: [
+    CommonModule,
+    SharedUiModule,
+    ExecutiveSummaryComponent,
+    QACompilanceComponent,
+  ],
   templateUrl: './digital-transformation.component.html',
   styleUrl: './digital-transformation.component.scss',
 })

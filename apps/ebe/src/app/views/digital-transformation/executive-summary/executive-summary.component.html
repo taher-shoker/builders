@@ -8,54 +8,68 @@
         </div>
       </ng-template>
       <div class="executive-summary-body">
-        <div class="executive-summary-body-title">
-          <div class="left-side">
-            <p class="title2">CPU</p>
-            <div class="status">
-              <span></span>
-              <p>on track</p>
+        @for (summaryData of executiveSummaryData.aiDashboard; track $index) {
+        <div class="executive-summary-body-container">
+          <div class="executive-summary-body-title">
+            <div class="left-side">
+              <p class="title2">{{ summaryData.title }}</p>
+              <stc-apps-status-card
+                [status]="summaryData.status"
+                [backgroundColor]="
+                  summaryData.status.toLowerCase() === 'at risk'
+                    ? '#FEF9C3'
+                    : '#dcfce7'
+                "
+                [textColor]="
+                  summaryData.status.toLowerCase() === 'at risk'
+                    ? '#EAB308'
+                    : '#22c55e'
+                "
+                [borderColor]="
+                  summaryData.status.toLowerCase() === 'at risk'
+                    ? '#FEF08A'
+                    : '#bbf7d0'
+                "
+              />
+            </div>
+            <div class="right-side">
+              <button (click)="openSidebar1(summaryData)">
+                <img src="assets/images/Info Circle.svg" alt="" />
+                <span>highlights</span>
+              </button>
+              <button (click)="openSidebar2(summaryData)">
+                <img src="assets/images/Danger.svg" alt="" />
+                <span>Challenges</span>
+              </button>
             </div>
           </div>
-          <div class="right-side">
-            <button>
-              <img src="assets/images/Info Circle.svg" alt="" />
-              <span>highlights</span>
-            </button>
-            <button>
-              <img src="assets/images/Danger.svg" alt="" />
-              <span>Challenges</span>
-            </button>
+          <div class="executive-summary-body-sub-title">
+            <div class="left-side">
+              <p>weight: {{ summaryData.weight }}</p>
+            </div>
+            <div class="right-side">
+              <p>
+                planned:
+                <span class="planned">{{ summaryData.planned }}</span>
+              </p>
+              <img src="assets/images/Component 2.svg" alt="" />
+              <p>
+                actual:
+                <span class="actual">{{ summaryData.actual }}</span>
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="executive-summary-body-sub-title">
-          <div class="left-side">
-            <p>weight: 65%</p>
-          </div>
-          <div class="right-side">
-            <p>
-              planned:
-              <span class="planned">45%</span>
-            </p>
-            <img src="assets/images/Component 2.svg" alt="" />
-            <p>
-              actual:
-              <span class="actual">32%</span>
-            </p>
-          </div>
-        </div>
-        <div class="executive-summary-body-content">
-          <div class="row">
-            @for (item of data; track $index) {
-            <div class="col-lg-6 col-md-6 col-sm-12">
-              <div class="executive-summary-card">
-                <p class="title m-0">
-                  {{ item.title }}
-                </p>
+          <div class="executive-summary-body-content">
+            <div class="row">
+              @for (item of summaryData.details; track $index) {
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <stc-apps-executive-summary-card [executiveCard]="item" />
               </div>
+              }
             </div>
-            }
           </div>
         </div>
+        }
       </div>
     </p-accordionTab>
     <p-accordionTab>
@@ -66,55 +80,87 @@
         </div>
       </ng-template>
       <div class="executive-summary-body">
-        <div class="executive-summary-body-title">
-          <div class="left-side">
-            <p class="title2">CPU</p>
-            <div class="status">
-              <span></span>
-              <p>on track</p>
+        @for (summaryData of executiveSummaryData.itPlatforms; track $index) {
+        <div class="executive-summary-body-container">
+          <div class="executive-summary-body-title">
+            <div class="left-side">
+              <p class="title2">{{ summaryData.title }}</p>
+              <stc-apps-status-card
+                [status]="summaryData.status"
+                [backgroundColor]="
+                  summaryData.status.toLowerCase() === 'at risk'
+                    ? '#FEF9C3'
+                    : '#dcfce7'
+                "
+                [textColor]="
+                  summaryData.status.toLowerCase() === 'at risk'
+                    ? '#EAB308'
+                    : '#22c55e'
+                "
+                [borderColor]="
+                  summaryData.status.toLowerCase() === 'at risk'
+                    ? '#FEF08A'
+                    : '#bbf7d0'
+                "
+              />
+            </div>
+            <div class="right-side">
+              <button (click)="openSidebar1(summaryData)">
+                <img src="assets/images/Info Circle.svg" alt="" />
+                <span>highlights</span>
+              </button>
+              <button (click)="openSidebar2(summaryData)">
+                <img src="assets/images/Danger.svg" alt="" />
+                <span>Challenges</span>
+              </button>
             </div>
           </div>
-          <div class="right-side">
-            <button>
-              <img src="assets/images/Info Circle.svg" alt="" />
-              <span>highlights</span>
-            </button>
-            <button>
-              <img src="assets/images/Danger.svg" alt="" />
-              <span>Challenges</span>
-            </button>
+          <div class="executive-summary-body-sub-title">
+            <div class="left-side">
+              <p>weight: {{ summaryData.weight }}</p>
+            </div>
+            <div class="right-side">
+              <p>
+                planned:
+                <span class="planned">{{ summaryData.planned }}</span>
+              </p>
+              <img src="assets/images/Component 2.svg" alt="" />
+              <p>
+                actual:
+                <span class="actual">{{ summaryData.actual }}</span>
+              </p>
+            </div>
           </div>
-        </div>
-        <div class="executive-summary-body-sub-title">
-          <div class="left-side">
-            <p>weight: 65%</p>
-          </div>
-          <div class="right-side">
-            <p>
-              planned:
-              <span class="planned">45%</span>
-            </p>
-            <img src="assets/images/Component 2.svg" alt="" />
-            <p>
-              actual:
-              <span class="actual">32%</span>
-            </p>
-          </div>
-        </div>
-        <div class="executive-summary-body-content">
-          <div class="row">
-            @for (item of data; track $index) {
-            <div class="col-lg-6 col-md-6 col-sm-12">
-              <div class="executive-summary-card">
-                <p class="title m-0">
-                  {{ item.title }}
-                </p>
+          <div class="executive-summary-body-content">
+            <div class="row">
+              @for (item of summaryData.details; track $index) {
+              <div class="col-lg-6 col-md-6 col-sm-12">
+                <stc-apps-executive-summary-card [executiveCard]="item" />
               </div>
+              }
             </div>
-            }
           </div>
         </div>
+        }
       </div>
     </p-accordionTab>
   </p-accordion>
 </section>
+<p-sidebar [(visible)]="sidebarVisible1" position="right">
+  <h3>{{ currentSideBarTitle }}</h3>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat.
+  </p>
+</p-sidebar>
+<p-sidebar [(visible)]="sidebarVisible2" position="right">
+  <h3>{{ currentSideBarTitle }}</h3>
+  <p>
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+    tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+    quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+    consequat.
+  </p>
+</p-sidebar>
