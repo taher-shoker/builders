@@ -155,13 +155,12 @@ export class MilestonesComponent
   monthsArr: any = [];
   yearsArr: any = [];
   allTeams: any = [];
-
+  pageSizeNumber: number = 10;
   ngOnInit() {
     this.previousPath = this.router.url;
     if (this.activatedRoute.snapshot.data['state'] == 'archive') {
       this.readOnly = true;
     } else this.readOnly = false;
-    console.log(this.activatedRoute.snapshot.data['state'], this.readOnly);
 
     this.searchForm();
     this.getMilestones();
@@ -401,10 +400,14 @@ export class MilestonesComponent
     });
   }
   paginate(event: PaginationEvent) {
-    this.fetchMilestones({ page: event.currentPage - 1 });
+    this.fetchMilestones({
+      page: event.currentPage - 1,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
   }
 
   setPageItemsCount(pageSize: number) {
+    this.pageSizeNumber = pageSize;
     this.fetchMilestones({ numberOfElementsToDisplay: pageSize, page: 0 });
   }
 
