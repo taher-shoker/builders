@@ -10,4 +10,23 @@
     // margin-top:30px;
     color: #000;
   }
+  .export-btn {
+    background-color: #ff375e;
+    border: 0;
+    border-radius: 5px;
+    padding: 8px 17px;
+    cursor: pointer;
+    color: #fff;
+    @extend .stcFont;
+    font-weight: 500;
+    font-size: 16px;
+    text-transform: capitalize;
+    img {
+      width: 18px;
+      position: relative;
+      top: -1px;
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
 }

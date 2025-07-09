@@ -1,0 +1,190 @@
+<form class="add-workstream-form" [formGroup]="addWorkstreamForm">
+  <div class="form-group">
+    <label for="title">
+      title
+      <span>*</span>
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      placeholder="workstream title"
+      formControlName="title"
+      [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
+      [class.is-invalid-brdr]="
+        title?.invalid && (title?.dirty || title?.touched)
+      "
+    />
+    <small
+      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      class="error-msg"
+    >
+      title is required
+    </small>
+  </div>
+  <div class="form-group">
+    <label>
+      status
+      <span>*</span>
+    </label>
+    <br />
+    <p-dropdown
+      [options]="statuses"
+      optionLabel="name"
+      optionValue="value"
+      placeholder="Choose Current Status"
+      styleClass="status-dropdown"
+      formControlName="status"
+      [class.is-invalid]="status?.invalid && (status?.dirty || status?.touched)"
+      [class.is-invalid-brdr]="
+        status?.invalid && (status?.dirty || status?.touched)
+      "
+    />
+    <small
+      *ngIf="status?.invalid && (status?.dirty || status?.touched)"
+      class="error-msg"
+    >
+      status is required
+    </small>
+  </div>
+  @if(!isAddProject() && !isEditProject()) {
+  <div class="form-group">
+    <label for="weight">
+      weight (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="weight"
+      placeholder="Choose Weight"
+      formControlName="weight"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="weight?.invalid && (weight?.dirty || weight?.touched)"
+      [class.is-invalid-brdr]="
+        weight?.invalid && (weight?.dirty || weight?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        weight?.invalid &&
+        (weight?.dirty || weight?.touched) &&
+        !(weight?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      weight is required
+    </small>
+    <small
+      *ngIf="weight?.invalid && (weight?.errors)!['max']"
+      class="error-msg"
+    >
+      weight must be a number between 0 and 100
+    </small>
+  </div>
+  }
+  <div class="form-group">
+    <label for="planned">
+      planned (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="planned"
+      placeholder="Choose Planned Progress"
+      formControlName="planned"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="
+        planned?.invalid && (planned?.dirty || planned?.touched)
+      "
+      [class.is-invalid-brdr]="
+        planned?.invalid && (planned?.dirty || planned?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        planned?.invalid &&
+        (planned?.dirty || planned?.touched) &&
+        !(planned?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      planned is required
+    </small>
+    <small
+      *ngIf="planned?.invalid && (planned?.errors)!['max']"
+      class="error-msg"
+    >
+      planned must be a number between 0 and 100
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="actual">
+      actual (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="actual"
+      placeholder="Choose Actual Progress"
+      formControlName="actual"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="actual?.invalid && (actual?.dirty || actual?.touched)"
+      [class.is-invalid-brdr]="
+        actual?.invalid && (actual?.dirty || actual?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        actual?.invalid &&
+        (actual?.dirty || actual?.touched) &&
+        !(actual?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      actual is required
+    </small>
+    <small
+      *ngIf="actual?.invalid && (actual?.errors)!['max']"
+      class="error-msg"
+    >
+      actual must be a number between 0 and 100
+    </small>
+  </div>
+  @if(!isAddProject() && !isEditProject()) {
+  <div class="form-group">
+    <label for="highlights">
+      highlights (%)
+      <!-- <span>*</span> -->
+    </label>
+    <textarea
+      class="form-control"
+      id="highlights"
+      placeholder="What is the Highlights"
+      formControlName="heighlights"
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <label for="challenges">
+      challenges (%)
+      <!-- <span>*</span> -->
+    </label>
+    <textarea
+      class="form-control"
+      id="challenges"
+      placeholder="What is the Challenges&Support Needed"
+      formControlName="challenges"
+    ></textarea>
+  </div>
+  }
+  <button
+    class="add-workstream-btn2"
+    [disabled]="addWorkstreamForm.invalid"
+    [class.is-disabled]="addWorkstreamForm.invalid"
+    (click)="addWorkstream()"
+  >
+    add workstream
+  </button>
+</form>

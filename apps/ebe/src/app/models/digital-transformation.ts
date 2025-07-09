@@ -29,3 +29,12 @@ export interface ExecutiveCardModel {
   actual: number;
   planned: number;
 }
+export interface AddWorkstreamFormModel {
+  title: string;
+  status: string;
+  weight: number;
+  actual: number;
+  planned: number;
+  highlights: string;
+  challenges: string;
+}

@@ -3,24 +3,48 @@
     <p class="title m-0">
       {{ executiveCard().title }}
     </p>
-    <stc-apps-status-card
-      [status]="executiveCard().status"
-      [backgroundColor]="
-        executiveCard().status.toLowerCase() === 'at risk'
-          ? '#FEF9C3'
-          : '#dcfce7'
-      "
-      [textColor]="
-        executiveCard().status.toLowerCase() === 'at risk'
-          ? '#EAB308'
-          : '#22c55e'
-      "
-      [borderColor]="
-        executiveCard().status.toLowerCase() === 'at risk'
-          ? '#FEF08A'
-          : '#bbf7d0'
-      "
-    />
+    <div class="status2">
+      <stc-apps-status-card
+        [status]="executiveCard().status"
+        [backgroundColor]="
+          executiveCard().status.toLowerCase() === 'at risk'
+            ? '#FEF9C3'
+            : executiveCard().status.toLowerCase() === 'on track'
+            ? '#dcfce7'
+            : executiveCard().status.toLowerCase() === 'delayed'
+            ? '#FEF2F2'
+            : executiveCard().status.toLowerCase() === 'not started/on hold'
+            ? '#F3F4F6'
+            : '#CFFAFE'
+        "
+        [textColor]="
+          executiveCard().status.toLowerCase() === 'at risk'
+            ? '#EAB308'
+            : executiveCard().status.toLowerCase() === 'on track'
+            ? '#22C55E'
+            : executiveCard().status.toLowerCase() === 'delayed'
+            ? '#EF4444'
+            : executiveCard().status.toLowerCase() === 'not started/on hold'
+            ? '#6B7280'
+            : '#06B6D4'
+        "
+        [borderColor]="
+          executiveCard().status.toLowerCase() === 'at risk'
+            ? '#FEF08A'
+            : executiveCard().status.toLowerCase() === 'on track'
+            ? '#BBF7D0'
+            : executiveCard().status.toLowerCase() === 'delayed'
+            ? '#FECACA'
+            : executiveCard().status.toLowerCase() === 'not started/on hold'
+            ? '#E5E7EB'
+            : '#A5F3FC'
+        "
+      />
+      <button class="edit-proj-btn" (click)="openAddWorkstreamSidebar()">
+        <i class="pi pi-pencil"></i>
+        <!-- <img src="assets/images/button.svg" alt="" /> -->
+      </button>
+    </div>
   </div>
   <div class="progress-bar">
     <stc-apps-progress-bar

@@ -1,4 +1,11 @@
-import { Component, input, InputSignal, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  input,
+  InputSignal,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatusCardComponent } from '../../status-card/status-card.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
@@ -36,6 +43,7 @@ export class ExecutiveSummaryCardComponent implements OnInit {
   vplanned!: number;
   difference!: number;
   data!: ProgressInfo;
+  @Output() openProjSidebar = new EventEmitter<ExecutiveCardModel>();
   ngOnInit() {
     this.vactual = this.executiveCard().actual;
     this.vplanned = this.executiveCard().planned;
@@ -47,31 +55,41 @@ export class ExecutiveSummaryCardComponent implements OnInit {
       suffixValue: 0,
       progressValue: this.vactual,
       barColor:
-        (this.difference >= 0 && this.difference <= 5) ||
-        this.vactual > this.vplanned
-          ? '#00C48C'
-          : this.difference > 5 && this.difference <= 10
-          ? '#EFC500'
-          : '#FF1A1A',
+        this.executiveCard().status.toLowerCase() === 'at risk'
+          ? '#EAB308'
+          : this.executiveCard().status.toLowerCase() === 'on track'
+          ? '#22C55E'
+          : this.executiveCard().status.toLowerCase() === 'delayed'
+          ? '#EF4444'
+          : this.executiveCard().status.toLowerCase() === 'not started/on hold'
+          ? '#6B7280'
+          : '#06B6D4',
       bgBarColor:
-        (this.difference >= 0 && this.difference <= 5) ||
-        this.vactual > this.vplanned
-          ? '#00c48c1a'
-          : this.difference > 5 && this.difference <= 10
-          ? 'rgba(239, 197, 0, .2)'
-          : 'rgba(255, 26, 26, .2)',
+        this.executiveCard().status.toLowerCase() === 'at risk'
+          ? '#FEF9C3'
+          : this.executiveCard().status.toLowerCase() === 'on track'
+          ? '#dcfce7'
+          : this.executiveCard().status.toLowerCase() === 'delayed'
+          ? '#FEF2F2'
+          : this.executiveCard().status.toLowerCase() === 'not started/on hold'
+          ? '#F3F4F6'
+          : '#CFFAFE',
       indexes: [
         {
           caption: 'Actual',
           value: this.executiveCard().actual,
           position: 'up',
           actualBarColor:
-            (this.difference >= 0 && this.difference <= 5) ||
-            this.vactual > this.vplanned
-              ? '#009F71'
-              : this.difference > 5 && this.difference <= 10
-              ? '#D9B301'
-              : '#BC0000',
+            this.executiveCard().status.toLowerCase() === 'at risk'
+              ? '#EAB308'
+              : this.executiveCard().status.toLowerCase() === 'on track'
+              ? '#22C55E'
+              : this.executiveCard().status.toLowerCase() === 'delayed'
+              ? '#EF4444'
+              : this.executiveCard().status.toLowerCase() ===
+                'not started/on hold'
+              ? '#6B7280'
+              : '#06B6D4',
         },
         {
           caption: `Planned`,
@@ -81,5 +99,8 @@ export class ExecutiveSummaryCardComponent implements OnInit {
         },
       ],
     };
+  }
+  openAddWorkstreamSidebar() {
+    this.openProjSidebar.emit(this.executiveCard());
   }
 }

@@ -1,10 +1,18 @@
 <section class="digital-transformation">
-  <stc-apps-page-header
-    [mainTitle]="'Digital Transformation'"
-    [secondaryTitle]="''"
-    [username]="userData ? userData.name : ''"
-    [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
-  />
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <stc-apps-page-header
+      [mainTitle]="'Digital Transformation'"
+      [secondaryTitle]="''"
+      [username]="userData ? userData.name : ''"
+      [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+    />
+    <button class="export-btn">
+      <img src="assets/images/File Download.svg" alt="" />
+      export
+    </button>
+  </div>
   <div class="digital-transformation-taps">
     @if(digitalTransformationTaps().length !== 0){
     <stc-apps-tabview

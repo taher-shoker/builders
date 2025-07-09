@@ -5,10 +5,13 @@ import { StatusCardComponent } from '../status-card/status-card.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ExecutiveSummaryCardComponent } from './executive-summary-card/executive-summary-card.component';
 import {
+  AddWorkstreamFormModel,
   AIDashboardModel,
+  ExecutiveCardModel,
   ExecutiveSummaryDataModel,
 } from '../../../models/digital-transformation';
 import { SidebarModule } from 'primeng/sidebar';
+import { AddWorkstreamFormComponent } from '../add-workstream-form/add-workstream-form.component';
 
 @Component({
   selector: 'stc-apps-executive-summary',
@@ -20,6 +23,7 @@ import { SidebarModule } from 'primeng/sidebar';
     SharedUiModule,
     ExecutiveSummaryCardComponent,
     SidebarModule,
+    AddWorkstreamFormComponent,
   ],
   templateUrl: './executive-summary.component.html',
   styleUrl: './executive-summary.component.scss',
@@ -27,7 +31,18 @@ import { SidebarModule } from 'primeng/sidebar';
 export class ExecutiveSummaryComponent {
   sidebarVisible1 = false;
   sidebarVisible2 = false;
+  showAddWorkstreamSidebar = false;
   currentSideBarTitle = '';
+  activeAccordionIndex = 0;
+  isWorkstreamSidebarVisible!: boolean;
+  isEditWorkStream!: boolean;
+  isEditProject!: boolean;
+  isAddProject!: boolean;
+  toggleAccordion(index: number, event: Event) {
+    event.stopPropagation();
+    this.activeAccordionIndex =
+      this.activeAccordionIndex === index ? -1 : index;
+  }
   executiveSummaryData: ExecutiveSummaryDataModel = {
     aiDashboard: [
       {
@@ -45,7 +60,7 @@ export class ExecutiveSummaryComponent {
           },
           {
             title: 'postpaid & fixed ph1 (FWA) delivery',
-            status: 'at risk',
+            status: 'delayed',
             actual: 15.6,
             planned: 23.8,
           },
@@ -60,13 +75,13 @@ export class ExecutiveSummaryComponent {
         details: [
           {
             title: 'L2Q - MVP2 Quote and Contract',
-            status: 'on track',
+            status: 'complete',
             actual: 90,
             planned: 95,
           },
           {
             title: 'Golden Product MVP1',
-            status: 'at risk',
+            status: 'not started/on hold',
             actual: 15.6,
             planned: 23.8,
           },
@@ -125,5 +140,25 @@ export class ExecutiveSummaryComponent {
   openSidebar2(summaryData: AIDashboardModel) {
     this.sidebarVisible2 = true;
     this.currentSideBarTitle = summaryData.title;
+  }
+  openAddWorkstreamSidebar(
+    isEditMode: boolean,
+    isAddProject: boolean,
+    isEditProject: boolean
+  ) {
+    this.isEditWorkStream = isEditMode;
+    this.isAddProject = isAddProject;
+    this.isEditProject = isEditProject;
+    this.showAddWorkstreamSidebar = true;
+    this.isWorkstreamSidebarVisible = true;
+  }
+  hideAddWorkstreamSidebar() {
+    this.isWorkstreamSidebarVisible = false;
+  }
+  addWorkStream(workStreamData: AddWorkstreamFormModel) {
+    console.log('Workstream Data:', workStreamData);
+  }
+  openProjSidebar(card: ExecutiveCardModel) {
+    console.log(card);
   }
 }
