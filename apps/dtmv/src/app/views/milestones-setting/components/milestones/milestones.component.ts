@@ -132,8 +132,7 @@ export class MilestonesComponent
     private utilities: UtilitiesService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    public configService: ConfigService,
-    private activatedRoute: ActivatedRoute
+    public configService: ConfigService
   ) {}
 
   allItems!: PendingTask[];
@@ -158,7 +157,7 @@ export class MilestonesComponent
   pageSizeNumber: number = 10;
   ngOnInit() {
     this.previousPath = this.router.url;
-    if (this.activatedRoute.snapshot.data['state'] == 'archive') {
+    if (this.route.snapshot.data['state'] == 'archive') {
       this.readOnly = true;
     } else this.readOnly = false;
 
@@ -287,8 +286,6 @@ export class MilestonesComponent
 
   fetchMilestones(options: any = {}): void {
     const filteredForm = this.filterForm;
-    console.log('this.filtered form', this.filterForm);
-
     // If the form is fully empty, reset all previous filters
     const isFormEmpty = Object.values(filteredForm).every(
       (val) => val === null || val === undefined || val === ''
@@ -470,6 +467,7 @@ export class MilestonesComponent
       }
       this.router.navigate(['./milestone_details', id], {
         relativeTo: this.route,
+        state: this.readOnly ? { viewMode: 'archive' } : {},
       });
     }
   }
