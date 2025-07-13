@@ -198,7 +198,9 @@
     }
   }
 }
-::ng-deep .add-workstream-sidebar {
+::ng-deep .add-workstream-sidebar,
+::ng-deep .highlights-sidebar,
+::ng-deep .challenges-sidebar {
   .p-sidebar-header {
     display: none;
   }

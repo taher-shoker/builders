@@ -10,6 +10,10 @@ import { CommonModule } from '@angular/common';
 import { StatusCardComponent } from '../../status-card/status-card.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ExecutiveCardModel } from '../../../../models/digital-transformation';
+import {
+  STATUS_STYLE_MAP,
+  WorkstreamStatus,
+} from '../../../../models/digital-transformation';
 export interface ProgressInfo {
   prefixText: string;
   prefixValue: number | string;
@@ -99,6 +103,17 @@ export class ExecutiveSummaryCardComponent implements OnInit {
         },
       ],
     };
+  }
+  getStatusStyle(status: string) {
+    const normalized = status?.toLowerCase();
+    const matchedStatus = Object.values(WorkstreamStatus).find(
+      (s) => s === normalized
+    ) as WorkstreamStatus;
+
+    return (
+      STATUS_STYLE_MAP[matchedStatus] ||
+      STATUS_STYLE_MAP[WorkstreamStatus.Complete]
+    );
   }
   openAddWorkstreamSidebar() {
     this.openProjSidebar.emit(this.executiveCard());

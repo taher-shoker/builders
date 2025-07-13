@@ -30,3 +30,24 @@
     }
   }
 }
+.qa-compilance {
+  background-color: var(--stc-white-color);
+  border-radius: 20px;
+  padding: 20px;
+  .main-title {
+    font-weight: bold;
+    font-size: 1rem;
+    @extend .stcFont;
+    color: var(--stc-purple-color);
+    // margin: 0;
+  }
+}
+.kpi-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 25px;
+  // margin-top: 20px;
+  .kpi-container-card {
+    width: 100%;
+  }
+}

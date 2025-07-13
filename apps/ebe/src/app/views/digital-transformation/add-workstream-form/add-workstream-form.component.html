@@ -185,6 +185,14 @@
     [class.is-disabled]="addWorkstreamForm.invalid"
     (click)="addWorkstream()"
   >
-    add workstream
+    {{
+      isEditWorkStream()
+        ? 'edit workstream'
+        : isAddProject()
+        ? 'add project'
+        : isEditProject()
+        ? 'edit project'
+        : 'add new workstream'
+    }}
   </button>
 </form>

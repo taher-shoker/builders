@@ -1,0 +1,131 @@
+@import '../../../../styles/fonts.scss';
+.qa-compilance-card {
+  // text-align: center;
+  background-color: var(--stc-light-grey-color5);
+  border-radius: 10px;
+  color: #000;
+  padding: 20px 0;
+  // margin-bottom: 20px;
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 25px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 20px;
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 20px;
+    }
+    .heighlights-btn {
+      background-color: transparent;
+      border: 0;
+      border-radius: 5px;
+      padding: 5px 15px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      gap: 5px;
+      margin-right: 20px;
+      img {
+        width: 20px;
+      }
+      background-color: #ff375e;
+      color: #fff;
+    }
+    &-title {
+      @extend .stcFont;
+      color: var(--stc-dark-grey-color);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+  &-body {
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 0 20px;
+    padding: 20px;
+    .details {
+      margin-top: 30px;
+      // display: flex;
+      // align-items: center;
+      display: grid;
+      grid-template-columns: 33.3333333% 33.3333333% 33.3333333%;
+      justify-content: center;
+      // gap: 15px;
+      .requested {
+        border-right: 1px solid #ebebef;
+        text-align: center;
+        &:last-child {
+          border-right: 0;
+        }
+      }
+      p {
+        margin: 0;
+        height: 48px;
+        color: #64748b;
+        @extend .stcFont;
+        text-transform: capitalize;
+        font-size: 0.9rem;
+      }
+      span {
+        color: #64748b;
+        @extend .stcFont;
+        font-weight: bold;
+        font-size: 1.6rem;
+        &.completed {
+          color: #22c55e;
+        }
+        &.missing {
+          color: #ef4444;
+        }
+      }
+    }
+  }
+}
+::ng-deep .qa-compilance-card-sidebar {
+  .p-sidebar-header {
+    display: none;
+  }
+  .p-sidebar-content {
+    padding: 0;
+  }
+  .sidebar-content {
+    padding: 20px;
+  }
+  .form-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    span {
+      display: inline-block;
+      width: 2px;
+      height: 30px;
+      border-radius: 3px;
+      background-color: var(--stc-red-dark-color);
+    }
+    p {
+      margin: 0;
+      color: var(--stc-dark-grey-color);
+      @extend .stcFont;
+      font-size: 1.1rem;
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+    i {
+      position: relative;
+      top: 2px;
+      cursor: pointer;
+      color: var(--stc-light-grey-color3);
+    }
+  }
+}

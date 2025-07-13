@@ -32,7 +32,22 @@
   </div> -->
   @if(currTap().id === 1){
   <stc-apps-executive-summary />
-  } @else if(currTap().id === 2){
-  <stc-apps-qa-compilance />
+  } @else {
+  <section class="qa-compilance">
+    <p class="main-title">{{ tabTitle }}</p>
+    @if(currTap().id !== 7){
+    <div class="kpi-container">
+      @for (card of qAComplianceData; track card.id) {
+      <div class="kpi-container-card">
+        <stc-apps-qa-compilance-card [QAComplianceCardData]="card" />
+      </div>
+      } @empty {
+      <h3>there is no data</h3>
+      }
+    </div>
+    } @else {
+    <h3>there is no data</h3>
+    }
+  </section>
   }
 </section>

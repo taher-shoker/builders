@@ -1,0 +1,85 @@
+<div class="qa-compilance-card">
+  <div class="qa-compilance-card-header">
+    <div class="left">
+      <p class="qa-compilance-card-header-title">
+        {{ QAComplianceCardData().title }}
+      </p>
+      <stc-apps-status-card
+        [status]="QAComplianceCardData().status"
+        [backgroundColor]="
+          getStatusStyle(QAComplianceCardData().status).backgroundColor
+        "
+        [textColor]="getStatusStyle(QAComplianceCardData().status).textColor"
+        [borderColor]="
+          getStatusStyle(QAComplianceCardData().status).borderColor
+        "
+      />
+    </div>
+    <div class="right">
+      <button class="heighlights-btn" (click)="showSidebar = true">
+        <img src="assets/images/Info Circle.svg" alt="" />
+        <span>highlights</span>
+      </button>
+    </div>
+  </div>
+  <div class="qa-compilance-card-body">
+    <stc-apps-progress-circle
+      [progressValue]="
+        QAComplianceCardData().totalTD
+          ? QAComplianceCardData().completed
+          : QAComplianceCardData().completedPercent
+      "
+      [percentValue]="QAComplianceCardData().completedPercent"
+      [showProgress]="true"
+      [progressSize]="'12rem'"
+      [mainBgColor]="getStatusStyle(QAComplianceCardData().status).textColor"
+      secondaryBgColor="#F3F4F6"
+      progressWidth="6.5rem"
+      [isWorkStream]="true"
+      fontFamily="STCForwardFont"
+      [secondaryValue]="QAComplianceCardData().underValidationPercent"
+      [totalTD]="QAComplianceCardData().totalTD"
+      [progressValueColor]="
+        getStatusStyle(QAComplianceCardData().status).textColor
+      "
+    />
+    <div class="details">
+      <div class="requested">
+        <p>requested artifacts</p>
+        <span>{{ QAComplianceCardData().requestedArtifacts }}</span>
+      </div>
+      <div class="requested">
+        <p>completed</p>
+        <span class="completed">{{ QAComplianceCardData().completed }}</span>
+      </div>
+      <div class="requested">
+        <p>missing artifacts</p>
+        <span class="missing">{{
+          QAComplianceCardData().missingArtifacts
+        }}</span>
+      </div>
+    </div>
+  </div>
+</div>
+<p-sidebar
+  [(visible)]="showSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="qa-compilance-card-sidebar"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>{{ QAComplianceCardData().title }}</p>
+      </div>
+      <div class="right" (click)="showSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <div class="content">
+      <h4>{{ QAComplianceCardData().heighlights }}</h4>
+    </div>
+  </div>
+</p-sidebar>

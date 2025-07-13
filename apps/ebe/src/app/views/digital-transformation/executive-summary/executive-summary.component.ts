@@ -9,10 +9,11 @@ import {
   AIDashboardModel,
   ExecutiveCardModel,
   ExecutiveSummaryDataModel,
+  STATUS_STYLE_MAP,
+  WorkstreamStatus,
 } from '../../../models/digital-transformation';
 import { SidebarModule } from 'primeng/sidebar';
 import { AddWorkstreamFormComponent } from '../add-workstream-form/add-workstream-form.component';
-
 @Component({
   selector: 'stc-apps-executive-summary',
   standalone: true,
@@ -30,7 +31,6 @@ import { AddWorkstreamFormComponent } from '../add-workstream-form/add-workstrea
 })
 export class ExecutiveSummaryComponent {
   sidebarVisible1 = false;
-  sidebarVisible2 = false;
   showAddWorkstreamSidebar = false;
   currentSideBarTitle = '';
   activeAccordionIndex = 0;
@@ -133,13 +133,22 @@ export class ExecutiveSummaryComponent {
       },
     ],
   };
-  openSidebar1(summaryData: AIDashboardModel) {
+  sidebarType = '';
+  openSidebar1(summaryData: AIDashboardModel, type: string) {
+    this.sidebarType = type;
     this.sidebarVisible1 = true;
     this.currentSideBarTitle = summaryData.title;
   }
-  openSidebar2(summaryData: AIDashboardModel) {
-    this.sidebarVisible2 = true;
-    this.currentSideBarTitle = summaryData.title;
+  getStatusStyle(status: string) {
+    const normalized = status?.toLowerCase();
+    const matchedStatus = Object.values(WorkstreamStatus).find(
+      (s) => s === normalized
+    ) as WorkstreamStatus;
+
+    return (
+      STATUS_STYLE_MAP[matchedStatus] ||
+      STATUS_STYLE_MAP[WorkstreamStatus.Complete]
+    );
   }
   openAddWorkstreamSidebar(
     isEditMode: boolean,
