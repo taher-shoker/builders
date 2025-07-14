@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, EventEmitter, input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import {
   QAComplianceModel,
@@ -19,6 +19,7 @@ import { SidebarModule } from 'primeng/sidebar';
 export class QaCompilanceCardComponent {
   showSidebar = false;
   QAComplianceCardData = input.required<QAComplianceModel>();
+  @Output() sidebarOpened = new EventEmitter();
   getStatusStyle(status: string) {
     const normalized = status?.toLowerCase();
     const matchedStatus = Object.values(WorkstreamStatus).find(
@@ -29,5 +30,8 @@ export class QaCompilanceCardComponent {
       STATUS_STYLE_MAP[matchedStatus] ||
       STATUS_STYLE_MAP[WorkstreamStatus.Complete]
     );
+  }
+  openSidebar() {
+    this.sidebarOpened.emit();
   }
 }

@@ -88,4 +88,43 @@ export interface QAComplianceModel {
   completedPercent: number;
   underValidationPercent?: number;
   totalTD?: number;
+  subTitle?: string;
+}
+export interface TechnicalDebtDashboardModel {
+  title: string;
+  id: number;
+  status: string;
+  heighlights: string;
+  data: {
+    technicalDebt: TechnicalDebtDataModel;
+    archituralBacklog?: ArchituralBacklog;
+  };
+}
+export interface ArchituralBacklog {
+  closed: number;
+  closedPercent: number;
+  open: number;
+  delayed: number;
+  underValidation: number;
+  totalABL: number;
+}
+export interface TechnicalDebtDataModel {
+  closed: number;
+  closedPercent: number;
+  open: number;
+  delayed: number;
+  underValidation: number;
+  totalTD: number;
+}
+export interface CapabilitiesHandoverDataModel {
+  title: string;
+  id: number;
+  status: string;
+  heighlights: string;
+  complete: number;
+  completePercent: number;
+  open: number;
+  delayed: number;
+  onhold: number;
+  totalCapabilities: number;
 }

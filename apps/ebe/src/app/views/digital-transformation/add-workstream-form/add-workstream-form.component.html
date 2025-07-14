@@ -47,7 +47,8 @@
       status is required
     </small>
   </div>
-  @if(!isAddProject() && !isEditProject()) {
+  @if(!isAddProject() || !isEditProject()) { @if(type() === ""){
+  @if(!isProject()){
   <div class="form-group">
     <label for="weight">
       weight (%)
@@ -153,7 +154,7 @@
       actual must be a number between 0 and 100
     </small>
   </div>
-  @if(!isAddProject() && !isEditProject()) {
+  } } @if(!isAddProject() && !isEditProject()) {
   <div class="form-group">
     <label for="highlights">
       highlights (%)
@@ -166,6 +167,7 @@
       formControlName="heighlights"
     ></textarea>
   </div>
+  @if(!type()) {
   <div class="form-group">
     <label for="challenges">
       challenges (%)
@@ -177,6 +179,119 @@
       placeholder="What is the Challenges&Support Needed"
       formControlName="challenges"
     ></textarea>
+  </div>
+  } } @if(type() === "compilance"){
+  <div class="form-group">
+    <label for="requestedArtifact">
+      requested artifact (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="requestedArtifact"
+      placeholder="No. Requested Artifacts"
+      formControlName="requestedArtifact"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="
+        requestedArtifact?.invalid &&
+        (requestedArtifact?.dirty || requestedArtifact?.touched)
+      "
+      [class.is-invalid-brdr]="
+        requestedArtifact?.invalid &&
+        (requestedArtifact?.dirty || requestedArtifact?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        requestedArtifact?.invalid &&
+        (requestedArtifact?.dirty || requestedArtifact?.touched) &&
+        !(requestedArtifact?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      requestedArtifact is required
+    </small>
+    <small
+      *ngIf="requestedArtifact?.invalid && (requestedArtifact?.errors)!['max']"
+      class="error-msg"
+    >
+      requestedArtifact must be between 0 and 100
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="completed">
+      completed (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="completed"
+      placeholder="No. Completed Artifacts"
+      formControlName="completed"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="
+        completed?.invalid && (completed?.dirty || completed?.touched)
+      "
+      [class.is-invalid-brdr]="
+        completed?.invalid && (completed?.dirty || completed?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        completed?.invalid &&
+        (completed?.dirty || completed?.touched) &&
+        !(completed?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      completed is required
+    </small>
+    <small
+      *ngIf="completed?.invalid && (completed?.errors)!['max']"
+      class="error-msg"
+    >
+      completed must be between 0 and 100
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="completed">
+      missing Artifacts (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="missingArtifacts"
+      placeholder="No. Missing Artifacts"
+      formControlName="missingArtifacts"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="
+        missingArtifacts?.invalid &&
+        (missingArtifacts?.dirty || missingArtifacts?.touched)
+      "
+      [class.is-invalid-brdr]="
+        missingArtifacts?.invalid &&
+        (missingArtifacts?.dirty || missingArtifacts?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        missingArtifacts?.invalid &&
+        (missingArtifacts?.dirty || missingArtifacts?.touched) &&
+        !(missingArtifacts?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      missingArtifacts is required
+    </small>
+    <small
+      *ngIf="missingArtifacts?.invalid && (missingArtifacts?.errors)!['max']"
+      class="error-msg"
+    >
+      missingArtifacts must be between 0 and 100
+    </small>
   </div>
   }
   <button

@@ -38,6 +38,7 @@ export class ExecutiveSummaryComponent {
   isEditWorkStream!: boolean;
   isEditProject!: boolean;
   isAddProject!: boolean;
+  isProject = false;
   toggleAccordion(index: number, event: Event) {
     event.stopPropagation();
     this.activeAccordionIndex =
@@ -159,7 +160,8 @@ export class ExecutiveSummaryComponent {
     this.isAddProject = isAddProject;
     this.isEditProject = isEditProject;
     this.showAddWorkstreamSidebar = true;
-    this.isWorkstreamSidebarVisible = true;
+    // this.isWorkstreamSidebarVisible = true;
+    this.isWorkstreamSidebarVisible = false;
   }
   hideAddWorkstreamSidebar() {
     this.isWorkstreamSidebarVisible = false;

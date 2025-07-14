@@ -35,6 +35,8 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
   isEditProject = input<boolean>(false);
   isAddProject = input<boolean>(false);
   isEditWorkStream = input<boolean>(false);
+  type = input<string>('');
+  isProject = input(false);
   @Output() addWorkStream: EventEmitter<AddWorkstreamFormModel> =
     new EventEmitter<AddWorkstreamFormModel>();
   statuses: Status[] = [
@@ -72,13 +74,51 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         ],
       });
     } else {
+      if (this.type() === 'compilance') {
+        this.addWorkstreamForm = this.formBuilder.group({
+          title: ['', [Validators.required]],
+          status: ['', [Validators.required]],
+          heighlights: [''],
+          requestedArtifact: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          completed: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          missingArtifacts: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+        });
+      } else {
+        this.addWorkstreamForm = this.formBuilder.group({
+          title: ['', [Validators.required]],
+          status: ['', [Validators.required]],
+          weight: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          actual: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          planned: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          heighlights: [''],
+          challenges: [''],
+        });
+      }
+    }
+  }
+  ngOnInit(): void {
+    if (this.isAddProject() || this.isEditProject()) {
       this.addWorkstreamForm = this.formBuilder.group({
         title: ['', [Validators.required]],
         status: ['', [Validators.required]],
-        weight: [
-          '',
-          [Validators.required, Validators.min(0), Validators.max(100)],
-        ],
         actual: [
           '',
           [Validators.required, Validators.min(0), Validators.max(100)],
@@ -87,30 +127,47 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
           '',
           [Validators.required, Validators.min(0), Validators.max(100)],
         ],
-        heighlights: [''],
-        challenges: [''],
       });
+    } else {
+      if (this.type() === 'compilance') {
+        this.addWorkstreamForm = this.formBuilder.group({
+          title: ['', [Validators.required]],
+          status: ['', [Validators.required]],
+          heighlights: [''],
+          requestedArtifact: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          completed: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          missingArtifacts: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+        });
+      } else {
+        this.addWorkstreamForm = this.formBuilder.group({
+          title: ['', [Validators.required]],
+          status: ['', [Validators.required]],
+          weight: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          actual: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          planned: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          heighlights: [''],
+          challenges: [''],
+        });
+      }
     }
-  }
-  ngOnInit(): void {
-    this.addWorkstreamForm = this.formBuilder.group({
-      title: ['', [Validators.required]],
-      status: ['', [Validators.required]],
-      weight: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
-      ],
-      actual: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
-      ],
-      planned: [
-        '',
-        [Validators.required, Validators.min(0), Validators.max(100)],
-      ],
-      heighlights: [''],
-      challenges: [''],
-    });
   }
   preventInvalidKeys(event: KeyboardEvent) {
     const invalidChars = ['e', 'E', '+', '-'];
@@ -132,5 +189,14 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
   }
   get planned() {
     return this.addWorkstreamForm.get('planned');
+  }
+  get requestedArtifact() {
+    return this.addWorkstreamForm.get('requestedArtifact');
+  }
+  get completed() {
+    return this.addWorkstreamForm.get('completed');
+  }
+  get missingArtifacts() {
+    return this.addWorkstreamForm.get('missingArtifacts');
   }
 }

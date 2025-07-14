@@ -7,7 +7,9 @@
           <div>
             <button
               class="add-workstream-btn"
-              (click)="openAddWorkstreamSidebar(false, false, false)"
+              (click)="
+                openAddWorkstreamSidebar(false, false, false); isProject = false
+              "
             >
               <i class="pi pi-plus"></i>
               add workstream
@@ -44,7 +46,12 @@
                 <img src="assets/images/Danger.svg" alt="" />
                 <span>Challenges</span>
               </button>
-              <button (click)="openAddWorkstreamSidebar(true, false, false)">
+              <button
+                (click)="
+                  openAddWorkstreamSidebar(true, false, false);
+                  isProject = false
+                "
+              >
                 <i class="pi pi-pencil"></i>
                 <!-- <img src="assets/images/button.svg" alt="" /> -->
               </button>
@@ -69,7 +76,9 @@
           <div class="executive-summary-body-content">
             <button
               class="add-new-project-btn"
-              (click)="openAddWorkstreamSidebar(false, true, false)"
+              (click)="
+                openAddWorkstreamSidebar(false, true, false); isProject = true
+              "
             >
               <i class="pi pi-plus"></i>
               add new project
@@ -80,7 +89,8 @@
                 <stc-apps-executive-summary-card
                   (openProjSidebar)="
                     openProjSidebar($event);
-                    openAddWorkstreamSidebar(false, false, true)
+                    openAddWorkstreamSidebar(false, false, true);
+                    isProject = true
                   "
                   [executiveCard]="item"
                 />
@@ -242,6 +252,8 @@
       [isEditWorkStream]="isEditWorkStream"
       [isAddProject]="isAddProject"
       [isEditProject]="isEditProject"
+      type=""
+      [isProject]="isProject"
     />
   </div>
 </p-sidebar>

@@ -1,6 +1,7 @@
 <div
   class="progress-circule multi-ring-chart"
   [class.custom-progress-circule]="progressWidth() !== ''"
+  [class.debt-progress-circule]="isDebtCard()"
   [class.progresscircule]="!isWorkStream()"
   role="progresscircule"
   [style]="'--value:' + progressValue()"
@@ -21,7 +22,7 @@
     }"
     >{{
       isWorkStream()
-        ? percentValue()
+        ? percentValue() + '%'
         : (progressValue() / 100 | percent : '1.0-2')
     }}</span
   >

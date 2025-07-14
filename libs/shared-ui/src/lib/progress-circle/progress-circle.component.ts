@@ -17,6 +17,7 @@ export class ProgressCircleComponent {
   progressWidth: InputSignal<string> = input('');
   fontFamily: InputSignal<string> = input('');
   isWorkStream: InputSignal<boolean> = input(false);
+  isDebtCard: InputSignal<boolean> = input(false);
   progressValueColor: InputSignal<string> = input('');
   secondaryValue: InputSignal<number | undefined, number | undefined> = input<
     number | undefined

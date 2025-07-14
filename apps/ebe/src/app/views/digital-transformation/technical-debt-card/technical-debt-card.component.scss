@@ -1,12 +1,11 @@
 @import '../../../../styles/fonts.scss';
-.qa-compilance-card {
-  // text-align: center;
+.technical-debt-card {
   background-color: var(--stc-light-grey-color5);
-  border-radius: 10px;
   color: #000;
+  border-radius: 10px;
   padding: 20px 0;
-  // margin-bottom: 20px;
   &-header {
+    border-bottom: 2px solid var(--stc-light-grey-color6);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -19,25 +18,19 @@
       gap: 10px;
       padding-left: 20px;
     }
-    .right {
-      display: flex;
-      align-items: center;
-      gap: 5px;
-      margin-right: 20px;
-    }
     .heighlights-btn {
       background-color: transparent;
       border: 0;
       border-radius: 5px;
-      padding: 5px 10px;
+      padding: 5px 15px;
       display: flex;
       align-items: center;
       cursor: pointer;
       font-size: 0.9rem;
-      gap: 5px;
-      // margin-right: 20px;
       @extend .stcFont;
       text-transform: capitalize;
+      gap: 5px;
+      margin-right: 20px;
       img {
         width: 20px;
       }
@@ -56,46 +49,75 @@
     background-color: #fff;
     border-radius: 10px;
     margin: 0 20px;
-    padding: 20px;
-    .details {
-      margin-top: 30px;
-      // display: flex;
-      // align-items: center;
-      display: grid;
-      grid-template-columns: 33.3333333% 33.3333333% 33.3333333%;
+    padding: 20px 20px 20px 20px;
+    .card-chart {
+      display: flex;
+      align-items: center;
+      gap: 10px;
       justify-content: center;
-      // gap: 15px;
-      .requested {
+    }
+    &-totalNum {
+      background-color: #f9fafb;
+      border-radius: 10px;
+      padding: 15px 25px;
+      span {
+        @extend .stcFont;
+        text-transform: capitalize;
+        color: #64748b;
+        font-size: 1rem;
+        display: inline-block;
+        text-align: center;
+      }
+      p {
+        margin: 0;
+        @extend .stcFont;
+        font-size: 1.5rem;
+        text-align: center;
+        font-weight: bold;
+        padding-top: 5px;
+      }
+    }
+    .card-details {
+      display: grid;
+      grid-template-columns: 25% 25% 25% 25%;
+      justify-content: center;
+      margin-top: 25px;
+      .closed {
         border-right: 1px solid #ebebef;
         text-align: center;
         &:last-child {
           border-right: 0;
         }
-      }
-      p {
-        margin: 0;
-        height: 48px;
-        color: #64748b;
-        @extend .stcFont;
-        text-transform: capitalize;
-        font-size: 0.9rem;
-      }
-      span {
-        color: #64748b;
-        @extend .stcFont;
-        font-weight: bold;
-        font-size: 1.6rem;
-        &.completed {
-          color: #22c55e;
+        p {
+          margin: 0;
+          @extend .stcFont;
+          text-transform: capitalize;
+          color: #64748b;
+          font-size: 0.7rem;
+          height: 40px;
         }
-        &.missing {
-          color: #ef4444;
+        span {
+          margin: 0;
+          @extend .stcFont;
+          display: inline-block;
+          text-align: center;
+          font-size: 1.2rem;
+          text-align: center;
+          font-weight: bold;
+          padding-top: 5px;
+          color: #22c55e;
         }
       }
     }
   }
 }
-::ng-deep .qa-compilance-card-sidebar {
+.chart-title {
+  @extend .stcFont;
+  text-transform: capitalize;
+  color: #121212;
+  font-size: 1rem;
+}
+::ng-deep .technical-debt-card-sidebar {
   .p-sidebar-header {
     display: none;
   }
@@ -135,20 +157,5 @@
       cursor: pointer;
       color: var(--stc-light-grey-color3);
     }
-  }
-}
-.edit-btn {
-  padding: 0;
-  border: 0;
-  border-radius: 5px;
-  background: #4f008c26;
-  width: 40px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  i {
-    font-size: 1rem;
-    color: #4f008c;
   }
 }
