@@ -203,7 +203,7 @@ export class MilestonesComponent
   }
   getActionsBasedOnRole(): AllowedActions[] {
     if (this.milestonesService.isDTAdmin) {
-      return [];
+      return ['edit', 'delete'];
     } else if (
       this.milestonesService.checkIsBusinessSpoc() ||
       this.milestonesService.checkIsDirector()
