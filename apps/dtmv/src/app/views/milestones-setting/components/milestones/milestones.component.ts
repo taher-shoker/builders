@@ -159,12 +159,18 @@ export class MilestonesComponent
     this.previousPath = this.router.url;
     if (this.route.snapshot.data['state'] == 'archive') {
       this.readOnly = true;
-    } else this.readOnly = false;
+      this.bannerDataService.updateData({
+        title: 'Archived Milestones',
+        text: '',
+      });
+    } else {
+      this.bannerDataService.updateData({ title: 'milestones', text: '' });
+      this.readOnly = false;
+    }
 
     this.searchForm();
     this.getMilestones();
     this.getPendingTasks();
-    this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
     this.dialogService.modals = [];
     this.getAllTeams();

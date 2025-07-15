@@ -291,7 +291,7 @@
       {{ item[header.key] }}
       } } }
     </td>
-    } } @else if(header.type === 'actions' && !readOnly &&
+    } } @else if(header.type === 'actions' &&
     ((!header?.actions?.includes('details') &&!item.latestWorkflowId) ||
     (header?.actions?.includes('details')))) {
 

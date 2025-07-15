@@ -23,7 +23,7 @@ const routes: Routes = [
       {
         path: 'archived-milestones',
         canActivate: [AuthGuard],
-        data: { state: 'archive' },
+        data: { state: 'archive', breadcrumb: 'archive' },
         loadChildren: () =>
           import('../milestones-setting/milestones-setting.module').then(
             (m) => m.MilestonesSettingModule
