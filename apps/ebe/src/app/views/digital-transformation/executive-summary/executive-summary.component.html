@@ -3,7 +3,7 @@
     <p-accordionTab>
       <ng-template pTemplate="header">
         <div class="main-header" (click)="$event.stopPropagation()">
-          <p>AI&DS Dashboard</p>
+          <p>{{ mainTitle()[0] }}</p>
           <div>
             <button
               class="add-workstream-btn"
@@ -23,19 +23,25 @@
         </div>
       </ng-template>
       <div class="executive-summary-body">
-        @for (summaryData of executiveSummaryData.aiDashboard; track $index) {
+        @for (summaryData of dsDashboard; track $index) {
         <div class="executive-summary-body-container">
           <div class="executive-summary-body-title">
             <div class="left-side">
-              <p class="title2">{{ summaryData.title }}</p>
+              <p class="title2">{{ summaryData.businessUnit }}</p>
+              @if(summaryData.businessUnitStatus){
               <stc-apps-status-card
-                [status]="summaryData.status"
+                [status]="summaryData.businessUnitStatus"
                 [backgroundColor]="
-                  getStatusStyle(summaryData.status).backgroundColor
+                  getStatusStyle(summaryData.businessUnitStatus).backgroundColor
                 "
-                [textColor]="getStatusStyle(summaryData.status).textColor"
-                [borderColor]="getStatusStyle(summaryData.status).borderColor"
+                [textColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).textColor
+                "
+                [borderColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).borderColor
+                "
               />
+              }
             </div>
             <div class="right-side">
               <button (click)="openSidebar1(summaryData, 'highlights')">
@@ -59,17 +65,17 @@
           </div>
           <div class="executive-summary-body-sub-title">
             <div class="left-side">
-              <p>weight: {{ summaryData.weight }}</p>
+              <p>weight: {{ summaryData.weight }}%</p>
             </div>
             <div class="right-side">
               <p>
                 planned:
-                <span class="planned">{{ summaryData.planned }}</span>
+                <span class="planned">{{ summaryData.planned }}%</span>
               </p>
               <img src="assets/images/Component 2.svg" alt="" />
               <p>
                 actual:
-                <span class="actual">{{ summaryData.actual }}</span>
+                <span class="actual">{{ summaryData.actual }}%</span>
               </p>
             </div>
           </div>
@@ -84,7 +90,7 @@
               add new project
             </button>
             <div class="row">
-              @for (item of summaryData.details; track $index) {
+              @for (item of summaryData.projects; track $index) {
               <div class="col-lg-6 col-md-6 col-sm-12">
                 <stc-apps-executive-summary-card
                   (openProjSidebar)="
@@ -105,7 +111,7 @@
     <p-accordionTab>
       <ng-template pTemplate="header">
         <div class="main-header" (click)="$event.stopPropagation()">
-          <p>IT Platforms Dashboard</p>
+          <p>{{ mainTitle()[1] }}</p>
           <div>
             <button
               class="add-workstream-btn"
@@ -123,19 +129,25 @@
         </div>
       </ng-template>
       <div class="executive-summary-body">
-        @for (summaryData of executiveSummaryData.itPlatforms; track $index) {
+        @for (summaryData of itPlatformDashboard; track $index) {
         <div class="executive-summary-body-container">
           <div class="executive-summary-body-title">
             <div class="left-side">
-              <p class="title2">{{ summaryData.title }}</p>
+              <p class="title2">{{ summaryData.businessUnit }}</p>
+              @if(summaryData.businessUnitStatus){
               <stc-apps-status-card
-                [status]="summaryData.status"
+                [status]="summaryData.businessUnitStatus"
                 [backgroundColor]="
-                  getStatusStyle(summaryData.status).backgroundColor
+                  getStatusStyle(summaryData.businessUnitStatus).backgroundColor
                 "
-                [textColor]="getStatusStyle(summaryData.status).textColor"
-                [borderColor]="getStatusStyle(summaryData.status).borderColor"
+                [textColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).textColor
+                "
+                [borderColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).borderColor
+                "
               />
+              }
             </div>
             <div class="right-side">
               <button (click)="openSidebar1(summaryData, 'highlights')">
@@ -154,17 +166,17 @@
           </div>
           <div class="executive-summary-body-sub-title">
             <div class="left-side">
-              <p>weight: {{ summaryData.weight }}</p>
+              <p>weight: {{ summaryData.weight }}%</p>
             </div>
             <div class="right-side">
               <p>
                 planned:
-                <span class="planned">{{ summaryData.planned }}</span>
+                <span class="planned">{{ summaryData.planned }}%</span>
               </p>
               <img src="assets/images/Component 2.svg" alt="" />
               <p>
                 actual:
-                <span class="actual">{{ summaryData.actual }}</span>
+                <span class="actual">{{ summaryData.actual }}%</span>
               </p>
             </div>
           </div>
@@ -177,7 +189,7 @@
               add new project
             </button>
             <div class="row">
-              @for (item of summaryData.details; track $index) {
+              @for (item of summaryData.projects; track $index) {
               <div class="col-lg-6 col-md-6 col-sm-12">
                 <stc-apps-executive-summary-card
                   (openProjSidebar)="
@@ -213,8 +225,29 @@
         <i class="pi pi-times"></i>
       </div>
     </div>
-    <div class="content">
-      <h4>{{ sidebarType }}</h4>
+    <div class="content mt-4">
+      @if(sidebarType === 'highlights'){ @for (highlight of highlights; track
+      $index) {
+      <div class="data">
+        @if(highlight.title){
+        <span> {{ highlight.title }}: </span>
+        }
+        {{ highlight.value }}
+      </div>
+      <br />
+      } @empty {
+      <h3 class="empty-heightlights">there are no highlights</h3>
+      } } @else { @for (challenge of challenges; track $index) {
+      <div class="data">
+        @if(challenge.title){
+        <span> {{ challenge.title }}: </span>
+        }
+        {{ challenge.value }}
+      </div>
+      <br />
+      } @empty {
+      <h3 class="empty-heightlights">there are no challenges</h3>
+      } }
     </div>
   </div>
 </p-sidebar>

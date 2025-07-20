@@ -31,11 +31,11 @@
     <h4>{{ currTap().name }}</h4>
   </div> -->
   @if(currTap().id === 1){
-  <stc-apps-executive-summary />
-  } @else {
+  <stc-apps-executive-summary [mainTitle]="firstTapTitles" />
+  } @else if(currTap().id !== 8) {
   <section class="qa-compilance">
     <div class="qa-compilance-header">
-      <p class="main-title">{{ tabTitle }}</p>
+      <p class="main-title">{{ currTap().value }}</p>
       <button
         class="add-workstream-btn"
         (click)="showWorkStreamSidebar(); isEdit = false"
@@ -44,35 +44,33 @@
         add workstream
       </button>
     </div>
-    @if(currTap().id === 2 || currTap().id === 3){
+    @if(tapsDetailsData.length !== 0){
     <div class="kpi-container">
-      @for (card of qAComplianceData; track card.id) {
+      @for (card of tapsDetailsData; track card.businessUnit) {
       <div class="kpi-container-card">
         <stc-apps-qa-compilance-card
           (sidebarOpened)="showWorkStreamSidebar(); isEdit = true"
           [QAComplianceCardData]="card"
         />
       </div>
-      } @empty {
-      <h3>there is no data</h3>
-      }
-    </div>
-    } @else if(currTap().id === 4 || currTap().id === 5 || currTap().id === 6){
-    <div class="kpi-container">
-      @for (card of technicalDebtDashboardModel; track card.id) {
-      <div class="kpi-container-card">
-        <stc-apps-technical-debt-card
-          [cardData]="card"
-          [currTap]="currTap().id"
-        />
-      </div>
-      } @empty {
-      <h3>there is no data</h3>
       }
     </div>
     } @else {
-    <h3>there is no data</h3>
+    <h3 class="empty-data-msg">there are no data</h3>
     }
+  </section>
+  } @else {
+  <section class="qa-compilance">
+    <div class="qa-compilance-header">
+      <p class="main-title">{{ currTap().value }}</p>
+      <button class="add-workstream-btn">
+        <i class="pi pi-plus"></i>
+        add new
+      </button>
+    </div>
+    <div class="qa-compilance-content">
+      <stc-apps-key-challenges-table />
+    </div>
   </section>
   }
 </section>

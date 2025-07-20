@@ -28,7 +28,7 @@
     background-color: #fff;
     color: var(--stc-purple-light-color);
     border-bottom: 0;
-    border-radius: 10px;
+    border-radius: 20px;
     transition: 0.3s;
     border: 0;
     padding: 0;
@@ -240,6 +240,24 @@
       cursor: pointer;
       color: var(--stc-light-grey-color3);
     }
+  }
+  .content {
+    .data {
+      @extend .stcFont;
+      color: #000000;
+      span {
+        font-weight: bold;
+      }
+    }
+  }
+  .empty-heightlights {
+    @extend .stcFont;
+    color: #000000;
+    text-transform: capitalize;
+    font-size: 1.1rem;
+    text-align: center;
+    font-style: italic;
+    margin: 0;
   }
 }
 .add-new-project-btn {

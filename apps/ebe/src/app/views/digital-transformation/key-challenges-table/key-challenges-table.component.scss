@@ -1,0 +1,71 @@
+@import '../../../../styles/fonts.scss';
+.key-challenges-table {
+  color: #000;
+  table {
+    width: 100%;
+    thead {
+      background: #4f008c26;
+      padding: 5px 10px;
+      th {
+        padding: 10px 0;
+        border-right: 1px solid #cdb7db;
+        text-align: center;
+        color: var(--stc-purple-color);
+        text-transform: capitalize;
+        font-weight: 600;
+        font-size: 0.9rem;
+        @extend .stcFont;
+        &:first-child {
+          border-top-left-radius: 10px;
+          // padding-left: 10px;
+        }
+        &:last-child {
+          border-right: 0;
+          border-top-right-radius: 10px;
+          // padding-right: 10px;
+        }
+      }
+    }
+    tbody {
+      position: relative;
+      tr {
+        border-bottom: 1px solid #e2e8f0;
+        &:last-child {
+          border-bottom: 0;
+        }
+      }
+      td {
+        padding: 10px;
+        @extend .stcFont;
+        &.action-td {
+          i {
+            font-size: 1.1rem;
+            cursor: pointer;
+          }
+          .pi-pencil {
+            color: var(--stc-purple-color);
+            display: inline-block;
+            margin-right: 15px;
+          }
+          .pi-trash {
+            color: var(--stc-red-color2);
+          }
+        }
+      }
+    }
+  }
+}
+.empty-data-msg {
+  color: var(--stc-purple-color);
+  text-transform: capitalize;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+  font-size: 1.3rem;
+  @extend .stcFont;
+  padding: 15px 0 5px;
+}
+.sort-img {
+  display: inline-block;
+  margin-left: 5px;
+}

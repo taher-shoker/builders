@@ -1,3 +1,8 @@
+export interface IDigitalTransformationTap {
+  id: number;
+  pageName: string;
+  subpageName: string;
+}
 export interface DigitalTransformationTapModel {
   id: number;
   name: string;
@@ -127,4 +132,38 @@ export interface CapabilitiesHandoverDataModel {
   delayed: number;
   onhold: number;
   totalCapabilities: number;
+}
+export interface pageDetailsModel {
+  businessUnit: string;
+  businessUnitStatus: string | null;
+  weight: number | null;
+  planned: number | null;
+  actual: number | null;
+  businessUnitHighlights: string | null;
+  businessUnitChallenges: string | null;
+  projects: pageDetailsProjectModel[];
+}
+export interface pageDetailsProjectModel {
+  projectName: string;
+  projectStatus: string;
+  projectHighlights: string | null;
+  totalCapabilities: number | null;
+  percentage: number | null;
+  totalTD: number | null;
+  totalABL: number | null;
+  metrics: pageDetailsProjectMetricsModel[];
+}
+export interface pageDetailsProjectMetricsModel {
+  name: string;
+  value: number;
+}
+export interface KeyChallengesModel {
+  id: number;
+  challengeId: number;
+  description: string;
+  raisedBy: string;
+  owner: string;
+  dateRaised: string;
+  impact: string;
+  supportNeeded: string;
 }

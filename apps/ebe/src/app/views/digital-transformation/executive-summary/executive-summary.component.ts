@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { StatusCardComponent } from '../status-card/status-card.component';
@@ -9,11 +9,15 @@ import {
   AIDashboardModel,
   ExecutiveCardModel,
   ExecutiveSummaryDataModel,
+  pageDetailsModel,
+  pageDetailsProjectModel,
   STATUS_STYLE_MAP,
   WorkstreamStatus,
 } from '../../../models/digital-transformation';
 import { SidebarModule } from 'primeng/sidebar';
 import { AddWorkstreamFormComponent } from '../add-workstream-form/add-workstream-form.component';
+import { DigitalTransformationService } from '../../../services/digital-transformation.service';
+import { Subject, takeUntil } from 'rxjs';
 @Component({
   selector: 'stc-apps-executive-summary',
   standalone: true,
@@ -29,7 +33,7 @@ import { AddWorkstreamFormComponent } from '../add-workstream-form/add-workstrea
   templateUrl: './executive-summary.component.html',
   styleUrl: './executive-summary.component.scss',
 })
-export class ExecutiveSummaryComponent {
+export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   sidebarVisible1 = false;
   showAddWorkstreamSidebar = false;
   currentSideBarTitle = '';
@@ -38,7 +42,10 @@ export class ExecutiveSummaryComponent {
   isEditWorkStream!: boolean;
   isEditProject!: boolean;
   isAddProject!: boolean;
+  endSubs$: Subject<any> = new Subject();
   isProject = false;
+  digitalTransformationService = inject(DigitalTransformationService);
+  mainTitle = input<string[]>([]);
   toggleAccordion(index: number, event: Event) {
     event.stopPropagation();
     this.activeAccordionIndex =
@@ -134,11 +141,48 @@ export class ExecutiveSummaryComponent {
       },
     ],
   };
+  dsDashboard: pageDetailsModel[] = [];
+  itPlatformDashboard: pageDetailsModel[] = [];
+  private getDigitalTransformationDetailsData(pageId: number) {
+    this.digitalTransformationService
+      .getDigitalTransformationDetailsData(pageId)
+      .pipe(takeUntil(this.endSubs$))
+      .subscribe({
+        next: (res: pageDetailsModel[]) => {
+          if (pageId === 1) {
+            this.dsDashboard = res;
+          } else {
+            this.itPlatformDashboard = res;
+          }
+        },
+        error: (error) => {
+          console.log(error);
+        },
+      });
+  }
+  ngOnDestroy(): void {
+    this.endSubs$.complete();
+  }
+  ngOnInit(): void {
+    this.getDigitalTransformationDetailsData(1);
+    this.getDigitalTransformationDetailsData(2);
+  }
   sidebarType = '';
-  openSidebar1(summaryData: AIDashboardModel, type: string) {
+  currentSideBarContent = '';
+  highlights: { id: number; title: string; value: string }[] = [];
+  challenges: { id: number; title: string; value: string }[] = [];
+  openSidebar1(summaryData: pageDetailsModel, type: string) {
     this.sidebarType = type;
     this.sidebarVisible1 = true;
-    this.currentSideBarTitle = summaryData.title;
+    this.currentSideBarTitle = summaryData.businessUnit;
+    if (summaryData.businessUnitHighlights) {
+      const cleaned = summaryData.businessUnitHighlights.replace(/�/g, ' ');
+      this.highlights = JSON.parse(cleaned);
+    }
+    if (summaryData.businessUnitChallenges) {
+      const cleaned2 = summaryData.businessUnitChallenges.replace(/�/g, ' ');
+      this.challenges = JSON.parse(cleaned2);
+    }
   }
   getStatusStyle(status: string) {
     const normalized = status?.toLowerCase();
@@ -169,7 +213,7 @@ export class ExecutiveSummaryComponent {
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
     console.log('Workstream Data:', workStreamData);
   }
-  openProjSidebar(card: ExecutiveCardModel) {
+  openProjSidebar(card: pageDetailsProjectModel) {
     console.log(card);
   }
 }

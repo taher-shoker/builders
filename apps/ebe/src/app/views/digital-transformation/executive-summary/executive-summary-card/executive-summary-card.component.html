@@ -1,16 +1,18 @@
 <div class="executive-summary-card">
   <div class="head">
     <p class="title m-0">
-      {{ executiveCard().title }}
+      {{ executiveCard().projectName }}
     </p>
     <div class="status2">
       <stc-apps-status-card
-        [status]="executiveCard().status"
+        [status]="executiveCard().projectStatus"
         [backgroundColor]="
-          getStatusStyle(executiveCard().status).backgroundColor
+          getStatusStyle(executiveCard().projectStatus).backgroundColor
         "
-        [textColor]="getStatusStyle(executiveCard().status).textColor"
-        [borderColor]="getStatusStyle(executiveCard().status).borderColor"
+        [textColor]="getStatusStyle(executiveCard().projectStatus).textColor"
+        [borderColor]="
+          getStatusStyle(executiveCard().projectStatus).borderColor
+        "
       />
       <button class="edit-proj-btn" (click)="openAddWorkstreamSidebar()">
         <i class="pi pi-pencil"></i>

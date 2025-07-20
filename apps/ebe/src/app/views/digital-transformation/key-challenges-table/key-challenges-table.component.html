@@ -1,0 +1,45 @@
+<div class="key-challenges-table">
+  <table>
+    <thead>
+      <th>
+        ID
+        <img src="assets/images/Vector.svg" class="sort-img" />
+      </th>
+      <th>description</th>
+      <th>raised by</th>
+      <th>owner</th>
+      <th>
+        date raised<img src="assets/images/Vector.svg" class="sort-img" />
+      </th>
+      <th>impact</th>
+      <th>support needed</th>
+      <th>actions</th>
+    </thead>
+    @if(!isEmpty){
+    <tbody>
+      @for (challenge of challengesData; track challenge.id) {
+      <tr>
+        <td style="width: 5%; text-align: center">{{ challenge.id }}</td>
+        <td style="width: 25%">{{ challenge.description }}</td>
+        <td style="width: 10%; text-align: center">{{ challenge.raisedBy }}</td>
+        <td style="width: 7%; text-align: center">{{ challenge.owner }}</td>
+        <td style="width: 10%; text-align: center">
+          {{ challenge.dateRaised }}
+        </td>
+        <td style="width: 7%; text-align: center">{{ challenge.impact }}</td>
+        <td style="width: 25%">
+          <p>{{ challenge.supportNeeded }}</p>
+        </td>
+        <td style="width: 15%; text-align: center" class="action-td">
+          <i class="pi pi-pencil"></i>
+          <i class="pi pi-trash"></i>
+        </td>
+      </tr>
+      }
+    </tbody>
+    }
+  </table>
+  @if(isEmpty){
+  <h4 class="empty-data-msg">there are no data in the table</h4>
+  }
+</div>

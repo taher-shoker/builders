@@ -2,6 +2,7 @@
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
+  margin-bottom: 20px;
   .head {
     display: flex;
     align-items: center;
@@ -30,4 +31,7 @@
     font-size: 1rem;
     color: #4f008c;
   }
+}
+.progress-bar {
+  padding: 0 20px;
 }

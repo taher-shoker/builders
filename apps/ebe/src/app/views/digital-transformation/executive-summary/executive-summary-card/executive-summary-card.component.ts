@@ -9,7 +9,10 @@ import {
 import { CommonModule } from '@angular/common';
 import { StatusCardComponent } from '../../status-card/status-card.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { ExecutiveCardModel } from '../../../../models/digital-transformation';
+import {
+  ExecutiveCardModel,
+  pageDetailsProjectModel,
+} from '../../../../models/digital-transformation';
 import {
   STATUS_STYLE_MAP,
   WorkstreamStatus,
@@ -41,16 +44,20 @@ interface Index {
   styleUrl: './executive-summary-card.component.scss',
 })
 export class ExecutiveSummaryCardComponent implements OnInit {
-  executiveCard: InputSignal<ExecutiveCardModel> =
-    input.required<ExecutiveCardModel>();
+  executiveCard: InputSignal<pageDetailsProjectModel> =
+    input.required<pageDetailsProjectModel>();
   vactual!: number;
   vplanned!: number;
   difference!: number;
   data!: ProgressInfo;
-  @Output() openProjSidebar = new EventEmitter<ExecutiveCardModel>();
+  @Output() openProjSidebar = new EventEmitter<pageDetailsProjectModel>();
   ngOnInit() {
-    this.vactual = this.executiveCard().actual;
-    this.vplanned = this.executiveCard().planned;
+    this.vactual = this.executiveCard().metrics.filter(
+      (val) => val.name === 'actual'
+    )[0].value;
+    this.vplanned = this.executiveCard().metrics.filter(
+      (val) => val.name === 'planned'
+    )[0].value;
     this.difference = Math.abs(this.vplanned - this.vactual);
     this.data = {
       prefixText: '',
@@ -59,45 +66,47 @@ export class ExecutiveSummaryCardComponent implements OnInit {
       suffixValue: 0,
       progressValue: this.vactual,
       barColor:
-        this.executiveCard().status.toLowerCase() === 'at risk'
+        this.executiveCard().projectStatus.toLowerCase() === 'at risk'
           ? '#EAB308'
-          : this.executiveCard().status.toLowerCase() === 'on track'
+          : this.executiveCard().projectStatus.toLowerCase() === 'on track'
           ? '#22C55E'
-          : this.executiveCard().status.toLowerCase() === 'delayed'
+          : this.executiveCard().projectStatus.toLowerCase() === 'delayed'
           ? '#EF4444'
-          : this.executiveCard().status.toLowerCase() === 'not started/on hold'
+          : this.executiveCard().projectStatus.toLowerCase() ===
+            'not started/on hold'
           ? '#6B7280'
           : '#06B6D4',
       bgBarColor:
-        this.executiveCard().status.toLowerCase() === 'at risk'
+        this.executiveCard().projectStatus.toLowerCase() === 'at risk'
           ? '#FEF9C3'
-          : this.executiveCard().status.toLowerCase() === 'on track'
+          : this.executiveCard().projectStatus.toLowerCase() === 'on track'
           ? '#dcfce7'
-          : this.executiveCard().status.toLowerCase() === 'delayed'
+          : this.executiveCard().projectStatus.toLowerCase() === 'delayed'
           ? '#FEF2F2'
-          : this.executiveCard().status.toLowerCase() === 'not started/on hold'
+          : this.executiveCard().projectStatus.toLowerCase() ===
+            'not started/on hold'
           ? '#F3F4F6'
           : '#CFFAFE',
       indexes: [
         {
           caption: 'Actual',
-          value: this.executiveCard().actual,
+          value: this.vactual,
           position: 'up',
           actualBarColor:
-            this.executiveCard().status.toLowerCase() === 'at risk'
+            this.executiveCard().projectStatus.toLowerCase() === 'at risk'
               ? '#EAB308'
-              : this.executiveCard().status.toLowerCase() === 'on track'
+              : this.executiveCard().projectStatus.toLowerCase() === 'on track'
               ? '#22C55E'
-              : this.executiveCard().status.toLowerCase() === 'delayed'
+              : this.executiveCard().projectStatus.toLowerCase() === 'delayed'
               ? '#EF4444'
-              : this.executiveCard().status.toLowerCase() ===
+              : this.executiveCard().projectStatus.toLowerCase() ===
                 'not started/on hold'
               ? '#6B7280'
               : '#06B6D4',
         },
         {
           caption: `Planned`,
-          value: this.executiveCard().planned,
+          value: this.vplanned,
           position: 'down',
           actualBarColor: '#000000',
         },

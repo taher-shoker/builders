@@ -117,3 +117,12 @@
     }
   }
 }
+.empty-data-msg {
+  color: var(--stc-purple-color);
+  text-transform: capitalize;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+  font-size: 1.3rem;
+  @extend .stcFont;
+}

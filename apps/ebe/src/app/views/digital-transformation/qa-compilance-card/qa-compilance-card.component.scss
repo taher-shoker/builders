@@ -16,7 +16,7 @@
     .left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 5px;
       padding-left: 20px;
     }
     .right {
@@ -45,6 +45,10 @@
       color: #fff;
     }
     &-title {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 50px;
       @extend .stcFont;
       color: var(--stc-dark-grey-color);
       font-size: 1.2rem;
@@ -57,12 +61,52 @@
     border-radius: 10px;
     margin: 0 20px;
     padding: 20px;
+    .project-name-title {
+      margin: 0;
+      color: #121212;
+      text-transform: capitalize;
+      margin-bottom: 20px;
+      @extend .stcFont;
+    }
+    .totalTDCard {
+      display: flex;
+      align-items: center;
+      // justify-content: space-between;
+      gap: 10px;
+    }
+    &:last-child {
+      margin-top: 20px;
+    }
+    .totaltd-card {
+      background-color: #f9fafb;
+      border-radius: 10px;
+      padding: 20px 20px 15px 20px;
+      width: 100%;
+      text-align: center;
+      p {
+        margin: 0;
+        text-transform: capitalize;
+        color: #64748b;
+        @extend .stcFont;
+        font-size: 1rem;
+      }
+      .val {
+        @extend .stcFont;
+        font-size: 1.7rem;
+        font-weight: bold;
+      }
+    }
+    .completed-text {
+      position: relative;
+      left: -9px;
+    }
     .details {
       margin-top: 30px;
       // display: flex;
       // align-items: center;
+      // justify-content: center;
       display: grid;
-      grid-template-columns: 33.3333333% 33.3333333% 33.3333333%;
+      // grid-template-columns: 33.3333333% 33.3333333% 33.3333333%;
       justify-content: center;
       // gap: 15px;
       .requested {
@@ -71,25 +115,33 @@
         &:last-child {
           border-right: 0;
         }
-      }
-      p {
-        margin: 0;
-        height: 48px;
-        color: #64748b;
-        @extend .stcFont;
-        text-transform: capitalize;
-        font-size: 0.9rem;
-      }
-      span {
-        color: #64748b;
-        @extend .stcFont;
-        font-weight: bold;
-        font-size: 1.6rem;
-        &.completed {
-          color: #22c55e;
+        p {
+          margin: 0;
+          height: 48px;
+          color: #64748b;
+          @extend .stcFont;
+          text-transform: capitalize;
+          font-size: 0.8rem;
+          &.actual-title {
+            height: 20px;
+          }
         }
-        &.missing {
-          color: #ef4444;
+        span {
+          color: #64748b;
+          @extend .stcFont;
+          font-weight: bold;
+          font-size: 1.6rem;
+        }
+        &:nth-child(2) {
+          // padding: 0 15px;
+          span {
+            color: #22c55e;
+          }
+        }
+        &:last-child {
+          span {
+            color: #ef4444;
+          }
         }
       }
     }
@@ -136,6 +188,25 @@
       color: var(--stc-light-grey-color3);
     }
   }
+  .content {
+    margin-top: 20px;
+    .data {
+      @extend .stcFont;
+      color: #000000;
+      span {
+        font-weight: 600;
+      }
+    }
+  }
+  .empty-heightlights {
+    @extend .stcFont;
+    color: #000000;
+    text-transform: capitalize;
+    font-size: 1.1rem;
+    text-align: center;
+    font-style: italic;
+    margin: 0;
+  }
 }
 .edit-btn {
   padding: 0;
@@ -151,4 +222,12 @@
     font-size: 1rem;
     color: #4f008c;
   }
+}
+.popover-section {
+  color: #222222;
+  @extend .stcFont;
+  font-size: 16px;
+  max-width: 400px;
+  word-spacing: 3px;
+  word-break: break-all;
 }
