@@ -69,3 +69,9 @@
   display: inline-block;
   margin-left: 5px;
 }
+::ng-deep .challenges-pagination {
+  justify-content: flex-end;
+  .p-paginator-page {
+    border-radius: 50%;
+  }
+}

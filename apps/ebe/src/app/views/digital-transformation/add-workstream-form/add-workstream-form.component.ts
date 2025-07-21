@@ -6,7 +6,6 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
@@ -17,6 +16,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { AddWorkstreamFormModel } from '../../../models/digital-transformation';
+import { CalendarModule } from 'primeng/calendar';
 interface Status {
   name: string;
   value: string;
@@ -24,7 +24,7 @@ interface Status {
 @Component({
   selector: 'stc-apps-add-workstream-form',
   standalone: true,
-  imports: [CommonModule, DropdownModule, ReactiveFormsModule],
+  imports: [CommonModule, DropdownModule, ReactiveFormsModule, CalendarModule],
   templateUrl: './add-workstream-form.component.html',
   styleUrl: './add-workstream-form.component.scss',
 })
@@ -92,6 +92,15 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
             [Validators.required, Validators.min(0), Validators.max(100)],
           ],
         });
+      } else if (this.type() === 'challenges') {
+        this.addWorkstreamForm = this.formBuilder.group({
+          description: [''],
+          raisedBy: [''],
+          owner: [''],
+          dateRaised: [''],
+          impact: [''],
+          supportNeeded: [''],
+        });
       } else {
         this.addWorkstreamForm = this.formBuilder.group({
           title: ['', [Validators.required]],
@@ -147,6 +156,15 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
             [Validators.required, Validators.min(0), Validators.max(100)],
           ],
         });
+      } else if (this.type() === 'challenges') {
+        this.addWorkstreamForm = this.formBuilder.group({
+          description: ['', [Validators.required]],
+          raisedBy: [''],
+          owner: [''],
+          dateRaised: [''],
+          impact: [''],
+          supportNeeded: [''],
+        });
       } else {
         this.addWorkstreamForm = this.formBuilder.group({
           title: ['', [Validators.required]],
@@ -174,6 +192,9 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
     if (invalidChars.includes(event.key)) {
       event.preventDefault();
     }
+  }
+  get description() {
+    return this.addWorkstreamForm.get('description');
   }
   get title() {
     return this.addWorkstreamForm.get('title');

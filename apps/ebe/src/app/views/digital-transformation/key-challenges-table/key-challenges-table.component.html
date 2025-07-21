@@ -1,14 +1,14 @@
 <div class="key-challenges-table">
   <table>
     <thead>
-      <th>
+      <th (click)="sort('id')" style="cursor: pointer">
         ID
         <img src="assets/images/Vector.svg" class="sort-img" />
       </th>
       <th>description</th>
       <th>raised by</th>
       <th>owner</th>
-      <th>
+      <th (click)="sort('date')" style="cursor: pointer">
         date raised<img src="assets/images/Vector.svg" class="sort-img" />
       </th>
       <th>impact</th>
@@ -17,7 +17,8 @@
     </thead>
     @if(!isEmpty){
     <tbody>
-      @for (challenge of challengesData; track challenge.id) {
+      @if(challengesData && challengesData.data){ @for (challenge of
+      challengesData.data; track challenge.id) {
       <tr>
         <td style="width: 5%; text-align: center">{{ challenge.id }}</td>
         <td style="width: 25%">{{ challenge.description }}</td>
@@ -28,14 +29,14 @@
         </td>
         <td style="width: 7%; text-align: center">{{ challenge.impact }}</td>
         <td style="width: 25%">
-          <p>{{ challenge.supportNeeded }}</p>
+          <p class="m-0">{{ challenge.supportNeeded }}</p>
         </td>
         <td style="width: 15%; text-align: center" class="action-td">
           <i class="pi pi-pencil"></i>
           <i class="pi pi-trash"></i>
         </td>
       </tr>
-      }
+      } }
     </tbody>
     }
   </table>
@@ -43,3 +44,12 @@
   <h4 class="empty-data-msg">there are no data in the table</h4>
   }
 </div>
+@if(challengesData && challengesData.data){
+<p-paginator
+  (onPageChange)="onPageChange($event)"
+  [first]="first"
+  [rows]="rows"
+  [totalRecords]="challengesData.totalElements"
+  styleClass="challenges-pagination"
+/>
+}

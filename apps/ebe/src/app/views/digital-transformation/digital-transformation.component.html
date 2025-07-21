@@ -63,13 +63,13 @@
   <section class="qa-compilance">
     <div class="qa-compilance-header">
       <p class="main-title">{{ currTap().value }}</p>
-      <button class="add-workstream-btn">
+      <button class="add-workstream-btn" (click)="showChallengesSidebar = true">
         <i class="pi pi-plus"></i>
         add new
       </button>
     </div>
     <div class="qa-compilance-content">
-      <stc-apps-key-challenges-table />
+      <stc-apps-key-challenges-table [isChallengeAdded]="isChallengeAdded" />
     </div>
   </section>
   }
@@ -98,6 +98,31 @@
       (addWorkStream)="addWorkStream($event)"
       [isWorkstreamSidebarVisible]="isWorkstreamSidebarVisible"
       type="compilance"
+    />
+  </div>
+</p-sidebar>
+<p-sidebar
+  [(visible)]="showChallengesSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="add-workstream-sidebar"
+  (onHide)="hideAddWorkstreamSidebar()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>add challenges</p>
+      </div>
+      <div class="right" (click)="showChallengesSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <stc-apps-add-workstream-form
+      (addWorkStream)="addChallengeData($event)"
+      type="challenges"
+      [isWorkstreamSidebarVisible]="showChallengesSidebar === false"
     />
   </div>
 </p-sidebar>

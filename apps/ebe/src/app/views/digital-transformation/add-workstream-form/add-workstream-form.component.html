@@ -1,4 +1,145 @@
 <form class="add-workstream-form" [formGroup]="addWorkstreamForm">
+  @if(type() === 'challenges'){
+  <div class="form-group">
+    <label for="description">
+      description
+      <!-- <span>*</span> -->
+    </label>
+    <textarea
+      class="form-control"
+      id="description"
+      placeholder="Add Description"
+      formControlName="description"
+      [class.is-invalid]="
+        description?.invalid && (description?.dirty || description?.touched)
+      "
+      [class.is-invalid-brdr2]="
+        description?.invalid && (description?.dirty || description?.touched)
+      "
+    ></textarea>
+    <small
+      *ngIf="
+        description?.invalid && (description?.dirty || description?.touched)
+      "
+      class="error-msg"
+    >
+      description is required
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="raisedBy">
+      raised by
+      <!-- <span>*</span> -->
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="raisedBy"
+      placeholder="Add Raised by"
+      formControlName="raisedBy"
+    />
+    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
+      [class.is-invalid-brdr]="
+        title?.invalid && (title?.dirty || title?.touched)
+      "
+    <small
+      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      class="error-msg"
+    >
+      title is required
+    </small> -->
+  </div>
+  <div class="form-group">
+    <label for="owner">
+      owner
+      <!-- <span>*</span> -->
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="owner"
+      placeholder="Add Owner"
+      formControlName="owner"
+    />
+    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
+      [class.is-invalid-brdr]="
+        title?.invalid && (title?.dirty || title?.touched)
+      "
+    <small
+      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      class="error-msg"
+    >
+      title is required
+    </small> -->
+  </div>
+  <div class="form-group">
+    <label for="dateRaised">
+      date raised
+      <!-- <span>*</span> -->
+    </label>
+    <p-calendar
+      formControlName="dateRaised"
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      inputId="icondisplay"
+      styleClass="small-calendar"
+      placeholder="Choose Date Raised"
+      dateFormat="mm/dd/yy"
+    />
+    <!-- <input
+      type="text"
+      class="form-control"
+      id="dateRaised"
+      placeholder="Add Date Raised"
+      formControlName="dateRaised"
+    /> -->
+    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
+      [class.is-invalid-brdr]="
+        title?.invalid && (title?.dirty || title?.touched)
+      "
+    <small
+      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      class="error-msg"
+    >
+      title is required
+    </small> -->
+  </div>
+  <div class="form-group">
+    <label for="impact">
+      impact
+      <!-- <span>*</span> -->
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="impact"
+      placeholder="Add impact"
+      formControlName="impact"
+    />
+    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
+      [class.is-invalid-brdr]="
+        title?.invalid && (title?.dirty || title?.touched)
+      "
+    <small
+      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      class="error-msg"
+    >
+      title is required
+    </small> -->
+  </div>
+  <div class="form-group">
+    <label for="supportNeeded">
+      support Needed
+      <!-- <span>*</span> -->
+    </label>
+    <textarea
+      class="form-control"
+      id="supportNeeded"
+      placeholder="Add support Needed"
+      formControlName="supportNeeded"
+    ></textarea>
+  </div>
+  } @else {
   <div class="form-group">
     <label for="title">
       title
@@ -293,7 +434,7 @@
       missingArtifacts must be between 0 and 100
     </small>
   </div>
-  }
+  } }
   <button
     class="add-workstream-btn2"
     [disabled]="addWorkstreamForm.invalid"
@@ -307,6 +448,8 @@
         ? 'add project'
         : isEditProject()
         ? 'edit project'
+        : type() === 'challenges'
+        ? 'add'
         : 'add new workstream'
     }}
   </button>

@@ -6,12 +6,13 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { UserModel } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { DigitalTransformationService } from '../../services/digital-transformation.service';
 import {
+  AddKeyChallengeDataModel,
   AddWorkstreamFormModel,
   DigitalTransformationTapModel,
   IDigitalTransformationTap,
@@ -46,6 +47,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   currTap = signal<DigitalTransformationTapModel>(
     {} as DigitalTransformationTapModel
   );
+  datePipe = inject(DatePipe);
   technicalDebtDashboardModel: TechnicalDebtDashboardModel[] = [];
   scorecardService = inject(ScorecardService);
   // qAComplianceData: QAComplianceModel[] = [];
@@ -59,6 +61,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   tapsDetailsData: pageDetailsModel[] = [];
   endSubs$: Subject<any> = new Subject();
   firstTapTitles: string[] = [];
+  showChallengesSidebar = false;
   private getDigitalTransformationData() {
     this.digitalTransformationService
       .getDigitalTransformationData()
@@ -135,5 +138,33 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   }
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
     console.log(workStreamData);
+  }
+  challengeFormData!: AddKeyChallengeDataModel;
+  isChallengeAdded = false;
+  addChallengeData(workStreamData: any) {
+    const formatted = this.datePipe.transform(
+      workStreamData.dateRaised,
+      'MM/dd/yyyy'
+    );
+    workStreamData.dateRaised = formatted;
+    this.challengeFormData = {
+      description: workStreamData.description,
+      raisedBy: workStreamData.raisedBy,
+      owner: workStreamData.owner,
+      dateRaised: workStreamData.dateRaised,
+      impact: workStreamData.impact,
+      supportNeeded: workStreamData.supportNeeded,
+    };
+    this.digitalTransformationService
+      .addKeyChallengrsData(this.challengeFormData)
+      .subscribe({
+        next: (res) => {
+          this.showChallengesSidebar = false;
+          this.isChallengeAdded = true;
+        },
+        error: () => {
+          this.isChallengeAdded = false;
+        },
+      });
   }
 }

@@ -158,8 +158,23 @@ export interface pageDetailsProjectMetricsModel {
   value: number;
 }
 export interface KeyChallengesModel {
+  data: KeyChallengesDataModel[];
+  pageNumber: number;
+  pageSize: number;
+  totalElements: number;
+  totalPages: number;
+}
+export interface KeyChallengesDataModel {
   id: number;
   challengeId: number;
+  description: string;
+  raisedBy: string;
+  owner: string;
+  dateRaised: string;
+  impact: string;
+  supportNeeded: string;
+}
+export interface AddKeyChallengeDataModel {
   description: string;
   raisedBy: string;
   owner: string;
