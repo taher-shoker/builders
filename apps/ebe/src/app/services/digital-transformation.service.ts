@@ -46,4 +46,15 @@ export class DigitalTransformationService {
       data
     );
   }
+  editKeyChallengrsData(id: number, data: AddKeyChallengeDataModel) {
+    return this.http.put<any>(
+      `${environment.apiUrl}/business-excellence/dt/pages/keyChallenges/${id}`,
+      data
+    );
+  }
+  deleteKeyChallengrsData(id: number) {
+    return this.http.delete<any>(
+      `${environment.apiUrl}/business-excellence/dt/pages/keyChallenges/${id}`
+    );
+  }
 }

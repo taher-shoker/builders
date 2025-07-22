@@ -449,8 +449,20 @@
         : isEditProject()
         ? 'edit project'
         : type() === 'challenges'
-        ? 'add'
+        ? objArr.length !== 0
+          ? 'save'
+          : 'add'
         : 'add new workstream'
     }}
   </button>
+  @if(isEditWorkStream() || isEditProject()){
+  <button
+    class="delete-workstream-btn2"
+    [disabled]="addWorkstreamForm.invalid"
+    [class.is-disabled]="addWorkstreamForm.invalid"
+    (click)="deleteWorkstream()"
+  >
+    {{ isEditWorkStream() ? 'delete workstream' : 'delete project' }}
+  </button>
+  }
 </form>

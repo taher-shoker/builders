@@ -18,6 +18,8 @@ import { SidebarModule } from 'primeng/sidebar';
 import { AddWorkstreamFormComponent } from '../add-workstream-form/add-workstream-form.component';
 import { DigitalTransformationService } from '../../../services/digital-transformation.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'stc-apps-executive-summary',
   standalone: true,
@@ -29,9 +31,11 @@ import { Subject, takeUntil } from 'rxjs';
     ExecutiveSummaryCardComponent,
     SidebarModule,
     AddWorkstreamFormComponent,
+    ConfirmDialogModule,
   ],
   templateUrl: './executive-summary.component.html',
   styleUrl: './executive-summary.component.scss',
+  providers: [ConfirmationService],
 })
 export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   sidebarVisible1 = false;
@@ -44,6 +48,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   isAddProject!: boolean;
   endSubs$: Subject<any> = new Subject();
   isProject = false;
+  confirmationService = inject(ConfirmationService);
   digitalTransformationService = inject(DigitalTransformationService);
   mainTitle = input<string[]>([]);
   toggleAccordion(index: number, event: Event) {
@@ -175,14 +180,42 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     this.sidebarType = type;
     this.sidebarVisible1 = true;
     this.currentSideBarTitle = summaryData.businessUnit;
-    if (summaryData.businessUnitHighlights) {
+    if (
+      summaryData.businessUnitHighlights &&
+      typeof summaryData.businessUnitHighlights === 'string'
+    ) {
       const cleaned = summaryData.businessUnitHighlights.replace(/�/g, ' ');
-      this.highlights = JSON.parse(cleaned);
+      if (cleaned.trim().startsWith('[')) {
+        try {
+          const parsed = JSON.parse(cleaned);
+          if (Array.isArray(parsed)) {
+            this.highlights = parsed;
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+      }
     }
-    if (summaryData.businessUnitChallenges) {
+    if (
+      summaryData.businessUnitChallenges &&
+      typeof summaryData.businessUnitChallenges === 'string'
+    ) {
       const cleaned2 = summaryData.businessUnitChallenges.replace(/�/g, ' ');
-      this.challenges = JSON.parse(cleaned2);
+      if (cleaned2.trim().startsWith('[')) {
+        try {
+          const parsed = JSON.parse(cleaned2);
+          if (Array.isArray(parsed)) {
+            this.challenges = parsed;
+          }
+        } catch (error) {
+          console.warn(error);
+        }
+      }
     }
+    // if (summaryData.businessUnitChallenges) {
+    //   const cleaned2 = summaryData.businessUnitChallenges.replace(/�/g, ' ');
+    //   this.challenges = JSON.parse(cleaned2);
+    // }
   }
   getStatusStyle(status: string) {
     const normalized = status?.toLowerCase();
@@ -195,10 +228,12 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       STATUS_STYLE_MAP[WorkstreamStatus.Complete]
     );
   }
+  editedData!: pageDetailsModel;
   openAddWorkstreamSidebar(
     isEditMode: boolean,
     isAddProject: boolean,
-    isEditProject: boolean
+    isEditProject: boolean,
+    summaryData?: pageDetailsModel
   ) {
     this.isEditWorkStream = isEditMode;
     this.isAddProject = isAddProject;
@@ -206,6 +241,9 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     this.showAddWorkstreamSidebar = true;
     // this.isWorkstreamSidebarVisible = true;
     this.isWorkstreamSidebarVisible = false;
+    if (summaryData) {
+      this.editedData = { ...summaryData };
+    }
   }
   hideAddWorkstreamSidebar() {
     this.isWorkstreamSidebarVisible = false;
@@ -213,7 +251,20 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
     console.log('Workstream Data:', workStreamData);
   }
+  editProjectData!: pageDetailsProjectModel | null;
   openProjSidebar(card: pageDetailsProjectModel) {
-    console.log(card);
+    // console.log(card);
+    this.editProjectData = { ...card };
+  }
+  deletedItem: any;
+  deleteWorkStream(e: any) {
+    this.deletedItem = e;
+    this.confirmationService.confirm({});
+  }
+  closeDialog() {
+    this.confirmationService.close();
+  }
+  deleteChallenge() {
+    console.log('deletedItem => ', this.deletedItem);
   }
 }

@@ -1,11 +1,4 @@
-import {
-  Component,
-  inject,
-  OnDestroy,
-  OnInit,
-  signal,
-  WritableSignal,
-} from '@angular/core';
+import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { UserModel } from '../../models/scorecard.model';
@@ -21,11 +14,11 @@ import {
 } from '../../models/digital-transformation';
 import { ExecutiveSummaryComponent } from './executive-summary/executive-summary.component';
 import { QaCompilanceCardComponent } from './qa-compilance-card/qa-compilance-card.component';
-import { TechnicalDebtCardComponent } from './technical-debt-card/technical-debt-card.component';
 import { SidebarModule } from 'primeng/sidebar';
 import { AddWorkstreamFormComponent } from './add-workstream-form/add-workstream-form.component';
 import { Subject, takeUntil } from 'rxjs';
 import { KeyChallengesTableComponent } from './key-challenges-table/key-challenges-table.component';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-digital-transformation',
   standalone: true,
@@ -44,6 +37,7 @@ import { KeyChallengesTableComponent } from './key-challenges-table/key-challeng
 export class DigitalTransformationComponent implements OnInit, OnDestroy {
   userData!: UserModel;
   tabTitle = '';
+  toastr = inject(ToastrService);
   currTap = signal<DigitalTransformationTapModel>(
     {} as DigitalTransformationTapModel
   );
@@ -56,8 +50,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   isEdit = false;
   // capabilitiesHandoverData: CapabilitiesHandoverDataModel[] = [];
   digitalTransformationService = inject(DigitalTransformationService);
-  digitalTransformationTaps: WritableSignal<DigitalTransformationTapModel[]> =
-    signal<DigitalTransformationTapModel[]>([]);
+  digitalTransformationTaps = signal<DigitalTransformationTapModel[]>([]);
   tapsDetailsData: pageDetailsModel[] = [];
   endSubs$: Subject<any> = new Subject();
   firstTapTitles: string[] = [];
@@ -158,9 +151,10 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     this.digitalTransformationService
       .addKeyChallengrsData(this.challengeFormData)
       .subscribe({
-        next: (res) => {
+        next: () => {
           this.showChallengesSidebar = false;
           this.isChallengeAdded = true;
+          this.toastr.success('The Challenge is added successfully');
         },
         error: () => {
           this.isChallengeAdded = false;

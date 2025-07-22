@@ -54,8 +54,9 @@
               </button>
               <button
                 (click)="
-                  openAddWorkstreamSidebar(true, false, false);
-                  isProject = false
+                  openAddWorkstreamSidebar(true, false, false, summaryData);
+                  isProject = false;
+                  editProjectData = null
                 "
               >
                 <i class="pi pi-pencil"></i>
@@ -158,7 +159,11 @@
                 <img src="assets/images/Danger.svg" alt="" />
                 <span>Challenges</span>
               </button>
-              <button (click)="openAddWorkstreamSidebar(true, false, false)">
+              <button
+                (click)="
+                  openAddWorkstreamSidebar(true, false, false, summaryData)
+                "
+              >
                 <i class="pi pi-pencil"></i>
                 <!-- <img src="assets/images/button.svg" alt="" /> -->
               </button>
@@ -183,7 +188,10 @@
           <div class="executive-summary-body-content">
             <button
               class="add-new-project-btn"
-              (click)="openAddWorkstreamSidebar(true, true, false)"
+              (click)="
+                openAddWorkstreamSidebar(true, true, false);
+                editProjectData = null
+              "
             >
               <i class="pi pi-plus"></i>
               add new project
@@ -287,6 +295,33 @@
       [isEditProject]="isEditProject"
       type=""
       [isProject]="isProject"
+      [editProjectData]="isAddProject ? null : editProjectData"
+      [editWorkstreamFormData]="!isEditWorkStream ? null : editedData"
+      (delete)="deleteWorkStream($event)"
     />
   </div>
 </p-sidebar>
+<p-confirmDialog [dismissableMask]="true" styleClass="delete-workstream-dialog">
+  <ng-template pTemplate="message" let-message>
+    <div class="content">
+      <div class="head">
+        <div class="left">
+          <i class="pi pi-trash"></i>
+          <p>delete {{ isEditProject ? 'project' : 'workstream' }}</p>
+        </div>
+        <i
+          class="pi pi-times text-6xl text-primary-500"
+          (click)="closeDialog()"
+        ></i>
+      </div>
+      <span
+        >know that deleting this workstream will also delete all related
+        records</span
+      >
+      <div class="buttons">
+        <button class="delete-btn" (click)="deleteChallenge()">delete</button>
+        <button class="cancel-btn" (click)="closeDialog()">cancel</button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>
