@@ -19,6 +19,8 @@ import { AddWorkstreamFormComponent } from './add-workstream-form/add-workstream
 import { Subject, takeUntil } from 'rxjs';
 import { KeyChallengesTableComponent } from './key-challenges-table/key-challenges-table.component';
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 @Component({
   selector: 'stc-apps-digital-transformation',
   standalone: true,
@@ -30,7 +32,9 @@ import { ToastrService } from 'ngx-toastr';
     KeyChallengesTableComponent,
     SidebarModule,
     AddWorkstreamFormComponent,
+    ConfirmDialogModule,
   ],
+  providers: [ConfirmationService],
   templateUrl: './digital-transformation.component.html',
   styleUrl: './digital-transformation.component.scss',
 })
@@ -48,6 +52,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   showAddWorkstreamSidebar = false;
   isWorkstreamSidebarVisible!: boolean;
   isEdit = false;
+  confirmationService = inject(ConfirmationService);
   // capabilitiesHandoverData: CapabilitiesHandoverDataModel[] = [];
   digitalTransformationService = inject(DigitalTransformationService);
   digitalTransformationTaps = signal<DigitalTransformationTapModel[]>([]);
@@ -126,7 +131,11 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   hideAddWorkstreamSidebar() {
     this.isWorkstreamSidebarVisible = false;
   }
-  showWorkStreamSidebar() {
+  editedData: pageDetailsModel | null = null;
+  showWorkStreamSidebar(data: pageDetailsModel) {
+    if (data) {
+      this.editedData = { ...data };
+    }
     this.showAddWorkstreamSidebar = true;
   }
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
@@ -160,5 +169,16 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
           this.isChallengeAdded = false;
         },
       });
+  }
+  deletedItem: any;
+  showDeleteDialog(data: any) {
+    this.confirmationService.confirm({});
+    this.deletedItem = data;
+  }
+  deleteChallenge() {
+    console.log(this.deletedItem);
+  }
+  closeDialog() {
+    this.confirmationService.close();
   }
 }

@@ -138,7 +138,9 @@
             'padding-left':
               item2.name.toLowerCase() === 'under verfication' ? '10px' : '0'
           }"
-          [class.completed-text]="item2.name.toLowerCase() === 'completed'"
+          [class.completed-text]="
+            item2.name.toLowerCase() === 'completed' && $index === 0
+          "
         >
           {{ item2.name }}
         </p>

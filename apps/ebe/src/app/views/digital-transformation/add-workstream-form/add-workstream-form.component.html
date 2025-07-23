@@ -139,7 +139,8 @@
       formControlName="supportNeeded"
     ></textarea>
   </div>
-  } @else {
+  } @else if(currentTabId() !== 4 && currentTabId() !== 5 && currentTabId() !==
+  6 && currentTabId() !== 7){
   <div class="form-group">
     <label for="title">
       title
@@ -298,7 +299,7 @@
   } } @if(!isAddProject() && !isEditProject()) {
   <div class="form-group">
     <label for="highlights">
-      highlights (%)
+      highlights
       <!-- <span>*</span> -->
     </label>
     <textarea
@@ -324,7 +325,7 @@
   } } @if(type() === "compilance"){
   <div class="form-group">
     <label for="requestedArtifact">
-      requested artifact (%)
+      requested artifact
       <span>*</span>
     </label>
     <input
@@ -362,7 +363,7 @@
   </div>
   <div class="form-group">
     <label for="completed">
-      completed (%)
+      completed
       <span>*</span>
     </label>
     <input
@@ -398,7 +399,7 @@
   </div>
   <div class="form-group">
     <label for="completed">
-      missing Artifacts (%)
+      missing Artifacts
       <span>*</span>
     </label>
     <input
@@ -434,7 +435,528 @@
       missingArtifacts must be between 0 and 100
     </small>
   </div>
-  } }
+  } } @else if(currentTabId() === 5 || currentTabId() === 6 || currentTabId()
+  === 7){
+  <div class="form-group">
+    <label for="title">
+      title
+      <span>*</span>
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      placeholder="workstream title"
+      formControlName="title"
+      [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
+      [class.is-invalid-brdr]="
+        title?.invalid && (title?.dirty || title?.touched)
+      "
+    />
+    <small
+      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      class="error-msg"
+    >
+      title is required
+    </small>
+  </div>
+  <div class="form-group">
+    <label>
+      status
+      <span>*</span>
+    </label>
+    <br />
+    <p-dropdown
+      [options]="statuses"
+      optionLabel="name"
+      optionValue="value"
+      placeholder="Choose Current Status"
+      styleClass="status-dropdown"
+      formControlName="status"
+      [class.is-invalid]="status?.invalid && (status?.dirty || status?.touched)"
+      [class.is-invalid-brdr]="
+        status?.invalid && (status?.dirty || status?.touched)
+      "
+    />
+    <small
+      *ngIf="status?.invalid && (status?.dirty || status?.touched)"
+      class="error-msg"
+    >
+      status is required
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="highlights">
+      highlights
+      <!-- <span>*</span> -->
+    </label>
+    <textarea
+      class="form-control"
+      id="highlights"
+      placeholder="What is the Highlights"
+      formControlName="highlights"
+    ></textarea>
+  </div>
+  @if(currentTabId() === 5){
+  <p class="sub-title">technical debt</p>
+  }
+  <div formGroupName="technicalDebt">
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="closed" class="small-label">
+            {{ currentTabId() === 5 ? 'closed' : 'completed' }}
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="closed"
+            placeholder="No. closed"
+            formControlName="closed"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('technicalDebt.closed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.closed')?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('technicalDebt.closed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.closed')?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('technicalDebt.closed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.closed')?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="open" class="small-label">
+            {{ currentTabId() === 7 ? 'on track' : 'open' }}
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="open"
+            placeholder="No. opened"
+            formControlName="open"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('technicalDebt.open')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.open')?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('technicalDebt.open')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.open')?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('technicalDebt.open')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.open')?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="delayed" class="small-label">
+            delayed
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="delayed"
+            placeholder="No. delayed"
+            formControlName="delayed"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('technicalDebt.delayed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.delayed')?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('technicalDebt.delayed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.delayed')?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('technicalDebt.delayed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.delayed')?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="delayed" class="small-label">
+            {{ currentTabId() === 5 ? 'under Verification' : 'on hold' }}
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="underVerification"
+            placeholder="No. underVerification"
+            formControlName="underVerification"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('technicalDebt.underVerification')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.underVerification')?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('technicalDebt.underVerification')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.underVerification')?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('technicalDebt.underVerification')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('technicalDebt.underVerification')?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  @if(currentTabId() === 5){
+  <p class="sub-title">architectural backlog</p>
+  <div formGroupName="architecturalBacklog">
+    <div class="row">
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="closed2" class="small-label">
+            closed
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="closed2"
+            placeholder="No. closed"
+            formControlName="closed"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('architecturalBacklog.closed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.closed')?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('architecturalBacklog.closed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.closed')?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('architecturalBacklog.closed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.closed')?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="open" class="small-label">
+            opened
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="open"
+            placeholder="No. opened"
+            formControlName="open"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('architecturalBacklog.open')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.open')?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('architecturalBacklog.open')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.open')?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('architecturalBacklog.open')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.open')?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="delayed" class="small-label">
+            delayed
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="delayed"
+            placeholder="No. delayed"
+            formControlName="delayed"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('architecturalBacklog.delayed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.delayed')?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('architecturalBacklog.delayed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.delayed')?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('architecturalBacklog.delayed')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.delayed')?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-12">
+        <div class="form-group">
+          <label for="delayed" class="small-label">
+            under Verification
+            <span>*</span>
+          </label>
+          <input
+            type="number"
+            class="form-control"
+            id="underVerification"
+            placeholder="No. underVerification"
+            formControlName="underVerification"
+            (keydown)="preventInvalidKeys($event)"
+            [class.is-invalid]="
+              addWorkstreamForm
+                .get('architecturalBacklog.underVerification')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.underVerification')
+                ?.touched
+            "
+            [class.is-invalid-brdr]="
+              addWorkstreamForm
+                .get('architecturalBacklog.underVerification')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.underVerification')
+                ?.touched
+            "
+          />
+          <div
+            class="error-msg"
+            *ngIf="
+              addWorkstreamForm
+                .get('architecturalBacklog.underVerification')
+                ?.hasError('required') &&
+              addWorkstreamForm.get('architecturalBacklog.underVerification')
+                ?.touched
+            "
+          >
+            <span class="error-message">This field is required.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  } } @else {
+  <div class="form-group">
+    <label for="title">
+      title
+      <span>*</span>
+    </label>
+    <input
+      type="text"
+      class="form-control"
+      id="title"
+      placeholder="workstream title"
+      formControlName="title"
+      [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
+      [class.is-invalid-brdr]="
+        title?.invalid && (title?.dirty || title?.touched)
+      "
+    />
+    <small
+      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      class="error-msg"
+    >
+      title is required
+    </small>
+  </div>
+  <div class="form-group">
+    <label>
+      status
+      <span>*</span>
+    </label>
+    <br />
+    <p-dropdown
+      [options]="statuses"
+      optionLabel="name"
+      optionValue="value"
+      placeholder="Choose Current Status"
+      styleClass="status-dropdown"
+      formControlName="status"
+      [class.is-invalid]="status?.invalid && (status?.dirty || status?.touched)"
+      [class.is-invalid-brdr]="
+        status?.invalid && (status?.dirty || status?.touched)
+      "
+    />
+    <small
+      *ngIf="status?.invalid && (status?.dirty || status?.touched)"
+      class="error-msg"
+    >
+      status is required
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="highlights">
+      highlights (%)
+      <!-- <span>*</span> -->
+    </label>
+    <textarea
+      class="form-control"
+      id="highlights"
+      placeholder="What is the Highlights"
+      formControlName="heighlights"
+    ></textarea>
+  </div>
+  <div class="form-group">
+    <label for="planned">
+      planned (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="planned"
+      placeholder="Choose Planned Progress"
+      formControlName="planned"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="
+        planned?.invalid && (planned?.dirty || planned?.touched)
+      "
+      [class.is-invalid-brdr]="
+        planned?.invalid && (planned?.dirty || planned?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        planned?.invalid &&
+        (planned?.dirty || planned?.touched) &&
+        !(planned?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      planned is required
+    </small>
+    <small
+      *ngIf="planned?.invalid && (planned?.errors)!['max']"
+      class="error-msg"
+    >
+      planned must be a number between 0 and 100
+    </small>
+  </div>
+  <div class="form-group">
+    <label for="actual">
+      actual (%)
+      <span>*</span>
+    </label>
+    <input
+      type="number"
+      class="form-control"
+      id="actual"
+      placeholder="Choose Actual Progress"
+      formControlName="actual"
+      (keydown)="preventInvalidKeys($event)"
+      [class.is-invalid]="actual?.invalid && (actual?.dirty || actual?.touched)"
+      [class.is-invalid-brdr]="
+        actual?.invalid && (actual?.dirty || actual?.touched)
+      "
+    />
+    <small
+      *ngIf="
+        actual?.invalid &&
+        (actual?.dirty || actual?.touched) &&
+        !(actual?.errors)!['max']
+      "
+      class="error-msg"
+    >
+      actual is required
+    </small>
+    <small
+      *ngIf="actual?.invalid && (actual?.errors)!['max']"
+      class="error-msg"
+    >
+      actual must be a number between 0 and 100
+    </small>
+  </div>
+  }
   <button
     class="add-workstream-btn2"
     [disabled]="addWorkstreamForm.invalid"
@@ -452,17 +974,18 @@
         ? objArr.length !== 0
           ? 'save'
           : 'add'
+        : editedCompilanceData()
+        ? 'edit workstream'
         : 'add new workstream'
     }}
   </button>
-  @if(isEditWorkStream() || isEditProject()){
-  <button
-    class="delete-workstream-btn2"
-    [disabled]="addWorkstreamForm.invalid"
-    [class.is-disabled]="addWorkstreamForm.invalid"
-    (click)="deleteWorkstream()"
-  >
-    {{ isEditWorkStream() ? 'delete workstream' : 'delete project' }}
+  @if(isEditWorkStream() || isEditProject() || editedCompilanceData()){
+  <button class="delete-workstream-btn2" (click)="deleteWorkstream()">
+    {{
+      isEditWorkStream() || editedCompilanceData()
+        ? 'delete workstream'
+        : 'delete project'
+    }}
   </button>
   }
 </form>

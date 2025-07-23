@@ -148,3 +148,15 @@ input[type='number']::-webkit-outer-spin-button {
 .is-invalid-brdr2 {
   border-color: red !important;
 }
+.sub-title {
+  color: #121217;
+  text-transform: capitalize;
+  @extend .stcFont;
+  font-weight: 600;
+  font-size: 1rem;
+  display: inline-block;
+  margin-bottom: 2px;
+}
+.small-label {
+  font-size: 0.9rem !important;
+}

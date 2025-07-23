@@ -72,6 +72,6 @@ export class QaCompilanceCardComponent {
     );
   }
   openSidebar() {
-    this.sidebarOpened.emit();
+    this.sidebarOpened.emit(this.QAComplianceCardData());
   }
 }
