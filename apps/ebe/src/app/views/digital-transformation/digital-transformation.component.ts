@@ -7,6 +7,7 @@ import { DigitalTransformationService } from '../../services/digital-transformat
 import {
   AddKeyChallengeDataModel,
   AddWorkstreamFormModel,
+  CreateWorkStreamModel,
   DigitalTransformationTapModel,
   IDigitalTransformationTap,
   pageDetailsModel,
@@ -92,7 +93,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
       });
   }
   private getDigitalTransformationDetailsData(pageId: number) {
-    this.tapsDetailsData = [];
+    // this.tapsDetailsData = [];
     this.digitalTransformationService
       .getDigitalTransformationDetailsData(pageId)
       .pipe(takeUntil(this.endSubs$))
@@ -124,7 +125,11 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     // this.qAComplianceData = [];
     // this.technicalDebtDashboardModel = [];
     this.currTap.set(tap);
-    if (this.currTap().id !== 1 && this.currTap().id !== 8) {
+    if (
+      this.currTap().id !== 1 &&
+      this.currTap().id !== 8 &&
+      this.currTap().id !== 9
+    ) {
       this.getDigitalTransformationDetailsData(this.currTap().id);
     }
   }
@@ -138,8 +143,185 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     }
     this.showAddWorkstreamSidebar = true;
   }
+  convertHeighlights(heighlights: string): string {
+    // const lines = heighlights.split('\n');
+    const lines = heighlights.split(' ');
+    const result = lines.map((line, index) => {
+      const parts = line.split(':');
+      const title = parts[0].trim();
+      const value = parts.length > 1 ? parts[1].trim() : '';
+      if (!line.includes(':')) {
+        return {
+          id: index + 1,
+          value: title,
+        };
+      }
+      return {
+        id: index + 1,
+        title,
+        value,
+      };
+    });
+    return JSON.stringify(result);
+  }
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
-    console.log(workStreamData);
+    let metricsArr = [];
+    if (this.currTap().id === 3) {
+      metricsArr = [
+        {
+          name: 'Requested artifacts',
+          value: workStreamData.requestedArtifact ?? 0,
+        },
+        {
+          name: 'completed',
+          value: workStreamData.completed ?? 0,
+        },
+        {
+          name: 'missing artifacts',
+          value: workStreamData.missingArtifacts ?? 0,
+        },
+      ];
+    } else {
+      metricsArr = [
+        {
+          name: 'actual',
+          value: workStreamData.actual ?? 0,
+        },
+        {
+          name: 'planned',
+          value: workStreamData.planned ?? 0,
+        },
+      ];
+    }
+    const data: CreateWorkStreamModel = {
+      pageId: this.currTap().id,
+      businessUnit: workStreamData.title,
+      projects:
+        this.currTap().id !== 5 &&
+        this.currTap().id !== 6 &&
+        this.currTap().id !== 7
+          ? [
+              {
+                projectStatus: workStreamData.status,
+                metrics: metricsArr,
+                projectHighlights: workStreamData.heighlights
+                  ? this.convertHeighlights(workStreamData.heighlights)
+                  : workStreamData.highlights
+                  ? this.convertHeighlights(workStreamData.highlights)
+                  : null,
+              },
+            ]
+          : this.currTap().id === 5
+          ? [
+              {
+                projectStatus: workStreamData.status,
+                projectName: 'Technical Dept',
+                metrics: [
+                  {
+                    name: 'closed',
+                    value: workStreamData.technicalDebt?.closed ?? 0,
+                  },
+                  {
+                    name: 'open',
+                    value: workStreamData.technicalDebt?.open ?? 0,
+                  },
+                  {
+                    name: 'delayed',
+                    value: workStreamData.technicalDebt?.delayed ?? 0,
+                  },
+                  {
+                    name: 'under verfication',
+                    value: workStreamData.technicalDebt?.underVerification ?? 0,
+                  },
+                  {
+                    name: 'total TD',
+                    value: workStreamData.technicalDebt?.totalTD ?? 0,
+                  },
+                ],
+                // totalTD: workStreamData.technicalDebt?.totalTD,
+                projectHighlights: workStreamData.heighlights
+                  ? this.convertHeighlights(workStreamData.heighlights)
+                  : workStreamData.highlights
+                  ? this.convertHeighlights(workStreamData.highlights)
+                  : null,
+              },
+              {
+                projectStatus: workStreamData.status,
+                projectName: 'Architectual Backlog',
+                metrics: [
+                  {
+                    name: 'closed',
+                    value: workStreamData.architecturalBacklog?.closed ?? 0,
+                  },
+                  {
+                    name: 'open',
+                    value: workStreamData.architecturalBacklog?.open ?? 0,
+                  },
+                  {
+                    name: 'delayed',
+                    value: workStreamData.architecturalBacklog?.delayed ?? 0,
+                  },
+                  {
+                    name: 'under verfication',
+                    value:
+                      workStreamData.architecturalBacklog?.underVerification ??
+                      0,
+                  },
+                  {
+                    name: 'total ABL',
+                    value: workStreamData.architecturalBacklog?.totalTD ?? 0,
+                  },
+                ],
+                // totalTD: workStreamData.architecturalBacklog?.totalTD,
+                projectHighlights: workStreamData.heighlights
+                  ? this.convertHeighlights(workStreamData.heighlights)
+                  : workStreamData.highlights
+                  ? this.convertHeighlights(workStreamData.highlights)
+                  : null,
+              },
+            ]
+          : [
+              {
+                projectStatus: workStreamData.status,
+                metrics: [
+                  {
+                    name: 'completed',
+                    value: workStreamData.technicalDebt?.closed ?? 0,
+                  },
+                  {
+                    name: this.currTap().id !== 7 ? 'open' : 'on track',
+                    value: workStreamData.technicalDebt?.open ?? 0,
+                  },
+                  {
+                    name: 'delayed',
+                    value: workStreamData.technicalDebt?.delayed ?? 0,
+                  },
+                  {
+                    name: 'on hold',
+                    value: workStreamData.technicalDebt?.underVerification ?? 0,
+                  },
+                  {
+                    name: 'total capabilities',
+                    value: workStreamData.technicalDebt?.totalTD ?? 0,
+                  },
+                ],
+                projectHighlights: workStreamData.heighlights
+                  ? this.convertHeighlights(workStreamData.heighlights)
+                  : workStreamData.highlights
+                  ? this.convertHeighlights(workStreamData.highlights)
+                  : null,
+              },
+            ],
+    };
+    console.log(data);
+    console.log('workStreamData => ', workStreamData);
+    this.digitalTransformationService.createNewWorkStream(data).subscribe({
+      next: (res) => {
+        this.getDigitalTransformationDetailsData(this.currTap().id);
+        this.toastr.success('The workstream is added successfully');
+        this.showAddWorkstreamSidebar = false;
+      },
+    });
   }
   challengeFormData!: AddKeyChallengeDataModel;
   isChallengeAdded = false;

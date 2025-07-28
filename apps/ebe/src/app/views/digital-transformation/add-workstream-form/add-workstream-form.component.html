@@ -512,7 +512,9 @@
             type="number"
             class="form-control"
             id="closed"
-            placeholder="No. closed"
+            [placeholder]="
+              currentTabId() === 5 ? 'No. closed' : 'No. completed'
+            "
             formControlName="closed"
             (keydown)="preventInvalidKeys($event)"
             [class.is-invalid]="
@@ -551,7 +553,7 @@
             type="number"
             class="form-control"
             id="open"
-            placeholder="No. opened"
+            [placeholder]="currentTabId() === 7 ? 'No. on track' : 'No. open'"
             formControlName="open"
             (keydown)="preventInvalidKeys($event)"
             [class.is-invalid]="
@@ -629,7 +631,9 @@
             type="number"
             class="form-control"
             id="underVerification"
-            placeholder="No. underVerification"
+            [placeholder]="
+              currentTabId() === 5 ? 'No. underVerification' : 'No. OnHold'
+            "
             formControlName="underVerification"
             (keydown)="preventInvalidKeys($event)"
             [class.is-invalid]="
@@ -656,6 +660,37 @@
           >
             <span class="error-message">This field is required.</span>
           </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="totalTD" class="small-label">
+          total TD
+          <span>*</span>
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="totalTD"
+          placeholder="No. totalTD"
+          formControlName="totalTD"
+          (keydown)="preventInvalidKeys($event)"
+          [class.is-invalid]="
+            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.touched
+          "
+          [class.is-invalid-brdr]="
+            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.touched
+          "
+        />
+        <div
+          class="error-msg"
+          *ngIf="
+            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.touched
+          "
+        >
+          <span class="error-message">This field is required.</span>
         </div>
       </div>
     </div>
@@ -821,6 +856,37 @@
           >
             <span class="error-message">This field is required.</span>
           </div>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="totalTD" class="small-label">
+          total ABL
+          <span>*</span>
+        </label>
+        <input
+          type="number"
+          class="form-control"
+          id="totalTD"
+          placeholder="No. total ABL"
+          formControlName="totalTD"
+          (keydown)="preventInvalidKeys($event)"
+          [class.is-invalid]="
+            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.touched
+          "
+          [class.is-invalid-brdr]="
+            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.touched
+          "
+        />
+        <div
+          class="error-msg"
+          *ngIf="
+            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.touched
+          "
+        >
+          <span class="error-message">This field is required.</span>
         </div>
       </div>
     </div>

@@ -140,9 +140,9 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
           this.addWorkstreamForm
             .get('title')
             ?.setValue(this.editedCompilanceData()?.businessUnit);
-          if (this.editedCompilanceData()?.businessUnitHighlights) {
+          if (this.editedCompilanceData()?.projects[0].projectHighlights) {
             const highlights =
-              this.editedCompilanceData()?.businessUnitHighlights;
+              this.editedCompilanceData()?.projects[0].projectHighlights;
             if (highlights && typeof highlights === 'string') {
               try {
                 const cleanedString = highlights
@@ -258,9 +258,9 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
           this.addWorkstreamForm
             .get('title')
             ?.setValue(this.editedCompilanceData()?.businessUnit);
-          if (this.editedCompilanceData()?.businessUnitHighlights) {
+          if (this.editedCompilanceData()?.projects[0].projectHighlights) {
             const highlights =
-              this.editedCompilanceData()?.businessUnitHighlights;
+              this.editedCompilanceData()?.projects[0].projectHighlights;
             if (highlights && typeof highlights === 'string') {
               try {
                 const cleanedString = highlights
@@ -330,6 +330,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               open: ['', [Validators.required]],
               delayed: ['', [Validators.required]],
               underVerification: ['', [Validators.required]],
+              totalTD: ['', [Validators.required]],
             }),
 
             architecturalBacklog: this.formBuilder.group({
@@ -337,6 +338,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               open: ['', [Validators.required]],
               delayed: ['', [Validators.required]],
               underVerification: ['', [Validators.required]],
+              totalTD: ['', [Validators.required]],
             }),
           });
         } else {
@@ -349,15 +351,20 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               open: ['', [Validators.required]],
               delayed: ['', [Validators.required]],
               underVerification: ['', [Validators.required]],
+              totalTD: ['', [Validators.required]],
             }),
           });
         }
         if (this.editedCompilanceData()) {
           console.log(this.editedCompilanceData());
           let textareaValue = '';
-          if (this.editedCompilanceData()?.businessUnitHighlights) {
+          if (
+            this.editedCompilanceData()?.businessUnitHighlights ||
+            this.editedCompilanceData()?.projects[0].projectHighlights
+          ) {
             const highlights =
-              this.editedCompilanceData()?.businessUnitHighlights;
+              this.editedCompilanceData()?.businessUnitHighlights ??
+              this.editedCompilanceData()?.projects[0].projectHighlights;
             if (highlights && typeof highlights === 'string') {
               try {
                 const cleanedString = highlights
@@ -393,6 +400,22 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
           this.addWorkstreamForm
             .get('title')
             ?.setValue(this.editedCompilanceData()?.businessUnit);
+          if (this.editedCompilanceData()?.projects[0].totalCapabilities) {
+            this.addWorkstreamForm
+              .get('technicalDebt.totalTD')
+              ?.setValue(
+                this.editedCompilanceData()?.projects[0].totalCapabilities
+              );
+          }
+          if (this.editedCompilanceData()?.projects[0].totalTD) {
+            this.addWorkstreamForm
+              .get('technicalDebt.totalTD')
+              ?.setValue(
+                this.editedCompilanceData()?.projects.filter(
+                  (val) => val.projectName.toLowerCase() === 'technical dept'
+                )[0].totalTD
+              );
+          }
           this.addWorkstreamForm
             .get('status')
             ?.setValue(
@@ -439,6 +462,16 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                 )[0]
                 .metrics.filter((val2) => val2.name === 'closed')[0].value
             );
+            if (this.editedCompilanceData()?.projects[0].totalTD) {
+              this.addWorkstreamForm
+                .get('architecturalBacklog.totalTD')
+                ?.setValue(
+                  this.editedCompilanceData()?.projects.filter(
+                    (val) =>
+                      val.projectName.toLowerCase() === 'architectual backlog'
+                  )[0].totalTD
+                );
+            }
             this.addWorkstreamForm.get('architecturalBacklog.open')?.setValue(
               this.editedCompilanceData()
                 ?.projects.filter(
@@ -475,7 +508,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               ?.setValue(
                 this.editedCompilanceData()?.projects[0].metrics.filter(
                   (val2) => val2.name.toLowerCase() === 'completed'
-                )[0].value
+                )[0]?.value
               );
             this.addWorkstreamForm
               .get('technicalDebt.open')
@@ -484,21 +517,21 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                   (val2) =>
                     val2.name.toLowerCase() === 'open' ||
                     val2.name.toLowerCase() === 'on track'
-                )[0].value
+                )[0]?.value
               );
             this.addWorkstreamForm
               .get('technicalDebt.delayed')
               ?.setValue(
                 this.editedCompilanceData()?.projects[0].metrics.filter(
                   (val2) => val2.name.toLowerCase() === 'delayed'
-                )[0].value
+                )[0]?.value
               );
             this.addWorkstreamForm
               .get('technicalDebt.underVerification')
               ?.setValue(
                 this.editedCompilanceData()?.projects[0].metrics.filter(
                   (val2) => val2.name.toLowerCase() === 'on hold'
-                )[0].value
+                )[0]?.value
               );
           }
         }
@@ -536,7 +569,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                     // Handle cases where quotes might be malformed
                     return match.replace(/\\(?=")/g, '');
                   });
-                if (typeof cleanedString === 'string') {
+                if (cleanedString.trim().startsWith('[')) {
                   const parsed = JSON.parse(cleanedString);
                   if (Array.isArray(parsed)) {
                     textareaValue = parsed
@@ -570,7 +603,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                     // Handle cases where quotes might be malformed
                     return match.replace(/\\(?=")/g, '');
                   });
-                if (typeof cleanedString === 'string') {
+                if (cleanedString.trim().startsWith('[')) {
                   const parsed = JSON.parse(cleanedString);
                   if (Array.isArray(parsed)) {
                     textareaValue2 = parsed
@@ -693,6 +726,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               open: ['', [Validators.required]],
               delayed: ['', [Validators.required]],
               underVerification: ['', [Validators.required]],
+              totalTD: ['', [Validators.required]],
             }),
 
             architecturalBacklog: this.formBuilder.group({
@@ -700,6 +734,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               open: ['', [Validators.required]],
               delayed: ['', [Validators.required]],
               underVerification: ['', [Validators.required]],
+              totalTD: ['', [Validators.required]],
             }),
           });
         } else {
@@ -712,6 +747,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               open: ['', [Validators.required]],
               delayed: ['', [Validators.required]],
               underVerification: ['', [Validators.required]],
+              totalTD: ['', [Validators.required]],
             }),
           });
         }
@@ -738,7 +774,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
     }
   }
   preventInvalidKeys(event: KeyboardEvent) {
-    const invalidChars = ['e', 'E', '+', '-'];
+    const invalidChars = ['e', 'E', '+', '-', 'ArrowUp', 'ArrowDown'];
     if (invalidChars.includes(event.key)) {
       event.preventDefault();
     }

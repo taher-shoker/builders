@@ -40,8 +40,26 @@ export interface AddWorkstreamFormModel {
   weight: number;
   actual: number;
   planned: number;
+  heighlights: string;
   highlights: string;
   challenges: string;
+  requestedArtifact?: number;
+  completed?: number;
+  missingArtifacts?: number;
+  architecturalBacklog?: {
+    closed?: number;
+    open?: number;
+    delayed?: number;
+    totalTD?: number;
+    underVerification?: number;
+  };
+  technicalDebt?: {
+    closed?: number;
+    totalTD?: number;
+    open?: number;
+    delayed?: number;
+    underVerification?: number;
+  };
 }
 export enum WorkstreamStatus {
   AtRisk = 'at risk',
@@ -49,6 +67,7 @@ export enum WorkstreamStatus {
   Delayed = 'delayed',
   NotStartedOrOnHold = 'not started/on hold',
   Complete = 'complete',
+  Completed = 'completed',
 }
 export interface StatusStyle {
   backgroundColor: string;
@@ -77,6 +96,11 @@ export const STATUS_STYLE_MAP: Record<WorkstreamStatus, StatusStyle> = {
     borderColor: '#E5E7EB',
   },
   [WorkstreamStatus.Complete]: {
+    backgroundColor: '#CFFAFE',
+    textColor: '#06B6D4',
+    borderColor: '#A5F3FC',
+  },
+  [WorkstreamStatus.Completed]: {
     backgroundColor: '#CFFAFE',
     textColor: '#06B6D4',
     borderColor: '#A5F3FC',
@@ -142,6 +166,7 @@ export interface pageDetailsModel {
   businessUnitHighlights: string | null;
   businessUnitChallenges: string | null;
   projects: pageDetailsProjectModel[];
+  businessUnitId: number;
 }
 export interface pageDetailsProjectModel {
   projectName: string;
@@ -181,4 +206,31 @@ export interface AddKeyChallengeDataModel {
   dateRaised: string;
   impact: string;
   supportNeeded: string;
+}
+export interface CreateWorkStreamModel {
+  pageId: number;
+  businessUnit?: string;
+  businessUnitId?: number;
+  businessUnitStatus?: string;
+  weight?: number;
+  planned?: number;
+  actual?: number;
+  businessUnitHighlights?: string | null;
+  businessUnitChallenges?: string | null;
+  projects?: {
+    projectId?: number;
+    projectName?: string;
+    projectStatus?: string;
+    projectHighlights: string | null;
+    totalCapabilities?: number;
+    percentage?: number;
+    totalTD?: number;
+    totalABL?: number | null;
+    metrics:
+      | {
+          name: string;
+          value: number;
+        }[]
+      | null;
+  }[];
 }

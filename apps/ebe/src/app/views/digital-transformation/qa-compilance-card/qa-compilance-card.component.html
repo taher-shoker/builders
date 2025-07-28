@@ -8,7 +8,7 @@
       >
         {{ QAComplianceCardData().businessUnit }}
       </p>
-      @if(QAComplianceCardData().businessUnit.trim().length > 5) {
+      @if(QAComplianceCardData().businessUnit.trim().length >= 5) {
       <p-overlayPanel #overlayPanel2 dismissable="true">
         <section class="popover-section">
           {{ QAComplianceCardData().businessUnit }}
@@ -60,9 +60,17 @@
     >
       <stc-apps-progress-circle
         [progressValue]="
-          item.totalTD ? closedValue(item) ?? 0 : item.percentage ?? 0
+          item.totalTD
+            ? closedValue(item) ?? 0
+            : item.percentage
+            ? item.percentage
+            : actualVal()
+            ? actualVal()
+            : 0
         "
-        [percentValue]="item.percentage ?? 0"
+        [percentValue]="
+          item.percentage ? item.percentage : actualVal() ? actualVal() : 0
+        "
         [showProgress]="true"
         [progressSize]="
           item.totalABL || item.totalTD || item.totalCapabilities
@@ -70,7 +78,6 @@
             : '12rem'
         "
         [mainBgColor]="getStatusStyle(item.projectStatus).textColor"
-        secondaryBgColor="#F3F4F6"
         progressWidth="11rem"
         [isDebtCard]="
           item.totalABL || item.totalTD || item.totalCapabilities ? true : false

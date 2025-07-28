@@ -84,7 +84,9 @@
             <button
               class="add-new-project-btn"
               (click)="
-                openAddWorkstreamSidebar(false, true, false); isProject = true
+                openAddWorkstreamSidebar(false, true, false);
+                isProject = true;
+                clickedWorkstreamId = summaryData.businessUnitId
               "
             >
               <i class="pi pi-plus"></i>
@@ -189,8 +191,9 @@
             <button
               class="add-new-project-btn"
               (click)="
-                openAddWorkstreamSidebar(true, true, false);
-                editProjectData = null
+                openAddWorkstreamSidebar(false, true, false);
+                editProjectData = null;
+                clickedWorkstreamId = summaryData.businessUnitId
               "
             >
               <i class="pi pi-plus"></i>
@@ -288,7 +291,7 @@
       </div>
     </div>
     <stc-apps-add-workstream-form
-      [isWorkstreamSidebarVisible]="isWorkstreamSidebarVisible"
+      [isWorkstreamSidebarVisible]="!showAddWorkstreamSidebar"
       (addWorkStream)="addWorkStream($event)"
       [isEditWorkStream]="isEditWorkStream"
       [isAddProject]="isAddProject"

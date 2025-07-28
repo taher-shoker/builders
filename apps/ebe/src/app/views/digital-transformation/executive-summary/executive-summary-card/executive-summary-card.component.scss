@@ -7,6 +7,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 250px;
+    }
   }
   .progress-bar {
     height: 200px;
@@ -34,4 +40,12 @@
 }
 .progress-bar {
   padding: 0 20px;
+}
+.popover-section {
+  color: #222222;
+  // @extend .stcFont;
+  font-size: 16px;
+  max-width: 400px;
+  word-spacing: 3px;
+  word-break: break-all;
 }

@@ -1,8 +1,19 @@
 <div class="executive-summary-card">
   <div class="head">
-    <p class="title m-0">
+    <p
+      class="title m-0"
+      (mouseenter)="overlayPanel2?.show($event)"
+      (mouseleave)="overlayPanel2?.hide()"
+    >
       {{ executiveCard().projectName }}
     </p>
+    @if(executiveCard().projectName.trim().length >= 30) {
+    <p-overlayPanel #overlayPanel2 dismissable="true">
+      <section class="popover-section">
+        {{ executiveCard().projectName }}
+      </section>
+    </p-overlayPanel>
+    }
     <div class="status2">
       <stc-apps-status-card
         [status]="executiveCard().projectStatus"

@@ -5,14 +5,13 @@ import {
   InputSignal,
   OnInit,
   Output,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { StatusCardComponent } from '../../status-card/status-card.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import {
-  ExecutiveCardModel,
-  pageDetailsProjectModel,
-} from '../../../../models/digital-transformation';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { pageDetailsProjectModel } from '../../../../models/digital-transformation';
 import {
   STATUS_STYLE_MAP,
   WorkstreamStatus,
@@ -39,7 +38,12 @@ interface Index {
 @Component({
   selector: 'stc-apps-executive-summary-card',
   standalone: true,
-  imports: [CommonModule, StatusCardComponent, SharedUiModule],
+  imports: [
+    CommonModule,
+    StatusCardComponent,
+    SharedUiModule,
+    OverlayPanelModule,
+  ],
   templateUrl: './executive-summary-card.component.html',
   styleUrl: './executive-summary-card.component.scss',
 })
@@ -49,6 +53,7 @@ export class ExecutiveSummaryCardComponent implements OnInit {
   vactual!: number;
   vplanned!: number;
   difference!: number;
+  @ViewChild('overlayPanel2') overlayPanel2?: OverlayPanel;
   data!: ProgressInfo;
   @Output() openProjSidebar = new EventEmitter<pageDetailsProjectModel>();
   ngOnInit() {

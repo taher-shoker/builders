@@ -7,6 +7,7 @@ import { ExecutiveSummaryCardComponent } from './executive-summary-card/executiv
 import {
   AddWorkstreamFormModel,
   AIDashboardModel,
+  CreateWorkStreamModel,
   ExecutiveCardModel,
   ExecutiveSummaryDataModel,
   pageDetailsModel,
@@ -20,6 +21,7 @@ import { DigitalTransformationService } from '../../../services/digital-transfor
 import { Subject, takeUntil } from 'rxjs';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-executive-summary',
   standalone: true,
@@ -46,11 +48,13 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   isEditWorkStream!: boolean;
   isEditProject!: boolean;
   isAddProject!: boolean;
+  toastr = inject(ToastrService);
   endSubs$: Subject<any> = new Subject();
   isProject = false;
   confirmationService = inject(ConfirmationService);
   digitalTransformationService = inject(DigitalTransformationService);
   mainTitle = input<string[]>([]);
+  pageId = input<number>();
   toggleAccordion(index: number, event: Event) {
     event.stopPropagation();
     this.activeAccordionIndex =
@@ -179,6 +183,8 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   openSidebar1(summaryData: pageDetailsModel, type: string) {
     this.sidebarType = type;
     this.sidebarVisible1 = true;
+    this.highlights = [];
+    this.challenges = [];
     this.currentSideBarTitle = summaryData.businessUnit;
     if (
       summaryData.businessUnitHighlights &&
@@ -248,12 +254,92 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   hideAddWorkstreamSidebar() {
     this.isWorkstreamSidebarVisible = false;
   }
+  convertHeighlights(heighlights: string): string {
+    // const lines = heighlights.split('\n');
+    const lines = heighlights.split(' ');
+    const result = lines.map((line, index) => {
+      const parts = line.split(':');
+      const title = parts[0].trim();
+      const value = parts.length > 1 ? parts[1].trim() : '';
+      if (!line.includes(':')) {
+        return {
+          id: index + 1,
+          value: title,
+        };
+      }
+      return {
+        id: index + 1,
+        title,
+        value,
+      };
+    });
+    return JSON.stringify(result);
+  }
+  clickedWorkstreamId!: number;
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
-    console.log('Workstream Data:', workStreamData);
+    const data: CreateWorkStreamModel = {
+      pageId: this.pageId() ?? 0,
+      businessUnit: workStreamData.title,
+      businessUnitStatus: workStreamData.status,
+      businessUnitHighlights: workStreamData.heighlights
+        ? this.convertHeighlights(workStreamData.heighlights)
+        : null,
+      businessUnitChallenges: workStreamData.challenges
+        ? this.convertHeighlights(workStreamData.challenges)
+        : null,
+      weight: workStreamData.weight,
+      actual: workStreamData.actual,
+      planned: workStreamData.planned,
+    };
+    if (data.weight) {
+      this.digitalTransformationService.createNewWorkStream(data).subscribe({
+        next: (res) => {
+          console.log(res);
+          this.getDigitalTransformationDetailsData(1);
+          this.getDigitalTransformationDetailsData(2);
+          this.toastr.success('The workstream is added successfully');
+          this.showAddWorkstreamSidebar = false;
+        },
+      });
+    } else {
+      // console.log(data);
+      console.log(this.clickedWorkstreamId);
+      console.log(this.pageId());
+      const addedProject = {
+        projectName: data.businessUnit,
+        projectStatus: data.businessUnitStatus,
+        metrics: [
+          {
+            name: 'actual',
+            value: data.actual,
+          },
+          {
+            name: 'planned',
+            value: data.planned,
+          },
+        ],
+      };
+      if (this.pageId()) {
+        this.digitalTransformationService
+          .createNewProjectInWorkStream(
+            this.activeAccordionIndex + 1,
+            this.clickedWorkstreamId,
+            addedProject
+          )
+          .subscribe({
+            next: (res) => {
+              this.getDigitalTransformationDetailsData(1);
+              this.getDigitalTransformationDetailsData(2);
+              this.toastr.success('The project is added successfully');
+              this.showAddWorkstreamSidebar = false;
+            },
+          });
+      }
+    }
   }
   editProjectData!: pageDetailsProjectModel | null;
   openProjSidebar(card: pageDetailsProjectModel) {
-    // console.log(card);
+    console.log(card);
     this.editProjectData = { ...card };
   }
   deletedItem: any;

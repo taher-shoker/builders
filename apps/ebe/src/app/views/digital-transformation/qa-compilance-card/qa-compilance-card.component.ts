@@ -38,7 +38,11 @@ export class QaCompilanceCardComponent {
   @Output() sidebarOpened = new EventEmitter();
   underValidationVal = 0;
   highlights: { id: number; title: string; value: string }[] = [];
-
+  actualVal(): number {
+    return this.QAComplianceCardData().projects[0].metrics.filter(
+      (val) => val.name.toLowerCase() === 'actual'
+    )[0]?.value;
+  }
   secondaryValue(project: pageDetailsProjectModel): number | undefined {
     const result = project.metrics?.find(
       (val) => val.name === 'under verfication'
@@ -52,8 +56,8 @@ export class QaCompilanceCardComponent {
 
   showSidebarTap() {
     this.showSidebar = true;
-    if (this.QAComplianceCardData().businessUnitHighlights) {
-      let cleaned = this.QAComplianceCardData().businessUnitHighlights;
+    if (this.QAComplianceCardData().projects[0].projectHighlights) {
+      let cleaned = this.QAComplianceCardData().projects[0].projectHighlights;
       if (cleaned) {
         cleaned = cleaned.replace(/�/g, ' ');
         this.highlights = JSON.parse(cleaned);

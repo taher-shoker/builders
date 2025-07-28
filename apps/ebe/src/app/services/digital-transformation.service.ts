@@ -1,6 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import {
   AddKeyChallengeDataModel,
+  CreateWorkStreamModel,
   IDigitalTransformationTap,
   KeyChallengesModel,
   pageDetailsModel,
@@ -53,8 +54,24 @@ export class DigitalTransformationService {
     );
   }
   deleteKeyChallengrsData(id: number) {
-    return this.http.delete<any>(
+    return this.http.delete(
       `${environment.apiUrl}/business-excellence/dt/pages/keyChallenges/${id}`
+    );
+  }
+  createNewWorkStream(data: CreateWorkStreamModel) {
+    return this.http.post(
+      `${environment.apiUrl}/business-excellence/dt/pages/workstream`,
+      data
+    );
+  }
+  createNewProjectInWorkStream(
+    pageId: number,
+    workstreamId: number,
+    data: any
+  ) {
+    return this.http.post(
+      `${environment.apiUrl}/business-excellence/dt/pages/workstream/project/${pageId}/${workstreamId}`,
+      data
     );
   }
 }

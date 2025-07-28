@@ -31,8 +31,11 @@
     <h4>{{ currTap().name }}</h4>
   </div> -->
   @if(currTap().id === 1){
-  <stc-apps-executive-summary [mainTitle]="firstTapTitles" />
-  } @else if(currTap().id !== 8) {
+  <stc-apps-executive-summary
+    [mainTitle]="firstTapTitles"
+    [pageId]="currTap().id"
+  />
+  } @else if(currTap().id !== 8 && currTap().id !== 9) {
   <section class="qa-compilance">
     <div class="qa-compilance-header">
       <p class="main-title">{{ currTap().value }}</p>
@@ -61,7 +64,7 @@
     <h3 class="empty-data-msg">there are no data</h3>
     }
   </section>
-  } @else {
+  } @else if(currTap().id === 8) {
   <section class="qa-compilance">
     <div class="qa-compilance-header">
       <p class="main-title">{{ currTap().value }}</p>
@@ -74,8 +77,20 @@
       <stc-apps-key-challenges-table [isChallengeAdded]="isChallengeAdded" />
     </div>
   </section>
+  } @else {
+  <section class="qa-compilance">
+    <div class="qa-compilance-header">
+      <p class="main-title">{{ currTap().value }}</p>
+      <button class="add-workstream-btn" (click)="showChallengesSidebar = true">
+        <i class="pi pi-plus"></i>
+        add achievement
+      </button>
+    </div>
+    <div class="qa-compilance-content"></div>
+  </section>
   }
 </section>
+
 <p-sidebar
   [(visible)]="showAddWorkstreamSidebar"
   position="right"
@@ -98,7 +113,7 @@
     </div>
     <stc-apps-add-workstream-form
       (addWorkStream)="addWorkStream($event)"
-      [isWorkstreamSidebarVisible]="isWorkstreamSidebarVisible"
+      [isWorkstreamSidebarVisible]="!showAddWorkstreamSidebar"
       [type]="
         currTap().id !== 4 &&
         currTap().id !== 5 &&
