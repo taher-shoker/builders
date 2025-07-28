@@ -1,0 +1,15 @@
+.feedback-issue-container {
+  padding: 41px;
+  &_title {
+    color: var(--blackColor);
+    font-size: 24px;
+    font-weight: 600;
+  }
+  &_form {
+    overflow: hidden;
+  }
+}
+::ng-deep .mat-mdc-dialog-container .mat-mdc-dialog-content {
+  overflow: hidden;
+  padding: 0 !important;
+}

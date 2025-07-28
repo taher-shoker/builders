@@ -1,0 +1,17 @@
+<div class="feedback-issue-container">
+  <h1 class="feedback-issue-container_title">Share Your Feedback/Issue</h1>
+  <p class="feedback-issue-container_subtitle">
+    Help us improve by sharing your thoughts or reporting issues
+  </p>
+  <div class="feedback-issue-container_form">
+    <form [formGroup]="feedbackIssueForm" (ngSubmit)="submit()">
+      <div mat-dialog-content>
+        <mat-label>Type*</mat-label>
+        <mat-radio-group formControlName="type">
+          <mat-radio-button value="Feedback">Feedback</mat-radio-button>
+          <mat-radio-button value="Issue">Issue</mat-radio-button>
+        </mat-radio-group>
+      </div>
+    </form>
+  </div>
+</div>

@@ -38,6 +38,7 @@ import {
 } from '@angular/animations';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
 import { UtilitiesService } from 'libs/shared-ui/src/lib/services/utilities.service';
+import { FeedbackIssueComponent } from '../../../feedback-issue/feedback-issue.component';
 
 export interface Milestone {
   activityName: string;
@@ -567,6 +568,11 @@ export class MilestonesComponent
         const data: Blob = new Blob([buffer]);
         saveAs(data, 'milestones.csv');
       });
+  }
+  openFeedbackDialog() {
+    this.matDialog.open(FeedbackIssueComponent, {
+      width: '1200px',
+    });
   }
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
