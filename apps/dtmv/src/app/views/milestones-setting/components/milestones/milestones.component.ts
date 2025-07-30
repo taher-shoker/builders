@@ -571,6 +571,7 @@ export class MilestonesComponent
   }
   openFeedbackDialog() {
     this.matDialog.open(FeedbackIssueComponent, {
+      disableClose: true,
       width: '1200px',
     });
   }
