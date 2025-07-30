@@ -5,6 +5,7 @@ import {
   IDigitalTransformationTap,
   KeyChallengesModel,
   pageDetailsModel,
+  QuarterAchievementModel,
 } from '../models/digital-transformation';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -99,6 +100,11 @@ export class DigitalTransformationService {
   deleteWorkstream(workStreamId: number) {
     return this.http.delete(
       `${environment.apiUrl}/business-excellence/dt/pages/workstream/${workStreamId}`
+    );
+  }
+  getQuarterAchievementsData(): Observable<QuarterAchievementModel[]> {
+    return this.http.get<QuarterAchievementModel[]>(
+      `${environment.apiUrl}/business-excellence/dt/pages/achievement`
     );
   }
 }
