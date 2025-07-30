@@ -3,8 +3,10 @@ import {
   EventEmitter,
   input,
   InputSignal,
+  OnChanges,
   OnInit,
   Output,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -47,7 +49,7 @@ interface Index {
   templateUrl: './executive-summary-card.component.html',
   styleUrl: './executive-summary-card.component.scss',
 })
-export class ExecutiveSummaryCardComponent implements OnInit {
+export class ExecutiveSummaryCardComponent implements OnInit, OnChanges {
   executiveCard: InputSignal<pageDetailsProjectModel> =
     input.required<pageDetailsProjectModel>();
   vactual!: number;
@@ -57,6 +59,12 @@ export class ExecutiveSummaryCardComponent implements OnInit {
   data!: ProgressInfo;
   @Output() openProjSidebar = new EventEmitter<pageDetailsProjectModel>();
   ngOnInit() {
+    this.updateChartData();
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    this.updateChartData();
+  }
+  updateChartData() {
     this.vactual = this.executiveCard().metrics.filter(
       (val) => val.name === 'actual'
     )[0].value;

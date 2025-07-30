@@ -74,4 +74,31 @@ export class DigitalTransformationService {
       data
     );
   }
+  deleteWorkStreamProject(projectId: number) {
+    return this.http.delete(
+      `${environment.apiUrl}/business-excellence/dt/pages/workstream/project/${projectId}`
+    );
+  }
+  deleteWorkStream(workstreamId: number) {
+    return this.http.delete(
+      `${environment.apiUrl}/business-excellence/dt/pages/workstream/${workstreamId}`
+    );
+  }
+  updateWorkstreamProject(ProjectId: number, data: any) {
+    return this.http.put(
+      `${environment.apiUrl}/business-excellence/dt/pages/workstream/project/${ProjectId}`,
+      data
+    );
+  }
+  updateWorkstream(workStreamId: number, data: any) {
+    return this.http.put(
+      `${environment.apiUrl}/business-excellence/dt/pages/workstream/${workStreamId}`,
+      data
+    );
+  }
+  deleteWorkstream(workStreamId: number) {
+    return this.http.delete(
+      `${environment.apiUrl}/business-excellence/dt/pages/workstream/${workStreamId}`
+    );
+  }
 }

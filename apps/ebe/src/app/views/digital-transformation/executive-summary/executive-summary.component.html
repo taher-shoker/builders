@@ -8,7 +8,8 @@
             <button
               class="add-workstream-btn"
               (click)="
-                openAddWorkstreamSidebar(false, false, false); isProject = false
+                openAddWorkstreamSidebar(false, false, false);
+                isProject.set(false)
               "
             >
               <i class="pi pi-plus"></i>
@@ -55,12 +56,11 @@
               <button
                 (click)="
                   openAddWorkstreamSidebar(true, false, false, summaryData);
-                  isProject = false;
+                  isProject.set(false);
                   editProjectData = null
                 "
               >
                 <i class="pi pi-pencil"></i>
-                <!-- <img src="assets/images/button.svg" alt="" /> -->
               </button>
             </div>
           </div>
@@ -85,7 +85,7 @@
               class="add-new-project-btn"
               (click)="
                 openAddWorkstreamSidebar(false, true, false);
-                isProject = true;
+                isProject.set(true);
                 clickedWorkstreamId = summaryData.businessUnitId
               "
             >
@@ -99,11 +99,13 @@
                   (openProjSidebar)="
                     openProjSidebar($event);
                     openAddWorkstreamSidebar(false, false, true);
-                    isProject = true
+                    isProject.set(true)
                   "
                   [executiveCard]="item"
                 />
               </div>
+              } @empty {
+              <p class="empty-msg">there are no projects for this workstream</p>
               }
             </div>
           </div>
@@ -193,7 +195,8 @@
               (click)="
                 openAddWorkstreamSidebar(false, true, false);
                 editProjectData = null;
-                clickedWorkstreamId = summaryData.businessUnitId
+                clickedWorkstreamId = summaryData.businessUnitId;
+                isProject.set(true)
               "
             >
               <i class="pi pi-plus"></i>
@@ -205,11 +208,14 @@
                 <stc-apps-executive-summary-card
                   (openProjSidebar)="
                     openProjSidebar($event);
-                    openAddWorkstreamSidebar(false, false, true)
+                    openAddWorkstreamSidebar(false, false, true);
+                    isProject.set(true)
                   "
                   [executiveCard]="item"
                 />
               </div>
+              } @empty {
+              <p class="empty-msg">there are no projects for this workstream</p>
               }
             </div>
           </div>
@@ -297,7 +303,7 @@
       [isAddProject]="isAddProject"
       [isEditProject]="isEditProject"
       type=""
-      [isProject]="isProject"
+      [isProject]="isProject()"
       [editProjectData]="isAddProject ? null : editProjectData"
       [editWorkstreamFormData]="!isEditWorkStream ? null : editedData"
       (delete)="deleteWorkStream($event)"
@@ -317,10 +323,13 @@
           (click)="closeDialog()"
         ></i>
       </div>
-      <span
-        >know that deleting this workstream will also delete all related
-        records</span
-      >
+      <span>
+        {{
+          isProject()
+            ? 'Are you sure you want to delete this project?'
+            : 'know that deleting this workstream will also delete all related records'
+        }}
+      </span>
       <div class="buttons">
         <button class="delete-btn" (click)="deleteChallenge()">delete</button>
         <button class="cancel-btn" (click)="closeDialog()">cancel</button>

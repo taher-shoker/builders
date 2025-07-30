@@ -1,0 +1,66 @@
+<section class="quarter-achievements">
+  <div class="quarter-achievements-header">
+    <p class="main-title">{{ currentTab().value }}</p>
+    <button class="add-workstream-btn">
+      <i class="pi pi-plus"></i>
+      add achievement
+    </button>
+  </div>
+  <div class="quarter-achievements-content">
+    <p-accordion [activeIndex]="activeAccordionIndex">
+      <p-accordionTab>
+        <ng-template pTemplate="header">
+          <div class="main-header" (click)="$event.stopPropagation()">
+            <p>Q1 Achievement</p>
+            <div>
+              <img src="assets/images/button3.svg" class="edit-img" alt="" />
+              <img
+                src="assets/images/arrow-up.svg"
+                alt=""
+                class="toggle-img"
+                (click)="toggleAccordion(0, $event)"
+              />
+            </div>
+          </div>
+        </ng-template>
+        <div class="quarter-achievements-body">
+          <div class="main-title2">
+            <img src="assets/images/achievement-img.svg" alt="" />
+            <p>CBU</p>
+          </div>
+          <div class="details">
+            @for (item of data; track $index) {
+            <div class="details-card">
+              <p class="title">{{ item.title }}</p>
+              <ul>
+                @for (desc of item.description; track $index) {
+                <li>
+                  <p class="desc">{{ desc }}</p>
+                </li>
+                }
+              </ul>
+            </div>
+            }
+          </div>
+        </div>
+      </p-accordionTab>
+      <!-- <p-accordionTab>
+        <ng-template pTemplate="header">
+          <div class="main-header" (click)="$event.stopPropagation()">
+            <p>Q2 Achievement</p>
+            <div>
+              <img src="assets/images/button3.svg" class="edit-img" alt="" />
+              <img
+                src="assets/images/arrow-up.svg"
+                alt=""
+                class="toggle-img"
+                (click)="toggleAccordion(1, $event)"
+              />
+            </div>
+          </div>
+        </ng-template>
+        <h1>dfasdfsd</h1>
+      </p-accordionTab> -->
+    </p-accordion>
+  </div>
+</section>

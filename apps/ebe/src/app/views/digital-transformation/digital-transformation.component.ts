@@ -22,6 +22,7 @@ import { KeyChallengesTableComponent } from './key-challenges-table/key-challeng
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
+import { QuarterAchievementsComponent } from './quarter-achievements/quarter-achievements.component';
 @Component({
   selector: 'stc-apps-digital-transformation',
   standalone: true,
@@ -34,6 +35,7 @@ import { ConfirmationService } from 'primeng/api';
     SidebarModule,
     AddWorkstreamFormComponent,
     ConfirmDialogModule,
+    QuarterAchievementsComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './digital-transformation.component.html',
@@ -47,6 +49,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     {} as DigitalTransformationTapModel
   );
   datePipe = inject(DatePipe);
+  isEditMode = false;
   technicalDebtDashboardModel: TechnicalDebtDashboardModel[] = [];
   scorecardService = inject(ScorecardService);
   // qAComplianceData: QAComplianceModel[] = [];
@@ -204,6 +207,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
               {
                 projectStatus: workStreamData.status,
                 metrics: metricsArr,
+                projectId: this.editedData?.projects[0].projectId,
                 projectHighlights: workStreamData.heighlights
                   ? this.convertHeighlights(workStreamData.heighlights)
                   : workStreamData.highlights
@@ -216,6 +220,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
               {
                 projectStatus: workStreamData.status,
                 projectName: 'Technical Dept',
+                projectId: this.editedData?.projects[0].projectId,
                 metrics: [
                   {
                     name: 'closed',
@@ -248,6 +253,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
               {
                 projectStatus: workStreamData.status,
                 projectName: 'Architectual Backlog',
+                projectId: this.editedData?.projects[1].projectId,
                 metrics: [
                   {
                     name: 'closed',
@@ -283,6 +289,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
           : [
               {
                 projectStatus: workStreamData.status,
+                projectId: this.editedData?.projects[0].projectId,
                 metrics: [
                   {
                     name: 'completed',
@@ -314,14 +321,27 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
             ],
     };
     console.log(data);
-    console.log('workStreamData => ', workStreamData);
-    this.digitalTransformationService.createNewWorkStream(data).subscribe({
-      next: (res) => {
-        this.getDigitalTransformationDetailsData(this.currTap().id);
-        this.toastr.success('The workstream is added successfully');
-        this.showAddWorkstreamSidebar = false;
-      },
-    });
+    // console.log('workStreamData => ', workStreamData);
+    // console.log('workStreamData => ', this.isEditMode);
+    if (this.isEditMode) {
+      this.digitalTransformationService
+        .updateWorkstream(this.editedData?.businessUnitId ?? 0, data)
+        .subscribe({
+          next: (res) => {
+            this.getDigitalTransformationDetailsData(this.currTap().id);
+            this.toastr.success('The workstream is updated successfully');
+            this.showAddWorkstreamSidebar = false;
+          },
+        });
+    } else {
+      this.digitalTransformationService.createNewWorkStream(data).subscribe({
+        next: (res) => {
+          this.getDigitalTransformationDetailsData(this.currTap().id);
+          this.toastr.success('The workstream is added successfully');
+          this.showAddWorkstreamSidebar = false;
+        },
+      });
+    }
   }
   challengeFormData!: AddKeyChallengeDataModel;
   isChallengeAdded = false;
@@ -359,6 +379,20 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   }
   deleteChallenge() {
     console.log(this.deletedItem);
+    this.digitalTransformationService
+      .deleteWorkStream(this.deletedItem.businessUnitId)
+      .subscribe({
+        next: () => {
+          this.getDigitalTransformationDetailsData(this.currTap().id);
+          this.toastr.success('The project is deleted successfully');
+          this.showAddWorkstreamSidebar = false;
+          this.closeDialog();
+        },
+        error: () => {
+          this.closeDialog();
+          this.showAddWorkstreamSidebar = false;
+        },
+      });
   }
   closeDialog() {
     this.confirmationService.close();

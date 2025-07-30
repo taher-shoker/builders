@@ -140,7 +140,7 @@
     ></textarea>
   </div>
   } @else if(currentTabId() !== 4 && currentTabId() !== 5 && currentTabId() !==
-  6 && currentTabId() !== 7){
+  6 && currentTabId() !== 7){ @if(!isEditWorkStream()){
   <div class="form-group">
     <label for="title">
       title
@@ -164,6 +164,7 @@
       title is required
     </small>
   </div>
+  }
   <div class="form-group">
     <label>
       status
@@ -203,6 +204,7 @@
       placeholder="Choose Weight"
       formControlName="weight"
       (keydown)="preventInvalidKeys($event)"
+      (wheel)="preventMouseWheelChange($event)"
       [class.is-invalid]="weight?.invalid && (weight?.dirty || weight?.touched)"
       [class.is-invalid-brdr]="
         weight?.invalid && (weight?.dirty || weight?.touched)
@@ -238,6 +240,7 @@
       placeholder="Choose Planned Progress"
       formControlName="planned"
       (keydown)="preventInvalidKeys($event)"
+      (wheel)="preventMouseWheelChange($event)"
       [class.is-invalid]="
         planned?.invalid && (planned?.dirty || planned?.touched)
       "
@@ -274,6 +277,7 @@
       placeholder="Choose Actual Progress"
       formControlName="actual"
       (keydown)="preventInvalidKeys($event)"
+      (wheel)="preventMouseWheelChange($event)"
       [class.is-invalid]="actual?.invalid && (actual?.dirty || actual?.touched)"
       [class.is-invalid-brdr]="
         actual?.invalid && (actual?.dirty || actual?.touched)
@@ -334,6 +338,7 @@
       id="requestedArtifact"
       placeholder="No. Requested Artifacts"
       formControlName="requestedArtifact"
+      (wheel)="preventMouseWheelChange($event)"
       (keydown)="preventInvalidKeys($event)"
       [class.is-invalid]="
         requestedArtifact?.invalid &&
@@ -372,6 +377,7 @@
       id="completed"
       placeholder="No. Completed Artifacts"
       formControlName="completed"
+      (wheel)="preventMouseWheelChange($event)"
       (keydown)="preventInvalidKeys($event)"
       [class.is-invalid]="
         completed?.invalid && (completed?.dirty || completed?.touched)
@@ -407,6 +413,7 @@
       class="form-control"
       id="missingArtifacts"
       placeholder="No. Missing Artifacts"
+      (wheel)="preventMouseWheelChange($event)"
       formControlName="missingArtifacts"
       (keydown)="preventInvalidKeys($event)"
       [class.is-invalid]="
@@ -436,7 +443,7 @@
     </small>
   </div>
   } } @else if(currentTabId() === 5 || currentTabId() === 6 || currentTabId()
-  === 7){
+  === 7){ @if(!isEditWorkStream()){
   <div class="form-group">
     <label for="title">
       title
@@ -460,6 +467,7 @@
       title is required
     </small>
   </div>
+  }
   <div class="form-group">
     <label>
       status
@@ -516,6 +524,7 @@
               currentTabId() === 5 ? 'No. closed' : 'No. completed'
             "
             formControlName="closed"
+            (wheel)="preventMouseWheelChange($event)"
             (keydown)="preventInvalidKeys($event)"
             [class.is-invalid]="
               addWorkstreamForm
@@ -555,6 +564,7 @@
             id="open"
             [placeholder]="currentTabId() === 7 ? 'No. on track' : 'No. open'"
             formControlName="open"
+            (wheel)="preventMouseWheelChange($event)"
             (keydown)="preventInvalidKeys($event)"
             [class.is-invalid]="
               addWorkstreamForm
@@ -595,6 +605,7 @@
             placeholder="No. delayed"
             formControlName="delayed"
             (keydown)="preventInvalidKeys($event)"
+            (wheel)="preventMouseWheelChange($event)"
             [class.is-invalid]="
               addWorkstreamForm
                 .get('technicalDebt.delayed')
@@ -636,6 +647,7 @@
             "
             formControlName="underVerification"
             (keydown)="preventInvalidKeys($event)"
+            (wheel)="preventMouseWheelChange($event)"
             [class.is-invalid]="
               addWorkstreamForm
                 .get('technicalDebt.underVerification')
@@ -672,6 +684,7 @@
           class="form-control"
           id="totalTD"
           placeholder="No. totalTD"
+          (wheel)="preventMouseWheelChange($event)"
           formControlName="totalTD"
           (keydown)="preventInvalidKeys($event)"
           [class.is-invalid]="
@@ -712,6 +725,7 @@
             placeholder="No. closed"
             formControlName="closed"
             (keydown)="preventInvalidKeys($event)"
+            (wheel)="preventMouseWheelChange($event)"
             [class.is-invalid]="
               addWorkstreamForm
                 .get('architecturalBacklog.closed')
@@ -751,6 +765,7 @@
             placeholder="No. opened"
             formControlName="open"
             (keydown)="preventInvalidKeys($event)"
+            (wheel)="preventMouseWheelChange($event)"
             [class.is-invalid]="
               addWorkstreamForm
                 .get('architecturalBacklog.open')
@@ -790,6 +805,7 @@
             placeholder="No. delayed"
             formControlName="delayed"
             (keydown)="preventInvalidKeys($event)"
+            (wheel)="preventMouseWheelChange($event)"
             [class.is-invalid]="
               addWorkstreamForm
                 .get('architecturalBacklog.delayed')
@@ -828,6 +844,7 @@
             id="underVerification"
             placeholder="No. underVerification"
             formControlName="underVerification"
+            (wheel)="preventMouseWheelChange($event)"
             (keydown)="preventInvalidKeys($event)"
             [class.is-invalid]="
               addWorkstreamForm
@@ -868,6 +885,7 @@
           class="form-control"
           id="totalTD"
           placeholder="No. total ABL"
+          (wheel)="preventMouseWheelChange($event)"
           formControlName="totalTD"
           (keydown)="preventInvalidKeys($event)"
           [class.is-invalid]="
@@ -891,7 +909,7 @@
       </div>
     </div>
   </div>
-  } } @else {
+  } } @else { @if(!isEditWorkStream()){
   <div class="form-group">
     <label for="title">
       title
@@ -915,6 +933,7 @@
       title is required
     </small>
   </div>
+  }
   <div class="form-group">
     <label>
       status
@@ -964,6 +983,7 @@
       placeholder="Choose Planned Progress"
       formControlName="planned"
       (keydown)="preventInvalidKeys($event)"
+      (wheel)="preventMouseWheelChange($event)"
       [class.is-invalid]="
         planned?.invalid && (planned?.dirty || planned?.touched)
       "
@@ -1000,6 +1020,7 @@
       placeholder="Choose Actual Progress"
       formControlName="actual"
       (keydown)="preventInvalidKeys($event)"
+      (wheel)="preventMouseWheelChange($event)"
       [class.is-invalid]="actual?.invalid && (actual?.dirty || actual?.touched)"
       [class.is-invalid-brdr]="
         actual?.invalid && (actual?.dirty || actual?.touched)

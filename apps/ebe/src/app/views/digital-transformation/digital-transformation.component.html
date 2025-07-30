@@ -42,7 +42,10 @@
       <button
         class="add-workstream-btn"
         (click)="
-          showAddWorkstreamSidebar = true; isEdit = false; editedData = null
+          showAddWorkstreamSidebar = true;
+          isEdit = false;
+          editedData = null;
+          isEditMode = false
         "
       >
         <i class="pi pi-plus"></i>
@@ -54,7 +57,9 @@
       @for (card of tapsDetailsData; track card.businessUnit) {
       <div class="kpi-container-card">
         <stc-apps-qa-compilance-card
-          (sidebarOpened)="showWorkStreamSidebar($event); isEdit = true"
+          (sidebarOpened)="
+            showWorkStreamSidebar($event); isEdit = true; isEditMode = true
+          "
           [QAComplianceCardData]="card"
         />
       </div>
@@ -78,16 +83,7 @@
     </div>
   </section>
   } @else {
-  <section class="qa-compilance">
-    <div class="qa-compilance-header">
-      <p class="main-title">{{ currTap().value }}</p>
-      <button class="add-workstream-btn" (click)="showChallengesSidebar = true">
-        <i class="pi pi-plus"></i>
-        add achievement
-      </button>
-    </div>
-    <div class="qa-compilance-content"></div>
-  </section>
+  <stc-apps-quarter-achievements [currentTab]="currTap()" />
   }
 </section>
 
@@ -123,6 +119,7 @@
           : ''
       "
       [editedCompilanceData]="editedData"
+      [isEditWorkStream]="isEditMode"
       (delete)="showDeleteDialog($event)"
       [currentTabId]="currTap().id"
     />

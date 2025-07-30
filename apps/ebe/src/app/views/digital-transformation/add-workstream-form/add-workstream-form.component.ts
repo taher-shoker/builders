@@ -6,6 +6,8 @@ import {
   OnChanges,
   OnInit,
   Output,
+  SimpleChange,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
@@ -47,7 +49,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
   editWorkstreamFormData = input<pageDetailsModel | null>(null);
   editProjectData = input<pageDetailsProjectModel | null>(null);
   editProjectDataStatus = input<string | null>(null);
-  isProject = input(false);
+  isProject = input();
   @Output() delete = new EventEmitter();
   @Output() addWorkStream: EventEmitter<AddWorkstreamFormModel> =
     new EventEmitter<AddWorkstreamFormModel>();
@@ -73,6 +75,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         this.addWorkstreamForm.reset();
       }
     }
+    console.log(this.isProject());
     if (this.isAddProject() || this.isEditProject()) {
       this.addWorkstreamForm = this.formBuilder.group({
         title: ['', [Validators.required]],
@@ -239,19 +242,34 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
           // this.addWorkstreamForm.setValue(this.editFormData());
         }
       } else if (this.currentTabId() === 4) {
-        this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
-          status: ['', [Validators.required]],
-          heighlights: [''],
-          actual: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-          planned: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-        });
+        if (!this.isEditWorkStream()) {
+          this.addWorkstreamForm = this.formBuilder.group({
+            title: ['', [Validators.required]],
+            status: ['', [Validators.required]],
+            heighlights: [''],
+            actual: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            planned: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+          });
+        } else {
+          this.addWorkstreamForm = this.formBuilder.group({
+            status: ['', [Validators.required]],
+            heighlights: [''],
+            actual: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            planned: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+          });
+        }
         if (this.editedCompilanceData()) {
           let textareaValue = '';
           console.log(this.editedCompilanceData());
@@ -275,10 +293,14 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                   if (Array.isArray(parsed)) {
                     textareaValue = parsed
                       .map((item: any) => {
-                        if (item.title) {
-                          return `${item.title}: ${item.value}`;
+                        if (item.title && !item.value) {
+                          return `${item.title}`;
+                        } else if (!item.title && item.value) {
+                          return `${item.value}`;
+                        } else if (item.title && item.value) {
+                          return `${item.title}:${item.value}`;
                         }
-                        return `${item.value}`;
+                        return '';
                       })
                       .join('\n');
                   }
@@ -321,39 +343,73 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         this.currentTabId() === 7
       ) {
         if (this.currentTabId() === 5) {
-          this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
-            highlights: [''],
-            technicalDebt: this.formBuilder.group({
-              closed: ['', [Validators.required]],
-              open: ['', [Validators.required]],
-              delayed: ['', [Validators.required]],
-              underVerification: ['', [Validators.required]],
-              totalTD: ['', [Validators.required]],
-            }),
-
-            architecturalBacklog: this.formBuilder.group({
-              closed: ['', [Validators.required]],
-              open: ['', [Validators.required]],
-              delayed: ['', [Validators.required]],
-              underVerification: ['', [Validators.required]],
-              totalTD: ['', [Validators.required]],
-            }),
-          });
+          if (this.isEditWorkStream()) {
+            this.addWorkstreamForm = this.formBuilder.group({
+              status: ['', [Validators.required]],
+              highlights: [''],
+              technicalDebt: this.formBuilder.group({
+                closed: ['', [Validators.required]],
+                open: ['', [Validators.required]],
+                delayed: ['', [Validators.required]],
+                underVerification: ['', [Validators.required]],
+                totalTD: ['', [Validators.required]],
+              }),
+              architecturalBacklog: this.formBuilder.group({
+                closed: ['', [Validators.required]],
+                open: ['', [Validators.required]],
+                delayed: ['', [Validators.required]],
+                underVerification: ['', [Validators.required]],
+                totalTD: ['', [Validators.required]],
+              }),
+            });
+          } else {
+            this.addWorkstreamForm = this.formBuilder.group({
+              title: ['', [Validators.required]],
+              status: ['', [Validators.required]],
+              highlights: [''],
+              technicalDebt: this.formBuilder.group({
+                closed: ['', [Validators.required]],
+                open: ['', [Validators.required]],
+                delayed: ['', [Validators.required]],
+                underVerification: ['', [Validators.required]],
+                totalTD: ['', [Validators.required]],
+              }),
+              architecturalBacklog: this.formBuilder.group({
+                closed: ['', [Validators.required]],
+                open: ['', [Validators.required]],
+                delayed: ['', [Validators.required]],
+                underVerification: ['', [Validators.required]],
+                totalTD: ['', [Validators.required]],
+              }),
+            });
+          }
         } else {
-          this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
-            highlights: [''],
-            technicalDebt: this.formBuilder.group({
-              closed: ['', [Validators.required]],
-              open: ['', [Validators.required]],
-              delayed: ['', [Validators.required]],
-              underVerification: ['', [Validators.required]],
-              totalTD: ['', [Validators.required]],
-            }),
-          });
+          if (this.isEditWorkStream()) {
+            this.addWorkstreamForm = this.formBuilder.group({
+              status: ['', [Validators.required]],
+              highlights: [''],
+              technicalDebt: this.formBuilder.group({
+                closed: ['', [Validators.required]],
+                open: ['', [Validators.required]],
+                delayed: ['', [Validators.required]],
+                underVerification: ['', [Validators.required]],
+                totalTD: ['', [Validators.required]],
+              }),
+            });
+          } else {
+            this.addWorkstreamForm = this.formBuilder.group({
+              title: ['', [Validators.required]],
+              status: ['', [Validators.required]],
+              highlights: [''],
+              technicalDebt: this.formBuilder.group({
+                closed: ['', [Validators.required]],
+                open: ['', [Validators.required]],
+                delayed: ['', [Validators.required]],
+                underVerification: ['', [Validators.required]],
+                totalTD: ['', [Validators.required]],
+              }),
+            });
+          }
         }
         if (this.editedCompilanceData()) {
           console.log(this.editedCompilanceData());
@@ -427,21 +483,23 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                 ?.projects.filter(
                   (val) => val.projectName.toLowerCase() === 'technical dept'
                 )[0]
-                .metrics.filter((val2) => val2.name === 'closed')[0].value
+                .metrics.filter((val2) => val2.name.trim() === 'closed')[0]
+                .value
             );
             this.addWorkstreamForm.get('technicalDebt.open')?.setValue(
               this.editedCompilanceData()
                 ?.projects.filter(
                   (val) => val.projectName.toLowerCase() === 'technical dept'
                 )[0]
-                .metrics.filter((val2) => val2.name === 'open')[0].value
+                .metrics.filter((val2) => val2.name.trim() === 'open')[0].value
             );
             this.addWorkstreamForm.get('technicalDebt.delayed')?.setValue(
               this.editedCompilanceData()
                 ?.projects.filter(
                   (val) => val.projectName.toLowerCase() === 'technical dept'
                 )[0]
-                .metrics.filter((val2) => val2.name === 'delayed')[0].value
+                .metrics.filter((val2) => val2.name.trim() === 'delayed')[0]
+                .value
             );
             this.addWorkstreamForm
               .get('technicalDebt.underVerification')
@@ -451,7 +509,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                     (val) => val.projectName.toLowerCase() === 'technical dept'
                   )[0]
                   .metrics.filter(
-                    (val2) => val2.name === 'under verfication'
+                    (val2) => val2.name.trim() === 'under verfication'
                   )[0].value
               );
             this.addWorkstreamForm.get('architecturalBacklog.closed')?.setValue(
@@ -460,7 +518,8 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                   (val) =>
                     val.projectName.toLowerCase() === 'architectual backlog'
                 )[0]
-                .metrics.filter((val2) => val2.name === 'closed')[0].value
+                .metrics.filter((val2) => val2.name.trim() === 'closed')[0]
+                .value
             );
             if (this.editedCompilanceData()?.projects[0].totalTD) {
               this.addWorkstreamForm
@@ -478,7 +537,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                   (val) =>
                     val.projectName.toLowerCase() === 'architectual backlog'
                 )[0]
-                .metrics.filter((val2) => val2.name === 'open')[0].value
+                .metrics.filter((val2) => val2.name.trim() === 'open')[0].value
             );
             this.addWorkstreamForm
               .get('architecturalBacklog.delayed')
@@ -488,7 +547,8 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                     (val) =>
                       val.projectName.toLowerCase() === 'architectual backlog'
                   )[0]
-                  .metrics.filter((val2) => val2.name === 'delayed')[0].value
+                  .metrics.filter((val2) => val2.name.trim() === 'delayed')[0]
+                  .value
               );
             this.addWorkstreamForm
               .get('architecturalBacklog.underVerification')
@@ -499,15 +559,25 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                       val.projectName.toLowerCase() === 'architectual backlog'
                   )[0]
                   .metrics.filter(
-                    (val2) => val2.name === 'under verfication'
+                    (val2) => val2.name.trim() === 'under verfication'
                   )[0].value
               );
+            if (this.editedCompilanceData()?.projects[1].totalABL) {
+              this.addWorkstreamForm
+                .get('architecturalBacklog.totalTD')
+                ?.setValue(
+                  this.editedCompilanceData()?.projects.filter(
+                    (val) =>
+                      val.projectName.toLowerCase() === 'architectual backlog'
+                  )[0].totalABL
+                );
+            }
           } else {
             this.addWorkstreamForm
               .get('technicalDebt.closed')
               ?.setValue(
                 this.editedCompilanceData()?.projects[0].metrics.filter(
-                  (val2) => val2.name.toLowerCase() === 'completed'
+                  (val2) => val2.name.trim().toLowerCase() === 'completed'
                 )[0]?.value
               );
             this.addWorkstreamForm
@@ -515,48 +585,69 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
               ?.setValue(
                 this.editedCompilanceData()?.projects[0].metrics.filter(
                   (val2) =>
-                    val2.name.toLowerCase() === 'open' ||
-                    val2.name.toLowerCase() === 'on track'
+                    val2.name.trim().toLowerCase() === 'open' ||
+                    val2.name.trim().toLowerCase() === 'on track'
                 )[0]?.value
               );
             this.addWorkstreamForm
               .get('technicalDebt.delayed')
               ?.setValue(
                 this.editedCompilanceData()?.projects[0].metrics.filter(
-                  (val2) => val2.name.toLowerCase() === 'delayed'
+                  (val2) => val2.name.trim().toLowerCase() === 'delayed'
                 )[0]?.value
               );
             this.addWorkstreamForm
               .get('technicalDebt.underVerification')
               ?.setValue(
                 this.editedCompilanceData()?.projects[0].metrics.filter(
-                  (val2) => val2.name.toLowerCase() === 'on hold'
+                  (val2) => val2.name.trim().toLowerCase() === 'on hold'
                 )[0]?.value
               );
           }
         }
       } else {
-        this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
-          status: ['', [Validators.required]],
-          weight: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-          actual: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-          planned: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-          heighlights: [''],
-          challenges: [''],
-        });
+        if (!this.isEditWorkStream()) {
+          this.addWorkstreamForm = this.formBuilder.group({
+            title: ['', [Validators.required]],
+            status: ['', [Validators.required]],
+            weight: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            actual: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            planned: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            heighlights: [''],
+            challenges: [''],
+          });
+        } else {
+          this.addWorkstreamForm = this.formBuilder.group({
+            status: ['', [Validators.required]],
+            weight: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            actual: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            planned: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            heighlights: [''],
+            challenges: [''],
+          });
+        }
         if (this.editWorkstreamFormData()) {
           let textareaValue = '';
           let textareaValue2 = '';
+          console.log(this.editWorkstreamFormData());
           if (this.editWorkstreamFormData()?.businessUnitHighlights) {
             const highlights =
               this.editWorkstreamFormData()?.businessUnitHighlights;
@@ -574,10 +665,14 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                   if (Array.isArray(parsed)) {
                     textareaValue = parsed
                       .map((item: any) => {
-                        if (item.title) {
-                          return `${item.title}: ${item.value}`;
+                        if (item.title && !item.value) {
+                          return `${item.title}`;
+                        } else if (!item.title && item.value) {
+                          return `${item.value}`;
+                        } else if (item.title && item.value) {
+                          return `${item.title}:${item.value}`;
                         }
-                        return `${item.value}`;
+                        return '';
                       })
                       .join('\n');
                   }
@@ -605,11 +700,21 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                   });
                 if (cleanedString.trim().startsWith('[')) {
                   const parsed = JSON.parse(cleanedString);
-                  if (Array.isArray(parsed)) {
+                  if (Array.isArray(parsed) && parsed.length !== 0) {
                     textareaValue2 = parsed
-                      .map((item: any) => `${item.title}: ${item.value}`)
+                      .map((item: any) => {
+                        if (item.title && !item.value) {
+                          return `${item.title}`;
+                        } else if (!item.title && item.value) {
+                          return `${item.value}`;
+                        } else if (item.title && item.value) {
+                          return `${item.title}:${item.value}`;
+                        }
+                        return '';
+                      })
                       .join('\n');
                   }
+                  console.log(textareaValue2);
                 }
               } catch (error) {
                 console.warn(
@@ -632,9 +737,9 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
           this.editWorkstreamFormData()!.businessUnitHighlights = textareaValue;
           this.editWorkstreamFormData()!.businessUnitChallenges =
             textareaValue2;
-          this.addWorkstreamForm
-            .get('title')
-            ?.setValue(this.editWorkstreamFormData()?.businessUnit);
+          // this.addWorkstreamForm
+          //   .get('title')
+          //   ?.setValue(this.editWorkstreamFormData()?.businessUnit);
           this.addWorkstreamForm
             .get('status')
             ?.setValue(
@@ -752,24 +857,44 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
           });
         }
       } else {
-        this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
-          status: ['', [Validators.required]],
-          weight: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-          actual: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-          planned: [
-            '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
-          ],
-          heighlights: [''],
-          challenges: [''],
-        });
+        if (!this.isEditWorkStream()) {
+          this.addWorkstreamForm = this.formBuilder.group({
+            title: ['', [Validators.required]],
+            status: ['', [Validators.required]],
+            weight: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            actual: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            planned: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            heighlights: [''],
+            challenges: [''],
+          });
+        } else {
+          this.addWorkstreamForm = this.formBuilder.group({
+            status: ['', [Validators.required]],
+            weight: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            actual: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            planned: [
+              '',
+              [Validators.required, Validators.min(0), Validators.max(100)],
+            ],
+            heighlights: [''],
+            challenges: [''],
+          });
+        }
       }
     }
   }
@@ -778,6 +903,10 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
     if (invalidChars.includes(event.key)) {
       event.preventDefault();
     }
+  }
+  preventMouseWheelChange(event: WheelEvent) {
+    (event.target as HTMLElement).blur(); // Optional: remove focus
+    event.preventDefault(); // Prevent scroll changing the input value
   }
   get description() {
     return this.addWorkstreamForm.get('description');

@@ -1,4 +1,11 @@
-import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AccordionModule } from 'primeng/accordion';
 import { StatusCardComponent } from '../status-card/status-card.component';
@@ -50,7 +57,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   isAddProject!: boolean;
   toastr = inject(ToastrService);
   endSubs$: Subject<any> = new Subject();
-  isProject = false;
+  isProject = signal(false);
   confirmationService = inject(ConfirmationService);
   digitalTransformationService = inject(DigitalTransformationService);
   mainTitle = input<string[]>([]);
@@ -234,7 +241,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       STATUS_STYLE_MAP[WorkstreamStatus.Complete]
     );
   }
-  editedData!: pageDetailsModel;
+  editedData!: pageDetailsModel | null;
   openAddWorkstreamSidebar(
     isEditMode: boolean,
     isAddProject: boolean,
@@ -247,6 +254,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     this.showAddWorkstreamSidebar = true;
     // this.isWorkstreamSidebarVisible = true;
     this.isWorkstreamSidebarVisible = false;
+    this.editedData = null;
     if (summaryData) {
       this.editedData = { ...summaryData };
     }
@@ -283,6 +291,8 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       businessUnitStatus: workStreamData.status,
       businessUnitHighlights: workStreamData.heighlights
         ? this.convertHeighlights(workStreamData.heighlights)
+        : workStreamData.highlights
+        ? this.convertHeighlights(workStreamData.highlights)
         : null,
       businessUnitChallenges: workStreamData.challenges
         ? this.convertHeighlights(workStreamData.challenges)
@@ -292,19 +302,32 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       planned: workStreamData.planned,
     };
     if (data.weight) {
-      this.digitalTransformationService.createNewWorkStream(data).subscribe({
-        next: (res) => {
-          console.log(res);
-          this.getDigitalTransformationDetailsData(1);
-          this.getDigitalTransformationDetailsData(2);
-          this.toastr.success('The workstream is added successfully');
-          this.showAddWorkstreamSidebar = false;
-        },
-      });
+      if (!this.isEditWorkStream) {
+        this.digitalTransformationService.createNewWorkStream(data).subscribe({
+          next: (res) => {
+            this.getDigitalTransformationDetailsData(1);
+            this.getDigitalTransformationDetailsData(2);
+            this.toastr.success('The workstream is added successfully');
+            this.showAddWorkstreamSidebar = false;
+          },
+        });
+      } else {
+        if (this.editedData) {
+          this.digitalTransformationService
+            .updateWorkstream(this.editedData.businessUnitId, data)
+            .subscribe({
+              next: (res) => {
+                this.getDigitalTransformationDetailsData(1);
+                this.getDigitalTransformationDetailsData(2);
+                this.toastr.success('The workstream is updated successfully');
+                this.showAddWorkstreamSidebar = false;
+              },
+            });
+        }
+        // console.log(data);
+      }
     } else {
       // console.log(data);
-      console.log(this.clickedWorkstreamId);
-      console.log(this.pageId());
       const addedProject = {
         projectName: data.businessUnit,
         projectStatus: data.businessUnitStatus,
@@ -319,7 +342,9 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
           },
         ],
       };
-      if (this.pageId()) {
+      // console.log(this.getStatusStyle(addedProject.projectStatus ?? ''));
+      // if (this.activeAccordionIndex) {
+      if (!this.isEditProject) {
         this.digitalTransformationService
           .createNewProjectInWorkStream(
             this.activeAccordionIndex + 1,
@@ -334,12 +359,30 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
               this.showAddWorkstreamSidebar = false;
             },
           });
+      } else {
+        // console.log(addedProject);
+        // console.log(this.editProjectData?.projectId);
+        this.digitalTransformationService
+          .updateWorkstreamProject(
+            this.editProjectData?.projectId ?? 0,
+            addedProject
+          )
+          .subscribe({
+            next: () => {
+              this.getDigitalTransformationDetailsData(1);
+              this.getDigitalTransformationDetailsData(2);
+              this.toastr.success('The project is updated successfully');
+              this.showAddWorkstreamSidebar = false;
+            },
+          });
       }
+      // }
     }
   }
   editProjectData!: pageDetailsProjectModel | null;
+  isDeleteProject = false;
   openProjSidebar(card: pageDetailsProjectModel) {
-    console.log(card);
+    // console.log(card);
     this.editProjectData = { ...card };
   }
   deletedItem: any;
@@ -352,5 +395,38 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   }
   deleteChallenge() {
     console.log('deletedItem => ', this.deletedItem);
+    if (this.isProject()) {
+      this.digitalTransformationService
+        .deleteWorkStreamProject(this.deletedItem.projectId)
+        .subscribe({
+          next: () => {
+            this.getDigitalTransformationDetailsData(1);
+            this.getDigitalTransformationDetailsData(2);
+            this.toastr.success('The project is deleted successfully');
+            this.showAddWorkstreamSidebar = false;
+            this.closeDialog();
+          },
+          error: () => {
+            this.closeDialog();
+            this.showAddWorkstreamSidebar = false;
+          },
+        });
+    } else {
+      this.digitalTransformationService
+        .deleteWorkStream(this.deletedItem.businessUnitId)
+        .subscribe({
+          next: () => {
+            this.getDigitalTransformationDetailsData(1);
+            this.getDigitalTransformationDetailsData(2);
+            this.toastr.success('The workstream is deleted successfully');
+            this.showAddWorkstreamSidebar = false;
+            this.closeDialog();
+          },
+          error: () => {
+            this.closeDialog();
+            this.showAddWorkstreamSidebar = false;
+          },
+        });
+    }
   }
 }

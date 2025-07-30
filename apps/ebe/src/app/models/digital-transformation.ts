@@ -171,6 +171,7 @@ export interface pageDetailsModel {
 export interface pageDetailsProjectModel {
   projectName: string;
   projectStatus: string;
+  projectId: number;
   projectHighlights: string | null;
   totalCapabilities: number | null;
   percentage: number | null;
@@ -208,7 +209,7 @@ export interface AddKeyChallengeDataModel {
   supportNeeded: string;
 }
 export interface CreateWorkStreamModel {
-  pageId: number;
+  pageId?: number;
   businessUnit?: string;
   businessUnitId?: number;
   businessUnitStatus?: string;

@@ -57,8 +57,8 @@
     display: none;
   }
   .p-accordion-content {
-    border-bottom-left-radius: 10px;
-    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
     border: 0;
     padding-top: 0;
   }
@@ -353,4 +353,12 @@
       }
     }
   }
+}
+.empty-msg {
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+  @extend .stcFont;
+  font-size: 1rem;
+  font-style: italic;
 }
