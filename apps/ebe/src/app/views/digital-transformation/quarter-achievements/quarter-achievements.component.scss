@@ -20,11 +20,7 @@
       transition: 0.4s;
       transform: rotate(180deg);
     }
-    .edit-img {
-      width: 35px;
-      display: inline-block;
-      margin-right: 15px;
-    }
+
     p {
       font-weight: bold;
       font-size: 1.2rem;
@@ -114,8 +110,16 @@
     text-align: center;
     position: relative;
     padding: 0 20px 20px;
-    img {
+    .businessUnit-img {
       width: 80px;
+    }
+    .edit-img {
+      width: 35px;
+      display: inline-block;
+      position: absolute;
+      right: 2%;
+      top: 2%;
+      cursor: pointer;
     }
     p {
       margin: 0;
@@ -214,6 +218,11 @@
   .p-dropdown-items {
     padding: 0;
     margin-bottom: 0;
+  }
+  .p-dropdown-items .p-dropdown-item {
+    white-space: normal !important;
+    word-break: break-word; /* or use 'break-all' if needed */
+    max-width: 100%; /* optional, set a fixed width for wrapping */
   }
 }
 ::ng-deep .is-invalid-brdr {
@@ -434,4 +443,13 @@ label {
       }
     }
   }
+}
+.quarter-empty-msg {
+  color: var(--stc-purple-color);
+  text-transform: capitalize;
+  text-align: center;
+  margin: 0;
+  font-style: italic;
+  font-size: 1.3rem;
+  @extend .stcFont;
 }

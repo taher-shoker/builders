@@ -5,10 +5,10 @@
     <stc-apps-page-header
       [mainTitle]="'Digital Transformation'"
       [secondaryTitle]="''"
-      [username]="userData ? userData.name : ''"
+      [username]="userData && userData.name ? userData.name : ''"
       [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
     />
-    <button class="export-btn">
+    <button class="export-btn" (click)="export()">
       <img src="assets/images/File Download.svg" alt="" />
       export
     </button>
@@ -30,15 +30,15 @@
   <!-- <div class="digital-transformation-body">
     <h4>{{ currTap().name }}</h4>
   </div> -->
-  @if(currTap().id === 1){
+  @if(currTap()){ @if(currTap().id === 1){
   <stc-apps-executive-summary
     [mainTitle]="firstTapTitles"
-    [pageId]="currTap().id"
+    [pageId]="currTap() && currTap().id ? currTap().id : 1"
   />
   } @else if(currTap().id !== 8 && currTap().id !== 9) {
   <section class="qa-compilance">
     <div class="qa-compilance-header">
-      <p class="main-title">{{ currTap().value }}</p>
+      <p class="main-title">{{ currTap().value ? currTap().value : '' }}</p>
       <button
         class="add-workstream-btn"
         (click)="
@@ -52,13 +52,16 @@
         add workstream
       </button>
     </div>
-    @if(tapsDetailsData.length !== 0){
+    @if(tapsDetailsData && tapsDetailsData.length !== 0){
     <div class="kpi-container">
       @for (card of tapsDetailsData; track card.businessUnit) {
       <div class="kpi-container-card">
         <stc-apps-qa-compilance-card
           (sidebarOpened)="
-            showWorkStreamSidebar($event); isEdit = true; isEditMode = true
+            showWorkStreamSidebar($event);
+            isEdit = true;
+            isEditMode = true;
+            isEditMode2 = true
           "
           [QAComplianceCardData]="card"
         />
@@ -72,7 +75,9 @@
   } @else if(currTap().id === 8) {
   <section class="qa-compilance">
     <div class="qa-compilance-header">
-      <p class="main-title">{{ currTap().value }}</p>
+      <p class="main-title">
+        {{ currTap() && currTap().value ? currTap().value : '' }}
+      </p>
       <button class="add-workstream-btn" (click)="showChallengesSidebar = true">
         <i class="pi pi-plus"></i>
         add new
@@ -84,7 +89,7 @@
   </section>
   } @else {
   <stc-apps-quarter-achievements [currentTab]="currTap()" />
-  }
+  } }
 </section>
 
 <p-sidebar
@@ -121,7 +126,7 @@
       [editedCompilanceData]="editedData"
       [isEditWorkStream]="isEditMode"
       (delete)="showDeleteDialog($event)"
-      [currentTabId]="currTap().id"
+      [currentTabId]="currTap() && currTap().id ? currTap().id : 1"
     />
   </div>
 </p-sidebar>

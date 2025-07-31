@@ -39,7 +39,7 @@ export class ScorecardService {
     },
     {
       id: 2,
-      name: 'CAD strategy programs',
+      name: 'AI&DS strategy programs',
       url: '/strategy-program',
     },
     {

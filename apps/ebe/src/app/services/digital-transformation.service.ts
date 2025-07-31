@@ -2,7 +2,9 @@ import { inject, Injectable } from '@angular/core';
 import {
   AddKeyChallengeDataModel,
   CreateWorkStreamModel,
+  IAddAchievement,
   IDigitalTransformationTap,
+  IWorkstream,
   KeyChallengesModel,
   pageDetailsModel,
   QuarterAchievementModel,
@@ -10,6 +12,7 @@ import {
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
+import saveAs from 'file-saver';
 @Injectable({
   providedIn: 'root',
 })
@@ -107,4 +110,42 @@ export class DigitalTransformationService {
       `${environment.apiUrl}/business-excellence/dt/pages/achievement`
     );
   }
+  getAllWorkstreams(): Observable<IWorkstream[]> {
+    return this.http.get<IWorkstream[]>(
+      `${environment.apiUrl}/business-excellence/dt/pages/achievement/workstreams`
+    );
+  }
+  addNewAchievement(data: IAddAchievement): Observable<any> {
+    return this.http.post(
+      `${environment.apiUrl}/business-excellence/dt/pages/achievement`,
+      data
+    );
+  }
+  editAchievement(id: number, data: IAddAchievement): Observable<any> {
+    return this.http.put(
+      `${environment.apiUrl}/business-excellence/dt/pages/achievement/${id}`,
+      data
+    );
+  }
+  deleteAchievement(id: number): Observable<any> {
+    return this.http.delete(
+      `${environment.apiUrl}/business-excellence/dt/pages/achievement/${id}`
+    );
+  }
+  exportData(id: number, filename: string) {
+    this.http
+      .get<any>(
+        `${environment.apiUrl}/business-excellence/dt/pages/export/${id}`,
+        { responseType: 'blob' as 'json' }
+      )
+      .subscribe({
+        next: (response) => {
+          const blob = new Blob([response], {
+            type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+          });
+          saveAs(blob, `${filename}.csv`);
+        },
+      });
+  }
 }
+// AI&DS Sector

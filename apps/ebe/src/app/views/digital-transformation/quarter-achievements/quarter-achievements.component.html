@@ -1,6 +1,8 @@
 <section class="quarter-achievements">
   <div class="quarter-achievements-header">
+    @if(currentTab() && currentTab().value){
     <p class="main-title">{{ currentTab().value }}</p>
+    }
     <button
       class="add-workstream-btn"
       (click)="showFormSidebar = true; isEditMode = false"
@@ -11,23 +13,19 @@
   </div>
   <div class="quarter-achievements-content">
     <p-accordion [activeIndex]="activeAccordionIndex">
-      @for (quarter of quarterAchievements; track quarter.quarterAchievementId)
-      {
+      @for (quarter of quarterAchievements; track $index) {
       <p-accordionTab>
         <ng-template pTemplate="header">
           <div class="main-header" (click)="$event.stopPropagation()">
-            <p>{{ quarter.quarterName | uppercase }} Achievement</p>
+            <p>
+              {{
+                quarter && quarter.quarterName
+                  ? (quarter.quarterName | uppercase)
+                  : 0
+              }}
+              Achievement
+            </p>
             <div>
-              <img
-                src="assets/images/button3.svg"
-                (click)="
-                  showFormSidebar = true;
-                  isEditMode = true;
-                  showEditSidebar(quarter)
-                "
-                class="edit-img"
-                alt=""
-              />
               <img
                 src="assets/images/arrow-up.svg"
                 alt=""
@@ -40,27 +38,54 @@
         @for (businessUnit of quarter.businessUnits; track businessUnit.id) {
         <div class="quarter-achievements-body">
           <div class="main-title2">
-            <img src="assets/images/achievement-img.svg" alt="" />
-            <p>{{ businessUnit.name }}</p>
+            <div class="cont">
+              <img
+                src="assets/images/achievement-img.svg"
+                class="businessUnit-img"
+                alt=""
+              />
+              <p>
+                {{ businessUnit && businessUnit.name ? businessUnit.name : '' }}
+              </p>
+            </div>
+            <img
+              src="assets/images/button3.svg"
+              (click)="
+                showFormSidebar = true;
+                isEditMode = true;
+                showEditSidebar(quarter, businessUnit)
+              "
+              class="edit-img"
+              alt=""
+            />
           </div>
           <div class="details">
             @for (achievement of businessUnit.achievements; track
             achievement.id) {
             <div class="details-card">
+              @if( achievement && achievement.title){
               <p class="title">{{ achievement.title }}</p>
+              } @if(achievement && achievement.description){
               <ul>
                 @for (desc of achievement.descriptionLines; track $index) {
                 <li>
-                  <p class="desc">{{ desc }}</p>
+                  <p class="desc">{{ desc ? desc : '' }}</p>
                 </li>
+                }@empty {
+                <p class="quarter-empty-msg">there are no achievements</p>
                 }
               </ul>
+              }
             </div>
             }
           </div>
         </div>
+        }@empty {
+        <p class="quarter-empty-msg">there are no businessUnit</p>
         }
       </p-accordionTab>
+      } @empty {
+      <p class="quarter-empty-msg">there are no quarters</p>
       }
     </p-accordion>
   </div>
@@ -104,6 +129,9 @@
             [class.is-invalid-brdr]="
               quarter?.invalid && (quarter?.dirty || quarter?.touched)
             "
+            [ngStyle]="{
+              'pointer-events': isEditMode ? 'none' : ''
+            }"
           />
           <small
             *ngIf="quarter?.invalid && (quarter?.dirty || quarter?.touched)"
@@ -119,9 +147,9 @@
           </label>
           <br />
           <p-dropdown
-            [options]="quarters"
+            [options]="workstreams"
             optionLabel="name"
-            optionValue="value"
+            optionValue="id"
             placeholder="Choose workstream"
             styleClass="quarter-dropdown"
             formControlName="workstream"
@@ -131,6 +159,9 @@
             [class.is-invalid-brdr]="
               workstream?.invalid && (workstream?.dirty || workstream?.touched)
             "
+            [ngStyle]="{
+              'pointer-events': isEditMode ? 'none' : ''
+            }"
           />
           <small
             *ngIf="
@@ -218,12 +249,7 @@
           add achievements
         </button>
         @if(isEditMode){
-        <button
-          class="delete-achievements-btn"
-          [disabled]="addWorkAchievementForm.invalid"
-          [class.is-disabled]="addWorkAchievementForm.invalid"
-          (click)="showDeleteDialog()"
-        >
+        <button class="delete-achievements-btn" (click)="showDeleteDialog()">
           delete achievement
         </button>
         }

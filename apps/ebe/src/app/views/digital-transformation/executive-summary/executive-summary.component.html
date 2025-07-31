@@ -3,7 +3,9 @@
     <p-accordionTab>
       <ng-template pTemplate="header">
         <div class="main-header" (click)="$event.stopPropagation()">
-          <p>{{ mainTitle()[0] }}</p>
+          <p>
+            {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[0] : '' }}
+          </p>
           <div>
             <button
               class="add-workstream-btn"
@@ -24,12 +26,18 @@
         </div>
       </ng-template>
       <div class="executive-summary-body">
-        @for (summaryData of dsDashboard; track $index) {
+        @if(dsDashboard){ @for (summaryData of dsDashboard; track $index) {
         <div class="executive-summary-body-container">
           <div class="executive-summary-body-title">
             <div class="left-side">
-              <p class="title2">{{ summaryData.businessUnit }}</p>
-              @if(summaryData.businessUnitStatus){
+              <p class="title2">
+                {{
+                  summaryData && summaryData.businessUnit
+                    ? summaryData.businessUnit
+                    : ''
+                }}
+              </p>
+              @if(summaryData && summaryData.businessUnitStatus){
               <stc-apps-status-card
                 [status]="summaryData.businessUnitStatus"
                 [backgroundColor]="
@@ -66,17 +74,32 @@
           </div>
           <div class="executive-summary-body-sub-title">
             <div class="left-side">
-              <p>weight: {{ summaryData.weight }}%</p>
+              <p>
+                weight:
+                {{
+                  summaryData && summaryData.weight ? summaryData.weight : ''
+                }}%
+              </p>
             </div>
             <div class="right-side">
               <p>
                 planned:
-                <span class="planned">{{ summaryData.planned }}%</span>
+                <span class="planned"
+                  >{{
+                    summaryData && summaryData.planned
+                      ? summaryData.planned
+                      : ''
+                  }}%</span
+                >
               </p>
               <img src="assets/images/Component 2.svg" alt="" />
               <p>
                 actual:
-                <span class="actual">{{ summaryData.actual }}%</span>
+                <span class="actual"
+                  >{{
+                    summaryData && summaryData.actual ? summaryData.actual : ''
+                  }}%</span
+                >
               </p>
             </div>
           </div>
@@ -94,6 +117,8 @@
             </button>
             <div class="row">
               @for (item of summaryData.projects; track $index) {
+              @if(summaryData && summaryData.projects &&
+              summaryData.projects.length !== 0){
               <div class="col-lg-6 col-md-6 col-sm-12">
                 <stc-apps-executive-summary-card
                   (openProjSidebar)="
@@ -104,19 +129,23 @@
                   [executiveCard]="item"
                 />
               </div>
-              } @empty {
+              } } @empty {
               <p class="empty-msg">there are no projects for this workstream</p>
               }
             </div>
           </div>
         </div>
-        }
+        } @empty {
+        <p class="quarter-empty-msg">there are no businessUnit</p>
+        } }
       </div>
     </p-accordionTab>
     <p-accordionTab>
       <ng-template pTemplate="header">
         <div class="main-header" (click)="$event.stopPropagation()">
-          <p>{{ mainTitle()[1] }}</p>
+          <p>
+            {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[1] : '' }}
+          </p>
           <div>
             <button
               class="add-workstream-btn"
@@ -134,12 +163,19 @@
         </div>
       </ng-template>
       <div class="executive-summary-body">
-        @for (summaryData of itPlatformDashboard; track $index) {
+        @if(itPlatformDashboard && itPlatformDashboard.length !== 0){ @for
+        (summaryData of itPlatformDashboard; track $index) {
         <div class="executive-summary-body-container">
           <div class="executive-summary-body-title">
             <div class="left-side">
-              <p class="title2">{{ summaryData.businessUnit }}</p>
-              @if(summaryData.businessUnitStatus){
+              <p class="title2">
+                {{
+                  summaryData && summaryData.businessUnit
+                    ? summaryData.businessUnit
+                    : ''
+                }}
+              </p>
+              @if(summaryData && summaryData.businessUnitStatus){
               <stc-apps-status-card
                 [status]="summaryData.businessUnitStatus"
                 [backgroundColor]="
@@ -173,6 +209,7 @@
               </button>
             </div>
           </div>
+          @if(summaryData){
           <div class="executive-summary-body-sub-title">
             <div class="left-side">
               <p>weight: {{ summaryData.weight }}%</p>
@@ -219,8 +256,11 @@
               }
             </div>
           </div>
+          }
         </div>
-        }
+        } @empty {
+        <p class="quarter-empty-msg">there are no businessUnit</p>
+        } }
       </div>
     </p-accordionTab>
   </p-accordion>

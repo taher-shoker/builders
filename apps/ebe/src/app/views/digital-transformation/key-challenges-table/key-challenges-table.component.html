@@ -20,25 +20,31 @@
       @if(challengesData && challengesData.data){ @for (challenge of
       challengesData.data; track challenge.id) {
       <tr>
-        <td style="width: 5%; text-align: center">{{ challenge.id }}</td>
+        <td style="width: 5%; text-align: center">
+          {{ challenge ? challenge.id : 0 }}
+        </td>
         <td style="width: 25%">
-          {{ challenge.description ? challenge.description : '-' }}
+          {{ challenge && challenge.description ? challenge.description : '-' }}
         </td>
         <td style="width: 10%; text-align: center">
-          {{ challenge.raisedBy ? challenge.raisedBy : '-' }}
+          {{ challenge && challenge.raisedBy ? challenge.raisedBy : '-' }}
         </td>
         <td style="width: 7%; text-align: center">
-          {{ challenge.owner ? challenge.owner : '-' }}
+          {{ challenge && challenge.owner ? challenge.owner : '-' }}
         </td>
         <td style="width: 11%; text-align: center">
-          {{ challenge.dateRaised ? challenge.dateRaised : '-' }}
+          {{ challenge && challenge.dateRaised ? challenge.dateRaised : '-' }}
         </td>
         <td style="width: 7%; text-align: center">
-          {{ challenge.impact ? challenge.impact : '-' }}
+          {{ challenge && challenge.impact ? challenge.impact : '-' }}
         </td>
         <td style="width: 25%">
           <p class="m-0">
-            {{ challenge.supportNeeded ? challenge.supportNeeded : '-' }}
+            {{
+              challenge && challenge.supportNeeded
+                ? challenge.supportNeeded
+                : '-'
+            }}
           </p>
         </td>
         <td style="width: 15%; text-align: center" class="action-td">
@@ -46,6 +52,8 @@
           <i class="pi pi-trash" (click)="showDeleteDialog(challenge)"></i>
         </td>
       </tr>
+      } @empty {
+      <p class="quarter-empty-msg">there are no quarters</p>
       } }
     </tbody>
     }

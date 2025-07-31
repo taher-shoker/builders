@@ -105,7 +105,7 @@ export class ActivityLogsComponent {
       },
       {
         id: 2,
-        name: 'CAD Strategy Program',
+        name: 'AI&DS Strategy Program',
         value: 'CAD',
       },
       // {

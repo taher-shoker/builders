@@ -236,11 +236,11 @@ export interface CreateWorkStreamModel {
   }[];
 }
 export interface QuarterAchievementModel {
-  quarterAchievementId: number;
   quarterName: string;
   businessUnits: QuarterAchievementBusinessUnitModel[];
 }
 export interface QuarterAchievementBusinessUnitModel {
+  quarterAchievementId: number;
   id: number;
   name: string;
   achievements: AchievementModel[];
@@ -250,4 +250,13 @@ export interface AchievementModel {
   title: string;
   description: string;
   descriptionLines: string[];
+}
+export interface IWorkstream {
+  id: number;
+  name: string;
+}
+export interface IAddAchievement {
+  quarterName: string;
+  businessUnitId: number;
+  achievements: string;
 }

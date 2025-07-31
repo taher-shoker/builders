@@ -362,3 +362,11 @@
   font-size: 1rem;
   font-style: italic;
 }
+.quarter-empty-msg {
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+  @extend .stcFont;
+  font-size: 1rem;
+  font-style: italic;
+}

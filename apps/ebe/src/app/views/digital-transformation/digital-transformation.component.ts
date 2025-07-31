@@ -71,16 +71,17 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (res: IDigitalTransformationTap[]) => {
           const taps: DigitalTransformationTapModel[] = [];
-          res.forEach((tap) => {
-            taps.push({
-              id: tap.id,
-              name: tap.pageName,
-              value: tap.subpageName,
+          if (res && res.length !== 0)
+            res.forEach((tap) => {
+              taps.push({
+                id: tap.id,
+                name: tap.pageName,
+                value: tap.subpageName,
+              });
+              if (tap.id === 1 || tap.id === 2) {
+                this.firstTapTitles.push(tap.subpageName);
+              }
             });
-            if (tap.id === 1 || tap.id === 2) {
-              this.firstTapTitles.push(tap.subpageName);
-            }
-          });
           const uniqueArray = taps.filter(
             (obj, index, self) =>
               index === self.findIndex((t) => t.name === obj.name)
@@ -95,13 +96,17 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
         },
       });
   }
+  isEditMode2 = false;
   private getDigitalTransformationDetailsData(pageId: number) {
-    // this.tapsDetailsData = [];
+    if (!this.isEditMode2) {
+      this.tapsDetailsData = [];
+    }
     this.digitalTransformationService
       .getDigitalTransformationDetailsData(pageId)
       .pipe(takeUntil(this.endSubs$))
       .subscribe({
         next: (res: pageDetailsModel[]) => {
+          console.log(res);
           this.tapsDetailsData = res;
         },
         error: (error) => {
@@ -127,8 +132,10 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     }
     // this.qAComplianceData = [];
     // this.technicalDebtDashboardModel = [];
+    this.isEditMode2 = false;
     this.currTap.set(tap);
     if (
+      this.currTap() &&
       this.currTap().id !== 1 &&
       this.currTap().id !== 8 &&
       this.currTap().id !== 9
@@ -396,5 +403,12 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   }
   closeDialog() {
     this.confirmationService.close();
+  }
+  export() {
+    console.log(this.currTap());
+    this.digitalTransformationService.exportData(
+      this.currTap().id,
+      this.currTap().name
+    );
   }
 }
