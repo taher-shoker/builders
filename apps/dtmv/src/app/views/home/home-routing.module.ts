@@ -35,6 +35,14 @@ const routes: Routes = [
         loadChildren: () =>
           import('../vp-report/vp-report.module').then((m) => m.VpReportModule),
       },
+      {
+        path: 'feedback-issue-logs',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('../feedback-issue/feedback-issue.module').then(
+            (m) => m.FeedBackIssueModule
+          ),
+      },
     ],
   },
 ];

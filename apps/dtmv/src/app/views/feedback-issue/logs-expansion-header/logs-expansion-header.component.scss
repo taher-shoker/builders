@@ -1,0 +1,49 @@
+p {
+  margin: 0;
+}
+.logs-panel-header {
+  font-family: var(--stc-font-base) !important;
+  width: 100%;
+  &_info,
+  &_number-of-attachments,
+  &_date {
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+  &_info {
+    &_type {
+      span {
+        font-size: 12px;
+        background-color: var(--stc-color);
+        color: var(--whiteColor);
+        text-align: center;
+        padding: 8px 17px;
+        border-radius: 999px;
+        white-space: nowrap;
+      }
+    }
+    &_data {
+      margin-top: 6px;
+      h5 {
+        color: var(--blackColor);
+        font-weight: 600;
+      }
+      p {
+        color: var(--stc-greyColor);
+      }
+    }
+  }
+  &_number-of-attachments,
+  &_date {
+    div {
+      padding: 8px 20px;
+      border-radius: 999px;
+      background-color: var(--stcLightGray);
+      color: var(--stc-greyColor);
+      i {
+        margin-right: 12px;
+      }
+    }
+  }
+}
