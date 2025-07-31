@@ -51,7 +51,9 @@
         <div>
           <label for="file">Attach File (Optional)</label>
           <div
-            *ngIf="files.length === 0 || errorSize || errorType"
+            *ngIf="
+              files.length === 0 || errorSize || errorType || errorMaxNumber
+            "
             class="file-uploader"
             [ngClass]="
               feedbackIssueForm.controls['file'].invalid &&
@@ -72,7 +74,7 @@
               hidden
               accept="{{ accept }}"
             />
-            @if (errorType || errorSize) {
+            @if (errorType || errorSize||errorMaxNumber) {
             <div class="text-center">
               <img
                 src="assets/images/arrow-up-from-bracket-solid-full.svg"
@@ -81,6 +83,8 @@
               <h4 class="error-file">Sorry !</h4>
               @if (errorType) {
               <p>Please ensure your file is in a supported format"</p>
+              } @else if(errorMaxNumber){
+              <p>You can only upload a maximum of 5 files.</p>
               } @else {
               <p>Please ensure your file is less than 5MB. "</p>
 
@@ -100,18 +104,37 @@
         </div>
 
         <div
-          class="file-box scrollable-area"
-          *ngIf="files && files.length > 0 && !errorSize && !errorType"
+          class="row file-box scrollable-area"
+          *ngIf="
+            files &&
+            files.length > 0 &&
+            !errorSize &&
+            !errorType &&
+            !errorMaxNumber
+          "
         >
           @for(file of files; track file){
-          <div class="file">
-            <span><i class="pi pi-file-o"></i> {{ file.name }}</span>
-
-            <i
-              role="button"
-              class="fa fa-times-circle remove-file"
-              (click)="removeFile(file)"
-            ></i>
+          <div class="col-md-6">
+            <div class="file">
+              <div class="w-100 row">
+                <div class="col-md-1 d-flex align-items-center">
+                  <i class="fa-regular fas fa-image"></i>
+                </div>
+                <div class="col-md-9">
+                  <span> {{ file.name }}</span>
+                  <div class="file_size">
+                    {{ file.size / 1024 | number : '1.0-0' }}KB
+                  </div>
+                </div>
+                <div class="col-md-2 d-flex align-items-center">
+                  <i
+                    role="button"
+                    class="fa fa-times-circle remove-file"
+                    (click)="removeFile(file)"
+                  ></i>
+                </div>
+              </div>
+            </div>
           </div>
           }
         </div>

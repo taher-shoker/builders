@@ -60,21 +60,23 @@
         }
       }
       .scrollable-area {
-        flex: 1 1 auto;
         overflow-y: auto;
-        max-height: 17vh;
+        max-height: 14vh;
         padding-right: 8px;
       }
 
       .file {
         background-color: var(--stc-air-color);
-        color: var(--stc-color);
+        color: var(--blackColor);
         display: flex;
         align-items: center;
         justify-content: space-between;
-        padding: 5px 16px;
+        padding: 16px 16px;
+        border-radius: 10px;
         margin: 10px 0px;
-
+        &_size {
+          color: var(--stc-greyColor);
+        }
         i.pi-times {
           color: var(--stc-red-color);
         }

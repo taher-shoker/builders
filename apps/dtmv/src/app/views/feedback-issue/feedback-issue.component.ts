@@ -13,6 +13,7 @@ export class FeedbackIssueComponent implements OnInit {
   files: File[] = [];
   errorSize = false;
   errorType = false;
+  errorMaxNumber = false;
   isLoading = false;
   accept = 'image/*';
   @ViewChild('fileUpload') fileUpload!: ElementRef;
@@ -40,6 +41,7 @@ export class FeedbackIssueComponent implements OnInit {
   clearFileInputElement() {
     this.errorSize = false;
     this.errorType = false;
+    this.errorMaxNumber = false;
     this.formData.delete('file');
     this.files = [];
   }
@@ -53,6 +55,13 @@ export class FeedbackIssueComponent implements OnInit {
   }
   uploadAndProgress(files: File[]) {
     this.files = files;
+    const totalFiles = this.files.length;
+    if (totalFiles > 5) {
+      this.errorMaxNumber = true;
+      console.log(totalFiles);
+
+      return;
+    }
     files.forEach((f) => {
       if (f.size > 8 * 1024 * 1024) {
         this.errorSize = true;
