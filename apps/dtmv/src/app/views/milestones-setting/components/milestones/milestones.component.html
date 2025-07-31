@@ -21,27 +21,12 @@
                       class="form-control stc-input" (keyup)="searchFilter(input)" />
                   </div>
                 </div> -->
-                <div class="col-2">
+                <div class="col-3">
                   <stc-apps-button
                     [buttonText]="'Filter' | translate"
                     [buttonType]="'gray-outline'"
                     [buttonIcon]="'fa-filter'"
                     (btnClick)="toggleFilter()"
-                  ></stc-apps-button>
-                </div>
-                <div class="col-2">
-                  <stc-apps-button
-                    [buttonText]="'Export' | translate"
-                    [buttonType]="'warn'"
-                    (btnClick)="onExporting()"
-                  ></stc-apps-button>
-                </div>
-                <div class="col-3">
-                  <stc-apps-button
-                    [buttonText]="'Add Feedback/Issue' | translate"
-                    [buttonType]="'stc-color-outline'"
-                    [buttonIcon]="'fa-plus-circle'"
-                    (btnClick)="openFeedbackDialog()"
                   ></stc-apps-button>
                 </div>
                 <div
@@ -60,6 +45,13 @@
                     (btnClick)="addMilestoneNavigate()"
                   ></stc-apps-button>
                 </div>
+                <div class="col-2">
+                  <stc-apps-button
+                    [buttonText]="'Export' | translate"
+                    [buttonType]="'warn'"
+                    (btnClick)="onExporting()"
+                  ></stc-apps-button>
+                </div>
 
                 <div
                   class="col-2"
@@ -71,7 +63,7 @@
                 >
                   <stc-apps-button
                     [buttonText]="'Pending actions'"
-                    [buttonType]="'stc-color-outline'"
+                    [buttonType]="'primary'"
                     (btnClick)="toggleAnimation()"
                   ></stc-apps-button>
                 </div>
@@ -211,6 +203,9 @@
       }}
     </div>
   </div>
+  <stc-apps-floating-menu
+    (openForm)="openFeedbackDialog()"
+  ></stc-apps-floating-menu>
 </div>
 
 <stc-apps-dialog id="filter-Modal">
