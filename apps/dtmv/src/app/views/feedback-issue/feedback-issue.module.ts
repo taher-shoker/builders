@@ -19,6 +19,8 @@ import { LogsExpansionHeaderComponent } from './logs-expansion-header/logs-expan
 import { MatExpansionModule } from '@angular/material/expansion';
 import { FloatingMenuComponent } from './floating-menu/floating-menu.component';
 import { LogsExpansionBodyComponent } from './logs-expansion-body/logs-expansion-body.component';
+import { AttachmentsComponent } from './attachments/attachments.component';
+
 const components = [
   FeedbackIssueComponent,
   FeedbackIssueLogsComponent,
@@ -26,6 +28,8 @@ const components = [
   CountColorPipe,
   LogsExpansionHeaderComponent,
   FloatingMenuComponent,
+  LogsExpansionBodyComponent,
+  AttachmentsComponent,
 ];
 const modules = [
   CommonModule,
@@ -44,7 +48,7 @@ const modules = [
   MatExpansionModule,
 ];
 @NgModule({
-  declarations: [...components, LogsExpansionBodyComponent],
+  declarations: [...components],
   imports: [...modules],
   exports: [CountColorPipe, ...components],
   providers: [],

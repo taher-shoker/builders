@@ -38,7 +38,9 @@
   background-color: transparent !important;
 }
 ::ng-deep .custom-toggle-group {
-  border-radius: 8px !important;
+  background-color: rgba(0, 0, 0, 0.03);
+  box-shadow: none !important;
+  border-radius: 4px !important;
   padding: 4px 0px;
   display: inline-flex;
 }
@@ -59,7 +61,6 @@
   background-color: var(--whiteColor);
   color: var(--blackColor);
   font-weight: 600;
-  box-shadow: 0 0 0 1px #e0e0e0 inset;
 }
 
 ::ng-deep .custom-toggle-group .mat-button-toggle:hover {

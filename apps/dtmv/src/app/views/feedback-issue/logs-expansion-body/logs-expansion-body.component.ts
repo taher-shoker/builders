@@ -8,4 +8,18 @@ import { Component, input, InputSignal } from '@angular/core';
 export class LogsExpansionBodyComponent {
   desc: InputSignal<string> = input('');
   attachaments: InputSignal<string> = input('');
+  testFiles: File[] = [
+    new File(['Dummy content 1'], 'test-document.pdf', {
+      type: 'application/pdf',
+      lastModified: new Date().getTime(),
+    }),
+    new File(['Sample image content'], 'image1.png', {
+      type: 'image/png',
+      lastModified: new Date().getTime(),
+    }),
+    new File(['Another dummy file'], 'notes.txt', {
+      type: 'text/plain',
+      lastModified: new Date().getTime(),
+    }),
+  ];
 }

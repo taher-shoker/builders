@@ -59,34 +59,6 @@
           font-weight: 300;
         }
       }
-      .scrollable-area {
-        overflow-y: auto;
-        max-height: 14vh;
-        padding-right: 8px;
-      }
-
-      .file {
-        background-color: var(--stc-air-color);
-        color: var(--blackColor);
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        padding: 16px 16px;
-        border-radius: 10px;
-        margin: 10px 0px;
-        &_size {
-          color: var(--stc-greyColor);
-        }
-        i.pi-times {
-          color: var(--stc-red-color);
-        }
-        i.pi-download {
-          color: var(--stc-moonlight-color);
-        }
-      }
-      .remove-file {
-        margin-left: 24px;
-      }
     }
     .btns-holder {
       margin-top: 12px;

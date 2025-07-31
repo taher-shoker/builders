@@ -28,8 +28,8 @@ export class FeedbackIssueComponent implements OnInit {
   intiateForm() {
     this.feedbackIssueForm = this.formBuilder.group({
       type: ['Feedback', Validators.required],
-      subject: ['', Validators.required],
-      comment: ['', Validators.required],
+      subject: ['', Validators.required, Validators.maxLength(250)],
+      comment: ['', Validators.required, Validators.maxLength(500)],
       file: [''],
     });
   }

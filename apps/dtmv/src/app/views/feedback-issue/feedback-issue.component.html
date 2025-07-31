@@ -103,41 +103,14 @@
           </div>
         </div>
 
-        <div
-          class="row file-box scrollable-area"
-          *ngIf="
-            files &&
-            files.length > 0 &&
-            !errorSize &&
-            !errorType &&
-            !errorMaxNumber
-          "
-        >
-          @for(file of files; track file){
-          <div class="col-md-6">
-            <div class="file">
-              <div class="w-100 row">
-                <div class="col-md-1 d-flex align-items-center">
-                  <i class="fa-regular fas fa-image"></i>
-                </div>
-                <div class="col-md-9">
-                  <span> {{ file.name }}</span>
-                  <div class="file_size">
-                    {{ file.size / 1024 | number : '1.0-0' }}KB
-                  </div>
-                </div>
-                <div class="col-md-2 d-flex align-items-center">
-                  <i
-                    role="button"
-                    class="fa fa-times-circle remove-file"
-                    (click)="removeFile(file)"
-                  ></i>
-                </div>
-              </div>
-            </div>
-          </div>
-          }
-        </div>
+        <!-- AttachmentsComponent -->
+        <stc-apps-feedback-issue-attachments
+          [files]="files"
+          [errorMaxNumber]="errorMaxNumber"
+          [errorSize]="errorSize"
+          [errorType]="errorType"
+          (removeFileEvent)="removeFile($event)"
+        ></stc-apps-feedback-issue-attachments>
       </div>
       <div class="row btns-holder">
         <div class="col-md-4 offset-md-8">
