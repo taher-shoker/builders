@@ -58,7 +58,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
     { name: 'On Track', value: 'on track' },
     { name: 'Completed', value: 'completed' },
     { name: 'Delayed', value: 'delayed' },
-    { name: 'Not Started/On Hold', value: 'not started/on hold' },
+    // { name: 'Not Started / On hold', value: 'not started / on hold' },
   ];
   selectedStatus: Status | null = null;
   addWorkstream() {
@@ -90,7 +90,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         ],
       });
       if (this.editProjectData()) {
-        // console.log(this.editProjectData());
+        console.log(this.editProjectData());
         this.addWorkstreamForm
           .get('title')
           ?.setValue(this.editProjectData()?.projectName);

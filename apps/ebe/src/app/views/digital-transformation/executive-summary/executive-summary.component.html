@@ -11,7 +11,8 @@
               class="add-workstream-btn"
               (click)="
                 openAddWorkstreamSidebar(false, false, false);
-                isProject.set(false)
+                isProject.set(false);
+                clickedPageId = 1
               "
             >
               <i class="pi pi-plus"></i>
@@ -149,7 +150,11 @@
           <div>
             <button
               class="add-workstream-btn"
-              (click)="openAddWorkstreamSidebar(false, false, false)"
+              (click)="
+                openAddWorkstreamSidebar(false, false, false);
+                isProject.set(false);
+                clickedPageId = 2
+              "
             >
               <i class="pi pi-plus"></i>
               add workstream

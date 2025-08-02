@@ -246,7 +246,7 @@
           [class.is-disabled]="addWorkAchievementForm.invalid"
           (click)="addNewAchievement()"
         >
-          add achievements
+          {{ isEditMode ? 'edit achievement' : 'add achievement' }}
         </button>
         @if(isEditMode){
         <button class="delete-achievements-btn" (click)="showDeleteDialog()">

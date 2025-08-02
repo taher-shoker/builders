@@ -176,6 +176,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   }
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
     let metricsArr = [];
+    this.isEditMode2 = true;
     if (this.currTap().id === 3) {
       metricsArr = [
         {

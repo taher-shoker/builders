@@ -194,9 +194,11 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     return JSON.stringify(result);
   }
   clickedWorkstreamId!: number;
+  clickedPageId!: number;
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
     const data: CreateWorkStreamModel = {
-      pageId: this.pageId() ?? 0,
+      // pageId: this.pageId() ?? 0,
+      pageId: this.clickedPageId,
       businessUnit: workStreamData.title,
       businessUnitStatus: workStreamData.status,
       businessUnitHighlights: workStreamData.heighlights
