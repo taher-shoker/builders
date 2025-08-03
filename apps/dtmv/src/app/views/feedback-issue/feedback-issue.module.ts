@@ -20,6 +20,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { FloatingMenuComponent } from './floating-menu/floating-menu.component';
 import { LogsExpansionBodyComponent } from './logs-expansion-body/logs-expansion-body.component';
 import { AttachmentsComponent } from './attachments/attachments.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 const components = [
   FeedbackIssueComponent,
@@ -42,6 +43,7 @@ const modules = [
   MatButtonModule,
   MatButtonToggleModule,
   MatFormFieldModule,
+  MatPaginatorModule,
   MatInputModule,
   MatRadioModule,
   FeedbackIssueRoutingModule,

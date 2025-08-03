@@ -1,6 +1,13 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { FeedbackIssueService } from './services/feedback-issues.service';
+import {
+  feedbackIssuesAttachment,
+  formBody,
+} from './models/feedback-issue.model';
+import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 @Component({
   selector: 'stc-apps-feedback-issue',
   templateUrl: './feedback-issue.component.html',
@@ -15,10 +22,14 @@ export class FeedbackIssueComponent implements OnInit {
   errorType = false;
   errorMaxNumber = false;
   isLoading = false;
+  attachamentIDS: number[] = [];
   accept = 'image/*';
   @ViewChild('fileUpload') fileUpload!: ElementRef;
   constructor(
     private formBuilder: FormBuilder,
+    private feedbackIssueService: FeedbackIssueService,
+    private toastr: ToastrService,
+    private router: Router,
     private dialogRef: MatDialogRef<FeedbackIssueComponent>
   ) {}
   ngOnInit(): void {
@@ -27,9 +38,9 @@ export class FeedbackIssueComponent implements OnInit {
 
   intiateForm() {
     this.feedbackIssueForm = this.formBuilder.group({
-      type: ['Feedback', Validators.required],
-      subject: ['', Validators.required, Validators.maxLength(250)],
-      comment: ['', Validators.required, Validators.maxLength(500)],
+      type: ['FEEDBACK', Validators.required],
+      subject: ['', [Validators.required, Validators.maxLength(100)]],
+      comment: ['', [Validators.required, Validators.maxLength(500)]],
       file: [''],
     });
   }
@@ -69,8 +80,13 @@ export class FeedbackIssueComponent implements OnInit {
         this.errorType = true;
       } else {
         this.formData.append('file', f);
-        console.log('formData', this.formData, files, f);
         this.feedbackIssueForm.get('file')?.setValue(this.formData);
+        this.feedbackIssueService.uploadFile(this.formData).subscribe({
+          next: (attachment: feedbackIssuesAttachment) => {
+            console.log('attachement', attachment);
+            this.attachamentIDS.push(attachment.id);
+          },
+        });
       }
     });
   }
@@ -83,6 +99,28 @@ export class FeedbackIssueComponent implements OnInit {
     this.dialogRef.close();
   }
   submit() {
+    if (!this.feedbackIssueForm?.valid) return;
+    this.isLoading = true;
+    const onSuccess = (message: string) => {
+      this.isLoading = false;
+      this.toastr.success(message);
+      this.cancel();
+    };
     console.log('submit', this.feedbackIssueForm.value);
+    const body: formBody = {
+      type: this.feedbackIssueForm.value.type,
+      title: this.feedbackIssueForm.value.subject,
+      description: this.feedbackIssueForm.value.comment,
+      attachmentIds: this.attachamentIDS,
+    };
+    this.feedbackIssueService.submitFeedbackIssueForm(body).subscribe({
+      next: () => {
+        onSuccess('Feedback/Issue has been submitted successfully!');
+      },
+      error: () => {
+        this.toastr.error('Something went wrong');
+        this.isLoading = false;
+      },
+    });
   }
 }
