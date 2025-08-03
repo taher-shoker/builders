@@ -228,7 +228,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
         (r) =>
           r.groupName !== 'DT_VP_Dashboard_Viewer' &&
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
-          r.groupName !== 'PMO'
+          r.groupName !== 'PMO' &&
+          r.groupName !== 'DT_Ticket_Admin'
       );
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||

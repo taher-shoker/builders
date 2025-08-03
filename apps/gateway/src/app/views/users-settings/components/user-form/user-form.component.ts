@@ -133,6 +133,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       viewer: [''],
       editor: [''],
       pmo: [''],
+      ticketAdmin: [''],
     });
   }
 
@@ -154,7 +155,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   get pmoControl(): AbstractControl | null {
     return this.form.get('pmo');
   }
-
+  get ticketAdminControl(): AbstractControl | null {
+    return this.form.get('ticketAdmin');
+  }
   onSubmit() {
     if (!this.form.valid) {
       this.markFormFieldsAsTouched();
@@ -192,6 +195,16 @@ export class UserFormComponent implements OnInit, OnChanges {
           .getRoles()
           .find((r) => r.groupName === 'PMO');
         pmoObj && dataForm.userGroups.push({ id: pmoObj.id });
+      }
+      if (this.ticketAdminControl?.value) {
+        console.log('ticketAdminControl', this.ticketAdminControl?.value);
+
+        const ticketAdminObj = this.userService
+          .getRoles()
+          .find((r) => r.groupName === 'DT_Ticket_Admin');
+        console.log(ticketAdminObj, this.userService.getRoles());
+
+        ticketAdminObj && dataForm.userGroups.push({ id: ticketAdminObj.id });
       }
     } else if (currentSystem === 'Dynamic_Report_Flow') {
       const userDelegates = this.form.get('userDelegates')?.value || [];
@@ -366,7 +379,8 @@ export class UserFormComponent implements OnInit, OnChanges {
         (r) =>
           r.groupName !== 'DT_VP_Dashboard_Viewer' &&
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
-          r.groupName !== 'PMO'
+          r.groupName !== 'PMO' &&
+          r.groupName !== 'DT_Ticket_Admin'
       );
 
     if (
@@ -541,6 +555,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.form.get('viewer')?.setValue(true);
       this.form.get('editor')?.setValue(false);
       this.form.get('pmo')?.setValue(false);
+      this.form.get('ticketAdmin')?.setValue(false);
     }
   }
   oncheckBoxSelect(ele: { name: string; value: boolean }) {
@@ -617,6 +632,13 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.searchGroupByName(this.data.userGroups, 'PMO')?.groupName === 'PMO'
       ) {
         this.form?.get('pmo')?.setValue(true);
+        this.form?.get('viewer')?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_Ticket_Admin')
+          ?.groupName === 'DT_Ticket_Admin'
+      ) {
+        this.form?.get('ticketAdmin')?.setValue(true);
         this.form?.get('viewer')?.disable();
       }
     }

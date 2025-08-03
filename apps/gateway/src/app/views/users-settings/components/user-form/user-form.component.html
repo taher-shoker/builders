@@ -222,11 +222,19 @@
             >
             </stc-apps-select-drop-down>
           </div>
-          <div class="col-md-5">
+          <div class="col-md-12">
             <stc-apps-checkbox
               [label]="'grant access to  VP report'"
               formControlName="viewer"
               [name]="'viewer'"
+            ></stc-apps-checkbox>
+          </div>
+          <div class="col-md-12">
+            <stc-apps-checkbox
+              [label]="'Grant access as DT Ticket Admin'"
+              formControlName="ticketAdmin"
+              [name]="'ticketAdmin'"
+              (selectChange)="oncheckBoxSelect($event)"
             ></stc-apps-checkbox>
           </div>
           <div
