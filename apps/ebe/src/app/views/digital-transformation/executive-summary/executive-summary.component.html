@@ -7,6 +7,7 @@
             {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[0] : '' }}
           </p>
           <div>
+            @if(!isViewer()){
             <button
               class="add-workstream-btn"
               (click)="
@@ -18,6 +19,7 @@
               <i class="pi pi-plus"></i>
               add workstream
             </button>
+            }
             <img
               src="assets/images/arrow-up.svg"
               alt=""
@@ -58,11 +60,16 @@
                 <img src="assets/images/Info Circle.svg" alt="" />
                 <span>highlights</span>
               </button>
-              <button (click)="openSidebar1(summaryData, 'challenges')">
+              <button
+                class="Challenges_button"
+                (click)="openSidebar1(summaryData, 'challenges')"
+              >
                 <img src="assets/images/Danger.svg" alt="" />
                 <span>Challenges</span>
               </button>
+              @if(!isViewer()){
               <button
+                class="editProjectData"
                 (click)="
                   openAddWorkstreamSidebar(true, false, false, summaryData);
                   isProject.set(false);
@@ -71,6 +78,7 @@
               >
                 <i class="pi pi-pencil"></i>
               </button>
+              }
             </div>
           </div>
           <div class="executive-summary-body-sub-title">
@@ -105,6 +113,7 @@
             </div>
           </div>
           <div class="executive-summary-body-content">
+            @if(!isViewer()){
             <button
               class="add-new-project-btn"
               (click)="
@@ -116,6 +125,7 @@
               <i class="pi pi-plus"></i>
               add new project
             </button>
+            }
             <div class="row">
               @for (item of summaryData.projects; track $index) {
               @if(summaryData && summaryData.projects &&
@@ -128,6 +138,8 @@
                     isProject.set(true)
                   "
                   [executiveCard]="item"
+                  [isViewer]="isViewer()"
+                  [isPMO]="isPMO()"
                 />
               </div>
               } } @empty {
@@ -148,6 +160,7 @@
             {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[1] : '' }}
           </p>
           <div>
+            @if(!isViewer()){
             <button
               class="add-workstream-btn"
               (click)="
@@ -159,6 +172,7 @@
               <i class="pi pi-plus"></i>
               add workstream
             </button>
+            }
             <img
               src="assets/images/arrow-up.svg"
               alt=""
@@ -204,6 +218,7 @@
                 <img src="assets/images/Danger.svg" alt="" />
                 <span>Challenges</span>
               </button>
+              @if(!isViewer()){
               <button
                 (click)="
                   openAddWorkstreamSidebar(true, false, false, summaryData)
@@ -212,6 +227,7 @@
                 <i class="pi pi-pencil"></i>
                 <!-- <img src="assets/images/button.svg" alt="" /> -->
               </button>
+              }
             </div>
           </div>
           @if(summaryData){
@@ -232,6 +248,7 @@
             </div>
           </div>
           <div class="executive-summary-body-content">
+            @if(!isViewer()){
             <button
               class="add-new-project-btn"
               (click)="
@@ -244,6 +261,7 @@
               <i class="pi pi-plus"></i>
               add new project
             </button>
+            }
             <div class="row">
               @for (item of summaryData.projects; track $index) {
               <div class="col-lg-6 col-md-6 col-sm-12">
@@ -254,6 +272,8 @@
                     isProject.set(true)
                   "
                   [executiveCard]="item"
+                  [isViewer]="isViewer()"
+                  [isPMO]="isPMO()"
                 />
               </div>
               } @empty {
@@ -352,6 +372,7 @@
       [editProjectData]="isAddProject ? null : editProjectData"
       [editWorkstreamFormData]="!isEditWorkStream ? null : editedData"
       (delete)="deleteWorkStream($event)"
+      [isPMO]="isPMO()"
     />
   </div>
 </p-sidebar>

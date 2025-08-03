@@ -129,11 +129,11 @@
             background-color: #ff375e;
             color: #fff;
           }
-          &:nth-child(2) {
+          &.Challenges_button {
             background-color: #e2e8f0;
             color: #475569;
           }
-          &:last-child {
+          &.editProjectData {
             padding: 0;
             background: #4f008c26;
             width: 40px;

@@ -34,11 +34,14 @@
   <stc-apps-executive-summary
     [mainTitle]="firstTapTitles"
     [pageId]="currTap() && currTap().id ? currTap().id : 1"
+    [isViewer]="isViewer"
+    [isPMO]="isPMO"
   />
   } @else if(currTap().id !== 8 && currTap().id !== 9) {
   <section class="qa-compilance">
     <div class="qa-compilance-header">
       <p class="main-title">{{ currTap().value ? currTap().value : '' }}</p>
+      @if(!isViewer){
       <button
         class="add-workstream-btn"
         (click)="
@@ -51,6 +54,7 @@
         <i class="pi pi-plus"></i>
         add workstream
       </button>
+      }
     </div>
     @if(tapsDetailsData && tapsDetailsData.length !== 0){
     <div class="kpi-container">
@@ -64,6 +68,8 @@
             isEditMode2 = true
           "
           [QAComplianceCardData]="card"
+          [isViewer]="isViewer"
+          [isPMO]="isPMO"
         />
       </div>
       }
@@ -78,13 +84,19 @@
       <p class="main-title">
         {{ currTap() && currTap().value ? currTap().value : '' }}
       </p>
+      @if(!isViewer){
       <button class="add-workstream-btn" (click)="showChallengesSidebar = true">
         <i class="pi pi-plus"></i>
         add new
       </button>
+      }
     </div>
     <div class="qa-compilance-content">
-      <stc-apps-key-challenges-table [isChallengeAdded]="isChallengeAdded" />
+      <stc-apps-key-challenges-table
+        [isChallengeAdded]="isChallengeAdded"
+        [isViewer]="isViewer"
+        [isPMO]="isPMO"
+      />
     </div>
   </section>
   } @else {
@@ -127,6 +139,7 @@
       [isEditWorkStream]="isEditMode"
       (delete)="showDeleteDialog($event)"
       [currentTabId]="currTap() && currTap().id ? currTap().id : 1"
+      [isPMO]="isPMO"
     />
   </div>
 </p-sidebar>
@@ -152,6 +165,7 @@
       (addWorkStream)="addChallengeData($event)"
       type="challenges"
       [isWorkstreamSidebarVisible]="showChallengesSidebar === false"
+      [isPMO]="isPMO"
     />
   </div>
 </p-sidebar>

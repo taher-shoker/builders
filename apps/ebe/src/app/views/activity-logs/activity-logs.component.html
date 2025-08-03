@@ -318,9 +318,10 @@
                       : (transformDate(log.timestamp) | truncateWord : 3)
                     : '-'
                 }}
+                <!--  && transformDate(log.timestamp).split("
+                ").length >= 3 -->
                 @if((currentTap().value !== 'Scorecard' && currentTap().value
-                !== 'Financial') && transformDate(log.timestamp).split("
-                ").length >= 3){
+                !== 'Financial')){
                 <span
                   class="read-more-btn"
                   (click)="longTitlePanel.toggle($event)"

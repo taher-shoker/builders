@@ -62,6 +62,8 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   digitalTransformationService = inject(DigitalTransformationService);
   mainTitle = input<string[]>([]);
   pageId = input<number>();
+  isPMO = input<boolean>();
+  isViewer = input<boolean>();
   toggleAccordion(index: number, event: Event) {
     event.stopPropagation();
     this.activeAccordionIndex =
@@ -108,6 +110,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       typeof summaryData.businessUnitHighlights === 'string'
     ) {
       const cleaned = summaryData.businessUnitHighlights.replace(/�/g, ' ');
+      console.log(cleaned);
       if (cleaned.trim().startsWith('[')) {
         try {
           const parsed = JSON.parse(cleaned);
@@ -193,6 +196,27 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     });
     return JSON.stringify(result);
   }
+  convertHeighlights2(input: string) {
+    const inputLines = input.split('\n');
+    const result = inputLines.map((line, index) => {
+      const parts = line.split(':');
+
+      if (parts.length === 2) {
+        return {
+          id: index + 1,
+          title: parts[0].trim(),
+          value: parts[1].trim(),
+        };
+      } else {
+        return {
+          id: index + 1,
+          title: '',
+          value: line.trim(),
+        };
+      }
+    });
+    return JSON.stringify(result);
+  }
   clickedWorkstreamId!: number;
   clickedPageId!: number;
   addWorkStream(workStreamData: AddWorkstreamFormModel) {
@@ -202,12 +226,12 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       businessUnit: workStreamData.title,
       businessUnitStatus: workStreamData.status,
       businessUnitHighlights: workStreamData.heighlights
-        ? this.convertHeighlights(workStreamData.heighlights)
+        ? this.convertHeighlights2(workStreamData.heighlights)
         : workStreamData.highlights
-        ? this.convertHeighlights(workStreamData.highlights)
+        ? this.convertHeighlights2(workStreamData.highlights)
         : null,
       businessUnitChallenges: workStreamData.challenges
-        ? this.convertHeighlights(workStreamData.challenges)
+        ? this.convertHeighlights2(workStreamData.challenges)
         : null,
       weight: workStreamData.weight,
       actual: workStreamData.actual,
@@ -215,6 +239,8 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     };
     if (data.weight) {
       if (!this.isEditWorkStream) {
+        // console.log(this.convertHeighlights2(workStreamData.heighlights));
+        // console.log(data);
         this.digitalTransformationService.createNewWorkStream(data).subscribe({
           next: (res) => {
             this.getDigitalTransformationDetailsData(1);

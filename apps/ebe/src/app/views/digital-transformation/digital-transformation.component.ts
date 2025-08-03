@@ -1,7 +1,11 @@
 import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { UserModel } from '../../models/scorecard.model';
+import {
+  UserGroup,
+  UserGroupRoles,
+  UserModel,
+} from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { DigitalTransformationService } from '../../services/digital-transformation.service';
 import {
@@ -54,6 +58,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   scorecardService = inject(ScorecardService);
   // qAComplianceData: QAComplianceModel[] = [];
   showAddWorkstreamSidebar = false;
+  userRoles!: UserGroup;
   isWorkstreamSidebarVisible!: boolean;
   isEdit = false;
   confirmationService = inject(ConfirmationService);
@@ -64,6 +69,9 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   endSubs$: Subject<any> = new Subject();
   firstTapTitles: string[] = [];
   showChallengesSidebar = false;
+  currentSystem!: string;
+  isPMO = false;
+  isViewer = false;
   private getDigitalTransformationData() {
     this.digitalTransformationService
       .getDigitalTransformationData()
@@ -117,10 +125,34 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
+  private checkSystem(groups: UserGroup[]): UserGroup {
+    const matchingGroup = groups.find((group: UserGroup) => {
+      return group.roles.some((role: UserGroupRoles) => {
+        return this.currentSystem === role.system.name;
+      });
+    });
+    if (matchingGroup) {
+      return matchingGroup;
+    } else {
+      throw new Error('No user group found for the current system');
+    }
+  }
+  getUserRole() {
+    this.currentSystem = this.scorecardService.getCurrentSystem();
+    this.userRoles = this.checkSystem(this.userData.userGroups);
+    console.log(this.userRoles);
+  }
   ngOnInit(): void {
     if (this.scorecardService.getUserGroups()) {
       this.userData = JSON.parse(
         decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+      this.getUserRole();
+      this.isPMO = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_PMO'
+      );
+      this.isViewer = this.userRoles.roles.some(
+        (role) => role.roleName === 'BE_VIEWERS'
       );
     }
     this.getDigitalTransformationData();

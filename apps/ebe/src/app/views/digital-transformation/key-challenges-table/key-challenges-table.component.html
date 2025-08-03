@@ -13,7 +13,9 @@
       </th>
       <th>impact</th>
       <th>support needed</th>
+      @if(!isViewer()){
       <th>actions</th>
+      }
     </thead>
     @if(!isEmpty){
     <tbody>
@@ -47,10 +49,12 @@
             }}
           </p>
         </td>
+        @if(!isViewer()){
         <td style="width: 15%; text-align: center" class="action-td">
           <i class="pi pi-pencil" (click)="getRowDetails(challenge)"></i>
           <i class="pi pi-trash" (click)="showDeleteDialog(challenge)"></i>
         </td>
+        }
       </tr>
       } @empty {
       <p class="quarter-empty-msg">there are no quarters</p>

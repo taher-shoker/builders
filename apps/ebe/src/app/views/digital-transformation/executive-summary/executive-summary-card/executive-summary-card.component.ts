@@ -55,6 +55,8 @@ export class ExecutiveSummaryCardComponent implements OnInit, OnChanges {
   vactual!: number;
   vplanned!: number;
   difference!: number;
+  isPMO = input<boolean>();
+  isViewer = input<boolean>();
   @ViewChild('overlayPanel2') overlayPanel2?: OverlayPanel;
   data!: ProgressInfo;
   @Output() openProjSidebar = new EventEmitter<pageDetailsProjectModel>();

@@ -33,8 +33,7 @@ export class MainLayoutComponent implements OnInit {
   deviceService = inject(DeviceService);
   ngOnInit(): void {
     this.currentSystem = this.scorecardService.getCurrentSystem();
-    if(this.scorecardService.getUserGroups())
-    {
+    if (this.scorecardService.getUserGroups()) {
       this.userData = JSON.parse(
         decodeURIComponent(this.scorecardService.getUserGroups())
       );
@@ -52,19 +51,16 @@ export class MainLayoutComponent implements OnInit {
         }
       },
     });
-    if(this.userData && this.userData.userGroups)
-    {
+    if (this.userData && this.userData.userGroups) {
       this.userRoles = this.checkSystem(this.userData.userGroups);
     }
-    if(this.userRoles && this.userRoles.roles)
-    {
+    if (this.userRoles && this.userRoles.roles) {
       this.isAllowed = this.userRoles.roles.some(
         (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
       );
     }
     this.authService.userRoles.next(this.userRoles);
-    if(this.userRoles && this.userRoles.roles)
-    {
+    if (this.userRoles && this.userRoles.roles) {
       this.isPMO = this.userRoles.roles.some(
         (role) => role.roleName === 'BE_PMO'
       );
@@ -83,8 +79,7 @@ export class MainLayoutComponent implements OnInit {
       throw new Error('No user group found for the current system');
     }
   }
-  toggleSwitchBtn()
-  {
+  toggleSwitchBtn() {
     this.scorecardService.toggleSwitchBtn.next(true);
   }
   getCurrentMode(mode: 'editMode' | 'viewMode') {

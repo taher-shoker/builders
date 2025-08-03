@@ -37,10 +37,12 @@
         <img src="assets/images/Info Circle.svg" alt="" />
         <span>highlights</span>
       </button>
+      @if(!isViewer()){
       <button class="edit-btn" (click)="openSidebar()">
         <i class="pi pi-pencil"></i>
         <!-- <img src="assets/images/button.svg" alt="" /> -->
       </button>
+      }
     </div>
   </div>
   @for (item of QAComplianceCardData().projects; track $index) {
@@ -77,7 +79,7 @@
             ? actualVal()
             : 0
         "
-        [percentValue]="item.percentage ?? 0"
+        [percentValue]="item.percentage ?? actualVal()"
         [showProgress]="true"
         [progressSize]="
           item.totalABL || item.totalTD || item.totalCapabilities

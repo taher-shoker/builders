@@ -46,6 +46,8 @@ export class KeyChallengesTableComponent
   isAsc = true;
   showChallengesSidebar = false;
   first = 0;
+  isPMO = input<boolean>();
+  isViewer = input<boolean>();
   rows = 5;
   page = 1;
   isChallengeAdded = input<boolean>(false);

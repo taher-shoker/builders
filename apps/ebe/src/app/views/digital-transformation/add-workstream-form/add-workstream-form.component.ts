@@ -44,6 +44,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
   isAddProject = input<boolean>(false);
   isEditWorkStream = input<boolean>(false);
   type = input<string>('');
+  isPMO = input<boolean | undefined>();
   editedCompilanceData = input<pageDetailsModel | null>(null);
   editFormData = input<KeyChallengesDataModel>({} as KeyChallengesDataModel);
   editWorkstreamFormData = input<pageDetailsModel | null>(null);
@@ -75,28 +76,43 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         this.addWorkstreamForm.reset();
       }
     }
-    console.log(this.isProject());
     if (this.isAddProject() || this.isEditProject()) {
-      this.addWorkstreamForm = this.formBuilder.group({
-        title: ['', [Validators.required]],
-        status: ['', [Validators.required]],
-        actual: [
-          '',
-          [Validators.required, Validators.min(0), Validators.max(100)],
-        ],
-        planned: [
-          '',
-          [Validators.required, Validators.min(0), Validators.max(100)],
-        ],
-      });
+      if (!this.isPMO()) {
+        this.addWorkstreamForm = this.formBuilder.group({
+          title: ['', [Validators.required]],
+          status: ['', [Validators.required]],
+          actual: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          planned: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+        });
+      } else {
+        this.addWorkstreamForm = this.formBuilder.group({
+          title: ['', [Validators.required]],
+          actual: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+          planned: [
+            '',
+            [Validators.required, Validators.min(0), Validators.max(100)],
+          ],
+        });
+      }
       if (this.editProjectData()) {
         console.log(this.editProjectData());
         this.addWorkstreamForm
           .get('title')
           ?.setValue(this.editProjectData()?.projectName);
-        this.addWorkstreamForm
-          .get('status')
-          ?.setValue(this.editProjectData()?.projectStatus.toLowerCase());
+        if (!this.isPMO()) {
+          this.addWorkstreamForm
+            .get('status')
+            ?.setValue(this.editProjectData()?.projectStatus.toLowerCase());
+        }
         this.addWorkstreamForm
           .get('actual')
           ?.setValue(
@@ -117,26 +133,48 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
       }
     } else {
       if (this.type() === 'compilance') {
-        this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
-          status: ['', [Validators.required]],
-          heighlights: [''],
-          requestedArtifact: [
-            '',
-            // [Validators.required, Validators.min(0), Validators.max(100)],
-            [Validators.required],
-          ],
-          completed: [
-            '',
-            // [Validators.required, Validators.min(0), Validators.max(100)],
-            [Validators.required],
-          ],
-          missingArtifacts: [
-            '',
-            // [Validators.required, Validators.min(0), Validators.max(100)],
-            [Validators.required],
-          ],
-        });
+        if (!this.isPMO()) {
+          this.addWorkstreamForm = this.formBuilder.group({
+            title: ['', [Validators.required]],
+            status: ['', [Validators.required]],
+            heighlights: [''],
+            requestedArtifact: [
+              '',
+              // [Validators.required, Validators.min(0), Validators.max(100)],
+              [Validators.required],
+            ],
+            completed: [
+              '',
+              // [Validators.required, Validators.min(0), Validators.max(100)],
+              [Validators.required],
+            ],
+            missingArtifacts: [
+              '',
+              // [Validators.required, Validators.min(0), Validators.max(100)],
+              [Validators.required],
+            ],
+          });
+        } else {
+          this.addWorkstreamForm = this.formBuilder.group({
+            title: ['', [Validators.required]],
+            heighlights: [''],
+            requestedArtifact: [
+              '',
+              // [Validators.required, Validators.min(0), Validators.max(100)],
+              [Validators.required],
+            ],
+            completed: [
+              '',
+              // [Validators.required, Validators.min(0), Validators.max(100)],
+              [Validators.required],
+            ],
+            missingArtifacts: [
+              '',
+              // [Validators.required, Validators.min(0), Validators.max(100)],
+              [Validators.required],
+            ],
+          });
+        }
         if (this.editedCompilanceData()) {
           let textareaValue = '';
           console.log(this.editedCompilanceData());
@@ -180,11 +218,13 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
                 ?.setValue(textareaValue);
             }
           }
-          this.addWorkstreamForm
-            .get('status')
-            ?.setValue(
-              this.editedCompilanceData()?.projects[0].projectStatus.toLowerCase()
-            );
+          if (!this.isPMO()) {
+            this.addWorkstreamForm
+              .get('status')
+              ?.setValue(
+                this.editedCompilanceData()?.projects[0].projectStatus.toLowerCase()
+              );
+          }
           this.addWorkstreamForm
             .get('requestedArtifact')
             ?.setValue(

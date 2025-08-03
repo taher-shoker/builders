@@ -164,7 +164,7 @@
       title is required
     </small>
   </div>
-  }
+  } @if(!isPMO()){
   <div class="form-group">
     <label>
       status
@@ -190,7 +190,7 @@
       status is required
     </small>
   </div>
-  @if(!isAddProject() || !isEditProject()) { @if(type() === ""){
+  } @if(!isAddProject() || !isEditProject()) { @if(type() === ""){
   @if(!isProject()){
   <div class="form-group">
     <label for="weight">
@@ -467,7 +467,7 @@
       title is required
     </small>
   </div>
-  }
+  } @if(!isPMO()){
   <div class="form-group">
     <label>
       status
@@ -493,6 +493,7 @@
       status is required
     </small>
   </div>
+  }
   <div class="form-group">
     <label for="highlights">
       highlights
@@ -933,7 +934,7 @@
       title is required
     </small>
   </div>
-  }
+  } @if(!isPMO()){
   <div class="form-group">
     <label>
       status
@@ -959,6 +960,7 @@
       status is required
     </small>
   </div>
+  }
   <div class="form-group">
     <label for="highlights">
       highlights (%)

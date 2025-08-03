@@ -123,6 +123,11 @@ export class ActivityLogsComponent {
         name: 'Financial Reporting',
         value: 'Financial',
       },
+      {
+        id: 5,
+        name: 'digital transformation',
+        value: 'DT',
+      },
     ]);
     this.router.params.subscribe({
       next: (param) => {
@@ -385,20 +390,41 @@ export class ActivityLogsComponent {
         },
       ];
     } else {
-      this.actionTypes = [
-        {
-          name: 'All',
-          id: 'All',
-        },
-        {
-          name: 'Import',
-          id: 'Import',
-        },
-        {
-          name: 'Export',
-          id: 'Export',
-        },
-      ];
+      if (clickedTap.value === 'DT') {
+        this.actionTypes = [
+          {
+            name: 'All',
+            id: 'All',
+          },
+          {
+            name: 'Add',
+            id: 'Add',
+          },
+          {
+            name: 'Edit',
+            id: 'Edit',
+          },
+          {
+            name: 'Delete',
+            id: 'Delete',
+          },
+        ];
+      } else {
+        this.actionTypes = [
+          {
+            name: 'All',
+            id: 'All',
+          },
+          {
+            name: 'Import',
+            id: 'Import',
+          },
+          {
+            name: 'Export',
+            id: 'Export',
+          },
+        ];
+      }
     }
     this.currentPage.set(0);
     this.selectedType = null;
