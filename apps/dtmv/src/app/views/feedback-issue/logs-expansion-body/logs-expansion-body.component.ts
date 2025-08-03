@@ -7,7 +7,9 @@ import { Component, input, InputSignal } from '@angular/core';
 })
 export class LogsExpansionBodyComponent {
   desc: InputSignal<string> = input('');
-  attachaments: InputSignal<string> = input('');
+  attachaments: InputSignal<
+    { attachmentId: number; attachmentName: string }[]
+  > = input([] as { attachmentId: number; attachmentName: string }[]);
   testFiles: File[] = [
     new File(['Dummy content 1'], 'test-document.pdf', {
       type: 'application/pdf',

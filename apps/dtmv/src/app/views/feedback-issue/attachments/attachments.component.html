@@ -10,21 +10,23 @@
   "
 >
   @for(file of files(); track file){
-  <div class="col-md-5">
+  <div [ngClass]="logs() ? 'col-md-5' : 'col-md-6'">
     <div class="file">
       <div class="w-100 row">
         <div class="col-md-1 d-flex align-items-center">
           <i class="fa-regular fas fa-image"></i>
         </div>
         <div class="col-md-9">
-          <span> {{ file.name }}</span>
+          <span> {{ getFileName(file) }}</span>
+          @if(isFileInstance(file)){
           <div class="file_size">
             {{ file.size / 1024 | number : '1.0-0' }}KB
           </div>
+          }
         </div>
         <div class="col-md-2 d-flex align-items-center justify-content-end">
           @if(logs()){
-          <i role="button" class="fa-solid fas fa-download"></i>
+          <i role="button" class="fa-solid fas fa-download" (click)="downloadFile(file)"></i>
           } @else(){
           <i
             role="button"

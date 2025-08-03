@@ -21,15 +21,17 @@
       <div class="content-tabs">
         <mat-button-toggle-group
           class="custom-toggle-group"
+          (change)="onFilterChange($event.value)"
           [(ngModel)]="selectedTab"
           appearance="legacy"
         >
-          <mat-button-toggle value="all">All</mat-button-toggle>
-          <mat-button-toggle value="issue">Issues</mat-button-toggle>
-          <mat-button-toggle value="feedback">Feedback</mat-button-toggle>
+          <mat-button-toggle value="ALL">All</mat-button-toggle>
+          <mat-button-toggle value="ISSUE">Issues</mat-button-toggle>
+          <mat-button-toggle value="FEEDBACK">Feedback</mat-button-toggle>
         </mat-button-toggle-group>
       </div>
       <div class="mt-4 content-expansion">
+        @for(log of allLogs.content;track log){
         <div class="expansion-panel">
           <mat-expansion-panel
             (opened)="panelOpenState = true"
@@ -38,12 +40,27 @@
             <mat-expansion-panel-header>
               <stc-apps-logs-expansion-header
                 class="w-100"
+                [type]="log.type"
+                [subTitle]="log.description"
+                [date]="log.createDate"
+                [count]="log.attachments.length"
               ></stc-apps-logs-expansion-header>
             </mat-expansion-panel-header>
-            <stc-apps-logs-expansion-body></stc-apps-logs-expansion-body>
+            <stc-apps-logs-expansion-body
+              [desc]="log.description"
+              [attachaments]="log.attachments"
+            ></stc-apps-logs-expansion-body>
           </mat-expansion-panel>
         </div>
+        }
       </div>
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="10"
+        (page)="pagination($event)"
+        aria-label="Select page"
+      >
+      </mat-paginator>
     </div>
   </div>
 </div>

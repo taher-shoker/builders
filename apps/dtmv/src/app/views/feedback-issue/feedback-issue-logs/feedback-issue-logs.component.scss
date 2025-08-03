@@ -15,7 +15,7 @@
         border-radius: 10px !important;
         box-shadow: none !important;
         padding: 16px 0px 16px 8px;
-
+        margin-bottom: 14px;
         .mat-expansion-panel-header {
           width: 100%;
           min-height: 52px !important;
@@ -38,7 +38,7 @@
   background-color: transparent !important;
 }
 ::ng-deep .custom-toggle-group {
-  background-color: rgba(0, 0, 0, 0.03);
+  background-color: var(--stcLightGray);
   box-shadow: none !important;
   border-radius: 4px !important;
   padding: 4px 0px;
@@ -68,4 +68,10 @@
 }
 ::ng-deep .mat-pseudo-checkbox {
   display: none !important;
+}
+::ng-deep .mat-mdc-paginator {
+  background-color: transparent !important;
+}
+::ng-deep .mat-mdc-paginator-outer-container {
+  font-family: 'stc forward-regular' !important;
 }

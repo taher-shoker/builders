@@ -1,13 +1,15 @@
 .expansion-body-holder {
   margin-top: 26px;
   font-family: 'stc forward-regular';
-  &_desc{
-    .header{
-        font-size: 16px;
-        margin-bottom: 12px;
+  &_desc {
+    margin-bottom: 22px;
+    .header {
+      font-size: 16px;
+      margin-bottom: 12px;
+      font-weight: 600;
     }
-    .desc{
-        color: var(--stc-greyColor);
+    .desc {
+      color: var(--stc-greyColor);
     }
   }
 }

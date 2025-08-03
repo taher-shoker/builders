@@ -3,13 +3,22 @@
     <div class="col-md-6">
       <div class="logs-panel-header_info row">
         <div class="logs-panel-header_info_type col-md-2">
-          <span>Feedback</span>
+          <span
+            [ngStyle]="{
+              'background-color':
+                type() === 'FEEDBACK' ? 'var(--stc-color)' : 'var(--red-alet)'
+            }"
+            >{{ formatType(type()) }}</span
+          >
         </div>
         <div class="logs-panel-header_info_data col-md-10">
           <h5 class="tile">Great user interface improvments</h5>
           <p class="subTitle">
-            The new dashborad design is much more intuitive. Love the color and
-            layout!
+            {{
+              subTitle().length > 50
+                ? (subTitle() | slice : 0 : 75) + '...'
+                : subTitle()
+            }}
           </p>
         </div>
       </div>
@@ -18,7 +27,7 @@
       <div class="logs-panel-header_number-of-attachments">
         <div>
           <i class="icon fa-solid fas fa-paperclip"></i>
-          <span class="count">4</span>
+          <span class="count">{{ count() }}</span>
         </div>
       </div>
     </div>
@@ -26,7 +35,7 @@
       <div class="logs-panel-header_date">
         <div>
           <i class="icon fa-regular fas fa-calendar"></i>
-          <span class="date">12/04/2025</span>
+          <span class="date">{{ date() }}</span>
         </div>
       </div>
     </div>
