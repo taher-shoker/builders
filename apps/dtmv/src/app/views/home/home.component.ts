@@ -42,7 +42,14 @@ export class HomeComponent implements OnInit {
       name: 'Archived DT Milestones',
       url: '/archived-milestones',
       icon: 'fa fa-archive',
-      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO','DT_User'],
+      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO', 'DT_User'],
+      urlHome: '/home',
+    },
+    {
+      name: 'Feedback/Issues Logs',
+      url: '/feedback-issue-logs',
+      icon: 'fa fa-list',
+      roles: ['TICKET_ADMIN', 'ADMINS'],
       urlHome: '/home',
     },
   ];
