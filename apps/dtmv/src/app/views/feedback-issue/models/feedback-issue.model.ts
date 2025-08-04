@@ -21,10 +21,12 @@ export interface formBody {
 export interface attachments {
   attachmentId: number;
   attachmentName: string;
+  fileSize: number;
 }
 export interface content {
   id: number;
   type: string;
+  title: string;
   description: string;
   createdBy: string;
   createDate: string;

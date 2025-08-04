@@ -203,9 +203,11 @@
       }}
     </div>
   </div>
+  @if(!milestonesService.isDTAdmin){
   <stc-apps-floating-menu
     (openForm)="openFeedbackDialog()"
   ></stc-apps-floating-menu>
+  }
 </div>
 
 <stc-apps-dialog id="filter-Modal">

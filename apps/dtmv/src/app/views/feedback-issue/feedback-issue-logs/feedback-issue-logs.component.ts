@@ -4,6 +4,7 @@ import { FeedbackIssueService } from '../services/feedback-issues.service';
 import { logsResponse, ticketCount } from '../models/feedback-issue.model';
 import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 
 @Component({
   selector: 'stc-apps-feedback-issue-logs',
@@ -35,7 +36,8 @@ export class FeedbackIssueLogsComponent implements OnInit {
     private bannerDataService: BannerDataService,
     private feedbackIssueService: FeedbackIssueService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private cookieService: CookieService
   ) {}
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
