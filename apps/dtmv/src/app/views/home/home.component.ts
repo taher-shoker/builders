@@ -49,7 +49,7 @@ export class HomeComponent implements OnInit {
       name: 'Feedback/Issues Logs',
       url: '/feedback-issue-logs',
       icon: 'fa fa-list',
-      roles: ['TICKET_ADMIN', 'ADMINS'],
+      roles: ['TICKET_ADMIN'],
       urlHome: '/home',
     },
   ];
