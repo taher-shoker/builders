@@ -1,6 +1,6 @@
 <div
   class="row file-box"
-  [ngClass]="!logs() ? 'scrollable-area' : ''"
+  [ngClass]="!logs() ? '' : ''"
   *ngIf="
     files() &&
     files().length > 0 &&

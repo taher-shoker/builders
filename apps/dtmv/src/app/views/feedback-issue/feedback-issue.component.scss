@@ -1,5 +1,7 @@
 .feedback-issue-container {
   padding: 41px;
+  max-height: 98vh;
+  overflow-y: auto;
   &_title {
     color: var(--blackColor);
     font-size: 24px;
