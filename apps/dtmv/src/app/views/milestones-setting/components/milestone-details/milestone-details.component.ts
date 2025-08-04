@@ -56,7 +56,7 @@ export class MilestoneDetailsComponent implements OnInit {
   deliverableInMaking: string = '';
   overallProgressInMaking: string = '';
   isUpdateProgressOnHold: boolean = false;
-
+  hideAction = true;
   refinedProgressUpdate: {
     workflowId: number | string;
     requestTaskId: number | string;
@@ -87,6 +87,10 @@ export class MilestoneDetailsComponent implements OnInit {
       this.milestoneId = params['id'];
       this.getMilestoneDetails();
     });
+    const viewMode = history.state.viewMode;
+    if (viewMode === 'archive') {
+      this.hideAction = false;
+    }
   }
 
   askUserToInitiateUpdateProgress() {

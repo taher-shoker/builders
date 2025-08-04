@@ -45,7 +45,6 @@
                     (btnClick)="addMilestoneNavigate()"
                   ></stc-apps-button>
                 </div>
-
                 <div class="col-2">
                   <stc-apps-button
                     [buttonText]="'Export' | translate"
@@ -99,7 +98,6 @@
               [paginate]="true"
               [applyFilter]="true"
               [filterForm]="filterForm"
-              [readOnly]="readOnly"
               [paginationConfig]="{
                 pageCount: previousParams.numberOfElementsToDisplay
                   ? previousParams.numberOfElementsToDisplay
@@ -205,6 +203,11 @@
       }}
     </div>
   </div>
+  @if(!milestonesService.isDTAdmin){
+  <stc-apps-floating-menu
+    (openForm)="openFeedbackDialog()"
+  ></stc-apps-floating-menu>
+  }
 </div>
 
 <stc-apps-dialog id="filter-Modal">

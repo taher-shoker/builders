@@ -14,7 +14,9 @@ import { CookieService } from 'ngx-cookie';
 export class ScorecardService {
   private currMode: BehaviorSubject<'editMode' | 'viewMode'> =
     new BehaviorSubject<'editMode' | 'viewMode'>('viewMode');
-  toggleSwitchBtn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  toggleSwitchBtn: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+    false
+  );
   private currUsername = '';
   userRoles!: UserGroup;
   http = inject(HttpClient);
@@ -66,17 +68,18 @@ export class ScorecardService {
   }
   getCurrentSystem(): string {
     if (this.cookieService.get('granted-systems')) {
-      const systemName = (
-        JSON.parse(this.cookieService.get('granted-systems')!) as string[]
-      ).find((x) => x === 'Business_Excellence_Dashboard');
+      const systemName =
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        (
+          JSON.parse(this.cookieService.get('granted-systems')!) as string[]
+        ).find((x) => x === 'Business_Excellence_Dashboard');
       return systemName ? systemName : '';
     }
     return '';
   }
   getNavLinks(): NavLinks[] {
-    if(this.getUserGroups())
-      {
-      let allNavs:NavLinks[] = [
+    if (this.getUserGroups()) {
+      const allNavs: NavLinks[] = [
         {
           id: 1,
           name: 'sector scorecards',
@@ -96,16 +99,17 @@ export class ScorecardService {
           id: 2,
           name: 'CAD strategy programs',
           url: '/strategy-program',
-        }
+        },
       ];
-      let userGroup = JSON.parse(this.getUserGroups());
+      const userGroup = JSON.parse(this.getUserGroups());
       const matchingGroup = userGroup.userGroups.find((group: UserGroup) => {
         return group.roles.some((role: UserGroupRoles) => {
           return this.getCurrentSystem() === role.system.name;
         });
       });
-      let isAllowed = matchingGroup.roles.some(
-        (role:any) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+      const isAllowed = matchingGroup.roles.some(
+        (role: any) =>
+          role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
       );
       // console.log(isAllowed);
       return isAllowed ? this.navItems : allNavs;

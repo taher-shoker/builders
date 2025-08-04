@@ -1,0 +1,72 @@
+.feedback-issue-container {
+  padding: 41px;
+  &_title {
+    color: var(--blackColor);
+    font-size: 24px;
+    font-weight: 600;
+  }
+  &_subtitle {
+    color: var(--grey-color);
+    margin-top: 12px;
+    font-size: 20px;
+    font-weight: 300;
+  }
+  &_form {
+    .type-input {
+      .form-label {
+        font-size: 15px;
+      }
+      .radio-group {
+        margin: 12px 0px;
+        input[type='radio'] {
+          width: 16px;
+          height: 16px;
+          accent-color: var(--stc-color);
+        }
+        .issue-btn {
+          margin-left: 42px;
+        }
+      }
+    }
+    .subject-input {
+      margin-top: 18px;
+    }
+    .file-input {
+      label {
+        font-size: 15px;
+      }
+      .file-uploader {
+        cursor: pointer;
+        margin: 16px auto;
+        border: 2px dashed var(--grey-color);
+        padding: 16px;
+        color: var(--grey-color);
+        border-radius: 10px;
+        &.error {
+          border-color: var(--stc-red-color);
+        }
+        img {
+          margin-bottom: 10px;
+          width: 42px;
+          height: 42px;
+          object-fit: contain;
+        }
+        h4 {
+          font-size: 12px;
+        }
+        p {
+          font-size: 12px;
+          font-weight: 300;
+        }
+      }
+    }
+    .btns-holder {
+      margin-top: 12px;
+    }
+  }
+}
+::ng-deep .custom-input {
+  label {
+    font-size: 15px;
+  }
+}

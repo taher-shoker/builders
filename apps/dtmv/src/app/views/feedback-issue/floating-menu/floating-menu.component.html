@@ -1,0 +1,13 @@
+<div
+  class="floating-wrapper"
+  (mouseleave)="menuOpen = false"
+  (mouseenter)="menuOpen = true"
+>
+  <button class="floating-btn" (click)="openFeedback()">
+    <i class="fa-regular fas fa-comment-dots"></i>
+  </button>
+
+  <div class="floating-menu" *ngIf="menuOpen" @menuAnimation>
+    <button>Add Feedback/Issue</button>
+  </div>
+</div>

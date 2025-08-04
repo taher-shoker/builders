@@ -23,7 +23,7 @@ const routes: Routes = [
       {
         path: 'archived-milestones',
         canActivate: [AuthGuard],
-        data: { state: 'archive' },
+        data: { state: 'archive', breadcrumb: 'archive' },
         loadChildren: () =>
           import('../milestones-setting/milestones-setting.module').then(
             (m) => m.MilestonesSettingModule
@@ -34,6 +34,14 @@ const routes: Routes = [
         canActivate: [AuthGuard],
         loadChildren: () =>
           import('../vp-report/vp-report.module').then((m) => m.VpReportModule),
+      },
+      {
+        path: 'feedback-issue-logs',
+        canActivate: [AuthGuard],
+        loadChildren: () =>
+          import('../feedback-issue/feedback-issue.module').then(
+            (m) => m.FeedBackIssueModule
+          ),
       },
     ],
   },

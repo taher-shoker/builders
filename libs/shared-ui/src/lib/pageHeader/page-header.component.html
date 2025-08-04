@@ -1,0 +1,37 @@
+<p
+  class="page-header-section-welcome-text"
+  [ngStyle]="{
+    'font-family': fontFamilies()[0]
+  }"
+>
+  welcome back,
+  <span
+    [ngStyle]="{
+      'font-family': fontFamilies()[1]
+    }"
+    >{{ username() }}</span
+  >
+  <img src="assets/images/Waving-Hand.svg" alt="" />
+</p>
+<div
+  class="page-header-section-title"
+  [ngStyle]="{
+    'font-family': fontFamilies()[0]
+  }"
+>
+  <p>
+    <span
+      [ngStyle]="{
+        'font-family': fontFamilies()[2]
+      }"
+    >
+      @if(isDeletedProject()) {
+      <i (click)="returnBack()" class="pi pi-arrow-left"></i>
+      }
+      {{ mainTitle() }}
+    </span>
+    @if (secondaryTitle()) {
+    {{ secondaryTitle() }}
+    }
+  </p>
+</div>

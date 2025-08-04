@@ -1,0 +1,67 @@
+<stc-apps-breadcrumb [bgColor]="'primary'"></stc-apps-breadcrumb>
+<stc-apps-banner> </stc-apps-banner>
+<div class="logs-container layout">
+  <div class="row box">
+    <div class="row logs-container_cards">
+      @for (card of cards;track card){
+      <div class="col-md-4">
+        <stc-apps-feedback-issue-card
+          [title]="card.title"
+          [count]="counts[card.countKey]"
+          [subTitle]="card.subtitle"
+        ></stc-apps-feedback-issue-card>
+      </div>
+      }
+    </div>
+    <div class="logs-container_content">
+      <div class="content-header">
+        <h4>Submissions</h4>
+        <p>View and manage all feedback and issues</p>
+      </div>
+      <div class="content-tabs">
+        <mat-button-toggle-group
+          class="custom-toggle-group"
+          (change)="onFilterChange($event.value)"
+          [(ngModel)]="selectedTab"
+          appearance="legacy"
+        >
+          <mat-button-toggle value="ALL">All</mat-button-toggle>
+          <mat-button-toggle value="ISSUE">Issues</mat-button-toggle>
+          <mat-button-toggle value="FEEDBACK">Feedback</mat-button-toggle>
+        </mat-button-toggle-group>
+      </div>
+      <div class="mt-4 content-expansion">
+        @for(log of allLogs.content;track log){
+        <div class="expansion-panel">
+          <mat-expansion-panel
+            (opened)="panelOpenState = true"
+            (closed)="panelOpenState = false"
+          >
+            <mat-expansion-panel-header>
+              <stc-apps-logs-expansion-header
+                class="w-100"
+                [type]="log.type"
+                [title]="log.title"
+                [subTitle]="log.description"
+                [date]="log.createDate"
+                [count]="log.attachments.length"
+              ></stc-apps-logs-expansion-header>
+            </mat-expansion-panel-header>
+            <stc-apps-logs-expansion-body
+              [desc]="log.description"
+              [attachaments]="log.attachments"
+            ></stc-apps-logs-expansion-body>
+          </mat-expansion-panel>
+        </div>
+        }
+      </div>
+      <mat-paginator
+        [length]="totalElements"
+        [pageSize]="10"
+        (page)="pagination($event)"
+        aria-label="Select page"
+      >
+      </mat-paginator>
+    </div>
+  </div>
+</div>

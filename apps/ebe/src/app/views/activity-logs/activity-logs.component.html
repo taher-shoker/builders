@@ -1,7 +1,12 @@
 <section class="activity-log-section">
   <div class="activity-log-section-header">
     <div class="content">
-      <stc-apps-page-header mainTitle="Activity Log Center" secondaryTitle="" />
+      <stc-apps-page-header
+        mainTitle="Activity Log Center"
+        secondaryTitle=""
+        [username]="userData ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
       <div class="activity-log-section-taps">
         <stc-apps-tabview
           [tabsData]="scorecardsTaps()"
@@ -60,7 +65,9 @@
           <p-dropdown
             [options]="programsData()"
             [(ngModel)]="selectedProgram"
-            [optionLabel]=" currentTap().value === 'PSR' ? 'sector' : 'strategyProjectName'"
+            [optionLabel]="
+              currentTap().value === 'PSR' ? 'sector' : 'strategyProjectName'
+            "
             optionValue="id"
             placeholder="Program"
             [styleClass]="
@@ -94,7 +101,9 @@
           <p-dropdown
             [options]="keyResultProjectsData()"
             [(ngModel)]="selectedKeyResultProject"
-            [optionLabel]=" currentTap().value === 'CAD' ? 'name' : 'projectName'"
+            [optionLabel]="
+              currentTap().value === 'CAD' ? 'name' : 'projectName'
+            "
             optionValue="id"
             placeholder="Project"
             [styleClass]="
@@ -107,7 +116,7 @@
           />
         </div>
         }
-        <div class="form-group" style = "position:relative;" #dateFormGroup>
+        <div class="form-group" style="position: relative" #dateFormGroup>
           <p-calendar
             [(ngModel)]="activityLogDate"
             [iconDisplay]="'input'"
@@ -216,7 +225,7 @@
               </td>
               } @if(activityLogsHeader.includes("activity key result")) {
               <td>
-                {{ log.attribute ? (log.attribute | truncateWord:2) : '-' }}
+                {{ log.attribute ? (log.attribute | truncateWord : 2) : '-' }}
                 @if(log.attribute && log.attribute.split(" ").length >= 2){
                 <span
                   class="read-more-btn"
@@ -237,7 +246,7 @@
               } @if(activityLogsHeader.includes("activity project")) {
               @if(currentTap().value === 'PSR') {
               <td>
-                {{ log.attribute ? (log.attribute | truncateWord:2) : '-' }}
+                {{ log.attribute ? (log.attribute | truncateWord : 2) : '-' }}
                 @if(log.attribute && log.attribute.split(" ").length >= 2){
                 <span
                   class="read-more-btn"
@@ -301,23 +310,32 @@
               </td>
               }
               <td>
-                {{ log.timestamp ? currentTap().value === 'Scorecard' || currentTap().value === 'Financial' ? (transformDate(log.timestamp)) : (transformDate(log.timestamp) | truncateWord:3) : '-' }}
-                @if((currentTap().value !== 'Scorecard' && currentTap().value !== 'Financial') && transformDate(log.timestamp).split(" ").length >= 3){
-                  <span
-                    class="read-more-btn"
-                    (click)="longTitlePanel.toggle($event)"
-                    >read more</span
-                  >
-                  <p-overlayPanel
-                    styleClass="longTitlePanel"
-                    #longTitlePanel
-                    dismissable="true"
-                  >
-                    <section class="long-title-popover-section">
-                      {{ transformDate(log.timestamp) }}
-                    </section>
-                  </p-overlayPanel>
-                  }
+                {{
+                  log.timestamp
+                    ? currentTap().value === 'Scorecard' ||
+                      currentTap().value === 'Financial'
+                      ? transformDate(log.timestamp)
+                      : (transformDate(log.timestamp) | truncateWord : 3)
+                    : '-'
+                }}
+                @if((currentTap().value !== 'Scorecard' && currentTap().value
+                !== 'Financial') && transformDate(log.timestamp).split("
+                ").length >= 3){
+                <span
+                  class="read-more-btn"
+                  (click)="longTitlePanel.toggle($event)"
+                  >read more</span
+                >
+                <p-overlayPanel
+                  styleClass="longTitlePanel"
+                  #longTitlePanel
+                  dismissable="true"
+                >
+                  <section class="long-title-popover-section">
+                    {{ transformDate(log.timestamp) }}
+                  </section>
+                </p-overlayPanel>
+                }
               </td>
               @if(activityLogsHeader.includes("new value")) {
               <td>

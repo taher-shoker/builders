@@ -244,6 +244,8 @@ export interface PendingTask {
     milestone_progress_id: string | number;
     team: string;
     status: string;
+    comment: string;
+    overall_progress: string;
   };
   taskName: 'Add Remarks';
   taskStatus: 'pending';

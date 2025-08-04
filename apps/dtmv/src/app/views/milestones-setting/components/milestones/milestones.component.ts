@@ -38,6 +38,7 @@ import {
 } from '@angular/animations';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
 import { UtilitiesService } from 'libs/shared-ui/src/lib/services/utilities.service';
+import { FeedbackIssueComponent } from '../../../feedback-issue/feedback-issue.component';
 
 export interface Milestone {
   activityName: string;
@@ -132,8 +133,7 @@ export class MilestonesComponent
     private utilities: UtilitiesService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    public configService: ConfigService,
-    private activatedRoute: ActivatedRoute
+    public configService: ConfigService
   ) {}
 
   allItems!: PendingTask[];
@@ -155,18 +155,23 @@ export class MilestonesComponent
   monthsArr: any = [];
   yearsArr: any = [];
   allTeams: any = [];
-
+  pageSizeNumber: number = 10;
   ngOnInit() {
     this.previousPath = this.router.url;
-    if (this.activatedRoute.snapshot.data['state'] == 'archive') {
+    if (this.route.snapshot.data['state'] == 'archive') {
       this.readOnly = true;
-    } else this.readOnly = false;
-    console.log(this.activatedRoute.snapshot.data['state'], this.readOnly);
+      this.bannerDataService.updateData({
+        title: 'Archived Milestones',
+        text: '',
+      });
+    } else {
+      this.bannerDataService.updateData({ title: 'milestones', text: '' });
+      this.readOnly = false;
+    }
 
     this.searchForm();
     this.getMilestones();
     this.getPendingTasks();
-    this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
     this.dialogService.modals = [];
     this.getAllTeams();
@@ -205,14 +210,14 @@ export class MilestonesComponent
   }
   getActionsBasedOnRole(): AllowedActions[] {
     if (this.milestonesService.isDTAdmin) {
-      return [];
+      return ['edit', 'delete'];
     } else if (
       this.milestonesService.checkIsBusinessSpoc() ||
       this.milestonesService.checkIsDirector()
     ) {
-      return ['edit', 'details'];
+      return ['details'];
     } else {
-      return ['edit', 'delete', 'details'];
+      return ['details'];
     }
     //
   }
@@ -288,8 +293,6 @@ export class MilestonesComponent
 
   fetchMilestones(options: any = {}): void {
     const filteredForm = this.filterForm;
-    console.log('this.filtered form', this.filterForm);
-
     // If the form is fully empty, reset all previous filters
     const isFormEmpty = Object.values(filteredForm).every(
       (val) => val === null || val === undefined || val === ''
@@ -401,10 +404,14 @@ export class MilestonesComponent
     });
   }
   paginate(event: PaginationEvent) {
-    this.fetchMilestones({ page: event.currentPage - 1 });
+    this.fetchMilestones({
+      page: event.currentPage - 1,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
   }
 
   setPageItemsCount(pageSize: number) {
+    this.pageSizeNumber = pageSize;
     this.fetchMilestones({ numberOfElementsToDisplay: pageSize, page: 0 });
   }
 
@@ -467,6 +474,7 @@ export class MilestonesComponent
       }
       this.router.navigate(['./milestone_details', id], {
         relativeTo: this.route,
+        state: this.readOnly ? { viewMode: 'archive' } : {},
       });
     }
   }
@@ -560,6 +568,12 @@ export class MilestonesComponent
         const data: Blob = new Blob([buffer]);
         saveAs(data, 'milestones.csv');
       });
+  }
+  openFeedbackDialog() {
+    this.matDialog.open(FeedbackIssueComponent, {
+      disableClose: true,
+      width: '1200px',
+    });
   }
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only

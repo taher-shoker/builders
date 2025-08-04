@@ -11,11 +11,11 @@ import {
   FileModel,
   ScorecardModel,
   TapModel,
+  UserModel,
 } from '../../models/scorecard.model';
 import { ScorecardService } from '../../services/scorecard.service';
 import { TapDetailsComponent } from './components/tap-details/tap-details.component';
-import { SharedUiModule } from "@stc-apps/shared-ui";
-import { PageHeaderComponent } from '../../components/pageHeader/page-header.component';
+import { SharedUiModule } from '@stc-apps/shared-ui';
 import { Subject, takeUntil } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ToastrService } from 'ngx-toastr';
@@ -36,11 +36,10 @@ interface FilteredOptions {
   imports: [
     TapDetailsComponent,
     SharedUiModule,
-    PageHeaderComponent,
     CommonModule,
     KpiMobileCardComponent,
     OverlayPanelModule,
-    MobileViewHeaderComponent
+    MobileViewHeaderComponent,
   ],
   templateUrl: './scorecard.component.html',
   styleUrl: './scorecard.component.scss',
@@ -54,10 +53,10 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   scorecardsTaps!: TapModel[];
   toastr = inject(ToastrService);
   isEmpty = false;
-  
-  currentMonth:number = new Date().getMonth();
-  currentYear:number = new Date().getFullYear();
-  currentMonthName:string = '';
+
+  currentMonth: number = new Date().getMonth();
+  currentYear: number = new Date().getFullYear();
+  currentMonthName = '';
   filtersOptions!: FilteredOptions;
   scorecardService = inject(ScorecardService);
   @ViewChild(TapDetailsComponent) child?: TapDetailsComponent;
@@ -65,8 +64,13 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   isMobile = signal<boolean>(false);
   deviceService = inject(DeviceService);
   router = inject(Router);
+  userData!: UserModel;
   ngOnInit(): void {
-    
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.isMobile.set(this.deviceService.isMobile());
     this.getInitScorecardsTaps(
       new Date().getMonth() + 1,
@@ -85,29 +89,39 @@ export class ScorecardComponent implements OnInit, OnDestroy {
     //   }
     // })
   }
-  filteredMonth!:number;
-  filteredYear!:number;
-  applyDateFilterInMobileView(selectedDate:Date)
-  {
+  filteredMonth!: number;
+  filteredYear!: number;
+  applyDateFilterInMobileView(selectedDate: Date) {
     this.filteredMonth = selectedDate.getMonth() + 1;
-    this.filteredYear = selectedDate.getFullYear()
-    this.getScorecardData(this.filteredMonth , this.filteredYear , this.currentClickedTapData.name);
+    this.filteredYear = selectedDate.getFullYear();
+    this.getScorecardData(
+      this.filteredMonth,
+      this.filteredYear,
+      this.currentClickedTapData.name
+    );
   }
-  getClickedTapInMobile(clickedTap:TapModel)
-  {
-    this.filteredMonth = this.filteredMonth ? this.filteredMonth : new Date().getMonth() + 1 
-    this.filteredYear = this.filteredYear ? this.filteredYear : new Date().getFullYear()    
+  getClickedTapInMobile(clickedTap: TapModel) {
+    this.filteredMonth = this.filteredMonth
+      ? this.filteredMonth
+      : new Date().getMonth() + 1;
+    this.filteredYear = this.filteredYear
+      ? this.filteredYear
+      : new Date().getFullYear();
     this.currentClickedTapData = clickedTap;
-    this.getScorecardData(this.filteredMonth , this.filteredYear , this.currentClickedTapData.name);
+    this.getScorecardData(
+      this.filteredMonth,
+      this.filteredYear,
+      this.currentClickedTapData.name
+    );
   }
-  isSuccess!:boolean;
+  isSuccess!: boolean;
   private getScorecardData(month: number, year: number, tapName?: string) {
     this.kpisData.set([]);
     this.scorecardService
-    .getScorecardData(month, year, tapName)
-    .pipe(takeUntil(this.endSubs$))
-    .subscribe({
-      next: (scorecards: ScorecardModel[]) => {
+      .getScorecardData(month, year, tapName)
+      .pipe(takeUntil(this.endSubs$))
+      .subscribe({
+        next: (scorecards: ScorecardModel[]) => {
           // console.log(scorecards);
           this.isSuccess = true;
           if (scorecards.length === 0) {
@@ -117,9 +131,9 @@ export class ScorecardComponent implements OnInit, OnDestroy {
             this.isEmpty = false;
           }
         },
-        error : (err) => {
+        error: (err) => {
           this.isSuccess = false;
-        }
+        },
       });
   }
   ngOnDestroy() {
@@ -127,8 +141,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
   }
   getClickedTap(clickedTap: TapModel) {
     this.currentClickedTapData = clickedTap;
-    if(this.child)
-    {
+    if (this.child) {
       this.child.showActivityLogsPopup = false;
     }
     if (this.filtersOptions) {
@@ -213,8 +226,7 @@ export class ScorecardComponent implements OnInit, OnDestroy {
       });
     }
   }
-  goBack()
-  {
-    this.router.navigateByUrl("/");
+  goBack() {
+    this.router.navigateByUrl('/');
   }
 }

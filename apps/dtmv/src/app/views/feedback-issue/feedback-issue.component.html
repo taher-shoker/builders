@@ -1,0 +1,140 @@
+<div class="feedback-issue-container">
+  <h1 class="feedback-issue-container_title">Share Your Feedback/Issue</h1>
+  <p class="feedback-issue-container_subtitle">
+    Help us improve by sharing your thoughts or reporting issues
+  </p>
+  <div class="feedback-issue-container_form">
+    <form [formGroup]="feedbackIssueForm" (ngSubmit)="submit()">
+      <div class="type-input">
+        <span class="form-label">Type *</span>
+        <div class="radio-group">
+          <label>
+            <input
+              name="type"
+              type="radio"
+              value="FEEDBACK"
+              formControlName="type"
+            />
+            Feedback
+          </label>
+
+          <label class="issue-btn">
+            <input
+              name="type"
+              type="radio"
+              value="ISSUE"
+              formControlName="type"
+            />
+            Issue
+          </label>
+        </div>
+      </div>
+      <div class="subject-input">
+        <stc-apps-input
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Add Title'"
+          [inputId]="'subject'"
+          [inputName]="'Title'"
+          formControlName="subject"
+        ></stc-apps-input>
+      </div>
+      <div class="note-input">
+        <stc-apps-textarea
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'comment'"
+          [inputName]="'Add note' | translate"
+          formControlName="comment"
+        ></stc-apps-textarea>
+      </div>
+      <div class="file-input col-12">
+        <div>
+          <label for="file">Attach File (Optional)</label>
+          <div
+            *ngIf="
+              files.length === 0 || errorSize || errorType || errorMaxNumber
+            "
+            class="file-uploader"
+            [ngClass]="
+              feedbackIssueForm.controls['file'].invalid &&
+              (feedbackIssueForm.controls['file'].dirty ||
+                feedbackIssueForm.controls['file'].touched)
+                ? 'error'
+                : ''
+            "
+            (click)="uploadClick()"
+          >
+            <input
+              #fileUpload
+              class="file-input"
+              type="file"
+              (change)="handleUploadChange($event)"
+              name="file"
+              multiple
+              hidden
+              accept="{{ accept }}"
+            />
+            @if (errorType || errorSize||errorMaxNumber) {
+            <div class="text-center">
+              <img
+                src="assets/images/arrow-up-from-bracket-solid-full.svg"
+                alt="upload"
+              />
+              <h4 class="error-file">Sorry !</h4>
+              @if (errorType) {
+              <p>Please ensure your file is in a supported format"</p>
+              } @else if(errorMaxNumber){
+              <p>You can only upload a maximum of 5 files.</p>
+              } @else {
+              <p>Please ensure your file is less than 5MB. "</p>
+
+              }
+            </div>
+            } @else {
+            <div class="text-center">
+              <img
+                src="assets/images/arrow-up-from-bracket-solid-full.svg"
+                alt="upload"
+              />
+              <h4>Click to upload a file</h4>
+              <p>JPG,JPEG,PNG,GIF or WEBP up to 8MB</p>
+            </div>
+            }
+          </div>
+        </div>
+
+        <!-- AttachmentsComponent -->
+        <stc-apps-feedback-issue-attachments
+          [files]="files"
+          [errorMaxNumber]="errorMaxNumber"
+          [errorSize]="errorSize"
+          [errorType]="errorType"
+          (removeFileEvent)="removeFile($event)"
+        ></stc-apps-feedback-issue-attachments>
+      </div>
+      <div class="row btns-holder">
+        <div class="col-md-4 offset-md-8">
+          <div class="row">
+            <div class="col-md-6">
+              <stc-apps-button
+                [buttonText]="'Cancel'"
+                [buttonType]="'gray-outline'"
+                (btnClick)="cancel()"
+              ></stc-apps-button>
+            </div>
+            <div class="col-md-6">
+              <stc-apps-button
+                [buttonDisable]="feedbackIssueForm.invalid"
+                [buttonText]="'Submit'"
+                [buttonType]="'primary'"
+                [loading]="isLoading"
+                (btnClick)="submit()"
+                [actionType]="'submit'"
+              ></stc-apps-button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
