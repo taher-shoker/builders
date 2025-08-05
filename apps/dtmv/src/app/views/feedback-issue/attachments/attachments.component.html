@@ -9,7 +9,7 @@
     !errorMaxNumber()
   "
 >
-  @for(file of files(); track file){
+  @for(file of files(); track $index){
   <div [ngClass]="logs() ? 'col-md-5' : 'col-md-6'">
     <div class="file">
       <div class="w-100 row">
@@ -17,7 +17,13 @@
           <i class="fa-regular fas fa-image"></i>
         </div>
         <div class="col-md-9">
-          <span> {{ getFileName(file) }}</span>
+          <span>
+            {{
+              getFileName(file).length > 40
+                ? (getFileName(file) | slice : 0 : 40) + '...'
+                : getFileName(file)
+            }}</span
+          >
           <div class="file_size">
             {{ getFileSize(file) / 1024 | number : '1.0-0' }}KB
           </div>
@@ -33,7 +39,7 @@
           <i
             role="button"
             class="fa fa-times-circle remove-file"
-            (click)="removeFile(file)"
+            (click)="removeFile(file, attachmentIDS()[$index])"
           ></i>
           }
         </div>

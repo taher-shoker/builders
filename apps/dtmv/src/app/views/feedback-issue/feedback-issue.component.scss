@@ -67,6 +67,9 @@
     }
   }
 }
+.error-msg {
+  color: var(--stc-red-color);
+}
 ::ng-deep .custom-input {
   label {
     font-size: 15px;

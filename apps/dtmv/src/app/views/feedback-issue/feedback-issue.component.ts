@@ -23,7 +23,7 @@ export class FeedbackIssueComponent implements OnInit {
   errorMaxNumber = false;
   isLoading = false;
   attachamentIDS: number[] = [];
-  accept = 'image/*';
+  accept = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
   @ViewChild('fileUpload') fileUpload!: ElementRef;
   constructor(
     private formBuilder: FormBuilder,
@@ -76,7 +76,7 @@ export class FeedbackIssueComponent implements OnInit {
     files.forEach((f) => {
       if (f.size > 8 * 1024 * 1024) {
         this.errorSize = true;
-      } else if (!f.type.startsWith('image/')) {
+      } else if (!this.accept.includes(f.type)) {
         this.errorType = true;
       } else {
         this.formData.append('file', f);
@@ -89,9 +89,14 @@ export class FeedbackIssueComponent implements OnInit {
         });
       }
     });
+    console.log(this.attachamentIDS);
   }
-  removeFile(fileToRemove: File): void {
-    this.files = this.files.filter((file) => file !== fileToRemove);
+  removeFile(fileToRemove: { file: File; attachmentId: number }): void {
+    this.files = this.files.filter((file) => file !== fileToRemove.file);
+    this.attachamentIDS = this.attachamentIDS.filter(
+      (ID) => ID != fileToRemove.attachmentId
+    );
+    console.log(this.attachamentIDS);
   }
   cancel() {
     this.feedbackIssueForm.reset();
@@ -106,13 +111,20 @@ export class FeedbackIssueComponent implements OnInit {
       this.toastr.success(message);
       this.cancel();
     };
-    console.log('submit', this.feedbackIssueForm.value);
+
     const body: formBody = {
       type: this.feedbackIssueForm.value.type,
-      title: this.feedbackIssueForm.value.subject,
-      description: this.feedbackIssueForm.value.comment,
+      title: this.feedbackIssueForm.value.subject.trim(),
+      description: this.feedbackIssueForm.value.comment.trim(),
       attachmentIds: this.attachamentIDS,
     };
+    if (body.title == '' || body.description == '') {
+      this.toastr.error(
+        'Subject must not be blank, Description must not be blank'
+      );
+      this.isLoading = false;
+      return;
+    }
     this.feedbackIssueService.submitFeedbackIssueForm(body).subscribe({
       next: () => {
         onSuccess('Feedback/Issue has been submitted successfully!');
