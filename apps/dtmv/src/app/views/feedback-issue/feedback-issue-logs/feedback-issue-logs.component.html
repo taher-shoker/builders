@@ -25,9 +25,15 @@
           [(ngModel)]="selectedTab"
           appearance="legacy"
         >
-          <mat-button-toggle value="ALL">All</mat-button-toggle>
-          <mat-button-toggle value="ISSUE">Issues</mat-button-toggle>
-          <mat-button-toggle value="FEEDBACK">Feedback</mat-button-toggle>
+          <mat-button-toggle value="ALL"
+            >All ( {{ counts.total }} )
+          </mat-button-toggle>
+          <mat-button-toggle value="ISSUE"
+            >Issues ({{ counts.issue }})</mat-button-toggle
+          >
+          <mat-button-toggle value="FEEDBACK"
+            >Feedback ({{ counts.feedback }})</mat-button-toggle
+          >
         </mat-button-toggle-group>
       </div>
       <div class="mt-4 content-expansion">

@@ -5,11 +5,11 @@ export class CountColorPipe implements PipeTransform {
   transform(title: string): string {
     switch (title?.toLowerCase()) {
       case 'feedback':
-        return 'green';
+        return 'var(--onTrackGreenColor)';
       case 'issues':
-        return 'red';
+        return 'var(--stcCoralColor)';
       default:
-        return 'blue';
+        return 'var(--seaBlue)';
     }
   }
 }

@@ -509,6 +509,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (this.userService.getCurrentSystem() === 'DI_Milestones') {
       this.form.get('viewer')?.enable();
       this.form.get('viewer')?.setValue(false);
+      this.form.get('ticketAdmin')?.setValue(false);
       this.form.get('teamDto')?.setValue([]);
       this.checkDtUserPermissions(value.groupName);
       this.teams = this.userService.allTeams;
@@ -616,7 +617,11 @@ export class UserFormComponent implements OnInit, OnChanges {
    */
   handleDI_Milestones() {
     if (this.data.userGroups.length > 1) {
-      this.form?.get('viewer')?.setValue(true);
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_VP_Dashboard_Viewer')
+      ) {
+        this.form?.get('viewer')?.setValue(true);
+      }
 
       // If user group contains DT_VP_Dashboard_Editor role, set editor to true
       if (
@@ -639,7 +644,7 @@ export class UserFormComponent implements OnInit, OnChanges {
           ?.groupName === 'DT_Ticket_Admin'
       ) {
         this.form?.get('ticketAdmin')?.setValue(true);
-        this.form?.get('viewer')?.disable();
+        // this.form?.get('viewer')?.disable();
       }
     }
   }
