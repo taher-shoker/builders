@@ -12,7 +12,7 @@ import { ControlValueAccessorDirective } from '../control-value-accessor.directi
   selector: 'stc-apps-textarea',
   templateUrl: './textarea.component.html',
   styleUrls: ['./textarea.component.scss'],
-  standalone : false,
+  standalone: false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -28,7 +28,7 @@ export class TextareaComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputType: 'text' | 'password' = 'text';
   @Input() inputIcon!: string;
   @Input() required!: boolean;
-
+  @Input() selfServiceMsg = false;
   @Output() valueKeyDown: EventEmitter<KeyboardEvent> =
     new EventEmitter<KeyboardEvent>();
 
