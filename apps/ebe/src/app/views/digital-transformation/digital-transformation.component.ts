@@ -185,24 +185,24 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     }
     this.showAddWorkstreamSidebar = true;
   }
-  convertHeighlights(heighlights: string): string {
-    // const lines = heighlights.split('\n');
-    const lines = heighlights.split(' ');
-    const result = lines.map((line, index) => {
+  convertHeighlights(input: string): string {
+    const inputLines = input.split('\n');
+    const result = inputLines.map((line, index) => {
       const parts = line.split(':');
-      const title = parts[0].trim();
-      const value = parts.length > 1 ? parts[1].trim() : '';
-      if (!line.includes(':')) {
+
+      if (parts.length === 2) {
         return {
           id: index + 1,
-          value: title,
+          title: parts[0].trim(),
+          value: parts[1].trim(),
+        };
+      } else {
+        return {
+          id: index + 1,
+          title: '',
+          value: line.trim(),
         };
       }
-      return {
-        id: index + 1,
-        title,
-        value,
-      };
     });
     return JSON.stringify(result);
   }
@@ -375,13 +375,19 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
         });
     } else {
       this.digitalTransformationService.createNewWorkStream(data).subscribe({
-        next: (res) => {
+        next: () => {
           this.getDigitalTransformationDetailsData(this.currTap().id);
           this.toastr.success('The workstream is added successfully');
           this.showAddWorkstreamSidebar = false;
         },
       });
     }
+  }
+  showSidebar() {
+    document.body.classList.add('sidebar-open');
+  }
+  hideSidebar() {
+    document.body.classList.remove('sidebar-open');
   }
   challengeFormData!: AddKeyChallengeDataModel;
   isChallengeAdded = false;

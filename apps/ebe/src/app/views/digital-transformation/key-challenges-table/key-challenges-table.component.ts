@@ -57,6 +57,12 @@ export class KeyChallengesTableComponent
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
+  showSidebar() {
+    document.body.classList.add('sidebar-open');
+  }
+  hideSidebar() {
+    document.body.classList.remove('sidebar-open');
+  }
   private getData(
     pageNum: number,
     pageSize: number,
@@ -84,7 +90,9 @@ export class KeyChallengesTableComponent
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['isChallengeAdded']) {
-      this.getData(this.page, 5, this.sortDirection, this.sortedBy);
+      if (this.isChallengeAdded()) {
+        this.getData(this.page, 5, this.sortDirection, this.sortedBy);
+      }
     }
   }
   sortDirection: 'asc' | 'desc' = 'desc';
@@ -101,7 +109,8 @@ export class KeyChallengesTableComponent
   onPageChange(event: PaginatorState) {
     this.first = event.first ?? 0;
     this.rows = event.rows ?? 5;
-    this.page = event.page ?? 1;
+    this.page = (event.page ?? 0) + 1;
+
     this.getData(
       (event.page ?? 0) + 1,
       this.rows,

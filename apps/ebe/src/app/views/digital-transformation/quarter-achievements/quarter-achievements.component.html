@@ -96,7 +96,8 @@
   [showCloseIcon]="false"
   transitionOptions="0.3s ease-in-out"
   styleClass="add-achievement-sidebar"
-  (onHide)="hideAddWorkstreamSidebar()"
+  (onHide)="hideAddWorkstreamSidebar(); hideSidebar()"
+  (onShow)="showSidebar()"
 >
   <div class="sidebar-content">
     <div class="form-title">
@@ -188,11 +189,8 @@
                   ? 'fourth Achievement'
                   : 'fifth Achievement'
               }}</label>
-              <i
-                class="pi pi-trash"
-                (click)="removeAchievement(index)"
-                *ngIf="index > 0"
-              ></i>
+              <i class="pi pi-trash" (click)="removeAchievement(index)"></i>
+              <!-- *ngIf="index > 0" -->
             </div>
             <div class="form-group">
               <label for="title">

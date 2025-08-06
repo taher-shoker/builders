@@ -196,6 +196,12 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     });
     return JSON.stringify(result);
   }
+  showSidebar() {
+    document.body.classList.add('sidebar-open');
+  }
+  hideSidebar() {
+    document.body.classList.remove('sidebar-open');
+  }
   convertHeighlights2(input: string) {
     const inputLines = input.split('\n');
     const result = inputLines.map((line, index) => {

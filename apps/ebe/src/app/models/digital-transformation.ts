@@ -258,5 +258,5 @@ export interface IWorkstream {
 export interface IAddAchievement {
   quarterName: string;
   businessUnitId: number;
-  achievements: string;
+  achievements?: string;
 }

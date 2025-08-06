@@ -55,6 +55,12 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
     { name: 'Q3', value: 'q3' },
     { name: 'Q4', value: 'q4' },
   ];
+  showSidebar() {
+    document.body.classList.add('sidebar-open');
+  }
+  hideSidebar() {
+    document.body.classList.remove('sidebar-open');
+  }
   digitalTransformationService = inject(DigitalTransformationService);
   confirmationService = inject(ConfirmationService);
   quarterAchievements: QuarterAchievementModel[] = [];
@@ -117,9 +123,9 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
     if (this.addWorkAchievementForm) {
       this.addWorkAchievementForm.reset();
       // Clear the FormArray properly
-      while (this.achievements.length !== 1) {
-        this.achievements.removeAt(0);
-      }
+      // while (this.achievements.length !== 1) {
+      this.achievements.removeAt(0);
+      // }
     }
   }
   currQuarterAchievementId = 0;
@@ -132,29 +138,39 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
           val.description = val.description.join('\n');
         }
       });
-      const data = {
+      // const addedData;
+      // if (formVal.achievements.length !== 0) {
+      const addedData = {
         quarterName: formVal.quarter,
         businessUnitId: formVal.workstream,
         achievements: JSON.stringify(formVal.achievements),
         // achievements: formVal.achievements,
       };
-      console.log(data);
+      // } else {
+      //   addedData = {
+      //     quarterName: formVal.quarter,
+      //     businessUnitId: formVal.workstream,
+      //   };
+      // }
+      console.log(addedData);
       if (!this.isEditMode) {
-        this.digitalTransformationService.addNewAchievement(data).subscribe({
-          next: () => {
-            this.getQuarterAchievementsData();
-            this.showFormSidebar = false;
-            this.hideAddWorkstreamSidebar();
-            this.toastr.success('The Achievement is added successfully');
-          },
-          error: () => {
-            this.showFormSidebar = false;
-            this.hideAddWorkstreamSidebar();
-          },
-        });
+        this.digitalTransformationService
+          .addNewAchievement(addedData)
+          .subscribe({
+            next: () => {
+              this.getQuarterAchievementsData();
+              this.showFormSidebar = false;
+              this.hideAddWorkstreamSidebar();
+              this.toastr.success('The Achievement is added successfully');
+            },
+            error: () => {
+              this.showFormSidebar = false;
+              this.hideAddWorkstreamSidebar();
+            },
+          });
       } else {
         this.digitalTransformationService
-          .editAchievement(this.currQuarterAchievementId, data)
+          .editAchievement(this.currQuarterAchievementId, addedData)
           .subscribe({
             next: () => {
               this.getQuarterAchievementsData();
