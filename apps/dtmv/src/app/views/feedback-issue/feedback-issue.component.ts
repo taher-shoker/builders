@@ -39,7 +39,7 @@ export class FeedbackIssueComponent implements OnInit {
   intiateForm() {
     this.feedbackIssueForm = this.formBuilder.group({
       type: ['FEEDBACK', Validators.required],
-      subject: ['', [Validators.required, Validators.maxLength(100)]],
+      subject: ['', [Validators.required, Validators.maxLength(50)]],
       comment: ['', [Validators.required, Validators.maxLength(1000)]],
       file: [''],
     });
@@ -81,7 +81,9 @@ export class FeedbackIssueComponent implements OnInit {
       } else {
         this.formData.append('file', f);
         this.feedbackIssueForm.get('file')?.setValue(this.formData);
-        this.feedbackIssueService.uploadFile(this.formData).subscribe({
+        const singleFileFormData = new FormData();
+        singleFileFormData.append('file', f);
+        this.feedbackIssueService.uploadFile(singleFileFormData).subscribe({
           next: (attachment: feedbackIssuesAttachment) => {
             console.log('attachement', attachment);
             this.attachamentIDS.push(attachment.id);
