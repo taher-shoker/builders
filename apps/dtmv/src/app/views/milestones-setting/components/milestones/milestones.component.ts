@@ -132,8 +132,7 @@ export class MilestonesComponent
     private utilities: UtilitiesService,
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
-    public configService: ConfigService,
-    private activatedRoute: ActivatedRoute
+    public configService: ConfigService
   ) {}
 
   allItems!: PendingTask[];
@@ -155,18 +154,23 @@ export class MilestonesComponent
   monthsArr: any = [];
   yearsArr: any = [];
   allTeams: any = [];
-
+  pageSizeNumber: number = 10;
   ngOnInit() {
     this.previousPath = this.router.url;
-    if (this.activatedRoute.snapshot.data['state'] == 'archive') {
+    if (this.route.snapshot.data['state'] == 'archive') {
       this.readOnly = true;
-    } else this.readOnly = false;
-    console.log(this.activatedRoute.snapshot.data['state'], this.readOnly);
+      this.bannerDataService.updateData({
+        title: 'Archived Milestones',
+        text: '',
+      });
+    } else {
+      this.bannerDataService.updateData({ title: 'milestones', text: '' });
+      this.readOnly = false;
+    }
 
     this.searchForm();
     this.getMilestones();
     this.getPendingTasks();
-    this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
     this.dialogService.modals = [];
     this.getAllTeams();
@@ -205,7 +209,7 @@ export class MilestonesComponent
   }
   getActionsBasedOnRole(): AllowedActions[] {
     if (this.milestonesService.isDTAdmin) {
-      return [];
+      return ['edit', 'delete'];
     } else if (
       this.milestonesService.checkIsBusinessSpoc() ||
       this.milestonesService.checkIsDirector()
@@ -288,8 +292,6 @@ export class MilestonesComponent
 
   fetchMilestones(options: any = {}): void {
     const filteredForm = this.filterForm;
-    console.log('this.filtered form', this.filterForm);
-
     // If the form is fully empty, reset all previous filters
     const isFormEmpty = Object.values(filteredForm).every(
       (val) => val === null || val === undefined || val === ''
@@ -401,10 +403,14 @@ export class MilestonesComponent
     });
   }
   paginate(event: PaginationEvent) {
-    this.fetchMilestones({ page: event.currentPage - 1 });
+    this.fetchMilestones({
+      page: event.currentPage - 1,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
   }
 
   setPageItemsCount(pageSize: number) {
+    this.pageSizeNumber = pageSize;
     this.fetchMilestones({ numberOfElementsToDisplay: pageSize, page: 0 });
   }
 
@@ -467,6 +473,7 @@ export class MilestonesComponent
       }
       this.router.navigate(['./milestone_details', id], {
         relativeTo: this.route,
+        state: this.readOnly ? { viewMode: 'archive' } : {},
       });
     }
   }

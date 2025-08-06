@@ -38,11 +38,11 @@ export class HomeComponent implements OnInit {
       roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO'],
       urlHome: '/home',
     },
-     {
+    {
       name: 'Archived DT Milestones',
       url: '/archived-milestones',
       icon: 'fa fa-archive',
-      roles: ['all'],
+      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO','DT_User'],
       urlHome: '/home',
     },
   ];
