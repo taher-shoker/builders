@@ -22,6 +22,7 @@ export class FeedbackIssueComponent implements OnInit {
   errorType = false;
   errorMaxNumber = false;
   isLoading = false;
+  isUploadPending = false;
   attachamentIDS: number[] = [];
   accept = ['image/jpeg', 'image/png', 'image/gif', 'image/jpg'];
   @ViewChild('fileUpload') fileUpload!: ElementRef;
@@ -56,49 +57,85 @@ export class FeedbackIssueComponent implements OnInit {
     this.formData.delete('file');
     this.files = [];
   }
+  resetUploadErrors() {
+    this.errorSize = false;
+    this.errorType = false;
+    this.errorMaxNumber = false;
+  }
   handleUploadChange(event: Event): void {
-    const inputElement = event.target as HTMLInputElement;
-    const files = Array.from(inputElement.files || []);
-    if (files.length > 0) {
-      this.clearFileInputElement();
-      this.uploadAndProgress(files);
+    if (this.isUploadPending) {
+      console.log('pending');
+
+      event.preventDefault();
+    } else {
+      const inputElement = event.target as HTMLInputElement;
+      const files = Array.from(inputElement.files || []);
+      if (files.length > 0) {
+        this.resetUploadErrors();
+        this.uploadAndProgress(files);
+      }
     }
   }
   uploadAndProgress(files: File[]) {
-    this.files = files;
-    const totalFiles = this.files.length;
+    console.log(this.files.length);
+
+    this.isUploadPending = true;
+    let filesProcessed = 0;
+    const totalFiles = this.files?.length + files.length;
     if (totalFiles > 5) {
       this.errorMaxNumber = true;
+      this.isUploadPending = false;
       console.log(totalFiles);
-
       return;
     }
     files.forEach((f) => {
       if (f.size > 8 * 1024 * 1024) {
         this.errorSize = true;
+        this.isUploadPending = false;
       } else if (!this.accept.includes(f.type)) {
         this.errorType = true;
+        this.isUploadPending = false;
       } else {
-        this.formData.append('file', f);
-        this.feedbackIssueForm.get('file')?.setValue(this.formData);
-        const singleFileFormData = new FormData();
-        singleFileFormData.append('file', f);
-        this.feedbackIssueService.uploadFile(singleFileFormData).subscribe({
-          next: (attachment: feedbackIssuesAttachment) => {
-            console.log('attachement', attachment);
-            this.attachamentIDS.push(attachment.id);
-          },
-        });
+        const exists = this.files.some(
+          (existingFile) =>
+            existingFile.name === f.name && existingFile.size === f.size
+        );
+        if (!exists) {
+          this.formData.append('file', f);
+          this.feedbackIssueForm.get('file')?.setValue(this.formData);
+          const singleFileFormData = new FormData();
+          singleFileFormData.append('file', f);
+          this.feedbackIssueService.uploadFile(singleFileFormData).subscribe({
+            next: (attachment: feedbackIssuesAttachment) => {
+              console.log('attachement', attachment);
+              this.attachamentIDS.push(attachment.id);
+              this.files.push(f);
+              filesProcessed++;
+              if (filesProcessed === files.length) {
+                this.isUploadPending = false;
+              }
+            },
+            error: () => {
+              this.isUploadPending = false;
+            },
+          });
+        } else if (exists) {
+          this.isUploadPending = false;
+          this.toastr.error('Attachment already uploaded once');
+        }
       }
     });
-    console.log(this.attachamentIDS);
+    console.log('final attachment ID', this.attachamentIDS);
   }
+
   removeFile(fileToRemove: { file: File; attachmentId: number }): void {
     this.files = this.files.filter((file) => file !== fileToRemove.file);
     this.attachamentIDS = this.attachamentIDS.filter(
       (ID) => ID != fileToRemove.attachmentId
     );
-    console.log(this.attachamentIDS);
+    this.isUploadPending = false;
+    this.errorMaxNumber = false;
+    console.log(this.attachamentIDS, this.files);
   }
   cancel() {
     this.feedbackIssueForm.reset();

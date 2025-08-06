@@ -1,13 +1,7 @@
 <div
   class="row file-box"
   [ngClass]="!logs() ? '' : ''"
-  *ngIf="
-    files() &&
-    files().length > 0 &&
-    !errorSize() &&
-    !errorType() &&
-    !errorMaxNumber()
-  "
+  *ngIf="files() && files().length > 0"
 >
   @for(file of files(); track $index){
   <div [ngClass]="logs() ? 'col-md-5' : 'col-md-6'">

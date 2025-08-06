@@ -53,10 +53,8 @@
       <div class="file-input col-12">
         <div>
           <label for="file">Attach File (Optional)</label>
+          <span class="loader" *ngIf="isUploadPending"></span>
           <div
-            *ngIf="
-              files.length === 0 || errorSize || errorType || errorMaxNumber
-            "
             class="file-uploader"
             [ngClass]="
               feedbackIssueForm.controls['file'].invalid &&
@@ -132,7 +130,7 @@
             </div>
             <div class="col-md-6">
               <stc-apps-button
-                [buttonDisable]="feedbackIssueForm.invalid"
+                [buttonDisable]="feedbackIssueForm.invalid || isUploadPending"
                 [buttonText]="'Submit'"
                 [buttonType]="'primary'"
                 [loading]="isLoading"
