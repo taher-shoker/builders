@@ -79,6 +79,8 @@ export class FeedbackIssueLogsComponent implements OnInit {
     });
     if (this.paginator) {
       this.paginator.firstPage();
+      this.currentPage = 0;
+      console.log(this.paginator.firstPage());
     }
   }
 
