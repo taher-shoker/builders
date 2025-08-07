@@ -178,7 +178,7 @@ export class MilestonesComponent
     this.monthsArrPopulator();
     this.yearsArrPopulator();
     this.detectChangedRoutes();
-    if (this.milestonesService.checkIsDirector()) {
+    if (this.milestonesService.checkIsDirector() || this.milestonesService.checkIsGovernance()) {
       this.bulkPremission = true;
     }
   }

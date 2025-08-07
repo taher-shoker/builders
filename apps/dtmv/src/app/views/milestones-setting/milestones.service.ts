@@ -60,6 +60,7 @@ export class MilestonesService {
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   isDTDirector!: boolean;
+  isDTGovernance!: boolean;
   isBusinessSpoc!: boolean;
   isVPViewer!: boolean;
 
@@ -85,12 +86,12 @@ export class MilestonesService {
     // const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     // return user.teams;
   }
-  getMilestoneUsersType(): Group[] {
+  getMilestoneUsersType(): Group[] {    
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.userGroups;
   }
 
-  checkIsDirector() {
+  checkIsDirector() {    
     if (
       this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
     ) {
@@ -99,6 +100,17 @@ export class MilestonesService {
       this.isDTDirector = false;
     }
     return this.isDTDirector;
+  }
+
+    checkIsGovernance() {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Governance')
+    ) {
+      this.isDTGovernance = true;
+    } else {
+      this.isDTGovernance = false;
+    }
+    return this.isDTGovernance;
   }
 
   /**
