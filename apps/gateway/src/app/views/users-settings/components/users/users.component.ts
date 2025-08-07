@@ -231,6 +231,17 @@ export class UsersComponent implements OnInit, AfterViewInit {
           r.groupName !== 'PMO' &&
           r.groupName !== 'DT_Ticket_Admin'
       );
+
+    if (this.privilege.length >= 2) {
+      const lastIndex = this.privilege.length - 1;
+      const secondLastIndex = this.privilege.length - 2;
+      // Swap the last two elements
+      [this.privilege[lastIndex], this.privilege[secondLastIndex]] = [
+        this.privilege[secondLastIndex],
+        this.privilege[lastIndex],
+      ];
+    }
+
     if (
       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
