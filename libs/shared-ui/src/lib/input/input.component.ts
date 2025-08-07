@@ -14,7 +14,7 @@ export interface FormFieldValue {
   selector: 'stc-apps-input',
   templateUrl: './input.component.html',
   styleUrls: ['./input.component.scss'],
-  standalone : false,
+  standalone: false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -31,6 +31,7 @@ export class InputComponent<T> extends ControlValueAccessorDirective<T> {
   @Input() inputIcon!: string;
   @Input() required!: boolean;
   @Input() disabled = false;
+  @Input() selfServiceMsg = false;
   @Output() valueKeyDown: EventEmitter<KeyboardEvent> =
     new EventEmitter<KeyboardEvent>();
 

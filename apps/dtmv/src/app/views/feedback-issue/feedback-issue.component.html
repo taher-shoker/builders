@@ -6,7 +6,8 @@
   <div class="feedback-issue-container_form">
     <form [formGroup]="feedbackIssueForm" (ngSubmit)="submit()">
       <div class="type-input">
-        <span class="form-label">Type *</span>
+        <span class="form-label">Type </span>
+        <span style="color: var(--mat-form-field-error-text-color)">*</span>
         <div class="radio-group">
           <label>
             <input
@@ -35,6 +36,7 @@
           [inputPlaceholder]="'Add Title'"
           [inputId]="'subject'"
           [inputName]="'Title'"
+          [selfServiceMsg]="true"
           formControlName="subject"
         ></stc-apps-input>
       </div>
@@ -44,16 +46,15 @@
           [inputPlaceholder]="''"
           [inputId]="'comment'"
           [inputName]="'Add note' | translate"
+          [selfServiceMsg]="true"
           formControlName="comment"
         ></stc-apps-textarea>
       </div>
       <div class="file-input col-12">
         <div>
           <label for="file">Attach File (Optional)</label>
+          <span class="loader" *ngIf="isUploadPending"></span>
           <div
-            *ngIf="
-              files.length === 0 || errorSize || errorType || errorMaxNumber
-            "
             class="file-uploader"
             [ngClass]="
               feedbackIssueForm.controls['file'].invalid &&
@@ -82,11 +83,15 @@
               />
               <h4 class="error-file">Sorry !</h4>
               @if (errorType) {
-              <p>Please ensure your file is in a supported format"</p>
+              <p class="error-msg">
+                Please ensure your file is in a supported format"
+              </p>
               } @else if(errorMaxNumber){
-              <p>You can only upload a maximum of 5 files.</p>
+              <p class="error-msg">You can only upload a maximum of 5 files.</p>
               } @else {
-              <p>Please ensure your file is less than 5MB. "</p>
+              <p class="error-msg">
+                Please ensure your file is less than 8MB. "
+              </p>
 
               }
             </div>
@@ -97,7 +102,7 @@
                 alt="upload"
               />
               <h4>Click to upload a file</h4>
-              <p>JPG,JPEG,PNG,GIF or WEBP up to 8MB</p>
+              <p>JPG,JPEG,PNG or GIF up to 8MB</p>
             </div>
             }
           </div>
@@ -106,6 +111,7 @@
         <!-- AttachmentsComponent -->
         <stc-apps-feedback-issue-attachments
           [files]="files"
+          [attachmentIDS]="attachamentIDS"
           [errorMaxNumber]="errorMaxNumber"
           [errorSize]="errorSize"
           [errorType]="errorType"
@@ -124,7 +130,7 @@
             </div>
             <div class="col-md-6">
               <stc-apps-button
-                [buttonDisable]="feedbackIssueForm.invalid"
+                [buttonDisable]="feedbackIssueForm.invalid || isUploadPending"
                 [buttonText]="'Submit'"
                 [buttonType]="'primary'"
                 [loading]="isLoading"
