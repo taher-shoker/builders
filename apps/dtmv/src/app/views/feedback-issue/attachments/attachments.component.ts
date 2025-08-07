@@ -25,13 +25,18 @@ export class AttachmentsComponent {
       | { attachmentId: number; attachmentName: string; fileSize: number }
     )[]
   );
+  attachmentIDS: InputSignal<number[]> = input([] as number[]);
   errorSize: InputSignal<boolean> = input(false);
   errorType: InputSignal<boolean> = input(false);
   errorMaxNumber: InputSignal<boolean> = input(false);
   logs: InputSignal<boolean> = input(false);
   fileName = '';
   fileSize = 0;
-  @Output() removeFileEvent = new EventEmitter<File>();
+  @Output() removeFileEvent = new EventEmitter<{
+    file: File;
+    attachmentId: number;
+  }>();
+
   constructor(
     private feedbackIssuesService: FeedbackIssueService,
     private toastr: ToastrService
@@ -51,8 +56,8 @@ export class AttachmentsComponent {
   isFileInstance(file: any): file is File {
     return file instanceof File;
   }
-  removeFile(file: any) {
-    this.removeFileEvent.emit(file);
+  removeFile(file: any, attachamnetID: number) {
+    this.removeFileEvent.emit({ file: file, attachmentId: attachamnetID });
   }
   downloadFile(file: any) {
     console.log(file.attachmentId);
