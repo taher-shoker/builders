@@ -7,6 +7,7 @@ import { Component, input, InputSignal } from '@angular/core';
 })
 export class LogsExpansionBodyComponent {
   desc: InputSignal<string> = input('');
+  email: InputSignal<string> = input('');
   attachaments: InputSignal<
     { attachmentId: number; attachmentName: string; fileSize: number }[]
   > = input(
