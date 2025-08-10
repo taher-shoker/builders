@@ -25,10 +25,12 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError((err) => {
+        console.log(err, 'erorororrr');
+
         const error = err.message;
         if (err.status === 401) {
           if (err.error.status === 'UNAUTHORIZED') {
-            // this.router.navigate(['/unauthorized-page']);
+            this.authService.navigateToLogin();
           } else {
             // auto logout if 401 response returned from api
             this.authService.logout();
