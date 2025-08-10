@@ -30,7 +30,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         const error = err.message;
         if (err.status === 401) {
           if (err.error.status === 'UNAUTHORIZED') {
-            this.authService.navigateToLogin();
+            this.authService.logout();
           } else {
             // auto logout if 401 response returned from api
             this.authService.logout();
