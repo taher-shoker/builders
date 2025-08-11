@@ -12,9 +12,12 @@ import {
 import { CommonModule } from '@angular/common';
 import { DropdownModule } from 'primeng/dropdown';
 import {
+  AbstractControl,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import {
@@ -69,6 +72,25 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
       );
     }
   }
+  requiredTrimmed(): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value?.toString().trim();
+      return value !== '' ? null : { requiredTrimmed: true };
+    };
+  }
+  maxLengthTrimmed(maxLength: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value?.toString().trim() || '';
+      return value.length > maxLength
+        ? {
+            maxLengthTrimmed: {
+              requiredLength: maxLength,
+              actualLength: value.length,
+            },
+          }
+        : null;
+    };
+  }
   objArr: any[] = [];
   ngOnChanges(): void {
     if (!this.isWorkstreamSidebarVisible()) {
@@ -79,27 +101,27 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
     if (this.isAddProject() || this.isEditProject()) {
       if (!this.isPMO()) {
         this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
-          status: ['', [Validators.required]],
+          title: ['', [this.requiredTrimmed()]],
+          status: ['', [this.requiredTrimmed()]],
           actual: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
           planned: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
         });
       } else {
         this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
+          title: ['', [this.requiredTrimmed()]],
           actual: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
           planned: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
         });
       }
@@ -135,43 +157,43 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
       if (this.type() === 'compilance') {
         if (!this.isPMO()) {
           this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
-            heighlights: [''],
+            title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+            status: ['', [this.requiredTrimmed()]],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
             requestedArtifact: [
               '',
-              // [Validators.required, Validators.min(0), Validators.max(100)],
-              [Validators.required],
+              // [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed()],
             ],
             completed: [
               '',
-              // [Validators.required, Validators.min(0), Validators.max(100)],
-              [Validators.required],
+              // [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed()],
             ],
             missingArtifacts: [
               '',
-              // [Validators.required, Validators.min(0), Validators.max(100)],
-              [Validators.required],
+              // [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed()],
             ],
           });
         } else {
           this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            heighlights: [''],
+            title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
             requestedArtifact: [
               '',
-              // [Validators.required, Validators.min(0), Validators.max(100)],
-              [Validators.required],
+              // [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed()],
             ],
             completed: [
               '',
-              // [Validators.required, Validators.min(0), Validators.max(100)],
-              [Validators.required],
+              // [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed()],
             ],
             missingArtifacts: [
               '',
-              // [Validators.required, Validators.min(0), Validators.max(100)],
-              [Validators.required],
+              // [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed()],
             ],
           });
         }
@@ -249,12 +271,15 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         }
       } else if (this.type() === 'challenges') {
         this.addWorkstreamForm = this.formBuilder.group({
-          description: ['', [Validators.required]],
-          raisedBy: [''],
-          owner: [''],
-          dateRaised: [''],
-          impact: [''],
-          supportNeeded: [''],
+          description: [
+            '',
+            [this.requiredTrimmed(), this.maxLengthTrimmed(1500)],
+          ],
+          raisedBy: ['', [this.maxLengthTrimmed(1500)]],
+          owner: ['', [this.maxLengthTrimmed(1500)]],
+          dateRaised: ['', [this.maxLengthTrimmed(1500)]],
+          impact: ['', [this.maxLengthTrimmed(1500)]],
+          supportNeeded: ['', [this.maxLengthTrimmed(1500)]],
         });
         if (
           this.editFormData() &&
@@ -284,29 +309,29 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
       } else if (this.currentTabId() === 4) {
         if (!this.isEditWorkStream()) {
           this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
-            heighlights: [''],
+            title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+            status: ['', [this.requiredTrimmed()]],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
             actual: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             planned: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
           });
         } else {
           this.addWorkstreamForm = this.formBuilder.group({
-            status: ['', [Validators.required]],
-            heighlights: [''],
+            status: ['', [this.requiredTrimmed()]],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
             actual: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             planned: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
           });
         }
@@ -385,68 +410,68 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         if (this.currentTabId() === 5) {
           if (this.isEditWorkStream()) {
             this.addWorkstreamForm = this.formBuilder.group({
-              status: ['', [Validators.required]],
-              highlights: [''],
+              status: ['', [this.requiredTrimmed()]],
+              highlights: ['', [this.maxLengthTrimmed(1500)]],
               technicalDebt: this.formBuilder.group({
-                closed: ['', [Validators.required]],
-                open: ['', [Validators.required]],
-                delayed: ['', [Validators.required]],
-                underVerification: ['', [Validators.required]],
-                totalTD: ['', [Validators.required]],
+                closed: ['', [this.requiredTrimmed()]],
+                open: ['', [this.requiredTrimmed()]],
+                delayed: ['', [this.requiredTrimmed()]],
+                underVerification: ['', [this.requiredTrimmed()]],
+                totalTD: ['', [this.requiredTrimmed()]],
               }),
               architecturalBacklog: this.formBuilder.group({
-                closed: ['', [Validators.required]],
-                open: ['', [Validators.required]],
-                delayed: ['', [Validators.required]],
-                underVerification: ['', [Validators.required]],
-                totalTD: ['', [Validators.required]],
+                closed: ['', [this.requiredTrimmed()]],
+                open: ['', [this.requiredTrimmed()]],
+                delayed: ['', [this.requiredTrimmed()]],
+                underVerification: ['', [this.requiredTrimmed()]],
+                totalTD: ['', [this.requiredTrimmed()]],
               }),
             });
           } else {
             this.addWorkstreamForm = this.formBuilder.group({
-              title: ['', [Validators.required]],
-              status: ['', [Validators.required]],
-              highlights: [''],
+              title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+              status: ['', [this.requiredTrimmed()]],
+              highlights: ['', [this.maxLengthTrimmed(1500)]],
               technicalDebt: this.formBuilder.group({
-                closed: ['', [Validators.required]],
-                open: ['', [Validators.required]],
-                delayed: ['', [Validators.required]],
-                underVerification: ['', [Validators.required]],
-                totalTD: ['', [Validators.required]],
+                closed: ['', [this.requiredTrimmed()]],
+                open: ['', [this.requiredTrimmed()]],
+                delayed: ['', [this.requiredTrimmed()]],
+                underVerification: ['', [this.requiredTrimmed()]],
+                totalTD: ['', [this.requiredTrimmed()]],
               }),
               architecturalBacklog: this.formBuilder.group({
-                closed: ['', [Validators.required]],
-                open: ['', [Validators.required]],
-                delayed: ['', [Validators.required]],
-                underVerification: ['', [Validators.required]],
-                totalTD: ['', [Validators.required]],
+                closed: ['', [this.requiredTrimmed()]],
+                open: ['', [this.requiredTrimmed()]],
+                delayed: ['', [this.requiredTrimmed()]],
+                underVerification: ['', [this.requiredTrimmed()]],
+                totalTD: ['', [this.requiredTrimmed()]],
               }),
             });
           }
         } else {
           if (this.isEditWorkStream()) {
             this.addWorkstreamForm = this.formBuilder.group({
-              status: ['', [Validators.required]],
-              highlights: [''],
+              status: ['', [this.requiredTrimmed()]],
+              highlights: ['', [this.maxLengthTrimmed(1500)]],
               technicalDebt: this.formBuilder.group({
-                closed: ['', [Validators.required]],
-                open: ['', [Validators.required]],
-                delayed: ['', [Validators.required]],
-                underVerification: ['', [Validators.required]],
-                totalTD: ['', [Validators.required]],
+                closed: ['', [this.requiredTrimmed()]],
+                open: ['', [this.requiredTrimmed()]],
+                delayed: ['', [this.requiredTrimmed()]],
+                underVerification: ['', [this.requiredTrimmed()]],
+                totalTD: ['', [this.requiredTrimmed()]],
               }),
             });
           } else {
             this.addWorkstreamForm = this.formBuilder.group({
-              title: ['', [Validators.required]],
-              status: ['', [Validators.required]],
-              highlights: [''],
+              title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+              status: ['', [this.requiredTrimmed()]],
+              highlights: ['', [this.maxLengthTrimmed(1500)]],
               technicalDebt: this.formBuilder.group({
-                closed: ['', [Validators.required]],
-                open: ['', [Validators.required]],
-                delayed: ['', [Validators.required]],
-                underVerification: ['', [Validators.required]],
-                totalTD: ['', [Validators.required]],
+                closed: ['', [this.requiredTrimmed()]],
+                open: ['', [this.requiredTrimmed()]],
+                delayed: ['', [this.requiredTrimmed()]],
+                underVerification: ['', [this.requiredTrimmed()]],
+                totalTD: ['', [this.requiredTrimmed()]],
               }),
             });
           }
@@ -648,40 +673,41 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
       } else {
         if (!this.isEditWorkStream()) {
           this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
+            title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+            // title: ['', [this.requiredTrimmed()]],
+            status: ['', [this.requiredTrimmed()]],
             weight: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             actual: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             planned: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
-            heighlights: [''],
-            challenges: [''],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
+            challenges: ['', [this.maxLengthTrimmed(1500)]],
           });
         } else {
           this.addWorkstreamForm = this.formBuilder.group({
-            status: ['', [Validators.required]],
+            status: ['', [this.requiredTrimmed()]],
             weight: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             actual: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             planned: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
-            heighlights: [''],
-            challenges: [''],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
+            challenges: ['', [this.maxLengthTrimmed(1500)]],
           });
         }
         if (this.editWorkstreamFormData()) {
@@ -807,132 +833,135 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     if (this.isAddProject() || this.isEditProject()) {
       this.addWorkstreamForm = this.formBuilder.group({
-        title: ['', [Validators.required]],
-        status: ['', [Validators.required]],
+        title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+        status: ['', [this.requiredTrimmed()]],
         actual: [
           '',
-          [Validators.required, Validators.min(0), Validators.max(100)],
+          [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
         ],
         planned: [
           '',
-          [Validators.required, Validators.min(0), Validators.max(100)],
+          [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
         ],
       });
     } else {
       if (this.type() === 'compilance') {
         this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
-          status: ['', [Validators.required]],
-          heighlights: [''],
+          title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+          status: ['', [this.requiredTrimmed()]],
+          heighlights: ['', [this.maxLengthTrimmed(1500)]],
           requestedArtifact: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
           completed: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
           missingArtifacts: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
         });
       } else if (this.type() === 'challenges') {
         this.addWorkstreamForm = this.formBuilder.group({
-          description: ['', [Validators.required]],
-          raisedBy: [''],
-          owner: [''],
-          dateRaised: [''],
-          impact: [''],
-          supportNeeded: [''],
+          description: [
+            '',
+            [this.requiredTrimmed(), this.maxLengthTrimmed(1500)],
+          ],
+          raisedBy: ['', [this.maxLengthTrimmed(1500)]],
+          owner: ['', [this.maxLengthTrimmed(1500)]],
+          dateRaised: ['', [this.maxLengthTrimmed(1500)]],
+          impact: ['', [this.maxLengthTrimmed(1500)]],
+          supportNeeded: ['', [this.maxLengthTrimmed(1500)]],
         });
       } else if (this.currentTabId() === 4) {
         this.addWorkstreamForm = this.formBuilder.group({
-          title: ['', [Validators.required]],
-          status: ['', [Validators.required]],
-          heighlights: [''],
+          title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+          status: ['', [this.requiredTrimmed()]],
+          heighlights: ['', [this.maxLengthTrimmed(1500)]],
           actual: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
           planned: [
             '',
-            [Validators.required, Validators.min(0), Validators.max(100)],
+            [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
           ],
         });
       } else if (this.currentTabId() === 5 || this.currentTabId() === 6) {
         if (this.currentTabId() === 5) {
           this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
-            highlights: [''],
+            title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+            status: ['', [this.requiredTrimmed()]],
+            highlights: ['', [this.maxLengthTrimmed(1500)]],
             technicalDebt: this.formBuilder.group({
-              closed: ['', [Validators.required]],
-              open: ['', [Validators.required]],
-              delayed: ['', [Validators.required]],
-              underVerification: ['', [Validators.required]],
-              totalTD: ['', [Validators.required]],
+              closed: ['', [this.requiredTrimmed()]],
+              open: ['', [this.requiredTrimmed()]],
+              delayed: ['', [this.requiredTrimmed()]],
+              underVerification: ['', [this.requiredTrimmed()]],
+              totalTD: ['', [this.requiredTrimmed()]],
             }),
 
             architecturalBacklog: this.formBuilder.group({
-              closed: ['', [Validators.required]],
-              open: ['', [Validators.required]],
-              delayed: ['', [Validators.required]],
-              underVerification: ['', [Validators.required]],
-              totalTD: ['', [Validators.required]],
+              closed: ['', [this.requiredTrimmed()]],
+              open: ['', [this.requiredTrimmed()]],
+              delayed: ['', [this.requiredTrimmed()]],
+              underVerification: ['', [this.requiredTrimmed()]],
+              totalTD: ['', [this.requiredTrimmed()]],
             }),
           });
         } else {
           this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
-            highlights: [''],
+            title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+            status: ['', [this.requiredTrimmed()]],
+            highlights: ['', [this.maxLengthTrimmed(1500)]],
             technicalDebt: this.formBuilder.group({
-              closed: ['', [Validators.required]],
-              open: ['', [Validators.required]],
-              delayed: ['', [Validators.required]],
-              underVerification: ['', [Validators.required]],
-              totalTD: ['', [Validators.required]],
+              closed: ['', [this.requiredTrimmed()]],
+              open: ['', [this.requiredTrimmed()]],
+              delayed: ['', [this.requiredTrimmed()]],
+              underVerification: ['', [this.requiredTrimmed()]],
+              totalTD: ['', [this.requiredTrimmed()]],
             }),
           });
         }
       } else {
         if (!this.isEditWorkStream()) {
           this.addWorkstreamForm = this.formBuilder.group({
-            title: ['', [Validators.required]],
-            status: ['', [Validators.required]],
+            title: ['', [this.requiredTrimmed(), this.maxLengthTrimmed(10)]],
+            status: ['', [this.requiredTrimmed()]],
             weight: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             actual: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             planned: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
-            heighlights: [''],
-            challenges: [''],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
+            challenges: ['', [this.maxLengthTrimmed(1500)]],
           });
         } else {
           this.addWorkstreamForm = this.formBuilder.group({
-            status: ['', [Validators.required]],
+            status: ['', [this.requiredTrimmed()]],
             weight: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             actual: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
             planned: [
               '',
-              [Validators.required, Validators.min(0), Validators.max(100)],
+              [this.requiredTrimmed(), Validators.min(0), Validators.max(100)],
             ],
-            heighlights: [''],
-            challenges: [''],
+            heighlights: ['', [this.maxLengthTrimmed(1500)]],
+            challenges: ['', [this.maxLengthTrimmed(1500)]],
           });
         }
       }

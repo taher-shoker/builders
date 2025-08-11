@@ -256,12 +256,13 @@ label {
     font-size: 0.7rem;
     bottom: -18px;
     left: 0;
+    margin-bottom: 1px;
   }
 }
 .achievements-group {
   border: 2px solid #d1d1db;
   border-radius: 5px;
-  padding: 7px 15px;
+  padding: 7px 15px 12px;
   margin-top: 25px;
   padding-bottom: 15px;
   input {
@@ -452,4 +453,10 @@ label {
   font-style: italic;
   font-size: 1.3rem;
   @extend .stcFont;
+}
+.small-label {
+  font-size: 0.9rem !important;
+}
+.is-invalid-brdr {
+  border-color: red !important;
 }

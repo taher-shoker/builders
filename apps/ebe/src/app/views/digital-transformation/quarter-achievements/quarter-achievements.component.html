@@ -5,7 +5,7 @@
     }
     <button
       class="add-workstream-btn"
-      (click)="showFormSidebar = true; isEditMode = false"
+      (click)="showFormSidebar = true; isEditMode = false; showAddSidebar()"
     >
       <i class="pi pi-plus"></i>
       add achievement
@@ -203,18 +203,19 @@
                 id="title"
                 formControlName="title"
                 placeholder="workstream title"
+                [class.is-invalid]="
+                  achievement.get('title')?.hasError('maxLengthTrimmed')
+                "
+                [class.is-invalid-brdr]="
+                  achievement.get('title')?.hasError('maxLengthTrimmed')
+                "
               />
-              <!-- formControlName="title" -->
-              <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
-        [class.is-invalid-brdr]="
-          title?.invalid && (title?.dirty || title?.touched)
-        " -->
-              <!-- <small
-          *ngIf="title?.invalid && (title?.dirty || title?.touched)"
-          class="error-msg"
-        >
-          title is required
-        </small> -->
+              <small
+                *ngIf="achievement.get('title')?.hasError('maxLengthTrimmed')"
+                class="error-msg"
+              >
+                title cannot exceed 1500 characters
+              </small>
             </div>
             <div class="form-group">
               <label for="desc">
@@ -226,7 +227,21 @@
                 formControlName="description"
                 id="desc"
                 placeholder="What is the description"
+                [class.is-invalid]="
+                  achievement.get('description')?.hasError('maxLengthTrimmed')
+                "
+                [class.is-invalid-brdr]="
+                  achievement.get('description')?.hasError('maxLengthTrimmed')
+                "
               ></textarea>
+              <small
+                *ngIf="
+                  achievement.get('description')?.hasError('maxLengthTrimmed')
+                "
+                class="error-msg"
+              >
+                description cannot exceed 1500 characters
+              </small>
             </div>
           </div>
           }

@@ -7,9 +7,12 @@ import {
   OnDestroy,
   OnInit,
   SimpleChanges,
+  ViewChild,
 } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { DigitalTransformationService } from '../../../services/digital-transformation.service';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+
 import {
   KeyChallengesDataModel,
   KeyChallengesModel,
@@ -28,6 +31,7 @@ import { ToastrService } from 'ngx-toastr';
     CommonModule,
     PaginatorModule,
     SidebarModule,
+    OverlayPanelModule,
     AddWorkstreamFormComponent,
     ConfirmDialogModule,
   ],
@@ -42,6 +46,8 @@ export class KeyChallengesTableComponent
   challengesData!: KeyChallengesModel;
   endSubs$: Subject<any> = new Subject();
   isEmpty = false;
+  @ViewChild('overlayPanel2') overlayPanel2?: OverlayPanel;
+  @ViewChild('overlayPanel') overlayPanel?: OverlayPanel;
   toastr = inject(ToastrService);
   isAsc = true;
   showChallengesSidebar = false;

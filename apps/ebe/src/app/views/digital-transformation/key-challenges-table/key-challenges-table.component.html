@@ -25,8 +25,20 @@
         <td style="width: 5%; text-align: center">
           {{ challenge ? challenge.id : 0 }}
         </td>
-        <td style="width: 25%">
-          {{ challenge && challenge.description ? challenge.description : '-' }}
+        <td style="width: 25%" class="desc-td">
+          <p>
+            {{
+              challenge && challenge.description ? challenge.description : '-'
+            }}
+          </p>
+          @if(challenge.description.trim().length > 100){
+          <span (click)="overlayPanel2?.show($event)">read more</span>
+          <p-overlayPanel #overlayPanel2 dismissable="true">
+            <section class="popover-section">
+              {{ challenge.description }}
+            </section>
+          </p-overlayPanel>
+          }
         </td>
         <td style="width: 10%; text-align: center">
           {{ challenge && challenge.raisedBy ? challenge.raisedBy : '-' }}
@@ -40,7 +52,7 @@
         <td style="width: 7%; text-align: center">
           {{ challenge && challenge.impact ? challenge.impact : '-' }}
         </td>
-        <td style="width: 25%">
+        <td style="width: 25%" class="desc-td">
           <p class="m-0">
             {{
               challenge && challenge.supportNeeded
@@ -48,6 +60,14 @@
                 : '-'
             }}
           </p>
+          @if(challenge.supportNeeded.trim().length > 100){
+          <span (click)="overlayPanel?.show($event)">read more</span>
+          <p-overlayPanel #overlayPanel dismissable="true">
+            <section class="popover-section">
+              {{ challenge.supportNeeded }}
+            </section>
+          </p-overlayPanel>
+          }
         </td>
         @if(!isViewer()){
         <td style="width: 15%; text-align: center" class="action-td">

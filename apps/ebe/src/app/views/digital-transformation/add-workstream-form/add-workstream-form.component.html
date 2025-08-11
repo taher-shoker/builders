@@ -19,11 +19,22 @@
     ></textarea>
     <small
       *ngIf="
-        description?.invalid && (description?.dirty || description?.touched)
+        description?.invalid &&
+        (description?.dirty || description?.touched) &&
+        !description?.hasError('maxLengthTrimmed')
       "
       class="error-msg"
     >
       description is required
+    </small>
+    <small
+      *ngIf="
+        description?.hasError('maxLengthTrimmed') &&
+        !description?.hasError('requiredTrimmed')
+      "
+      class="error-msg"
+    >
+      maximum length of description is 1500 characters
     </small>
   </div>
   <div class="form-group">
@@ -37,17 +48,12 @@
       id="raisedBy"
       placeholder="Add Raised by"
       formControlName="raisedBy"
+      [class.is-invalid]="addWorkstreamForm.get('raisedBy')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('raisedBy')?.invalid"
     />
-    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
-      [class.is-invalid-brdr]="
-        title?.invalid && (title?.dirty || title?.touched)
-      "
-    <small
-      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
-      class="error-msg"
-    >
-      title is required
-    </small> -->
+    <small *ngIf="addWorkstreamForm.get('raisedBy')?.invalid" class="error-msg">
+      maximum length of raised by is 1500 characters
+    </small>
   </div>
   <div class="form-group">
     <label for="owner">
@@ -60,17 +66,12 @@
       id="owner"
       placeholder="Add Owner"
       formControlName="owner"
+      [class.is-invalid]="addWorkstreamForm.get('owner')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('owner')?.invalid"
     />
-    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
-      [class.is-invalid-brdr]="
-        title?.invalid && (title?.dirty || title?.touched)
-      "
-    <small
-      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
-      class="error-msg"
-    >
-      title is required
-    </small> -->
+    <small *ngIf="addWorkstreamForm.get('owner')?.invalid" class="error-msg">
+      maximum length of owner is 1500 characters
+    </small>
   </div>
   <div class="form-group">
     <label for="dateRaised">
@@ -86,23 +87,6 @@
       placeholder="Choose Date Raised"
       dateFormat="mm/dd/yy"
     />
-    <!-- <input
-      type="text"
-      class="form-control"
-      id="dateRaised"
-      placeholder="Add Date Raised"
-      formControlName="dateRaised"
-    /> -->
-    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
-      [class.is-invalid-brdr]="
-        title?.invalid && (title?.dirty || title?.touched)
-      "
-    <small
-      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
-      class="error-msg"
-    >
-      title is required
-    </small> -->
   </div>
   <div class="form-group">
     <label for="impact">
@@ -115,17 +99,12 @@
       id="impact"
       placeholder="Add impact"
       formControlName="impact"
+      [class.is-invalid]="addWorkstreamForm.get('impact')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('impact')?.invalid"
     />
-    <!-- [class.is-invalid]="title?.invalid && (title?.dirty || title?.touched)"
-      [class.is-invalid-brdr]="
-        title?.invalid && (title?.dirty || title?.touched)
-      "
-    <small
-      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
-      class="error-msg"
-    >
-      title is required
-    </small> -->
+    <small *ngIf="addWorkstreamForm.get('impact')?.invalid" class="error-msg">
+      maximum length of impact is 1500 characters
+    </small>
   </div>
   <div class="form-group">
     <label for="supportNeeded">
@@ -137,7 +116,15 @@
       id="supportNeeded"
       placeholder="Add support Needed"
       formControlName="supportNeeded"
+      [class.is-invalid]="addWorkstreamForm.get('supportNeeded')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('supportNeeded')?.invalid"
     ></textarea>
+    <small
+      *ngIf="addWorkstreamForm.get('supportNeeded')?.invalid"
+      class="error-msg"
+    >
+      maximum length of support Needed is 1500 characters
+    </small>
   </div>
   } @else if(currentTabId() !== 4 && currentTabId() !== 5 && currentTabId() !==
   6 && currentTabId() !== 7){ @if(!isEditWorkStream()){
@@ -158,10 +145,24 @@
       "
     />
     <small
-      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      *ngIf="
+        title?.invalid &&
+        (title?.dirty || title?.touched) &&
+        !title?.hasError('maxLengthTrimmed')
+      "
       class="error-msg"
     >
       title is required
+    </small>
+    <small
+      *ngIf="
+        title?.invalid &&
+        title?.hasError('maxLengthTrimmed') &&
+        !title?.hasError('requiredTrimmed')
+      "
+      class="error-msg"
+    >
+      title must be at most 10 characters
     </small>
   </div>
   } @if(!isPMO()){
@@ -311,7 +312,15 @@
       id="highlights"
       placeholder="What is the Highlights"
       formControlName="heighlights"
+      [class.is-invalid]="addWorkstreamForm.get('heighlights')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('heighlights')?.invalid"
     ></textarea>
+    <small
+      *ngIf="addWorkstreamForm.get('heighlights')?.hasError('maxLengthTrimmed')"
+      class="error-msg"
+    >
+      maximum length of highlights is 1500 characters
+    </small>
   </div>
   @if(!type()) {
   <div class="form-group">
@@ -324,7 +333,15 @@
       id="challenges"
       placeholder="What is the Challenges&Support Needed"
       formControlName="challenges"
+      [class.is-invalid]="addWorkstreamForm.get('challenges')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('challenges')?.invalid"
     ></textarea>
+    <small
+      *ngIf="addWorkstreamForm.get('challenges')?.hasError('maxLengthTrimmed')"
+      class="error-msg"
+    >
+      maximum length of challenges is 1500 characters
+    </small>
   </div>
   } } @if(type() === "compilance"){
   <div class="form-group">
@@ -461,10 +478,24 @@
       "
     />
     <small
-      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      *ngIf="
+        title?.invalid &&
+        (title?.dirty || title?.touched) &&
+        !title?.hasError('maxLengthTrimmed')
+      "
       class="error-msg"
     >
       title is required
+    </small>
+    <small
+      *ngIf="
+        title?.invalid &&
+        title?.hasError('maxLengthTrimmed') &&
+        !title?.hasError('requiredTrimmed')
+      "
+      class="error-msg"
+    >
+      title must be at most 10 characters
     </small>
   </div>
   } @if(!isPMO()){
@@ -504,7 +535,15 @@
       id="highlights"
       placeholder="What is the Highlights"
       formControlName="highlights"
+      [class.is-invalid]="addWorkstreamForm.get('highlights')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('highlights')?.invalid"
     ></textarea>
+    <small
+      *ngIf="addWorkstreamForm.get('highlights')?.hasError('maxLengthTrimmed')"
+      class="error-msg"
+    >
+      maximum length of highlights is 1500 characters
+    </small>
   </div>
   @if(currentTabId() === 5){
   <p class="sub-title">technical debt</p>
@@ -530,13 +569,13 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('technicalDebt.closed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.closed')?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('technicalDebt.closed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.closed')?.touched
             "
           />
@@ -545,7 +584,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('technicalDebt.closed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.closed')?.touched
             "
           >
@@ -570,13 +609,13 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('technicalDebt.open')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.open')?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('technicalDebt.open')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.open')?.touched
             "
           />
@@ -585,7 +624,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('technicalDebt.open')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.open')?.touched
             "
           >
@@ -610,13 +649,13 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('technicalDebt.delayed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.delayed')?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('technicalDebt.delayed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.delayed')?.touched
             "
           />
@@ -625,7 +664,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('technicalDebt.delayed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.delayed')?.touched
             "
           >
@@ -652,13 +691,13 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('technicalDebt.underVerification')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.underVerification')?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('technicalDebt.underVerification')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.underVerification')?.touched
             "
           />
@@ -667,7 +706,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('technicalDebt.underVerification')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('technicalDebt.underVerification')?.touched
             "
           >
@@ -689,18 +728,18 @@
           formControlName="totalTD"
           (keydown)="preventInvalidKeys($event)"
           [class.is-invalid]="
-            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.hasError('requiredTrimmed') &&
             addWorkstreamForm.get('totalTD')?.touched
           "
           [class.is-invalid-brdr]="
-            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.hasError('requiredTrimmed') &&
             addWorkstreamForm.get('totalTD')?.touched
           "
         />
         <div
           class="error-msg"
           *ngIf="
-            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.hasError('requiredTrimmed') &&
             addWorkstreamForm.get('totalTD')?.touched
           "
         >
@@ -730,13 +769,13 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('architecturalBacklog.closed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.closed')?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('architecturalBacklog.closed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.closed')?.touched
             "
           />
@@ -745,7 +784,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('architecturalBacklog.closed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.closed')?.touched
             "
           >
@@ -770,13 +809,13 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('architecturalBacklog.open')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.open')?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('architecturalBacklog.open')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.open')?.touched
             "
           />
@@ -785,7 +824,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('architecturalBacklog.open')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.open')?.touched
             "
           >
@@ -810,13 +849,13 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('architecturalBacklog.delayed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.delayed')?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('architecturalBacklog.delayed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.delayed')?.touched
             "
           />
@@ -825,7 +864,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('architecturalBacklog.delayed')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.delayed')?.touched
             "
           >
@@ -850,14 +889,14 @@
             [class.is-invalid]="
               addWorkstreamForm
                 .get('architecturalBacklog.underVerification')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.underVerification')
                 ?.touched
             "
             [class.is-invalid-brdr]="
               addWorkstreamForm
                 .get('architecturalBacklog.underVerification')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.underVerification')
                 ?.touched
             "
@@ -867,7 +906,7 @@
             *ngIf="
               addWorkstreamForm
                 .get('architecturalBacklog.underVerification')
-                ?.hasError('required') &&
+                ?.hasError('requiredTrimmed') &&
               addWorkstreamForm.get('architecturalBacklog.underVerification')
                 ?.touched
             "
@@ -890,18 +929,18 @@
           formControlName="totalTD"
           (keydown)="preventInvalidKeys($event)"
           [class.is-invalid]="
-            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.hasError('requiredTrimmed') &&
             addWorkstreamForm.get('totalTD')?.touched
           "
           [class.is-invalid-brdr]="
-            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.hasError('requiredTrimmed') &&
             addWorkstreamForm.get('totalTD')?.touched
           "
         />
         <div
           class="error-msg"
           *ngIf="
-            addWorkstreamForm.get('totalTD')?.hasError('required') &&
+            addWorkstreamForm.get('totalTD')?.hasError('requiredTrimmed') &&
             addWorkstreamForm.get('totalTD')?.touched
           "
         >
@@ -928,10 +967,24 @@
       "
     />
     <small
-      *ngIf="title?.invalid && (title?.dirty || title?.touched)"
+      *ngIf="
+        title?.invalid &&
+        (title?.dirty || title?.touched) &&
+        !title?.hasError('maxLengthTrimmed')
+      "
       class="error-msg"
     >
       title is required
+    </small>
+    <small
+      *ngIf="
+        title?.invalid &&
+        title?.hasError('maxLengthTrimmed') &&
+        !title?.hasError('requiredTrimmed')
+      "
+      class="error-msg"
+    >
+      title must be at most 10 characters
     </small>
   </div>
   } @if(!isPMO()){
@@ -963,7 +1016,7 @@
   }
   <div class="form-group">
     <label for="highlights">
-      highlights (%)
+      highlights
       <!-- <span>*</span> -->
     </label>
     <textarea
@@ -971,7 +1024,15 @@
       id="highlights"
       placeholder="What is the Highlights"
       formControlName="heighlights"
+      [class.is-invalid]="addWorkstreamForm.get('heighlights')?.invalid"
+      [class.is-invalid-brdr]="addWorkstreamForm.get('heighlights')?.invalid"
     ></textarea>
+    <small
+      *ngIf="addWorkstreamForm.get('heighlights')?.hasError('maxLengthTrimmed')"
+      class="error-msg"
+    >
+      maximum length of highlights is 1500 characters
+    </small>
   </div>
   <div class="form-group">
     <label for="planned">

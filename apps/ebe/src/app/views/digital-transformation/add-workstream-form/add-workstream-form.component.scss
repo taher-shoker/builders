@@ -160,3 +160,6 @@ input[type='number']::-webkit-outer-spin-button {
 .small-label {
   font-size: 0.9rem !important;
 }
+.is-invalid-brdr {
+  border-color: red !important;
+}

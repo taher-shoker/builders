@@ -11,10 +11,13 @@ import { DigitalTransformationService } from '../../../services/digital-transfor
 import { SidebarModule } from 'primeng/sidebar';
 import { DropdownModule } from 'primeng/dropdown';
 import {
+  AbstractControl,
   FormArray,
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
+  ValidationErrors,
+  ValidatorFn,
   Validators,
 } from '@angular/forms';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
@@ -107,10 +110,23 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
   removeAchievement(index: number): void {
     this.achievements.removeAt(index);
   }
+  maxLengthTrimmed(maxLength: number): ValidatorFn {
+    return (control: AbstractControl): ValidationErrors | null => {
+      const value = control.value?.toString().trim() || '';
+      return value.length > maxLength
+        ? {
+            maxLengthTrimmed: {
+              requiredLength: maxLength,
+              actualLength: value.length,
+            },
+          }
+        : null;
+    };
+  }
   createAchievementFormGroup(): FormGroup {
     return this.fb.group({
-      title: ['', Validators.required],
-      description: ['', Validators.required],
+      title: ['', [Validators.required, this.maxLengthTrimmed(1500)]],
+      description: ['', [Validators.required, this.maxLengthTrimmed(1500)]],
     });
   }
   get quarter() {
@@ -131,8 +147,7 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
   currQuarterAchievementId = 0;
   addNewAchievement() {
     if (this.addWorkAchievementForm.valid) {
-      const formVal = { ...this.addWorkAchievementForm.value };
-      console.log(formVal);
+      const formVal = { ...this.addWorkAchievementForm.getRawValue() };
       formVal.achievements.map((val: any) => {
         if (Array.isArray(val.description)) {
           val.description = val.description.join('\n');
@@ -146,13 +161,6 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
         achievements: JSON.stringify(formVal.achievements),
         // achievements: formVal.achievements,
       };
-      // } else {
-      //   addedData = {
-      //     quarterName: formVal.quarter,
-      //     businessUnitId: formVal.workstream,
-      //   };
-      // }
-      console.log(addedData);
       if (!this.isEditMode) {
         this.digitalTransformationService
           .addNewAchievement(addedData)
@@ -214,14 +222,25 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
               }
             });
             this.quarterAchievements = quarters;
+          } else {
+            this.quarterAchievements = [];
           }
         },
       });
+  }
+  showAddSidebar() {
+    this.addWorkAchievementForm.get('quarter')?.enable();
+    this.addWorkAchievementForm.get('workstream')?.enable();
+    if (this.achievements.length < 1) {
+      this.addAchievement();
+    }
   }
   showEditSidebar(
     data: QuarterAchievementModel,
     bu: QuarterAchievementBusinessUnitModel
   ) {
+    this.addWorkAchievementForm.get('quarter')?.disable();
+    this.addWorkAchievementForm.get('workstream')?.disable();
     this.currQuarterAchievementId = bu.quarterAchievementId;
     this.deletedItem = data;
     const currBu = this.workstreams.filter(
@@ -249,7 +268,6 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
     this.confirmationService.confirm({});
   }
   deleteChallenge() {
-    console.log(this.currQuarterAchievementId);
     this.digitalTransformationService
       .deleteAchievement(this.currQuarterAchievementId)
       .subscribe({
