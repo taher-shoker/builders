@@ -248,7 +248,12 @@ export class MilestoneDetailsComponent implements OnInit {
             }
 
             if (res[i].taskName === 'Approve Progress') {
-              userThatTaskIsPendingOn = 'DT Director';
+              userThatTaskIsPendingOn =
+                res[i]?.username
+                  ?.split('Role::')[1]
+                  ?.split(',')[0]
+                  ?.trim()
+                  ?.replace(/_/g, ' ') ?? 'Unknown role';
             }
 
             if (res[i].taskName === 'Add New Progress') {

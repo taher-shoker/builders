@@ -383,6 +383,16 @@ export class UserFormComponent implements OnInit, OnChanges {
           r.groupName !== 'DT_Ticket_Admin'
       );
 
+    if (filteredRoles.length >= 2) {
+      const lastIndex = filteredRoles.length - 1;
+      const secondLastIndex = filteredRoles.length - 2;
+      // Swap the last two elements
+      [filteredRoles[lastIndex], filteredRoles[secondLastIndex]] = [
+        filteredRoles[secondLastIndex],
+        filteredRoles[lastIndex],
+      ];
+    }
+
     if (
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
     ) {

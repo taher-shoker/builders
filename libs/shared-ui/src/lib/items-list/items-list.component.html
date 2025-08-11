@@ -62,7 +62,9 @@
           @if (bulkApprove) {
           <div class="progressJustificationsHolder task-desc">
             <p>Overall Progress: <strong>{{ item.requestParams.overall_progress }}% </strong></p>
-            <p>Comment: <strong> {{ item.requestParams.comment }}</strong></p>
+           @if(item.requestParams.comment) {
+             <p>Comment: <strong> {{ item.requestParams.comment }}</strong></p>
+           }
           </div>
           }
         </div>

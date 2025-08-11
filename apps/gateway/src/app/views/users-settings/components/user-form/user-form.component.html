@@ -238,7 +238,7 @@
           </div>
           <div
             class="row"
-            *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User'"
+            *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User' || this.form?.get('userGroups')?.value?.groupName === 'DT_Governance'"
           >
             <div class="col-md-12">
               <stc-apps-checkbox
