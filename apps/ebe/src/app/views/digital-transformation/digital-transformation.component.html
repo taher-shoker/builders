@@ -1,0 +1,201 @@
+<section class="digital-transformation">
+  <div
+    style="display: flex; justify-content: space-between; align-items: center"
+  >
+    <stc-apps-page-header
+      [mainTitle]="'Digital Transformation'"
+      [secondaryTitle]="''"
+      [username]="userData && userData.name ? userData.name : ''"
+      [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+    />
+    <button class="export-btn" (click)="export()">
+      <img src="assets/images/File Download.svg" alt="" />
+      export
+    </button>
+  </div>
+  <div class="digital-transformation-taps">
+    @if(digitalTransformationTaps().length !== 0){
+    <stc-apps-tabview
+      [tabsData]="digitalTransformationTaps()"
+      [tabColor]="'#ffffff'"
+      [clickedtabColor]="'#ffffff'"
+      [tabBackground]="'#FFFFFF0D'"
+      [clickedtabBackground]="'#FF375E'"
+      (clickedTap)="getClickedTap($event)"
+      [fontFamily]="'STCForwardFont'"
+      [isMobile]="false"
+    />
+    }
+  </div>
+  <!-- <div class="digital-transformation-body">
+    <h4>{{ currTap().name }}</h4>
+  </div> -->
+  @if(currTap()){ @if(currTap().id === 1){
+  <stc-apps-executive-summary
+    [mainTitle]="firstTapTitles"
+    [pageId]="currTap() && currTap().id ? currTap().id : 1"
+    [isViewer]="isViewer"
+    [isPMO]="isPMO"
+  />
+  } @else if(currTap().id !== 8 && currTap().id !== 9) {
+  <section class="qa-compilance">
+    <div class="qa-compilance-header">
+      <p class="main-title">{{ currTap().value ? currTap().value : '' }}</p>
+      @if(!isViewer){
+      <button
+        class="add-workstream-btn"
+        (click)="
+          showAddWorkstreamSidebar = true;
+          isEdit = false;
+          editedData = null;
+          isEditMode = false
+        "
+      >
+        <i class="pi pi-plus"></i>
+        add workstream
+      </button>
+      }
+    </div>
+    @if(tapsDetailsData && tapsDetailsData.length !== 0){
+    <div class="kpi-container">
+      @for (card of tapsDetailsData; track card.businessUnit) {
+      <div class="kpi-container-card">
+        <stc-apps-qa-compilance-card
+          (sidebarOpened)="
+            showWorkStreamSidebar($event);
+            isEdit = true;
+            isEditMode = true;
+            isEditMode2 = true
+          "
+          [QAComplianceCardData]="card"
+          [isViewer]="isViewer"
+          [isPMO]="isPMO"
+        />
+      </div>
+      }
+    </div>
+    } @else {
+    <h3 class="empty-data-msg">there are no data</h3>
+    }
+  </section>
+  } @else if(currTap().id === 8) {
+  <section class="qa-compilance">
+    <div class="qa-compilance-header">
+      <p class="main-title">
+        {{ currTap() && currTap().value ? currTap().value : '' }}
+      </p>
+      @if(!isViewer){
+      <button class="add-workstream-btn" (click)="showChallengesSidebar = true">
+        <i class="pi pi-plus"></i>
+        add new
+      </button>
+      }
+    </div>
+    <div class="qa-compilance-content">
+      <stc-apps-key-challenges-table
+        [isChallengeAdded]="isChallengeAdded"
+        [isViewer]="isViewer"
+        [isPMO]="isPMO"
+      />
+    </div>
+  </section>
+  } @else {
+  <stc-apps-quarter-achievements
+    [currentTab]="currTap()"
+    [isPMO]="isPMO"
+    [isViewer]="isViewer"
+  />
+  } }
+</section>
+
+<p-sidebar
+  [(visible)]="showAddWorkstreamSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="add-workstream-sidebar"
+  (onHide)="hideAddWorkstreamSidebar(); hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>
+          {{ isEdit ? 'edit workstream' : 'add new workstream' }}
+        </p>
+      </div>
+      <div class="right" (click)="showAddWorkstreamSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <stc-apps-add-workstream-form
+      (addWorkStream)="addWorkStream($event)"
+      [isWorkstreamSidebarVisible]="!showAddWorkstreamSidebar"
+      [type]="
+        currTap().id !== 4 &&
+        currTap().id !== 5 &&
+        currTap().id !== 6 &&
+        currTap().id !== 7
+          ? 'compilance'
+          : ''
+      "
+      [editedCompilanceData]="editedData"
+      [isEditWorkStream]="isEditMode"
+      (delete)="showDeleteDialog($event)"
+      [currentTabId]="currTap() && currTap().id ? currTap().id : 1"
+      [isPMO]="isPMO"
+    />
+  </div>
+</p-sidebar>
+<p-sidebar
+  [(visible)]="showChallengesSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="add-workstream-sidebar"
+  (onHide)="hideAddWorkstreamSidebar(); hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>add challenges</p>
+      </div>
+      <div class="right" (click)="showChallengesSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <stc-apps-add-workstream-form
+      (addWorkStream)="addChallengeData($event)"
+      type="challenges"
+      [isWorkstreamSidebarVisible]="showChallengesSidebar === false"
+      [isPMO]="isPMO"
+    />
+  </div>
+</p-sidebar>
+<p-confirmDialog
+  [dismissableMask]="true"
+  styleClass="delete-workstream-dialog2"
+>
+  <ng-template pTemplate="message" let-message>
+    <div class="content">
+      <div class="head">
+        <div class="left">
+          <i class="pi pi-trash"></i>
+          <p>delete workstream</p>
+        </div>
+        <i
+          class="pi pi-times text-6xl text-primary-500"
+          (click)="closeDialog()"
+        ></i>
+      </div>
+      <span>are you sure you want to delete this workstream?</span>
+      <div class="buttons">
+        <button class="delete-btn" (click)="deleteChallenge()">delete</button>
+        <button class="cancel-btn" (click)="closeDialog()">cancel</button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

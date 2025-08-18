@@ -1,0 +1,11 @@
+<div
+  class="status"
+  [ngStyle]="{
+    'background-color': backgroundColor(),
+    color: textColor(),
+    'border-color': borderColor()
+  }"
+>
+  <span [ngStyle]="{ 'background-color': textColor() }"></span>
+  <p [ngStyle]="{ color: textColor() }">{{ status() }}</p>
+</div>

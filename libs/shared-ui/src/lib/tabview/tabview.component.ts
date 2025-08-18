@@ -1,60 +1,86 @@
-import { Component, ElementRef, EventEmitter, HostListener, input , InputSignal, OnChanges , Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  HostListener,
+  input,
+  InputSignal,
+  OnChanges,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { TabsDataModel } from './tabsData.model';
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
   selector: 'stc-apps-tabview',
   standalone: false,
   templateUrl: './tabview.component.html',
   styleUrl: './tabview.component.scss',
 })
-export class TabviewComponent implements OnChanges{
+export class TabviewComponent implements OnChanges {
   // @Input({required : true}) tabsData!:TabsDataModel[];
-  tabsData:InputSignal<TabsDataModel[]> = input.required<TabsDataModel[]>()
+  tabsData: InputSignal<TabsDataModel[]> = input.required<TabsDataModel[]>();
   @ViewChild('tabsView') tabsView!: ElementRef;
   tabs2 = [
-    'Strategic', 'Operational', 'Test07', 'Test', 'Relational', 
-    'Financial', 'Test5', 'Tab6', 'Tab5', 'Tab9', 'Test2', 
-    'Txt212', 'Tab7', 'Tab8', 'Corporate', 'Tap2', 'Tap3', 
-    'Testttttt', 'Admin', 'Admin123', 'Tap1', 'Tap4'
+    'Strategic',
+    'Operational',
+    'Test07',
+    'Test',
+    'Relational',
+    'Financial',
+    'Test5',
+    'Tab6',
+    'Tab5',
+    'Tab9',
+    'Test2',
+    'Txt212',
+    'Tab7',
+    'Tab8',
+    'Corporate',
+    'Tap2',
+    'Tap3',
+    'Testttttt',
+    'Admin',
+    'Admin123',
+    'Tap1',
+    'Tap4',
   ];
   activeIndex = 0;
-  tabColor:InputSignal<string> = input<string>('')
-  fontFamily:InputSignal<string> = input<string>('')
-  isMobile:InputSignal<boolean> = input<boolean>(false)
+  tabColor: InputSignal<string> = input<string>('');
+  fontFamily: InputSignal<string> = input<string>('');
+  isMobile: InputSignal<boolean> = input<boolean>(false);
   @ViewChild('tabsContainer', { static: false }) tabsContainer!: ElementRef;
   @ViewChild('tabs', { static: false }) tabs!: ElementRef;
   onHover = false;
   hoveredTap = 0;
-  clickedtabColor:InputSignal<string> = input<string>('')
-  clickedtabBackground:InputSignal<string> = input<string>('')
-  tabBackground:InputSignal<string> = input<string>('')
-  @Output() clickedTap:EventEmitter<TabsDataModel> = new EventEmitter();
+  clickedtabColor: InputSignal<string> = input<string>('');
+  clickedtabBackground: InputSignal<string> = input<string>('');
+  tabBackground: InputSignal<string> = input<string>('');
+  @Output() clickedTap: EventEmitter<TabsDataModel> = new EventEmitter();
   currentIndex = input<number>(0);
-  currentClickedTapIndex!:number;
+  currentClickedTapIndex!: number;
   maxTabs = 0;
   responsiveOptions: any[] | undefined;
-  data!:TabsDataModel[];
+  data!: TabsDataModel[];
   isActivityLogTable = input<boolean>(false);
-  showArrows!:boolean;
-  ngOnInit()
-  {
+  showArrows!: boolean;
+  constructor(private cdr: ChangeDetectorRef) {}
+  ngOnInit() {
     this.currentClickedTapIndex = this.currentIndex();
-    
   }
   ngOnChanges(): void {
-    if(this.tabsData())
-    {
-      this.data = this.tabsData().slice(0,5);
+    if (this.tabsData()) {
+      this.data = this.tabsData().slice(0, 5);
     }
   }
-  toggleTaps(index:number , tap:string , tab:TabsDataModel)
-  {
+  toggleTaps(index: number, tap: string, tab: TabsDataModel) {
     const d = {
-      id : index,
-      name : tap,
-      value :tap
-    }
+      id: index,
+      name: tap,
+      value: tap,
+    };
     this.currentClickedTapIndex = index;
-    this.clickedTap.emit(tab)
+    this.clickedTap.emit(tab);
   }
   scrollTabs(direction: number) {
     const container = this.tabsContainer.nativeElement;
@@ -72,9 +98,10 @@ export class TabviewComponent implements OnChanges{
   }
   ngAfterViewInit() {
     this.checkScreenSize();
+    this.activeIndex = 1;
+    this.cdr.detectChanges();
   }
-  showMore()
-  {
-    this.data = this.tabsData()
+  showMore() {
+    this.data = this.tabsData();
   }
 }

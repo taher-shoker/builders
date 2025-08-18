@@ -3,7 +3,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
-import { NxWelcomeComponent } from './nx-welcome.component';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 // import { SharedUiModule } from '@stc-apps/shared-ui';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -36,15 +35,13 @@ import { HomepageMobileComponent } from './views/homepage-mobile/homepage-mobile
     RouterModule.forRoot(appRoutes),
     BrowserAnimationsModule,
     SharedUiModule,
-    NgxSpinnerModule.forRoot({type : "ball-spin"}),
+    NgxSpinnerModule.forRoot({ type: 'ball-spin' }),
     CookieModule.withOptions(),
     ToastrModule.forRoot(),
-    HomepageMobileComponent
+    HomepageMobileComponent,
   ],
   providers: [
-    importProvidersFrom([
-      HttpClientModule
-    ]),
+    importProvidersFrom([HttpClientModule]),
     // {
     //   provide: HTTP_INTERCEPTORS,
     //   useClass: HttpUrlInterceptor,
@@ -67,8 +64,8 @@ import { HomepageMobileComponent } from './views/homepage-mobile/homepage-mobile
     },
     {
       provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    }
+      useClass: HashLocationStrategy,
+    },
   ],
   bootstrap: [AppComponent],
 })

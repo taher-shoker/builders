@@ -1,0 +1,161 @@
+<section class="technical-debt-card">
+  <div class="technical-debt-card-header">
+    <div class="left">
+      <p class="technical-debt-card-header-title">{{ cardData().title }}</p>
+      <stc-apps-status-card
+        [status]="cardData().status"
+        [backgroundColor]="getStatusStyle(cardData().status).backgroundColor"
+        [textColor]="getStatusStyle(cardData().status).textColor"
+        [borderColor]="getStatusStyle(cardData().status).borderColor"
+      />
+    </div>
+    <div class="right">
+      <div class="right">
+        <button class="heighlights-btn" (click)="showSidebar = true">
+          <img src="assets/images/Info Circle.svg" alt="" />
+          <span>highlights</span>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="technical-debt-card-body">
+    @if(currTap() === 4){
+    <p class="chart-title">technical debt</p>
+    }
+    <div class="card-chart">
+      <div class="technical-debt-card-body-chart">
+        <stc-apps-progress-circle
+          [progressValue]="
+            currTap() !== 5 && currTap() !== 6
+              ? technicalDebtChart.closed
+              : technicalDebtChart.closedPercent
+          "
+          [percentValue]="technicalDebtChart.closedPercent"
+          [showProgress]="true"
+          [progressSize]="'8rem'"
+          [mainBgColor]="getStatusStyle(cardData().status).textColor"
+          secondaryBgColor="#F3F4F6"
+          progressWidth="10rem"
+          [isWorkStream]="true"
+          fontFamily="STCForwardFont"
+          [isDebtCard]="true"
+          [secondaryValue]="
+            currTap() !== 5 && currTap() !== 6
+              ? technicalDebtChart.underValidation
+              : undefined
+          "
+          [totalTD]="
+            currTap() !== 5 && currTap() !== 6
+              ? technicalDebtChart.totalTD
+              : undefined
+          "
+          [progressValueColor]="getStatusStyle(cardData().status).textColor"
+        />
+      </div>
+      <div class="technical-debt-card-body-totalNum">
+        <span>
+          {{ currTap() === 4 ? 'total TD' : 'total capabilities' }}
+        </span>
+        <p
+          [ngStyle]="{
+            color: getStatusStyle(cardData().status).textColor
+          }"
+        >
+          {{ technicalDebtChart.totalTD }}
+        </p>
+      </div>
+    </div>
+    <div class="card-details">
+      <div class="closed">
+        <p>{{ currTap() === 4 ? 'closed' : 'completed' }}</p>
+        <span>{{ technicalDebtChart.closed }}</span>
+      </div>
+      <div class="closed">
+        <p>open</p>
+        <span>{{ technicalDebtChart.open }}</span>
+      </div>
+      <div class="closed">
+        <p>delayed</p>
+        <span>{{ technicalDebtChart.delayed }}</span>
+      </div>
+      <div class="closed">
+        <p>{{ currTap() === 4 ? 'under validation' : 'on hold' }}</p>
+        <span>{{ technicalDebtChart.underValidation }}</span>
+      </div>
+    </div>
+  </div>
+  @if(archituralBacklogChart){
+  <div class="technical-debt-card-body" style="margin-top: 20px">
+    <p class="chart-title">architectual backlog</p>
+    <div class="card-chart">
+      <div class="technical-debt-card-body-chart">
+        <stc-apps-progress-circle
+          [progressValue]="archituralBacklogChart.closed"
+          [percentValue]="archituralBacklogChart.closedPercent"
+          [showProgress]="true"
+          [progressSize]="'8rem'"
+          [mainBgColor]="getStatusStyle(cardData().status).textColor"
+          secondaryBgColor="#F3F4F6"
+          progressWidth="10rem"
+          [isWorkStream]="true"
+          fontFamily="STCForwardFont"
+          [isDebtCard]="true"
+          [secondaryValue]="archituralBacklogChart.underValidation"
+          [totalTD]="archituralBacklogChart.totalABL"
+          [progressValueColor]="getStatusStyle(cardData().status).textColor"
+        />
+      </div>
+      <div class="technical-debt-card-body-totalNum">
+        <span>total ABL</span>
+        <p
+          [ngStyle]="{
+            color: getStatusStyle(cardData().status).textColor
+          }"
+        >
+          {{ archituralBacklogChart.totalABL }}
+        </p>
+      </div>
+    </div>
+    <div class="card-details">
+      <div class="closed">
+        <p>closed</p>
+        <span>{{ archituralBacklogChart.closed }}</span>
+      </div>
+      <div class="closed">
+        <p>open</p>
+        <span>{{ archituralBacklogChart.open }}</span>
+      </div>
+      <div class="closed">
+        <p>delayed</p>
+        <span>{{ archituralBacklogChart.delayed }}</span>
+      </div>
+      <div class="closed">
+        <p>under validation</p>
+        <span>{{ archituralBacklogChart.underValidation }}</span>
+      </div>
+    </div>
+  </div>
+  }
+</section>
+<p-sidebar
+  [(visible)]="showSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="technical-debt-card-sidebar"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>{{ cardData().title }}</p>
+      </div>
+      <div class="right" (click)="showSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <div class="content">
+      <h4>{{ cardData().heighlights }}</h4>
+    </div>
+  </div>
+</p-sidebar>
