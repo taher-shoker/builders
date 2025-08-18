@@ -31,7 +31,8 @@
               challenge && challenge.description ? challenge.description : '-'
             }}
           </p>
-          @if(challenge.description.trim().length > 100){
+          @if(challenge && challenge.description &&
+          challenge.description.trim().length > 100){
           <span (click)="overlayPanel2?.show($event)">read more</span>
           <p-overlayPanel #overlayPanel2 dismissable="true">
             <section class="popover-section">
@@ -60,7 +61,8 @@
                 : '-'
             }}
           </p>
-          @if(challenge.supportNeeded.trim().length > 100){
+          @if(challenge && challenge.supportNeeded &&
+          challenge.supportNeeded.trim().length > 100){
           <span (click)="overlayPanel?.show($event)">read more</span>
           <p-overlayPanel #overlayPanel dismissable="true">
             <section class="popover-section">

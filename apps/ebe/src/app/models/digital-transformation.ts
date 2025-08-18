@@ -90,11 +90,6 @@ export const STATUS_STYLE_MAP: Record<WorkstreamStatus, StatusStyle> = {
     textColor: '#EF4444',
     borderColor: '#FECACA',
   },
-  [WorkstreamStatus.NotStartedOrOnHold]: {
-    backgroundColor: '#F3F4F6',
-    textColor: '#6B7280',
-    borderColor: '#E5E7EB',
-  },
   [WorkstreamStatus.Complete]: {
     backgroundColor: '#CFFAFE',
     textColor: '#06B6D4',
@@ -104,6 +99,11 @@ export const STATUS_STYLE_MAP: Record<WorkstreamStatus, StatusStyle> = {
     backgroundColor: '#CFFAFE',
     textColor: '#06B6D4',
     borderColor: '#A5F3FC',
+  },
+  [WorkstreamStatus.NotStartedOrOnHold]: {
+    backgroundColor: '#F3F4F6',
+    textColor: '#6B7280',
+    borderColor: '#E5E7EB',
   },
 };
 export interface QAComplianceModel {

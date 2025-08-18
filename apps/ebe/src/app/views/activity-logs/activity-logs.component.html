@@ -243,7 +243,8 @@
                 </p-overlayPanel>
                 }
               </td>
-              } @if(activityLogsHeader.includes("activity project")) {
+              } @if(activityLogsHeader.includes("activity project") ||
+              activityLogsHeader.includes("workstream project")) {
               @if(currentTap().value === 'PSR') {
               <td>
                 {{ log.attribute ? (log.attribute | truncateWord : 2) : '-' }}

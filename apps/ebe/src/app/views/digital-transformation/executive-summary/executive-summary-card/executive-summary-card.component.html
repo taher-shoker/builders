@@ -5,9 +5,14 @@
       (mouseenter)="overlayPanel2?.show($event)"
       (mouseleave)="overlayPanel2?.hide()"
     >
-      {{ executiveCard().projectName }}
+      {{
+        executiveCard() && executiveCard().projectName
+          ? executiveCard().projectName
+          : ''
+      }}
     </p>
-    @if(executiveCard().projectName.trim().length >= 30) {
+    @if(executiveCard() && executiveCard().projectName &&
+    executiveCard().projectName.trim().length >= 30) {
     <p-overlayPanel #overlayPanel2 dismissable="true">
       <section class="popover-section">
         {{ executiveCard().projectName }}
@@ -15,6 +20,7 @@
     </p-overlayPanel>
     }
     <div class="status2">
+      @if(executiveCard() && executiveCard().projectStatus) {
       <stc-apps-status-card
         [status]="executiveCard().projectStatus"
         [backgroundColor]="
@@ -25,7 +31,14 @@
           getStatusStyle(executiveCard().projectStatus).borderColor
         "
       />
-      @if(!isViewer()){
+      } @else {
+      <stc-apps-status-card
+        [status]="'TBD'"
+        [backgroundColor]="'#F3F4F6'"
+        [textColor]="'#6B7280'"
+        [borderColor]="'#E5E7EB'"
+      />
+      } @if(!isViewer()){
       <button class="edit-proj-btn" (click)="openAddWorkstreamSidebar()">
         <i class="pi pi-pencil"></i>
         <!-- <img src="assets/images/button.svg" alt="" /> -->

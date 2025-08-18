@@ -30,7 +30,12 @@
             .borderColor
         "
       />
-      }
+      } @else {<stc-apps-status-card
+        [status]="'TBD'"
+        [backgroundColor]="'#F3F4F6'"
+        [textColor]="'#6B7280'"
+        [borderColor]="'#E5E7EB'"
+      />}
     </div>
     <div class="right">
       <button class="heighlights-btn" (click)="showSidebarTap()">
@@ -49,12 +54,7 @@
   <div class="qa-compilance-card-body">
     @if(item.projectName){
     <p class="project-name-title">{{ item.projectName }}</p>
-    } @if(item.projectStatus){
-    <!-- [progressValue]="
-              QAComplianceCardData().totalTD
-                ? QAComplianceCardData().completed
-                : QAComplianceCardData().completedPercent
-            " -->
+    }
     <div
       [class.totalTDCard]="
         item.totalABL || item.totalTD || item.totalCapabilities
@@ -71,7 +71,7 @@
         " -->
       <stc-apps-progress-circle
         [progressValue]="
-          item.totalTD
+          item.totalTD || item.totalABL
             ? closedValue(item) ?? 0
             : item.percentage
             ? item.percentage
@@ -86,7 +86,11 @@
             ? '9rem'
             : '12rem'
         "
-        [mainBgColor]="getStatusStyle(item.projectStatus).textColor"
+        [mainBgColor]="
+          item.projectStatus
+            ? getStatusStyle(item.projectStatus).textColor
+            : '#6B7280'
+        "
         progressWidth="11rem"
         [isDebtCard]="
           item.totalABL || item.totalTD || item.totalCapabilities ? true : false
@@ -104,7 +108,11 @@
             ? item.totalCapabilities
             : 0
         "
-        [progressValueColor]="getStatusStyle(item.projectStatus).textColor"
+        [progressValueColor]="
+          item.projectStatus
+            ? getStatusStyle(item.projectStatus).textColor
+            : '#6B7280'
+        "
       />
       @if(item.totalABL || item.totalTD || item.totalCapabilities){
       <div class="totaltd-card">
@@ -131,7 +139,7 @@
       </div>
       }
     </div>
-    }
+
     <div
       class="details"
       [ngStyle]="{

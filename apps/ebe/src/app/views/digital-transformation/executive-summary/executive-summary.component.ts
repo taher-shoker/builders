@@ -83,9 +83,6 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
             this.itPlatformDashboard = res;
           }
         },
-        error: (error) => {
-          console.log(error);
-        },
       });
   }
   ngOnDestroy(): void {
@@ -110,7 +107,6 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       typeof summaryData.businessUnitHighlights === 'string'
     ) {
       const cleaned = summaryData.businessUnitHighlights.replace(/�/g, ' ');
-      console.log(cleaned);
       if (cleaned.trim().startsWith('[')) {
         try {
           const parsed = JSON.parse(cleaned);
@@ -245,10 +241,8 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     };
     if (data.weight) {
       if (!this.isEditWorkStream) {
-        // console.log(this.convertHeighlights2(workStreamData.heighlights));
-        // console.log(data);
         this.digitalTransformationService.createNewWorkStream(data).subscribe({
-          next: (res) => {
+          next: () => {
             this.getDigitalTransformationDetailsData(1);
             this.getDigitalTransformationDetailsData(2);
             this.toastr.success('The workstream is added successfully');
@@ -268,10 +262,8 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
               },
             });
         }
-        // console.log(data);
       }
     } else {
-      // console.log(data);
       const addedProject = {
         projectName: data.businessUnit,
         projectStatus: data.businessUnitStatus,
@@ -286,7 +278,6 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
           },
         ],
       };
-      // console.log(this.getStatusStyle(addedProject.projectStatus ?? ''));
       // if (this.activeAccordionIndex) {
       if (!this.isEditProject) {
         this.digitalTransformationService
@@ -304,8 +295,6 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
             },
           });
       } else {
-        // console.log(addedProject);
-        // console.log(this.editProjectData?.projectId);
         this.digitalTransformationService
           .updateWorkstreamProject(
             this.editProjectData?.projectId ?? 0,
@@ -326,7 +315,6 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   editProjectData!: pageDetailsProjectModel | null;
   isDeleteProject = false;
   openProjSidebar(card: pageDetailsProjectModel) {
-    // console.log(card);
     this.editProjectData = { ...card };
   }
   deletedItem: any;
@@ -338,7 +326,6 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     this.confirmationService.close();
   }
   deleteChallenge() {
-    console.log('deletedItem => ', this.deletedItem);
     if (this.isProject()) {
       this.digitalTransformationService
         .deleteWorkStreamProject(this.deletedItem.projectId)

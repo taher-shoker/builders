@@ -48,6 +48,8 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
   activeAccordionIndex = 0;
   showFormSidebar = false;
   toastr = inject(ToastrService);
+  isPMO = input<boolean>();
+  isViewer = input<boolean>();
   addWorkAchievementForm!: FormGroup;
   isEditMode = false;
   workstreams: IWorkstream[] = [];
@@ -89,7 +91,6 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
   private getAllAchievementsWorkstream() {
     this.digitalTransformationService.getAllWorkstreams().subscribe({
       next: (res: IWorkstream[]) => {
-        console.log(res);
         this.workstreams = res;
       },
     });
@@ -184,7 +185,7 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
               this.getQuarterAchievementsData();
               this.showFormSidebar = false;
               this.hideAddWorkstreamSidebar();
-              this.toastr.success('The Achievement is added successfully');
+              this.toastr.success('The Achievement is updated successfully');
             },
             error: () => {
               this.showFormSidebar = false;
@@ -211,8 +212,6 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
                           .split(/\\n|\n/)
                           .map((line) => line.trim())
                           .filter((line) => line.length > 0);
-                        // console.log(achievement.description);
-                        // console.log(achievement.descriptionLines);
                       } else {
                         achievement.descriptionLines = [];
                       }
@@ -231,7 +230,10 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
   showAddSidebar() {
     this.addWorkAchievementForm.get('quarter')?.enable();
     this.addWorkAchievementForm.get('workstream')?.enable();
-    if (this.achievements.length < 1) {
+    this.achievements.clear();
+    // this.achievements.reset();
+    // this.addWorkAchievementForm.get('achievements')?.setValue(null);
+    if (this.achievements && this.achievements.length < 1) {
       this.addAchievement();
     }
   }

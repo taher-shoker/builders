@@ -6,7 +6,6 @@ import {
   OnChanges,
   OnInit,
   Output,
-  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -63,7 +62,7 @@ export class ExecutiveSummaryCardComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.updateChartData();
   }
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(): void {
     this.updateChartData();
   }
   updateChartData() {
@@ -81,43 +80,46 @@ export class ExecutiveSummaryCardComponent implements OnInit, OnChanges {
       suffixValue: 0,
       progressValue: this.vactual,
       barColor:
-        this.executiveCard().projectStatus.toLowerCase() === 'at risk'
+        this.executiveCard()?.projectStatus?.toLowerCase() === 'at risk'
           ? '#EAB308'
-          : this.executiveCard().projectStatus.toLowerCase() === 'on track'
+          : this.executiveCard()?.projectStatus?.toLowerCase() === 'on track'
           ? '#22C55E'
-          : this.executiveCard().projectStatus.toLowerCase() === 'delayed'
+          : this.executiveCard()?.projectStatus?.toLowerCase() === 'delayed'
           ? '#EF4444'
-          : this.executiveCard().projectStatus.toLowerCase() ===
-            'not started/on hold'
-          ? '#6B7280'
-          : '#06B6D4',
+          : this.executiveCard()?.projectStatus?.toLowerCase() === 'complete' ||
+            this.executiveCard()?.projectStatus?.toLowerCase() === 'completed'
+          ? '#06B6D4'
+          : '#6B7280',
       bgBarColor:
-        this.executiveCard().projectStatus.toLowerCase() === 'at risk'
+        this.executiveCard()?.projectStatus?.toLowerCase() === 'at risk'
           ? '#FEF9C3'
-          : this.executiveCard().projectStatus.toLowerCase() === 'on track'
+          : this.executiveCard()?.projectStatus?.toLowerCase() === 'on track'
           ? '#dcfce7'
-          : this.executiveCard().projectStatus.toLowerCase() === 'delayed'
+          : this.executiveCard()?.projectStatus?.toLowerCase() === 'delayed'
           ? '#FEF2F2'
-          : this.executiveCard().projectStatus.toLowerCase() ===
-            'not started/on hold'
-          ? '#F3F4F6'
-          : '#CFFAFE',
+          : this.executiveCard()?.projectStatus?.toLowerCase() === 'complete' ||
+            this.executiveCard()?.projectStatus?.toLowerCase() === 'completed'
+          ? '#CFFAFE'
+          : '#F3F4F6',
       indexes: [
         {
           caption: 'Actual',
           value: this.vactual,
           position: 'up',
           actualBarColor:
-            this.executiveCard().projectStatus.toLowerCase() === 'at risk'
+            this.executiveCard()?.projectStatus?.toLowerCase() === 'at risk'
               ? '#EAB308'
-              : this.executiveCard().projectStatus.toLowerCase() === 'on track'
+              : this.executiveCard()?.projectStatus?.toLowerCase() ===
+                'on track'
               ? '#22C55E'
-              : this.executiveCard().projectStatus.toLowerCase() === 'delayed'
+              : this.executiveCard()?.projectStatus?.toLowerCase() === 'delayed'
               ? '#EF4444'
-              : this.executiveCard().projectStatus.toLowerCase() ===
-                'not started/on hold'
-              ? '#6B7280'
-              : '#06B6D4',
+              : this.executiveCard()?.projectStatus?.toLowerCase() ===
+                  'complete' ||
+                this.executiveCard()?.projectStatus?.toLowerCase() ===
+                  'completed'
+              ? '#06B6D4'
+              : '#6B7280',
         },
         {
           caption: `Planned`,

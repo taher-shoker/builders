@@ -34,7 +34,6 @@ export class TechnicalDebtCardComponent implements OnInit, OnChanges {
   ngOnInit() {
     this.technicalDebtChart = this.cardData().data.technicalDebt;
     this.archituralBacklogChart = this.cardData().data.archituralBacklog;
-    console.log(this.technicalDebtChart);
   }
   ngOnChanges() {
     this.technicalDebtChart = this.cardData().data.technicalDebt;

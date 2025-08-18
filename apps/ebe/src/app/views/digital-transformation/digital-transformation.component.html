@@ -100,7 +100,11 @@
     </div>
   </section>
   } @else {
-  <stc-apps-quarter-achievements [currentTab]="currTap()" />
+  <stc-apps-quarter-achievements
+    [currentTab]="currTap()"
+    [isPMO]="isPMO"
+    [isViewer]="isViewer"
+  />
   } }
 </section>
 

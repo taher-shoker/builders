@@ -97,10 +97,6 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
           this.digitalTransformationTaps.set(uniqueArray);
           this.currTap.set(this.digitalTransformationTaps()[0]);
           // this.getDigitalTransformationDetailsData(this.currTap().id);
-          console.log(this.firstTapTitles);
-        },
-        error: (error) => {
-          console.log(error);
         },
       });
   }
@@ -114,11 +110,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.endSubs$))
       .subscribe({
         next: (res: pageDetailsModel[]) => {
-          console.log(res);
           this.tapsDetailsData = res;
-        },
-        error: (error) => {
-          console.log(error);
         },
       });
   }
@@ -140,7 +132,6 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   getUserRole() {
     this.currentSystem = this.scorecardService.getCurrentSystem();
     this.userRoles = this.checkSystem(this.userData.userGroups);
-    console.log(this.userRoles);
   }
   ngOnInit(): void {
     if (this.scorecardService.getUserGroups()) {
@@ -158,7 +149,6 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     this.getDigitalTransformationData();
   }
   getClickedTap(tap: DigitalTransformationTapModel): void {
-    console.log('Clicked tab:', tap);
     if (this.currTap() && this.currTap().id === tap.id) {
       return; // Exit early
     }
@@ -360,9 +350,6 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
               },
             ],
     };
-    console.log(data);
-    // console.log('workStreamData => ', workStreamData);
-    // console.log('workStreamData => ', this.isEditMode);
     if (this.isEditMode) {
       this.digitalTransformationService
         .updateWorkstream(this.editedData?.businessUnitId ?? 0, data)
@@ -424,7 +411,6 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     this.deletedItem = data;
   }
   deleteChallenge() {
-    console.log(this.deletedItem);
     this.digitalTransformationService
       .deleteWorkStream(this.deletedItem.businessUnitId)
       .subscribe({
@@ -444,7 +430,6 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     this.confirmationService.close();
   }
   export() {
-    console.log(this.currTap());
     this.digitalTransformationService.exportData(
       this.currTap().id,
       this.currTap().name

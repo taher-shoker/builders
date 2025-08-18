@@ -53,6 +53,13 @@
                   getStatusStyle(summaryData.businessUnitStatus).borderColor
                 "
               />
+              } @else {
+              <stc-apps-status-card
+                [status]="'TBD'"
+                [backgroundColor]="'#F3F4F6'"
+                [textColor]="'#6B7280'"
+                [borderColor]="'#E5E7EB'"
+              />
               }
             </div>
             <div class="right-side">
@@ -207,6 +214,13 @@
                   getStatusStyle(summaryData.businessUnitStatus).borderColor
                 "
               />
+              }@else {
+              <stc-apps-status-card
+                [status]="'TBD'"
+                [backgroundColor]="'#F3F4F6'"
+                [textColor]="'#6B7280'"
+                [borderColor]="'#E5E7EB'"
+              />
               }
             </div>
             <div class="right-side">
@@ -220,6 +234,7 @@
               </button>
               @if(!isViewer()){
               <button
+                class="editProjectData"
                 (click)="
                   openAddWorkstreamSidebar(true, false, false, summaryData)
                 "
@@ -233,18 +248,23 @@
           @if(summaryData){
           <div class="executive-summary-body-sub-title">
             <div class="left-side">
+              @if(summaryData.weight){
               <p>weight: {{ summaryData.weight }}%</p>
+              }
             </div>
             <div class="right-side">
+              @if(summaryData.planned){
               <p>
                 planned:
                 <span class="planned">{{ summaryData.planned }}%</span>
               </p>
               <img src="assets/images/Component 2.svg" alt="" />
+              } @if(summaryData.actual){
               <p>
                 actual:
                 <span class="actual">{{ summaryData.actual }}%</span>
               </p>
+              }
             </div>
           </div>
           <div class="executive-summary-body-content">
@@ -263,7 +283,8 @@
             </button>
             }
             <div class="row">
-              @for (item of summaryData.projects; track $index) {
+              @if(summaryData.projects){ @for (item of summaryData.projects;
+              track $index) {
               <div class="col-lg-6 col-md-6 col-sm-12">
                 <stc-apps-executive-summary-card
                   (openProjSidebar)="
@@ -278,7 +299,7 @@
               </div>
               } @empty {
               <p class="empty-msg">there are no projects for this workstream</p>
-              }
+              } }
             </div>
           </div>
           }

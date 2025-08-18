@@ -2,7 +2,7 @@
   <div class="quarter-achievements-header">
     @if(currentTab() && currentTab().value){
     <p class="main-title">{{ currentTab().value }}</p>
-    }
+    } @if(!isPMO() && !isViewer()){
     <button
       class="add-workstream-btn"
       (click)="showFormSidebar = true; isEditMode = false; showAddSidebar()"
@@ -10,6 +10,7 @@
       <i class="pi pi-plus"></i>
       add achievement
     </button>
+    }
   </div>
   <div class="quarter-achievements-content">
     <p-accordion [activeIndex]="activeAccordionIndex">
@@ -48,6 +49,7 @@
                 {{ businessUnit && businessUnit.name ? businessUnit.name : '' }}
               </p>
             </div>
+            @if(!isPMO() && !isViewer()){
             <img
               src="assets/images/button3.svg"
               (click)="
@@ -58,6 +60,7 @@
               class="edit-img"
               alt=""
             />
+            }
           </div>
           <div class="details">
             @for (achievement of businessUnit.achievements; track
@@ -85,7 +88,7 @@
         }
       </p-accordionTab>
       } @empty {
-      <p class="quarter-empty-msg">there are no quarters</p>
+      <p class="quarter-empty-msg">there are no data</p>
       }
     </p-accordion>
   </div>

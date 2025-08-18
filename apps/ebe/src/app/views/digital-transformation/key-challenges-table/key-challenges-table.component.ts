@@ -87,7 +87,6 @@ export class KeyChallengesTableComponent
           } else {
             this.isEmpty = false;
           }
-          // console.log(res);
         },
       });
   }
@@ -127,7 +126,6 @@ export class KeyChallengesTableComponent
   // get paginatedChallenges(): KeyChallengesDataModel[] {
   //   const start = this.first;
   //   const end = this.first + this.rows;
-  //   console.log(this.challengesData);
   //   return this.challengesData.data?.slice(start, end);
   // }
   addChallengeData(data: any) {
@@ -155,7 +153,6 @@ export class KeyChallengesTableComponent
     this.confirmationService.confirm({});
   }
   deleteChallenge() {
-    console.log(this.clickedId2);
     this.digitalTransformationService
       .deleteKeyChallengrsData(this.clickedId2)
       .subscribe({

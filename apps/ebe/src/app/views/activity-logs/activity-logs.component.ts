@@ -125,7 +125,7 @@ export class ActivityLogsComponent {
       },
       {
         id: 5,
-        name: 'digital transformation',
+        name: 'Digital Transformation',
         value: 'DT',
       },
     ]);
@@ -456,7 +456,7 @@ export class ActivityLogsComponent {
           'user name',
           'activity type',
           'activity program',
-          'activity project',
+          clickedTap.value === 'DT' ? 'workstream project' : 'activity project',
           'activity details',
           'time stamp',
           'old value',
