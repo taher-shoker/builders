@@ -134,6 +134,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       editor: [''],
       pmo: [''],
       ticketAdmin: [''],
+      edit_delete: [''],
     });
   }
 
@@ -155,8 +156,12 @@ export class UserFormComponent implements OnInit, OnChanges {
   get pmoControl(): AbstractControl | null {
     return this.form.get('pmo');
   }
+
   get ticketAdminControl(): AbstractControl | null {
     return this.form.get('ticketAdmin');
+  }
+  get dtUserEdit_Delete_Control(): AbstractControl | null {
+    return this.form.get('edit_delete');
   }
   onSubmit() {
     if (!this.form.valid) {
@@ -197,14 +202,20 @@ export class UserFormComponent implements OnInit, OnChanges {
         pmoObj && dataForm.userGroups.push({ id: pmoObj.id });
       }
       if (this.ticketAdminControl?.value) {
-        console.log('ticketAdminControl', this.ticketAdminControl?.value);
-
         const ticketAdminObj = this.userService
           .getRoles()
           .find((r) => r.groupName === 'DT_Ticket_Admin');
-        console.log(ticketAdminObj, this.userService.getRoles());
 
         ticketAdminObj && dataForm.userGroups.push({ id: ticketAdminObj.id });
+      }
+
+      if (this.dtUserEdit_Delete_Control?.value) {
+        const dtUserEdit_DeleteObj = this.userService
+          .getRoles()
+          .find((r) => r.groupName === 'DT_User_Edit_Delete');
+
+        dtUserEdit_DeleteObj &&
+          dataForm.userGroups.push({ id: dtUserEdit_DeleteObj.id });
       }
     } else if (currentSystem === 'Dynamic_Report_Flow') {
       const userDelegates = this.form.get('userDelegates')?.value || [];
@@ -380,7 +391,8 @@ export class UserFormComponent implements OnInit, OnChanges {
           r.groupName !== 'DT_VP_Dashboard_Viewer' &&
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
           r.groupName !== 'PMO' &&
-          r.groupName !== 'DT_Ticket_Admin'
+          r.groupName !== 'DT_Ticket_Admin' &&
+          r.groupName !== 'DT_User_Edit_Delete'
       );
 
     if (filteredRoles.length >= 2) {
@@ -520,6 +532,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.form.get('viewer')?.enable();
       this.form.get('viewer')?.setValue(false);
       this.form.get('ticketAdmin')?.setValue(false);
+      this.form.get('edit_delete')?.setValue(false);
       this.form.get('teamDto')?.setValue([]);
       this.checkDtUserPermissions(value.groupName);
       this.teams = this.userService.allTeams;
@@ -567,6 +580,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.form.get('editor')?.setValue(false);
       this.form.get('pmo')?.setValue(false);
       this.form.get('ticketAdmin')?.setValue(false);
+      this.form.get('edit_delete')?.setValue(false);
     }
   }
   oncheckBoxSelect(ele: { name: string; value: boolean }) {
@@ -654,7 +668,12 @@ export class UserFormComponent implements OnInit, OnChanges {
           ?.groupName === 'DT_Ticket_Admin'
       ) {
         this.form?.get('ticketAdmin')?.setValue(true);
-        // this.form?.get('viewer')?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_User_Edit_Delete')
+          ?.groupName === 'DT_User_Edit_Delete'
+      ) {
+        this.form?.get('edit_delete')?.setValue(true);
       }
     }
   }

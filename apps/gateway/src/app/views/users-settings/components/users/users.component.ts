@@ -229,7 +229,8 @@ export class UsersComponent implements OnInit, AfterViewInit {
           r.groupName !== 'DT_VP_Dashboard_Viewer' &&
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
           r.groupName !== 'PMO' &&
-          r.groupName !== 'DT_Ticket_Admin'
+          r.groupName !== 'DT_Ticket_Admin' &&
+          r.groupName !== 'DT_User_Edit_Delete'
       );
 
     if (this.privilege.length >= 2) {
