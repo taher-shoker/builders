@@ -1,0 +1,51 @@
+.executive-summary-card {
+  background-color: #fff;
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  .head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 250px;
+    }
+  }
+  .progress-bar {
+    height: 200px;
+  }
+}
+.status2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.edit-proj-btn {
+  padding: 0;
+  border: 0;
+  border-radius: 5px;
+  background: #4f008c26;
+  width: 40px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  i {
+    font-size: 1rem;
+    color: #4f008c;
+  }
+}
+.progress-bar {
+  padding: 0 20px;
+}
+.popover-section {
+  color: #222222;
+  // @extend .stcFont;
+  font-size: 16px;
+  max-width: 400px;
+  word-spacing: 3px;
+  word-break: break-all;
+}

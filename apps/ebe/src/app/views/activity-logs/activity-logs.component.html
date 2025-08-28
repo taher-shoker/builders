@@ -243,7 +243,8 @@
                 </p-overlayPanel>
                 }
               </td>
-              } @if(activityLogsHeader.includes("activity project")) {
+              } @if(activityLogsHeader.includes("activity project") ||
+              activityLogsHeader.includes("workstream project")) {
               @if(currentTap().value === 'PSR') {
               <td>
                 {{ log.attribute ? (log.attribute | truncateWord : 2) : '-' }}
@@ -318,9 +319,10 @@
                       : (transformDate(log.timestamp) | truncateWord : 3)
                     : '-'
                 }}
+                <!--  && transformDate(log.timestamp).split("
+                ").length >= 3 -->
                 @if((currentTap().value !== 'Scorecard' && currentTap().value
-                !== 'Financial') && transformDate(log.timestamp).split("
-                ").length >= 3){
+                !== 'Financial')){
                 <span
                   class="read-more-btn"
                   (click)="longTitlePanel.toggle($event)"

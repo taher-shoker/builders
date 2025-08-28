@@ -105,7 +105,7 @@ export class ActivityLogsComponent {
       },
       {
         id: 2,
-        name: 'CAD Strategy Program',
+        name: 'AI&DS Strategy Program',
         value: 'CAD',
       },
       // {
@@ -122,6 +122,11 @@ export class ActivityLogsComponent {
         id: 5,
         name: 'Financial Reporting',
         value: 'Financial',
+      },
+      {
+        id: 5,
+        name: 'Digital Transformation',
+        value: 'DT',
       },
     ]);
     this.router.params.subscribe({
@@ -385,20 +390,41 @@ export class ActivityLogsComponent {
         },
       ];
     } else {
-      this.actionTypes = [
-        {
-          name: 'All',
-          id: 'All',
-        },
-        {
-          name: 'Import',
-          id: 'Import',
-        },
-        {
-          name: 'Export',
-          id: 'Export',
-        },
-      ];
+      if (clickedTap.value === 'DT') {
+        this.actionTypes = [
+          {
+            name: 'All',
+            id: 'All',
+          },
+          {
+            name: 'Add',
+            id: 'Add',
+          },
+          {
+            name: 'Edit',
+            id: 'Edit',
+          },
+          {
+            name: 'Delete',
+            id: 'Delete',
+          },
+        ];
+      } else {
+        this.actionTypes = [
+          {
+            name: 'All',
+            id: 'All',
+          },
+          {
+            name: 'Import',
+            id: 'Import',
+          },
+          {
+            name: 'Export',
+            id: 'Export',
+          },
+        ];
+      }
     }
     this.currentPage.set(0);
     this.selectedType = null;
@@ -430,7 +456,7 @@ export class ActivityLogsComponent {
           'user name',
           'activity type',
           'activity program',
-          'activity project',
+          clickedTap.value === 'DT' ? 'workstream project' : 'activity project',
           'activity details',
           'time stamp',
           'old value',

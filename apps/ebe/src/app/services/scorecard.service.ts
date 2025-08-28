@@ -37,15 +37,20 @@ export class ScorecardService {
       name: 'project execution',
       url: '/psr',
     },
-    {
-      id: 2,
-      name: 'CAD strategy programs',
-      url: '/strategy-program',
-    },
+    // {
+    //   id: 2,
+    //   name: 'AI&DS strategy programs',
+    //   url: '/strategy-program',
+    // },
     {
       id: 6,
       name: 'Activity Log Center',
       url: '/activity-logs',
+    },
+    {
+      id: 7,
+      name: 'Digital Transformation',
+      url: '/digital-transformation',
     },
     // {
     //   id: 3,
@@ -97,8 +102,13 @@ export class ScorecardService {
         },
         {
           id: 2,
-          name: 'CAD strategy programs',
+          name: 'AI&DS strategy programs',
           url: '/strategy-program',
+        },
+        {
+          id: 7,
+          name: 'Digital Transformation',
+          url: '/digital-transformation',
         },
       ];
       const userGroup = JSON.parse(this.getUserGroups());

@@ -1,0 +1,161 @@
+@import '../../../../styles/fonts.scss';
+.technical-debt-card {
+  background-color: var(--stc-light-grey-color5);
+  color: #000;
+  border-radius: 10px;
+  padding: 20px 0;
+  &-header {
+    border-bottom: 2px solid var(--stc-light-grey-color6);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #e2e8f0;
+    padding-bottom: 20px;
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 20px;
+    }
+    .heighlights-btn {
+      background-color: transparent;
+      border: 0;
+      border-radius: 5px;
+      padding: 5px 15px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      font-size: 0.9rem;
+      @extend .stcFont;
+      text-transform: capitalize;
+      gap: 5px;
+      margin-right: 20px;
+      img {
+        width: 20px;
+      }
+      background-color: #ff375e;
+      color: #fff;
+    }
+    &-title {
+      @extend .stcFont;
+      color: var(--stc-dark-grey-color);
+      font-size: 1.2rem;
+      font-weight: 600;
+      margin: 0;
+    }
+  }
+  &-body {
+    background-color: #fff;
+    border-radius: 10px;
+    margin: 0 20px;
+    padding: 20px 20px 20px 20px;
+    .card-chart {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      justify-content: center;
+    }
+    &-totalNum {
+      background-color: #f9fafb;
+      border-radius: 10px;
+      padding: 15px 25px;
+      span {
+        @extend .stcFont;
+        text-transform: capitalize;
+        color: #64748b;
+        font-size: 1rem;
+        display: inline-block;
+        text-align: center;
+      }
+      p {
+        margin: 0;
+        @extend .stcFont;
+        font-size: 1.5rem;
+        text-align: center;
+        font-weight: bold;
+        padding-top: 5px;
+      }
+    }
+    .card-details {
+      display: grid;
+      grid-template-columns: 25% 25% 25% 25%;
+      justify-content: center;
+      margin-top: 25px;
+      .closed {
+        border-right: 1px solid #ebebef;
+        text-align: center;
+        &:last-child {
+          border-right: 0;
+        }
+        p {
+          margin: 0;
+          @extend .stcFont;
+          text-transform: capitalize;
+          color: #64748b;
+          font-size: 0.7rem;
+          height: 40px;
+        }
+        span {
+          margin: 0;
+          @extend .stcFont;
+          display: inline-block;
+          text-align: center;
+          font-size: 1.2rem;
+          text-align: center;
+          font-weight: bold;
+          padding-top: 5px;
+          color: #22c55e;
+        }
+      }
+    }
+  }
+}
+.chart-title {
+  @extend .stcFont;
+  text-transform: capitalize;
+  color: #121212;
+  font-size: 1rem;
+}
+::ng-deep .technical-debt-card-sidebar {
+  .p-sidebar-header {
+    display: none;
+  }
+  .p-sidebar-content {
+    padding: 0;
+  }
+  .sidebar-content {
+    padding: 20px;
+  }
+  .form-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    span {
+      display: inline-block;
+      width: 2px;
+      height: 30px;
+      border-radius: 3px;
+      background-color: var(--stc-red-dark-color);
+    }
+    p {
+      margin: 0;
+      color: var(--stc-dark-grey-color);
+      @extend .stcFont;
+      font-size: 1.1rem;
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+    i {
+      position: relative;
+      top: 2px;
+      cursor: pointer;
+      color: var(--stc-light-grey-color3);
+    }
+  }
+}

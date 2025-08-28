@@ -1,0 +1,29 @@
+@import '../../../../styles/fonts.scss';
+.status {
+  // background: #dcfce7;
+  // border: 2px solid #bbf7d0;
+  border-width: 2px;
+  border-style: solid;
+  padding: 5px;
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  span {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    // background-color: #22c55e;
+    display: inline-block;
+  }
+  p {
+    @extend .stcFont;
+    text-transform: capitalize;
+    font-size: 0.8rem;
+    // color: #22c55e;
+    position: relative;
+    font-weight: 500;
+    top: 1px;
+    margin: 0;
+  }
+}

@@ -1,0 +1,299 @@
+<section class="quarter-achievements">
+  <div class="quarter-achievements-header">
+    @if(currentTab() && currentTab().value){
+    <p class="main-title">{{ currentTab().value }}</p>
+    } @if(!isPMO() && !isViewer()){
+    <button
+      class="add-workstream-btn"
+      (click)="showFormSidebar = true; isEditMode = false; showAddSidebar()"
+    >
+      <i class="pi pi-plus"></i>
+      add achievement
+    </button>
+    }
+  </div>
+  <div class="quarter-achievements-content">
+    <p-accordion [activeIndex]="activeAccordionIndex">
+      @for (quarter of quarterAchievements; track $index) {
+      <p-accordionTab>
+        <ng-template pTemplate="header">
+          <div class="main-header" (click)="$event.stopPropagation()">
+            <p>
+              {{
+                quarter && quarter.quarterName
+                  ? (quarter.quarterName | uppercase)
+                  : 0
+              }}
+              Achievement
+            </p>
+            <div>
+              <img
+                src="assets/images/arrow-up.svg"
+                alt=""
+                class="toggle-img"
+                (click)="toggleAccordion($index, $event)"
+              />
+            </div>
+          </div>
+        </ng-template>
+        @for (businessUnit of quarter.businessUnits; track businessUnit.id) {
+        <div class="quarter-achievements-body">
+          <div class="main-title2">
+            <div class="cont">
+              <img
+                src="assets/images/achievement-img.svg"
+                class="businessUnit-img"
+                alt=""
+              />
+              <p>
+                {{ businessUnit && businessUnit.name ? businessUnit.name : '' }}
+              </p>
+            </div>
+            @if(!isPMO() && !isViewer()){
+            <img
+              src="assets/images/button3.svg"
+              (click)="
+                showFormSidebar = true;
+                isEditMode = true;
+                showEditSidebar(quarter, businessUnit)
+              "
+              class="edit-img"
+              alt=""
+            />
+            }
+          </div>
+          <div class="details">
+            @for (achievement of businessUnit.achievements; track
+            achievement.id) {
+            <div class="details-card">
+              @if( achievement && achievement.title){
+              <p class="title">{{ achievement.title }}</p>
+              } @if(achievement && achievement.description){
+              <ul>
+                @for (desc of achievement.descriptionLines; track $index) {
+                <li>
+                  <p class="desc">{{ desc ? desc : '' }}</p>
+                </li>
+                }@empty {
+                <p class="quarter-empty-msg">there are no achievements</p>
+                }
+              </ul>
+              }
+            </div>
+            }
+          </div>
+        </div>
+        }@empty {
+        <p class="quarter-empty-msg">there are no businessUnit</p>
+        }
+      </p-accordionTab>
+      } @empty {
+      <p class="quarter-empty-msg">there are no data</p>
+      }
+    </p-accordion>
+  </div>
+</section>
+<p-sidebar
+  [(visible)]="showFormSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="add-achievement-sidebar"
+  (onHide)="hideAddWorkstreamSidebar(); hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>{{ isEditMode ? 'edit achievement' : 'new achievements' }}</p>
+      </div>
+      <div class="right" (click)="showFormSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <div class="form-content">
+      <form class="mt-4" [formGroup]="addWorkAchievementForm">
+        <div class="form-group">
+          <label>
+            quarter
+            <span>*</span>
+          </label>
+          <br />
+          <p-dropdown
+            [options]="quarters"
+            optionLabel="name"
+            optionValue="value"
+            placeholder="Choose quarter"
+            styleClass="quarter-dropdown"
+            formControlName="quarter"
+            [class.is-invalid]="
+              quarter?.invalid && (quarter?.dirty || quarter?.touched)
+            "
+            [class.is-invalid-brdr]="
+              quarter?.invalid && (quarter?.dirty || quarter?.touched)
+            "
+            [ngStyle]="{
+              'pointer-events': isEditMode ? 'none' : ''
+            }"
+          />
+          <small
+            *ngIf="quarter?.invalid && (quarter?.dirty || quarter?.touched)"
+            class="error-msg"
+          >
+            quarter is required
+          </small>
+        </div>
+        <div class="form-group">
+          <label>
+            workstream
+            <span>*</span>
+          </label>
+          <br />
+          <p-dropdown
+            [options]="workstreams"
+            optionLabel="name"
+            optionValue="id"
+            placeholder="Choose workstream"
+            styleClass="quarter-dropdown"
+            formControlName="workstream"
+            [class.is-invalid]="
+              workstream?.invalid && (workstream?.dirty || workstream?.touched)
+            "
+            [class.is-invalid-brdr]="
+              workstream?.invalid && (workstream?.dirty || workstream?.touched)
+            "
+            [ngStyle]="{
+              'pointer-events': isEditMode ? 'none' : ''
+            }"
+          />
+          <small
+            *ngIf="
+              workstream?.invalid && (workstream?.dirty || workstream?.touched)
+            "
+            class="error-msg"
+          >
+            workstream is required
+          </small>
+        </div>
+        <div formArrayName="achievements">
+          @for (achievement of achievements.controls;track achievement;let index
+          = $index) {
+          <div [formGroupName]="index" class="form-group achievements-group">
+            <div class="head">
+              <label for="">{{
+                index === 0
+                  ? 'First Achievement'
+                  : index === 1
+                  ? 'second Achievement'
+                  : index === 2
+                  ? 'third Achievement'
+                  : index === 3
+                  ? 'fourth Achievement'
+                  : 'fifth Achievement'
+              }}</label>
+              <i class="pi pi-trash" (click)="removeAchievement(index)"></i>
+              <!-- *ngIf="index > 0" -->
+            </div>
+            <div class="form-group">
+              <label for="title">
+                title
+                <!-- <span>*</span> -->
+              </label>
+              <input
+                type="text"
+                class="form-control"
+                id="title"
+                formControlName="title"
+                placeholder="workstream title"
+                [class.is-invalid]="
+                  achievement.get('title')?.hasError('maxLengthTrimmed')
+                "
+                [class.is-invalid-brdr]="
+                  achievement.get('title')?.hasError('maxLengthTrimmed')
+                "
+              />
+              <small
+                *ngIf="achievement.get('title')?.hasError('maxLengthTrimmed')"
+                class="error-msg"
+              >
+                title cannot exceed 1500 characters
+              </small>
+            </div>
+            <div class="form-group">
+              <label for="desc">
+                description
+                <!-- <span>*</span> -->
+              </label>
+              <textarea
+                class="form-control"
+                formControlName="description"
+                id="desc"
+                placeholder="What is the description"
+                [class.is-invalid]="
+                  achievement.get('description')?.hasError('maxLengthTrimmed')
+                "
+                [class.is-invalid-brdr]="
+                  achievement.get('description')?.hasError('maxLengthTrimmed')
+                "
+              ></textarea>
+              <small
+                *ngIf="
+                  achievement.get('description')?.hasError('maxLengthTrimmed')
+                "
+                class="error-msg"
+              >
+                description cannot exceed 1500 characters
+              </small>
+            </div>
+          </div>
+          }
+        </div>
+        @if(canAddMoreAchievements()){
+        <button class="add-more" (click)="addAchievement()">
+          <i class="pi pi-plus"></i>
+          add more
+        </button>
+        }
+        <div class="divider"></div>
+        <button
+          class="add-achievements-btn"
+          [disabled]="addWorkAchievementForm.invalid"
+          [class.is-disabled]="addWorkAchievementForm.invalid"
+          (click)="addNewAchievement()"
+        >
+          {{ isEditMode ? 'edit achievement' : 'add achievement' }}
+        </button>
+        @if(isEditMode){
+        <button class="delete-achievements-btn" (click)="showDeleteDialog()">
+          delete achievement
+        </button>
+        }
+      </form>
+    </div>
+  </div>
+</p-sidebar>
+<p-confirmDialog
+  [dismissableMask]="true"
+  styleClass="delete-achievement-dialog"
+>
+  <ng-template pTemplate="message" let-message>
+    <div class="content">
+      <div class="head">
+        <div class="left">
+          <i class="pi pi-trash"></i>
+          <p>delete workstream</p>
+        </div>
+        <i
+          class="pi pi-times text-6xl text-primary-500"
+          (click)="closeDialog()"
+        ></i>
+      </div>
+      <span>are you sure you want to delete this achievement?</span>
+      <div class="buttons">
+        <button class="delete-btn" (click)="deleteChallenge()">delete</button>
+        <button class="cancel-btn" (click)="closeDialog()">cancel</button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>
