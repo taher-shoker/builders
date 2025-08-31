@@ -61,10 +61,12 @@
           <!--If the user is a director show the comments and the progress  -->
           @if (bulkApprove) {
           <div class="progressJustificationsHolder task-desc">
+            @if(item.requestParams.overall_progress){
             <p>Overall Progress: <strong>{{ item.requestParams.overall_progress }}% </strong></p>
-           @if(item.requestParams.comment) {
-             <p>Comment: <strong> {{ item.requestParams.comment }}</strong></p>
-           }
+            }
+            @if(item.requestParams.comment) {
+            <p>Comment: <strong> {{ item.requestParams.comment }}</strong></p>
+            }
           </div>
           }
         </div>

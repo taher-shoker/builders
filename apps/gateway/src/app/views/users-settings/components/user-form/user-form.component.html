@@ -55,12 +55,6 @@
             </stc-apps-select-drop-down>
           </div>
           <div class="col-md-2"></div>
-
-          <!-- <div class="col-md-5">
-                  <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
-                    [required]="true" [options]="teams" [selectId]="selectedTeam || null">
-                  </stc-apps-select-drop-down>
-                </div> -->
         </div>
         <div class="row mt-7" *ngIf="
             showInputs &&
@@ -134,12 +128,12 @@
           </div>
 
 
-          <div class="row"
-            *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User' || this.form?.get('userGroups')?.value?.groupName === 'DT_Governance'">
+          <div class="row" *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User'">
             <div class="col-md-12">
               <stc-apps-checkbox [label]="'Grant Edit for VP Report'" formControlName="editor" [name]="'editor'"
                 (selectChange)="oncheckBoxSelect($event)"></stc-apps-checkbox>
             </div>
+
             <div class="col-md-12">
               <stc-apps-checkbox [label]="'Grant access as DT PMO for VP Report'" formControlName="pmo" [name]="'pmo'"
                 (selectChange)="oncheckBoxSelect($event)"></stc-apps-checkbox>
@@ -148,6 +142,7 @@
               <stc-apps-checkbox [label]="'DT user to edit or delete'" formControlName="edit_delete"
                 [name]="'edit_delete'"></stc-apps-checkbox>
             </div>
+
           </div>
         </div>
         <div class="row mt-7" *ngIf="

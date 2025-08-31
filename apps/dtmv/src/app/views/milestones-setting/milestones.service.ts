@@ -86,12 +86,12 @@ export class MilestonesService {
     // const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     // return user.teams;
   }
-  getMilestoneUsersType(): Group[] {    
+  getMilestoneUsersType(): Group[] {
     const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
     return user.userGroups;
   }
 
-  checkIsDirector() {    
+  checkIsDirector() {
     if (
       this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Director')
     ) {
@@ -102,7 +102,7 @@ export class MilestonesService {
     return this.isDTDirector;
   }
 
-    checkIsGovernance() {
+  checkIsGovernance() {
     if (
       this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Governance')
     ) {
@@ -270,7 +270,7 @@ export class MilestonesService {
     });
   }
   getMilestoneProgress(id: number) {
-    return this.http.get(`${this.dtUrl}/progress/${id}`);
+    return this.http.get(`${this.dtUrl}/progress/4096`);
   }
 
   /**

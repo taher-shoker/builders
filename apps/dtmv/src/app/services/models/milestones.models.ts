@@ -64,6 +64,8 @@ export class Actions {
     'Approve progress',
     'Approve progress'
   );
+  static readonly approveModification = new Actions('Approve', 'Approve');
+  static readonly returnModification = new Actions('Reject', 'Reject');
   static readonly returnProgress = new Actions('Return progress', 'Return');
 
   static readonly returnJustification = new Actions(
@@ -127,6 +129,12 @@ export interface MilestoneDetails {
     workflowId: number | null;
     updatedBy: string;
     status: string;
+  };
+  milestoneChangeRequest: {
+    id: number;
+    changeType: string;
+    workflowId: number;
+    requestedBy: string;
   };
 }
 

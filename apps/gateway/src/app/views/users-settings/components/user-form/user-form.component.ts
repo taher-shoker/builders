@@ -163,6 +163,10 @@ export class UserFormComponent implements OnInit, OnChanges {
   get dtUserEdit_Delete_Control(): AbstractControl | null {
     return this.form.get('edit_delete');
   }
+  get groupName(): string | null {
+    return this.form?.get('userGroups')?.value?.groupName ?? null;
+  }
+
   onSubmit() {
     if (!this.form.valid) {
       this.markFormFieldsAsTouched();

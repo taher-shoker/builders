@@ -5,19 +5,18 @@
 
 .step {
   display: flex;
-  .left-part{
+  .left-part {
     flex-shrink: 0;
     flex-grow: 0;
     flex-basis: 30px;
     display: flex;
     justify-content: center;
   }
-  
-  .right-part{
+
+  .right-part {
     padding-left: 10px;
   }
 }
-
 
 .step-head {
   height: 30px;
@@ -82,7 +81,7 @@
   background-color: var(--red-Color-dark);
 }
 
-.comment-prefix{
+.comment-prefix {
   color: grey;
 }
 
@@ -94,6 +93,24 @@
   padding: 12px;
 }
 
-.action-btns{
+.action-btns {
   margin-left: -16px;
+}
+.change_request_info {
+  p {
+    color: var(--stc-color);
+    font-weight: bold;
+    text-transform: capitalize;
+    span {
+      color: grey;
+      padding: 5px;
+      border-radius: 2px;
+    }
+  }
+}
+.del-reqt {
+  background-color: var(--red-Color-dark);
+  padding: 5px;
+  color: #fff;
+  border-radius: 3px;
 }

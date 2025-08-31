@@ -178,7 +178,10 @@ export class MilestonesComponent
     this.monthsArrPopulator();
     this.yearsArrPopulator();
     this.detectChangedRoutes();
-    if (this.milestonesService.checkIsDirector() || this.milestonesService.checkIsGovernance()) {
+    if (
+      this.milestonesService.checkIsDirector() ||
+      this.milestonesService.checkIsGovernance()
+    ) {
       this.bulkPremission = true;
     }
   }
@@ -217,7 +220,7 @@ export class MilestonesComponent
     ) {
       return ['details'];
     } else {
-      return ['details'];
+      return ['edit', 'delete', 'details'];
     }
     //
   }
@@ -491,11 +494,15 @@ export class MilestonesComponent
         }
         this.milestonesService.deleteMilestone(event.dataRow.id).subscribe({
           next: () => {
-            this.toastr.success('Deleted successfully');
+            if (event.dataRow.userHasEditPermission) {
+              this.toastr.success('Request Delete has been sent successfully');
+            } else {
+              this.toastr.success('Deleted successfully');
+            }
             this.getMilestones();
           },
           error: () => {
-            this.toastr.error('Something went wrong!');
+            //  this.toastr.error('Something went wrong!');
           },
         });
       });

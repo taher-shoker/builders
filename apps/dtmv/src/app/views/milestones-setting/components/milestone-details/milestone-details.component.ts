@@ -2,7 +2,7 @@
 import { Milestone } from './../milestones/milestones.component';
 /* eslint-disable @nx/enforce-module-boundaries */
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { saveAs } from 'file-saver';
@@ -70,11 +70,12 @@ export class MilestoneDetailsComponent implements OnInit {
   };
 
   needToPushWorkflowAction: boolean = false;
-
+  changeMilestoneType: 'UPDATE' | 'DELETE' = 'UPDATE';
   constructor(
     protected dialogService: DialogService,
     private bannerDataService: BannerDataService,
     private route: ActivatedRoute,
+    private router: Router,
     public milestonesService: MilestonesService,
     public authService: AuthService,
     private matDialog: MatDialog,
@@ -140,27 +141,32 @@ export class MilestoneDetailsComponent implements OnInit {
           'medium'
         ) || '';
     }
-    const initialStep: Step = {
-      caption: `Milestone progress updated (${this.status})`,
-      state: 'done',
-      extraInfo: [`${this.progressDate} By ${this.progressUpdatedBy}`],
-      additionalTemp: true,
-      captionTemp: true,
-    };
-
-    this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
+    if (!this.milestoneDetails.milestoneChangeRequest) {
+      const initialStep: Step = {
+        caption: `Milestone progress updated (${this.status})`,
+        state: 'done',
+        extraInfo: [`${this.progressDate} By ${this.progressUpdatedBy}`],
+        additionalTemp: true,
+        captionTemp: true,
+      };
+      this.steps.unshift(initialStep);
+    }
+    // Adding the first step statically in the array before looping the rest of tasks.
     this.getMilestoneProgressWorkflow(params);
   }
 
   getMilestoneProgressWorkflow(params?: Params) {
     if (
-      this.milestoneDetails.currentMilestoneProgressUpdateDto &&
-      this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
+      (this.milestoneDetails.currentMilestoneProgressUpdateDto &&
+        this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId) ||
+      (this.milestoneDetails.milestoneChangeRequest &&
+        this.milestoneDetails.milestoneChangeRequest.workflowId)
     ) {
+      const workFlowId =
+        this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId ??
+        this.milestoneDetails.milestoneChangeRequest?.workflowId;
       this.milestonesService
-        .getMilestoneProgressWorkflow(
-          this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId
-        )
+        .getMilestoneProgressWorkflow(workFlowId)
         .subscribe((res) => {
           if (!this.isUpdateProgressOnHold) {
             this.isLoadingSteps = false;
@@ -304,6 +310,11 @@ export class MilestoneDetailsComponent implements OnInit {
               } else if (res[i].taskName === 'Approve Progress') {
                 actions.push(Actions.approveProgress);
                 actions.push(Actions.returnProgress);
+              } else if (res[i].taskName === 'Review Milestone Modifications') {
+                actions.push(Actions.approveModification);
+                actions.push(Actions.returnModification);
+                userThatTaskIsPendingOn =
+                  this.milestoneDetails.milestoneChangeRequest.requestedBy;
               }
             }
 
@@ -350,6 +361,7 @@ export class MilestoneDetailsComponent implements OnInit {
       .subscribe((res: any) => {
         // this.milestonesService.getRemindersData();
         this.milestoneDetails = res;
+        this.changeMilestoneType = res?.milestoneChangeRequest?.changeType;
         this.bannerDataService.updateData({
           title: this.milestoneDetails.milestoneName || '',
           text: '',
@@ -360,6 +372,8 @@ export class MilestoneDetailsComponent implements OnInit {
           this.milestoneDetails.currentMilestoneProgressUpdateDto
             .overallProgress
         ) {
+          this.showMilestoneProgressWorkflow(params);
+        } else if (this.milestoneDetails.milestoneChangeRequest) {
           this.showMilestoneProgressWorkflow(params);
         } else {
           this.steps = [];
@@ -381,7 +395,9 @@ export class MilestoneDetailsComponent implements OnInit {
   removeParentArrayWithPendingTask(res: any): void {
     this.filteredDataHistory = res.filter((requestObj: any) =>
       requestObj.requestTasksHistory.every(
-        (task: any) => task.status !== 'pending'
+        (task: any) =>
+          task.status !== 'pending' &&
+          task.taskName !== 'Review Milestone Modifications'
       )
     );
   }
@@ -489,6 +505,14 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   doStepAction(action: { actionObj: Actions | string; item: any }) {
+    const isUpdated = this.changeMilestoneType === 'UPDATE';
+    const actionType = isUpdated ? 'edit' : 'delete';
+    const messages: Record<string, string> = {
+      [Actions.approveModification
+        .uniqueTitle]: `approve ${actionType} Milestone`,
+      [Actions.returnModification
+        .uniqueTitle]: `reject ${actionType} Milestone`,
+    };
     if (
       typeof action.actionObj !== 'string' &&
       'uniqueTitle' in action.actionObj
@@ -569,16 +593,22 @@ export class MilestoneDetailsComponent implements OnInit {
         action.actionObj.uniqueTitle === Actions.reviewEvidence.uniqueTitle ||
         action.actionObj.uniqueTitle ===
           Actions.reviewJustification.uniqueTitle ||
-        action.actionObj.uniqueTitle === Actions.reviewOnTrack.uniqueTitle
+        action.actionObj.uniqueTitle === Actions.reviewOnTrack.uniqueTitle ||
+        action.actionObj.uniqueTitle ===
+          Actions.approveModification.uniqueTitle ||
+        action.actionObj.uniqueTitle === Actions.returnModification.uniqueTitle
       ) {
         const params: {
           requestParams: { name: string; value: number | string | boolean }[];
         } = {
           requestParams: [],
         };
+        const popupMsg =
+          messages[action.actionObj.uniqueTitle] ?? 'approve milestone';
 
         this.makeSureToApprove(
-          this.milestoneDetails.milestoneName || 'unnamed'
+          this.milestoneDetails.milestoneName || 'unnamed',
+          popupMsg
         ).subscribe((res) => {
           if (!res) {
             return;
@@ -599,6 +629,25 @@ export class MilestoneDetailsComponent implements OnInit {
               name: 'is_remark_approved',
               value: 1, // 1 means approved.
             });
+          } else if (
+            action.item.taskName === 'Review Milestone Modifications'
+          ) {
+            if (
+              typeof action.actionObj !== 'string' &&
+              'uniqueTitle' in action.actionObj
+            ) {
+              params.requestParams.push(
+                {
+                  name: 'is_edit_data_approved',
+                  value:
+                    action.actionObj.uniqueTitle === 'Approve' ? true : false, // 1 means approved.
+                },
+                {
+                  name: 'milestone_change_request_id',
+                  value: this.milestoneDetails.milestoneChangeRequest.id,
+                }
+              );
+            }
           }
 
           this.isLoadingSteps = true;
@@ -606,12 +655,17 @@ export class MilestoneDetailsComponent implements OnInit {
           this.milestonesService
             .completePendingTask(
               this.milestoneDetails.currentMilestoneProgressUpdateDto
-                ?.workflowId || '',
+                ?.workflowId ||
+                this.milestoneDetails?.milestoneChangeRequest.workflowId,
               action.item.requestTaskId,
               params
             )
             .subscribe(() => {
-              this.getMilestoneDetails();
+              if (this.milestoneDetails.milestoneChangeRequest && !isUpdated) {
+                this.router.navigate(['/'], { relativeTo: this.route });
+              } else {
+                this.getMilestoneDetails();
+              }
             });
         });
       }

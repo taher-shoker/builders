@@ -103,6 +103,33 @@ export class ActionsStepperComponent {
   @ContentChild('bodyTemplate') stepTemplate!: TemplateRef<any>;
   @ContentChild('captionTemplate') stepCaptionTemplate!: TemplateRef<any>;
 
+  getKeys(obj: any): string[] {
+    return Object.keys(obj).filter(
+      (k) =>
+        ![
+          'milestone_id',
+          'milestone_change_request_id',
+          'creator_username',
+          'team',
+          'change_type',
+        ].includes(k)
+    );
+  }
+  // 🔹 Method to format values
+  formatValue(key: string, value: any): string {
+    if (!value) return 'N/A';
+    const date = new Date(value);
+
+    switch (key) {
+      case 'createdDate':
+      case 'updatedDate':
+      case 'closedDate':
+        return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleString();
+      default:
+        return String(value);
+    }
+  }
+
   raiseAction(actionObj: string | Actions, optionalItem?: any) {
     this.stepperAction.emit({ actionObj, item: optionalItem });
   }

@@ -2,15 +2,12 @@
   @for(step of steps; track step; let i = $index){
   <div class="step">
     <div class="left-part">
-      <div
-        class="step-head"
-        [ngClass]="{
+      <div class="step-head" [ngClass]="{
           'step-done': step.state === 'done',
           'step-warning': step.state === 'warning',
           'step-danger': step.state === 'danger',
           'step-edit': step.state === 'edit'
-        }"
-      >
+        }">
         @if (step.state === 'done') {
         <i class="ri-check-fill" style="color: white"></i>
         } @if (step.state === 'warning') {
@@ -18,16 +15,13 @@
         } @if (step.state === 'edit') {
         <i class="ri-edit-fill" style="color: white"></i>
         } @if (step.state === 'danger') {
-          <i class="ri-close-line" style="color: white"></i>
+        <i class="ri-close-line" style="color: white"></i>
         }
       </div>
     </div>
     <div class="right-part">
       @if(step.captionTemp){
-      <ng-template
-        [ngTemplateOutlet]="stepCaptionTemplate"
-        [ngTemplateOutletContext]="{ $implicit: step }"
-      >
+      <ng-template [ngTemplateOutlet]="stepCaptionTemplate" [ngTemplateOutletContext]="{ $implicit: step }">
       </ng-template>
       }@else {
       <div class="step-caption">{{ step.caption }}</div>
@@ -51,32 +45,55 @@
       <div class="row">
         @for(attachment of step.attachments; track attachment){
         <div class="col-6">
-          <a
-            href="javascript:void(0);"
-            (click)="raiseAction('download', attachment)"
-            >{{ attachment.label }}</a
-          >
+          <a href="javascript:void(0);" (click)="raiseAction('download', attachment)">{{ attachment.label }}</a>
         </div>
         }
       </div>
       } @if(step.additionalTemp){
-      <ng-template
-        [ngTemplateOutlet]="stepTemplate"
-        [ngTemplateOutletContext]="{ $implicit: step }"
-      >
+      <ng-template [ngTemplateOutlet]="stepTemplate" [ngTemplateOutletContext]="{ $implicit: step }">
       </ng-template>
       }
-      @if(step.actions){
-        <div class="d-flex action-btns">
-          @for(action of step.actions; track action){
-          <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
-            {{ action | displayCaption }}
-          </button>
+      @if(step.stepObject?.requestParams){
+      <div class="row mt-2">
+        <div class="col-12">
+          @if(step.stepObject?.requestParams.change_type === 'UPDATE'){
+          <mat-accordion multi="false">
+            <mat-expansion-panel [expanded]="true">
+              <mat-expansion-panel-header class="header-item">
+                <div class="box-item py-4">
+                  <h5>Milestone Edit Request</h5>
+                </div>
+              </mat-expansion-panel-header>
+
+              <!-- Dates -->
+              <div class="change_request_info">
+                <p *ngFor="let item of getKeys(step.stepObject.requestParams)" class=" ">{{item}}: <span>
+                    {{ formatValue(item, step.stepObject.requestParams[item]) }}</span>
+                </p>
+              </div>
+            </mat-expansion-panel>
+          </mat-accordion>
+          }@else if(step.stepObject?.requestParams.change_type === 'DELETE') {
+          <p class="del-reqt">Milestone Delete Request</p>
           }
+
         </div>
+      </div>
+
+
+      }
+      @if(step.actions){
+      <div class="d-flex action-btns">
+        @for(action of step.actions; track action){
+        <button (click)="raiseAction(action, step.stepObject)" class="m-3 stc-btn">
+          {{ action | displayCaption }}
+        </button>
         }
+      </div>
+      }
+
     </div>
   </div>
 
-   }
+  }
 </div>
