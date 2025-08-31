@@ -67,7 +67,7 @@
 
               <!-- Dates -->
               <div class="change_request_info">
-                <p *ngFor="let item of getKeys(step.stepObject.requestParams)" class=" ">{{item}}: <span>
+                <p *ngFor="let item of getKeys(step.stepObject.requestParams)" class=" ">{{formatKey(item)}}: <span>
                     {{ formatValue(item, step.stepObject.requestParams[item]) }}</span>
                 </p>
               </div>

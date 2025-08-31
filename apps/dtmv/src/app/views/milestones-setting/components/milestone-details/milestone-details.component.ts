@@ -253,7 +253,10 @@ export class MilestoneDetailsComponent implements OnInit {
               userThatTaskIsPendingOn = 'DT User';
             }
 
-            if (res[i].taskName === 'Approve Progress') {
+            if (
+              res[i].taskName === 'Approve Progress' ||
+              res[i].taskName === 'Review Milestone Modifications'
+            ) {
               userThatTaskIsPendingOn =
                 res[i]?.username
                   ?.split('Role::')[1]
@@ -313,8 +316,7 @@ export class MilestoneDetailsComponent implements OnInit {
               } else if (res[i].taskName === 'Review Milestone Modifications') {
                 actions.push(Actions.approveModification);
                 actions.push(Actions.returnModification);
-                userThatTaskIsPendingOn =
-                  this.milestoneDetails.milestoneChangeRequest.requestedBy;
+                userThatTaskIsPendingOn = 'DT Director';
               }
             }
 
@@ -325,7 +327,6 @@ export class MilestoneDetailsComponent implements OnInit {
               // This is to check if params is received but empty, that must indicate that the user can Update DT Record
               actions.push(Actions.updateDTRecord);
             }
-
             const step: Step = {
               caption:
                 res[i].taskName === 'Review Remarks'
@@ -393,12 +394,12 @@ export class MilestoneDetailsComponent implements OnInit {
       });
   }
   removeParentArrayWithPendingTask(res: any): void {
-    this.filteredDataHistory = res.filter((requestObj: any) =>
-      requestObj.requestTasksHistory.every(
-        (task: any) =>
-          task.status !== 'pending' &&
-          task.taskName !== 'Review Milestone Modifications'
-      )
+    this.filteredDataHistory = res.filter(
+      (requestObj: any) =>
+        requestObj?.requestTasksHistory?.length > 0 &&
+        requestObj.requestTasksHistory.every(
+          (task: any) => task.status !== 'pending'
+        )
     );
   }
 

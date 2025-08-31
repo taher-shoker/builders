@@ -111,23 +111,19 @@ export class ActionsStepperComponent {
           'milestone_change_request_id',
           'creator_username',
           'team',
+          'milestone_name',
           'change_type',
         ].includes(k)
     );
   }
   // 🔹 Method to format values
-  formatValue(key: string, value: any): string {
-    if (!value) return 'N/A';
-    const date = new Date(value);
+  formatKey(key: string): string {
+    return key.replace(/_/g, ' ');
+  }
 
-    switch (key) {
-      case 'createdDate':
-      case 'updatedDate':
-      case 'closedDate':
-        return isNaN(date.getTime()) ? 'Invalid Date' : date.toLocaleString();
-      default:
-        return String(value);
-    }
+  formatValue(key: string, value: any): string {
+    if (value === null || value === undefined || value === '') return 'N/A';
+    return String(value);
   }
 
   raiseAction(actionObj: string | Actions, optionalItem?: any) {

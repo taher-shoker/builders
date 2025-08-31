@@ -270,7 +270,7 @@ export class MilestonesService {
     });
   }
   getMilestoneProgress(id: number) {
-    return this.http.get(`${this.dtUrl}/progress/4096`);
+    return this.http.get(`${this.dtUrl}/progress/${id}`);
   }
 
   /**
