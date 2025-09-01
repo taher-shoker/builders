@@ -16,7 +16,11 @@ import { DatePipe } from '@angular/common';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
-  return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
+  return new TranslateHttpLoader(
+    http,
+    window.location.origin + environment.languageFilesPath,
+    '.json'
+  );
 }
 export const provideTranslation = () => ({
   defaultLanguage: 'en',
