@@ -398,7 +398,9 @@ export class MilestoneDetailsComponent implements OnInit {
       (requestObj: any) =>
         requestObj?.requestTasksHistory?.length > 0 &&
         requestObj.requestTasksHistory.every(
-          (task: any) => task.status !== 'pending'
+          (task: any) =>
+            task.status !== 'pending' &&
+            task.taskName !== 'Review Milestone Modifications'
         )
     );
   }
