@@ -1,17 +1,19 @@
 import { Route } from '@angular/router';
 import { MainLayoutComponent } from './layouts/main-layout/main-layout.component';
 import { LoginComponent } from './features/auth/login/login.component';
-// import { authGuard } from './features/auth/guards/auth.guard';
+import { authGuard } from './features/auth/guards/auth.guard';
+import { noAuthGuard } from './features/auth/guards/no-auth-guard.guard';
 
 export const appRoutes: Route[] = [
   {
     path: 'login',
     component: LoginComponent,
+    canActivate: [noAuthGuard]
   },
   {
     path: '',
     component: MainLayoutComponent,
-    // canActivate: [authGuard],
+    canActivate: [authGuard],
     children: [
       {
         path: '',
@@ -61,5 +63,5 @@ export const appRoutes: Route[] = [
   {
     path: '**',
     redirectTo: 'login'
-  }
+  },
 ];
