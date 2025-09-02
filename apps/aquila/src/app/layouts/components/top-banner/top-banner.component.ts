@@ -1,9 +1,11 @@
-import { Component, input } from '@angular/core';
+import { Component, inject, input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ButtonModule } from 'primeng/button';
 import { NotificationsListComponent } from '../../../features/notifications-list/notifications-list.component';
 import { SpeedDialModule } from 'primeng/speeddial';
+import { AuthService } from '../../../features/auth/services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'stc-apps-top-banner',
@@ -19,6 +21,9 @@ import { SpeedDialModule } from 'primeng/speeddial';
   styleUrls: ['./top-banner.component.scss'],
 })
 export class TopBannerComponent {
+  private authService = inject(AuthService);
+  private router = inject(Router);
+
   logoSrc = input('');
   userName = 'Sara Alkurdy';
   showNotifications = false;
@@ -62,5 +67,10 @@ export class TopBannerComponent {
 
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
+  }
+
+  handleLogOut() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
