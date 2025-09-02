@@ -14,6 +14,8 @@ import { environment } from '../environments/environment';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { DatePipe } from '@angular/common';
 import { LoaderInterceptor } from './core/interceptors/loader.interceptor';
+import { ToastrModule } from 'ngx-toastr';
+import { AuthInterceptor } from './core/interceptors/auth.interceptor';
 
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
@@ -37,12 +39,19 @@ export const provideTranslation = () => ({
     BrowserModule,
     BrowserAnimationsModule,
     RouterModule.forRoot(appRoutes),
+    ToastrModule.forRoot({
+      timeOut: 3000,
+      closeButton: true,
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+    }),
   ],
   providers: [
     importProvidersFrom([
       HttpClientModule,
       TranslateModule.forRoot(provideTranslation()),
     ]),
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
     { provide: HTTP_INTERCEPTORS, useClass: LoaderInterceptor, multi: true },
     DatePipe,
   ],
