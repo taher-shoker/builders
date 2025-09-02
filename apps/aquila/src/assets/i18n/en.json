@@ -13,5 +13,6 @@
   "welcome_back_msg": "Welcome Back! Here’s overview of GPMO Dashboard",
   "last_update": "Last Update",
   "invalid_format": " Invalid Format",
-  "field_required": "This Field Is Required"
+  "field_required": "This Field Is Required",
+  "must_contain_stc_domain": "Email must contain @stc domain (e.g., user@stc.com.sa)"
 }
