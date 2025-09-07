@@ -1,4 +1,4 @@
-import { Component, inject, input } from '@angular/core';
+import { Component, inject, input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ButtonModule } from 'primeng/button';
@@ -20,7 +20,7 @@ import { Router } from '@angular/router';
   templateUrl: './top-banner.component.html',
   styleUrls: ['./top-banner.component.scss'],
 })
-export class TopBannerComponent {
+export class TopBannerComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
 
@@ -60,6 +60,13 @@ export class TopBannerComponent {
     },
   ];
 
+  ngOnInit() {
+    this.userName = this.getAccessToken();
+  }
+
+  getAccessToken(): string {
+    return localStorage.getItem('userEmail')?.split('@')[0] || '';
+  }
   handleNotificationClick(notification: string) {
     console.log('Clicked:', notification);
     // Add your logic here for handling notification clicks
