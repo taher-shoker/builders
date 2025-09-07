@@ -178,10 +178,7 @@ export class MilestonesComponent
     this.monthsArrPopulator();
     this.yearsArrPopulator();
     this.detectChangedRoutes();
-    if (
-      this.milestonesService.checkIsDirector() ||
-      this.milestonesService.checkIsGovernance()
-    ) {
+    if (this.milestonesService.checkIsDirector()) {
       this.bulkPremission = true;
     }
   }
@@ -216,7 +213,8 @@ export class MilestonesComponent
       return ['edit', 'delete'];
     } else if (
       this.milestonesService.checkIsBusinessSpoc() ||
-      this.milestonesService.checkIsDirector()
+      this.milestonesService.checkIsDirector() ||
+      this.milestonesService.checkIsGovernance()
     ) {
       return ['details'];
     } else {

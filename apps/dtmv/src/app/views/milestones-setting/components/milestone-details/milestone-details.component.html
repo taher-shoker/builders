@@ -253,8 +253,8 @@
         </div>
       </div>
     </div>
-    @if(!milestonesService.isDTAdmin){ @if (milestoneDetails.status !==
-    'Planned' && milestoneDetails.status !== 'Completed' && hideAction) {
+    @if(!milestonesService.isDTAdmin){ @if ( (milestoneDetails.status !== 'Completed'&&
+    ( milestoneDetails.status !== 'Planned' || milestoneDetails.milestoneChangeRequest)) && hideAction) {
     <div class="col-md-5">
       <div class="logs">
         <h4 class="section-title">On Going Workflow</h4>
