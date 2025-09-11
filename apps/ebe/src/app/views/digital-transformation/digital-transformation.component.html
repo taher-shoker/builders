@@ -1,3 +1,4 @@
+@if(!isMobile()){
 <section class="digital-transformation">
   <div
     style="display: flex; justify-content: space-between; align-items: center"
@@ -28,8 +29,8 @@
     }
   </div>
   <!-- <div class="digital-transformation-body">
-    <h4>{{ currTap().name }}</h4>
-  </div> -->
+      <h4>{{ currTap().name }}</h4>
+    </div> -->
   @if(currTap()){ @if(currTap().id === 1){
   <stc-apps-executive-summary
     [mainTitle]="firstTapTitles"
@@ -107,6 +108,84 @@
   />
   } }
 </section>
+} @else {
+<div class="digital-transformation-mobile-view">
+  <stc-apps-mobile-view-header
+    [isSuccess]="false"
+    [showDateModal]="false"
+    [headerTitle]="'Digital Transformation'"
+    headerSubTitle="Monitor Digital Growth"
+  />
+  <div class="digital-transformation-mobile-view-body">
+    @if(digitalTransformationTaps().length !== 0){
+    <stc-apps-tabview
+      [tabsData]="digitalTransformationTaps()"
+      [tabColor]="'#6C6C89'"
+      [clickedtabColor]="'#ffffff'"
+      [tabBackground]="'#ffffff'"
+      [clickedtabBackground]="'#FF375E'"
+      (clickedTap)="getClickedTap($event)"
+      [fontFamily]="'STCForwardFont'"
+      [isMobile]="true"
+    />
+    } @if(currTap()){ @if(currTap().id === 1){
+    <stc-apps-executive-summary
+      [mainTitle]="firstTapTitles"
+      [pageId]="currTap() && currTap().id ? currTap().id : 1"
+      [isViewer]="isViewer"
+      [isPMO]="isPMO"
+      [isMobile]="isMobile()"
+    />
+    } @else if(currTap().id !== 8 && currTap().id !== 9){
+    <section class="qa-compilance qa-compilance-mobile">
+      <div class="qa-compilance-header">
+        <p class="main-title">{{ currTap().value ? currTap().value : '' }}</p>
+      </div>
+      @if(tapsDetailsData && tapsDetailsData.length !== 0){
+      <div class="kpi-container kpi-container-mobile">
+        @for (card of tapsDetailsData; track card.businessUnit) {
+        <div class="kpi-container-card">
+          <stc-apps-qa-compilance-card
+            [isMobile]="isMobile()"
+            (sidebarOpened)="
+              showWorkStreamSidebar($event);
+              isEdit = true;
+              isEditMode = true;
+              isEditMode2 = true
+            "
+            [QAComplianceCardData]="card"
+            [isViewer]="isViewer"
+            [isPMO]="isPMO"
+          />
+        </div>
+        }
+      </div>
+      } @else {
+      <h3 class="empty-data-msg">there are no data</h3>
+      }
+    </section>
+    } @else if (currTap().id === 9) {
+    <stc-apps-quarter-achievements
+      [currentTab]="currTap()"
+      [isPMO]="isPMO"
+      [isViewer]="isViewer"
+      [isMobile]="isMobile()"
+    />
+    } @else {
+    <section class="key-challenges-table-mobile">
+      <div class="key-challenges-table-mobile-header">
+        <p class="main-title">
+          {{ currTap() && currTap().value ? currTap().value : '' }}
+        </p>
+      </div>
+      <div class="key-challenges-table-mobile-body">
+        <stc-apps-key-challenge-mobile-view />
+      </div>
+    </section>
+    } }
+  </div>
+</div>
+}
 
 <p-sidebar
   [(visible)]="showAddWorkstreamSidebar"

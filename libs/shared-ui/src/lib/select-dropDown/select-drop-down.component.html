@@ -1,42 +1,78 @@
 <div class="select-box" [class]="selectType" *ngIf="control">
-  <label *ngIf="label" [ngStyle]="{'font-size': labelSize + 'px'}">{{ label | translate }}<span>:</span><mat-error
-      *ngIf="control.errors"> *</mat-error></label>
-  <mat-form-field *ngIf="!group" [ngStyle]="{'width': inputWidth ? inputWidth : ''}">
-    <mat-label>{{matLabel}}</mat-label>
-    <mat-select [formControl]="control" [required]="required" (selectionChange)="onChangeValue($event.value)"
-      [(value)]="selectedValue" [multiple]="multi">
-
+  <label *ngIf="label" [ngStyle]="{ 'font-size': labelSize + 'px' }"
+    >{{ label | translate }}<span>:</span
+    ><mat-error *ngIf="control.errors"> *</mat-error></label
+  >
+  <mat-form-field
+    *ngIf="!group"
+    [ngStyle]="{ width: inputWidth ? inputWidth : '' }"
+  >
+    <mat-label>{{ matLabel }}</mat-label>
+    <mat-select
+      [formControl]="control"
+      [required]="required"
+      (selectionChange)="onChangeValue($event.value)"
+      [(value)]="selectedValue"
+      [multiple]="multi"
+    >
       <mat-option *ngIf="searchMode" class="searchInput">
         <span class="" id="basic-addon1"><i class="fas fa-search"></i></span>
-        <input type="text" [formControl]="searchControl" [placeholder]="'Search...'"
-          (click)="stopDropdownClose($event)">
+        <input
+          type="text"
+          [formControl]="searchControl"
+          [placeholder]="'Search...'"
+          (click)="stopDropdownClose($event)"
+        />
       </mat-option>
       <mat-option *ngIf="Resetting && options.length > 0">None</mat-option>
-      <mat-option *ngFor="let option of filteredOptions"
-        [value]="multi ? option[labelValue]: outputValue ? option[outputValue]: option">
+      <mat-option
+        *ngFor="let option of filteredOptions"
+        [value]="
+          multi
+            ? option[labelValue]
+            : outputValue
+            ? option[outputValue]
+            : option
+        "
+      >
         {{ option[labelName] }}
       </mat-option>
     </mat-select>
     <mat-error *ngIf="control.errors">{{
       'field_required' | translate
-      }}</mat-error>
+    }}</mat-error>
   </mat-form-field>
   <mat-form-field *ngIf="group">
-    <mat-select [formControl]="control" [multiple]="multi" [(value)]="selectId"
-      (selectionChange)="onChangeValue($event.value)">
+    <mat-select
+      [formControl]="control"
+      [multiple]="multi"
+      [(value)]="selectId"
+      (selectionChange)="onChangeValue($event.value)"
+    >
       <mat-option *ngIf="searchMode" class="searchInput">
         <span class="" id="basic-addon1"><i class="fas fa-search"></i></span>
-        <input [formControl]="searchControl" [placeholder]="'Search...'" (click)="stopDropdownClose($event)">
+        <input
+          [formControl]="searchControl"
+          [placeholder]="'Search...'"
+          (click)="stopDropdownClose($event)"
+        />
       </mat-option>
-      <mat-optgroup *ngFor="let group of options" [label]="group[groupName]" [disabled]="group.disabled">
-        <mat-option *ngFor="let option of group[groupOptions]" [value]="option.id">
-          {{option[labelName]}}
+      <mat-optgroup
+        *ngFor="let group of options"
+        [label]="group[groupName]"
+        [disabled]="group.disabled"
+      >
+        <mat-option
+          *ngFor="let option of group[groupOptions]"
+          [value]="option.id"
+        >
+          {{ option[labelName] }}
         </mat-option>
       </mat-optgroup>
     </mat-select>
     <mat-error *ngIf="control.errors">{{
       'field_required' | translate
-      }}</mat-error>
+    }}</mat-error>
   </mat-form-field>
   <div style="display: none" *ngIf="!yet">
     <ng-content></ng-content>

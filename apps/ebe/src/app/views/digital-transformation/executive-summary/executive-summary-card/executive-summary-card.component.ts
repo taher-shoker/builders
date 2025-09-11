@@ -56,6 +56,7 @@ export class ExecutiveSummaryCardComponent implements OnInit, OnChanges {
   difference!: number;
   isPMO = input<boolean>();
   isViewer = input<boolean>();
+  isMobile = input<boolean>(false);
   @ViewChild('overlayPanel2') overlayPanel2?: OverlayPanel;
   data!: ProgressInfo;
   @Output() openProjSidebar = new EventEmitter<pageDetailsProjectModel>();

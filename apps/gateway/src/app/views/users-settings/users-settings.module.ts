@@ -19,7 +19,6 @@ import { UsersSettingsRoutingModule } from './users-settings-routing.module';
 import { UsersSettingsComponent } from './users-settings.component';
 import { MatOption } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
-
 @NgModule({
   declarations: [
     UsersSettingsComponent,

@@ -78,8 +78,8 @@
     height: 30px !important;
     border-radius: 50% !important;
     align-items: center !important;
-    background-color: rgba(255, 255, 255, .5) !important;
-    color:#ffffff !important;
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    color: #ffffff !important;
     position: absolute !important;
     top: 18% !important;
   }
@@ -100,8 +100,8 @@
         min-width: 102px !important;
         text-align: center !important;
         text-decoration: none !important;
-        gap:30px !important;
-        font-weight:500 !important;
+        gap: 30px !important;
+        font-weight: 500 !important;
         position: relative !important;
         left: -13px !important;
       }
@@ -118,29 +118,25 @@
   transition: 0.3s !important;
   // min-width: 102px !important;
   text-align: center !important;
-  &.ActivityLogTable
-  {
-    @media all and (max-width:1500px)
-    {
-      min-width:230px !important;
+  &.ActivityLogTable {
+    @media all and (max-width: 1500px) {
+      min-width: 230px !important;
     }
   }
 }
-::ng-deep .mobile-view
-{
-  .p-tabview-nav-next , .p-tabview-nav-prev
-  {
+::ng-deep .mobile-view {
+  .p-tabview-nav-next,
+  .p-tabview-nav-prev {
     display: none;
   }
-  .p-tabview-nav li a
-  {
-    gap:15px !important;
+  .p-tabview-nav li a {
+    gap: 15px !important;
   }
-  .tap
-  {
-    box-shadow: 0px 2px 4px -1px #1212170F;
+  .tap {
+    box-shadow: 0px 2px 4px -1px #1212170f;
     // box-shadow: 0px 4px 6px -1px #12121714;
     font-size: 16px !important;
+    width: max-content;
   }
 }
 // ::ng-deep .custom-tabview .p-tabview-nav-container {
@@ -173,16 +169,14 @@
 // ::ng-deep .custom-tabview .p-tabview-nav-next {
 //   right: -2rem !important;
 // }
-.tabs-container
-{
+.tabs-container {
   margin-bottom: 20px;
   display: flex;
   align-items: center;
   gap: 15px;
   // justify-content: center;
   white-space: nowrap;
-  .tabs-wrapper
-  {
+  .tabs-wrapper {
     position: relative;
     // background: #401664; // Adjust to your theme
     // width:70%;
@@ -192,15 +186,13 @@
     // flex-grow: 1;
     // max-width: 90%;
   }
-  .tabs
-  {
+  .tabs {
     display: flex;
     align-items: center;
-    gap:15px;
+    gap: 15px;
     white-space: nowrap;
   }
-  .prev-button
-  {
+  .prev-button {
     padding: 5px;
     border-radius: 50%;
     align-items: center;
@@ -210,8 +202,7 @@
     justify-content: center;
     // width: 40px;
     cursor: pointer;
-    i
-    {
+    i {
       font-size: 20px;
     }
   }

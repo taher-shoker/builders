@@ -460,3 +460,27 @@ label {
 .is-invalid-brdr {
   border-color: red !important;
 }
+::ng-deep .quarter-achievements-mobile {
+  background-color: transparent;
+  border-radius: 0;
+  padding: 0;
+  .main-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #000;
+  }
+  .quarter-achievements-body {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .main-header {
+    background-color: #fff;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+  }
+  .p-accordion-content {
+    padding: 0 !important;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}

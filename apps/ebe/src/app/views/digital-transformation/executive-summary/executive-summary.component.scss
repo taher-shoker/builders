@@ -1,5 +1,6 @@
 @import '../../../../styles/fonts.scss';
 ::ng-deep .executive-summary {
+  min-height: 100vh;
   .p-accordion-tab {
     margin-bottom: 15px;
   }
@@ -92,7 +93,10 @@
       .left-side {
         display: flex;
         align-items: center;
-        gap: 20px;
+        gap: 10px;
+        @media all and (max-width: 400px) {
+          gap: 6px;
+        }
         p {
           margin: 0;
         }
@@ -106,6 +110,13 @@
         display: flex;
         align-items: center;
         gap: 15px;
+        &.right-side-mobile {
+          gap: 8px;
+        }
+        @media all and (max-width: 389px) {
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
         button {
           background-color: transparent;
           border: 0;
@@ -370,3 +381,26 @@
   font-size: 1rem;
   font-style: italic;
 }
+.mobile-button {
+  padding: 5px 8px !important;
+  font-size: 0.7rem !important;
+}
+::ng-deep .executive-summary-mobile {
+  .main-header {
+    padding: 0 !important;
+  }
+  .p-accordion-content {
+    padding: 0 !important;
+    padding-top: 10px !important;
+    background-color: transparent !important;
+  }
+  .p-accordion-header-link {
+    background-color: transparent !important;
+  }
+  .executive-summary-body-container {
+    background-color: #fff !important;
+  }
+}
+// .full-height {
+//   height: 100vh !important;
+// }

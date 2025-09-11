@@ -49,6 +49,7 @@ export class QuarterAchievementsComponent implements OnInit, OnDestroy {
   showFormSidebar = false;
   toastr = inject(ToastrService);
   isPMO = input<boolean>();
+  isMobile = input<boolean>();
   isViewer = input<boolean>();
   addWorkAchievementForm!: FormGroup;
   isEditMode = false;

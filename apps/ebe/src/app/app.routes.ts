@@ -147,7 +147,7 @@ export const appRoutes: Route[] = [
       import(
         './views/digital-transformation/digital-transformation.component'
       ).then((m) => m.DigitalTransformationComponent),
-    canActivate: [IsNotMobileGuard],
+    // canActivate: [IsNotMobileGuard],
   },
   {
     path: 'psr/add-program',
