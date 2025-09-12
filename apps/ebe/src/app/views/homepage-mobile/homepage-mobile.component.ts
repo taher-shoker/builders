@@ -71,10 +71,18 @@ export class HomepageMobileComponent {
               id: 4,
               title: 'digital transformation',
               subTitle: 'monitor digital growth',
-              rNumber: res.psrDetail.numberOfRIndicator,
-              aNumber: res.psrDetail.numberOfAIndicator,
-              gNumber: res.psrDetail.numberOfGIndicator,
-              cNumber: res.psrDetail.numberOfGIndicator,
+              rNumber: res.dtProjectStatistics.filter(
+                (v) => v.status === 'delayed'
+              )[0].count,
+              aNumber: res.dtProjectStatistics.filter(
+                (v) => v.status === 'at risk'
+              )[0].count,
+              gNumber: res.dtProjectStatistics.filter(
+                (v) => v.status === 'on track'
+              )[0].count,
+              cNumber: res.dtProjectStatistics.filter(
+                (v) => v.status === 'completed'
+              )[0].count,
               image: 'assets/images/mobile/digital-transformation-icon.svg',
             },
           ]);
