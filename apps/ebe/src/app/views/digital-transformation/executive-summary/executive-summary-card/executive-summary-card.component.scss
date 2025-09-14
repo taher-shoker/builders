@@ -2,7 +2,7 @@
   background-color: #fff;
   border-radius: 10px;
   padding: 20px;
-  margin-bottom: 20px;
+  // margin-bottom: 20px;
   .head {
     display: flex;
     align-items: center;
@@ -48,4 +48,7 @@
   max-width: 400px;
   word-spacing: 3px;
   word-break: break-all;
+}
+.mobile-card {
+  background-color: #f5f6fa !important;
 }

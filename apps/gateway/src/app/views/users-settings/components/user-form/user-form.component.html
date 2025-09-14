@@ -177,6 +177,23 @@
               [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
             </stc-apps-select-drop-down>
           </div>
+          <!-- <div class="col-md-2"></div>
+          <div class="col-md-5">
+            <label class="pages-label">Pages <span>*</span></label>
+            <mat-form-field>
+              <mat-select
+                multiple
+                (selectionChange)="onPageSelectionChange($event)"
+                [formControl]="pagesControl"
+              >
+                @for (topping of pages; track topping) {
+                <mat-option [value]="topping.code">{{
+                  topping.name
+                }}</mat-option>
+                }
+              </mat-select>
+            </mat-form-field>
+          </div> -->
         </div>
         <div class="row mt-7 flex-row-reverse">
           <div class="col-md-4 offset-md-8">

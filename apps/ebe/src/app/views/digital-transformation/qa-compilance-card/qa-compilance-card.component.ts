@@ -37,6 +37,7 @@ export class QaCompilanceCardComponent {
   @ViewChild('overlayPanel3') overlayPanel3?: OverlayPanel;
   isPMO = input<boolean>();
   isViewer = input<boolean>();
+  isMobile = input<boolean>();
   @Output() sidebarOpened = new EventEmitter();
   underValidationVal = 0;
   highlights: { id: number; title: string; value: string }[] = [];

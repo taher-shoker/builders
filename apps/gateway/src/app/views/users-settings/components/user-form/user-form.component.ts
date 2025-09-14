@@ -30,7 +30,10 @@ import {
   UserGroup,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
-
+interface Page {
+  name: string;
+  code: string;
+}
 @Component({
   selector: 'stc-apps-user-form',
   templateUrl: './user-form.component.html',
@@ -43,7 +46,8 @@ export class UserFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   // privilages: Role[] = [];
   privilages: WritableSignal<any[]> = signal([]);
-
+  pages!: Page[];
+  selectedPage!: string[];
   teams: Team[] = [];
   allUsers: User[] = [];
   //userDelegate: any[] = [];
@@ -84,6 +88,15 @@ export class UserFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
+    // this.pages = [
+    //   // { name: 'All', code: 'all' },
+    //   { name: 'Sector Scorecards', code: 'sector-scorecards' },
+    //   { name: 'Financial Status', code: 'financial-status' },
+    //   { name: 'Project Execution', code: 'project-execution' },
+    //   { name: 'AI&DS Strategy Programs', code: 'ai-ds-strategy-programs' },
+    //   { name: 'Activity Log Center', code: 'activity-log-center' },
+    //   { name: 'Digital Transformation', code: 'digital-transformation' },
+    // ];
     this.initializeUserForm();
     if (!this.isEditing) {
       this.disableFields();
@@ -99,6 +112,10 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.restFormWithValue(this.data);
       }
     }
+  }
+  pagesControl = new FormControl([] as string[]);
+  onPageSelectionChange(event: any) {
+    this.pagesControl.setValue([...event.value]);
   }
   private noWhitespaceValidator(control: FormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;

@@ -1,4 +1,4 @@
-<div class="executive-summary-card">
+<div class="executive-summary-card" [class.mobile-card]="isMobile()">
   <div class="head">
     <p
       class="title m-0"
@@ -38,7 +38,7 @@
         [textColor]="'#6B7280'"
         [borderColor]="'#E5E7EB'"
       />
-      } @if(!isViewer()){
+      } @if(!isViewer() && !isMobile()){
       <button class="edit-proj-btn" (click)="openAddWorkstreamSidebar()">
         <i class="pi pi-pencil"></i>
         <!-- <img src="assets/images/button.svg" alt="" /> -->

@@ -64,6 +64,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   pageId = input<number>();
   isPMO = input<boolean>();
   isViewer = input<boolean>();
+  isMobile = input<boolean>(false);
   toggleAccordion(index: number, event: Event) {
     event.stopPropagation();
     this.activeAccordionIndex =
@@ -359,5 +360,9 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
           },
         });
     }
+  }
+  onAccordionChange(e: any) {
+    console.log(e);
+    console.log(this.activeAccordionIndex);
   }
 }

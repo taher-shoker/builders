@@ -1,8 +1,11 @@
-<section class="quarter-achievements">
+<section
+  class="quarter-achievements"
+  [class.quarter-achievements-mobile]="isMobile()"
+>
   <div class="quarter-achievements-header">
     @if(currentTab() && currentTab().value){
     <p class="main-title">{{ currentTab().value }}</p>
-    } @if(!isPMO() && !isViewer()){
+    } @if(!isPMO() && !isViewer() && !isMobile()){
     <button
       class="add-workstream-btn"
       (click)="showFormSidebar = true; isEditMode = false; showAddSidebar()"
@@ -49,7 +52,7 @@
                 {{ businessUnit && businessUnit.name ? businessUnit.name : '' }}
               </p>
             </div>
-            @if(!isPMO() && !isViewer()){
+            @if(!isPMO() && !isViewer() && !isMobile()){
             <img
               src="assets/images/button3.svg"
               (click)="

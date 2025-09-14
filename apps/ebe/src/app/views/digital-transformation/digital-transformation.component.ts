@@ -1,6 +1,14 @@
-import { Component, inject, OnDestroy, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  inject,
+  OnDestroy,
+  OnInit,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
 import { SharedUiModule } from '@stc-apps/shared-ui';
+import { KeyChallengeMobileViewComponent } from './key-challenge-mobile-view/key-challenge-mobile-view.component';
 import {
   UserGroup,
   UserGroupRoles,
@@ -27,6 +35,8 @@ import { ToastrService } from 'ngx-toastr';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 import { QuarterAchievementsComponent } from './quarter-achievements/quarter-achievements.component';
+import { DeviceService } from '../../services/device.service';
+import { MobileViewHeaderComponent } from '../../components/mobile-view-header/mobile-view-header.component';
 @Component({
   selector: 'stc-apps-digital-transformation',
   standalone: true,
@@ -40,6 +50,8 @@ import { QuarterAchievementsComponent } from './quarter-achievements/quarter-ach
     AddWorkstreamFormComponent,
     ConfirmDialogModule,
     QuarterAchievementsComponent,
+    MobileViewHeaderComponent,
+    KeyChallengeMobileViewComponent,
   ],
   providers: [ConfirmationService],
   templateUrl: './digital-transformation.component.html',
@@ -49,6 +61,8 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   userData!: UserModel;
   tabTitle = '';
   toastr = inject(ToastrService);
+  isMobile = signal<boolean>(false);
+  deviceService = inject(DeviceService);
   currTap = signal<DigitalTransformationTapModel>(
     {} as DigitalTransformationTapModel
   );
@@ -62,6 +76,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
   isWorkstreamSidebarVisible!: boolean;
   isEdit = false;
   confirmationService = inject(ConfirmationService);
+  @ViewChild(KeyChallengesTableComponent) child!: KeyChallengesTableComponent;
   // capabilitiesHandoverData: CapabilitiesHandoverDataModel[] = [];
   digitalTransformationService = inject(DigitalTransformationService);
   digitalTransformationTaps = signal<DigitalTransformationTapModel[]>([]);
@@ -134,6 +149,7 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
     this.userRoles = this.checkSystem(this.userData.userGroups);
   }
   ngOnInit(): void {
+    this.isMobile.set(this.deviceService.isMobile());
     if (this.scorecardService.getUserGroups()) {
       this.userData = JSON.parse(
         decodeURIComponent(this.scorecardService.getUserGroups())
@@ -398,10 +414,13 @@ export class DigitalTransformationComponent implements OnInit, OnDestroy {
         next: () => {
           this.showChallengesSidebar = false;
           this.isChallengeAdded = true;
+          this.child.getData();
+          // this.child.isChallengeAddedSuccess.set(true);
           this.toastr.success('The Challenge is added successfully');
         },
         error: () => {
-          this.isChallengeAdded = false;
+          this.child.isChallengeAddedSuccess.set(false);
+          // this.isChallengeAdded = false;
         },
       });
   }

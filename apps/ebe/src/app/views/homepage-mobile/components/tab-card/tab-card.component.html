@@ -42,6 +42,13 @@
         <span>{{ tabData().gNumber }}</span>
         <p>G</p>
       </div>
+      @if(tabData().cNumber){
+      <div class="vertical-num kpis-num">
+        <div class="bullet cyan"></div>
+        <span>{{ tabData().cNumber }}</span>
+        <p>C</p>
+      </div>
+      }
     </div>
     } @else {
     <div class="kpis-tabs-number">
