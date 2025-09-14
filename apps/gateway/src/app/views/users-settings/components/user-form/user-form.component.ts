@@ -88,15 +88,15 @@ export class UserFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    this.pages = [
-      // { name: 'All', code: 'all' },
-      { name: 'Sector Scorecards', code: 'sector-scorecards' },
-      { name: 'Financial Status', code: 'financial-status' },
-      { name: 'Project Execution', code: 'project-execution' },
-      { name: 'AI&DS Strategy Programs', code: 'ai-ds-strategy-programs' },
-      { name: 'Activity Log Center', code: 'activity-log-center' },
-      { name: 'Digital Transformation', code: 'digital-transformation' },
-    ];
+    // this.pages = [
+    //   // { name: 'All', code: 'all' },
+    //   { name: 'Sector Scorecards', code: 'sector-scorecards' },
+    //   { name: 'Financial Status', code: 'financial-status' },
+    //   { name: 'Project Execution', code: 'project-execution' },
+    //   { name: 'AI&DS Strategy Programs', code: 'ai-ds-strategy-programs' },
+    //   { name: 'Activity Log Center', code: 'activity-log-center' },
+    //   { name: 'Digital Transformation', code: 'digital-transformation' },
+    // ];
     this.initializeUserForm();
     if (!this.isEditing) {
       this.disableFields();
