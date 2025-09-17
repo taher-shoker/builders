@@ -21,111 +21,66 @@ export class ScorecardService {
   userRoles!: UserGroup;
   http = inject(HttpClient);
   cookieService = inject(CookieService);
-  private navItems: NavLinks[] = [
-    {
-      id: 1,
-      name: 'sector scorecards',
-      url: '/scorecard',
-    },
-    {
-      id: 5,
-      name: 'Financial Status',
-      url: '/financial-reporting',
-    },
-    {
-      id: 4,
-      name: 'project execution',
-      url: '/psr',
-    },
-    // {
-    //   id: 2,
-    //   name: 'AI&DS strategy programs',
-    //   url: '/strategy-program',
-    // },
-    {
-      id: 6,
-      name: 'Activity Log Center',
-      url: '/activity-logs',
-    },
-    {
-      id: 7,
-      name: 'Digital Transformation',
-      url: '/digital-transformation',
-    },
-    // {
-    //   id: 3,
-    //   name: 'raqami',
-    //   url: '/raqami',
-    // },
-    // {
-    //   id: 4,
-    //   name: 'PSR',
-    //   url: '/psr',
-    // },
-    // {
-    //   id: 3,
-    //   name: 'raqami',
-    //   url: '/raqami',
-    // },
-  ];
+  // private navItems: NavLinks[] = [
+  //   {
+  //     id: 1,
+  //     name: 'Sector Scorecards',
+  //     url: '/scorecard',
+  //   },
+  //   {
+  //     id: 5,
+  //     name: 'Financial Status',
+  //     url: '/financial-reporting',
+  //   },
+  //   {
+  //     id: 4,
+  //     name: 'Project Execution',
+  //     url: '/psr',
+  //   },
+  //   // {
+  //   //   id: 2,
+  //   //   name: 'AI&DS strategy programs',
+  //   //   url: '/strategy-program',
+  //   // },
+  //   {
+  //     id: 6,
+  //     name: 'Activity Log Center',
+  //     url: '/activity-logs',
+  //   },
+  //   {
+  //     id: 7,
+  //     name: 'Digital Transformation',
+  //     url: '/digital-transformation',
+  //   },
+  //   // {
+  //   //   id: 3,
+  //   //   name: 'raqami',
+  //   //   url: '/raqami',
+  //   // },
+  //   // {
+  //   //   id: 4,
+  //   //   name: 'PSR',
+  //   //   url: '/psr',
+  //   // },
+  //   // {
+  //   //   id: 3,
+  //   //   name: 'raqami',
+  //   //   url: '/raqami',
+  //   // },
+  // ];
   getUserGroups(): string {
     return this.cookieService.get('MODERN_SYSTEM_USER') || '';
   }
   getCurrentSystem(): string {
     if (this.cookieService.get('granted-systems')) {
-      const systemName =
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        (
-          JSON.parse(this.cookieService.get('granted-systems')!) as string[]
-        ).find((x) => x === 'Business_Excellence_Dashboard');
+      const systemName = (
+        JSON.parse(this.cookieService.get('granted-systems')!) as string[]
+      ).find((x) => x === 'Business_Excellence_Dashboard');
       return systemName ? systemName : '';
     }
     return '';
   }
-  getNavLinks(): NavLinks[] {
-    if (this.getUserGroups()) {
-      const allNavs: NavLinks[] = [
-        {
-          id: 1,
-          name: 'sector scorecards',
-          url: '/scorecard',
-        },
-        {
-          id: 5,
-          name: 'Financial Status',
-          url: '/financial-reporting',
-        },
-        {
-          id: 4,
-          name: 'project execution',
-          url: '/psr',
-        },
-        {
-          id: 2,
-          name: 'AI&DS strategy programs',
-          url: '/strategy-program',
-        },
-        {
-          id: 7,
-          name: 'Digital Transformation',
-          url: '/digital-transformation',
-        },
-      ];
-      const userGroup = JSON.parse(this.getUserGroups());
-      const matchingGroup = userGroup.userGroups.find((group: UserGroup) => {
-        return group.roles.some((role: UserGroupRoles) => {
-          return this.getCurrentSystem() === role.system.name;
-        });
-      });
-      const isAllowed = matchingGroup.roles.some(
-        (role: any) =>
-          role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
-      );
-      // console.log(isAllowed);
-      return isAllowed ? this.navItems : allNavs;
-    }
-    return [];
-  }
+
   setUsername(name: string) {
     this.currUsername = name;
   }

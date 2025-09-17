@@ -250,6 +250,7 @@ export class AuthService {
             email: res.email,
             userDelegates: res.userDelegates,
             userGroups: res.userGroups,
+            pageAccess: res.pageAccess,
           };
           this.cookieService.put(
             'MODERN_SYSTEM_USER',

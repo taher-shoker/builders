@@ -25,14 +25,14 @@ export const appRoutes: Route[] = [
     canActivate: [IsMobileGuard],
   },
   {
-    path: 'scorecard',
+    path: 'sector-scorecards',
     loadComponent: () =>
       import('./views/scorecard/scorecard.component').then(
         (m) => m.ScorecardComponent
       ),
   },
   {
-    path: 'strategy-program',
+    path: 'ai-ds-strategy-programs',
     loadComponent: () =>
       import('./views/strategyProgram/strategyProgram.component').then(
         (m) => m.StrategyProgramComponent
@@ -40,7 +40,7 @@ export const appRoutes: Route[] = [
     canActivate: [IsNotMobileGuard],
   },
   {
-    path: 'activity-logs',
+    path: 'activity-log-center',
     loadComponent: () =>
       import('./views/activity-logs/activity-logs.component').then(
         (m) => m.ActivityLogsComponent
@@ -48,7 +48,7 @@ export const appRoutes: Route[] = [
     canActivate: [IsAdminGuard, IsNotMobileGuard],
   },
   {
-    path: 'activity-logs/:title',
+    path: 'activity-log-center/:title',
     loadComponent: () =>
       import('./views/activity-logs/activity-logs.component').then(
         (m) => m.ActivityLogsComponent
@@ -56,7 +56,7 @@ export const appRoutes: Route[] = [
     canActivate: [IsAdminGuard, IsNotMobileGuard],
   },
   {
-    path: 'strategy-program/:programName/:programId',
+    path: 'ai-ds-strategy-programs/:programName/:programId',
     loadComponent: () =>
       import(
         './views/strategyProgram/components/kpi-details/kpi-details.component'
@@ -125,7 +125,7 @@ export const appRoutes: Route[] = [
   //     ),
   // },
   {
-    path: 'financial-reporting',
+    path: 'financial-status',
     loadComponent: () =>
       import('./views/financial-reporting/financial-reporting.component').then(
         (m) => m.FinancialReportingComponent
@@ -137,7 +137,7 @@ export const appRoutes: Route[] = [
   //     import('./views/raqami/raqami.component').then((m) => m.RaqamiComponent),
   // },
   {
-    path: 'psr',
+    path: 'project-execution',
     loadComponent: () =>
       import('./views/PSR/PSR.component').then((m) => m.PSRComponent),
   },
@@ -150,7 +150,7 @@ export const appRoutes: Route[] = [
     // canActivate: [IsNotMobileGuard],
   },
   {
-    path: 'psr/add-program',
+    path: 'project-execution/add-program',
     loadComponent: () =>
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
@@ -158,7 +158,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard, IsNotMobileGuard],
   },
   {
-    path: 'psr/add-project/:sector',
+    path: 'project-execution/add-project/:sector',
     loadComponent: () =>
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
@@ -166,7 +166,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard, IsNotMobileGuard],
   },
   {
-    path: 'psr/edit-program/:id',
+    path: 'project-execution/edit-program/:id',
     loadComponent: () =>
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
@@ -174,7 +174,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard, IsNotMobileGuard],
   },
   {
-    path: 'psr/edit-project/:sector/:projId',
+    path: 'project-execution/edit-project/:sector/:projId',
     loadComponent: () =>
       import(
         './views/PSR/components/add-psr-project-form/add-psr-project-form.component'
@@ -182,7 +182,7 @@ export const appRoutes: Route[] = [
     canActivate: [AuthGuard, IsNotMobileGuard],
   },
   {
-    path: 'psr/:id/:sectorId',
+    path: 'project-execution/:id/:sectorId',
     loadComponent: () =>
       import(
         './views/PSR/components/psr-details-page/psr-details-page.component'

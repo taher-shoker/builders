@@ -23,17 +23,14 @@ import { ToastrService } from 'ngx-toastr';
 import { DialogService } from '@stc-apps/shared-ui';
 import { forkJoin } from 'rxjs';
 import {
+  Page,
   Role,
   Team,
   User,
-  UserDelegate,
   UserGroup,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
-interface Page {
-  name: string;
-  code: string;
-}
+
 @Component({
   selector: 'stc-apps-user-form',
   templateUrl: './user-form.component.html',
@@ -47,6 +44,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   // privilages: Role[] = [];
   privilages: WritableSignal<any[]> = signal([]);
   pages!: Page[];
+  filterPages!: Page[];
   selectedPage!: string[];
   teams: Team[] = [];
   allUsers: User[] = [];
@@ -58,6 +56,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   selectedTeam!: { id: number; name: string };
   selectedDelegates: any;
   selectedGroup: number[] = [];
+  selectedPages: any = [];
   addGroups = false;
   showInputs = true;
   userTeam = '';
@@ -88,15 +87,6 @@ export class UserFormComponent implements OnInit, OnChanges {
   ) {}
 
   ngOnInit() {
-    this.pages = [
-      // { name: 'All', code: 'all' },
-      { name: 'Sector Scorecards', code: 'sector-scorecards' },
-      { name: 'Financial Status', code: 'financial-status' },
-      { name: 'Project Execution', code: 'project-execution' },
-      { name: 'AI&DS Strategy Programs', code: 'ai-ds-strategy-programs' },
-      { name: 'Activity Log Center', code: 'activity-log-center' },
-      { name: 'Digital Transformation', code: 'digital-transformation' },
-    ];
     this.initializeUserForm();
     if (!this.isEditing) {
       this.disableFields();
@@ -104,18 +94,30 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
     this.handleGrouping();
     this.getUsersList();
+    this.getAccessPages();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
       if (this.data) {
         this.restFormWithValue(this.data);
+        if (this.data.pageAccess) {
+          this.selectedPages = this.data.pageAccess.map((p: Page) => p.id);
+        }
       }
     }
   }
-  pagesControl = new FormControl([] as string[]);
-  onPageSelectionChange(event: any) {
-    this.pagesControl.setValue([...event.value]);
+  getAccessPages() {
+    this.userService.getPages().subscribe((res) => {
+      if (!res) return;
+      this.pages = res;
+      this.filterPages = res;
+      if (this.data) {
+        if (this.data.pageAccess) {
+          this.selectedPages = this.data.pageAccess.map((p: Page) => p.id);
+        }
+      }
+    });
   }
   private noWhitespaceValidator(control: FormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
@@ -152,6 +154,12 @@ export class UserFormComponent implements OnInit, OnChanges {
       pmo: [''],
       ticketAdmin: [''],
       edit_delete: [''],
+      pageAccess: [
+        '',
+        this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+          ? Validators.required
+          : Validators.nullValidator,
+      ],
     });
   }
 
@@ -201,6 +209,9 @@ export class UserFormComponent implements OnInit, OnChanges {
     const email = this.form.get('email')?.value;
     const name = this.form.get('name')?.value;
     const jobTitle = this.form.get('jobTitle')?.value;
+    const pageAccess = this.form.get('pageAccess')?.value.map((p: number) => {
+      return { id: p };
+    });
 
     if (currentSystem === 'DI_Milestones') {
       dataForm = { userGroups, teams, email, name, jobTitle };
@@ -257,8 +268,9 @@ export class UserFormComponent implements OnInit, OnChanges {
       dataForm = { userGroups, teams, email, name, jobTitle };
     } else if (currentSystem === 'Strategic_Dashboard') {
       dataForm = { userGroups, email, name, jobTitle };
+    } else if (currentSystem === 'Business_Excellence_Dashboard') {
+      dataForm = { userGroups, email, name, jobTitle, pageAccess };
     } else if (
-      currentSystem === 'Business_Excellence_Dashboard' ||
       currentSystem === 'ChatBI' ||
       currentSystem === 'TU_BRAIN' ||
       currentSystem === 'FNI_Nokia'
@@ -287,44 +299,41 @@ export class UserFormComponent implements OnInit, OnChanges {
         handleError
       );
     } else if (this.addGroups) {
-      let data = { id: this.userId, userGroups, teams };
-      if (currentSystem === 'Score_Card_Report_DB' && teams?.length > 0) {
-        data.teams = teams;
-      }
-      if (currentSystem === 'Strategic_Dashboard' && teams?.length > 0) {
-        data.teams = null;
-      }
-      if (
-        currentSystem === 'Dynamic_Report_Flow' ||
-        currentSystem === 'ChatBI' ||
-        currentSystem === 'Business_Excellence_Dashboard' ||
-        currentSystem === 'TU_BRAIN' ||
-        currentSystem === 'FNI_Nokia'
-      ) {
-        data = { ...data, teams, userGroups };
-        console.log(data.teams);
+      const baseData = { id: this.userId, userGroups, teams };
+      let data: any;
 
-        delete data.teams;
-        // if (this.viewerControl?.value) {
-        //   const viewerObj = this.userService
-        //     .getRoles()
-        //     .find((r) => r.groupName === 'DT_VP_Dashboard_Viewer');
-        //   viewerObj && data.userGroups.push({ id: viewerObj.id });
-        // } else if (this.editorControl?.value) {
-        //   const editorObj = this.userService
-        //     .getRoles()
-        //     .find((r) => r.groupName === 'DT_VP_Dashboard_Editor');
-        //   editorObj && data.userGroups.push({ id: editorObj.id });
-        // } else if (this.pmoControl?.value) {
-        //   const pmoObj = this.userService
-        //     .getRoles()
-        //     .find((r) => r.groupName === 'PMO');
-        //   pmoObj && data.userGroups.push({ id: pmoObj.id });
-        // }
-      }
-      if (currentSystem === 'DI_Management') {
-        data = { ...data, userGroups: teams, teams: userGroups };
-        delete data.teams;
+      switch (currentSystem) {
+        case 'Score_Card_Report_DB':
+          data = { ...baseData, teams: teams?.length > 0 ? teams : undefined };
+          break;
+
+        case 'Strategic_Dashboard':
+          data = { ...baseData, teams: null };
+          break;
+
+        case 'Dynamic_Report_Flow':
+        case 'ChatBI':
+        case 'TU_BRAIN':
+        case 'FNI_Nokia':
+          data = { ...baseData, userGroups }; // omit teams directly
+          break;
+
+        case 'Business_Excellence_Dashboard':
+          data = {
+            ...baseData,
+            userGroups: userGroups,
+            pageAccess,
+          };
+          delete data.teams; // optional if you want to guarantee no teams
+          break;
+
+        case 'DI_Management':
+          data = { ...baseData, userGroups: teams, teams: userGroups };
+          delete data.teams;
+          break;
+
+        default:
+          data = baseData;
       }
 
       this.userService.addUserGroup(data).subscribe(() => {
@@ -332,10 +341,12 @@ export class UserFormComponent implements OnInit, OnChanges {
         if (delegateEmail) {
           this.updateUserDelegate(delegateEmail);
         }
+
         const escaltionManager = this.form.get('manager')?.value;
         if (escaltionManager) {
           this.updateUserEscalationManger({ id: escaltionManager });
         }
+
         onSuccess('User Group is added successfully');
       }, handleError);
     } else {
@@ -559,6 +570,17 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.teams = this.userService.allTeams;
     } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
       this.teams = this.userService.getTeams();
+    } else if (
+      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+    ) {
+      this.form.get('pageAccess')?.reset();
+      if (value.groupName === 'BE_EDITORS') {
+        this.filterPages = this.pages;
+      } else {
+        this.filterPages = this.pages.filter(
+          (r) => r.name !== 'Activity Log Center'
+        );
+      }
     }
     // else if (this.userService.getCurrentSystem() === 'Strategic_Dashboard') {
     //   this.teams = this.userService.getTeams();

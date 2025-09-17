@@ -13,6 +13,7 @@ export interface LoggedUser {
   userGroups: UserGroup[];
   username: null | string;
   userDelegates?: any[];
+  pageAccess?: any[];
 }
 
 export interface System {

@@ -16,6 +16,7 @@ import {
   Team,
   Role,
   UserGroup,
+  Page,
 } from '../../shared/models/users-settings.model';
 
 @Injectable({
@@ -38,6 +39,11 @@ export class UsersService {
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.endpoint}/users`, {
+      params: this.setSystemParam(),
+    });
+  }
+  getPages(): Observable<Page[]> {
+    return this.http.get<Page[]>(`${this.endpoint}/page-access`, {
       params: this.setSystemParam(),
     });
   }
