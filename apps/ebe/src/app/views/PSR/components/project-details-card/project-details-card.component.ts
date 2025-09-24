@@ -93,19 +93,26 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   private getSpecificActivityLog(
     moduleName: string,
-    activityType:string,
+    activityType: string,
     subModule?: string,
     projectName?: string,
-    entity?:string,
-    showParentData?:boolean
+    entity?: string,
+    showParentData?: boolean
   ) {
     this.activityLogService
-      .getSpecificActivityLog(moduleName, activityType , subModule, projectName , entity , showParentData)
+      .getSpecificActivityLog(
+        moduleName,
+        activityType,
+        subModule,
+        projectName,
+        entity,
+        showParentData
+      )
       .pipe(takeUntil(this.$endScorecardActivityLogsSub))
       .subscribe({
         next: (activityLogs: ActivityLogData[]) => {
           // console.log(activityLogs);
-          
+
           this.activityLogsTableBody.set(activityLogs);
         },
       });
@@ -115,14 +122,16 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.$endScorecardActivityLogsSub.complete();
     this.actionsPanel.hide();
   }
-  sectorId:string = ''
+  sectorId: string = '';
   gotoEditPage() {
     this.route.params.subscribe({
       next: (param: Params) => {
         if (param['id']) {
           const program = encodeURIComponent(param['id']);
           this.router.navigateByUrl(
-            `/psr/edit-project/${program}/${this.projectData().id}`
+            `/project-execution/edit-project/${program}/${
+              this.projectData().id
+            }`
           );
         }
       },
@@ -163,11 +172,11 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   ) {}
   ngOnInit(): void {
     this.scorecardService.toggleSwitchBtn.subscribe({
-      next : (res) => {
+      next: (res) => {
         this.showActivityLogsPopup = false;
         this.actionsPanel?.hide();
-      }
-    })
+      },
+    });
     this.route.params.subscribe({
       next: (param: Params) => {
         if (param['sectorId']) {
@@ -250,13 +259,12 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
         },
       ];
     }
-    if(this.isPMO())
-    {
+    if (this.isPMO()) {
       this.items = [
         {
           label: 'Edit',
           icon: 'pi pi-pen-to-square',
-        }
+        },
       ];
     }
   }
@@ -556,8 +564,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     // })
   }
   showActivityLogsPopup3 = false;
-  showDeliverablesActivityLogs()
-  {
+  showDeliverablesActivityLogs() {
     this.getSpecificActivityLog(
       'PSR',
       'Add,Edit,Delete',
@@ -569,8 +576,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     // console.log("this.projectData().projectName => " , this.projectData().projectName);
     this.showActivityLogsPopup3 = !this.showActivityLogsPopup3;
   }
-  popupClosed3()
-  {
+  popupClosed3() {
     this.showActivityLogsPopup3 = false;
   }
 }

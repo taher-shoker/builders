@@ -62,8 +62,8 @@ export class AddPsrProjectFormComponent implements OnInit {
       );
     }
     if (
-      this.router.url.startsWith('/psr/add-program') ||
-      this.router.url.startsWith('/psr/edit-program')
+      this.router.url.startsWith('/project-execution/add-program') ||
+      this.router.url.startsWith('/project-execution/edit-program')
     ) {
       this.inPSRForm = true;
     } else {
@@ -81,7 +81,7 @@ export class AddPsrProjectFormComponent implements OnInit {
         if (param['sector']) {
           this.sectorName = param['sector'];
         }
-        if (!url.startsWith('/psr/add')) {
+        if (!url.startsWith('/project-execution/add')) {
           this.isEditMode = true;
           if (param['id'] && this.inPSRForm) {
             this.programId = +param['id'];
@@ -155,8 +155,8 @@ export class AddPsrProjectFormComponent implements OnInit {
   }
   createProjectFormGroup(): FormGroup {
     if (
-      this.router.url.startsWith('/psr/add-program') ||
-      this.router.url.startsWith('/psr/edit-program')
+      this.router.url.startsWith('/project-execution/add-program') ||
+      this.router.url.startsWith('/project-execution/edit-program')
     ) {
       this.inPSRForm = true;
       return this.formBuilder.group({

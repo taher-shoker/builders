@@ -1,72 +1,39 @@
-<section
-  class="project-container"
-  [class.project-container-in-mobile]="isMobile()"
->
+<section class="project-container" [class.project-container-in-mobile]="isMobile()">
   <div class="project-container-head">
-    <p
-      class="project-container-header"
-      [class.mobile-view-title]="isMobile()"
+    <p class="project-container-header" [class.mobile-view-title]="isMobile()"
       (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''"
-      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
-    >
+      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''">
       {{ project().sector }}
     </p>
     @if(!isMobile()) {
     <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
-    <p-overlayPanel
-      #actionsPanel
-      dismissable="false"
-      [appendTo]="'body'"
-      styleClass="project-actions-logs"
-      (onHide)="showActivityLogsPopup = false"
-    >
+    <p-overlayPanel #actionsPanel dismissable="false" [appendTo]="'body'" styleClass="project-actions-logs"
+      (onHide)="showActivityLogsPopup = false">
       <div class="actions-logs-table">
         @for (item of items; track $index) {
-        <div
-          class="action"
-          [class.delete-btn]="item.label === 'Delete'"
-          (click)="
+        <div class="action" [class.delete-btn]="item.label === 'Delete'" (click)="
             item.label === 'Edit'
               ? gotoEditPage()
               : item.label === 'Delete'
               ? showDeleteDialog()
               : showActivityLogs()
-          "
-        >
+          ">
           <i [class]="item.icon"></i>
           <p>{{ item.label }}</p>
         </div>
         }
       </div>
     </p-overlayPanel>
-    <stc-apps-activity-logs-popup
-      [activityLogsTableHeader]="activityLogsTableHeader()"
-      [activityLogsTableBody]="activityLogsTableBody()"
-      [showPopup]="showActivityLogsPopup"
-      (popupClosed)="popupClosed()"
-      [isProjectActionPopup]="true"
-      type="psr"
-      [isDismissable]="true"
-      (popupHide)="showActivityLogsPopup = false"
-    />
+    <stc-apps-activity-logs-popup [activityLogsTableHeader]="activityLogsTableHeader()"
+      [activityLogsTableBody]="activityLogsTableBody()" [showPopup]="showActivityLogsPopup"
+      (popupClosed)="popupClosed()" [isProjectActionPopup]="true" type="psr" [isDismissable]="true"
+      (popupHide)="showActivityLogsPopup = false" />
     }
   </div>
-  <div
-    class="project-container-chart"
-    [class.mt-5]="!isMobile()"
-    [class.mobile-view-chart]="isMobile()"
-  >
-    <stc-apps-multi-circles-progress-bar
-      [chartData]="chartData"
-      [colors]="colors"
-      [showLegend]="true"
-      [labelsFontFamily]="'STCForwardFont'"
-      [legendsFontFamily]="'mediunPoppins'"
-      [outerRadius]="160"
-      [innerRadius]="100"
-      [showLabels]="true"
-      [showLegendValues]="false"
-    />
+  <div class="project-container-chart" [class.mt-5]="!isMobile()" [class.mobile-view-chart]="isMobile()">
+    <stc-apps-multi-circles-progress-bar [chartData]="chartData" [colors]="colors" [showLegend]="true"
+      [labelsFontFamily]="'STCForwardFont'" [legendsFontFamily]="'mediunPoppins'" [outerRadius]="160"
+      [innerRadius]="100" [showLabels]="true" [showLegendValues]="false" />
   </div>
   <!-- {{maxTextLength}} -->
   <div [class.project-card-info]="isMobile()">
@@ -74,9 +41,9 @@
       planned date:
       <span>{{
         project() && project().plannedDate
-          ? formatDate(project().plannedDate)
-          : ''
-      }}</span>
+        ? formatDate(project().plannedDate)
+        : ''
+        }}</span>
     </p>
     <p class="project-container-description">
       {{ project().details.trim() | truncateWord : (isMobile() ? 2 : 6) }}
@@ -88,12 +55,8 @@
     </p>
     <!-- [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProject]" -->
     @if(!isDeleted()) {
-    <a
-      class="project-container-details-link"
-      [routerLink]="['/psr/', project().sector, project().id]"
-      (click)="gotoProjectDetailsPage()"
-      [class.project-container-details-link-mobile]="isMobile()"
-    >
+    <a class="project-container-details-link" [routerLink]="['/project-execution/', project().sector, project().id]"
+      (click)="gotoProjectDetailsPage()" [class.project-container-details-link-mobile]="isMobile()">
       <span>more details</span>
       @if(!isMobile()) {
       <img src="assets/images/arrow-right.svg" alt="" />

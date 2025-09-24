@@ -43,7 +43,7 @@ export interface UserModel {
   jobTitle: string;
   userGroups: UserGroup[];
   username: string;
-  pageAccess: { id: number; name: string }[];
+  pageAccess: { id: number; name: string; slug: string }[];
 }
 export interface UserGroup {
   id: number;
