@@ -43,6 +43,15 @@ const routes: Routes = [
             (m) => m.FeedBackIssueModule
           ),
       },
+      {
+        path: 'di-kpi-integration',
+        canActivate: [AuthGuard],
+        data: { state: 'kpi', breadcrumb: 'DI KPI Integration' },
+        loadChildren: () =>
+          import('../kpi-dashboard/kpi-dashboard.module').then(
+            (m) => m.KpiDashboardModule
+          ),
+      },
     ],
   },
 ];
