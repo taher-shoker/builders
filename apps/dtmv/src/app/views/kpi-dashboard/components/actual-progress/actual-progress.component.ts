@@ -4,6 +4,8 @@ import {
   AfterViewInit,
   input,
   InputSignal,
+  ViewChild,
+  ElementRef,
 } from '@angular/core';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5percent from '@amcharts/amcharts5/percent';
@@ -28,7 +30,6 @@ export interface LegendItem {
 })
 export class ActualProgressComponent implements OnDestroy, AfterViewInit {
   title: InputSignal<string> = input('');
-  chartId: InputSignal<string> = input('chartdiv');
   data: InputSignal<DonutData[]> = input<DonutData[]>([]);
   width: InputSignal<string> = input('100%');
   height: InputSignal<string> = input('400px');
@@ -39,6 +40,7 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
     { label: 'At Risk', color: '#ffa500', value: '30%' },
     { label: 'Delayed', color: '#ff4d4d', value: '30%' },
   ]);
+  @ViewChild('chartContainer', { static: false }) chartContainer!: ElementRef;
 
   private root!: am5.Root;
   private chart!: am5percent.PieChart;
@@ -47,209 +49,213 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
   ngAfterViewInit() {
     setTimeout(() => {
       this.createChart();
-    });
+    }, 300);
   }
 
   ngOnDestroy() {
-    if (this.root) {
+    if (this.root && !this.root.isDisposed()) {
       this.root.dispose();
     }
   }
 
   private createChart() {
     try {
-      // Create root element
-      this.root = am5.Root.new(this.chartId());
+      if (this.chartContainer && this.chartContainer.nativeElement) {
+        // Clear the container first
+        this.chartContainer.nativeElement.innerHTML = '';
+        // Create root using the container element directly
+        this.root = am5.Root.new(this.chartContainer.nativeElement);
 
-      // Set themes
-      this.root.setThemes([am5themes_Animated.new(this.root)]);
+        // Set themes
+        this.root.setThemes([am5themes_Animated.new(this.root)]);
 
-      // Set the root container's layout to vertical
-      this.root.container.set('layout', this.root.verticalLayout);
+        // Set the root container's layout to vertical
+        this.root.container.set('layout', this.root.verticalLayout);
 
-      // Create main container for chart (takes 70% of space)
-      const chartContainer = this.root.container.children.push(
-        am5.Container.new(this.root, {
-          width: am5.percent(100),
-          height: am5.percent(70), // Chart takes 70% of height
-          layout: this.root.verticalLayout,
-        })
-      );
+        // Create main container for chart (takes 70% of space)
+        const chartContainer = this.root.container.children.push(
+          am5.Container.new(this.root, {
+            width: am5.percent(100),
+            height: am5.percent(70), // Chart takes 70% of height
+            layout: this.root.verticalLayout,
+          })
+        );
 
-      // Create chart within the chart container
-      this.chart = chartContainer.children.push(
-        am5percent.PieChart.new(this.root, {
-          startAngle: 160,
-          endAngle: 380,
-          width: am5.percent(100),
-          height: am5.percent(100),
-        })
-      );
+        // Create chart within the chart container
+        this.chart = chartContainer.children.push(
+          am5percent.PieChart.new(this.root, {
+            startAngle: 160,
+            endAngle: 380,
+            width: am5.percent(100),
+            height: am5.percent(100),
+          })
+        );
 
-      /* remove amchart logo */
-      if (this.root._logo) {
-        this.root._logo.dispose();
+        /* remove amchart logo */
+        if (this.root._logo) {
+          this.root._logo.dispose();
+        }
+
+        // Use provided data or default data
+        const chartData =
+          this.data().length > 0 ? this.data() : this.getDefaultData();
+
+        // Make all segments the same width by setting equal values
+        const segmentCount = chartData.length;
+        const sameValue = 100;
+        const half = Math.ceil(segmentCount / 2);
+        const coloredData = chartData.map((item, idx) => ({
+          ...item,
+          litres: sameValue,
+          bottles: sameValue,
+          color: idx < half ? this.baseColor() : '#e0e0e0',
+        }));
+
+        // Create color set from coloredData
+        const colorSet = am5.ColorSet.new(this.root, {
+          colors: coloredData.map((d) => am5.color(d.color)),
+        });
+
+        // Create outer series (thick ring)
+        let series0 = this.chart.series.push(
+          am5percent.PieSeries.new(this.root, {
+            valueField: 'litres',
+            categoryField: 'country',
+            startAngle: 160,
+            endAngle: 380,
+            radius: am5.percent(70),
+            innerRadius: am5.percent(65),
+          })
+        );
+
+        // Apply gap and solid color to outer series
+        series0.slices.template.setAll({
+          stroke: am5.color(0xffffff),
+          strokeWidth: this.segmentGap(),
+          strokeOpacity: 1,
+          fillOpacity: 1,
+        });
+
+        // Create inner series (thin ring)
+        let series1 = this.chart.series.push(
+          am5percent.PieSeries.new(this.root, {
+            startAngle: 160,
+            endAngle: 380,
+            valueField: 'bottles',
+            innerRadius: am5.percent(80),
+            categoryField: 'country',
+          })
+        );
+
+        // Apply gap and solid color to inner series
+        series1.slices.template.setAll({
+          stroke: am5.color(0xffffff),
+          strokeWidth: this.segmentGap(),
+          strokeOpacity: 1,
+          fillOpacity: 1,
+          cornerRadius: 20,
+        });
+
+        // Apply colorSet to outer series
+        series0.set('colors', colorSet);
+        // Apply colorSet to inner series
+        series1.set('colors', colorSet);
+
+        series1.ticks.template.set('forceHidden', true);
+        series1.labels.template.set('forceHidden', true);
+
+        // Create a series for the inner dotted border
+        let dottedSeries = this.chart.series.push(
+          am5percent.PieSeries.new(this.root, {
+            startAngle: 160,
+            endAngle: 380,
+            valueField: 'value',
+            categoryField: 'category',
+            innerRadius: am5.percent(60),
+            radius: am5.percent(60),
+          })
+        );
+
+        dottedSeries.slices.template.setAll({
+          fillOpacity: 0,
+          stroke: am5.color(0xe0e0e0),
+          strokeWidth: 1,
+          strokeDasharray: [5, 5],
+          strokeOpacity: 1,
+        });
+
+        // Single data item to create one continuous arc
+        dottedSeries.data.setAll([{ value: 1, category: 'border' }]);
+        dottedSeries.ticks.template.set('forceHidden', true);
+        dottedSeries.labels.template.set('forceHidden', true);
+
+        // Add bold 76% label
+        this.chart.seriesContainer.children.push(
+          am5.Label.new(this.root, {
+            textAlign: 'center',
+            centerY: am5.p50,
+            centerX: am5.p50,
+            y: -20,
+            text: '76 %',
+            fontSize: 30,
+            fontWeight: '800',
+            fill: am5.color(0x03c38b),
+            width: am5.percent(100),
+            height: am5.percent(30),
+          })
+        );
+
+        // Add normal Actual Progress label below
+        this.chart.seriesContainer.children.push(
+          am5.Label.new(this.root, {
+            textAlign: 'center',
+            centerY: am5.p100,
+            centerX: am5.p50,
+            y: 25,
+            text: 'Actual Progress',
+            fontSize: 20,
+            fontWeight: 'normal',
+            fill: am5.color(0x000000),
+            width: am5.percent(100),
+            height: am5.percent(10),
+          })
+        );
+
+        // Set data
+        series0.data.setAll(coloredData);
+        series1.data.setAll(coloredData);
+
+        // Hide all default series labels and ticks
+        series0.labels.template.set('forceHidden', true);
+        series0.ticks.template.set('forceHidden', true);
+
+        // Add static label for "Baseline"
+        this.chart.children.push(
+          am5.Label.new(this.root, {
+            text: '0%\n[bold]Baseline[/]',
+            x: am5.percent(20),
+            y: am5.percent(85),
+            fontSize: 14,
+            fill: am5.color(0x677184),
+            textAlign: 'center',
+          })
+        );
+
+        // Add static label for "Target"
+        this.chart.children.push(
+          am5.Label.new(this.root, {
+            text: '100%\n[bold]Target[/]',
+            x: am5.percent(75),
+            y: am5.percent(85),
+            fontSize: 14,
+            fill: am5.color(0x677184),
+            textAlign: 'center',
+          })
+        );
+
+        // Create legends container at the bottom (takes 30% of space)
+        this.createLegends();
       }
-
-      // Use provided data or default data
-      const chartData =
-        this.data().length > 0 ? this.data() : this.getDefaultData();
-
-      // Make all segments the same width by setting equal values
-      const segmentCount = chartData.length;
-      const sameValue = 100;
-      const half = Math.ceil(segmentCount / 2);
-      const coloredData = chartData.map((item, idx) => ({
-        ...item,
-        litres: sameValue,
-        bottles: sameValue,
-        color: idx < half ? this.baseColor() : '#e0e0e0',
-      }));
-
-      // Create color set from coloredData
-      const colorSet = am5.ColorSet.new(this.root, {
-        colors: coloredData.map((d) => am5.color(d.color)),
-      });
-
-      // Create outer series (thick ring)
-      let series0 = this.chart.series.push(
-        am5percent.PieSeries.new(this.root, {
-          valueField: 'litres',
-          categoryField: 'country',
-          startAngle: 160,
-          endAngle: 380,
-          radius: am5.percent(70),
-          innerRadius: am5.percent(65),
-        })
-      );
-
-      // Apply gap and solid color to outer series
-      series0.slices.template.setAll({
-        stroke: am5.color(0xffffff),
-        strokeWidth: this.segmentGap(),
-        strokeOpacity: 1,
-        fillOpacity: 1,
-      });
-
-      // Create inner series (thin ring)
-      let series1 = this.chart.series.push(
-        am5percent.PieSeries.new(this.root, {
-          startAngle: 160,
-          endAngle: 380,
-          valueField: 'bottles',
-          innerRadius: am5.percent(80),
-          categoryField: 'country',
-        })
-      );
-
-      // Apply gap and solid color to inner series
-      series1.slices.template.setAll({
-        stroke: am5.color(0xffffff),
-        strokeWidth: this.segmentGap(),
-        strokeOpacity: 1,
-        fillOpacity: 1,
-        cornerRadius: 20,
-      });
-
-      // Apply colorSet to outer series
-      series0.set('colors', colorSet);
-      // Apply colorSet to inner series
-      series1.set('colors', colorSet);
-
-      series1.ticks.template.set('forceHidden', true);
-      series1.labels.template.set('forceHidden', true);
-
-      // Create a series for the inner dotted border
-      let dottedSeries = this.chart.series.push(
-        am5percent.PieSeries.new(this.root, {
-          startAngle: 160,
-          endAngle: 380,
-          valueField: 'value',
-          categoryField: 'category',
-          innerRadius: am5.percent(60),
-          radius: am5.percent(60),
-        })
-      );
-
-      dottedSeries.slices.template.setAll({
-        fillOpacity: 0,
-        stroke: am5.color(0xe0e0e0),
-        strokeWidth: 1,
-        strokeDasharray: [5, 5],
-        strokeOpacity: 1,
-      });
-
-      // Single data item to create one continuous arc
-      dottedSeries.data.setAll([{ value: 1, category: 'border' }]);
-      dottedSeries.ticks.template.set('forceHidden', true);
-      dottedSeries.labels.template.set('forceHidden', true);
-
-      // Add bold 76% label
-      this.chart.seriesContainer.children.push(
-        am5.Label.new(this.root, {
-          textAlign: 'center',
-          centerY: am5.p50,
-          centerX: am5.p50,
-          y: -20,
-          text: '76 %',
-          fontSize: 30,
-          fontWeight: '800',
-          fill: am5.color(0x03c38b),
-          width: am5.percent(100),
-          height: am5.percent(30),
-        })
-      );
-
-      // Add normal Actual Progress label below
-      this.chart.seriesContainer.children.push(
-        am5.Label.new(this.root, {
-          textAlign: 'center',
-          centerY: am5.p100,
-          centerX: am5.p50,
-          y: 25,
-          text: 'Actual Progress',
-          fontSize: 20,
-          fontWeight: 'normal',
-          fill: am5.color(0x000000),
-          width: am5.percent(100),
-          height: am5.percent(10),
-        })
-      );
-
-      // Set data
-      series0.data.setAll(coloredData);
-      series1.data.setAll(coloredData);
-
-      // Hide all default series labels and ticks
-      series0.labels.template.set('forceHidden', true);
-      series0.ticks.template.set('forceHidden', true);
-
-      // Add static label for "Baseline"
-      this.chart.children.push(
-        am5.Label.new(this.root, {
-          text: '0%\n[bold]Baseline[/]',
-          x: am5.percent(20),
-          y: am5.percent(85),
-          fontSize: 14,
-          fill: am5.color(0x677184),
-          textAlign: 'center',
-        })
-      );
-
-      // Add static label for "Target"
-      this.chart.children.push(
-        am5.Label.new(this.root, {
-          text: '100%\n[bold]Target[/]',
-          x: am5.percent(75),
-          y: am5.percent(85),
-          fontSize: 14,
-          fill: am5.color(0x677184),
-          textAlign: 'center',
-        })
-      );
-
-      // Create legends container at the bottom (takes 30% of space)
-      this.createLegends();
     } catch (error) {
       console.error('Error creating chart:', error);
     }
