@@ -1,8 +1,21 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 
 @Component({
   selector: 'stc-apps-kpi-dashboard',
   templateUrl: './kpi-dashboard.component.html',
   styleUrls: ['./kpi-dashboard.component.scss'],
 })
-export class KpiDashboardComponent {}
+export class KpiDashboardComponent {
+  currentTab = signal<string>('Clusters'); // Set initial tab
+
+  customTabs = [
+    { label: 'Clusters', key: 'Clusters' },
+    { label: 'FUs', key: 'FUs' },
+    { label: 'T&O', key: 'T&O' },
+  ];
+
+  onTabChanged(tabName: string): void {
+    console.log('Active tab:', tabName);
+    this.currentTab.set(tabName); // Update current tab
+  }
+}

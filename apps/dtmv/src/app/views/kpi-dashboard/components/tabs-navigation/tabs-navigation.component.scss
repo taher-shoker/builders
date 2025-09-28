@@ -1,0 +1,13 @@
+mat-tab-group {
+    .tab-label-content {
+        font-size: 14px;
+    }
+
+::ng-deep {
+        .mat-mdc-tab-body-content {
+        overflow: hidden;
+    }
+}
+
+      
+}

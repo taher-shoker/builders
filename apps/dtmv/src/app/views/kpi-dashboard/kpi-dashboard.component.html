@@ -1,10 +1,26 @@
-<stc-apps-breadcrumb [bgColor]="'primary'"></stc-apps-breadcrumb>
-<stc-apps-banner> </stc-apps-banner>
+<div class="kpi-dashboard">
+  <stc-apps-breadcrumb [bgColor]="'primary'"></stc-apps-breadcrumb>
+  <stc-apps-banner> </stc-apps-banner>
 
-<div class="kpi-dashboard-container">
-  <div class="row">
-    <div class="col-md-4">
-      <stc-apps-actual-progress [title]="'Actual Progress 2025'"></stc-apps-actual-progress>
+  <div class="row mt-4">
+    <div class="kpi-dashboard_tabs">
+      <div class="kpi-dashboard_tabs_box">
+        <stc-apps-tabs-navigation
+        [tabs]="customTabs"
+        [selectedTab]="currentTab()"
+        (tabChanged)="onTabChanged($event)"
+      >
+        <div class="kpi-dashboard_container">
+          <div class="row">
+            <div class="col-md-4">
+              <stc-apps-actual-progress
+                [title]="'Actual Progress 2025'"
+              ></stc-apps-actual-progress>
+            </div>
+          </div>
+        </div>
+      </stc-apps-tabs-navigation>
+      </div>
     </div>
   </div>
 </div>

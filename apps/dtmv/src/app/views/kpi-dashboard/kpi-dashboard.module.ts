@@ -15,9 +15,11 @@ import { MatSliderModule } from '@angular/material/slider';
 import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule } from '@angular/forms';
 import { ActualProgressComponent } from './components/actual-progress/actual-progress.component';
+import { MatTabsModule } from '@angular/material/tabs';
+import { TabsNavigationComponent } from './components/tabs-navigation/tabs-navigation.component';
 
 @NgModule({
-  declarations: [KpiDashboardComponent, ActualProgressComponent],
+  declarations: [KpiDashboardComponent, ActualProgressComponent, TabsNavigationComponent],
   imports: [
     CommonModule,
     SharedUiModule,
@@ -32,6 +34,7 @@ import { ActualProgressComponent } from './components/actual-progress/actual-pro
     MatSliderModule,
     MatRadioModule,
     FormsModule,
+    MatTabsModule,
   ],
 })
 export class KpiDashboardModule {}

@@ -1,0 +1,31 @@
+.kpi-dashboard {
+    &_tabs {
+        position: relative;
+        top: -75px;
+        background: white;
+        width: 96%;
+        left: 2%;
+        border-radius: 7px;
+        padding-inline-start: 25px;
+
+        &_box {
+            border-radius: 7px;
+            margin-bottom: 16px;
+            background-color: var(--stc-white-color);
+            padding: 20px;
+
+            stc-apps-tabs-navigation {
+                ::ng-deep {
+                    .mat-mdc-tab-header {
+                        width: 30%;
+                        padding-inline-start: 0;
+                    }
+
+                    .mat-mdc-tab .mdc-tab-indicator__content--underline {
+                        border: 1px solid var(--stc-pink-color) !important;
+                    }
+                }
+            }
+        }
+    }
+}

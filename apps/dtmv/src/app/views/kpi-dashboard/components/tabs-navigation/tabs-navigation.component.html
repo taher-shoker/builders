@@ -1,0 +1,17 @@
+  <mat-tab-group
+    animationDuration="300ms"
+    [selectedIndex]="activeTabIndex()"
+    (selectedTabChange)="onTabChanged($event)"
+    class="tabs-navigation"
+  >
+    <mat-tab *ngFor="let tab of tabs()">
+      <ng-template mat-tab-label>
+        <div class="tab-label-content">
+          <span class="tab-text">{{ tab.label }}</span>
+        </div>
+      </ng-template>
+
+      <!-- Content will be projected from parent -->
+      <ng-content [select]="'[tabContent=' + tab.content + ']'"></ng-content>
+    </mat-tab>
+  </mat-tab-group>
