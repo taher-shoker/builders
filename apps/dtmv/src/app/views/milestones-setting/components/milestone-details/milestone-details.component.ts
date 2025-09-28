@@ -110,6 +110,7 @@ export class MilestoneDetailsComponent implements OnInit {
     this.isLoadingSteps = true;
 
     this.steps = [];
+
     if (this.milestoneDetails.currentMilestoneProgressUpdateDto) {
       this.progress =
         this.milestoneDetails.currentMilestoneProgressUpdateDto.overallProgress;
@@ -141,6 +142,8 @@ export class MilestoneDetailsComponent implements OnInit {
           'medium'
         ) || '';
     }
+
+
     if (!this.milestoneDetails.milestoneChangeRequest) {
       const initialStep: Step = {
         caption: `Milestone progress updated (${this.status})`,
@@ -156,6 +159,15 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   getMilestoneProgressWorkflow(params?: Params) {
+    if (
+      !this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId &&
+      !this.milestoneDetails.milestoneChangeRequest?.workflowId
+    ) {
+      // No workflow exists, stop loading immediately
+      this.isLoadingSteps = false;
+      return;
+    }
+
     if (
       (this.milestoneDetails.currentMilestoneProgressUpdateDto &&
         this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId) ||
