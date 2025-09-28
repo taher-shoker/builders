@@ -6,7 +6,7 @@ import { Component, signal } from '@angular/core';
   styleUrls: ['./kpi-dashboard.component.scss'],
 })
 export class KpiDashboardComponent {
-  currentTab = signal<string>('Clusters'); // Set initial tab
+  currentTab = signal<string>('Clusters');
 
   customTabs = [
     { label: 'Clusters', key: 'Clusters' },
@@ -16,6 +16,6 @@ export class KpiDashboardComponent {
 
   onTabChanged(tabName: string): void {
     console.log('Active tab:', tabName);
-    this.currentTab.set(tabName); // Update current tab
+    this.currentTab.set(tabName);
   }
 }

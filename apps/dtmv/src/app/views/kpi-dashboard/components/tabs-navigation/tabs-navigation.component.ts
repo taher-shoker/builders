@@ -1,4 +1,4 @@
-import { Component, computed, EventEmitter, input, Output } from '@angular/core';
+import { Component, computed, ContentChild, EventEmitter, input, Output, TemplateRef } from '@angular/core';
 
 export interface TabConfig {
   label: string;
@@ -15,12 +15,13 @@ export class TabsNavigationComponent {
   tabs = input<TabConfig[]>([]);
   selectedTab = input<string>('');
   @Output() tabChanged = new EventEmitter<string>();
+  @ContentChild('tabContent', { static: true }) tabContentTemplate!: TemplateRef<any>;
 
   activeTabIndex = computed(() => {
     const currentSelected = this.selectedTab();
     const tabsList = this.tabs();
     const index = tabsList.findIndex(tab => tab.key === currentSelected);
-    return index >= 0 ? index : 0; // Default to first tab if not found
+    return index >= 0 ? index : 0;
   });
 
 

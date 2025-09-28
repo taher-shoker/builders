@@ -3,11 +3,20 @@ mat-tab-group {
         font-size: 14px;
     }
 
-::ng-deep {
+    ::ng-deep {
         .mat-mdc-tab-body-content {
-        overflow: hidden;
-    }
-}
+            overflow: hidden;
+        }
 
-      
-}
+        .mat-mdc-tab {
+            &.mdc-tab--active {
+                background-color: var(--stc-white-color) !important;
+            }
+
+            &:not(.mdc-tab--active) {
+                color: #64748B !important;
+            }
+        }
+    }
+
+    }
