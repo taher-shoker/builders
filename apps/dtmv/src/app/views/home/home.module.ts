@@ -16,6 +16,7 @@ import { HomeComponent } from './home.component';
 import { MilestonesSettingModule } from '../milestones-setting/milestones-setting.module';
 import { VpReportModule } from '../vp-report/vp-report.module';
 import { FeedBackIssueModule } from '../feedback-issue/feedback-issue.module';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -27,6 +28,7 @@ import { FeedBackIssueModule } from '../feedback-issue/feedback-issue.module';
     RouterModule,
     TranslateModule,
     MatTableModule,
+    MatTabsModule,
     MatPaginatorModule,
     MatProgressSpinnerModule,
     MatExpansionModule,
