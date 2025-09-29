@@ -17,9 +17,10 @@ import { FormsModule } from '@angular/forms';
 import { ActualProgressComponent } from './components/actual-progress/actual-progress.component';
 import { MatTabsModule } from '@angular/material/tabs';
 import { TabsNavigationComponent } from './components/tabs-navigation/tabs-navigation.component';
+import { DiProgressComponent } from './components/di-progress/di-progress.component';
 
 @NgModule({
-  declarations: [KpiDashboardComponent, ActualProgressComponent, TabsNavigationComponent],
+  declarations: [KpiDashboardComponent, ActualProgressComponent, TabsNavigationComponent, DiProgressComponent],
   imports: [
     CommonModule,
     SharedUiModule,

@@ -1,0 +1,21 @@
+<div class="card">
+  <div class="card-header">
+    <h3>DI Progress</h3>
+    <div class="card-header_filters">
+      <stc-apps-select-drop-down
+        [label]="''"
+        [matLabel]="'Dimensions'"
+      ></stc-apps-select-drop-down>
+      <stc-apps-select-drop-down
+        [label]="''"
+        [matLabel]="'Monthly'"
+      ></stc-apps-select-drop-down>
+    </div>
+  </div>
+  <div class="card-body">
+    <stc-apps-line-chat-chart
+      [chartTitle]="'title'"
+      [chartData]="lineChartData"
+    ></stc-apps-line-chat-chart>
+  </div>
+</div>

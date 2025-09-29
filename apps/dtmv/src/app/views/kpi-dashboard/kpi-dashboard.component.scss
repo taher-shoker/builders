@@ -8,6 +8,13 @@
         border-radius: 7px;
     }
 
+    &_title {
+        font-size: 24px;
+        font-weight: 800;
+        color: var(--stc-color);
+        margin-bottom: 16px;
+    }
+
     &_tabs {
         border-radius: 7px;
         background-color: var(--stc-white-color);
