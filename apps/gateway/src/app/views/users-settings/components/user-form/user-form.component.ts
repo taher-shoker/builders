@@ -209,9 +209,9 @@ export class UserFormComponent implements OnInit, OnChanges {
     const email = this.form.get('email')?.value;
     const name = this.form.get('name')?.value;
     const jobTitle = this.form.get('jobTitle')?.value;
-    const pageAccess = this.form.get('pageAccess')?.value.map((p: number) => {
+    const pageAccess = this.form.get('pageAccess')?.value.length > 0 ? this.form.get('pageAccess')?.value.map((p: number) => {
       return { id: p };
-    });
+    }) : [];
 
     if (currentSystem === 'DI_Milestones') {
       dataForm = { userGroups, teams, email, name, jobTitle };
