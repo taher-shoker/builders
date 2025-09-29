@@ -112,7 +112,7 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
       });
 
       // Create outer series (thick ring)
-      let series0 = this.chart.series.push(
+      const series0 = this.chart.series.push(
         am5percent.PieSeries.new(this.root, {
           valueField: 'litres',
           categoryField: 'country',
@@ -132,7 +132,7 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
       });
 
       // Create inner series (thin ring)
-      let series1 = this.chart.series.push(
+      const series1 = this.chart.series.push(
         am5percent.PieSeries.new(this.root, {
           startAngle: 160,
           endAngle: 380,
@@ -160,7 +160,7 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
       series1.labels.template.set('forceHidden', true);
 
       // Create a series for the inner dotted border
-      let dottedSeries = this.chart.series.push(
+      const dottedSeries = this.chart.series.push(
         am5percent.PieSeries.new(this.root, {
           startAngle: 160,
           endAngle: 380,
