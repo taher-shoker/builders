@@ -3,6 +3,21 @@ import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
 
+export interface LegendSettings {
+  layout?: 'horizontal' | 'vertical' | 'grid';
+  itemSpacing?: number;
+  fontSize?: number;
+  fontWeight?: am5.ILabelSettings['fontWeight'];
+  maxWidth?: number;
+  marginTop?: number;
+  markerCornerRadius?: number;
+  markerWidth?: number;
+  markerHeight?: number;
+  labelCenterY?: am5.Percent | number;
+  y?: am5.Percent;
+  colors?: string[];
+}
+
 @Component({
   selector: 'stc-apps-line-chat-chart',
   templateUrl: './lineChart.component.html',
@@ -14,6 +29,7 @@ export class LineChatChartComponent implements OnInit {
   chartData: InputSignal<any[]> = input([{}]);
   chartTitle: InputSignal<string> = input('');
   popUpClick: InputSignal<boolean> = input(false);
+  legendSettings: InputSignal<LegendSettings | undefined> = input();
   array = ['avgDownStream'];
   constructor() {
     effect(() => {
@@ -28,6 +44,10 @@ export class LineChatChartComponent implements OnInit {
   }
 
   lineChart() {
+    if (!document.getElementById(this.chartdiv_id)) {
+      setTimeout(() => this.lineChart(), 100);
+      return;
+    }
     const data = this.chartData();
     this.root = am5.Root.new(this.chartdiv_id);
     if (this.root._logo) {
@@ -47,9 +67,12 @@ export class LineChatChartComponent implements OnInit {
       })
     );
 
-    const colors = ['#4f2b85', '#00aaff', '#ffaa00', '#ff3366', '#33cc99'];
+    const settings = this.legendSettings();
+
+    const defaultColors = ['#4f2b85', '#00aaff', '#ffaa00', '#ff3366', '#33cc99'];
+    const colors = settings?.colors ?? defaultColors;
     const allColors: am5.Color[] = colors.map((color) => am5.color(color));
-    chart.get('colors')?.set('colors', allColors);
+    chart.get('colors')?.set('colors', allColors);    
 
     const cursor = chart.set('cursor', am5xy.XYCursor.new(this.root, {}));
     cursor.lineY.set('visible', false);
@@ -88,8 +111,11 @@ export class LineChatChartComponent implements OnInit {
     const valueKeys = Object.keys(sample).filter((k) => k.startsWith('value'));
 
     valueKeys.forEach((key, index) => {
-      const indicatorName = sample[`indicatorName`] ?? `Series ${index + 1}`;
-
+      // const indicatorName = sample[`indicatorName`] ?? `Series ${index + 1}`;
+      const indicatorName =
+        sample[`indicatorName${key.replace('value', '')}`] ??
+        sample[`indicatorName`] ??
+        `Series ${index + 1}`;
       const series = chart.series.push(
         am5xy.LineSeries.new(this.root, {
           name: indicatorName,
@@ -145,19 +171,41 @@ export class LineChatChartComponent implements OnInit {
       am5.Legend.new(this.root, {
         centerX: am5.percent(50),
         x: am5.percent(50),
-        y: am5.percent(90),
-        marginTop: 20,
+        y: settings?.y ?? am5.percent(90),
+        marginTop: settings?.marginTop ?? 20,
         useDefaultMarker: true,
       })
     );
 
+    if (settings) {
+      if (settings.layout === 'horizontal') {
+        legend.set('layout', this.root.horizontalLayout);
+      }
+
+      const markerTemplate = legend.markerRectangles.template;
+
+      markerTemplate.setAll({
+        width: settings.markerWidth,
+        height: settings.markerHeight,
+      });
+
+      markerTemplate.setAll({
+        cornerRadiusTL: settings.markerCornerRadius,
+        cornerRadiusTR: settings.markerCornerRadius,
+        cornerRadiusBL: settings.markerCornerRadius,
+        cornerRadiusBR: settings.markerCornerRadius,
+      });
+    }
+
     legend.data.setAll(chart.series.values);
 
     legend.labels.template.setAll({
-      fontSize: window.innerWidth < 768 ? 12 : 14,
-      maxWidth: 200,
+      fontSize: settings?.fontSize ?? (window.innerWidth < 768 ? 12 : 14),
+      maxWidth: settings?.maxWidth ?? 200,
       oversizedBehavior: 'wrap',
-      fontWeight: window.innerWidth < 768 ? 'bold' : 'normal',
+      fontWeight:
+        settings?.fontWeight ?? (window.innerWidth < 768 ? 'bold' : 'normal'),
+      centerY: settings?.labelCenterY ?? undefined,
     });
 
     chart.appear(1000, 100);
