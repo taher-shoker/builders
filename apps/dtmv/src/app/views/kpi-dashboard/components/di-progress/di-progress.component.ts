@@ -1,56 +1,148 @@
-import { Component, input, InputSignal, OnInit } from '@angular/core';
-import { LineChartData } from '@stc-apps/shared-ui';
+/* eslint-disable @nx/enforce-module-boundaries */
+import { AfterViewInit, Component, input, InputSignal } from '@angular/core';
+import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
+import * as am5 from '@amcharts/amcharts5';
 
 @Component({
   selector: 'stc-apps-di-progress',
   templateUrl: './di-progress.component.html',
-  styleUrls: ['./di-progress.component.scss']
+  styleUrls: ['./di-progress.component.scss'],
 })
-export class DiProgressComponent implements OnInit {
+export class DiProgressComponent implements AfterViewInit {
   title: InputSignal<string> = input('');
-  //Hold the line of the data
-  lineChartData: LineChartData[] = [];
 
-  //Hold the line of the target
-  lineChartTarget: LineChartData[] = [];
+  chartData: any[] = [];
+  legendSettings: LegendSettings = {
+    layout: 'horizontal',
+    itemSpacing: 10,
+    markerCornerRadius: 10,
+    fontSize: 12,
+    markerWidth: 10,
+    markerHeight: 10,
+    marginTop: 30,
+    labelCenterY: am5.percent(70),
+    colors: [
+      '#277FF1',
+      '#00C48C',
+      '#FF6A39',
+      '#4F008C',
+    ],
+  };
 
-  lineChartColors = ['#45006F', '#FF6A39'];
-
-    ngOnInit(): void {
-       this.initializeDummyData();
+  ngAfterViewInit(): void {
+    setTimeout(() => {
+      this.initializeDummyData();
+    });
   }
 
-   private initializeDummyData(): void {
-    // Generate dummy data for the main line chart
-    this.lineChartData = [
-      { category: '2024-01-01', value: 65, caseCount: 10 },
-      { category: '2024-02-01', value: 72, caseCount: 15 },
-      { category: '2024-03-01', value: 68, caseCount: 12 },
-      { category: '2024-04-01', value: 80, caseCount: 18 },
-      { category: '2024-05-01', value: 75, caseCount: 14 },
-      { category: '2024-06-01', value: 85, caseCount: 20 },
-      { category: '2024-07-01', value: 78, caseCount: 16 },
-      { category: '2024-08-01', value: 90, caseCount: 22 },
-      { category: '2024-09-01', value: 82, caseCount: 19 },
-      { category: '2024-10-01', value: 88, caseCount: 21 },
-      { category: '2024-11-01', value: 95, caseCount: 25 },
-      { category: '2024-12-01', value: 92, caseCount: 23 }
+  private initializeDummyData(): void {
+    const rawData = [
+      {
+        x: 'Jan',
+        value1: 65,
+        value2: 45,
+        value3: 75,
+        value4: 55,
+        indicatorName1: 'Sara',
+        indicatorName2: 'Alaa',
+        indicatorName3: 'Alkurdy',
+        indicatorName4: 'Test',
+      },
+      {
+        x: 'Feb',
+        value1: 72,
+        value2: 52,
+        value3: 68,
+        value4: 60,
+      },
+      {
+        x: 'Mar',
+        value1: 68,
+        value2: 58,
+        value3: 72,
+        value4: 58,
+      },
+      {
+        x: 'Apr',
+        value1: 80,
+        value2: 65,
+        value3: 78,
+        value4: 65,
+      },
+      {
+        x: 'May',
+        value1: 75,
+        value2: 70,
+        value3: 82,
+        value4: 70,
+      },
+      {
+        x: 'Jun',
+        value1: 85,
+        value2: 75,
+        value3: 88,
+        value4: 75,
+      },
+      {
+        x: 'Jul',
+        value1: 78,
+        value2: 68,
+        value3: 85,
+        value4: 72,
+      },
+      {
+        x: 'Aug',
+        value1: 90,
+        value2: 80,
+        value3: 92,
+        value4: 82,
+      },
+      {
+        x: 'Sep',
+        value1: 82,
+        value2: 72,
+        value3: 87,
+        value4: 78,
+      },
+      {
+        x: 'Oct',
+        value1: 88,
+        value2: 78,
+        value3: 90,
+        value4: 85,
+      },
+      {
+        x: 'Nov',
+        value1: 95,
+        value2: 85,
+        value3: 94,
+        value4: 90,
+      },
+      {
+        x: 'Dec',
+        value1: 92,
+        value2: 82,
+        value3: 96,
+        value4: 88,
+      },
     ];
 
-    // Generate dummy data for the target line (dashed line)
-    this.lineChartTarget = [
-      { category: '2024-01-01', value: 70 },
-      { category: '2024-02-01', value: 70 },
-      { category: '2024-03-01', value: 70 },
-      { category: '2024-04-01', value: 75 },
-      { category: '2024-05-01', value: 75 },
-      { category: '2024-06-01', value: 80 },
-      { category: '2024-07-01', value: 80 },
-      { category: '2024-08-01', value: 85 },
-      { category: '2024-09-01', value: 85 },
-      { category: '2024-10-01', value: 90 },
-      { category: '2024-11-01', value: 90 },
-      { category: '2024-12-01', value: 95 }
-    ];
+    const indicatorNames = {
+      indicatorName1: 'Capability Building',
+      indicatorName2: 'Capability Utilization',
+      indicatorName3: 'Digital Experience & Impact',
+      indicatorName4: 'B2C DI (Total)',
+    };
+
+    this.chartData = rawData.map((monthData) => {
+      return {
+        x: monthData.x,
+        value1: monthData.value1,
+        value2: monthData.value2,
+        value3: monthData.value3,
+        value4: monthData.value4,
+        ...indicatorNames,
+      };
+    });
   }
 }
