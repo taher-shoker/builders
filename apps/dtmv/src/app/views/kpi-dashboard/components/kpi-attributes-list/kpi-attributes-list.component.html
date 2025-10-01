@@ -1,0 +1,13 @@
+<div class="kpi-attributes-list">
+  @for (attribute of attributes(); track attribute.label) {
+  <div class="kpi-attributes-list_item">
+    <div class="kpi-attributes-list_item_content">
+      <span class="attribute-label">{{ attribute.label }}</span>
+      <span class="attribute-value">{{ attribute.value }}</span>
+    </div>
+    <div class="kpi-attributes-list_item_icon">
+      <img [src]="attribute.icon" alt="" /> 
+    </div>
+  </div>
+  }
+</div>
