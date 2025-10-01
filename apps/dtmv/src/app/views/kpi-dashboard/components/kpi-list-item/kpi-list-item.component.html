@@ -1,0 +1,33 @@
+<div
+  class="kpi-list-item"
+  [class.selected]="isSelected()"
+  (click)="selectKpi.emit(kpi)"
+>
+  <div class="kpi-list-item_header">
+    <div class="kpi-list-item_header_title">
+      <h4>{{ kpi().description }}</h4>
+      <p>{{ kpi().name }}</p>
+    </div>
+    <div class="kpi-list-item_header_actions">
+      <stc-apps-kpi-actions [kpi]="kpi()"></stc-apps-kpi-actions>
+    </div>
+  </div>
+
+  <div class="kpi-list-item_attributes">
+    <h4 class="kpi-list-item_title">Attributes</h4>
+    <stc-apps-kpi-attributes-list
+      [attributes]="attributes()"
+    ></stc-apps-kpi-attributes-list>
+  </div>
+
+  <div class="kpi-list-item_chart">
+    <h4 class="kpi-list-item_title">Actual Progress</h4>
+    @if(chartData && chartData.length > 0) {
+    <stc-apps-line-chat-chart
+      [chartData]="chartData"
+      [chartTitle]="''"
+      [legendSettings]="legendSettings"
+    ></stc-apps-line-chat-chart>
+    }
+  </div>
+</div>
