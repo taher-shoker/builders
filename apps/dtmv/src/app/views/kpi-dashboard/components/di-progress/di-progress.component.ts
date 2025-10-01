@@ -43,10 +43,6 @@ export class DiProgressComponent implements AfterViewInit {
         value2: 45,
         value3: 75,
         value4: 55,
-        indicatorName1: 'Sara',
-        indicatorName2: 'Alaa',
-        indicatorName3: 'Alkurdy',
-        indicatorName4: 'Test',
       },
       {
         x: 'Feb',

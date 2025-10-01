@@ -1,8 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-
 import { KpiDashboardRoutingModule } from './kpi-dashboard-routing.module';
-import { KpiDashboardComponent } from './kpi-dashboard.component';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { RouterModule } from '@angular/router';
 import { MatListModule } from '@angular/material/list';
@@ -13,14 +11,38 @@ import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatRadioModule } from '@angular/material/radio';
-import { FormsModule } from '@angular/forms';
-import { ActualProgressComponent } from './components/actual-progress/actual-progress.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
+
+import { KpiDashboardComponent } from './kpi-dashboard.component';
+import { ActualProgressComponent } from './components/actual-progress/actual-progress.component';
 import { TabsNavigationComponent } from './components/tabs-navigation/tabs-navigation.component';
 import { DiProgressComponent } from './components/di-progress/di-progress.component';
+import { KpiListComponent } from './components/kpi-list/kpi-list.component';
+import { KpiListItemComponent } from './components/kpi-list-item/kpi-list-item.component';
+import { KpiListHeaderComponent } from './components/kpi-list-header/kpi-list-header.component';
+import { KpiSearchComponent } from './components/kpi-search/kpi-search.component';
+import { KpiListSectionComponent } from './components/kpi-list-section/kpi-list-section.component';
+import { KpiActionsComponent } from './components/kpi-actions/kpi-actions.component';
+import { KpiAttributesListComponent } from './components/kpi-attributes-list/kpi-attributes-list.component';
+
 
 @NgModule({
-  declarations: [KpiDashboardComponent, ActualProgressComponent, TabsNavigationComponent, DiProgressComponent],
+  declarations: [
+    KpiDashboardComponent,
+    ActualProgressComponent,
+    TabsNavigationComponent,
+    DiProgressComponent,
+    KpiListComponent,
+    KpiListItemComponent,
+    KpiListHeaderComponent,
+    KpiSearchComponent,
+    KpiListSectionComponent,
+    KpiActionsComponent,
+    KpiAttributesListComponent,
+  ],
   imports: [
     CommonModule,
     SharedUiModule,
@@ -36,6 +58,9 @@ import { DiProgressComponent } from './components/di-progress/di-progress.compon
     MatRadioModule,
     FormsModule,
     MatTabsModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    MatIconModule,
   ],
 })
 export class KpiDashboardModule {}
