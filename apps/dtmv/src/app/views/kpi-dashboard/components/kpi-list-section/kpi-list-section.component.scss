@@ -1,0 +1,16 @@
+.kpi-list-section {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+
+    &_item {
+        height: 100%;
+    }
+
+    &_filters,
+    &_item {
+        border: 1px solid var(--lightGrey);
+        padding: 16px 24px;
+        border-radius: 10px;
+    }
+}

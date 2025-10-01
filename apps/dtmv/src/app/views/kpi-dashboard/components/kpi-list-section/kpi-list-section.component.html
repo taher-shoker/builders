@@ -1,0 +1,30 @@
+<div class="kpi-list-section card">
+  <stc-apps-kpi-list-header></stc-apps-kpi-list-header>
+
+  <div class="kpi-list_section_body card-body">
+    <div class="row">
+      <div class="col-md-3">
+        <div class="kpi-list-section_filters">
+          <stc-apps-kpi-search></stc-apps-kpi-search>
+          <stc-apps-kpi-list
+            [selectedKpi]="selectedKpi()"
+            (kpiSelected)="onKpiSelected($event)"
+          ></stc-apps-kpi-list>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="kpi-list-section_item">
+          @if(selectedKpi()) {
+          <stc-apps-kpi-list-item
+            [kpi]="selectedKpi()!"
+          ></stc-apps-kpi-list-item>
+          } @else {
+          <div class="no-kpi-selected">
+            Please select a KPI to view details.
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
