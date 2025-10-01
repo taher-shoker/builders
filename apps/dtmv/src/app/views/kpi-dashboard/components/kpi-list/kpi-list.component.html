@@ -1,0 +1,18 @@
+<div class="kpi-list">
+  <!-- KPI List -->
+  <div class="kpi-list_content">
+    @for(kpi of filteredKpis(); track kpi.id){
+    <div
+      class="kpi-list_item"
+      [ngClass]="{ 'selected': selectedKpi()?.id === kpi.id }"
+      (click)="onKpiSelect(kpi)"
+    >
+      <div class="kpi-list_item_header">
+        <h4 class="kpi-name">{{ kpi.description }}</h4>
+      </div>
+
+      <p class="kpi-list_item_description">{{ kpi.name }}</p>
+    </div>
+    }
+  </div>
+</div>
