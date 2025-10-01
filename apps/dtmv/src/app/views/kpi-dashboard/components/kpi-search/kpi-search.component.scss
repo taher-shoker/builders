@@ -1,0 +1,27 @@
+.kpi-list {
+    &_search {
+        stc-apps-input {
+            ::ng-deep {
+                .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+                    background-color: transparent;
+                    border: 1px solid #CBD5E1;
+                    border-radius: 10px !important;
+                }
+
+                .input-group.stc-input-group .input-group-text {
+                    color: #CBD5E1;
+                }
+            }
+        }
+
+        stc-apps-select-drop-down {
+            ::ng-deep {
+                .mdc-text-field--filled {
+                    background-color: transparent;
+                    border: 1px solid var(--light-slate-gray);
+                    border-radius: 5px !important;
+                }
+            }
+        }
+    }
+}
