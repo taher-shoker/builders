@@ -1,0 +1,44 @@
+.dialog {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 43px;
+    overflow-y: scroll;
+    max-height: 500px;
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            color: var(--stc-color);
+            font-size: 20px;
+            padding: 0;
+            font-weight: 600;
+        }
+
+        button {
+            border: none;
+            background-color: transparent;
+            line-height: 0;
+
+            mat-icon {
+                color: #8a8aa3;
+            }
+        }
+    }
+
+    .dialog_body {
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+    }
+
+    .dialog_footer {
+        display: flex;
+        justify-content: end;
+        gap: 24px
+    }
+}

@@ -1,0 +1,82 @@
+<div class="dialog">
+  <div class="dialog_header">
+    <h2 mat-dialog-title>{{ dialogTitle }}</h2>
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog_body" [formGroup]="kpiForm" (ngSubmit)="onSubmit()">
+    <div class="row">
+      <div class="col-12">
+        <stc-apps-input
+          [inputName]="'KPI Name'"
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Add KPI name'"
+          formControlName="kpiName"
+        ></stc-apps-input>
+
+        <stc-apps-input
+          [inputName]="'Current Value'"
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Add Current Value'"
+          formControlName="currentValue"
+        ></stc-apps-input>
+
+        <stc-apps-input
+          [inputName]="'KPI formula'"
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Enter KPI formula e.g. (Current/Target)*100'"
+          formControlName="kpiFormula"
+        ></stc-apps-input>
+      </div>
+
+      <div class="col-md-6">
+        <stc-apps-input
+          [inputName]="'Weight'"
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Add Weight'"
+          formControlName="weight"
+        ></stc-apps-input>
+      </div>
+      <div class="col-md-6">
+        <stc-apps-input
+          [inputName]="'Baseline'"
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Add Baseline'"
+          formControlName="baseline"
+        ></stc-apps-input>
+      </div>
+      <div class="col-md-6">
+        <stc-apps-input
+          [inputName]="'Target'"
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Add Target'"
+          formControlName="target"
+        ></stc-apps-input>
+      </div>
+      <div class="col-md-6">
+        <stc-apps-input
+          [inputName]="'Ambition'"
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Add Ambition'"
+          formControlName="ambition"
+        ></stc-apps-input>
+      </div>
+    </div>
+  </div>
+
+  <div class="dialog_footer">
+    <stc-apps-button
+      [buttonText]="'Cancel'"
+      [buttonType]="'gray-outline'"
+      (btnClick)="onCancel()"
+    ></stc-apps-button>
+
+    <stc-apps-button
+      [buttonText]="isEditMode ? 'Save Changes' : 'Add'"
+      [buttonType]="'primary'"
+      (btnClick)="onSubmit()"
+    ></stc-apps-button>
+  </div>
+</div>

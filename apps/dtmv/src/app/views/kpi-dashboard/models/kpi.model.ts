@@ -11,3 +11,21 @@ export interface KPI {
   owner?: string;
   category?: string;
 }
+
+export interface DialogConfig {
+  width?: string;
+  height?: string;
+  disableClose?: boolean;
+  data?: any;
+}
+
+export interface DialogResult<T = any> {
+  success: boolean;
+  data?: T;
+  action?: 'save' | 'delete' | 'cancel';
+}
+
+export interface KpiFormDialogData {
+  kpi?: KPI;
+  mode: 'add' | 'edit';
+}
