@@ -1,5 +1,7 @@
 <div class="kpi-list-section card">
-  <stc-apps-kpi-list-header></stc-apps-kpi-list-header>
+  <stc-apps-kpi-list-header
+    (addKpi)="onAddNewKpi()"
+  ></stc-apps-kpi-list-header>
 
   <div class="kpi-list_section_body card-body">
     <div class="row">
@@ -17,6 +19,9 @@
           @if(selectedKpi()) {
           <stc-apps-kpi-list-item
             [kpi]="selectedKpi()!"
+            (edit)="onEditKpi($event)"
+            (updateValue)="onUpdateKpiValue($event)"
+            (delete)="onDeleteKpi($event)"
           ></stc-apps-kpi-list-item>
           } @else {
           <div class="no-kpi-selected">
