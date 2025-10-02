@@ -1,15 +1,16 @@
- <div class="kpi-list_header">
-    <h3>List of KPIs</h3>
-    <div class="kpi-list_actons">
-      <stc-apps-button
-        buttonText="Export"
-        [buttonIcon]="' fa-arrow-down'"
-        [buttonType]="'stc-color-outline'"
-      ></stc-apps-button>
-      <stc-apps-button
-        buttonText="Add New KPI"
-        [buttonIcon]="' fa-plus'"
-        [buttonType]="'primary'"
-      ></stc-apps-button>
-    </div>
+<div class="kpi-list_header">
+  <h3>List of KPIs</h3>
+  <div class="kpi-list_actons">
+    <stc-apps-button
+      buttonText="Export"
+      [buttonIcon]="' fa-arrow-down'"
+      [buttonType]="'stc-color-outline'"
+    ></stc-apps-button>
+    <stc-apps-button
+      buttonText="Add New KPI"
+      [buttonIcon]="' fa-plus'"
+      [buttonType]="'primary'"
+      (click)="onAddKpi()"
+    ></stc-apps-button>
   </div>
+</div>

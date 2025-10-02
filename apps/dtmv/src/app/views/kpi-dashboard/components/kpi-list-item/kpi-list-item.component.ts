@@ -25,6 +25,8 @@ export class KpiListItemComponent implements OnInit {
   @Output() activityLog = new EventEmitter<KPI>();
   @Output() updateValue = new EventEmitter<KPI>();
   @Output() viewList = new EventEmitter<KPI>();
+  @Output() edit = new EventEmitter<KPI>();
+  @Output() delete = new EventEmitter<KPI>();
 
   chartData: any[] = [];
   colors: string[] = ['#7C3BED'];
@@ -84,6 +86,14 @@ export class KpiListItemComponent implements OnInit {
 
   onViewList(kpi: KPI): void {
     this.viewList.emit(kpi);
+  }
+
+  onEdit(kpi: KPI): void {
+    this.edit.emit(kpi);
+  }
+
+  onDelete(kpi: KPI): void {
+    this.delete.emit(kpi);
   }
 
   private initializeDummyChartData(): void {

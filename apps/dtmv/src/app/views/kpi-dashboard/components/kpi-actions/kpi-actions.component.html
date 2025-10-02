@@ -1,5 +1,5 @@
 <div class="kpi-actions">
-  <span>Update actual value</span>
+  <span (click)="onUpdateValue()">Update actual value</span>
 
   <!-- Activity Log Button -->
   <stc-apps-button
@@ -14,15 +14,13 @@
   </button>
 
   <mat-menu #menu="matMenu">
-  <button mat-menu-item>
+  <button mat-menu-item (click)="onEdit()">
     <mat-icon>edit</mat-icon>
     <span>Edit</span>
   </button>
-  <button mat-menu-item>
-   <mat-icon>close</mat-icon>
+  <button mat-menu-item (click)="onDelete()">
+   <mat-icon>delete</mat-icon>
     <span>Delete</span>
   </button>
 </mat-menu>
 </div>
-
-

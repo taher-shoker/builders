@@ -12,6 +12,8 @@ export class KpiActionsComponent {
   @Output() activityLog = new EventEmitter<KPI>();
   @Output() updateValue = new EventEmitter<KPI>();
   @Output() viewList = new EventEmitter<KPI>();
+  @Output() edit = new EventEmitter<KPI>();
+  @Output() delete = new EventEmitter<KPI>();
 
   onActivityLog(): void {
     this.activityLog.emit(this.kpi());
@@ -23,5 +25,13 @@ export class KpiActionsComponent {
 
   onViewList(): void {
     this.viewList.emit(this.kpi());
+  }
+
+  onEdit(): void {
+    this.edit.emit(this.kpi());
+  }
+
+  onDelete(): void {
+    this.delete.emit(this.kpi());
   }
 }

@@ -9,7 +9,12 @@
       <p>{{ kpi().name }}</p>
     </div>
     <div class="kpi-list-item_header_actions">
-      <stc-apps-kpi-actions [kpi]="kpi()"></stc-apps-kpi-actions>
+      <stc-apps-kpi-actions
+        [kpi]="kpi()"
+        (edit)="onEdit(kpi())"
+        (updateValue)="onUpdateValue(kpi())"
+        (delete)="onDelete(kpi())"
+      ></stc-apps-kpi-actions>
     </div>
   </div>
 
