@@ -27,6 +27,9 @@ import { KpiSearchComponent } from './components/kpi-search/kpi-search.component
 import { KpiListSectionComponent } from './components/kpi-list-section/kpi-list-section.component';
 import { KpiActionsComponent } from './components/kpi-actions/kpi-actions.component';
 import { KpiAttributesListComponent } from './components/kpi-attributes-list/kpi-attributes-list.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { KpiFormDialogComponent } from './components/kpi-form-dialog/kpi-form-dialog.component';
+import { UpdateValueDialogComponent } from './components/update-value-dialog/update-value-dialog.component';
 
 
 @NgModule({
@@ -42,6 +45,8 @@ import { KpiAttributesListComponent } from './components/kpi-attributes-list/kpi
     KpiListSectionComponent,
     KpiActionsComponent,
     KpiAttributesListComponent,
+    KpiFormDialogComponent,
+    UpdateValueDialogComponent,
   ],
   imports: [
     CommonModule,
@@ -61,6 +66,7 @@ import { KpiAttributesListComponent } from './components/kpi-attributes-list/kpi
     ReactiveFormsModule,
     MatMenuModule,
     MatIconModule,
+    MatDialogModule
   ],
 })
 export class KpiDashboardModule {}
