@@ -55,6 +55,8 @@ export class AddPsrProjectFormComponent implements OnInit {
   projectId = '';
   userData!: UserModel;
   scorecardService = inject(ScorecardService);
+  userPMs: { name: string; code: string }[] = [];
+
   ngOnInit(): void {
     if (this.scorecardService.getUserGroups()) {
       this.userData = JSON.parse(
@@ -65,6 +67,7 @@ export class AddPsrProjectFormComponent implements OnInit {
       this.router.url.startsWith('/project-execution/add-program') ||
       this.router.url.startsWith('/project-execution/edit-program')
     ) {
+      this.getPMs();
       this.inPSRForm = true;
     } else {
       this.inPSRForm = false;
@@ -163,6 +166,7 @@ export class AddPsrProjectFormComponent implements OnInit {
         sector: [null, [Validators.required, this.noSpacesValidator]],
         details: [null, [Validators.required, this.noSpacesValidator]],
         plannedDate: [null, [Validators.required]],
+        pms: [null],
       });
     } else {
       this.inPSRForm = false;
@@ -244,9 +248,6 @@ export class AddPsrProjectFormComponent implements OnInit {
     return errorMag;
   }
   changeStartDate(program: AbstractControl, startDate: Date) {
-    // console.log(startDate);
-    // program.get('startDate')?.value;
-    // console.log(program.get('startDate'));
     if (startDate) {
       this.messageHint = '';
     }
@@ -336,11 +337,13 @@ export class AddPsrProjectFormComponent implements OnInit {
             });
         } else {
           const newArr: AddProgramModel[] = [];
+          console.log(this.programsList);
           this.programsList.value.forEach((d: ProgramModel) => {
             newArr.push({
               sector: d.sector,
               details: d.details,
               plannedDate: this.formatDate(d.plannedDate),
+              pms: d.pms,
             });
           });
           this.psrService.addNewProgram(newArr).subscribe({
@@ -367,7 +370,21 @@ export class AddPsrProjectFormComponent implements OnInit {
       },
     });
   }
+  handleChangePM(event: Event) {
+    console.log(event);
+  }
+  private getPMs() {
+    this.psrService.getAllPMUsers().subscribe({
+      next: (res: string[]) => {
+        console.log(res);
+        this.userPMs = res.map((u: string) => {
+          return { name: u, code: u };
+        });
+      },
+    });
+  }
   private editProgramData(data: AddProgramModel) {
+    console.log(data);
     data.plannedDate = this.formatDate(new Date(data.plannedDate));
     this.psrService.editProgram(data, this.programId).subscribe({
       next: () => {

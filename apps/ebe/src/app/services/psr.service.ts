@@ -62,6 +62,11 @@ export class PSRService {
       `${environment.apiUrl}/business-excellence/psr/executiveView`
     );
   }
+  getAllPMUsers(): Observable<string[]> {
+    return this.http.get<string[]>(
+      `${environment.apiUrl}/admin/users/allUsersInRole?system=Business_Excellence_Dashboard&role=BE_PM`
+    );
+  }
   getExecuteProjectDetailsData(
     groupName: string
   ): Observable<PSRProjectDetailsModel[]> {
