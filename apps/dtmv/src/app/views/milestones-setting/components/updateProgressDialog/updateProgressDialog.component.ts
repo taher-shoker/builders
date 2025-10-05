@@ -9,23 +9,29 @@ import { customValidator } from './invalidValue.validator';
   styleUrl: './updateProgressDialog.component.scss',
 })
 export class UpdateProgressDialogComponent {
-
   overallProgressFloor = 0;
+  isPlannedStatus = false;
 
   form!: FormGroup;
 
   constructor(
     public dialogRef: MatDialogRef<UpdateProgressDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { overallProgress: string, milestoneName: string }
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      overallProgress: string;
+      milestoneName: string;
+      status: string;
+    }
   ) {
-    if(data.overallProgress){
-      this.overallProgressFloor = Number(data.overallProgress)
+    this.isPlannedStatus = data.status?.toLowerCase() == 'planned';
+    if (data.overallProgress) {
+      this.overallProgressFloor = Number(data.overallProgress);
     }
 
     this.form = new FormGroup({
       overallProgress: new FormControl('', [
         Validators.required,
-        customValidator(this.overallProgressFloor),
+        customValidator(this.overallProgressFloor, this.isPlannedStatus),
         Validators.pattern('^[0-9]+$|^([0-9]+)\\.([0-9]+)$'),
       ]),
       // overallProgress: new FormControl('', [Validators.required, customValidator(this.overallProgressFloor), Validators.pattern('^(?!.*[a-zA-Z]).*[0-9]+(.[0-9]+)?$')]), // remove due to the special characters was a bug
