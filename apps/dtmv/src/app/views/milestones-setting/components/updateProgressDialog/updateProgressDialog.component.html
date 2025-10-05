@@ -24,9 +24,15 @@
               </mat-error> -->
           @if (form.get('overallProgress')?.hasError('pattern') ) {
           <mat-error> Must be valid number </mat-error>
+          } @else if
+          (form.get('overallProgress')?.hasError('plannedStatusLimit')) {
+          <mat-error>
+            Progress cannot be 100% for milestones in planned status.
+          </mat-error>
           }@else if (form.get('overallProgress')?.hasError('invalidValue')) {
           <mat-error>
-            Value must be greater than {{overallProgressFloor}} and maximum 100.
+            Value must be greater than {{ overallProgressFloor }} and maximum
+            100.
           </mat-error>
           } }
         </div>
