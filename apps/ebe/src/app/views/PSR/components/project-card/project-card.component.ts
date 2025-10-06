@@ -133,7 +133,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
   $endScorecardActivityLogsSub:Subject<any> = new Subject();
   private getSpecificActivityLog(moduleName:string , subModule?:string , projectName?:string , entity?:string , showParentData?:boolean)
   {
-    
+
     this.activityLogService.getSpecificActivityLog(moduleName , this.isDeleted() ? "Add,Edit,Delete" : "Add,Edit" , subModule , projectName , entity , showParentData).pipe(takeUntil(this.$endScorecardActivityLogsSub)).subscribe({
       next : (activityLogs:ActivityLogData[]) => {
         this.activityLogsTableBody.set(activityLogs);
@@ -153,7 +153,7 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
     this.$endScorecardActivityLogsSub.complete();
   }
 
-  ngOnChanges(): void {    
+  ngOnChanges(): void {
     this.chartData = {
       actual : this.project().actual ? this.project().actual : 0,
       planned : this.project().planned ? this.project().planned : 0
@@ -161,7 +161,6 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
     const textArr:string[] = this.project().details?.trim()?.split(' ') ?? [];
     const filteredArray = textArr.filter(item => item !== '');
     this.maxTextLength = filteredArray.length;
-    // console.log(filteredArray);
   }
   openActionsMenu()
   {
@@ -210,6 +209,6 @@ export class PSRProjectCardComponent implements OnChanges , OnInit {
     this.close();
   }
   gotoProjectDetailsPage(){
-   localStorage.setItem("sector" , this.project().sector) 
+   localStorage.setItem("sector" , this.project().sector)
   }
 }

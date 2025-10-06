@@ -56,7 +56,7 @@ export class AddPsrProjectFormComponent implements OnInit {
   userData!: UserModel;
   scorecardService = inject(ScorecardService);
   userPMs: { name: string; id: string }[] = [];
-  selectedPMS = [];
+  selectedPMS: { name: string; id: string }[] = [];
   ngOnInit(): void {
     if (this.scorecardService.getUserGroups()) {
       this.userData = JSON.parse(
@@ -90,7 +90,6 @@ export class AddPsrProjectFormComponent implements OnInit {
             this.programId = +param['id'];
             this.getValuesById(+param['id']);
           } else {
-            // console.log(param);
             if (param['sector'] && param['projId']) {
               this.projectId = param['projId'];
               this.getProjectValuesById(param['sector'], +param['projId']);
@@ -325,7 +324,6 @@ export class AddPsrProjectFormComponent implements OnInit {
               actualSpending: data.actualSpending,
             });
           });
-          // console.log("addedProjects => " , this.addedProjects);
           this.psrService
             .addNewProject(this.addedProjects, this.sectorName)
             .subscribe({
@@ -337,7 +335,6 @@ export class AddPsrProjectFormComponent implements OnInit {
             });
         } else {
           const newArr: AddProgramModel[] = [];
-          console.log(this.programsList);
           this.programsList.value.forEach((d: ProgramModel) => {
             newArr.push({
               sector: d.sector,
@@ -362,9 +359,9 @@ export class AddPsrProjectFormComponent implements OnInit {
       next: (res: PSRDataModel) => {
         this.programsList.controls[0].get('sector')?.setValue(res.sector);
         this.programsList.controls[0].get('details')?.setValue(res.details);
-        //this.programsList.controls[0].get('pms')?.setValue(res.pms);
-        console.log(res.pms);
-        this.selectedPMS = res.pms;
+        if (res?.pms) {
+          this.selectedPMS = res.pms;
+        }
         if (res.plannedDate) {
           this.programsList.controls[0]
             .get('plannedDate')
@@ -373,13 +370,10 @@ export class AddPsrProjectFormComponent implements OnInit {
       },
     });
   }
-  handleChangePM(p: any, event: Event) {
-    console.log(event);
-  }
+
   private getPMs() {
     this.psrService.getAllPMUsers().subscribe({
       next: (res: string[]) => {
-        console.log(res);
         this.userPMs = res.map((u: string) => {
           return { name: u, id: u };
         });
@@ -387,7 +381,6 @@ export class AddPsrProjectFormComponent implements OnInit {
     });
   }
   private editProgramData(data: AddProgramModel) {
-    console.log(data);
     data.plannedDate = this.formatDate(new Date(data.plannedDate));
     this.psrService.editProgram(data, this.programId).subscribe({
       next: () => {
@@ -405,7 +398,6 @@ export class AddPsrProjectFormComponent implements OnInit {
       const updatedObj = this.programsList.value[0];
       const formattedStartDate = this.formatDate(updatedObj.startDate);
       const formattedEndDate = this.formatDate(updatedObj.endDate);
-      // console.log(updatedObj.indicator);
       if (
         updatedObj.indicator.value === 'N/A' ||
         updatedObj.indicator === 'N/A'
@@ -430,8 +422,7 @@ export class AddPsrProjectFormComponent implements OnInit {
         poAmount: updatedObj.POAmount,
         actualSpending: updatedObj.actualSpending,
       };
-      // console.log(updatedObj);
-      // console.log(addedProjects);
+     
 
       this.psrService
         .updateProject(+this.projectId, addedProjects, this.sectorName)

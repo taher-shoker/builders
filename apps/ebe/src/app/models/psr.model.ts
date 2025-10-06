@@ -5,7 +5,7 @@ export interface PSRDataModel {
   actual: number;
   details: string;
   plannedDate: string | null;
-  pms: [];
+  pms?: [];
 }
 export interface PSRChartDataModel {
   actual: number | null;
