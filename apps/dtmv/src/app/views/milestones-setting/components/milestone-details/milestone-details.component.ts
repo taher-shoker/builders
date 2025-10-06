@@ -301,8 +301,13 @@ export class MilestoneDetailsComponent implements OnInit {
                   actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
                 }
                 if (res[i].taskName === 'Review Progress') {
-                  actions.push(Actions.reviewOnTrack);
-                  actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+                  if (this.milestoneDetails.status?.toLowerCase() === 'planned') {
+                    actions.push(Actions.approveProgress);
+                    actions.push(Actions.returnProgress);
+                  } else {
+                    actions.push(Actions.reviewOnTrack);
+                    actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+                  }
                 }
               } else if (
                 res[i].taskName === Actions.addEvidence.uniqueTitle ||
@@ -829,7 +834,7 @@ export class MilestoneDetailsComponent implements OnInit {
           type,
           milestoneId: this.milestoneId,
           showAttachment,
-          status,
+          status: this.milestoneDetails.status?.toLowerCase(),
         },
       }
     );
