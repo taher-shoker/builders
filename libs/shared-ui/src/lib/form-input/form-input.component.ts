@@ -57,6 +57,7 @@ export class FormInputComponent implements ControlValueAccessor {
       value2 = input.value;
     }
     this.value = value2; // Process the value
+    console.log(this.value);
     this.onChange(value2);
     this.validateError(value2);
   }

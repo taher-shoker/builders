@@ -55,8 +55,8 @@ export class AddPsrProjectFormComponent implements OnInit {
   projectId = '';
   userData!: UserModel;
   scorecardService = inject(ScorecardService);
-  userPMs: { name: string; code: string }[] = [];
-
+  userPMs: { name: string; id: string }[] = [];
+  selectedPMS = [];
   ngOnInit(): void {
     if (this.scorecardService.getUserGroups()) {
       this.userData = JSON.parse(
@@ -166,7 +166,7 @@ export class AddPsrProjectFormComponent implements OnInit {
         sector: [null, [Validators.required, this.noSpacesValidator]],
         details: [null, [Validators.required, this.noSpacesValidator]],
         plannedDate: [null, [Validators.required]],
-        pms: [null],
+        pms: [[]],
       });
     } else {
       this.inPSRForm = false;
@@ -362,6 +362,9 @@ export class AddPsrProjectFormComponent implements OnInit {
       next: (res: PSRDataModel) => {
         this.programsList.controls[0].get('sector')?.setValue(res.sector);
         this.programsList.controls[0].get('details')?.setValue(res.details);
+        //this.programsList.controls[0].get('pms')?.setValue(res.pms);
+        console.log(res.pms);
+        this.selectedPMS = res.pms;
         if (res.plannedDate) {
           this.programsList.controls[0]
             .get('plannedDate')
@@ -370,7 +373,7 @@ export class AddPsrProjectFormComponent implements OnInit {
       },
     });
   }
-  handleChangePM(event: Event) {
+  handleChangePM(p: any, event: Event) {
     console.log(event);
   }
   private getPMs() {
@@ -378,7 +381,7 @@ export class AddPsrProjectFormComponent implements OnInit {
       next: (res: string[]) => {
         console.log(res);
         this.userPMs = res.map((u: string) => {
-          return { name: u, code: u };
+          return { name: u, id: u };
         });
       },
     });

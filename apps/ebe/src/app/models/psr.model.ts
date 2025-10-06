@@ -5,6 +5,7 @@ export interface PSRDataModel {
   actual: number;
   details: string;
   plannedDate: string | null;
+  pms: [];
 }
 export interface PSRChartDataModel {
   actual: number | null;
@@ -75,7 +76,7 @@ export interface AddProgramModel {
   sector: string;
   details: string;
   plannedDate: string;
-  pms: string;
+  pms: any;
 }
 export interface ProgramModel {
   id?: number;
