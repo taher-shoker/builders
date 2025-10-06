@@ -1,1 +1,97 @@
-<p>update-value-dialog works!</p>
+<div class="dialog">
+  <div class="dialog_header">
+    <h2 mat-dialog-title>Update actual KPI value</h2>
+    <div class="dialog_header_actions">
+      <stc-apps-button
+        [buttonText]="'Cancel'"
+        [buttonType]="'gray-outline'"
+        (btnClick)="onCancel()"
+      ></stc-apps-button>
+
+      <stc-apps-button
+        [buttonText]="'Save'"
+        [buttonType]="'primary'"
+        (btnClick)="onSubmit()"
+        [buttonDisable]="!form.valid"
+      ></stc-apps-button>
+    </div>
+  </div>
+
+  <div class="dialog_body" [formGroup]="form">
+    <div class="row">
+      <div class="col-md-6">
+        <stc-apps-date-picker
+          [className]="'custom-input'"
+          [inputPlaceholder]="''"
+          [inputId]="'activationDate'"
+          [inputName]="''"
+          formControlName="date"
+        >
+        </stc-apps-date-picker>
+      </div>
+
+      <div class="col-md-6">
+        <stc-apps-input
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Enter actual progrees Value'"
+          [inputId]="'actualValue'"
+          formControlName="actualValue"
+        >
+        </stc-apps-input>
+      </div>
+
+      <div class="col-12">
+        <small class="helper-text"
+          >Choose the date that this KPI value corresponds to. By default,
+          today’s date is selected.</small
+        >
+      </div>
+
+      <div class="col-12">
+        <div class="evidence">
+          <label for="evidence_upload" class="evidence_upload_label">
+            <i class="ri-upload-2-line"></i>Add evidence (Optional)
+          </label>
+          <input
+            id="evidence_upload"
+            type="file"
+            multiple
+            (change)="onFileChange($event)"
+            class="d-none"
+          />
+        </div>
+      </div>
+
+      @if(evidenceFiles.length > 0){
+      <div class="col-12">
+        <div class="evidence_title">
+          <i class="ri-attachment-2"></i>
+          <span>Evidence ({{ evidenceFiles.length }})</span>
+        </div>
+      </div>
+
+      @for(file of evidenceFiles; track file){
+      <div class="col-md-6 mb-3">
+        <div class="evidence_file_item">
+          <div class="file-details">
+            <div class="file-preview">
+              @if(file.isImage){
+              <img [src]="file.previewUrl" alt="Preview" class="preview-image" />
+              } @else {
+              <i class="ri-file-text-line file-icon"></i>
+              }
+            </div>
+            <div class="file-info">
+              <div class="file-name">{{ file.file.name }}</div>
+              <div class="file-size">
+                {{ (file.file.size / 1024 / 1024).toFixed(2) }} MB
+              </div>
+            </div>
+          </div>
+          <i class="ri-close-line remove-icon" (click)="removeFile(file)"></i>
+        </div>
+      </div>
+      } }
+    </div>
+  </div>
+</div>

@@ -32,7 +32,7 @@ export class KpiDialogService {
     return this.dialog
       .open(UpdateValueDialogComponent, {
         ...this.defaultConfig,
-        width: '500px',
+        width: '900px',
         data: { kpi },
       })
       .afterClosed();

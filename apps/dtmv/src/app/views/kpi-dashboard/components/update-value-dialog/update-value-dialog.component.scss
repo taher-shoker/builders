@@ -1,0 +1,121 @@
+.dialog {
+    padding: 24px;
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+
+        h2 {
+            font-size: 16px;
+            color: var(--grayColor);
+            padding: 0;
+            font-weight: 600;
+        }
+
+        &_actions {
+            display: flex;
+            gap: 8px;
+
+            stc-apps-button {
+                ::ng-deep {
+                    button {
+                        font-size: 16px;
+                        padding: 7px 10.5px;
+                    }
+                }
+            }
+        }
+    }
+
+    &_body {
+        .helper-text {
+            color: #64748B;
+        }
+
+        .evidence {
+            margin-top: 1rem;
+
+
+            &_upload_label {
+                cursor: pointer;
+                color: var(--stc-color);
+                display: inline-flex;
+                align-items: center;
+                gap: 4px;
+                text-decoration: underline;
+
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+
+            &_title {
+                font-weight: 600;
+                margin-block: 15px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                color: var(--darkPurpleColor);
+            }
+
+            &_file_item {
+                display: flex;
+                justify-content: space-between;
+                background: #F9FAFB;
+                border: 1px solid rgba(0, 0, 0, 0.1);
+                align-items: center;
+                gap: 10px;
+                border-radius: 10px;
+                padding: 15px;
+
+                .file-info {
+                    .file-name {
+                        color: #101828;
+                        white-space: nowrap;
+                        overflow: hidden;
+                        text-overflow: ellipsis;
+                        max-width: 220px;
+                    }
+
+                    .file-size {
+                        color: #6A7282;
+                    }
+                }
+
+                .remove-icon {
+                    color: #99A1AF;
+                    font-size: 20px;
+                    cursor: pointer;
+                }
+
+                .file-details {
+                    display: flex;
+                    align-items: center;
+                    gap: 10px;
+                }
+
+                .file-preview {
+                    flex-shrink: 0;
+                    width: 60px;
+                    height: 60px;
+                    overflow: hidden;
+
+                    .preview-image {
+                        width: 100%;
+                        height: 100%;
+                        object-fit: cover;
+                        border-radius: 4px;
+                    }
+
+                    .file-icon {
+                        font-size: 32px;
+                        color: var(--stc-greyColor);
+                        line-height: 1;
+                    }
+                }
+            }
+        }
+
+    }
+}
