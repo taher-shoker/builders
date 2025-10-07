@@ -1,55 +1,37 @@
 <section class="project position-relative">
   <div class="project-head">
-    <p
-      class="project-title"
-      (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''"
-      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
-    >
+    <p class="project-title" (mouseenter)="overlayPanel2 ? overlayPanel2.show($event) : ''"
+      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''">
       {{ projectData().projectName | truncateWord : 7 }}
     </p>
     @if(isAllowed()) {
     <i class="pi pi-ellipsis-v" (click)="actionsPanel.toggle($event)"></i>
-    <p-overlayPanel
-      #actionsPanel
-      dismissable="false"
-      [appendTo]="'body'"
-      styleClass="project-card-actions-logs"
-      (onHide)="showActivityLogsPopup = false"
-    >
+    <p-overlayPanel #actionsPanel dismissable="false" [appendTo]="'body'" styleClass="project-card-actions-logs"
+      (onHide)="showActivityLogsPopup = false">
       <div class="actions-logs-table">
         @for (item of items; track $index) {
-        <div
-          class="action"
-          [class.delete-btn]="item.label === 'Delete'"
-          (click)="
+        <div class="action" [class.delete-btn]="item.label === 'Delete'" (click)="
             item.label === 'Edit'
               ? gotoEditPage()
               : item.label === 'Delete'
               ? showDeleteDialog()
               : showActivityLogs()
-          "
-        >
+          ">
           <i [class]="item.icon"></i>
           <p>{{ item.label }}</p>
         </div>
         }
       </div>
     </p-overlayPanel>
-    <stc-apps-activity-logs-popup
-      [activityLogsTableHeader]="activityLogsTableHeader()"
-      [activityLogsTableBody]="activityLogsTableBody()"
-      [showPopup]="showActivityLogsPopup"
-      (popupClosed)="popupClosed()"
-      [isProjectActionPopup]="true"
-      type="psr"
-      [isDismissable]="true"
-      (popupHide)="showActivityLogsPopup = false"
-    />
+    <stc-apps-activity-logs-popup [activityLogsTableHeader]="activityLogsTableHeader()"
+      [activityLogsTableBody]="activityLogsTableBody()" [showPopup]="showActivityLogsPopup"
+      (popupClosed)="popupClosed()" [isProjectActionPopup]="true" type="psr" [isDismissable]="true"
+      (popupHide)="showActivityLogsPopup = false" />
     <!-- <i class = "pi pi-ellipsis-v" (click)="menu.toggle($event)"></i>
       <p-menu #menu [model]="items" [popup]="true" appendTo="body" class = "psr-popup">
         <ng-template pTemplate="item" let-item>
           <div class="menu-container">
-            <div 
+            <div
               class="menu-item"
               [class.edit-btn]="item.label === 'Edit'"
               [class.delete-btn]="item.label === 'Delete'"
@@ -71,27 +53,16 @@
   </div>
   <div class="project-statuses-cards">
     @if(projectData() && projectData().projectOwner) {
-    <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().projectOwner!"
-      [kpiType]="'owner-name'"
-    />
+    <stc-apps-kpi-status-card [kpiStatus]="projectData().projectOwner!" [kpiType]="'owner-name'" />
     }
-    <stc-apps-kpi-status-card
-      [kpiStatus]="
+    <stc-apps-kpi-status-card [kpiStatus]="
         projectData() && projectData().vendor ? projectData().vendor : 'N/A'
-      "
-      [kpiType]="'vendor'"
-    />
+      " [kpiType]="'vendor'" />
     @if(projectData() && projectData().projectStage) {
-    <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().projectStage!"
-      [kpiType]="'status'"
-    />
+    <stc-apps-kpi-status-card [kpiStatus]="projectData().projectStage!" [kpiType]="'status'" />
     }
-    <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().indicator ? projectData().indicator! : 'N/A'"
-      [kpiType]="'indicator'"
-      [domainIndicatorColor]="
+    <stc-apps-kpi-status-card [kpiStatus]="projectData().indicator ? projectData().indicator! : 'N/A'"
+      [kpiType]="'indicator'" [domainIndicatorColor]="
         projectData().indicator?.toLowerCase() === 'r'
           ? '#FF0000'
           : projectData().indicator?.toLowerCase() === 'g'
@@ -99,13 +70,9 @@
           : projectData().indicator?.toLowerCase() === 'a'
           ? '#ECB027'
           : '#bbbbbb'
-      "
-    />
+      " />
     @if(projectData() && projectData().domain) {
-    <stc-apps-kpi-status-card
-      [kpiStatus]="projectData().domain"
-      [kpiType]="'domain'"
-    />
+    <stc-apps-kpi-status-card [kpiStatus]="projectData().domain" [kpiType]="'domain'" />
     }
   </div>
   <div class="project-timelines">
@@ -132,19 +99,14 @@
       <div class="project-timelines-timeline-data">
         <div class="project-timelines-timeline-data-start">
           <p class="project-timelines-timeline-data-start-title">PO amount</p>
-          <p
-            class="project-timelines-timeline-data-start-info truncate"
+          <p class="project-timelines-timeline-data-start-info truncate"
             (mouseenter)="overlayPanel4 ? overlayPanel4.show($event) : ''"
-            (mouseleave)="overlayPanel4 ? overlayPanel4.hide() : ''"
-          >
+            (mouseleave)="overlayPanel4 ? overlayPanel4.hide() : ''">
             {{ projectData().poAmount ? projectData().poAmount : 'N/A' }}
             @if(projectData().poAmount &&
             projectData().poAmount.toString().length >= 10){
             <p-overlayPanel #overlayPanel4 dismissable="true">
-              <section
-                class="poamount-popover-section"
-                [innerHTML]="projectData().poAmount"
-              ></section>
+              <section class="poamount-popover-section" [innerHTML]="projectData().poAmount"></section>
             </p-overlayPanel>
             }
           </p>
@@ -152,23 +114,18 @@
         <span class="line"></span>
         <div class="project-timelines-timeline-data-end">
           <p class="project-timelines-timeline-data-start-title">actual</p>
-          <p
-            class="project-timelines-timeline-data-start-info truncate"
+          <p class="project-timelines-timeline-data-start-info truncate"
             (mouseenter)="overlayPanel3 ? overlayPanel3.show($event) : ''"
-            (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''"
-          >
+            (mouseleave)="overlayPanel3 ? overlayPanel3.hide() : ''">
             {{
-              projectData().actualSpending
-                ? projectData().actualSpending
-                : 'N/A'
+            projectData().actualSpending
+            ? projectData().actualSpending
+            : 'N/A'
             }}
             @if(projectData().actualSpending &&
             projectData().actualSpending.toString().length >= 10){
             <p-overlayPanel #overlayPanel3 dismissable="true">
-              <section
-                class="poamount-popover-section"
-                [innerHTML]="projectData().actualSpending"
-              ></section>
+              <section class="poamount-popover-section" [innerHTML]="projectData().actualSpending"></section>
             </p-overlayPanel>
             }
           </p>
@@ -177,61 +134,37 @@
     </div>
   </div>
   <div class="project-chart-card">
-    <div
-      style="display: flex; align-items: center; justify-content: space-between"
-    >
+    <div style="display: flex; align-items: center; justify-content: space-between">
       @if(isAdmin()) {
-      <button
-        class="activity-logs-button"
-        (click)="showDeliverablesActivityLogs()"
-      >
+      <button class="activity-logs-button" (click)="showDeliverablesActivityLogs()">
         <img src="assets/images/History.svg" />
         <span>activity log</span>
       </button>
       }
-      <stc-apps-activity-logs-popup
-        [activityLogsTableHeader]="activityLogsTableHeader()"
-        [activityLogsTableBody]="activityLogsTableBody()"
-        [showPopup]="showActivityLogsPopup3"
-        (popupClosed)="popupClosed3()"
-        [isProjectActionPopup]="true"
-        type="psr"
-        [isDismissable]="true"
-        (popupHide)="showActivityLogsPopup3 = false"
-      />
+      <stc-apps-activity-logs-popup [activityLogsTableHeader]="activityLogsTableHeader()"
+        [activityLogsTableBody]="activityLogsTableBody()" [showPopup]="showActivityLogsPopup3"
+        (popupClosed)="popupClosed3()" [isProjectActionPopup]="true" type="psr" [isDismissable]="true"
+        (popupHide)="showActivityLogsPopup3 = false" />
       @if(projectData().chartDetails && projectData().chartDetails.length !== 0)
       {
       <p class="project-chart-card-details" (click)="displayDrilldown()">
         details
       </p>
-      } @else { @if(!isDeleted()) {
-      <p
-        class="project-chart-card-details empty-details-btn"
-        (click)="showAddRecordForm2()"
-        [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'"
-      >
+      } @else { @if(!isDeleted() && !psrServices.isPMUser()) {
+      <p class="project-chart-card-details empty-details-btn" (click)="showAddRecordForm2()"
+        [class.be-viewers]="userRoles().roles[0].roleName === 'BE_VIEWERS'">
         <img src="assets/images/add-square.svg" alt="" />
         <span> add details </span>
       </p>
       } @else {
-      <p
-        class="project-chart-card-details empty-details-btn"
-        style="height: 21px"
-      ></p>
+      <p class="project-chart-card-details empty-details-btn" style="height: 21px"></p>
       } }
     </div>
     @if((projectData().vactual || projectData().vactual === 0) &&
     (projectData().vplanned || projectData().vplanned === 0)) {
-    <div
-      class="project-chart-card-chart position-relative"
-      style="margin: 0 20px"
-    >
-      <stc-apps-progress-bar
-        [data]="data"
-        [isPSRProject]="true"
-        [fontFamily]="'STCForwardFont'"
-        (displayDrilldown)="displayDrilldown()"
-      />
+    <div class="project-chart-card-chart position-relative" style="margin: 0 20px">
+      <stc-apps-progress-bar [data]="data" [isPSRProject]="true" [fontFamily]="'STCForwardFont'"
+        (displayDrilldown)="displayDrilldown()" />
     </div>
     } @else {
     <p class="empty-chart-data">N/A</p>
@@ -239,15 +172,12 @@
   </div>
 </section>
 <p-overlayPanel #overlayPanel dismissable="false">
-  <section
-    class="popover-section"
-    [ngStyle]="{
+  <section class="popover-section" [ngStyle]="{
       'padding-right':
         projectData().chartDetails && projectData().chartDetails.length > 4
           ? '10px'
           : '0'
-    }"
-  >
+    }">
     <div class="header mb-3">
       <div class="header-actions">
         @if(formValues2.length !== 0 || isEditMode) {
@@ -255,22 +185,13 @@
           <button class="cancel-btn" type="button" (click)="cancel()">
             cancel
           </button>
-          <button
-            class="add-btn"
-            type="button"
-            (click)="saveData()"
-            [disabled]="isDisabled"
-            [class.disabled-btn]="isDisabled"
-          >
+          <button class="add-btn" type="button" (click)="saveData()" [disabled]="isDisabled"
+            [class.disabled-btn]="isDisabled">
             save
           </button>
         </div>
         }
-        <i
-          class="pi pi-times-circle"
-          (click)="closePopup()"
-          style="margin-right: 1px"
-        ></i>
+        <i class="pi pi-times-circle" (click)="closePopup()" style="margin-right: 1px"></i>
       </div>
       <div class="main-title">
         <p>details for chart</p>
@@ -285,44 +206,25 @@
         }
         <!-- @if(!isEditMode && newData.chartDetails && newData.chartDetails.length !== 0 &&
         userRoles().roles[0].roleName !== "BE_VIEWERS" && !isDeleted()) {
-          
+
         } -->
       </div>
     </div>
-    <stc-apps-custom-table
-      [headers]="tableHeader"
-      [items]="newData.chartDetails"
-      [psrTable]="true"
-      [fontFamily]="'STCForwardFont'"
-      (addRecord)="addRecord($event)"
-      (deleteAddedRecord)="deleteRecord($event)"
-      [isEditMode]="isEditMode"
-      (updatedData)="getUpdatedData($event)"
-      [userRoles]="userRoles().roles[0].roleName"
-      [isDeleted]="isDeleted()"
-    />
+    <stc-apps-custom-table [headers]="tableHeader" [items]="newData.chartDetails" [psrTable]="true"
+      [fontFamily]="'STCForwardFont'" (addRecord)="addRecord($event)" (deleteAddedRecord)="deleteRecord($event)"
+      [isEditMode]="isEditMode" (updatedData)="getUpdatedData($event)" [userRoles]="userRoles().roles[0].roleName"
+      [isDeleted]="isDeleted()" />
   </section>
 </p-overlayPanel>
 @if(userRoles().roles[0].roleName !== "BE_VIEWERS") {
-<p-dialog
-  [modal]="true"
-  [(visible)]="visible"
-  [style]="{ width: '45rem' }"
-  [draggable]="false"
-  [dismissableMask]="false"
-  [showHeader]="false"
-  class="add-project-details-dialog"
->
+<p-dialog [modal]="true" [(visible)]="visible" [style]="{ width: '45rem' }" [draggable]="false"
+  [dismissableMask]="false" [showHeader]="false" class="add-project-details-dialog">
   <div>
-    <stc-apps-add-project-form
-      [id]="
+    <stc-apps-add-project-form [id]="
         projectData().chartDetails && projectData().chartDetails.length !== 0
           ? projectData().chartDetails[projectData().chartDetails.length - 1].id
           : 0
-      "
-      (closePopupEmit)="visible = false"
-      (getValues)="getFormValues($event)"
-    />
+      " (closePopupEmit)="visible = false" (getValues)="getFormValues($event)" />
   </div>
 </p-dialog>
 <stc-apps-confirm-dialog [key]="'delete-record'">
@@ -355,10 +257,7 @@
       This action is permanent and cannot be undone!
     </p> -->
     <div class="buttons mt-5">
-      <button
-        class="delete"
-        (click)="deleteProjectData(projectData().id); actionsPanel.hide()"
-      >
+      <button class="delete" (click)="deleteProjectData(projectData().id); actionsPanel.hide()">
         yes. delete
       </button>
       <button (click)="close()" class="cancel">cancel</button>

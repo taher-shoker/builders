@@ -89,6 +89,5 @@ export class MobileProjectCardComponent {
   showDeliverablesTable(position: Position) {
     this.position = position;
     this.visible = true;
-    // console.log(this.project());
   }
 }
