@@ -30,6 +30,7 @@ import { KpiAttributesListComponent } from './components/kpi-attributes-list/kpi
 import { MatDialogModule } from '@angular/material/dialog';
 import { KpiFormDialogComponent } from './components/kpi-form-dialog/kpi-form-dialog.component';
 import { UpdateValueDialogComponent } from './components/update-value-dialog/update-value-dialog.component';
+import { ActivityLogComponent } from './components/activity-log/activity-log.component';
 
 
 @NgModule({
@@ -47,6 +48,7 @@ import { UpdateValueDialogComponent } from './components/update-value-dialog/upd
     KpiAttributesListComponent,
     KpiFormDialogComponent,
     UpdateValueDialogComponent,
+    ActivityLogComponent,
   ],
   imports: [
     CommonModule,

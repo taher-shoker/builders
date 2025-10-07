@@ -48,6 +48,10 @@ export class KpiListSectionComponent {
       .subscribe(() => {});
   }
 
+  onActivityLog(kpi: KPI): void {
+    this.dialogService.openActivityLogDialog(kpi).subscribe();
+  }
+
   onUpdateKpiValue(kpi: KPI): void {
     this.dialogService.openUpdateValueDialog(kpi).subscribe();
   }

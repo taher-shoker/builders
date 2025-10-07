@@ -1,0 +1,25 @@
+<div class="dialog"  @slideInOut>
+  <header class="dialog_header">
+    <h2 mat-dialog-title>Logs for KPI details</h2>
+    <button mat-icon-button (click)="onCancel()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </header>
+
+  <mat-dialog-content class="dialog_body">
+    <ul class="activity-list">
+      <li *ngFor="let log of activityLogs" class="activity-list_item">
+        <mat-icon class="activity-list_icon" [color]="log.returned ? 'warn' : 'primary'">
+          {{ log.returned ? 'info' : 'check_circle' }}
+        </mat-icon>
+        <div class="activity-list_details">
+          <p class="activity-list_details_title">{{ log.title }}</p>
+          <div class="activity-list_details_meta">
+            <p class="activity-list_details_-date">{{ log.date | date : 'medium' }}</p>
+            <p class="activity-list_details_author">By: {{ log.author }}</p>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </mat-dialog-content>
+</div>
