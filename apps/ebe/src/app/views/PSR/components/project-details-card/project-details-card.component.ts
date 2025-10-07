@@ -122,7 +122,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.$endScorecardActivityLogsSub.complete();
     this.actionsPanel.hide();
   }
-  sectorId: string = '';
+  sectorId = '';
   gotoEditPage() {
     this.route.params.subscribe({
       next: (param: Params) => {
@@ -166,6 +166,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   psrServices = inject(PSRService);
   datePipe = inject(DatePipe);
   activeRoute = inject(ActivatedRoute);
+
   constructor(
     private elementRef: ElementRef,
     private confirmationService: ConfirmationService
@@ -216,7 +217,10 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
         label: 'New Value',
       },
     ]);
-    if (this.userRoles().roles[0].roleName !== 'BE_VIEWERS') {
+    if (
+      this.userRoles().roles[0].roleName !== 'BE_VIEWERS' &&
+      this.userRoles().roles[0].roleName !== 'BE_PM'
+    ) {
       this.tableHeader = this.psrServices.tableHeader;
     } else {
       this.tableHeader = this.psrServices.tableHeader.filter(
@@ -247,6 +251,8 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
           },
         ];
       }
+    } else if (this.psrServices.isPMUser()) {
+      this.items = [];
     } else {
       this.items = [
         {
@@ -437,12 +443,15 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.isEditMode = false;
     const filteredArray = this.tableHeader.filter((obj) => obj.key === '');
     if (filteredArray.length === 0) {
-      this.tableHeader.push({
-        key: '',
-        type: 'text',
-        label: '',
-      });
+      if (!this.psrServices.isPMUser()) {
+        this.tableHeader.push({
+          key: '',
+          type: 'text',
+          label: '',
+        });
+      }
     }
+
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
     // console.log(this.newData);
     this.formValues2 = [];
@@ -455,11 +464,13 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     const filteredArray = this.tableHeader.filter((obj) => obj.key === '');
     this.formValues2 = [];
     if (filteredArray.length === 0) {
-      this.tableHeader.push({
-        key: '',
-        type: 'text',
-        label: '',
-      });
+      if (!this.psrServices.isPMUser()) {
+        this.tableHeader.push({
+          key: '',
+          type: 'text',
+          label: '',
+        });
+      }
     }
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
   }
@@ -467,6 +478,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   allElementsNotNull(arrayOfObjects: any[]) {
     for (const obj of arrayOfObjects) {
       for (const key in obj) {
+        console.log(obj, key);
         if (
           obj[key] === null ||
           obj[key] === '' ||
@@ -482,7 +494,6 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   getUpdatedData(e: { items: ChartDetails[]; id: number }) {
     this.selectedItem = e.items.filter((val) => val.id === e.id)[0];
-    // console.log(this.allElementsNotNull(e.items));
     if (!this.allElementsNotNull(e.items)) {
       this.isDisabled = true;
     } else {
@@ -511,11 +522,13 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.showActivityLogsPopup3 = false;
     const isExists = this.tableHeader.filter((val) => val.key === '')[0];
     if (!isExists) {
-      this.tableHeader.push({
-        key: '',
-        type: 'text',
-        label: '',
-      });
+      if (!this.psrServices.isPMUser()) {
+        this.tableHeader.push({
+          key: '',
+          type: 'text',
+          label: '',
+        });
+      }
     }
     this.newData.chartDetails.forEach((data) => {
       if (typeof data.startDate === 'object') {
@@ -546,9 +559,9 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       });
   }
   editMode() {
-    // console.log('sfd');
     this.isEditMode = true;
-    const filteredArray = this.tableHeader.filter((obj) => obj.key !== '');
+    let filteredArray = [];
+    filteredArray = this.tableHeader.filter((obj) => obj.key !== '');
     this.tableHeader = filteredArray;
     this.isDisabled = false;
     this.showActivityLogsPopup3 = false;

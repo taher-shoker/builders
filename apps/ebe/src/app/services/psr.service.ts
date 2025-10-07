@@ -11,6 +11,7 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { AbstractControl, FormGroup, ValidationErrors } from '@angular/forms';
+import { CookieService } from 'ngx-cookie';
 @Injectable({ providedIn: 'root' })
 export class PSRService {
   programForm!: FormGroup;
@@ -57,6 +58,8 @@ export class PSRService {
     },
   ];
   http = inject(HttpClient);
+  cookieService = inject(CookieService);
+
   getExecuteViewData(): Observable<PSRDataModel[]> {
     return this.http.get<PSRDataModel[]>(
       `${environment.apiUrl}/business-excellence/psr/executiveView`
@@ -66,6 +69,11 @@ export class PSRService {
     return this.http.get<string[]>(
       `${environment.apiUrl}/admin/users/allUsersInRole?system=Business_Excellence_Dashboard&role=BE_PM`
     );
+  }
+  isPMUser(): boolean {
+    const user = JSON.parse(this.cookieService.get('MODERN_SYSTEM_USER') || '');
+    const userRole = user?.userGroups[0]?.roles[0].roleName;
+    return userRole === 'BE_PM';
   }
   getExecuteProjectDetailsData(
     groupName: string
