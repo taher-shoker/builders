@@ -29,16 +29,25 @@
         }
     }
 
-    .dialog_body {
+    &_body {
         .row {
             margin-left: 0;
             margin-right: 0;
         }
     }
 
-    .dialog_footer {
+    &_footer {
         display: flex;
         justify-content: end;
-        gap: 24px
+
+        gap: 24px;
+
+        stc-apps-button {
+            ::ng-deep {
+                button {
+                    font-size: 16px;
+                }
+            }
+        }
     }
 }
