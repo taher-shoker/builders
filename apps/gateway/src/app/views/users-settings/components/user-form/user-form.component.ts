@@ -598,6 +598,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.form.get('pageAccess')?.setValue([3]);
         this.form.get('pageAccess')?.disable();
       } else {
+        this.form.get('pageAccess')?.enable();
         this.filterPages = this.pages.filter(
           (r) => r.name !== 'Activity Log Center'
         );

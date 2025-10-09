@@ -195,8 +195,8 @@
           (ngModelChange)="inputChanged(item['id'])" max="100" />
         } @else {
         <p-calendar dateFormat="dd/mm/yy" styleClass="custom-calendar2" class="custom-calendar2" appendTo="body"
-          [(ngModel)]="item[header.key]" [disabled]="userRoles() === 'BE_PM'"
-          (ngModelChange)="inputChanged(item['id'])" />
+          [ngModel]="item[header.key]" (ngModelChange)="setValue(item, header.key, $event); inputChanged(item['id'])"
+          [disabled]="userRoles() === 'BE_PM'" />
         <!-- {{item['endDate']}} -->
         <!-- {{parseDate(item['startDate']) > parseDate(item['endDate'])}}  -->
         @if(parseDate(item['startDate']) > parseDate(item['endDate']) &&
