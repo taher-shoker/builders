@@ -301,7 +301,9 @@ export class MilestoneDetailsComponent implements OnInit {
                   actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
                 }
                 if (res[i].taskName === 'Review Progress') {
-                  if (this.milestoneDetails.status?.toLowerCase() === 'planned') {
+                  if (
+                    this.milestoneDetails.status?.toLowerCase() === 'planned'
+                  ) {
                     actions.push(Actions.approveProgress);
                     actions.push(Actions.returnProgress);
                   } else {
@@ -794,6 +796,7 @@ export class MilestoneDetailsComponent implements OnInit {
     showAttachment: boolean = true,
     status: string = ''
   ) {
+    console.log(showAttachment);
     if (status?.toLowerCase() === 'planned' && isFirstUpdateProgress) {
       const params: {
         requestParams: { name: string; value: number | string | boolean }[];
