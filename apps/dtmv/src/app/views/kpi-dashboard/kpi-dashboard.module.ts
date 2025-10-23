@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 
 import { KpiDashboardComponent } from './kpi-dashboard.component';
 import { ActualProgressComponent } from './components/actual-progress/actual-progress.component';
+import { ProgressGaugeComponent } from './components/progress-gauge/progress-gauge.component';
 import { TabsNavigationComponent } from './components/tabs-navigation/tabs-navigation.component';
 import { DiProgressComponent } from './components/di-progress/di-progress.component';
 import { KpiListComponent } from './components/kpi-list/kpi-list.component';
@@ -31,7 +32,6 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { KpiFormDialogComponent } from './components/kpi-form-dialog/kpi-form-dialog.component';
 import { UpdateValueDialogComponent } from './components/update-value-dialog/update-value-dialog.component';
 import { ActivityLogComponent } from './components/activity-log/activity-log.component';
-
 
 @NgModule({
   declarations: [
@@ -49,6 +49,7 @@ import { ActivityLogComponent } from './components/activity-log/activity-log.com
     KpiFormDialogComponent,
     UpdateValueDialogComponent,
     ActivityLogComponent,
+    ProgressGaugeComponent
   ],
   imports: [
     CommonModule,
