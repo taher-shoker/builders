@@ -43,7 +43,7 @@ export class ProgressGaugeComponent {
   legend: LegendItem[] = [
     { label: 'Ontrack', key: 'ontrack' },
     { label: 'At risk', key: 'atrisk' },
-    { label: 'delayed', key: 'delayed' },
+    { label: 'Delayed', key: 'delayed' },
   ];
 
   private _progress = signal(this.progress);
@@ -98,15 +98,58 @@ export class ProgressGaugeComponent {
     return this.arcPath(this.rOuter, end, this.endAngle);
   }
 
-  // Dash pattern to simulate segmented green blocks
+  // Individual segment paths - this approach draws each segment separately
+  get segmentPaths() {
+    const arcLen = this.rOuter * ((this.sweep * Math.PI) / 180);
+    const segmentLen = arcLen / this.segmentCount;
+    const segmentAngle = this.sweep / this.segmentCount;
+    const dash = segmentLen * (1 - this.gapRatio);
+    const dashAngle = segmentAngle * (1 - this.gapRatio);
+
+    const progressSegments = Math.floor((this.progressSig() / 100) * this.segmentCount);
+    const progressRemainder = ((this.progressSig() / 100) * this.segmentCount) - progressSegments;
+
+    const segments = [];
+
+    // Draw complete segments
+    for (let i = 0; i < progressSegments; i++) {
+      const startAngle = this.startAngle + (i * segmentAngle);
+      const endAngle = startAngle + dashAngle;
+      segments.push({
+        path: this.arcPath(this.rOuter, startAngle, endAngle),
+        isComplete: true
+      });
+    }
+
+    // Draw partial segment if needed
+    if (progressRemainder > 0 && progressSegments < this.segmentCount) {
+      const startAngle = this.startAngle + (progressSegments * segmentAngle);
+      const partialDashAngle = dashAngle * progressRemainder;
+      const endAngle = startAngle + partialDashAngle;
+      segments.push({
+        path: this.arcPath(this.rOuter, startAngle, endAngle),
+        isComplete: false
+      });
+    }
+
+    return segments;
+  }
+
+  // Dash pattern to simulate segmented green blocks (keeping for backward compatibility)
   get dashArray() {
     // approximate arc length = r * theta (in radians)
     const arcLen = this.rOuter * ((this.sweep * Math.PI) / 180);
     const segmentLen = arcLen / this.segmentCount;
     const dash = segmentLen * (1 - this.gapRatio);
     const gap = segmentLen * this.gapRatio;
-    // stroke-dasharray repeated: "dash gap"
+
+    // Simple repeating pattern - we'll use dashOffset to position correctly
     return `${dash} ${gap}`;
+  }
+
+  // Dash offset to align segments properly (keeping for backward compatibility)
+  get dashOffset() {
+    return 0; // Not used with the new segmentPaths approach
   }
 
   // Dotted inner ring

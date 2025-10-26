@@ -16,15 +16,16 @@
                 <div class="col-12">
                   <h2 class="kpi-dashboard_title">Commercial Unit Details</h2>
                 </div>
-                <!-- <div class="col-md-4">
-                  <stc-apps-actual-progress
-                    [title]="'Actual Progress 2025'"
-                  ></stc-apps-actual-progress>
-                </div> -->
                 <div class="col-4">
                   <stc-apps-progress-gauge
-                    [progress]="50"
-                  ></stc-apps-progress-gauge>
+                    [progress]="75"
+                    [colorActive]="'#ef4444'"
+                    [baseline]="90"
+                    [target]="95"
+                    ></stc-apps-progress-gauge>
+                  <!---F4C430 At Risk --->
+                  <!---EF4444 Delayed --->
+                  <!---00C389 On Track --->
                 </div>
                 <div class="col-8">
                   <stc-apps-di-progress></stc-apps-di-progress>

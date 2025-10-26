@@ -13,7 +13,7 @@
           [attr.stroke-width]="thickness"
           stroke-linecap="round"
           fill="none"
-          opacity="0.6"
+          opacity="0.3"
         />
 
         <!-- Remaining (light grey on the right side) -->
@@ -23,19 +23,20 @@
           [attr.stroke-width]="thickness"
           stroke-linecap="round"
           fill="none"
-          opacity="0.35"
+          opacity="0.2"
         />
 
-        <!-- Active segmented arc -->
-        <path
-          [attr.d]="activePath"
-          [attr.stroke]="colorActive"
-          [attr.stroke-width]="thickness"
-          stroke-linecap="round"
-          fill="none"
-          [attr.stroke-dasharray]="dashArray"
-          stroke-linejoin="round"
-        />
+        <!-- Active segmented arc using individual segments -->
+        <g *ngFor="let segment of segmentPaths">
+          <path
+            [attr.d]="segment.path"
+            [attr.stroke]="colorActive"
+            [attr.stroke-width]="thickness"
+            stroke-linecap="round"
+            fill="none"
+            stroke-linejoin="round"
+          />
+        </g>
 
         <!-- End marker -->
         <circle
