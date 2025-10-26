@@ -150,7 +150,7 @@ calculateLinearDropRotation(progress: number): number {
   // Clamp progress between 0–100
   progress = Math.max(0, Math.min(progress, 100));
 
-  const minRotation = 100;  // rotation at 0%
+  const minRotation = 85;  // rotation at 0%
   const maxRotation = 280; // rotation at 100%
 
   // Linear interpolation formula
