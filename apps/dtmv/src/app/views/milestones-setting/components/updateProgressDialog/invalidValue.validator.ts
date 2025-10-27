@@ -8,9 +8,9 @@ export function customValidator(
   return (control: AbstractControl): { [key: string]: boolean } | null => {
     const numValue = Number(control.value);
 
-    if (isPlannedStatus && numValue === 100) {
-      return { plannedStatusLimit: true };
-    }
+    // if (isPlannedStatus && numValue === 100) {
+    //   return { plannedStatusLimit: true };
+    // }
     if (control.value && (control.value <= threshold || control.value > 100)) {
       return { invalidValue: true };
     }
