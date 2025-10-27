@@ -797,36 +797,36 @@ export class MilestoneDetailsComponent implements OnInit {
     status: string = ''
   ) {
     console.log(showAttachment);
-    if (status?.toLowerCase() === 'planned' && isFirstUpdateProgress) {
-      const params: {
-        requestParams: { name: string; value: number | string | boolean }[];
-      } = {
-        requestParams: [
-          {
-            name: 'is_progress_approved',
-            value: true,
-          },
-        ],
-      };
+    // if (status?.toLowerCase() === 'planned' && isFirstUpdateProgress) {
+    //   const params: {
+    //     requestParams: { name: string; value: number | string | boolean }[];
+    //   } = {
+    //     requestParams: [
+    //       {
+    //         name: 'is_progress_approved',
+    //         value: true,
+    //       },
+    //     ],
+    //   };
 
-      this.isLoadingSteps = true;
-      if (this.isUpdateProgressOnHold) {
-        this.sendAllRequests(params, isFirstUpdateProgress);
-        this.isUpdateProgressOnHold = false;
-      } else {
-        this.milestonesService
-          .completePendingTask(
-            this.milestoneDetails.currentMilestoneProgressUpdateDto
-              ?.workflowId || '',
-            Number(item?.requestTaskId),
-            params
-          )
-          .subscribe(() => {
-            this.getMilestoneDetails(params);
-          });
-      }
-      return;
-    }
+    //   this.isLoadingSteps = true;
+    //   if (this.isUpdateProgressOnHold) {
+    //     this.sendAllRequests(params, isFirstUpdateProgress);
+    //     this.isUpdateProgressOnHold = false;
+    //   } else {
+    //     this.milestonesService
+    //       .completePendingTask(
+    //         this.milestoneDetails.currentMilestoneProgressUpdateDto
+    //           ?.workflowId || '',
+    //         Number(item?.requestTaskId),
+    //         params
+    //       )
+    //       .subscribe(() => {
+    //         this.getMilestoneDetails(params);
+    //       });
+    //   }
+    //   return;
+    // }
 
     const dialogRef = this.matDialog.open(
       UpdateMilestoneProgressDialogComponent,
@@ -1043,25 +1043,25 @@ export class MilestoneDetailsComponent implements OnInit {
       .calculateMilestoneProgress(milestoneId, progress)
       .subscribe((res) => {
         if (res.status?.toLowerCase() === 'planned') {
-          this.isUpdateProgressOnHold = false;
-
+          // this.isUpdateProgressOnHold = false;
+console.log("calculated" , res)
           if (isFirstUpdateProgress) {
             // For initial updates, create the progress record and then refresh.
-            this.updateProgress().subscribe(() => {
-              this.getMilestoneDetails();
-            });
+            // this.updateProgress().subscribe(() => {
+            //   this.getMilestoneDetails();
+            // });
           } else {
             // For subsequent updates (like 'Add New Progress'), update the existing task.
-            this.updateNonInitialProgress().subscribe(() => {
-              this.getMilestoneDetails();
-            });
+            // this.updateNonInitialProgress().subscribe(() => {
+            //   this.getMilestoneDetails();
+            // });
           }
-          return; // Exit early, no dialog or special action needed.
+          // return; // Exit early, no dialog or special action needed.
         }
         let actionObj: Actions;
         if (res.status === 'Delayed' || res.status === 'At Risk') {
           actionObj = Actions.addJustification;
-        } else if (res.status === 'Completed') {
+        } else if (res.status === 'Completed' || res.status === "Planned") {
           actionObj = Actions.addEvidence;
         } else {
           actionObj = Actions.addOnTrack;
