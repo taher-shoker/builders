@@ -48,6 +48,10 @@ export class LineChatChartComponent implements OnInit {
       setTimeout(() => this.lineChart(), 100);
       return;
     }
+    // Dispose any existing root to allow clean re-render on data changes
+    if (this.root && !this.root.isDisposed()) {
+      this.root.dispose();
+    }
     const data = this.chartData();
     this.root = am5.Root.new(this.chartdiv_id);
     if (this.root._logo) {
@@ -72,7 +76,7 @@ export class LineChatChartComponent implements OnInit {
     const defaultColors = ['#4f2b85', '#00aaff', '#ffaa00', '#ff3366', '#33cc99'];
     const colors = settings?.colors ?? defaultColors;
     const allColors: am5.Color[] = colors.map((color) => am5.color(color));
-    chart.get('colors')?.set('colors', allColors);    
+    chart.get('colors')?.set('colors', allColors);
 
     const cursor = chart.set('cursor', am5xy.XYCursor.new(this.root, {}));
     cursor.lineY.set('visible', false);
@@ -124,7 +128,8 @@ export class LineChatChartComponent implements OnInit {
           valueYField: key,
           categoryXField: 'x',
           tooltip: am5.Tooltip.new(this.root, {
-            labelText: `{${key}}`,
+            // Show series name next to the value in the tooltip
+            labelText: `${indicatorName}: {${key}}%`,
           }),
         })
       );

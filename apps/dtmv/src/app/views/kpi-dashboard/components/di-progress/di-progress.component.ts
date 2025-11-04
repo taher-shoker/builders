@@ -1,7 +1,8 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AfterViewInit, Component, input, InputSignal } from '@angular/core';
+import { AfterViewInit, Component, input, InputSignal, effect } from '@angular/core';
 import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
 import * as am5 from '@amcharts/amcharts5';
+import { KpiService, UnitSeriesItem } from '../../kpi.service';
 
 @Component({
   selector: 'stc-apps-di-progress',
@@ -10,8 +11,24 @@ import * as am5 from '@amcharts/amcharts5';
 })
 export class DiProgressComponent implements AfterViewInit {
   title: InputSignal<string> = input('');
+  unitId: InputSignal<number | null> = input<number | null>(null);
+  teamName: InputSignal<string> = input('');
 
   chartData: any[] = [];
+  // Dropdowns
+  dimensionsOptions = [
+    { id: 'All', name: 'All' },
+    { id: 'Capability Building', name: 'Capability Building' },
+    { id: 'Digital Experience & Impact', name: 'Digital Experience & Impact' },
+    { id: 'Capability Utilization', name: 'Capability Utilization' },
+    { id: 'Overall', name: 'Overall' },
+  ];
+  periodOptions = [
+    { id: 'monthly', name: 'Monthly' },
+    { id: 'weekly', name: 'Weekly' },
+  ];
+  selectedDimension = 'All';
+  selectedPeriod: 'monthly' | 'weekly' = 'monthly';
   legendSettings: LegendSettings = {
     layout: 'horizontal',
     itemSpacing: 10,
@@ -22,123 +39,112 @@ export class DiProgressComponent implements AfterViewInit {
     marginTop: 30,
     labelCenterY: am5.percent(70),
     colors: [
-      '#277FF1',
-      '#00C48C',
-      '#FF6A39',
-      '#4F008C',
+      '#277FF1', // Capability Building
+      '#FFA500', // Capability Utilization
+      '#00C48C', // Digital Experience & Impact
+      '#4F008C', // Overall (Total)
     ],
   };
 
   ngAfterViewInit(): void {
-    setTimeout(() => {
-      this.initializeDummyData();
+    // Perform an initial fetch if unitId is already available
+    const id = this.unitId();
+    if (id != null && this.chartData.length === 0) {
+      this.fetchSeries(id);
+    }
+  }
+
+  onDimensionChange(value: string): void {
+    this.selectedDimension = value as any;
+    const id = this.unitId();
+    if (id != null) this.fetchSeries(id);
+  }
+
+  onPeriodChange(value: string): void {
+    this.selectedPeriod = (value === 'Weekly' || value === 'weekly') ? 'weekly' : 'monthly';
+    const id = this.unitId();
+    if (id != null) this.fetchSeries(id);
+  }
+
+  private fetchSeries(unitId: number): void {
+    this.kpiService.getUnitSeries(unitId, this.selectedPeriod).subscribe({
+      next: (items: UnitSeriesItem[]) => {
+        // Available dimensions (fixed order)
+        const allDimensions = [
+          'Capability Building',
+          'Capability Utilization',
+          'Digital Experience & Impact',
+          'Overall',
+        ];
+
+        // Determine which dimensions to render based on selection
+        const dimsToRender =
+          this.selectedDimension === 'All' || !allDimensions.includes(this.selectedDimension)
+            ? allDimensions
+            : [this.selectedDimension];
+
+        // Group by period
+        const byPeriod = new Map<number, UnitSeriesItem[]>();
+        items.forEach((i) => {
+          const arr = byPeriod.get(i.period) || [];
+          arr.push(i);
+          byPeriod.set(i.period, arr);
+        });
+
+        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+
+        const dataRows = Array.from(byPeriod.entries())
+          .sort((a,b) => a[0]-b[0])
+          .map(([period, arr]) => {
+            const xLabel = this.selectedPeriod === 'monthly'
+              ? monthNames[(period-1) % 12] || String(period)
+              : `Wk ${period}`;
+
+            const row: any = { x: xLabel };
+            dimsToRender.forEach((dim, idx) => {
+              const rec = arr.find(a => a.dimension === dim);
+              const pct = rec && typeof rec.diActualProgress === 'number'
+                ? parseFloat((rec.diActualProgress * 100).toFixed(2))
+                : null; // use null to create gaps when missing
+              const key = `value${idx+1}`;
+              const nameKey = `indicatorName${idx+1}`;
+              row[key] = pct;
+              // Use team name for Overall series label
+              if (dim === 'Overall') {
+                const tn = (this.teamName() || '').trim();
+                row[nameKey] = tn ? `${tn} DI (Overall)` : 'DI (Overall)';
+              } else {
+                row[nameKey] = dim;
+              }
+            });
+            return row;
+          });
+
+        // Update legend colors to match the rendered dimensions order
+        const colorMap: Record<string, string> = {
+          'Capability Building': '#277FF1',
+          'Capability Utilization': '#00C48C',
+          'Digital Experience & Impact': '#FF6A39',
+          Overall: '#4F008C',
+        };
+        const newColors = dimsToRender.map((d) => colorMap[d]);
+        this.legendSettings = { ...this.legendSettings, colors: newColors };
+
+        this.chartData = dataRows;
+      },
+      error: () => {
+        this.chartData = [];
+      }
     });
   }
 
-  private initializeDummyData(): void {
-    const rawData = [
-      {
-        x: 'Jan',
-        value1: 65,
-        value2: 45,
-        value3: 75,
-        value4: 55,
-      },
-      {
-        x: 'Feb',
-        value1: 72,
-        value2: 52,
-        value3: 68,
-        value4: 60,
-      },
-      {
-        x: 'Mar',
-        value1: 68,
-        value2: 58,
-        value3: 72,
-        value4: 58,
-      },
-      {
-        x: 'Apr',
-        value1: 80,
-        value2: 65,
-        value3: 78,
-        value4: 65,
-      },
-      {
-        x: 'May',
-        value1: 75,
-        value2: 70,
-        value3: 82,
-        value4: 70,
-      },
-      {
-        x: 'Jun',
-        value1: 85,
-        value2: 75,
-        value3: 88,
-        value4: 75,
-      },
-      {
-        x: 'Jul',
-        value1: 78,
-        value2: 68,
-        value3: 85,
-        value4: 72,
-      },
-      {
-        x: 'Aug',
-        value1: 90,
-        value2: 80,
-        value3: 92,
-        value4: 82,
-      },
-      {
-        x: 'Sep',
-        value1: 82,
-        value2: 72,
-        value3: 87,
-        value4: 78,
-      },
-      {
-        x: 'Oct',
-        value1: 88,
-        value2: 78,
-        value3: 90,
-        value4: 85,
-      },
-      {
-        x: 'Nov',
-        value1: 95,
-        value2: 85,
-        value3: 94,
-        value4: 90,
-      },
-      {
-        x: 'Dec',
-        value1: 92,
-        value2: 82,
-        value3: 96,
-        value4: 88,
-      },
-    ];
-
-    const indicatorNames = {
-      indicatorName1: 'Capability Building',
-      indicatorName2: 'Capability Utilization',
-      indicatorName3: 'Digital Experience & Impact',
-      indicatorName4: 'B2C DI (Total)',
-    };
-
-    this.chartData = rawData.map((monthData) => {
-      return {
-        x: monthData.x,
-        value1: monthData.value1,
-        value2: monthData.value2,
-        value3: monthData.value3,
-        value4: monthData.value4,
-        ...indicatorNames,
-      };
+  constructor(private kpiService: KpiService) {
+    // Run effect in injection context (constructor) to avoid NG0203
+    effect(() => {
+      const id = this.unitId();
+      if (id != null) {
+        this.fetchSeries(id);
+      }
     });
   }
 }

@@ -1,14 +1,26 @@
 <div class="card">
   <div class="card-header">
-    <h3>DI Progress</h3>
+    <h3>{{ teamName() ? (teamName() + ' ') : '' }}DI Progress</h3>
     <div class="card-header_filters">
       <stc-apps-select-drop-down
         [label]="''"
         [matLabel]="'Dimensions'"
+        [options]="dimensionsOptions"
+        [labelName]="'name'"
+        [labelValue]="'id'"
+        [outputValue]="'name'"
+        [selectId]="selectedDimension"
+        (selectChange)="onDimensionChange($event)"
       ></stc-apps-select-drop-down>
       <stc-apps-select-drop-down
         [label]="''"
-        [matLabel]="'Monthly'"
+        [matLabel]="'Period'"
+        [options]="periodOptions"
+        [labelName]="'name'"
+        [labelValue]="'id'"
+        [outputValue]="'name'"
+        [selectId]="selectedPeriod === 'weekly' ? 'Weekly' : 'Monthly'"
+        (selectChange)="onPeriodChange($event)"
       ></stc-apps-select-drop-down>
     </div>
   </div>
