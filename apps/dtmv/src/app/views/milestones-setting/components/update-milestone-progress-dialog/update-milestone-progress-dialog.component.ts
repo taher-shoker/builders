@@ -37,6 +37,10 @@ export class UpdateMilestoneProgressDialogComponent {
     let status;
     if (this.data.type === Actions.addEvidence.uniqueTitle) {
       status = 'status is completed !';
+      console.log(this.data);
+      if (this.data.status === 'planned') {
+        status = 'status is Planned | Early Progress Update Evidence';
+      }
     } else if (this.data.type === Actions.addJustification.uniqueTitle) {
       if (this.data.status === 'At Risk') {
         status = 'status is at risk';

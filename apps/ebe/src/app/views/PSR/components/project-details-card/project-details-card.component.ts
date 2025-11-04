@@ -93,19 +93,26 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   private getSpecificActivityLog(
     moduleName: string,
-    activityType:string,
+    activityType: string,
     subModule?: string,
     projectName?: string,
-    entity?:string,
-    showParentData?:boolean
+    entity?: string,
+    showParentData?: boolean
   ) {
     this.activityLogService
-      .getSpecificActivityLog(moduleName, activityType , subModule, projectName , entity , showParentData)
+      .getSpecificActivityLog(
+        moduleName,
+        activityType,
+        subModule,
+        projectName,
+        entity,
+        showParentData
+      )
       .pipe(takeUntil(this.$endScorecardActivityLogsSub))
       .subscribe({
         next: (activityLogs: ActivityLogData[]) => {
           // console.log(activityLogs);
-          
+
           this.activityLogsTableBody.set(activityLogs);
         },
       });
@@ -115,14 +122,16 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.$endScorecardActivityLogsSub.complete();
     this.actionsPanel.hide();
   }
-  sectorId:string = ''
+  sectorId = '';
   gotoEditPage() {
     this.route.params.subscribe({
       next: (param: Params) => {
         if (param['id']) {
           const program = encodeURIComponent(param['id']);
           this.router.navigateByUrl(
-            `/psr/edit-project/${program}/${this.projectData().id}`
+            `/project-execution/edit-project/${program}/${
+              this.projectData().id
+            }`
           );
         }
       },
@@ -157,17 +166,18 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   psrServices = inject(PSRService);
   datePipe = inject(DatePipe);
   activeRoute = inject(ActivatedRoute);
+
   constructor(
     private elementRef: ElementRef,
     private confirmationService: ConfirmationService
   ) {}
   ngOnInit(): void {
     this.scorecardService.toggleSwitchBtn.subscribe({
-      next : (res) => {
+      next: (res) => {
         this.showActivityLogsPopup = false;
         this.actionsPanel?.hide();
-      }
-    })
+      },
+    });
     this.route.params.subscribe({
       next: (param: Params) => {
         if (param['sectorId']) {
@@ -207,7 +217,10 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
         label: 'New Value',
       },
     ]);
-    if (this.userRoles().roles[0].roleName !== 'BE_VIEWERS') {
+    if (
+      this.userRoles().roles[0].roleName !== 'BE_VIEWERS' &&
+      this.userRoles().roles[0].roleName !== 'BE_PM'
+    ) {
       this.tableHeader = this.psrServices.tableHeader;
     } else {
       this.tableHeader = this.psrServices.tableHeader.filter(
@@ -238,6 +251,8 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
           },
         ];
       }
+    } else if (this.psrServices.isPMUser()) {
+      this.items = [];
     } else {
       this.items = [
         {
@@ -250,13 +265,12 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
         },
       ];
     }
-    if(this.isPMO())
-    {
+    if (this.isPMO()) {
       this.items = [
         {
           label: 'Edit',
           icon: 'pi pi-pen-to-square',
-        }
+        },
       ];
     }
   }
@@ -429,12 +443,15 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.isEditMode = false;
     const filteredArray = this.tableHeader.filter((obj) => obj.key === '');
     if (filteredArray.length === 0) {
-      this.tableHeader.push({
-        key: '',
-        type: 'text',
-        label: '',
-      });
+      if (!this.psrServices.isPMUser()) {
+        this.tableHeader.push({
+          key: '',
+          type: 'text',
+          label: '',
+        });
+      }
     }
+
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
     // console.log(this.newData);
     this.formValues2 = [];
@@ -447,11 +464,13 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     const filteredArray = this.tableHeader.filter((obj) => obj.key === '');
     this.formValues2 = [];
     if (filteredArray.length === 0) {
-      this.tableHeader.push({
-        key: '',
-        type: 'text',
-        label: '',
-      });
+      if (!this.psrServices.isPMUser()) {
+        this.tableHeader.push({
+          key: '',
+          type: 'text',
+          label: '',
+        });
+      }
     }
     this.newData = JSON.parse(JSON.stringify(this.projectData()));
   }
@@ -459,6 +478,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   allElementsNotNull(arrayOfObjects: any[]) {
     for (const obj of arrayOfObjects) {
       for (const key in obj) {
+        console.log(obj, key);
         if (
           obj[key] === null ||
           obj[key] === '' ||
@@ -474,7 +494,6 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
   }
   getUpdatedData(e: { items: ChartDetails[]; id: number }) {
     this.selectedItem = e.items.filter((val) => val.id === e.id)[0];
-    // console.log(this.allElementsNotNull(e.items));
     if (!this.allElementsNotNull(e.items)) {
       this.isDisabled = true;
     } else {
@@ -503,11 +522,13 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     this.showActivityLogsPopup3 = false;
     const isExists = this.tableHeader.filter((val) => val.key === '')[0];
     if (!isExists) {
-      this.tableHeader.push({
-        key: '',
-        type: 'text',
-        label: '',
-      });
+      if (!this.psrServices.isPMUser()) {
+        this.tableHeader.push({
+          key: '',
+          type: 'text',
+          label: '',
+        });
+      }
     }
     this.newData.chartDetails.forEach((data) => {
       if (typeof data.startDate === 'object') {
@@ -538,9 +559,9 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
       });
   }
   editMode() {
-    // console.log('sfd');
     this.isEditMode = true;
-    const filteredArray = this.tableHeader.filter((obj) => obj.key !== '');
+    let filteredArray = [];
+    filteredArray = this.tableHeader.filter((obj) => obj.key !== '');
     this.tableHeader = filteredArray;
     this.isDisabled = false;
     this.showActivityLogsPopup3 = false;
@@ -556,8 +577,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     // })
   }
   showActivityLogsPopup3 = false;
-  showDeliverablesActivityLogs()
-  {
+  showDeliverablesActivityLogs() {
     this.getSpecificActivityLog(
       'PSR',
       'Add,Edit,Delete',
@@ -569,8 +589,7 @@ export class ProjectDetailsCardComponent implements OnInit, OnChanges {
     // console.log("this.projectData().projectName => " , this.projectData().projectName);
     this.showActivityLogsPopup3 = !this.showActivityLogsPopup3;
   }
-  popupClosed3()
-  {
+  popupClosed3() {
     this.showActivityLogsPopup3 = false;
   }
 }

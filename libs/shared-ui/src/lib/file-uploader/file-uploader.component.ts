@@ -14,7 +14,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
   selector: 'stc-apps-file-uploader',
   templateUrl: './file-uploader.component.html',
   styleUrls: ['./file-uploader.component.scss'],
-  standalone : false,
+  standalone: false,
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
@@ -199,8 +199,6 @@ export class FileUploaderComponent implements ControlValueAccessor {
   }
 
   validate(file: File) {
-    console.log(file);
-
     // Check if the file size exceeds 10 MB
     if (file.size > this.size) {
       this.invalidFileMessageDetail = 'File is too big!';

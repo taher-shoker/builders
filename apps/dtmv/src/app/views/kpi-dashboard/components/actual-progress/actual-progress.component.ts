@@ -116,17 +116,17 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
           colors: coloredData.map((d) => am5.color(d.color)),
         });
 
-        // Create outer series (thick ring)
-        let series0 = this.chart.series.push(
-          am5percent.PieSeries.new(this.root, {
-            valueField: 'litres',
-            categoryField: 'country',
-            startAngle: 160,
-            endAngle: 380,
-            radius: am5.percent(70),
-            innerRadius: am5.percent(65),
-          })
-        );
+      // Create outer series (thick ring)
+      const series0 = this.chart.series.push(
+        am5percent.PieSeries.new(this.root, {
+          valueField: 'litres',
+          categoryField: 'country',
+          startAngle: 160,
+          endAngle: 380,
+          radius: am5.percent(70),
+          innerRadius: am5.percent(65),
+        })
+      );
 
         // Apply gap and solid color to outer series
         series0.slices.template.setAll({
@@ -136,16 +136,16 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
           fillOpacity: 1,
         });
 
-        // Create inner series (thin ring)
-        let series1 = this.chart.series.push(
-          am5percent.PieSeries.new(this.root, {
-            startAngle: 160,
-            endAngle: 380,
-            valueField: 'bottles',
-            innerRadius: am5.percent(80),
-            categoryField: 'country',
-          })
-        );
+      // Create inner series (thin ring)
+      const series1 = this.chart.series.push(
+        am5percent.PieSeries.new(this.root, {
+          startAngle: 160,
+          endAngle: 380,
+          valueField: 'bottles',
+          innerRadius: am5.percent(80),
+          categoryField: 'country',
+        })
+      );
 
         // Apply gap and solid color to inner series
         series1.slices.template.setAll({
@@ -164,17 +164,17 @@ export class ActualProgressComponent implements OnDestroy, AfterViewInit {
         series1.ticks.template.set('forceHidden', true);
         series1.labels.template.set('forceHidden', true);
 
-        // Create a series for the inner dotted border
-        let dottedSeries = this.chart.series.push(
-          am5percent.PieSeries.new(this.root, {
-            startAngle: 160,
-            endAngle: 380,
-            valueField: 'value',
-            categoryField: 'category',
-            innerRadius: am5.percent(60),
-            radius: am5.percent(60),
-          })
-        );
+      // Create a series for the inner dotted border
+      const dottedSeries = this.chart.series.push(
+        am5percent.PieSeries.new(this.root, {
+          startAngle: 160,
+          endAngle: 380,
+          valueField: 'value',
+          categoryField: 'category',
+          innerRadius: am5.percent(60),
+          radius: am5.percent(60),
+        })
+      );
 
         dottedSeries.slices.template.setAll({
           fillOpacity: 0,

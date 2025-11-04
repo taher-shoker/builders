@@ -194,22 +194,6 @@
               [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
             </stc-apps-select-drop-down>
           </div>
-          <div class="col-md-2"></div>
-          <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="'Pages'" formControlName="pageAccess" [required]="true"
-              [options]="filterPages" [multi]="true" [selectId]="selectedPages || null">
-            </stc-apps-select-drop-down>
-            <!-- <label class="pages-label">Pages <span>*</span></label>
-            <mat-form-field>
-              <mat-select multiple (selectionChange)="onPageSelectionChange($event)" [formControl]="pagesControl">
-                @for (topping of pages; track topping) {
-                <mat-option [value]="topping.slug">{{
-                  topping.name
-                  }}</mat-option>
-                }
-              </mat-select>
-            </mat-form-field> -->
-          </div>
         </div>
 
 

@@ -72,7 +72,11 @@ export class MainLayoutComponent implements OnInit {
     this.navItems = this.userData?.pageAccess.map((p: any) => {
       return { ...p, url: `/${p.slug}` };
     });
-    this.router.navigate([this.navItems[0].url]);
+    if (!this.isMobile()) {
+      this.router.navigate([this.navItems[0].url]);
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
   private checkSystem(groups: UserGroup[]): UserGroup {
     const matchingGroup = groups.find((group: UserGroup) => {

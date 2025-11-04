@@ -18,11 +18,11 @@ div[role='progresscircule'] {
   width: var(--size);
   height: var(--size);
   border-radius: 50%;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 1;
   font-size: calc(var(--size) / 5);
   color: var(--stc-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 div[role='progresscircule']::after {

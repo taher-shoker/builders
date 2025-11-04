@@ -110,6 +110,7 @@ export class MilestoneDetailsComponent implements OnInit {
     this.isLoadingSteps = true;
 
     this.steps = [];
+
     if (this.milestoneDetails.currentMilestoneProgressUpdateDto) {
       this.progress =
         this.milestoneDetails.currentMilestoneProgressUpdateDto.overallProgress;
@@ -141,6 +142,7 @@ export class MilestoneDetailsComponent implements OnInit {
           'medium'
         ) || '';
     }
+
     if (!this.milestoneDetails.milestoneChangeRequest) {
       const initialStep: Step = {
         caption: `Milestone progress updated (${this.status})`,
@@ -156,6 +158,15 @@ export class MilestoneDetailsComponent implements OnInit {
   }
 
   getMilestoneProgressWorkflow(params?: Params) {
+    if (
+      !this.milestoneDetails.currentMilestoneProgressUpdateDto?.workflowId &&
+      !this.milestoneDetails.milestoneChangeRequest?.workflowId
+    ) {
+      // No workflow exists, stop loading immediately
+      this.isLoadingSteps = false;
+      return;
+    }
+
     if (
       (this.milestoneDetails.currentMilestoneProgressUpdateDto &&
         this.milestoneDetails.currentMilestoneProgressUpdateDto.workflowId) ||
@@ -290,8 +301,15 @@ export class MilestoneDetailsComponent implements OnInit {
                   actions.push(Actions.returnJustification); // Adding action 'Return' in all 3 cases.
                 }
                 if (res[i].taskName === 'Review Progress') {
-                  actions.push(Actions.reviewOnTrack);
-                  actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+                  if (
+                    this.milestoneDetails.status?.toLowerCase() === 'planned'
+                  ) {
+                    actions.push(Actions.approveProgress);
+                    actions.push(Actions.returnProgress);
+                  } else {
+                    actions.push(Actions.reviewOnTrack);
+                    actions.push(Actions.returnOnTrack); // Adding action 'Return' in all 3 cases.
+                  }
                 }
               } else if (
                 res[i].taskName === Actions.addEvidence.uniqueTitle ||
@@ -628,10 +646,17 @@ export class MilestoneDetailsComponent implements OnInit {
               value: 1, // 1 means approved.
             });
           } else if (action.item.taskName === 'Review Progress') {
-            params.requestParams.push({
-              name: 'is_remark_approved',
-              value: 1, // 1 means approved.
-            });
+            if (this.milestoneDetails.status?.toLowerCase() === 'planned') {
+              params.requestParams.push({
+                name: 'is_progress_approved',
+                value: true,
+              });
+            } else {
+              params.requestParams.push({
+                name: 'is_remark_approved',
+                value: 1, // 1 means approved.
+              });
+            }
           } else if (
             action.item.taskName === 'Review Milestone Modifications'
           ) {
@@ -771,6 +796,38 @@ export class MilestoneDetailsComponent implements OnInit {
     showAttachment: boolean = true,
     status: string = ''
   ) {
+    console.log(showAttachment);
+    // if (status?.toLowerCase() === 'planned' && isFirstUpdateProgress) {
+    //   const params: {
+    //     requestParams: { name: string; value: number | string | boolean }[];
+    //   } = {
+    //     requestParams: [
+    //       {
+    //         name: 'is_progress_approved',
+    //         value: true,
+    //       },
+    //     ],
+    //   };
+
+    //   this.isLoadingSteps = true;
+    //   if (this.isUpdateProgressOnHold) {
+    //     this.sendAllRequests(params, isFirstUpdateProgress);
+    //     this.isUpdateProgressOnHold = false;
+    //   } else {
+    //     this.milestonesService
+    //       .completePendingTask(
+    //         this.milestoneDetails.currentMilestoneProgressUpdateDto
+    //           ?.workflowId || '',
+    //         Number(item?.requestTaskId),
+    //         params
+    //       )
+    //       .subscribe(() => {
+    //         this.getMilestoneDetails(params);
+    //       });
+    //   }
+    //   return;
+    // }
+
     const dialogRef = this.matDialog.open(
       UpdateMilestoneProgressDialogComponent,
       {
@@ -780,7 +837,7 @@ export class MilestoneDetailsComponent implements OnInit {
           type,
           milestoneId: this.milestoneId,
           showAttachment,
-          status,
+          status: this.milestoneDetails.status?.toLowerCase(),
         },
       }
     );
@@ -857,14 +914,21 @@ export class MilestoneDetailsComponent implements OnInit {
         }
       } else if (type === Actions.returnOnTrack.uniqueTitle) {
         params.requestParams.push({
-          name: 'is_remark_approved',
-          value: 2, // 2 means rejected.
-        });
-
-        params.requestParams.push({
           name: 'reason_of_rejection',
           value: res.note,
         });
+
+        if (this.milestoneDetails.status?.toLowerCase() === 'planned') {
+          params.requestParams.push({
+            name: 'is_progress_approved',
+            value: false,
+          });
+        } else {
+          params.requestParams.push({
+            name: 'is_remark_approved',
+            value: 2, // 2 means rejected.
+          });
+        }
 
         if (res.attachments) {
           params.requestParams.push({
@@ -921,6 +985,7 @@ export class MilestoneDetailsComponent implements OnInit {
           this.milestoneDetails.latestApprovedMilestoneProgressUpdate
             ?.overallProgress,
         milestoneName: this.milestoneDetails.milestoneName,
+        status: this.milestoneDetails.status,
       },
     });
 
@@ -977,10 +1042,26 @@ export class MilestoneDetailsComponent implements OnInit {
     this.milestonesService
       .calculateMilestoneProgress(milestoneId, progress)
       .subscribe((res) => {
+        if (res.status?.toLowerCase() === 'planned') {
+          // this.isUpdateProgressOnHold = false;
+console.log("calculated" , res)
+          if (isFirstUpdateProgress) {
+            // For initial updates, create the progress record and then refresh.
+            // this.updateProgress().subscribe(() => {
+            //   this.getMilestoneDetails();
+            // });
+          } else {
+            // For subsequent updates (like 'Add New Progress'), update the existing task.
+            // this.updateNonInitialProgress().subscribe(() => {
+            //   this.getMilestoneDetails();
+            // });
+          }
+          // return; // Exit early, no dialog or special action needed.
+        }
         let actionObj: Actions;
         if (res.status === 'Delayed' || res.status === 'At Risk') {
           actionObj = Actions.addJustification;
-        } else if (res.status === 'Completed') {
+        } else if (res.status === 'Completed' || res.status === "Planned") {
           actionObj = Actions.addEvidence;
         } else {
           actionObj = Actions.addOnTrack;
@@ -1039,7 +1120,7 @@ export class MilestoneDetailsComponent implements OnInit {
       .subscribe(() => {
         this.isLoadingSteps = true;
         this.needToPushWorkflowAction = false;
-        this.getMilestoneDetails();
+        this.getMilestoneDetails(params);
       });
   }
 

@@ -114,11 +114,26 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.filterPages = res;
       if (this.data) {
         if (this.data.pageAccess) {
-          this.selectedPages = this.data.pageAccess.map((p: Page) => p.id);
+          this.handlePageAccess();
         }
       }
     });
   }
+  private handlePageAccess(): void {
+    const pageAccess = this.data?.pageAccess;
+    const roleName = this.checkSystem(this.data.userGroups)?.roles?.[0]
+      ?.roleName;
+    const pageName = pageAccess?.[0]?.name;
+
+    if (pageAccess?.length) {
+      if (roleName === 'BE_PM' && pageName === 'Project Execution') {
+        this.form.get('pageAccess')?.disable();
+      }
+
+      this.selectedPages = pageAccess.map((p: Page) => p.id);
+    }
+  }
+
   private noWhitespaceValidator(control: FormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
@@ -209,9 +224,12 @@ export class UserFormComponent implements OnInit, OnChanges {
     const email = this.form.get('email')?.value;
     const name = this.form.get('name')?.value;
     const jobTitle = this.form.get('jobTitle')?.value;
-    const pageAccess = this.form.get('pageAccess')?.value.map((p: number) => {
-      return { id: p };
-    });
+    const pageAccess =
+      this.form.get('pageAccess')?.value.length > 0
+        ? this.form.get('pageAccess')?.value.map((p: number) => {
+            return { id: p };
+          })
+        : [];
 
     if (currentSystem === 'DI_Milestones') {
       dataForm = { userGroups, teams, email, name, jobTitle };
@@ -576,7 +594,11 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.form.get('pageAccess')?.reset();
       if (value.groupName === 'BE_EDITORS') {
         this.filterPages = this.pages;
+      } else if (value.groupName === 'BE_PM') {
+        this.form.get('pageAccess')?.setValue([3]);
+        this.form.get('pageAccess')?.disable();
       } else {
+        this.form.get('pageAccess')?.enable();
         this.filterPages = this.pages.filter(
           (r) => r.name !== 'Activity Log Center'
         );

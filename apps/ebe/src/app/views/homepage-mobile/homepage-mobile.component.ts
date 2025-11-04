@@ -41,10 +41,10 @@ export class HomepageMobileComponent {
       .subscribe({
         next: (res: DashboardData) => {
           this.dashboardData = res;
-          this.tapsData.set([
+          const cards = [
             {
               id: 1,
-              title: 'sector scorecard',
+              title: 'sector scorecards',
               subTitle: 'track performance metrices',
               verticalNumber: res.scorecard.numberOfVerticals,
               kpisNumber: res.scorecard.numberOfKPIs,
@@ -85,17 +85,25 @@ export class HomepageMobileComponent {
               )[0].count,
               image: 'assets/images/mobile/digital-transformation-icon.svg',
             },
-          ]);
+          ];
+          const allowedCards = cards.filter((card) =>
+            this.userData.pageAccess.some(
+              (access) => access.name.toLowerCase() === card.title.toLowerCase()
+            )
+          );
+
+          this.tapsData.set(allowedCards);
+          //this.tapsData.set();
         },
       });
   }
   getCurrentTap(tap: HomePageTap) {
     if (tap.id === 1) {
-      this.router.navigateByUrl('/scorecard');
+      this.router.navigateByUrl('/sector-scorecards');
     } else if (tap.id === 2) {
-      this.router.navigateByUrl('/psr');
+      this.router.navigateByUrl('/project-execution');
     } else if (tap.id === 3) {
-      this.router.navigateByUrl('/financial-reporting');
+      this.router.navigateByUrl('/financial-status');
     } else {
       this.router.navigateByUrl('/digital-transformation');
     }

@@ -1,124 +1,105 @@
 @import '../../../../../styles/fonts';
-.psr-form
-{
+.psr-form {
   padding: 20px 30px;
-  &-body
-  {
+  &-body {
     background-color: var(--stc-grey-lighter-color);
     border-radius: 20px;
     padding: 20px;
     position: relative;
     color: #000;
-    &-header
-    {
+    &-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      &-left
-      {
+      &-left {
         display: flex;
         align-items: center;
-        gap:15px;
-        span
-        {
-          color:var(--stc-lighter-black-color);
+        gap: 15px;
+        span {
+          color: var(--stc-lighter-black-color);
           text-transform: capitalize;
           font-weight: 700;
           font-size: 1.3rem;
         }
       }
-      &-right
-      {
-        img
-        {
+      &-right {
+        img {
           cursor: pointer;
         }
       }
     }
-    &-form
-    {
-      &-projects
-      {
-        .form-wrapper
-        {
-          border: 1px solid #8E9AA033;
+    &-form {
+      &-projects {
+        .form-wrapper {
+          border: 1px solid #8e9aa033;
           border-radius: 10px;
           margin-top: 30px;
           padding: 20px 20px 30px;
-          .delete-program-img
-          {
+          .delete-program-img {
             text-align: end;
-            img
-            {
+            img {
               cursor: pointer;
             }
           }
-          .form-group
-          {
+          .form-group {
             position: relative;
-            small
-            {
-              color:red;
+            small {
+              color: red;
               @extend .stcFont;
               text-transform: capitalize;
               position: absolute;
               left: 0;
               bottom: -22px;
             }
-            label
-            {
+            label {
               display: block;
               @extend .stcFont;
-              color:var(--stc-purple-color);
+              color: var(--stc-purple-color);
               font-size: 1.1rem;
               text-transform: capitalize;
               font-weight: 500;
               width: fit-content;
             }
-            input
-            {
+            input {
               width: 100%;
-              border:0;
+              border: 0;
               outline: 0;
               box-shadow: none;
               border-radius: 10px;
-              padding:13px 15px;
+              padding: 13px 15px;
               margin-top: 7px;
               background-color: var(--stc-lighter-grey-color);
-              border:1px solid var(--stc-lighter-grey-color);
+              border: 1px solid var(--stc-lighter-grey-color);
               @extend .stcFont;
               &::placeholder {
-                color: #8E9AA0;
+                color: #8e9aa0;
                 font-weight: 400;
                 @extend .stcFont;
                 // text-transform: capitalize;
               }
-              &.invalid-input
-              {
-                border-color:red;
+              &.invalid-input {
+                border-color: red;
               }
             }
-            textarea
-            {
+            textarea {
               width: 100%;
               resize: none;
-              border:0;
+              border: 0;
               outline: 0;
               box-shadow: none;
               border-radius: 10px;
-              padding:13px 15px;
+              padding: 13px 15px;
               margin-top: 7px;
               background-color: var(--stc-lighter-grey-color);
-              border:1px solid var(--stc-lighter-grey-color);
+              border: 1px solid var(--stc-lighter-grey-color);
               @extend .stcFont;
               &::placeholder {
-                color: #8E9AA0;
+                color: #8e9aa0;
                 font-weight: 400;
                 @extend .stcFont;
               }
-              &.invalid-input
-              {
-                border-color:red;
+              &.invalid-input {
+                border-color: red;
               }
             }
           }
@@ -168,82 +149,69 @@
     }
   }
 }
-.disabled-btn
-{
-  opacity: .7 !important;
+.disabled-btn {
+  opacity: 0.7 !important;
   cursor: not-allowed !important;
 }
-.edit-program-dialog
-{
-  padding:0px 20px 0px;
+.edit-program-dialog {
+  padding: 0px 20px 0px;
   text-align: center;
-  min-width:500px;
-  min-height:172px;
-  .header
-  {
+  min-width: 500px;
+  min-height: 172px;
+  .header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    img
-    {
+    img {
       width: 40px;
-      cursor:pointer;
+      cursor: pointer;
     }
   }
-  .body
-  {
+  .body {
     display: flex;
     align-items: center;
-    gap:10px;
+    gap: 10px;
   }
-  p
-  {
+  p {
     margin: 0;
     @extend .stcFont;
-    &.delete-record-header
-    {
-      color:var(--stc-lighter-black-color);
+    &.delete-record-header {
+      color: var(--stc-lighter-black-color);
       font-weight: 600;
       text-transform: capitalize;
-      margin:15px 0;
+      margin: 15px 0;
       font-size: 19px;
     }
-    &.delete-record-content
-    {
+    &.delete-record-content {
       @extend .stcFont;
-      color:var(--stc-lighter-grey-color2);
+      color: var(--stc-lighter-grey-color2);
       font-size: 17px;
     }
-    &.delete-record-warning
-    {
-      color:var( --stc-red-color);
-      margin:15px 0;
+    &.delete-record-warning {
+      color: var(--stc-red-color);
+      margin: 15px 0;
       font-size: 16px;
     }
   }
-  .buttons
-  {
+  .buttons {
     display: flex;
     justify-content: flex-end;
-    gap:25px;
-    button
-    {
-      border:0;
-      background-color:transparent;
+    gap: 25px;
+    button {
+      border: 0;
+      background-color: transparent;
       border-radius: 5px;
-      width:150px;
-      height:40px;
-      color:var(--stc-dark-grey-color2);
+      width: 150px;
+      height: 40px;
+      color: var(--stc-dark-grey-color2);
       text-transform: capitalize;
       @extend .stcFont;
       font-weight: 500;
-      &.delete
-      {
+      &.delete {
         background-color: var(--stc-purple-color);
-        color:var(--stc-white-color);
+        color: var(--stc-white-color);
       }
-      &.cancel
-      {
+      &.cancel {
         width: 80px;
       }
     }
@@ -260,21 +228,18 @@ input[type='number'] {
   -moz-appearance: textfield;
   appearance: textfield;
 }
-::ng-deep .startDate-calendar
-{
-  .p-calendar
-  {
+::ng-deep .startDate-calendar {
+  .p-calendar {
     width: 100% !important;
-    input
-    {
-      border:0 !important;
+    input {
+      border: 0 !important;
       outline: 0 !important;
       box-shadow: none !important;
       border-radius: 10px !important;
       margin-top: 7px !important;
       background-color: var(--stc-lighter-grey-color) !important;
-      border:1px solid var(--stc-lighter-grey-color) !important;
-      padding:0 15px !important;
+      border: 1px solid var(--stc-lighter-grey-color) !important;
+      padding: 0 15px !important;
       height: 51px !important;
       @extend .stcFont;
     }
@@ -283,25 +248,20 @@ input[type='number'] {
     min-width: 300px !important;
     min-height: 200px !important;
   }
-  &.invalid-date
-  {
-    .p-calendar
-    {
-      input
-      {
-        border-color:red !important;
+  &.invalid-date {
+    .p-calendar {
+      input {
+        border-color: red !important;
       }
     }
   }
 }
-.background-item
-{
+.background-item {
   display: flex;
   align-items: center;
-  gap:5px;
+  gap: 5px;
 }
-.background-bullet
-{
+.background-bullet {
   width: 12px;
   height: 12px;
   border-radius: 50%;
@@ -342,6 +302,24 @@ input[type='number'] {
       text-transform: capitalize;
       @extend .stcFont;
       font-weight: 500;
+    }
+  }
+}
+::ng-deep {
+  stc-apps-select-drop-down {
+    width: 100%;
+    display: block;
+    .mat-mdc-form-field {
+      display: block;
+    }
+    .mdc-line-ripple {
+      display: none;
+    }
+    label {
+      color: #4f008c;
+    }
+    .mat-mdc-text-field-wrapper {
+      border-radius: 10px;
     }
   }
 }

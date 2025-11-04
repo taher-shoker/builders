@@ -19,9 +19,7 @@
         </p>
         @if(challenge && challenge.description &&
         challenge.description.trim().length > 100){
-        <span (click)="overlayPanel2?.show($event)" class="more-link"
-          >more</span
-        >
+        <span (click)="overlayPanel2?.show($event)" class="more-link">more</span>
         <p-overlayPanel #overlayPanel2 dismissable="true">
           <section class="challenge-popover-section">
             {{ challenge.description }}
@@ -41,20 +39,35 @@
           </div>
         </div>
         <div class="bottom-data">
-          <p>Impact</p>
-          <span>{{ challenge.impact ? challenge.impact : '-' }}</span>
+          <div class="left">
+            <p>Impact</p>
+            <span>{{ challenge.impact ? challenge.impact : '-' }}</span>
+          </div>
+          <div class="right">
+            <p>supported needed</p>
+            <div class="challenge-title">
+              <p class="colored">
+                {{ challenge && challenge.supportNeeded ? challenge.supportNeeded : '-' }}
+              </p>
+              @if(challenge && challenge.supportNeeded &&
+              challenge.supportNeeded.trim().length > 100){
+              <span (click)="overlayPanel2?.show($event)" class="more-link">more</span>
+              <p-overlayPanel #overlayPanel2 dismissable="true">
+                <section class="challenge-popover-section">
+                  {{ challenge.supportNeeded }}
+                </section>
+              </p-overlayPanel>
+              }
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
     } }
   </div>
   @if(challengesData && challengesData.data){
-  <p-paginator
-    (onPageChange)="onPageChange($event)"
-    [first]="first"
-    [rows]="rows"
-    [totalRecords]="challengesData.totalElements"
-    styleClass="challenges-pagination-mobile"
-  />
+  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+    [totalRecords]="challengesData.totalElements" styleClass="challenges-pagination-mobile" />
   }
 </div>
