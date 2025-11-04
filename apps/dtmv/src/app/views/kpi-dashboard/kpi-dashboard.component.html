@@ -12,25 +12,44 @@
         >
           <ng-template #tabContent let-tab let-i="index">
             <div class="kpi-dashboard_tabs_container">
-              <div class="row gy-4">
-                <div class="col-12">
-                  <h2 class="kpi-dashboard_title">Commercial Unit Details</h2>
+              <div class="row gy-4 cols-spaced-32">
+                <div class="m-0 p-0 col-12">
+                  <div class="teams-tabs">
+                    @for (team of teamTabs; track team.key) {
+                    <button
+                      type="button"
+                      class="teams-tab"
+                      [class.active]="currentTeam() === team.key"
+                      [attr.aria-pressed]="currentTeam() === team.key"
+                      (click)="onTeamChanged(team.key)"
+                    >
+                      {{ team.label }}
+                    </button>
+                    }
+                  </div>
+                  <h2 class="kpi-dashboard_title">
+                    {{
+                      currentTeam()
+                        ? currentTeam() + ' Unit Details'
+                        : 'Unit Details'
+                    }}
+                  </h2>
                 </div>
-                <div class="col-4">
+                <div class="p-0 col-4">
                   <stc-apps-progress-gauge
                     [progress]="75"
                     [colorActive]="'#ef4444'"
                     [baseline]="90"
                     [target]="95"
-                    ></stc-apps-progress-gauge>
+                  ></stc-apps-progress-gauge>
                   <!---F4C430 At Risk --->
                   <!---EF4444 Delayed --->
                   <!---00C389 On Track --->
                 </div>
-                <div class="col-8">
+                <div class="p-0 col-8">
                   <stc-apps-di-progress></stc-apps-di-progress>
                 </div>
-                <div class="col-12">
+                <div class="p-0 col-12">
                   <stc-apps-kpi-list-section></stc-apps-kpi-list-section>
                 </div>
               </div>

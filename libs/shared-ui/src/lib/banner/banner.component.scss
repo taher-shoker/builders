@@ -14,6 +14,13 @@
     justify-content: space-between;
     padding-inline: 40px;
 
+    &.center-title {
+      min-height: 170px; // match banner box min-height for vertical centering
+      h1 {
+        margin-bottom: 60px;
+      }
+    }
+
     .welcome-msg {
       p {
         color: $greyColor;
