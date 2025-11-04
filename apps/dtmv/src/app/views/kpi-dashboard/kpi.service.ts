@@ -13,6 +13,14 @@ export interface UnitsGroupedCategory {
   teams: TeamSummary[];
 }
 
+export interface UnitProgress {
+  unitId: number;
+  year: number;
+  unitBaseline: number; // 0..1
+  unitTarget: number; // 0..1
+  diActualProgress: number; // 0..1
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -28,6 +36,15 @@ export class KpiService {
   getUnitsGrouped(): Observable<UnitsGroupedCategory[]> {
     return this.http.get<UnitsGroupedCategory[]>(
       `${this.baseUrl}v2/dt-milestone-service/units/grouped`
+    );
+  }
+
+  /**
+   * Fetches unit progress by unit ID.
+   */
+  getUnitProgress(unitId: number): Observable<UnitProgress> {
+    return this.http.get<UnitProgress>(
+      `${this.baseUrl}v2/dt-milestone-service/units/${unitId}/progress`
     );
   }
 }

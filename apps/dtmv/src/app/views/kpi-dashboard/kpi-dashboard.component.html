@@ -37,10 +37,11 @@
                 </div>
                 <div class="p-0 col-4">
                   <stc-apps-progress-gauge
-                    [progress]="75"
-                    [colorActive]="'#ef4444'"
-                    [baseline]="90"
-                    [target]="95"
+                    [title]="currentTeam() ? (currentTeam() + ' Actual Progress') : 'DI Progress'"
+                    [progress]="progressPct()"
+                    [colorActive]="statusColor()"
+                    [baseline]="baselinePct()"
+                    [target]="targetPct()"
                   ></stc-apps-progress-gauge>
                   <!---F4C430 At Risk --->
                   <!---EF4444 Delayed --->

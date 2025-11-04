@@ -20,6 +20,8 @@ export class ProgressGaugeComponent {
   @Input({ required: true }) set progress(v: number) {
     this._progress.set(this.clamp(v));
   }
+  /** Title displayed in the card header */
+  @Input() title = 'DI Progress';
   @Input() baseline = 98;
   @Input() target = 98;
 

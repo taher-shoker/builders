@@ -1,5 +1,5 @@
-import { Component, OnInit, signal } from '@angular/core';
-import { KpiService, UnitsGroupedCategory, TeamSummary } from './kpi.service';
+import { Component, OnInit, computed, signal, effect } from '@angular/core';
+import { KpiService, UnitsGroupedCategory, TeamSummary, UnitProgress } from './kpi.service';
 
 @Component({
   selector: 'stc-apps-kpi-dashboard',
@@ -10,6 +10,11 @@ export class KpiDashboardComponent implements OnInit {
   currentTab = signal<string>('');
   customTabs: { label: string; key: string }[] = [];
   private unitsGrouped: UnitsGroupedCategory[] = [];
+  private teamIdByName: Map<string, number> = new Map<string, number>();
+
+  // Unit progress state
+  unitProgress = signal<UnitProgress | null>(null);
+  currentTeamId = signal<number | null>(null);
 
   constructor(private kpiService: KpiService) {}
 
@@ -33,6 +38,8 @@ export class KpiDashboardComponent implements OnInit {
         // Initialize team tabs from the first category
         const firstCategoryTeams = units.find((u) => u.category === first)?.teams || [];
         this.setTeamTabs(firstCategoryTeams);
+        // initial fetch for first team
+        this.fetchUnitProgress();
       },
       error: () => {
         // Fallback to known defaults in case of API error
@@ -60,6 +67,7 @@ export class KpiDashboardComponent implements OnInit {
     // Update teams for the selected category from cached data
     const teams = this.unitsGrouped.find((u) => u.category === tabName)?.teams || [];
     this.setTeamTabs(teams);
+    this.fetchUnitProgress();
   }
 
   // --- Teams Tabs state ---
@@ -68,12 +76,82 @@ export class KpiDashboardComponent implements OnInit {
 
   private setTeamTabs(teams: TeamSummary[]) {
     this.teamTabs = (teams || []).map((t) => ({ label: t.name, key: t.name }));
+    // build name->id map
+    this.teamIdByName = new Map((teams || []).map((t) => [t.name, t.id]));
     const firstTeamKey = this.teamTabs[0]?.key ?? '';
     this.currentTeam.set(firstTeamKey);
+    const id = this.teamIdByName.get(firstTeamKey) ?? null;
+    this.currentTeamId.set(id);
+    console.log('[KPI] setTeamTabs:', { teams, teamTabs: this.teamTabs, teamIdByName: Object.fromEntries(this.teamIdByName), firstTeamKey, id });
   }
 
   onTeamChanged(teamKey: string): void {
     this.currentTeam.set(teamKey);
-    // TODO: trigger data load for selected team/category when backend endpoints are available
+    const id = this.teamIdByName.get(teamKey) ?? null;
+    this.currentTeamId.set(id);
+    console.log('[KPI] onTeamChanged:', { teamKey, id });
+    this.fetchUnitProgress();
   }
+
+  private fetchUnitProgress(): void {
+    const id = this.currentTeamId();
+    if (id == null) {
+      this.unitProgress.set(null);
+      console.warn('[KPI] fetchUnitProgress: no currentTeamId, skipping');
+      return;
+    }
+    console.log('[KPI] fetchUnitProgress: requesting', { unitId: id });
+    this.kpiService.getUnitProgress(id).subscribe({
+      next: (data) => {
+        console.log('[KPI] fetchUnitProgress: response', data);
+        this.unitProgress.set(data);
+      },
+      error: (err) => {
+        console.error('[KPI] fetchUnitProgress: error', err);
+        this.unitProgress.set(null);
+      },
+    });
+  }
+
+  // Percent conversions for template (0..100)
+  progressPct = computed(() => {
+    const p = this.unitProgress();
+    return p ? Math.round((p.diActualProgress || 0) * 100) : 0;
+  });
+  baselinePct = computed(() => {
+    const p = this.unitProgress();
+    return p ? Math.round((p.unitBaseline || 0) * 100) : 0;
+  });
+  targetPct = computed(() => {
+    const p = this.unitProgress();
+    return p ? Math.round((p.unitTarget || 0) * 100) : 0;
+  });
+
+  // Color selection based on progress vs baseline/target
+  statusColor = computed(() => {
+    const p = this.unitProgress();
+    if (!p) return '#00C389'; // default to On Track green
+    const progress = p.diActualProgress ?? 0;
+    const baseline = p.unitBaseline ?? 0;
+    const target = p.unitTarget ?? 0;
+
+    // Business rule (adjust if needed):
+    // - progress < baseline => Delayed (red)
+    // - progress >= target => On Track (green)
+    // - otherwise => At Risk (amber)
+    if (progress < baseline) return '#EF4444';
+    if (progress >= target) return '#00C389';
+    return '#F4C430';
+  });
+
+  // Log any changes in unitProgress and the derived percentages
+  progressLogEffect = effect(() => {
+    const p = this.unitProgress();
+    console.log('[KPI] unitProgress updated:', p);
+    console.log('[KPI] computed percents:', {
+      progressPct: this.progressPct(),
+      baselinePct: this.baselinePct(),
+      targetPct: this.targetPct(),
+    });
+  });
 }
