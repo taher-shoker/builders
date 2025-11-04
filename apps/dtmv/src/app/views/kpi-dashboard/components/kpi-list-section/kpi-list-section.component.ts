@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { KPI } from '../../models/kpi.model';
@@ -17,6 +17,16 @@ export class KpiListSectionComponent {
   dialogService = inject(KpiDialogService);
   dialog = inject(MatDialog);
   kpiService = inject(KpiDialogService);
+  searchTerm = signal<string>('');
+
+  // Inputs from parent (Dashboard)
+  @Input() kpis: KPI[] = [];
+  @Input() loading = false;
+
+  // Output to parent to request loading next page
+  @Output() loadMoreRequested = new EventEmitter<void>();
+  // Forward dimensions change from search to parent
+  @Output() dimensionFilterChanged = new EventEmitter<string[]>();
 
   onKpiSelected(kpi: KPI): void {
     this.selectedKpi.set(kpi);
@@ -45,7 +55,7 @@ export class KpiListSectionComponent {
     dialogRef
       .afterClosed()
       .pipe(filter((confirmed) => confirmed))
-      .subscribe(() => {});
+      .subscribe();
   }
 
   onActivityLog(kpi: KPI): void {
@@ -54,5 +64,17 @@ export class KpiListSectionComponent {
 
   onUpdateKpiValue(kpi: KPI): void {
     this.dialogService.openUpdateValueDialog(kpi).subscribe();
+  }
+
+  onReachEnd(): void {
+    this.loadMoreRequested.emit();
+  }
+
+  onDimensionsFilterChanged(dimensions: string[]): void {
+    this.dimensionFilterChanged.emit(dimensions);
+  }
+
+  onSearchChange(term: string): void {
+    this.searchTerm.set(term || '');
   }
 }

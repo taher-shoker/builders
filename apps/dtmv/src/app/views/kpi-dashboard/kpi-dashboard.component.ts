@@ -1,5 +1,6 @@
 import { Component, OnInit, computed, signal, effect } from '@angular/core';
-import { KpiService, UnitsGroupedCategory, TeamSummary, UnitProgress } from './kpi.service';
+import { KpiService, UnitsGroupedCategory, TeamSummary, UnitProgress, KpiListResponse, KpiListItem } from './kpi.service';
+import { KPI } from './models/kpi.model';
 
 @Component({
   selector: 'stc-apps-kpi-dashboard',
@@ -15,6 +16,14 @@ export class KpiDashboardComponent implements OnInit {
   // Unit progress state
   unitProgress = signal<UnitProgress | null>(null);
   currentTeamId = signal<number | null>(null);
+
+  // KPI List state (parent-driven pagination)
+  kpis = signal<KPI[]>([]);
+  private page = signal<number>(0);
+  private readonly size = 10;
+  private last = signal<boolean>(false);
+  loadingKpis = signal<boolean>(false);
+  private selectedDimensions = signal<string[]>([]);
 
   constructor(private kpiService: KpiService) {}
 
@@ -40,6 +49,8 @@ export class KpiDashboardComponent implements OnInit {
         this.setTeamTabs(firstCategoryTeams);
         // initial fetch for first team
         this.fetchUnitProgress();
+        // initial KPI page
+        this.fetchKpiPage(true);
       },
       error: () => {
         // Fallback to known defaults in case of API error
@@ -67,6 +78,8 @@ export class KpiDashboardComponent implements OnInit {
     // Update teams for the selected category from cached data
     const teams = this.unitsGrouped.find((u) => u.category === tabName)?.teams || [];
     this.setTeamTabs(teams);
+    // Refetch KPI list for the new unit context
+    this.fetchKpiPage(true);
     this.fetchUnitProgress();
   }
 
@@ -91,6 +104,8 @@ export class KpiDashboardComponent implements OnInit {
     this.currentTeamId.set(id);
     console.log('[KPI] onTeamChanged:', { teamKey, id });
     this.fetchUnitProgress();
+    // Reset KPIs when team changes
+    this.fetchKpiPage(true);
   }
 
   private fetchUnitProgress(): void {
@@ -111,6 +126,60 @@ export class KpiDashboardComponent implements OnInit {
         this.unitProgress.set(null);
       },
     });
+  }
+
+  // --- KPI List fetching with pagination ---
+  private mapKpiItem(item: KpiListItem): KPI {
+    return {
+      id: String(item.id),
+      name: item.name,
+      description: item.dimension,
+    };
+  }
+
+  fetchKpiPage(reset = false): void {
+    if (reset) {
+      this.kpis.set([]);
+      this.page.set(0);
+      this.last.set(false);
+    }
+    if (this.last()) return;
+    this.loadingKpis.set(true);
+    const page = this.page();
+    const unitId = this.currentTeamId();
+    const dims = this.selectedDimensions();
+    const dimensionParam = dims.length === 1 ? dims[0] : undefined;
+    if (unitId == null) {
+      console.warn('[KPI] fetchKpiPage: no unitId, skipping');
+      this.loadingKpis.set(false);
+      return;
+    }
+    this.kpiService.getKpis(page, this.size, unitId, dimensionParam).subscribe({
+      next: (res: KpiListResponse) => {
+        const mapped = (res.content || []).map((i) => this.mapKpiItem(i));
+        this.kpis.set([...(this.kpis() || []), ...mapped]);
+        this.last.set(!!res.last);
+        this.page.set(page + 1);
+        this.loadingKpis.set(false);
+        console.log('[KPI] fetchKpiPage:', { page, size: this.size, unitId, dimension: dimensionParam, received: mapped.length, last: res.last });
+      },
+      error: (err) => {
+        console.error('[KPI] fetchKpiPage error:', err);
+        this.loadingKpis.set(false);
+      },
+    });
+  }
+
+  onLoadMoreRequested(): void {
+    if (!this.loadingKpis() && !this.last()) {
+      this.fetchKpiPage();
+    }
+  }
+
+  // Handle dimension filter changes from search (via section)
+  onDimensionFilterChanged(dimensions: string[]): void {
+    this.selectedDimensions.set(dimensions || []);
+    this.fetchKpiPage(true);
   }
 
   // Percent conversions for template (0..100)

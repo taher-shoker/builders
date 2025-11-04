@@ -43,15 +43,16 @@
                     [baseline]="baselinePct()"
                     [target]="targetPct()"
                   ></stc-apps-progress-gauge>
-                  <!---F4C430 At Risk --->
-                  <!---EF4444 Delayed --->
-                  <!---00C389 On Track --->
                 </div>
                 <div class="p-0 col-8">
                   <stc-apps-di-progress [unitId]="currentTeamId()" [teamName]="currentTeam()"></stc-apps-di-progress>
                 </div>
                 <div class="p-0 col-12">
-                  <stc-apps-kpi-list-section></stc-apps-kpi-list-section>
+                  <stc-apps-kpi-list-section
+                    [kpis]="kpis()"
+                    (loadMoreRequested)="onLoadMoreRequested()"
+                    (dimensionFilterChanged)="onDimensionFilterChanged($event)"
+                  ></stc-apps-kpi-list-section>
                 </div>
               </div>
             </div>

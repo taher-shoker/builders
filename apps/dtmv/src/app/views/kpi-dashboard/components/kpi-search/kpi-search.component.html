@@ -7,6 +7,11 @@
   ></stc-apps-input>
   <stc-apps-select-drop-down
     [label]="''"
-    [matLabel]="'All Dimensions'"
+    [matLabel]="'Dimensions'"
+    [multi]="true"
+    [options]="dimensionsOptions"
+    formControlName="dimensions"
+    [searchMode]="false"
+    (selectChange)="onDimensionsChange($event)"
   ></stc-apps-select-drop-down>
 </div>

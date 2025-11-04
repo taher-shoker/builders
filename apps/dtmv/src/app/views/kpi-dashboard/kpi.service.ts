@@ -31,6 +31,24 @@ export interface UnitSeriesItem {
   diActualProgress: number; // 0..1
 }
 
+export interface KpiListItem {
+  id: number;
+  name: string;
+  dimension: string;
+}
+
+export interface KpiListResponse {
+  content: KpiListItem[];
+  last: boolean;
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  number: number;
+  first: boolean;
+  numberOfElements: number;
+  empty: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -66,5 +84,17 @@ export class KpiService {
     const url = `${this.baseUrl}v2/dt-milestone-service/units/${unitId}/series`;
     const finalUrl = periodType ? `${url}?periodType=${periodType}` : url;
     return this.http.get<UnitSeriesItem[]>(finalUrl);
+  }
+
+  /**
+   * Fetches KPIs list with server-side pagination.
+   */
+  getKpis(page: number, size: number, unitId: number, dimension?: string): Observable<KpiListResponse> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi`;
+    const params: Record<string, any> = { page, size, unitId };
+    if (dimension && dimension.trim().length > 0) {
+      params['dimension'] = dimension.trim();
+    }
+    return this.http.get<KpiListResponse>(url, { params });
   }
 }
