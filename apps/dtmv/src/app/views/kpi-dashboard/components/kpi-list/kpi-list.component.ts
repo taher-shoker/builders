@@ -61,6 +61,11 @@ export class KpiListComponent implements AfterViewInit {
 
 
   onKpiSelect(kpi: KPI): void {
+    const selected = this.selectedKpi();
+    // Ignore clicks when the KPI is already selected
+    if (selected && selected.id === kpi.id) {
+      return;
+    }
     this.kpiSelected.emit(kpi);
   }
 
