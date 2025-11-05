@@ -31,8 +31,17 @@ export class KpiListComponent implements AfterViewInit {
   constructor() {
     // Re-evaluate scroll presence whenever the rendered list changes
     effect(() => {
-      // Depend on filteredKpis so the effect runs when list updates
-      void this.filteredKpis();
+      // Depend on filteredKpis and selectedKpi so the effect runs when list or selection updates
+      const list = this.filteredKpis();
+      const selected = this.selectedKpi();
+
+      // Auto-select the first item by default when nothing is selected
+      // or when the current selection is no longer in the filtered list
+      if (list.length > 0 && (!selected || !list.some((k) => k.id === selected.id))) {
+        // Defer emit to avoid change detection cycles
+        setTimeout(() => this.kpiSelected.emit(list[0]), 0);
+      }
+
       // Measure after DOM updates
       setTimeout(() => this.updateHasScroll(), 0);
     });
@@ -58,7 +67,7 @@ export class KpiListComponent implements AfterViewInit {
   onScroll(event: Event): void {
     const target = event.target as HTMLElement;
     if (!target) return;
-    const threshold = 100; // px from bottom
+    const threshold = 250; // px from bottom
     const atBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - threshold;
     if (atBottom) {
       this.reachListEnd.emit();
