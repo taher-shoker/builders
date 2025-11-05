@@ -1,37 +1,57 @@
 .kpi-actions {
-    display: flex;
-    align-items: center;
-    gap: 32px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
 
-    span {
-        font-size: 15px;
-        color: var(--stc-color);
-        font-weight: 600;
-        text-decoration: underline;
-        cursor: pointer;
+  span {
+    color: var(--stc-color);
+    cursor: pointer;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: var(--button-label-font-weight, 500);
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+
+    &:hover {
+      font-weight: 600;
     }
+  }
 
-    stc-apps-button {
-        ::ng-deep {
-            button {
-                background-color: var(--stc-pink-color);
-                color: var(--whiteColor);
-            }
+  stc-apps-button {
+    ::ng-deep {
+      button {
+        background-color: var(--stc-pink-color);
+        color: var(--whiteColor);
+        font-size: 14px;
+
+        i{
+          font-size: 14px;
         }
+      }
     }
+  }
 
-    .menu-button {
-        border: none;
-        background: transparent;
+  .menu-button {
+    border: none;
+    background: transparent;
+    color: var(--stc-color) !important;
+
+    mat-icon {
+      color: var(--stc-color) !important;
     }
+  }
 }
 
 ::ng-deep {
-    .mat-mdc-menu-content {
-
-        button,
-        mat-icon {
-            color: var(--stc-color) !important;
-        }
+  .mat-mdc-menu-content {
+    button,
+    mat-icon {
+      color: var(--stc-color) !important;
     }
+  }
 }

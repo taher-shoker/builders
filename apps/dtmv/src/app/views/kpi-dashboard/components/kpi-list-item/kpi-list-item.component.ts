@@ -40,7 +40,7 @@ export class KpiListItemComponent implements OnInit {
       {
         label: 'Current Value',
         value: '12,690,000',
-        icon: 'assets/images/kpi-dashboard/current-value.svg',
+        icon: 'assets/images/kpi-dashboard/chart-bar.svg',
       },
       {
         label: 'Weight 2025',
