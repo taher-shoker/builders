@@ -28,9 +28,21 @@
         background-color: var(--stc-pink-color);
         color: var(--whiteColor);
         font-size: 14px;
+        transition: transform 180ms ease, box-shadow 180ms ease,
+          filter 180ms ease;
 
         i{
           font-size: 14px;
+        }
+
+        &:hover{
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+          filter: brightness(1.05);
+        }
+
+        &:active{
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          filter: brightness(1.0);
         }
       }
     }
