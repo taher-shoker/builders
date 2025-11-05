@@ -1,18 +1,25 @@
 <div class="kpi-list">
   <!-- KPI List -->
   <div class="kpi-list_content" #contentEl (scroll)="onScroll($event)" [class.add-padding]="hasScroll">
-    @for(kpi of filteredKpis(); track kpi.id){
-    <div
-      class="kpi-list_item"
-      [ngClass]="{ selected: selectedKpi()?.id === kpi.id }"
-      (click)="onKpiSelect(kpi)"
-    >
-      <div class="kpi-list_item_header">
-        <h4 class="kpi-name">{{ kpi.name }}</h4>
+    @if (isEmpty()) {
+      <div class="kpi-list_empty">
+        <p class="empty-message">No KPIs to display.</p>
+        <p class="empty-sub">Adjust filters or data source to show KPIs.</p>
       </div>
+    } @else {
+      @for (kpi of filteredKpis(); track kpi.id) {
+        <div
+          class="kpi-list_item"
+          [ngClass]="{ selected: selectedKpi()?.id === kpi.id }"
+          (click)="onKpiSelect(kpi)"
+        >
+          <div class="kpi-list_item_header">
+            <h4 class="kpi-name">{{ kpi.name }}</h4>
+          </div>
 
-      <p class="kpi-list_item_description">{{ kpi.description }}</p>
-    </div>
+          <p class="kpi-list_item_description">{{ kpi.description }}</p>
+        </div>
+      }
     }
   </div>
 </div>
