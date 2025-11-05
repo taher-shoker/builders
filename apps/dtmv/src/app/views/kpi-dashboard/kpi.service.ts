@@ -49,6 +49,18 @@ export interface KpiListResponse {
   empty: boolean;
 }
 
+export interface KpiAttributes {
+  unitId: number;
+  kpiId: number;
+  dimension: string;
+  currentValue: number;
+  weight: number; // 0..1 (fraction)
+  baseline: number;
+  target: number;
+  ambition: number;
+  direction: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -96,5 +108,13 @@ export class KpiService {
       params['dimension'] = dimension.trim();
     }
     return this.http.get<KpiListResponse>(url, { params });
+  }
+
+  /**
+   * Fetches KPI attributes by KPI ID.
+   */
+  getKpiAttributes(kpiId: number): Observable<KpiAttributes> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/attributes`;
+    return this.http.get<KpiAttributes>(url);
   }
 }

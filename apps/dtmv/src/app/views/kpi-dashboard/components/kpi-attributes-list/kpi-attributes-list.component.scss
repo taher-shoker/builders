@@ -47,3 +47,41 @@
     }
   }
 }
+
+/* Skeleton styles */
+.kpi-attributes-list_item.skeleton {
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-attributes-list_item.skeleton .skeleton-label,
+.kpi-attributes-list_item.skeleton .skeleton-value {
+  display: block;
+  height: 14px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e6e6e6 0%, #f5f5f5 50%, #e6e6e6 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.kpi-attributes-list_item.skeleton .skeleton-label {
+  width: 120px;
+}
+
+.kpi-attributes-list_item.skeleton .skeleton-value {
+  width: 90px;
+}
+
+.kpi-attributes-list_item.skeleton .skeleton-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e6e6e6 0%, #f5f5f5 50%, #e6e6e6 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

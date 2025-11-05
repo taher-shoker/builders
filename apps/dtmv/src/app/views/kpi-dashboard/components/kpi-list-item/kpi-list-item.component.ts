@@ -20,6 +20,8 @@ import { AttributeItem } from '../../models/attribute-item.model';
 export class KpiListItemComponent implements OnInit {
   kpi: InputSignal<KPI> = input.required<KPI>();
   isSelected: InputSignal<boolean> = input(false);
+  attributes: InputSignal<AttributeItem[]> = input<AttributeItem[]>([]);
+  attributesLoading: InputSignal<boolean> = input(false);
 
   @Output() selectKpi = new EventEmitter<any>();
   @Output() activityLog = new EventEmitter<KPI>();
@@ -32,38 +34,6 @@ export class KpiListItemComponent implements OnInit {
   colors: string[] = ['#7C3BED'];
   bulletCirclesColor = '#7C3BED';
 
-  attributes = computed<AttributeItem[]>(() => {
-    const kpiData = this.kpi();
-    if (!kpiData) return [];
-
-    return [
-      {
-        label: 'Current Value',
-        value: '12,690,000',
-        icon: 'assets/images/kpi-dashboard/chart-bar.svg',
-      },
-      {
-        label: 'Weight 2025',
-        value: '6%',
-        icon: 'assets/images/kpi-dashboard/weight.svg',
-      },
-      {
-        label: 'Baseline',
-        value: '12,690,000',
-        icon: 'assets/images/kpi-dashboard/chart-bar.svg',
-      },
-      {
-        label: 'Target',
-        value: '10,000,000',
-        icon: 'assets/images/kpi-dashboard/target.svg',
-      },
-      {
-        label: 'Ambition',
-        value: '12,690,000',
-        icon: 'assets/images/kpi-dashboard/ambition.svg',
-      },
-    ];
-  });
 
   legendSettings: LegendSettings = {
     markerCornerRadius: 10,

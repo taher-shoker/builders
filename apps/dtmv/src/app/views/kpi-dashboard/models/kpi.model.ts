@@ -1,5 +1,5 @@
 export interface KPI {
-  id?: string;
+  id?: number | string;
   name?: string;
   description?: string;
   currentValue?: number;

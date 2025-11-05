@@ -8,4 +8,7 @@ import { AttributeItem } from '../../models/attribute-item.model';
 })
 export class KpiAttributesListComponent {
   attributes = input<AttributeItem[]>([]);
+  loading = input<boolean>(false);
+  // Render 5 skeleton cards while loading
+  skeletons = Array.from({ length: 5 });
 }

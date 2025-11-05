@@ -21,6 +21,8 @@
           @if(selectedKpi()) {
           <stc-apps-kpi-list-item
             [kpi]="selectedKpi()!"
+            [attributes]="attributes()"
+            [attributesLoading]="attributesLoading()"
             (edit)="onEditKpi($event)"
             (updateValue)="onUpdateKpiValue($event)"
             (delete)="onDeleteKpi($event)"
