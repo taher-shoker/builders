@@ -61,6 +61,18 @@ export interface KpiAttributes {
   direction: number;
 }
 
+export interface KpiValueRecord {
+  progressId: number;
+  unitId: number;
+  kpiId: number;
+  dimension: string;
+  year: number;
+  quarter: 'Q1' | 'Q2' | 'Q3' | 'Q4' | string;
+  month: number; // 1..12
+  progressDate: string; // ISO date
+  value: number;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -116,5 +128,19 @@ export class KpiService {
   getKpiAttributes(kpiId: number): Observable<KpiAttributes> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/attributes`;
     return this.http.get<KpiAttributes>(url);
+  }
+
+  /**
+   * Fetch KPI values for chart with optional grouping (monthly | quarterly).
+   * Defaults to monthly when grouping is not provided.
+   */
+  getKpiValues(
+    kpiId: number,
+    grouping?: 'monthly' | 'quarterly'
+  ): Observable<KpiValueRecord[]> {
+    const base = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/values`;
+    const selectedGrouping = grouping ?? 'monthly';
+    const url = `${base}?grouping=${selectedGrouping}`;
+    return this.http.get<KpiValueRecord[]>(url);
   }
 }

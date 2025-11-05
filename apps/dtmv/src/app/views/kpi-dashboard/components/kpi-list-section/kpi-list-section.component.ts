@@ -4,7 +4,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
 import { KPI } from '../../models/kpi.model';
 import { KpiDialogService } from '../../services/kpi-dialog.service';
-import { KpiService, KpiAttributes } from '../../kpi.service';
+import { KpiService, KpiAttributes, KpiValueRecord } from '../../kpi.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 
@@ -22,6 +22,9 @@ export class KpiListSectionComponent {
   searchTerm = signal<string>('');
   attributes = signal([] as { label: string; value: string | number; icon: string }[]);
   attributesLoading = signal<boolean>(false);
+  chartGrouping = signal<'monthly' | 'quarterly'>('monthly');
+  chartData = signal<any[]>([]);
+  chartLoading = signal<boolean>(false);
 
   // Inputs from parent (Dashboard)
   @Input() kpis: KPI[] = [];
@@ -42,10 +45,13 @@ export class KpiListSectionComponent {
       // Optionally clear current attributes while loading
       this.attributes.set([]);
       this.fetchAttributesForKpi(idNum);
+      // Fetch chart values with current grouping
+      this.fetchKpiValues(idNum, this.chartGrouping());
     } else {
       console.warn('Invalid KPI id; cannot load attributes.', idStr);
       this.attributes.set([]);
       this.attributesLoading.set(false);
+      this.chartData.set([]);
     }
   }
 
@@ -134,5 +140,55 @@ export class KpiListSectionComponent {
         this.attributesLoading.set(false);
       },
     });
+  }
+
+  private fetchKpiValues(kpiId: number, grouping: 'monthly' | 'quarterly'): void {
+    this.chartLoading.set(true);
+    this.kpiService.getKpiValues(kpiId, grouping).subscribe({
+      next: (resp: KpiValueRecord[]) => {
+        const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const items = resp.map((r) => {
+          const x = grouping === 'quarterly'
+            ? r.quarter
+            : (typeof r.month === 'number' && r.month >= 1 && r.month <= 12)
+              ? monthNames[r.month - 1]
+              : (() => {
+                  const d = new Date(r.progressDate);
+                  return isNaN(d.getTime()) ? (r.quarter || r.progressDate) : d.toLocaleString('en', { month: 'short' });
+                })();
+          // Align with shared line chart expectations (value1 + indicatorName1)
+          return {
+            x,
+            value1: r.value ?? 0,
+            indicatorName1: '',
+          };
+        });
+        console.log('[KPIS for chart]',items)
+        console.log('[KPI Section] fetchKpiValues', {
+          grouping,
+          rawLength: resp?.length ?? 0,
+          rawSample: resp?.[0],
+          mappedLength: items.length,
+          mappedSample: items[0],
+        });
+        this.chartData.set(items);
+        this.chartLoading.set(false);
+      },
+      error: (err: HttpErrorResponse) => {
+        console.error('Failed to load KPI values', err);
+        this.chartData.set([]);
+        this.chartLoading.set(false);
+      },
+    });
+  }
+
+  onChartGroupingChange(grouping: 'monthly' | 'quarterly'): void {
+    this.chartGrouping.set(grouping);
+    const kpi = this.selectedKpi();
+    const idStr = kpi?.id;
+    const idNum = typeof idStr === 'string' ? Number(idStr) : (typeof idStr === 'number' ? idStr : NaN);
+    if (Number.isFinite(idNum)) {
+      this.fetchKpiValues(idNum, grouping);
+    }
   }
 }

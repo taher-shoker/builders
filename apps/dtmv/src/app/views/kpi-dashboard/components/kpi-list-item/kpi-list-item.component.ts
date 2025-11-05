@@ -7,9 +7,11 @@ import {
   InputSignal,
   OnInit,
   Output,
+  effect,
 } from '@angular/core';
 import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
 import { KPI } from '../../models/kpi.model';
+import { signal } from '@angular/core';
 import { AttributeItem } from '../../models/attribute-item.model';
 
 @Component({
@@ -22,6 +24,14 @@ export class KpiListItemComponent implements OnInit {
   isSelected: InputSignal<boolean> = input(false);
   attributes: InputSignal<AttributeItem[]> = input<AttributeItem[]>([]);
   attributesLoading: InputSignal<boolean> = input(false);
+  chartDataInput: InputSignal<any[]> = input<any[]>([]);
+  chartGrouping: InputSignal<'monthly' | 'quarterly'> = input<'monthly' | 'quarterly'>('monthly');
+  chartLoading: InputSignal<boolean> = input(false);
+
+  groupingOptions = [
+    { id: 'monthly', name: 'Monthly' },
+    { id: 'quarterly', name: 'Quarterly' },
+  ];
 
   @Output() selectKpi = new EventEmitter<any>();
   @Output() activityLog = new EventEmitter<KPI>();
@@ -29,8 +39,13 @@ export class KpiListItemComponent implements OnInit {
   @Output() viewList = new EventEmitter<KPI>();
   @Output() edit = new EventEmitter<KPI>();
   @Output() delete = new EventEmitter<KPI>();
+  @Output() groupingChange = new EventEmitter<'monthly' | 'quarterly'>();
 
-  chartData: any[] = [];
+  chartData = signal<any[]>([]);
+  hasChartData = computed(() => {
+    const d = this.chartDataInput();
+    return Array.isArray(d) && d.length > 0;
+  });
   colors: string[] = ['#7C3BED'];
   bulletCirclesColor = '#7C3BED';
 
@@ -43,7 +58,20 @@ export class KpiListItemComponent implements OnInit {
   };
 
   ngOnInit(): void {
-    this.initializeDummyChartData();
+    // Sync passed chart data to local prop used by template
+    effect(() => {
+      const inData = this.chartDataInput();
+      console.log('[KPI Item] chartDataInput received', {
+        length: inData?.length ?? 0,
+        sample: inData?.[0],
+        grouping: this.chartGrouping(),
+      });
+      this.chartData.set(inData || []);
+      console.log('[KPI Item] local chartData set', {
+        length: this.chartData()?.length ?? 0,
+        sample: this.chartData()?.[0],
+      });
+    });
   }
 
   onActivityLog(kpi: KPI): void {
@@ -76,12 +104,20 @@ export class KpiListItemComponent implements OnInit {
       { x: 'Jun', value: Math.random() * 20 + 75 },
     ];
 
-    this.chartData = rawData.map((monthData) => {
-      return {
-        x: monthData.x,
-        value: monthData.value,
-        indicatorName: '',
-      };
-    });
+    const items = rawData.map((monthData) => ({
+      x: monthData.x,
+      value: monthData.value,
+      indicatorName: '',
+    }));
+    // Set via signal to avoid type errors and ensure reactivity
+    this.chartData.set(items);
+  }
+
+  onGroupingChange(value: string | string[]): void {
+    const v = Array.isArray(value) ? value[0] : value;
+    const vStr = (v ?? '').toString().toLowerCase();
+    const normalized = vStr === 'quarterly' ? 'quarterly' : 'monthly';
+    console.log('[KPI Item] groupingChange emitted', normalized);
+    this.groupingChange.emit(normalized);
   }
 }

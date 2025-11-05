@@ -28,13 +28,38 @@
   </div>
 
   <div class="kpi-list-item_chart">
-    <h4 class="kpi-list-item_title">Actual Progress</h4>
-    @if(chartData && chartData.length > 0) {
-    <stc-apps-line-chat-chart
-      [chartData]="chartData"
-      [chartTitle]="''"
-      [legendSettings]="legendSettings"
-    ></stc-apps-line-chat-chart>
+    <div class="kpi-list-item_chart_header">
+      <h4 class="kpi-list-item_title">Actual Progress</h4>
+      <div class="chart-controls">
+        <stc-apps-select-drop-down
+          [label]="''"
+          [matLabel]="'Period'"
+          [options]="groupingOptions"
+          [labelName]="'name'"
+          [labelValue]="'id'"
+          [outputValue]="'name'"
+          [selectId]="chartGrouping() === 'quarterly' ? 'Quarterly' : 'Monthly'"
+          (selectChange)="onGroupingChange($event)"
+        ></stc-apps-select-drop-down>
+      </div>
+    </div>
+    @if (chartLoading()) {
+      <div class="chart-skeleton">
+        <div class="skeleton-title"></div>
+        <div class="skeleton-graph"></div>
+        <div class="skeleton-legend">
+          <span class="skeleton-pill"></span>
+          <span class="skeleton-pill"></span>
+          <span class="skeleton-pill"></span>
+        </div>
+      </div>
+    } @else {
+      @if (hasChartData()) {
+        <stc-apps-line-chat-chart
+          [chartData]="chartDataInput()"
+          [showLegend]="false"
+        ></stc-apps-line-chat-chart>
+      }
     }
   </div>
 </div>

@@ -33,9 +33,90 @@
     max-height: 400px;
   }
 
+  &_chart_header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  .chart-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+
+    stc-apps-select-drop-down {
+      width: 220px;
+    }
+  }
+
   &_title {
     color: var(--stc-color);
     font-size: 21px;
     font-weight: 600;
   }
+}
+
+/* Chart skeleton loader (styled similar to attributes shimmer) */
+.chart-skeleton {
+  border: 1px solid #efefef;
+  border-radius: 8px;
+  padding: 16px;
+  background-color: #fafafa;
+}
+
+.skeleton-title,
+.skeleton-graph,
+.skeleton-pill {
+  display: block;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #e6e6e6 0%, #f5f5f5 50%, #e6e6e6 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.2s infinite;
+}
+
+.skeleton-title {
+  height: 18px;
+  width: 140px;
+  margin-bottom: 12px;
+}
+
+.skeleton-graph {
+  height: 250px;
+  width: 100%;
+}
+
+.skeleton-legend {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.skeleton-pill {
+  height: 16px;
+  width: 80px;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+stc-apps-select-drop-down {
+  ::ng-deep {
+    .mdc-text-field--filled {
+      background-color: transparent;
+      border: 1px solid var(--light-slate-gray);
+      border-radius: 5px !important;
+    }
+  }
+}
+
+/* Override line chart height locally for KPI item usage */
+::ng-deep stc-apps-line-chat-chart .lineChartDiv {
+  height: 350px !important;
 }
