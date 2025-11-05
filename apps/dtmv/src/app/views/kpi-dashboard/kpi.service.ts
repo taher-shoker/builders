@@ -73,6 +73,33 @@ export interface KpiValueRecord {
   value: number;
 }
 
+// API models for KPI Log endpoint
+export interface KpiLogProgress {
+  id: number;
+  progressDate: string;
+  value: number;
+  createdBy: string;
+  createDate: string;
+  attachments: any[];
+}
+
+export interface KpiLog {
+  id: number;
+  name: string;
+  dimension: string;
+  weight: number;
+  baseline: number;
+  target: number;
+  ambition: number;
+  formula: string;
+  createdBy: string;
+  direction: number;
+  createDate: string;
+  updatedBy: string;
+  updateDate: string;
+  kpiProgresses: KpiLogProgress[];
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -142,5 +169,13 @@ export class KpiService {
     const selectedGrouping = grouping ?? 'monthly';
     const url = `${base}?grouping=${selectedGrouping}`;
     return this.http.get<KpiValueRecord[]>(url);
+  }
+
+  /**
+   * Fetch KPI activity log details by KPI ID.
+   */
+  getKpiLog(kpiId: number): Observable<KpiLog> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi/log/${kpiId}`;
+    return this.http.get<KpiLog>(url);
   }
 }

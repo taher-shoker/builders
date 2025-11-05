@@ -1,6 +1,9 @@
 <div class="dialog"  @slideInOut>
   <header class="dialog_header">
-    <h2 mat-dialog-title>Logs for KPI details</h2>
+    <h2 mat-dialog-title>
+      <span class="title-prefix">Logs for KPI: </span>
+      <span class="title-kpi" [title]="data.kpi.name">{{ data.kpi.name }}</span>
+    </h2>
     <button mat-icon-button (click)="onCancel()">
       <mat-icon>close</mat-icon>
     </button>
@@ -16,6 +19,7 @@
           <p class="activity-list_details_title">{{ log.title }}</p>
           <div class="activity-list_details_meta">
             <p class="activity-list_details_-date">{{ log.date | date : 'medium' }}</p>
+            <p class="activity-list_details_value" *ngIf="log.value !== null && log.value !== undefined">Value: {{ log.value | number:'1.0-2' }}</p>
             <p class="activity-list_details_author">By: {{ log.author }}</p>
           </div>
         </div>

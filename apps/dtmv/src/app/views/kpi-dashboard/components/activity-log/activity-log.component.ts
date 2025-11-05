@@ -1,6 +1,8 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { KPI } from '../../models/kpi.model';
+import { KpiService, KpiLog } from '../../kpi.service';
 
 @Component({
   selector: 'stc-apps-activity-log',
@@ -24,62 +26,46 @@ animations: [
     ])
   ]
 })
-export class ActivityLogComponent {
-  activityLogs = [
-    {
-      title: 'KPI added',
-      date: new Date(),
-      returned: false,
-      author: 'john.doe@stc.net',
-    },
-    {
-      title: 'KPI updated',
-      date: new Date(Date.now() - 86400000),
-      returned: false,
-      author: 'admin@stc.net',
-    },
-    {
-      title: 'System check KPI status',
-      date: new Date(Date.now() - 172800000),
-      returned: true,
-      author: 'jane.smith@stc.net',
-    },
-    {
-      title: 'KPI status is delayed',
-      date: new Date(Date.now() - 259200000),
-      returned: false,
-      author: 'john.doe@stc.net',
-    },
-    {
-      title: 'Justification returned from DT approval',
-      date: new Date(Date.now() - 345600000),
-      returned: false,
-      author: 'alex.ray@stc.net',
-    },
-    {
-      title: 'new Justification submit',
-      date: new Date(Date.now() - 345600000),
-      returned: false,
-      author: 'alex.ray@stc.net',
-    },
-    {
-      title: 'Justification approved from DT approval',
-      date: new Date(Date.now() - 345600000),
-      returned: false,
-      author: 'alex.ray@stc.net',
-    },
-    {
-      title: 'Dt-director approve the milestone',
-      date: new Date(Date.now() - 345600000),
-      returned: false,
-      author: 'Ahmed12@stc.net',
-    },
-  ];
+export class ActivityLogComponent implements OnInit {
+  activityLogs: { title: string; date: Date; returned: boolean; author: string; value?: number }[] = [];
+  kpiLog?: KpiLog;
 
   constructor(
     public dialogRef: MatDialogRef<ActivityLogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: ActivityLogComponent
+    @Inject(MAT_DIALOG_DATA) public data: { kpi: KPI; viewOnly?: boolean },
+    private kpiService: KpiService
   ) {}
+
+  ngOnInit(): void {
+    const rawId = this.data?.kpi?.id;
+    const kpiId = typeof rawId === 'number' ? rawId : Number(rawId);
+    if (!Number.isFinite(kpiId)) {
+      this.activityLogs = [];
+      return;
+    }
+    console.log('[ActivityLog] Fetching KPI log for id', kpiId);
+    this.kpiService.getKpiLog(kpiId).subscribe({
+      next: (res) => {
+        this.kpiLog = res;
+        this.activityLogs = (res.kpiProgresses || []).map((p) => {
+          // Prefer createDate if present; fallback to progressDate
+          const dateStr = p.createDate || p.progressDate;
+          const dateObj = new Date(dateStr);
+          const date = isNaN(dateObj.getTime()) ? new Date() : dateObj;
+          return {
+            title: 'Progress updated',
+            date,
+            returned: false,
+            author: p.createdBy || 'system',
+            value: p.value
+          };
+        });
+      },
+      error: () => {
+        this.activityLogs = [];
+      },
+    });
+  }
 
   onCancel(): void {
     this.dialogRef.close({

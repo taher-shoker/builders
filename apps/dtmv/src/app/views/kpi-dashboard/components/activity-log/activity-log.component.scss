@@ -4,6 +4,7 @@
     flex-direction: column;
     height: 100%;
     box-sizing: border-box;
+    overflow-x: hidden; // prevent horizontal scroll from long titles
 
     &_header {
         display: flex;
@@ -11,17 +12,31 @@
         align-items: center;
 
         h2 {
-            color: var(--stc-color);
+            color: var(--grey-color);
             font-size: 20px;
             padding: 0;
             font-weight: 600;
-            margin-bottom: 24px;
+            margin: 0; // keep header compact
+            flex: 1 1 auto; // allow title to shrink within header
+            min-width: 0; // enable flex ellipsis
+            white-space: normal; // allow wrapping
+            overflow-wrap: anywhere; // break long words/URLs if needed
+            // text-overflow: ellipsis; // truncate long KPI names gracefully
+
+            .title-kpi {
+                color: var(--stc-color);
+            }
+            .title-prefix {
+                color: var(--grey-color);
+            }
         }
 
         button {
             border: none;
             background-color: transparent;
             line-height: 0;
+            flex: 0 0 auto;
+            margin-left: 8px;
 
             mat-icon {
                 color: #8a8aa3;
