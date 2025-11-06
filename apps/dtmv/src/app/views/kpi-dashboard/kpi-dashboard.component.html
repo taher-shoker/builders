@@ -50,6 +50,7 @@
                 <div class="p-0 col-12">
                   <stc-apps-kpi-list-section
                     [kpis]="kpis()"
+                    [permissionRole]="permissionRole"
                     (loadMoreRequested)="onLoadMoreRequested()"
                     (dimensionFilterChanged)="onDimensionFilterChanged($event)"
                   ></stc-apps-kpi-list-section>

@@ -1,6 +1,7 @@
 <div class="kpi-list-section card">
   <stc-apps-kpi-list-header
     (addKpi)="onAddNewKpi()"
+    [permissionRole]="permissionRole"
   ></stc-apps-kpi-list-header>
 
     <div class="mt-4 row">
@@ -31,6 +32,7 @@
             (updateValue)="onUpdateKpiValue($event)"
             (delete)="onDeleteKpi($event)"
             (activityLog)="onActivityLog($event)"
+            [permissionRole]="permissionRole"
           ></stc-apps-kpi-list-item>
           } @else {
           <div class="no-kpi-selected">

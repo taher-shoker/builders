@@ -29,6 +29,7 @@ export class KpiListSectionComponent {
   // Inputs from parent (Dashboard)
   @Input() kpis: KPI[] = [];
   @Input() loading = false;
+  @Input() permissionRole: 'viewer' | 'editor' = 'viewer';
 
   // Output to parent to request loading next page
   @Output() loadMoreRequested = new EventEmitter<void>();

@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, signal, effect } from '@angular/core';
 import { KpiService, UnitsGroupedCategory, TeamSummary, UnitProgress, KpiListResponse, KpiListItem } from './kpi.service';
 import { KPI } from './models/kpi.model';
+import { PermissionService } from '../../services/permission.service';
 
 @Component({
   selector: 'stc-apps-kpi-dashboard',
@@ -12,6 +13,9 @@ export class KpiDashboardComponent implements OnInit {
   customTabs: { label: string; key: string }[] = [];
   private unitsGrouped: UnitsGroupedCategory[] = [];
   private teamIdByName: Map<string, number> = new Map<string, number>();
+
+  // Permission role to control actions in the KPI list section
+  permissionRole: 'viewer' | 'editor' = 'viewer';
 
   // Unit progress state
   unitProgress = signal<UnitProgress | null>(null);
@@ -25,9 +29,13 @@ export class KpiDashboardComponent implements OnInit {
   loadingKpis = signal<boolean>(false);
   private selectedDimensions = signal<string[]>([]);
 
-  constructor(private kpiService: KpiService) {}
+  constructor(private kpiService: KpiService, private permissionService: PermissionService) {}
 
   ngOnInit(): void {
+    // Determine permission role based on user groups
+    const isEditor = this.permissionService.checkIsAdmin() || this.permissionService.checkIsGovernance();
+    this.permissionRole = isEditor ? 'editor' : 'viewer';
+
     this.kpiService.getUnitsGrouped().subscribe({
       next: (data: UnitsGroupedCategory[]) => {
         // Map categories to tabs; preserve order from API

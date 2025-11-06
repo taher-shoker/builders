@@ -8,6 +8,7 @@ import {
   OnInit,
   Output,
   effect,
+  Input
 } from '@angular/core';
 import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
 import { KPI } from '../../models/kpi.model';
@@ -40,6 +41,7 @@ export class KpiListItemComponent implements OnInit {
   @Output() edit = new EventEmitter<KPI>();
   @Output() delete = new EventEmitter<KPI>();
   @Output() groupingChange = new EventEmitter<'monthly' | 'quarterly'>();
+  @Input() permissionRole: 'viewer' | 'editor' = 'viewer';
 
   chartData = signal<any[]>([]);
   hasChartData = computed(() => {

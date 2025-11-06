@@ -11,6 +11,7 @@
       [buttonIcon]="' fa-plus'"
       [buttonType]="'primary'"
       (click)="onAddKpi()"
+      *ngIf="permissionRole === 'editor'"
     ></stc-apps-button>
   </div>
 </div>

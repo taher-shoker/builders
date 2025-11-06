@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Output } from '@angular/core';
+import { Component, EventEmitter, input, Output, Input } from '@angular/core';
 import { KPI } from '../../models/kpi.model';
 
 @Component({
@@ -14,6 +14,7 @@ export class KpiActionsComponent {
   @Output() viewList = new EventEmitter<KPI>();
   @Output() edit = new EventEmitter<KPI>();
   @Output() delete = new EventEmitter<KPI>();
+  @Input() permissionRole: 'viewer' | 'editor' = 'viewer';
 
   onActivityLog(): void {
     this.activityLog.emit(this.kpi());
