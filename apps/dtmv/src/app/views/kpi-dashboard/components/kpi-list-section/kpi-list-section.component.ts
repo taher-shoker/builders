@@ -6,7 +6,7 @@ import { KPI } from '../../models/kpi.model';
 import { KpiDialogService } from '../../services/kpi-dialog.service';
 import { KpiService, KpiAttributes, KpiValueRecord } from '../../kpi.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
+import { ConfirmationModalComponent } from 'libs/shared-ui/src/lib/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'stc-apps-kpi-list-section',
@@ -73,21 +73,37 @@ export class KpiListSectionComponent {
   }
 
   onDeleteKpi(kpi: KPI): void {
-    const dialogRef = this.dialog.open(MessageDialogComponent, {
-      width: '500px',
+    const dialogRef = this.dialog.open(ConfirmationModalComponent, {
+      width: '520px',
       data: {
-        title: 'Delete KPI',
-        icon: 'warning',
-        msg: `Are you sure you want to delete the KPI "${kpi.name}"?`,
+        title: 'Delete the KPI',
+        message: `Are you sure that you want to proceed deleting the KPI "<strong>${kpi.name}</strong>"?`,
+        approveLabel: 'Yes, Delete',
+        cancelLabel: 'Cancel',
       },
       disableClose: true,
       panelClass: 'delete-kpi-dialog',
     });
 
-    dialogRef
-      .afterClosed()
-      .pipe(filter((confirmed) => confirmed))
-      .subscribe();
+    dialogRef.afterClosed().subscribe((confirmed) => {
+      if (!confirmed) return;
+      const idStr = kpi.id;
+      const idNum = typeof idStr === 'string' ? Number(idStr) : idStr as number | undefined;
+      if (idNum == null || !Number.isFinite(Number(idNum))) {
+        console.warn('Invalid KPI id; cannot delete.', idStr);
+        return;
+      }
+      this.kpiService.deleteKpi(Number(idNum)).subscribe({
+        next: () => {
+          // Clear selection and ask parent to refresh the list
+          this.selectedKpi.set(null);
+          this.refreshRequested.emit();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Failed to delete KPI', err);
+        },
+      });
+    });
   }
 
   onActivityLog(kpi: KPI): void {

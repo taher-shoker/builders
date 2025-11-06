@@ -287,6 +287,14 @@ export class KpiService {
   }
 
   /**
+   * Delete KPI by ID
+   */
+  deleteKpi(kpiId: number): Observable<any> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}`;
+    return this.http.delete(url);
+  }
+
+  /**
    * Upload a single attachment for KPI progress and return its metadata (including id).
    * Files are sent as multipart/form-data under the 'file' field.
    */
