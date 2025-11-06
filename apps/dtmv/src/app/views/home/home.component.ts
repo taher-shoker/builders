@@ -31,9 +31,16 @@ export class HomeComponent implements OnInit {
   sidebarLogoSrc = 'assets/images/brand/sidebar-logo.png';
   navItems = [
     {
-      name: 'home',
+      name: 'Milestone Management',
       url: '/home',
       icon: 'fa-home',
+      roles: ['all'],
+      urlHome: '/home',
+    },
+    {
+      name: 'KPI Management',
+      url: '/kpi-dashboard',
+      icon: 'fa-tachometer-alt',
       roles: ['all'],
       urlHome: '/home',
     },
@@ -118,7 +125,7 @@ private updateActiveTabAndBanner(url: string): void {
         title: 'Archived Milestones',
         text: '',
       });
-    } else if (url.includes('/di-kpi-integration')) {
+    } else if (url.includes('/kpi-dashboard')) {
       this.bannerDataService.updateData({
         title: 'DT-Milestone-DI-KPIs-Integration',
         text: '',
