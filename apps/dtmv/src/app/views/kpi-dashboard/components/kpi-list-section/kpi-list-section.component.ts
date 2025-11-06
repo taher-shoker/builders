@@ -30,11 +30,14 @@ export class KpiListSectionComponent {
   @Input() kpis: KPI[] = [];
   @Input() loading = false;
   @Input() permissionRole: 'viewer' | 'editor' = 'viewer';
+  @Input() unitId: number | null = null;
 
   // Output to parent to request loading next page
   @Output() loadMoreRequested = new EventEmitter<void>();
   // Forward dimensions change from search to parent
   @Output() dimensionFilterChanged = new EventEmitter<string[]>();
+  // Request parent to refresh KPI list (reset and refetch)
+  @Output() refreshRequested = new EventEmitter<void>();
 
   onKpiSelected(kpi: KPI): void {
     this.selectedKpi.set(kpi);
@@ -57,11 +60,16 @@ export class KpiListSectionComponent {
   }
 
   onAddNewKpi(): void {
-    this.dialogService.openKpiFormDialog().subscribe();
+    this.dialogService.openKpiFormDialog(undefined, this.unitId).subscribe((result) => {
+      if (result && result.success) {
+        // Ask parent to refresh KPI list
+        this.refreshRequested.emit();
+      }
+    });
   }
 
   onEditKpi(kpi: KPI): void {
-    this.dialogService.openKpiFormDialog(kpi).subscribe();
+    this.dialogService.openKpiFormDialog(kpi, this.unitId).subscribe();
   }
 
   onDeleteKpi(kpi: KPI): void {

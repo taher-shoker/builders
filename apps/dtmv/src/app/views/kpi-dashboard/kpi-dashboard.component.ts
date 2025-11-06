@@ -103,6 +103,7 @@ export class KpiDashboardComponent implements OnInit {
     this.currentTeam.set(firstTeamKey);
     const id = this.teamIdByName.get(firstTeamKey) ?? null;
     this.currentTeamId.set(id);
+    this.kpiService.setCurrentUnitId(id);
     console.log('[KPI] setTeamTabs:', { teams, teamTabs: this.teamTabs, teamIdByName: Object.fromEntries(this.teamIdByName), firstTeamKey, id });
   }
 
@@ -110,6 +111,7 @@ export class KpiDashboardComponent implements OnInit {
     this.currentTeam.set(teamKey);
     const id = this.teamIdByName.get(teamKey) ?? null;
     this.currentTeamId.set(id);
+    this.kpiService.setCurrentUnitId(id);
     console.log('[KPI] onTeamChanged:', { teamKey, id });
     this.fetchUnitProgress();
     // Reset KPIs when team changes
@@ -187,6 +189,11 @@ export class KpiDashboardComponent implements OnInit {
   // Handle dimension filter changes from search (via section)
   onDimensionFilterChanged(dimensions: string[]): void {
     this.selectedDimensions.set(dimensions || []);
+    this.fetchKpiPage(true);
+  }
+
+  // Refresh on demand (e.g., after creating a KPI)
+  onRefreshRequested(): void {
     this.fetchKpiPage(true);
   }
 

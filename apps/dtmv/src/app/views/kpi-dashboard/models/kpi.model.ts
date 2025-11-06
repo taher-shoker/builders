@@ -28,4 +28,5 @@ export interface DialogResult<T = any> {
 export interface KpiFormDialogData {
   kpi?: KPI;
   mode: 'add' | 'edit';
+  unitId?: number | null;
 }

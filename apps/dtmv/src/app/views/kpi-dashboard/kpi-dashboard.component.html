@@ -51,8 +51,10 @@
                   <stc-apps-kpi-list-section
                     [kpis]="kpis()"
                     [permissionRole]="permissionRole"
+                    [unitId]="currentTeamId()"
                     (loadMoreRequested)="onLoadMoreRequested()"
                     (dimensionFilterChanged)="onDimensionFilterChanged($event)"
+                    (refreshRequested)="onRefreshRequested()"
                   ></stc-apps-kpi-list-section>
                 </div>
               </div>

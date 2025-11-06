@@ -7,61 +7,105 @@
   </div>
 
   <div class="dialog_body" [formGroup]="kpiForm" (ngSubmit)="onSubmit()">
-    <div class="row">
-      <div class="col-12">
+    <div class="form-grid form-grid--single">
+      <div class="form-col">
         <stc-apps-input
           [inputName]="'KPI Name'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Add KPI name'"
+          [required]="true"
           formControlName="kpiName"
         ></stc-apps-input>
 
-        <stc-apps-input
+        <stc-apps-select-drop-down
+          [label]="'Select Dimension'"
+          [options]="dimensionOptions"
+          [labelName]="'name'"
+          [labelValue]="'id'"
+          [outputValue]="'name'"
+          [required]="true"
+          formControlName="dimension"
+        ></stc-apps-select-drop-down>
+
+        <stc-apps-numeric-input
           [inputName]="'Current Value'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Current Value'"
+          [allowDecimal]="true"
+          [min]="0"
           formControlName="currentValue"
-        ></stc-apps-input>
+        ></stc-apps-numeric-input>
 
         <stc-apps-input
           [inputName]="'KPI formula'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Enter KPI formula e.g. (Current/Target)*100'"
+          [required]="true"
           formControlName="kpiFormula"
         ></stc-apps-input>
-      </div>
 
-      <div class="col-md-6">
-        <stc-apps-input
+        <!-- Keep direction available but move it below for consistency -->
+        <stc-apps-select-drop-down
+          [label]="'Direction'"
+          [options]="directionOptions"
+          [labelName]="'name'"
+          [labelValue]="'id'"
+          [outputValue]="'id'"
+          [required]="true"
+          formControlName="direction"
+        ></stc-apps-select-drop-down>
+      </div>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-col">
+        <stc-apps-numeric-input
           [inputName]="'Weight'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Weight'"
+          [allowDecimal]="true"
+          [min]="0"
           formControlName="weight"
-        ></stc-apps-input>
+        ></stc-apps-numeric-input>
       </div>
-      <div class="col-md-6">
-        <stc-apps-input
+      <div class="form-col">
+        <stc-apps-numeric-input
           [inputName]="'Baseline'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Baseline'"
+          [allowDecimal]="true"
+          [min]="0"
           formControlName="baseline"
-        ></stc-apps-input>
+        ></stc-apps-numeric-input>
       </div>
-      <div class="col-md-6">
-        <stc-apps-input
+    </div>
+
+    <div class="form-grid">
+      <div class="form-col">
+        <stc-apps-numeric-input
           [inputName]="'Target'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Target'"
+          [allowDecimal]="true"
+          [min]="0"
           formControlName="target"
-        ></stc-apps-input>
+        ></stc-apps-numeric-input>
       </div>
-      <div class="col-md-6">
-        <stc-apps-input
+      <div class="form-col">
+        <stc-apps-numeric-input
           [inputName]="'Ambition'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Ambition'"
+          [allowDecimal]="true"
+          [min]="0"
           formControlName="ambition"
-        ></stc-apps-input>
+        ></stc-apps-numeric-input>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12" *ngIf="errorMessage">
+        <small class="helper-text" style="color: #d32f2f;">{{ errorMessage }}</small>
       </div>
     </div>
   </div>
@@ -77,6 +121,7 @@
       [buttonText]="isEditMode ? 'Save Changes' : 'Add'"
       [buttonType]="'primary'"
       (btnClick)="onSubmit()"
+      [buttonDisable]="loading || !kpiForm.valid"
     ></stc-apps-button>
   </div>
 </div>

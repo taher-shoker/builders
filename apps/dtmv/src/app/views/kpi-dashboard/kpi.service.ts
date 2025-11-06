@@ -107,6 +107,20 @@ export interface UpdateKpiProgressPayload {
   attachmentIds?: number[];
 }
 
+// Payload model for creating a KPI
+export interface CreateKpiPayload {
+  name: string;
+  ambition: string;
+  formula: string;
+  dimension: string;
+  weight: string;
+  currentValue: string;
+  baseline: string;
+  target: string;
+  unitId: number;
+  direction: number;
+}
+
 // Response model for attachment upload
 export interface KpiProgressAttachmentResponse {
   id: number;
@@ -126,8 +140,17 @@ export interface KpiProgressAttachmentResponse {
 })
 export class KpiService {
   private baseUrl = environment.apiUrl;
+  private currentUnitId: number | null = null;
 
   constructor(private http: HttpClient) {}
+
+  setCurrentUnitId(id: number | null): void {
+    this.currentUnitId = id;
+  }
+
+  getCurrentUnitId(): number | null {
+    return this.currentUnitId;
+  }
 
   /**
    * Fetches units grouped data for KPI Dashboard.
@@ -209,6 +232,14 @@ export class KpiService {
     payload: UpdateKpiProgressPayload
   ): Observable<any> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/progress`;
+    return this.http.post(url, payload);
+  }
+
+  /**
+   * Create a new KPI.
+   */
+  createKpi(payload: CreateKpiPayload): Observable<any> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi`;
     return this.http.post(url, payload);
   }
 
