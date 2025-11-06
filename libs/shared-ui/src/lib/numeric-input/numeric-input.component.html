@@ -1,0 +1,35 @@
+<div class="input-group stc-input-group" *ngIf="control">
+  <label *ngIf="inputName">
+    {{ inputName | translate }}
+    <mat-error *ngIf="control.invalid">* </mat-error>
+  </label>
+  <mat-form-field>
+    <input
+      type="text"
+      [id]="inputId"
+      [name]="inputName"
+      matInput
+      [placeholder]="inputPlaceholder ? inputPlaceholder : ''"
+      autocomplete="off"
+      [formControl]="control"
+      [readonly]="disabled"
+      (keydown)="onKeyDown($event)"
+      (paste)="onPaste($event)"
+      (input)="onInput($event)"
+      [attr.inputmode]="allowDecimal ? 'decimal' : 'numeric'"
+    />
+
+    <mat-error *ngIf="control.hasError('required')">
+      {{ 'field_required' | translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('max')">
+      {{ 'Please enter number less than or equal ' + control.getError('max').max | translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('min')">
+      {{ 'Please enter number greater than or equal ' + control.getError('min').min | translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('pattern')">
+      {{ 'Please enter a valid number' | translate }}
+    </mat-error>
+  </mat-form-field>
+</div>

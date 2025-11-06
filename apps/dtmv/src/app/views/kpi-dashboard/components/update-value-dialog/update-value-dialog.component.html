@@ -12,7 +12,7 @@
         [buttonText]="'Save'"
         [buttonType]="'primary'"
         (btnClick)="onSubmit()"
-        [buttonDisable]="!form.valid"
+        [buttonDisable]="loading || !form.get('date')?.value || !form.get('actualValue')?.value || !form.valid"
       ></stc-apps-button>
     </div>
   </div>
@@ -20,24 +20,25 @@
   <div class="dialog_body" [formGroup]="form">
     <div class="row">
       <div class="col-md-6">
-        <stc-apps-date-picker
-          [className]="'custom-input'"
-          [inputPlaceholder]="''"
-          [inputId]="'activationDate'"
+        <stc-apps-month-year-picker
+          [inputPlaceholder]="'MM/YYYY'"
+          [inputId]="'monthYear'"
           [inputName]="''"
+          [disabledInput]="true"
           formControlName="date"
         >
-        </stc-apps-date-picker>
+        </stc-apps-month-year-picker>
       </div>
 
       <div class="col-md-6">
-        <stc-apps-input
+        <stc-apps-numeric-input
           [className]="'custom-input'"
-          [inputPlaceholder]="'Enter actual progrees Value'"
+          [inputPlaceholder]="'Enter actual progress Value'"
           [inputId]="'actualValue'"
+          [allowDecimal]="true"
           formControlName="actualValue"
         >
-        </stc-apps-input>
+        </stc-apps-numeric-input>
       </div>
 
       <div class="col-12">
@@ -45,6 +46,10 @@
           >Choose the date that this KPI value corresponds to. By default,
           today’s date is selected.</small
         >
+      </div>
+
+      <div class="col-12" *ngIf="errorMessage">
+        <small class="helper-text" style="color: #d32f2f;">{{ errorMessage }}</small>
       </div>
 
       <div class="col-12">
@@ -74,11 +79,12 @@
       <div class="col-md-6 mb-3">
         <div class="evidence_file_item">
           <div class="file-details">
-            <div class="file-preview">
+            <div class="file-preview" [class.non-image]="!file.isImage">
               @if(file.isImage){
               <img [src]="file.previewUrl" alt="Preview" class="preview-image" />
               } @else {
-              <i class="ri-file-text-line file-icon"></i>
+              <!-- <i class="ri-file-pdf-line file-icon"></i> -->
+              <i class="far fa-file-alt file-icon"></i>
               }
             </div>
             <div class="file-info">

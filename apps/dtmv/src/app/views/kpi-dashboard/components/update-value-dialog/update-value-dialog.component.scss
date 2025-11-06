@@ -100,6 +100,9 @@
                     width: 60px;
                     height: 60px;
                     overflow: hidden;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
 
                     .preview-image {
                         width: 100%;
@@ -109,9 +112,17 @@
                     }
 
                     .file-icon {
-                        font-size: 32px;
+                        font-size: 28px;
                         color: var(--stc-greyColor);
                         line-height: 1;
+                    }
+
+                    &.non-image {
+                        background: #FFEAEA; /* light red tint */
+                        border-radius: 12px;
+                        .file-icon {
+                            color: #E53935; /* red icon */
+                        }
                     }
                 }
             }

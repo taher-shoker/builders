@@ -100,6 +100,27 @@ export interface KpiLog {
   kpiProgresses: KpiLogProgress[];
 }
 
+// Payload model for updating KPI progress
+export interface UpdateKpiProgressPayload {
+  value: string;
+  progressDate: string; // format MM/YYYY
+  attachmentIds?: number[];
+}
+
+// Response model for attachment upload
+export interface KpiProgressAttachmentResponse {
+  id: number;
+  milestone: any;
+  fileName: string;
+  url: string;
+  label: string;
+  uploadDate: string;
+  ticket: any;
+  fileSize: number;
+  kpiProgress: any;
+  attached: boolean;
+}
+
 @Injectable({
   providedIn: 'root',
 })
@@ -177,5 +198,28 @@ export class KpiService {
   getKpiLog(kpiId: number): Observable<KpiLog> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi/log/${kpiId}`;
     return this.http.get<KpiLog>(url);
+  }
+
+  /**
+   * Update KPI progress value for a given KPI.
+   * Expects progressDate in MM/YYYY format and optional attachment IDs.
+   */
+  updateKpiProgress(
+    kpiId: number,
+    payload: UpdateKpiProgressPayload
+  ): Observable<any> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/progress`;
+    return this.http.post(url, payload);
+  }
+
+  /**
+   * Upload a single attachment for KPI progress and return its metadata (including id).
+   * Files are sent as multipart/form-data under the 'file' field.
+   */
+  uploadKpiProgressAttachment(file: File): Observable<KpiProgressAttachmentResponse> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/attachments/kpi-progress`;
+    const formData = new FormData();
+    formData.append('file', file, file.name);
+    return this.http.post<KpiProgressAttachmentResponse>(url, formData);
   }
 }
