@@ -113,6 +113,13 @@
         justify-content: flex-end;
         gap: 16px;
 
+        .footer-error {
+            margin-right: auto;
+            align-self: center;
+            color: #d32f2f; /* Material error color */
+            font-size: 0.875rem; /* slightly smaller than labels */
+        }
+
         stc-apps-button {
             ::ng-deep {
                 button {

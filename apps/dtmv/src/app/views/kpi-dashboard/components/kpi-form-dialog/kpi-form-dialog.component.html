@@ -28,6 +28,7 @@
         ></stc-apps-select-drop-down>
 
         <stc-apps-numeric-input
+          *ngIf="!isEditMode"
           [inputName]="'Current Value'"
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Current Value'"
@@ -103,14 +104,12 @@
       </div>
     </div>
 
-    <div class="row">
-      <div class="col-12" *ngIf="errorMessage">
-        <small class="helper-text" style="color: #d32f2f;">{{ errorMessage }}</small>
-      </div>
-    </div>
   </div>
 
   <div class="dialog_footer">
+    <div class="footer-error" *ngIf="errorMessage">
+      {{ errorMessage }}
+    </div>
     <stc-apps-button
       [buttonText]="'Cancel'"
       [buttonType]="'gray-outline'"

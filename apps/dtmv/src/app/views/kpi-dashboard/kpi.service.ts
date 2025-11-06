@@ -121,6 +121,33 @@ export interface CreateKpiPayload {
   direction: number;
 }
 
+// Payload model for updating a KPI (exclude currentValue)
+export interface UpdateKpiPayload {
+  name: string;
+  ambition: string;
+  formula: string;
+  dimension: string;
+  weight: string;
+  baseline: string;
+  target: string;
+  unitId: number;
+  direction: number;
+  currentValue:string;
+}
+
+// Response model for KPI details (GET /kpi/{id})
+export interface KpiDetailsResponse {
+  id: number;
+  name: string;
+  dimension: string;
+  weight: number;
+  baseline: number;
+  target: number;
+  ambition: number;
+  formula: string;
+  direction: number; // 1 or -1
+}
+
 // Response model for attachment upload
 export interface KpiProgressAttachmentResponse {
   id: number;
@@ -241,6 +268,22 @@ export class KpiService {
   createKpi(payload: CreateKpiPayload): Observable<any> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi`;
     return this.http.post(url, payload);
+  }
+
+  /**
+   * Fetch single KPI details by ID
+   */
+  getKpiById(kpiId: number): Observable<KpiDetailsResponse> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}`;
+    return this.http.get<KpiDetailsResponse>(url);
+  }
+
+  /**
+   * Update KPI by ID
+   */
+  updateKpi(kpiId: number, payload: UpdateKpiPayload): Observable<any> {
+    const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}`;
+    return this.http.put(url, payload);
   }
 
   /**

@@ -2,7 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { KPI, KpiFormDialogData } from '../../models/kpi.model';
-import { KpiService, CreateKpiPayload } from '../../kpi.service';
+import { KpiService, CreateKpiPayload, UpdateKpiPayload } from '../../kpi.service';
 
 @Component({
   selector: 'stc-apps-kpi-form-dialog',
@@ -37,8 +37,30 @@ export class KpiFormDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.isEditMode && this.data.kpi) {
-      this.populateForm(this.data.kpi);
+    if (this.isEditMode && this.data.kpi && this.data.kpi.id != null) {
+      const idNum = Number(this.data.kpi.id);
+      if (Number.isFinite(idNum)) {
+        this.loading = true;
+        this.kpiService.getKpiById(idNum).subscribe({
+          next: (res) => {
+            this.populateFormFromResponse(res);
+            this.loading = false;
+          },
+          error: (err) => {
+            console.error('[KPI] getKpiById error', err);
+            this.loading = false;
+          },
+        });
+        // In edit mode, remove validators from currentValue (field hidden in edit)
+        const cvCtrl = this.kpiForm.get('currentValue');
+        if (cvCtrl) {
+          cvCtrl.clearValidators();
+          cvCtrl.updateValueAndValidity();
+        }
+      } else {
+        // Fallback to minimal populate if id is not numeric
+        this.populateForm(this.data.kpi);
+      }
     }
   }
 
@@ -57,7 +79,28 @@ export class KpiFormDialogComponent implements OnInit {
   }
 
   private populateForm(kpi: KPI): void {
-    this.kpiForm.patchValue({});
+    // Minimal populate using available fields on KPI model
+    this.kpiForm.patchValue({
+      kpiName: kpi.name ?? '',
+      dimension: kpi.description ?? '',
+    });
+  }
+
+  private populateFormFromResponse(res: import('../../kpi.service').KpiDetailsResponse): void {
+    // Convert numeric values to strings to align with form payload expectations
+    const toStr = (v: number | string | undefined | null) =>
+      v == null ? '' : String(v);
+
+    this.kpiForm.patchValue({
+      kpiName: res.name ?? '',
+      dimension: res.dimension ?? '',
+      direction: res.direction,
+      kpiFormula: res.formula ?? '',
+      weight: toStr(res.weight ?? ''),
+      baseline: toStr(res.baseline ?? ''),
+      target: toStr(res.target ?? ''),
+      ambition: toStr(res.ambition ?? ''),
+    });
   }
 
   onSubmit(): void {
@@ -65,8 +108,52 @@ export class KpiFormDialogComponent implements OnInit {
 
     const formValue = this.kpiForm.value;
     if (this.isEditMode) {
-      // Placeholder for edit flow; not implemented yet
-      this.dialogRef.close({ success: false, action: 'save' });
+      const idNum = Number(this.data?.kpi?.id);
+      if (!Number.isFinite(idNum)) {
+        this.errorMessage = 'Invalid KPI ID.';
+        return;
+      }
+
+      const unitIdRaw = this.data?.unitId ?? this.kpiService.getCurrentUnitId();
+      const unitId = typeof unitIdRaw === 'number' ? unitIdRaw : Number(unitIdRaw);
+      if (!Number.isFinite(unitId)) {
+        this.errorMessage = 'No unit selected. Please select a unit tab first.';
+        return;
+      }
+
+      const rawDim = formValue.dimension;
+      const dimensionStr = typeof rawDim === 'string' ? rawDim : (rawDim?.name ?? rawDim?.id ?? '');
+      const rawDir = formValue.direction;
+      const directionNum = typeof rawDir === 'number' ? rawDir : Number(rawDir?.id ?? rawDir);
+
+      const payload: UpdateKpiPayload = {
+        name: String(formValue.kpiName || '').trim(),
+        ambition: String(formValue.ambition ?? ''),
+        formula: String(formValue.kpiFormula ?? ''),
+        dimension: String(dimensionStr ?? ''),
+        weight: String(formValue.weight ?? ''),
+        baseline: String(formValue.baseline ?? ''),
+        target: String(formValue.target ?? ''),
+        unitId: unitId,
+        direction: directionNum,
+        currentValue:'1' || String(formValue.currentValue ?? '1') // not reflecting in backend
+      };
+
+      this.loading = true;
+      this.errorMessage = '';
+      console.log(idNum)
+      console.log(payload)
+      this.kpiService.updateKpi(idNum, payload).subscribe({
+        next: (res) => {
+          this.loading = false;
+          this.dialogRef.close({ success: true, action: 'save', data: res });
+        },
+        error: (err) => {
+          this.loading = false;
+          this.errorMessage = 'Failed to update KPI. Please try again.';
+          console.error('[KPI] updateKpi error', err);
+        },
+      });
       return;
     }
 
