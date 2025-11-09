@@ -13,6 +13,7 @@ export class DiProgressComponent implements AfterViewInit {
   title: InputSignal<string> = input('');
   unitId: InputSignal<number | null> = input<number | null>(null);
   teamName: InputSignal<string> = input('');
+  year: InputSignal<number | string> = input<number | string>('');
 
   chartData: any[] = [];
   // Dropdowns
@@ -67,7 +68,9 @@ export class DiProgressComponent implements AfterViewInit {
   }
 
   private fetchSeries(unitId: number): void {
-    this.kpiService.getUnitSeries(unitId, this.selectedPeriod).subscribe({
+    const yrRaw = this.year();
+    const yrNum = typeof yrRaw === 'string' ? Number(yrRaw) : (typeof yrRaw === 'number' ? yrRaw : undefined);
+    this.kpiService.getUnitSeries(unitId, this.selectedPeriod, Number.isFinite(yrNum as number) ? (yrNum as number) : undefined).subscribe({
       next: (items: UnitSeriesItem[]) => {
         // Available dimensions (fixed order)
         const allDimensions = [

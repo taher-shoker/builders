@@ -8,12 +8,48 @@
         border-radius: 7px;
     }
 
-    &_title {
-        font-size: 24px;
-        font-weight: 700;
-        color: var(--stc-color);
-        // margin-bottom: 16px;
+  &_title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--stc-color);
+    // margin-bottom: 16px;
+  }
+
+  &_titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  &_titlebar_filters {
+    width: 220px;
+    min-width: 180px;
+
+    stc-apps-select-drop-down {
+      ::ng-deep {
+        /* Match outlined, rounded look similar to the reference */
+        .mdc-text-field--filled {
+          background-color: #fff;
+          border: 1px solid var(--stc-color);
+          border-radius: 10px !important;
+          min-height: 44px;
+        }
+
+        .mdc-text-field__input {
+          color: var(--stc-darkGrey-color, #334155);
+          font-size: 14px;
+        }
+
+        /* Optional: tighten padding to reduce visual height */
+        .mdc-text-field--filled .mdc-text-field__ripple,
+        .mdc-text-field--filled .mdc-line-ripple {
+          display: none;
+        }
+      }
     }
+  }
 
   &_tabs {
     border-radius: 7px;

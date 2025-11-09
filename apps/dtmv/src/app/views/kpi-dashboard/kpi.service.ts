@@ -192,30 +192,36 @@ export class KpiService {
   /**
    * Fetches unit progress by unit ID.
    */
-  getUnitProgress(unitId: number): Observable<UnitProgress> {
-    return this.http.get<UnitProgress>(
-      `${this.baseUrl}v2/dt-milestone-service/units/${unitId}/progress`
-    );
+  getUnitProgress(unitId: number, year?: number): Observable<UnitProgress> {
+    const base = `${this.baseUrl}v2/dt-milestone-service/units/${unitId}/progress`;
+    const url = year ? `${base}?year=${year}` : base;
+    return this.http.get<UnitProgress>(url);
   }
 
   /**
    * Fetches unit series by unit ID.
    * Optionally supports period type filtering (monthly | weekly) via query param if backend supports it.
    */
-  getUnitSeries(unitId: number, periodType?: 'monthly' | 'weekly'): Observable<UnitSeriesItem[]> {
+  getUnitSeries(unitId: number, periodType?: 'monthly' | 'weekly', year?: number): Observable<UnitSeriesItem[]> {
     const url = `${this.baseUrl}v2/dt-milestone-service/units/${unitId}/series`;
-    const finalUrl = periodType ? `${url}?periodType=${periodType}` : url;
+    const params: string[] = [];
+    if (periodType) params.push(`periodType=${periodType}`);
+    if (typeof year === 'number') params.push(`year=${year}`);
+    const finalUrl = params.length ? `${url}?${params.join('&')}` : url;
     return this.http.get<UnitSeriesItem[]>(finalUrl);
   }
 
   /**
    * Fetches KPIs list with server-side pagination.
    */
-  getKpis(page: number, size: number, unitId: number, dimension?: string): Observable<KpiListResponse> {
+  getKpis(page: number, size: number, unitId: number, dimension?: string, year?: number): Observable<KpiListResponse> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi`;
     const params: Record<string, any> = { page, size, unitId };
     if (dimension && dimension.trim().length > 0) {
       params['dimension'] = dimension.trim();
+    }
+    if (typeof year === 'number') {
+      params['year'] = year;
     }
     return this.http.get<KpiListResponse>(url, { params });
   }

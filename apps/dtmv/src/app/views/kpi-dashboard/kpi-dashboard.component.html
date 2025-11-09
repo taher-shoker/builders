@@ -27,13 +27,27 @@
                     </button>
                     }
                   </div>
-                  <h2 class="kpi-dashboard_title">
-                    {{
-                      currentTeam()
-                        ? currentTeam() + ' Unit Details'
-                        : 'Unit Details'
-                    }}
-                  </h2>
+                  <div class="kpi-dashboard_titlebar">
+                    <h2 class="kpi-dashboard_title">
+                      {{
+                        currentTeam()
+                          ? currentTeam() + ' Unit Details'
+                          : 'Unit Details'
+                      }}
+                    </h2>
+                    <div class="kpi-dashboard_titlebar_filters">
+                      <stc-apps-select-drop-down
+                        [label]="''"
+                        [matLabel]="'KPI Year'"
+                        [options]="yearsOptions"
+                        [labelName]="'name'"
+                        [labelValue]="'id'"
+                        [outputValue]="'name'"
+                        [selectId]="selectedYear()"
+                        (selectChange)="onYearChanged($event)"
+                      ></stc-apps-select-drop-down>
+                    </div>
+                  </div>
                 </div>
                 <div class="p-0 col-4">
                   <stc-apps-progress-gauge
@@ -45,7 +59,7 @@
                   ></stc-apps-progress-gauge>
                 </div>
                 <div class="p-0 col-8">
-                  <stc-apps-di-progress [unitId]="currentTeamId()" [teamName]="currentTeam()"></stc-apps-di-progress>
+                  <stc-apps-di-progress [unitId]="currentTeamId()" [teamName]="currentTeam()" [year]="selectedYear()"></stc-apps-di-progress>
                 </div>
                 <div class="p-0 col-12">
                   <stc-apps-kpi-list-section

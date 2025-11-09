@@ -29,12 +29,19 @@ export class KpiDashboardComponent implements OnInit {
   loadingKpis = signal<boolean>(false);
   private selectedDimensions = signal<string[]>([]);
 
+  // Year filter state (UI only for now)
+  yearsOptions: { id: string; name: string }[] = [];
+  selectedYear = signal<string>('');
+
   constructor(private kpiService: KpiService, private permissionService: PermissionService) {}
 
   ngOnInit(): void {
     // Determine permission role based on user groups
     const isEditor = this.permissionService.checkIsAdmin() || this.permissionService.checkIsGovernance();
     this.permissionRole = isEditor ? 'editor' : 'viewer';
+
+    // Initialize year options from 2025 to current year
+    this.populateYearsOptions();
 
     this.kpiService.getUnitsGrouped().subscribe({
       next: (data: UnitsGroupedCategory[]) => {
@@ -78,6 +85,18 @@ export class KpiDashboardComponent implements OnInit {
         ]);
       },
     });
+  }
+
+  private populateYearsOptions(): void {
+    const startYear = 2024;
+    const currentYear = new Date().getFullYear();
+    const years: { id: string; name: string }[] = [];
+    for (let y = startYear; y <= currentYear; y++) {
+      const ys = String(y);
+      years.push({ id: ys, name: ys });
+    }
+    this.yearsOptions = years;
+    this.selectedYear.set(String(currentYear));
   }
 
   onTabChanged(tabName: string): void {
@@ -125,8 +144,9 @@ export class KpiDashboardComponent implements OnInit {
       console.warn('[KPI] fetchUnitProgress: no currentTeamId, skipping');
       return;
     }
-    console.log('[KPI] fetchUnitProgress: requesting', { unitId: id });
-    this.kpiService.getUnitProgress(id).subscribe({
+    const year = Number(this.selectedYear());
+    console.log('[KPI] fetchUnitProgress: requesting', { unitId: id, year });
+    this.kpiService.getUnitProgress(id, Number.isFinite(year) ? year : undefined).subscribe({
       next: (data) => {
         console.log('[KPI] fetchUnitProgress: response', data);
         this.unitProgress.set(data);
@@ -164,7 +184,8 @@ export class KpiDashboardComponent implements OnInit {
       this.loadingKpis.set(false);
       return;
     }
-    this.kpiService.getKpis(page, this.size, unitId, dimensionParam).subscribe({
+    const year = Number(this.selectedYear());
+    this.kpiService.getKpis(page, this.size, unitId, dimensionParam, Number.isFinite(year) ? year : undefined).subscribe({
       next: (res: KpiListResponse) => {
         const mapped = (res.content || []).map((i) => this.mapKpiItem(i));
         this.kpis.set([...(this.kpis() || []), ...mapped]);
@@ -184,6 +205,14 @@ export class KpiDashboardComponent implements OnInit {
     if (!this.loadingKpis() && !this.last()) {
       this.fetchKpiPage();
     }
+  }
+
+  // Year change handler (hook for future data filtering if needed)
+  onYearChanged(yearName: string): void {
+    this.selectedYear.set(yearName);
+    // Refresh data across the dashboard when year changes
+    this.fetchUnitProgress();
+    this.fetchKpiPage(true);
   }
 
   // Handle dimension filter changes from search (via section)
