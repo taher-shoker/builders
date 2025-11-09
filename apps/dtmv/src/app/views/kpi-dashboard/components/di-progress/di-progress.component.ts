@@ -1,5 +1,11 @@
 /* eslint-disable @nx/enforce-module-boundaries */
-import { AfterViewInit, Component, input, InputSignal, effect } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  input,
+  InputSignal,
+  effect,
+} from '@angular/core';
 import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
 import * as am5 from '@amcharts/amcharts5';
 import { KpiService, UnitSeriesItem } from '../../kpi.service';
@@ -62,83 +68,127 @@ export class DiProgressComponent implements AfterViewInit {
   }
 
   onPeriodChange(value: string): void {
-    this.selectedPeriod = (value === 'Weekly' || value === 'weekly') ? 'weekly' : 'monthly';
+    this.selectedPeriod =
+      value === 'Weekly' || value === 'weekly' ? 'weekly' : 'monthly';
     const id = this.unitId();
     if (id != null) this.fetchSeries(id);
   }
 
   private fetchSeries(unitId: number): void {
     const yrRaw = this.year();
-    const yrNum = typeof yrRaw === 'string' ? Number(yrRaw) : (typeof yrRaw === 'number' ? yrRaw : undefined);
-    this.kpiService.getUnitSeries(unitId, this.selectedPeriod, Number.isFinite(yrNum as number) ? (yrNum as number) : undefined).subscribe({
-      next: (items: UnitSeriesItem[]) => {
-        // Available dimensions (fixed order)
-        const allDimensions = [
-          'Capability Building',
-          'Capability Utilization',
-          'Digital Experience & Impact',
-          'Overall',
-        ];
+    const yrNum =
+      typeof yrRaw === 'string'
+        ? Number(yrRaw)
+        : typeof yrRaw === 'number'
+        ? yrRaw
+        : undefined;
+    this.kpiService
+      .getUnitSeries(
+        unitId,
+        this.selectedPeriod,
+        Number.isFinite(yrNum as number) ? (yrNum as number) : undefined
+      )
+      .subscribe({
+        next: (items: UnitSeriesItem[]) => {
+          // Available dimensions (fixed order)
+          const allDimensions = [
+            'Capability Building',
+            'Capability Utilization',
+            'Digital Experience & Impact',
+            'Overall',
+          ];
 
-        // Determine which dimensions to render based on selection
-        const dimsToRender =
-          this.selectedDimension === 'All' || !allDimensions.includes(this.selectedDimension)
-            ? allDimensions
-            : [this.selectedDimension];
+          // Determine which dimensions to render based on selection
+          const dimsToRender =
+            this.selectedDimension === 'All' ||
+            !allDimensions.includes(this.selectedDimension)
+              ? allDimensions
+              : [this.selectedDimension];
 
-        // Group by period
-        const byPeriod = new Map<number, UnitSeriesItem[]>();
-        items.forEach((i) => {
-          const arr = byPeriod.get(i.period) || [];
-          arr.push(i);
-          byPeriod.set(i.period, arr);
-        });
-
-        const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-
-        const dataRows = Array.from(byPeriod.entries())
-          .sort((a,b) => a[0]-b[0])
-          .map(([period, arr]) => {
-            const xLabel = this.selectedPeriod === 'monthly'
-              ? monthNames[(period-1) % 12] || String(period)
-              : `Wk ${period}`;
-
-            const row: any = { x: xLabel };
-            dimsToRender.forEach((dim, idx) => {
-              const rec = arr.find(a => a.dimension === dim);
-              const pct = rec && typeof rec.diActualProgress === 'number'
-                ? parseFloat((rec.diActualProgress * 100).toFixed(2))
-                : null; // use null to create gaps when missing
-              const key = `value${idx+1}`;
-              const nameKey = `indicatorName${idx+1}`;
-              row[key] = pct;
-              // Use team name for Overall series label
-              if (dim === 'Overall') {
-                const tn = (this.teamName() || '').trim();
-                row[nameKey] = tn ? `${tn} DI (Overall)` : 'DI (Overall)';
-              } else {
-                row[nameKey] = dim;
-              }
-            });
-            return row;
+          // Group by period
+          const byPeriod = new Map<number, UnitSeriesItem[]>();
+          items.forEach((i) => {
+            const arr = byPeriod.get(i.period) || [];
+            arr.push(i);
+            byPeriod.set(i.period, arr);
           });
 
-        // Update legend colors to match the rendered dimensions order
-        const colorMap: Record<string, string> = {
-          'Capability Building': '#277FF1',
-          'Capability Utilization': '#00C48C',
-          'Digital Experience & Impact': '#FF6A39',
-          Overall: '#4F008C',
-        };
-        const newColors = dimsToRender.map((d) => colorMap[d]);
-        this.legendSettings = { ...this.legendSettings, colors: newColors };
+          const monthNames = [
+            'Jan',
+            'Feb',
+            'Mar',
+            'Apr',
+            'May',
+            'Jun',
+            'Jul',
+            'Aug',
+            'Sep',
+            'Oct',
+            'Nov',
+            'Dec',
+          ];
 
-        this.chartData = dataRows;
-      },
-      error: () => {
-        this.chartData = [];
+          const dataRows = Array.from(byPeriod.entries())
+            .sort((a, b) => a[0] - b[0])
+            .map(([period, arr]) => {
+              const xLabel =
+                this.selectedPeriod === 'monthly'
+                  ? monthNames[(period - 1) % 12] || String(period)
+                  : `Wk ${period}`;
+
+              const row: any = { x: xLabel };
+              dimsToRender.forEach((dim, idx) => {
+                const rec = arr.find((a) => a.dimension === dim);
+                const pct =
+                  rec && typeof rec.diActualProgress === 'number'
+                    ? parseFloat((rec.diActualProgress * 100).toFixed(2))
+                    : null; // use null to create gaps when missing
+                const key = `value${idx + 1}`;
+                const nameKey = `indicatorName${idx + 1}`;
+                row[key] = pct;
+                // Use team name for Overall series label
+                if (dim === 'Overall') {
+                  const tn = (this.teamName() || '').trim();
+                  row[nameKey] = tn ? `${tn} DI (Overall)` : 'DI (Overall)';
+                } else {
+                  row[nameKey] = dim;
+                }
+              });
+              return row;
+            });
+
+          // Update legend colors to match the rendered dimensions order
+          const colorMap: Record<string, string> = {
+            'Capability Building': '#277FF1',
+            'Capability Utilization': '#00C48C',
+            'Digital Experience & Impact': '#FF6A39',
+            Overall: '#4F008C',
+          };
+          const newColors = dimsToRender.map((d) => colorMap[d]);
+          this.legendSettings = { ...this.legendSettings, colors: newColors };
+          console.log('DATA ROWS', dataRows);
+          this.chartData = dataRows;
+        },
+        error: () => {
+          this.chartData = [];
+        },
+      });
+  }
+
+  // Helper: determine if chartData contains any numeric values
+  hasChartData(): boolean {
+    const rows = this.chartData || [];
+    for (const row of rows) {
+      for (const key of Object.keys(row)) {
+        if (key.startsWith('value')) {
+          const v = (row as any)[key];
+          if (typeof v === 'number' && !isNaN(v)) {
+            return true;
+          }
+        }
       }
-    });
+    }
+    return false;
   }
 
   constructor(private kpiService: KpiService) {

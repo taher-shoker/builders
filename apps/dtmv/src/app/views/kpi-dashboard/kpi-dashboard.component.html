@@ -71,6 +71,7 @@
                     [kpis]="kpis()"
                     [permissionRole]="permissionRole"
                     [unitId]="currentTeamId()"
+                    [canLoadMore]="canLoadMore()"
                     (loadMoreRequested)="onLoadMoreRequested()"
                     (dimensionFilterChanged)="onDimensionFilterChanged($event)"
                     (refreshRequested)="onRefreshRequested()"

@@ -6,6 +6,8 @@ import {
   signal,
 } from '@angular/core';
 
+import { UnitProgress } from '../../kpi.service';
+
 type LegendItem = { label: string; key: 'ontrack' | 'atrisk' | 'delayed' };
 
 @Component({
@@ -50,6 +52,8 @@ export class ProgressGaugeComponent {
 
   private _progress = signal(this.progress);
   progressSig = computed(() => this._progress());
+
+  unitProgress = signal<UnitProgress | null>(null);
 
   // ----- Geometry helpers -----
   private clamp(n: number) {
@@ -300,4 +304,11 @@ calculateDropRotation(progress: number): number {
       return String(num * s);
     });
   }
+
+    hasActualData = computed(() => {
+    const p = this.progressSig();
+    if (!p) return false;
+    const vals = [this.progressSig(), this.baseline, this.target];
+    return vals.some((v) => typeof v === 'number' && !isNaN(v));
+  });
 }

@@ -22,6 +22,8 @@ export class KpiListComponent implements AfterViewInit {
   kpis = input<KPI[]>([]);
   selectedKpi = input<KPI | null>(null);
   searchTerm = input<string>('');
+  // Parent-driven guard: when false, suppress reachListEnd emissions
+  canLoadMore = input<boolean>(true);
   hasScroll = false;
 
   @Output() kpiSelected = new EventEmitter<KPI>();
@@ -72,10 +74,21 @@ export class KpiListComponent implements AfterViewInit {
   onScroll(event: Event): void {
     const target = event.target as HTMLElement;
     if (!target) return;
+    // Avoid triggering load-more when there are no KPIs
+    if (this.filteredKpis().length === 0) {
+      this.updateHasScroll();
+      return;
+    }
+    // If parent indicates we cannot load more (loading or last page), stop here
+    if (!this.canLoadMore()) {
+      this.updateHasScroll();
+      return;
+    }
     const threshold = 250; // px from bottom
     const atBottom = target.scrollTop + target.clientHeight >= target.scrollHeight - threshold;
+    // Debounce reach-end emissions to avoid rapid repeated triggers
     if (atBottom) {
-      this.reachListEnd.emit();
+      this.emitReachEndDebounced();
     }
     // Update whether scrollbar is present
     this.updateHasScroll();
@@ -95,5 +108,17 @@ export class KpiListComponent implements AfterViewInit {
     const el = this.contentEl?.nativeElement;
     if (!el) return;
     this.hasScroll = el.scrollHeight > el.clientHeight;
+  }
+
+  // --- Debounce helper to prevent repeated reach-end events ---
+  private lastReachEmit = 0;
+  private emitReachEndDebounced(): void {
+    const now = Date.now();
+    const minIntervalMs = 500;
+    if (now - this.lastReachEmit < minIntervalMs) {
+      return;
+    }
+    this.lastReachEmit = now;
+    this.reachListEnd.emit();
   }
 }

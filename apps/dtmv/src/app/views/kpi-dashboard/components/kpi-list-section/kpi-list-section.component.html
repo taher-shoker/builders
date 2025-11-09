@@ -7,11 +7,12 @@
     <div class="mt-4 row">
       <div class="col-md-3">
         <div class="kpi-list-section_filters">
-          <stc-apps-kpi-search (dimensionsChange)="onDimensionsFilterChanged($event)" (searchChange)="onSearchChange($event)"></stc-apps-kpi-search>
+          <stc-apps-kpi-search [hidden]="!hasKpis()" (dimensionsChange)="onDimensionsFilterChanged($event)" (searchChange)="onSearchChange($event)"></stc-apps-kpi-search>
           <stc-apps-kpi-list
             [kpis]="kpis"
             [selectedKpi]="selectedKpi()"
             [searchTerm]="searchTerm()"
+            [canLoadMore]="canLoadMore"
             (kpiSelected)="onKpiSelected($event)"
             (reachListEnd)="onReachEnd()"
           ></stc-apps-kpi-list>

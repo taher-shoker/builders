@@ -28,6 +28,8 @@ export class KpiDashboardComponent implements OnInit {
   private readonly size = 500;
   private last = signal<boolean>(false);
   loadingKpis = signal<boolean>(false);
+  // Expose canLoadMore to child components (guards load-more when fetching or last page)
+  canLoadMore = computed(() => !this.loadingKpis() && !this.last());
   private selectedDimensions = signal<string[]>([]);
 
   // Year filter state (UI only for now)
@@ -207,11 +209,15 @@ export class KpiDashboardComponent implements OnInit {
     this.kpiService.getKpis(page, this.size, unitId, dimensionParam, Number.isFinite(year) ? year : undefined).subscribe({
       next: (res: KpiListResponse) => {
         const mapped = (res.content || []).map((i) => this.mapKpiItem(i));
-        this.kpis.set([...(this.kpis() || []), ...mapped]);
-        this.last.set(!!res.last);
-        this.page.set(page + 1);
+        const isEmptyPage = mapped.length === 0;
+        // If the API returns an empty page, cap pagination to avoid repeated requests
+        this.last.set(!!res.last || isEmptyPage);
+        if (!isEmptyPage) {
+          this.kpis.set([...(this.kpis() || []), ...mapped]);
+          this.page.set(page + 1);
+        }
         this.loadingKpis.set(false);
-        console.log('[KPI] fetchKpiPage:', { page, size: this.size, unitId, dimension: dimensionParam, received: mapped.length, last: res.last });
+        console.log('[KPI] fetchKpiPage:', { page, size: this.size, unitId, dimension: dimensionParam, received: mapped.length, last: res.last, cappedByEmpty: isEmptyPage });
       },
       error: (err) => {
         console.error('[KPI] fetchKpiPage error:', err);

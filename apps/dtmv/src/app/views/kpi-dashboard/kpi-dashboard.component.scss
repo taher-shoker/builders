@@ -173,4 +173,35 @@
       font-size: 12px;
     }
   }
+
+  /* Empty state card styling for Actual Progress */
+  .kpi-empty-card {
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed var(--light-slate-gray);
+      border-radius: 12px;
+      padding: 24px;
+      color: var(--dark-charcoal);
+      background-color: #fafafa;
+
+      &_icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      &_title {
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      &_subtitle {
+        font-size: 13px;
+        color: var(--slate-gray);
+      }
+    }
+  }
 }

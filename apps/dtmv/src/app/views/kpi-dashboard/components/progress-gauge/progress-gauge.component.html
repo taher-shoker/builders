@@ -4,7 +4,7 @@
   </div>
 
   <div class="card-body">
-    <div class="gauge">
+    <div class="gauge" *ngIf="hasActualData(); else emptyState">
       <svg [attr.viewBox]="'0 0 ' + size + ' ' + size_width" class="block">
         <!-- Muted background arc -->
         <path
@@ -120,5 +120,12 @@
         </div>
       </div>
     </div>
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <!-- <div class="empty-state_icon">📈</div> -->
+        <div class="empty-state_title">No actual progress data</div>
+        <div class="empty-state_subtitle">Try a different year or unit.</div>
+      </div>
+    </ng-template>
   </div>
 </div>

@@ -33,6 +33,8 @@ export class KpiListSectionComponent {
   @Input() loading = false;
   @Input() permissionRole: 'viewer' | 'editor' = 'viewer';
   @Input() unitId: number | null = null;
+  // Parent-provided guard to prevent redundant load-more requests
+  @Input() canLoadMore = true;
 
   // Output to parent to request loading next page
   @Output() loadMoreRequested = new EventEmitter<void>();
@@ -40,6 +42,15 @@ export class KpiListSectionComponent {
   @Output() dimensionFilterChanged = new EventEmitter<string[]>();
   // Request parent to refresh KPI list (reset and refetch)
   @Output() refreshRequested = new EventEmitter<void>();
+
+  /**
+   * Returns true if there are any KPIs in the current list.
+   * Used by the template to conditionally render the search/filter component.
+   */
+  hasKpis(): boolean {
+    const list = this.kpis || [];
+    return Array.isArray(list) && list.length > 0;
+  }
 
   onKpiSelected(kpi: KPI): void {
     this.selectedKpi.set(kpi);
@@ -170,6 +181,9 @@ export class KpiListSectionComponent {
   }
 
   onReachEnd(): void {
+    if (!this.canLoadMore) {
+      return;
+    }
     this.loadMoreRequested.emit();
   }
 
