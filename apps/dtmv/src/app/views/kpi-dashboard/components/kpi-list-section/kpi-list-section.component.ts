@@ -7,6 +7,7 @@ import { KpiDialogService } from '../../services/kpi-dialog.service';
 import { KpiService, KpiAttributes, KpiValueRecord } from '../../kpi.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConfirmationModalComponent } from 'libs/shared-ui/src/lib/confirmation-modal/confirmation-modal.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'stc-apps-kpi-list-section',
@@ -19,6 +20,7 @@ export class KpiListSectionComponent {
   dialogService = inject(KpiDialogService);
   dialog = inject(MatDialog);
   kpiService = inject(KpiService);
+  toastr = inject(ToastrService);
   searchTerm = signal<string>('');
   attributes = signal([] as { label: string; value: string | number; icon: string }[]);
   attributesLoading = signal<boolean>(false);
@@ -64,6 +66,7 @@ export class KpiListSectionComponent {
       if (result && result.success) {
         // Ask parent to refresh KPI list
         this.refreshRequested.emit();
+        this.toastr.success('KPI added successfully');
       }
     });
   }
@@ -71,10 +74,12 @@ export class KpiListSectionComponent {
   onEditKpi(kpi: KPI): void {
     this.dialogService.openKpiFormDialog(kpi, this.unitId).subscribe((result) => {
       if (result && result.success) {
+        this.toastr.success('KPI updated successfully');
         const idRaw = kpi.id ?? this.selectedKpi()?.id;
         const idNum = typeof idRaw === 'string' ? Number(idRaw) : (typeof idRaw === 'number' ? idRaw : NaN);
         if (!Number.isFinite(idNum)) {
           console.warn('Invalid KPI id; cannot refresh after edit.', idRaw);
+          this.toastr.warning('Updated, but failed to reload details');
           return;
         }
 
@@ -107,6 +112,7 @@ export class KpiListSectionComponent {
             // Fallback: at least refresh attributes and values using existing selection
             this.fetchAttributesForKpi(idNum);
             this.fetchKpiValues(idNum, this.chartGrouping());
+            this.toastr.warning('Updated, but failed to reload details');
           },
         });
       }
@@ -139,9 +145,11 @@ export class KpiListSectionComponent {
           // Clear selection and ask parent to refresh the list
           this.selectedKpi.set(null);
           this.refreshRequested.emit();
+          this.toastr.success('KPI deleted successfully');
         },
         error: (err: HttpErrorResponse) => {
           console.error('Failed to delete KPI', err);
+          this.toastr.error('Failed to delete KPI');
         },
       });
     });
@@ -156,6 +164,7 @@ export class KpiListSectionComponent {
       // After successful update, simulate re-selecting the KPI to refresh
       if (result && result.success) {
         this.onKpiSelected(kpi);
+        this.toastr.success('KPI actual value updated successfully');
       }
     });
   }
@@ -209,6 +218,7 @@ export class KpiListSectionComponent {
         console.error('Failed to load KPI attributes', err);
         this.attributes.set([]);
         this.attributesLoading.set(false);
+        this.toastr.error('Failed to load KPI attributes');
       },
     });
   }
@@ -249,6 +259,7 @@ export class KpiListSectionComponent {
         console.error('Failed to load KPI values', err);
         this.chartData.set([]);
         this.chartLoading.set(false);
+        this.toastr.error('Failed to load KPI values');
       },
     });
   }
