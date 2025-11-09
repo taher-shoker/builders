@@ -1,4 +1,4 @@
-import { Component, inject, signal, Input, Output, EventEmitter } from '@angular/core';
+import { Component, inject, signal, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MatDialog } from '@angular/material/dialog';
 import { filter } from 'rxjs';
@@ -197,6 +197,33 @@ export class KpiListSectionComponent {
       this.chartData.set([]);
       this.attributesLoading.set(false);
       this.chartLoading.set(false);
+    }
+  }
+
+  // Clear selection when incoming KPI list becomes empty or no longer contains the selected item
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('kpis' in changes) {
+      const currentList: KPI[] = this.kpis || [];
+      const selected = this.selectedKpi();
+
+      // If list is empty, clear selection and related state
+      if (!currentList || currentList.length === 0) {
+        this.selectedKpi.set(null);
+        this.attributes.set([]);
+        this.chartData.set([]);
+        this.attributesLoading.set(false);
+        this.chartLoading.set(false);
+        return;
+      }
+
+      // If currently selected KPI is not in the new list, clear selection
+      if (selected && !currentList.some((k) => String(k.id) === String(selected.id))) {
+        this.selectedKpi.set(null);
+        this.attributes.set([]);
+        this.chartData.set([]);
+        this.attributesLoading.set(false);
+        this.chartLoading.set(false);
+      }
     }
   }
 
