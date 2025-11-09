@@ -35,17 +35,22 @@
                           : 'Unit Details'
                       }}
                     </h2>
-                    <div class="kpi-dashboard_titlebar_filters">
-                      <stc-apps-select-drop-down
-                        [label]="''"
-                        [matLabel]="'KPI Year'"
-                        [options]="yearsOptions"
-                        [labelName]="'name'"
-                        [labelValue]="'id'"
-                        [outputValue]="'name'"
-                        [selectId]="selectedYear()"
-                        (selectChange)="onYearChanged($event)"
-                      ></stc-apps-select-drop-down>
+                    <div class="kpi-dashboard_titlebar_actions">
+                      <div class="kpi-dashboard_loading" *ngIf="globalLoading()">
+                        <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+                      </div>
+                      <div class="kpi-dashboard_titlebar_filters">
+                        <stc-apps-select-drop-down
+                          [label]="''"
+                          [matLabel]="'KPI Year'"
+                          [options]="yearsOptions"
+                          [labelName]="'name'"
+                          [labelValue]="'id'"
+                          [outputValue]="'name'"
+                          [selectId]="selectedYear()"
+                          (selectChange)="onYearChanged($event)"
+                        ></stc-apps-select-drop-down>
+                      </div>
                     </div>
                   </div>
                 </div>

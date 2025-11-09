@@ -2,6 +2,7 @@ import { Component, OnInit, computed, signal, effect } from '@angular/core';
 import { KpiService, UnitsGroupedCategory, TeamSummary, UnitProgress, KpiListResponse, KpiListItem } from './kpi.service';
 import { KPI } from './models/kpi.model';
 import { PermissionService } from '../../services/permission.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'stc-apps-kpi-dashboard',
@@ -33,7 +34,16 @@ export class KpiDashboardComponent implements OnInit {
   yearsOptions: { id: string; name: string }[] = [];
   selectedYear = signal<string>('');
 
-  constructor(private kpiService: KpiService, private permissionService: PermissionService) {}
+  // Global loading indicator and year-change cycle tracking
+  private pendingRequests = signal<number>(0);
+  globalLoading = computed(() => this.pendingRequests() > 0 || this.loadingKpis());
+  private yearChangeInProgress = signal<boolean>(false);
+
+  constructor(
+    private kpiService: KpiService,
+    private permissionService: PermissionService,
+    private toastr: ToastrService
+  ) {}
 
   ngOnInit(): void {
     // Determine permission role based on user groups
@@ -146,6 +156,8 @@ export class KpiDashboardComponent implements OnInit {
     }
     const year = Number(this.selectedYear());
     console.log('[KPI] fetchUnitProgress: requesting', { unitId: id, year });
+    // Track global loading
+    this.pendingRequests.set(this.pendingRequests() + 1);
     this.kpiService.getUnitProgress(id, Number.isFinite(year) ? year : undefined).subscribe({
       next: (data) => {
         console.log('[KPI] fetchUnitProgress: response', data);
@@ -154,6 +166,10 @@ export class KpiDashboardComponent implements OnInit {
       error: (err) => {
         console.error('[KPI] fetchUnitProgress: error', err);
         this.unitProgress.set(null);
+        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
+      },
+      complete: () => {
+        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
       },
     });
   }
@@ -175,6 +191,8 @@ export class KpiDashboardComponent implements OnInit {
     }
     if (this.last()) return;
     this.loadingKpis.set(true);
+    // Track global loading
+    this.pendingRequests.set(this.pendingRequests() + 1);
     const page = this.page();
     const unitId = this.currentTeamId();
     const dims = this.selectedDimensions();
@@ -182,6 +200,7 @@ export class KpiDashboardComponent implements OnInit {
     if (unitId == null) {
       console.warn('[KPI] fetchKpiPage: no unitId, skipping');
       this.loadingKpis.set(false);
+      this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
       return;
     }
     const year = Number(this.selectedYear());
@@ -197,6 +216,10 @@ export class KpiDashboardComponent implements OnInit {
       error: (err) => {
         console.error('[KPI] fetchKpiPage error:', err);
         this.loadingKpis.set(false);
+        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
+      },
+      complete: () => {
+        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
       },
     });
   }
@@ -210,6 +233,9 @@ export class KpiDashboardComponent implements OnInit {
   // Year change handler (hook for future data filtering if needed)
   onYearChanged(yearName: string): void {
     this.selectedYear.set(yearName);
+    // Start year-change cycle: show info toast and enable global loader
+    this.yearChangeInProgress.set(true);
+    this.toastr.info(`Reloading dashboard data for ${yearName}...`, 'Updating');
     // Refresh data across the dashboard when year changes
     this.fetchUnitProgress();
     this.fetchKpiPage(true);
@@ -266,5 +292,17 @@ export class KpiDashboardComponent implements OnInit {
       baselinePct: this.baselinePct(),
       targetPct: this.targetPct(),
     });
+  });
+
+  // Toast success when a year-change cycle finishes
+  yearChangeToastEffect = effect(() => {
+    const pending = this.pendingRequests();
+    const kpisLoading = this.loadingKpis();
+    const inCycle = this.yearChangeInProgress();
+    if (inCycle && pending === 0 && !kpisLoading) {
+      const yearName = this.selectedYear();
+      this.toastr.success(`Dashboard updated for ${yearName}`, 'Done');
+      this.yearChangeInProgress.set(false);
+    }
   });
 }

@@ -23,6 +23,20 @@
     margin-bottom: 8px;
   }
 
+  &_titlebar_actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &_loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+  }
+
   &_titlebar_filters {
     width: 220px;
     min-width: 180px;
