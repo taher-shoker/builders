@@ -58,11 +58,17 @@
     padding: 12px 16px;
     border-radius: 36px;
     background-color: #EFEFEF;
-    width: max-content;
+    /* Hug content: don’t stretch across full width */
+    width: auto;
+    max-width: 100%;
     margin: 32px 0px;
+    /* No scrolling; allow wrapping to additional lines when needed */
+    overflow: visible;
+    flex-wrap: wrap;
   }
 
   .teams-tab {
+    flex: 0 0 auto;
     border-radius: 24px;
     padding: 8px 16px;
     border: 1px solid transparent;
@@ -71,6 +77,7 @@
     font-weight: 400;
     cursor: pointer;
     transition: all 150ms ease-in-out;
+    white-space: nowrap;
   }
 
   .teams-tab.active {
@@ -81,5 +88,39 @@
 
   .teams-tab:not(.active):hover {
     color: var(--stc-color);
+  }
+
+  /* Responsive compression to avoid overflow without scrolling */
+  @media (max-width: 1280px) {
+    .teams-tabs {
+      gap: 20px;
+      padding: 10px 14px;
+    }
+    .teams-tab {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .teams-tabs {
+      gap: 12px;
+      padding: 8px 12px;
+    }
+    .teams-tab {
+      padding: 5px 10px;
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .teams-tabs {
+      gap: 8px;
+      padding: 6px 10px;
+    }
+    .teams-tab {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
   }
 }
