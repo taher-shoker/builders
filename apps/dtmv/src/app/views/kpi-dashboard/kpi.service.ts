@@ -74,30 +74,25 @@ export interface KpiValueRecord {
 }
 
 // API models for KPI Log endpoint
-export interface KpiLogProgress {
+// New API models for KPI Activity Logs (array response)
+export interface KpiActivityAttachment {
   id: number;
-  progressDate: string;
-  value: number;
-  createdBy: string;
-  createDate: string;
-  attachments: any[];
+  attachmentType: string | null;
+  fileName: string;
+  url: string;
+  label: string;
+  note: string | null;
+  uploadDate: string; // YYYY-MM-DD
 }
 
-export interface KpiLog {
+export interface KpiActivityLogEntry {
   id: number;
-  name: string;
-  dimension: string;
-  weight: number;
-  baseline: number;
-  target: number;
-  ambition: number;
-  formula: string;
-  createdBy: string;
-  direction: number;
-  createDate: string;
-  updatedBy: string;
-  updateDate: string;
-  kpiProgresses: KpiLogProgress[];
+  kpiId: number;
+  title: string; // e.g., 'KPI Added', 'KPI Progress Updated', 'KPI Updated'
+  details: string | null; // e.g., 'Progress Date: 11/2025<br>Actual Progress: 22.0<br>'
+  attachments: KpiActivityAttachment[] | null;
+  username: string;
+  createdAt: string; // ISO timestamp
 }
 
 // Payload model for updating KPI progress
@@ -180,6 +175,28 @@ export class KpiService {
   }
 
   /**
+   * Build full download URL for a KPI attachment using backend base URL.
+   * Example: `${BASE_URL}attachements/{id}/download`
+   */
+  getAttachmentDownloadUrl(id: number): string {
+    const attachmentId = Number(id);
+    const validId = Number.isFinite(attachmentId) ? attachmentId : Number(String(id).trim());
+    return `${this.baseUrl}attachements/${validId}/download`;
+  }
+
+  /**
+   * Download KPI attachment as Blob using HttpClient.
+   */
+  downloadAttachment(id: number) {
+    return this.http.get(
+      `${this.baseUrl}v2/dt-milestone-service/attachments/${id}/download`,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  /**
    * Fetches units grouped data for KPI Dashboard.
    * Relies on global HTTP interceptor to attach user token.
    */
@@ -251,9 +268,9 @@ export class KpiService {
   /**
    * Fetch KPI activity log details by KPI ID.
    */
-  getKpiLog(kpiId: number): Observable<KpiLog> {
+  getKpiLog(kpiId: number): Observable<KpiActivityLogEntry[]> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi/log/${kpiId}`;
-    return this.http.get<KpiLog>(url);
+    return this.http.get<KpiActivityLogEntry[]>(url);
   }
 
   /**

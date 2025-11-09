@@ -42,7 +42,7 @@ export class KpiDialogService {
   openActivityLogDialog(kpi: KPI): Observable<void> {
     return this.dialog
       .open(ActivityLogComponent, {
-        width: '500px',
+        width: '600px',
         height: '100vh',
         position: {
           top: '0',
