@@ -24,7 +24,7 @@ export class KpiDashboardComponent implements OnInit {
   // KPI List state (parent-driven pagination)
   kpis = signal<KPI[]>([]);
   private page = signal<number>(0);
-  private readonly size = 10;
+  private readonly size = 500;
   private last = signal<boolean>(false);
   loadingKpis = signal<boolean>(false);
   private selectedDimensions = signal<string[]>([]);

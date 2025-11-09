@@ -179,6 +179,25 @@ export class KpiListSectionComponent {
 
   onSearchChange(term: string): void {
     this.searchTerm.set(term || '');
+
+    // When search results in an empty visible list, clear the right-side selection
+    const all = this.kpis || [];
+    const t = (term || '').trim().toLowerCase();
+    const filtered = !t
+      ? all
+      : all.filter((k) => (
+          (k.name || '').toLowerCase().includes(t) ||
+          (k.description || '').toLowerCase().includes(t)
+        ));
+
+    if (filtered.length === 0) {
+      this.selectedKpi.set(null);
+      // Optional: also clear auxiliary data tied to the selection
+      this.attributes.set([]);
+      this.chartData.set([]);
+      this.attributesLoading.set(false);
+      this.chartLoading.set(false);
+    }
   }
 
   private fetchAttributesForKpi(kpiId: number): void {
