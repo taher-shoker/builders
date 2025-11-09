@@ -69,7 +69,48 @@ export class KpiListSectionComponent {
   }
 
   onEditKpi(kpi: KPI): void {
-    this.dialogService.openKpiFormDialog(kpi, this.unitId).subscribe();
+    this.dialogService.openKpiFormDialog(kpi, this.unitId).subscribe((result) => {
+      if (result && result.success) {
+        const idRaw = kpi.id ?? this.selectedKpi()?.id;
+        const idNum = typeof idRaw === 'string' ? Number(idRaw) : (typeof idRaw === 'number' ? idRaw : NaN);
+        if (!Number.isFinite(idNum)) {
+          console.warn('Invalid KPI id; cannot refresh after edit.', idRaw);
+          return;
+        }
+
+        // Refresh selected KPI basic info, attributes, and values
+        this.attributesLoading.set(true);
+        this.attributes.set([]);
+
+        this.kpiService.getKpiById(idNum).subscribe({
+          next: (details) => {
+            const updated: KPI = {
+              id: String(details.id),
+              name: details.name,
+              description: details.dimension,
+            };
+            // Update the selected card info
+            this.selectedKpi.set(updated);
+            // Also update the item in the rendered list so the card reflects latest name/dimension
+            const currentList = this.kpis || [];
+            const targetId = String(details.id);
+            this.kpis = currentList.map((it) =>
+              String(it.id) === targetId
+                ? { ...it, name: details.name, description: details.dimension }
+                : it
+            );
+            this.fetchAttributesForKpi(idNum);
+            this.fetchKpiValues(idNum, this.chartGrouping());
+          },
+          error: (err: HttpErrorResponse) => {
+            console.error('Failed to load KPI details after edit', err);
+            // Fallback: at least refresh attributes and values using existing selection
+            this.fetchAttributesForKpi(idNum);
+            this.fetchKpiValues(idNum, this.chartGrouping());
+          },
+        });
+      }
+    });
   }
 
   onDeleteKpi(kpi: KPI): void {
