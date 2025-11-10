@@ -1,4 +1,4 @@
-<div class="dialog"  @slideInOut>
+<div class="dialog" @slideInOut>
   <header class="dialog_header">
     <h2 mat-dialog-title>
       <span class="title-prefix">Logs for KPI: </span>
@@ -11,30 +11,88 @@
 
   <mat-dialog-content class="dialog_body">
     <ul class="activity-list">
-      <li *ngFor="let log of activityLogs" class="activity-list_item" [class.activity-list_item--warn]="log.returned">
-        <mat-icon class="activity-list_icon" [color]="log.iconColor || (log.returned ? 'warn' : 'primary')">
+      <li
+        *ngFor="let log of activityLogs"
+        class="activity-list_item"
+        [class.activity-list_item--warn]="log.returned"
+      >
+        <mat-icon
+          class="activity-list_icon"
+          [color]="log.iconColor || (log.returned ? 'warn' : 'primary')"
+        >
           {{ log.icon || (log.returned ? 'info' : 'check_circle') }}
         </mat-icon>
         <div class="activity-list_details">
           <p class="activity-list_details_title">{{ log.title }}</p>
 
-          <div class="activity-list_details_description" *ngIf="log.descriptionHtml" [innerHTML]="log.descriptionHtml"></div>
+          <div
+            class="activity-list_details_description"
+            *ngIf="log.descriptionHtml"
+            [innerHTML]="log.descriptionHtml"
+          ></div>
 
-          <div class="activity-list_attachments" *ngIf="log.attachments?.length">
+          <div
+            class="activity-list_attachments"
+            *ngIf="log.attachments?.length"
+          >
             <div class="activity-list_attachments_label">
               <mat-icon>attach_file</mat-icon>
               Evidence Attachments:
             </div>
             <div class="activity-list_attachments_list">
               <ng-container *ngFor="let att of log.attachments">
-                <a class="activity-list_attachment_link" href="#" (click)="onDownloadAttachment(att); $event.preventDefault()" [title]="att.label">{{ att.label }}</a>
+                <a
+                  class="activity-list_attachment_link"
+                  href="#"
+                  (click)="onDownloadAttachment(att); $event.preventDefault()"
+                  [title]="att.label"
+                  >{{ att.label }}</a
+                >
               </ng-container>
             </div>
           </div>
 
           <div class="activity-list_details_footer">
-            <p class="activity-list_details_date">{{ log.date | date : 'medium' }}</p>
-            <p class="activity-list_details_author" [title]="log.author">By: {{ log.author }}</p>
+            <p class="activity-list_details_date">
+              <svg
+                class="activity-list_details_icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="color: var(--grey-color)"
+                aria-hidden="true"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+              {{ log.date | date : 'medium' }}
+            </p>
+            <p class="activity-list_details_author" [title]="log.author">
+              <svg
+                class="activity-list_details_icon"
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                style="color: var(--grey-color)"
+                aria-hidden="true"
+              >
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+              {{ log.author }}
+            </p>
           </div>
         </div>
       </li>
