@@ -197,6 +197,18 @@ export class KpiService {
   }
 
   /**
+   * Export KPI as Blob using HttpClient.
+   */
+  exportKPIs(unitId: number) {
+    return this.http.get(
+      `${this.baseUrl}v2/dt-milestone-service/kpi/${unitId}/export`,
+      {
+        responseType: 'blob',
+      }
+    );
+  }
+
+  /**
    * Fetches units grouped data for KPI Dashboard.
    * Relies on global HTTP interceptor to attach user token.
    */

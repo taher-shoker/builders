@@ -1,8 +1,16 @@
 import { Component, OnInit, computed, signal, effect } from '@angular/core';
-import { KpiService, UnitsGroupedCategory, TeamSummary, UnitProgress, KpiListResponse, KpiListItem } from './kpi.service';
+import {
+  KpiService,
+  UnitsGroupedCategory,
+  TeamSummary,
+  UnitProgress,
+  KpiListResponse,
+  KpiListItem,
+} from './kpi.service';
 import { KPI } from './models/kpi.model';
 import { PermissionService } from '../../services/permission.service';
 import { ToastrService } from 'ngx-toastr';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'stc-apps-kpi-dashboard',
@@ -38,7 +46,9 @@ export class KpiDashboardComponent implements OnInit {
 
   // Global loading indicator and year-change cycle tracking
   private pendingRequests = signal<number>(0);
-  globalLoading = computed(() => this.pendingRequests() > 0 || this.loadingKpis());
+  globalLoading = computed(
+    () => this.pendingRequests() > 0 || this.loadingKpis()
+  );
   private yearChangeInProgress = signal<boolean>(false);
 
   constructor(
@@ -49,7 +59,9 @@ export class KpiDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     // Determine permission role based on user groups
-    const isEditor = this.permissionService.checkIsAdmin() || this.permissionService.checkIsGovernance();
+    const isEditor =
+      this.permissionService.checkIsAdmin() ||
+      this.permissionService.checkIsGovernance();
     this.permissionRole = isEditor ? 'editor' : 'viewer';
 
     // Initialize year options from 2025 to current year
@@ -72,7 +84,8 @@ export class KpiDashboardComponent implements OnInit {
         this.currentTab.set(first);
 
         // Initialize team tabs from the first category
-        const firstCategoryTeams = units.find((u) => u.category === first)?.teams || [];
+        const firstCategoryTeams =
+          units.find((u) => u.category === first)?.teams || [];
         this.setTeamTabs(firstCategoryTeams);
         // initial fetch for first team
         this.fetchUnitProgress();
@@ -115,7 +128,8 @@ export class KpiDashboardComponent implements OnInit {
     this.currentTab.set(tabName);
 
     // Update teams for the selected category from cached data
-    const teams = this.unitsGrouped.find((u) => u.category === tabName)?.teams || [];
+    const teams =
+      this.unitsGrouped.find((u) => u.category === tabName)?.teams || [];
     this.setTeamTabs(teams);
     // Refetch KPI list for the new unit context
     this.fetchKpiPage(true);
@@ -135,7 +149,13 @@ export class KpiDashboardComponent implements OnInit {
     const id = this.teamIdByName.get(firstTeamKey) ?? null;
     this.currentTeamId.set(id);
     this.kpiService.setCurrentUnitId(id);
-    console.log('[KPI] setTeamTabs:', { teams, teamTabs: this.teamTabs, teamIdByName: Object.fromEntries(this.teamIdByName), firstTeamKey, id });
+    // console.log('[KPI] setTeamTabs:', {
+    //   teams,
+    //   teamTabs: this.teamTabs,
+    //   teamIdByName: Object.fromEntries(this.teamIdByName),
+    //   firstTeamKey,
+    //   id,
+    // });
   }
 
   onTeamChanged(teamKey: string): void {
@@ -143,7 +163,7 @@ export class KpiDashboardComponent implements OnInit {
     const id = this.teamIdByName.get(teamKey) ?? null;
     this.currentTeamId.set(id);
     this.kpiService.setCurrentUnitId(id);
-    console.log('[KPI] onTeamChanged:', { teamKey, id });
+    // console.log('[KPI] onTeamChanged:', { teamKey, id });
     this.fetchUnitProgress();
     // Reset KPIs when team changes
     this.fetchKpiPage(true);
@@ -157,23 +177,25 @@ export class KpiDashboardComponent implements OnInit {
       return;
     }
     const year = Number(this.selectedYear());
-    console.log('[KPI] fetchUnitProgress: requesting', { unitId: id, year });
+    // console.log('[KPI] fetchUnitProgress: requesting', { unitId: id, year });
     // Track global loading
     this.pendingRequests.set(this.pendingRequests() + 1);
-    this.kpiService.getUnitProgress(id, Number.isFinite(year) ? year : undefined).subscribe({
-      next: (data) => {
-        console.log('[KPI] fetchUnitProgress: response', data);
-        this.unitProgress.set(data);
-      },
-      error: (err) => {
-        console.error('[KPI] fetchUnitProgress: error', err);
-        this.unitProgress.set(null);
-        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
-      },
-      complete: () => {
-        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
-      },
-    });
+    this.kpiService
+      .getUnitProgress(id, Number.isFinite(year) ? year : undefined)
+      .subscribe({
+        next: (data) => {
+          // console.log('[KPI] fetchUnitProgress: response', data);
+          this.unitProgress.set(data);
+        },
+        error: (err) => {
+          console.error('[KPI] fetchUnitProgress: error', err);
+          this.unitProgress.set(null);
+          this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
+        },
+        complete: () => {
+          this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
+        },
+      });
   }
 
   // --- KPI List fetching with pagination ---
@@ -206,30 +228,64 @@ export class KpiDashboardComponent implements OnInit {
       return;
     }
     const year = Number(this.selectedYear());
-    this.kpiService.getKpis(page, this.size, unitId, dimensionParam, Number.isFinite(year) ? year : undefined).subscribe({
-      next: (res: KpiListResponse) => {
-        const mapped = (res.content || []).map((i) => this.mapKpiItem(i));
-        const isEmptyPage = mapped.length === 0;
-        // If the API returns an empty page, cap pagination to avoid repeated requests
-        this.last.set(!!res.last || isEmptyPage);
-        if (!isEmptyPage) {
-          this.kpis.set([...(this.kpis() || []), ...mapped]);
-          this.page.set(page + 1);
-        }
-        this.loadingKpis.set(false);
-        console.log('[KPI] fetchKpiPage:', { page, size: this.size, unitId, dimension: dimensionParam, received: mapped.length, last: res.last, cappedByEmpty: isEmptyPage });
+    this.kpiService
+      .getKpis(
+        page,
+        this.size,
+        unitId,
+        dimensionParam,
+        Number.isFinite(year) ? year : undefined
+      )
+      .subscribe({
+        next: (res: KpiListResponse) => {
+          const mapped = (res.content || []).map((i) => this.mapKpiItem(i));
+          const isEmptyPage = mapped.length === 0;
+          // If the API returns an empty page, cap pagination to avoid repeated requests
+          this.last.set(!!res.last || isEmptyPage);
+          if (!isEmptyPage) {
+            this.kpis.set([...(this.kpis() || []), ...mapped]);
+            this.page.set(page + 1);
+          }
+          this.loadingKpis.set(false);
+          // console.log('[KPI] fetchKpiPage:', {
+          //   page,
+          //   size: this.size,
+          //   unitId,
+          //   dimension: dimensionParam,
+          //   received: mapped.length,
+          //   last: res.last,
+          //   cappedByEmpty: isEmptyPage,
+          // });
+        },
+        error: (err) => {
+          console.error('[KPI] fetchKpiPage error:', err);
+          this.loadingKpis.set(false);
+          this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
+        },
+        complete: () => {
+          this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
+        },
+      });
+  }
+
+  exportKPIS() {
+    const unitId = this.currentTeamId();
+    if (unitId == null) {
+      console.warn('[KPI] exportKPIS: no unitId, skipping');
+      return;
+    }
+    this.kpiService.exportKPIs(unitId).subscribe({
+      next: (res) => {
+        const unitName = this.currentTeam() || String(unitId);
+        const safeUnitName = unitName.replace(/[^a-zA-Z0-9_-]+/g, '_');
+        saveAs(res, `exported-kpis-${safeUnitName}.xlsx`);
       },
       error: (err) => {
-        console.error('[KPI] fetchKpiPage error:', err);
-        this.loadingKpis.set(false);
-        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
-      },
-      complete: () => {
-        this.pendingRequests.set(Math.max(this.pendingRequests() - 1, 0));
+        console.error('[KPI] exportKPIS error:', err);
+        this.toastr.error('Error exporting KPIs', 'Error');
       },
     });
   }
-
   onLoadMoreRequested(): void {
     if (!this.loadingKpis() && !this.last()) {
       this.fetchKpiPage();
@@ -256,6 +312,10 @@ export class KpiDashboardComponent implements OnInit {
   // Refresh on demand (e.g., after creating a KPI)
   onRefreshRequested(): void {
     this.fetchKpiPage(true);
+  }
+
+  onExportKPIsRequested(): void {
+    this.exportKPIS();
   }
 
   // Percent conversions for template (0..100)
@@ -292,12 +352,12 @@ export class KpiDashboardComponent implements OnInit {
   // Log any changes in unitProgress and the derived percentages
   progressLogEffect = effect(() => {
     const p = this.unitProgress();
-    console.log('[KPI] unitProgress updated:', p);
-    console.log('[KPI] computed percents:', {
-      progressPct: this.progressPct(),
-      baselinePct: this.baselinePct(),
-      targetPct: this.targetPct(),
-    });
+    // console.log('[KPI] unitProgress updated:', p);
+    // console.log('[KPI] computed percents:', {
+    //   progressPct: this.progressPct(),
+    //   baselinePct: this.baselinePct(),
+    //   targetPct: this.targetPct(),
+    // });
   });
 
   // Toast success when a year-change cycle finishes

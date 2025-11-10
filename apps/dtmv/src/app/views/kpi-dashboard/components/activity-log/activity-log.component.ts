@@ -54,7 +54,7 @@ export class ActivityLogComponent implements OnInit {
       this.activityLogs = [];
       return;
     }
-    console.log('[ActivityLog] Fetching KPI log for id', kpiId);
+    // console.log('[ActivityLog] Fetching KPI log for id', kpiId);
     this.kpiService.getKpiLog(kpiId).subscribe({
       next: (res) => {
         this.kpiActivityLogs = res;

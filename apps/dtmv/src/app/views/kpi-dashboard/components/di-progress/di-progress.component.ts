@@ -166,7 +166,7 @@ export class DiProgressComponent implements AfterViewInit {
           };
           const newColors = dimsToRender.map((d) => colorMap[d]);
           this.legendSettings = { ...this.legendSettings, colors: newColors };
-          console.log('DATA ROWS', dataRows);
+          // console.log('DATA ROWS', dataRows);
           this.chartData = dataRows;
         },
         error: () => {

@@ -2,6 +2,8 @@
   <stc-apps-kpi-list-header
     (addKpi)="onAddNewKpi()"
     [permissionRole]="permissionRole"
+    (exportKPIs)="onExportKPIs()"
+    [showExportButton]="hasKpis()"
   ></stc-apps-kpi-list-header>
 
     <div class="mt-4 row">

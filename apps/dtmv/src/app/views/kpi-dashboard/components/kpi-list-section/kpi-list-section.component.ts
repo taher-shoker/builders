@@ -42,6 +42,7 @@ export class KpiListSectionComponent {
   @Output() dimensionFilterChanged = new EventEmitter<string[]>();
   // Request parent to refresh KPI list (reset and refetch)
   @Output() refreshRequested = new EventEmitter<void>();
+  @Output() exportRequested = new EventEmitter<void>();
 
   /**
    * Returns true if there are any KPIs in the current list.
@@ -80,6 +81,14 @@ export class KpiListSectionComponent {
         this.toastr.success('KPI added successfully');
       }
     });
+  }
+
+  onExportKPIs(): void {
+    if (this.unitId) {
+      this.exportRequested.emit();
+    } else {
+      this.toastr.warning('No unit selected to export KPIs');
+    }
   }
 
   onEditKpi(kpi: KPI): void {
@@ -304,14 +313,14 @@ export class KpiListSectionComponent {
             indicatorName1: '',
           };
         });
-        console.log('[KPIS for chart]',items)
-        console.log('[KPI Section] fetchKpiValues', {
-          grouping,
-          rawLength: resp?.length ?? 0,
-          rawSample: resp?.[0],
-          mappedLength: items.length,
-          mappedSample: items[0],
-        });
+        // console.log('[KPIS for chart]',items)
+        // console.log('[KPI Section] fetchKpiValues', {
+        //   grouping,
+        //   rawLength: resp?.length ?? 0,
+        //   rawSample: resp?.[0],
+        //   mappedLength: items.length,
+        //   mappedSample: items[0],
+        // });
         this.chartData.set(items);
         this.chartLoading.set(false);
       },

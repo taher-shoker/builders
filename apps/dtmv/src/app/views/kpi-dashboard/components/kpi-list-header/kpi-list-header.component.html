@@ -5,6 +5,8 @@
       buttonText="Export"
       [buttonIcon]="' fa-download'"
       [buttonType]="'stc-color-outline'"
+      (click)="onExportKPIs()"
+      [hidden]="!showExportButton"
     ></stc-apps-button>
     <stc-apps-button
       buttonText="Add New KPI"

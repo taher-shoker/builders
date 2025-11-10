@@ -5,10 +5,9 @@ import {
   EventEmitter,
   input,
   InputSignal,
-  OnInit,
   Output,
   effect,
-  Input
+  Input,
 } from '@angular/core';
 import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
 import { KPI } from '../../models/kpi.model';
@@ -20,13 +19,15 @@ import { AttributeItem } from '../../models/attribute-item.model';
   templateUrl: './kpi-list-item.component.html',
   styleUrls: ['./kpi-list-item.component.scss'],
 })
-export class KpiListItemComponent implements OnInit {
+export class KpiListItemComponent {
   kpi: InputSignal<KPI> = input.required<KPI>();
   isSelected: InputSignal<boolean> = input(false);
   attributes: InputSignal<AttributeItem[]> = input<AttributeItem[]>([]);
   attributesLoading: InputSignal<boolean> = input(false);
   chartDataInput: InputSignal<any[]> = input<any[]>([]);
-  chartGrouping: InputSignal<'monthly' | 'quarterly'> = input<'monthly' | 'quarterly'>('monthly');
+  chartGrouping: InputSignal<'monthly' | 'quarterly'> = input<
+    'monthly' | 'quarterly'
+  >('monthly');
   chartLoading: InputSignal<boolean> = input(false);
 
   groupingOptions = [
@@ -51,30 +52,36 @@ export class KpiListItemComponent implements OnInit {
   colors: string[] = ['#7C3BED'];
   bulletCirclesColor = '#7C3BED';
 
-
   legendSettings: LegendSettings = {
     markerCornerRadius: 10,
     markerWidth: 10,
     markerHeight: 10,
     marginTop: 30,
   };
-
-  ngOnInit(): void {
-    // Sync passed chart data to local prop used by template
-    effect(() => {
+  //  ngOnInit(): void {
+  //     // Sync passed chart data to local prop used by template
+  //     effect(() => {
+  //       const inData = this.chartDataInput();
+  //       // console.log('[KPI Item] chartDataInput received', {
+  //       //   length: inData?.length ?? 0,
+  //       //   sample: inData?.[0],
+  //       //   grouping: this.chartGrouping(),
+  //       // });
+  //       this.chartData.set(inData || []);
+  //       // console.log('[KPI Item] local chartData set', {
+  //       //   length: this.chartData()?.length ?? 0,
+  //       //   sample: this.chartData()?.[0],
+  //       // });
+  //     });
+  //   }
+  // Sync passed chart data to local prop used by template
+  chartDataSyncEffect = effect(
+    () => {
       const inData = this.chartDataInput();
-      console.log('[KPI Item] chartDataInput received', {
-        length: inData?.length ?? 0,
-        sample: inData?.[0],
-        grouping: this.chartGrouping(),
-      });
       this.chartData.set(inData || []);
-      console.log('[KPI Item] local chartData set', {
-        length: this.chartData()?.length ?? 0,
-        sample: this.chartData()?.[0],
-      });
-    });
-  }
+    },
+    { allowSignalWrites: true }
+  );
 
   onActivityLog(kpi: KPI): void {
     this.activityLog.emit(kpi);
@@ -119,7 +126,7 @@ export class KpiListItemComponent implements OnInit {
     const v = Array.isArray(value) ? value[0] : value;
     const vStr = (v ?? '').toString().toLowerCase();
     const normalized = vStr === 'quarterly' ? 'quarterly' : 'monthly';
-    console.log('[KPI Item] groupingChange emitted', normalized);
+    // console.log('[KPI Item] groupingChange emitted', normalized);
     this.groupingChange.emit(normalized);
   }
 }

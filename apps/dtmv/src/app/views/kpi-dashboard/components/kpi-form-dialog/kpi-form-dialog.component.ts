@@ -141,8 +141,8 @@ export class KpiFormDialogComponent implements OnInit {
 
       this.loading = true;
       this.errorMessage = '';
-      console.log(idNum)
-      console.log(payload)
+      // console.log(idNum)
+      // console.log(payload)
       this.kpiService.updateKpi(idNum, payload).subscribe({
         next: (res) => {
           this.loading = false;
