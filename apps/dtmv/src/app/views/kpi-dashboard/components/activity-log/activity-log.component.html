@@ -10,7 +10,8 @@
   </header>
 
   <mat-dialog-content class="dialog_body">
-    <ul class="activity-list">
+    <ng-container *ngIf="activityLogs?.length; else noActivityLogs">
+      <ul class="activity-list">
       <li
         *ngFor="let log of activityLogs"
         class="activity-list_item"
@@ -96,6 +97,13 @@
           </div>
         </div>
       </li>
-    </ul>
+      </ul>
+    </ng-container>
+    <ng-template #noActivityLogs>
+      <div class="activity-list_empty" aria-live="polite">
+        <mat-icon class="activity-list_empty_icon" aria-hidden="true">info</mat-icon>
+        <p class="activity-list_empty_text">No activity logs to display.</p>
+      </div>
+    </ng-template>
   </mat-dialog-content>
 </div>

@@ -49,7 +49,6 @@ export class KpiDashboardComponent implements OnInit {
   globalLoading = computed(
     () => this.pendingRequests() > 0 || this.loadingKpis()
   );
-  private yearChangeInProgress = signal<boolean>(false);
 
   constructor(
     private kpiService: KpiService,
@@ -295,9 +294,6 @@ export class KpiDashboardComponent implements OnInit {
   // Year change handler (hook for future data filtering if needed)
   onYearChanged(yearName: string): void {
     this.selectedYear.set(yearName);
-    // Start year-change cycle: show info toast and enable global loader
-    this.yearChangeInProgress.set(true);
-    this.toastr.info(`Reloading dashboard data for ${yearName}...`, 'Updating');
     // Refresh data across the dashboard when year changes
     this.fetchUnitProgress();
     this.fetchKpiPage(true);
@@ -360,15 +356,4 @@ export class KpiDashboardComponent implements OnInit {
     // });
   });
 
-  // Toast success when a year-change cycle finishes
-  yearChangeToastEffect = effect(() => {
-    const pending = this.pendingRequests();
-    const kpisLoading = this.loadingKpis();
-    const inCycle = this.yearChangeInProgress();
-    if (inCycle && pending === 0 && !kpisLoading) {
-      const yearName = this.selectedYear();
-      this.toastr.success(`Dashboard updated for ${yearName}`, 'Done');
-      this.yearChangeInProgress.set(false);
-    }
-  });
 }
