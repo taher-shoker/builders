@@ -69,11 +69,11 @@
                 <div class="p-0 col-12">
                   <stc-apps-kpi-list-section
                     [kpis]="kpis()"
+                    [loading]="loadingKpis()"
                     [permissionRole]="permissionRole"
                     [unitId]="currentTeamId()"
                     [canLoadMore]="canLoadMore()"
                     (loadMoreRequested)="onLoadMoreRequested()"
-                    (dimensionFilterChanged)="onDimensionFilterChanged($event)"
                     (refreshRequested)="onRefreshRequested()"
                     (exportRequested)="onExportKPIsRequested()"
                   ></stc-apps-kpi-list-section>

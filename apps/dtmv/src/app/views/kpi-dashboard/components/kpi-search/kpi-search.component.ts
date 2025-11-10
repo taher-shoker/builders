@@ -17,7 +17,7 @@ import { debounceTime, Subject, takeUntil } from 'rxjs';
 export class KpiSearchComponent implements OnInit, OnDestroy {
   @Output() searchChange = new EventEmitter<string>();
   @Output() dimensionsChange = new EventEmitter<string[]>();
-  placeholder = input('Search KPIs...');
+  placeholder = input('KPI name..');
 
   searchForm = new FormGroup({
     searchControl: new FormControl(''),

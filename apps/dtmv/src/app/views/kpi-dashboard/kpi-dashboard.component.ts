@@ -219,7 +219,7 @@ export class KpiDashboardComponent implements OnInit {
     const page = this.page();
     const unitId = this.currentTeamId();
     const dims = this.selectedDimensions();
-    const dimensionParam = dims.length === 1 ? dims[0] : undefined;
+    const dimensionsParam = Array.isArray(dims) && dims.length > 0 ? dims : undefined;
     if (unitId == null) {
       console.warn('[KPI] fetchKpiPage: no unitId, skipping');
       this.loadingKpis.set(false);
@@ -232,7 +232,7 @@ export class KpiDashboardComponent implements OnInit {
         page,
         this.size,
         unitId,
-        dimensionParam,
+        dimensionsParam,
         Number.isFinite(year) ? year : undefined
       )
       .subscribe({
@@ -250,7 +250,7 @@ export class KpiDashboardComponent implements OnInit {
           //   page,
           //   size: this.size,
           //   unitId,
-          //   dimension: dimensionParam,
+          //   dimensions: dimensionsParam,
           //   received: mapped.length,
           //   last: res.last,
           //   cappedByEmpty: isEmptyPage,

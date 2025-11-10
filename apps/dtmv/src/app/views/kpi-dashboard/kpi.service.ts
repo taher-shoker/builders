@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
@@ -243,15 +243,32 @@ export class KpiService {
   /**
    * Fetches KPIs list with server-side pagination.
    */
-  getKpis(page: number, size: number, unitId: number, dimension?: string, year?: number): Observable<KpiListResponse> {
+  getKpis(
+    page: number,
+    size: number,
+    unitId: number,
+    dimensions?: string[],
+    year?: number
+  ): Observable<KpiListResponse> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi`;
-    const params: Record<string, any> = { page, size, unitId };
-    if (dimension && dimension.trim().length > 0) {
-      params['dimension'] = dimension.trim();
+    let params = new HttpParams()
+      .set('page', String(page))
+      .set('size', String(size))
+      .set('unitId', String(unitId));
+
+    if (Array.isArray(dimensions) && dimensions.length > 0) {
+      const cleaned = dimensions
+        .map((d) => (d ?? '').trim())
+        .filter((d) => d.length > 0);
+      if (cleaned.length > 0) {
+        params = params.set('dimension', cleaned.join(','));
+      }
     }
+
     if (typeof year === 'number') {
-      params['year'] = year;
+      params = params.set('year', String(year));
     }
+
     return this.http.get<KpiListResponse>(url, { params });
   }
 

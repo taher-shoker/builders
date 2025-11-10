@@ -17,6 +17,8 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class KpiListSectionComponent {
   selectedKpi = signal<KPI | null>(null);
+  // Client-side dimensions filter state
+  selectedDimensions = signal<string[]>([]);
   dialogService = inject(KpiDialogService);
   dialog = inject(MatDialog);
   kpiService = inject(KpiService);
@@ -27,6 +29,14 @@ export class KpiListSectionComponent {
   chartGrouping = signal<'monthly' | 'quarterly'>('monthly');
   chartData = signal<any[]>([]);
   chartLoading = signal<boolean>(false);
+
+  private clearSelectionState(): void {
+    this.selectedKpi.set(null);
+    this.attributes.set([]);
+    this.chartData.set([]);
+    this.attributesLoading.set(false);
+    this.chartLoading.set(false);
+  }
 
   // Inputs from parent (Dashboard)
   @Input() kpis: KPI[] = [];
@@ -197,29 +207,48 @@ export class KpiListSectionComponent {
   }
 
   onDimensionsFilterChanged(dimensions: string[]): void {
-    this.dimensionFilterChanged.emit(dimensions);
+    // Client-side filtering: keep selection locally and do not trigger server fetch
+    this.selectedDimensions.set(dimensions || []);
+    // If no dimensions are selected, clear current selection and related state
+    if (!dimensions || dimensions.length === 0) {
+      this.clearSelectionState();
+      return;
+    }
+    // If the current selection is excluded by the new dimensions filter, clear selection
+    const selected = this.selectedKpi();
+    const selectedDim = (selected?.description || '').trim();
+    const include = (dimensions || []).map((d) => String(d).trim());
+    if (selected && selectedDim && !include.includes(selectedDim)) {
+      this.clearSelectionState();
+    }
   }
 
   onSearchChange(term: string): void {
     this.searchTerm.set(term || '');
 
-    // When search results in an empty visible list, clear the right-side selection
+    // Apply combined filtering (dimensions + search) to determine visibility
     const all = this.kpis || [];
     const t = (term || '').trim().toLowerCase();
+    const dims = (this.selectedDimensions() || []).map((d) => String(d).trim());
+    const byDims = !dims || dims.length === 0
+      ? []
+      : all.filter((k) => dims.includes(String(k.description || '').trim()));
     const filtered = !t
-      ? all
-      : all.filter((k) => (
+      ? byDims
+      : byDims.filter((k) => (
           (k.name || '').toLowerCase().includes(t) ||
           (k.description || '').toLowerCase().includes(t)
         ));
 
     if (filtered.length === 0) {
-      this.selectedKpi.set(null);
-      // Optional: also clear auxiliary data tied to the selection
-      this.attributes.set([]);
-      this.chartData.set([]);
-      this.attributesLoading.set(false);
-      this.chartLoading.set(false);
+      this.clearSelectionState();
+      return;
+    }
+
+    // If selected KPI is no longer visible after search, clear selection
+    const selected = this.selectedKpi();
+    if (selected && !filtered.some((k) => String(k.id) === String(selected.id))) {
+      this.clearSelectionState();
     }
   }
 

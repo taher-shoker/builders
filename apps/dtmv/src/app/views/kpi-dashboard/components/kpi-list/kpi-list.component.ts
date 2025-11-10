@@ -22,6 +22,8 @@ export class KpiListComponent implements AfterViewInit {
   kpis = input<KPI[]>([]);
   selectedKpi = input<KPI | null>(null);
   searchTerm = input<string>('');
+  // Selected dimensions for client-side filtering
+  dimensionsFilter = input<string[]>([]);
   // Parent-driven guard: when false, suppress reachListEnd emissions
   canLoadMore = input<boolean>(true);
   hasScroll = false;
@@ -51,9 +53,20 @@ export class KpiListComponent implements AfterViewInit {
 
   filteredKpis = computed(() => {
     const term = (this.searchTerm() || '').trim().toLowerCase();
+    const dims = (this.dimensionsFilter() || []).map((d) => String(d).trim());
     const list = this.kpis() || [];
-    if (!term) return list;
-    return list.filter((k) => {
+
+    // When no dimensions are selected, clear the visible list entirely
+    if (!dims || dims.length === 0) {
+      return [] as KPI[];
+    }
+
+    // Apply dimensions filter first (if any)
+    const byDims = list.filter((k) => dims.includes(String(k.description || '').trim()));
+
+    // Apply search term filter
+    if (!term) return byDims;
+    return byDims.filter((k) => {
       const name = (k.name || '').toLowerCase();
       const desc = (k.description || '').toLowerCase();
       return name.includes(term) || desc.includes(term);
