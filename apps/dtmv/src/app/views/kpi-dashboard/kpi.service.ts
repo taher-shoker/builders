@@ -109,7 +109,6 @@ export interface CreateKpiPayload {
   formula: string;
   dimension: string;
   weight: string;
-  currentValue: string;
   baseline: string;
   target: string;
   unitId: number;
@@ -127,7 +126,6 @@ export interface UpdateKpiPayload {
   target: string;
   unitId: number;
   direction: number;
-  currentValue:string;
 }
 
 // Response model for KPI details (GET /kpi/{id})

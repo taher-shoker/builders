@@ -27,15 +27,7 @@
           formControlName="dimension"
         ></stc-apps-select-drop-down>
 
-        <stc-apps-numeric-input
-          *ngIf="!isEditMode"
-          [inputName]="'Current Value'"
-          [className]="'custom-input'"
-          [inputPlaceholder]="'Add Current Value'"
-          [allowDecimal]="true"
-          [min]="0"
-          formControlName="currentValue"
-        ></stc-apps-numeric-input>
+        <!-- Removed Current Value input from Add KPI form as requested -->
 
         <stc-apps-input
           [inputName]="'KPI formula'"

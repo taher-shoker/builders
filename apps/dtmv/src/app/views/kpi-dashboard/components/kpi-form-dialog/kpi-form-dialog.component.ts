@@ -51,12 +51,6 @@ export class KpiFormDialogComponent implements OnInit {
             this.loading = false;
           },
         });
-        // In edit mode, remove validators from currentValue (field hidden in edit)
-        const cvCtrl = this.kpiForm.get('currentValue');
-        if (cvCtrl) {
-          cvCtrl.clearValidators();
-          cvCtrl.updateValueAndValidity();
-        }
       } else {
         // Fallback to minimal populate if id is not numeric
         this.populateForm(this.data.kpi);
@@ -69,7 +63,6 @@ export class KpiFormDialogComponent implements OnInit {
       kpiName: ['', Validators.required],
       dimension: ['', Validators.required],
       direction: [null, Validators.required],
-      currentValue: ['', Validators.required],
       kpiFormula: ['', Validators.required],
       weight: ['', Validators.required],
       baseline: ['', Validators.required],
@@ -135,8 +128,7 @@ export class KpiFormDialogComponent implements OnInit {
         baseline: String(formValue.baseline ?? ''),
         target: String(formValue.target ?? ''),
         unitId: unitId,
-        direction: directionNum,
-        currentValue:'1' || String(formValue.currentValue ?? '1') // not reflecting in backend
+        direction: directionNum
       };
 
       this.loading = true;
@@ -199,7 +191,6 @@ export class KpiFormDialogComponent implements OnInit {
       formula: String(formValue.kpiFormula ?? ''),
       dimension: String(dimensionStr ?? ''),
       weight: String(formValue.weight ?? ''),
-      currentValue: String(formValue.currentValue ?? ''),
       baseline: String(formValue.baseline ?? ''),
       target: String(formValue.target ?? ''),
       unitId: unitId,
