@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { shareReplay, finalize } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface TeamSummary {
@@ -113,6 +114,7 @@ export interface CreateKpiPayload {
   target: string;
   unitId: number;
   direction: number;
+  year:number;
 }
 
 // Payload model for updating a KPI (exclude currentValue)
@@ -161,6 +163,23 @@ export interface KpiProgressAttachmentResponse {
 export class KpiService {
   private baseUrl = environment.apiUrl;
   private currentUnitId: number | null = null;
+  // De-duplicate concurrent identical GET requests by URL
+  private inflight = new Map<string, Observable<any>>();
+
+  private dedupGet<T>(finalUrl: string): Observable<T> {
+    const existing = this.inflight.get(finalUrl);
+    if (existing) {
+      return existing as Observable<T>;
+    }
+    const req$ = this.http
+      .get<T>(finalUrl)
+      .pipe(
+        shareReplay({ bufferSize: 1, refCount: false }),
+        finalize(() => this.inflight.delete(finalUrl))
+      );
+    this.inflight.set(finalUrl, req$);
+    return req$;
+  }
 
   constructor(private http: HttpClient) {}
 
@@ -235,7 +254,7 @@ export class KpiService {
     if (periodType) params.push(`periodType=${periodType}`);
     if (typeof year === 'number') params.push(`year=${year}`);
     const finalUrl = params.length ? `${url}?${params.join('&')}` : url;
-    return this.http.get<UnitSeriesItem[]>(finalUrl);
+    return this.dedupGet<UnitSeriesItem[]>(finalUrl);
   }
 
   /**
@@ -275,7 +294,7 @@ export class KpiService {
    */
   getKpiAttributes(kpiId: number): Observable<KpiAttributes> {
     const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/attributes`;
-    return this.http.get<KpiAttributes>(url);
+    return this.dedupGet<KpiAttributes>(url);
   }
 
   /**
@@ -289,7 +308,7 @@ export class KpiService {
     const base = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/values`;
     const selectedGrouping = grouping ?? 'monthly';
     const url = `${base}?grouping=${selectedGrouping}`;
-    return this.http.get<KpiValueRecord[]>(url);
+    return this.dedupGet<KpiValueRecord[]>(url);
   }
 
   /**

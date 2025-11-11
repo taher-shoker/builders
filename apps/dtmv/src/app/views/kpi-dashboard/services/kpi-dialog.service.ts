@@ -17,12 +17,12 @@ export class KpiDialogService {
   constructor(private dialog: MatDialog) {}
 
   // Open Add KPI Dialog
-  openKpiFormDialog(kpi?: KPI, unitId?: number | null): Observable<DialogResult<KPI>> {
+  openKpiFormDialog(kpi?: KPI, unitId?: number | null, year?: number | null): Observable<DialogResult<KPI>> {
     return this.dialog
       .open(KpiFormDialogComponent, {
         ...this.defaultConfig,
         width: '700px',
-        data: { kpi, mode: kpi ? 'edit' : 'add', unitId },
+        data: { kpi, mode: kpi ? 'edit' : 'add', unitId, year },
       })
       .afterClosed();
   }

@@ -195,6 +195,7 @@ export class KpiFormDialogComponent implements OnInit {
       target: String(formValue.target ?? ''),
       unitId: unitId,
       direction: directionNum,
+      year: this.data?.year ?? new Date().getFullYear(),
     };
 
     this.loading = true;

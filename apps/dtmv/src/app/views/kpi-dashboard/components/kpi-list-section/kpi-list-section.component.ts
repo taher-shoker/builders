@@ -43,6 +43,7 @@ export class KpiListSectionComponent {
   @Input() loading = false;
   @Input() permissionRole: 'viewer' | 'editor' = 'viewer';
   @Input() unitId: number | null = null;
+  @Input() year: number | null = null;
   // Parent-provided guard to prevent redundant load-more requests
   @Input() canLoadMore = true;
 
@@ -84,7 +85,7 @@ export class KpiListSectionComponent {
   }
 
   onAddNewKpi(): void {
-    this.dialogService.openKpiFormDialog(undefined, this.unitId).subscribe((result) => {
+    this.dialogService.openKpiFormDialog(undefined, this.unitId, this.year ?? null).subscribe((result) => {
       if (result && result.success) {
         // Ask parent to refresh KPI list
         this.refreshRequested.emit();
@@ -102,7 +103,7 @@ export class KpiListSectionComponent {
   }
 
   onEditKpi(kpi: KPI): void {
-    this.dialogService.openKpiFormDialog(kpi, this.unitId).subscribe((result) => {
+    this.dialogService.openKpiFormDialog(kpi, this.unitId, this.year ?? null).subscribe((result) => {
       if (result && result.success) {
         this.toastr.success('KPI updated successfully');
         const idRaw = kpi.id ?? this.selectedKpi()?.id;

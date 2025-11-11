@@ -29,4 +29,5 @@ export interface KpiFormDialogData {
   kpi?: KPI;
   mode: 'add' | 'edit';
   unitId?: number | null;
+  year?: number | null;
 }

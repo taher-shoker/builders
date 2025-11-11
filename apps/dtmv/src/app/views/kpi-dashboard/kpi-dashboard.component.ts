@@ -124,6 +124,11 @@ export class KpiDashboardComponent implements OnInit {
   }
 
   onTabChanged(tabName: string): void {
+    // Guard against duplicate calls when the initial tab selection triggers
+    // a selectedTabChange event with the same tab value.
+    if (tabName === this.currentTab()) {
+      return;
+    }
     this.currentTab.set(tabName);
 
     // Update teams for the selected category from cached data
