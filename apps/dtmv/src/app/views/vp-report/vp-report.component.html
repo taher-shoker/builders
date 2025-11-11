@@ -35,6 +35,17 @@
           </ul>
         </div>
       </div>
+      <stc-apps-vp-summary-cards
+        [teamName]="selectedTeam()"
+        [cardTitle]="'DI Progress'"
+
+      ></stc-apps-vp-summary-cards>
+      <!--
+
+        [progressData]="progressBarData()"
+      -->
+      <!-- [stcDiScore]="reportData()?.stcDiScore || 0" -->
+        <!-- [unitDiScore]="reportData()?.diScore || 0" -->
       <div class="col-md-12">
         <div class="row align-items-center">
           <div class="col-md-9">
