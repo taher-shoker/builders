@@ -35,6 +35,15 @@ export class VpReportComponent implements OnInit {
   reportData: WritableSignal<ReportData | undefined> = signal(undefined);
   digitalTransformation: WritableSignal<boolean> = signal(true);
 
+  // Summary cards: unit progress API integration
+  summaryCardsLoading: WritableSignal<boolean> = signal(false);
+  unitProgress: WritableSignal<{
+    unitBaseline: number;
+    unitTarget: number;
+    diActualProgress: number;
+    averageUnitsProgress: number;
+  } | null> = signal(null);
+
   progressBarData = computed(() => {
     const reportData = this.reportData();
 
@@ -124,6 +133,7 @@ export class VpReportComponent implements OnInit {
       }
 
       this.getDTStreams();
+      this.fetchUnitProgress();
     });
   }
 
@@ -147,6 +157,28 @@ export class VpReportComponent implements OnInit {
         this.streamsYear.set(res.year);
         this.milestoneProgress.set(res.workStreamScore);
         this.reportData.set(res.reportData);
+      });
+  }
+
+  private fetchUnitProgress() {
+    // Guard against unset team/year
+    if (!this.selectedTeam() || !this.selectedYear()) {
+      return;
+    }
+
+    this.summaryCardsLoading.set(true);
+
+    this.milestonesService
+      .getUnitProgress(this.selectedTeam(), this.selectedYear())
+      .subscribe({
+        next: (res) => {
+          this.unitProgress.set(res);
+          this.summaryCardsLoading.set(false);
+        },
+        error: () => {
+          // Keep UI stable on error; clear loading and retain last known values
+          this.summaryCardsLoading.set(false);
+        },
       });
   }
 
@@ -194,4 +226,67 @@ export class VpReportComponent implements OnInit {
     const quarter = Math.floor(month / 3) + 1;
     return `Q${quarter}`;
   }
+
+  // Computed progress info for summary cards based on unitProgress API
+  summaryCardsProgressData = computed(() => {
+    const up = this.unitProgress();
+    const toPercent = (n: number) => Math.round(n * 10000) / 100; // two decimals
+
+    if (up) {
+      const actualPct = toPercent(up.diActualProgress);
+      const targetPct = toPercent(up.unitTarget);
+      const baselinePct = toPercent(up.unitBaseline);
+
+      return {
+        prefixText: 'Baseline',
+        prefixValue: baselinePct,
+        suffixText: '', //'EOY Target',
+        suffixValue: '', //targetPct,
+        progressValue: actualPct,
+        indexes: [
+          { caption: 'Actual', value: actualPct, position: 'up' },
+          {
+            caption: `${this.getCurrentQuarter()} Target`,
+            value: targetPct,
+            position: 'down',
+          },
+        ],
+        barColor: actualPct < targetPct ? '#c82a27' : '#00c48c',
+        bgBarColor: actualPct < targetPct ? '#c82a271a' : '#00c48c1a',
+      } as ProgressInfo;
+    }
+
+    return {
+      prefixText: 'Baseline',
+      prefixValue: 0,
+      suffixText: 'EOY Target',
+      suffixValue: 0,
+      progressValue: 0,
+      indexes: [
+        { caption: 'Actual', value: 0, position: 'up' },
+        {
+          caption: `${this.getCurrentQuarter()} Target`,
+          value: 0,
+          position: 'down',
+        },
+      ],
+      barColor: '#00c48c',
+      bgBarColor: '#00c48c1a',
+    } as ProgressInfo;
+  });
+
+  baselinePercent = computed(() => {
+    const up = this.unitProgress();
+    return up ? Math.round(up.unitBaseline * 10000) / 100 : 0;
+  });
+
+  stcDiScoreValue = computed(() => {
+    const up = this.unitProgress();
+    return up ? Math.round(up.averageUnitsProgress * 10000) / 100 : 0;
+  });
+
+  unitDiScoreValue = computed(() => {
+    const up = this.unitProgress();
+    return up ? Math.round(up.diActualProgress * 10000) / 100 : 0;
+  });
 }

@@ -11,6 +11,7 @@ export class VpSummaryCardsComponent {
   @Input() teamName = '';
   @Input() baselineTitle = 'Baseline';
   @Input() baselineValue?: number = 10;
+  @Input() loading = false;
   @Input() progressData: ProgressInfo = {
         prefixText: '',
         prefixValue: 0,

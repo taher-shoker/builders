@@ -5,27 +5,45 @@
         <h3>{{ teamName ? teamName + ' ' : '' }}{{ cardTitle }}</h3>
       </div>
       <div class="card-body">
-        <div class="baseline-row">
-          <div class="baseline" *ngIf="baselineValue !== undefined && baselineValue !== null">
-            <p class="title">{{ baselineTitle }}</p>
-            <p class="value">{{ baselineValue }}%</p>
+        <!-- Skeleton for progress bar card -->
+        <ng-container *ngIf="loading; else progressContent">
+          <div class="baseline-row">
+            <div class="baseline">
+              <!-- <p class="title skeleton-line"></p> -->
+              <p class="value skeleton-line skeleton-value"></p>
+            </div>
+            <div class="bar-holder">
+              <div class="skeleton skeleton-bar"></div>
+            </div>
           </div>
+        </ng-container>
+        <!-- Actual progress bar content -->
+        <ng-template #progressContent>
+          <!-- <div class="baseline-row"> -->
+          <!-- <div class="baseline" *ngIf="baselineValue !== undefined && baselineValue !== null">
+              <p class="title">{{ baselineTitle }}</p>
+              <p class="value">{{ baselineValue }}%</p>
+            </div> -->
           <div class="bar-holder">
             <stc-apps-progress-bar
-              [attr.class]="progressData.progressValue > 0 ? 'green-index' : ''"
+              [ngClass]="{
+                'red-index': (progressData.progressValue || 0) < ((progressData.indexes && progressData.indexes[1]?.value) || 0),
+                'green-index': (progressData.progressValue || 0) >= ((progressData.indexes && progressData.indexes[1]?.value) || 0)
+              }"
               [data]="progressData"
             ></stc-apps-progress-bar>
+            <!-- </div> -->
           </div>
-        </div>
+        </ng-template>
       </div>
     </div>
   </div>
   <div class="col-md-3">
     <div class="card summary-card score-card">
       <div class="card-body">
-        <div class="score-content">
+        <div class="score-content" *ngIf="!loading; else scoreSkeleton1">
           <div class="title-row">
-            <h3>KPI STC DT Score</h3>
+            <h3>STC KPIs DT Score</h3>
             <mat-icon class="trend-icon" aria-hidden="true"
               >trending_up</mat-icon
             >
@@ -34,15 +52,23 @@
             <span class="di-number">{{ stcDiScore || 0 }}%</span>
           </div>
         </div>
+        <ng-template #scoreSkeleton1>
+          <div class="title-row">
+            <div class="skeleton-line skeleton-title"></div>
+          </div>
+          <div class="number-holder">
+            <div class="skeleton-line skeleton-number"></div>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
   <div class="col-md-3">
     <div class="card summary-card score-card">
       <div class="card-body">
-        <div class="score-content">
+        <div class="score-content" *ngIf="!loading; else scoreSkeleton2">
           <div class="title-row">
-            <h3>KPI ( Unit ) DI Score</h3>
+            <h3>{{ teamName }}'s KPIs DI Score</h3>
             <mat-icon class="trend-icon" aria-hidden="true"
               >trending_up</mat-icon
             >
@@ -51,6 +77,14 @@
             <span class="di-number">{{ unitDiScore || 0 }}%</span>
           </div>
         </div>
+        <ng-template #scoreSkeleton2>
+          <div class="title-row">
+            <div class="skeleton-line skeleton-title"></div>
+          </div>
+          <div class="number-holder">
+            <div class="skeleton-line skeleton-number"></div>
+          </div>
+        </ng-template>
       </div>
     </div>
   </div>
