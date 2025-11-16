@@ -28,13 +28,14 @@ export class KpiDialogService {
   }
 
   openUpdateValueDialog(
-    kpi: KPI
+    kpi: KPI,
+    year?: number | null
   ): Observable<DialogResult<{ newValue: number; notes: string }>> {
     return this.dialog
       .open(UpdateValueDialogComponent, {
         ...this.defaultConfig,
         width: '900px',
-        data: { kpi },
+        data: { kpi, year },
       })
       .afterClosed();
   }

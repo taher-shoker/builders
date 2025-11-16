@@ -191,7 +191,7 @@ export class KpiListSectionComponent {
   }
 
   onUpdateKpiValue(kpi: KPI): void {
-    this.dialogService.openUpdateValueDialog(kpi).subscribe((result) => {
+    this.dialogService.openUpdateValueDialog(kpi, this.year ?? null).subscribe((result) => {
       // After successful update, simulate re-selecting the KPI to refresh
       if (result && result.success) {
         this.onKpiSelected(kpi);

@@ -28,18 +28,26 @@ export class UpdateValueDialogComponent implements OnDestroy {
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<UpdateValueDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { kpi: KPI },
+    @Inject(MAT_DIALOG_DATA) public data: { kpi: KPI, year?: number | null },
     private sanitizer: DomSanitizer,
     private kpiService: KpiService
   ) {
     this.form = this.createForm();
   }
 
+  yearMinDate: Date = new Date(new Date().getFullYear(), 0, 1);
+  yearMaxDate: Date = new Date(new Date().getFullYear(), 11, 31);
+
   private createForm(): FormGroup {
+    const selectedYear = typeof this.data?.year === 'number' && Number.isFinite(this.data.year)
+      ? this.data.year as number
+      : new Date().getFullYear();
+    this.yearMinDate = new Date(selectedYear, 0, 1);
+    this.yearMaxDate = new Date(selectedYear, 11, 31);
+    const defaultMonth = new Date().getMonth();
+    const defaultDate = new Date(selectedYear, defaultMonth, 1);
     return this.fb.group({
-      // Default to current month; still marked required, but has initial value
-      date: [new Date(new Date().getFullYear(), new Date().getMonth(), 1), [Validators.required]],
-      // Require actual value entry; numeric validation handled by the numeric input component
+      date: [defaultDate, [Validators.required]],
       actualValue: ['', [Validators.required]],
       evidence: [[], [this.maxFileSizeArrayValidator(30 * 1024 * 1024)]]
     });
