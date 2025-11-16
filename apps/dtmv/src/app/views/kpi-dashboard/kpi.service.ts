@@ -216,13 +216,10 @@ export class KpiService {
   /**
    * Export KPI as Blob using HttpClient.
    */
-  exportKPIs(unitId: number) {
-    return this.http.get(
-      `${this.baseUrl}v2/dt-milestone-service/kpi/${unitId}/export`,
-      {
-        responseType: 'blob',
-      }
-    );
+  exportKPIs(unitId: number, year?: number) {
+    const base = `${this.baseUrl}v2/dt-milestone-service/kpi/${unitId}/export`;
+    const url = typeof year === 'number' ? `${base}?year=${year}` : base;
+    return this.http.get(url, { responseType: 'blob' });
   }
 
   /**

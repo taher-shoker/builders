@@ -278,7 +278,8 @@ export class KpiDashboardComponent implements OnInit {
       console.warn('[KPI] exportKPIS: no unitId, skipping');
       return;
     }
-    this.kpiService.exportKPIs(unitId).subscribe({
+    const yearNum = Number(this.selectedYear());
+    this.kpiService.exportKPIs(unitId, Number.isFinite(yearNum) ? yearNum : undefined).subscribe({
       next: (res) => {
         const unitName = this.currentTeam() || String(unitId);
         const safeUnitName = unitName.replace(/[^a-zA-Z0-9_-]+/g, '_');
