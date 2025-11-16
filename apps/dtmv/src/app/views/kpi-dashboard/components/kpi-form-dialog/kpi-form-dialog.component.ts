@@ -64,11 +64,21 @@ export class KpiFormDialogComponent implements OnInit {
       dimension: ['', Validators.required],
       direction: [null, Validators.required],
       kpiFormula: ['', [Validators.required, Validators.maxLength(255)]],
-      weight: ['', Validators.required],
-      baseline: ['', Validators.required],
-      target: ['', Validators.required],
-      ambition: ['', Validators.required],
+      weight: ['', [Validators.required, this.notZeroValidator()]],
+      baseline: ['', [Validators.required, this.notZeroValidator()]],
+      target: ['', [Validators.required, this.notZeroValidator()]],
+      ambition: ['', [Validators.required, this.notZeroValidator()]],
     });
+  }
+
+  private notZeroValidator() {
+    return (control: import('@angular/forms').AbstractControl) => {
+      const raw = control.value;
+      if (raw == null || raw === '') return null;
+      const num = Number(String(raw));
+      if (!Number.isFinite(num)) return { pattern: true };
+      return num === 0 ? { notZero: true } : null;
+    };
   }
 
   private populateForm(kpi: KPI): void {

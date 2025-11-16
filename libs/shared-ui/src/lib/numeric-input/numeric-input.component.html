@@ -31,5 +31,8 @@
     <mat-error *ngIf="control.hasError('pattern')">
       {{ 'Please enter a valid number' | translate }}
     </mat-error>
+    <mat-error *ngIf="control.hasError('notZero')">
+      {{ 'Please enter a non-zero number' | translate }}
+    </mat-error>
   </mat-form-field>
 </div>

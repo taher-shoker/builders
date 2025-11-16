@@ -57,7 +57,8 @@
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Weight'"
           [allowDecimal]="true"
-          [min]="0"
+          [allowNegative]="true"
+          [disallowZero]="true"
           formControlName="weight"
         ></stc-apps-numeric-input>
       </div>
@@ -67,7 +68,8 @@
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Baseline'"
           [allowDecimal]="true"
-          [min]="0"
+          [allowNegative]="true"
+          [disallowZero]="true"
           formControlName="baseline"
         ></stc-apps-numeric-input>
       </div>
@@ -80,7 +82,8 @@
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Target'"
           [allowDecimal]="true"
-          [min]="0"
+          [allowNegative]="true"
+          [disallowZero]="true"
           formControlName="target"
         ></stc-apps-numeric-input>
       </div>
@@ -90,7 +93,8 @@
           [className]="'custom-input'"
           [inputPlaceholder]="'Add Ambition'"
           [allowDecimal]="true"
-          [min]="0"
+          [allowNegative]="true"
+          [disallowZero]="true"
           formControlName="ambition"
         ></stc-apps-numeric-input>
       </div>

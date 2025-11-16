@@ -33,6 +33,8 @@ export class NumericInputComponent
   @Input() disabled = false;
   @Input() className = '';
   @Input() allowDecimal = true;
+  @Input() allowNegative = false;
+  @Input() disallowZero = false;
   @Input() min?: number;
   @Input() max?: number;
   @Output() valueKeyDown: EventEmitter<KeyboardEvent> =
@@ -44,7 +46,7 @@ export class NumericInputComponent
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['allowDecimal'] || changes['min'] || changes['max']) {
+    if (changes['allowDecimal'] || changes['allowNegative'] || changes['disallowZero'] || changes['min'] || changes['max']) {
       this.applyValidators();
     }
   }
@@ -77,9 +79,26 @@ export class NumericInputComponent
       return;
     }
 
-    // Block signs and scientific notation
-    if (event.key === '+' || event.key === '-' || event.key === 'e' || event.key === 'E') {
+    // Block '+' and scientific notation; allow '-' only when allowNegative
+    if (event.key === '+' || event.key === 'e' || event.key === 'E') {
       event.preventDefault();
+      return;
+    }
+
+    if (event.key === '-') {
+      if (!this.allowNegative) {
+        event.preventDefault();
+        return;
+      }
+      const input = event.target as HTMLInputElement;
+      const hasSign = input.value.startsWith('-');
+      const caret = input.selectionStart ?? 0;
+      if (hasSign || caret !== 0) {
+        event.preventDefault();
+        return;
+      }
+      // allow single leading '-'
+      this.valueKeyDown.emit(event);
       return;
     }
 
@@ -119,25 +138,36 @@ export class NumericInputComponent
   }
 
   private sanitizeInput(text: string, current: string): string {
-    // Remove everything except digits and dots; allow at most one dot overall
-    const only = text.replace(/[^\d.]/g, '');
-    if (!this.allowDecimal) return only.replace(/\./g, '');
-    // Retain only the first dot
-    const firstDotIndex = only.indexOf('.');
-    if (firstDotIndex === -1) return only;
-    const digitsOnly = only.replace(/\./g, '');
-    return (
-      digitsOnly.substring(0, firstDotIndex) +
-      '.' +
-      digitsOnly.substring(firstDotIndex)
-    );
+    // Allow optional leading '-' when allowNegative
+    let cleaned = text.replace(/[^\d.\-]/g, '');
+    let sign = '';
+    if (this.allowNegative && cleaned.startsWith('-')) {
+      sign = '-';
+    }
+    // remove all other '-' occurrences
+    cleaned = cleaned.replace(/\-/g, '');
+    if (!this.allowDecimal) cleaned = cleaned.replace(/\./g, '');
+    const firstDotIndex = cleaned.indexOf('.');
+    if (firstDotIndex === -1) return sign + cleaned;
+    const digitsOnly = cleaned.replace(/\./g, '');
+    return sign + digitsOnly.substring(0, firstDotIndex) + '.' + digitsOnly.substring(firstDotIndex);
   }
 
   private applyValidators(): void {
     if (!this.control) return;
     const newValidators = [] as any[];
-    const pattern = this.allowDecimal ? /^\d+(?:\.\d+)?$/ : /^\d+$/;
-    newValidators.push(Validators.pattern(pattern));
+    const numberBody = this.allowDecimal ? '\\d+(?:\\.\\d+)?' : '\\d+';
+    const regex = this.allowNegative ? new RegExp('^-?' + numberBody + '$') : new RegExp('^' + numberBody + '$');
+    newValidators.push(Validators.pattern(regex));
+    if (this.disallowZero) {
+      newValidators.push((control: any) => {
+        const raw = control?.value;
+        if (raw == null || raw === '') return null;
+        const num = Number(String(raw));
+        if (!Number.isFinite(num)) return null;
+        return num === 0 ? { notZero: true } : null;
+      });
+    }
     if (typeof this.min === 'number') newValidators.push(Validators.min(this.min));
     if (typeof this.max === 'number') newValidators.push(Validators.max(this.max));
 
