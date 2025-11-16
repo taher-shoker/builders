@@ -60,10 +60,10 @@ export class KpiFormDialogComponent implements OnInit {
 
   private createForm(): FormGroup {
     return this.fb.group({
-      kpiName: ['', Validators.required],
+      kpiName: ['', [Validators.required, Validators.maxLength(255)]],
       dimension: ['', Validators.required],
       direction: [null, Validators.required],
-      kpiFormula: ['', Validators.required],
+      kpiFormula: ['', [Validators.required, Validators.maxLength(255)]],
       weight: ['', Validators.required],
       baseline: ['', Validators.required],
       target: ['', Validators.required],
