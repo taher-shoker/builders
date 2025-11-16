@@ -35,6 +35,10 @@
 
         .evidence {
             margin-top: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
 
 
             &_upload_label {
@@ -48,6 +52,12 @@
                 &:hover {
                     opacity: 0.8;
                 }
+            }
+
+            .evidence_error {
+                color: #d32f2f;
+                margin-left: auto;
+                text-align: right;
             }
 
             &_title {

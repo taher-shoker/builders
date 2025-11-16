@@ -64,6 +64,9 @@
             (change)="onFileChange($event)"
             class="d-none"
           />
+          <small class="helper-text evidence_error" *ngIf="oversizedFilesCount > 0 || form.get('evidence')?.hasError('maxFileSize')">
+            Attachments more than 30 MB are not allowed.
+          </small>
         </div>
       </div>
 

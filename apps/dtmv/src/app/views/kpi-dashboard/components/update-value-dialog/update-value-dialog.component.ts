@@ -1,5 +1,5 @@
 import { Component, Inject, OnDestroy } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidatorFn } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { KPI } from '../../models/kpi.model';
@@ -22,7 +22,9 @@ export class UpdateValueDialogComponent implements OnDestroy {
    evidenceFiles: EvidenceFile[] = [];
    loading = false;
    errorMessage: string | null = null;
-   
+   oversizedFilesCount = 0;
+   private hideErrorTimer: any = null;
+
   constructor(
     private fb: FormBuilder,
     public dialogRef: MatDialogRef<UpdateValueDialogComponent>,
@@ -33,20 +35,38 @@ export class UpdateValueDialogComponent implements OnDestroy {
     this.form = this.createForm();
   }
 
-    private createForm(): FormGroup {
+  private createForm(): FormGroup {
     return this.fb.group({
       // Default to current month; still marked required, but has initial value
       date: [new Date(new Date().getFullYear(), new Date().getMonth(), 1), [Validators.required]],
       // Require actual value entry; numeric validation handled by the numeric input component
       actualValue: ['', [Validators.required]],
-      evidence: [[]]
+      evidence: [[], [this.maxFileSizeArrayValidator(30 * 1024 * 1024)]]
     });
+  }
+
+  private maxFileSizeArrayValidator(maxBytes: number): ValidatorFn {
+    return (control: AbstractControl) => {
+      const value = control.value as any[];
+      if (!Array.isArray(value) || value.length === 0) return null;
+      const oversized = value.filter((item) => {
+        const f = (item && item.file instanceof File) ? item.file : item as any;
+        return f && typeof f.size === 'number' && f.size > maxBytes;
+      });
+      return oversized.length ? { maxFileSize: { maxBytes, count: oversized.length } } : null;
+    };
   }
 
   onFileChange(event: any): void {
     const files = event.target.files;
     if (files) {
+      const maxBytes = 30 * 1024 * 1024;
+      let oversizedCount = 0;
       for (const file of files) {
+        if (file.size > maxBytes) {
+          oversizedCount++;
+          continue;
+        }
         const isImage = file.type.startsWith('image');
         const previewUrl = isImage
           ? this.sanitizer.bypassSecurityTrustUrl(URL.createObjectURL(file))
@@ -56,19 +76,58 @@ export class UpdateValueDialogComponent implements OnDestroy {
       this.form.patchValue({
         evidence: this.evidenceFiles
       });
+      const evCtrl = this.form.get('evidence');
+      this.oversizedFilesCount = oversizedCount;
+      if (oversizedCount > 0) {
+        this.errorMessage = null;
+        const existing = evCtrl?.errors || {};
+        evCtrl?.setErrors({ ...existing, maxFileSize: { maxBytes: maxBytes, count: oversizedCount } });
+        if (this.hideErrorTimer) {
+          clearTimeout(this.hideErrorTimer);
+        }
+        this.hideErrorTimer = setTimeout(() => {
+          this.oversizedFilesCount = 0;
+          if (evCtrl?.hasError('maxFileSize')) {
+            const { maxFileSize, ...rest } = evCtrl.errors || {};
+            evCtrl.setErrors(Object.keys(rest).length ? rest : null);
+            evCtrl.updateValueAndValidity();
+          }
+          this.hideErrorTimer = null;
+        }, 5000);
+      } else {
+        this.errorMessage = null;
+        if (evCtrl?.hasError('maxFileSize')) {
+          const { maxFileSize, ...rest } = evCtrl.errors || {};
+          evCtrl.setErrors(Object.keys(rest).length ? rest : null);
+        }
+        this.oversizedFilesCount = 0;
+      }
+      evCtrl?.updateValueAndValidity();
     }
   }
 
-    removeFile(fileToRemove: EvidenceFile): void {
+  removeFile(fileToRemove: EvidenceFile): void {
     this.evidenceFiles = this.evidenceFiles.filter(item => item !== fileToRemove);
     this.form.patchValue({
       evidence: this.evidenceFiles
     });
     // To allow re-uploading the same file after removing it
     (document.getElementById('evidence_upload') as HTMLInputElement).value = '';
+    const evCtrl = this.form.get('evidence');
+    this.errorMessage = null;
+    evCtrl?.setErrors(null);
+    evCtrl?.updateValueAndValidity();
+    if (this.hideErrorTimer) {
+      clearTimeout(this.hideErrorTimer);
+      this.hideErrorTimer = null;
+    }
   }
 
   ngOnDestroy(): void {
+    if (this.hideErrorTimer) {
+      clearTimeout(this.hideErrorTimer);
+      this.hideErrorTimer = null;
+    }
     // Revoke the object URLs to avoid memory leaks
     this.evidenceFiles.forEach(item => {
       if (item.isImage && item.previewUrl) {
