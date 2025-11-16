@@ -60,6 +60,8 @@
           [chartData]="chartDataInput()"
           [showLegend]="false"
         ></stc-apps-line-chat-chart>
+      } @else {
+        <div class="no-chart-data">No progress data to view chart</div>
       }
     }
   </div>

@@ -46,6 +46,16 @@
     margin-bottom: 8px;
   }
 
+  .no-chart-data {
+    border-radius: 8px;
+    padding: 16px;
+    color: #757575;
+    text-align: center;
+    display: grid;
+    place-items: center;
+    min-height: 350px;
+  }
+
   .chart-controls {
     display: flex;
     align-items: center;
