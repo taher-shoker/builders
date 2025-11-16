@@ -230,7 +230,7 @@ export class VpReportComponent implements OnInit {
   // Computed progress info for summary cards based on unitProgress API
   summaryCardsProgressData = computed(() => {
     const up = this.unitProgress();
-    const toPercent = (n: number) => Math.round(n * 10000) / 100; // two decimals
+    const toPercent = (n: number | null | undefined) => Math.round((n ?? 0) * 100);
 
     if (up) {
       const actualPct = toPercent(up.diActualProgress);
@@ -277,16 +277,16 @@ export class VpReportComponent implements OnInit {
 
   baselinePercent = computed(() => {
     const up = this.unitProgress();
-    return up ? Math.round(up.unitBaseline * 10000) / 100 : 0;
+    return up ? Math.round((up.unitBaseline || 0) * 100) : 0; // Math.round(up.unitBaseline * 10000) / 100 : 0;
   });
 
   stcDiScoreValue = computed(() => {
     const up = this.unitProgress();
-    return up ? Math.round(up.averageUnitsProgress * 10000) / 100 : 0;
+    return up ? Math.round((up.averageUnitsProgress || 0) * 100) : 0; //Math.round(up.averageUnitsProgress * 10000) / 100 : 0;
   });
 
   unitDiScoreValue = computed(() => {
     const up = this.unitProgress();
-    return up ? Math.round(up.diActualProgress * 10000) / 100 : 0;
+    return up ? Math.round((up.diActualProgress || 0) * 100) : 0;//Math.round(up.diActualProgress * 10000) / 100 : 0;
   });
 }
