@@ -32,10 +32,10 @@ export class DiProgressComponent implements AfterViewInit {
   ];
   periodOptions = [
     { id: 'monthly', name: 'Monthly' },
-    { id: 'weekly', name: 'Weekly' },
+    { id: 'quarterly', name: 'Quarterly' },
   ];
   selectedDimension = 'All';
-  selectedPeriod: 'monthly' | 'weekly' = 'monthly';
+  selectedPeriod: 'monthly' | 'quarterly' = 'monthly';
   legendSettings: LegendSettings = {
     layout: 'horizontal',
     itemSpacing: 10,
@@ -69,7 +69,7 @@ export class DiProgressComponent implements AfterViewInit {
 
   onPeriodChange(value: string): void {
     this.selectedPeriod =
-      value === 'Weekly' || value === 'weekly' ? 'weekly' : 'monthly';
+      value === 'Monthly' || value === 'monthly' ? 'monthly' : 'quarterly';
     const id = this.unitId();
     if (id != null) this.fetchSeries(id);
   }
@@ -134,7 +134,7 @@ export class DiProgressComponent implements AfterViewInit {
               const xLabel =
                 this.selectedPeriod === 'monthly'
                   ? monthNames[(period - 1) % 12] || String(period)
-                  : `Wk ${period}`;
+                  : `Q${period}`;
 
               const row: any = { x: xLabel };
               dimsToRender.forEach((dim, idx) => {

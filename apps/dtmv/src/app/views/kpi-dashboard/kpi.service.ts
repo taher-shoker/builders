@@ -248,10 +248,10 @@ export class KpiService {
    * Fetches unit series by unit ID.
    * Optionally supports period type filtering (monthly | weekly) via query param if backend supports it.
    */
-  getUnitSeries(unitId: number, periodType?: 'monthly' | 'weekly', year?: number): Observable<UnitSeriesItem[]> {
+  getUnitSeries(unitId: number, periodType?: 'monthly' | 'quarterly', year?: number): Observable<UnitSeriesItem[]> {
     const url = `${this.baseUrl}v2/dt-milestone-service/units/${unitId}/series`;
     const params: string[] = [];
-    if (periodType) params.push(`periodType=${periodType}`);
+    if (periodType) params.push(`groupedBy=${periodType}`);
     if (typeof year === 'number') params.push(`year=${year}`);
     const finalUrl = params.length ? `${url}?${params.join('&')}` : url;
     return this.dedupGet<UnitSeriesItem[]>(finalUrl);
