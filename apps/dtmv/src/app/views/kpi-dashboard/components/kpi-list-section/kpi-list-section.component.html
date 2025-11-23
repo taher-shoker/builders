@@ -9,7 +9,7 @@
     <div class="mt-4 row">
       <div class="col-md-3">
         <div class="kpi-list-section_filters">
-          <stc-apps-kpi-search *ngIf="loading || hasKpis()" (dimensionsChange)="onDimensionsFilterChanged($event)" (searchChange)="onSearchChange($event)"></stc-apps-kpi-search>
+          <stc-apps-kpi-search *ngIf="loading || hasKpis()" [kpis]="kpis" (dimensionsChange)="onDimensionsFilterChanged($event)" (searchChange)="onSearchChange($event)"></stc-apps-kpi-search>
           <stc-apps-kpi-list
             [kpis]="kpis"
             [selectedKpi]="selectedKpi()"

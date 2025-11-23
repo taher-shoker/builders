@@ -1,13 +1,13 @@
 /* eslint-disable @nx/enforce-module-boundaries */
+import * as am5 from '@amcharts/amcharts5';
 import {
   AfterViewInit,
   Component,
+  effect,
   input,
   InputSignal,
-  effect,
 } from '@angular/core';
 import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
-import * as am5 from '@amcharts/amcharts5';
 import { KpiService, UnitSeriesItem } from '../../kpi.service';
 
 @Component({
@@ -90,19 +90,35 @@ export class DiProgressComponent implements AfterViewInit {
       )
       .subscribe({
         next: (items: UnitSeriesItem[]) => {
-          // Available dimensions (fixed order)
-          const allDimensions = [
+          // Build dimensions options dynamically from data (preserve known order)
+          const baseOrder = [
             'Capability Building',
             'Capability Utilization',
             'Digital Experience & Impact',
             'Overall',
           ];
+          const presentSet = new Set<string>();
+          (items || []).forEach((i) => {
+            const dim = (i.dimension || '').trim();
+            if (dim) presentSet.add(dim);
+          });
+          const availableDimensions = baseOrder.filter((d) => presentSet.has(d));
+          this.dimensionsOptions = [
+            { id: 'All', name: 'All' },
+            ...availableDimensions.map((d) => ({ id: d, name: d })),
+          ];
+          if (
+            this.selectedDimension !== 'All' &&
+            !availableDimensions.includes(this.selectedDimension)
+          ) {
+            this.selectedDimension = 'All';
+          }
 
           // Determine which dimensions to render based on selection
           const dimsToRender =
             this.selectedDimension === 'All' ||
-            !allDimensions.includes(this.selectedDimension)
-              ? allDimensions
+            !availableDimensions.includes(this.selectedDimension)
+              ? availableDimensions
               : [this.selectedDimension];
 
           // Group by period

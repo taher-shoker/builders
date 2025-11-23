@@ -2,22 +2,27 @@ import {
   Component,
   EventEmitter,
   input,
+  Input,
+  OnChanges,
   OnDestroy,
-  Output,
   OnInit,
+  Output,
+  SimpleChanges,
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { debounceTime, Subject, takeUntil } from 'rxjs';
+import { KPI } from '../../models/kpi.model';
 
 @Component({
   selector: 'stc-apps-kpi-search',
   templateUrl: './kpi-search.component.html',
   styleUrls: ['./kpi-search.component.scss'],
 })
-export class KpiSearchComponent implements OnInit, OnDestroy {
+export class KpiSearchComponent implements OnInit, OnDestroy, OnChanges {
   @Output() searchChange = new EventEmitter<string>();
   @Output() dimensionsChange = new EventEmitter<string[]>();
   placeholder = input('KPI name..');
+  @Input() kpis: KPI[] = [];
 
   searchForm = new FormGroup({
     searchControl: new FormControl(''),
@@ -25,25 +30,37 @@ export class KpiSearchComponent implements OnInit, OnDestroy {
   });
   private destroy$ = new Subject<void>();
 
-  // Dimensions options for multi-select
-  dimensionsOptions = [
-    { id: 'Capability Building', name: 'Capability Building' },
-    { id: 'Capability Utilization', name: 'Capability Utilization' },
-    { id: 'Digital Experience & Impact', name: 'Digital Experience & Impact' },
-  ];
+  // Dimensions options for multi-select (dynamic)
+  dimensionsOptions: { id: string; name: string }[] = [];
 
   constructor() {
     this.setupSearchDebounce();
   }
 
-  ngOnInit(): void {
-    // Preselect all dimensions except the 'All' placeholder
-    const allIdsExceptAll = this.dimensionsOptions
-      .map((o) => o.id);
-    this.searchForm.get('dimensions')?.setValue(allIdsExceptAll, {
-      emitEvent: false,
-    });
-    this.dimensionsChange.emit(allIdsExceptAll);
+  ngOnInit(): void {}
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if ('kpis' in changes) {
+      const list = this.kpis || [];
+      const baseOrder = [
+        'Capability Building',
+        'Capability Utilization',
+        'Digital Experience & Impact',
+      ];
+      const present = Array.from(
+        new Set(
+          list
+            .map((k) => (k.description || '').trim())
+            .filter((d) => !!d)
+        )
+      );
+      const ordered = baseOrder.filter((d) => present.includes(d));
+      this.dimensionsOptions = ordered.map((d) => ({ id: d, name: d }));
+
+      const allIds = this.dimensionsOptions.map((o) => o.id);
+      this.searchForm.get('dimensions')?.setValue(allIds, { emitEvent: false });
+      this.dimensionsChange.emit(allIds);
+    }
   }
 
  private setupSearchDebounce(): void {

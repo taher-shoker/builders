@@ -1,10 +1,9 @@
-import { Component, inject, signal, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Component, EventEmitter, inject, Input, Output, signal, SimpleChanges } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { filter } from 'rxjs';
+import { KpiAttributes, KpiService, KpiValueRecord } from '../../kpi.service';
 import { KPI } from '../../models/kpi.model';
 import { KpiDialogService } from '../../services/kpi-dialog.service';
-import { KpiService, KpiAttributes, KpiValueRecord } from '../../kpi.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ConfirmationModalComponent } from 'libs/shared-ui/src/lib/confirmation-modal/confirmation-modal.component';
 import { ToastrService } from 'ngx-toastr';
@@ -276,6 +275,17 @@ export class KpiListSectionComponent {
         this.chartData.set([]);
         this.attributesLoading.set(false);
         this.chartLoading.set(false);
+      }
+
+      // Preselect all available dimensions when none selected yet
+      const currentDims = this.selectedDimensions();
+      if (!currentDims || currentDims.length === 0) {
+        const uniqueDims = Array.from(
+          new Set((currentList || []).map((k) => String(k.description || '').trim()).filter((d) => !!d))
+        );
+        if (uniqueDims.length > 0) {
+          this.selectedDimensions.set(uniqueDims);
+        }
       }
     }
   }

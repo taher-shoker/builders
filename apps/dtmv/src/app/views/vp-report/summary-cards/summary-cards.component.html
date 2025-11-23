@@ -27,8 +27,8 @@
           <div class="bar-holder">
             <stc-apps-progress-bar
               [ngClass]="{
-                'red-index': (progressData.progressValue || 0) < ((progressData.indexes && progressData.indexes[1]?.value) || 0),
-                'green-index': (progressData.progressValue || 0) >= ((progressData.indexes && progressData.indexes[1]?.value) || 0)
+                'red-index': (progressData.progressValue || 0) < ((progressData.indexes && progressData.indexes.length > 1 && progressData.indexes[1].value) || 0),
+                'green-index': (progressData.progressValue || 0) >= ((progressData.indexes && progressData.indexes.length > 1 && progressData.indexes[1].value) || 0)
               }"
               [data]="progressData"
             ></stc-apps-progress-bar>
