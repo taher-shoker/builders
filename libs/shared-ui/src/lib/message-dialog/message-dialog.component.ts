@@ -12,12 +12,22 @@ import { SharedUiModule } from '../shared-ui.module';
 })
 export class MessageDialogComponent {
   message: string = '';
+  title?: string;
+  icon?: string;
   isLoading!: boolean;
   constructor(
     public dialogRef: MatDialogRef<MessageDialogComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { msg: string; isLoading: boolean }
+    @Inject(MAT_DIALOG_DATA)
+    public data: {
+      msg: string;
+      isLoading: boolean;
+      title?: string;
+      icon?: string;
+    }
   ) {
     this.message = data.msg;
+    this.title = data.title;
+    this.icon = data.icon;
     this.isLoading = data.isLoading;
   }
 

@@ -1,0 +1,49 @@
+<div class="kpi-list-section card">
+  <stc-apps-kpi-list-header
+    (addKpi)="onAddNewKpi()"
+    [permissionRole]="permissionRole"
+    (exportKPIs)="onExportKPIs()"
+    [showExportButton]="hasKpis()"
+  ></stc-apps-kpi-list-header>
+
+    <div class="mt-4 row">
+      <div class="col-md-3">
+        <div class="kpi-list-section_filters">
+          <stc-apps-kpi-search *ngIf="loading || hasKpis()" [kpis]="kpis" (dimensionsChange)="onDimensionsFilterChanged($event)" (searchChange)="onSearchChange($event)"></stc-apps-kpi-search>
+          <stc-apps-kpi-list
+            [kpis]="kpis"
+            [selectedKpi]="selectedKpi()"
+            [searchTerm]="searchTerm()"
+            [dimensionsFilter]="selectedDimensions()"
+            [canLoadMore]="canLoadMore"
+            (kpiSelected)="onKpiSelected($event)"
+            (reachListEnd)="onReachEnd()"
+          ></stc-apps-kpi-list>
+        </div>
+      </div>
+      <div class="col-md-9">
+        <div class="kpi-list-section_item">
+          @if(selectedKpi()) {
+          <stc-apps-kpi-list-item
+            [kpi]="selectedKpi()!"
+            [attributes]="attributes()"
+            [attributesLoading]="attributesLoading()"
+            [chartDataInput]="chartData()"
+            [chartLoading]="chartLoading()"
+            [chartGrouping]="chartGrouping()"
+            (groupingChange)="onChartGroupingChange($event)"
+            (edit)="onEditKpi($event)"
+            (updateValue)="onUpdateKpiValue($event)"
+            (delete)="onDeleteKpi($event)"
+            (activityLog)="onActivityLog($event)"
+            [permissionRole]="permissionRole"
+          ></stc-apps-kpi-list-item>
+          } @else {
+          <div class="no-kpi-selected">
+            No data to display.
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+</div>

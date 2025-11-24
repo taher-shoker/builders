@@ -1,3 +1,29 @@
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
 /* You can add global styles to this file, and also import other style files */
 @import "./styles/custom.scss";
 @import "./styles/variables.scss";
+/* WebKit browsers (Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 3px; /* thinner width */
+  height: 3px; /* for horizontal scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* or #f1f1f1 if you want */
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--stc-color);
+  border-radius: 10px;
+  transition: background-color 0.3s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: var(--stc-color);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin; /* makes it thinner */
+  scrollbar-color: var(--stc-color) transparent;
+}

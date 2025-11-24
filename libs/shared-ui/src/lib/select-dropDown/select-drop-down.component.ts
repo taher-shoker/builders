@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   OnChanges,
+  OnInit,
   Output,
   QueryList,
   SimpleChanges,
@@ -34,7 +35,7 @@ interface Option {
 })
 export class SelectDropDownComponent<T>
   extends ControlValueAccessorDirective<T>
-  implements OnChanges
+  implements OnChanges, OnInit
 {
   @ContentChildren(MatOption) queryOptions!: QueryList<MatOption>;
 
@@ -67,6 +68,20 @@ export class SelectDropDownComponent<T>
   selectedValue: any;
   filteredOptions: any[] = [];
 
+  override ngOnInit(): void {
+    // Ensure base directive initializes control first
+    super.ngOnInit();
+    // Re-sync initial selected value to the FormControl so mat-select displays it
+    const initialValue = this.defaultAll && this.options.length > 0
+      ? this.options[0][this.labelValue]
+      : this.selectId;
+    this.selectedValue = initialValue;
+    this.filteredOptions = this.options;
+    if (initialValue !== undefined) {
+      this.control?.setValue(initialValue, { emitEvent: false });
+    }
+  }
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['options']) {
       this.options = changes['options'].currentValue || [];
@@ -83,6 +98,11 @@ export class SelectDropDownComponent<T>
       this.selectedValue = this.options[0][this.labelValue];
     } else {
       this.selectedValue = this.selectId;
+    }
+
+    // Ensure the FormControl reflects the initial selected value so mat-select displays it
+    if (this.selectedValue !== undefined) {
+      this.control.setValue(this.selectedValue, { emitEvent: false });
     }
 
     this.searchControl.valueChanges

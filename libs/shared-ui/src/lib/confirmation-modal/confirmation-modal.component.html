@@ -1,0 +1,38 @@
+<div class="confirm-modal">
+  <div class="confirm-header">
+    <h2 class="confirm-title">{{ title }}</h2>
+    <button type="button" class="close-btn" (click)="cancel()" aria-label="Close">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="confirm-body">
+    <div class="icon-wrap" aria-hidden="true">
+      <!-- Inline SVG to match red warning triangle icon -->
+      <svg class="warning-triangle" width="32" height="32" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 3.5L1.5 20.5H22.5L12 3.5Z" stroke="#EF4444" stroke-width="2" fill="none"/>
+        <path d="M12 9V13" stroke="#EF4444" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="12" cy="16" r="1" fill="#EF4444"/>
+      </svg>
+    </div>
+    <p class="confirm-message" [innerHTML]="message | safeHtml"></p>
+  </div>
+
+  <div class="confirm-actions">
+    <stc-apps-button
+      [buttonText]="cancelLabel"
+      [buttonType]="'gray-outline'"
+      [paddingX]="'24px'"
+      [paddingY]="'12px'"
+      (btnClick)="cancel()"
+    ></stc-apps-button>
+    <stc-apps-button
+      [buttonText]="approveLabel"
+      [buttonType]="'primary'"
+      [actionType]="'submit'"
+      [paddingX]="'24px'"
+      [paddingY]="'12px'"
+      (btnClick)="approve()"
+    ></stc-apps-button>
+  </div>
+</div>

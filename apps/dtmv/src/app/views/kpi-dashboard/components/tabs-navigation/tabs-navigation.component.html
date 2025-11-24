@@ -1,0 +1,22 @@
+<mat-tab-group
+  animationDuration="300ms"
+  [selectedIndex]="activeTabIndex()"
+  (selectedTabChange)="onTabChanged($event)"
+  class="tabs-navigation"
+>
+  @for(tab of tabs(); track tab.label; let i = $index) {
+  <mat-tab>
+    <ng-template mat-tab-label>
+      <div class="tab-label-content">
+        <span class="tab-text">{{ tab.label }}</span>
+      </div>
+    </ng-template>
+
+    @if(tabContentTemplate) {
+      <ng-container
+        *ngTemplateOutlet="tabContentTemplate; context: { $implicit: i }"
+      ></ng-container>
+    }
+  </mat-tab>
+  }
+</mat-tab-group>
