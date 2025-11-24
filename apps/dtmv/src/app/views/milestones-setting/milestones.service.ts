@@ -181,6 +181,32 @@ export class MilestonesService {
   }
 
   /**
+   * Fetches unit progress metrics for VP dashboard summary cards.
+   * @param teamName team identifier
+   * @param year selected year
+   */
+  getUnitProgress(
+    teamName: string,
+    year: number
+  ): Observable<{
+    unitBaseline: number;
+    unitTarget: number;
+    diActualProgress: number;
+    averageUnitsProgress: number;
+  }> {
+    const params = new HttpParams()
+      .set('teamName', teamName)
+      .set('year', year.toString());
+
+    return this.http.get<{
+      unitBaseline: number;
+      unitTarget: number;
+      diActualProgress: number;
+      averageUnitsProgress: number;
+    }>(`${this.vpUrl}unit/progress`, { params });
+  }
+
+  /**
    *
    * @param team Pass the required team if user has multi teams
    * @param year pass the year of the filtration

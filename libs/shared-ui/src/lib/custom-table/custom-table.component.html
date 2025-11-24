@@ -116,7 +116,7 @@
 <p [ngStyle]="{ 'font-family': fontFamily() }" class="empty-details">
   there are no data
 </p>
-} @if(psrTable() && userRoles() !== "BE_VIEWERS" && !isDeleted()) {
+} @if(psrTable() && userRoles() !== "BE_VIEWERS" &&userRoles() !== "BE_PM" && !isDeleted()) {
 <button type="button" class="add-record-btn" [ngStyle]="{ 'font-family': fontFamily() }" (click)="addNewRecord()">
   <img [src]="
       activityLogTable
@@ -181,7 +181,7 @@
       @if(header.key !== '') { @if(header.key !== 'id') { @if(header.key ===
       'major') {
       <div class="position-relative">
-        <input type="text" [(ngModel)]="item[header.key]" class="edit-input"
+        <input type="text" [disabled]="userRoles() === 'BE_PM'" [(ngModel)]="item[header.key]" class="edit-input"
           (ngModelChange)="inputChanged(item['id'])" />
         @if(item[header.key] === '') {
         <small class="empty-data-msg">This field is required</small>
@@ -190,11 +190,13 @@
       } @else {
       <div class="position-relative">
         @if(header.key === 'completionLevel' || header.key === 'weight') {
-        <input type="number" [(ngModel)]="item[header.key]" class="edit-input" (keypress)="keyPress2($event)"
+        <input type="number" [disabled]="userRoles() === 'BE_PM' &&  header.key === 'weight' "
+          [(ngModel)]="item[header.key]" class="edit-input" (keypress)="keyPress2($event)"
           (ngModelChange)="inputChanged(item['id'])" max="100" />
         } @else {
         <p-calendar dateFormat="dd/mm/yy" styleClass="custom-calendar2" class="custom-calendar2" appendTo="body"
-          [(ngModel)]="item[header.key]" (ngModelChange)="inputChanged(item['id'])" />
+          [ngModel]="item[header.key]" (ngModelChange)="setValue(item, header.key, $event); inputChanged(item['id'])"
+          [disabled]="userRoles() === 'BE_PM'" />
         <!-- {{item['endDate']}} -->
         <!-- {{parseDate(item['startDate']) > parseDate(item['endDate'])}}  -->
         @if(parseDate(item['startDate']) > parseDate(item['endDate']) &&

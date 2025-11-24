@@ -44,7 +44,7 @@ const routes: Routes = [
           ),
       },
       {
-        path: 'di-kpi-integration',
+        path: 'kpi-dashboard',
         canActivate: [AuthGuard],
         data: { state: 'kpi', breadcrumb: 'DI KPI Integration' },
         loadChildren: () =>

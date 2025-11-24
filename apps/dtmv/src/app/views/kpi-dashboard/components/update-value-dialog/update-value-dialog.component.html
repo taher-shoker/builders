@@ -1,0 +1,108 @@
+<div class="dialog">
+  <div class="dialog_header">
+    <h2 mat-dialog-title>Update actual KPI value</h2>
+    <div class="dialog_header_actions">
+      <stc-apps-button
+        [buttonText]="'Cancel'"
+        [buttonType]="'gray-outline'"
+        (btnClick)="onCancel()"
+      ></stc-apps-button>
+
+      <stc-apps-button
+        [buttonText]="'Save'"
+        [buttonType]="'primary'"
+        (btnClick)="onSubmit()"
+        [buttonDisable]="loading || !form.get('date')?.value || !form.get('actualValue')?.value || !form.valid"
+      ></stc-apps-button>
+    </div>
+  </div>
+
+  <div class="dialog_body" [formGroup]="form">
+    <div class="row">
+      <div class="col-md-6">
+        <stc-apps-month-year-picker
+          [inputPlaceholder]="'MM/YYYY'"
+          [inputId]="'monthYear'"
+          [inputName]="''"
+          [disabledInput]="true"
+          [minDate]="yearMinDate"
+          [maxDate]="yearMaxDate"
+          formControlName="date"
+        >
+        </stc-apps-month-year-picker>
+      </div>
+
+      <div class="col-md-6">
+        <stc-apps-numeric-input
+          [className]="'custom-input'"
+          [inputPlaceholder]="'Enter actual progress Value'"
+          [inputId]="'actualValue'"
+          [allowDecimal]="true"
+          formControlName="actualValue"
+        >
+        </stc-apps-numeric-input>
+      </div>
+
+      <div class="col-12">
+        <small class="helper-text"
+          >Choose the date that this KPI value corresponds to. By default,
+          today’s date is selected.</small
+        >
+      </div>
+
+      <div class="col-12" *ngIf="errorMessage">
+        <small class="helper-text" style="color: #d32f2f;">{{ errorMessage }}</small>
+      </div>
+
+      <div class="col-12">
+        <div class="evidence">
+          <label for="evidence_upload" class="evidence_upload_label">
+            <i class="ri-upload-2-line"></i>Add evidence (Optional)
+          </label>
+          <input
+            id="evidence_upload"
+            type="file"
+            multiple
+            (change)="onFileChange($event)"
+            class="d-none"
+          />
+          <small class="helper-text evidence_error" *ngIf="oversizedFilesCount > 0 || form.get('evidence')?.hasError('maxFileSize')">
+            Attachments more than 30 MB are not allowed.
+          </small>
+        </div>
+      </div>
+
+      @if(evidenceFiles.length > 0){
+      <div class="col-12">
+        <div class="evidence_title">
+          <i class="ri-attachment-2"></i>
+          <span>Evidence ({{ evidenceFiles.length }})</span>
+        </div>
+      </div>
+
+      @for(file of evidenceFiles; track file){
+      <div class="col-md-6 mb-3">
+        <div class="evidence_file_item">
+          <div class="file-details">
+            <div class="file-preview" [class.non-image]="!file.isImage">
+              @if(file.isImage){
+              <img [src]="file.previewUrl" alt="Preview" class="preview-image" />
+              } @else {
+              <!-- <i class="ri-file-pdf-line file-icon"></i> -->
+              <i class="far fa-file-alt file-icon"></i>
+              }
+            </div>
+            <div class="file-info">
+              <div class="file-name">{{ file.file.name }}</div>
+              <div class="file-size">
+                {{ (file.file.size / 1024 / 1024).toFixed(2) }} MB
+              </div>
+            </div>
+          </div>
+          <i class="ri-close-line remove-icon" (click)="removeFile(file)"></i>
+        </div>
+      </div>
+      } }
+    </div>
+  </div>
+</div>

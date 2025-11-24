@@ -6,7 +6,8 @@
       {{ project().sector }}
     </p>
     @if(!isMobile()) {
-    <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>
+    @if(items.length > 0){
+    <i class="pi pi-ellipsis-v" #actionsBtn (click)="openActionsMenu()"></i>}
     <p-overlayPanel #actionsPanel dismissable="false" [appendTo]="'body'" styleClass="project-actions-logs"
       (onHide)="showActivityLogsPopup = false">
       <div class="actions-logs-table">

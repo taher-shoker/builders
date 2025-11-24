@@ -1,0 +1,207 @@
+.kpi-dashboard {
+    &_layout {
+        background: var(--whiteColor);
+        position: relative;
+        top: -75px;
+        width: 96%;
+        left: 2%;
+        border-radius: 7px;
+    }
+
+  &_title {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--stc-color);
+    // margin-bottom: 16px;
+  }
+
+  &_titlebar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 8px;
+  }
+
+  &_titlebar_actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &_loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+  }
+
+  &_titlebar_filters {
+    width: 220px;
+    min-width: 180px;
+
+    stc-apps-select-drop-down {
+      ::ng-deep {
+        /* Match outlined, rounded look similar to the reference */
+        .mdc-text-field--filled {
+          background-color: #fff;
+          border: 1px solid var(--stc-color);
+          border-radius: 10px !important;
+          min-height: 44px;
+        }
+
+        .mdc-text-field__input {
+          color: var(--stc-darkGrey-color, #334155);
+          font-size: 14px;
+        }
+
+        /* Optional: tighten padding to reduce visual height */
+        .mdc-text-field--filled .mdc-text-field__ripple,
+        .mdc-text-field--filled .mdc-line-ripple {
+          display: none;
+        }
+      }
+    }
+  }
+
+  &_tabs {
+    border-radius: 7px;
+    background-color: var(--stc-white-color);
+
+        stc-apps-tabs-navigation {
+            ::ng-deep {
+                .mat-mdc-tab-header {
+                    width: 30%;
+                    padding-inline-start: 0;
+                }
+
+                .mat-mdc-tab .mdc-tab-indicator__content--underline {
+                    border: 1px solid var(--stc-pink-color) !important;
+                }
+            }
+        }
+
+    &_container {
+      padding: 16px;
+      background-color: var(--stc-lightGrey-color);
+    }
+  }
+
+  .cols-spaced-32 {
+    /* Create a fixed 32px gap between the two KPI columns */
+    display: flex;
+    flex-wrap: wrap;
+    column-gap: 32px;
+  }
+
+  .cols-spaced-32 > .col-8 {
+    /* Reduce the second column width to account for the gap */
+    flex: 0 0 calc(66.6667% - 32px);
+    max-width: calc(66.6667% - 32px);
+  }
+
+  .teams-tabs {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    padding: 12px 16px;
+    border-radius: 36px;
+    background-color: #EFEFEF;
+    /* Hug content: don’t stretch across full width */
+    width: auto;
+    max-width: 100%;
+    margin: 32px 0px;
+    /* No scrolling; allow wrapping to additional lines when needed */
+    overflow: visible;
+    flex-wrap: wrap;
+  }
+
+  .teams-tab {
+    flex: 0 0 auto;
+    border-radius: 24px;
+    padding: 8px 16px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: var(--stc-grey-color, #9aa0a6);
+    font-weight: 400;
+    cursor: pointer;
+    transition: all 150ms ease-in-out;
+    white-space: nowrap;
+  }
+
+  .teams-tab.active {
+    background: #fff;
+    border-color: var(--stc-color);
+    color: var(--stc-color);
+  }
+
+  .teams-tab:not(.active):hover {
+    color: var(--stc-color);
+  }
+
+  /* Responsive compression to avoid overflow without scrolling */
+  @media (max-width: 1280px) {
+    .teams-tabs {
+      gap: 20px;
+      padding: 10px 14px;
+    }
+    .teams-tab {
+      padding: 6px 12px;
+      font-size: 14px;
+    }
+  }
+
+  @media (max-width: 992px) {
+    .teams-tabs {
+      gap: 12px;
+      padding: 8px 12px;
+    }
+    .teams-tab {
+      padding: 5px 10px;
+      font-size: 13px;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .teams-tabs {
+      gap: 8px;
+      padding: 6px 10px;
+    }
+    .teams-tab {
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+  }
+
+  /* Empty state card styling for Actual Progress */
+  .kpi-empty-card {
+    .empty-state {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      border: 1px dashed var(--light-slate-gray);
+      border-radius: 12px;
+      padding: 24px;
+      color: var(--dark-charcoal);
+      background-color: #fafafa;
+
+      &_icon {
+        font-size: 24px;
+        margin-bottom: 8px;
+      }
+
+      &_title {
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 4px;
+      }
+
+      &_subtitle {
+        font-size: 13px;
+        color: var(--slate-gray);
+      }
+    }
+  }
+}

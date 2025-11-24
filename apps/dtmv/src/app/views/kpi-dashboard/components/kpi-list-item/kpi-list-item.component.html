@@ -1,0 +1,68 @@
+<div
+  class="kpi-list-item"
+  [class.selected]="isSelected()"
+  (click)="selectKpi.emit(kpi)"
+>
+  <div class="kpi-list-item_header">
+    <div class="kpi-list-item_header_title">
+      <h4>{{ kpi().name }}</h4>
+      <p>{{ kpi().description }}</p>
+    </div>
+    <div class="kpi-list-item_header_actions">
+      <stc-apps-kpi-actions
+        [kpi]="kpi()"
+        (edit)="onEdit(kpi())"
+        (updateValue)="onUpdateValue(kpi())"
+        (delete)="onDelete(kpi())"
+        (activityLog)="onActivityLog(kpi())"
+        [permissionRole]="permissionRole"
+      ></stc-apps-kpi-actions>
+    </div>
+  </div>
+
+  <div class="kpi-list-item_attributes">
+    <h4 class="kpi-list-item_title">Attributes</h4>
+    <stc-apps-kpi-attributes-list
+      [attributes]="attributes()"
+      [loading]="attributesLoading()"
+    ></stc-apps-kpi-attributes-list>
+  </div>
+
+  <div class="kpi-list-item_chart">
+    <div class="kpi-list-item_chart_header">
+      <h4 class="kpi-list-item_title">Actual Progress</h4>
+      <div class="chart-controls">
+        <stc-apps-select-drop-down
+          [label]="''"
+          [matLabel]="'Period'"
+          [options]="groupingOptions"
+          [labelName]="'name'"
+          [labelValue]="'id'"
+          [outputValue]="'name'"
+          [selectId]="chartGrouping() === 'quarterly' ? 'Quarterly' : 'Monthly'"
+          (selectChange)="onGroupingChange($event)"
+        ></stc-apps-select-drop-down>
+      </div>
+    </div>
+    @if (chartLoading()) {
+      <div class="chart-skeleton">
+        <div class="skeleton-title"></div>
+        <div class="skeleton-graph"></div>
+        <div class="skeleton-legend">
+          <span class="skeleton-pill"></span>
+          <span class="skeleton-pill"></span>
+          <span class="skeleton-pill"></span>
+        </div>
+      </div>
+    } @else {
+      @if (hasChartData()) {
+        <stc-apps-line-chat-chart
+          [chartData]="chartDataInput()"
+          [showLegend]="false"
+        ></stc-apps-line-chat-chart>
+      } @else {
+        <div class="no-chart-data">No progress data available to display the chart.</div>
+      }
+    }
+  </div>
+</div>

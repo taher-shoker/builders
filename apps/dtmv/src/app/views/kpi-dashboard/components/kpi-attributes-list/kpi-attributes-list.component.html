@@ -1,0 +1,27 @@
+<div class="kpi-attributes-list">
+  @if (loading()) {
+    @for (_ of skeletons; track $index) {
+      <div class="kpi-attributes-list_item skeleton">
+        <div class="kpi-attributes-list_item_content">
+          <span class="skeleton-label"></span>
+          <span class="skeleton-value"></span>
+        </div>
+        <div class="kpi-attributes-list_item_icon">
+          <div class="skeleton-icon"></div>
+        </div>
+      </div>
+    }
+  } @else {
+    @for (attribute of attributes(); track attribute.label) {
+      <div class="kpi-attributes-list_item">
+        <div class="kpi-attributes-list_item_content">
+          <span class="attribute-label">{{ attribute.label }}</span>
+          <span class="attribute-value">{{ attribute.value }}</span>
+        </div>
+        <div class="kpi-attributes-list_item_icon">
+          <img [src]="attribute.icon" alt="" />
+        </div>
+      </div>
+    }
+  }
+</div>

@@ -1,0 +1,44 @@
+<div class="card">
+  <div class="card-header">
+    <h3>{{ teamName() ? (teamName() + ' ') : '' }}DI Progress</h3>
+    <div class="card-header_filters" *ngIf="hasChartData()">
+      <stc-apps-select-drop-down
+        [label]="''"
+        [matLabel]="'Dimensions'"
+        [options]="dimensionsOptions"
+        [labelName]="'name'"
+        [labelValue]="'id'"
+        [outputValue]="'name'"
+        [selectId]="selectedDimension"
+        (selectChange)="onDimensionChange($event)"
+      ></stc-apps-select-drop-down>
+      <stc-apps-select-drop-down
+        [label]="''"
+        [matLabel]="'Period'"
+        [options]="periodOptions"
+        [labelName]="'name'"
+        [labelValue]="'id'"
+        [outputValue]="'name'"
+        [selectId]="selectedPeriod === 'monthly' ? 'Monthly' : 'Quarterly'"
+        (selectChange)="onPeriodChange($event)"
+      ></stc-apps-select-drop-down>
+    </div>
+  </div>
+  <div class="card-body">
+    <ng-container *ngIf="hasChartData(); else emptyDiState">
+      <stc-apps-line-chat-chart
+        [chartData]="chartData"
+        [chartTitle]="''"
+        [popUpClick]="false"
+        [legendSettings]="legendSettings"
+      ></stc-apps-line-chat-chart>
+    </ng-container>
+    <ng-template #emptyDiState>
+      <div class="empty-state">
+        <!-- <div class="empty-state_icon">📈</div> -->
+        <div class="empty-state_title">No DI progress data</div>
+        <div class="empty-state_subtitle">Try a different year or unit.</div>
+      </div>
+    </ng-template>
+  </div>
+</div>

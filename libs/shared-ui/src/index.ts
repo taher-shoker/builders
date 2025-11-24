@@ -28,3 +28,4 @@ export * from './lib/date-picker-weekly-range/date-picker-weekly-range.component
 export * from './lib/donut-chart/donut-chart.component';
 
 export * from './lib/weekly-line-chart/weekly-line-chart.component';
+export * from './lib/progress-bar/progress-bar.component';

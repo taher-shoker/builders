@@ -1,0 +1,67 @@
+.confirm-modal {
+  padding: 32px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.confirm-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.confirm-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #334155; /* slate-700 */
+}
+
+.close-btn {
+  width: 44px;
+  height: 44px;
+  // border-radius: 8px;
+  // border: 2px solid #cbd5e1; /* slate-300 */
+  // background: #eef2f7; /* subtle gray */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  border: none;
+  background-color: transparent;
+  line-height: 0;
+}
+
+.confirm-body {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.warning-triangle {
+  display: inline-block;
+}
+
+.confirm-message {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: #334155; /* slate-700 */
+}
+
+.confirm-actions {
+  margin-top: 28px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  ::ng-deep {
+    stc-apps-button {
+      button,
+      i {
+        font-size: 16px;
+      }
+    }
+  }
+}

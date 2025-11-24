@@ -29,6 +29,7 @@ export class ButtonComponent implements OnInit {
   @Input() padding: string = '';
   @Input() paddingX: string = '12px';
   @Input() paddingY: string = '6px';
+  @Input() buttonIconV6: string = '';
   @Output() btnClick: EventEmitter<void> = new EventEmitter();
 
   ngOnInit(): void {

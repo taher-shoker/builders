@@ -1,0 +1,15 @@
+.home_tabs {
+    ::ng-deep {
+        mat-tab-group {
+            .mat-mdc-tab-header {
+                width: 30%;
+                padding-inline-start: 0;
+
+            }
+
+            .mat-mdc-tab .mdc-tab__text-label {
+                font-size: 14px;
+            }
+        }
+    }
+}

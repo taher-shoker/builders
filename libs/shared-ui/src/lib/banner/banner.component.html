@@ -1,5 +1,5 @@
-<div class="banner-box px-3">
-  <div class="top-banner">
+<div class="banner-box px-0">
+  <div class="top-banner" [ngClass]="{ 'center-title': !welcome && !userName && !(this.data.text) }">
     <div class="left">
       <div class="welcome-msg" *ngIf="welcome">
         <h3>{{ 'welcome' | translate }}, {{ userName }}</h3>
