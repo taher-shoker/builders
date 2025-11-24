@@ -10,14 +10,13 @@ import { LanguageManagerService } from '@stc-apps/lng-selector';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 import { ToastrService } from 'ngx-toastr';
 import {
-  User,
-  Team,
   Role,
+  Team,
+  User,
   UserGroup,
 } from '../../../../shared/models/users-settings.model';
 import { UsersService } from '../../users.service';
 // eslint-disable-next-line @nx/enforce-module-boundaries
-import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 
@@ -93,9 +92,11 @@ export class UsersComponent implements OnInit, AfterViewInit {
         key: 'teamDto',
         type: 'text',
         label:
-          this.userService.getCurrentSystem() !== 'Score_Card_Report_DB'
-            ? 'team'
-            : 'sectors',
+          this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
+            ? 'sectors'
+            : this.userService.getCurrentSystem() === 'DI_Milestones'
+            ? 'Unit'
+            : 'team',
       },
       {
         key: 'jobTitle',
