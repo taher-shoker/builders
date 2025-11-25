@@ -4,25 +4,25 @@ import { Milestone } from './../milestones/milestones.component';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
+import { DatePipe } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
+import {
+  Actions,
+  MilestoneDetails,
+  Params,
+  RequestTask,
+} from 'apps/dtmv/src/app/services/models/milestones.models';
 import { saveAs } from 'file-saver';
+import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
+import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 import { AuthService } from '../../../../services/auth.service';
 import {
   MilestoneAttachment,
   MilestonesService,
 } from '../../milestones.service';
-import { Step } from 'libs/shared-ui/src/lib/actions-stepper/actions-stepper.component';
-import { MatDialog } from '@angular/material/dialog';
 import { UpdateMilestoneProgressDialogComponent } from '../update-milestone-progress-dialog/update-milestone-progress-dialog.component';
-import { DatePipe } from '@angular/common';
 import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
-import { MessageDialogComponent } from 'libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import {
-  MilestoneDetails,
-  Actions,
-  RequestTask,
-  Params,
-} from 'apps/dtmv/src/app/services/models/milestones.models';
 
 //TODO: Refactor the workflow of the stepper.
 
@@ -1044,7 +1044,7 @@ export class MilestoneDetailsComponent implements OnInit {
       .subscribe((res) => {
         if (res.status?.toLowerCase() === 'planned') {
           // this.isUpdateProgressOnHold = false;
-console.log("calculated" , res)
+          console.log('calculated', res);
           if (isFirstUpdateProgress) {
             // For initial updates, create the progress record and then refresh.
             // this.updateProgress().subscribe(() => {
@@ -1061,7 +1061,7 @@ console.log("calculated" , res)
         let actionObj: Actions;
         if (res.status === 'Delayed' || res.status === 'At Risk') {
           actionObj = Actions.addJustification;
-        } else if (res.status === 'Completed' || res.status === "Planned") {
+        } else if (res.status === 'Completed' || res.status === 'Planned') {
           actionObj = Actions.addEvidence;
         } else {
           actionObj = Actions.addOnTrack;
@@ -1139,5 +1139,13 @@ console.log("calculated" , res)
 
   isDirector(): boolean {
     return this.milestonesService.checkIsDirector();
+  }
+
+  get isViewMode(): boolean {
+    return !(
+      this.milestonesService.checkIsAdmin() ||
+      this.milestonesService.checkIsExecutive() ||
+      this.milestonesService.checkIsPMO()
+    );
   }
 }

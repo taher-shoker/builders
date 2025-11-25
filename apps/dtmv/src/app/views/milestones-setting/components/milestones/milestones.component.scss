@@ -253,13 +253,21 @@ table {
 }
 
 .pending-list-holder {
-  position: absolute;
-  width: 600px;
+  position: static;
+  width: 100%;
 }
 
 // .widen-list{
 //   width: 600px;
 // }
+
+.pending-list-holder.floating {
+  position: fixed;
+  right: 20px;
+  top: 160px;
+  width: 600px;
+  z-index: 1000;
+}
 
 .mat-expansion-panel {
   box-shadow: unset;

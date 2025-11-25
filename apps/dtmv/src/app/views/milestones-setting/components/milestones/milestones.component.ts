@@ -8,37 +8,32 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterEvent,
-} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from '../../../../services/auth.service';
-import { filter, Subscription, take } from 'rxjs';
-import { UtilsService } from '@stc-apps/lng-selector';
-import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import { MilestonesService, PendingTask } from '../../milestones.service';
-import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
-import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
-import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { saveAs } from 'file-saver';
 import {
-  trigger,
+  animate,
   state,
   style,
   transition,
-  animate,
+  trigger,
 } from '@angular/animations';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from '@stc-apps/lng-selector';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
+import { saveAs } from 'file-saver';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UtilitiesService } from 'libs/shared-ui/src/lib/services/utilities.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { filter, Subscription, take } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
 import { FeedbackIssueComponent } from '../../../feedback-issue/feedback-issue.component';
+import { MilestonesService, PendingTask } from '../../milestones.service';
+import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
+import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 
 export interface Milestone {
   activityName: string;
@@ -168,7 +163,6 @@ export class MilestonesComponent
       this.bannerDataService.updateData({ title: 'milestones', text: '' });
       this.readOnly = false;
     }
-
     this.searchForm();
     this.getMilestones();
     this.getPendingTasks();
@@ -181,6 +175,7 @@ export class MilestonesComponent
     if (this.milestonesService.checkIsDirector()) {
       this.bulkPremission = true;
     }
+    this.pendingActionsShown = 'in';
   }
   detectChangedRoutes() {
     this.routerSub = this.router.events
@@ -731,20 +726,26 @@ export class MilestonesComponent
   isPendingListClosable: boolean = false;
 
   toggleAnimation() {
-    this.pendingActionsShown =
-      this.pendingActionsShown === 'out' ? 'in' : 'out';
+    this.pendingActionsShown = this.pendingActionsShown === 'out' ? 'in' : 'out';
   }
 
   handlePendingActionsList(width: number) {
     this.milestonesService.checkIsAdmin();
-    if (width < 1630) {
-      this.tableCols = 12;
-      this.showPendingActionsBtn = true;
-      this.isPendingListClosable = true;
-    } else if (width > 1630) {
-      this.showPendingActionsBtn = false;
-      this.isPendingListClosable = false;
+    const MIN_TABLE_WIDTH = 1165;
+    const PANE_WIDTH = 600;
+    const GAP = 40; // approximate padding/margins
+    const enoughSpace = width >= MIN_TABLE_WIDTH + PANE_WIDTH + GAP;
+
+    if (enoughSpace) {
       this.tableCols = 8;
+      this.isPendingListClosable = false;
+      this.pendingActionsShown = 'in';
+      this.showPendingActionsBtn = false;
+    } else {
+      this.tableCols = 12;
+      this.isPendingListClosable = true;
+      // Keep toggle available; do not force-close here to allow user toggle
+      this.showPendingActionsBtn = true;
     }
   }
 
@@ -753,5 +754,24 @@ export class MilestonesComponent
     this.userSub?.unsubscribe();
     this.getAssigneeTasks?.unsubscribe();
     this.formChangesSub?.unsubscribe();
+  }
+  get canAddMilestone(): boolean {
+    if (this.readOnly) return false;
+    const restricted =
+      this.milestonesService.checkIsBusinessSpoc() ||
+      this.milestonesService.checkIsDirector() ||
+      this.milestonesService.checkIsGovernance() ||
+      this.milestonesService.checkIsExecutive() ||
+      this.milestonesService.checkIsPMO() ||
+      this.milestonesService.checkIsAdmin();
+    return !restricted;
+  }
+
+  get pendingActionsCanRender(): boolean {
+    return (
+      !this.milestonesService.checkIsAdmin &&
+      !this.milestonesService.checkIsExecutive() &&
+      !this.milestonesService.checkIsPMO()
+    );
   }
 }
