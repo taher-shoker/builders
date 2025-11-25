@@ -60,16 +60,15 @@
               [sort]="true"
               [paginate]="true"
               [applyFilter]="true"
+              [currentPage]="currentPageNumber"
               [filterForm]="filterForm"
               [paginationConfig]="{
-                pageCount: previousParams.numberOfElementsToDisplay
-                  ? previousParams.numberOfElementsToDisplay
-                  : configService.getConfig().defaultPageSize,
+                pageCount: pageSizeNumber,
                 pageSizesOptionals: configService.getConfig().pageSizesOptions,
                 showTotal: false,
                 paginationIq: 'smart',
                 showPagePerItems: true,
-                currentPage: previousParams.page ? previousParams.page + 1 : 1
+                currentPage: currentPageNumber
               }"
               (paginationEvent)="paginate($event)"
               (pageSizeEvent)="setPageItemsCount($event)"

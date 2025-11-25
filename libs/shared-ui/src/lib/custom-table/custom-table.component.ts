@@ -1,6 +1,7 @@
 /* eslint-disable for-direction */
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 /* eslint-disable @typescript-eslint/no-inferrable-types */
+import { DatePipe } from '@angular/common';
 import {
   Component,
   ContentChildren,
@@ -19,7 +20,6 @@ import {
 import { BehaviorSubject, Subject } from 'rxjs';
 import { PaginationEvent } from '../paginator/paginator.component';
 import { CustomTemplateDirective } from './custom-template.directive';
-import { DatePipe } from '@angular/common';
 
 export interface ColumnsSchema {
   key: string;
@@ -161,6 +161,9 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (this.paginationConfig) {
+      if (typeof this.paginationConfig.currentPage === 'number') {
+        this.currentPage = this.paginationConfig.currentPage;
+      }
       if (this.paginate && this.paginationConfig.paginationIq !== 'smart') {
         this.setupDumbPaginator();
       }
@@ -178,29 +181,29 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   }
 
   setupSmartPagination() {
-    this.loadedPages = [1]; // *in case of smart pagination, start tracking the pages with page number 1 on init already,
-    this.itemsMap.set('1', this.items); // *and assign the first set/chunk of items to first element.
+    this.loadedPages = [1];
+    this.itemsMap.set('1', this.items);
 
     this.paginator$.subscribe((res) => {
       this.currentPage = res.currentPage;
-
       if (!this.loadedPages?.includes(this.currentPage)) {
         this.handleSmartPageAddition(this.currentPage);
-        this.paginationEvent.emit(res);
-      } else {
-        this.onDataChange();
       }
+      this.paginationEvent.emit(res);
+      this.onDataChange();
     });
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['paginationConfig']) {
-      if (
-        changes['paginationConfig'].currentValue?.pageCount !==
-        changes['paginationConfig'].previousValue?.pageCount
-      ) {
+      const curr = changes['paginationConfig'].currentValue;
+      const prev = changes['paginationConfig'].previousValue;
+      if (curr?.pageCount !== prev?.pageCount) {
         this.loadedPages = [1];
         this.itemsMap.clear();
+      }
+      if (typeof curr?.currentPage === 'number') {
+        this.currentPage = curr.currentPage;
       }
     }
     if (changes['filterForm']) {

@@ -151,6 +151,7 @@ export class MilestonesComponent
   yearsArr: any = [];
   allTeams: any = [];
   pageSizeNumber: number = 10;
+  currentPageNumber: number = 1;
   ngOnInit() {
     this.previousPath = this.router.url;
     if (this.route.snapshot.data['state'] == 'archive') {
@@ -164,6 +165,16 @@ export class MilestonesComponent
       this.readOnly = false;
     }
     this.searchForm();
+    const storedPageSize = sessionStorage.getItem('milestonesPageSize');
+    if (storedPageSize) {
+      const n = parseInt(storedPageSize, 10);
+      if (!isNaN(n) && n > 0) this.pageSizeNumber = n;
+    }
+    const storedCurrentPage = sessionStorage.getItem('milestonesCurrentPage');
+    if (storedCurrentPage) {
+      const p = parseInt(storedCurrentPage, 10);
+      if (!isNaN(p) && p > 0) this.currentPageNumber = p;
+    }
     this.getMilestones();
     this.getPendingTasks();
 
@@ -406,6 +417,8 @@ export class MilestonesComponent
     });
   }
   paginate(event: PaginationEvent) {
+    this.currentPageNumber = event.currentPage;
+    sessionStorage.setItem('milestonesCurrentPage', String(event.currentPage));
     this.fetchMilestones({
       page: event.currentPage - 1,
       numberOfElementsToDisplay: this.pageSizeNumber,
@@ -414,6 +427,9 @@ export class MilestonesComponent
 
   setPageItemsCount(pageSize: number) {
     this.pageSizeNumber = pageSize;
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    sessionStorage.setItem('milestonesPageSize', String(pageSize));
     this.fetchMilestones({ numberOfElementsToDisplay: pageSize, page: 0 });
   }
 
@@ -439,7 +455,9 @@ export class MilestonesComponent
       JSON.stringify(this.filterForm)
     );
 
-    this.fetchMilestones({ page: 0 });
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    this.fetchMilestones({ page: 0, numberOfElementsToDisplay: this.pageSizeNumber });
     this.dialogService.close();
   }
 
@@ -448,7 +466,9 @@ export class MilestonesComponent
     this.resetFormFlag = true;
     this.filterForm = {};
     sessionStorage.removeItem('filterFormMilestones');
-    this.fetchMilestones({ page: 0 });
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    this.fetchMilestones({ page: 0, numberOfElementsToDisplay: this.pageSizeNumber });
     this.dialogService.close();
   }
 
@@ -709,14 +729,10 @@ export class MilestonesComponent
 
     if (filters) {
       this.filterForm = filters;
-      this.fetchMilestones({ page: 0 });
+      this.fetchMilestones({ page: this.currentPageNumber - 1, numberOfElementsToDisplay: this.pageSizeNumber });
       this.resetForm(this.filterForm);
     } else {
-      this.getMilestonesSub = this.milestonesService
-        .getMilestones({}, this.readOnly)
-        .subscribe((res: any) => {
-          this.populateMilestones(res);
-        });
+      this.fetchMilestones({ page: this.currentPageNumber - 1, numberOfElementsToDisplay: this.pageSizeNumber });
     }
   }
   addingArchiveFilter() {
