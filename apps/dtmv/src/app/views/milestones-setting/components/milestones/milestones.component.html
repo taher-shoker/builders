@@ -33,7 +33,7 @@
                 <div
                   class="col-2"
                   *ngIf="
-                    showPendingActionsBtn && !pendingActionsCanRender &&
+                    showPendingActionsBtn && pendingActionsCanRender &&
                     !this.readOnly
                   "
                 >
@@ -120,51 +120,51 @@
           </div>
         </div>
       </div>
-      @if( !this.milestonesService.isDTAdmin && !this.readOnly &&
-      !milestonesService.isDTExecutive && !milestonesService.isDTPMO){@if
-      (tableCols === 12 ) {
-      <div
-        [@slideInOut]="pendingActionsShown"
-        class="pending-list-holder"
-        [ngClass]="{ 'widen-list': isPendingListClosable, floating: tableCols === 12 }"
-      >
-        <stc-apps-items-list
-          [caption]="'pending_actions' | translate"
-          [items]="allItems"
-          [closable]="isPendingListClosable"
-          (itemClicked)="detailsNavigate($event)"
-          (closeClicked)="toggleAnimation()"
-          [bulkApprove]="bulkPremission"
-          (bulkApproveEvent)="handleBulk()"
-          [showBulkRequests]="showBulkRequests"
-          (cancelBulk)="handleCancellation()"
-          (submitBulk)="sendIds($event)"
-          [loadingItems]="loadingBulk"
-        ></stc-apps-items-list>
-      </div>
-      } @else {
-      <div class="col-md-4">
-        <div
-          [@slideInOut]="pendingActionsShown"
-          class="pending-list-holder"
-          [ngClass]="{ 'widen-list': isPendingListClosable }"
-        >
-          <stc-apps-items-list
-            [caption]="'pending_actions' | translate"
-            [items]="allItems"
-            [closable]="isPendingListClosable"
-            (itemClicked)="detailsNavigate($event)"
-            (closeClicked)="toggleAnimation()"
-            [bulkApprove]="bulkPremission"
-            (bulkApproveEvent)="handleBulk()"
-            [showBulkRequests]="showBulkRequests"
-            (cancelBulk)="handleCancellation()"
-            (submitBulk)="sendIds($event)"
-            [loadingItems]="loadingBulk"
-          ></stc-apps-items-list>
-        </div>
-      </div>
-      }}
+      @if (pendingActionsCanRender) {
+        @if (tableCols === 12) {
+          <div
+            [@slideInOut]="pendingActionsShown"
+            class="pending-list-holder"
+            [ngClass]="{ 'widen-list': isPendingListClosable, floating: tableCols === 12 }"
+          >
+            <stc-apps-items-list
+              [caption]="'pending_actions' | translate"
+              [items]="allItems"
+              [closable]="isPendingListClosable"
+              (itemClicked)="detailsNavigate($event)"
+              (closeClicked)="toggleAnimation()"
+              [bulkApprove]="bulkPremission"
+              (bulkApproveEvent)="handleBulk()"
+              [showBulkRequests]="showBulkRequests"
+              (cancelBulk)="handleCancellation()"
+              (submitBulk)="sendIds($event)"
+              [loadingItems]="loadingBulk"
+            ></stc-apps-items-list>
+          </div>
+        } @else {
+          <div class="col-md-4">
+            <div
+              [@slideInOut]="pendingActionsShown"
+              class="pending-list-holder"
+              [ngClass]="{ 'widen-list': isPendingListClosable }"
+            >
+              <stc-apps-items-list
+                [caption]="'pending_actions' | translate"
+                [items]="allItems"
+                [closable]="isPendingListClosable"
+                (itemClicked)="detailsNavigate($event)"
+                (closeClicked)="toggleAnimation()"
+                [bulkApprove]="bulkPremission"
+                (bulkApproveEvent)="handleBulk()"
+                [showBulkRequests]="showBulkRequests"
+                (cancelBulk)="handleCancellation()"
+                (submitBulk)="sendIds($event)"
+                [loadingItems]="loadingBulk"
+              ></stc-apps-items-list>
+            </div>
+          </div>
+        }
+      }
     </div>
   </div>
   @if(!milestonesService.isDTAdmin){

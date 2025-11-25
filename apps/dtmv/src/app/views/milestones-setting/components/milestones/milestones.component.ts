@@ -730,11 +730,17 @@ export class MilestonesComponent
   }
 
   handlePendingActionsList(width: number) {
-    this.milestonesService.checkIsAdmin();
     const MIN_TABLE_WIDTH = 1165;
     const PANE_WIDTH = 600;
     const GAP = 40; // approximate padding/margins
     const enoughSpace = width >= MIN_TABLE_WIDTH + PANE_WIDTH + GAP;
+
+    if (!this.pendingActionsCanRender) {
+      this.tableCols = 12;
+      this.isPendingListClosable = false;
+      this.showPendingActionsBtn = false;
+      return;
+    }
 
     if (enoughSpace) {
       this.tableCols = 8;
@@ -744,7 +750,6 @@ export class MilestonesComponent
     } else {
       this.tableCols = 12;
       this.isPendingListClosable = true;
-      // Keep toggle available; do not force-close here to allow user toggle
       this.showPendingActionsBtn = true;
     }
   }
@@ -769,7 +774,7 @@ export class MilestonesComponent
 
   get pendingActionsCanRender(): boolean {
     return (
-      !this.milestonesService.checkIsAdmin &&
+      !this.milestonesService.checkIsAdmin() &&
       !this.milestonesService.checkIsExecutive() &&
       !this.milestonesService.checkIsPMO()
     );
