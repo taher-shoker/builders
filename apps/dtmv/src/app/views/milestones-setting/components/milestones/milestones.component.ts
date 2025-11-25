@@ -304,6 +304,12 @@ export class MilestonesComponent
     for (const [key, value] of Object.entries(filteredForm)) {
       if (value === null || value === undefined || value === '') {
         delete params[key];
+      } else if (Array.isArray(value)) {
+        if (value.length === 0) {
+          delete params[key];
+        } else {
+          params[key] = value.join(',');
+        }
       } else {
         params[key] = value;
       }

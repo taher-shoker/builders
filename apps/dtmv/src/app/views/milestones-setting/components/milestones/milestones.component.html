@@ -237,6 +237,7 @@
             [options]="milestoneStatus"
             formControlName="status"
             [outputValue]="'value'"
+            [multi]="true"
           ></stc-apps-select-drop-down>
         </div>
         <div class="col-md-3" *ngIf="allTeams.length > 0">
@@ -245,6 +246,8 @@
             [options]="allTeams"
             formControlName="teamName"
             [outputValue]="'name'"
+            [labelValue]="'name'"
+            [multi]="true"
           ></stc-apps-select-drop-down>
         </div>
 
