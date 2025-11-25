@@ -22,16 +22,15 @@
     padding: 50px;
     .top {
       background-color: white;
-      position: absolute;
-      width: 93.5%;
-      top: -60px;
+      position: relative;
+      top:-120px;
       padding: 36px;
       border-radius: 5px;
     }
     .bottom {
       background-color: white;
       padding: 36px;
-      margin-top: 105px;
+      margin-top: -90px;
       border-radius: 5px;
     }
   }
