@@ -20,6 +20,11 @@
   }
   .inputs {
     padding: 50px;
+    .w-230 {
+      width: 230px;
+      flex: 0 0 auto;
+      height: 56px;
+    }
     .top {
       background-color: white;
       position: relative;
