@@ -12,7 +12,6 @@
       [formControl]="control"
       [required]="required"
       (selectionChange)="onChangeValue($event.value)"
-      [(value)]="selectedValue"
       [multiple]="multi"
     >
       <mat-option *ngIf="searchMode" class="searchInput">
@@ -46,7 +45,6 @@
     <mat-select
       [formControl]="control"
       [multiple]="multi"
-      [(value)]="selectId"
       (selectionChange)="onChangeValue($event.value)"
     >
       <mat-option *ngIf="searchMode" class="searchInput">

@@ -1,19 +1,19 @@
 import {
-  Component,
-  ContentChildren,
-  EventEmitter,
-  Input,
-  OnChanges,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  forwardRef,
+    Component,
+    ContentChildren,
+    EventEmitter,
+    Input,
+    OnChanges,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    forwardRef,
 } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
-import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 import { startWith } from 'rxjs';
+import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
 interface Option {
   [key: string]: string;
@@ -77,7 +77,8 @@ export class SelectDropDownComponent<T>
       : this.selectId;
     this.selectedValue = initialValue;
     this.filteredOptions = this.options;
-    if (initialValue !== undefined) {
+    // Only set if parent hasn't provided a value
+    if (initialValue !== undefined && (this.control?.value === null || this.control?.value === undefined)) {
       this.control?.setValue(initialValue, { emitEvent: false });
     }
   }
@@ -101,7 +102,8 @@ export class SelectDropDownComponent<T>
     }
 
     // Ensure the FormControl reflects the initial selected value so mat-select displays it
-    if (this.selectedValue !== undefined) {
+    // Only set if current control value is empty
+    if (this.selectedValue !== undefined && (this.control.value === null || this.control.value === undefined)) {
       this.control.setValue(this.selectedValue, { emitEvent: false });
     }
 
