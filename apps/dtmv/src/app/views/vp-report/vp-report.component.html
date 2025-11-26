@@ -21,7 +21,7 @@
             ></stc-apps-select-drop-down>
             <stc-apps-button
               *ngIf="!pendingPanelOpen"
-              [buttonText]="pendingPanelOpen ? 'Hide Pending Actions' : 'Show Pending Actions'"
+              [buttonText]="pendingPanelOpen ? 'Hide Pending Actions' : 'Pending Actions'"
               [buttonType]="'primary'"
               (btnClick)="togglePendingPanel()"
               [buttonIconV6]="'far fa-clock'"
@@ -101,6 +101,7 @@
             [closable]="true"
             [isOpen]="pendingPanelOpen"
             (closeClicked)="pendingPanelOpen = false"
+            (itemClicked)="onPendingItemClicked($event)"
           ></stc-apps-vp-pending-actions>
         </div>
       </div>

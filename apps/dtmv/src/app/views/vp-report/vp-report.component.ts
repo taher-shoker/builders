@@ -110,6 +110,7 @@ export class VpReportComponent implements OnInit {
     this.setDateInitiallyToCurrentYear();
     this.getAllTeams();
     this.showDigitalTransformation();
+    this.fetchVPPendingTasks();
   }
 
   showDigitalTransformation() {
@@ -214,6 +215,30 @@ export class VpReportComponent implements OnInit {
 
   protected togglePendingPanel() {
     this.pendingPanelOpen = !this.pendingPanelOpen;
+  }
+
+  protected fetchVPPendingTasks() {
+    this.milestonesService
+      .getMilestoneTasks({ onlyVpReport: '1' })
+      .subscribe({
+        next: (res) => {
+          this.vpPendingItems = Array.isArray(res) ? res : [];
+        },
+        error: () => {
+          this.vpPendingItems = [];
+        },
+      });
+  }
+
+  protected onPendingItemClicked(item: any) {
+    if (item?.flowName === 'DT_VP_Report_Data_Approval') {
+      const team = item?.requestParams?.team;
+      const yearRaw = item?.requestParams?.year;
+      const yearNum = typeof yearRaw === 'number' ? yearRaw : Number(yearRaw);
+      this.router.navigate(['vp-report/edit'], {
+        queryParams: { team, year: yearNum },
+      });
+    }
   }
 
   private yearsArrPopulator() {
