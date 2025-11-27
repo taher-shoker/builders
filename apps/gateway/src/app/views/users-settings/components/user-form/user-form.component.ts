@@ -174,7 +174,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       manager: [{}],
       viewer: [false],
       editor: [false],
-      pmo: [false],
+      DT_Governance_Approver: [false],
       ticketAdmin: [false],
       edit_delete: [false],
       pageAccess: [
@@ -202,7 +202,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   // Getter for pmoControl
   get pmoControl(): AbstractControl | null {
-    return this.form.get('pmo');
+    return this.form.get('DT_Governance_Approver');
   }
 
   get ticketAdminControl(): AbstractControl | null {
@@ -256,7 +256,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (this.pmoControl?.value) {
         const pmoObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'PMO');
+          .find((r) => r.groupName === 'DT_Governance_Approver');
         pmoObj && dataForm.userGroups.push({ id: pmoObj.id });
       }
       if (this.ticketAdminControl?.value) {
@@ -448,7 +448,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         (r) =>
           r.groupName !== 'DT_VP_Dashboard_Viewer' &&
           r.groupName !== 'DT_VP_Dashboard_Editor' &&
-          r.groupName !== 'PMO' &&
+          r.groupName !== 'DT_Governance_Approver' &&
           r.groupName !== 'DT_Ticket_Admin' &&
           r.groupName !== 'DT_User_Edit_Delete'
       );
@@ -662,7 +662,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (value === 'DT_User') {
       this.form.get('viewer')?.setValue(true);
       this.form.get('editor')?.setValue(false);
-      this.form.get('pmo')?.setValue(false);
+      this.form.get('DT_Governance_Approver')?.setValue(false);
       this.form.get('ticketAdmin')?.setValue(false);
       this.form.get('edit_delete')?.setValue(false);
       this.cdr.detectChanges();
@@ -740,9 +740,9 @@ export class UserFormComponent implements OnInit, OnChanges {
 
       // If user group contains PMO role, set pmo to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'PMO')?.groupName === 'PMO'
+        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')?.groupName === 'DT_Governance_Approver'
       ) {
-        this.form?.get('pmo')?.setValue(true);
+        this.form?.get('DT_Governance_Approver')?.setValue(true);
         this.form?.get('viewer')?.disable();
       }
       if (
@@ -863,7 +863,7 @@ export class UserFormComponent implements OnInit, OnChanges {
   private resetPrivilegeCheckboxes(): void {
     this.form.get('viewer')?.setValue(false, { emitEvent: false });
     this.form.get('editor')?.setValue(false, { emitEvent: false });
-    this.form.get('pmo')?.setValue(false, { emitEvent: false });
+    this.form.get('DT_Governance_Approver')?.setValue(false, { emitEvent: false });
     this.form.get('ticketAdmin')?.setValue(false, { emitEvent: false });
     this.form.get('edit_delete')?.setValue(false, { emitEvent: false });
     this.viewerControl?.enable();

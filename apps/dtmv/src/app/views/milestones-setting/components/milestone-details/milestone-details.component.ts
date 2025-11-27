@@ -334,7 +334,7 @@ export class MilestoneDetailsComponent implements OnInit {
               } else if (res[i].taskName === 'Review Milestone Modifications') {
                 actions.push(Actions.approveModification);
                 actions.push(Actions.returnModification);
-                userThatTaskIsPendingOn = 'DT Director';
+                //userThatTaskIsPendingOn = 'DT Director';
               }
             }
 

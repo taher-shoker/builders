@@ -307,7 +307,7 @@ export interface ReportDataWorkflow {
   taskName:
     | 'Approve Report Data'
     | 'Edit Report Data'
-    | 'Approve Report Data PMO'
+    | 'Approve Report Data Governance'
     | 'Approve Report Data Director';
   userDisplayName: string | null;
   username: string | null;
