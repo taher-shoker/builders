@@ -66,6 +66,8 @@ export class UserFormComponent implements OnInit, OnChanges {
   private dataReady = false;
   private rolesReady = false;
   private initialBindingDone = false;
+  private rebindingPrivilege = false;
+  private userSelectedPrivilege = false;
 
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
@@ -88,10 +90,16 @@ export class UserFormComponent implements OnInit, OnChanges {
     protected dialogService: DialogService,
     private el: ElementRef,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    if (!this.form) {
+      this.initializeUserForm();
+    }
+  }
 
   ngOnInit() {
-    this.initializeUserForm();
+    if (!this.form) {
+      this.initializeUserForm();
+    }
     if (!this.isEditing) {
       this.disableFields();
       this.showInputs = false;
@@ -105,10 +113,16 @@ export class UserFormComponent implements OnInit, OnChanges {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
-      if (this.data) {
+      if (!this.form) {
+        this.initializeUserForm();
+      }
+      if (this.data && this.form) {
         this.restFormWithValue(this.data);
-        this.getRoles();
         this.dataReady = true;
+        if (this.rolesReady && !this.initialBindingDone && !this.userSelectedPrivilege) {
+          this.getRoles();
+          this.initialBindingDone = true;
+        }
         if (this.data.pageAccess) {
           this.selectedPages = this.data.pageAccess.map((p: Page) => p.id);
         }
@@ -244,13 +258,13 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (this.viewerControl?.value) {
         const viewerObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_VP_Dashboard_Viewer');
+          .find((r) => r.groupName === 'VP_VIEWER');
         viewerObj && dataForm.userGroups.push({ id: viewerObj.id });
       }
       if (this.editorControl?.value) {
         const editorObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_VP_Dashboard_Editor');
+          .find((r) => r.groupName === 'VP_EDITOR');
         editorObj && dataForm.userGroups.push({ id: editorObj.id });
       }
       if (this.pmoControl?.value) {
@@ -262,7 +276,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (this.ticketAdminControl?.value) {
         const ticketAdminObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_Ticket_Admin');
+          .find((r) => r.groupName === 'TICKET_ADMIN');
 
         ticketAdminObj && dataForm.userGroups.push({ id: ticketAdminObj.id });
       }
@@ -446,10 +460,10 @@ export class UserFormComponent implements OnInit, OnChanges {
       .getRoles()
       .filter(
         (r) =>
-          r.groupName !== 'DT_VP_Dashboard_Viewer' &&
-          r.groupName !== 'DT_VP_Dashboard_Editor' &&
+          r.groupName !== 'VP_VIEWER' &&
+          r.groupName !== 'VP_EDITOR' &&
           r.groupName !== 'DT_Governance_Approver' &&
-          r.groupName !== 'DT_Ticket_Admin' &&
+          r.groupName !== 'TICKET_ADMIN' &&
           r.groupName !== 'DT_User_Edit_Delete'
       );
 
@@ -477,23 +491,38 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.privilages.set(filteredRoles);
     }
     if (this.data) {
+      if (this.userSelectedPrivilege) {
+        this.initialBindingDone = true;
+        return;
+      }
       const currentSystem = this.userService.getCurrentSystem();
       if (currentSystem === 'DI_Milestones') {
         const options = this.privilages();
         const candidateIds = options.map((p) => p.id);
-        const activeGroup = this.data.userGroups.find(
+        const preferredOrder = [
+          'DT_User',
+          'DT_Director',
+          'DT_PMO',
+          'DT_Governance',
+          'DT_Executive'
+        ];
+        const preferredMatch = preferredOrder
+          .map((name) => this.searchGroupByName(this.data.userGroups, name))
+          .find((g) => g && candidateIds.includes(g.id));
+        const fallbackMatch = this.data.userGroups.find(
           (g) =>
             g.roles?.some((r) => r.system?.name === currentSystem) &&
             candidateIds.includes(g.id)
         );
-        this.selectedPrivilege = options.find(
-          (p) => p.id === activeGroup?.id
-        );
+        const activeGroup = preferredMatch || fallbackMatch;
+        this.selectedPrivilege = options.find((p) => p.id === activeGroup?.id);
         if (this.selectedPrivilege) {
           this.form
             .get('userGroups')
             ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
           this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
         }
       } else if (currentSystem === 'DI_Management') {
         this.selectedPrivilege = this.privilages().filter(
@@ -503,7 +532,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.form
             .get('userGroups')
             ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
           this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
         }
       } else if (currentSystem === 'Score_Card_Report_DB') {
         this.selectedPrivilege = this.privilages().filter(
@@ -513,7 +544,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.form
             .get('userGroups')
             ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
           this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
         }
       } else if (currentSystem === 'Strategic_Dashboard') {
         this.selectedPrivilege = this.privilages().filter(
@@ -523,7 +556,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.form
             .get('userGroups')
             ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
           this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
         }
       } else if (currentSystem === 'FRAUD_ManagementUsers') {
         this.selectedPrivilege = this.privilages().filter(
@@ -533,7 +568,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.form
             .get('userGroups')
             ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
           this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
         }
       } else {
         this.selectedPrivilege = this.privilages().filter(
@@ -543,9 +580,14 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.form
             .get('userGroups')
             ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
           this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
         }
       }
+    }
+    if (this.data) {
+      this.initialBindingDone = true;
     }
   }
 
@@ -646,6 +688,7 @@ export class UserFormComponent implements OnInit, OnChanges {
             }
             this.addGroups = true;
             this.userId = res?.id || 0;
+            this.data = res;
             this.restFormWithValue(res);
             this.enableFields();
           },
@@ -684,6 +727,9 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
   restFormWithValue(data: User) {
+    if (!this.form) {
+      return;
+    }
     this.form.patchValue({
       email: data.email,
       name: data.name,
@@ -724,15 +770,15 @@ export class UserFormComponent implements OnInit, OnChanges {
   handleDI_Milestones() {
     if (this.data.userGroups.length > 1) {
       if (
-        this.searchGroupByName(this.data.userGroups, 'DT_VP_Dashboard_Viewer')
+        this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')
       ) {
         this.form?.get('viewer')?.setValue(true);
       }
 
       // If user group contains DT_VP_Dashboard_Editor role, set editor to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'DT_VP_Dashboard_Editor')
-          ?.groupName === 'DT_VP_Dashboard_Editor'
+        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')
+          ?.groupName === 'VP_EDITOR'
       ) {
         this.form?.get('editor')?.setValue(true);
         this.form?.get('viewer')?.disable();
@@ -746,8 +792,8 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.form?.get('viewer')?.disable();
       }
       if (
-        this.searchGroupByName(this.data.userGroups, 'DT_Ticket_Admin')
-          ?.groupName === 'DT_Ticket_Admin'
+        this.searchGroupByName(this.data.userGroups, 'TICKET_ADMIN')
+          ?.groupName === 'TICKET_ADMIN'
       ) {
         this.form?.get('ticketAdmin')?.setValue(true);
       }
@@ -781,9 +827,13 @@ export class UserFormComponent implements OnInit, OnChanges {
     ]).subscribe(([teams, groups]) => {
       this.userService.allTeams = teams || [];
       this.userService.allGroups = groups || [];
-      this.getTeams(this.data?.userGroups[0]);
-      this.getRoles();
       this.rolesReady = true;
+      if (this.data) {
+        this.getTeams(this.data.userGroups[0]);
+      }
+      if (this.dataReady && !this.initialBindingDone) {
+        this.getRoles();
+      }
       // Do not override team selections with group IDs
       this.initializing = false;
     });
@@ -812,6 +862,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   // Suppress form value changes on initial privilege binding
   // Avoid clearing team selections set from existing user data
   handleTeam(value: Role) {
+    if (!this.rebindingPrivilege && !this.initializing) {
+      this.userSelectedPrivilege = true;
+    }
     if (this.initializing) {
       return;
     }

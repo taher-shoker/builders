@@ -173,7 +173,7 @@ export class EditComponent implements OnInit {
           // Is Approved true or null, means a flow is closed and a DT User with role "Editor" can submit again
           if (
             this.milestonesService.userInGroup('DT_User') &&
-            this.milestonesService.userInGroup('DT_VP_Dashboard_Editor')
+            this.milestonesService.userInGroup('VP_EDITOR')
           ) {
             this.handleUiState('edit-pending'); // prepare the UI state for dt user to edit data.
           } else {
@@ -198,7 +198,7 @@ export class EditComponent implements OnInit {
         if (workflowRes?.taskName === 'Edit Report Data') {
           if (
             this.milestonesService.userInGroup('DT_User') &&
-            this.milestonesService.userInGroup('DT_VP_Dashboard_Editor')
+            this.milestonesService.userInGroup('VP_EDITOR')
           ) {
             this.handleUiState('resubmission-pending');
           } else {

@@ -1,5 +1,6 @@
 <div class="user-form">
   <form
+    *ngIf="form"
     [formGroup]="form"
     (ngSubmit)="onSubmit()"
     (keydown)="keyDownFunction($event)"
