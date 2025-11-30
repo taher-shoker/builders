@@ -11,6 +11,7 @@
     <mat-select
       [formControl]="control"
       [required]="required"
+      [panelClass]="'stc-select-panel'"
       (selectionChange)="onChangeValue($event.value)"
       [multiple]="multi"
     >
@@ -45,6 +46,7 @@
     <mat-select
       [formControl]="control"
       [multiple]="multi"
+      [panelClass]="'stc-select-panel'"
       (selectionChange)="onChangeValue($event.value)"
     >
       <mat-option *ngIf="searchMode" class="searchInput">

@@ -223,16 +223,19 @@ export class UsersComponent implements OnInit, AfterViewInit {
   }
 
   getRoles() {
-    this.privilege = this.userService
-      .getRoles()
-      .filter(
-        (r) =>
-          r.groupName !== 'DT_VP_Dashboard_Viewer' &&
-          r.groupName !== 'DT_VP_Dashboard_Editor' &&
-          r.groupName !== 'PMO' &&
-          r.groupName !== 'DT_Ticket_Admin' &&
-          r.groupName !== 'DT_User_Edit_Delete'
-      );
+    this.privilege = this.userService.getRoles();
+    this.privilege = (this.privilege || []).map((p: any) => ({
+      ...p,
+      groupLabel: (p.groupName || '').replace(/_/g, ' '),
+    }));
+      // .filter(
+      //   (r) =>
+      //     r.groupName !== 'DT_VP_Dashboard_Viewer' &&
+      //     r.groupName !== 'DT_VP_Dashboard_Editor' &&
+      //     r.groupName !== 'PMO' &&
+      //     r.groupName !== 'DT_Ticket_Admin' &&
+      //     r.groupName !== 'DT_User_Edit_Delete'
+      // );
 
     if (this.privilege.length >= 2) {
       const lastIndex = this.privilege.length - 1;
@@ -263,8 +266,12 @@ export class UsersComponent implements OnInit, AfterViewInit {
         .map((item: UserGroup) => ({
           id: item.roles[0].id,
           groupName: item.roles[0].roleName,
+        }))
+        .map((p: any) => ({
+          ...p,
+          groupLabel: (p.groupName || '').replace(/_/g, ' '),
         }));
-    }
+  }
   }
 
   getTeams() {

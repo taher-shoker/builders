@@ -1,0 +1,32 @@
+// :host ::ng-deep .mat-mdc-select-panel .mat-mdc-option,
+// :host ::ng-deep .mat-mdc-select-panel .mdc-list-item__primary-text {
+//   white-space: nowrap !important;
+//   word-break: normal !important;
+//   overflow-wrap: normal;
+//   -ms-word-break: normal;
+//   word-wrap: normal;
+//   hyphens: none;
+// }
+
+// :host ::ng-deep .mat-mdc-select-panel .mdc-list-item__primary-text {
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+
+// :host ::ng-deep .mat-mdc-select-panel {
+//   min-width: 320px;
+//   max-width: 80vw;
+// }
+
+// :host ::ng-deep .stc-select-panel .mdc-list-item__primary-text {
+//   white-space: nowrap !important;
+//   word-break: normal !important;
+//   overflow-wrap: normal;
+//   word-wrap: normal;
+//   hyphens: none;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+// :host ::ng-deep .stc-select-panel {
+//   min-width: 360px;
+// }
