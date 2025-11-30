@@ -61,13 +61,13 @@ type AllowedActions = '' | 'edit' | 'details' | 'delete' | 'updateProgress';
       state(
         'in',
         style({
-          right: '0',
+          right: '-40px',
         })
       ),
       state(
         'out',
         style({
-          right: '-600px',
+          right: '-640px',
         })
       ),
       transition('out => in', [animate('300ms ease-in')]),

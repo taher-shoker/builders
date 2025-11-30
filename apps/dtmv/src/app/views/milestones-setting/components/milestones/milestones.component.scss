@@ -262,9 +262,8 @@ table {
 // }
 
 .pending-list-holder.floating {
-  position: fixed;
-  right: 20px;
-  top: 160px;
+  position: absolute;
+  top: 24px;
   width: 600px;
   z-index: 1000;
 }
