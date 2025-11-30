@@ -234,7 +234,7 @@ export class MilestonesComponent
       {
         key: 'teamName',
         type: 'text',
-        label: 'Team',
+        label: 'Unit',
       },
       {
         key: 'workStream',
