@@ -207,10 +207,7 @@ export class EditComponent implements OnInit {
             this.status.set('Waiting For Resubmission');
           }
         } else if (workflowRes?.taskName === 'Approve Report Data Governance') {
-          if (
-            this.milestonesService.userInGroup('DT_User') ||
-            this.milestonesService.userInGroup('DT_Governance')
-          ) {
+          if (this.milestonesService.userInGroup('DT_Governance_Approver')) {
             this.directorOrPMOCanComment.set(true);
             this.handleUiState('governance-approval-pending');
           } else {
