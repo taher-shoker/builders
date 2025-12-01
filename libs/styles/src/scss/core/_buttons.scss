@@ -61,6 +61,10 @@
   &.gray-outline {
     color: $shadowStc;
     border: 1px solid $shadowStc;
+    .loader {
+      border-color: $shadowStc !important;
+      border-bottom-color: transparent !important;
+    }
   }
   &.stc-color-outline {
     color: $stcColor !important;

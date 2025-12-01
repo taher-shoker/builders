@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AdminAuthGuard } from '../../services/admin.auth.guard';
 import { AuthGuard } from '../../services/auth.guard';
 import { HomeComponent } from './home.component';
-import { VpViewerGuard } from '../../services/guards/vp-viewer.guard';
 
 const routes: Routes = [
   {
@@ -50,6 +50,15 @@ const routes: Routes = [
         loadChildren: () =>
           import('../kpi-dashboard/kpi-dashboard.module').then(
             (m) => m.KpiDashboardModule
+          ),
+      },
+      {
+        path: 'action-log',
+        canActivate: [AdminAuthGuard],
+        data: { breadcrumb: 'Action Log' },
+        loadChildren: () =>
+          import('../action-log/action-log.module').then(
+            (m) => m.ActionLogModule
           ),
       },
     ],

@@ -69,6 +69,13 @@ export class HomeComponent implements OnInit {
       roles: ['TICKET_ADMIN'],
       urlHome: '/home',
     },
+    {
+      name: 'Action Log',
+      url: '/action-log',
+      icon: 'fa fa-list-alt',
+      roles: ['ADMINS'],
+      urlHome: '/home',
+    },
   ];
   ngOnInit() {
     this.updateActiveTabAndBanner(this.router.url);
@@ -139,6 +146,8 @@ export class HomeComponent implements OnInit {
         title: 'DT-Milestone-DI-KPIs-Integration',
         text: '',
       });
+    } else if (url.includes('/action-log')) {
+      this.bannerDataService.updateData({ title: 'Action Log', text: '' });
     } else {
       this.bannerDataService.updateData({ title: 'milestones', text: '' });
     }
