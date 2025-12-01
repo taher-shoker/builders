@@ -119,7 +119,11 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (this.data && this.form) {
         this.restFormWithValue(this.data);
         this.dataReady = true;
-        if (this.rolesReady && !this.initialBindingDone && !this.userSelectedPrivilege) {
+        if (
+          this.rolesReady &&
+          !this.initialBindingDone &&
+          !this.userSelectedPrivilege
+        ) {
           this.getRoles();
           this.initialBindingDone = true;
         }
@@ -504,7 +508,7 @@ export class UserFormComponent implements OnInit, OnChanges {
           'DT_Director',
           'DT_PMO',
           'DT_Governance',
-          'DT_Executive'
+          'DT_Executive',
         ];
         const preferredMatch = preferredOrder
           .map((name) => this.searchGroupByName(this.data.userGroups, name))
@@ -769,16 +773,14 @@ export class UserFormComponent implements OnInit, OnChanges {
    */
   handleDI_Milestones() {
     if (this.data.userGroups.length > 1) {
-      if (
-        this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')
-      ) {
+      if (this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')) {
         this.form?.get('viewer')?.setValue(true);
       }
 
       // If user group contains DT_VP_Dashboard_Editor role, set editor to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')
-          ?.groupName === 'VP_EDITOR'
+        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')?.groupName ===
+        'VP_EDITOR'
       ) {
         this.form?.get('editor')?.setValue(true);
         this.form?.get('viewer')?.disable();
@@ -786,7 +788,8 @@ export class UserFormComponent implements OnInit, OnChanges {
 
       // If user group contains PMO role, set pmo to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')?.groupName === 'DT_Governance_Approver'
+        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')
+          ?.groupName === 'DT_Governance_Approver'
       ) {
         this.form?.get('DT_Governance_Approver')?.setValue(true);
         this.form?.get('viewer')?.disable();
@@ -832,6 +835,11 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.getTeams(this.data.userGroups[0]);
       }
       if (this.dataReady && !this.initialBindingDone) {
+        this.getRoles();
+      }
+
+      if (this.isEditing === false) {
+        this.getTeams(this.data?.userGroups[0]);
         this.getRoles();
       }
       // Do not override team selections with group IDs
@@ -916,7 +924,9 @@ export class UserFormComponent implements OnInit, OnChanges {
   private resetPrivilegeCheckboxes(): void {
     this.form.get('viewer')?.setValue(false, { emitEvent: false });
     this.form.get('editor')?.setValue(false, { emitEvent: false });
-    this.form.get('DT_Governance_Approver')?.setValue(false, { emitEvent: false });
+    this.form
+      .get('DT_Governance_Approver')
+      ?.setValue(false, { emitEvent: false });
     this.form.get('ticketAdmin')?.setValue(false, { emitEvent: false });
     this.form.get('edit_delete')?.setValue(false, { emitEvent: false });
     this.viewerControl?.enable();
