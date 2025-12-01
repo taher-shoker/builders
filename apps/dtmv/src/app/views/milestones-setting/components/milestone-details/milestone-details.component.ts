@@ -101,7 +101,7 @@ export class MilestoneDetailsComponent implements OnInit {
       actions: [Actions.initiateUpdateProgress],
     };
     this.isLoadingSteps = false;
-    if (!this.isDirector()) {
+    if (!this.isDirector() && !this.milestonesService.checkIsGovernance()) {
       this.steps.unshift(initialStep); // Adding the first step statically in the array before looping the rest of tasks.
     }
   }
