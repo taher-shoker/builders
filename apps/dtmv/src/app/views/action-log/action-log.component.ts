@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { saveAs } from 'file-saver';
+import { ToastrService } from 'ngx-toastr';
 import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { ActionLogEntry, ActionLogService } from './action-log.service';
@@ -29,7 +30,12 @@ export class ActionLogComponent implements OnInit {
   dropdownResetKey = 0;
 
   columnsSchema = [
-    { key: 'formattedCreatedAt', type: 'text', label: 'Action Date', align: 'left' },
+    {
+      key: 'formattedCreatedAt',
+      type: 'text',
+      label: 'Action Date',
+      align: 'left',
+    },
     { key: 'createdByName', type: 'text', label: 'User', align: 'left' },
     { key: 'action', type: 'text', label: 'Action Type', align: 'left' },
     { key: 'resourceType', type: 'text', label: 'Module Type', align: 'left' },
@@ -45,7 +51,8 @@ export class ActionLogComponent implements OnInit {
     private fb: FormBuilder,
     private router: Router,
     private route: ActivatedRoute,
-    private actionLogService: ActionLogService
+    private actionLogService: ActionLogService,
+    private toastr: ToastrService
   ) {}
 
   ngOnInit(): void {
@@ -97,7 +104,8 @@ export class ActionLogComponent implements OnInit {
           this.totalCount = actions.length;
         } else {
           const items = actions?.content || actions?.items || [];
-          const total = actions?.totalElements ?? actions?.total ?? items.length;
+          const total =
+            actions?.totalElements ?? actions?.total ?? items.length;
           this.actions = this.mapActionItems(items);
           this.totalCount = total;
         }
@@ -151,8 +159,16 @@ export class ActionLogComponent implements OnInit {
           this.loadingExport = false;
         })
       )
-      .subscribe((blob) => {
-        saveAs(blob, 'action-log.csv');
+      .subscribe({
+        next: (blob) => {
+          const filename = this.buildExportFilename();
+          saveAs(blob, filename);
+        },
+        error: () => {
+          this.toastr.error(
+            'No action log entries found. Try adjusting your filters or check back later.'
+          );
+        },
       });
   }
 
@@ -216,5 +232,15 @@ export class ActionLogComponent implements OnInit {
       formattedCreatedAt: this.formatDateTime(item.createdAt),
       createdByName: this.resolveUserName(item.createdBy),
     }));
+  }
+  private buildExportFilename(): string {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+    const hh = String(now.getHours()).padStart(2, '0');
+    const mi = String(now.getMinutes()).padStart(2, '0');
+    const ss = String(now.getSeconds()).padStart(2, '0');
+    return `action-log_${yyyy}-${mm}-${dd}_${hh}-${mi}-${ss}.xlsx`;
   }
 }

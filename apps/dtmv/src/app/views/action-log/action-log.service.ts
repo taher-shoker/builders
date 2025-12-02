@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -42,9 +42,15 @@ export class ActionLogService {
     let httpParams = new HttpParams()
       .set('page', String(Math.max(0, params.page - 1)))
       .set('size', String(params.size));
-    if (params.user) httpParams = httpParams.set('createdBy', String(params.user));
-    if (params.action) httpParams = httpParams.set('action', String(params.action));
-    if (params.milestoneName) httpParams = httpParams.set('milestoneName', String(params.milestoneName));
+    if (params.user)
+      httpParams = httpParams.set('createdBy', String(params.user));
+    if (params.action)
+      httpParams = httpParams.set('action', String(params.action));
+    if (params.milestoneName)
+      httpParams = httpParams.set(
+        'milestoneName',
+        String(params.milestoneName)
+      );
 
     return this.http.get<PaginatedResponse<ActionLogEntry> | ActionLogEntry[]>(
       this.auditUrl,
@@ -57,14 +63,22 @@ export class ActionLogService {
     action?: string;
     milestoneName?: string;
   }): Observable<Blob> {
-    let httpParams = new HttpParams().set('system', 'DI_Milestones');
-    if (params.user) httpParams = httpParams.set('user', params.user);
-    if (params.action) httpParams = httpParams.set('action', params.action);
+    let httpParams = new HttpParams();
+    if (params.user)
+      httpParams = httpParams.set('createdBy', String(params.user));
+    if (params.action)
+      httpParams = httpParams.set('action', String(params.action));
     if (params.milestoneName)
-      httpParams = httpParams.set('milestoneName', params.milestoneName);
-    return this.http.get(`${this.actionsUrl}/export`, {
+      httpParams = httpParams.set(
+        'milestoneName',
+        String(params.milestoneName)
+      );
+
+    const headers = new HttpHeaders({ 'X-Skip-Toastr': 'true' });
+    return this.http.get(`${this.auditUrl}/export`, {
       params: httpParams,
       responseType: 'blob',
+      headers,
     });
   }
 
@@ -75,6 +89,8 @@ export class ActionLogService {
 
   getActionTypes(): Observable<{ name: string }[]> {
     const url = `${this.baseUrl}v2/dt-milestone-service/audit/actions`;
-    return this.http.get<string[]>(url).pipe(map((arr) => arr.map((name) => ({ name }))));
+    return this.http
+      .get<string[]>(url)
+      .pipe(map((arr) => arr.map((name) => ({ name }))));
   }
 }
