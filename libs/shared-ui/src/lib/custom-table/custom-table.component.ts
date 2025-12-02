@@ -28,6 +28,7 @@ export interface ColumnsSchema {
   dateString?: 'longDate';
   actions?: ('edit' | 'delete' | 'details' | 'updateProgress' | '')[];
   complexViewTemp?: any;
+  align?: 'left' | 'center' | 'right';
 }
 
 export interface PaginationConfig {
@@ -78,6 +79,9 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   @Input() currentPage: number = 1;
   isDeleted = input<boolean>(false);
   showLogs = input<boolean>(false);
+
+  @Input() rowClickEnabled: boolean = false;
+  @Input() rowClickAction?: string;
 
   isEditMode = input<boolean>();
   userRoles = input<string>();
@@ -266,6 +270,12 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
 
   raiseAction(value: string, dataRow: any) {
     this.doAction.emit({ value, dataRow });
+  }
+
+  onRowClick(dataRow: any) {
+    if (this.rowClickEnabled && this.rowClickAction) {
+      this.raiseAction(this.rowClickAction, dataRow);
+    }
   }
 
   onDataChange(items?: any[]) {

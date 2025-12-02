@@ -1,6 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface ActionLogEntry {
@@ -9,6 +10,7 @@ export interface ActionLogEntry {
   createdBy: string;
   resourceId: string;
   resourceType: string;
+  resourceName?: string;
   action: string;
   payload?: any;
   parameters?: Record<string, any>;
@@ -26,6 +28,7 @@ export interface PaginatedResponse<T> {
 export class ActionLogService {
   baseUrl = environment.apiUrl;
   actionsUrl = `${this.baseUrl}v2/dt-milestone-service/actions`;
+  auditUrl = `${this.baseUrl}v2/dt-milestone-service/audit`;
 
   constructor(private http: HttpClient) {}
 
@@ -37,15 +40,14 @@ export class ActionLogService {
     milestoneName?: string;
   }): Observable<PaginatedResponse<ActionLogEntry> | ActionLogEntry[]> {
     let httpParams = new HttpParams()
-      .set('page', String(params.page))
-      .set('size', String(params.size))
-      .set('system', 'DI_Milestones');
-    if (params.user) httpParams = httpParams.set('user', params.user);
-    if (params.action) httpParams = httpParams.set('action', params.action);
-    if (params.milestoneName)
-      httpParams = httpParams.set('milestoneName', params.milestoneName);
+      .set('page', String(Math.max(0, params.page - 1)))
+      .set('size', String(params.size));
+    if (params.user) httpParams = httpParams.set('createdBy', String(params.user));
+    if (params.action) httpParams = httpParams.set('action', String(params.action));
+    if (params.milestoneName) httpParams = httpParams.set('milestoneName', String(params.milestoneName));
+
     return this.http.get<PaginatedResponse<ActionLogEntry> | ActionLogEntry[]>(
-      this.actionsUrl,
+      this.auditUrl,
       { params: httpParams }
     );
   }
@@ -67,13 +69,12 @@ export class ActionLogService {
   }
 
   getUsers(): Observable<{ name: string; email: string }[]> {
-    const url = `${this.baseUrl}v2/admin/users`;
-    const params = new HttpParams().set('system', 'DI_Milestones');
-    return this.http.get<{ name: string; email: string }[]>(url, { params });
+    const url = `${this.baseUrl}v2/dt-milestone-service/audit/users`;
+    return this.http.get<{ name: string; email: string }[]>(url);
   }
 
   getActionTypes(): Observable<{ name: string }[]> {
-    const url = `${this.actionsUrl}/types`;
-    return this.http.get<{ name: string }[]>(url);
+    const url = `${this.baseUrl}v2/dt-milestone-service/audit/actions`;
+    return this.http.get<string[]>(url).pipe(map((arr) => arr.map((name) => ({ name }))));
   }
 }

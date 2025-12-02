@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { saveAs } from 'file-saver';
+import { forkJoin } from 'rxjs';
 import { finalize } from 'rxjs/operators';
 import { ActionLogEntry, ActionLogService } from './action-log.service';
 
@@ -18,20 +19,26 @@ export class ActionLogComponent implements OnInit {
   pageSize = 10;
   loadingTable = false;
   loadingApplyFilters = false;
+  loadingClearFilters = false;
   loadingExport = false;
 
   userOptions: { name: string; email: string }[] = [];
   actionTypeOptions: { name: string }[] = [];
+  private userLookup: Map<string, string> = new Map<string, string>();
+  private lastHasActiveFilters = false;
+  dropdownResetKey = 0;
 
   columnsSchema = [
-    { key: 'id', type: 'text', label: 'ID' },
-    { key: 'createdAt', type: 'date', label: 'Created At' },
-    { key: 'createdBy', type: 'text', label: 'Created By' },
-    { key: 'resourceId', type: 'text', label: 'Resource ID' },
-    { key: 'resourceType', type: 'text', label: 'Resource Type' },
-    { key: 'action', type: 'text', label: 'Action' },
-    { key: 'system', type: 'text', label: 'System' },
-    { key: 'actions', type: 'actions', label: '', actions: ['details'] },
+    { key: 'formattedCreatedAt', type: 'text', label: 'Action Date', align: 'left' },
+    { key: 'createdByName', type: 'text', label: 'User', align: 'left' },
+    { key: 'action', type: 'text', label: 'Action Type', align: 'left' },
+    { key: 'resourceType', type: 'text', label: 'Module Type', align: 'left' },
+    {
+      key: 'resourceName',
+      type: 'text',
+      label: 'Milestone Name',
+      align: 'left',
+    },
   ];
 
   constructor(
@@ -48,14 +55,53 @@ export class ActionLogComponent implements OnInit {
       milestoneName: [''],
     });
 
-    this.actionLogService.getUsers().subscribe((users) => {
-      this.userOptions = users || [];
-    });
-    this.actionLogService.getActionTypes().subscribe((types) => {
-      this.actionTypeOptions = types || [];
-    });
+    this.fetchInitialData();
 
-    this.fetchActions();
+    this.lastHasActiveFilters = this.hasActiveFilters();
+    this.form.valueChanges.subscribe(() => {
+      const now = this.hasActiveFilters();
+      if (!now && this.lastHasActiveFilters) {
+        this.currentPage = 1;
+        this.fetchActions();
+      }
+      this.lastHasActiveFilters = now;
+    });
+  }
+
+  private fetchInitialData(): void {
+    const { user, actionType, milestoneName } = this.form.value;
+    this.loadingTable = true;
+    forkJoin({
+      users: this.actionLogService.getUsers(),
+      actionTypes: this.actionLogService.getActionTypes(),
+      actions: this.actionLogService.getActions({
+        page: this.currentPage,
+        size: this.pageSize,
+        user,
+        action: actionType,
+        milestoneName,
+      }),
+    })
+      .pipe(
+        finalize(() => {
+          this.loadingTable = false;
+        })
+      )
+      .subscribe(({ users, actionTypes, actions }) => {
+        this.userOptions = users || [];
+        this.userLookup = new Map((users || []).map((u) => [u.email, u.name]));
+        this.actionTypeOptions = actionTypes || [];
+
+        if (Array.isArray(actions)) {
+          this.actions = this.mapActionItems(actions);
+          this.totalCount = actions.length;
+        } else {
+          const items = actions?.content || actions?.items || [];
+          const total = actions?.totalElements ?? actions?.total ?? items.length;
+          this.actions = this.mapActionItems(items);
+          this.totalCount = total;
+        }
+      });
   }
 
   fetchActions(): void {
@@ -73,16 +119,17 @@ export class ActionLogComponent implements OnInit {
         finalize(() => {
           this.loadingTable = false;
           if (this.loadingApplyFilters) this.loadingApplyFilters = false;
+          if (this.loadingClearFilters) this.loadingClearFilters = false;
         })
       )
       .subscribe((res) => {
         if (Array.isArray(res)) {
-          this.actions = res;
+          this.actions = this.mapActionItems(res);
           this.totalCount = res.length;
         } else {
           const items = res?.content || res?.items || [];
           const total = res?.totalElements ?? res?.total ?? items.length;
-          this.actions = items;
+          this.actions = this.mapActionItems(items);
           this.totalCount = total;
         }
       });
@@ -107,6 +154,14 @@ export class ActionLogComponent implements OnInit {
       .subscribe((blob) => {
         saveAs(blob, 'action-log.csv');
       });
+  }
+
+  clearFilters(): void {
+    this.loadingClearFilters = true;
+    this.form.reset({ user: '', actionType: '', milestoneName: '' });
+    this.dropdownResetKey++;
+    this.currentPage = 1;
+    this.fetchActions();
   }
 
   paginate(event: { currentPage: number }): void {
@@ -136,5 +191,30 @@ export class ActionLogComponent implements OnInit {
         (actionType && actionType !== '') ||
         (milestoneName && String(milestoneName).trim() !== '')
     );
+  }
+
+  private formatDateTime(ts: string): string {
+    if (!ts) return '-';
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return ts;
+    const dd = String(d.getDate()).padStart(2, '0');
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const yyyy = d.getFullYear();
+    const hh = String(d.getHours()).padStart(2, '0');
+    const mi = String(d.getMinutes()).padStart(2, '0');
+    const ss = String(d.getSeconds()).padStart(2, '0');
+    return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
+  }
+
+  private resolveUserName(createdBy: string): string {
+    return this.userLookup.get(createdBy) ?? createdBy;
+  }
+
+  private mapActionItems(items: ActionLogEntry[]): ActionLogEntry[] {
+    return (items || []).map((item) => ({
+      ...item,
+      formattedCreatedAt: this.formatDateTime(item.createdAt),
+      createdByName: this.resolveUserName(item.createdBy),
+    }));
   }
 }

@@ -24,7 +24,6 @@
           (click)="stopDropdownClose($event)"
         />
       </mat-option>
-      <mat-option *ngIf="Resetting && options.length > 0">None</mat-option>
       <mat-option
         *ngFor="let option of filteredOptions"
         [value]="
@@ -38,6 +37,15 @@
         {{ option[labelName] }}
       </mat-option>
     </mat-select>
+    <button
+      mat-icon-button
+      matSuffix
+      aria-label="Clear selection"
+      *ngIf="Resetting && hasUserSelection && (multi ? (isArray(control?.value) && control?.value.length > 0) : control?.value != null)"
+      (click)="clearSelection($event)"
+    >
+      <i class="fas fa-times"></i>
+    </button>
     <mat-error *ngIf="control.errors">{{
       'field_required' | translate
     }}</mat-error>
@@ -70,6 +78,15 @@
         </mat-option>
       </mat-optgroup>
     </mat-select>
+    <button
+      mat-icon-button
+      matSuffix
+      aria-label="Clear selection"
+      *ngIf="Resetting && hasUserSelection && (multi ? (isArray(control?.value) && control?.value.length > 0) : control?.value != null)"
+      (click)="clearSelection($event)"
+    >
+      <i class="fas fa-times"></i>
+    </button>
     <mat-error *ngIf="control.errors">{{
       'field_required' | translate
     }}</mat-error>

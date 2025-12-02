@@ -40,6 +40,14 @@ tr:not(.table-header) {
   }
 }
 
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background-color: rgba(79, 0, 140, 0.06);
+}
+
 .action-option {
   padding-block: 0.5rem;
   color: grey;
@@ -116,7 +124,7 @@ tr:not(.table-header) {
 .activityTable
 {
   td {
-    text-align: left!important;
+    text-align: left;
   }
 }
 .empty-details {
