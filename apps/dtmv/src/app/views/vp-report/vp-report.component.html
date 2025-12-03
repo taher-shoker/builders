@@ -97,11 +97,12 @@
         <div class="col-md-12">
           <stc-apps-vp-pending-actions
             [caption]="'Pending actions'"
-            [items]="vpPendingItems"
+            [items]="vpPendingItems()"
             [closable]="true"
             [isOpen]="pendingPanelOpen"
             (closeClicked)="pendingPanelOpen = false"
             (itemClicked)="onPendingItemClicked($event)"
+            *ngIf="pendingActionsCanRender()"
           ></stc-apps-vp-pending-actions>
         </div>
       </div>

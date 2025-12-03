@@ -44,7 +44,7 @@ export class VpReportComponent implements OnInit {
     averageUnitsProgress: number;
   } | null> = signal(null);
 
-  vpPendingItems: any[] = [];
+  vpPendingItems: WritableSignal<any[]> = signal([]);
   pendingPanelOpen: boolean = true;
 
   progressBarData = computed(() => {
@@ -222,10 +222,11 @@ export class VpReportComponent implements OnInit {
       .getMilestoneTasks({ onlyVpReport: '1' })
       .subscribe({
         next: (res) => {
-          this.vpPendingItems = Array.isArray(res) ? res : [];
+          console.log(res)
+          this.vpPendingItems.set(Array.isArray(res) ? res : []);
         },
         error: () => {
-          this.vpPendingItems = [];
+          this.vpPendingItems.set([]);
         },
       });
   }
@@ -327,4 +328,17 @@ export class VpReportComponent implements OnInit {
     const up = this.unitProgress();
     return up ? Math.round((up.diActualProgress || 0) * 100) : 0;//Math.round(up.diActualProgress * 10000) / 100 : 0;
   });
+
+  pendingActionsCanRender = computed(() => {
+    return this.vpPendingItems().length > 0;
+  });
+    // console.log(this.vpPendingItems)
+    // return (
+
+    //   // !this.milestonesService.checkIsAdmin() &&
+    //   // !this.milestonesService.checkIsExecutive() &&
+    //   // !this.milestonesService.checkIsPMO() &&
+    //   // !this.milestonesService.checkIsBusinessSpoc()
+    //   this.vpPendingItems.length > 0
+    // );
 }
