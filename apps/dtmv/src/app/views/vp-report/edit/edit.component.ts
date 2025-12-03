@@ -194,7 +194,6 @@ export class EditComponent implements OnInit {
 
         if (workflowRes?.taskName === 'Edit Report Data') {
           if (
-            this.milestonesService.userInGroup('DT_User') &&
             this.milestonesService.userInGroup('VP_EDITOR')
           ) {
             this.handleUiState('resubmission-pending');
