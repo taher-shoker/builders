@@ -171,10 +171,7 @@ export class EditComponent implements OnInit {
 
         if (res.isApproved === null || res.isApproved === true) {
           // Is Approved true or null, means a flow is closed and a DT User with role "Editor" can submit again
-          if (
-            this.milestonesService.userInGroup('DT_User') &&
-            this.milestonesService.userInGroup('VP_EDITOR')
-          ) {
+          if (this.milestonesService.userInGroup('VP_EDITOR')) {
             this.handleUiState('edit-pending'); // prepare the UI state for dt user to edit data.
           } else {
             this.handleUiState('none-pending'); // prepare the UI state to prevent any actions.

@@ -52,14 +52,14 @@ export class HomeComponent implements OnInit {
       name: 'Vp Report',
       url: '/vp-report',
       icon: 'fa-file-signature',
-      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO'],
+      roles: ['VP_VIEWER', 'VP_EDITOR', 'DT_PMO'],
       urlHome: '/home',
     },
     {
       name: 'Archived DT Milestones',
       url: '/archived-milestones',
       icon: 'fa fa-archive',
-      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO', 'DT_User'],
+      roles: ['all'],
       urlHome: '/home',
     },
     {

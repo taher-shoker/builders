@@ -798,7 +798,8 @@ export class MilestonesComponent
     return (
       !this.milestonesService.checkIsAdmin() &&
       !this.milestonesService.checkIsExecutive() &&
-      !this.milestonesService.checkIsPMO()
+      !this.milestonesService.checkIsPMO() &&
+      !this.readOnly
     );
   }
 }
