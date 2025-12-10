@@ -45,4 +45,8 @@ export class ProgressBarComponent {
   get unit(): string {
     return this.data().unit || '%';
   }
+  getLeftPosition(index: Index): string {
+    const v = (typeof index.progressValue === 'number' ? index.progressValue : index.value ?? 0);
+    return (v >= 100 ? 100 : v) + '%';
+  }
 }

@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
-import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Observable, delay, map, of } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import {
-  StreamsResponse,
   HighlightImpactReport,
+  HighlightImpartReportResponse,
   MilestoneAttachment,
   MilestoneProgressWorkflow,
   PendingTask,
-  HighlightImpartReportResponse,
   Reminders,
   ReportData,
   ReportDataWorkflow,
+  StreamsResponse,
 } from '../../services/models/milestones.models';
 
 export interface User {
@@ -62,6 +62,8 @@ export class MilestonesService {
   isDTDirector!: boolean;
   isDTGovernance!: boolean;
   isBusinessSpoc!: boolean;
+  isDTExecutive!: boolean;
+  isDTPMO!: boolean;
   isVPViewer!: boolean;
 
   isDTAdmin!: boolean;
@@ -111,6 +113,26 @@ export class MilestonesService {
       this.isDTGovernance = false;
     }
     return this.isDTGovernance;
+  }
+
+  checkIsExecutive() {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Executive')
+    ) {
+      this.isDTExecutive = true;
+    } else {
+      this.isDTExecutive = false;
+    }
+    return this.isDTExecutive;
+  }
+
+  checkIsPMO() {
+    if (this.getMilestoneUsersType().find((x) => x.groupName === 'DT_PMO')) {
+      this.isDTPMO = true;
+    } else {
+      this.isDTPMO = false;
+    }
+    return this.isDTPMO;
   }
 
   /**
@@ -473,4 +495,4 @@ export class MilestonesService {
     return Object.keys(obj)[Object.values(obj).indexOf(status)];
   }
 }
-export { HighlightImpactReport, PendingTask, MilestoneAttachment };
+export { HighlightImpactReport, MilestoneAttachment, PendingTask };

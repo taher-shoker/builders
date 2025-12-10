@@ -2,21 +2,21 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 
-import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import {
   app_sector_labels,
   di_labels,
   fraud_labels,
 } from '../../shared/constant/labels';
-import { Observable } from 'rxjs';
 import {
-  User,
-  RequestUser,
-  Team,
-  Role,
-  UserGroup,
   Page,
+  RequestUser,
+  Role,
+  Team,
+  User,
+  UserGroup,
 } from '../../shared/models/users-settings.model';
 
 @Injectable({

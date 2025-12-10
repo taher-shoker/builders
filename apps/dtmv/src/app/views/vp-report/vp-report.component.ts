@@ -8,11 +8,11 @@ import {
   computed,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MilestonesService } from '../milestones-setting/milestones.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DTStream, ReportData } from '../../services/models/milestones.models';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
+import { DTStream, ReportData } from '../../services/models/milestones.models';
+import { MilestonesService } from '../milestones-setting/milestones.service';
 
 @Component({
   selector: 'stc-apps-vp-report',
@@ -43,6 +43,9 @@ export class VpReportComponent implements OnInit {
     diActualProgress: number;
     averageUnitsProgress: number;
   } | null> = signal(null);
+
+  vpPendingItems: WritableSignal<any[]> = signal([]);
+  pendingPanelOpen: boolean = true;
 
   progressBarData = computed(() => {
     const reportData = this.reportData();
@@ -107,6 +110,7 @@ export class VpReportComponent implements OnInit {
     this.setDateInitiallyToCurrentYear();
     this.getAllTeams();
     this.showDigitalTransformation();
+    this.fetchVPPendingTasks();
   }
 
   showDigitalTransformation() {
@@ -117,7 +121,11 @@ export class VpReportComponent implements OnInit {
   }
   private watchRoute() {
     this.route.queryParams.subscribe((params) => {
-      this.selectedYear.set(params['year']);
+      const yearParam = Number(params['year']);
+      if (Number.isFinite(yearParam) && yearParam > 0) {
+        this.selectedYear.set(yearParam);
+        this.filterSelect.get('dateType')?.setValue(yearParam, { emitEvent: false });
+      }
       this.selectedTeam.set(params['team']);
 
       const currentYear = new Date().getFullYear();
@@ -125,6 +133,7 @@ export class VpReportComponent implements OnInit {
       if (!params['year']) {
         this.selectedYear.set(currentYear);
         this.updateRoute(this.allTeams[0]?.name, currentYear);
+        this.filterSelect.get('dateType')?.setValue(currentYear, { emitEvent: false });
       }
 
       if (!params['team']) {
@@ -140,6 +149,7 @@ export class VpReportComponent implements OnInit {
   private setDateInitiallyToCurrentYear() {
     const currentYear = new Date().getFullYear();
     this.filterSelect.get('dateType')?.setValue(currentYear);
+    this.selectedYear.set(currentYear);
   }
 
   private getAllTeams() {
@@ -201,6 +211,35 @@ export class VpReportComponent implements OnInit {
   protected handleSelectChange(value: string) {
     this.selectedYear.set(Number(value));
     this.updateRoute(this.selectedTeam(), Number(value));
+  }
+
+  protected togglePendingPanel() {
+    this.pendingPanelOpen = !this.pendingPanelOpen;
+  }
+
+  protected fetchVPPendingTasks() {
+    this.milestonesService
+      .getMilestoneTasks({ onlyVpReport: '1' })
+      .subscribe({
+        next: (res) => {
+          console.log(res)
+          this.vpPendingItems.set(Array.isArray(res) ? res : []);
+        },
+        error: () => {
+          this.vpPendingItems.set([]);
+        },
+      });
+  }
+
+  protected onPendingItemClicked(item: any) {
+    if (item?.flowName === 'DT_VP_Report_Data_Approval') {
+      const team = item?.requestParams?.team;
+      const yearRaw = item?.requestParams?.year;
+      const yearNum = typeof yearRaw === 'number' ? yearRaw : Number(yearRaw);
+      this.router.navigate(['vp-report/edit'], {
+        queryParams: { team, year: yearNum },
+      });
+    }
   }
 
   private yearsArrPopulator() {
@@ -289,4 +328,17 @@ export class VpReportComponent implements OnInit {
     const up = this.unitProgress();
     return up ? Math.round((up.diActualProgress || 0) * 100) : 0;//Math.round(up.diActualProgress * 10000) / 100 : 0;
   });
+
+  pendingActionsCanRender = computed(() => {
+    return this.vpPendingItems().length > 0;
+  });
+    // console.log(this.vpPendingItems)
+    // return (
+
+    //   // !this.milestonesService.checkIsAdmin() &&
+    //   // !this.milestonesService.checkIsExecutive() &&
+    //   // !this.milestonesService.checkIsPMO() &&
+    //   // !this.milestonesService.checkIsBusinessSpoc()
+    //   this.vpPendingItems.length > 0
+    // );
 }
