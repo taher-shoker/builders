@@ -26,8 +26,12 @@ export class ActionLogComponent implements OnInit {
   userOptions: { name: string; email: string }[] = [];
   actionTypeOptions: { name: string }[] = [];
   private userLookup: Map<string, string> = new Map<string, string>();
-  private lastHasActiveFilters = false;
   dropdownResetKey = 0;
+  appliedFilters: { user: string; actionType: string; milestoneName: string } = {
+    user: '',
+    actionType: '',
+    milestoneName: '',
+  };
 
   columnsSchema = [
     {
@@ -63,20 +67,14 @@ export class ActionLogComponent implements OnInit {
     });
 
     this.fetchInitialData();
-
-    this.lastHasActiveFilters = this.hasActiveFilters();
-    this.form.valueChanges.subscribe(() => {
-      const now = this.hasActiveFilters();
-      if (!now && this.lastHasActiveFilters) {
-        this.currentPage = 1;
-        this.fetchActions();
-      }
-      this.lastHasActiveFilters = now;
-    });
   }
 
   private fetchInitialData(): void {
-    const { user, actionType, milestoneName } = this.form.value;
+    this.appliedFilters = { ...this.form.value } as {
+      user: string;
+      actionType: string;
+      milestoneName: string;
+    };
     this.loadingTable = true;
     forkJoin({
       users: this.actionLogService.getUsers(),
@@ -84,9 +82,9 @@ export class ActionLogComponent implements OnInit {
       actions: this.actionLogService.getActions({
         page: this.currentPage,
         size: this.pageSize,
-        user,
-        action: actionType,
-        milestoneName,
+        user: this.appliedFilters.user,
+        action: this.appliedFilters.actionType,
+        milestoneName: this.appliedFilters.milestoneName,
       }),
     })
       .pipe(
@@ -113,15 +111,14 @@ export class ActionLogComponent implements OnInit {
   }
 
   fetchActions(): void {
-    const { user, actionType, milestoneName } = this.form.value;
     this.loadingTable = true;
     this.actionLogService
       .getActions({
         page: this.currentPage,
         size: this.pageSize,
-        user,
-        action: actionType,
-        milestoneName,
+        user: this.appliedFilters.user,
+        action: this.appliedFilters.actionType,
+        milestoneName: this.appliedFilters.milestoneName,
       })
       .pipe(
         finalize(() => {
@@ -146,14 +143,23 @@ export class ActionLogComponent implements OnInit {
   handleFilterChange(): void {
     this.currentPage = 1;
     this.loadingApplyFilters = true;
+    const { user, actionType, milestoneName } = this.form.value;
+    this.appliedFilters = {
+      user: String(user || ''),
+      actionType: String(actionType || ''),
+      milestoneName: String(milestoneName || ''),
+    };
     this.fetchActions();
   }
 
   export(): void {
-    const { user, actionType, milestoneName } = this.form.value;
     this.loadingExport = true;
     this.actionLogService
-      .exportActions({ user, action: actionType, milestoneName })
+      .exportActions({
+        user: this.appliedFilters.user,
+        action: this.appliedFilters.actionType,
+        milestoneName: this.appliedFilters.milestoneName,
+      })
       .pipe(
         finalize(() => {
           this.loadingExport = false;
@@ -177,6 +183,7 @@ export class ActionLogComponent implements OnInit {
     this.form.reset({ user: '', actionType: '', milestoneName: '' });
     this.dropdownResetKey++;
     this.currentPage = 1;
+    this.appliedFilters = { user: '', actionType: '', milestoneName: '' };
     this.fetchActions();
   }
 
@@ -204,8 +211,17 @@ export class ActionLogComponent implements OnInit {
     const { user, actionType, milestoneName } = this.form?.value || {};
     return Boolean(
       (user && user !== '') ||
-        (actionType && actionType !== '') ||
-        (milestoneName && String(milestoneName).trim() !== '')
+      (actionType && actionType !== '') ||
+      (milestoneName && String(milestoneName).trim() !== '')
+    );
+  }
+
+  hasAppliedFilters(): boolean {
+    const { user, actionType, milestoneName } = this.appliedFilters;
+    return Boolean(
+      (user && user !== '') ||
+      (actionType && actionType !== '') ||
+      (milestoneName && String(milestoneName).trim() !== '')
     );
   }
 
@@ -222,7 +238,7 @@ export class ActionLogComponent implements OnInit {
     return `${dd}/${mm}/${yyyy} ${hh}:${mi}:${ss}`;
   }
 
-  private resolveUserName(createdBy: string): string {
+  resolveUserName(createdBy: string): string {
     return this.userLookup.get(createdBy) ?? createdBy;
   }
 
