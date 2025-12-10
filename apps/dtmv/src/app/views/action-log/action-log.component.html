@@ -13,8 +13,7 @@
           [labelName]="'name'"
           [outputValue]="'email'"
           [searchMode]="true"
-          [Resetting]="true"
-          [resetTrigger]="dropdownResetKey"
+          [Resetting]="false"
           formControlName="user"
           [group]="false"
         ></stc-apps-select-drop-down>
@@ -26,8 +25,7 @@
           [labelName]="'name'"
           [outputValue]="'name'"
           [searchMode]="true"
-          [Resetting]="true"
-          [resetTrigger]="dropdownResetKey"
+          [Resetting]="false"
           formControlName="actionType"
           [group]="false"
         ></stc-apps-select-drop-down>
@@ -66,11 +64,21 @@
           (btnClick)="export()"
           [buttonIcon]="'fa-download'"
           [loading]="loadingExport"
-          [buttonDisable]="!hasActiveFilters() && actions.length === 0"
+          [buttonDisable]="!hasAppliedFilters() && actions.length === 0"
         ></stc-apps-button>
       </div>
     </div>
   </form>
+
+  <div class="filters-hint mt-3" *ngIf="hasAppliedFilters()">
+    <div class="d-flex align-items-center flex-wrap gap-2">
+      <i class="fas fa-filter"></i>
+      <span>Showing results filtered by:</span>
+      <span class="badge filter-hint" *ngIf="appliedFilters.user">User: {{ resolveUserName(appliedFilters.user) }}</span>
+      <span class="badge filter-hint" *ngIf="appliedFilters.actionType">Action Type: {{ appliedFilters.actionType }}</span>
+      <span class="badge filter-hint" *ngIf="appliedFilters.milestoneName">Milestone: {{ appliedFilters.milestoneName }}</span>
+    </div>
+  </div>
 
   <div class="table-holder mt-4">
     <div class="table-overlay" *ngIf="loadingTable">
