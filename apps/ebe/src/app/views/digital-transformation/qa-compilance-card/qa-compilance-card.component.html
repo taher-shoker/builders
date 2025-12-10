@@ -1,4 +1,4 @@
-<div class="qa-compilance-card">
+<div class="qa-compilance-card" [class.qa-compilance-card-mobile]="isMobile()">
   <div class="qa-compilance-card-header">
     <div class="left">
       <p
@@ -42,7 +42,7 @@
         <img src="assets/images/Info Circle.svg" alt="" />
         <span>highlights</span>
       </button>
-      @if(!isViewer()){
+      @if(!isViewer() && !isMobile()){
       <button class="edit-btn" (click)="openSidebar()">
         <i class="pi pi-pencil"></i>
         <!-- <img src="assets/images/button.svg" alt="" /> -->
@@ -97,7 +97,7 @@
         "
         [isWorkStream]="true"
         fontFamily="STCForwardFont"
-        secondaryBgColor="#F3F4F6"
+        [secondaryBgColor]="!isMobile() ? '#F3F4F6' : '#80808029'"
         [secondaryValue]="secondaryValue(item)"
         [totalTD]="
           item.totalTD

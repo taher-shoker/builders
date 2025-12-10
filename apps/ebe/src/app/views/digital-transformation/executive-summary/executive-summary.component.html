@@ -1,4 +1,8 @@
-<section class="executive-summary">
+<section
+  class="executive-summary"
+  [class.executive-summary-mobile]="isMobile()"
+  [class.full-height]="activeAccordionIndex === -1"
+>
   <p-accordion [activeIndex]="activeAccordionIndex">
     <p-accordionTab>
       <ng-template pTemplate="header">
@@ -7,7 +11,7 @@
             {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[0] : '' }}
           </p>
           <div>
-            @if(!isViewer()){
+            @if(!isViewer() && !isMobile()){
             <button
               class="add-workstream-btn"
               (click)="
@@ -32,7 +36,7 @@
         @if(dsDashboard){ @for (summaryData of dsDashboard; track $index) {
         <div class="executive-summary-body-container">
           <div class="executive-summary-body-title">
-            <div class="left-side">
+            <div class="left-side" style="flex-wrap: wrap">
               <p class="title2">
                 {{
                   summaryData && summaryData.businessUnit
@@ -62,19 +66,23 @@
               />
               }
             </div>
-            <div class="right-side">
-              <button (click)="openSidebar1(summaryData, 'highlights')">
+            <div class="right-side" [class.right-side-mobile]="isMobile()">
+              <button
+                (click)="openSidebar1(summaryData, 'highlights')"
+                [class.mobile-button]="isMobile()"
+              >
                 <img src="assets/images/Info Circle.svg" alt="" />
                 <span>highlights</span>
               </button>
               <button
                 class="Challenges_button"
+                [class.mobile-button]="isMobile()"
                 (click)="openSidebar1(summaryData, 'challenges')"
               >
                 <img src="assets/images/Danger.svg" alt="" />
                 <span>Challenges</span>
               </button>
-              @if(!isViewer()){
+              @if(!isViewer() && !isMobile()){
               <button
                 class="editProjectData"
                 (click)="
@@ -120,7 +128,7 @@
             </div>
           </div>
           <div class="executive-summary-body-content">
-            @if(!isViewer()){
+            @if(!isViewer() && !isMobile()){
             <button
               class="add-new-project-btn"
               (click)="
@@ -137,7 +145,12 @@
               @for (item of summaryData.projects; track $index) {
               @if(summaryData && summaryData.projects &&
               summaryData.projects.length !== 0){
-              <div class="col-lg-6 col-md-6 col-sm-12">
+              <div
+                class="col-lg-6 col-md-6 col-sm-12"
+                [ngStyle]="{
+                  'margin-bottom': $last ? '0px' : '20px'
+                }"
+              >
                 <stc-apps-executive-summary-card
                   (openProjSidebar)="
                     openProjSidebar($event);
@@ -145,6 +158,7 @@
                     isProject.set(true)
                   "
                   [executiveCard]="item"
+                  [isMobile]="isMobile()"
                   [isViewer]="isViewer()"
                   [isPMO]="isPMO()"
                 />
@@ -167,7 +181,7 @@
             {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[1] : '' }}
           </p>
           <div>
-            @if(!isViewer()){
+            @if(!isViewer() && !isMobile()){
             <button
               class="add-workstream-btn"
               (click)="
@@ -193,7 +207,7 @@
         (summaryData of itPlatformDashboard; track $index) {
         <div class="executive-summary-body-container">
           <div class="executive-summary-body-title">
-            <div class="left-side">
+            <div class="left-side" style="flex-wrap: wrap">
               <p class="title2">
                 {{
                   summaryData && summaryData.businessUnit
@@ -223,16 +237,23 @@
               />
               }
             </div>
-            <div class="right-side">
-              <button (click)="openSidebar1(summaryData, 'highlights')">
+            <div class="right-side" [class.right-side-mobile]="isMobile()">
+              <button
+                [class.mobile-button]="isMobile()"
+                (click)="openSidebar1(summaryData, 'highlights')"
+              >
                 <img src="assets/images/Info Circle.svg" alt="" />
                 <span>highlights</span>
               </button>
-              <button (click)="openSidebar1(summaryData, 'challenges')">
+              <button
+                [class.mobile-button]="isMobile()"
+                (click)="openSidebar1(summaryData, 'challenges')"
+                class="Challenges_button"
+              >
                 <img src="assets/images/Danger.svg" alt="" />
                 <span>Challenges</span>
               </button>
-              @if(!isViewer()){
+              @if(!isViewer() && !isMobile()){
               <button
                 class="editProjectData"
                 (click)="
@@ -268,7 +289,7 @@
             </div>
           </div>
           <div class="executive-summary-body-content">
-            @if(!isViewer()){
+            @if(!isViewer() && !isMobile()){
             <button
               class="add-new-project-btn"
               (click)="
@@ -285,8 +306,14 @@
             <div class="row">
               @if(summaryData.projects){ @for (item of summaryData.projects;
               track $index) {
-              <div class="col-lg-6 col-md-6 col-sm-12">
+              <div
+                class="col-lg-6 col-md-6 col-sm-12"
+                [ngStyle]="{
+                  'margin-bottom': $last ? '0px' : '20px'
+                }"
+              >
                 <stc-apps-executive-summary-card
+                  [isMobile]="isMobile()"
                   (openProjSidebar)="
                     openProjSidebar($event);
                     openAddWorkstreamSidebar(false, false, true);

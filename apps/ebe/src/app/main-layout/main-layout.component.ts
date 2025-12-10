@@ -43,7 +43,7 @@ export class MainLayoutComponent implements OnInit {
     this.scorecardService.setUsername(this.userData?.name);
     this.logoSrc = 'assets/images/stc-logo.svg';
     this.userNameLogo = 'assets/images/username-logo.svg';
-    this.navItems = this.scorecardService.getNavLinks();
+    // this.navItems = this.scorecardService.getNavLinks();
     this.router.events.subscribe({
       next: (res) => {
         if (res instanceof NavigationStart) {
@@ -65,7 +65,18 @@ export class MainLayoutComponent implements OnInit {
         (role) => role.roleName === 'BE_PMO'
       );
     }
+    this.pageAccessPermision();
     this.scorecardService.userRoles = this.userRoles;
+  }
+  pageAccessPermision() {
+    this.navItems = this.userData?.pageAccess.map((p: any) => {
+      return { ...p, url: `/${p.slug}` };
+    });
+    if (!this.isMobile()) {
+      this.router.navigate([this.navItems[0].url]);
+    } else {
+      this.router.navigate(['/home']);
+    }
   }
   private checkSystem(groups: UserGroup[]): UserGroup {
     const matchingGroup = groups.find((group: UserGroup) => {

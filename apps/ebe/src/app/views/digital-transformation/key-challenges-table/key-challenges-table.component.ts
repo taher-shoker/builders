@@ -6,6 +6,7 @@ import {
   OnChanges,
   OnDestroy,
   OnInit,
+  signal,
   SimpleChanges,
   ViewChild,
 } from '@angular/core';
@@ -39,13 +40,12 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './key-challenges-table.component.scss',
   providers: [ConfirmationService],
 })
-export class KeyChallengesTableComponent
-  implements OnInit, OnDestroy, OnChanges
-{
+export class KeyChallengesTableComponent implements OnInit, OnDestroy {
   digitalTransformationService = inject(DigitalTransformationService);
   challengesData!: KeyChallengesModel;
   endSubs$: Subject<any> = new Subject();
   isEmpty = false;
+  isChallengeAddedSuccess = signal(false);
   @ViewChild('overlayPanel2') overlayPanel2?: OverlayPanel;
   @ViewChild('overlayPanel') overlayPanel?: OverlayPanel;
   toastr = inject(ToastrService);
@@ -54,6 +54,7 @@ export class KeyChallengesTableComponent
   first = 0;
   isPMO = input<boolean>();
   isViewer = input<boolean>();
+  isMobile = input<boolean>();
   rows = 5;
   page = 1;
   isChallengeAdded = input<boolean>(false);
@@ -69,15 +70,10 @@ export class KeyChallengesTableComponent
   hideSidebar() {
     document.body.classList.remove('sidebar-open');
   }
-  private getData(
-    pageNum: number,
-    pageSize: number,
-    sort?: string,
-    sortBy?: string
-  ) {
+  getData() {
     this.isEmpty = false;
     this.digitalTransformationService
-      .getKeyChallengrsData(pageNum, pageSize, sort, sortBy)
+      .getKeyChallengrsData(this.page, 5, this.sortDirection, this.sortedBy)
       .pipe(takeUntil(this.endSubs$))
       .subscribe({
         next: (res: KeyChallengesModel) => {
@@ -91,14 +87,7 @@ export class KeyChallengesTableComponent
       });
   }
   ngOnInit(): void {
-    this.getData(1, 5, this.sortDirection);
-  }
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['isChallengeAdded']) {
-      if (this.isChallengeAdded()) {
-        this.getData(this.page, 5, this.sortDirection, this.sortedBy);
-      }
-    }
+    this.getData();
   }
   sortDirection: 'asc' | 'desc' = 'desc';
   sortedBy = '';
@@ -109,19 +98,13 @@ export class KeyChallengesTableComponent
     } else {
       this.sortedBy = 'dateRaised';
     }
-    this.getData(this.page, 5, this.sortDirection, this.sortedBy);
+    this.getData();
   }
   onPageChange(event: PaginatorState) {
     this.first = event.first ?? 0;
     this.rows = event.rows ?? 5;
     this.page = (event.page ?? 0) + 1;
-
-    this.getData(
-      (event.page ?? 0) + 1,
-      this.rows,
-      this.sortDirection,
-      this.sortedBy
-    );
+    this.getData();
   }
   // get paginatedChallenges(): KeyChallengesDataModel[] {
   //   const start = this.first;
@@ -134,7 +117,7 @@ export class KeyChallengesTableComponent
       .editKeyChallengrsData(this.clickedId, data)
       .subscribe({
         next: (res) => {
-          this.getData(this.page, 5, this.sortDirection, this.sortedBy);
+          this.getData();
           this.showChallengesSidebar = false;
           this.toastr.success('The Challenge is updated successfully');
         },
@@ -157,7 +140,7 @@ export class KeyChallengesTableComponent
       .deleteKeyChallengrsData(this.clickedId2)
       .subscribe({
         next: (res) => {
-          this.getData(this.page, 5, this.sortDirection, this.sortedBy);
+          this.getData();
           this.confirmationService.close();
           this.toastr.success('The Challenge is deleted successfully');
         },

@@ -127,7 +127,6 @@
               [name]="'ticketAdmin'"></stc-apps-checkbox>
           </div>
 
-
           <div class="row" *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User'">
             <div class="col-md-12">
               <stc-apps-checkbox [label]="'Grant Edit for VP Report'" formControlName="editor" [name]="'editor'"
@@ -142,7 +141,6 @@
               <stc-apps-checkbox [label]="'DT user to edit or delete'" formControlName="edit_delete"
                 [name]="'edit_delete'"></stc-apps-checkbox>
             </div>
-
           </div>
         </div>
         <div class="row mt-7" *ngIf="
@@ -164,10 +162,29 @@
           </div>
         </div>
         <div class="row mt-7" *ngIf="
+                    (showInputs &&
+                      userService.getCurrentSystem() ===
+                        'Business_Excellence_Dashboard')
+
+                  ">
+          <div class="col-md-5">
+            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
+              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
+              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-md-2"></div>
+          <div class="col-md-5">
+            <stc-apps-select-drop-down [label]="'Pages'" formControlName="pageAccess" [required]="true"
+              [options]="filterPages" [multi]="true" [selectId]="selectedPages || null">
+            </stc-apps-select-drop-down>
+
+          </div>
+        </div>
+        <div class="row mt-7" *ngIf="
             (showInputs &&
               userService.getCurrentSystem() ===
-                'Business_Excellence_Dashboard') ||
-            userService.getCurrentSystem() === 'ChatBI' ||
+                'ChatBI')  ||
             userService.getCurrentSystem() === 'TU_BRAIN' ||
             userService.getCurrentSystem() === 'FNI_Nokia'
           ">
@@ -178,6 +195,8 @@
             </stc-apps-select-drop-down>
           </div>
         </div>
+
+
         <div class="row mt-7 flex-row-reverse">
           <div class="col-md-4 offset-md-8">
             <div class="row">

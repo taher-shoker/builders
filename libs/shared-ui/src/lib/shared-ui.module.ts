@@ -109,6 +109,8 @@ import { PageHeaderComponent } from './pageHeader/page-header.component';
 import { FormInputComponent } from './form-input/form-input.component';
 import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component';
 import { ProgressChartComponent } from './progress-chart/progress-chart.component';
+import { MonthYearPickerComponent } from './month-year-picker/month-year-picker.component';
+import { NumericInputComponent } from './numeric-input/numeric-input.component';
 
 const components = [
   ButtonComponent,
@@ -131,6 +133,7 @@ const components = [
   DatePickerWeeklyComponent,
   DatePickerRangeComponent,
   DatePickerWeeklyRangeComponent,
+  MonthYearPickerComponent,
   LocaleDatePipe,
   SafeHtmlPipe,
   DonutChartComponent,
@@ -179,6 +182,7 @@ const components = [
   FormInputComponent,
   EditModeViewComponent,
   ProgressChartComponent,
+  NumericInputComponent,
 ];
 
 @NgModule({

@@ -1,5 +1,6 @@
 <button type="button" class="btn" [class]="buttonType" [disabled]="buttonDisable || loading" (click)="onClick()">
   <i class="fas {{ buttonIcon }}" *ngIf="buttonIcon"></i>
+  <i class="{{ buttonIconV6 }}" *ngIf="buttonIconV6"></i>
   {{ buttonText | translate }}
   <span class="loader" *ngIf="loading"></span>
 </button>

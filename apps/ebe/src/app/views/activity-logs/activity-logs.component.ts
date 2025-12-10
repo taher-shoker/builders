@@ -3,6 +3,7 @@ import {
   effect,
   ElementRef,
   inject,
+  OnInit,
   Renderer2,
   signal,
   ViewChild,
@@ -49,7 +50,7 @@ interface ActionType {
   providers: [DatePipe],
   encapsulation: ViewEncapsulation.Emulated,
 })
-export class ActivityLogsComponent {
+export class ActivityLogsComponent implements OnInit {
   currentTap = signal<TapModel>({} as TapModel);
   scorecardsTaps = signal<TapModel[]>([]);
   @ViewChild('dateFormGroup', { read: ElementRef }) dateFormGroup!: ElementRef;
@@ -91,21 +92,61 @@ export class ActivityLogsComponent {
   tapIndex = 0;
   userData!: UserModel;
   scorecardService = inject(ScorecardService);
+  private tabConfigs: Record<string, any> = {
+    scorecard: {
+      headers: ['user name', 'activity type', 'time stamp'],
+      index: 0,
+    },
+    cad: {
+      headers: [
+        'user name',
+        'activity type',
+        'activity program',
+        'activity key result',
+        'activity project',
+        'activity details',
+        'time stamp',
+        'old value',
+        'new value',
+      ],
+      index: 1,
+      actions: ['All', 'Import', 'Export', 'Add', 'Edit', 'Delete'],
+    },
+    psr: {
+      headers: [
+        'user name',
+        'activity type',
+        'activity program',
+        'activity project',
+        'activity details',
+        'time stamp',
+        'old value',
+        'new value',
+      ],
+      index: 2,
+      actions: ['All', 'Import', 'Export', 'Add', 'Edit', 'Delete'],
+    },
+    financial: {
+      headers: ['user name', 'activity type', 'time stamp'],
+      index: 3,
+    },
+  };
+
   ngOnInit() {
     if (this.scorecardService.getUserGroups()) {
       this.userData = JSON.parse(
         decodeURIComponent(this.scorecardService.getUserGroups())
       );
     }
-    this.scorecardsTaps.set([
+    const cards = [
       {
         id: 1,
-        name: 'Sector Scorecard',
+        name: 'Sector Scorecards',
         value: 'Scorecard',
       },
       {
         id: 2,
-        name: 'AI&DS Strategy Program',
+        name: 'AI&DS Strategy Programs',
         value: 'CAD',
       },
       // {
@@ -120,7 +161,7 @@ export class ActivityLogsComponent {
       },
       {
         id: 5,
-        name: 'Financial Reporting',
+        name: 'Financial Status',
         value: 'Financial',
       },
       {
@@ -128,121 +169,57 @@ export class ActivityLogsComponent {
         name: 'Digital Transformation',
         value: 'DT',
       },
-    ]);
+    ];
+    const allowedCards = cards.filter((card) =>
+      this.userData.pageAccess.some(
+        (access) => access.name.toLowerCase() === card.name.toLowerCase()
+      )
+    );
+    this.scorecardsTaps.set(allowedCards);
+    // this.scorecardsTaps.set();
     this.router.params.subscribe({
       next: (param) => {
-        const title = param['title'];
-        if (title === 'scorecard') {
-          this.currentTap.set(this.scorecardsTaps()[0]);
-          this.activityLogsHeader = [
-            'user name',
-            'activity type',
-            'time stamp',
-          ];
-          this.tapIndex = 0;
-        } else if (title === 'cad') {
-          this.currentTap.set(this.scorecardsTaps()[1]);
-          this.activityLogsHeader = [
-            'user name',
-            'activity type',
-            'activity program',
-            'activity key result',
-            'activity project',
-            'activity details',
-            'time stamp',
-            'old value',
-            'new value',
-          ];
-          this.tapIndex = 1;
-          this.actionTypes = [
-            {
-              name: 'All',
-              id: 'All',
-            },
-            {
-              name: 'Import',
-              id: 'Import',
-            },
-            {
-              name: 'Export',
-              id: 'Export',
-            },
-            {
-              name: 'Add',
-              id: 'Add',
-            },
-            {
-              name: 'Edit',
-              id: 'Edit',
-            },
-            {
-              name: 'Delete',
-              id: 'Delete',
-            },
-          ];
-        } else if (title === 'psr') {
-          this.currentTap.set(this.scorecardsTaps()[2]);
-          this.activityLogsHeader = [
-            'user name',
-            'activity type',
-            'activity program',
-            'activity project',
-            'activity details',
-            'time stamp',
-            'old value',
-            'new value',
-          ];
-          this.tapIndex = 2;
-          this.actionTypes = [
-            {
-              name: 'All',
-              id: 'All',
-            },
-            {
-              name: 'Import',
-              id: 'Import',
-            },
-            {
-              name: 'Export',
-              id: 'Export',
-            },
-            {
-              name: 'Add',
-              id: 'Add',
-            },
-            {
-              name: 'Edit',
-              id: 'Edit',
-            },
-            {
-              name: 'Delete',
-              id: 'Delete',
-            },
-          ];
-        } else if (title === 'financial') {
-          this.tapIndex = 3;
-          this.currentTap.set(this.scorecardsTaps()[3]);
-          this.activityLogsHeader = [
-            'user name',
-            'activity type',
-            'time stamp',
-          ];
+        const title = param['title']?.toLowerCase();
+        // declare config once
+        let config: any;
+
+        if (title) {
+          config = this.tabConfigs[title];
+          this.currentTap.set(
+            this.getCardByValue(title, this.scorecardsTaps())
+          );
+          this.activityLogsHeader = config.headers;
+          this.tapIndex = config.index;
         } else {
-          this.currentTap.set(this.scorecardsTaps()[0]);
-          this.activityLogsHeader = [
-            'user name',
-            'activity type',
-            'time stamp',
-          ];
+          const firstTab = this.scorecardsTaps()[0];
+          config = this.tabConfigs[firstTab.value.toLowerCase()];
+
+          this.currentTap.set(firstTab);
+          this.activityLogsHeader = config.headers;
           this.tapIndex = 0;
+        }
+
+        if (config.actions) {
+          this.actionTypes = config.actions.map((a: any) => ({
+            name: a,
+            id: a,
+          }));
         }
         this.getProgramFilterData();
         this.getKeyResultFilterData();
         this.getKeyResultprojectsFilterData();
       },
     });
+
     this.getAllActivityLogs(this.currentTap().value, 0, 10);
   }
+  getCardByValue(value: string, list: any[]) {
+    return (
+      list.find((card) => card.value.toLowerCase() === value.toLowerCase()) ||
+      null
+    );
+  }
+
   loading = false;
   private getAllActivityLogs(
     moduleName: string,
@@ -273,7 +250,6 @@ export class ActivityLogsComponent {
       .pipe(takeUntil(this.endSubs$))
       .subscribe({
         next: (res: ActivityLogRes) => {
-          console.log(res);
           this.activityLogsResponse.set(res);
           if (res.data.length === 0) {
             this.loading = false;
@@ -575,9 +551,6 @@ export class ActivityLogsComponent {
       this.selectedKeyResult = null;
     }
     if (this.currentTap().value === 'CAD') {
-      // console.log(this.selectedKeyResult);
-      // console.log(this.selectedProgram);
-      // console.log(this.selectedProgramIdFromKeyRes);
       this.getAllActivityLogs(
         this.currentTap().value,
         this.currentPage(),
@@ -656,7 +629,6 @@ export class ActivityLogsComponent {
       e.programId !== -1000 ? e.programId : null;
     const selectedKeyId =
       e.keyResultNumber !== -1000 ? e.keyResultNumber : null;
-    console.log(e);
     if (selectedKeyId) {
       if (this.selectedProgram && this.selectedProgram !== -1000) {
         this.getKeyResultprojectsFilterData(
@@ -685,11 +657,7 @@ export class ActivityLogsComponent {
     }
   }
   filterByName() {
-    // if(this.searchKeyword)
-    // {
-    // console.log(this.selectedKeyResult);
     this.applyFilters();
-    // }
   }
   selectActionType() {
     this.applyFilters();

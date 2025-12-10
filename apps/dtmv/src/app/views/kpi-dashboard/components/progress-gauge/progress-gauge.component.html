@@ -1,0 +1,131 @@
+<div class="card">
+  <div class="card-header">
+    <h3>{{ title }}</h3>
+  </div>
+
+  <div class="card-body">
+    <div class="gauge" *ngIf="hasActualData(); else emptyState">
+      <svg [attr.viewBox]="'0 0 ' + size + ' ' + size_width" class="block">
+        <!-- Muted background arc -->
+        <path
+          [attr.d]="bgPath"
+          [attr.stroke]="colorMuted"
+          [attr.stroke-width]="thickness"
+          stroke-linecap="round"
+          fill="none"
+          opacity="0.3"
+        />
+
+        <!-- Remaining (light grey on the right side) -->
+        <path
+          [attr.d]="remainingPath"
+          [attr.stroke]="colorMuted"
+          [attr.stroke-width]="thickness"
+          stroke-linecap="round"
+          fill="none"
+          opacity="0.2"
+        />
+
+        <!-- Active segmented arc using individual segments -->
+        <g *ngFor="let segment of segmentPaths">
+          <path
+            [attr.d]="segment.path"
+            [attr.stroke]="colorActive"
+            [attr.stroke-width]="thickness"
+            stroke-linecap="round"
+            fill="none"
+            stroke-linejoin="round"
+          />
+        </g>
+
+        <!-- End marker -->
+        <circle
+          [attr.cx]="markerCoord.x"
+          [attr.cy]="markerCoord.y"
+          [attr.r]="thickness / 2"
+          fill="white"
+          [attr.stroke]="colorActive"
+          [attr.stroke-width]="6"
+        ></circle>
+
+        <!-- Inner dotted guide -->
+        <path
+          [attr.d]="bgPath"
+          [attr.stroke]="colorDotted"
+          stroke-width="3"
+          fill="none"
+          stroke-linecap="round"
+          [attr.stroke-dasharray]="dottedDashArray"
+          [attr.transform]="'translate(' + (cx - cx) + ',' + (cy - cy) + ')'"
+          [attr.pathLength]="100"
+          [attr.filter]="''"
+          [attr.transform-origin]="cx + ' ' + cy"
+          [attr.d]="arcPath(rInnerDots, startAngle, endAngle)"
+          opacity="0.5"
+        />
+
+        <!-- Center value -->
+        <g class="center">
+          <text
+            [attr.x]="cx"
+            [attr.y]="cy - 8"
+            text-anchor="middle"
+            class="value"
+            [attr.fill]="colorActive"
+          >
+            {{ progressSig() }}%
+          </text>
+          <text
+            [attr.x]="cx"
+            [attr.y]="cy + 24"
+            text-anchor="middle"
+            class="label"
+            [attr.fill]="colorText"
+          >
+            Actual progress
+          </text>
+
+          <!-- Teardrop indicator -->
+          <g [attr.transform]="'translate(' + cx + ',' + (cy + 70) + ')'">
+            <g [attr.transform]="'rotate(' + dropRotate + ')'">
+              <path [attr.d]="alternativeDropPath" [attr.fill]="colorActive"></path>
+            </g>
+          </g>
+        </g>
+      </svg>
+
+      <!-- Bottom labels -->
+      <div class="labels">
+        <div class="metric">
+          <div class="val">{{ baseline }}%</div>
+          <div class="caption">Baseline</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="metric">
+          <div class="val">{{ target }}%</div>
+          <div class="caption">Target</div>
+        </div>
+      </div>
+
+      <!-- Legend -->
+      <div class="legend">
+        <div class="item" *ngFor="let it of legend">
+          <span
+            class="dot"
+            [class.ontrack]="it.key === 'ontrack'"
+            [class.atrisk]="it.key === 'atrisk'"
+            [class.delayed]="it.key === 'delayed'"
+          ></span>
+          <span>{{ it.label }}</span>
+        </div>
+      </div>
+    </div>
+    <ng-template #emptyState>
+      <div class="empty-state">
+        <!-- <div class="empty-state_icon">📈</div> -->
+        <div class="empty-state_title">No actual progress data</div>
+        <div class="empty-state_subtitle">Try a different year or unit.</div>
+      </div>
+    </ng-template>
+  </div>
+</div>

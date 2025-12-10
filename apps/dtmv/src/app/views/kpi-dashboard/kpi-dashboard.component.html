@@ -1,0 +1,89 @@
+<div class="kpi-dashboard">
+  <stc-apps-breadcrumb [bgColor]="'primary'"></stc-apps-breadcrumb>
+  <stc-apps-banner> </stc-apps-banner>
+
+  <div class="kpi-dashboard_layout">
+    <div class="row mt-4">
+      <div class="kpi-dashboard_tabs">
+        <stc-apps-tabs-navigation
+          [tabs]="customTabs"
+          [selectedTab]="currentTab()"
+          (tabChanged)="onTabChanged($event)"
+        >
+          <ng-template #tabContent let-tab let-i="index">
+            <div class="kpi-dashboard_tabs_container">
+              <div class="row gy-4 cols-spaced-32">
+                <div class="m-0 p-0 col-12">
+                  <div class="teams-tabs">
+                    @for (team of teamTabs; track team.key) {
+                    <button
+                      type="button"
+                      class="teams-tab"
+                      [class.active]="currentTeam() === team.key"
+                      [attr.aria-pressed]="currentTeam() === team.key"
+                      (click)="onTeamChanged(team.key)"
+                    >
+                      {{ team.label }}
+                    </button>
+                    }
+                  </div>
+                  <div class="kpi-dashboard_titlebar">
+                    <h2 class="kpi-dashboard_title">
+                      {{
+                        currentTeam()
+                          ? currentTeam() + ' Unit Details'
+                          : 'Unit Details'
+                      }}
+                    </h2>
+                    <div class="kpi-dashboard_titlebar_actions">
+                      <div class="kpi-dashboard_loading" *ngIf="globalLoading()">
+                        <mat-progress-spinner [diameter]="20" mode="indeterminate"></mat-progress-spinner>
+                      </div>
+                      <div class="kpi-dashboard_titlebar_filters">
+                        <stc-apps-select-drop-down
+                          [label]="''"
+                          [matLabel]="'View Year'"
+                          [options]="yearsOptions"
+                          [labelName]="'name'"
+                          [labelValue]="'id'"
+                          [outputValue]="'name'"
+                          [selectId]="selectedYear()"
+                          (selectChange)="onYearChanged($event)"
+                        ></stc-apps-select-drop-down>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="p-0 col-4">
+                  <stc-apps-progress-gauge
+                    [title]="currentTeam() ? (currentTeam() + ' Actual Progress') : 'DI Progress'"
+                    [progress]="progressPct()"
+                    [colorActive]="statusColor()"
+                    [baseline]="baselinePct()"
+                    [target]="targetPct()"
+                  ></stc-apps-progress-gauge>
+                </div>
+                <div class="p-0 col-8">
+                  <stc-apps-di-progress [unitId]="currentTeamId()" [teamName]="currentTeam()" [year]="selectedYear()"></stc-apps-di-progress>
+                </div>
+                <div class="p-0 col-12">
+                  <stc-apps-kpi-list-section
+                    [kpis]="kpis()"
+                    [loading]="loadingKpis()"
+                    [permissionRole]="permissionRole"
+                    [unitId]="currentTeamId()"
+                    [year]="+selectedYear()"
+                    [canLoadMore]="canLoadMore()"
+                    (loadMoreRequested)="onLoadMoreRequested()"
+                    (refreshRequested)="onRefreshRequested()"
+                    (exportRequested)="onExportKPIsRequested()"
+                  ></stc-apps-kpi-list-section>
+                </div>
+              </div>
+            </div>
+          </ng-template>
+        </stc-apps-tabs-navigation>
+      </div>
+    </div>
+  </div>
+</div>

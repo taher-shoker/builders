@@ -54,6 +54,12 @@
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 25px;
   // margin-top: 20px;
+  &.kpi-container-mobile {
+    @media all and (max-width: 400px) {
+      width: 100%;
+      display: block;
+    }
+  }
   .kpi-container-card {
     width: 100%;
   }
@@ -198,6 +204,29 @@
         border-radius: 5px;
         padding: 5px 10px;
       }
+    }
+  }
+}
+.digital-transformation-mobile-view {
+  min-height: 100vh;
+  background: #f5f6fa;
+}
+.digital-transformation-mobile-view-body {
+  // background-color: #f5f6fa;
+  padding: 15px;
+  // min-height: 100vh;
+}
+.qa-compilance-mobile {
+  background-color: transparent;
+  padding: 0;
+}
+.key-challenges-table-mobile {
+  &-header {
+    .main-title {
+      color: #121217;
+      font-size: 1.1rem;
+      @extend .stcFont;
+      font-weight: bold;
     }
   }
 }

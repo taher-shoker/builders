@@ -93,17 +93,37 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
   deleteRecord(item: any) {
     this.deleteAddedRecord.emit(item);
   }
-  parseDate(dateString: Date | string) {
-    if (typeof dateString !== 'string') {
-      // const date:string = this.datePipe.transform(dateString, 'yyyy/MM/dd') ?? ""
-      // const [day, month, year] = date.split('/');
-      return new Date(dateString);
-      // return date;
-    } else {
-      const [day, month, year] = dateString.split('/');
-      return new Date(+year, +month - 1, +day);
+  parseDate(dateInput: Date | string | any): string {
+    if (!dateInput) return '';
+
+    let date: Date;
+
+    // If already a Date object
+    if (dateInput instanceof Date) {
+      date = dateInput;
     }
+    // If ISO or dd/MM/yyyy string
+    else if (typeof dateInput === 'string') {
+      if (dateInput.includes('-')) {
+        // ISO or yyyy-MM-dd
+        date = new Date(dateInput);
+      } else {
+        // Handle dd/MM/yyyy
+        const [day, month, year] = dateInput.split('/').map(Number);
+        date = new Date(year, month - 1, day);
+      }
+    } else {
+      return '';
+    }
+
+    // Format to yyyy/MM/dd
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
+
+    return `${yyyy}/${mm}/${dd}`;
   }
+
   sortingDirection: 'desc' | 'asc' = 'asc';
   changeCurrentSortingColumn(colName: string): void {
     this.currentSortedByColumn$.next(colName);
@@ -263,6 +283,28 @@ export class CustomTableComponent implements OnChanges, OnInit, OnDestroy {
       e.preventDefault();
     }
   }
+
+  setValue(item: any, key: string, value: any): void {
+    if (!item || !key) return;
+
+    // If value is a Date object, store it as dd/mm/yyyy string
+    if (value instanceof Date) {
+      item[key] = this.formatDate(value);
+    } else {
+      // Parse if it comes as a string
+      const parsed = this.parseDate(value);
+      item[key] = this.formatDate(parsed);
+    }
+  }
+
+  /** Converts a Date → dd/mm/yyyy string */
+  formatDate(date: Date | any): string {
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+  }
+
   keyPress2(e: KeyboardEvent) {
     if (e.key === 'e') {
       e.preventDefault();

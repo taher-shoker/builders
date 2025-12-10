@@ -5,6 +5,13 @@
   border-radius: 10px;
   color: #000;
   padding: 20px 0;
+  &.qa-compilance-card-mobile {
+    background-color: #fff;
+    margin-block: 8px;
+    .qa-compilance-card-body {
+      background-color: #f5f6fa;
+    }
+  }
   // margin-bottom: 20px;
   &-header {
     display: flex;

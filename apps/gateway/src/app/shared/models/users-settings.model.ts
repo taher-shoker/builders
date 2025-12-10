@@ -27,6 +27,11 @@ export interface UserDelegate {
   email: string;
   [key: string]: unknown;
 }
+export interface Page {
+  id: number;
+  name: string;
+  slug: string;
+}
 interface DTO {
   passwordEncrypted: boolean;
   username: string;
@@ -65,6 +70,7 @@ export interface User {
   roles?: string[];
   userDelegates?: UserDelegates[];
   manager?: { id: number; email: string; name: string; jobTitle: string };
+  pageAccess?: Page[];
 }
 export interface UserDelegates {
   delegateName: string;

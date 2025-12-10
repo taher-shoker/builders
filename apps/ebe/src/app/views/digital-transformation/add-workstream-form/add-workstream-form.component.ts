@@ -1,5 +1,7 @@
 import {
+  AfterViewInit,
   Component,
+  ElementRef,
   EventEmitter,
   inject,
   input,
@@ -38,7 +40,9 @@ interface Status {
   templateUrl: './add-workstream-form.component.html',
   styleUrl: './add-workstream-form.component.scss',
 })
-export class AddWorkstreamFormComponent implements OnInit, OnChanges {
+export class AddWorkstreamFormComponent
+  implements OnInit, OnChanges, AfterViewInit
+{
   formBuilder = inject(FormBuilder);
   addWorkstreamForm!: FormGroup;
   isWorkstreamSidebarVisible = input<boolean>(false);
@@ -46,6 +50,7 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
   currentTabId = input<number>();
   isAddProject = input<boolean>(false);
   isEditWorkStream = input<boolean>(false);
+  constructor(private elementRef: ElementRef) {}
   type = input<string>('');
   isPMO = input<boolean | undefined>();
   editedCompilanceData = input<pageDetailsModel | null>(null);
@@ -71,6 +76,19 @@ export class AddWorkstreamFormComponent implements OnInit, OnChanges {
         this.addWorkstreamForm.value as AddWorkstreamFormModel
       );
     }
+  }
+  ngAfterViewInit() {
+    // Get all number inputs with wheel event prevention
+    const numberInputs = this.elementRef.nativeElement.querySelectorAll(
+      'input[type="number"][wheel]'
+    );
+
+    // Add passive wheel event listeners
+    numberInputs.forEach((input: HTMLInputElement) => {
+      input.addEventListener('wheel', this.preventMouseWheelChange.bind(this), {
+        passive: false, // Set to false since we're calling preventDefault()
+      });
+    });
   }
   requiredTrimmed(): ValidatorFn {
     return (control: AbstractControl): ValidationErrors | null => {

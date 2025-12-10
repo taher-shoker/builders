@@ -1,0 +1,51 @@
+.kpi-list {
+    &_search {
+        stc-apps-input {
+            ::ng-deep {
+                .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+                    background-color: transparent;
+                    border: 1px solid #CBD5E1;
+                    border-radius: 10px !important;
+                }
+
+                .input-group.stc-input-group .input-group-text {
+                    color: #CBD5E1;
+                }
+            }
+        }
+
+        stc-apps-select-drop-down {
+            ::ng-deep {
+                .mdc-text-field--filled {
+                    background-color: transparent;
+                    border: 1px solid var(--light-slate-gray);
+                    border-radius: 5px !important;
+                }
+
+                /* Keep the select stable height and prevent content wrap */
+                .mat-mdc-form-field {
+                    width: 100%;
+                }
+                .mat-mdc-form-field-flex {
+                    min-height: 40px; /* match inputs */
+                }
+                .mat-mdc-select,
+                .mat-mdc-select-trigger {
+                    width: 100%;
+                    display: flex;
+                    align-items: center;
+                }
+                .mat-mdc-select-value {
+                    white-space: nowrap;
+                    overflow: hidden;
+                    text-overflow: ellipsis; /* squash long multi-select labels */
+                }
+                /* Reduce internal padding to avoid height jumps when selecting */
+                .mdc-text-field--filled .mdc-text-field__input {
+                    padding-top: 10px;
+                    padding-bottom: 10px;
+                }
+            }
+        }
+    }
+}

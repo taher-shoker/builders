@@ -1,0 +1,73 @@
+<div class="key-challenges-mobile">
+  <div class="content">
+    @if(challengesData){ @for (challenge of challengesData.data; track
+    challenge.id) {
+    <div class="challenge-card">
+      <div class="challenge-card-header">
+        <div class="left">
+          <p>ID :</p>
+          <span>{{ challenge.id }}</span>
+        </div>
+        <div class="right">
+          <p>Date Raised :</p>
+          <span>{{ challenge.dateRaised }}</span>
+        </div>
+      </div>
+      <div class="challenge-title">
+        <p>
+          {{ challenge && challenge.description ? challenge.description : '-' }}
+        </p>
+        @if(challenge && challenge.description &&
+        challenge.description.trim().length > 100){
+        <span (click)="overlayPanel2?.show($event)" class="more-link">more</span>
+        <p-overlayPanel #overlayPanel2 dismissable="true">
+          <section class="challenge-popover-section">
+            {{ challenge.description }}
+          </section>
+        </p-overlayPanel>
+        }
+      </div>
+      <div class="challenge-data">
+        <div class="top-data">
+          <div class="left">
+            <p>Raised by</p>
+            <span>{{ challenge.raisedBy ? challenge.raisedBy : '-' }}</span>
+          </div>
+          <div class="right">
+            <p>Owner</p>
+            <span>{{ challenge.owner ? challenge.owner : '-' }}</span>
+          </div>
+        </div>
+        <div class="bottom-data">
+          <div class="left">
+            <p>Impact</p>
+            <span>{{ challenge.impact ? challenge.impact : '-' }}</span>
+          </div>
+          <div class="right">
+            <p>supported needed</p>
+            <div class="challenge-title">
+              <p class="colored">
+                {{ challenge && challenge.supportNeeded ? challenge.supportNeeded : '-' }}
+              </p>
+              @if(challenge && challenge.supportNeeded &&
+              challenge.supportNeeded.trim().length > 100){
+              <span (click)="overlayPanel2?.show($event)" class="more-link">more</span>
+              <p-overlayPanel #overlayPanel2 dismissable="true">
+                <section class="challenge-popover-section">
+                  {{ challenge.supportNeeded }}
+                </section>
+              </p-overlayPanel>
+              }
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+    } }
+  </div>
+  @if(challengesData && challengesData.data){
+  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows"
+    [totalRecords]="challengesData.totalElements" styleClass="challenges-pagination-mobile" />
+  }
+</div>

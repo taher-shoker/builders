@@ -28,9 +28,8 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       this.authService.navigateToLogin();
       return false;
-    } else if (!this.authService.isAdminUser()) {
-      return true;
     }
-    return false;
+    // Allow navigation for any authenticated user (including admins)
+    return true;
   }
 }
