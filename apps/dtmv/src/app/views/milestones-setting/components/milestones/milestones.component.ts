@@ -8,37 +8,32 @@ import {
   OnInit,
   ViewChild,
 } from '@angular/core';
-import {
-  ActivatedRoute,
-  NavigationEnd,
-  Router,
-  RouterEvent,
-} from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
-import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from '../../../../services/auth.service';
-import { filter, Subscription, take } from 'rxjs';
-import { UtilsService } from '@stc-apps/lng-selector';
-import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import { MilestonesService, PendingTask } from '../../milestones.service';
-import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
-import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
-import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { saveAs } from 'file-saver';
 import {
-  trigger,
+  animate,
   state,
   style,
   transition,
-  animate,
+  trigger,
 } from '@angular/animations';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from '@stc-apps/lng-selector';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
+import { saveAs } from 'file-saver';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
 import { UtilitiesService } from 'libs/shared-ui/src/lib/services/utilities.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { filter, Subscription, take } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
 import { FeedbackIssueComponent } from '../../../feedback-issue/feedback-issue.component';
+import { MilestonesService, PendingTask } from '../../milestones.service';
+import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
+import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 
 export interface Milestone {
   activityName: string;
@@ -66,13 +61,13 @@ type AllowedActions = '' | 'edit' | 'details' | 'delete' | 'updateProgress';
       state(
         'in',
         style({
-          right: '0',
+          right: '-40px',
         })
       ),
       state(
         'out',
         style({
-          right: '-600px',
+          right: '-640px',
         })
       ),
       transition('out => in', [animate('300ms ease-in')]),
@@ -156,6 +151,7 @@ export class MilestonesComponent
   yearsArr: any = [];
   allTeams: any = [];
   pageSizeNumber: number = 10;
+  currentPageNumber: number = 1;
   ngOnInit() {
     this.previousPath = this.router.url;
     if (this.route.snapshot.data['state'] == 'archive') {
@@ -168,8 +164,17 @@ export class MilestonesComponent
       this.bannerDataService.updateData({ title: 'milestones', text: '' });
       this.readOnly = false;
     }
-
     this.searchForm();
+    const storedPageSize = sessionStorage.getItem('milestonesPageSize');
+    if (storedPageSize) {
+      const n = parseInt(storedPageSize, 10);
+      if (!isNaN(n) && n > 0) this.pageSizeNumber = n;
+    }
+    const storedCurrentPage = sessionStorage.getItem('milestonesCurrentPage');
+    if (storedCurrentPage) {
+      const p = parseInt(storedCurrentPage, 10);
+      if (!isNaN(p) && p > 0) this.currentPageNumber = p;
+    }
     this.getMilestones();
     this.getPendingTasks();
 
@@ -181,6 +186,7 @@ export class MilestonesComponent
     if (this.milestonesService.checkIsDirector()) {
       this.bulkPremission = true;
     }
+    this.pendingActionsShown = 'in';
   }
   detectChangedRoutes() {
     this.routerSub = this.router.events
@@ -228,7 +234,7 @@ export class MilestonesComponent
       {
         key: 'teamName',
         type: 'text',
-        label: 'Team',
+        label: 'Unit',
       },
       {
         key: 'workStream',
@@ -309,6 +315,12 @@ export class MilestonesComponent
     for (const [key, value] of Object.entries(filteredForm)) {
       if (value === null || value === undefined || value === '') {
         delete params[key];
+      } else if (Array.isArray(value)) {
+        if (value.length === 0) {
+          delete params[key];
+        } else {
+          params[key] = value.join(',');
+        }
       } else {
         params[key] = value;
       }
@@ -405,6 +417,8 @@ export class MilestonesComponent
     });
   }
   paginate(event: PaginationEvent) {
+    this.currentPageNumber = event.currentPage;
+    sessionStorage.setItem('milestonesCurrentPage', String(event.currentPage));
     this.fetchMilestones({
       page: event.currentPage - 1,
       numberOfElementsToDisplay: this.pageSizeNumber,
@@ -413,6 +427,9 @@ export class MilestonesComponent
 
   setPageItemsCount(pageSize: number) {
     this.pageSizeNumber = pageSize;
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    sessionStorage.setItem('milestonesPageSize', String(pageSize));
     this.fetchMilestones({ numberOfElementsToDisplay: pageSize, page: 0 });
   }
 
@@ -438,7 +455,9 @@ export class MilestonesComponent
       JSON.stringify(this.filterForm)
     );
 
-    this.fetchMilestones({ page: 0 });
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    this.fetchMilestones({ page: 0, numberOfElementsToDisplay: this.pageSizeNumber });
     this.dialogService.close();
   }
 
@@ -447,7 +466,9 @@ export class MilestonesComponent
     this.resetFormFlag = true;
     this.filterForm = {};
     sessionStorage.removeItem('filterFormMilestones');
-    this.fetchMilestones({ page: 0 });
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    this.fetchMilestones({ page: 0, numberOfElementsToDisplay: this.pageSizeNumber });
     this.dialogService.close();
   }
 
@@ -708,14 +729,10 @@ export class MilestonesComponent
 
     if (filters) {
       this.filterForm = filters;
-      this.fetchMilestones({ page: 0 });
+      this.fetchMilestones({ page: this.currentPageNumber - 1, numberOfElementsToDisplay: this.pageSizeNumber });
       this.resetForm(this.filterForm);
     } else {
-      this.getMilestonesSub = this.milestonesService
-        .getMilestones({}, this.readOnly)
-        .subscribe((res: any) => {
-          this.populateMilestones(res);
-        });
+      this.fetchMilestones({ page: this.currentPageNumber - 1, numberOfElementsToDisplay: this.pageSizeNumber });
     }
   }
   addingArchiveFilter() {
@@ -731,20 +748,31 @@ export class MilestonesComponent
   isPendingListClosable: boolean = false;
 
   toggleAnimation() {
-    this.pendingActionsShown =
-      this.pendingActionsShown === 'out' ? 'in' : 'out';
+    this.pendingActionsShown = this.pendingActionsShown === 'out' ? 'in' : 'out';
   }
 
   handlePendingActionsList(width: number) {
-    this.milestonesService.checkIsAdmin();
-    if (width < 1630) {
+    const MIN_TABLE_WIDTH = 1165;
+    const PANE_WIDTH = 600;
+    const GAP = 40; // approximate padding/margins
+    const enoughSpace = width >= MIN_TABLE_WIDTH + PANE_WIDTH + GAP;
+
+    if (!this.pendingActionsCanRender) {
       this.tableCols = 12;
-      this.showPendingActionsBtn = true;
-      this.isPendingListClosable = true;
-    } else if (width > 1630) {
-      this.showPendingActionsBtn = false;
       this.isPendingListClosable = false;
+      this.showPendingActionsBtn = false;
+      return;
+    }
+
+    if (enoughSpace) {
       this.tableCols = 8;
+      this.isPendingListClosable = false;
+      this.pendingActionsShown = 'in';
+      this.showPendingActionsBtn = false;
+    } else {
+      this.tableCols = 12;
+      this.isPendingListClosable = true;
+      this.showPendingActionsBtn = true;
     }
   }
 
@@ -753,5 +781,25 @@ export class MilestonesComponent
     this.userSub?.unsubscribe();
     this.getAssigneeTasks?.unsubscribe();
     this.formChangesSub?.unsubscribe();
+  }
+  get canAddMilestone(): boolean {
+    if (this.readOnly) return false;
+    const restricted =
+      this.milestonesService.checkIsBusinessSpoc() ||
+      this.milestonesService.checkIsDirector() ||
+      this.milestonesService.checkIsGovernance() ||
+      this.milestonesService.checkIsExecutive() ||
+      this.milestonesService.checkIsPMO() ||
+      this.milestonesService.checkIsAdmin();
+    return !restricted;
+  }
+
+  get pendingActionsCanRender(): boolean {
+    return (
+      !this.milestonesService.checkIsAdmin() &&
+      !this.milestonesService.checkIsExecutive() &&
+      !this.milestonesService.checkIsPMO() &&
+      !this.readOnly
+    );
   }
 }

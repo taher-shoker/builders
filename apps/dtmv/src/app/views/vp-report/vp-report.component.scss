@@ -26,6 +26,7 @@
 }
 
 .vp-report {
+  position: relative;
   h3 {
     font-size: 32px;
     font-family: var(--stc-font-meduim);
@@ -82,8 +83,32 @@
     margin-right: 10px;
     margin-bottom: 10px;
   }
-  ::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) {
-    background-color: rgba($color: white, $alpha: 1) !important;
+  stc-apps-select-drop-down {
+    ::ng-deep .mdc-text-field--filled {
+      background-color: #fff;
+      border: 1px solid var(--stc-color);
+      border-radius: 10px !important;
+      min-height: 44px;
+    }
+    ::ng-deep .mdc-text-field__input {
+      color: var(--stc-darkGrey-color, #334155);
+      font-size: 14px;
+    }
+    ::ng-deep .mdc-text-field--filled .mdc-text-field__ripple,
+    ::ng-deep .mdc-text-field--filled .mdc-line-ripple {
+      display: none;
+    }
+  }
+  stc-apps-button {
+    ::ng-deep button {
+      height: 58px;
+      min-height: 58px;
+      padding-top: 0;
+      padding-bottom: 0;
+      display: inline-flex;
+      align-items: center;
+      font-size: 1rem;
+    }
   }
 }
 .mt-6 {

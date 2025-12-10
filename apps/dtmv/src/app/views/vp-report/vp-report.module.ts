@@ -19,9 +19,10 @@ import { QuillModule } from 'ngx-quill';
 import { EditComponent } from './edit/edit.component';
 import { PulsCardComponent } from './puls-card/puls-card.component';
 import { VpSummaryCardsComponent } from './summary-cards/summary-cards.component';
+import { PendingActionsPanelComponent } from './pending-actions-panel/pending-actions-panel.component';
 
 @NgModule({
-  declarations: [VpReportComponent, EditComponent, PulsCardComponent, VpSummaryCardsComponent],
+  declarations: [VpReportComponent, EditComponent, PulsCardComponent, VpSummaryCardsComponent, PendingActionsPanelComponent],
   imports: [
     CommonModule,
     FormsModule,
@@ -39,7 +40,7 @@ import { VpSummaryCardsComponent } from './summary-cards/summary-cards.component
     VpReportRoutingModule,
     QuillModule.forRoot(), // Ensure QuillModule is imported and initialized
   ],
-  exports: [PulsCardComponent, VpSummaryCardsComponent],
+  exports: [PulsCardComponent, VpSummaryCardsComponent, PendingActionsPanelComponent],
   providers: [],
 })
 export class VpReportModule {}

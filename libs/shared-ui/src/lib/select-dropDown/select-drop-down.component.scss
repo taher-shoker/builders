@@ -1,0 +1,96 @@
+// :host ::ng-deep .mat-mdc-select-panel .mat-mdc-option,
+// :host ::ng-deep .mat-mdc-select-panel .mdc-list-item__primary-text {
+//   white-space: nowrap !important;
+//   word-break: normal !important;
+//   overflow-wrap: normal;
+//   -ms-word-break: normal;
+//   word-wrap: normal;
+//   hyphens: none;
+// }
+
+// :host ::ng-deep .mat-mdc-select-panel .mdc-list-item__primary-text {
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+
+// :host ::ng-deep .mat-mdc-select-panel {
+//   min-width: 320px;
+//   max-width: 80vw;
+// }
+
+// :host ::ng-deep .stc-select-panel .mdc-list-item__primary-text {
+//   white-space: nowrap !important;
+//   word-break: normal !important;
+//   overflow-wrap: normal;
+//   word-wrap: normal;
+//   hyphens: none;
+//   overflow: hidden;
+//   text-overflow: ellipsis;
+// }
+// :host ::ng-deep .stc-select-panel {
+//   min-width: 360px;
+// }
+// .stc-select-panel {
+//   max-height: 350px !important; // optional if you want a fixed height
+//   overflow: auto !important;
+//   padding-top: 48px !important; // reserve space for sticky search bar
+//   position: relative;
+// }
+
+// /* Make the search input sticky */
+// .searchInput {
+//   position: sticky;
+//   top: 0;
+//   z-index: 10;
+//   background: #fff; // must have background color
+//   padding: 8px 0 !important;
+//   border-bottom: 1px solid #eee;
+// }
+// .stc-select-panel .mat-option,
+// .stc-select-panel .mat-optgroup-label {
+//   padding-left: 16px !important;
+// }
+
+.stc-select-panel {
+  max-height: 350px !important;
+  overflow: auto !important;
+
+  /* Offset for the sticky search bar height */
+  // padding-top: 50px !important;
+  position: relative;
+  padding-top: 50px !important;
+}
+
+/* Sticky search bar */
+.searchInput {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+
+  /* 🔥 Fix transparency issue */
+  background: #fff !important;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+
+  /* Make it look like a header */
+  padding: 8px !important;
+  margin: 0 !important;
+
+  /* Ensure it fully overlays content below */
+  display: flex;
+  align-items: center;
+}
+
+/* Optional: style the actual input */
+.searchInput input {
+  width: 100%;
+  border: none;
+  outline: none;
+  background: #fff !important;
+  padding: 6px 8px;
+  font-size: 14px;
+}
+
+.searchInput span {
+  margin-right: 6px;
+  color: #777;
+}

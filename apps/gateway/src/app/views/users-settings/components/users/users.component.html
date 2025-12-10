@@ -84,7 +84,7 @@
               [label]="userService.translateText('privilege')"
               [selectType]="'filter-select-box'"
               [options]="privilege"
-              [labelName]="'groupName'"
+              [labelName]="'groupLabel'"
               (selectChange)="handleSelectChange($event, 'privilege')"
               formControlName="privilegeSelect"
               [defaultAll]="true"
@@ -108,7 +108,7 @@
                   ? '75%'
                   : ''
               "
-              [label]="userService.translateText('team')"
+              [label]="userService.getCurrentSystem() !== 'DI_Milestones'? userService.translateText('team') : userService.translateText('unit')"
               [selectType]="'filter-select-box'"
               [options]="teams"
               (selectChange)="handleSelectChange($event, 'team')"

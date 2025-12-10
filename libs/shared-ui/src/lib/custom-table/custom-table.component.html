@@ -6,10 +6,10 @@
       @for(header of headers(); track header){
       <th (click)="changeCurrentSortingColumn(header.key)" [ngStyle]="{
           'font-family': fontFamily() ? fontFamily() : '',
-          'text-align': activityLogTable ? 'center' : 'left'
+          'text-align': header.align ? header.align : (activityLogTable ? 'center' : 'left')
         }">
         <div class="header-cell-holder" [ngStyle]="{
-            'justify-content': activityLogTable ? 'center' : 'left'
+            'justify-content': header.align ? (header.align === 'center' ? 'center' : header.align === 'right' ? 'flex-end' : 'flex-start') : (activityLogTable ? 'center' : 'flex-start')
           }">
           <div>{{ header.label }}</div>
           @if (sort && header.key !== 'actions' && !activityLogTable) {
@@ -56,8 +56,8 @@
     <tr class="table-header">
       @for(header of headers(); track header){
       <th (click)="changeCurrentSortingColumn(header.key)"
-        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }">
-        <div class="header-cell-holder">
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '', 'text-align': header.align ? header.align : 'left' }">
+        <div class="header-cell-holder" [ngStyle]="{ 'justify-content': header.align ? (header.align === 'center' ? 'center' : header.align === 'right' ? 'flex-end' : 'flex-start') : 'flex-start' }">
           <div>{{ header.label }}</div>
         </div>
       </th>
@@ -73,8 +73,8 @@
     <tr class="table-header">
       @for(header of headers(); track header){
       <th (click)="changeCurrentSortingColumn(header.key)"
-        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }">
-        <div class="header-cell-holder">
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '', 'text-align': header.align ? header.align : 'left' }">
+        <div class="header-cell-holder" [ngStyle]="{ 'justify-content': header.align ? (header.align === 'center' ? 'center' : header.align === 'right' ? 'flex-end' : 'flex-start') : 'flex-start' }">
           <div>{{ header.label }}</div>
           @if (sort && header.key !== 'actions') {
           <div class="arrows-holder">
@@ -134,10 +134,10 @@
 <ng-template #tableBody let-tableItems="tableItems">
   @for(item of tableItems | filterArray: filterStrStored; track item){
 
-  <tr>
+  <tr (click)="onRowClick(item)" [class.clickable-row]="rowClickEnabled && rowClickAction">
     @for(header of headers(); track header){ @if(header.type !== 'actions' &&
     header.type !== 'custom'){ @if(header.complexViewTemp){
-    <td>
+    <td [ngStyle]="{ 'text-align': header.align ? header.align : (psrTable() ? 'center' : 'left') }">
       <ng-container *ngTemplateOutlet="
           header.complexViewTemp;
           context: { header: header, item: item }
@@ -157,11 +157,12 @@
         (header.label === 'Completion Level' || header.label === 'weight')
       " [ngStyle]="{
         'font-family': fontFamily() && psrTable() ? fontFamily() : '',
-        color: header.key === 'time' ? '#8E9AA0' : '#363636'
+        color: header.key === 'time' ? '#8E9AA0' : '#363636',
+        'text-align': header.align ? header.align : (psrTable() ? 'center' : 'left')
       }">
       @if(!isEditMode()) { @if(header.key === '' && userRoles() !== "BE_VIEWERS"
       && !isDeleted()) {
-      <div class="delete-btn" (click)="deleteRecord(item)" [ngStyle]="{
+      <div class="delete-btn" (click)="deleteRecord(item); $event.stopPropagation()" [ngStyle]="{
           'font-family': fontFamily() && psrTable() ? fontFamily() : ''
         }">
         <img src="assets/images/trash.svg" alt="" />
@@ -223,11 +224,11 @@
     item.userHasEditPermission && !item.hasOngoingUpdateApproval)) ||
     (header?.actions?.includes('details')))) {
 
-    <td>
+    <td [ngStyle]="{ 'text-align': header.align ? header.align : (psrTable() ? 'center' : 'left') }">
       <div class="actions-row d-flex">
         @if((header.actions ?? []).length > 0){
 
-        <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
+        <span class="actions-span" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
           <i class="ri-more-2-fill"></i>
         </span>
         <mat-menu #menu="matMenu">
@@ -264,7 +265,7 @@
     } @else { @for(action of header?.actions; track action; let i = $index){
     @if(action === 'edit' && !item.latestWorkflowId ){
     <ng-container *ngIf="item.userHasEditPermission && !item.hasOngoingUpdateApproval && item.status !== 'Completed'">
-      <div class="edit-option action-option" (click)="raiseAction(action, item)">
+      <div class="edit-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
         <i class="ri-edit-box-line edit-icon"></i>
         Edit
       </div>
@@ -273,7 +274,7 @@
     } @else if (action === 'delete' && !item.latestWorkflowId && item.status !== 'Completed' ) {
     <ng-container *ngIf="item.userHasEditPermission &&
     !item.hasOngoingUpdateApproval">
-      <div class="delete-option action-option" (click)="raiseAction(action, item)">
+      <div class="delete-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
         <i class="ri-delete-bin-line"></i>
         Delete
       </div>
@@ -281,13 +282,13 @@
 
     } @else if(action === 'details'){
 
-    <div class="details-option action-option" (click)="raiseAction(action, item)">
+    <div class="details-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
       <i class="ri-arrow-right-up-line"></i>
       Show Details
     </div>
     } @else if(action === 'updateProgress' && !item.latestWorkflowId &&
     item.status !== 'Planned' && item.status !== 'Completed'){
-    <div class="update-option action-option" (click)="raiseAction(action, item)">
+    <div class="update-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
       <i class="ri-arrow-left-right-line"></i>
       Update Progress
     </div>

@@ -21,7 +21,7 @@
       <div
         class="bar"
         [ngStyle]="{
-          width: data().progressValue + '%',
+          width: data().progressValue >= 100 ? '100%' : data().progressValue + '%',
           'background-color': data().barColor
         }"
       ></div>
@@ -30,9 +30,7 @@
         <div
           class="indexer"
           [ngStyle]="{
-            left: index.progressValue
-              ? index.progressValue + '%'
-              : index.value + '%',
+            left: getLeftPosition(index),
             top: index.position === 'up' ? '-85px' : null,
             bottom: index.position === 'down' ? '-65px' : null
           }"
