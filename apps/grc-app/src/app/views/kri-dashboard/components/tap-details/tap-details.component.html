@@ -1,0 +1,40 @@
+<section class="financial-scorecard">
+
+  <form class="financial-scorecard-header-dropdowns justify-content-end" [formGroup]="filtersForm">
+    <stc-apps-select-drop-down [label]="''" formControlName="month" [options]="monthsArr" [outputValue]="'id'"
+      (selectChange)="selectMonth()" />
+    <stc-apps-select-drop-down [label]="''" formControlName="year" [options]="years()" [outputValue]="'id'"
+      (selectChange)="selectYear()" />
+  </form>
+  @if(!isEmpty()) { @for (scorecard of scorcardData(); track $index;let first =
+  $first) {
+  <div class="financial-scorecard-header">
+    <p class="financial-scorecard-header-title" [class.mt-4]="!first" (mouseenter)="showPopup(scorecard.title)"
+      (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''">
+      <!-- (click)="text()" -->
+      {{ scorecard.title | truncateWord : 13 }}
+      @if(scorecard.title.trim().length > 95) {
+      <p-overlayPanel #overlayPanel2 dismissable="true">
+        <section class="popover-section">{{ hoverTitle }}</section>
+      </p-overlayPanel>
+      }
+    </p>
+  </div>
+  <div class="financial-scorecard-costs">
+
+    <div class="kpi-container">
+      @for (kpi of scorecard.kpiDataDTO; track $index) {
+      <div class="kpi-container-card">
+        <stc-apps-kpi-card [kpi]="kpi" />
+      </div>
+      }
+    </div>
+  </div>
+  } } @else {
+  <h4 class="empty-data-msg mt-4">There are no KPIs</h4>
+  }
+</section>
+<stc-apps-dialog-modal [visible]="visible" (ImportedFile)="importData($event)" (onhide)="onHide()" />
+<stc-apps-activity-logs-popup [activityLogsTableHeader]="activityLogsTableHeader"
+  [activityLogsTableBody]="activityLogsTableBody()" [showPopup]="showActivityLogsPopup" (popupClosed)="popupClosed()"
+  type="scorecard" />

@@ -1,0 +1,77 @@
+@import '../../styles/fonts.scss';
+
+.card-section {
+  padding: 20px 30px;
+  &-welcome-text {
+    text-transform: capitalize;
+    font-size: 19px;
+    @extend .stcFont;
+    span {
+      @extend .mediunPoppins;
+      font-size: 22px;
+    }
+    img {
+      display: inline-block;
+      margin-left: 10px;
+      position: relative;
+      top: -3px;
+    }
+  }
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    .hands-img {
+      position: relative;
+      top: 15px;
+    }
+  }
+  &-title {
+    font-size: 24px;
+    text-transform: capitalize;
+    font-weight: normal;
+    @extend .stcFont;
+    font-size: 22px;
+    span {
+      font-size: 27px;
+      @extend .blackPoppins;
+    }
+  }
+
+  &-tap-details {
+    background-color: var(--stc-white-color);
+    border-radius: 20px;
+    padding: 20px;
+    // z-index: 9999999;
+    position: relative;
+    // margin-top:30px;
+    color: #000;
+    // margin-top: 35px;
+    // z-index: 111111;
+  }
+}
+
+.main-layout {
+  color: var(--stc-white-color);
+  &-content {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: 20% 80%;
+    @media all and (min-width: 1600px) and (max-width: 3000px) {
+      grid-template-columns: 15% 85%;
+    }
+    @media all and (min-width: 3001px) {
+      grid-template-columns: 12% 88%;
+    }
+    &-sidebar {
+      background-color: var(--stc-purple-color);
+    }
+    &-page {
+      background-color: var(--stc-purple-dark-color);
+      background-image: url(../../assets/images/main-background.svg);
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+    }
+  }
+}
