@@ -1,6 +1,27 @@
-<div class="scored-card-section-header">
-  <div>
-    <stc-apps-page-header [mainTitle]="'KRIs Dashboard'" [secondaryTitle]="''" [username]="userName"
-      [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']" />
+<div class="kri-section">
+  <div class="kri-section-header">
+    <stc-apps-page-header
+      [mainTitle]="'KRIs Dashboard'"
+      [secondaryTitle]="''"
+      [username]="userName"
+      [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+    />
+  </div>
+  <div class="kri-section-body">
+    <stc-apps-tabview
+      [tabsData]="kriTaps"
+      [tabColor]="'#ffffff'"
+      [clickedtabColor]="'#ffffff'"
+      [tabBackground]="'#FFFFFF1A'"
+      [clickedtabBackground]="'#FF375E'"
+      [fontFamily]="'STCForwardFont'"
+      [isMobile]="true"
+      (clickedTap)="getCurrentTap($event)"
+    />
+    <div class="kri-section-body-tab-details">
+      @if(currentClickedTap.name === 'Executive Summary'){
+      <stc-apps-executive-summary />
+      }
+    </div>
   </div>
 </div>

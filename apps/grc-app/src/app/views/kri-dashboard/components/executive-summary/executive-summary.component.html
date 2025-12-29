@@ -1,0 +1,85 @@
+<section class="executive-summary">
+  <div class="executive-summary-header">
+    <p>Exeuctive summary</p>
+    <div class="filter-options">
+      <form class="filter-dropdowns" [formGroup]="filtersForm">
+        <stc-apps-select-drop-down
+          [label]="''"
+          formControlName="quarter"
+          [options]="quarters"
+          [outputValue]="'id'"
+        />
+        <stc-apps-select-drop-down
+          [label]="''"
+          formControlName="quarterType"
+          [options]="quarterTypes"
+          [outputValue]="'id'"
+        />
+        <stc-apps-select-drop-down
+          [label]="''"
+          formControlName="year"
+          [options]="yearsdata"
+          [outputValue]="'id'"
+        />
+      </form>
+      <span class="divider"></span>
+      <div class="import-export-buttons">
+        <button class="import-button" (click)="showUploadDialog()">
+          <img src="assets/images/import-icon.svg" alt="Import" />
+          Import
+        </button>
+        <button class="export-button">
+          <img src="assets/images/export-icon.svg" alt="Export" />
+          Export
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="executive-summary-legends">
+    <div class="legends">
+      @for (legend of statusLegends;track legend.name) {
+      <stc-apps-status-legend [legend]="legend" />
+      }
+    </div>
+  </div>
+  <div class="executive-summary-body">
+    <div class="content">
+      <div class="content2">
+        <div class="card-box">
+          <div class="overall-performance-card">
+            <p>overall performance</p>
+            <div class="overall-performance-chart" style="height: 350px">
+              <stc-apps-donut-chart
+                [data]="donatChartData"
+                [colors]="donutColors"
+                textInside="test"
+                [showLegends]="true"
+              />
+            </div>
+          </div>
+        </div>
+        <div class="card-box">
+          <div class="overall-performance-card">
+            <p>KRI Status Per GD</p>
+            <div class="overall-performance-chart" style="height: 350px">
+              <stc-apps-stacked-bar-chart />
+            </div>
+          </div>
+        </div>
+        <div class="card-box card-box2">
+          <div class="overall-performance-card">
+            <p>KRIs Trend analysis</p>
+            <div class="overall-performance-chart" style="height: 300px"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card-box">text</div>
+    </div>
+  </div>
+</section>
+<stc-apps-file-upload-dialog
+  [showDialog]="showUploadFileDialog"
+  (dialogHide)="showUploadFileDialog = false"
+  fileType="xlsx"
+  (uploadFile)="uploadFile($event)"
+/>
