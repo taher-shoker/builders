@@ -9,6 +9,10 @@ export interface TapModel {
   name: string;
   value: string;
 }
+export interface TapApiModel {
+  id: number;
+  tabName: string;
+}
 
 export interface FileModel {
   lastModified: number;

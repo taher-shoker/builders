@@ -19,8 +19,8 @@
       (clickedTap)="getCurrentTap($event)"
     />
     <div class="kri-section-body-tab-details">
-      @if(currentClickedTap.name === 'Executive Summary'){
-      <stc-apps-executive-summary />
+      @if(currentClickedTap && currentClickedTap.id === 1){
+      <stc-apps-executive-summary [kriTaps]="kriTaps" />
       }
     </div>
   </div>

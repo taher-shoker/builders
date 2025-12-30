@@ -1,20 +1,26 @@
-import { Component, OnInit } from '@angular/core';
-import am5index from '@amcharts/amcharts5/index';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
+// import am5index from '@amcharts/amcharts5/index';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
 import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
+import { DomSanitizer } from '@angular/platform-browser';
 @Component({
   selector: 'stc-apps-stacked-bar-chart',
   standalone: false,
   templateUrl: './stacked-bar-chart.component.html',
   styleUrl: './stacked-bar-chart.component.scss',
 })
-export class StackedBarChartComponent implements OnInit {
-  ngOnInit() {
+export class StackedBarChartComponent implements AfterViewInit, OnInit {
+  chartdiv_id = '';
+  ngOnInit(): void {
+    this.chartdiv_id = `${Math.random()}_chart_id`;
+  }
+  ngAfterViewInit() {
     this.stackedBarChart();
   }
+  constructor(public dom_s: DomSanitizer) {}
   stackedBarChart() {
-    const root = am5.Root.new('stackedBarChart');
+    const root = am5.Root.new(this.chartdiv_id);
     const myTheme = am5.Theme.new(root);
     myTheme.rule('Grid', ['base']).setAll({
       strokeOpacity: 0.1,
@@ -142,7 +148,7 @@ export class StackedBarChartComponent implements OnInit {
         }
       );
       series.columns.template.setAll({
-        tooltipText: '{name} : {valueX}',
+        tooltipText: `${name} : {valueX}`,
         tooltipY: am5.percent(90),
         cornerRadiusTL: 10,
         cornerRadiusTR: 10,

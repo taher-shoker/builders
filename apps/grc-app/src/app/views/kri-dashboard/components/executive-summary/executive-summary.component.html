@@ -1,25 +1,28 @@
 <section class="executive-summary">
   <div class="executive-summary-header">
-    <p>Exeuctive summary</p>
+    <p>Executive Summary</p>
     <div class="filter-options">
       <form class="filter-dropdowns" [formGroup]="filtersForm">
         <stc-apps-select-drop-down
           [label]="''"
           formControlName="quarter"
           [options]="quarters"
-          [outputValue]="'id'"
+          [outputValue]="'name'"
+          (selectChange)="onChangeValue()"
         />
         <stc-apps-select-drop-down
           [label]="''"
           formControlName="quarterType"
           [options]="quarterTypes"
-          [outputValue]="'id'"
+          [outputValue]="'name'"
+          (selectChange)="onChangeValue()"
         />
         <stc-apps-select-drop-down
           [label]="''"
           formControlName="year"
           [options]="yearsdata"
           [outputValue]="'id'"
+          (selectChange)="onChangeValue()"
         />
       </form>
       <span class="divider"></span>
@@ -69,11 +72,43 @@
         <div class="card-box card-box2">
           <div class="overall-performance-card">
             <p>KRIs Trend analysis</p>
-            <div class="overall-performance-chart" style="height: 300px"></div>
+            <div class="overall-performance-chart" style="height: 300px">
+              <stc-apps-triple-line-chart />
+            </div>
           </div>
         </div>
       </div>
-      <div class="card-box">text</div>
+      <div class="card-box">
+        <div class="overall-performance-card">
+          <p>Unacceptable KRIs Per GD (4)</p>
+          <div
+            class="overall-performance-chart rounded-bar-chart-container"
+            style="height: 300px"
+          >
+            <stc-apps-rounded-bar-chart />
+          </div>
+        </div>
+        <div class="kris-details">
+          <div class="kris-details-header">
+            <p>KRIs Details</p>
+            <form class="filter-dropdowns" [formGroup]="KrisfiltersForm">
+              <stc-apps-select-drop-down
+                [label]="''"
+                formControlName="kriCategory"
+                [options]="KrisDropdownData"
+                [outputValue]="'id'"
+              />
+            </form>
+          </div>
+          <div class="kris-details-data">
+            @for(kri of KriData;track kri.id){
+            <div class="child">
+              <stc-apps-kri-item [kri]="kri" />
+            </div>
+            }
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </section>

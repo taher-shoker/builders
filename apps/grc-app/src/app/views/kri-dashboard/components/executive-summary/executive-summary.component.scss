@@ -70,6 +70,12 @@
         }
       }
     }
+    .filter-dropdowns3 {
+      .mat-mdc-form-field {
+        width: 220px !important;
+        height: 40px !important;
+      }
+    }
     .divider {
       width: 1px;
       height: 39px;
@@ -150,6 +156,71 @@
             padding: 0 15px 0 15px;
           }
         }
+        .rounded-bar-chart-container {
+          border-bottom: 1px solid #e2e8f0;
+        }
+        .kris-details {
+          padding: 15px;
+          &-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            p {
+              @extend .stcFont;
+              color: var(--stc-dark-grey-color);
+              font-size: 16px;
+              font-weight: 500;
+              text-transform: capitalize;
+              margin: 0;
+            }
+            .mat-mdc-form-field {
+              width: 140px !important;
+              height: 40px !important;
+              .mat-mdc-text-field-wrapper {
+                border-radius: 5px !important;
+                background-color: #fff !important;
+              }
+              .mat-mdc-form-field-subscript-wrapper {
+                display: none !important;
+              }
+              .mdc-line-ripple {
+                display: none !important;
+              }
+              .mat-mdc-select-arrow {
+                color: var(--stc-purple-color);
+              }
+              .mat-mdc-select-min-line {
+                color: var(--stc-black-color);
+                @extend .stcFont;
+              }
+              .mat-mdc-select-trigger {
+                align-items: center !important;
+              }
+              .mat-mdc-text-field-wrapper,
+              .mat-mdc-select-arrow-wrapper {
+                align-items: flex-end !important;
+              }
+              .mat-mdc-form-field-focus-overlay {
+                display: none !important;
+              }
+              .mat-mdc-select-min-line {
+                display: inline-block;
+                padding-top: 3px;
+              }
+            }
+          }
+          &-data {
+            margin-top: 20px;
+            overflow-y: auto;
+            max-height: 330px;
+            .child {
+              margin-bottom: 15px;
+              &:last-child {
+                margin-bottom: 0;
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -160,4 +231,17 @@
 ::ng-deep .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
   color: var(--stc-purple-color) !important;
   font-weight: bold !important;
+}
+::ng-deep .mat-mdc-select-min-line {
+  display: inline-block !important; /* Ensure it behaves like an inline block */
+  white-space: nowrap !important; /* Prevent wrapping to a new line */
+  overflow: hidden !important; /* Hide the text that sticks out */
+  text-overflow: ellipsis !important; /* Add the '...' at the end */
+  display: block !important; /* Ensure it behaves like a block for width calculations */
+  max-width: 100% !important; /* Force it to stay within the container */
+}
+
+/* Ensure the arrow doesn't get pushed off or overlap */
+::ng-deep .mat-mdc-select-arrow-wrapper {
+  flex-shrink: 0 !important; /* Prevent the arrow from shrinking */
 }

@@ -32,6 +32,8 @@ import { ConfirmationService } from 'primeng/api';
 import { FileUploadDialogComponent } from './components/file-upload-dialog/file-upload-dialog.component';
 import { A11yModule } from '@angular/cdk/a11y';
 import { StackedBarChartComponent } from './components/stacked-bar-chart/stacked-bar-chart.component';
+import { KriItemComponent } from './components/kri-item/kri-item.component';
+import { CdkAutofill } from '@angular/cdk/text-field';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
     http,
@@ -57,6 +59,7 @@ export const provideTranslation = () => ({
     StatusLegendComponent,
     FileUploadDialogComponent,
     StackedBarChartComponent,
+    KriItemComponent,
   ],
   imports: [
     BrowserModule,
@@ -70,6 +73,7 @@ export const provideTranslation = () => ({
     DialogModule,
     FormsModule,
     A11yModule,
+    CdkAutofill,
   ],
   providers: [
     importProvidersFrom([HttpClientModule]),

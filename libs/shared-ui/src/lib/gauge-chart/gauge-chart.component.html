@@ -1,0 +1,36 @@
+<div class="gauge-container" [style.width.px]="size" [style.height.px]="size">
+  <svg viewBox="0 0 100 100" class="gauge-svg">
+    <circle
+      cx="50"
+      cy="50"
+      [attr.r]="radius"
+      fill="none"
+      stroke="#f0f0f0"
+      [attr.stroke-width]="strokeWidth"
+    />
+
+    <circle
+      class="progress-ring"
+      cx="50"
+      cy="50"
+      [attr.r]="radius"
+      fill="none"
+      [attr.stroke]="color"
+      [attr.stroke-width]="strokeWidth"
+      stroke-linecap="round"
+      [style.stroke-dasharray]="circumference"
+      [style.stroke-dashoffset]="dashOffset"
+    />
+
+    <text
+      x="50"
+      y="50"
+      text-anchor="middle"
+      dominant-baseline="central"
+      [attr.fill]="color"
+      class="gauge-text"
+    >
+      {{ value }}
+    </text>
+  </svg>
+</div>

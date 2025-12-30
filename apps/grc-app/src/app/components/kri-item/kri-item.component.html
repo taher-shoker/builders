@@ -1,0 +1,14 @@
+<div class="kri">
+  <div class="left">
+    <p class="title">{{ kri().title }}</p>
+    <span>{{ kri().category }}</span>
+  </div>
+  <div class="right">
+    <stc-apps-gauge-chart
+      [percentage]="kri().value"
+      [value]="kri().value"
+      [size]="50"
+      color="#DC2626"
+    />
+  </div>
+</div>
