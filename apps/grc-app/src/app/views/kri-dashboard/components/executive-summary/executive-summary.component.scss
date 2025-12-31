@@ -245,3 +245,12 @@
 ::ng-deep .mat-mdc-select-arrow-wrapper {
   flex-shrink: 0 !important; /* Prevent the arrow from shrinking */
 }
+.empty-data-message {
+  display: grid;
+  place-items: center;
+  height: 100%;
+  @extend .stcFont;
+  color: var(--stc-dark-grey-color);
+  font-size: 18px;
+  text-transform: capitalize;
+}

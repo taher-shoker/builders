@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { map, Observable } from 'rxjs';
-import { TapApiModel, TapModel } from '../models';
+import { ExecutiveSummaryModel, TapApiModel, TapModel } from '../models';
 @Injectable({ providedIn: 'root' })
 export class ExecutiveSummaryService {
   http = inject(HttpClient);
@@ -22,8 +22,8 @@ export class ExecutiveSummaryService {
     periodType: string,
     period: string,
     gd: string
-  ): Observable<any> {
-    return this.http.get<any>(
+  ): Observable<ExecutiveSummaryModel> {
+    return this.http.get<ExecutiveSummaryModel>(
       `${environment.apiUrl}/kri/executive-summary?year=${year}&periodType=${periodType}&period=${period}&gd=${gd}`
     );
   }

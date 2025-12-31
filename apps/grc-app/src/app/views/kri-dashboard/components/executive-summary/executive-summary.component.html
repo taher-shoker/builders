@@ -52,12 +52,15 @@
           <div class="overall-performance-card">
             <p>overall performance</p>
             <div class="overall-performance-chart" style="height: 350px">
+              @if(donatChartData.length > 0){
               <stc-apps-donut-chart
                 [data]="donatChartData"
                 [colors]="donutColors"
                 textInside="test"
                 [showLegends]="true"
+                [label]="acceptableNumber"
               />
+              }
             </div>
           </div>
         </div>
@@ -65,7 +68,11 @@
           <div class="overall-performance-card">
             <p>KRI Status Per GD</p>
             <div class="overall-performance-chart" style="height: 350px">
-              <stc-apps-stacked-bar-chart />
+              @if(KRIStatusPerGDChartData.length > 0){
+              <stc-apps-stacked-bar-chart [data]="KRIStatusPerGDChartData" />
+              } @else {
+              <span class="empty-data-message">there are no data</span>
+              }
             </div>
           </div>
         </div>
@@ -97,6 +104,7 @@
                 formControlName="kriCategory"
                 [options]="KrisDropdownData"
                 [outputValue]="'id'"
+                (selectChange)="changeGD()"
               />
             </form>
           </div>

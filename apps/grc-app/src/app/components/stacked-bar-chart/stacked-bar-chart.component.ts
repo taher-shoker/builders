@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 // import am5index from '@amcharts/amcharts5/index';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -10,26 +18,46 @@ import { DomSanitizer } from '@angular/platform-browser';
   templateUrl: './stacked-bar-chart.component.html',
   styleUrl: './stacked-bar-chart.component.scss',
 })
-export class StackedBarChartComponent implements AfterViewInit, OnInit {
-  chartdiv_id = '';
-  ngOnInit(): void {
-    this.chartdiv_id = `${Math.random()}_chart_id`;
-  }
+export class StackedBarChartComponent
+  implements AfterViewInit, OnChanges, OnDestroy
+{
+  chartdiv_id = `chart_${Math.random().toString(36).substring(2, 15)}`;
+  @Input() data: any[] = [];
+  root!: am5.Root;
+  // ngOnInit(): void {
+  //   // this.chartdiv_id = `${Math.random()}_chart_id`;
+  // }
   ngAfterViewInit() {
     this.stackedBarChart();
   }
+  ngOnDestroy(): void {
+    // 4. Clean up when component is removed
+    if (this.root) {
+      this.root.dispose();
+    }
+    am5.array.each(am5.registry.rootElements, (root) => {
+      if (root && root.dom.id === this.chartdiv_id) {
+        root.dispose();
+      }
+    });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && !changes['data'].firstChange && this.root) {
+      this.stackedBarChart();
+    }
+  }
   constructor(public dom_s: DomSanitizer) {}
   stackedBarChart() {
-    const root = am5.Root.new(this.chartdiv_id);
-    const myTheme = am5.Theme.new(root);
+    this.root = am5.Root.new(this.chartdiv_id);
+    const myTheme = am5.Theme.new(this.root);
     myTheme.rule('Grid', ['base']).setAll({
       strokeOpacity: 0.1,
     });
-    root.setThemes([am5themes_Animated.new(root), myTheme]);
-    const chart = root.container.children.push(
-      am5xy.XYChart.new(root, {
+    this.root.setThemes([am5themes_Animated.new(this.root), myTheme]);
+    const chart = this.root.container.children.push(
+      am5xy.XYChart.new(this.root, {
         paddingLeft: 0,
-        layout: root.verticalLayout,
+        layout: this.root.verticalLayout,
       })
     );
     chart
@@ -41,53 +69,16 @@ export class StackedBarChartComponent implements AfterViewInit, OnInit {
         am5.color(0x86a873),
         am5.color(0xbb9f06),
       ]);
-    if (root._logo) {
-      root._logo.dispose();
+    if (this.root._logo) {
+      this.root._logo.dispose();
     }
-    const data = [
-      {
-        name: 'DP',
-        europe: 50,
-        namerica: 35,
-        asia: 15,
-      },
-      {
-        name: 'Exc.',
-        europe: 70,
-        namerica: 20,
-        asia: 10,
-      },
-      {
-        name: 'Jaw.',
-        europe: 30,
-        namerica: 50,
-        asia: 20,
-      },
-      {
-        name: 'EPU',
-        europe: 100,
-        namerica: 0,
-        asia: 0,
-      },
-      {
-        name: 'AI',
-        europe: 10,
-        namerica: 20,
-        asia: 70,
-      },
-      {
-        name: 'CPU',
-        europe: 10,
-        namerica: 80,
-        asia: 10,
-      },
-    ];
-    const yRenderer = am5xy.AxisRendererY.new(root, {});
+    const data = this.data;
+    const yRenderer = am5xy.AxisRendererY.new(this.root, {});
     const yAxis = chart.yAxes.push(
-      am5xy.CategoryAxis.new(root, {
+      am5xy.CategoryAxis.new(this.root, {
         categoryField: 'name',
         renderer: yRenderer,
-        tooltip: am5.Tooltip.new(root, {}),
+        tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
     yRenderer.grid.template.setAll({
@@ -95,13 +86,13 @@ export class StackedBarChartComponent implements AfterViewInit, OnInit {
       forceHidden: true,
     });
     yAxis.data.setAll(data);
-    const xRenderer = am5xy.AxisRendererX.new(root, {
+    const xRenderer = am5xy.AxisRendererX.new(this.root, {
       minGridDistance: 40,
       strokeOpacity: 0,
       forceHidden: true,
     });
     const xAxis = chart.xAxes.push(
-      am5xy.ValueAxis.new(root, {
+      am5xy.ValueAxis.new(this.root, {
         min: 0,
         maxPrecision: 0,
         renderer: xRenderer,
@@ -116,14 +107,14 @@ export class StackedBarChartComponent implements AfterViewInit, OnInit {
       forceHidden: true,
     });
     // const legend = chart.children.push(
-    //   am5.Legend.new(root, {
+    //   am5.Legend.new(this.root, {
     //     centerX: am5.p50,
     //     x: am5.p50,
     //   })
     // );
-    function makeSeries(name: string, fieldName: string) {
+    const makeSeries = (name: string, fieldName: string) => {
       const series = chart.series.push(
-        am5xy.ColumnSeries.new(root, {
+        am5xy.ColumnSeries.new(this.root, {
           name: name,
           stacked: true,
           xAxis: xAxis,
@@ -157,18 +148,13 @@ export class StackedBarChartComponent implements AfterViewInit, OnInit {
       });
       series.data.setAll(data);
       series.appear();
+      ``;
       series.bullets.push(
         series.bullets.push(function (root, series, dataItem) {
-          // 1. Get the actual value for this specific series segment
-          // We cast dataContext to any to access the dynamic key (fieldName)
           const value = (dataItem.dataContext as any)[fieldName];
-
-          // 2. Define your threshold (e.g., hide if value is less than 5)
-          if (value < 5) {
-            return undefined; // returning undefined prevents the bullet from being created
+          if (value < 10) {
+            return undefined;
           }
-
-          // 3. Create the bullet if value is large enough
           return am5.Bullet.new(root, {
             sprite: am5.Label.new(root, {
               // Tip: Use fieldName in text to show the segment size (e.g. "1")
@@ -182,14 +168,14 @@ export class StackedBarChartComponent implements AfterViewInit, OnInit {
           });
         })
       );
-
-      // legend.data.push(series);
+    };
+    if (data.length > 0) {
+      Object.keys(data[0]).forEach((key) => {
+        if (key !== 'name') {
+          makeSeries(key, key);
+        }
+      });
     }
-    Object.keys(data[0]).forEach((key) => {
-      if (key !== 'name') {
-        makeSeries(key, key);
-      }
-    });
 
     chart.appear(1000, 100);
   }
