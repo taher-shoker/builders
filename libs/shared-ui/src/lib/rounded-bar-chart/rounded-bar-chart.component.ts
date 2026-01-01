@@ -1,4 +1,12 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  Input,
+  OnChanges,
+  OnDestroy,
+  OnInit,
+  SimpleChanges,
+} from '@angular/core';
 import am5index from '@amcharts/amcharts5/index';
 import * as am5 from '@amcharts/amcharts5';
 import * as am5xy from '@amcharts/amcharts5/xy';
@@ -9,33 +17,56 @@ import am5themes_Animated from '@amcharts/amcharts5/themes/Animated';
   templateUrl: './rounded-bar-chart.component.html',
   styleUrl: './rounded-bar-chart.component.scss',
 })
-export class RoundedBarChartComponent implements OnInit, AfterViewInit {
-  chartdiv_id = '';
-  ngOnInit(): void {
-    this.chartdiv_id = `${Math.random()}_chart_id`;
-  }
+export class RoundedBarChartComponent
+  implements AfterViewInit, OnDestroy, OnChanges
+{
+  chartdiv_id = `${Math.random()}_chart_id`;
+  root!: am5.Root;
+  @Input({ required: true }) data: {
+    gd: string;
+    numberOfUnacceptableProjects: number;
+  }[] = [];
   ngAfterViewInit(): void {
     this.roundedBarChart();
   }
+  ngOnDestroy(): void {
+    // 4. Clean up when component is removed
+    if (this.root) {
+      this.root.dispose();
+    }
+    am5.array.each(am5.registry.rootElements, (root) => {
+      if (root && root.dom.id === this.chartdiv_id) {
+        root.dispose();
+      }
+    });
+  }
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['data'] && !changes['data'].firstChange && this.root) {
+      this.roundedBarChart();
+    }
+  }
   roundedBarChart() {
-    const root = am5.Root.new(this.chartdiv_id);
-    root.setThemes([am5themes_Animated.new(root)]);
-    const chart = root.container.children.push(
-      am5xy.XYChart.new(root, {
+    if (this.root) {
+      this.root.dispose();
+    }
+    this.root = am5.Root.new(this.chartdiv_id);
+    this.root.setThemes([am5themes_Animated.new(this.root)]);
+    const chart = this.root.container.children.push(
+      am5xy.XYChart.new(this.root, {
         paddingLeft: 0,
         paddingRight: 1,
       })
     );
-    if (root._logo) {
-      root._logo.dispose();
+    if (this.root._logo) {
+      this.root._logo.dispose();
     }
-    const cursor = chart.set('cursor', am5xy.XYCursor.new(root, {}));
+    const cursor = chart.set('cursor', am5xy.XYCursor.new(this.root, {}));
     cursor.lineY.set('visible', false);
     cursor.lineX.set('visible', false);
     cursor.setAll({
       snapToSeries: [],
     });
-    const xRenderer = am5xy.AxisRendererX.new(root, {
+    const xRenderer = am5xy.AxisRendererX.new(this.root, {
       minGridDistance: 30,
       // minorGridEnabled: true,
     });
@@ -44,6 +75,8 @@ export class RoundedBarChartComponent implements OnInit, AfterViewInit {
       fill: am5.color(0x7a7a7b),
       fontSize: 13,
       paddingTop: 10,
+      oversizedBehavior: 'truncate',
+      maxWidth: 50, // Adjust this width as needed
       // rotation: -90,
       // centerY: am5.p50,
       // centerX: am5.p100,
@@ -53,21 +86,22 @@ export class RoundedBarChartComponent implements OnInit, AfterViewInit {
       location: 1,
     });
     const xAxis = chart.xAxes.push(
-      am5xy.CategoryAxis.new(root, {
+      am5xy.CategoryAxis.new(this.root, {
         maxDeviation: 0.3,
-        categoryField: 'country',
+        categoryField: 'gd',
         renderer: xRenderer,
-        // tooltip: am5.Tooltip.new(root, {}),
+        // tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
-    const yRenderer = am5xy.AxisRendererY.new(root, {});
+    const yRenderer = am5xy.AxisRendererY.new(this.root, {});
     yRenderer.labels.template.setAll({
       forceHidden: true,
     });
     const yAxis = chart.yAxes.push(
-      am5xy.ValueAxis.new(root, {
+      am5xy.ValueAxis.new(this.root, {
         maxDeviation: 0.3,
         renderer: yRenderer,
+        min: 0,
       })
     );
     yRenderer.grid.template.setAll({
@@ -77,15 +111,15 @@ export class RoundedBarChartComponent implements OnInit, AfterViewInit {
       forceHidden: true,
     });
     const series = chart.series.push(
-      am5xy.ColumnSeries.new(root, {
+      am5xy.ColumnSeries.new(this.root, {
         name: 'Series 1',
         xAxis: xAxis,
         yAxis: yAxis,
-        valueYField: 'value',
+        valueYField: 'numberOfUnacceptableProjects',
         sequencedInterpolation: true,
-        categoryXField: 'country',
-        tooltip: am5.Tooltip.new(root, {
-          labelText: '{valueY}',
+        categoryXField: 'gd',
+        tooltip: am5.Tooltip.new(this.root, {
+          labelText: '{categoryX} : {valueY}',
         }),
       })
     );
@@ -97,12 +131,12 @@ export class RoundedBarChartComponent implements OnInit, AfterViewInit {
       width: am5.p50,
       strokeOpacity: 0,
     });
-    series.bullets.push(function () {
-      return am5.Bullet.new(root, {
+    series.bullets.push(() => {
+      return am5.Bullet.new(this.root, {
         locationY: 1,
-        sprite: am5.Label.new(root, {
+        sprite: am5.Label.new(this.root, {
           text: "{valueYWorking.formatNumber('#.')}",
-          fill: root.interfaceColors.get('alternativeText'),
+          fill: this.root.interfaceColors.get('alternativeText'),
           centerY: am5.p0,
           centerX: am5.p50,
           populateText: true,
@@ -117,32 +151,7 @@ export class RoundedBarChartComponent implements OnInit, AfterViewInit {
     series.columns.template.adapters.add('stroke', function (stroke, target) {
       return chart.get('colors')?.getIndex(series.columns.indexOf(target));
     });
-    const data = [
-      {
-        country: 'DP',
-        value: 3,
-      },
-      {
-        country: 'Exc',
-        value: 1,
-      },
-      {
-        country: 'AI',
-        value: 5,
-      },
-      {
-        country: 'Ja',
-        value: 1,
-      },
-      {
-        country: 'EB',
-        value: 7,
-      },
-      {
-        country: 'CB',
-        value: 5,
-      },
-    ];
+    const data = this.data;
     xAxis.data.setAll(data);
     series.data.setAll(data);
     series.appear(1000);

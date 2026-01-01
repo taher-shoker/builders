@@ -37,6 +37,11 @@ export class KriDashboardComponent implements OnInit, OnDestroy {
         },
       });
   }
+  isUploaded(event: boolean) {
+    if (event) {
+      this.getTabsData();
+    }
+  }
   getCurrentTap(tap: TapModel) {
     this.currentClickedTap = tap;
   }

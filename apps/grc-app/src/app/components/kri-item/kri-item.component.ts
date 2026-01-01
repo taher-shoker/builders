@@ -1,5 +1,5 @@
 import { Component, input, InputSignal } from '@angular/core';
-import { KRIModel } from '../../models';
+import { UnacceptableProjectDetails } from '../../models';
 @Component({
   selector: 'stc-apps-kri-item',
   standalone: false,
@@ -7,5 +7,6 @@ import { KRIModel } from '../../models';
   styleUrl: './kri-item.component.scss',
 })
 export class KriItemComponent {
-  kri: InputSignal<KRIModel> = input.required<KRIModel>();
+  kri: InputSignal<UnacceptableProjectDetails> =
+    input.required<UnacceptableProjectDetails>();
 }

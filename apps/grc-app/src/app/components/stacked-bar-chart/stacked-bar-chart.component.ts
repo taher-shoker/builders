@@ -85,6 +85,10 @@ export class StackedBarChartComponent
       location: 1,
       forceHidden: true,
     });
+    yRenderer.labels.template.setAll({
+      maxWidth: 50,
+      oversizedBehavior: 'truncate',
+    });
     yAxis.data.setAll(data);
     const xRenderer = am5xy.AxisRendererX.new(this.root, {
       minGridDistance: 40,
@@ -139,7 +143,7 @@ export class StackedBarChartComponent
         }
       );
       series.columns.template.setAll({
-        tooltipText: `${name} : {valueX}`,
+        tooltipText: `${name} in {name} : {valueX}`,
         tooltipY: am5.percent(90),
         cornerRadiusTL: 10,
         cornerRadiusTR: 10,

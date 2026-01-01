@@ -1,13 +1,23 @@
-import { Component, inject, input, OnDestroy, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  OnDestroy,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
   DPKRIsModel,
   ExecutiveSummaryModel,
   KRIModel,
   TapModel,
+  UnacceptableProjectDetails,
 } from '../../../../models';
 import { ExecutiveSummaryService } from '../../../../services/executive-summary.service';
 import { Subject, takeUntil } from 'rxjs';
+import { ToastrService } from 'ngx-toastr';
 @Component({
   selector: 'stc-apps-executive-summary',
   standalone: false,
@@ -16,17 +26,18 @@ import { Subject, takeUntil } from 'rxjs';
 })
 export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   quarters: { name: string; id: number | string }[] = [];
+  @Output() isUploaded: EventEmitter<boolean> = new EventEmitter<boolean>();
   currQuarter = 'Q1';
   executiveSummaryData!: ExecutiveSummaryModel;
   currQuarterType = 'Quarter';
   quarterTypes: { name: string; id: number }[] = [];
+  toastr = inject(ToastrService);
   yearsdata: { name: string; id: number }[] = [];
   quartersMonthTypes: { name: string; id: number }[] = [];
   KrisDropdownData: { name: string; id: number }[] = [];
   statusLegends: { name: string; color: string }[] = [];
   kriTaps = input.required<TapModel[]>();
   selectedQuarterType!: string;
-  KriData: KRIModel[] = [];
   DPKRIsData: DPKRIsModel[] = [];
   KRITrendAnalysisData: any[] = [];
   showUploadFileDialog = false;
@@ -75,50 +86,6 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       {
         name: 'unacceptable',
         color: '#EF4444',
-      },
-    ];
-    this.KriData = [
-      {
-        id: 1,
-        title:
-          'Percentage deviation of DQHI against target - PCRF-Fixed (source system)',
-        category: 'DP',
-        value: 50,
-      },
-      {
-        id: 1,
-        title:
-          'Percentage deviation of DQHI against target - PCRF-Fixed (source system)',
-        category: 'DP',
-        value: 20,
-      },
-      {
-        id: 1,
-        title:
-          'Percentage deviation of DQHI against target - PCRF-Fixed (source system)',
-        category: 'Excellence',
-        value: 84,
-      },
-      {
-        id: 1,
-        title:
-          'Percentage deviation of DQHI against target - PCRF-Fixed (source system)',
-        category: 'AI',
-        value: 23,
-      },
-      {
-        id: 1,
-        title:
-          'Percentage deviation of DQHI against target - PCRF-Fixed (source system)',
-        category: 'EBU',
-        value: 10,
-      },
-      {
-        id: 1,
-        title:
-          'Percentage deviation of DQHI against target - PCRF-Fixed (source system)',
-        category: 'Jawwy',
-        value: 100,
       },
     ];
     this.getExecutiveSummaryData();
@@ -170,7 +137,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.endSub$))
       .subscribe({
         next: (data: ExecutiveSummaryModel) => {
-          console.log('Executive Summary Data:', data);
+          // console.log('Executive Summary Data:', data);
           this.executiveSummaryData = data;
           if (
             this.executiveSummaryData &&
@@ -238,7 +205,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
               );
             const result = Object.values(groupedData);
             this.KRITrendAnalysisData = result;
-            console.log(result);
+            // console.log(result);
           }
         },
         error: (error) => {
@@ -290,6 +257,21 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     this.showUploadFileDialog = true;
   }
   uploadFile(file: File) {
-    console.log('File uploaded:', file);
+    this.executiveSummaryService.uploadExecutiveSummaryFile(file).subscribe({
+      next: () => {
+        this.toastr.success('The File is Saved Successfully');
+        this.showUploadFileDialog = false;
+        this.getExecutiveSummaryData();
+        this.isUploaded.emit(true);
+      },
+      error: (error) => {
+        this.toastr.error(error);
+        // this.toastr.error('Error while uploading the file');
+        this.showUploadFileDialog = false;
+      },
+    });
+  }
+  exportExecutiveSummary() {
+    this.executiveSummaryService.exportExecutiveSummaryData();
   }
 }

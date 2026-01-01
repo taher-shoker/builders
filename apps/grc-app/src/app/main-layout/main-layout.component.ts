@@ -31,7 +31,7 @@ export class MainLayoutComponent implements OnInit {
     this.userNameLogo = 'assets/images/username-logo.svg';
     this.authService.loggedUserStream.subscribe((user) => {
       if (user) {
-        console.log(user);
+        // console.log(user);
         this.userName = user.name;
       }
     });
@@ -45,7 +45,7 @@ export class MainLayoutComponent implements OnInit {
     // });
     this.navItems = [
       { id: 1, name: 'KRI', url: '/kri' },
-      { id: 2, name: 'Compliance Register', url: '/compliance-reg' },
+      // { id: 2, name: 'Compliance Register', url: '/compliance-reg' },
     ];
     if (!this.isMobile()) {
       this.router.navigate([this.navItems[0].url]);

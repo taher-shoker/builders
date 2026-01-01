@@ -291,7 +291,7 @@ export class DonutChartComponent
     if (this.id || this.showLegends) {
       this.root.numberFormatter.set('numberFormat', '#.#a');
       if (this.data[0]?.category !== 'No Data') {
-        series.slices.template.set('tooltipText', '{category}: {value}');
+        series.slices.template.set('tooltipText', '{category}: {value}%');
       }
       // const label = series.children.push(am5.Label.new(this.root, {
       //   html: "<div style = 'font-size:1.5rem;font-weight:600;display:block'>"+ this.overallNumber +"<span style = 'color:#616161;font-size:0.9rem;font-weight:400'>SAR</span></div><div style = 'font-size:1rem;font-weight:600'>"+this.textInside+"</div>",
