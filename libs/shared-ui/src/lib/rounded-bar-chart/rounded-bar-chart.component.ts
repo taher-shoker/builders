@@ -85,10 +85,23 @@ export class RoundedBarChartComponent
     xRenderer.grid.template.setAll({
       location: 1,
     });
+    const data2 = this.data.map((item) => {
+      const stringValue = Object.values(item).find(
+        (value) => typeof value === 'string'
+      );
+      const numberValue = Object.values(item).find(
+        (value) => typeof value === 'number'
+      );
+      return {
+        name: stringValue,
+        value: numberValue,
+      };
+    });
+
     const xAxis = chart.xAxes.push(
       am5xy.CategoryAxis.new(this.root, {
         maxDeviation: 0.3,
-        categoryField: 'gd',
+        categoryField: 'name',
         renderer: xRenderer,
         // tooltip: am5.Tooltip.new(this.root, {}),
       })
@@ -115,9 +128,9 @@ export class RoundedBarChartComponent
         name: 'Series 1',
         xAxis: xAxis,
         yAxis: yAxis,
-        valueYField: 'numberOfUnacceptableProjects',
+        valueYField: 'value',
         sequencedInterpolation: true,
-        categoryXField: 'gd',
+        categoryXField: 'name',
         tooltip: am5.Tooltip.new(this.root, {
           labelText: '{categoryX} : {valueY}',
         }),
@@ -151,9 +164,8 @@ export class RoundedBarChartComponent
     series.columns.template.adapters.add('stroke', function (stroke, target) {
       return chart.get('colors')?.getIndex(series.columns.indexOf(target));
     });
-    const data = this.data;
-    xAxis.data.setAll(data);
-    series.data.setAll(data);
+    xAxis.data.setAll(data2);
+    series.data.setAll(data2);
     series.appear(1000);
     chart.appear(1000, 100);
   }

@@ -169,7 +169,7 @@ export class DonutChartComponent
           const dataItem = target.dataItem;
           const dataContext = dataItem?.dataContext as DonutChartData;
           if (!dataContext) return fill;
-          return am5.color(dataContext.color ? dataContext.color : '#000000');
+          return am5.color(dataContext.color ? dataContext.color : '#64748B');
         });
       } else {
         this.colors.forEach((color: string) => {
@@ -306,8 +306,6 @@ export class DonutChartComponent
         this.data.length > 0 &&
         this.data[0].category !== 'No Data'
       ) {
-        console.log('sfsd');
-
         const legend = chart.children.push(
           am5.Legend.new(this.root, {
             nameField: 'categoryY',

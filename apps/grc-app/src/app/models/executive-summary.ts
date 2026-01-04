@@ -47,3 +47,9 @@ export interface OverallPerformanceModel {
   status: string;
   percentage: number;
 }
+export interface AvailablePeriodModel {
+  id: number;
+  year: number;
+  month: string;
+  quarter: string;
+}

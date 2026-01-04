@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import {
+  AvailablePeriodModel,
   DPKRIsModel,
   ExecutiveSummaryModel,
   KRIModel,
@@ -28,12 +29,13 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   quarters: { name: string; id: number | string }[] = [];
   @Output() isUploaded: EventEmitter<boolean> = new EventEmitter<boolean>();
   currQuarter = 'Q1';
+  periods = input.required<AvailablePeriodModel[]>();
+  years = input.required<number[]>();
   executiveSummaryData!: ExecutiveSummaryModel;
   currQuarterType = 'Quarter';
   quarterTypes: { name: string; id: number }[] = [];
   toastr = inject(ToastrService);
   yearsdata: { name: string; id: number }[] = [];
-  quartersMonthTypes: { name: string; id: number }[] = [];
   KrisDropdownData: { name: string; id: number }[] = [];
   statusLegends: { name: string; color: string }[] = [];
   kriTaps = input.required<TapModel[]>();
@@ -46,7 +48,7 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   filtersForm: FormGroup = new FormGroup({
     quarter: new FormControl(this.currQuarter),
     quarterType: new FormControl('Quarter'),
-    year: new FormControl(new Date().getFullYear()),
+    year: new FormControl(),
   });
   KrisfiltersForm: FormGroup = new FormGroup({
     kriCategory: new FormControl(0),
@@ -54,16 +56,10 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
   monthQuarterFilter: FormGroup = new FormGroup({
     quarterFilter: new FormControl(1),
   });
-  donutColors = ['#22C55E', '#EAB308', '#DC2626'];
+  donutColors = ['#22C55E', '#EAB308', '#DC2626', '#64748B'];
   donatChartData: { category: string; value: number; color?: string }[] = [];
   KRIStatusPerGDChartData: any[] = [];
   ngOnInit() {
-    this.quarters = [
-      { name: 'Q1', id: 1 },
-      { name: 'Q2', id: 2 },
-      { name: 'Q3', id: 3 },
-      { name: 'Q4', id: 4 },
-    ];
     this.quarterTypes = [
       { name: 'Quarter', id: 1 },
       { name: 'Month', id: 2 },
@@ -71,9 +67,35 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     this.KrisDropdownData = this.kriTaps();
     this.KrisDropdownData = [{ name: 'ALL', id: 0 }, ...this.kriTaps()];
     this.selectedQuarterType = this.filtersForm.get('quarterType')?.value;
-    for (let year = 2020; year <= new Date().getFullYear(); year++) {
-      this.yearsdata.push({ name: year.toString(), id: year });
+    if (this.years().length !== 0) {
+      this.years().forEach((year) => {
+        this.yearsdata.push({ name: year.toString(), id: year });
+      });
+      if (this.yearsdata.length > 0) {
+        this.filtersForm.get('year')?.setValue(this.yearsdata[0].id);
+      }
     }
+    if (this.periods().length > 0) {
+      this.quarters = [];
+      const filteredPeriod = this.periods().filter(
+        (p) => p.year === this.filtersForm.get('year')?.value
+      );
+      // console.log(filteredPeriod);
+      // loop on filteredPeriod to quarters and remove duplicates using Set
+      const seen = new Set<string>();
+      filteredPeriod.forEach((period) => {
+        if (!seen.has(period.quarter)) {
+          seen.add(period.quarter);
+          this.quarters.push({
+            name: period.quarter,
+            id: this.quarters.length + 1,
+          });
+        }
+      });
+    }
+    // for (let year = 2020; year <= new Date().getFullYear(); year++) {
+    //   this.yearsdata.push({ name: year.toString(), id: year });
+    // }
     this.statusLegends = [
       {
         name: 'Acceptable',
@@ -82,6 +104,10 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
       {
         name: 'tolerable',
         color: '#EAB308',
+      },
+      {
+        name: 'Unclassified',
+        color: '#64748B',
       },
       {
         name: 'unacceptable',
@@ -148,10 +174,12 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
                 category: item.status,
                 value: item.percentage,
                 color:
-                  item.status === 'Acceptable'
+                  item.status.toLowerCase() === 'acceptable'
                     ? '#22C55E'
-                    : item.status === 'Tolerable'
+                    : item.status.toLowerCase() === 'tolerable'
                     ? '#EAB308'
+                    : item.status.toLowerCase() === 'unclassified'
+                    ? '#64748B'
                     : '#DC2626',
               });
             });
@@ -218,31 +246,35 @@ export class ExecutiveSummaryComponent implements OnInit, OnDestroy {
     const quarterType = this.filtersForm.get('quarterType')?.value;
     this.currQuarterType = quarterType;
     if (quarterType === 'Month') {
-      this.quarters = [
-        { name: 'Jan', id: 'January' },
-        { name: 'Feb', id: 'February' },
-        { name: 'Mar', id: 'March' },
-        { name: 'Apr', id: 'April' },
-        { name: 'May', id: 'May' },
-        { name: 'Jun', id: 'June' },
-        { name: 'Jul', id: 'July' },
-        { name: 'Aug', id: 'August' },
-        { name: 'Sep', id: 'September' },
-        { name: 'Oct', id: 'October' },
-        { name: 'Nov', id: 'November' },
-        { name: 'Dec', id: 'December' },
-      ];
+      this.quarters = [];
+      const filteredPeriod = this.periods().filter(
+        (p) => p.year === this.filtersForm.get('year')?.value
+      );
+      filteredPeriod.forEach((period) => {
+        this.quarters.push({
+          name: period.month.slice(0, 3),
+          id: period.month,
+        });
+      });
       const isCurrentValueValid = this.quarters.some((q) => q.name === quarter);
       if (!isCurrentValueValid) {
         this.filtersForm.get('quarter')?.setValue('Jan');
       }
     } else {
-      this.quarters = [
-        { name: 'Q1', id: 1 },
-        { name: 'Q2', id: 2 },
-        { name: 'Q3', id: 3 },
-        { name: 'Q4', id: 4 },
-      ];
+      this.quarters = [];
+      const filteredPeriod = this.periods().filter(
+        (p) => p.year === this.filtersForm.get('year')?.value
+      );
+      const seen = new Set<string>();
+      filteredPeriod.forEach((period) => {
+        if (!seen.has(period.quarter)) {
+          seen.add(period.quarter);
+          this.quarters.push({
+            name: period.quarter,
+            id: this.quarters.length + 1,
+          });
+        }
+      });
       const isCurrentValueValid = this.quarters.some((q) => q.name === quarter);
       if (!isCurrentValueValid) {
         this.filtersForm.get('quarter')?.setValue('Q1');

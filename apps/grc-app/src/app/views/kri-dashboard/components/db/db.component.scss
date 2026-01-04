@@ -1,6 +1,5 @@
 @import '../../../../../styles/fonts.scss';
-::ng-deep .executive-summary {
-  // height: 1000px;
+::ng-deep .db {
   &-header {
     display: flex;
     align-items: center;
@@ -70,6 +69,12 @@
           padding-top: 3px;
         }
       }
+      .unacceptable-dropdown {
+        .mat-mdc-form-field {
+          width: 220px !important;
+          height: 40px !important;
+        }
+      }
     }
     .filter-dropdowns3 {
       .mat-mdc-form-field {
@@ -124,114 +129,64 @@
     }
   }
   &-body {
-    .content {
-      display: grid;
-      grid-template-columns: calc(70% - 20px) 30%;
-      // grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 20px;
+    &-statistics-data {
       margin-top: 20px;
-      .content2 {
-        display: grid;
-        grid-template-columns: calc(50% - 10px) calc(50% - 10px);
-        gap: 20px;
+      // devide the cards in 5 columns with gap of 20px
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+      @media all and (max-width: 1400px) {
+        grid-template-columns: repeat(3, 1fr);
       }
-      .card-box {
-        background-color: #f3f4f6;
-        border-radius: 8px;
-        position: relative;
-        &.card-box2 {
-          grid-column: 1 / -1;
+      @media all and (max-width: 1100px) {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .box {
+        border: 1px solid #0000001a;
+        border-radius: 14px;
+        width: 100%;
+        .header {
+          padding: 20px;
+          padding-bottom: 0;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
         }
-        // padding: 15px;
-        .overall-performance-card {
-          p {
-            margin: 0;
-            color: var(--stc-dark-grey-color);
-            @extend .stcFont;
-            font-size: 16px;
-            font-weight: 500;
-            text-transform: capitalize;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 15px;
-          }
-          .overall-performance-chart {
-            padding: 0 15px 0 15px;
-          }
+        .title {
+          color: #6b7280;
+          @extend .stcFont;
+          font-size: 14px;
+          margin: 0;
+          text-transform: capitalize;
         }
-        .rounded-bar-chart-container {
-          border-bottom: 1px solid #e2e8f0;
-        }
-        .kris-details {
-          padding: 15px;
-          &.no-data2 {
-            height: 55%;
+        .data {
+          padding: 20px;
+          padding-bottom: 0;
+          @extend .stcFont;
+          font-size: 20px;
+          font-weight: 600;
+          color: #0a0a0a;
+          &.acceptable {
+            color: var(--stc-green-darker-color);
           }
-          &-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            p {
-              @extend .stcFont;
-              color: var(--stc-dark-grey-color);
-              font-size: 16px;
-              font-weight: 500;
-              text-transform: capitalize;
-              margin: 0;
-            }
-            .mat-mdc-form-field {
-              width: 140px !important;
-              height: 40px !important;
-              .mat-mdc-text-field-wrapper {
-                border-radius: 5px !important;
-                background-color: #fff !important;
-              }
-              .mat-mdc-form-field-subscript-wrapper {
-                display: none !important;
-              }
-              .mdc-line-ripple {
-                display: none !important;
-              }
-              .mat-mdc-select-arrow {
-                color: var(--stc-purple-color);
-              }
-              .mat-mdc-select-min-line {
-                color: var(--stc-black-color);
-                @extend .stcFont;
-              }
-              .mat-mdc-select-trigger {
-                align-items: center !important;
-              }
-              .mat-mdc-text-field-wrapper,
-              .mat-mdc-select-arrow-wrapper {
-                align-items: flex-end !important;
-              }
-              .mat-mdc-form-field-focus-overlay {
-                display: none !important;
-              }
-              .mat-mdc-select-min-line {
-                display: inline-block;
-                padding-top: 3px;
-              }
-            }
+          &.tolerable {
+            color: var(--stc-darker-yellow-color);
           }
-          &-data {
-            margin-top: 20px;
-            overflow-y: auto;
-            max-height: 330px;
-            &.no-data {
-              display: grid;
-              place-items: center;
-              height: 100%;
-            }
-            .child {
-              margin-bottom: 15px;
-              &:last-child {
-                margin-bottom: 0;
-              }
-            }
+          &.unacceptable {
+            color: var(--stc-red-darker-color);
+          }
+          &.unclassified {
+            color: #64748b;
           }
         }
       }
+    }
+    &-kris {
+      margin-top: 25px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+      gap: 20px;
     }
   }
 }
@@ -250,17 +205,13 @@
   display: block !important; /* Ensure it behaves like a block for width calculations */
   max-width: 100% !important; /* Force it to stay within the container */
 }
-
-/* Ensure the arrow doesn't get pushed off or overlap */
-::ng-deep .mat-mdc-select-arrow-wrapper {
-  flex-shrink: 0 !important; /* Prevent the arrow from shrinking */
-}
 .empty-data-message {
-  display: grid;
-  place-items: center;
-  height: 100%;
-  @extend .stcFont;
   color: var(--stc-dark-grey-color);
-  font-size: 18px;
+  font-size: 13px;
   text-transform: capitalize;
+  text-align: center;
+  width: 100%;
+  display: block;
+  margin-top: 20px;
+  @extend .stcFont;
 }

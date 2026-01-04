@@ -34,6 +34,8 @@ import { A11yModule } from '@angular/cdk/a11y';
 import { StackedBarChartComponent } from './components/stacked-bar-chart/stacked-bar-chart.component';
 import { KriItemComponent } from './components/kri-item/kri-item.component';
 import { CdkAutofill } from '@angular/cdk/text-field';
+import { DbComponent } from './views/kri-dashboard/components/db/db.component';
+import { KriCardComponent } from './views/kri-dashboard/components/kri-card/kri-card.component';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
     http,
@@ -60,6 +62,8 @@ export const provideTranslation = () => ({
     FileUploadDialogComponent,
     StackedBarChartComponent,
     KriItemComponent,
+    DbComponent,
+    KriCardComponent,
   ],
   imports: [
     BrowserModule,

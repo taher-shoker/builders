@@ -2,7 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { map, Observable } from 'rxjs';
-import { ExecutiveSummaryModel, TapApiModel, TapModel } from '../models';
+import {
+  AvailablePeriodModel,
+  ExecutiveSummaryModel,
+  TapApiModel,
+  TapModel,
+} from '../models';
 import saveAs from 'file-saver';
 @Injectable({ providedIn: 'root' })
 export class ExecutiveSummaryService {
@@ -48,6 +53,11 @@ export class ExecutiveSummaryService {
     return this.http.post<any>(
       `${environment.apiUrl}/kri/file-imports`,
       formData
+    );
+  }
+  getAvailablePeriod(): Observable<AvailablePeriodModel[]> {
+    return this.http.get<AvailablePeriodModel[]>(
+      `${environment.apiUrl}/kri/available-periods`
     );
   }
 }

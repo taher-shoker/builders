@@ -59,7 +59,7 @@ export class TripleLineChartComponent
         am5.color(0x22c55e),
         am5.color(0xeab308),
         am5.color(0xdc2626),
-        am5.color(0x86a873),
+        am5.color(0x64748b),
         am5.color(0xbb9f06),
       ]);
     if (this.root._logo) {

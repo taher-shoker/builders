@@ -1,0 +1,18 @@
+<section class="kri">
+  <div class="kri-header">
+    <p class="title">{{ quarterTrend().name }}</p>
+    <div
+      class="kri-header-legend"
+      [ngClass]="{
+        acceptable: quarterTrend().kriStatus.toLowerCase() === 'acceptable',
+        tolerable: quarterTrend().kriStatus.toLowerCase() === 'tolerable',
+        unacceptable: quarterTrend().kriStatus.toLowerCase() === 'unacceptable',
+        unclassified: quarterTrend().kriStatus.toLowerCase() === 'unclassified'
+      }"
+    >
+      <span class="bullet"></span>
+      <span class="status">{{ quarterTrend().kriStatus }}</span>
+    </div>
+  </div>
+  <div class="kri-chart">chart</div>
+</section>

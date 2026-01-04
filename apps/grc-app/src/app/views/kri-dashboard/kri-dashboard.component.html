@@ -19,10 +19,20 @@
       (clickedTap)="getCurrentTap($event)"
     />
     <div class="kri-section-body-tab-details">
-      @if(currentClickedTap && currentClickedTap.id === 1){
+      @if(currentClickedTap && currentClickedTap.name.toLowerCase() ===
+      'executive summary' && years.length > 0 && periods.length > 0){
       <stc-apps-executive-summary
         [kriTaps]="kriTaps"
         (isUploaded)="isUploaded($event)"
+        [periods]="periods"
+        [years]="years"
+      />
+      } @else if(currentClickedTap && currentClickedTap.name.toLowerCase() ===
+      'dp' && years.length > 0 && periods.length > 0){
+      <stc-apps-db
+        [periods]="periods"
+        [years]="years"
+        [gd]="currentClickedTap.name"
       />
       }
     </div>

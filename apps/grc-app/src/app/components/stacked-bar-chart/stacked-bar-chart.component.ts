@@ -42,12 +42,15 @@ export class StackedBarChartComponent
     });
   }
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['data'] && !changes['data'].firstChange && this.root) {
+    if (changes['data'] && !changes['data'].firstChange) {
       this.stackedBarChart();
     }
   }
   constructor(public dom_s: DomSanitizer) {}
   stackedBarChart() {
+    if (this.root) {
+      this.root.dispose();
+    }
     this.root = am5.Root.new(this.chartdiv_id);
     const myTheme = am5.Theme.new(this.root);
     myTheme.rule('Grid', ['base']).setAll({
@@ -66,7 +69,7 @@ export class StackedBarChartComponent
         am5.color(0x22c55e),
         am5.color(0xeab308),
         am5.color(0xdc2626),
-        am5.color(0x86a873),
+        am5.color(0x64748b),
         am5.color(0xbb9f06),
       ]);
     if (this.root._logo) {
@@ -81,6 +84,12 @@ export class StackedBarChartComponent
         tooltip: am5.Tooltip.new(this.root, {}),
       })
     );
+    // if (data[0].name === '') {
+    //   yRenderer.setAll({
+    //     cellStartLocation: 0.2,
+    //     cellEndLocation: 0.8,
+    //   });
+    // }
     yRenderer.grid.template.setAll({
       location: 1,
       forceHidden: true,
@@ -143,7 +152,10 @@ export class StackedBarChartComponent
         }
       );
       series.columns.template.setAll({
-        tooltipText: `${name} in {name} : {valueX}`,
+        tooltipText:
+          data[0].name !== ''
+            ? `${name} in {name} : {valueX}`
+            : `${name} : {valueX}`,
         tooltipY: am5.percent(90),
         cornerRadiusTL: 10,
         cornerRadiusTR: 10,
@@ -175,7 +187,7 @@ export class StackedBarChartComponent
     };
     if (data.length > 0) {
       Object.keys(data[0]).forEach((key) => {
-        if (key !== 'name') {
+        if (key !== 'name' && key !== 'all') {
           makeSeries(key, key);
         }
       });

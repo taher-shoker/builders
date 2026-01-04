@@ -1,0 +1,72 @@
+@import '../../../../../styles/fonts.scss';
+.kri {
+  background-color: #f3f4f6;
+  border-radius: 8px;
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 16px 5px;
+    border-bottom: 1px solid #e2e8f0;
+    .title {
+      // padding: 10px 16px 5px;
+      margin: 0;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      @extend .stcFont;
+    }
+    &-legend {
+      background-color: #fee2e2;
+      border: 1px solid #fecaca;
+      border-radius: 4px;
+      padding: 5px 9px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      .status {
+        color: #ef4444;
+        font-size: 13px;
+        @extend .stcFont;
+      }
+      .bullet {
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: #ef4444;
+        border-radius: 50%;
+        // margin-right: 6px;
+      }
+      &.acceptable {
+        background-color: #dcfce7;
+        border: 1px solid #bbf7d0;
+        .status {
+          color: #22c55e;
+        }
+        .bullet {
+          background-color: #22c55e;
+        }
+      }
+      &.tolerable {
+        background-color: #fef9c3;
+        border: 1px solid #fef08a;
+        .status {
+          color: #eab308;
+        }
+        .bullet {
+          background-color: #eab308;
+        }
+      }
+      &.unclassified {
+        background-color: #e0e7ff;
+        border: 1px solid #c7d2fe;
+        .status {
+          color: #6366f1;
+        }
+        .bullet {
+          background-color: #6366f1;
+        }
+      }
+    }
+  }
+}
