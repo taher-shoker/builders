@@ -215,3 +215,7 @@
   margin-top: 20px;
   @extend .stcFont;
 }
+::ng-deep .DP-paginator {
+  justify-content: flex-end !important;
+  margin-top: 25px !important;
+}

@@ -36,6 +36,9 @@ import { KriItemComponent } from './components/kri-item/kri-item.component';
 import { CdkAutofill } from '@angular/cdk/text-field';
 import { DbComponent } from './views/kri-dashboard/components/db/db.component';
 import { KriCardComponent } from './views/kri-dashboard/components/kri-card/kri-card.component';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { PaginatePipe } from './pipes/paginate.pipe';
+import { PaginatorModule } from 'primeng/paginator';
 export function HttpLoaderFactory(http: HttpClient) {
   return new TranslateHttpLoader(
     http,
@@ -64,6 +67,7 @@ export const provideTranslation = () => ({
     KriItemComponent,
     DbComponent,
     KriCardComponent,
+    PaginatePipe,
   ],
   imports: [
     BrowserModule,
@@ -78,6 +82,8 @@ export const provideTranslation = () => ({
     FormsModule,
     A11yModule,
     CdkAutofill,
+    OverlayPanelModule,
+    PaginatorModule,
   ],
   providers: [
     importProvidersFrom([HttpClientModule]),

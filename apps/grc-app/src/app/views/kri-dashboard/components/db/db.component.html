@@ -97,10 +97,18 @@
     </div>
     @if(dbKRIsData){
     <div class="db-body-kris">
-      @for (kri of dbKRIsData.quarterTrend; track kri.id) {
+      @for (kri of dbKRIsData.quarterTrend|paginate: first:rows; track kri.id) {
       <stc-apps-kri-card [quarterTrend]="kri" />
       }
     </div>
+    <p-paginator
+      (onPageChange)="onPageChange($event)"
+      [first]="first"
+      [rows]="rows"
+      [totalRecords]="dbKRIsData.quarterTrend.length"
+      [styleClass]="'DP-paginator'"
+    />
+    <!-- [rowsPerPageOptions]="[10, 20, 30]" -->
     } } @else { sgfsdfds }
   </div>
 </section>

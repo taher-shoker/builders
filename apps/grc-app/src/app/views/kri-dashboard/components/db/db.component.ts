@@ -4,6 +4,7 @@ import { DbDataModel, IStatusSummary } from '../../../../models/db';
 import { AvailablePeriodModel } from '../../../../models/executive-summary';
 import { DbService } from '../../../../services/db.service';
 import { Subject, takeUntil } from 'rxjs';
+import { PaginatorState } from 'primeng/paginator';
 @Component({
   selector: 'stc-apps-db',
   standalone: false,
@@ -22,6 +23,13 @@ export class DbComponent implements OnInit, OnDestroy {
   dbService = inject(DbService);
   dbKRIsData!: DbDataModel;
   endSubs$: Subject<void> = new Subject<void>();
+  first = 0;
+  rows = 10;
+  onPageChange(event: PaginatorState) {
+    console.log(event);
+    this.first = event.first ?? 0;
+    this.rows = event.rows ?? 10;
+  }
   ngOnDestroy(): void {
     this.endSubs$.complete();
   }
@@ -85,6 +93,7 @@ export class DbComponent implements OnInit, OnDestroy {
       }
       this.isQuarterTypeMonth = false;
     }
+    this.first = 0;
     this.getDPData();
   }
   ngOnInit(): void {
