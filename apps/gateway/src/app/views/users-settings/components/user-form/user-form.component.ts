@@ -506,7 +506,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         const preferredOrder = [
           'DT_User',
           'DT_Director',
-          'DT_PMO',
+          'PMO',
           'DT_Governance',
           'DT_Executive',
         ];
