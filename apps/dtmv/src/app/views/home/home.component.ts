@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
       name: 'Vp Report',
       url: '/vp-report',
       icon: 'fa-file-signature',
-      roles: ['VP_VIEWER', 'VP_EDITOR', 'DT_PMO'],
+      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO'],
       urlHome: '/home',
     },
     {
@@ -69,13 +69,13 @@ export class HomeComponent implements OnInit {
       roles: ['TICKET_ADMIN'],
       urlHome: '/home',
     },
-    {
-      name: 'Action Log',
-      url: '/action-log',
-      icon: 'fa fa-list-alt',
-      roles: ['ADMINS'],
-      urlHome: '/home',
-    },
+    // {
+    //   name: 'Action Log',
+    //   url: '/action-log',
+    //   icon: 'fa fa-list-alt',
+    //   roles: ['ADMINS'],
+    //   urlHome: '/home',
+    // },
   ];
   ngOnInit() {
     this.updateActiveTabAndBanner(this.router.url);

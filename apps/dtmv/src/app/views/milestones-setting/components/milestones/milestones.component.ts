@@ -457,7 +457,10 @@ export class MilestonesComponent
 
     this.currentPageNumber = 1;
     sessionStorage.setItem('milestonesCurrentPage', '1');
-    this.fetchMilestones({ page: 0, numberOfElementsToDisplay: this.pageSizeNumber });
+    this.fetchMilestones({
+      page: 0,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
     this.dialogService.close();
   }
 
@@ -468,14 +471,23 @@ export class MilestonesComponent
     sessionStorage.removeItem('filterFormMilestones');
     this.currentPageNumber = 1;
     sessionStorage.setItem('milestonesCurrentPage', '1');
-    this.fetchMilestones({ page: 0, numberOfElementsToDisplay: this.pageSizeNumber });
+    this.fetchMilestones({
+      page: 0,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
     this.dialogService.close();
   }
 
   getAllTeams() {
-    this.milestonesService.setUserTeams().subscribe((res) => {
-      this.allTeams = res;
-    });
+    if (this.milestonesService.checkIsAdmin()) {
+      this.milestonesService.setSystemTeams().subscribe((res) => {
+        this.allTeams = res;
+      });
+    } else {
+      this.milestonesService.setUserTeams().subscribe((res) => {
+        this.allTeams = res;
+      });
+    }
   }
 
   detailsNavigate(item: any) {
@@ -729,10 +741,16 @@ export class MilestonesComponent
 
     if (filters) {
       this.filterForm = filters;
-      this.fetchMilestones({ page: this.currentPageNumber - 1, numberOfElementsToDisplay: this.pageSizeNumber });
+      this.fetchMilestones({
+        page: this.currentPageNumber - 1,
+        numberOfElementsToDisplay: this.pageSizeNumber,
+      });
       this.resetForm(this.filterForm);
     } else {
-      this.fetchMilestones({ page: this.currentPageNumber - 1, numberOfElementsToDisplay: this.pageSizeNumber });
+      this.fetchMilestones({
+        page: this.currentPageNumber - 1,
+        numberOfElementsToDisplay: this.pageSizeNumber,
+      });
     }
   }
   addingArchiveFilter() {
@@ -748,7 +766,8 @@ export class MilestonesComponent
   isPendingListClosable: boolean = false;
 
   toggleAnimation() {
-    this.pendingActionsShown = this.pendingActionsShown === 'out' ? 'in' : 'out';
+    this.pendingActionsShown =
+      this.pendingActionsShown === 'out' ? 'in' : 'out';
   }
 
   handlePendingActionsList(width: number) {
