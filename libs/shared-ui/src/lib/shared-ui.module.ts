@@ -111,7 +111,9 @@ import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component
 import { ProgressChartComponent } from './progress-chart/progress-chart.component';
 import { MonthYearPickerComponent } from './month-year-picker/month-year-picker.component';
 import { NumericInputComponent } from './numeric-input/numeric-input.component';
-
+import { TripleLineChartComponent } from './triple-line-chart/triple-line-chart.component';
+import { RoundedBarChartComponent } from './rounded-bar-chart/rounded-bar-chart.component';
+import { GaugeChartComponent } from './gauge-chart/gauge-chart.component';
 const components = [
   ButtonComponent,
   TabviewComponent,
@@ -169,6 +171,7 @@ const components = [
   NewLinePipe,
   MultiCirclesChartComponent,
   ClusteredColumnChartComponent,
+  GaugeChartComponent,
   ActivityLogsPopupComponent,
   SplitButtonComponent,
   InputGroupComponent,
@@ -183,6 +186,8 @@ const components = [
   EditModeViewComponent,
   ProgressChartComponent,
   NumericInputComponent,
+  TripleLineChartComponent,
+  RoundedBarChartComponent,
 ];
 
 @NgModule({

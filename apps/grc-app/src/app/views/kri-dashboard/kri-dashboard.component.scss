@@ -1,0 +1,11 @@
+.kri-section {
+  &-body {
+    &-tab-details {
+      background-color: var(--stc-white-color);
+      border-radius: 20px;
+      padding: 20px;
+      position: relative;
+      color: #000;
+    }
+  }
+}

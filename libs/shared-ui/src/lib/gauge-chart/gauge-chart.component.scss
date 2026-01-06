@@ -1,0 +1,24 @@
+.gauge-container {
+  position: relative;
+  display: inline-block;
+}
+
+.gauge-svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg); /* Rotates the whole chart so 0% is at the top */
+}
+
+/* We must counter-rotate the text so it isn't sideways */
+.gauge-text {
+  font-family: 'Arial', sans-serif;
+  font-weight: 900; /* Extra bold to match image */
+  font-size: 16px; /* Adjust relative to viewBox size */
+  transform: rotate(90deg); /* Counter-rotation */
+  transform-origin: center; /* Spin around the center */
+}
+
+/* Optional: Add a smooth animation when value changes */
+.progress-ring {
+  transition: stroke-dashoffset 0.35s ease-in-out;
+}
