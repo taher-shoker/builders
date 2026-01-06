@@ -127,7 +127,7 @@ export class MilestonesService {
   }
 
   checkIsPMO() {
-    if (this.getMilestoneUsersType().find((x) => x.groupName === 'DT_PMO')) {
+    if (this.getMilestoneUsersType().find((x) => x.groupName === 'PMO')) {
       this.isDTPMO = true;
     } else {
       this.isDTPMO = false;

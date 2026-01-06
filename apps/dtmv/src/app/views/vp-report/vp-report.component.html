@@ -86,7 +86,7 @@
           <div class="col-md-3">
             <span
               class="edit-link"
-              *ngIf="!milestonesService.isBusinessSpoc"
+              *ngIf="!milestonesService.isBusinessSpoc && !milestonesService.checkIsExecutive() && !milestonesService.checkIsPMO()"
               (click)="goEditPage()"
               >Edit</span
             >
@@ -396,7 +396,7 @@
 
             <span
               class="edit-link"
-              *ngIf="!milestonesService.isBusinessSpoc"
+              *ngIf="!milestonesService.isBusinessSpoc && !milestonesService.checkIsExecutive() && !milestonesService.checkIsPMO()"
               (click)="goEditPage()"
               >Edit</span
             >
@@ -420,7 +420,7 @@
 
             <span
               class="edit-link"
-              *ngIf="!milestonesService.isBusinessSpoc"
+             *ngIf="!milestonesService.isBusinessSpoc && !milestonesService.checkIsExecutive() && !milestonesService.checkIsPMO()"
               (click)="goEditPage()"
               >Edit</span
             >
