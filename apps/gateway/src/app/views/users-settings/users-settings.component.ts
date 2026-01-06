@@ -59,6 +59,13 @@ export class UsersSettingsComponent implements OnInit {
         icon: 'fa fa-list-alt',
         isExtrnal: true,
       });
+    } else if (this.userService.getCurrentSystem() === 'GRC_Dashboard') {
+      this.navItems.push({
+        name: 'GRC Dashboard',
+        url: window.location.origin + environment.systems.grc_dashboard,
+        icon: 'fa-database',
+        isExtrnal: true,
+      });
     }
 
     this.userName = user.name;
