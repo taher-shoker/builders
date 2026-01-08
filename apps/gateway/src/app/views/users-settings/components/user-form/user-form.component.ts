@@ -877,16 +877,23 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (this.initializing && !this.rebindingPrivilege) {
       return;
     }
-    this.resetPrivilegeCheckboxes();
-    if (this.userService.getCurrentSystem() === 'DI_Milestones') {
+    const currentSystem = this.userService.getCurrentSystem();
+    const isProgrammaticInit =
+      this.rebindingPrivilege ||
+      (this.data && !this.userSelectedPrivilege && !this.initialBindingDone);
+    if (!isProgrammaticInit) {
+      this.resetPrivilegeCheckboxes();
+    }
+    if (currentSystem === 'DI_Milestones') {
       this.form.get('viewer')?.enable();
       this.checkDtUserPermissions(value.groupName);
       this.teams = this.userService.allTeams;
-    } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
+      if (isProgrammaticInit) {
+        this.rehydrateMilestonesCheckboxes();
+      }
+    } else if (currentSystem === 'Score_Card_Report_DB') {
       this.teams = this.userService.getTeams();
-    } else if (
-      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
-    ) {
+    } else if (currentSystem === 'Business_Excellence_Dashboard') {
       if (value.groupName === 'BE_EDITORS') {
         this.filterPages = this.pages;
         const availableIds = this.availableIdsFrom(this.filterPages);
@@ -959,5 +966,42 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   private applyPageSelection(ids: number[]): void {
     this.form.get('pageAccess')?.setValue(ids, { emitEvent: false });
+  }
+
+  private rehydrateMilestonesCheckboxes(): void {
+    if (this.data?.userGroups?.length > 1) {
+      if (this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')) {
+        this.form?.get('viewer')?.setValue(true, { emitEvent: false });
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')?.groupName ===
+        'VP_EDITOR'
+      ) {
+        this.form?.get('editor')?.setValue(true, { emitEvent: false });
+        this.viewerControl?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')
+          ?.groupName === 'DT_Governance_Approver'
+      ) {
+        this.form?.get('DT_Governance_Approver')?.setValue(true, {
+          emitEvent: false,
+        });
+        this.viewerControl?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'TICKET_ADMIN')
+          ?.groupName === 'TICKET_ADMIN'
+      ) {
+        this.form?.get('ticketAdmin')?.setValue(true, { emitEvent: false });
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_User_Edit_Delete')
+          ?.groupName === 'DT_User_Edit_Delete'
+      ) {
+        this.form?.get('edit_delete')?.setValue(true, { emitEvent: false });
+      }
+      this.cdr.detectChanges();
+    }
   }
 }
