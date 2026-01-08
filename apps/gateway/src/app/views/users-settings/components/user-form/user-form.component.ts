@@ -157,6 +157,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
 
       this.selectedPages = pageAccess.map((p: Page) => p.id);
+      this.applyPageSelection(this.selectedPages);
     }
   }
 
@@ -196,7 +197,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       ticketAdmin: [false],
       edit_delete: [false],
       pageAccess: [
-        '',
+        [],
         this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
           ? Validators.required
           : Validators.nullValidator,
@@ -873,7 +874,7 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (!this.rebindingPrivilege && !this.initializing) {
       this.userSelectedPrivilege = true;
     }
-    if (this.initializing) {
+    if (this.initializing && !this.rebindingPrivilege) {
       return;
     }
     this.resetPrivilegeCheckboxes();
@@ -886,23 +887,28 @@ export class UserFormComponent implements OnInit, OnChanges {
     } else if (
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
     ) {
-      this.form.get('pageAccess')?.reset();
       if (value.groupName === 'BE_EDITORS') {
         this.filterPages = this.pages;
+        const availableIds = this.availableIdsFrom(this.filterPages);
+        const selection = this.computePageSelection(availableIds);
+        this.applyPageSelection(selection);
       } else if (value.groupName === 'BE_PM') {
-        this.form.get('pageAccess')?.setValue([3]);
+        this.applyPageSelection([3]);
         this.form.get('pageAccess')?.disable();
       } else {
         this.form.get('pageAccess')?.enable();
         this.filterPages = this.pages.filter(
           (r) => r.name !== 'Activity Log Center'
         );
+        const availableIds = this.availableIdsFrom(this.filterPages);
+        const selection = this.computePageSelection(availableIds);
+        this.applyPageSelection(selection);
       }
     } else {
       this.teams = this.userService
         .getTeams()
         .filter((x) => x.roleName == value.groupName);
-      if (this.initializing) {
+      if (this.initializing && !this.rebindingPrivilege) {
         return;
       }
       const current = this.form?.get('teamDto')?.value;
@@ -931,5 +937,27 @@ export class UserFormComponent implements OnInit, OnChanges {
     this.form.get('edit_delete')?.setValue(false, { emitEvent: false });
     this.viewerControl?.enable();
     this.cdr.detectChanges();
+  }
+
+  private normalizeIds(val: any): number[] {
+    if (!Array.isArray(val)) return [];
+    return val.map((id: any) => Number(id));
+  }
+
+  private availableIdsFrom(pages: Page[]): number[] {
+    return (pages || []).map((p) => Number(p.id));
+  }
+
+  private computePageSelection(availableIds: number[]): number[] {
+    const current = this.normalizeIds(this.form.get('pageAccess')?.value || []);
+    const preserved = current.filter((id) => availableIds.includes(id));
+    const initial = this.normalizeIds(this.selectedPages || []).filter((id) =>
+      availableIds.includes(id)
+    );
+    return preserved.length > 0 ? preserved : initial;
+  }
+
+  private applyPageSelection(ids: number[]): void {
+    this.form.get('pageAccess')?.setValue(ids, { emitEvent: false });
   }
 }
