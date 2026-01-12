@@ -1,0 +1,165 @@
+<section class="agile-executive-summary">
+  <div class="section-header">
+    <div class="header-text">
+      <div class="title-container">
+        <img src="/assets/images/icon-title.png" height="25" width="25"/>
+        <h2>AI&DS Sector - Overall Maturity Overview</h2>
+      </div>
+      <p>High-level agile maturity assessment across all business units</p>
+    </div>
+    <div class="top-filters">
+      <div class="filter">
+        <label>Year</label>
+        <stc-apps-custom-dropdown
+          [list]="years()"
+          [displayNameProperty]="'displayName'"
+          [valueProperty]="'value'"
+          [outputProperty]="'value'"
+          (itemSelected)="onSelectYear($event)"
+        ></stc-apps-custom-dropdown>
+      </div>
+      <div class="filter">
+        <label>Quarter</label>
+        <stc-apps-custom-dropdown
+          [list]="quarters()"
+          [displayNameProperty]="'displayName'"
+          [valueProperty]="'value'"
+          [outputProperty]="'value'"
+          (itemSelected)="onSelectQuarter($event)"
+        ></stc-apps-custom-dropdown>
+      </div>
+    </div>
+  </div>
+
+  <div class="overview-grid">
+    <div class="time-period-card card card-h-320">
+      <div class="score">
+        <h1>{{ overviewScore() }}</h1>
+        <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
+      </div>
+      <div class="progress-section">
+        <div class="progress-labels">
+          <span class="label-left">Progress to Target (4.0)</span>
+          <span class="label-right">{{ targetProgress() }}%</span>
+        </div>
+        <stc-apps-progress-bar
+          [data]="{
+            prefixText: '',
+            prefixValue: 0,
+            suffixText: '',
+            suffixValue: '',
+            progressValue: targetProgress(),
+            barColor: '#000000',
+            bgBarColor: '#EBE0F5',
+            indexes: []
+          }"
+        ></stc-apps-progress-bar>
+      </div>
+    </div>
+
+    <div class="maturity-index-card card">
+      <div class="card-header">
+        <h3>AI&DS Sector Overall Maturity index</h3>
+        <span>Sector-wide view across People, Process, and Technology</span>
+      </div>
+      <stc-apps-multi-circles-chart
+        [chartData2]="maturityChartData()"
+      ></stc-apps-multi-circles-chart>
+    </div>
+  </div>
+
+  <div class="heatmap-section card">
+    <div class="heatmap-header">
+      <h3>Heat map</h3>
+      <div class="heatmap-filters">
+        <div class="filter">
+          <label>Line of business</label>
+          <stc-apps-custom-dropdown
+            [list]="lobDropdownList()"
+            [outputProperty]="'value'"
+            (itemSelected)="onSelectLOB($event)"
+          ></stc-apps-custom-dropdown>
+        </div>
+        <div class="filter">
+          <label>Tribe name</label>
+          <stc-apps-custom-dropdown
+            [list]="[{displayName: 'All Tribes', value: 'all'}]"
+            [displayNameProperty]="'displayName'"
+            [valueProperty]="'value'"
+            [outputProperty]="'value'"
+          ></stc-apps-custom-dropdown>
+        </div>
+        <div class="filter">
+          <label>Quarter</label>
+          <stc-apps-custom-dropdown
+            [list]="quarters()"
+            [displayNameProperty]="'displayName'"
+            [valueProperty]="'value'"
+            [outputProperty]="'value'"
+            (itemSelected)="onSelectQuarter($event)"
+          ></stc-apps-custom-dropdown>
+        </div>
+      </div>
+    </div>
+    <div class="heatmap-table">
+      <div class="table-header">
+        <div class="th label-col"></div>
+        @for (col of heatmapColumns(); track col) {
+          <div class="th">{{ col }}</div>
+        }
+      </div>
+      <div class="table-body">
+        @for (row of heatmapRows(); track row.label) {
+          <div class="tr">
+            <div class="td label-col">{{ row.label }}</div>
+            @for (val of row.values; track $index) {
+              <div class="td">
+                <div class="cell" [class.low]="val<2.5" [class.mid]="val>=2.5 && val<3" [class.high]="val>=3">
+                  {{ val }}
+                </div>
+              </div>
+            }
+          </div>
+        }
+        <div class="tr total-row">
+          <div class="td label-col">Total Average</div>
+          @for (col of heatmapColumns(); track col; let i = $index) {
+            <div class="td">
+              <div class="cell total">
+                {{ getTotalAverageForColumn(i) | number: '1.2-2' }}
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="performance-scale">
+      <span class="scale-title">Performance Scale</span>
+      @for (s of performanceScale(); track s.caption) {
+        <span class="badge">{{ s.caption }}</span>
+        <span class="range">{{ s.range }}</span>
+      }
+    </div>
+  </div>
+
+  <div class="bottom-grid">
+    <div class="card">
+      <div class="card-header">
+        <h3>AI&DS Agile Maturity Index</h3>
+      </div>
+      <stc-apps-multi-circles-chart
+        [chartData2]="maturityChartData()"
+      ></stc-apps-multi-circles-chart>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <h3>Key Highlights</h3>
+      </div>
+      <ul class="highlights">
+        @for (h of keyHighlights(); track h) {
+          <li>{{ h }}</li>
+        }
+      </ul>
+    </div>
+  </div>
+</section>

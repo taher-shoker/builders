@@ -1,0 +1,37 @@
+@if (!isMobile()) {
+  <section class="digital-transformation">
+    <div
+      style="display: flex; justify-content: space-between; align-items: center"
+    >
+      <stc-apps-page-header
+        [mainTitle]="'Agile Transformation'"
+        [secondaryTitle]="''"
+        [username]="userData && userData.name ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
+    </div>
+    <div class="digital-transformation-taps">
+      <stc-apps-tabview
+        [tabsData]="agileTransformationTabs()"
+        [tabColor]="'#ffffff'"
+        [clickedtabColor]="'#ffffff'"
+        [tabBackground]="'#FFFFFF0D'"
+        [clickedtabBackground]="'#FF375E'"
+        (clickedTap)="getClickedTap($event)"
+        [fontFamily]="'STCForwardFont'"
+        [isMobile]="false"
+      />
+    </div>
+    @if (currTap()) {
+      @if (currTap()?.id === 1) {
+        <stc-apps-agile-executive-summary />
+      } @else if (currTap()?.id === 2) {
+        <stc-apps-qbr-status />
+      } @else if (currTap()?.id === 3) {
+        <stc-apps-bau-delivery-performance />
+      } @else if (currTap()?.id === 4) {
+        <stc-apps-estimated-efforts-calculator />
+      }
+    }
+  </section>
+}
