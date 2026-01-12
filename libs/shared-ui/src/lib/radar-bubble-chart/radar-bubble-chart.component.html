@@ -1,0 +1,13 @@
+<div class="radar-wrap">
+  <svg #svgHost class="radar"></svg>
+</div>
+
+<div
+  class="radar-tooltip"
+  *ngIf="tooltipVisible"
+  [style.left.px]="tooltipX"
+  [style.top.px]="tooltipY"
+>
+  <div class="tooltip-title">{{ tooltipLabel }}</div>
+  <div class="tooltip-value">Value: {{ tooltipValue }}</div>
+</div>

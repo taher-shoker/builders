@@ -1,14 +1,14 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { ScorecardService } from '../services/scorecard.service';
+import { NavigationStart, Router } from '@angular/router';
 import {
   NavLinks,
   UserGroup,
   UserGroupRoles,
   UserModel,
 } from '../models/scorecard.model';
-import { NavigationStart, Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { DeviceService } from '../services/device.service';
+import { ScorecardService } from '../services/scorecard.service';
 @Component({
   selector: 'stc-apps-main-layout',
   standalone: false,
@@ -72,10 +72,17 @@ export class MainLayoutComponent implements OnInit {
     this.navItems = this.userData?.pageAccess.map((p: any) => {
       return { ...p, url: `/${p.slug}` };
     });
-    if (!this.isMobile()) {
-      this.router.navigate([this.navItems[0].url]);
-    } else {
-      this.router.navigate(['/home']);
+
+    const currentPath = window.location.pathname;
+    const hasHash = window.location.hash && window.location.hash !== '#/';
+
+    // Only redirect if we are at the root and not navigating to a specific hash/path
+    if ((currentPath === '/' || currentPath === '/index.html') && !hasHash) {
+      if (!this.isMobile()) {
+        this.router.navigate([this.navItems[0].url]);
+      } else {
+        this.router.navigate(['/home']);
+      }
     }
   }
   private checkSystem(groups: UserGroup[]): UserGroup {

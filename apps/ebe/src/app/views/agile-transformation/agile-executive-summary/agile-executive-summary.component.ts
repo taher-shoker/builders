@@ -1,15 +1,16 @@
 import { CommonModule } from '@angular/common';
-import { Component, signal } from '@angular/core';
-import { SharedUiModule } from '@stc-apps/shared-ui';
+import { Component, OnInit, signal } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RadarBubble, SharedUiModule } from '@stc-apps/shared-ui';
 
 @Component({
   selector: 'stc-apps-agile-executive-summary',
   standalone: true,
-  imports: [CommonModule, SharedUiModule],
+  imports: [CommonModule, SharedUiModule, FormsModule],
   templateUrl: './agile-executive-summary.component.html',
   styleUrls: ['./agile-executive-summary.component.scss'],
 })
-export class AgileExecutiveSummaryComponent {
+export class AgileExecutiveSummaryComponent implements OnInit {
   years = signal([
     { displayName: '2024', value: 2024 },
     { displayName: '2025', value: 2025 },
@@ -23,6 +24,25 @@ export class AgileExecutiveSummaryComponent {
   selectedYear = signal<number>(2025);
   selectedQuarter = signal<string>('Q1');
 
+  ngOnInit() {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+
+    // Add current year if not present
+    const currentYears = this.years();
+    if (!currentYears.find(y => y.value === currentYear)) {
+      this.years.update(y => [...y, { displayName: String(currentYear), value: currentYear }]);
+    }
+
+    // Set current year
+    this.selectedYear.set(currentYear);
+
+    // Calculate and set current quarter
+    const month = today.getMonth() + 1;
+    const quarter = Math.ceil(month / 3);
+    this.selectedQuarter.set(`Q${quarter}`);
+  }
+
   overviewScore = signal<number>(8.9);
   targetProgress = signal<number>(70);
 
@@ -33,6 +53,17 @@ export class AgileExecutiveSummaryComponent {
     { title: 'People', value1: 7.9, value2: 7.2, color: '#4F008C' },
     { title: 'Technology', value1: 8.1, value2: 7.0, color: '#000000' },
   ]);
+
+  labels = ['Strategy', 'Process', 'Technology', 'People', 'Structure'];
+
+  bubbles: RadarBubble[] = [
+    { axisIndex: 0, value: 1.5, r: 14 },
+    { axisIndex: 1, value: 2, r: 14 },
+    { axisIndex: 2, value: 3, r: 14 },
+    { axisIndex: 3, value: 0.75, r: 14 },
+    { axisIndex: 4, value: 2.5, r: 14 },
+  ];
+
 
   heatmapColumns = signal([
     'Squad 1',

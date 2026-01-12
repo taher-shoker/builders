@@ -29,3 +29,4 @@ export * from './lib/donut-chart/donut-chart.component';
 
 export * from './lib/weekly-line-chart/weekly-line-chart.component';
 export * from './lib/progress-bar/progress-bar.component';
+export * from './lib/radar-bubble-chart/radar-bubble-chart.component';

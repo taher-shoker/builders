@@ -2,7 +2,7 @@
   <div class="section-header">
     <div class="header-text">
       <div class="title-container">
-        <img src="/assets/images/icon-title.png" height="25" width="25"/>
+        <img src="/assets/images/icon-title.png" height="25" width="25" />
         <h2>AI&DS Sector - Overall Maturity Overview</h2>
       </div>
       <p>High-level agile maturity assessment across all business units</p>
@@ -15,6 +15,8 @@
           [displayNameProperty]="'displayName'"
           [valueProperty]="'value'"
           [outputProperty]="'value'"
+          [ngModel]="selectedYear()"
+          [highlightSelected]="true"
           (itemSelected)="onSelectYear($event)"
         ></stc-apps-custom-dropdown>
       </div>
@@ -25,6 +27,8 @@
           [displayNameProperty]="'displayName'"
           [valueProperty]="'value'"
           [outputProperty]="'value'"
+          [ngModel]="selectedQuarter()"
+          [highlightSelected]="true"
           (itemSelected)="onSelectQuarter($event)"
         ></stc-apps-custom-dropdown>
       </div>
@@ -32,7 +36,7 @@
   </div>
 
   <div class="overview-grid">
-    <div class="time-period-card card card-h-320">
+    <div class="time-period-card card ">
       <div class="score">
         <h1>{{ overviewScore() }}</h1>
         <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
@@ -62,9 +66,15 @@
         <h3>AI&DS Sector Overall Maturity index</h3>
         <span>Sector-wide view across People, Process, and Technology</span>
       </div>
-      <stc-apps-multi-circles-chart
-        [chartData2]="maturityChartData()"
-      ></stc-apps-multi-circles-chart>
+      <shared-radar-bubble-chart
+        [labels]="labels"
+        [levels]="4"
+        [outerRadius]="170"
+        [innerZoneRatio]="0.5"
+        [bubbles]="bubbles"
+        [startAngleDeg]="-108"
+      >
+      </shared-radar-bubble-chart>
     </div>
   </div>
 
@@ -83,7 +93,7 @@
         <div class="filter">
           <label>Tribe name</label>
           <stc-apps-custom-dropdown
-            [list]="[{displayName: 'All Tribes', value: 'all'}]"
+            [list]="[{ displayName: 'All Tribes', value: 'all' }]"
             [displayNameProperty]="'displayName'"
             [valueProperty]="'value'"
             [outputProperty]="'value'"
@@ -105,30 +115,35 @@
       <div class="table-header">
         <div class="th label-col"></div>
         @for (col of heatmapColumns(); track col) {
-          <div class="th">{{ col }}</div>
+        <div class="th">{{ col }}</div>
         }
       </div>
       <div class="table-body">
         @for (row of heatmapRows(); track row.label) {
-          <div class="tr">
-            <div class="td label-col">{{ row.label }}</div>
-            @for (val of row.values; track $index) {
-              <div class="td">
-                <div class="cell" [class.low]="val<2.5" [class.mid]="val>=2.5 && val<3" [class.high]="val>=3">
-                  {{ val }}
-                </div>
-              </div>
-            }
+        <div class="tr">
+          <div class="td label-col">{{ row.label }}</div>
+          @for (val of row.values; track $index) {
+          <div class="td">
+            <div
+              class="cell"
+              [class.low]="val < 2.5"
+              [class.mid]="val >= 2.5 && val < 3"
+              [class.high]="val >= 3"
+            >
+              {{ val }}
+            </div>
           </div>
+          }
+        </div>
         }
         <div class="tr total-row">
           <div class="td label-col">Total Average</div>
           @for (col of heatmapColumns(); track col; let i = $index) {
-            <div class="td">
-              <div class="cell total">
-                {{ getTotalAverageForColumn(i) | number: '1.2-2' }}
-              </div>
+          <div class="td">
+            <div class="cell total">
+              {{ getTotalAverageForColumn(i) | number : '1.2-2' }}
             </div>
+          </div>
           }
         </div>
       </div>
@@ -136,8 +151,8 @@
     <div class="performance-scale">
       <span class="scale-title">Performance Scale</span>
       @for (s of performanceScale(); track s.caption) {
-        <span class="badge">{{ s.caption }}</span>
-        <span class="range">{{ s.range }}</span>
+      <span class="badge">{{ s.caption }}</span>
+      <span class="range">{{ s.range }}</span>
       }
     </div>
   </div>
@@ -157,7 +172,7 @@
       </div>
       <ul class="highlights">
         @for (h of keyHighlights(); track h) {
-          <li>{{ h }}</li>
+        <li>{{ h }}</li>
         }
       </ul>
     </div>
