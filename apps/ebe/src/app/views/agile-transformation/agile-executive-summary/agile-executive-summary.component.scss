@@ -96,7 +96,6 @@
   }
 }
 
-
 .overview-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -170,18 +169,18 @@
   }
 }
 .maturity-index-card {
-  border: 1px solid #B999D1;
+  border: 1px solid #b999d1;
   min-height: 240px;
   display: flex;
   flex-direction: column;
 
   .card-header {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-bottom: 24px;
 
-      h3 {
+    h3 {
       font-size: 17px;
       font-weight: 700;
       color: #111827;
@@ -219,11 +218,48 @@
 }
 .heatmap-section h3 {
   margin: 0;
-  font-size: 16px;
+  font-weight: 700;
+  font-size: 17px;
+  line-height: 28px;
 }
 .heatmap-filters {
   display: flex;
   gap: 12px;
+}
+.heatmap-filters .filter {
+  flex: 1;
+  min-width: 160px;
+}
+.heatmap-filters stc-apps-custom-dropdown {
+  display: block;
+  width: 100%;
+
+  ::ng-deep .dropdown-head {
+    border: 1px solid #b999d1 !important;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+
+    .head-wrapper {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .head-display-name {
+      font-size: 14px;
+      color: #333;
+    }
+
+    .head-caret-down i {
+      color: #9ca3af;
+      font-size: 18px;
+    }
+  }
 }
 .heatmap-table {
   margin-top: 12px;
@@ -264,44 +300,30 @@
 .cell.high {
   background: #d1fae5;
 }
-.cell.total {
-  background: #e5e7eb;
-}
-.total-row .td {
-  background: #f3f4f6;
-}
-.performance-scale {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 12px;
-  flex-wrap: wrap;
-}
-.performance-scale .scale-title {
-  color: #6b7280;
-  margin-right: 8px;
-}
-.performance-scale .badge {
-  background: #f3f4f6;
-  padding: 4px 10px;
-  border-radius: 999px;
-  font-size: 12px;
-}
-.performance-scale .range {
-  color: #6b7280;
-  font-size: 12px;
-  margin-right: 8px;
-}
 .bottom-grid {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 .highlights {
-  margin: 8px 0 0 0;
-  padding-left: 18px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 .highlights li {
-  margin-bottom: 6px;
-  color: #374151;
+  position: relative;
+  padding-left: 16px;
+  margin-bottom: 12px;
+  line-height: 1.5;
+}
+.highlights li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: #6b7280;
+}
+
+app-heatmap-performance {
+  display: block;
+  margin-top: 24px;
 }

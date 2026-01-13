@@ -3,6 +3,23 @@ import { Component, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RadarBubble, SharedUiModule } from '@stc-apps/shared-ui';
 
+type Dimension = {
+  key: 'strategy' | 'structure' | 'processes' | 'people' | 'technology';
+  label: string;
+};
+
+type Squad = {
+  id: string;
+  name: string;
+  scores: {
+    strategy: number;
+    structure: number;
+    processes: number;
+    people: number;
+    technology: number;
+  };
+};
+
 @Component({
   selector: 'stc-apps-agile-executive-summary',
   standalone: true,
@@ -23,6 +40,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   ]);
   selectedYear = signal<number>(2025);
   selectedQuarter = signal<string>('Q1');
+  selectedTribe = signal<string>('all');
 
   ngOnInit() {
     const today = new Date();
@@ -43,7 +61,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     this.selectedQuarter.set(`Q${quarter}`);
   }
 
-  overviewScore = signal<number>(8.9);
+  overviewScore = signal<number>(2.8);
   targetProgress = signal<number>(70);
 
   maturityChartData = signal([
@@ -65,43 +83,49 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   ];
 
 
-  heatmapColumns = signal([
-    'Squad 1',
-    'Squad 2',
-    'Squad 3',
-    'Squad 4',
-    'Squad 5',
-    'Tribe Total',
-  ]);
-  heatmapRows = signal([
-    {
-      label: 'Strategy',
-      values: [3.0, 3.0, 3.0, 3.0, 3.0, 2.86],
-    },
-    {
-      label: 'Structure',
-      values: [2.32, 2.32, 3.0, 2.32, 2.32, 2.59],
-    },
-    {
-      label: 'Processes',
-      values: [2.32, 3.0, 3.0, 3.0, 3.0, 3.0],
-    },
-    {
-      label: 'People',
-      values: [3.0, 3.0, 3.0, 3.0, 3.0, 2.59],
-    },
-    {
-      label: 'Technology',
-      values: [3.0, 3.0, 3.0, 3.0, 3.0, 2.78],
-    },
-  ]);
+  // heatmapColumns = signal([
+  //   'Squad 1',
+  //   'Squad 2',
+  //   'Squad 3',
+  //   'Squad 4',
+  //   'Squad 5',
+  //   'Squad 6',
+  //   'Squad 7',
+  //   'Squad 8',
+  //   'Squad 9',
+  //   'Squad 10',
+  //   'Squad 11',
+  //   'Tribe Total',
+  // ]);
+  // heatmapRows = signal([
+  //   {
+  //     label: 'Strategy',
+  //     values: [3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.86],
+  //   },
+  //   {
+  //     label: 'Structure',
+  //     values: [2.32, 2.32, 3.0, 2.32, 2.32, 2.32, 3.0, 2.32,3.0, 3.0, 3.0, 2.59],
+  //   },
+  //   {
+  //     label: 'Processes',
+  //     values: [2.32, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.59],
+  //   },
+  //   {
+  //     label: 'People',
+  //     values: [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.59],
+  //   },
+  //   {
+  //     label: 'Technology',
+  //     values: [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.78],
+  //   },
+  // ]);
 
-  performanceScale = signal([
-    { caption: 'Fly', range: '3 - 4.0' },
-    { caption: 'Run', range: '2.75 - 3.49' },
-    { caption: 'Walk', range: '1.5 - 2.49' },
-    { caption: 'Crawl', range: '0 - 1.49' },
-  ]);
+  // performanceScale = signal([
+  //   { caption: 'Fly', range: '3 - 4.0' },
+  //   { caption: 'Run', range: '2.75 - 3.49' },
+  //   { caption: 'Walk', range: '1.5 - 2.49' },
+  //   { caption: 'Crawl', range: '0 - 1.49' },
+  // ]);
 
   lobOptions = signal([
     { key: 'EBU', label: 'EBU' },
@@ -125,12 +149,32 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     'The Postpaid New Connection is available for both new and existing customers, and applies to Voice and Data for both Physical Sims and eSIMs',
   ]);
 
-  getTotalAverageForColumn(index: number): number {
-    const rows = this.heatmapRows();
-    if (!rows || rows.length === 0) return 0;
-    const sum = rows.reduce((acc, r) => acc + (r.values[index] ?? 0), 0);
-    return sum / rows.length;
-  }
+   dimensions: Dimension[] = [
+    { key: 'strategy', label: 'Strategy' },
+    { key: 'structure', label: 'Structure' },
+    { key: 'processes', label: 'Processes' },
+    { key: 'people', label: 'People' },
+    { key: 'technology', label: 'Technology' },
+  ];
+
+  squads: Squad[] = Array.from({ length: 15 }).map((_, i) => ({
+    id: String(i + 1),
+    name: `Squad ${i + 1}`,
+    scores: {
+      strategy: i % 2 ? 3.0 : 1.32,
+      structure: i % 3 ? 3.0 : 2.32,
+      processes: i % 4 ? 3.0 : 3.32,
+      people: i % 2 ? 2.32 : 3.77,
+      technology: i % 5 ? 3.0 : 2.32,
+    },
+  }));
+
+  // getTotalAverageForColumn(index: number): number {
+  //   const rows = this.heatmapRows();
+  //   if (!rows || rows.length === 0) return 0;
+  //   const sum = rows.reduce((acc, r) => acc + (r.values[index] ?? 0), 0);
+  //   return sum / rows.length;
+  // }
 
   onSelectYear(event: any) {
     this.selectedYear.set(event as number);
@@ -140,5 +184,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   }
   onSelectLOB(event: any) {
     this.selectedLOB.set(event as string);
+  }
+  onSelectTribe(event: any) {
+    this.selectedTribe.set(event as string);
   }
 }

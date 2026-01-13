@@ -86,7 +86,11 @@
           <label>Line of business</label>
           <stc-apps-custom-dropdown
             [list]="lobDropdownList()"
+            [displayNameProperty]="'displayName'"
+            [valueProperty]="'value'"
             [outputProperty]="'value'"
+            [ngModel]="selectedLOB()"
+            [highlightSelected]="true"
             (itemSelected)="onSelectLOB($event)"
           ></stc-apps-custom-dropdown>
         </div>
@@ -97,6 +101,9 @@
             [displayNameProperty]="'displayName'"
             [valueProperty]="'value'"
             [outputProperty]="'value'"
+            [ngModel]="selectedTribe()"
+            [highlightSelected]="true"
+            (itemSelected)="onSelectTribe($event)"
           ></stc-apps-custom-dropdown>
         </div>
         <div class="filter">
@@ -106,55 +113,35 @@
             [displayNameProperty]="'displayName'"
             [valueProperty]="'value'"
             [outputProperty]="'value'"
+            [ngModel]="selectedQuarter()"
+            [highlightSelected]="true"
             (itemSelected)="onSelectQuarter($event)"
           ></stc-apps-custom-dropdown>
         </div>
       </div>
     </div>
-    <div class="heatmap-table">
-      <div class="table-header">
-        <div class="th label-col"></div>
-        @for (col of heatmapColumns(); track col) {
-        <div class="th">{{ col }}</div>
-        }
-      </div>
-      <div class="table-body">
-        @for (row of heatmapRows(); track row.label) {
-        <div class="tr">
-          <div class="td label-col">{{ row.label }}</div>
-          @for (val of row.values; track $index) {
-          <div class="td">
-            <div
-              class="cell"
-              [class.low]="val < 2.5"
-              [class.mid]="val >= 2.5 && val < 3"
-              [class.high]="val >= 3"
-            >
-              {{ val }}
-            </div>
-          </div>
-          }
-        </div>
-        }
-        <div class="tr total-row">
-          <div class="td label-col">Total Average</div>
-          @for (col of heatmapColumns(); track col; let i = $index) {
-          <div class="td">
-            <div class="cell total">
-              {{ getTotalAverageForColumn(i) | number : '1.2-2' }}
-            </div>
-          </div>
-          }
-        </div>
-      </div>
-    </div>
-    <div class="performance-scale">
+    <!-- <stc-apps-heatmap-table
+      [columns]="heatmapColumns()"
+      [rows]="heatmapRows()"
+      [showLeftTotalColumn]="true"
+      [leftTotalColumnTitle]="'Total Tribe'"
+      [showRightTotalColumn]="true"
+      [rightTotalColumnTitle]="'Tribe Total'"
+      [totalRowTitle]="'Total Average'"
+      [minValue]="0"
+      [maxValue]="4"
+    ></stc-apps-heatmap-table> -->
+    <!-- <div class="performance-scale">
       <span class="scale-title">Performance Scale</span>
       @for (s of performanceScale(); track s.caption) {
       <span class="badge">{{ s.caption }}</span>
       <span class="range">{{ s.range }}</span>
       }
-    </div>
+    </div> -->
+     <app-heatmap-performance
+      [dimensions]="dimensions"
+      [squads]="squads">
+    </app-heatmap-performance>
   </div>
 
   <div class="bottom-grid">

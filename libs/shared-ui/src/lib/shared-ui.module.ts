@@ -107,6 +107,8 @@ import { ScatterChartComponent } from './chat-charts/scatter-chart/scatterChart.
 import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component';
 import { FormInputComponent } from './form-input/form-input.component';
 import { GaugeChartComponent } from './gauge-chart/gauge-chart.component';
+import { HeatmapPerformanceComponent } from './heatmap-performance/heatmap-performance.component';
+import { HeatmapTableComponent } from './heatmap-table/heatmap-table.component';
 import { MonthYearPickerComponent } from './month-year-picker/month-year-picker.component';
 import { NumericInputComponent } from './numeric-input/numeric-input.component';
 import { PageHeaderComponent } from './pageHeader/page-header.component';
@@ -193,7 +195,7 @@ const components = [
 
 @NgModule({
   declarations: [...components],
-  exports: [...components, ...modules, RadarBubbleChartComponent],
+  exports: [...components, ...modules, RadarBubbleChartComponent, HeatmapTableComponent, HeatmapPerformanceComponent],
   providers: [
     UtilitiesService,
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
@@ -238,6 +240,8 @@ const components = [
     DropdownModule,
     CarouselModule,
     RadarBubbleChartComponent,
+    HeatmapTableComponent,
+    HeatmapPerformanceComponent
   ],
 })
 export class SharedUiModule {}

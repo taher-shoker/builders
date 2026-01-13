@@ -27,6 +27,9 @@ export * from './lib/date-picker-weekly-range/date-picker-weekly-range.component
 
 export * from './lib/donut-chart/donut-chart.component';
 
-export * from './lib/weekly-line-chart/weekly-line-chart.component';
+export * from './lib/heatmap-performance/heatmap-performance.component';
+export * from './lib/heatmap-table/heatmap-table.component';
 export * from './lib/progress-bar/progress-bar.component';
 export * from './lib/radar-bubble-chart/radar-bubble-chart.component';
+export * from './lib/weekly-line-chart/weekly-line-chart.component';
+
