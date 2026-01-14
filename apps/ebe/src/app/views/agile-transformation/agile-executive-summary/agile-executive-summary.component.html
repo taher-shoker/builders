@@ -37,14 +37,15 @@
 
   <div class="overview-grid">
     <div class="time-period-card card">
+      @if (overviewScore() !== null && targetProgress() !== null) {
       <div class="score">
-        <h1>{{ overviewScore() }}</h1>
+        <h1>{{ overviewScore()! }}</h1>
         <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
       </div>
       <div class="progress-section">
         <div class="progress-labels">
           <span class="label-left">Progress to Target (4.0)</span>
-          <span class="label-right">{{ targetProgress() }}%</span>
+          <span class="label-right">{{ targetProgress()! }}%</span>
         </div>
         <stc-apps-progress-bar
           [data]="{
@@ -52,13 +53,18 @@
             prefixValue: 0,
             suffixText: '',
             suffixValue: '',
-            progressValue: targetProgress(),
+            progressValue: targetProgress()!,
             barColor: '#000000',
             bgBarColor: '#EBE0F5',
             indexes: []
           }"
         ></stc-apps-progress-bar>
       </div>
+      } @else {
+      <div class="empty-state">
+        No overview data available for the selected period.
+      </div>
+      }
     </div>
 
     <div class="maturity-index-card card">
@@ -66,15 +72,22 @@
         <h3>AI&DS Sector Overall Maturity index</h3>
         <span>Sector-wide view across People, Process, and Technology</span>
       </div>
+
+      @if (sectorLabels.length && sectorBubbles.length) {
       <shared-radar-bubble-chart
-        [labels]="labels"
+        [labels]="sectorLabels"
         [levels]="4"
         [outerRadius]="170"
         [innerZoneRatio]="0.5"
-        [bubbles]="bubbles"
+        [bubbles]="sectorBubbles"
         [startAngleDeg]="-108"
       >
       </shared-radar-bubble-chart>
+      } @else {
+      <div class="empty-state">
+        No maturity index data available for the selected filters.
+      </div>
+      }
     </div>
   </div>
 
@@ -89,33 +102,21 @@
             [displayNameProperty]="'displayName'"
             [valueProperty]="'value'"
             [outputProperty]="'value'"
-            [ngModel]="selectedLOB()"
+            [ngModel]="selectedHeatmapLOB()"
             [highlightSelected]="true"
-            (itemSelected)="onSelectLOB($event)"
+            (itemSelected)="onSelectHeatmapLOB($event)"
           ></stc-apps-custom-dropdown>
         </div>
         <div class="filter">
           <label>Tribe name</label>
           <stc-apps-custom-dropdown
-            [list]="[{ displayName: 'All Tribes', value: 'all' }]"
+            [list]="tribeDropdownList()"
             [displayNameProperty]="'displayName'"
             [valueProperty]="'value'"
             [outputProperty]="'value'"
             [ngModel]="selectedTribe()"
             [highlightSelected]="true"
             (itemSelected)="onSelectTribe($event)"
-          ></stc-apps-custom-dropdown>
-        </div>
-        <div class="filter">
-          <label>Quarter</label>
-          <stc-apps-custom-dropdown
-            [list]="quarters()"
-            [displayNameProperty]="'displayName'"
-            [valueProperty]="'value'"
-            [outputProperty]="'value'"
-            [ngModel]="selectedQuarter()"
-            [highlightSelected]="true"
-            (itemSelected)="onSelectQuarter($event)"
           ></stc-apps-custom-dropdown>
         </div>
       </div>
@@ -138,8 +139,14 @@
       <span class="range">{{ s.range }}</span>
       }
     </div> -->
+    @if (squads.length > 0) {
     <app-heatmap-performance [dimensions]="dimensions" [squads]="squads">
     </app-heatmap-performance>
+    } @else {
+    <div class="empty-state">
+      No heatmap data available for the selected filters.
+    </div>
+    }
   </div>
 
   <div class="card lob-tabs-card">
@@ -162,6 +169,8 @@
           <div class="card-header">
             <h3>AI&DS Agile Maturity Index</h3>
           </div>
+
+          @if (labels.length && bubbles.length) {
           <shared-radar-bubble-chart
             [labels]="labels"
             [levels]="4"
@@ -171,6 +180,11 @@
             [startAngleDeg]="-108"
           >
           </shared-radar-bubble-chart>
+          } @else {
+          <div class="empty-state">
+            No maturity index data available for the selected line of business.
+          </div>
+          }
         </div>
         <div class="card highlights-card">
           <div class="card-header">
@@ -183,11 +197,18 @@
           <div class="highlight-subtitle">
             {{ keyHighlights().title }}
           </div>
+
+          @if (keyHighlights().items.length) {
           <ul class="highlights">
             @for (h of keyHighlights().items; track h) {
             <li>{{ h }}</li>
             }
           </ul>
+          } @else {
+          <div class="empty-state">
+            No key highlights available for the selected line of business.
+          </div>
+          }
         </div>
       </div>
     </div>

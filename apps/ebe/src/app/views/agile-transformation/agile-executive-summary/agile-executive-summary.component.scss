@@ -114,6 +114,11 @@ h3 {
       font-weight: 700;
     }
   }
+
+  .empty-state {
+    font-size: 14px;
+    color: #6b7280;
+  }
 }
 
 .overview-grid {
@@ -235,6 +240,15 @@ h3 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.heatmap-section .empty-state {
+  margin-top: 24px;
+  padding: 16px;
+  border-radius: 12px;
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  font-size: 14px;
+  color: #6b7280;
 }
 // .heatmap-section h3 {
 //   margin: 0;
@@ -460,6 +474,11 @@ app-heatmap-performance {
         font-weight: bold;
       }
     }
+  }
+
+  .empty-state {
+    font-size: 14px;
+    color: #6b7280;
   }
 
   .lob-badge {

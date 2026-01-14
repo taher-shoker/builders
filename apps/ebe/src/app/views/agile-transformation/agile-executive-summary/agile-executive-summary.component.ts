@@ -1,7 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RadarBubble, SharedUiModule } from '@stc-apps/shared-ui';
+import {
+  AgileExecutiveSummaryService,
+  HeatmapMetadataResponse,
+  HeatmapSquadsValuesResponse,
+  MaturityIndexResponse,
+  OverallMaturityIndexResponse,
+  TimePeriodMetadata,
+} from '../../../services/agile-executive-summary.service';
 
 type Dimension = {
   key: 'strategy' | 'structure' | 'processes' | 'people' | 'technology';
@@ -28,41 +36,22 @@ type Squad = {
   styleUrls: ['./agile-executive-summary.component.scss'],
 })
 export class AgileExecutiveSummaryComponent implements OnInit {
-  years = signal([
-    { displayName: '2024', value: 2024 },
-    { displayName: '2025', value: 2025 },
-  ]);
-  quarters = signal([
-    { displayName: 'Q1', value: 'Q1' },
-    { displayName: 'Q2', value: 'Q2' },
-    { displayName: 'Q3', value: 'Q3' },
-    { displayName: 'Q4', value: 'Q4' },
-  ]);
-  selectedYear = signal<number>(2025);
+  agileService = inject(AgileExecutiveSummaryService);
+
+  years = signal<{ displayName: string; value: string }[]>([]);
+  quarters = signal<{ displayName: string; value: string }[]>([]);
+  selectedYear = signal<string>('');
   selectedQuarter = signal<string>('Q1');
   selectedTribe = signal<string>('all');
+  selectedHeatmapLOB = signal<string>('');
+  tribeDropdownList = signal<{ displayName: string; value: string }[]>([]);
 
   ngOnInit() {
-    const today = new Date();
-    const currentYear = today.getFullYear();
-
-    // Add current year if not present
-    const currentYears = this.years();
-    if (!currentYears.find(y => y.value === currentYear)) {
-      this.years.update(y => [...y, { displayName: String(currentYear), value: currentYear }]);
-    }
-
-    // Set current year
-    this.selectedYear.set(currentYear);
-
-    // Calculate and set current quarter
-    const month = today.getMonth() + 1;
-    const quarter = Math.ceil(month / 3);
-    this.selectedQuarter.set(`Q${quarter}`);
+    this.loadTimePeriodMetadata();
   }
 
-  overviewScore = signal<number>(2.8);
-  targetProgress = signal<number>(70);
+  overviewScore = signal<number | null>(2.8);
+  targetProgress = signal<number | null>(70);
 
   maturityChartData = signal([
     { title: 'Strategy', value1: 8.9, value2: 7.5, color: '#B999D1' },
@@ -72,60 +61,25 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     { title: 'Technology', value1: 8.1, value2: 7.0, color: '#000000' },
   ]);
 
-  labels = ['Strategy', 'Process', 'Technology', 'People', 'Structure'];
+  labels = ['Strategy', 'Structure', 'Processes', 'People', 'Technology'];
 
   bubbles: RadarBubble[] = [
-    { axisIndex: 0, value: 1.5, r: 14 },
-    { axisIndex: 1, value: 2, r: 14 },
-    { axisIndex: 2, value: 3, r: 14 },
-    { axisIndex: 3, value: 0.75, r: 14 },
-    { axisIndex: 4, value: 2.5, r: 14 },
+    { axisIndex: 0, value: 0, r: 14 },
+    { axisIndex: 1, value: 0, r: 14 },
+    { axisIndex: 2, value: 0, r: 14 },
+    { axisIndex: 3, value: 0, r: 14 },
+    { axisIndex: 4, value: 0, r: 14 },
   ];
 
+  sectorLabels = ['Strategy', 'Process', 'Technology', 'People', 'Structure'];
 
-  // heatmapColumns = signal([
-  //   'Squad 1',
-  //   'Squad 2',
-  //   'Squad 3',
-  //   'Squad 4',
-  //   'Squad 5',
-  //   'Squad 6',
-  //   'Squad 7',
-  //   'Squad 8',
-  //   'Squad 9',
-  //   'Squad 10',
-  //   'Squad 11',
-  //   'Tribe Total',
-  // ]);
-  // heatmapRows = signal([
-  //   {
-  //     label: 'Strategy',
-  //     values: [3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.86],
-  //   },
-  //   {
-  //     label: 'Structure',
-  //     values: [2.32, 2.32, 3.0, 2.32, 2.32, 2.32, 3.0, 2.32,3.0, 3.0, 3.0, 2.59],
-  //   },
-  //   {
-  //     label: 'Processes',
-  //     values: [2.32, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.59],
-  //   },
-  //   {
-  //     label: 'People',
-  //     values: [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.59],
-  //   },
-  //   {
-  //     label: 'Technology',
-  //     values: [3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0, 3.0,3.0, 3.0, 3.0, 2.78],
-  //   },
-  // ]);
-
-  // performanceScale = signal([
-  //   { caption: 'Fly', range: '3 - 4.0' },
-  //   { caption: 'Run', range: '2.75 - 3.49' },
-  //   { caption: 'Walk', range: '1.5 - 2.49' },
-  //   { caption: 'Crawl', range: '0 - 1.49' },
-  // ]);
+  sectorBubbles: RadarBubble[] = [
+    { axisIndex: 0, value: 4, r: 14 },
+    { axisIndex: 1, value: 4, r: 14 },
+    { axisIndex: 2, value: 4, r: 14 },
+    { axisIndex: 3, value: 3.9, r: 14 },
+    { axisIndex: 4, value: 4, r: 14 },
+  ];
 
   lobOptions = signal([
     { key: 'EBU', label: 'EBU' },
@@ -142,16 +96,11 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   ]);
 
   keyHighlights = signal({
-    title: 'Postpaid O2C - Release 1 for New Connection',
-    items: [
-      'TAWASOL Digital pilot closure & final business acceptance for release “New Connection of Postpaid”',
-      'New UI/UX in TAMWOOl digital enhances the agent experience by offering faster, smoother, and more user-friendly interactions for postpaid',
-      'The production deployment of the Postpaid New Connection covering O2C Journey requirements including retrofit CRs',
-      'The Postpaid New Connection is available for both new and existing customers, and applies to Voice and Data for both Physical Sims and eSIMs',
-    ],
+    title: '',
+    items: [] as string[],
   });
 
-   dimensions: Dimension[] = [
+  dimensions: Dimension[] = [
     { key: 'strategy', label: 'Strategy' },
     { key: 'structure', label: 'Structure' },
     { key: 'processes', label: 'Processes' },
@@ -159,35 +108,217 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     { key: 'technology', label: 'Technology' },
   ];
 
-  squads: Squad[] = Array.from({ length: 15 }).map((_, i) => ({
-    id: String(i + 1),
-    name: `Squad ${i + 1}`,
-    scores: {
-      strategy: i % 2 ? 3.0 : 1.32,
-      structure: i % 3 ? 3.0 : 2.32,
-      processes: i % 4 ? 3.0 : 3.32,
-      people: i % 2 ? 2.32 : 3.77,
-      technology: i % 5 ? 3.0 : 2.32,
-    },
-  }));
-
-  // getTotalAverageForColumn(index: number): number {
-  //   const rows = this.heatmapRows();
-  //   if (!rows || rows.length === 0) return 0;
-  //   const sum = rows.reduce((acc, r) => acc + (r.values[index] ?? 0), 0);
-  //   return sum / rows.length;
-  // }
+  squads: Squad[] = [];
 
   onSelectYear(event: any) {
-    this.selectedYear.set(event as number);
+    this.selectedYear.set(String(event));
+    this.loadOverallMaturityIndex();
+    this.loadMaturityIndex();
+    this.loadHeatmapSquadsValues();
   }
+
   onSelectQuarter(event: any) {
     this.selectedQuarter.set(event as string);
+    this.loadOverallMaturityIndex();
+    this.loadMaturityIndex();
+    this.loadHeatmapSquadsValues();
   }
+
   onSelectLOB(event: any) {
     this.selectedLOB.set(event as string);
+    this.labels = [];
+    this.bubbles = [];
+    this.sectorBubbles = [];
+    this.keyHighlights.set({ title: '', items: [] });
+    this.loadMaturityIndex();
   }
+
+  onSelectHeatmapLOB(event: any) {
+    this.selectedHeatmapLOB.set(event as string);
+    this.loadHeatmapSquadsValues();
+  }
+
   onSelectTribe(event: any) {
     this.selectedTribe.set(event as string);
+    this.loadHeatmapSquadsValues();
+  }
+
+  private loadHeatmapSquadsValues() {
+    const year = Number(this.selectedYear());
+    const quarter = this.selectedQuarter();
+    const lineOfBusiness = this.selectedHeatmapLOB();
+    const tribe = this.selectedTribe();
+
+    if (!lineOfBusiness || !tribe) {
+      return;
+    }
+
+    this.squads = [];
+
+    this.agileService
+      .getHeatmapSquadsValues(year, quarter, lineOfBusiness, tribe)
+      .subscribe((data: HeatmapSquadsValuesResponse) => {
+        this.squads =
+          data.squadValues?.map((s) => ({
+            id: String(s.id),
+            name: s.squadName,
+            scores: {
+              strategy: s.strategy,
+              structure: s.structure,
+              processes: s.processes,
+              people: s.people,
+              technology: s.technology,
+            },
+          })) ?? [];
+      });
+  }
+
+  private loadHeatmapMetadata() {
+    this.agileService
+      .getHeatmapMetadata()
+      .subscribe((data: HeatmapMetadataResponse) => {
+        if (data.lineOfBusinesses && data.lineOfBusinesses.length) {
+          const lobList = data.lineOfBusinesses.map((lob) => ({
+            displayName: lob,
+            value: lob,
+          }));
+          this.lobDropdownList.set(lobList);
+          if (!this.selectedHeatmapLOB() && lobList.length > 0) {
+            this.selectedHeatmapLOB.set(lobList[0].value);
+          }
+        }
+
+        const tribesList = [
+          ...(data.tribes ?? []).map((tribe) => ({
+            displayName: tribe,
+            value: tribe,
+          })),
+        ];
+        this.tribeDropdownList.set(tribesList);
+        if (tribesList.length > 0) {
+          this.selectedTribe.set(tribesList[0].value);
+        }
+        this.loadHeatmapSquadsValues();
+      });
+  }
+
+  private loadTimePeriodMetadata() {
+    this.agileService
+      .getTimePeriodMetadata()
+      .subscribe((data: TimePeriodMetadata) => {
+        const numericYears =
+          data.years
+            ?.map((y: number) => Number(y))
+            .filter((y: number) => !Number.isNaN(y)) ?? [];
+
+        const yearOptions = numericYears.map((y: number) => ({
+          displayName: String(y),
+          value: String(y),
+        }));
+
+        const quarterOptions =
+          data.quarters?.map((q: string) => ({
+            displayName: q,
+            value: q,
+          })) ?? [];
+
+        this.years.set(yearOptions);
+        this.quarters.set(quarterOptions);
+
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        const currentQuarter = `Q${Math.ceil((today.getMonth() + 1) / 3)}`;
+
+        const lastYearNumber =
+          numericYears && numericYears.length
+            ? Math.max(...numericYears)
+            : undefined;
+
+        const lastYearString =
+          lastYearNumber !== undefined
+            ? String(lastYearNumber)
+            : yearOptions[yearOptions.length - 1]?.value;
+        const lastQuarter = quarterOptions[quarterOptions.length - 1]?.value;
+
+        const defaultYear = lastYearString ?? yearOptions[0]?.value;
+
+        let defaultQuarter = lastQuarter;
+        if (Number(defaultYear) === currentYear) {
+          defaultQuarter =
+            quarterOptions.find(
+              (q: { value: string }) => q.value === currentQuarter
+            )?.value ?? lastQuarter;
+        }
+
+        if (defaultYear !== undefined) {
+          this.selectedYear.set(defaultYear);
+        }
+        if (defaultQuarter) {
+          this.selectedQuarter.set(defaultQuarter);
+        }
+        this.loadOverallMaturityIndex();
+        this.loadMaturityIndex();
+        this.loadHeatmapMetadata();
+      });
+  }
+
+  private loadOverallMaturityIndex() {
+    const year = Number(this.selectedYear());
+    const quarter = this.selectedQuarter();
+
+    this.sectorBubbles = [];
+
+    this.agileService
+      .getOverallMaturityIndex(year, quarter)
+      .subscribe((data: OverallMaturityIndexResponse) => {
+        this.overviewScore.set(data.overallMaturityScore);
+        this.targetProgress.set(data.progressToTarget * 100);
+        this.sectorLabels = [
+          'Strategy',
+          'Process',
+          'Technology',
+          'People',
+          'Structure',
+        ];
+        this.sectorBubbles = [
+          { axisIndex: 0, value: data.strategyScore, r: 14 },
+          { axisIndex: 1, value: data.processScore, r: 14 },
+          { axisIndex: 2, value: data.technologyScore, r: 14 },
+          { axisIndex: 3, value: data.peopleScore, r: 14 },
+          { axisIndex: 4, value: data.structureScore, r: 14 },
+        ];
+      });
+  }
+
+  private loadMaturityIndex() {
+    const year = Number(this.selectedYear());
+    const quarter = this.selectedQuarter();
+    const lob = this.selectedLOB();
+
+    this.bubbles = [];
+
+    this.agileService
+      .getMaturityIndex(year, quarter, lob)
+      .subscribe((data: MaturityIndexResponse) => {
+        this.labels = [
+          'Strategy',
+          'Structure',
+          'Processes',
+          'People',
+          'Technology',
+        ];
+        this.bubbles = [
+          { axisIndex: 0, value: data.strategy, r: 14 },
+          { axisIndex: 1, value: data.structure, r: 14 },
+          { axisIndex: 2, value: data.processes, r: 14 },
+          { axisIndex: 3, value: data.people, r: 14 },
+          { axisIndex: 4, value: data.technology, r: 14 },
+        ];
+
+        this.keyHighlights.set({
+          title: data.titleKeyHighlights ?? 'Key Highlights',
+          items: data.keyHighlights ? [data.keyHighlights] : [],
+        });
+      });
   }
 }

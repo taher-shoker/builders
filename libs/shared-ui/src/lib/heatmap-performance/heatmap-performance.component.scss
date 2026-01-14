@@ -46,6 +46,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
   font-size: 14px;
   line-height: 1;
   user-select: none;
@@ -61,7 +62,18 @@
       color: #4C1D95;
       font-weight: 600;
       height: 100%;
+      padding: 0 8px;
     }
+  }
+
+  .cell-header-label {
+    display: -webkit-box;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
   }
 
   &.row-label {
