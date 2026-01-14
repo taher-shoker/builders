@@ -141,13 +141,15 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     { displayName: 'WBU', value: 'WBU' },
   ]);
 
-  keyHighlights = signal([
-    'Postpaid O2C - Release 1 for New Connection',
-    'TAMWOOl Digital pilot closure & final business acceptance for release “New Connection of Postpaid”',
-    'New UI/UX in TAMWOOl digital enhances the agent experience by offering faster, smoother, and more user-friendly interactions for postpaid',
-    'The production deployment of the Postpaid New Connection covering O2C Journey requirements including retrofit CRs',
-    'The Postpaid New Connection is available for both new and existing customers, and applies to Voice and Data for both Physical Sims and eSIMs',
-  ]);
+  keyHighlights = signal({
+    title: 'Postpaid O2C - Release 1 for New Connection',
+    items: [
+      'TAWASOL Digital pilot closure & final business acceptance for release “New Connection of Postpaid”',
+      'New UI/UX in TAMWOOl digital enhances the agent experience by offering faster, smoother, and more user-friendly interactions for postpaid',
+      'The production deployment of the Postpaid New Connection covering O2C Journey requirements including retrofit CRs',
+      'The Postpaid New Connection is available for both new and existing customers, and applies to Voice and Data for both Physical Sims and eSIMs',
+    ],
+  });
 
    dimensions: Dimension[] = [
     { key: 'strategy', label: 'Strategy' },

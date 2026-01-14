@@ -1,3 +1,11 @@
+h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #111827;
+  line-height: 28px;
+  margin-bottom: 0;
+}
+
 .agile-executive-summary {
   display: flex;
   flex-direction: column;
@@ -93,6 +101,18 @@
   .card-header {
     background: transparent !important;
     border-bottom: none !important;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 20px;
+    padding-left: 0;
+
+    h3 {
+      margin: 0;
+      color: #1F2937;
+      font-size: 18px;
+      font-weight: 700;
+    }
   }
 }
 
@@ -180,13 +200,13 @@
     gap: 2px;
     margin-bottom: 24px;
 
-    h3 {
-      font-size: 17px;
-      font-weight: 700;
-      color: #111827;
-      line-height: 28px;
-      margin-bottom: 0;
-    }
+    // h3 {
+    //   font-size: 17px;
+    //   font-weight: 700;
+    //   color: #111827;
+    //   line-height: 28px;
+    //   margin-bottom: 0;
+    // }
 
     span {
       color: #6b7280;
@@ -216,12 +236,12 @@
   justify-content: space-between;
   align-items: center;
 }
-.heatmap-section h3 {
-  margin: 0;
-  font-weight: 700;
-  font-size: 17px;
-  line-height: 28px;
-}
+// .heatmap-section h3 {
+//   margin: 0;
+//   font-weight: 700;
+//   font-size: 17px;
+//   line-height: 28px;
+// }
 .heatmap-filters {
   display: flex;
   gap: 12px;
@@ -304,6 +324,7 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  margin-top: 12px;
 }
 .highlights {
   list-style: none;
@@ -317,7 +338,7 @@
   line-height: 1.5;
 }
 .highlights li::before {
-  content: "•";
+  content: '•';
   position: absolute;
   left: 0;
   color: #6b7280;
@@ -326,4 +347,150 @@
 app-heatmap-performance {
   display: block;
   margin-top: 24px;
+}
+
+.lob-tabs-card {
+  margin-bottom: 24px;
+  padding: 20px !important; // Slightly tighter padding for the bar
+}
+
+.lob-tabs-section {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #64748B;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin: 0;
+  }
+
+  .tabs-list {
+    display: inline-flex;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 4px;
+    border-radius: 12px;
+    gap: 4px;
+    width: fit-content;
+  }
+
+  .tab-btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    min-width: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.6);
+      color: #334151;
+    }
+
+    &.active {
+      background: var(--stc-pink-color);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+  }
+}
+.maturity-index-card {
+  shared-radar-bubble-chart {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    max-height: 400px;
+    margin: 0 auto;
+  }
+}
+
+.highlights-card {
+  position: relative; // Ensure badge positions relative to the card
+
+  .card-header {
+    margin-bottom: 24px;
+    background: transparent; // Ensure header doesn't have a contrasting background if not desired
+    border-bottom: none; // Remove border if present
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  .highlight-subtitle {
+    font-size: 16px;
+    font-weight: 700;
+    color: #E91E63; // Pink color
+    margin-bottom: 16px;
+    padding-left: 0; // Ensure it aligns with h3
+  }
+
+  .highlights {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    li {
+      position: relative;
+      padding-left: 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #374151;
+
+      &::before {
+        content: "•";
+        position: absolute;
+        left: 0;
+        color: #111827;
+        font-weight: bold;
+      }
+    }
+  }
+
+  .lob-badge {
+    position: absolute;
+    top: 32px;
+    right: 32px;
+    width: 80px;
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+
+    img {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .text {
+      position: absolute;
+      top: 50%;
+      left: 0; // Align from the left
+      transform: translateY(-50%);
+      width: calc(100% - 15px); // Subtract approximate width of the pink stripe
+      text-align: center;
+      color: #000;
+      font-weight: 700;
+      font-size: 14px;
+      z-index: 2;
+      line-height: 1;
+    }
+  }
 }

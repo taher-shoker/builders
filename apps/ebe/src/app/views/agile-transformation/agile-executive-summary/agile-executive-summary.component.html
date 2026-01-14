@@ -36,7 +36,7 @@
   </div>
 
   <div class="overview-grid">
-    <div class="time-period-card card ">
+    <div class="time-period-card card">
       <div class="score">
         <h1>{{ overviewScore() }}</h1>
         <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
@@ -138,30 +138,58 @@
       <span class="range">{{ s.range }}</span>
       }
     </div> -->
-     <app-heatmap-performance
-      [dimensions]="dimensions"
-      [squads]="squads">
+    <app-heatmap-performance [dimensions]="dimensions" [squads]="squads">
     </app-heatmap-performance>
   </div>
 
-  <div class="bottom-grid">
-    <div class="card">
-      <div class="card-header">
-        <h3>AI&DS Agile Maturity Index</h3>
-      </div>
-      <stc-apps-multi-circles-chart
-        [chartData2]="maturityChartData()"
-      ></stc-apps-multi-circles-chart>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <h3>Key Highlights</h3>
-      </div>
-      <ul class="highlights">
-        @for (h of keyHighlights(); track h) {
-        <li>{{ h }}</li>
+  <div class="card lob-tabs-card">
+    <div class="lob-tabs-section">
+      <h3>Line of business</h3>
+      <div class="tabs-list">
+        @for (lob of lobOptions(); track lob.key) {
+        <button
+          class="tab-btn"
+          [class.active]="selectedLOB() === lob.key"
+          (click)="onSelectLOB(lob.key)"
+        >
+          {{ lob.label }}
+        </button>
         }
-      </ul>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="card maturity-index-card">
+          <div class="card-header">
+            <h3>AI&DS Agile Maturity Index</h3>
+          </div>
+          <shared-radar-bubble-chart
+            [labels]="labels"
+            [levels]="4"
+            [outerRadius]="170"
+            [innerZoneRatio]="0.5"
+            [bubbles]="bubbles"
+            [startAngleDeg]="-108"
+          >
+          </shared-radar-bubble-chart>
+        </div>
+        <div class="card highlights-card">
+          <div class="card-header">
+            <h3>Key Highlights</h3>
+            <div class="lob-badge">
+              <img src="/assets/images/lob-badge.png" alt="LOB Badge">
+              <span class="text">{{ selectedLOB() }}</span>
+            </div>
+          </div>
+          <div class="highlight-subtitle">
+            {{ keyHighlights().title }}
+          </div>
+          <ul class="highlights">
+            @for (h of keyHighlights().items; track h) {
+            <li>{{ h }}</li>
+            }
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
 </section>
