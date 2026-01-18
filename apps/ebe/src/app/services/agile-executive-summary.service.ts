@@ -156,4 +156,37 @@ export class AgileExecutiveSummaryService {
       { observe: 'body', responseType: 'text' as 'json' }
     );
   }
+
+  importExecutiveSummary(
+    dashboardName: string,
+    selectedFile: any,
+    opts: {
+      year: number;
+      quarter: string;
+      lineOfBusiness?: string;
+      tribe?: string;
+    }
+  ): Observable<any> {
+    const formData = new FormData();
+    formData.append('multipartFile', selectedFile, selectedFile.name);
+    formData.append('dashboardName', dashboardName);
+    const params = new URLSearchParams({
+      year: String(opts.year),
+      quarter: opts.quarter,
+    });
+    const shouldIncludeContext =
+      dashboardName !== 'overall_maturity_index' &&
+      dashboardName !== 'executive_summary_performance_heatmap';
+    if (shouldIncludeContext && opts.lineOfBusiness) {
+      params.set('lineOfBusiness', opts.lineOfBusiness);
+    }
+    if (shouldIncludeContext && opts.tribe) {
+      params.set('tribe', opts.tribe);
+    }
+    return this.http.post<any>(
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/import?${params.toString()}`,
+      formData
+    );
+  }
+
 }

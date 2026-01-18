@@ -373,7 +373,25 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   confirmImport() {
     if (!this.selectedImportFile) return;
-    this.scorecardService.uploadFile(this.selectedImportFile).subscribe({
+    const year = Number(this.selectedYear());
+    const quarter = this.selectedQuarter();
+    const lineOfBusiness = this.selectedHeatmapLOB();
+    const tribe = this.selectedTribe();
+    const ctx = this.importContext;
+    const dashboardName =
+      ctx === 'heatmap'
+        ? 'executive_summary_performance_heatmap'
+        : ctx === 'heatmapSquads'
+        ? 'executive_summary_performance_heatmap_squads'
+        : 'overall_maturity_index';
+    this.agileService
+      .importExecutiveSummary(dashboardName, this.selectedImportFile, {
+        year,
+        quarter,
+        lineOfBusiness,
+        tribe,
+      })
+      .subscribe({
       next: () => {
         this.editSidebarVisible = false;
         this.hideSidebar();
@@ -391,7 +409,25 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   importData(e: FileModel) {
     if (e) {
-      this.scorecardService.uploadFile(e).subscribe({
+      const year = Number(this.selectedYear());
+      const quarter = this.selectedQuarter();
+      const lineOfBusiness = this.selectedHeatmapLOB();
+      const tribe = this.selectedTribe();
+      const ctx = this.importContext;
+      const dashboardName =
+        ctx === 'heatmap'
+          ? 'executive_summary_performance_heatmap'
+          : ctx === 'heatmapSquads'
+          ? 'executive_summary_performance_heatmap_squads'
+          : 'overall_maturity_index';
+      this.agileService
+        .importExecutiveSummary(dashboardName, e, {
+          year,
+          quarter,
+          lineOfBusiness,
+          tribe,
+        })
+        .subscribe({
         next: () => {
           this.visible = false;
           this.loadOverallMaturityIndex();
