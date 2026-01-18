@@ -53,8 +53,8 @@
       </div>
       <div class="progress-section">
         <div class="progress-labels">
-          <span class="label-left">Progress to Target (4.0)</span>
-          <span class="label-right">{{ targetProgress()! }}%</span>
+          <span class="label-left">Progress to Target ({{ progressToTarget()  | number:'1.0-2' }})</span>
+          <span class="label-right">{{ targetProgress()! | number:'1.0-2' }}%</span>
         </div>
         <stc-apps-progress-bar
           [data]="{

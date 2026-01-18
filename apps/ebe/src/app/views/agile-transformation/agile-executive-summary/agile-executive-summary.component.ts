@@ -75,6 +75,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   overviewScore = signal<number | null>(2.8);
   targetProgress = signal<number | null>(70);
+  progressToTarget = signal<number | null>(4.0);
 
   maturityChartData = signal([
     { title: 'Strategy', value1: 8.9, value2: 7.5, color: '#B999D1' },
@@ -295,7 +296,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       .getOverallMaturityIndex(year, quarter)
       .subscribe((data: OverallMaturityIndexResponse) => {
         this.overviewScore.set(data.overallMaturityScore);
-        this.targetProgress.set(data.progressToTarget * 100);
+        this.targetProgress.set((data.overallMaturityScore/4) * 100);
+        this.progressToTarget.set(data.progressToTarget);
         this.sectorLabels = [
           'Strategy',
           'Process',
