@@ -146,4 +146,14 @@ export class AgileExecutiveSummaryService {
       `${environment.apiUrl}/business-excellence/agile/executive-summary/overall-maturity-index?${params.toString()}`
     );
   }
+
+  downloadExecutiveSummaryCsv(dashboardName: string): Observable<string> {
+    const params = new URLSearchParams({
+      dashboardName,
+    });
+    return this.http.get<string>(
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/export?${params.toString()}`,
+      { observe: 'body', responseType: 'text' as 'json' }
+    );
+  }
 }

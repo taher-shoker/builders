@@ -97,6 +97,7 @@ h3 {
   padding: 25px;
   border: 1px solid #e9d4ff !important;
   box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  gap: 12px;
 
   .card-header {
     background: transparent !important;
@@ -109,7 +110,7 @@ h3 {
 
     h3 {
       margin: 0;
-      color: #1F2937;
+      color: #1f2937;
       font-size: 18px;
       font-weight: 700;
     }
@@ -242,7 +243,6 @@ h3 {
   align-items: center;
 }
 .heatmap-section .empty-state {
-  margin-top: 24px;
   padding: 16px;
   border-radius: 12px;
   background: #f9fafb;
@@ -296,7 +296,6 @@ h3 {
   }
 }
 .heatmap-table {
-  margin-top: 12px;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
   overflow: hidden;
@@ -338,7 +337,7 @@ h3 {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-  margin-top: 12px;
+  // margin-top: 12px;
 }
 .highlights {
   list-style: none;
@@ -378,10 +377,46 @@ app-heatmap-performance {
     display: block;
     font-size: 14px;
     font-weight: 600;
-    color: #64748B;
+    color: #64748b;
     text-transform: uppercase;
     letter-spacing: 0.05em;
     margin: 0;
+  }
+  .export-import-bar {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    background: #f3fbfd;
+    border: 1px solid #e9f5f7;
+    border-radius: 12px;
+    padding: 10px;
+  }
+  .ei-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    border-radius: 10px;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 300;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    i {
+      font-size: 18px;
+      color: #fff;
+    }
+    &:hover {
+      filter: brightness(0.95);
+      transform: translateY(-1px);
+    }
+  }
+  .ei-btn.export {
+    background: var(--stc-pink-color);
+  }
+  .ei-btn.import {
+    background: var(--stc-purple-color);
   }
 
   .tabs-list {
@@ -448,7 +483,7 @@ app-heatmap-performance {
   .highlight-subtitle {
     font-size: 16px;
     font-weight: 700;
-    color: #E91E63; // Pink color
+    color: #e91e63; // Pink color
     margin-bottom: 16px;
     padding-left: 0; // Ensure it aligns with h3
   }
@@ -467,7 +502,7 @@ app-heatmap-performance {
       color: #374151;
 
       &::before {
-        content: "•";
+        content: '•';
         position: absolute;
         left: 0;
         color: #111827;
@@ -510,6 +545,15 @@ app-heatmap-performance {
       font-size: 14px;
       z-index: 2;
       line-height: 1;
+    }
+  }
+}
+
+::ng-deep {
+  stc-apps-edit-mode-view {
+    margin-top: 12px;
+    .financial-scorecard-edit-mode {
+      margin-bottom: 6px !important;
     }
   }
 }

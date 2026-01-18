@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RadarBubble, SharedUiModule } from '@stc-apps/shared-ui';
+import { FileModel } from '../../../models/scorecard.model';
 import {
   AgileExecutiveSummaryService,
   HeatmapMetadataResponse,
@@ -10,6 +11,8 @@ import {
   OverallMaturityIndexResponse,
   TimePeriodMetadata,
 } from '../../../services/agile-executive-summary.service';
+import { AuthService } from '../../../services/auth.service';
+import { ScorecardService } from '../../../services/scorecard.service';
 
 type Dimension = {
   key: 'strategy' | 'structure' | 'processes' | 'people' | 'technology';
@@ -37,6 +40,8 @@ type Squad = {
 })
 export class AgileExecutiveSummaryComponent implements OnInit {
   agileService = inject(AgileExecutiveSummaryService);
+  scorecardService = inject(ScorecardService);
+  authServices = inject(AuthService);
 
   years = signal<{ displayName: string; value: string }[]>([]);
   quarters = signal<{ displayName: string; value: string }[]>([]);
@@ -45,9 +50,27 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   selectedTribe = signal<string>('all');
   selectedHeatmapLOB = signal<string>('');
   tribeDropdownList = signal<{ displayName: string; value: string }[]>([]);
+  currentMode: 'editMode' | 'viewMode' = 'viewMode';
+  isAdmin = false;
+  visible = false;
+  importContext: 'heatmap' | 'heatmapSquads' | null = null;
+  editSidebarVisible = false;
+  selectedImportFile: FileModel | null = null;
 
   ngOnInit() {
     this.loadTimePeriodMetadata();
+    this.scorecardService.getCurrentMode().subscribe({
+      next: (res: 'editMode' | 'viewMode') => {
+        this.currentMode = res;
+      },
+    });
+    this.authServices.userRoles.subscribe({
+      next: (role) => {
+        this.isAdmin = role.roles?.some(
+          (r) => r.roleName === 'BE_EDITORS' || r.roleName === 'ADMINS'
+        );
+      },
+    });
   }
 
   overviewScore = signal<number | null>(2.8);
@@ -320,5 +343,117 @@ export class AgileExecutiveSummaryComponent implements OnInit {
           items: data.keyHighlights ? [data.keyHighlights] : [],
         });
       });
+  }
+
+  showDialog() {
+    this.visible = true;
+  }
+  showHeatmapImportDialog() {
+    this.importContext = 'heatmap';
+    this.showDialog();
+  }
+  showHeatmapSquadsImportDialog() {
+    this.importContext = 'heatmapSquads';
+    this.showDialog();
+  }
+
+  onHide() {
+    this.visible = false;
+  }
+  showSidebar() {
+    document.body.classList.add('sidebar-open');
+  }
+  hideSidebar() {
+    document.body.classList.remove('sidebar-open');
+  }
+
+  onUploadFileSelected(e: FileModel | null) {
+    this.selectedImportFile = e;
+  }
+
+  confirmImport() {
+    if (!this.selectedImportFile) return;
+    this.scorecardService.uploadFile(this.selectedImportFile).subscribe({
+      next: () => {
+        this.editSidebarVisible = false;
+        this.hideSidebar();
+        this.selectedImportFile = null;
+        this.loadOverallMaturityIndex();
+        this.loadMaturityIndex();
+        this.loadHeatmapSquadsValues();
+      },
+      error: () => {
+        this.editSidebarVisible = false;
+        this.hideSidebar();
+      },
+    });
+  }
+
+  importData(e: FileModel) {
+    if (e) {
+      this.scorecardService.uploadFile(e).subscribe({
+        next: () => {
+          this.visible = false;
+          this.loadOverallMaturityIndex();
+          this.loadMaturityIndex();
+          this.loadHeatmapSquadsValues();
+        },
+        error: () => {
+          this.visible = false;
+        },
+      });
+    }
+  }
+
+  downloadTemplate() {
+    this.downloadOverviewCsv();
+  }
+
+  private downloadFile(data: string, filename: string) {
+    const blob = new Blob([data], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  }
+
+  downloadOverviewCsv() {
+    this.agileService
+      .downloadExecutiveSummaryCsv('overall_maturity_index')
+      .subscribe({
+        next: (response) => {
+          this.downloadFile(response, 'overall_maturity_index.csv');
+        },
+      });
+  }
+  downloadHeatmapCsv() {
+    this.agileService
+      .downloadExecutiveSummaryCsv('executive_summary_performance_heatmap')
+      .subscribe({
+        next: (response) => {
+          this.downloadFile(response, 'executive_summary_performance_heatmap.csv');
+        },
+      });
+  }
+  downloadHeatmapSquadsCsv() {
+    this.agileService
+      .downloadExecutiveSummaryCsv(
+        'executive_summary_performance_heatmap_squads'
+      )
+      .subscribe({
+        next: (response) => {
+          this.downloadFile(
+            response,
+            'executive_summary_performance_heatmap_squads.csv'
+          );
+        },
+      });
+  }
+
+  showEditMaturityIndex() {
+    this.editSidebarVisible = true;
+    this.showSidebar();
   }
 }

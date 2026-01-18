@@ -1,0 +1,23 @@
+<p-sidebar
+  [(visible)]="visible"
+  [position]="position"
+  [showCloseIcon]="showCloseIcon"
+  [transitionOptions]="'0.3s ease-in-out'"
+  [styleClass]="styleClass"
+  (onHide)="handleHide()"
+  (onShow)="handleShow()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>{{ title }}</p>
+      </div>
+      <div class="right" (click)="close()">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <ng-content></ng-content>
+  </div>
+</p-sidebar>
+

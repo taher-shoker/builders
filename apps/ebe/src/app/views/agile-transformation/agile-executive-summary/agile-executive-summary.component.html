@@ -34,7 +34,15 @@
       </div>
     </div>
   </div>
-
+  @if (currentMode === 'editMode') {
+  <stc-apps-export-import-bar
+    [showExport]="true"
+    [showImport]="true"
+    importLabel="Import Overall Maturity index"
+    exportLabel="Export Overall Maturity index"
+    (import)="showDialog()"
+  />
+  }
   <div class="overview-grid">
     <div class="time-period-card card">
       @if (overviewScore() !== null && targetProgress() !== null) {
@@ -92,54 +100,57 @@
   </div>
 
   <div class="heatmap-section card">
+     @if (currentMode === 'editMode') {
+        <stc-apps-export-import-bar
+          [showExport]="true"
+          [showImport]="true"
+          exportLabel="Export Heatmap"
+          importLabel="Import Heatmap"
+          (export)="downloadHeatmapCsv()"
+          (import)="showHeatmapImportDialog()"
+        />
+        }
     <div class="heatmap-header">
-      <h3>Heat map</h3>
-      <div class="heatmap-filters">
-        <div class="filter">
-          <label>Line of business</label>
-          <stc-apps-custom-dropdown
-            [list]="lobDropdownList()"
-            [displayNameProperty]="'displayName'"
-            [valueProperty]="'value'"
-            [outputProperty]="'value'"
-            [ngModel]="selectedHeatmapLOB()"
-            [highlightSelected]="true"
-            (itemSelected)="onSelectHeatmapLOB($event)"
-          ></stc-apps-custom-dropdown>
-        </div>
-        <div class="filter">
-          <label>Tribe name</label>
-          <stc-apps-custom-dropdown
-            [list]="tribeDropdownList()"
-            [displayNameProperty]="'displayName'"
-            [valueProperty]="'value'"
-            [outputProperty]="'value'"
-            [ngModel]="selectedTribe()"
-            [highlightSelected]="true"
-            (itemSelected)="onSelectTribe($event)"
-          ></stc-apps-custom-dropdown>
+
+        <h3>Heat map</h3>
+        <div class="heatmap-filters">
+          <div class="filter">
+            <label>Line of business</label>
+            <stc-apps-custom-dropdown
+              [list]="lobDropdownList()"
+              [displayNameProperty]="'displayName'"
+              [valueProperty]="'value'"
+              [outputProperty]="'value'"
+              [ngModel]="selectedHeatmapLOB()"
+              [highlightSelected]="true"
+              (itemSelected)="onSelectHeatmapLOB($event)"
+            ></stc-apps-custom-dropdown>
+          </div>
+          <div class="filter">
+            <label>Tribe name</label>
+            <stc-apps-custom-dropdown
+              [list]="tribeDropdownList()"
+              [displayNameProperty]="'displayName'"
+              [valueProperty]="'value'"
+              [outputProperty]="'value'"
+              [ngModel]="selectedTribe()"
+              [highlightSelected]="true"
+              (itemSelected)="onSelectTribe($event)"
+            ></stc-apps-custom-dropdown>
+          </div>
         </div>
       </div>
-    </div>
-    <!-- <stc-apps-heatmap-table
-      [columns]="heatmapColumns()"
-      [rows]="heatmapRows()"
-      [showLeftTotalColumn]="true"
-      [leftTotalColumnTitle]="'Total Tribe'"
-      [showRightTotalColumn]="true"
-      [rightTotalColumnTitle]="'Tribe Total'"
-      [totalRowTitle]="'Total Average'"
-      [minValue]="0"
-      [maxValue]="4"
-    ></stc-apps-heatmap-table> -->
-    <!-- <div class="performance-scale">
-      <span class="scale-title">Performance Scale</span>
-      @for (s of performanceScale(); track s.caption) {
-      <span class="badge">{{ s.caption }}</span>
-      <span class="range">{{ s.range }}</span>
-      }
-    </div> -->
-    @if (squads.length > 0) {
+
+      @if (currentMode === 'editMode') {
+      <stc-apps-export-import-bar
+        [showExport]="true"
+        [showImport]="true"
+        exportLabel="Export Squads"
+        importLabel="Import Squads"
+        (export)="downloadHeatmapSquadsCsv()"
+        (import)="showHeatmapSquadsImportDialog()"
+      />
+    } @if (squads.length > 0) {
     <app-heatmap-performance [dimensions]="dimensions" [squads]="squads">
     </app-heatmap-performance>
     } @else {
@@ -152,6 +163,7 @@
   <div class="card lob-tabs-card">
     <div class="lob-tabs-section">
       <h3>Line of business</h3>
+
       <div class="tabs-list">
         @for (lob of lobOptions(); track lob.key) {
         <button
@@ -163,6 +175,15 @@
         </button>
         }
       </div>
+      @if (currentMode === 'editMode') {
+      <stc-apps-export-import-bar
+        [showExport]="false"
+        [showImport]="true"
+        importLabel="Edit"
+        importIconClass="pi pi-pencil"
+        (import)="showEditMaturityIndex()"
+      />
+      }
 
       <div class="bottom-grid">
         <div class="card maturity-index-card">
@@ -190,7 +211,7 @@
           <div class="card-header">
             <h3>Key Highlights</h3>
             <div class="lob-badge">
-              <img src="/assets/images/lob-badge.png" alt="LOB Badge">
+              <img src="/assets/images/lob-badge.png" alt="LOB Badge" />
               <span class="text">{{ selectedLOB() }}</span>
             </div>
           </div>
@@ -214,3 +235,31 @@
     </div>
   </div>
 </section>
+<stc-apps-dialog-modal
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
+/>
+<stc-apps-form-sidebar
+  [(visible)]="editSidebarVisible"
+  [title]="importContext === 'heatmap' ? 'Import Heatmap' : 'Import Heatmap Squads'"
+  [position]="'right'"
+  [showCloseIcon]="false"
+  (onHide)="hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <stc-apps-file-upload-input
+    [fileType]="'.csv'"
+    (uploadedFile)="onUploadFileSelected($event)"
+  ></stc-apps-file-upload-input>
+  <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: flex-end">
+    <button class="ei-btn import" (click)="confirmImport()">
+      <i class="ri-cloud-upload-line"></i>
+      Import
+    </button>
+    <button class="ei-btn export" (click)="editSidebarVisible=false; hideSidebar()">
+      <i class="pi pi-times"></i>
+      Cancel
+    </button>
+  </div>
+</stc-apps-form-sidebar>

@@ -100,12 +100,15 @@ import { TruncateWordPipe } from './truncateWord.pipe';
 import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.component';
 const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
 
+import { SidebarModule } from 'primeng/sidebar';
 import { BarChatChartComponent } from './chat-charts/bar-chart/barChart.component';
 import { LineChatChartComponent } from './chat-charts/line-chart/lineChart.component';
 import { PieChartComponent } from './chat-charts/pie-chart/pieChart.component';
 import { ScatterChartComponent } from './chat-charts/scatter-chart/scatterChart.component';
 import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component';
+import { ExportImportBarComponent } from './export-import-bar/export-import-bar.component';
 import { FormInputComponent } from './form-input/form-input.component';
+import { FormSidebarComponent } from './form-sidebar/form-sidebar.component';
 import { GaugeChartComponent } from './gauge-chart/gauge-chart.component';
 import { HeatmapPerformanceComponent } from './heatmap-performance/heatmap-performance.component';
 import { HeatmapTableComponent } from './heatmap-table/heatmap-table.component';
@@ -191,6 +194,8 @@ const components = [
   NumericInputComponent,
   TripleLineChartComponent,
   RoundedBarChartComponent,
+  ExportImportBarComponent,
+  FormSidebarComponent,
 ];
 
 @NgModule({
@@ -239,6 +244,7 @@ const components = [
     InputTextModule,
     DropdownModule,
     CarouselModule,
+    SidebarModule,
     RadarBubbleChartComponent,
     HeatmapTableComponent,
     HeatmapPerformanceComponent

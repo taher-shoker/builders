@@ -1,0 +1,40 @@
+:host {
+  display: block;
+}
+.export-import-bar {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  background: #F3FBFD;
+  border: 1px solid #E9F5F7;
+  border-radius: 12px;
+  padding: 10px;
+}
+.ei-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  i {
+    font-size: 18px;
+    color: #fff;
+  }
+  &:hover {
+    filter: brightness(0.95);
+    transform: translateY(-1px);
+  }
+}
+.ei-btn.export {
+  background: var(--stc-pink-color);
+}
+.ei-btn.import {
+  background: var(--stc-purple-color);
+}
+
