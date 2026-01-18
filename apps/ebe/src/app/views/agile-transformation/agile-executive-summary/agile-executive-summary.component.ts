@@ -405,10 +405,6 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     }
   }
 
-  downloadTemplate() {
-    this.downloadOverviewCsv();
-  }
-
   private downloadFile(data: string, filename: string) {
     const blob = new Blob([data], { type: 'text/csv' });
     const url = window.URL.createObjectURL(blob);
@@ -419,7 +415,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     window.URL.revokeObjectURL(url);
   }
 
-  downloadOverviewCsv() {
+  downloadOverallMaturityIndexTemplate() {
     this.agileService
       .downloadExecutiveSummaryCsv('overall_maturity_index')
       .subscribe({
@@ -428,7 +424,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
         },
       });
   }
-  downloadHeatmapCsv() {
+  downloadHeatmapTemplate() {
     this.agileService
       .downloadExecutiveSummaryCsv('executive_summary_performance_heatmap')
       .subscribe({
@@ -437,7 +433,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
         },
       });
   }
-  downloadHeatmapSquadsCsv() {
+  downloadHeatmapSquadsTemplate() {
     this.agileService
       .downloadExecutiveSummaryCsv(
         'executive_summary_performance_heatmap_squads'

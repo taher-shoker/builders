@@ -41,6 +41,7 @@
     importLabel="Import Overall Maturity index"
     exportLabel="Export Overall Maturity index Template"
     (import)="showDialog()"
+    (export)="downloadOverallMaturityIndexTemplate()"
   />
   }
   <div class="overview-grid">
@@ -106,7 +107,7 @@
           [showImport]="true"
           exportLabel="Export Heatmap Template"
           importLabel="Import Heatmap"
-          (export)="downloadHeatmapCsv()"
+          (export)="downloadHeatmapTemplate()"
           (import)="showHeatmapImportDialog()"
         />
         }
@@ -147,7 +148,7 @@
         [showImport]="true"
         exportLabel="Export Squads Template"
         importLabel="Import Squads"
-        (export)="downloadHeatmapSquadsCsv()"
+        (export)="downloadHeatmapSquadsTemplate()"
         (import)="showHeatmapSquadsImportDialog()"
       />
     } @if (squads.length > 0) {
