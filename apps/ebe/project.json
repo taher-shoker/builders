@@ -16,13 +16,23 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/ebe/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
-        "assets": ["apps/ebe/src/favicon.ico", "apps/ebe/src/assets"],
+        "assets": [
+          "apps/ebe/src/favicon.ico",
+          "apps/ebe/src/assets",
+          {
+            "glob": "**/*",
+            "input": "node_modules/primeicons/fonts",
+            "output": "assets/primeicons/fonts"
+          }
+        ],
         "styles": [
           "node_modules/bootstrap/dist/css/bootstrap.min.css",
           "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
           "node_modules/primeng/resources/primeng.min.css",
           "node_modules/ngx-spinner/animations/ball-spin.css",
           "node_modules/ngx-toastr/toastr.css",
+          "node_modules/quill/dist/quill.core.css",
+          "node_modules/quill/dist/quill.snow.css",
           "apps/ebe/src/styles.scss"
         ],
         "scripts": ["node_modules/bootstrap/dist/js/bootstrap.min.js"]

@@ -452,8 +452,64 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       });
   }
 
+  editMaturitySidebarVisible = false;
+  maturityEditValues: {
+    strategy: number | null;
+    structure: number | null;
+    processes: number | null;
+    people: number | null;
+    technology: number | null;
+  } = {
+    strategy: null,
+    structure: null,
+    processes: null,
+    people: null,
+    technology: null,
+  };
+
   showEditMaturityIndex() {
-    this.editSidebarVisible = true;
+    const current = this.bubbles;
+    this.maturityEditValues = {
+      strategy: current[0]?.value ?? null,
+      structure: current[1]?.value ?? null,
+      processes: current[2]?.value ?? null,
+      people: current[3]?.value ?? null,
+      technology: current[4]?.value ?? null,
+    };
+    this.editMaturitySidebarVisible = true;
     this.showSidebar();
+  }
+
+  onSaveMaturityEdit(payload: {
+    values: {
+      strategy: number;
+      structure: number;
+      processes: number;
+      people: number;
+      technology: number;
+    };
+    keyHighlightsTitle: string;
+    keyHighlightsContentHtml: string;
+  }) {
+    this.bubbles = [
+      { axisIndex: 0, value: payload.values.strategy, r: 14 },
+      { axisIndex: 1, value: payload.values.structure, r: 14 },
+      { axisIndex: 2, value: payload.values.processes, r: 14 },
+      { axisIndex: 3, value: payload.values.people, r: 14 },
+      { axisIndex: 4, value: payload.values.technology, r: 14 },
+    ];
+    this.keyHighlights.set({
+      title: payload.keyHighlightsTitle || 'Key Highlights',
+      items: payload.keyHighlightsContentHtml
+        ? [payload.keyHighlightsContentHtml]
+        : [],
+    });
+    this.editMaturitySidebarVisible = false;
+    this.hideSidebar();
+  }
+
+  onCancelMaturityEdit() {
+    this.editMaturitySidebarVisible = false;
+    this.hideSidebar();
   }
 }

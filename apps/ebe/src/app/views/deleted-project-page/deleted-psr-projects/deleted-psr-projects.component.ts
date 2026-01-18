@@ -17,7 +17,7 @@ import { ScorecardService } from '../../../services/scorecard.service';
 export class DeletedPsrProjectsComponent {
   route = inject(ActivatedRoute);
   activityLogService = inject(ActivityLogService);
-  pageTitle:string = ""
+  pageTitle = ""
   deletedPSRProject = signal<PSRProjectDetailsModel[]>([]);
   userRoles!: UserGroup;
   scorecardService = inject(ScorecardService);

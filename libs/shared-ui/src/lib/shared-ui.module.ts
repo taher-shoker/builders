@@ -29,6 +29,7 @@ import { CalendarModule } from 'primeng/calendar';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { DialogModule as primengDialogModule } from 'primeng/dialog';
 import { DropdownModule } from 'primeng/dropdown';
+import { EditorModule } from 'primeng/editor';
 import { InputGroupModule } from 'primeng/inputgroup';
 import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
 import { InputTextModule } from 'primeng/inputtext';
@@ -101,6 +102,7 @@ import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.
 const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
 
 import { SidebarModule } from 'primeng/sidebar';
+import { AgileMaturityEditFormComponent } from './agile-maturity-edit-form/agile-maturity-edit-form.component';
 import { BarChatChartComponent } from './chat-charts/bar-chart/barChart.component';
 import { LineChatChartComponent } from './chat-charts/line-chart/lineChart.component';
 import { PieChartComponent } from './chat-charts/pie-chart/pieChart.component';
@@ -115,6 +117,7 @@ import { HeatmapTableComponent } from './heatmap-table/heatmap-table.component';
 import { MonthYearPickerComponent } from './month-year-picker/month-year-picker.component';
 import { NumericInputComponent } from './numeric-input/numeric-input.component';
 import { PageHeaderComponent } from './pageHeader/page-header.component';
+import { PrimeEditorComponent } from './prime-editor/prime-editor.component';
 import { ProgressChartComponent } from './progress-chart/progress-chart.component';
 import { RadarBubbleChartComponent } from './radar-bubble-chart/radar-bubble-chart.component';
 import { RoundedBarChartComponent } from './rounded-bar-chart/rounded-bar-chart.component';
@@ -195,7 +198,9 @@ const components = [
   TripleLineChartComponent,
   RoundedBarChartComponent,
   ExportImportBarComponent,
+  PrimeEditorComponent,
   FormSidebarComponent,
+  AgileMaturityEditFormComponent,
 ];
 
 @NgModule({
@@ -245,6 +250,7 @@ const components = [
     DropdownModule,
     CarouselModule,
     SidebarModule,
+    EditorModule,
     RadarBubbleChartComponent,
     HeatmapTableComponent,
     HeatmapPerformanceComponent

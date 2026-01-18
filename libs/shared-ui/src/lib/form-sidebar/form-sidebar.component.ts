@@ -23,11 +23,12 @@ export class FormSidebarComponent {
   }
 
   handleHide() {
+    this.visibleChange.emit(false);
     this.onHide.emit();
   }
 
   handleShow() {
+    this.visibleChange.emit(true);
     this.onShow.emit();
   }
 }
-

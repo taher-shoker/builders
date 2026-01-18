@@ -27,10 +27,10 @@ type Position =
   styleUrl: './date-modal.component.scss',
 })
 export class DateModalComponent {
-  currentMonth:number = 0;
-  currentYear:number = 0;
-  currentMonthName: string = '';
-  visible: boolean = false;
+  currentMonth = 0;
+  currentYear = 0;
+  currentMonthName = '';
+  visible = false;
   position!: Position;
   selectedDate!: Date;
   isSuccess = input<boolean>()

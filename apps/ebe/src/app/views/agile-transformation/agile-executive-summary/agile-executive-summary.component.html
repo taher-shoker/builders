@@ -39,7 +39,7 @@
     [showExport]="true"
     [showImport]="true"
     importLabel="Import Overall Maturity index"
-    exportLabel="Export Overall Maturity index"
+    exportLabel="Export Overall Maturity index Template"
     (import)="showDialog()"
   />
   }
@@ -104,7 +104,7 @@
         <stc-apps-export-import-bar
           [showExport]="true"
           [showImport]="true"
-          exportLabel="Export Heatmap"
+          exportLabel="Export Heatmap Template"
           importLabel="Import Heatmap"
           (export)="downloadHeatmapCsv()"
           (import)="showHeatmapImportDialog()"
@@ -145,7 +145,7 @@
       <stc-apps-export-import-bar
         [showExport]="true"
         [showImport]="true"
-        exportLabel="Export Squads"
+        exportLabel="Export Squads Template"
         importLabel="Import Squads"
         (export)="downloadHeatmapSquadsCsv()"
         (import)="showHeatmapSquadsImportDialog()"
@@ -222,7 +222,7 @@
           @if (keyHighlights().items.length) {
           <ul class="highlights">
             @for (h of keyHighlights().items; track h) {
-            <li>{{ h }}</li>
+            <li [innerHTML]="h | safeHtml"></li>
             }
           </ul>
           } @else {
@@ -263,3 +263,27 @@
     </button>
   </div>
 </stc-apps-form-sidebar>
+  <stc-apps-form-sidebar
+    [(visible)]="editMaturitySidebarVisible"
+    [title]="'Edit Maturity Index'"
+    [position]="'right'"
+    [showCloseIcon]="false"
+    (onHide)="hideSidebar()"
+    (onShow)="showSidebar()"
+  >
+    <stc-apps-agile-maturity-edit-form
+      [initialValues]="{
+        values: {
+          strategy: maturityEditValues.strategy ?? undefined,
+          structure: maturityEditValues.structure ?? undefined,
+          processes: maturityEditValues.processes ?? undefined,
+          people: maturityEditValues.people ?? undefined,
+          technology: maturityEditValues.technology ?? undefined
+        },
+        keyHighlightsTitle: keyHighlights().title,
+        keyHighlightsContentHtml: keyHighlights().items[0]
+      }"
+      (save)="onSaveMaturityEdit($event)"
+      (cancel)="onCancelMaturityEdit()"
+    ></stc-apps-agile-maturity-edit-form>
+  </stc-apps-form-sidebar>
