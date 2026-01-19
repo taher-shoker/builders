@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 export type MaturityEditValues = {
@@ -21,7 +21,7 @@ export type MaturityEditPayload = {
   templateUrl: './agile-maturity-edit-form.component.html',
   styleUrls: ['./agile-maturity-edit-form.component.scss'],
 })
-export class AgileMaturityEditFormComponent implements OnInit {
+export class AgileMaturityEditFormComponent implements OnInit, OnChanges {
   @Input() initialValues: {
     values: Partial<MaturityEditValues>;
     keyHighlightsTitle?: string;
@@ -63,8 +63,25 @@ export class AgileMaturityEditFormComponent implements OnInit {
       ],
     });
     this.keyTitle = this.initialValues.keyHighlightsTitle ?? '';
+    this.form.markAsPristine();
+    this.form.markAsUntouched();
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['initialValues'] && this.form) {
+      this.form.patchValue({
+        strategy: this.initialValues.values.strategy ?? null,
+        structure: this.initialValues.values.structure ?? null,
+        processes: this.initialValues.values.processes ?? null,
+        people: this.initialValues.values.people ?? null,
+        technology: this.initialValues.values.technology ?? null,
+        keyHighlightsContentHtml: this.initialValues.keyHighlightsContentHtml ?? '',
+      }, { emitEvent: false });
+      this.keyTitle = this.initialValues.keyHighlightsTitle ?? '';
+      this.form.markAsPristine();
+      this.form.markAsUntouched();
+    }
+  }
   onSave() {
     if (this.form.invalid) return;
     const payload: MaturityEditPayload = {
@@ -85,4 +102,3 @@ export class AgileMaturityEditFormComponent implements OnInit {
     this.cancel.emit();
   }
 }
-

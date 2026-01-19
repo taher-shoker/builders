@@ -19,21 +19,23 @@
         (input)="onInput($event)"
         [attr.inputmode]="allowDecimal ? 'decimal' : 'numeric'"
       />
-      <mat-error *ngIf="control.hasError('required')">
-        {{ 'field_required' | translate }}
-      </mat-error>
-      <mat-error *ngIf="control.hasError('max')">
-        {{ 'Please enter number less than or equal ' + control.getError('max').max | translate }}
-      </mat-error>
-      <mat-error *ngIf="control.hasError('min')">
-        {{ 'Please enter number greater than or equal ' + control.getError('min').min | translate }}
-      </mat-error>
-      <mat-error *ngIf="control.hasError('pattern')">
-        {{ 'Please enter a valid number' | translate }}
-      </mat-error>
-      <mat-error *ngIf="control.hasError('notZero')">
-        {{ 'Please enter a non-zero number' | translate }}
-      </mat-error>
+      <ng-container *ngIf="control.dirty">
+        <mat-error *ngIf="control.hasError('required')">
+          {{ 'field_required' | translate }}
+        </mat-error>
+        <mat-error *ngIf="control.hasError('max')">
+          {{ 'Please enter number less than or equal ' + control.getError('max').max | translate }}
+        </mat-error>
+        <mat-error *ngIf="control.hasError('min')">
+          {{ 'Please enter number greater than or equal ' + control.getError('min').min | translate }}
+        </mat-error>
+        <mat-error *ngIf="control.hasError('pattern')">
+          {{ 'Please enter a valid number' | translate }}
+        </mat-error>
+        <mat-error *ngIf="control.hasError('notZero')">
+          {{ 'Please enter a non-zero number' | translate }}
+        </mat-error>
+      </ng-container>
     </mat-form-field>
     <div class="plain-input-wrapper" *ngSwitchCase="'plain'">
       <input
@@ -49,7 +51,7 @@
         (input)="onInput($event)"
         [attr.inputmode]="allowDecimal ? 'decimal' : 'numeric'"
       />
-      <div class="errors" *ngIf="control.invalid && (control.dirty || control.touched)">
+      <div class="errors" *ngIf="control.invalid && control.dirty">
         <span *ngIf="control.hasError('required')">
           {{ 'field_required' | translate }}
         </span>

@@ -8,6 +8,7 @@ import {
   HeatmapMetadataResponse,
   HeatmapSquadsValuesResponse,
   MaturityIndexResponse,
+  MaturityIndexSaveRequest,
   OverallMaturityIndexResponse,
   TimePeriodMetadata,
 } from '../../../services/agile-executive-summary.service';
@@ -133,6 +134,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   ];
 
   squads: Squad[] = [];
+  private maturityIndexId: number | null = null;
 
   onSelectYear(event: any) {
     this.selectedYear.set(String(event));
@@ -152,7 +154,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     this.selectedLOB.set(event as string);
     this.labels = [];
     this.bubbles = [];
-    this.sectorBubbles = [];
+    this.bubbles = [];
     this.keyHighlights.set({ title: '', items: [] });
     this.loadMaturityIndex();
   }
@@ -296,7 +298,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       .getOverallMaturityIndex(year, quarter)
       .subscribe((data: OverallMaturityIndexResponse) => {
         this.overviewScore.set(data.overallMaturityScore);
-        this.targetProgress.set((data.overallMaturityScore/4) * 100);
+        this.targetProgress.set((data.overallMaturityScore / 4) * 100);
         this.progressToTarget.set(data.progressToTarget);
         this.sectorLabels = [
           'Strategy',
@@ -321,10 +323,14 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     const lob = this.selectedLOB();
 
     this.bubbles = [];
-
+    this.keyHighlights.set({
+      title: '',
+      items: [],
+    });
     this.agileService
       .getMaturityIndex(year, quarter, lob)
       .subscribe((data: MaturityIndexResponse) => {
+        this.maturityIndexId = data.id ?? null;
         this.labels = [
           'Strategy',
           'Structure',
@@ -332,18 +338,20 @@ export class AgileExecutiveSummaryComponent implements OnInit {
           'People',
           'Technology',
         ];
-        this.bubbles = [
-          { axisIndex: 0, value: data.strategy, r: 14 },
-          { axisIndex: 1, value: data.structure, r: 14 },
-          { axisIndex: 2, value: data.processes, r: 14 },
-          { axisIndex: 3, value: data.people, r: 14 },
-          { axisIndex: 4, value: data.technology, r: 14 },
-        ];
+        if (data.id) {
+          this.bubbles = [
+            { axisIndex: 0, value: data.strategy, r: 14 },
+            { axisIndex: 1, value: data.structure, r: 14 },
+            { axisIndex: 2, value: data.processes, r: 14 },
+            { axisIndex: 3, value: data.people, r: 14 },
+            { axisIndex: 4, value: data.technology, r: 14 },
+          ];
 
-        this.keyHighlights.set({
-          title: data.titleKeyHighlights ?? 'Key Highlights',
-          items: data.keyHighlights ? [data.keyHighlights] : [],
-        });
+          this.keyHighlights.set({
+            title: data.titleKeyHighlights ?? 'Key Highlights',
+            items: data.keyHighlights ? [data.keyHighlights] : [],
+          });
+        }
       });
   }
 
@@ -394,19 +402,19 @@ export class AgileExecutiveSummaryComponent implements OnInit {
         tribe,
       })
       .subscribe({
-      next: () => {
-        this.editSidebarVisible = false;
-        this.hideSidebar();
-        this.selectedImportFile = null;
-        this.loadOverallMaturityIndex();
-        this.loadMaturityIndex();
-        this.loadHeatmapSquadsValues();
-      },
-      error: () => {
-        this.editSidebarVisible = false;
-        this.hideSidebar();
-      },
-    });
+        next: () => {
+          this.editSidebarVisible = false;
+          this.hideSidebar();
+          this.selectedImportFile = null;
+          this.loadOverallMaturityIndex();
+          this.loadMaturityIndex();
+          this.loadHeatmapSquadsValues();
+        },
+        error: () => {
+          this.editSidebarVisible = false;
+          this.hideSidebar();
+        },
+      });
   }
 
   importData(e: FileModel) {
@@ -430,16 +438,16 @@ export class AgileExecutiveSummaryComponent implements OnInit {
           tribe,
         })
         .subscribe({
-        next: () => {
-          this.visible = false;
-          this.loadOverallMaturityIndex();
-          this.loadMaturityIndex();
-          this.loadHeatmapSquadsValues();
-        },
-        error: () => {
-          this.visible = false;
-        },
-      });
+          next: () => {
+            this.visible = false;
+            this.loadOverallMaturityIndex();
+            this.loadMaturityIndex();
+            this.loadHeatmapSquadsValues();
+          },
+          error: () => {
+            this.visible = false;
+          },
+        });
     }
   }
 
@@ -467,7 +475,10 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       .downloadExecutiveSummaryCsv('executive_summary_performance_heatmap')
       .subscribe({
         next: (response) => {
-          this.downloadFile(response, 'executive_summary_performance_heatmap.csv');
+          this.downloadFile(
+            response,
+            'executive_summary_performance_heatmap.csv'
+          );
         },
       });
   }
@@ -525,21 +536,32 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     keyHighlightsTitle: string;
     keyHighlightsContentHtml: string;
   }) {
-    this.bubbles = [
-      { axisIndex: 0, value: payload.values.strategy, r: 14 },
-      { axisIndex: 1, value: payload.values.structure, r: 14 },
-      { axisIndex: 2, value: payload.values.processes, r: 14 },
-      { axisIndex: 3, value: payload.values.people, r: 14 },
-      { axisIndex: 4, value: payload.values.technology, r: 14 },
-    ];
-    this.keyHighlights.set({
-      title: payload.keyHighlightsTitle || 'Key Highlights',
-      items: payload.keyHighlightsContentHtml
-        ? [payload.keyHighlightsContentHtml]
-        : [],
+    const body: MaturityIndexSaveRequest = {
+      lob: this.selectedLOB(),
+      year: Number(this.selectedYear()),
+      quarter: this.selectedQuarter(),
+      strategy: payload.values.strategy,
+      structure: payload.values.structure,
+      people: payload.values.people,
+      technology: payload.values.technology,
+      processes: payload.values.processes,
+      titleKeyHighlights: payload.keyHighlightsTitle || '',
+      keyHighlights: payload.keyHighlightsContentHtml || '',
+    };
+    if (this.maturityIndexId !== null) {
+      body.id = this.maturityIndexId;
+    }
+    this.agileService.saveMaturityIndex(body).subscribe({
+      next: () => {
+        this.loadMaturityIndex();
+        this.editMaturitySidebarVisible = false;
+        this.hideSidebar();
+      },
+      error: () => {
+        this.editMaturitySidebarVisible = false;
+        this.hideSidebar();
+      },
     });
-    this.editMaturitySidebarVisible = false;
-    this.hideSidebar();
   }
 
   onCancelMaturityEdit() {

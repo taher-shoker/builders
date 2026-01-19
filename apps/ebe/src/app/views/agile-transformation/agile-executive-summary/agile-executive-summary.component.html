@@ -216,16 +216,12 @@
               <span class="text">{{ selectedLOB() }}</span>
             </div>
           </div>
-          <div class="highlight-subtitle">
+          <div class="highlight-subtitle" *ngIf="keyHighlights().title">
             {{ keyHighlights().title }}
           </div>
 
           @if (keyHighlights().items.length) {
-          <ul class="highlights">
-            @for (h of keyHighlights().items; track h) {
-            <li [innerHTML]="h | safeHtml"></li>
-            }
-          </ul>
+          <div class="highlights-content" [innerHTML]="keyHighlights().items.join('') | safeHtml"></div>
           } @else {
           <div class="empty-state">
             No key highlights available for the selected line of business.

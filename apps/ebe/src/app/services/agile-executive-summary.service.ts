@@ -30,6 +30,20 @@ export interface MaturityIndexResponse {
   keyHighlights: string;
 }
 
+export interface MaturityIndexSaveRequest {
+  id?: number;
+  lob: string;
+  year: number;
+  quarter: string;
+  strategy: number;
+  structure: number;
+  people: number;
+  technology: number;
+  processes: number;
+  titleKeyHighlights: string;
+  keyHighlights: string;
+}
+
 export interface OverallMaturityIndexResponse {
   id: number;
   year: number;
@@ -154,6 +168,13 @@ export class AgileExecutiveSummaryService {
     return this.http.get<string>(
       `${environment.apiUrl}/business-excellence/agile/executive-summary/export?${params.toString()}`,
       { observe: 'body', responseType: 'text' as 'json' }
+    );
+  }
+
+  saveMaturityIndex(body: MaturityIndexSaveRequest): Observable<void> {
+    return this.http.post<void>(
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/maturity-index`,
+      body
     );
   }
 

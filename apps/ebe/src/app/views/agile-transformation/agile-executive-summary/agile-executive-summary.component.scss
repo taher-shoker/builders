@@ -236,6 +236,14 @@ h3 {
     max-height: 400px;
     margin: 0 auto;
   }
+
+  .empty-state {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
 }
 .heatmap-section .heatmap-header {
   display: flex;
@@ -469,6 +477,8 @@ app-heatmap-performance {
 
 .highlights-card {
   position: relative; // Ensure badge positions relative to the card
+  display: flex;
+  flex-direction: column;
 
   .card-header {
     margin-bottom: 24px;
@@ -514,12 +524,17 @@ app-heatmap-performance {
   .empty-state {
     font-size: 14px;
     color: #6b7280;
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
 
   .lob-badge {
     position: absolute;
-    top: 32px;
-    right: 32px;
+    top: 10px;
+    right: 25px;
     width: 80px;
     height: auto;
     display: flex;
