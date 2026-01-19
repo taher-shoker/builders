@@ -76,8 +76,15 @@ export class MainLayoutComponent implements OnInit {
     const currentPath = window.location.pathname;
     const hasHash = window.location.hash && window.location.hash !== '#/';
 
-    // Only redirect if we are at the root and not navigating to a specific hash/path
-    if ((currentPath === '/' || currentPath === '/index.html') && !hasHash) {
+    const baseAttr = document.querySelector('base')?.getAttribute('href') || '/';
+    const baseWithSlash = baseAttr.endsWith('/') ? baseAttr : baseAttr + '/';
+    const pathWithSlash = currentPath.endsWith('/') ? currentPath : currentPath + '/';
+    const atBase =
+      pathWithSlash === baseWithSlash ||
+      currentPath === '/index.html' ||
+      currentPath === baseWithSlash + 'index.html';
+
+    if (atBase && !hasHash) {
       if (!this.isMobile()) {
         this.router.navigate([this.navItems[0].url]);
       } else {
