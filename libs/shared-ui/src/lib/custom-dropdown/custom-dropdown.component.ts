@@ -124,17 +124,12 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
 
   writeValue(value: unknown): void {
     console.log("Curr VAL is :", value)
-    if (this.list().length > 0) {
-      const selected =
-        this.mutatedList().find( (item) => {
-          return item['componentScopedValueAccessor'] === value
-        }
-
-        ) || null;
-
-        console.log("SELECTED IS:::", selected)
-      this.chosenItem.set(selected);
-    }
+    const selected =
+      this.mutatedList().find((item) => {
+        return item['componentScopedValueAccessor'] === value;
+      }) || null;
+    console.log("SELECTED IS:::", selected)
+    this.chosenItem.set(selected);
   }
 
   registerOnChange(fn: (value: unknown) => void): void {
@@ -172,12 +167,6 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   protected selectItem(item: Item) {
 
     if(item['componentScopedValueAccessor'] === this.chosenItem()?.['componentScopedValueAccessor']){
-      this.chosenItem.set(null)
-      if (this.outputProperty() !== '') {
-        this.unselectItem.emit((<any>item).componentScopedOutputPropertyAccessor);
-      } else {
-        this.unselectItem.emit(item);
-      }
       return;
     }
 

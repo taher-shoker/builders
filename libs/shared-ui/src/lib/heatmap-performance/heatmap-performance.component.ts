@@ -6,11 +6,15 @@ import {
   OnChanges,
   SimpleChanges,
 } from '@angular/core';
+import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
 export type Dimension = {
   key: string;
   label: string;
   icon?: string; // optional: use your icon system (svg class, prime icon class, etc.)
+  iconSize?: number;
+  iconWidth?: number;
+  iconHeight?: number;
 };
 
 export type Squad = {
@@ -69,11 +73,13 @@ export class HeatmapPerformanceComponent implements OnChanges {
   @Input() leftColWidth = 210;
   @Input() squadColWidth = 92;
   @Input() totalColWidth = 160;
+  @Input() iconSize = 16;
 
   // Derived data
   tribeTotalsByDimension: Record<string, number> = {};
   squadTotals: Record<string, number> = {};
   overallTotal = 0;
+  constructor(private sanitizer: DomSanitizer) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     this.recompute();
@@ -221,5 +227,9 @@ export class HeatmapPerformanceComponent implements OnChanges {
       return { r: +match[1], g: +match[2], b: +match[3] };
     }
     return { r: 0, g: 0, b: 0 };
+  }
+  sanitizeSvg(svg: string | undefined): SafeHtml | null {
+    if (!svg) return null;
+    return this.sanitizer.bypassSecurityTrustHtml(svg);
   }
 }
