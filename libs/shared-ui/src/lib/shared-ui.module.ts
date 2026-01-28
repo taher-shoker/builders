@@ -1,116 +1,127 @@
-import { SplitButtonModule } from 'primeng/splitbutton';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { NgModule } from '@angular/core';
 import { CommonModule, DatePipe } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { MatSelectModule } from '@angular/material/select';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { LngSelectorModule } from '@stc-apps/lng-selector';
 import { ModeToggleModule } from '@stc-apps/mode-toggle';
-import { MatExpansionModule } from '@angular/material/expansion';
-import { MAT_DATE_LOCALE, MatNativeDateModule } from '@angular/material/core';
+import { SplitButtonModule } from 'primeng/splitbutton';
 
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatButtonModule } from '@angular/material/button';
 
-import { ButtonComponent } from './button/button.component';
-import { HeaderComponent } from './header/header.component';
-import { InputComponent } from './input/input.component';
-import { BreadCrumbModule } from './breadcrumb/breadcrumb.module';
-import { BannerComponent } from './banner/banner.component';
-import { FilterBoxComponent } from './filter-box/filter-box.component';
-import { SelectDropDownComponent } from './select-dropDown/select-drop-down.component';
-import { TableComponent } from './table/table.component';
-import { FileUploaderComponent } from './file-uploader/file-uploader.component';
-import { TextareaComponent } from './textarea/textarea.component';
-import { DialogComponent } from './dialog/dialog.component';
-import { DatePickerComponent } from './date-picker/date-picker.component';
+import { MatMomentDateModule, MomentDateModule } from '@angular/material-moment-adapter';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
-import { MomentDateModule } from '@angular/material-moment-adapter';
-import { MatMomentDateModule } from '@angular/material-moment-adapter';
-import { ProgressCircleChartComponent } from './progress-circle-chart/progress-circle-chart.component';
-import { LineChartComponent } from './line-chart/line-chart.component';
+import { NgCircleProgressModule } from 'ng-circle-progress';
+import { CarouselModule } from 'ngx-owl-carousel-o';
+import { CalendarModule } from 'primeng/calendar';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { DialogModule as primengDialogModule } from 'primeng/dialog';
+import { DropdownModule } from 'primeng/dropdown';
+import { EditorModule } from 'primeng/editor';
+import { InputGroupModule } from 'primeng/inputgroup';
+import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
+import { InputTextModule } from 'primeng/inputtext';
+import { OverlayPanelModule } from 'primeng/overlaypanel';
+import { TabViewModule } from 'primeng/tabview';
+import { DisplayCaptionPipe } from './actions-stepper/action.pipe';
+import { ActionsStepperComponent } from './actions-stepper/actions-stepper.component';
+import { ActivityLogsPopupComponent } from './activity-logs-popup/activity-logs-popup.component';
+import { AttachmentsComponent } from './attachments/attachments.component';
+import { BannerComponent } from './banner/banner.component';
 import { BarChartComponent } from './bar-chart/bar-chart.component';
-import { DatePickerWeeklyComponent } from './date-picker-weekly/date-picker-weekly.component';
+import { BreadCrumbModule } from './breadcrumb/breadcrumb.module';
+import { ButtonComponent } from './button/button.component';
+import { TableChartComponent } from './chat-charts/table-chart/tableChart.component';
+import { CheckboxComponent } from './checkbox/checkbox.component';
+import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
+import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { CounterCardComponent } from './counter-card/counter-card.component';
+import { CircularProgressBarComponent } from './curcular-progress-bar/circular-progress-bar.component';
+import { CustomDropdownComponent } from './custom-dropdown/custom-dropdown.component';
+import { CustomTableComponent } from './custom-table/custom-table.component';
 import { DatePickerRangeComponent } from './date-picker-range/date-picker-range.component';
 import { DatePickerWeeklyRangeComponent } from './date-picker-weekly-range/date-picker-weekly-range.component';
-import { LocaleDatePipe } from './locale.date/locale.date.pipe';
+import { DatePickerWeeklyComponent } from './date-picker-weekly/date-picker-weekly.component';
+import { DatePickerComponent } from './date-picker/date-picker.component';
+import { DialogComponent } from './dialog/dialog.component';
 import { DonutChartComponent } from './donut-chart/donut-chart.component';
-import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.component';
-import { CounterCardComponent } from './counter-card/counter-card.component';
-import { ItemsListComponent } from './items-list/items-list.component';
-import { CustomTableComponent } from './custom-table/custom-table.component';
-import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
-import { PaginatorComponent } from './paginator/paginator.component';
-import { SortableTableDirective } from './sorter/sorter.directive';
-import { ActionsStepperComponent } from './actions-stepper/actions-stepper.component';
-import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
-import { FilterArrayPipe } from './filter-array/filter-array.pipe';
-import { DisplayCaptionPipe } from './actions-stepper/action.pipe';
-import { NotificationsDropdownComponent } from './notifications-dropdown/notifications-dropdown.component';
-import { DateAgoPipe } from './notifications-dropdown/date-ago.pipe';
-import { TimelineChartComponent } from './timeline-chart/timeline-chart.component';
-import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.component';
-import { CheckboxComponent } from './checkbox/checkbox.component';
-import { ProgressBarComponent } from './progress-bar/progress-bar.component';
-import { CustomDropdownComponent } from './custom-dropdown/custom-dropdown.component';
-import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
-import { AttachmentsComponent } from './attachments/attachments.component';
-import { TabviewComponent } from './tabview/tabview.component';
-import { KpiCardComponent } from './kpi-card/kpi-card.component';
-import { KpiStatusCardComponent } from './kpiStatusCard/kpi-status-card.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
-import { CircularProgressBarComponent } from './curcular-progress-bar/circular-progress-bar.component';
-import { NgCircleProgressModule } from 'ng-circle-progress';
-import { MillionPipe } from './million.pipe';
-import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-bar.component';
-import { ProjectCardComponent } from './project-card/project-card.component';
-import { TabViewModule } from 'primeng/tabview';
-import { MultiCirclesProgressBarComponent } from './multi-circles-progress-bar/multi-circles-progress-bar.component';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
-import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
-import { OverlayPanelModule } from 'primeng/overlaypanel';
-import { TruncateWordPipe } from './truncateWord.pipe';
-import { CalendarModule } from 'primeng/calendar';
+import { DoubleLineChartComponent } from './double-line-chart/double-line-chart.component';
 import { DialogModalComponent } from './file-upload-dialog/dialog.component';
 import { FileUploadInputComponent } from './file-upload-input/file-upload-input.component';
-import { DialogModule as primengDialogModule } from 'primeng/dialog';
-import { DoubleLineChartComponent } from './double-line-chart/double-line-chart.component';
-import { NewLinePipe } from './newLine.pipe';
-import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
-import { SharedService } from './shared.service';
-import { ClusteredColumnChartComponent } from './clustered-column-chart/clustered-column-chart.component';
-import { ActivityLogsPopupComponent } from './activity-logs-popup/activity-logs-popup.component';
-const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
-import { SplitButtonComponent } from './split-button/split-button.component';
-import { InputGroupComponent } from './input-group/input-group.component';
-import { InputGroupAddonModule } from 'primeng/inputgroupaddon';
-import { InputGroupModule } from 'primeng/inputgroup';
-import { InputTextModule } from 'primeng/inputtext';
+import { FileUploaderComponent } from './file-uploader/file-uploader.component';
+import { FilterArrayPipe } from './filter-array/filter-array.pipe';
+import { FilterBoxComponent } from './filter-box/filter-box.component';
 import { FilterDropdownComponent } from './filter-dropdown/filter-dropdown.component';
-import { DropdownModule } from 'primeng/dropdown';
-import { CarouselModule } from 'ngx-owl-carousel-o';
+import { HeaderComponent } from './header/header.component';
+import { InputFullWidthComponent } from './input-full-width/input-full-width.component';
+import { InputGroupComponent } from './input-group/input-group.component';
+import { InputComponent } from './input/input.component';
+import { ItemsListComponent } from './items-list/items-list.component';
+import { KpiCardComponent } from './kpi-card/kpi-card.component';
+import { KpiStatusCardComponent } from './kpiStatusCard/kpi-status-card.component';
+import { LineChartComponent } from './line-chart/line-chart.component';
+import { LocaleDatePipe } from './locale.date/locale.date.pipe';
+import { MillionPipe } from './million.pipe';
+import { MultiCirclesChartComponent } from './multi-circles-chart/multi-circles-chart.component';
+import { MultiCirclesProgressBarComponent } from './multi-circles-progress-bar/multi-circles-progress-bar.component';
+import { NewLinePipe } from './newLine.pipe';
+import { DateAgoPipe } from './notifications-dropdown/date-ago.pipe';
+import { NotificationsDropdownComponent } from './notifications-dropdown/notifications-dropdown.component';
+import { PaginatorComponent } from './paginator/paginator.component';
+import { ProgressBarComponent } from './progress-bar/progress-bar.component';
+import { ProgressCircleChartComponent } from './progress-circle-chart/progress-circle-chart.component';
+import { ProgressCircleComponent } from './progress-circle/progress-circle.component';
+import { ProjectCardComponent } from './project-card/project-card.component';
+import { SafeHtmlPipe } from './safe-html/safe-html.pipe';
+import { SelectDropDownComponent } from './select-dropDown/select-drop-down.component';
 import { UtilitiesService } from './services/utilities.service';
-import { TableChartComponent } from './chat-charts/table-chart/tableChart.component';
+import { SharedService } from './shared.service';
+import { SidebarComponent } from './sidebar/sidebar.component';
+import { SolidCircularBarComponent } from './solid-circular-bar/solid-circular-bar.component';
+import { SortableTableDirective } from './sorter/sorter.directive';
+import { SplitButtonComponent } from './split-button/split-button.component';
+import { TableComponent } from './table/table.component';
+import { TabviewComponent } from './tabview/tabview.component';
+import { TextEditorQuillComponent } from './text-editor-quill/text-editor-quill.component';
+import { TextareaComponent } from './textarea/textarea.component';
+import { TimelineChartComponent } from './timeline-chart/timeline-chart.component';
+import { TruncateWordPipe } from './truncateWord.pipe';
+import { WeeklyLineChartComponent } from './weekly-line-chart/weekly-line-chart.component';
+const modules = [BreadCrumbModule, MatIconModule, CalendarModule];
 
+import { SidebarModule } from 'primeng/sidebar';
+import { AgileMaturityEditFormComponent } from './agile-maturity-edit-form/agile-maturity-edit-form.component';
+import { BarChatChartComponent } from './chat-charts/bar-chart/barChart.component';
+import { LineChatChartComponent } from './chat-charts/line-chart/lineChart.component';
 import { PieChartComponent } from './chat-charts/pie-chart/pieChart.component';
 import { ScatterChartComponent } from './chat-charts/scatter-chart/scatterChart.component';
-import { LineChatChartComponent } from './chat-charts/line-chart/lineChart.component';
-import { BarChatChartComponent } from './chat-charts/bar-chart/barChart.component';
-import { PageHeaderComponent } from './pageHeader/page-header.component';
-import { FormInputComponent } from './form-input/form-input.component';
 import { EditModeViewComponent } from './edit-mode-view/edit-mode-view.component';
-import { ProgressChartComponent } from './progress-chart/progress-chart.component';
+import { ExportImportBarComponent } from './export-import-bar/export-import-bar.component';
+import { FormInputComponent } from './form-input/form-input.component';
+import { FormSidebarComponent } from './form-sidebar/form-sidebar.component';
+import { GaugeChartComponent } from './gauge-chart/gauge-chart.component';
+import { HeatmapPerformanceComponent } from './heatmap-performance/heatmap-performance.component';
+import { HeatmapTableComponent } from './heatmap-table/heatmap-table.component';
 import { MonthYearPickerComponent } from './month-year-picker/month-year-picker.component';
 import { NumericInputComponent } from './numeric-input/numeric-input.component';
+import { PageHeaderComponent } from './pageHeader/page-header.component';
+import { PrimeEditorComponent } from './prime-editor/prime-editor.component';
+import { ProgressChartComponent } from './progress-chart/progress-chart.component';
+import { RadarBubbleChartComponent } from './radar-bubble-chart/radar-bubble-chart.component';
+import { RoundedBarChartComponent } from './rounded-bar-chart/rounded-bar-chart.component';
+import { TripleLineChartComponent } from './triple-line-chart/triple-line-chart.component';
 
 const components = [
   ButtonComponent,
@@ -169,6 +180,7 @@ const components = [
   NewLinePipe,
   MultiCirclesChartComponent,
   ClusteredColumnChartComponent,
+  GaugeChartComponent,
   ActivityLogsPopupComponent,
   SplitButtonComponent,
   InputGroupComponent,
@@ -183,11 +195,17 @@ const components = [
   EditModeViewComponent,
   ProgressChartComponent,
   NumericInputComponent,
+  TripleLineChartComponent,
+  RoundedBarChartComponent,
+  ExportImportBarComponent,
+  PrimeEditorComponent,
+  FormSidebarComponent,
+  AgileMaturityEditFormComponent,
 ];
 
 @NgModule({
   declarations: [...components],
-  exports: [...components, ...modules],
+  exports: [...components, ...modules, RadarBubbleChartComponent, HeatmapTableComponent, HeatmapPerformanceComponent],
   providers: [
     UtilitiesService,
     { provide: MAT_DATE_LOCALE, useValue: 'en-GB' },
@@ -231,6 +249,11 @@ const components = [
     InputTextModule,
     DropdownModule,
     CarouselModule,
+    SidebarModule,
+    EditorModule,
+    RadarBubbleChartComponent,
+    HeatmapTableComponent,
+    HeatmapPerformanceComponent
   ],
 })
 export class SharedUiModule {}

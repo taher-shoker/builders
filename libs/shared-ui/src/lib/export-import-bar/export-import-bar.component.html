@@ -1,0 +1,15 @@
+<div class="export-import-bar">
+  @if (showExport) {
+  <button class="ei-btn export" (click)="onExport()">
+    <i class="{{ exportIconClass }}"></i>
+    {{ exportLabel }}
+  </button>
+  }
+  @if (showImport) {
+  <button class="ei-btn import" (click)="onImport()">
+    <i class="{{ importIconClass }}"></i>
+    {{ importLabel }}
+  </button>
+  }
+</div>
+

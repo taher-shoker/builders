@@ -1,0 +1,55 @@
+<section class="kri">
+  <div class="kri-header">
+    <p class="title">
+      @if (quarterTrend().name.includes(' ')) {
+      {{ quarterTrend().name | truncateWord : 5 }}
+      } @else {
+      {{ quarterTrend().name | slice : 0 : 35 }}... }
+      @if(quarterTrend().name.split(' ').length > 5 ||
+      quarterTrend().name.length > 35) {
+      <span class="read-more-btn" (click)="capexOverlay.toggle($event)"
+        >read more</span
+      >
+      <p-overlayPanel
+        #capexOverlay
+        dismissable="true"
+        styleClass="kri-title-popover"
+      >
+        <section class="popover-section">
+          {{ quarterTrend().name }}
+        </section>
+      </p-overlayPanel>
+      }
+    </p>
+    <div
+      class="kri-header-legend"
+      [ngClass]="{
+        acceptable: quarterTrend().kriStatus.toLowerCase() === 'acceptable',
+        tolerable: quarterTrend().kriStatus.toLowerCase() === 'tolerable',
+        unacceptable: quarterTrend().kriStatus.toLowerCase() === 'unacceptable',
+        unclassified: quarterTrend().kriStatus.toLowerCase() === 'unclassified'
+      }"
+    >
+      <span class="bullet"></span>
+      <span class="status">{{ quarterTrend().kriStatus }}</span>
+    </div>
+  </div>
+  <div
+    class="kri-chart"
+    [ngStyle]="{
+      padding: !noData() ? '20px' : '20px 20px 5px'
+    }"
+  >
+    @if(!noData()){
+    <div class="chart" style="height: 300px">
+      <stc-apps-rounded-bar-chart
+        [data]="chartData()"
+        [isNegativeValues]="true"
+        [thresholdsData]="thresholdsData()"
+      />
+    </div>
+    } @else {
+    <p class="no-data-msg">No data available</p>
+    }
+  </div>
+</section>

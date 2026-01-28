@@ -14,5 +14,5 @@ import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 export class KpiMobileCardComponent {
   kpi:InputSignal<KpiModel> = input.required<KpiModel>();
   @ViewChild('textOverlayPanel') textOverlayPanel!: OverlayPanel;
-  activeIndex: number = 0;
+  activeIndex = 0;
 }

@@ -281,12 +281,11 @@
         </div>
       </div>
     </div>
-    @if(!milestonesService.isDTAdmin){ @if (milestoneDetails.status !==
-    'Completed' && hideAction && milestoneDetails.latestApprovedMilestoneProgressUpdate
-                        ?.overallProgress !== '100.0') {
+    @if(isViewMode){ @if (milestoneDetails.status !== 'Completed' && hideAction
+    && milestoneDetails.latestApprovedMilestoneProgressUpdate ?.overallProgress
+    !== '100.0') {
 
-
-    <div class="col-md-5">
+    <div class="col-md-5 p-0">
       <div class="logs">
         <h4 class="section-title">On Going Workflow</h4>
 

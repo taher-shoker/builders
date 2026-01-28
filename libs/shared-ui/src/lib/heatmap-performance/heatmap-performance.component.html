@@ -1,0 +1,94 @@
+<div class="heatmap-shell">
+  <div class="heatmap" [style.gridTemplateColumns]="gridTemplateColumns()">
+    <!-- Header row -->
+    <div class="cell header left sticky-left sticky-top">
+      <div class="cell-inner"></div>
+    </div>
+
+    <div
+      class="cell header sticky-top"
+      *ngFor="let s of squads; trackBy: trackBySquad"
+      [title]="s.name"
+    >
+      <div class="cell-inner">
+        <span class="cell-header-label">
+          {{ s.name }}
+        </span>
+      </div>
+    </div>
+
+    <div class="cell header total sticky-right sticky-top">
+      <div class="cell-inner">Total Tribe</div>
+    </div>
+
+    <!-- Dimension rows -->
+    <ng-container *ngFor="let d of dimensions; trackBy: trackByDim">
+      <!-- Left label -->
+      <div class="cell row-label sticky-left">
+        <div class="cell-inner">
+          <span class="label">
+            <span class="dot"></span>
+            {{ d.label }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Squad values -->
+      <div
+        class="cell value"
+        *ngFor="let s of squads; trackBy: trackBySquad"
+        [ngStyle]="cellStyle(s.scores[d.key], 'normal')"
+      >
+        {{ format(s.scores[d.key]) }}
+      </div>
+
+      <!-- Total Tribe per dimension -->
+      <div class="cell value total sticky-right">
+        <div
+          class="cell-inner"
+          [ngStyle]="cellStyle(tribeTotalsByDimension[d.key], 'tribe')"
+        >
+          {{ format(tribeTotalsByDimension[d.key]) }}
+        </div>
+      </div>
+    </ng-container>
+
+    <!-- Footer / Total Average row -->
+    <div class="cell footer left sticky-left">
+      <div class="cell-inner">
+        Total Average
+      </div>
+    </div>
+
+    <div
+      class="cell value footer"
+      *ngFor="let s of squads; trackBy: trackBySquad"
+      [ngStyle]="cellStyle(squadTotals[s.id], 'footer')"
+    >
+      {{ format(squadTotals[s.id]) }}
+    </div>
+
+    <div class="cell value footer total sticky-right">
+      <div
+        class="cell-inner"
+        [ngStyle]="cellStyle(overallTotal, 'footer')"
+      >
+        {{ format(overallTotal) }}
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="legend-title">Performance Scale</div>
+    <div class="legend-row">
+      <div class="legend-item" *ngFor="let band of scale">
+        <div class="legend-bar" [style.background]="band.color"></div>
+        <div class="legend-meta">
+          <div class="legend-label">{{ band.label }}</div>
+          <div class="legend-range">{{ band.min }}-{{ band.max }}</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

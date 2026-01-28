@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { BannerDataService } from '@stc-apps/shared-ui';
 import { CookieService } from 'ngx-cookie';
 import { AuthService } from '../../services/auth.service';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { MilestonesService } from '../milestones-setting/milestones.service';
-import { BannerDataService } from '@stc-apps/shared-ui';
 
 @Component({
   selector: 'stc-apps-home',
@@ -23,7 +23,11 @@ export class HomeComponent implements OnInit {
     private bannerDataService: BannerDataService
   ) {}
 
-  private readonly TAB_ROUTES_SET = new Set(['/home', '/di-kpi-integration', '/']);
+  private readonly TAB_ROUTES_SET = new Set([
+    '/home',
+    '/di-kpi-integration',
+    '/',
+  ]);
   urlHome = '/home';
   title = { title: 'home', text: '' };
   userName = '';
@@ -55,7 +59,7 @@ export class HomeComponent implements OnInit {
       name: 'Archived DT Milestones',
       url: '/archived-milestones',
       icon: 'fa fa-archive',
-      roles: ['VP_VIEWER', 'VP_EDITOR', 'PMO', 'DT_User'],
+      roles: ['all'],
       urlHome: '/home',
     },
     {
@@ -65,6 +69,13 @@ export class HomeComponent implements OnInit {
       roles: ['TICKET_ADMIN'],
       urlHome: '/home',
     },
+    // {
+    //   name: 'Action Log',
+    //   url: '/action-log',
+    //   icon: 'fa fa-list-alt',
+    //   roles: ['ADMINS'],
+    //   urlHome: '/home',
+    // },
   ];
   ngOnInit() {
     this.updateActiveTabAndBanner(this.router.url);
@@ -75,7 +86,13 @@ export class HomeComponent implements OnInit {
     });
 
     this.authService.getUserData();
-    this.milestonesService.getRemindersData();
+    const isRestricted =
+      this.milestonesService.checkIsPMO() ||
+      this.milestonesService.checkIsExecutive() ||
+      this.milestonesService.checkIsAdmin();
+    if (!isRestricted) {
+      this.milestonesService.getRemindersData();
+    }
     this.userName = this.cookieService.get('USER_FULLNAME') || '';
     this.authService.loggedUserStream.subscribe((res) => {
       this.userName = res?.name || '';
@@ -113,13 +130,12 @@ export class HomeComponent implements OnInit {
   logOut() {
     this.authService.logout();
   }
-private updateActiveTabAndBanner(url: string): void {
+  private updateActiveTabAndBanner(url: string): void {
     this.updateActiveTab(url);
     this.updateBannerBasedOnRoute(url);
     this.updateShowTabs(url);
   }
- private updateBannerBasedOnRoute(url: string): void {
-
+  private updateBannerBasedOnRoute(url: string): void {
     if (url.includes('/archived-milestones')) {
       this.bannerDataService.updateData({
         title: 'Archived Milestones',
@@ -130,6 +146,8 @@ private updateActiveTabAndBanner(url: string): void {
         title: 'DT-Milestone-DI-KPIs-Integration',
         text: '',
       });
+    } else if (url.includes('/action-log')) {
+      this.bannerDataService.updateData({ title: 'Action Log', text: '' });
     } else {
       this.bannerDataService.updateData({ title: 'milestones', text: '' });
     }
@@ -143,9 +161,9 @@ private updateActiveTabAndBanner(url: string): void {
     }
   }
 
- private updateShowTabs(url: string): void {
+  private updateShowTabs(url: string): void {
     this.showTabs = this.TAB_ROUTES_SET.has(url);
-}
+  }
 
   onTabChanged(tabIndex: number): void {
     this.activeTabIndex = tabIndex;

@@ -1,0 +1,12 @@
+<div
+  *ngIf="isOpen"
+  class="pending-list-holder"
+>
+  <stc-apps-items-list
+    [caption]="caption"
+    [items]="items"
+    [closable]="closable"
+    (itemClicked)="onItemClicked($event)"
+    (closeClicked)="onCloseClicked()"
+  ></stc-apps-items-list>
+</div>

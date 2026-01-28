@@ -1,0 +1,147 @@
+.maturity-edit-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 16px;
+}
+.left,
+.right {
+  background: #ffffff;
+  border: 1px solid #e9d4ff;
+  border-radius: 12px;
+  padding: 12px;
+}
+.inputs {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 12px;
+}
+::ng-deep .inputs .stc-input-group {
+  display: block;
+}
+::ng-deep .inputs .stc-input-group label {
+  margin: 0;
+  white-space: normal;
+  color: var(--stc-dark-grey-color);
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+::ng-deep .inputs .stc-input-group label .required-star {
+  color: #ef4444;
+  margin-left: 4px;
+  display: inline;
+}
+::ng-deep .inputs .stc-input-group mat-form-field {
+  width: 100%;
+  margin: 0;
+}
+::ng-deep .inputs .stc-input-group .mat-mdc-form-field .mdc-text-field {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 0 12px;
+  height: 40px;
+}
+::ng-deep .inputs .stc-input-group .mat-mdc-form-field .mdc-line-ripple {
+  display: none;
+}
+::ng-deep .inputs .stc-input-group .mat-mdc-form-field-subscript-wrapper {
+  padding-left: 0 !important;
+  margin-left: 0 !important;
+}
+.right input {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  height: 40px;
+  background: #ffffff;
+  color: #111827;
+  outline: none;
+  margin-top: 6px;
+}
+
+.right input:focus {
+  border-color: var(--stc-purple-color);
+  caret-color: var(--stc-purple-color);
+}
+
+/* PrimeNG Editor (Quill) visibility and styling */
+:host ::ng-deep .right stc-apps-prime-editor .ql-toolbar {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px 8px 0 0;
+  background: #ffffff;
+  margin-top: 6px;
+  padding: 4px 8px;
+}
+:host ::ng-deep .right stc-apps-prime-editor .ql-container {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 0 0 8px 8px;
+  background: #ffffff;
+  min-height: 160px;
+}
+:host ::ng-deep .right stc-apps-prime-editor .ql-editor {
+  min-height: 120px;
+  padding: 10px 12px;
+  color: #111827;
+}
+:host ::ng-deep .right stc-apps-prime-editor .ql-container:focus-within {
+  border-color: var(--stc-purple-color);
+}
+:host ::ng-deep .right stc-apps-prime-editor .ql-toolbar .ql-formats {
+  margin-right: 8px;
+}
+:host ::ng-deep .right stc-apps-prime-editor .ql-toolbar .ql-formats button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  line-height: 24px;
+}
+:host ::ng-deep .right stc-apps-prime-editor .ql-snow .ql-picker {
+  font-size: 12px;
+}
+.left h3,
+.right h3 {
+  margin: 0 0 12px 0;
+  color: var(--stc-dark-grey-color);
+  font-size: 20px;
+  font-weight: 700;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 12px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 300;
+  cursor: pointer;
+}
+.btn.save {
+  background: var(--stc-purple-color);
+}
+.btn.cancel {
+  background: var(--stc-pink-color);
+}
+@media (max-width: 640px) {
+  .maturity-edit-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .inputs {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

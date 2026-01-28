@@ -12,8 +12,8 @@ import {
 } from '@angular/core';
 import { FormControl, NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
 import { MatOption } from '@angular/material/core';
-import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 import { startWith } from 'rxjs';
+import { ControlValueAccessorDirective } from '../control-value-accessor.directive';
 
 interface Option {
   [key: string]: string;
@@ -62,11 +62,13 @@ export class SelectDropDownComponent<T>
   @Input() multi = false;
   @Input() searchMode = false;
   @Input() Resetting = false;
+  @Input() resetTrigger = 0;
   override control = new FormControl();
   searchControl = new FormControl();
 
   selectedValue: any;
   filteredOptions: any[] = [];
+  hasUserSelection = false;
 
   override ngOnInit(): void {
     // Ensure base directive initializes control first
@@ -77,7 +79,8 @@ export class SelectDropDownComponent<T>
       : this.selectId;
     this.selectedValue = initialValue;
     this.filteredOptions = this.options;
-    if (initialValue !== undefined) {
+    // Only set if parent hasn't provided a value
+    if (initialValue !== undefined && (this.control?.value === null || this.control?.value === undefined)) {
       this.control?.setValue(initialValue, { emitEvent: false });
     }
   }
@@ -94,6 +97,9 @@ export class SelectDropDownComponent<T>
         } as unknown as Option);
       }
     }
+    if (changes['resetTrigger'] && !changes['resetTrigger'].firstChange) {
+      this.hasUserSelection = false;
+    }
     if (this.defaultAll && this.options.length > 0) {
       this.selectedValue = this.options[0][this.labelValue];
     } else {
@@ -101,7 +107,8 @@ export class SelectDropDownComponent<T>
     }
 
     // Ensure the FormControl reflects the initial selected value so mat-select displays it
-    if (this.selectedValue !== undefined) {
+    // Only set if current control value is empty
+    if (this.selectedValue !== undefined && (this.control.value === null || this.control.value === undefined)) {
       this.control.setValue(this.selectedValue, { emitEvent: false });
     }
 
@@ -125,8 +132,8 @@ export class SelectDropDownComponent<T>
   }
 
   onChangeValue(value: any): void {
-    if (value || value === 0) {
-      if (value.length === 0 && this.multi && this.required) {
+    if (value || value === 0 || value === null) {
+      if (this.multi && this.required && Array.isArray(value) && value.length === 0) {
         this.control.addValidators(Validators.required);
         this.control.updateValueAndValidity();
       }
@@ -136,6 +143,8 @@ export class SelectDropDownComponent<T>
         : value;
       this.selectChange.emit(output);
       this.selectedValue = value;
+      this.hasUserSelection = true;
+      this.searchControl.setValue('', { emitEvent: true });
     }
   }
   filterOptions(searchTerm = ''): void {
@@ -164,5 +173,21 @@ export class SelectDropDownComponent<T>
 
   stopDropdownClose(event: MouseEvent): void {
     event.stopPropagation();
+  }
+
+  clearSelection(event?: MouseEvent): void {
+    event?.stopPropagation();
+    event?.preventDefault();
+    if (!this.control) return;
+    const cleared = this.multi ? [] : null;
+    this.control.setValue(cleared);
+    this.selectedValue = cleared;
+    this.selectChange.emit(cleared);
+    this.hasUserSelection = false;
+    this.searchControl.setValue('', { emitEvent: true });
+  }
+
+  isArray(val: any): val is any[] {
+    return Array.isArray(val);
   }
 }

@@ -1,7 +1,7 @@
 <div class="pending-tasks" [ngClass]="{ 'hovering-list': closable }">
   <div class="header" [ngClass]="bulkApprove ? 'with-bulk' : ''">
     @if(closable){
-    <span class="x-btn" (click)="notifyParent()">X</span>
+    <span class="x-btn" title="Close" (click)="notifyParent()">X</span>
     }
     <div class="main-title">
       <h3><i [class]="iconClass || 'far fa-clock'"></i> {{ caption }}</h3>
@@ -74,7 +74,7 @@
     </li>
     }@else {
     <li>
-      <p class="no-data">no data found</p>
+      <p class="no-data">No pending actions at the moment.</p>
     </li>
     }
   </ul>

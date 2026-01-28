@@ -1,0 +1,72 @@
+<div class="maturity-edit-grid" [formGroup]="form">
+  <div class="left">
+    <h3>AI&DS Agile Maturity Index</h3>
+    <div class="inputs">
+      <stc-apps-numeric-input
+        inputName="Strategy"
+        inputId="strategy"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="strategy"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="Structure"
+        inputId="structure"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="structure"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="Processes"
+        inputId="processes"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="processes"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="People"
+        inputId="people"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="people"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="Technology"
+        inputId="technology"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="technology"
+      ></stc-apps-numeric-input>
+    </div>
+  </div>
+  <div class="right">
+    <h3>Key Highlights</h3>
+    <label>Title</label>
+    <input
+      type="text"
+      [value]="keyTitle"
+      (input)="keyTitle = $any($event.target).value"
+      placeholder="Enter title"
+    />
+    <label style="margin-top: 12px">Content</label>
+    <stc-apps-prime-editor
+      formControlName="keyHighlightsContentHtml"
+    ></stc-apps-prime-editor>
+  </div>
+</div>
+<div class="actions">
+  <button class="btn save" (click)="onSave()" [disabled]="form.invalid">
+    Save
+  </button>
+  <button class="btn cancel" (click)="onCancel()">Cancel</button>
+</div>

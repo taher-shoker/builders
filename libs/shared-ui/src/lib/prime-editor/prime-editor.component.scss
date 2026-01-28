@@ -1,0 +1,43 @@
+:host ::ng-deep .ql-toolbar {
+  padding: 4px 8px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px 8px 0 0;
+  background: #ffffff;
+}
+
+:host ::ng-deep .ql-container {
+  border: 1px solid #e5e7eb;
+  border-radius: 0 0 8px 8px;
+  background: #ffffff;
+}
+
+:host ::ng-deep .ql-container:focus-within {
+  border-color: var(--stc-purple-color);
+}
+
+:host ::ng-deep .ql-toolbar .ql-formats {
+  margin-right: 8px;
+}
+
+:host ::ng-deep .ql-toolbar .ql-formats button {
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  line-height: 24px;
+  border: none;
+  background: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ensure no oversized default icons from theme or global overrides */
+:host ::ng-deep .ql-toolbar button::before {
+  content: none !important;
+}
+
+:host ::ng-deep .ql-toolbar .ql-formats button span {
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+}

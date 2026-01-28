@@ -29,8 +29,6 @@
 //   //   // })
 //   // );
 
-
-
 //    canActivate(
 //     next: ActivatedRouteSnapshot,
 //     state: RouterStateSnapshot
@@ -43,9 +41,6 @@
 //   }
 
 // };
-
-
-
 
 import { Injectable } from '@angular/core';
 import {

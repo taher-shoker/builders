@@ -1,0 +1,9 @@
+::ng-deep .toast-top-right
+{
+    position: fixed !important;
+    top:13px !important;
+    .toast-success
+    {
+        width:330px !important;
+    }
+}

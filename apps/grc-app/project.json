@@ -1,0 +1,105 @@
+{
+  "name": "grc-app",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "stc-apps",
+  "sourceRoot": "apps/grc-app/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/grc-app",
+        "index": "apps/grc-app/src/index.html",
+        "browser": "apps/grc-app/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/grc-app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": ["apps/grc-app/src/favicon.ico", "apps/grc-app/src/assets"],
+        "styles": [
+          "node_modules/bootstrap/dist/css/bootstrap.min.css",
+          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/primeng.min.css",
+          "node_modules/ngx-spinner/animations/ball-spin.css",
+          "node_modules/ngx-toastr/toastr.css",
+          "apps/grc-app/src/styles.scss"
+        ],
+        "scripts": ["node_modules/bootstrap/dist/js/bootstrap.min.js"]
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "2mb",
+              "maximumError": "6mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "7kb",
+              "maximumError": "12kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/grc-app/src/environments/environment.ts",
+              "with": "apps/grc-app/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "staging": {
+          "optimization": {
+            "scripts": true,
+            "styles": {
+              "minify": true,
+              "inlineCritical": false
+            }
+          },
+          "fileReplacements": [
+            {
+              "replace": "apps/grc-app/src/environments/environment.ts",
+              "with": "apps/grc-app/src/environments/environment.stage.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "grc-app:build:production"
+        },
+        "development": {
+          "buildTarget": "grc-app:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "grc-app:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/grc-app/jest.config.ts"
+      }
+    }
+  }
+}

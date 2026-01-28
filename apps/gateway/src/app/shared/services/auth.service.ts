@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie';
-import { environment } from '../../../environments/environment';
-import { ToastrService } from 'ngx-toastr';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie';
+import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { AuthResponseData, LoggedUser, System } from '../models/auth.model';
 import { TPUserModel } from '../models/TP/TPUserModel';
 import { UserData, UserGroup } from '../models/users-settings.model';
-import { AuthResponseData, LoggedUser, System } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -142,7 +142,8 @@ export class AuthService {
       res.dto.systems.includes('Strategic_Dashboard') ||
       res.dto.systems.includes('ChatBI') ||
       res.dto.systems.includes('TU_BRAIN') ||
-      res.dto.systems.includes('FNI_Nokia')
+      res.dto.systems.includes('FNI_Nokia') ||
+      res.dto.systems.includes('GRC_Dashboard')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -174,6 +175,7 @@ export class AuthService {
       res.dto.systems.includes('Strategic_Dashboard') ||
       res.dto.systems.includes('ChatBI') ||
       res.dto.systems.includes('TU_BRAIN') ||
+      res.dto.systems.includes('GRC_Dashboard') ||
       res.dto.systems.includes('FNI_Nokia')
     ) {
       this.setLoggedInUser();
@@ -223,6 +225,9 @@ export class AuthService {
     }
     if (res.dto.systems.includes('FNI_Nokia')) {
       this.gratnedSystems.push('FNI_Nokia');
+    }
+    if (res.dto.systems.includes('GRC_Dashboard')) {
+      this.gratnedSystems.push('GRC_Dashboard');
     }
     this.setLoggedInUser();
   }
@@ -296,6 +301,7 @@ export class AuthService {
       ChatBI: environment.systems.chat_bi,
       TU_BRAIN: environment.systems.tu_brain,
       FNI_Nokia: environment.systems.nokia_chat,
+      GRC_Dashboard: environment.systems.grc_dashboard,
     };
     const url = systemUrls[system];
     if (url) {
@@ -535,6 +541,16 @@ export class AuthService {
                   window.location.origin + environment.systems.nokia_chat,
                 name: 'FNI Vision',
                 displayName: 'FNI Vision',
+                mobileView: true,
+              });
+              break;
+            case 'GRC_Dashboard':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin + environment.systems.grc_dashboard,
+                name: 'GRC Dashboard',
+                displayName: 'GRC Dashboard',
                 mobileView: true,
               });
               break;

@@ -58,9 +58,24 @@ export class PaginatorComponent implements OnInit, OnChanges {
     if (changes['elementsLength']) {
       this.elementsLength = changes['elementsLength'].currentValue;
       this.setPagesCount();
-      this.activePage = 1;
-      this.validate();
+      if (this.activePage > this.pagesCount) {
+        this.activePage = this.pagesCount || 1;
+      }
+      this.updateFlags();
     }
+
+    if (changes['activePage']) {
+      const newPage = changes['activePage'].currentValue;
+      if (typeof newPage === 'number' && newPage >= 1) {
+        this.activePage = newPage;
+        this.updateFlags();
+      }
+    }
+  }
+
+  private updateFlags(): void {
+    this.onLastPage = this.pagesCount === this.activePage;
+    this.onFirstPage = this.activePage === 1;
   }
 
   setPagesCount() {

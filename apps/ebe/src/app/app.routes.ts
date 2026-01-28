@@ -188,4 +188,11 @@ export const appRoutes: Route[] = [
         './views/PSR/components/psr-details-page/psr-details-page.component'
       ).then((m) => m.PsrDetailsPageComponent),
   },
+  {
+        path: 'agile-transformation',
+        loadComponent: () =>
+            import(
+                './views/agile-transformation/agile-transformation.component'
+            ).then((m) => m.AgileTransformationComponent),
+    },
 ];

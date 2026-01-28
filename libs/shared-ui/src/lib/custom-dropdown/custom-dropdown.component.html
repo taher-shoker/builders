@@ -36,11 +36,12 @@
         {{'None' }}
       </div>
       }
-      @for (item of filteredList(); track item) { 
-      <div class="item" (click)="selectItem(item)">
+      @for (item of filteredList(); track item) {
+      <div class="item" (click)="selectItem(item)"
+        [ngClass]="{'selected': highlightSelected() && item.componentScopedValueAccessor === chosenItem()?.['componentScopedValueAccessor']}">
         {{ item.componentScopedNameAccessor }}
-        @if (item.componentScopedValueAccessor === chosenItem()?.['componentScopedValueAccessor']) {
-          <i class="ri-check-fill"></i>
+        @if (highlightSelected() && item.componentScopedValueAccessor === chosenItem()?.['componentScopedValueAccessor']) {
+          <i class="ri-check-fill check-icon"></i>
         }
       </div>
       }
@@ -54,8 +55,12 @@
       </div>
       }
       @for (item of mutatedList(); track item) {
-      <div class="item" (click)="selectItem(item)">
+      <div class="item" (click)="selectItem(item)"
+        [ngClass]="{'selected': highlightSelected() && item.componentScopedValueAccessor === chosenItem()?.['componentScopedValueAccessor']}">
         {{ item.componentScopedNameAccessor }}
+        @if (highlightSelected() && item.componentScopedValueAccessor === chosenItem()?.['componentScopedValueAccessor']) {
+          <i class="ri-check-fill check-icon"></i>
+        }
       </div>
       }
     </div>

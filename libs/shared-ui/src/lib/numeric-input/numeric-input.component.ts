@@ -1,11 +1,11 @@
 import {
   Component,
   EventEmitter,
-  Input,
-  Output,
   forwardRef,
-  OnInit,
+  Input,
   OnChanges,
+  OnInit,
+  Output,
   SimpleChanges,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, Validators } from '@angular/forms';
@@ -37,6 +37,7 @@ export class NumericInputComponent
   @Input() disallowZero = false;
   @Input() min?: number;
   @Input() max?: number;
+  @Input() appearance: 'material' | 'plain' = 'material';
   @Output() valueKeyDown: EventEmitter<KeyboardEvent> =
     new EventEmitter<KeyboardEvent>();
 

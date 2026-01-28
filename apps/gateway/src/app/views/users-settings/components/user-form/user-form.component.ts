@@ -62,6 +62,12 @@ export class UserFormComponent implements OnInit, OnChanges {
   userTeam = '';
   userId = 0;
   isSubmitLoader = false;
+  private initializing = true;
+  private dataReady = false;
+  private rolesReady = false;
+  private initialBindingDone = false;
+  private rebindingPrivilege = false;
+  private userSelectedPrivilege = false;
 
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
@@ -84,23 +90,43 @@ export class UserFormComponent implements OnInit, OnChanges {
     protected dialogService: DialogService,
     private el: ElementRef,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    if (!this.form) {
+      this.initializeUserForm();
+    }
+  }
 
   ngOnInit() {
-    this.initializeUserForm();
+    if (!this.form) {
+      this.initializeUserForm();
+    }
     if (!this.isEditing) {
       this.disableFields();
       this.showInputs = false;
     }
     this.handleGrouping();
-    this.getUsersList();
+    if (this.userService.getCurrentSystem() !== 'DI_Milestones') {
+      this.getUsersList();
+    }
     this.getAccessPages();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
-      if (this.data) {
+      if (!this.form) {
+        this.initializeUserForm();
+      }
+      if (this.data && this.form) {
         this.restFormWithValue(this.data);
+        this.dataReady = true;
+        if (
+          this.rolesReady &&
+          !this.initialBindingDone &&
+          !this.userSelectedPrivilege
+        ) {
+          this.getRoles();
+          this.initialBindingDone = true;
+        }
         if (this.data.pageAccess) {
           this.selectedPages = this.data.pageAccess.map((p: Page) => p.id);
         }
@@ -131,6 +157,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       }
 
       this.selectedPages = pageAccess.map((p: Page) => p.id);
+      this.applyPageSelection(this.selectedPages);
     }
   }
 
@@ -164,13 +191,13 @@ export class UserFormComponent implements OnInit, OnChanges {
       ],
       userDelegates: [[]],
       manager: [{}],
-      viewer: [''],
-      editor: [''],
-      pmo: [''],
-      ticketAdmin: [''],
-      edit_delete: [''],
+      viewer: [false],
+      editor: [false],
+      DT_Governance_Approver: [false],
+      ticketAdmin: [false],
+      edit_delete: [false],
       pageAccess: [
-        '',
+        [],
         this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
           ? Validators.required
           : Validators.nullValidator,
@@ -194,7 +221,7 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   // Getter for pmoControl
   get pmoControl(): AbstractControl | null {
-    return this.form.get('pmo');
+    return this.form.get('DT_Governance_Approver');
   }
 
   get ticketAdminControl(): AbstractControl | null {
@@ -236,25 +263,25 @@ export class UserFormComponent implements OnInit, OnChanges {
       if (this.viewerControl?.value) {
         const viewerObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_VP_Dashboard_Viewer');
+          .find((r) => r.groupName === 'VP_VIEWER');
         viewerObj && dataForm.userGroups.push({ id: viewerObj.id });
       }
       if (this.editorControl?.value) {
         const editorObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_VP_Dashboard_Editor');
+          .find((r) => r.groupName === 'VP_EDITOR');
         editorObj && dataForm.userGroups.push({ id: editorObj.id });
       }
       if (this.pmoControl?.value) {
         const pmoObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'PMO');
+          .find((r) => r.groupName === 'DT_Governance_Approver');
         pmoObj && dataForm.userGroups.push({ id: pmoObj.id });
       }
       if (this.ticketAdminControl?.value) {
         const ticketAdminObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_Ticket_Admin');
+          .find((r) => r.groupName === 'TICKET_ADMIN');
 
         ticketAdminObj && dataForm.userGroups.push({ id: ticketAdminObj.id });
       }
@@ -438,10 +465,10 @@ export class UserFormComponent implements OnInit, OnChanges {
       .getRoles()
       .filter(
         (r) =>
-          r.groupName !== 'DT_VP_Dashboard_Viewer' &&
-          r.groupName !== 'DT_VP_Dashboard_Editor' &&
-          r.groupName !== 'PMO' &&
-          r.groupName !== 'DT_Ticket_Admin' &&
+          r.groupName !== 'VP_VIEWER' &&
+          r.groupName !== 'VP_EDITOR' &&
+          r.groupName !== 'DT_Governance_Approver' &&
+          r.groupName !== 'TICKET_ADMIN' &&
           r.groupName !== 'DT_User_Edit_Delete'
       );
 
@@ -469,32 +496,103 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.privilages.set(filteredRoles);
     }
     if (this.data) {
+      if (this.userSelectedPrivilege) {
+        this.initialBindingDone = true;
+        return;
+      }
       const currentSystem = this.userService.getCurrentSystem();
       if (currentSystem === 'DI_Milestones') {
-        this.selectedPrivilege = this.privilages().filter(
-          (p) => p.id === this.checkSystem(this.data.userGroups)?.id
-        )[0];
+        const options = this.privilages();
+        const candidateIds = options.map((p) => p.id);
+        const preferredOrder = [
+          'DT_User',
+          'DT_Director',
+          'PMO',
+          'DT_Governance',
+          'DT_Executive',
+        ];
+        const preferredMatch = preferredOrder
+          .map((name) => this.searchGroupByName(this.data.userGroups, name))
+          .find((g) => g && candidateIds.includes(g.id));
+        const fallbackMatch = this.data.userGroups.find(
+          (g) =>
+            g.roles?.some((r) => r.system?.name === currentSystem) &&
+            candidateIds.includes(g.id)
+        );
+        const activeGroup = preferredMatch || fallbackMatch;
+        this.selectedPrivilege = options.find((p) => p.id === activeGroup?.id);
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'DI_Management') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'Score_Card_Report_DB') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'Strategic_Dashboard') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'FRAUD_ManagementUsers') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       }
+    }
+    if (this.data) {
+      this.initialBindingDone = true;
     }
   }
 
@@ -534,6 +632,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.selectedGroup = this.data.teams.map(
             (t: { name: string; id: number }) => t.id
           );
+          this.form
+            .get('teamDto')
+            ?.setValue(this.selectedGroup, { emitEvent: false });
         }
       } else if (this.userService.getCurrentSystem() === 'DI_Management') {
         this.teams = this.userService
@@ -564,6 +665,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           );
           this.form.get('teamDto')?.setValidators(null);
           this.form.get('teamDto')?.updateValueAndValidity();
+          this.form
+            .get('teamDto')
+            ?.setValue(this.selectedGroup, { emitEvent: false });
         }
       } else {
         this.selectedTeam = this.teams.filter(
@@ -575,44 +679,6 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   cancel() {
     this.router.navigate(['./users-setting']);
-  }
-
-  handleTeam(value: Role) {
-    if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-      this.form.get('viewer')?.enable();
-      this.form.get('viewer')?.setValue(false);
-      this.form.get('ticketAdmin')?.setValue(false);
-      this.form.get('edit_delete')?.setValue(false);
-      this.form.get('teamDto')?.setValue([]);
-      this.checkDtUserPermissions(value.groupName);
-      this.teams = this.userService.allTeams;
-    } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
-      this.teams = this.userService.getTeams();
-    } else if (
-      this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
-    ) {
-      this.form.get('pageAccess')?.reset();
-      if (value.groupName === 'BE_EDITORS') {
-        this.filterPages = this.pages;
-      } else if (value.groupName === 'BE_PM') {
-        this.form.get('pageAccess')?.setValue([3]);
-        this.form.get('pageAccess')?.disable();
-      } else {
-        this.form.get('pageAccess')?.enable();
-        this.filterPages = this.pages.filter(
-          (r) => r.name !== 'Activity Log Center'
-        );
-      }
-    }
-    // else if (this.userService.getCurrentSystem() === 'Strategic_Dashboard') {
-    //   this.teams = this.userService.getTeams();
-    // }
-    else {
-      this.form?.get('teamDto')?.setValue('');
-      this.teams = this.userService
-        .getTeams()
-        .filter((x) => x.roleName == value.groupName);
-    }
   }
 
   checkUserExist() {
@@ -627,6 +693,7 @@ export class UserFormComponent implements OnInit, OnChanges {
             }
             this.addGroups = true;
             this.userId = res?.id || 0;
+            this.data = res;
             this.restFormWithValue(res);
             this.enableFields();
           },
@@ -643,9 +710,10 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (value === 'DT_User') {
       this.form.get('viewer')?.setValue(true);
       this.form.get('editor')?.setValue(false);
-      this.form.get('pmo')?.setValue(false);
+      this.form.get('DT_Governance_Approver')?.setValue(false);
       this.form.get('ticketAdmin')?.setValue(false);
       this.form.get('edit_delete')?.setValue(false);
+      this.cdr.detectChanges();
     }
   }
   oncheckBoxSelect(ele: { name: string; value: boolean }) {
@@ -664,15 +732,15 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
   restFormWithValue(data: User) {
-    this.getUsersList();
-    forkJoin([this.userService.getUsers()]).subscribe(() => {
-      this.form.patchValue({
-        email: data.email,
-        name: data.name,
-        jobTitle: data.jobTitle,
-        userDelegates: this.data?.userDelegates?.[0]?.delegateName,
-        manager: this.data?.manager?.id,
-      });
+    if (!this.form) {
+      return;
+    }
+    this.form.patchValue({
+      email: data.email,
+      name: data.name,
+      jobTitle: data.jobTitle,
+      userDelegates: this.data?.userDelegates?.[0]?.delegateName,
+      manager: this.data?.manager?.id,
     });
 
     if (!this.addGroups) {
@@ -681,9 +749,9 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.selectedGroup = this.data.userGroups
           .filter((s) => s.roles[0].system.name === 'DI_Management')
           .map((group: UserGroup) => group.id);
-        this.selectedGroup = this.data.userGroups.map(
-          (group: UserGroup) => group.id
-        );
+        // this.selectedGroup = this.data.userGroups.map(
+        //   (group: UserGroup) => group.id
+        // );
       } else if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.handleDI_Milestones();
       } else if (
@@ -706,16 +774,14 @@ export class UserFormComponent implements OnInit, OnChanges {
    */
   handleDI_Milestones() {
     if (this.data.userGroups.length > 1) {
-      if (
-        this.searchGroupByName(this.data.userGroups, 'DT_VP_Dashboard_Viewer')
-      ) {
+      if (this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')) {
         this.form?.get('viewer')?.setValue(true);
       }
 
       // If user group contains DT_VP_Dashboard_Editor role, set editor to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'DT_VP_Dashboard_Editor')
-          ?.groupName === 'DT_VP_Dashboard_Editor'
+        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')?.groupName ===
+        'VP_EDITOR'
       ) {
         this.form?.get('editor')?.setValue(true);
         this.form?.get('viewer')?.disable();
@@ -723,14 +789,15 @@ export class UserFormComponent implements OnInit, OnChanges {
 
       // If user group contains PMO role, set pmo to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'PMO')?.groupName === 'PMO'
+        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')
+          ?.groupName === 'DT_Governance_Approver'
       ) {
-        this.form?.get('pmo')?.setValue(true);
+        this.form?.get('DT_Governance_Approver')?.setValue(true);
         this.form?.get('viewer')?.disable();
       }
       if (
-        this.searchGroupByName(this.data.userGroups, 'DT_Ticket_Admin')
-          ?.groupName === 'DT_Ticket_Admin'
+        this.searchGroupByName(this.data.userGroups, 'TICKET_ADMIN')
+          ?.groupName === 'TICKET_ADMIN'
       ) {
         this.form?.get('ticketAdmin')?.setValue(true);
       }
@@ -740,6 +807,7 @@ export class UserFormComponent implements OnInit, OnChanges {
       ) {
         this.form?.get('edit_delete')?.setValue(true);
       }
+      this.cdr.detectChanges();
     }
   }
   searchGroupByName(groups: UserGroup[], groupName: string) {
@@ -757,25 +825,26 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   handleGrouping() {
-    this.userService.getAllTeams().subscribe((res) => {
-      this.userService.allTeams = res;
-    });
-    this.userService.getGroups().subscribe((res: UserGroup[]) => {
-      if (res) {
-        this.userService.getGroups().subscribe((res: UserGroup[]) => {
-          if (res) {
-            this.userService.allGroups = res;
-            this.getTeams(this.data?.userGroups[0]);
-            this.getRoles();
-          }
-        });
-
-        if (this.data) {
-          this.selectedGroup = this.data.userGroups.map(
-            (group: UserGroup) => group.id
-          );
-        }
+    forkJoin([
+      this.userService.getAllTeams(),
+      this.userService.getGroups(),
+    ]).subscribe(([teams, groups]) => {
+      this.userService.allTeams = teams || [];
+      this.userService.allGroups = groups || [];
+      this.rolesReady = true;
+      if (this.data) {
+        this.getTeams(this.data.userGroups[0]);
       }
+      if (this.dataReady && !this.initialBindingDone) {
+        this.getRoles();
+      }
+
+      if (this.isEditing === false) {
+        this.getTeams(this.data?.userGroups[0]);
+        this.getRoles();
+      }
+      // Do not override team selections with group IDs
+      this.initializing = false;
     });
   }
   getUsersList() {
@@ -798,5 +867,141 @@ export class UserFormComponent implements OnInit, OnChanges {
   closeDialog() {
     this.dialogService.close();
     this.router.navigate(['/users-setting']);
+  }
+  // Suppress form value changes on initial privilege binding
+  // Avoid clearing team selections set from existing user data
+  handleTeam(value: Role) {
+    if (!this.rebindingPrivilege && !this.initializing) {
+      this.userSelectedPrivilege = true;
+    }
+    if (this.initializing && !this.rebindingPrivilege) {
+      return;
+    }
+    const currentSystem = this.userService.getCurrentSystem();
+    const isProgrammaticInit =
+      this.rebindingPrivilege ||
+      (this.data && !this.userSelectedPrivilege && !this.initialBindingDone);
+    if (!isProgrammaticInit) {
+      this.resetPrivilegeCheckboxes();
+    }
+    if (currentSystem === 'DI_Milestones') {
+      this.form.get('viewer')?.enable();
+      this.checkDtUserPermissions(value.groupName);
+      this.teams = this.userService.allTeams;
+      if (isProgrammaticInit) {
+        this.rehydrateMilestonesCheckboxes();
+      }
+    } else if (currentSystem === 'Score_Card_Report_DB') {
+      this.teams = this.userService.getTeams();
+    } else if (currentSystem === 'Business_Excellence_Dashboard') {
+      if (value.groupName === 'BE_EDITORS') {
+        this.filterPages = this.pages;
+        const availableIds = this.availableIdsFrom(this.filterPages);
+        const selection = this.computePageSelection(availableIds);
+        this.applyPageSelection(selection);
+      } else if (value.groupName === 'BE_PM') {
+        this.applyPageSelection([3]);
+        this.form.get('pageAccess')?.disable();
+      } else {
+        this.form.get('pageAccess')?.enable();
+        this.filterPages = this.pages.filter(
+          (r) => r.name !== 'Activity Log Center'
+        );
+        const availableIds = this.availableIdsFrom(this.filterPages);
+        const selection = this.computePageSelection(availableIds);
+        this.applyPageSelection(selection);
+      }
+    } else {
+      this.teams = this.userService
+        .getTeams()
+        .filter((x) => x.roleName == value.groupName);
+      if (this.initializing && !this.rebindingPrivilege) {
+        return;
+      }
+      const current = this.form?.get('teamDto')?.value;
+      const availableIds = (this.teams || []).map((t) => t.id);
+      if (Array.isArray(current)) {
+        const preserved = current.filter((id: number) =>
+          availableIds.includes(id)
+        );
+        this.form.get('teamDto')?.setValue(preserved, { emitEvent: false });
+      } else if (current && typeof current === 'object' && 'id' in current) {
+        const id = (current as any).id;
+        if (!availableIds.includes(id)) {
+          this.form.get('teamDto')?.setValue([], { emitEvent: false });
+        }
+      }
+    }
+  }
+
+  private resetPrivilegeCheckboxes(): void {
+    this.form.get('viewer')?.setValue(false, { emitEvent: false });
+    this.form.get('editor')?.setValue(false, { emitEvent: false });
+    this.form
+      .get('DT_Governance_Approver')
+      ?.setValue(false, { emitEvent: false });
+    this.form.get('ticketAdmin')?.setValue(false, { emitEvent: false });
+    this.form.get('edit_delete')?.setValue(false, { emitEvent: false });
+    this.viewerControl?.enable();
+    this.cdr.detectChanges();
+  }
+
+  private normalizeIds(val: any): number[] {
+    if (!Array.isArray(val)) return [];
+    return val.map((id: any) => Number(id));
+  }
+
+  private availableIdsFrom(pages: Page[]): number[] {
+    return (pages || []).map((p) => Number(p.id));
+  }
+
+  private computePageSelection(availableIds: number[]): number[] {
+    const current = this.normalizeIds(this.form.get('pageAccess')?.value || []);
+    const preserved = current.filter((id) => availableIds.includes(id));
+    const initial = this.normalizeIds(this.selectedPages || []).filter((id) =>
+      availableIds.includes(id)
+    );
+    return preserved.length > 0 ? preserved : initial;
+  }
+
+  private applyPageSelection(ids: number[]): void {
+    this.form.get('pageAccess')?.setValue(ids, { emitEvent: false });
+  }
+
+  private rehydrateMilestonesCheckboxes(): void {
+    if (this.data?.userGroups?.length > 1) {
+      if (this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')) {
+        this.form?.get('viewer')?.setValue(true, { emitEvent: false });
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')?.groupName ===
+        'VP_EDITOR'
+      ) {
+        this.form?.get('editor')?.setValue(true, { emitEvent: false });
+        this.viewerControl?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')
+          ?.groupName === 'DT_Governance_Approver'
+      ) {
+        this.form?.get('DT_Governance_Approver')?.setValue(true, {
+          emitEvent: false,
+        });
+        this.viewerControl?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'TICKET_ADMIN')
+          ?.groupName === 'TICKET_ADMIN'
+      ) {
+        this.form?.get('ticketAdmin')?.setValue(true, { emitEvent: false });
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_User_Edit_Delete')
+          ?.groupName === 'DT_User_Edit_Delete'
+      ) {
+        this.form?.get('edit_delete')?.setValue(true, { emitEvent: false });
+      }
+      this.cdr.detectChanges();
+    }
   }
 }

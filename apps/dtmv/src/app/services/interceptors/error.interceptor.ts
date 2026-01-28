@@ -1,15 +1,15 @@
-import { Injectable } from '@angular/core';
 import {
-  HttpRequest,
-  HttpHandler,
   HttpEvent,
+  HttpHandler,
   HttpInterceptor,
+  HttpRequest,
 } from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
+import { ToastrService } from 'ngx-toastr';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AuthService } from '../auth.service';
-import { ToastrService } from 'ngx-toastr';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class ErrorInterceptor implements HttpInterceptor {
@@ -28,6 +28,7 @@ export class ErrorInterceptor implements HttpInterceptor {
         console.log(err, 'erorororrr');
 
         const error = err.message;
+        const skipToastr = request.headers.get('X-Skip-Toastr') === 'true';
         if (err.status === 401) {
           if (err.error.status === 'UNAUTHORIZED') {
             this.authService.logout();
@@ -39,15 +40,18 @@ export class ErrorInterceptor implements HttpInterceptor {
           //this.authService.logout();
           // this.router.navigate(['/unauthorized-page']);
         } else {
-          this.toastr.error(
-            err?.error?.debugMessage
-              ? err?.error?.debugMessage
-              : err?.error?.result
-              ? err?.error?.result
-              : err?.error?.message
-              ? err?.error?.message
-              : 'Something went wrong!'
-          );
+          const shouldSkip = skipToastr && err.status === 400;
+          if (!shouldSkip) {
+            this.toastr.error(
+              err?.error?.debugMessage
+                ? err?.error?.debugMessage
+                : err?.error?.result
+                ? err?.error?.result
+                : err?.error?.message
+                ? err?.error?.message
+                : 'Something went wrong!'
+            );
+          }
         }
         return throwError(error);
       })
