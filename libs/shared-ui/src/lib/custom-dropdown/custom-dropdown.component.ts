@@ -3,7 +3,6 @@
 import {
   Component,
   computed,
-  effect,
   EventEmitter,
   forwardRef,
   Inject,
@@ -12,7 +11,7 @@ import {
   OnInit,
   Output,
   signal,
-  WritableSignal,
+  WritableSignal
 } from '@angular/core';
 import {
   ControlValueAccessor,
@@ -46,6 +45,7 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
   label = input<string>();
   searchable = input<boolean>(false);
   resetable = input<boolean>(false);
+  highlightSelected = input<boolean>(false);
   // required = input<boolean>(false);
   required: WritableSignal<boolean> = signal(false);
   displayNameProperty = input<string>('displayName');
@@ -129,7 +129,7 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
         this.mutatedList().find( (item) => {
           return item['componentScopedValueAccessor'] === value
         }
-          
+
         ) || null;
 
         console.log("SELECTED IS:::", selected)
@@ -143,7 +143,7 @@ export class CustomDropdownComponent implements ControlValueAccessor, OnInit {
 
 
   registerOnTouched(fn: () => void): void {
-    
+
     this.onTouched = fn;
   }
 

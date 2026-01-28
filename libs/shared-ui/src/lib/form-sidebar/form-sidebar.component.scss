@@ -1,0 +1,62 @@
+:host ::ng-deep .form-sidebar {
+  width: 640px;
+}
+
+:host ::ng-deep .form-sidebar .p-sidebar-header {
+  display: none;
+}
+
+:host ::ng-deep .form-sidebar .p-sidebar-content {
+  padding: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+:host ::ng-deep .form-sidebar .sidebar-content {
+  padding: 20px;
+  max-width: 100%;
+}
+
+:host ::ng-deep .form-sidebar .form-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 16px;
+  // border-bottom: 1px solid #e5e7eb;
+  margin-top: 4px;
+}
+
+:host ::ng-deep .form-sidebar .form-title .left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+:host ::ng-deep .form-sidebar .form-title .left span {
+  display: inline-block;
+  width: 3px;
+  height: 22px;
+  border-radius: 3px;
+  background-color: #EF4444 !important;
+}
+
+:host ::ng-deep .form-sidebar .form-title .left p {
+  margin: 0;
+  color: #111827 !important;
+  font-size: 18px !important;
+  text-transform: none;
+  font-weight: 600 !important;
+}
+
+:host ::ng-deep .form-sidebar .form-title .right i {
+  position: relative;
+  top: 0;
+  cursor: pointer;
+  color: #6B7280 !important;
+  font-size: 18px !important;
+  transition: color .2s ease;
+}
+
+:host ::ng-deep .form-sidebar .form-title .right i:hover {
+  color: #4B5563 !important;
+}

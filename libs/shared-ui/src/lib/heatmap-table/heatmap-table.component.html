@@ -1,0 +1,70 @@
+<div class="heatmap-table" [style.--cols]="displayColumns.length">
+  <div class="table-header">
+    <div class="th label-col"></div>
+    @for (col of displayColumns; track col) {
+      <div class="th">{{ col }}</div>
+    }
+  </div>
+
+  <div class="table-body">
+    @for (row of rows; track row.label) {
+      <div class="tr">
+        <div class="td label-col label-cell">
+          <span class="label">{{ row.label }}</span>
+        </div>
+        @if (showLeftTotalColumn) {
+          <div class="td">
+            <div class="cell emphasized" [ngStyle]="cellStyle(average(row.values), true)">
+              {{ toFixed(average(row.values)) }}
+            </div>
+          </div>
+        }
+        @for (val of row.values; track $index) {
+          <div class="td">
+            <div
+              class="cell"
+              [ngStyle]="cellStyle(val, true)"
+            >
+              {{ toFixed(val) }}
+            </div>
+          </div>
+        }
+        @if (showRightTotalColumn) {
+          <div class="td">
+            <div class="cell emphasized" [ngStyle]="cellStyle(average(row.values), true)">
+              {{ toFixed(average(row.values)) }}
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <div class="tr total-row">
+      <div class="td label-col">{{ totalRowTitle }}</div>
+      @if (showLeftTotalColumn) {
+        <div class="td">
+          <div class="cell total emphasized" [ngStyle]="cellStyle(average(totalsRow), true)">
+            {{ toFixed(average(totalsRow)) }}
+          </div>
+        </div>
+      }
+      @for (val of totalsRow; track $index) {
+        <div class="td">
+          <div
+            class="cell total emphasized"
+            [ngStyle]="cellStyle(val, true)"
+          >
+            {{ toFixed(val) }}
+          </div>
+        </div>
+      }
+      @if (showRightTotalColumn) {
+        <div class="td">
+          <div class="cell total emphasized" [ngStyle]="cellStyle(average(totalsRow), true)">
+            {{ toFixed(average(totalsRow)) }}
+          </div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

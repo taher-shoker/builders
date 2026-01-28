@@ -1,4 +1,4 @@
-import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
+import { CommonModule, DatePipe } from '@angular/common';
 import {
   Component,
   inject,
@@ -7,31 +7,28 @@ import {
   signal,
   ViewChild,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Params, Router, RouterModule } from '@angular/router';
-import { AccordionModule } from 'primeng/accordion';
-import { StrategyProgramService } from '../../../../services/strategy-program.service';
 import { SharedUiModule } from '@stc-apps/shared-ui';
-import { ButtonModule } from 'primeng/button';
+import { ToastrService } from 'ngx-toastr';
+import { AccordionModule } from 'primeng/accordion';
 import { ConfirmationService } from 'primeng/api';
-import { ScorecardService } from '../../../../services/scorecard.service';
+import { ButtonModule } from 'primeng/button';
+import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
+import { Subject, takeUntil } from 'rxjs';
+import { MenuPopupComponent } from '../../../../components/menu-popup/menu-popup.component';
+import {
+  ActivityLogData,
+  ColumnsSchema,
+} from '../../../../models/activity-logs';
 import {
   FileModel,
   UserGroup,
   UserModel,
 } from '../../../../models/scorecard.model';
-import { ToastrService } from 'ngx-toastr';
-import { Subject, takeUntil } from 'rxjs';
-import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-import { DatePipe } from '@angular/common';
-import {
-  ActivityLogData,
-  ColumnsSchema,
-} from '../../../../models/activity-logs';
+import { StrategyProgramKpiDetailsModel } from '../../../../models/strategy-program.model';
 import { ActivityLogService } from '../../../../services/activity-logs.service';
-import { MenuPopupComponent } from '../../../../components/menu-popup/menu-popup.component';
-// eslint-disable-next-line @nx/enforce-module-boundaries
-import { ProjectCardComponent } from '../../../../../../../../libs/shared-ui/src/lib/project-card/project-card.component';
+import { ScorecardService } from '../../../../services/scorecard.service';
+import { StrategyProgramService } from '../../../../services/strategy-program.service';
 export interface KpiProjectsDetailsModel {
   project: string;
   actual: number;
@@ -72,7 +69,6 @@ export class KpiDetailsComponentTsComponent implements OnInit, OnDestroy {
   toastr = inject(ToastrService);
   activityLogService = inject(ActivityLogService);
   @ViewChild(MenuPopupComponent) child?: MenuPopupComponent;
-  @ViewChild(ProjectCardComponent) child2?: ProjectCardComponent;
   userData!: UserModel;
   menuItems: any[] = [];
   isEmpty!: boolean;
@@ -371,10 +367,6 @@ export class KpiDetailsComponentTsComponent implements OnInit, OnDestroy {
   showActionsPopup() {
     this.actionsPanel.toggle(event);
     this.showActivityLogsPopup = false;
-    if (this.child2) {
-      this.child2.actionsPanel.hide();
-      this.child2.showActivityLogsPopup = false;
-    }
   }
   openPanel() {
     this.showActivityLogsPopup = false;

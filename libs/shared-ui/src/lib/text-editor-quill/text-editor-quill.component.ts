@@ -1,4 +1,4 @@
-import { Component, forwardRef, OnDestroy, AfterViewInit, input, effect } from '@angular/core';
+import { AfterViewInit, Component, forwardRef, input, OnDestroy } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import Quill from 'quill';
 
