@@ -1,11 +1,10 @@
 import {
-  Component,
-  EventEmitter,
-  Input,
-  input,
-  OnChanges,
-  OnInit,
-  Output,
+    Component,
+    EventEmitter,
+    Input,
+    input,
+    OnChanges,
+    Output
 } from '@angular/core';
 interface FileModel {
   lastModified: number;

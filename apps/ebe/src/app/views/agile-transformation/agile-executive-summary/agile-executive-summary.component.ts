@@ -10,7 +10,6 @@ import {
   MaturityIndexResponse,
   MaturityIndexSaveRequest,
   OverallMaturityIndexResponse,
-  TimePeriodMetadata,
 } from '../../../services/agile-executive-summary.service';
 import { AuthService } from '../../../services/auth.service';
 import { ScorecardService } from '../../../services/scorecard.service';
@@ -18,6 +17,7 @@ import { ScorecardService } from '../../../services/scorecard.service';
 type Dimension = {
   key: 'strategy' | 'structure' | 'processes' | 'people' | 'technology';
   label: string;
+  icon?: string;
 };
 
 type Squad = {
@@ -46,9 +46,9 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   years = signal<{ displayName: string; value: string }[]>([]);
   quarters = signal<{ displayName: string; value: string }[]>([]);
-  selectedYear = signal<string>('');
-  selectedQuarter = signal<string>('Q1');
-  selectedTribe = signal<string>('all');
+  selectedYear = signal<string>('2025');
+  selectedQuarter = signal<string>('Q4');
+  selectedTribe = signal<string>('');
   selectedHeatmapLOB = signal<string>('');
   tribeDropdownList = signal<{ displayName: string; value: string }[]>([]);
   currentMode: 'editMode' | 'viewMode' = 'viewMode';
@@ -74,9 +74,9 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     });
   }
 
-  overviewScore = signal<number | null>(2.8);
-  targetProgress = signal<number | null>(70);
-  progressToTarget = signal<number | null>(4.0);
+  overviewScore = signal<number | null>(null);
+  targetProgress = signal<number | null>(null);
+  progressToTarget = signal<number | null>(null);
 
   maturityChartData = signal([
     { title: 'Strategy', value1: 8.9, value2: 7.5, color: '#B999D1' },
@@ -89,21 +89,21 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   labels = ['Strategy', 'Structure', 'Processes', 'People', 'Technology'];
 
   bubbles: RadarBubble[] = [
-    { axisIndex: 0, value: 0, r: 14 },
-    { axisIndex: 1, value: 0, r: 14 },
-    { axisIndex: 2, value: 0, r: 14 },
-    { axisIndex: 3, value: 0, r: 14 },
-    { axisIndex: 4, value: 0, r: 14 },
+    // { axisIndex: 0, value: 0, r: 14 },
+    // { axisIndex: 1, value: 0, r: 14 },
+    // { axisIndex: 2, value: 0, r: 14 },
+    // { axisIndex: 3, value: 0, r: 14 },
+    // { axisIndex: 4, value: 0, r: 14 },
   ];
 
   sectorLabels = ['Strategy', 'Process', 'Technology', 'People', 'Structure'];
 
   sectorBubbles: RadarBubble[] = [
-    { axisIndex: 0, value: 4, r: 14 },
-    { axisIndex: 1, value: 4, r: 14 },
-    { axisIndex: 2, value: 4, r: 14 },
-    { axisIndex: 3, value: 3.9, r: 14 },
-    { axisIndex: 4, value: 4, r: 14 },
+    // { axisIndex: 0, value: 4, r: 14 },
+    // { axisIndex: 1, value: 4, r: 14 },
+    // { axisIndex: 2, value: 4, r: 14 },
+    // { axisIndex: 3, value: 3.9, r: 14 },
+    // { axisIndex: 4, value: 4, r: 14 },
   ];
 
   lobOptions = signal([
@@ -113,11 +113,11 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     { key: 'WBU', label: 'WBU' },
   ]);
   selectedLOB = signal<string>('EBU');
-  lobDropdownList = signal([
-    { displayName: 'EBU', value: 'EBU' },
-    { displayName: 'CBU', value: 'CBU' },
-    { displayName: 'Jawwy', value: 'Jawwy' },
-    { displayName: 'WBU', value: 'WBU' },
+  lobDropdownList = signal<any>([
+    // { displayName: 'EBU', value: 'EBU' },
+    // { displayName: 'CBU', value: 'CBU' },
+    // { displayName: 'Jawwy', value: 'Jawwy' },
+    // { displayName: 'WBU', value: 'WBU' },
   ]);
 
   keyHighlights = signal({
@@ -126,11 +126,11 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   });
 
   dimensions: Dimension[] = [
-    { key: 'strategy', label: 'Strategy' },
-    { key: 'structure', label: 'Structure' },
-    { key: 'processes', label: 'Processes' },
-    { key: 'people', label: 'People' },
-    { key: 'technology', label: 'Technology' },
+    { key: 'strategy', label: 'Strategy', icon: 'assets/images/strategy.svg' },
+    { key: 'structure', label: 'Structure', icon: 'assets/images/structure.svg' },
+    { key: 'processes', label: 'Processes', icon: 'assets/images/process.svg' },
+    { key: 'people', label: 'People', icon: 'assets/images/people.svg' },
+    { key: 'technology', label: 'Technology', icon: 'assets/images/technology.svg' },
   ];
 
   squads: Squad[] = [];
@@ -139,15 +139,17 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   onSelectYear(event: any) {
     this.selectedYear.set(String(event));
     this.loadOverallMaturityIndex();
-    this.loadMaturityIndex();
-    this.loadHeatmapSquadsValues();
+    this.loadAgileMaturityIndex();
+    this.resetHeatmapContext();
+    this.loadHeatmapMetadata();
   }
 
   onSelectQuarter(event: any) {
     this.selectedQuarter.set(event as string);
     this.loadOverallMaturityIndex();
-    this.loadMaturityIndex();
-    this.loadHeatmapSquadsValues();
+    this.loadAgileMaturityIndex();
+    this.resetHeatmapContext();
+    this.loadHeatmapMetadata();
   }
 
   onSelectLOB(event: any) {
@@ -156,7 +158,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     this.bubbles = [];
     this.bubbles = [];
     this.keyHighlights.set({ title: '', items: [] });
-    this.loadMaturityIndex();
+    this.loadAgileMaturityIndex();
   }
 
   onSelectHeatmapLOB(event: any) {
@@ -199,9 +201,21 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       });
   }
 
+  private resetHeatmapContext() {
+    this.lobDropdownList.set([]);
+    this.tribeDropdownList.set([]);
+    this.selectedHeatmapLOB.set('');
+    this.selectedTribe.set('');
+    this.squads = [];
+  }
   private loadHeatmapMetadata() {
+    this.resetHeatmapContext();
+
+    const year = Number(this.selectedYear());
+    const quarter = this.selectedQuarter();
+
     this.agileService
-      .getHeatmapMetadata()
+      .getHeatmapMetadata(year, quarter)
       .subscribe((data: HeatmapMetadataResponse) => {
         if (data.lineOfBusinesses && data.lineOfBusinesses.length) {
           const lobList = data.lineOfBusinesses.map((lob) => ({
@@ -214,110 +228,105 @@ export class AgileExecutiveSummaryComponent implements OnInit {
           }
         }
 
-        const tribesList = [
-          ...(data.tribes ?? []).map((tribe) => ({
+       if (data.tribes && data.tribes.length) {
+          const tribesList = data.tribes.map((tribe) => ({
             displayName: tribe,
             value: tribe,
-          })),
-        ];
-        this.tribeDropdownList.set(tribesList);
-        if (tribesList.length > 0) {
-          this.selectedTribe.set(tribesList[0].value);
+          }));
+          this.tribeDropdownList.set(tribesList);
+          if (!this.selectedTribe() && tribesList.length > 0) {
+            this.selectedTribe.set(tribesList[0].value);
+          }
         }
+
         this.loadHeatmapSquadsValues();
+
       });
   }
 
   private loadTimePeriodMetadata() {
-    this.agileService
-      .getTimePeriodMetadata()
-      .subscribe((data: TimePeriodMetadata) => {
-        const numericYears =
-          data.years
-            ?.map((y: number) => Number(y))
-            .filter((y: number) => !Number.isNaN(y)) ?? [];
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentQuarter = `Q${Math.ceil((today.getMonth() + 1) / 3)}`;
 
-        const yearOptions = numericYears.map((y: number) => ({
-          displayName: String(y),
-          value: String(y),
-        }));
+    const yearsList: number[] = [];
+    for (let y = 2025; y <= currentYear; y++) {
+      yearsList.push(y);
+    }
+    const yearOptions = yearsList.map((y: number) => ({
+      displayName: String(y),
+      value: String(y),
+    }));
 
-        const quarterOptions =
-          data.quarters?.map((q: string) => ({
-            displayName: q,
-            value: q,
-          })) ?? [];
+    const quarterOptions = ['Q1', 'Q2', 'Q3', 'Q4'].map((q: string) => ({
+      displayName: q,
+      value: q,
+    }));
 
-        this.years.set(yearOptions);
-        this.quarters.set(quarterOptions);
-
-        const today = new Date();
-        const currentYear = today.getFullYear();
-        const currentQuarter = `Q${Math.ceil((today.getMonth() + 1) / 3)}`;
-
-        const lastYearNumber =
-          numericYears && numericYears.length
-            ? Math.max(...numericYears)
-            : undefined;
-
-        const lastYearString =
-          lastYearNumber !== undefined
-            ? String(lastYearNumber)
-            : yearOptions[yearOptions.length - 1]?.value;
-        const lastQuarter = quarterOptions[quarterOptions.length - 1]?.value;
-
-        const defaultYear = lastYearString ?? yearOptions[0]?.value;
-
-        let defaultQuarter = lastQuarter;
-        if (Number(defaultYear) === currentYear) {
-          defaultQuarter =
-            quarterOptions.find(
-              (q: { value: string }) => q.value === currentQuarter
-            )?.value ?? lastQuarter;
-        }
-
-        if (defaultYear !== undefined) {
-          this.selectedYear.set(defaultYear);
-        }
-        if (defaultQuarter) {
-          this.selectedQuarter.set(defaultQuarter);
-        }
-        this.loadOverallMaturityIndex();
-        this.loadMaturityIndex();
-        this.loadHeatmapMetadata();
-      });
+    this.years.set(yearOptions);
+    this.quarters.set(quarterOptions);
+    // this.selectedYear.set(String(currentYear));
+    // this.selectedQuarter.set(currentQuarter);
+    this.loadOverallMaturityIndex();
+    this.loadAgileMaturityIndex();
+    this.loadHeatmapMetadata();
   }
 
   private loadOverallMaturityIndex() {
     const year = Number(this.selectedYear());
     const quarter = this.selectedQuarter();
 
+    this.overviewScore.set(null);
+    this.targetProgress.set(null);
+    this.progressToTarget.set(null);
     this.sectorBubbles = [];
 
     this.agileService
       .getOverallMaturityIndex(year, quarter)
       .subscribe((data: OverallMaturityIndexResponse) => {
-        this.overviewScore.set(data.overallMaturityScore);
-        this.targetProgress.set((data.overallMaturityScore / 4) * 100);
-        this.progressToTarget.set(data.progressToTarget);
-        this.sectorLabels = [
-          'Strategy',
-          'Process',
-          'Technology',
-          'People',
-          'Structure',
-        ];
-        this.sectorBubbles = [
-          { axisIndex: 0, value: data.strategyScore, r: 14 },
-          { axisIndex: 1, value: data.processScore, r: 14 },
-          { axisIndex: 2, value: data.technologyScore, r: 14 },
-          { axisIndex: 3, value: data.peopleScore, r: 14 },
-          { axisIndex: 4, value: data.structureScore, r: 14 },
-        ];
+        if (data) {
+          this.overviewScore.set(data.overallMaturityScore);
+          this.targetProgress.set((data.overallMaturityScore / 4) * 100);
+          this.progressToTarget.set(data.progressToTarget);
+          this.sectorLabels = [
+            'Strategy',
+            'Process',
+            'Technology',
+            'People',
+            'Structure',
+          ];
+          this.sectorBubbles = [
+            { axisIndex: 0, value: data.strategyScore, r: 14 },
+            { axisIndex: 1, value: data.processScore, r: 14 },
+            { axisIndex: 2, value: data.technologyScore, r: 14 },
+            { axisIndex: 3, value: data.peopleScore, r: 14 },
+            { axisIndex: 4, value: data.structureScore, r: 14 },
+          ];
+        }
       });
   }
 
-  private loadMaturityIndex() {
+  performanceLabel(): 'Fly' | 'Run' | 'Walk' | 'Crawl' | '' {
+    const s = this.overviewScore();
+    if (s === null || typeof s !== 'number') return '';
+    if (s >= 3.5) return 'Fly';
+    if (s >= 2.5) return 'Run';
+    if (s >= 1.5) return 'Walk';
+    return 'Crawl';
+  }
+
+  performanceImage(): string {
+    const label = this.performanceLabel();
+    const map: Record<string, string> = {
+      Fly: 'assets/images/fly.png',
+      Run: 'assets/images/run.png',
+      Walk: 'assets/images/walk.png',
+      Crawl: 'assets/images/crawl.png',
+    };
+    return map[label] ?? '';
+  }
+
+  private loadAgileMaturityIndex() {
     const year = Number(this.selectedYear());
     const quarter = this.selectedQuarter();
     const lob = this.selectedLOB();
@@ -328,7 +337,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       items: [],
     });
     this.agileService
-      .getMaturityIndex(year, quarter, lob)
+      .getAgileMaturityIndex(year, quarter, lob)
       .subscribe((data: MaturityIndexResponse) => {
         this.maturityIndexId = data.id ?? null;
         this.labels = [
@@ -407,8 +416,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
           this.hideSidebar();
           this.selectedImportFile = null;
           this.loadOverallMaturityIndex();
-          this.loadMaturityIndex();
-          this.loadHeatmapSquadsValues();
+          this.loadAgileMaturityIndex();
+          this.loadHeatmapMetadata();
         },
         error: () => {
           this.editSidebarVisible = false;
@@ -441,8 +450,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
           next: () => {
             this.visible = false;
             this.loadOverallMaturityIndex();
-            this.loadMaturityIndex();
-            this.loadHeatmapSquadsValues();
+            this.loadAgileMaturityIndex();
+            this.loadHeatmapMetadata();
           },
           error: () => {
             this.visible = false;
@@ -553,7 +562,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     }
     this.agileService.saveMaturityIndex(body).subscribe({
       next: () => {
-        this.loadMaturityIndex();
+        this.loadAgileMaturityIndex();
         this.editMaturitySidebarVisible = false;
         this.hideSidebar();
       },

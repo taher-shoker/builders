@@ -51,21 +51,47 @@
   </div>
   <div class="right">
     <h3>Key Highlights</h3>
-    <label>Title</label>
+    <label
+      >Title
+      <span
+        *ngIf="form.get('keyHighlightsTitle')?.hasError('required')"
+        class="required-star"
+        >*</span
+      ></label
+    >
     <input
       type="text"
-      [value]="keyTitle"
-      (input)="keyTitle = $any($event.target).value"
+      formControlName="keyHighlightsTitle"
       placeholder="Enter title"
     />
-    <label style="margin-top: 12px">Content</label>
-    <stc-apps-prime-editor
+    @if (form.get('keyHighlightsTitle')?.hasError('required') &&
+    form.get('keyHighlightsTitle')?.touched) {
+    <div class="error-holder">
+      <p>This Field Is Required</p>
+    </div>
+    }
+    <label style="margin-top: 12px"
+      >Content @if(!isHasHighlightContent()){
+      <span class="required-star">*</span>}</label
+    >
+    <p-editor
       formControlName="keyHighlightsContentHtml"
-    ></stc-apps-prime-editor>
+      [modules]="modules"
+      [style]="{ height: '200px' }"
+      (onTextChange)="onTextChange($event)"
+    >
+    </p-editor>
+
+    @if (hasHighlightContent === false && form.get('keyHighlightsContentHtml')?.touched)
+    {
+    <div class="error-holder">
+      <p>This Field Is Required</p>
+    </div>
+    }
   </div>
 </div>
 <div class="actions">
-  <button class="btn save" (click)="onSave()" [disabled]="form.invalid">
+  <button class="btn save" (click)="onSave()" [disabled]="form.invalid || !isHasHighlightContent()">
     Save
   </button>
   <button class="btn cancel" (click)="onCancel()">Cancel</button>

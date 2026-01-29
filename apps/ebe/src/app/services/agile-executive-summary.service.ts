@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { RadarBubble } from '@stc-apps/shared-ui';
 import { Observable } from 'rxjs';
@@ -107,16 +107,25 @@ export class AgileExecutiveSummaryService {
     );
   }
 
-  getHeatmapMetadata(): Observable<HeatmapMetadataResponse> {
+  getHeatmapMetadata(
+    year: number,
+    quarter: string
+  ): Observable<HeatmapMetadataResponse> {
+    const params = new URLSearchParams({
+      year: String(year),
+      quarter,
+    });
     return this.http.get<HeatmapMetadataResponse>(
-      `${environment.apiUrl}/business-excellence/agile/executive-summary/heatmap-metadata`
+      `${
+        environment.apiUrl
+      }/business-excellence/agile/executive-summary/heatmap-metadata?${params.toString()}`
     );
   }
 
-  getMaturityIndex(
+  getAgileMaturityIndex(
     year: number,
     quarter: string,
-    lob: string,
+    lob: string
   ): Observable<MaturityIndexResponse> {
     const params = new URLSearchParams({
       year: String(year),
@@ -125,7 +134,9 @@ export class AgileExecutiveSummaryService {
     });
 
     return this.http.get<MaturityIndexResponse>(
-      `${environment.apiUrl}/business-excellence/agile/executive-summary/maturity-index?${params.toString()}`
+      `${
+        environment.apiUrl
+      }/business-excellence/agile/executive-summary/maturity-index?${params.toString()}`
     );
   }
 
@@ -143,7 +154,9 @@ export class AgileExecutiveSummaryService {
     });
 
     return this.http.get<HeatmapSquadsValuesResponse>(
-      `${environment.apiUrl}/business-excellence/agile/executive-summary/heatmap-squads-values?${params.toString()}`
+      `${
+        environment.apiUrl
+      }/business-excellence/agile/executive-summary/heatmap-squads-values?${params.toString()}`
     );
   }
 
@@ -157,7 +170,9 @@ export class AgileExecutiveSummaryService {
     });
 
     return this.http.get<OverallMaturityIndexResponse>(
-      `${environment.apiUrl}/business-excellence/agile/executive-summary/overall-maturity-index?${params.toString()}`
+      `${
+        environment.apiUrl
+      }/business-excellence/agile/executive-summary/overall-maturity-index?${params.toString()}`
     );
   }
 
@@ -166,7 +181,9 @@ export class AgileExecutiveSummaryService {
       dashboardName,
     });
     return this.http.get<string>(
-      `${environment.apiUrl}/business-excellence/agile/executive-summary/export?${params.toString()}`,
+      `${
+        environment.apiUrl
+      }/business-excellence/agile/executive-summary/export?${params.toString()}`,
       { observe: 'body', responseType: 'text' as 'json' }
     );
   }
@@ -191,23 +208,22 @@ export class AgileExecutiveSummaryService {
     const formData = new FormData();
     formData.append('multipartFile', selectedFile, selectedFile.name);
     formData.append('dashboardName', dashboardName);
-    const params = new URLSearchParams({
-      year: String(opts.year),
-      quarter: opts.quarter,
-    });
+    let params = new HttpParams()
+      .set('year', String(opts.year))
+      .set('quarter', opts.quarter);
     const shouldIncludeContext =
       dashboardName !== 'overall_maturity_index' &&
       dashboardName !== 'executive_summary_performance_heatmap';
     if (shouldIncludeContext && opts.lineOfBusiness) {
-      params.set('lineOfBusiness', opts.lineOfBusiness);
+      params = params.set('lineOfBusiness', opts.lineOfBusiness);
     }
     if (shouldIncludeContext && opts.tribe) {
-      params.set('tribe', opts.tribe);
+      params = params.set('tribe', opts.tribe);
     }
     return this.http.post<any>(
-      `${environment.apiUrl}/business-excellence/agile/executive-summary/import?${params.toString()}`,
-      formData
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/import`,
+      formData,
+      { params }
     );
   }
-
 }
