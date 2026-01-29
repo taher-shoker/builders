@@ -1,4 +1,5 @@
 import { Route } from '@angular/router';
+import { AgileTransformationGuard } from './guards/agileTransformation.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { IsAdminGuard } from './guards/isAdmin.guard';
 import { IsMobileGuard } from './guards/isMobile.guard';
@@ -194,5 +195,6 @@ export const appRoutes: Route[] = [
             import(
                 './views/agile-transformation/agile-transformation.component'
             ).then((m) => m.AgileTransformationComponent),
+        canActivate: [AgileTransformationGuard],
     },
 ];

@@ -178,6 +178,30 @@
     border-radius: 50%;
     background: #94A3B8;
   }
+  .dot-icon {
+    width: 10px;
+    height: 10px;
+    flex-shrink: 0;
+    display: inline-block;
+  }
+  .custom-icon {
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    flex-shrink: 0;
+    line-height: 0;
+    vertical-align: middle;
+    svg {
+      width: 10px;
+      height: 10px;
+      display: block;
+    }
+  }
+  .custom-icon-img {
+    display: inline-block;
+    flex-shrink: 0;
+    vertical-align: middle;
+  }
 }
 
 /* Hover micro-interactions */

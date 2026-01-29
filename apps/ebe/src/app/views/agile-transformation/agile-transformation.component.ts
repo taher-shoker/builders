@@ -37,21 +37,21 @@ export class AgileTransformationComponent implements OnInit {
       name: 'Executive Summary',
       value: 'Executive Summary',
     },
-    {
-      id: 2,
-      name: 'QBR Status',
-      value: 'QBR Status',
-    },
-    {
-      id: 3,
-      name: 'BAU Delivery Performance',
-      value: 'BAU Delivery Performance',
-    },
-    {
-      id: 4,
-      name: 'Estimated Efforts Calculator',
-      value: 'Estimated Efforts Calculator',
-    },
+    // {
+    //   id: 2,
+    //   name: 'QBR Status',
+    //   value: 'QBR Status',
+    // },
+    // {
+    //   id: 3,
+    //   name: 'BAU Delivery Performance',
+    //   value: 'BAU Delivery Performance',
+    // },
+    // {
+    //   id: 4,
+    //   name: 'Estimated Efforts Calculator',
+    //   value: 'Estimated Efforts Calculator',
+    // },
   ]);
   currTap = signal<DigitalTransformationTapModel | null>(null);
 

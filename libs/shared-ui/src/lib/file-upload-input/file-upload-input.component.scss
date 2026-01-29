@@ -57,6 +57,10 @@
             justify-content: flex-start;
             text-align: left;
             gap: 10px;
+          span {
+            word-break: break-word;
+            overflow-wrap: anywhere;
+          }
         }
         .remove-file
         {

@@ -19,7 +19,7 @@
         (input)="onInput($event)"
         [attr.inputmode]="allowDecimal ? 'decimal' : 'numeric'"
       />
-      <ng-container *ngIf="control.dirty">
+      <ng-container *ngIf="control.touched">
         <mat-error *ngIf="control.hasError('required')">
           {{ 'field_required' | translate }}
         </mat-error>
@@ -51,7 +51,7 @@
         (input)="onInput($event)"
         [attr.inputmode]="allowDecimal ? 'decimal' : 'numeric'"
       />
-      <div class="errors" *ngIf="control.invalid && control.dirty">
+      <div class="errors" *ngIf="control.invalid && control.touched">
         <span *ngIf="control.hasError('required')">
           {{ 'field_required' | translate }}
         </span>
