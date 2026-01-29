@@ -1,0 +1,27 @@
+<div class="kpi-actions">
+  <span (click)="onUpdateValue()" *ngIf="permissionRole === 'editor'">Update Actual Value</span>
+
+  <!-- Activity Log Button -->
+  <stc-apps-button
+    [buttonText]="'Activity Log'"
+    [buttonType]="'danger'"
+    (click)="onActivityLog()"
+    [buttonIconV6]="'far fa-file'"
+  ></stc-apps-button>
+
+  <!-- View List Button -->
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="KPI actions menu" class="menu-button" *ngIf="permissionRole === 'editor'">
+    <mat-icon>more_vert</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+  <button mat-menu-item (click)="onEdit()">
+    <mat-icon>edit</mat-icon>
+    <span>Edit</span>
+  </button>
+  <button mat-menu-item (click)="onDelete()">
+   <mat-icon>delete</mat-icon>
+    <span>Delete</span>
+  </button>
+</mat-menu>
+</div>

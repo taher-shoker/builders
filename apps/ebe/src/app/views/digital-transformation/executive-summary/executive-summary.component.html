@@ -1,0 +1,456 @@
+<section
+  class="executive-summary"
+  [class.executive-summary-mobile]="isMobile()"
+  [class.full-height]="activeAccordionIndex === -1"
+>
+  <p-accordion [activeIndex]="activeAccordionIndex">
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <div class="main-header" (click)="$event.stopPropagation()">
+          <p>
+            {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[0] : '' }}
+          </p>
+          <div>
+            @if(!isViewer() && !isMobile()){
+            <button
+              class="add-workstream-btn"
+              (click)="
+                openAddWorkstreamSidebar(false, false, false);
+                isProject.set(false);
+                clickedPageId = 1
+              "
+            >
+              <i class="pi pi-plus"></i>
+              add workstream
+            </button>
+            }
+            <img
+              src="assets/images/arrow-up.svg"
+              alt=""
+              (click)="toggleAccordion(0, $event)"
+            />
+          </div>
+        </div>
+      </ng-template>
+      <div class="executive-summary-body">
+        @if(dsDashboard){ @for (summaryData of dsDashboard; track $index) {
+        <div class="executive-summary-body-container">
+          <div class="executive-summary-body-title">
+            <div class="left-side" style="flex-wrap: wrap">
+              <p class="title2">
+                {{
+                  summaryData && summaryData.businessUnit
+                    ? summaryData.businessUnit
+                    : ''
+                }}
+              </p>
+              @if(summaryData && summaryData.businessUnitStatus){
+              <stc-apps-status-card
+                [status]="summaryData.businessUnitStatus"
+                [backgroundColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).backgroundColor
+                "
+                [textColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).textColor
+                "
+                [borderColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).borderColor
+                "
+              />
+              } @else {
+              <stc-apps-status-card
+                [status]="'TBD'"
+                [backgroundColor]="'#F3F4F6'"
+                [textColor]="'#6B7280'"
+                [borderColor]="'#E5E7EB'"
+              />
+              }
+            </div>
+            <div class="right-side" [class.right-side-mobile]="isMobile()">
+              <button
+                (click)="openSidebar1(summaryData, 'highlights')"
+                [class.mobile-button]="isMobile()"
+              >
+                <img src="assets/images/Info Circle.svg" alt="" />
+                <span>highlights</span>
+              </button>
+              <button
+                class="Challenges_button"
+                [class.mobile-button]="isMobile()"
+                (click)="openSidebar1(summaryData, 'challenges')"
+              >
+                <img src="assets/images/Danger.svg" alt="" />
+                <span>Challenges</span>
+              </button>
+              @if(!isViewer() && !isMobile()){
+              <button
+                class="editProjectData"
+                (click)="
+                  openAddWorkstreamSidebar(true, false, false, summaryData);
+                  isProject.set(false);
+                  editProjectData = null
+                "
+              >
+                <i class="pi pi-pencil"></i>
+              </button>
+              }
+            </div>
+          </div>
+          <div class="executive-summary-body-sub-title">
+            <div class="left-side">
+              <p>
+                weight:
+                {{
+                  summaryData && summaryData.weight ? summaryData.weight : ''
+                }}%
+              </p>
+            </div>
+            <div class="right-side">
+              <p>
+                planned:
+                <span class="planned"
+                  >{{
+                    summaryData && summaryData.planned
+                      ? summaryData.planned
+                      : ''
+                  }}%</span
+                >
+              </p>
+              <img src="assets/images/Component 2.svg" alt="" />
+              <p>
+                actual:
+                <span class="actual"
+                  >{{
+                    summaryData && summaryData.actual ? summaryData.actual : ''
+                  }}%</span
+                >
+              </p>
+            </div>
+          </div>
+          <div class="executive-summary-body-content">
+            @if(!isViewer() && !isMobile()){
+            <button
+              class="add-new-project-btn"
+              (click)="
+                openAddWorkstreamSidebar(false, true, false);
+                isProject.set(true);
+                clickedWorkstreamId = summaryData.businessUnitId
+              "
+            >
+              <i class="pi pi-plus"></i>
+              add new project
+            </button>
+            }
+            <div class="row">
+              @for (item of summaryData.projects; track $index) {
+              @if(summaryData && summaryData.projects &&
+              summaryData.projects.length !== 0){
+              <div
+                class="col-lg-6 col-md-6 col-sm-12"
+                [ngStyle]="{
+                  'margin-bottom': $last ? '0px' : '20px'
+                }"
+              >
+                <stc-apps-executive-summary-card
+                  (openProjSidebar)="
+                    openProjSidebar($event);
+                    openAddWorkstreamSidebar(false, false, true);
+                    isProject.set(true)
+                  "
+                  [executiveCard]="item"
+                  [isMobile]="isMobile()"
+                  [isViewer]="isViewer()"
+                  [isPMO]="isPMO()"
+                />
+              </div>
+              } } @empty {
+              <p class="empty-msg">there are no projects for this workstream</p>
+              }
+            </div>
+          </div>
+        </div>
+        } @empty {
+        <p class="quarter-empty-msg">there are no workstreams</p>
+        } }
+      </div>
+    </p-accordionTab>
+    <p-accordionTab>
+      <ng-template pTemplate="header">
+        <div class="main-header" (click)="$event.stopPropagation()">
+          <p>
+            {{ mainTitle() && mainTitle().length !== 0 ? mainTitle()[1] : '' }}
+          </p>
+          <div>
+            @if(!isViewer() && !isMobile()){
+            <button
+              class="add-workstream-btn"
+              (click)="
+                openAddWorkstreamSidebar(false, false, false);
+                isProject.set(false);
+                clickedPageId = 2
+              "
+            >
+              <i class="pi pi-plus"></i>
+              add workstream
+            </button>
+            }
+            <img
+              src="assets/images/arrow-up.svg"
+              alt=""
+              (click)="toggleAccordion(1, $event)"
+            />
+          </div>
+        </div>
+      </ng-template>
+      <div class="executive-summary-body">
+        @if(itPlatformDashboard && itPlatformDashboard.length !== 0){ @for
+        (summaryData of itPlatformDashboard; track $index) {
+        <div class="executive-summary-body-container">
+          <div class="executive-summary-body-title">
+            <div class="left-side" style="flex-wrap: wrap">
+              <p class="title2">
+                {{
+                  summaryData && summaryData.businessUnit
+                    ? summaryData.businessUnit
+                    : ''
+                }}
+              </p>
+              @if(summaryData && summaryData.businessUnitStatus){
+              <stc-apps-status-card
+                [status]="summaryData.businessUnitStatus"
+                [backgroundColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).backgroundColor
+                "
+                [textColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).textColor
+                "
+                [borderColor]="
+                  getStatusStyle(summaryData.businessUnitStatus).borderColor
+                "
+              />
+              }@else {
+              <stc-apps-status-card
+                [status]="'TBD'"
+                [backgroundColor]="'#F3F4F6'"
+                [textColor]="'#6B7280'"
+                [borderColor]="'#E5E7EB'"
+              />
+              }
+            </div>
+            <div class="right-side" [class.right-side-mobile]="isMobile()">
+              <button
+                [class.mobile-button]="isMobile()"
+                (click)="openSidebar1(summaryData, 'highlights')"
+              >
+                <img src="assets/images/Info Circle.svg" alt="" />
+                <span>highlights</span>
+              </button>
+              <button
+                [class.mobile-button]="isMobile()"
+                (click)="openSidebar1(summaryData, 'challenges')"
+                class="Challenges_button"
+              >
+                <img src="assets/images/Danger.svg" alt="" />
+                <span>Challenges</span>
+              </button>
+              @if(!isViewer() && !isMobile()){
+              <button
+                class="editProjectData"
+                (click)="
+                  openAddWorkstreamSidebar(true, false, false, summaryData)
+                "
+              >
+                <i class="pi pi-pencil"></i>
+                <!-- <img src="assets/images/button.svg" alt="" /> -->
+              </button>
+              }
+            </div>
+          </div>
+          @if(summaryData){
+          <div class="executive-summary-body-sub-title">
+            <div class="left-side">
+              @if(summaryData.weight){
+              <p>weight: {{ summaryData.weight }}%</p>
+              }
+            </div>
+            <div class="right-side">
+              @if(summaryData.planned){
+              <p>
+                planned:
+                <span class="planned">{{ summaryData.planned }}%</span>
+              </p>
+              <img src="assets/images/Component 2.svg" alt="" />
+              } @if(summaryData.actual){
+              <p>
+                actual:
+                <span class="actual">{{ summaryData.actual }}%</span>
+              </p>
+              }
+            </div>
+          </div>
+          <div class="executive-summary-body-content">
+            @if(!isViewer() && !isMobile()){
+            <button
+              class="add-new-project-btn"
+              (click)="
+                openAddWorkstreamSidebar(false, true, false);
+                editProjectData = null;
+                clickedWorkstreamId = summaryData.businessUnitId;
+                isProject.set(true)
+              "
+            >
+              <i class="pi pi-plus"></i>
+              add new project
+            </button>
+            }
+            <div class="row">
+              @if(summaryData.projects){ @for (item of summaryData.projects;
+              track $index) {
+              <div
+                class="col-lg-6 col-md-6 col-sm-12"
+                [ngStyle]="{
+                  'margin-bottom': $last ? '0px' : '20px'
+                }"
+              >
+                <stc-apps-executive-summary-card
+                  [isMobile]="isMobile()"
+                  (openProjSidebar)="
+                    openProjSidebar($event);
+                    openAddWorkstreamSidebar(false, false, true);
+                    isProject.set(true)
+                  "
+                  [executiveCard]="item"
+                  [isViewer]="isViewer()"
+                  [isPMO]="isPMO()"
+                />
+              </div>
+              } @empty {
+              <p class="empty-msg">there are no projects for this workstream</p>
+              } }
+            </div>
+          </div>
+          }
+        </div>
+        } } @else {
+        <p class="quarter-empty-msg">there are no workstreams</p>
+        }
+      </div>
+    </p-accordionTab>
+  </p-accordion>
+</section>
+<p-sidebar
+  [(visible)]="sidebarVisible1"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="highlights-sidebar"
+  (onHide)="hideAddWorkstreamSidebar(); hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>{{ currentSideBarTitle }}</p>
+      </div>
+      <div class="right" (click)="sidebarVisible1 = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <div class="content mt-4">
+      @if(sidebarType === 'highlights'){ @for (highlight of highlights; track
+      $index) {
+      <div class="data">
+        @if(highlight.title){
+        <span> {{ highlight.title }}: </span>
+        }
+        {{ highlight.value }}
+      </div>
+      <br />
+      } @empty {
+      <h3 class="empty-heightlights">there are no highlights</h3>
+      } } @else { @for (challenge of challenges; track $index) {
+      <div class="data">
+        @if(challenge.title){
+        <span> {{ challenge.title }}: </span>
+        }
+        {{ challenge.value }}
+      </div>
+      <br />
+      } @empty {
+      <h3 class="empty-heightlights">there are no challenges</h3>
+      } }
+    </div>
+  </div>
+</p-sidebar>
+<p-sidebar
+  [(visible)]="showAddWorkstreamSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="add-workstream-sidebar"
+  (onHide)="hideAddWorkstreamSidebar(); hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>
+          {{
+            isEditWorkStream
+              ? 'edit workstream'
+              : isAddProject
+              ? 'add new project'
+              : isEditProject
+              ? 'edit project'
+              : 'add new workstream'
+          }}
+        </p>
+      </div>
+      <div class="right" (click)="showAddWorkstreamSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <stc-apps-add-workstream-form
+      [isWorkstreamSidebarVisible]="!showAddWorkstreamSidebar"
+      (addWorkStream)="addWorkStream($event)"
+      [isEditWorkStream]="isEditWorkStream"
+      [isAddProject]="isAddProject"
+      [isEditProject]="isEditProject"
+      type=""
+      [isProject]="isProject()"
+      [editProjectData]="isAddProject ? null : editProjectData"
+      [editWorkstreamFormData]="!isEditWorkStream ? null : editedData"
+      (delete)="deleteWorkStream($event)"
+      [isPMO]="isPMO()"
+    />
+  </div>
+</p-sidebar>
+<p-confirmDialog [dismissableMask]="true" styleClass="delete-workstream-dialog">
+  <ng-template pTemplate="message" let-message>
+    <div class="content">
+      <div class="head">
+        <div class="left">
+          <i class="pi pi-trash"></i>
+          <p>delete {{ isEditProject ? 'project' : 'workstream' }}</p>
+        </div>
+        <i
+          class="pi pi-times text-6xl text-primary-500"
+          (click)="closeDialog()"
+        ></i>
+      </div>
+      <span>
+        {{
+          isProject()
+            ? 'Are you sure you want to delete this project?'
+            : 'know that deleting this workstream will also delete all related records'
+        }}
+      </span>
+      <div class="buttons">
+        <button class="delete-btn" (click)="deleteChallenge()">delete</button>
+        <button class="cancel-btn" (click)="closeDialog()">cancel</button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

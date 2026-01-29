@@ -8,11 +8,11 @@ import {
   computed,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MilestonesService } from '../milestones-setting/milestones.service';
 import { FormControl, FormGroup } from '@angular/forms';
-import { DTStream, ReportData } from '../../services/models/milestones.models';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProgressInfo } from 'libs/shared-ui/src/lib/progress-bar/progress-bar.component';
+import { DTStream, ReportData } from '../../services/models/milestones.models';
+import { MilestonesService } from '../milestones-setting/milestones.service';
 
 @Component({
   selector: 'stc-apps-vp-report',
@@ -34,6 +34,18 @@ export class VpReportComponent implements OnInit {
 
   reportData: WritableSignal<ReportData | undefined> = signal(undefined);
   digitalTransformation: WritableSignal<boolean> = signal(true);
+
+  // Summary cards: unit progress API integration
+  summaryCardsLoading: WritableSignal<boolean> = signal(false);
+  unitProgress: WritableSignal<{
+    unitBaseline: number;
+    unitTarget: number;
+    diActualProgress: number;
+    averageUnitsProgress: number;
+  } | null> = signal(null);
+
+  vpPendingItems: WritableSignal<any[]> = signal([]);
+  pendingPanelOpen: boolean = true;
 
   progressBarData = computed(() => {
     const reportData = this.reportData();
@@ -98,6 +110,7 @@ export class VpReportComponent implements OnInit {
     this.setDateInitiallyToCurrentYear();
     this.getAllTeams();
     this.showDigitalTransformation();
+    this.fetchVPPendingTasks();
   }
 
   showDigitalTransformation() {
@@ -108,7 +121,11 @@ export class VpReportComponent implements OnInit {
   }
   private watchRoute() {
     this.route.queryParams.subscribe((params) => {
-      this.selectedYear.set(params['year']);
+      const yearParam = Number(params['year']);
+      if (Number.isFinite(yearParam) && yearParam > 0) {
+        this.selectedYear.set(yearParam);
+        this.filterSelect.get('dateType')?.setValue(yearParam, { emitEvent: false });
+      }
       this.selectedTeam.set(params['team']);
 
       const currentYear = new Date().getFullYear();
@@ -116,6 +133,7 @@ export class VpReportComponent implements OnInit {
       if (!params['year']) {
         this.selectedYear.set(currentYear);
         this.updateRoute(this.allTeams[0]?.name, currentYear);
+        this.filterSelect.get('dateType')?.setValue(currentYear, { emitEvent: false });
       }
 
       if (!params['team']) {
@@ -124,12 +142,14 @@ export class VpReportComponent implements OnInit {
       }
 
       this.getDTStreams();
+      this.fetchUnitProgress();
     });
   }
 
   private setDateInitiallyToCurrentYear() {
     const currentYear = new Date().getFullYear();
     this.filterSelect.get('dateType')?.setValue(currentYear);
+    this.selectedYear.set(currentYear);
   }
 
   private getAllTeams() {
@@ -147,6 +167,28 @@ export class VpReportComponent implements OnInit {
         this.streamsYear.set(res.year);
         this.milestoneProgress.set(res.workStreamScore);
         this.reportData.set(res.reportData);
+      });
+  }
+
+  private fetchUnitProgress() {
+    // Guard against unset team/year
+    if (!this.selectedTeam() || !this.selectedYear()) {
+      return;
+    }
+
+    this.summaryCardsLoading.set(true);
+
+    this.milestonesService
+      .getUnitProgress(this.selectedTeam(), this.selectedYear())
+      .subscribe({
+        next: (res) => {
+          this.unitProgress.set(res);
+          this.summaryCardsLoading.set(false);
+        },
+        error: () => {
+          // Keep UI stable on error; clear loading and retain last known values
+          this.summaryCardsLoading.set(false);
+        },
       });
   }
 
@@ -169,6 +211,35 @@ export class VpReportComponent implements OnInit {
   protected handleSelectChange(value: string) {
     this.selectedYear.set(Number(value));
     this.updateRoute(this.selectedTeam(), Number(value));
+  }
+
+  protected togglePendingPanel() {
+    this.pendingPanelOpen = !this.pendingPanelOpen;
+  }
+
+  protected fetchVPPendingTasks() {
+    this.milestonesService
+      .getMilestoneTasks({ onlyVpReport: '1' })
+      .subscribe({
+        next: (res) => {
+          console.log(res)
+          this.vpPendingItems.set(Array.isArray(res) ? res : []);
+        },
+        error: () => {
+          this.vpPendingItems.set([]);
+        },
+      });
+  }
+
+  protected onPendingItemClicked(item: any) {
+    if (item?.flowName === 'DT_VP_Report_Data_Approval') {
+      const team = item?.requestParams?.team;
+      const yearRaw = item?.requestParams?.year;
+      const yearNum = typeof yearRaw === 'number' ? yearRaw : Number(yearRaw);
+      this.router.navigate(['vp-report/edit'], {
+        queryParams: { team, year: yearNum },
+      });
+    }
   }
 
   private yearsArrPopulator() {
@@ -194,4 +265,80 @@ export class VpReportComponent implements OnInit {
     const quarter = Math.floor(month / 3) + 1;
     return `Q${quarter}`;
   }
+
+  // Computed progress info for summary cards based on unitProgress API
+  summaryCardsProgressData = computed(() => {
+    const up = this.unitProgress();
+    const toPercent = (n: number | null | undefined) => Math.round((n ?? 0) * 100);
+
+    if (up) {
+      const actualPct = toPercent(up.diActualProgress);
+      const targetPct = toPercent(up.unitTarget);
+      const baselinePct = toPercent(up.unitBaseline);
+
+      return {
+        prefixText: 'Baseline',
+        prefixValue: baselinePct,
+        suffixText: '', //'EOY Target',
+        suffixValue: '', //targetPct,
+        progressValue: actualPct,
+        indexes: [
+          { caption: 'Actual', value: actualPct, position: 'up' },
+          {
+            caption: `${this.getCurrentQuarter()} Target`,
+            value: targetPct,
+            position: 'down',
+          },
+        ],
+        barColor: actualPct < targetPct ? '#c82a27' : '#00c48c',
+        bgBarColor: actualPct < targetPct ? '#c82a271a' : '#00c48c1a',
+      } as ProgressInfo;
+    }
+
+    return {
+      prefixText: 'Baseline',
+      prefixValue: 0,
+      suffixText: 'EOY Target',
+      suffixValue: 0,
+      progressValue: 0,
+      indexes: [
+        { caption: 'Actual', value: 0, position: 'up' },
+        {
+          caption: `${this.getCurrentQuarter()} Target`,
+          value: 0,
+          position: 'down',
+        },
+      ],
+      barColor: '#00c48c',
+      bgBarColor: '#00c48c1a',
+    } as ProgressInfo;
+  });
+
+  baselinePercent = computed(() => {
+    const up = this.unitProgress();
+    return up ? Math.round((up.unitBaseline || 0) * 100) : 0; // Math.round(up.unitBaseline * 10000) / 100 : 0;
+  });
+
+  stcDiScoreValue = computed(() => {
+    const up = this.unitProgress();
+    return up ? Math.round((up.averageUnitsProgress || 0) * 100) : 0; //Math.round(up.averageUnitsProgress * 10000) / 100 : 0;
+  });
+
+  unitDiScoreValue = computed(() => {
+    const up = this.unitProgress();
+    return up ? Math.round((up.diActualProgress || 0) * 100) : 0;//Math.round(up.diActualProgress * 10000) / 100 : 0;
+  });
+
+  pendingActionsCanRender = computed(() => {
+    return this.vpPendingItems().length > 0;
+  });
+    // console.log(this.vpPendingItems)
+    // return (
+
+    //   // !this.milestonesService.checkIsAdmin() &&
+    //   // !this.milestonesService.checkIsExecutive() &&
+    //   // !this.milestonesService.checkIsPMO() &&
+    //   // !this.milestonesService.checkIsBusinessSpoc()
+    //   this.vpPendingItems.length > 0
+    // );
 }

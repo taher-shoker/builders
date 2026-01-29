@@ -1,70 +1,150 @@
+@if(!isMobile()) {
 <section class="scored-card-section">
-    <div class="scored-card-section-header">
-      <div>
-        <stc-apps-page-header
-          [mainTitle]="'PSR'"
-          [secondaryTitle]="''"
-        />
-      </div>
-      <img class = "hands-img" src="assets/images/hands-img.svg" alt="">
+  <div class="scored-card-section-header">
+    <div>
+      <stc-apps-page-header
+        [mainTitle]="'PSR'"
+        [secondaryTitle]="''"
+        [username]="userData ? userData.name : ''"
+        [fontFamilies]="['STCForwardFont', 'mediunPoppins', 'blackPoppins']"
+      />
     </div>
-      <div class="scored-card-section-tap-details">
-        @if(currentMode === 'editMode' && isAdmin) {
-          <stc-apps-edit-mode-view 
-            (import)="showDialog()"
-            (export)="downloadTemplate()"
+    <img class="hands-img" src="assets/images/hands-img.svg" alt="" />
+  </div>
+  <div class="scored-card-section-tap-details">
+    @if(currentMode === 'editMode' && isAdmin) {
+    <stc-apps-edit-mode-view
+      (import)="showDialog()"
+      (export)="downloadTemplate()"
+      [showActivityLogsButton]="false"
+      fontFamily="STCForwardFont"
+    />
+    } @if(!isEmpty) {
+    <div class="projects-container">
+      <div class="head">
+        <p class="psr-tabview-header">
+          {{
+            selectedGD && selectedGD[0] && selectedGD[0].gd
+              ? selectedGD[0].gd
+              : ''
+          }}
+        </p>
+        @if(isAllowed) {
+        <div style="display: flex">
+          <button
+            (click)="gotoAddForm()"
+            class="add-program-btn"
+            style="margin-right: 15px"
+          >
+            <!-- <i class = "pi pi-plus"></i> -->
+            <img src="assets/images/plus-icon.svg" alt="" />
+            add new project
+          </button>
+          @if(isAdmin) {
+          <stc-apps-menu-popup
+            [menuItems]="menuItems"
+            (onClick)="actionButton($event)"
+            [hidePopup]="showActivityLogsPopup"
+            (hide)="showActivityLogsPopup = false"
           />
-        }
-        @if(!isEmpty)
-        {
-          <div class="projects-container">
-            <div class="head">
-              <p class = "psr-tabview-header">
-                {{selectedGD && selectedGD[0] && selectedGD[0].gd ? selectedGD[0].gd : ''}}
-              </p>
-              @if(isAllowed)
-              {
-                <button (click)="gotoAddForm()"  class = "add-program-btn">
-                    <!-- <i class = "pi pi-plus"></i> -->
-                     <img src="assets/images/plus-icon.svg" alt="">
-                    add new project
-                </button>
-              }
-            </div>
-            <div class="project-cards-container">
-              @for (proj of PSRDetailsData; track proj.gd) {
-                <div class="project-card">
-                  <stc-apps-project-details-card 
-                    [projectData]="proj"
-                    (addRecordInTable)="addRecordInTable($event)"
-                    (closePopupEmit)="closePopup($event)"
-                    [userRoles]="userRoles"
-                    (deleteProject)="deleteProject($event)"
-                    [isAllowed]="isAllowed"
-                    (addChartData)="addChartData($event)"
-                    (deleteTableRecord)="deleteTableRecord($event)"
-                  />
-                </div>
-              }
-            </div>
-          </div>
-        } @else {
-          @if(isAllowed)
-          {
-            <button (click)="gotoAddForm()" class = "add-program-btn ms-auto">
-              <!-- <i class = "pi pi-plus"></i> -->
-               <img src="assets/images/plus-icon.svg" alt="">
-              add new project
-            </button>
+          <stc-apps-activity-logs-popup
+            [activityLogsTableHeader]="activityLogsTableHeader"
+            [activityLogsTableBody]="activityLogsTableBody()"
+            [showPopup]="showActivityLogsPopup"
+            (popupClosed)="popupClosed()"
+            [isProjectActionPopup]="true"
+            [isActionPopup2]="true"
+            type="psr"
+          />
           }
-          <p class = "empty-data-msg">
-            there are no data for this project
-          </p>
+        </div>
         }
       </div>
-  </section>
-<stc-apps-dialog-modal 
+      <div class="project-cards-container">
+        @for (proj of PSRDetailsData; track proj.gd) {
+        <div class="project-card">
+          <stc-apps-project-details-card
+            [projectData]="proj"
+            (addRecordInTable)="addRecordInTable($event)"
+            (closePopupEmit)="closePopup($event)"
+            [userRoles]="userRoles"
+            (deleteProject)="deleteProject($event)"
+            [isAllowed]="isAllowed"
+            [isAdmin]="isAdmin"
+            (addChartData)="addChartData($event)"
+            (deleteTableRecord)="deleteTableRecord($event)"
+            [groupName]="groupName"
+            type="psr"
+            [isPMO]="isPMO"
+          />
+        </div>
+        }
+      </div>
+    </div>
+    } @else { @if(isAllowed) {
+    <div style="display: flex">
+      <button
+        (click)="gotoAddForm()"
+        class="add-program-btn ms-auto"
+        style="margin-right: 15px"
+      >
+        <!-- <i class = "pi pi-plus"></i> -->
+        <img src="assets/images/plus-icon.svg" alt="" />
+        add new project
+      </button>
+      @if(isAdmin) {
+      <stc-apps-menu-popup
+        [menuItems]="menuItems"
+        (onClick)="actionButton($event)"
+        [hidePopup]="showActivityLogsPopup"
+        (hide)="showActivityLogsPopup = false"
+      />
+      <stc-apps-activity-logs-popup
+        [activityLogsTableHeader]="activityLogsTableHeader"
+        [activityLogsTableBody]="activityLogsTableBody()"
+        [showPopup]="showActivityLogsPopup"
+        (popupClosed)="popupClosed()"
+        [isProjectActionPopup]="true"
+        [isActionPopup2]="true"
+        type="psr"
+      />
+      }
+    </div>
+    }
+    <p class="empty-data-msg">there are no data for this project</p>
+    }
+  </div>
+</section>
+<stc-apps-dialog-modal
   [visible]="visible"
   (ImportedFile)="importData($event)"
   (onhide)="onHide()"
 />
+} @else {
+<div class="psr-details-page-mobile-view">
+  <div class="psr-details-page-mobile-view-header">
+    <stc-apps-mobile-view-header
+      [isSuccess]="false"
+      [showDateModal]="false"
+      [headerTitle]="'Project Execution'"
+      [isPSRDetails]="true"
+    />
+  </div>
+  <div class="psr-details-page-mobile-view-body">
+    <div class="page-title">
+      {{
+        selectedGD && selectedGD[0] && selectedGD[0].gd ? selectedGD[0].gd : ''
+      }}
+    </div>
+    <div class="projects-container row mt-3">
+      @for (project of PSRDetailsData; track project.gd){
+      <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <stc-apps-mobile-project-card [project]="project" />
+      </div>
+      } @empty {
+      <p class="empty-data-msg2">there are no projects</p>
+      }
+    </div>
+  </div>
+</div>
+}

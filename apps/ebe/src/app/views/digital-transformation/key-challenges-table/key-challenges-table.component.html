@@ -1,0 +1,147 @@
+<div class="key-challenges-table">
+  <table>
+    <thead>
+      <th (click)="sort('id')" style="cursor: pointer">
+        ID
+        <img src="assets/images/Vector.svg" class="sort-img" />
+      </th>
+      <th>description</th>
+      <th>raised by</th>
+      <th>owner</th>
+      <th (click)="sort('date')" style="cursor: pointer">
+        date raised<img src="assets/images/Vector.svg" class="sort-img" />
+      </th>
+      <th>impact</th>
+      <th>support needed</th>
+      @if(!isViewer()){
+      <th>actions</th>
+      }
+    </thead>
+    @if(!isEmpty){
+    <tbody>
+      @if(challengesData && challengesData.data){ @for (challenge of
+      challengesData.data; track challenge.id) {
+      <tr>
+        <td style="width: 6%; text-align: center">
+          {{ challenge ? challenge.id : 0 }}
+        </td>
+        <td style="width: 24%" class="desc-td">
+          <p>
+            {{
+              challenge && challenge.description ? challenge.description : '-'
+            }}
+          </p>
+          @if(challenge && challenge.description &&
+          challenge.description.trim().length > 100){
+          <span (click)="overlayPanel2?.show($event)">read more</span>
+          <p-overlayPanel #overlayPanel2 dismissable="true">
+            <section class="popover-section">
+              {{ challenge.description }}
+            </section>
+          </p-overlayPanel>
+          }
+        </td>
+        <td style="width: 10%; text-align: center">
+          {{ challenge && challenge.raisedBy ? challenge.raisedBy : '-' }}
+        </td>
+        <td style="width: 7%; text-align: center">
+          {{ challenge && challenge.owner ? challenge.owner : '-' }}
+        </td>
+        <td style="width: 16%; text-align: center">
+          {{ challenge && challenge.dateRaised ? challenge.dateRaised : '-' }}
+        </td>
+        <td style="width: 7%; text-align: center">
+          {{ challenge && challenge.impact ? challenge.impact : '-' }}
+        </td>
+        <td style="width: 20%" class="desc-td">
+          <p class="m-0">
+            {{
+              challenge && challenge.supportNeeded
+                ? challenge.supportNeeded
+                : '-'
+            }}
+          </p>
+          @if(challenge && challenge.supportNeeded &&
+          challenge.supportNeeded.trim().length > 100){
+          <span (click)="overlayPanel?.show($event)">read more</span>
+          <p-overlayPanel #overlayPanel dismissable="true">
+            <section class="popover-section">
+              {{ challenge.supportNeeded }}
+            </section>
+          </p-overlayPanel>
+          }
+        </td>
+        @if(!isViewer()){
+        <td style="width: 15%; text-align: center" class="action-td">
+          <i class="pi pi-pencil" (click)="getRowDetails(challenge)"></i>
+          <i class="pi pi-trash" (click)="showDeleteDialog(challenge)"></i>
+        </td>
+        }
+      </tr>
+      } @empty {
+      <p class="quarter-empty-msg">there are no quarters</p>
+      } }
+    </tbody>
+    }
+  </table>
+  @if(isEmpty){
+  <h4 class="empty-data-msg">there are no data in the table</h4>
+  }
+</div>
+@if(challengesData && challengesData.data){
+<p-paginator
+  (onPageChange)="onPageChange($event)"
+  [first]="first"
+  [rows]="rows"
+  [totalRecords]="challengesData.totalElements"
+  styleClass="challenges-pagination"
+/>
+}
+<p-sidebar
+  [(visible)]="showChallengesSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="add-workstream-sidebar"
+  (onHide)="hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+        <p>edit challenges</p>
+      </div>
+      <div class="right" (click)="showChallengesSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <stc-apps-add-workstream-form
+      (addWorkStream)="addChallengeData($event)"
+      type="challenges"
+      [editFormData]="editFormData"
+      [isWorkstreamSidebarVisible]="showChallengesSidebar === false"
+    />
+  </div>
+</p-sidebar>
+<p-confirmDialog [dismissableMask]="true" styleClass="delete-challenge-dialog">
+  <ng-template pTemplate="message" let-message>
+    <div class="content">
+      <div class="head">
+        <div class="left">
+          <i class="pi pi-trash"></i>
+          <p>delete Challenge</p>
+        </div>
+        <i
+          class="pi pi-times text-6xl text-primary-500"
+          (click)="closeDialog()"
+        ></i>
+      </div>
+      <span>are you sure that you want to delete this challenge?</span>
+      <div class="buttons">
+        <button class="delete-btn" (click)="deleteChallenge()">delete</button>
+        <button class="cancel-btn" (click)="closeDialog()">cancel</button>
+      </div>
+    </div>
+  </ng-template>
+</p-confirmDialog>

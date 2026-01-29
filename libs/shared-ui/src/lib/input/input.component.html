@@ -1,29 +1,63 @@
 <div class="input-group stc-input-group" *ngIf="control">
-  <label *ngIf="inputName">{{ inputName | translate }}
-    <mat-error *ngIf="control.invalid">* </mat-error></label>
+  <label *ngIf="inputName"
+    >{{ inputName | translate }}
+    <mat-error *ngIf="control.invalid">* </mat-error></label
+  >
   <mat-form-field class="">
-    <span class=" input-group-text" id="basic-addon1" *ngIf="inputIcon"><i class="fas {{ inputIcon }}"></i></span>
-    <input [type]="inputType" [id]="inputId" [name]="inputName" matInput
-      [placeholder]="inputPlaceholder ? inputPlaceholder : ''" autocomplete="new-password" [formControl]="control"
-      [readonly]="disabled" (keydown)="onKeyDown($event)" />
+    <span class="input-group-text" id="basic-addon1" *ngIf="inputIcon"
+      ><i class="fas {{ inputIcon }}"></i
+    ></span>
+    <input
+      [type]="inputType"
+      [id]="inputId"
+      [name]="inputName"
+      matInput
+      [placeholder]="inputPlaceholder ? inputPlaceholder : ''"
+      autocomplete="new-password"
+      [formControl]="control"
+      [readonly]="disabled"
+      (keydown)="onKeyDown($event)"
+    />
     <!-- [autocomplete]="'off'" -->
-    <mat-icon matSuffix *ngIf="inputId === 'password'" (click)="toggelPassword()"><i
-        class="fas {{ showPassword  ? ' fa-eye' : '  fa-eye-slash' }}"></i></mat-icon>
+    <mat-icon
+      matSuffix
+      *ngIf="inputId === 'password'"
+      (click)="toggelPassword()"
+      ><i class="fas {{ showPassword ? ' fa-eye' : '  fa-eye-slash' }}"></i
+    ></mat-icon>
 
-    <mat-error *ngIf="control.hasError('required') || control.hasError('whitespace')">{{ 'field_required' | translate
+    <mat-error
+      *ngIf="control.hasError('required') || control.hasError('whitespace')"
+      >{{ 'field_required' | translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('email')"
+      >{{ 'invalid_format' | translate }}
+    </mat-error>
+    <mat-error *ngIf="control.hasError('maxlength') && !selfServiceMsg"
+      >{{
+        'Please enter text less than ' +
+          control.getError('maxlength').requiredLength +
+          ' character' | translate
       }}
     </mat-error>
-    <mat-error *ngIf="control.hasError('email')">{{ 'invalid_format' | translate }}
+    <mat-error *ngIf="control.hasError('maxlength') && selfServiceMsg"
+      >{{
+        'Please enter text less than or equal' +
+          control.getError('maxlength').requiredLength +
+          ' character' | translate
+      }}
     </mat-error>
-    <mat-error *ngIf="control.hasError('maxlength')">{{ 'Please enter text less than '+
-      control.getError('maxlength').requiredLength + ' character' |
-      translate }}
+    <mat-error *ngIf="control.hasError('max')">
+      {{
+        'Please enter number less than or equal ' + control.getError('max').max
+          | translate
+      }}
     </mat-error>
-    <mat-error *ngIf="control.hasError('max') ">
-      {{ 'Please enter number less than or equal ' + control.getError('max').max | translate }}
-    </mat-error>
-    <mat-error *ngIf="control.hasError('min') ">
-      {{ 'Please enter number greater than or equal ' + control.getError('min').min | translate }}
+    <mat-error *ngIf="control.hasError('min')">
+      {{
+        'Please enter number greater than or equal ' +
+          control.getError('min').min | translate
+      }}
     </mat-error>
     <mat-error *ngIf="control.hasError('pattern')">
       {{ 'Please enter only numbers ' }}

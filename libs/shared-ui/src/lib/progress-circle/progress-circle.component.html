@@ -1,10 +1,33 @@
-<div class="progress-circule" role="progresscircule" [style]="'--value:' + progressValue()"
-  [ngStyle]="{ background: conicGradient(), '--size': progressSize() }">
+<div
+  class="progress-circule multi-ring-chart"
+  [class.custom-progress-circule]="progressWidth() !== ''"
+  [class.debt-progress-circule]="isDebtCard()"
+  [class.progresscircule]="!isWorkStream()"
+  role="progresscircule"
+  [style]="'--value:' + progressValue()"
+  [style.--progress]="progressValue()"
+  [style.--total]="secondaryValue()"
+  [ngStyle]="{ background: conicGradient(), '--size': progressSize() }"
+>
   @if (showProgress()&&strategicFlag()) {
   <span class="circle-content">{{
     progressValue() / 100 | percent : '1.0-2'
-    }}</span>
+  }}</span>
   } @else if(showProgress() && !strategicFlag()){
-  <span class="circle-content">{{ progressValue() / 100 | percent : '1.0-2' }}</span>
+  <span
+    class="circle-content"
+    [ngStyle]="{
+      'font-family': fontFamily(),
+      color: progressValueColor() || '#000000',
+    }"
+    >{{
+      isWorkStream()
+        ? percentValue() + '%'
+        : (progressValue() / 100 | percent : '1.0-2')
+    }}</span
+  >
   }
 </div>
+<!-- <div class="circle-secondary-value" *ngIf="secondaryValue() !== null">
+  Total TD: {{ secondaryValue() }}
+</div> -->

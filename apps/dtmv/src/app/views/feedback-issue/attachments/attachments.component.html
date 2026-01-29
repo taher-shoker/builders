@@ -1,0 +1,44 @@
+<div
+  class="row file-box"
+  [ngClass]="!logs() ? '' : ''"
+  *ngIf="files() && files().length > 0"
+>
+  @for(file of files(); track $index){
+  <div [ngClass]="logs() ? 'col-md-5' : 'col-md-6'">
+    <div class="file">
+      <div class="w-100 row">
+        <div class="col-md-1 d-flex align-items-center">
+          <i class="fa-regular fas fa-image"></i>
+        </div>
+        <div class="col-md-9">
+          <span>
+            {{
+              getFileName(file).length > 40
+                ? (getFileName(file) | slice : 0 : 40) + '...'
+                : getFileName(file)
+            }}</span
+          >
+          <div class="file_size">
+            {{ getFileSize(file) / 1024 | number : '1.0-0' }}KB
+          </div>
+        </div>
+        <div class="col-md-2 d-flex align-items-center justify-content-end">
+          @if(logs()){
+          <i
+            role="button"
+            class="fa-solid fas fa-download"
+            (click)="downloadFile(file)"
+          ></i>
+          } @else(){
+          <i
+            role="button"
+            class="fa fa-times-circle remove-file"
+            (click)="removeFile(file, attachmentIDS()[$index])"
+          ></i>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

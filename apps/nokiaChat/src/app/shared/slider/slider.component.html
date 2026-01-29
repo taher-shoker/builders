@@ -1,0 +1,27 @@
+<div #sliderWrapper class="slider-wrapper">
+  <div
+    class="slider-track"
+    [style.transform]="getTransform()"
+    [style.transition]="transitionStyle"
+  >
+    <div
+      class="card-group"
+      *ngFor="let group of chunkedMessages; let i = index"
+      [class.active]="activeIndex() === i"
+    >
+      <div class="card" *ngFor="let msg of group" (click)="cardClick(msg)">
+        {{ msg }}
+      </div>
+    </div>
+  </div>
+
+  <div class="dots">
+    <span
+      *ngFor="let group of chunkedMessages; let i = index"
+      class="dot"
+      [class.active]="activeIndex() === i"
+      (click)="goToSlide(i)"
+    >
+    </span>
+  </div>
+</div>

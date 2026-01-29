@@ -1,0 +1,9 @@
+<div class="card-holder">
+  <div class="card-content">
+    <h4 class="card-content_title">{{ title() }}</h4>
+    <p class="card-content_count" [style.color]="title() | countColor">
+      {{ count() }}
+    </p>
+    <p class="card-content_sub-title">{{ subTitle() }}</p>
+  </div>
+</div>

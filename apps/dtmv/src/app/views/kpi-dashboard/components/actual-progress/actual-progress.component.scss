@@ -1,0 +1,16 @@
+.card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 20px;
+
+    .card-header {
+        padding-bottom: 0;
+        border-bottom: none;
+        background-color: transparent;
+
+        h3 {
+            font-weight: 500;
+            font-size: 20px;
+        }
+    }
+}

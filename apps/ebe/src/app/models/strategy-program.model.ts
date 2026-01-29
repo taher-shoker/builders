@@ -11,6 +11,7 @@ export interface StrategyProgramKpiDetailsModel
 }
 export interface StrategyProgramKpiProjectsDetailsModel
 {
+  id:number;
   project:string;
   actual:number;
   planned:number;
@@ -27,6 +28,7 @@ export interface StrategyProgramModel
 }
 export interface StrategyProgramKpiModel
 {
+  id:number;
   strategyProjectName:string;
   currentProgress:number;
   totalWeight:number;

@@ -1,0 +1,233 @@
+<div class="qa-compilance-card" [class.qa-compilance-card-mobile]="isMobile()">
+  <div class="qa-compilance-card-header">
+    <div class="left">
+      <p
+        class="qa-compilance-card-header-title"
+        (mouseenter)="overlayPanel2?.show($event)"
+        (mouseleave)="overlayPanel2?.hide()"
+      >
+        {{ QAComplianceCardData().businessUnit }}
+      </p>
+      @if(QAComplianceCardData().businessUnit.trim().length >= 5) {
+      <p-overlayPanel #overlayPanel2 dismissable="true">
+        <section class="popover-section">
+          {{ QAComplianceCardData().businessUnit }}
+        </section>
+      </p-overlayPanel>
+      } @if(QAComplianceCardData().projects[0].projectStatus){
+      <stc-apps-status-card
+        [status]="QAComplianceCardData().projects[0].projectStatus!"
+        [backgroundColor]="
+          getStatusStyle(QAComplianceCardData().projects[0].projectStatus!)
+            .backgroundColor
+        "
+        [textColor]="
+          getStatusStyle(QAComplianceCardData().projects[0].projectStatus!)
+            .textColor
+        "
+        [borderColor]="
+          getStatusStyle(QAComplianceCardData().projects[0].projectStatus!)
+            .borderColor
+        "
+      />
+      } @else {<stc-apps-status-card
+        [status]="'TBD'"
+        [backgroundColor]="'#F3F4F6'"
+        [textColor]="'#6B7280'"
+        [borderColor]="'#E5E7EB'"
+      />}
+    </div>
+    <div class="right">
+      <button class="heighlights-btn" (click)="showSidebarTap()">
+        <img src="assets/images/Info Circle.svg" alt="" />
+        <span>highlights</span>
+      </button>
+      @if(!isViewer() && !isMobile()){
+      <button class="edit-btn" (click)="openSidebar()">
+        <i class="pi pi-pencil"></i>
+        <!-- <img src="assets/images/button.svg" alt="" /> -->
+      </button>
+      }
+    </div>
+  </div>
+  @for (item of QAComplianceCardData().projects; track $index) {
+  <div class="qa-compilance-card-body">
+    @if(item.projectName){
+    <p class="project-name-title">{{ item.projectName }}</p>
+    }
+    <div
+      [class.totalTDCard]="
+        item.totalABL || item.totalTD || item.totalCapabilities
+      "
+    >
+      <!-- [progressValue]="
+          item.totalTD
+            ? closedValue(item) ?? 0
+            : item.percentage
+            ? item.percentage
+            : actualVal()
+            ? actualVal()
+            : 0
+        " -->
+      <stc-apps-progress-circle
+        [progressValue]="
+          item.totalTD || item.totalABL
+            ? closedValue(item) ?? 0
+            : item.percentage
+            ? item.percentage
+            : actualVal()
+            ? actualVal()
+            : 0
+        "
+        [percentValue]="item.percentage ?? actualVal()"
+        [showProgress]="true"
+        [progressSize]="
+          item.totalABL || item.totalTD || item.totalCapabilities
+            ? '9rem'
+            : '12rem'
+        "
+        [mainBgColor]="
+          item.projectStatus
+            ? getStatusStyle(item.projectStatus).textColor
+            : '#6B7280'
+        "
+        progressWidth="11rem"
+        [isDebtCard]="
+          item.totalABL || item.totalTD || item.totalCapabilities ? true : false
+        "
+        [isWorkStream]="true"
+        fontFamily="STCForwardFont"
+        [secondaryBgColor]="!isMobile() ? '#F3F4F6' : '#80808029'"
+        [secondaryValue]="secondaryValue(item)"
+        [totalTD]="
+          item.totalTD
+            ? item.totalTD
+            : item.totalABL
+            ? item.totalABL
+            : item.totalCapabilities
+            ? item.totalCapabilities
+            : 0
+        "
+        [progressValueColor]="
+          item.projectStatus
+            ? getStatusStyle(item.projectStatus).textColor
+            : '#6B7280'
+        "
+      />
+      @if(item.totalABL || item.totalTD || item.totalCapabilities){
+      <div class="totaltd-card">
+        <p class="title">
+          {{
+            item.totalABL
+              ? 'total ABL'
+              : item.totalTD
+              ? 'total TD'
+              : 'total Capabilities'
+          }}
+        </p>
+        <span
+          class="val"
+          [ngStyle]="{ color: getStatusStyle(item.projectStatus).textColor }"
+          >{{
+            item.totalTD
+              ? item.totalTD
+              : item.totalABL
+              ? item.totalABL
+              : item.totalCapabilities
+          }}</span
+        >
+      </div>
+      }
+    </div>
+
+    <div
+      class="details"
+      [ngStyle]="{
+        'grid-template-columns':
+          item.metrics.length === 3
+            ? '33.3333333% 33.3333333% 33.3333333%'
+            : item.metrics.length === 2
+            ? '50% 50%'
+            : '25% 25% 25% 25%'
+      }"
+    >
+      @for (item2 of item.metrics; track $index) {
+      <div class="requested">
+        <p
+          [class.actual-title]="
+            item2.name.toLowerCase() === 'actual' ||
+            item2.name.toLowerCase() === 'planned'
+          "
+          [ngStyle]="{
+            'padding-left':
+              item2.name.toLowerCase() === 'under verfication' ? '10px' : '0'
+          }"
+          [class.completed-text]="
+            item2.name.toLowerCase() === 'completed' && $index === 0
+          "
+        >
+          {{ item2.name }}
+        </p>
+        <span
+          [ngStyle]="{
+            color:
+              item2.name === 'actual'
+                ? getStatusStyle(item.projectStatus).textColor
+                : ''
+          }"
+        >
+          {{ item2.value }}
+          @if(item2.name === 'actual' || item2.name === 'planned'){ % }
+        </span>
+      </div>
+      }
+    </div>
+  </div>
+  }
+</div>
+<p-sidebar
+  [(visible)]="showSidebar"
+  position="right"
+  [showCloseIcon]="false"
+  transitionOptions="0.3s ease-in-out"
+  styleClass="qa-compilance-card-sidebar"
+>
+  <div class="sidebar-content">
+    <div class="form-title">
+      <div class="left">
+        <span></span>
+
+        <p
+          class="qa-compilance-card-header-title"
+          (mouseenter)="overlayPanel3?.show($event)"
+          (mouseleave)="overlayPanel3?.hide()"
+        >
+          {{ QAComplianceCardData().businessUnit }}
+        </p>
+        @if(QAComplianceCardData().businessUnit.trim().length > 5) {
+        <p-overlayPanel #overlayPanel3 dismissable="true">
+          <section class="popover-section">
+            {{ QAComplianceCardData().businessUnit }}
+          </section>
+        </p-overlayPanel>
+        }
+      </div>
+      <div class="right" (click)="showSidebar = false">
+        <i class="pi pi-times"></i>
+      </div>
+    </div>
+    <div class="content">
+      @for (highlight of highlights; track $index) {
+      <div class="data">
+        @if(highlight.title){
+        <span>{{ highlight.title }}: </span>
+        }
+        {{ highlight.value }}
+      </div>
+      <br />
+      } @empty {
+      <h3 class="empty-heightlights">there are no highlights</h3>
+      }
+    </div>
+  </div>
+</p-sidebar>

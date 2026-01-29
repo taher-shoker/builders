@@ -1,41 +1,59 @@
 <section class="psr-tabview">
-    @if(currentMode === 'editMode' && isAdmin) {
-        <stc-apps-edit-mode-view 
-          (import)="showDialog()"
-          (export)="downloadTemplate()"
-        />
-    } 
-    <div class = "psr-head">
-        <p class = "psr-tabview-header">
-            Strategic Projects - Executive View
-        </p>
-        @if(isAllowed)
-        {
-            <button routerLink="add-program">
-                <!-- <i class = "pi pi-plus"></i> -->
-                 <img src="assets/images/plus-icon.svg" alt="">
-                add new program
-            </button>
-        }
+  @if(currentMode === 'editMode' && isAdmin) {
+  <stc-apps-edit-mode-view
+    (import)="showDialog()"
+    (export)="downloadTemplate()"
+    [showActivityLogsButton]="false"
+    fontFamily="STCForwardFont"
+  />
+  }
+  <div class="psr-head">
+    <p class="psr-tabview-header">Strategic Projects - Executive View</p>
+    @if(isAllowed) {
+    <div style="display: flex">
+      <button routerLink="add-program" style="margin-right: 15px">
+        <!-- <i class = "pi pi-plus"></i> -->
+        <img src="assets/images/plus-icon.svg" alt="" />
+        add new program
+      </button>
+      @if(isAdmin) {
+      <stc-apps-menu-popup
+        [menuItems]="menuItems"
+        (onClick)="actionButton($event)"
+        [hidePopup]="showActivityLogsPopup"
+        (hide)="showActivityLogsPopup = false"
+      />
+      <stc-apps-activity-logs-popup
+        [activityLogsTableHeader]="activityLogsTableHeader"
+        [activityLogsTableBody]="activityLogsTableBody()"
+        [showPopup]="showActivityLogsPopup"
+        (popupClosed)="popupClosed()"
+        [isActionPopup]="false"
+        [isActionPopup2]="true"
+        type="psr"
+      />
+      }
     </div>
-    @if(!isEmpty())
-    {
-        <div class="project-container">
-            @for (project of projects(); track project.sector) {
-                <div class="project-container-card">
-                    <stc-apps-psr-project-card 
-                        [project]="project"
-                        (ProgramId)="getProgramId($event)"
-                        [isAllowed]="isAllowed"
-                    />
-                </div>
-            }
-        </div>
-    } @else {
-        <p class = "empty-data-msg mt-4">there are no projects</p>
     }
+  </div>
+  @if(!isEmpty()) {
+  <div class="project-container">
+    @for (project of projects(); track project.sector) {
+    <div class="project-container-card">
+      <stc-apps-psr-project-card
+        [project]="project"
+        (ProgramId)="getProgramId($event)"
+        [isAdmin]="isAdmin"
+        [isPMO]="isPMO"
+      />
+    </div>
+    }
+  </div>
+  } @else {
+  <p class="empty-data-msg mt-4">there are no projects</p>
+  }
 </section>
-<stc-apps-dialog-modal 
+<stc-apps-dialog-modal
   [visible]="visible"
   (ImportedFile)="importData($event)"
   (onhide)="onHide()"

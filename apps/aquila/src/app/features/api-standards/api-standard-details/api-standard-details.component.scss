@@ -1,0 +1,80 @@
+@import '../../../../styles/shared-styles.scss';
+
+.api-standard-details {
+    padding: $gap-large;
+    @extend .component-wrapper;
+
+    &_overview {
+        @include flex-column;
+        gap: $gap-large;
+
+        h3 {
+            color: var(--darkColor);
+            font-weight: 600;
+        }
+
+        .send-btn {
+            border: none;
+            text-decoration: underline;
+            color: var(--stc-color);
+            font-family: 'stc forward-medium';
+            padding: 0;
+
+            img {
+                margin-inline-start: $gap-tiny;
+            }
+        }
+    }
+
+    &_fields {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        @include responsive-gap(20px 50px);
+
+        .form-group {
+            @include flex-column;
+
+            &.full-width {
+                grid-column: span 2;
+            }
+
+            p {
+                color: var(--dark-slate-gray);
+                font-size: $font-size-small;
+            }
+
+            ::ng-deep {
+
+                input,
+                p-calendar span {
+                    width: $full-width;
+                }
+            }
+        }
+
+        @media screen and (max-width: $breakpoint-md) {
+            grid-template-columns: 1fr;
+
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+        }
+    }
+
+    &_actions {
+        display: flex;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        margin-top: $gap-xl;
+        gap: $gap-xs;
+
+        stc-apps-button ::ng-deep button {
+            min-width: 8rem;
+            @include button-font-size;
+        }
+
+        stc-apps-split-button ::ng-deep p-splitbutton button {
+            @include button-font-size;
+        }
+    }
+}

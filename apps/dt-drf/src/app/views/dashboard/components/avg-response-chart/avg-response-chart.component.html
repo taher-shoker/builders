@@ -1,0 +1,53 @@
+<div class="white-box">
+  <div class="row">
+    <div class="col-md-5">
+      <h3>Avg Response Time Per {{perUser ? 'User' : 'Report'}}</h3>
+    </div>
+    <div class="col-md-7">
+      <div class="row" [formGroup]="form">
+
+        <div class="col-md-2">
+          @if( hasNonNullValue(this.filter)){
+          <stc-apps-button [buttonText]="'Clear'" [buttonType]="'warn'" (btnClick)="reset()"></stc-apps-button>
+          }
+
+        </div>
+        @if(perUser){
+        <div class="col-md-5">
+          <stc-apps-select-drop-down [searchMode]="true" formControlName="user" [label]="''" [matLabel]="'User'"
+            [options]="alluser()" (selectChange)="handleSelect($event,'user')"
+            [outputValue]="'email'"></stc-apps-select-drop-down>
+        </div>
+        }@else {
+        <div class="col-md-5">
+          <stc-apps-select-drop-down formControlName="category" [label]="''" [matLabel]="'Category'"
+            [options]="categories()" (selectChange)="handleSelect($event,'category')"
+            [outputValue]="'name'"></stc-apps-select-drop-down>
+        </div>
+        }
+
+        <div class="col-md-5">
+          <stc-apps-date-picker-range [disableInput]="true" [disableFilterFlag]="true"
+            (datePickerChangeEvent)="datePickerChanged($event)" [startDate]="form.get('startDate')?.value"
+            [endDate]="form.get('endDate')?.value">
+          </stc-apps-date-picker-range>
+        </div>
+
+
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div style="width: 100%; height: 300px;">
+        <div [id]="chartdi_id" [ngStyle]="{'width': '100%', 'height': chartData.length === 0 ? 'auto' : '300px'}">
+        </div>
+        @if(chartData.length ===0) {
+        <p class="noData">No Data To Display </p>
+        }
+      </div>
+
+
+    </div>
+  </div>
+</div>

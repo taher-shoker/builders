@@ -14,7 +14,13 @@ export const environment = {
     dynamic_rf_system: '/cem/reporting/dynamic-rf-workspace/',
     business_excellence_system: '/cem/reporting/business-excellence-workspace/',
     score_card_report_db: '/cem/reporting/score-card-report/',
-    strategic_dashboard:'/cem/reporting/strategic_dashboard/'
+    strategic_dashboard: '/cem/reporting/strategic_dashboard/',
+    chat_bi: '/cem/reporting/chat_bi/',
+    nokia_chat: '/cem/reporting/nokia_chat/',
+    grc_dashboard: '/cem/reporting/grc_dashboard/',
+
+    tu_brain:
+      'https://stcgpt-ui.agreeableriver-7f2a419b.switzerlandnorth.azurecontainerapps.io/login',
   },
   sso_url: 'http://localhost:9084/cem/reporting-api/saml/saml/login',
   languageFilesPath: '/cem/reporting/assets/i18n/',

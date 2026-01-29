@@ -1,0 +1,19 @@
+@import '../../../styles/fonts.scss';
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  &-bullet {
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  &-title {
+    margin: 0;
+    @extend .stcFont;
+    font-size: 14px;
+    text-transform: capitalize;
+    color: #000000;
+  }
+}

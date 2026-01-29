@@ -2,12 +2,12 @@
 import { Component, OnInit, WritableSignal, signal } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie';
+import { ReportData } from '../../../services/models/milestones.models';
 import {
   HighlightImpactReport,
   MilestonesService,
 } from '../../milestones-setting/milestones.service';
-import { ReportData } from '../../../services/models/milestones.models';
-import { CookieService } from 'ngx-cookie';
 
 @Component({
   selector: 'stc-apps-edit',
@@ -130,6 +130,8 @@ export class EditComponent implements OnInit {
         clarityStrategicProgramReflectionLevel: new FormControl(null),
         erpStatus: new FormControl('', Validators.maxLength(1000)),
         erpStatusReflectionLevel: new FormControl(null),
+        dataEnablementStatus: new FormControl('', Validators.maxLength(1000)),
+        dataEnablementStatusReflectionLevel: new FormControl(null),
       }),
       commentForm: new FormGroup({
         comment: new FormControl(''),
@@ -169,10 +171,7 @@ export class EditComponent implements OnInit {
 
         if (res.isApproved === null || res.isApproved === true) {
           // Is Approved true or null, means a flow is closed and a DT User with role "Editor" can submit again
-          if (
-            this.milestonesService.userInGroup('DT_User') &&
-            this.milestonesService.userInGroup('DT_VP_Dashboard_Editor')
-          ) {
+          if (this.milestonesService.userInGroup('VP_EDITOR')) {
             this.handleUiState('edit-pending'); // prepare the UI state for dt user to edit data.
           } else {
             this.handleUiState('none-pending'); // prepare the UI state to prevent any actions.
@@ -195,8 +194,7 @@ export class EditComponent implements OnInit {
 
         if (workflowRes?.taskName === 'Edit Report Data') {
           if (
-            this.milestonesService.userInGroup('DT_User') &&
-            this.milestonesService.userInGroup('DT_VP_Dashboard_Editor')
+            this.milestonesService.userInGroup('VP_EDITOR')
           ) {
             this.handleUiState('resubmission-pending');
           } else {
@@ -204,17 +202,14 @@ export class EditComponent implements OnInit {
             this.showStatus.set(true);
             this.status.set('Waiting For Resubmission');
           }
-        } else if (workflowRes?.taskName === 'Approve Report Data PMO') {
-          if (
-            this.milestonesService.userInGroup('DT_User') &&
-            this.milestonesService.userInGroup('PMO')
-          ) {
+        } else if (workflowRes?.taskName === 'Approve Report Data Governance') {
+          if (this.milestonesService.userInGroup('DT_Governance_Approver')) {
             this.directorOrPMOCanComment.set(true);
-            this.handleUiState('pmo-approval-pending');
+            this.handleUiState('governance-approval-pending');
           } else {
             this.handleUiState('none-pending');
             this.showStatus.set(true);
-            this.status.set('Waiting For PMO approval');
+            this.status.set('Waiting For Governance approval');
           }
         } else {
           if (this.milestonesService.checkIsDirector()) {
@@ -240,7 +235,7 @@ export class EditComponent implements OnInit {
           for (const taskAttr of item.requestTaskAttributes) {
             if (
               taskAttr.name === 'reason_of_rejection' &&
-              item.taskName === 'Approve Report Data PMO'
+              item.taskName === 'Approve Report Data Governance'
             ) {
               // comments of PMO
               PMOsComments.push(taskAttr.value);
@@ -309,8 +304,16 @@ export class EditComponent implements OnInit {
     this.form.get('dataForm')?.get('erpStatus')?.setValue(formData.erpStatus);
     this.form
       .get('dataForm')
+      ?.get('dataEnablementStatus')
+      ?.setValue(formData.dataEnablementStatus);
+    this.form
+      .get('dataForm')
       ?.get('erpStatusReflectionLevel')
       ?.setValue(formData.erpStatusReflectionLevel);
+    this.form
+      .get('dataForm')
+      ?.get('dataEnablementStatusReflectionLevel')
+      ?.setValue(formData.dataEnablementStatusReflectionLevel);
     this.destroyQuillEditor();
     this.reviewMode.set(true);
     this.buildQuillEditor();
@@ -329,7 +332,7 @@ export class EditComponent implements OnInit {
       | 'edit-pending'
       | 'director-approval-pending'
       | 'resubmission-pending'
-      | 'pmo-approval-pending'
+      | 'governance-approval-pending'
       | 'none-pending'
       | 'loading'
   ) {
@@ -367,7 +370,7 @@ export class EditComponent implements OnInit {
       this.showDirectorApproveBtn.set(true);
       this.showDirectorRejectBtn.set(true);
       this.showResubmitBtn.set(false);
-    } else if (state === 'pmo-approval-pending') {
+    } else if (state === 'governance-approval-pending') {
       this.form.get('dataForm')?.disable();
       this.showPMOApprovalBtn.set(true);
       this.showPMORejectBtn.set(true);
@@ -460,7 +463,9 @@ export class EditComponent implements OnInit {
       status,
       clarityStrategicProgramReflectionLevel,
       erpStatus,
+      dataEnablementStatus,
       erpStatusReflectionLevel,
+      dataEnablementStatusReflectionLevel,
     } = this.form.get('dataForm')!.value;
     const editingData: HighlightImpactReport = {
       actual: actual || 0,
@@ -482,7 +487,10 @@ export class EditComponent implements OnInit {
       clarityStrategicProgramReflectionLevel:
         clarityStrategicProgramReflectionLevel || null,
       erpStatus: erpStatus || '',
+      dataEnablementStatus: dataEnablementStatus || '',
       erpStatusReflectionLevel: erpStatusReflectionLevel || null,
+      dataEnablementStatusReflectionLevel:
+        dataEnablementStatusReflectionLevel || null,
       team: this.selectedTeam(),
       year: this.selectedYear(),
     };
@@ -519,7 +527,9 @@ export class EditComponent implements OnInit {
       status,
       clarityStrategicProgramReflectionLevel,
       erpStatus,
+      dataEnablementStatus,
       erpStatusReflectionLevel,
+      dataEnablementStatusReflectionLevel,
     } = this.form.get('dataForm')!.value;
     const params = [
       {
@@ -599,9 +609,19 @@ export class EditComponent implements OnInit {
         value: erpStatus,
       },
       {
+        name: 'data_enablement_status',
+        value: dataEnablementStatus,
+      },
+      {
         name: 'erp_status_reflection_level',
         value: erpStatusReflectionLevel
           ? erpStatusReflectionLevel?.join(',')
+          : null,
+      },
+      {
+        name: 'data_enablement_status_reflection_level',
+        value: dataEnablementStatusReflectionLevel
+          ? dataEnablementStatusReflectionLevel?.join(',')
           : null,
       },
     ].filter((param: { name: string; value: string }) => param.value !== null);

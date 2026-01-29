@@ -1,0 +1,176 @@
+<stc-apps-breadcrumbs></stc-apps-breadcrumbs>
+<p-toast />
+
+<div class="api-standard-form">
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <div class="api-standard-form_container">
+      <div class="api-standard-form_fields">
+        <!-- Standard Name -->
+        <div class="form-group">
+          <label for="name">Standard Name</label>
+          <input
+            id="name"
+            type="text"
+            pInputText
+            placeholder="Add Name"
+            formControlName="name"
+          />
+          @if ( form.get('name')?.touched &&
+          form.get('name')?.errors?.['required']) {
+          <small class="p-error"> Standard Name is required. </small>
+          } @if (form.get('name')?.errors?.['pattern']) {
+          <small class="p-error">Standard Name cannot contain spaces.</small>
+          }
+        </div>
+
+        <!-- Version -->
+        <div class="form-group">
+          <label for="version">Version</label>
+          <input
+            id="version"
+            type="text"
+            pInputText
+            placeholder="Add Version"
+            formControlName="version"
+          />
+          @if (form.get('version')?.invalid && form.get('version')?.touched) {
+          <small class="p-error"> Version is required. </small>
+          }
+        </div>
+
+        <!-- Publish Date -->
+        <div class="form-group">
+          <label for="publishUpdate">Publish Date</label>
+          <p-calendar
+            id="publishUpdate"
+            formControlName="publishUpdate"
+            placeholder="Select Publish Date"
+            [iconDisplay]="'input'"
+            [showIcon]="true"
+            [showTime]="true"
+            [timeOnly]="false"
+            [hourFormat]="'12'"
+          ></p-calendar>
+          @if (form.get('publishUpdate')?.invalid &&
+          form.get('publishUpdate')?.touched) {
+          <small class="p-error"> Publish Date is required. </small>
+          }
+        </div>
+
+        <!-- Business Area -->
+        <div class="form-group">
+          <label for="businessArea">Business Area</label>
+          <input
+            id="businessArea"
+            type="text"
+            pInputText
+            placeholder="Add Business Area"
+            formControlName="businessArea"
+          />
+          @if (form.get('businessArea')?.invalid &&
+          form.get('businessArea')?.touched) {
+          <small class="p-error"> Business Area is required. </small>
+          }
+        </div>
+
+        <!-- domain -->
+        <div class="form-group">
+          <label for="domain">Domain</label>
+          <input
+            id="domain"
+            type="text"
+            pInputText
+            placeholder="Add Domain"
+            formControlName="domain"
+          />
+          @if (form.get('domain')?.invalid && form.get('domain')?.touched) {
+          <small class="p-error">Domain is required. </small>
+          }
+        </div>
+      </div>
+      <!-- CTK File -->
+      <div class="api-standard-form_upload">
+        <label>CTK File (ZIP)</label>
+        <p-fileUpload
+          name="file"
+          [auto]="false"
+          [multiple]="false"
+          [accept]="acceptedTypes.join(',')"
+          customUpload="true"
+          (onSelect)="onFileSelect($event)"
+          (onUpload)="onFileUpload($event)"
+          (onRemove)="onFileRemove($event)"
+          [files]="uploadedFiles"
+        >
+          <ng-template pTemplate="content"> </ng-template>
+
+          <ng-template pTemplate="file" let-file>
+            <div class="file-item">
+              <div class="file-info">
+                <img
+                  src="assets/images/Zip File.svg"
+                  alt="File"
+                  class="file-icon"
+                />
+                <div class="file-details">
+                  <p class="file-name">{{ file.name }}</p>
+                  <p class="file-size">
+                    {{ (file.size / 1024).toFixed(2) }} KB
+                  </p>
+                </div>
+              </div>
+              <stc-apps-button
+                buttonText=""
+                [buttonIcon]="'pi pi-times'"
+                (click)="onFileRemove(file)"
+              ></stc-apps-button>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="empty">
+            <div class="drag-drop-area">
+              <i class="pi pi-cloud-upload" style="margin-right: 5px"></i>
+              <span
+                >Drag the CTK File or
+                <a
+                  href="#"
+                  (click)="fileInput.click(); $event.preventDefault()"
+                  class="browse-link"
+                >
+                  browse
+                </a></span
+              >
+              <input
+                type="file"
+                (change)="onFileSelect($event)"
+                multiple
+                accept=".zip,.rar,.tar,.gz,.7z,.tar.gz,.tar.bz2,.xz"
+                style="display: none"
+                #fileInput
+              />
+            </div>
+          </ng-template>
+        </p-fileUpload>
+        <p class="file-upload-info">Only support .ZIP/RAR files.</p>
+        @if (form.get('file')?.invalid && form.get('file')?.touched) {
+        <small class="p-error"> File is required. </small>
+        }
+        <p-toast />
+      </div>
+      <div class="api-standard-form_actions">
+        <stc-apps-button
+          buttonText="Cancel"
+          [buttonType]="'default'"
+          [buttonType]="'stc-color-outline'"
+          [routerLink]="'/api-standard-list'"
+        />
+
+        <stc-apps-button
+          [buttonText]="isEditMode ? 'Save Changes' : 'Add'"
+          [buttonType]="'primary'"
+          (click)="onSubmit()"
+        ></stc-apps-button>
+      </div>
+    </div>
+  </form>
+</div>

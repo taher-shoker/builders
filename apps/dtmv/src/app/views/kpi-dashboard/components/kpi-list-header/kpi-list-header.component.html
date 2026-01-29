@@ -1,0 +1,19 @@
+<div class="kpi-list_header">
+  <h3>List of KPIs</h3>
+  <div class="kpi-list_actons">
+    <stc-apps-button
+      buttonText="Export"
+      [buttonIcon]="' fa-download'"
+      [buttonType]="'stc-color-outline'"
+      (click)="onExportKPIs()"
+      [hidden]="!showExportButton"
+    ></stc-apps-button>
+    <stc-apps-button
+      buttonText="Add New KPI"
+      [buttonIcon]="' fa-plus'"
+      [buttonType]="'primary'"
+      (click)="onAddKpi()"
+      *ngIf="permissionRole === 'editor'"
+    ></stc-apps-button>
+  </div>
+</div>

@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../shared/services/auth.service';
-import { CookieService } from 'ngx-cookie';
 import { Router } from '@angular/router';
-import { UsersService } from './users.service';
+import { CookieService } from 'ngx-cookie';
 import { environment } from '../../../environments/environment';
+import { AuthService } from '../../shared/services/auth.service';
+import { UsersService } from './users.service';
 
 @Component({
   selector: 'stc-apps-users-settings',
@@ -46,6 +46,23 @@ export class UsersSettingsComponent implements OnInit {
       this.navItems.push({
         name: 'DT Milestones',
         url: window.location.origin + environment.systems.di_milestones_system,
+        icon: 'fa-database',
+        isExtrnal: true,
+      });
+
+      this.navItems.push({
+        name: 'Action Log',
+        url:
+          window.location.origin +
+          environment.systems.di_milestones_system +
+          '#/action-log',
+        icon: 'fa fa-list-alt',
+        isExtrnal: true,
+      });
+    } else if (this.userService.getCurrentSystem() === 'GRC_Dashboard') {
+      this.navItems.push({
+        name: 'GRC Dashboard',
+        url: window.location.origin + environment.systems.grc_dashboard,
         icon: 'fa-database',
         isExtrnal: true,
       });

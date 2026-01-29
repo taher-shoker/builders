@@ -1,0 +1,406 @@
+@import '../../../../styles/fonts.scss';
+::ng-deep .executive-summary {
+  min-height: 100vh;
+  .p-accordion-tab {
+    margin-bottom: 15px;
+  }
+  .add-workstream-btn {
+    border: 0;
+    background-color: var(--stc-purple-color);
+    border-radius: 5px;
+    color: #fff;
+    padding: 6px 12px;
+    margin-right: 10px;
+    @extend .stcFont;
+    font-size: 1rem;
+    cursor: pointer;
+    text-transform: capitalize;
+    i {
+      font-size: 0.8rem;
+      display: inline-block;
+      margin-right: 5px;
+    }
+  }
+  .p-accordion-header-link {
+    text-decoration: none;
+    @extend .stcFont;
+    justify-content: space-between;
+    flex-direction: row-reverse;
+    background-color: #fff;
+    color: var(--stc-purple-light-color);
+    border-bottom: 0;
+    border-radius: 20px;
+    transition: 0.3s;
+    border: 0;
+    padding: 0;
+    &:hover {
+      background-color: #fff;
+    }
+    .main-header {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      padding: 20px;
+      justify-content: space-between;
+      img {
+        width: 20px;
+        transition: 0.4s;
+        transform: rotate(180deg);
+      }
+      p {
+        font-weight: bold;
+        font-size: 1rem;
+        margin: 0;
+      }
+    }
+  }
+  .p-accordion-toggle-icon {
+    display: none;
+  }
+  .p-accordion-content {
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+    border: 0;
+    padding-top: 0;
+  }
+  .p-highlight {
+    transition: 0.3s;
+    border: 0;
+    .p-accordion-header-link {
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+    .main-header {
+      img {
+        transform: rotate(0deg);
+      }
+    }
+  }
+  &-body {
+    // background-color: #f3f4f6;
+    // border-radius: 10px;
+    &-container {
+      background-color: #f3f4f6;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    // padding: 20px;
+    &-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 20px 0px 20px;
+      .left-side {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        @media all and (max-width: 400px) {
+          gap: 6px;
+        }
+        p {
+          margin: 0;
+        }
+        .title2 {
+          font-weight: bold;
+          color: #000;
+          font-size: 1.2rem;
+        }
+      }
+      .right-side {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        &.right-side-mobile {
+          gap: 8px;
+        }
+        @media all and (max-width: 389px) {
+          flex-wrap: wrap;
+          justify-content: flex-end;
+        }
+        button {
+          background-color: transparent;
+          border: 0;
+          border-radius: 5px;
+          padding: 10px 15px;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          font-size: 0.9rem;
+          gap: 5px;
+          img {
+            width: 20px;
+          }
+          span {
+            @extend .stcFont;
+            text-transform: capitalize;
+            position: relative;
+            top: 1px;
+          }
+          &:first-child {
+            background-color: #ff375e;
+            color: #fff;
+          }
+          &.Challenges_button {
+            background-color: #e2e8f0;
+            color: #475569;
+          }
+          &.editProjectData {
+            padding: 0;
+            background: #4f008c26;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            i {
+              font-size: 1rem;
+              color: #4f008c;
+            }
+          }
+        }
+      }
+    }
+    &-sub-title {
+      margin-top: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px 10px 20px;
+      // margin-bottom: 10px;
+      border-bottom: 2px solid #e2e8f0;
+      // border-bottom: 2px solid #000;
+      p {
+        margin: 0;
+        @extend .stcFont;
+      }
+      .left-side {
+        p {
+          color: #000;
+          font-size: 1rem;
+          font-weight: 600;
+          text-transform: capitalize;
+        }
+      }
+      .right-side {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        img {
+          width: 15px;
+        }
+        p {
+          text-transform: capitalize;
+          color: #64748b;
+          font-size: 1rem;
+          span {
+            font-weight: bold;
+            &.actual {
+              color: #22c55e;
+            }
+            &.planned {
+              color: #000;
+            }
+          }
+        }
+      }
+    }
+    &-content {
+      padding: 20px;
+    }
+  }
+}
+::ng-deep .add-workstream-sidebar,
+::ng-deep .highlights-sidebar,
+::ng-deep .challenges-sidebar {
+  .p-sidebar-header {
+    display: none;
+  }
+  .p-sidebar-content {
+    padding: 0;
+  }
+  .sidebar-content {
+    padding: 20px;
+  }
+  .form-title {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    span {
+      display: inline-block;
+      width: 2px;
+      height: 30px;
+      border-radius: 3px;
+      background-color: var(--stc-red-dark-color);
+    }
+    p {
+      margin: 0;
+      color: var(--stc-dark-grey-color);
+      @extend .stcFont;
+      font-size: 1.1rem;
+      text-transform: capitalize;
+      font-weight: 500;
+    }
+    i {
+      position: relative;
+      top: 2px;
+      cursor: pointer;
+      color: var(--stc-light-grey-color3);
+    }
+  }
+  .content {
+    .data {
+      @extend .stcFont;
+      color: #000000;
+      span {
+        font-weight: bold;
+      }
+    }
+  }
+  .empty-heightlights {
+    @extend .stcFont;
+    color: #000000;
+    text-transform: capitalize;
+    font-size: 1.1rem;
+    text-align: center;
+    font-style: italic;
+    margin: 0;
+  }
+}
+.add-new-project-btn {
+  width: 100%;
+  background-color: #e2e8f0;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px 15px;
+  text-transform: capitalize;
+  @extend .stcFont;
+  font-size: 0.8rem;
+  margin-bottom: 20px;
+  color: #475569;
+  font-weight: 550;
+  i {
+    color: #475569;
+    font-weight: 550;
+    font-size: 0.8rem;
+    display: inline-block;
+    margin-right: 5px;
+  }
+}
+::ng-deep .delete-workstream-dialog {
+  .p-dialog-header,
+  .p-dialog-footer {
+    display: none;
+  }
+  .p-dialog-content {
+    width: 650px;
+    height: 180px;
+    border-radius: 10px;
+    padding: 0;
+    display: block;
+    padding: 20px;
+  }
+  .content {
+    .head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .left {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        i {
+          color: #d50b3e;
+          position: relative;
+          top: -1px;
+        }
+        p {
+          color: #d50b3e;
+          margin: 0;
+          font-weight: bold;
+          text-transform: capitalize;
+          @extend .stcFont;
+        }
+      }
+      .pi-times {
+        color: #d50b3e;
+        cursor: pointer;
+      }
+    }
+    span {
+      @extend .stcFont;
+      text-align: center;
+      text-transform: capitalize;
+      display: inline-block;
+      margin-top: 10px;
+    }
+  }
+  .buttons {
+    text-align: start;
+    margin-top: 45px;
+    button {
+      background-color: transparent;
+      border: 0;
+      @extend .stcFont;
+      text-transform: capitalize;
+      font-size: 1rem;
+      &.delete-btn {
+        color: #d50b3e;
+        border: 1px solid #d50b3e;
+        border-radius: 5px;
+        padding: 5px 10px;
+        margin-right: 15px;
+      }
+      &.cancel-btn {
+        color: #6c6c89;
+        border: 1px solid #ebebef;
+        background-color: #ebebef;
+        border-radius: 5px;
+        padding: 5px 10px;
+      }
+    }
+  }
+}
+.empty-msg {
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+  @extend .stcFont;
+  font-size: 1rem;
+  font-style: italic;
+}
+.quarter-empty-msg {
+  margin: 0;
+  text-align: center;
+  text-transform: capitalize;
+  @extend .stcFont;
+  font-size: 1rem;
+  font-style: italic;
+}
+.mobile-button {
+  padding: 5px 8px !important;
+  font-size: 0.7rem !important;
+}
+::ng-deep .executive-summary-mobile {
+  .main-header {
+    padding: 0 !important;
+  }
+  .p-accordion-content {
+    padding: 0 !important;
+    padding-top: 10px !important;
+    background-color: transparent !important;
+  }
+  .p-accordion-header-link {
+    background-color: transparent !important;
+  }
+  .executive-summary-body-container {
+    background-color: #fff !important;
+  }
+}
+// .full-height {
+//   height: 100vh !important;
+// }

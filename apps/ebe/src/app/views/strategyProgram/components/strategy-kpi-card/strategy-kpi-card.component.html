@@ -1,21 +1,18 @@
 <section class="strategy-kpi-card">
-  <p class = "strategy-kpi-card-title">
+  <p class="strategy-kpi-card-title">
     {{strategyKpiCard().strategyProjectName | truncateWord:5}}
     @if(titleArr.length > 5)
     {
-      <span (click)="displayDrilldown()" class = "read-more">read more</span>
-      <p-overlayPanel #overlayPanel dismissable="true">
-        <section class="popover-section2">
-          <p>{{strategyKpiCard().strategyProjectName}}</p>
-        </section>
-      </p-overlayPanel>
+    <span (click)="displayDrilldown()" class="read-more">read more</span>
+    <p-overlayPanel #overlayPanel dismissable="true">
+      <section class="popover-section2">
+        <p>{{strategyKpiCard().strategyProjectName}}</p>
+      </section>
+    </p-overlayPanel>
     }
   </p>
   <div class="strategy-kpi-card-status">
-    <stc-apps-solid-circular-bar
-      [percentVal]="strategyKpiCard().currentProgress"
-      [subTitle]="'current progress'"
-    />
+    <stc-apps-solid-circular-bar [percentVal]="strategyKpiCard().currentProgress" [subTitle]="'current progress'" />
   </div>
   <div class="strategy-kpi-card-cards mt-4">
     <div class="strategy-kpi-card-cards-weight-card">
@@ -31,17 +28,17 @@
     <p>
       {{strategyKpiCard().description | truncateWord:10}}
       @if(descArr.length > 10){
-        <span (click)="displayDrilldown2()" class = "read-more">read more</span>
-        <p-overlayPanel #overlayPanel2 dismissable="true">
-          <section class="popover-section2">
-            <p>{{strategyKpiCard().description}}</p>
-          </section>
-        </p-overlayPanel>
+      <span (click)="displayDrilldown2()" class="read-more">read more</span>
+      <p-overlayPanel #overlayPanel2 dismissable="true">
+        <section class="popover-section2">
+          <p>{{strategyKpiCard().description}}</p>
+        </section>
+      </p-overlayPanel>
       }
     </p>
   </div>
   <div class="strategy-kpi-card-details-btn mt-5 mb-3">
-    <a [routerLink]="['/strategy-program/' , strategyKpiCard().strategyProjectName]">
+    <a [routerLink]="['/ai-ds-strategy-programs/' , strategyKpiCard().strategyProjectName , strategyKpiCard().id]">
       <span>more details</span>
       <img src="assets/images/arrow-right.svg" alt="">
     </a>

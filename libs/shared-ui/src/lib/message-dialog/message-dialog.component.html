@@ -1,18 +1,30 @@
-<div class="dialog ">
+<div class="dialog">
   <div class="dialog-body">
     <div class="body-holder">
-      <p>{{ message }}</p>
+      @if(title) {
+      <h2 class="dialog-title">{{ title }}</h2>
+      }
+      <p class="dialog-message" [attr.data-icon]="icon || null">{{ message }}</p>
     </div>
   </div>
 
   <hr class="liner-hr" />
 
   <div class="dialog-actions row">
-    <div class="col-md-3"><stc-apps-button [buttonText]="'Close'" [buttonType]="'gray-outline'"
-        (btnClick)="cancel()"></stc-apps-button></div>
-    <div class="col-md-3"><stc-apps-button [buttonText]="'Yes'" [buttonType]="'primary'" (btnClick)="approve()"
-        [actionType]="'submit'"></stc-apps-button></div>
-
-
+    <div class="col-md-3">
+      <stc-apps-button
+        [buttonText]="'Close'"
+        [buttonType]="'gray-outline'"
+        (btnClick)="cancel()"
+      ></stc-apps-button>
+    </div>
+    <div class="col-md-3">
+      <stc-apps-button
+        [buttonText]="'Yes'"
+        [buttonType]="'primary'"
+        (btnClick)="approve()"
+        [actionType]="'submit'"
+      ></stc-apps-button>
+    </div>
   </div>
 </div>

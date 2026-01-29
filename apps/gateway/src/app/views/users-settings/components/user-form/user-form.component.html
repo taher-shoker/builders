@@ -1,173 +1,388 @@
 <div class="user-form">
-  <form [formGroup]="form" (ngSubmit)="onSubmit()" (keydown)="keyDownFunction($event)">
+  <form
+    *ngIf="form"
+    [formGroup]="form"
+    (ngSubmit)="onSubmit()"
+    (keydown)="keyDownFunction($event)"
+  >
     <div class="inputs">
       <div class="top">
         <div class="row align-items-center">
           <div class="col-md-4">
-            <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="'Example@stc.com.sa'" [inputId]="'email'"
-              [inputName]="'email'" formControlName="email"></stc-apps-input>
+            <stc-apps-input
+              [className]="'custom-input'"
+              [inputPlaceholder]="'Example@stc.com.sa'"
+              [inputId]="'email'"
+              [inputName]="'email'"
+              formControlName="email"
+            ></stc-apps-input>
           </div>
-          <div class="col-md-2 mt-1r">
-            <stc-apps-button *ngIf="!isEditing" [buttonIcon]="'fa-search'" [buttonText]="'Search on user'"
-              [buttonType]="'stc-color-outline'" (btnClick)="checkUserExist()"
-              [buttonDisable]="form.get('email')?.value === ''"></stc-apps-button>
+          <div class="col mt-2 w-230">
+            <stc-apps-button
+              *ngIf="!isEditing"
+              [buttonIcon]="'fa-search'"
+              [buttonText]="'Search on user'"
+              [buttonType]="'stc-color-outline'"
+              (btnClick)="checkUserExist()"
+              [buttonDisable]="form.get('email')?.value === ''"
+            ></stc-apps-button>
           </div>
         </div>
       </div>
       <div class="bottom" *ngIf="showInputs">
         <div class="row mt-2">
           <div class="col-md-5">
-            <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'name'" [inputName]="'Name'"
-              formControlName="name"></stc-apps-input>
+            <stc-apps-input
+              [className]="'custom-input'"
+              [inputPlaceholder]="''"
+              [inputId]="'name'"
+              [inputName]="'Name'"
+              formControlName="name"
+            ></stc-apps-input>
           </div>
           <div class="col-md-2"></div>
           <div class="col-md-5">
-            <stc-apps-input [className]="'custom-input'" [inputPlaceholder]="''" [inputId]="'jobTitle'"
-              [inputName]="'job Title'" formControlName="jobTitle"></stc-apps-input>
+            <stc-apps-input
+              [className]="'custom-input'"
+              [inputPlaceholder]="''"
+              [inputId]="'jobTitle'"
+              [inputName]="'job Title'"
+              formControlName="jobTitle"
+            ></stc-apps-input>
           </div>
         </div>
-        <div class="row mt-7" *ngIf="
+        <div
+          class="row mt-7"
+          *ngIf="
             showInputs &&
             userService.getCurrentSystem() === 'FRAUD_ManagementUsers'
-          ">
+          "
+        >
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
-              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
-              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('privilege')"
+              [options]="privilages()"
+              formControlName="userGroups"
+              [labelName]="'groupName'"
+              [required]="true"
+              [selectId]="selectedPrivilege || null"
+              (selectChange)="handleTeam($event)"
+            >
             </stc-apps-select-drop-down>
           </div>
           <div class="col-md-2"></div>
 
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
-              [required]="true" [options]="teams" [selectId]="selectedTeam || null">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('team')"
+              formControlName="teamDto"
+              [required]="true"
+              [options]="teams"
+              [selectId]="selectedTeam || null"
+            >
             </stc-apps-select-drop-down>
           </div>
         </div>
-        <div class="row mt-7" *ngIf="
-        showInputs &&
-        userService.getCurrentSystem() === 'Strategic_Dashboard'
-      ">
-      <div class="col-md-5">
-        <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
-          formControlName="userGroups" [labelName]="'groupName'" [required]="true"
-          [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
-        </stc-apps-select-drop-down>
-      </div>
-      <div class="col-md-2"></div>
-
-      <!-- <div class="col-md-5">
-        <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
-          [required]="true" [options]="teams" [selectId]="selectedTeam || null">
-        </stc-apps-select-drop-down>
-      </div> -->
-    </div>
-        <div class="row mt-7" *ngIf="
+        <div
+          class="row mt-7"
+          *ngIf="
+            showInputs &&
+            userService.getCurrentSystem() === 'Strategic_Dashboard'
+          "
+        >
+          <div class="col-md-5">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('privilege')"
+              [options]="privilages()"
+              formControlName="userGroups"
+              [labelName]="'groupName'"
+              [required]="true"
+              [selectId]="selectedPrivilege || null"
+              (selectChange)="handleTeam($event)"
+            >
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-md-2"></div>
+        </div>
+        <div
+          class="row mt-7"
+          *ngIf="
             showInputs &&
             userService.getCurrentSystem() === 'Score_Card_Report_DB'
-          ">
+          "
+        >
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="'Role'" [options]="privilages()" formControlName="userGroups"
-              [labelName]="'groupName'" [required]="true" [selectId]="selectedPrivilege || null">
+            <stc-apps-select-drop-down
+              [label]="'Role'"
+              [options]="privilages()"
+              formControlName="userGroups"
+              [labelName]="'groupName'"
+              [required]="true"
+              [selectId]="selectedPrivilege || null"
+            >
             </stc-apps-select-drop-down>
           </div>
           <div class="col-md-2"></div>
 
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="'Sector'" formControlName="teamDto" [required]="true" [options]="teams"
-              [multi]="true" [selectId]="selectedGroup || null">
+            <stc-apps-select-drop-down
+              [label]="'Sector'"
+              formControlName="teamDto"
+              [required]="true"
+              [options]="teams"
+              [multi]="true"
+              [selectId]="selectedGroup || null"
+            >
             </stc-apps-select-drop-down>
           </div>
         </div>
-        <div class="row mt-7" *ngIf="
+        <div
+          class="row mt-7 h500"
+          *ngIf="
             showInputs &&
             userService.getCurrentSystem() === 'Dynamic_Report_Flow'
-          ">
-          <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
-              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
-              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
-            </stc-apps-select-drop-down>
+          "
+        >
+          <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-5">
+                <stc-apps-select-drop-down
+                  [label]="userService.translateText('privilege')"
+                  [options]="privilages()"
+                  formControlName="userGroups"
+                  [labelName]="'groupName'"
+                  [required]="true"
+                  [selectId]="selectedPrivilege || null"
+                  (selectChange)="handleTeam($event)"
+                >
+                </stc-apps-select-drop-down>
+              </div>
+              <div class="col-md-2"></div>
 
-          </div>
-          <div class="col-md-2"></div>
-
-          <div class="col-md-5">
-            <stc-apps-custom-dropdown [searchable]="true" formControlName="userDelegates" [label]="'User Delegate'"
-              [list]="userDelegate" [resetable]="true" [searchable]="true" [displayNameProperty]="'name'"
-              [valueProperty]="'email'"></stc-apps-custom-dropdown>
+              <div class="col-md-5">
+                <stc-apps-custom-dropdown
+                  [searchable]="true"
+                  formControlName="userDelegates"
+                  [label]="'User Delegate'"
+                  [list]="userDelegate()"
+                  [resetable]="true"
+                  [displayNameProperty]="'name'"
+                  [valueProperty]="'email'"
+                ></stc-apps-custom-dropdown>
+              </div>
+            </div>
+            <div class="row mt-7">
+              <div class="col-md-5">
+                <stc-apps-custom-dropdown
+                  [searchable]="true"
+                  formControlName="manager"
+                  [label]="'Escalation manager'"
+                  [list]="escaltionManager()"
+                  [resetable]="true"
+                  [displayNameProperty]="'name'"
+                  [valueProperty]="'id'"
+                ></stc-apps-custom-dropdown>
+              </div>
+            </div>
           </div>
         </div>
-        <div class="row mt-7" *ngIf="
+        <div
+          class="row mt-7"
+          *ngIf="
             showInputs && userService.getCurrentSystem() === 'DI_Milestones'
-          ">
+          "
+        >
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
-              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
-              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('privilege')"
+              [options]="privilages()"
+              formControlName="userGroups"
+              [labelName]="'groupName'"
+              [required]="true"
+              [selectId]="selectedPrivilege || null"
+              (selectChange)="handleTeam($event)"
+            >
             </stc-apps-select-drop-down>
           </div>
           <div class="col-md-2"></div>
 
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('team')" formControlName="teamDto"
-              [required]="true" [options]="teams" [multi]="true" [selectId]="selectedGroup || null">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('unit')"
+              formControlName="teamDto"
+              [required]="true"
+              [options]="teams"
+              [multi]="true"
+              [selectId]="selectedGroup || null"
+            >
             </stc-apps-select-drop-down>
           </div>
-          <div class="col-md-5">
-            <stc-apps-checkbox [label]="'grant access to  VP report'" formControlName="viewer"
-              [name]="'viewer'"></stc-apps-checkbox>
+          <div class="col-md-12">
+            <stc-apps-checkbox
+              *ngIf="this.form?.get('userGroups')?.value?.groupName"
+              [label]="'grant access to VP report'"
+              formControlName="viewer"
+              [name]="'viewer'"
+            ></stc-apps-checkbox>
           </div>
-          <div class="row" *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User'">
+          <div class="col-md-12">
+            <stc-apps-checkbox
+              [label]="'Grant access as DT Ticket Admin'"
+              *ngIf="
+                this.form?.get('userGroups')?.value?.groupName ===
+                  'DT_Governance' ||
+                this.form?.get('userGroups')?.value?.groupName === 'PMO'
+              "
+              formControlName="ticketAdmin"
+              [name]="'ticketAdmin'"
+            ></stc-apps-checkbox>
+          </div>
+          <!-- *ngIf="this.form?.get('userGroups')?.value?.groupName === 'DT_User'" -->
+
+          <div class="row">
             <div class="col-md-12">
-              <stc-apps-checkbox [label]="'Grant Edit for VP Report'" formControlName="editor" [name]="'editor'"
-                (selectChange)="oncheckBoxSelect($event)"></stc-apps-checkbox>
+              <stc-apps-checkbox
+                *ngIf="
+                  this.form?.get('userGroups')?.value?.groupName ===
+                    'DT_Director' ||
+                  this.form?.get('userGroups')?.value?.groupName === 'DT_User'
+                "
+                [label]="'Grant Edit for VP Report'"
+                formControlName="editor"
+                [name]="'editor'"
+                (selectChange)="oncheckBoxSelect($event)"
+              ></stc-apps-checkbox>
+            </div>
+
+            <div class="col-md-12">
+              <stc-apps-checkbox
+                *ngIf="
+                  this.form?.get('userGroups')?.value?.groupName ===
+                  'DT_Governance'
+                "
+                [label]="'Grant access as DT Gov for VP Report'"
+                formControlName="DT_Governance_Approver"
+                [name]="'DT_Governance_Approver'"
+                (selectChange)="oncheckBoxSelect($event)"
+              ></stc-apps-checkbox>
             </div>
             <div class="col-md-12">
-              <stc-apps-checkbox [label]="'Grant access as DT PMO for VP Report'" formControlName="pmo" [name]="'pmo'"
-                (selectChange)="oncheckBoxSelect($event)"></stc-apps-checkbox>
+              <stc-apps-checkbox
+                *ngIf="
+                  this.form?.get('userGroups')?.value?.groupName === 'DT_User'
+                "
+                [label]="'DT user to edit or delete'"
+                formControlName="edit_delete"
+                [name]="'edit_delete'"
+              ></stc-apps-checkbox>
             </div>
           </div>
         </div>
-        <div class="row mt-7" *ngIf="
+        <div
+          class="row mt-7"
+          *ngIf="
             showInputs && userService.getCurrentSystem() === 'DI_Management'
-          ">
+          "
+        >
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
-              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
-              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('privilege')"
+              [options]="privilages()"
+              formControlName="userGroups"
+              [labelName]="'groupName'"
+              [required]="true"
+              [selectId]="selectedPrivilege || null"
+              (selectChange)="handleTeam($event)"
+            >
             </stc-apps-select-drop-down>
           </div>
           <div class="col-md-2"></div>
 
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('team')" [options]="teams"
-              formControlName="teamDto" [required]="true" [multi]="true" [groupOptions]="'roles'"
-              [selectId]="selectedGroup">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('team')"
+              [options]="teams"
+              formControlName="teamDto"
+              [required]="true"
+              [multi]="true"
+              [groupOptions]="'roles'"
+              [selectId]="selectedGroup"
+            >
             </stc-apps-select-drop-down>
           </div>
         </div>
-        <div class="row mt-7" *ngIf="
+        <div
+          class="row mt-7"
+          *ngIf="
             showInputs &&
             userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
-          ">
+          "
+        >
           <div class="col-md-5">
-            <stc-apps-select-drop-down [label]="userService.translateText('privilege')" [options]="privilages()"
-              formControlName="userGroups" [labelName]="'groupName'" [required]="true"
-              [selectId]="selectedPrivilege || null" (selectChange)="handleTeam($event)">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('privilege')"
+              [options]="privilages()"
+              formControlName="userGroups"
+              [labelName]="'groupName'"
+              [required]="true"
+              [selectId]="selectedPrivilege || null"
+              (selectChange)="handleTeam($event)"
+            >
+            </stc-apps-select-drop-down>
+          </div>
+          <div class="col-md-2"></div>
+          <div class="col-md-5">
+            <stc-apps-select-drop-down
+              [label]="'Pages'"
+              formControlName="pageAccess"
+              [required]="true"
+              [options]="filterPages"
+              [multi]="true"
+              [selectId]="selectedPages || null"
+            >
             </stc-apps-select-drop-down>
           </div>
         </div>
+        <div
+          class="row mt-7"
+          *ngIf="
+            (showInputs && userService.getCurrentSystem() === 'ChatBI') ||
+            userService.getCurrentSystem() === 'TU_BRAIN' ||
+            userService.getCurrentSystem() === 'FNI_Nokia'
+          "
+        >
+          <div class="col-md-5">
+            <stc-apps-select-drop-down
+              [label]="userService.translateText('privilege')"
+              [options]="privilages()"
+              formControlName="userGroups"
+              [labelName]="'groupName'"
+              [required]="true"
+              [selectId]="selectedPrivilege || null"
+              (selectChange)="handleTeam($event)"
+            >
+            </stc-apps-select-drop-down>
+          </div>
+        </div>
+
         <div class="row mt-7 flex-row-reverse">
           <div class="col-md-4 offset-md-8">
             <div class="row">
               <div class="col-md-6">
-                <stc-apps-button [buttonText]="'Cancel'" [buttonType]="'gray-outline'"
-                  (btnClick)="cancel()"></stc-apps-button>
+                <stc-apps-button
+                  [buttonText]="'Cancel'"
+                  [buttonType]="'gray-outline'"
+                  (btnClick)="cancel()"
+                ></stc-apps-button>
               </div>
               <div class="col-md-6">
-                <stc-apps-button [buttonText]="isEditing ? 'Save' : 'Add user'" [buttonType]="'primary'"
-                  (btnClick)="onSubmit()" [loading]="isSubmitLoader" *ngIf="showInputs">
+                <stc-apps-button
+                  [buttonText]="isEditing ? 'Save' : 'Add user'"
+                  [buttonType]="'primary'"
+                  (btnClick)="onSubmit()"
+                  [loading]="isSubmitLoader"
+                  *ngIf="showInputs"
+                >
                 </stc-apps-button>
               </div>
             </div>
@@ -188,7 +403,11 @@
 
   <div class="row mt-4">
     <div class="col-md-4 offset-4">
-      <stc-apps-button [buttonText]="'Ok'" [buttonType]="'primary'" (btnClick)="closeDialog()"></stc-apps-button>
+      <stc-apps-button
+        [buttonText]="'Ok'"
+        [buttonType]="'primary'"
+        (btnClick)="closeDialog()"
+      ></stc-apps-button>
     </div>
   </div>
 </stc-apps-dialog>

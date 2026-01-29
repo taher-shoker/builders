@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
-    "install": "npm i --legacy-peer-deps --force --loglevel silly --no-audit --no-fund --ignore-scripts",
-    "build:chat:prod": "npx nx run chatBI:build --configuration=production --base-href=/cem/reporting/chat_bi/"
+    "installation": "NODE_OPTIONS='--max-old-space-size=16384' npm i --legacy-peer-deps --force --loglevel silly --no-audit --no-fund",
+    "build:chat:prod": "sudo npx nx run chatBI:build --configuration=production --base-href=/cem/reporting/chat_bi/",
+    "build:excellence:prod": "sudo npx nx run ebe:build --configuration=production --base-href=/cem/reporting/business-excellence-workspace/"
   },
   "private": true,
   "dependencies": {
@@ -36,10 +37,11 @@
     "ng-circle-progress": "^1.7.1",
     "ngx-cookie": "^6.0.1",
     "ngx-cookie-service": "^16.0.0",
+    "ngx-owl-carousel-o": "^19.0.0",
     "ngx-quill": "^25.3.2",
     "ngx-spinner": "^16.0.2",
     "ngx-toastr": "^17.0.2",
-    "primeicons": "^7.0.0",
+    "primeicons": "6.0.1",
     "primeng": "^17.18.4",
     "quill": "^2.0.2",
     "remixicon": "^4.1.0",
@@ -66,12 +68,15 @@
     "@nx/js": "18.0.2",
     "@nx/playwright": "18.0.2",
     "@nx/web": "18.0.2",
+    "@nx/webpack": "18.0.2",
     "@nx/workspace": "18.0.2",
     "@playwright/test": "^1.36.0",
     "@schematics/angular": "~16.0.0",
     "@swc-node/register": "~1.6.7",
+    "@swc/cli": "~0.1.62",
     "@swc/core": "~1.3.85",
     "@swc/helpers": "~0.5.2",
+    "@swc/jest": "0.2.20",
     "@types/file-saver": "^2.0.5",
     "@types/hammerjs": "^2.0.46",
     "@types/jest": "^29.4.0",
@@ -96,8 +101,9 @@
     "postcss-preset-env": "~7.5.0",
     "postcss-url": "~10.1.3",
     "prettier": "^2.6.2",
+    "swc-loader": "0.1.15",
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
-    "typescript": "5.3"
+    "typescript": "5.2.2"
   }
 }

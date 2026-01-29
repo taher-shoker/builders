@@ -1,0 +1,59 @@
+.slider-wrapper {
+  touch-action: pan-y;
+  user-select: none;
+  font-family: Arial;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+  width: 100%;
+  height: 100%;
+}
+.card-group {
+  flex: 0 0 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-top: 12px;
+  padding: 0px 4px;
+  box-sizing: border-box;
+}
+
+.card {
+  color: var(--blackColor);
+  background: var(--whiteColor);
+  padding: 1rem;
+  border-radius: 12px !important;
+  text-align: left;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 22px;
+  white-space: normal;
+}
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  position: relative;
+  z-index: 10;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    background: white;
+    border-radius: 50%;
+    opacity: 0.5;
+    cursor: pointer;
+
+    &.active {
+      background: #ff375e;
+      opacity: 1;
+    }
+  }
+}

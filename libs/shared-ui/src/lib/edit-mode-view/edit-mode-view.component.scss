@@ -1,0 +1,43 @@
+// @import '../../../../../styles/fonts';
+.financial-scorecard-edit-mode {
+  // height:60px;
+  border-radius: 15px;
+  // background-color: var(--stc-grey-light-color);
+  background-color: var(--stc-lighter-sky-color);
+  // background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 20px;
+  margin-bottom: 20px;
+  gap: 20px;
+  &-button {
+    // background-color: var(--stc-purple-light-color);
+    // color:var(--stc-white-color);
+    background-color: var(--stc-red-dark-color);
+    color: var(--stc-white-color);
+    border: 0;
+    // @extend .stcFont;
+    font-size: 16px;
+    text-transform: capitalize;
+    padding: 10px 25px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    &.import-btn {
+      background-color: var(--stc-purple-color);
+    }
+    &.activity-log-btn {
+      background-color: var(--stc-grey-dark-color);
+      padding: 10px 15px;
+    }
+    img {
+      display: inline-block;
+      margin-right: 10px;
+      position: relative;
+      top: -1px;
+      width: 24px;
+    }
+  }
+}

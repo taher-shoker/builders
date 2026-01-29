@@ -1,0 +1,98 @@
+<div class="maturity-edit-grid" [formGroup]="form">
+  <div class="left">
+    <h3>AI&DS Agile Maturity Index</h3>
+    <div class="inputs">
+      <stc-apps-numeric-input
+        inputName="Strategy"
+        inputId="strategy"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="strategy"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="Structure"
+        inputId="structure"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="structure"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="Processes"
+        inputId="processes"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="processes"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="People"
+        inputId="people"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="people"
+      ></stc-apps-numeric-input>
+      <stc-apps-numeric-input
+        inputName="Technology"
+        inputId="technology"
+        [min]="0"
+        [max]="4"
+        [allowDecimal]="true"
+        [appearance]="'plain'"
+        formControlName="technology"
+      ></stc-apps-numeric-input>
+    </div>
+  </div>
+  <div class="right">
+    <h3>Key Highlights</h3>
+    <label
+      >Title
+      <span
+        *ngIf="form.get('keyHighlightsTitle')?.hasError('required')"
+        class="required-star"
+        >*</span
+      ></label
+    >
+    <input
+      type="text"
+      formControlName="keyHighlightsTitle"
+      placeholder="Enter title"
+    />
+    @if (form.get('keyHighlightsTitle')?.hasError('required') &&
+    form.get('keyHighlightsTitle')?.touched) {
+    <div class="error-holder">
+      <p>This Field Is Required</p>
+    </div>
+    }
+    <label style="margin-top: 12px"
+      >Content @if(!isHasHighlightContent()){
+      <span class="required-star">*</span>}</label
+    >
+    <p-editor
+      formControlName="keyHighlightsContentHtml"
+      [modules]="modules"
+      [style]="{ height: '200px' }"
+      (onTextChange)="onTextChange($event)"
+    >
+    </p-editor>
+
+    @if (hasHighlightContent === false && form.get('keyHighlightsContentHtml')?.touched)
+    {
+    <div class="error-holder">
+      <p>This Field Is Required</p>
+    </div>
+    }
+  </div>
+</div>
+<div class="actions">
+  <button class="btn save" (click)="onSave()" [disabled]="form.invalid || !isHasHighlightContent()">
+    Save
+  </button>
+  <button class="btn cancel" (click)="onCancel()">Cancel</button>
+</div>

@@ -1,0 +1,62 @@
+<form [formGroup]="filterForm" class="api-standard_filters">
+  <!-- Search by Standard Name -->
+  <div class="filter-field">
+    <p-iconField iconPosition="left">
+      <p-inputIcon styleClass="pi pi-search" />
+      <input
+        id="standardName"
+        type="text"
+        pInputText
+        formControlName="name"
+        placeholder="Search by Standard Name"
+      />
+    </p-iconField>
+  </div>
+
+  <!-- Publish Date -->
+  <div class="filter-field">
+    <p-calendar
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      placeholder="Publish Date"
+      formControlName="publishUpdate"
+      [showClear]="true"
+      [showTime]="true"
+      [timeOnly]="false"
+      [hourFormat]="'12'"
+      inputId="publishUpdate"
+    />
+  </div>
+
+  <!-- Latest Update Date -->
+  <div class="filter-field">
+    <p-calendar
+      formControlName="lastUpdate"
+      [iconDisplay]="'input'"
+      [showIcon]="true"
+      placeholder="Latest Update Date"
+      [showClear]="true"
+      inputId="lastUpdate"
+    />
+  </div>
+
+  <!-- Business Area Dropdown -->
+  <div class="filter-field">
+    <stc-apps-filter-dropdown
+      [dropdownOptions]="businessAreaOptions()"
+      [placeholder]="'Business Area'"
+      [selectedValue]="filterForm.get('businessArea')?.value"
+      (valueChange)="onBusinessAreaChange($event)"
+    ></stc-apps-filter-dropdown>
+  </div>
+
+  <!-- Sort Buttons -->
+  <div class="filter-field">
+    <stc-apps-filter-dropdown
+      [dropdownOptions]="sortOptions"
+      [placeholder]="'Sort'"
+      [selectedValue]="selectedSortOption"
+      (valueChange)="onSortChange($event)"
+    ></stc-apps-filter-dropdown>
+  </div>
+</form>

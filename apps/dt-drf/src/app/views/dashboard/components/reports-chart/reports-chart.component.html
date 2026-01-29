@@ -1,0 +1,50 @@
+<div class="white-box">
+  <div class="row">
+    <div class="col-md-3">
+      <h3>All Reports</h3>
+    </div>
+    <div class="col-md-9">
+      <div class="row" [formGroup]="form">
+        <div class="col-md-2">
+          @if( hasNonNullValue(this.filter)){
+          <stc-apps-button [buttonText]="'Clear'" [buttonType]="'warn'" (btnClick)="reset()"></stc-apps-button>
+          }
+
+        </div>
+        <div class="col-md-3">
+          <stc-apps-select-drop-down formControlName="category" [label]="''" [matLabel]="'Category'"
+            [options]="categories()" [outputValue]="'name'"
+            (selectChange)="handleSelect($event,'category')"></stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-3">
+          <stc-apps-select-drop-down formControlName="status" (selectChange)="handleSelect($event,'status')"
+            [matLabel]="'Report Status'" [label]="''" [options]="authService.reportStatus"
+            [outputValue]="'value'"></stc-apps-select-drop-down>
+        </div>
+        <div class="col-md-4">
+          <stc-apps-date-picker-range [resetFormFlag]="true" [disableInput]="true" [disableFilterFlag]="true"
+            (datePickerChangeEvent)="datePickerChanged($event)" [startDate]="form.get('startDate')?.value"
+            [endDate]="form.get('endDate')?.value">
+          </stc-apps-date-picker-range>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="">
+        @if(chartData && chartData.length !== 0)
+        {
+        <div class="" style="height: 300px;">
+
+          <stc-apps-bar-chart [data]="chartData" [isFinancialStatus]="false" />
+        </div>}
+        @else {
+        <p class="noData">No Data To Display </p>
+        }
+      </div>
+
+
+    </div>
+  </div>
+</div>

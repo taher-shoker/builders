@@ -1,21 +1,21 @@
 /* eslint-disable @typescript-eslint/no-inferrable-types */
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 // import { environment } from 'apps/d2d/src/environments/environment';
-import { environment } from '../../../environments/environment';
-import { BehaviorSubject, Observable, delay, map, of } from 'rxjs';
 import { CookieService } from 'ngx-cookie';
+import { BehaviorSubject, Observable, map } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import {
-  StreamsResponse,
   HighlightImpactReport,
+  HighlightImpartReportResponse,
   MilestoneAttachment,
   MilestoneProgressWorkflow,
   PendingTask,
-  HighlightImpartReportResponse,
   Reminders,
   ReportData,
   ReportDataWorkflow,
+  StreamsResponse,
 } from '../../services/models/milestones.models';
 
 export interface User {
@@ -60,7 +60,10 @@ export class MilestonesService {
   constructor(private http: HttpClient, private cookieService: CookieService) {}
 
   isDTDirector!: boolean;
+  isDTGovernance!: boolean;
   isBusinessSpoc!: boolean;
+  isDTExecutive!: boolean;
+  isDTPMO!: boolean;
   isVPViewer!: boolean;
 
   isDTAdmin!: boolean;
@@ -99,6 +102,37 @@ export class MilestonesService {
       this.isDTDirector = false;
     }
     return this.isDTDirector;
+  }
+
+  checkIsGovernance() {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Governance')
+    ) {
+      this.isDTGovernance = true;
+    } else {
+      this.isDTGovernance = false;
+    }
+    return this.isDTGovernance;
+  }
+
+  checkIsExecutive() {
+    if (
+      this.getMilestoneUsersType().find((x) => x.groupName === 'DT_Executive')
+    ) {
+      this.isDTExecutive = true;
+    } else {
+      this.isDTExecutive = false;
+    }
+    return this.isDTExecutive;
+  }
+
+  checkIsPMO() {
+    if (this.getMilestoneUsersType().find((x) => x.groupName === 'PMO')) {
+      this.isDTPMO = true;
+    } else {
+      this.isDTPMO = false;
+    }
+    return this.isDTPMO;
   }
 
   /**
@@ -150,7 +184,11 @@ export class MilestonesService {
       params,
     });
   }
-
+  approveBulkTasks(data: number[]) {
+    return this.http.put(`${this.dtUrl}/bulk/approval`, {
+      milestoneIds: data,
+    });
+  }
   /**
    * Returns all of the streams of the DTMV system.
    */
@@ -162,6 +200,32 @@ export class MilestonesService {
     return this.http.get<StreamsResponse>(`${this.vpUrl}activities`, {
       params,
     });
+  }
+
+  /**
+   * Fetches unit progress metrics for VP dashboard summary cards.
+   * @param teamName team identifier
+   * @param year selected year
+   */
+  getUnitProgress(
+    teamName: string,
+    year: number
+  ): Observable<{
+    unitBaseline: number;
+    unitTarget: number;
+    diActualProgress: number;
+    averageUnitsProgress: number;
+  }> {
+    const params = new HttpParams()
+      .set('teamName', teamName)
+      .set('year', year.toString());
+
+    return this.http.get<{
+      unitBaseline: number;
+      unitTarget: number;
+      diActualProgress: number;
+      averageUnitsProgress: number;
+    }>(`${this.vpUrl}unit/progress`, { params });
   }
 
   /**
@@ -189,12 +253,18 @@ export class MilestonesService {
     );
   }
 
-  getMilestones(filterData?: any) {
+  getMilestones(filterData?: any, archivedFlag?: boolean) {
+    if (archivedFlag !== undefined) {
+      filterData['archived'] = archivedFlag;
+    }
     return this.http.get(`${this.dtUrl}`, {
       params: filterData,
     });
   }
-  exportMilestones(filterData?: any) {
+  exportMilestones(filterData?: any, archivedFlag?: boolean) {
+    if (archivedFlag !== undefined) {
+      filterData['archived'] = archivedFlag;
+    }
     return this.http.get(`${this.dtUrl}/export`, {
       params: filterData,
       responseType: 'blob',
@@ -292,11 +362,20 @@ export class MilestonesService {
         )
       );
   }
+  getMilestoneTasks(extraParams?: {
+    [key: string]: boolean | string;
+  }): Observable<PendingTask[]> {
+    let params = this.setSystemParam();
 
-  getMilestoneTasks(): Observable<PendingTask[]> {
-    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`, {
-      params: this.setSystemParam(),
-    });
+    if (extraParams) {
+      for (const key in extraParams) {
+        if (Object.prototype.hasOwnProperty.call(extraParams, key)) {
+          params = params.set(key, extraParams[key]);
+        }
+      }
+    }
+
+    return this.http.get<PendingTask[]>(`${this.ticketUrl}pending`, { params });
   }
 
   downloadAttachment(id: number) {
@@ -416,4 +495,4 @@ export class MilestonesService {
     return Object.keys(obj)[Object.values(obj).indexOf(status)];
   }
 }
-export { HighlightImpactReport, PendingTask, MilestoneAttachment };
+export { HighlightImpactReport, MilestoneAttachment, PendingTask };

@@ -1,0 +1,17 @@
+<div class="kpi-list_search" [formGroup]="searchForm">
+  <stc-apps-input
+    [inputType]="'text'"
+    formControlName="searchControl"
+    [inputPlaceholder]="placeholder()"
+    [inputIcon]="'fa-search'"
+  ></stc-apps-input>
+  <stc-apps-select-drop-down
+    [label]="''"
+    [matLabel]="'Dimensions'"
+    [multi]="true"
+    [options]="dimensionsOptions"
+    formControlName="dimensions"
+    [searchMode]="false"
+    (selectChange)="onDimensionsChange($event)"
+  ></stc-apps-select-drop-down>
+</div>

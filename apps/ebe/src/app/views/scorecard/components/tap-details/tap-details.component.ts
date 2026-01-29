@@ -8,7 +8,7 @@ import {
   signal,
   WritableSignal,
   EventEmitter,
-  ViewChild
+  ViewChild,
 } from '@angular/core';
 import {
   FileModel,
@@ -21,19 +21,24 @@ import {
   FormsModule,
   ReactiveFormsModule,
 } from '@angular/forms';
-import { SharedUiModule } from "@stc-apps/shared-ui";
+import { SharedUiModule } from '@stc-apps/shared-ui';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { ScorecardService } from '../../../../services/scorecard.service';
 // import { DialogModule } from 'primeng/dialog';
 // import { FileUploadInputComponent } from '../../../../components/file-upload-input/file-upload-input.component';
-import { EditModeViewComponent } from '../edit-mode-view/edit-mode-view.component';
-import { Subject } from 'rxjs';
+import { Subject, takeUntil } from 'rxjs';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
-interface filterOption
-{
-  month:number;
-  year:number;
+import { DatePipe } from '@angular/common';
+import {
+  ActivityLogData,
+  ColumnsSchema,
+} from '../../../../models/activity-logs';
+import { AuthService } from '../../../../services/auth.service';
+import { ActivityLogService } from '../../../../services/activity-logs.service';
+interface filterOption {
+  month: number;
+  year: number;
 }
 @Component({
   selector: 'stc-apps-tap-details',
@@ -44,30 +49,39 @@ interface filterOption
     ReactiveFormsModule,
     MatFormFieldModule,
     MatSelectModule,
-    EditModeViewComponent,
-    OverlayPanelModule
+    OverlayPanelModule,
   ],
   templateUrl: './tap-details.component.html',
   styleUrl: './tap-details.component.scss',
 })
 export class TapDetailsComponent implements OnInit {
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
-  scorcardData: InputSignal<ScorecardModel[]> = input.required<ScorecardModel[]>();
-  currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<'editMode' | 'viewMode'>();
+  scorcardData: InputSignal<ScorecardModel[]> =
+    input.required<ScorecardModel[]>();
+  currentMode: InputSignal<'editMode' | 'viewMode'> = input.required<
+    'editMode' | 'viewMode'
+  >();
   visible = false;
-  endSubs$:Subject<ScorecardModel[]> = new Subject();
-  selectedFile!:FileModel | null;
+  endSubs$: Subject<ScorecardModel[]> = new Subject();
+  activityLogsTableHeader!: ColumnsSchema[];
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
+  selectedFile!: FileModel | null;
+  activityLogServices = inject(ActivityLogService);
   currentClickedTap: InputSignal<TapModel> = input.required<TapModel>();
   isEmpty: InputSignal<boolean> = input.required<boolean>();
   monthsArr: { name: string; id: number }[] = [];
-  years: WritableSignal<{ name: string; id: number }[]> = signal<{ name: string; id: number }[]>([]);
+  years: WritableSignal<{ name: string; id: number }[]> = signal<
+    { name: string; id: number }[]
+  >([]);
   filtersForm: FormGroup = new FormGroup({
     month: new FormControl(new Date().getMonth() + 1),
     year: new FormControl(new Date().getFullYear()),
   });
-  @Output() filterOptions:EventEmitter<filterOption> = new EventEmitter();
-  @Output() ImportedFile:EventEmitter<FileModel> = new EventEmitter();
+  @Output() filterOptions: EventEmitter<filterOption> = new EventEmitter();
+  @Output() ImportedFile: EventEmitter<FileModel> = new EventEmitter();
   scorecardService = inject(ScorecardService);
+  isAdmin = false;
+  authServices = inject(AuthService);
   monthsArrPopulator() {
     for (let i = 1; this.monthsArr.length < 12; i++) {
       const date = new Date(2000, i - 1, 10); // 2009-11-10
@@ -76,8 +90,43 @@ export class TapDetailsComponent implements OnInit {
       this.monthsArr.push(monthObject);
     }
   }
-  ngOnInit(): void {    
-    console.log(window.innerWidth);
+  constructor(private datePipe: DatePipe) {}
+  ngOnInit(): void {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next: (res) => {
+        this.showActivityLogsPopup = false;
+      },
+    });
+    this.authServices.userRoles.subscribe({
+      next: (role) => {
+        this.isAdmin = role.roles.some(
+          (role) => role.roleName === 'BE_EDITORS' || role.roleName === 'ADMINS'
+        );
+      },
+    });
+    // console.log(window.innerWidth);
+    this.activityLogsTableHeader = [
+      {
+        key: 'username',
+        type: 'text',
+        label: 'User Name',
+      },
+      {
+        key: 'type',
+        type: 'text',
+        label: 'Activity Type',
+      },
+      // {
+      //   key : "details",
+      //   type : "text",
+      //   label : "Activity Details"
+      // },
+      {
+        key: 'time',
+        type: 'text',
+        label: 'Time Stamp',
+      },
+    ];
     const yearsArr: { name: string; id: number }[] = [];
     const currYear: number = new Date().getFullYear();
     for (let index = 2024; index <= currYear; index++) {
@@ -94,36 +143,31 @@ export class TapDetailsComponent implements OnInit {
     return this.filtersForm.get('year');
   }
   selectYear() {
-    console.log('month value => ', this.monthValue?.value);
-    console.log('year value => ', this.yearValue?.value);
+    // console.log('month value => ', this.monthValue?.value);
+    // console.log('year value => ', this.yearValue?.value);
     this.filterOptions.emit(this.filtersForm.value);
   }
   selectMonth() {
-    console.log('month value => ', this.monthValue?.value);
-    console.log('year value => ', this.yearValue?.value);
+    // console.log('month value => ', this.monthValue?.value);
+    // console.log('year value => ', this.yearValue?.value);
     this.filterOptions.emit(this.filtersForm.value);
   }
-  showDialog()
-  {
+  showDialog() {
     this.visible = true;
   }
-  importData(e:FileModel)
-  {
-    if(e)
-    {
+  importData(e: FileModel) {
+    if (e) {
       this.ImportedFile.emit(e);
     }
   }
-  downloadTemplate()
-  {
+  downloadTemplate() {
     this.scorecardService.downloadTemplate().subscribe({
-      next : (response) => {
+      next: (response) => {
         this.downloadFile(response, `scorecards.csv`);
-      }
-    })
+      },
+    });
   }
-  text()
-  {
+  text() {
     this.overlayPanel2.toggle(event);
   }
   downloadFile(data: string, filename: string) {
@@ -135,16 +179,36 @@ export class TapDetailsComponent implements OnInit {
     a.click();
     window.URL.revokeObjectURL(url);
   }
-  onHide()
-  {
+  onHide() {
     this.visible = false;
   }
-  hoverTitle!:string;
-  showPopup(title:string)
-  {
-    if(title.trim().length > 95){
+  hoverTitle!: string;
+  showPopup(title: string) {
+    if (title.trim().length > 95) {
       this.hoverTitle = title;
-      this.overlayPanel2.show(event)
+      this.overlayPanel2.show(event);
     }
+  }
+  showActivityLogsPopup = false;
+  showActivityLogs() {
+    // this.activityLogsPanel.toggle(event);
+    this.getScorecardActivityLogs('Scorecard');
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+  }
+  $endScorecardActivityLogsSub: Subject<any> = new Subject();
+  private getScorecardActivityLogs(moduleName: string) {
+    this.activityLogServices
+      .getSpecificActivityLog(moduleName, 'Import,Export')
+      .pipe(takeUntil(this.$endScorecardActivityLogsSub))
+      .subscribe({
+        next: (activityLogs: ActivityLogData[]) => {
+          // console.log(activityLogs);
+          this.activityLogsTableBody.set(activityLogs);
+        },
+      });
+  }
+  popupClosed() {
+    this.showActivityLogsPopup = false;
+    this.$endScorecardActivityLogsSub.complete();
   }
 }

@@ -1,0 +1,23 @@
+<div class="home-section">
+  <stc-apps-user-info
+    [userImage]="userImage()"
+    [username]="userData ? userData.name : ''"
+  />
+  <div class="stc-logo">
+    <img src="assets/images/stc-logo.svg" alt="" />
+  </div>
+  <p class="main-title">AI&DS</p>
+  <div class="tabs-cards">
+    <div class="row">
+      @for (tap of tapsData(); track tap.id) {
+      <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 col-xs-12">
+        <stc-apps-tab-card
+          [tabData]="tap"
+          (currentTap)="getCurrentTap($event)"
+        />
+      </div>
+      }
+    </div>
+  </div>
+  <!-- <router-outlet /> -->
+</div>

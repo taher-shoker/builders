@@ -3,6 +3,9 @@
   <stc-apps-edit-mode-view
     (import)="showDialog()"
     (export)="downloadTemplate()"
+    (showActivityLogs)="showActivityLogs()"
+    [isAdmin]="isAdmin"
+    fontFamily="STCForwardFont"
   />
   }
   <form
@@ -32,7 +35,7 @@
       [class.mt-4]="!first"
       (mouseenter)="showPopup(scorecard.title)"
       (mouseleave)="overlayPanel2 ? overlayPanel2.hide() : ''"
-      >
+    >
       <!-- (click)="text()" -->
       {{ scorecard.title | truncateWord : 13 }}
       @if(scorecard.title.trim().length > 95) {
@@ -66,6 +69,13 @@
   [visible]="visible"
   (ImportedFile)="importData($event)"
   (onhide)="onHide()"
+/>
+<stc-apps-activity-logs-popup
+  [activityLogsTableHeader]="activityLogsTableHeader"
+  [activityLogsTableBody]="activityLogsTableBody()"
+  [showPopup]="showActivityLogsPopup"
+  (popupClosed)="popupClosed()"
+  type="scorecard"
 />
 <!-- <p-dialog
   [modal]="true"

@@ -6,34 +6,34 @@ import {
   Component,
   OnDestroy,
   OnInit,
-  TemplateRef,
   ViewChild,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { BannerDataService, DialogService } from '@stc-apps/shared-ui';
 
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { AuthService } from '../../../../services/auth.service';
-import { Subscription, take } from 'rxjs';
-import { UtilsService } from '@stc-apps/lng-selector';
-import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
-import { MatDialog } from '@angular/material/dialog';
-import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
-import { MilestonesService, PendingTask } from '../../milestones.service';
-import { UtilitiesService } from 'apps/dtmv/src/app/services/utilities.service';
-import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
-import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
-import { ToastrService } from 'ngx-toastr';
-import { NgxSpinnerService } from 'ngx-spinner';
-import { saveAs } from 'file-saver';
 import {
-  trigger,
+  animate,
   state,
   style,
   transition,
-  animate,
+  trigger,
 } from '@angular/animations';
+import { AbstractControl, FormBuilder, FormGroup } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { UtilsService } from '@stc-apps/lng-selector';
 import { ConfigService } from 'apps/dtmv/src/app/services/config.service';
+import { saveAs } from 'file-saver';
+import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
+import { PaginationEvent } from 'libs/shared-ui/src/lib/paginator/paginator.component';
+import { UtilitiesService } from 'libs/shared-ui/src/lib/services/utilities.service';
+import { NgxSpinnerService } from 'ngx-spinner';
+import { ToastrService } from 'ngx-toastr';
+import { filter, Subscription, take } from 'rxjs';
+import { AuthService } from '../../../../services/auth.service';
+import { FeedbackIssueComponent } from '../../../feedback-issue/feedback-issue.component';
+import { MilestonesService, PendingTask } from '../../milestones.service';
+import { UpdateProgressDialogComponent } from '../updateProgressDialog/updateProgressDialog.component';
+import { MessageDialogComponent } from './../../../../../../../../libs/shared-ui/src/lib/message-dialog/message-dialog.component';
 
 export interface Milestone {
   activityName: string;
@@ -50,6 +50,7 @@ interface MilestonesParamsFilterration {
   sortDirection?: string;
   [key: string]: any; // To accommodate any additional form fields from filteredForm
 }
+type AllowedActions = '' | 'edit' | 'details' | 'delete' | 'updateProgress';
 
 @Component({
   selector: 'stc-apps-casses',
@@ -60,13 +61,13 @@ interface MilestonesParamsFilterration {
       state(
         'in',
         style({
-          right: '0',
+          right: '-40px',
         })
       ),
       state(
         'out',
         style({
-          right: '-500px',
+          right: '-640px',
         })
       ),
       transition('out => in', [animate('300ms ease-in')]),
@@ -80,6 +81,7 @@ export class MilestonesComponent
   @ViewChild('statusCustomTemplate') statusCustomTemplate!: any;
   @ViewChild('validationCustomTemplate') validationCustomTemplate!: any;
   @ViewChild('progressCustomTemplate') progressCustomTemplate!: any;
+  // @ViewChild('actions') actions!: any;
 
   form!: FormGroup;
   isLoading = true;
@@ -92,7 +94,7 @@ export class MilestonesComponent
   userSub!: Subscription;
   getAssigneeTasks!: Subscription;
   formChangesSub!: Subscription;
-
+  readOnly = false;
   // Props of the paginator :
   milestonesTotalCount!: number;
 
@@ -109,7 +111,10 @@ export class MilestonesComponent
   ];
   previousParams: MilestonesParamsFilterration = {}; // Store previous parameters
   filterForm: any = {};
-
+  showBulkRequests: boolean = false;
+  bulkPremission: boolean = false;
+  loadingBulk: boolean = false;
+  previousPath: string = '';
   constructor(
     private formBuilder: FormBuilder,
     public router: Router,
@@ -131,7 +136,7 @@ export class MilestonesComponent
     this.router.navigate(['./add_milestone'], { relativeTo: this.route });
   }
   columnsSchema: ColumnsSchema[] = [];
-
+  private routerSub!: Subscription;
   disabled = false;
   tableData!: any;
   rowData!: any;
@@ -145,17 +150,83 @@ export class MilestonesComponent
   monthsArr: any = [];
   yearsArr: any = [];
   allTeams: any = [];
-
+  pageSizeNumber: number = 10;
+  currentPageNumber: number = 1;
   ngOnInit() {
+    this.previousPath = this.router.url;
+    if (this.route.snapshot.data['state'] == 'archive') {
+      this.readOnly = true;
+      this.bannerDataService.updateData({
+        title: 'Archived Milestones',
+        text: '',
+      });
+    } else {
+      this.bannerDataService.updateData({ title: 'milestones', text: '' });
+      this.readOnly = false;
+    }
+    this.searchForm();
+    const storedPageSize = sessionStorage.getItem('milestonesPageSize');
+    if (storedPageSize) {
+      const n = parseInt(storedPageSize, 10);
+      if (!isNaN(n) && n > 0) this.pageSizeNumber = n;
+    }
+    const storedCurrentPage = sessionStorage.getItem('milestonesCurrentPage');
+    if (storedCurrentPage) {
+      const p = parseInt(storedCurrentPage, 10);
+      if (!isNaN(p) && p > 0) this.currentPageNumber = p;
+    }
     this.getMilestones();
     this.getPendingTasks();
-    this.bannerDataService.updateData({ title: 'milestones', text: '' });
 
-    this.searchForm();
     this.dialogService.modals = [];
     this.getAllTeams();
     this.monthsArrPopulator();
     this.yearsArrPopulator();
+    this.detectChangedRoutes();
+    if (this.milestonesService.checkIsDirector()) {
+      this.bulkPremission = true;
+    }
+    this.pendingActionsShown = 'in';
+  }
+  detectChangedRoutes() {
+    this.routerSub = this.router.events
+      .pipe(
+        filter(
+          (event): event is NavigationEnd => event instanceof NavigationEnd
+        )
+      )
+      .subscribe((event) => {
+        const currentPath = event.urlAfterRedirects;
+
+        const switchedBetweenHomeAndArchive =
+          (this.previousPath.includes('/home') &&
+            currentPath.includes('/archive')) ||
+          (this.previousPath.includes('/archive') &&
+            currentPath.includes('/home'));
+
+        if (switchedBetweenHomeAndArchive) {
+          this.form.reset();
+          this.resetFormFlag = true;
+          this.filterForm = {};
+          sessionStorage.removeItem('filterFormMilestones');
+        }
+
+        this.previousPath = currentPath;
+      });
+  }
+  getActionsBasedOnRole(): AllowedActions[] {
+    if (this.milestonesService.isDTAdmin) {
+      return ['edit', 'delete'];
+    } else if (
+      this.milestonesService.checkIsBusinessSpoc() ||
+      this.milestonesService.checkIsDirector() ||
+      this.milestonesService.checkIsGovernance()
+    ) {
+      return ['details'];
+    } else {
+      return ['edit', 'delete', 'details'];
+    }
+    //
   }
 
   ngAfterViewInit(): void {
@@ -163,7 +234,7 @@ export class MilestonesComponent
       {
         key: 'teamName',
         type: 'text',
-        label: 'Team',
+        label: 'Unit',
       },
       {
         key: 'workStream',
@@ -217,12 +288,7 @@ export class MilestonesComponent
       {
         key: 'actions',
         type: 'actions',
-        actions: !this.milestonesService.checkIsAdmin()
-          ? this.milestonesService.checkIsBusinessSpoc() ||
-            this.milestonesService.checkIsDirector()
-            ? ['details']
-            : ['edit', 'details']
-          : ['edit', 'delete', 'details'],
+        actions: this.getActionsBasedOnRole(),
         label: '',
       },
     ];
@@ -232,52 +298,138 @@ export class MilestonesComponent
     this.handlePendingActionsList(window.innerWidth);
   }
 
-  getPendingTasks() {
-    this.milestonesService.getMilestoneTasks().subscribe((res) => {
-      this.allItems = res;
-    });
-  }
+  fetchMilestones(options: any = {}): void {
+    const filteredForm = this.filterForm;
+    // If the form is fully empty, reset all previous filters
+    const isFormEmpty = Object.values(filteredForm).every(
+      (val) => val === null || val === undefined || val === ''
+    );
+    if (isFormEmpty) {
+      this.previousParams = {};
+    }
 
-  fetchMilestones(options: any = {}) {
-    const filteredForm = this.form.value;
-    // Start with previousParams
+    // Start with a clone of previous params
     let params: MilestonesParamsFilterration = { ...this.previousParams };
-    // Override properties in previousParams with filteredForm
-    Object.keys(filteredForm).forEach((key) => {
-      if (filteredForm[key] === null) {
-        // Delete property from params if the value in filteredForm is null
-        delete params[key];
-      } else {
-        // Otherwise, override the previousParam with the value from filteredForm
-        params[key] = filteredForm[key];
-      }
-    });
 
-    // Override with options
+    // Apply filters from the form (override or delete)
+    for (const [key, value] of Object.entries(filteredForm)) {
+      if (value === null || value === undefined || value === '') {
+        delete params[key];
+      } else if (Array.isArray(value)) {
+        if (value.length === 0) {
+          delete params[key];
+        } else {
+          params[key] = value.join(',');
+        }
+      } else {
+        params[key] = value;
+      }
+    }
+
+    // Merge with additional options (override again)
     params = { ...params, ...options };
-    // Remove undefined values
+
+    // Normalize specific field if necessary
+    if (params['activityName']) {
+      params['activityName'] = params['activityName'].toString().toLowerCase();
+    }
+
+    // Final cleanup: remove undefined or empty string
     const cleanParams = Object.fromEntries(
       Object.entries(params).filter(
         ([_, value]) => value !== undefined && value !== ''
       )
     );
 
-    // Store the latest clean params
+    // Save the cleaned params
     this.previousParams = { ...cleanParams };
-    // Make the API call with the clean parameters
+    console.log('clean params', cleanParams);
+
+    // Trigger API call
     this.milestonesService
-      .getMilestones(cleanParams)
+      .getMilestones(cleanParams, this.readOnly)
       .pipe(take(1))
       .subscribe((res: any) => {
         this.populateMilestones(res);
       });
   }
 
+  getPendingTasks() {
+    this.milestonesService.getMilestoneTasks().subscribe((res) => {
+      this.allItems = res;
+    });
+  }
+
+  handleBulk() {
+    this.showBulkRequests = false;
+    this.loadingBulk = true;
+    this.milestonesService
+      .getMilestoneTasks({ onlyEligibleForBulkApproval: '1' })
+      .subscribe((res) => {
+        if (res.length > 0) {
+          this.showBulkRequests = true;
+        }
+        this.loadingBulk = false;
+        this.allItems = res;
+      });
+  }
+  handleCancellation() {
+    this.milestonesService
+      .getMilestoneTasks({ onlyEligibleForBulkApproval: '0' })
+      .subscribe((res) => {
+        this.showBulkRequests = false;
+        this.allItems = res;
+      });
+  }
+  sendIds(arrId: number[]) {
+    this.loadingBulk = true;
+    this.milestonesService.approveBulkTasks(arrId).subscribe({
+      next: () => {
+        this.loadingBulk = false;
+        this.toastr.success('Bulk approval completed successfully');
+        this.handleCancellation();
+      },
+      error: () => {
+        this.handleCancellation();
+        this.loadingBulk = false;
+        // this.toastr.error('Something went wrong!');
+      },
+    });
+  }
+  formatDate(date: Date): string | null {
+    if (date == null) return null;
+    const d = new Date(date);
+    const year = d.getFullYear();
+    const month = String(d.getMonth() + 1).padStart(2, '0');
+    const day = String(d.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  }
+
+  datePickerChanged(
+    event: { start: Date; end: Date },
+    formControlType: string
+  ) {
+    const from = `${formControlType}From`;
+    const to = `${formControlType}To`;
+    this.form.patchValue({
+      [from]: this.formatDate(event.start),
+      [to]: this.formatDate(event.end),
+    });
+  }
   paginate(event: PaginationEvent) {
-    this.fetchMilestones({ page: event.currentPage - 1 });
+    this.currentPageNumber = event.currentPage;
+    sessionStorage.setItem('milestonesCurrentPage', String(event.currentPage));
+    this.fetchMilestones({
+      page: event.currentPage - 1,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
   }
 
   setPageItemsCount(pageSize: number) {
+    this.pageSizeNumber = pageSize;
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    sessionStorage.setItem('milestonesPageSize', String(pageSize));
     this.fetchMilestones({ numberOfElementsToDisplay: pageSize, page: 0 });
   }
 
@@ -297,24 +449,42 @@ export class MilestonesComponent
   }
 
   onSubmit() {
-    this.filterForm = this.utilities.filterObject(this.form.value);
-    this.fetchMilestones({ page: 0 });
+    this.filterForm = this.form.value;
+    sessionStorage.setItem(
+      'filterFormMilestones',
+      JSON.stringify(this.filterForm)
+    );
+
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    this.fetchMilestones({
+      page: 0,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
     this.dialogService.close();
   }
 
   clearFormFilter() {
     this.form.reset();
+    this.resetFormFlag = true;
     this.filterForm = {};
-    this.fetchMilestones({ page: 0 });
+    sessionStorage.removeItem('filterFormMilestones');
+    this.currentPageNumber = 1;
+    sessionStorage.setItem('milestonesCurrentPage', '1');
+    this.fetchMilestones({
+      page: 0,
+      numberOfElementsToDisplay: this.pageSizeNumber,
+    });
     this.dialogService.close();
   }
 
   getAllTeams() {
-    this.milestonesService.setUserTeams().subscribe((res) => {
-      this.allTeams = res;
-    });
-    if (this.allTeams?.length === 0) {
+    if (this.milestonesService.checkIsAdmin()) {
       this.milestonesService.setSystemTeams().subscribe((res) => {
+        this.allTeams = res;
+      });
+    } else {
+      this.milestonesService.setUserTeams().subscribe((res) => {
         this.allTeams = res;
       });
     }
@@ -338,6 +508,7 @@ export class MilestonesComponent
       }
       this.router.navigate(['./milestone_details', id], {
         relativeTo: this.route,
+        state: this.readOnly ? { viewMode: 'archive' } : {},
       });
     }
   }
@@ -354,11 +525,15 @@ export class MilestonesComponent
         }
         this.milestonesService.deleteMilestone(event.dataRow.id).subscribe({
           next: () => {
-            this.toastr.success('Deleted successfully');
+            if (event.dataRow.userHasEditPermission) {
+              this.toastr.success('Request Delete has been sent successfully');
+            } else {
+              this.toastr.success('Deleted successfully');
+            }
             this.getMilestones();
           },
           error: () => {
-            this.toastr.error('Something went wrong!');
+            //  this.toastr.error('Something went wrong!');
           },
         });
       });
@@ -417,31 +592,93 @@ export class MilestonesComponent
   endDate: Date = new Date();
   startDate: Date = new Date(new Date().setDate(new Date().getDate() - 7));
 
+  resetFormFlag = false;
+
   toggleFilter() {
+    this.resetFormFlag = false;
     this.dialogService.open('filter-Modal');
   }
 
   onExporting() {
     this.milestonesService
-      .exportMilestones(this.previousParams)
+      .exportMilestones(this.previousParams, this.readOnly)
       .subscribe((buffer) => {
         const data: Blob = new Blob([buffer]);
         saveAs(data, 'milestones.csv');
       });
   }
-
+  openFeedbackDialog() {
+    this.matDialog.open(FeedbackIssueComponent, {
+      disableClose: true,
+      width: '1200px',
+    });
+  }
   searchForm() {
     // Adding nonNullable makes the (.reset() function) return the form to it's initial state rather than NULLS, effective Angular14+ only
-    this.form = this.formBuilder.group({
-      milestoneName: [null],
-      milestoneId: [null],
-      teamName: [null],
-      status: [null],
-      month: [null],
-      year: [null],
-      workStream: [null],
-      validationStatus: [null],
+    this.form = this.formBuilder.group(
+      {
+        milestoneName: [null],
+        teamName: [null],
+        status: [null],
+        startDateFrom: [null],
+        startDateTo: [null],
+        endDateFrom: [null],
+        endDateTo: [null],
+        activityName: [null],
+        validationStatus: [null],
+      },
+      { validators: this.dateRangeValidator }
+    );
+  }
+  resetForm(data: any) {
+    this.form.setValue({
+      milestoneName: data.milestoneName || null,
+      teamName: data.teamName || null,
+      status: data.status || null,
+      startDateFrom: data.startDateFrom || null,
+      startDateTo: data.startDateTo || null,
+      endDateFrom: data.endDateFrom || null,
+      endDateTo: data.endDateFrom || null,
+      activityName: data.activityName || null,
+      validationStatus: data.validationStatus || null,
     });
+  }
+  get startDateFrom() {
+    return this.form.get('startDateFrom');
+  }
+
+  get startDateTo() {
+    return this.form.get('startDateTo');
+  }
+  get endDateFrom() {
+    return this.form.get('endDateFrom');
+  }
+
+  get endDateTo() {
+    return this.form.get('endDateTo');
+  }
+  dateRangeValidator(control: AbstractControl) {
+    const startFrom = control.get('startDateFrom')?.value;
+    const startTo = control.get('startDateTo')?.value;
+    const endFrom = control.get('endDateFrom')?.value;
+    const endTo = control.get('endDateTo')?.value;
+
+    if (
+      (startFrom && endFrom && new Date(startFrom) > new Date(endFrom)) ||
+      (startTo && endTo && new Date(startTo) > new Date(endTo))
+    ) {
+      return { invalidDateRange: true };
+    }
+
+    return null;
+  }
+  numericDateValidator(control: AbstractControl) {
+    const dateValue = control.value;
+    return /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/.test(
+      dateValue
+    ) || dateValue == null
+      ? null
+      : { invalidDateFormat: true };
   }
 
   OnChangesForm() {
@@ -499,17 +736,27 @@ export class MilestonesComponent
   }
 
   getMilestones() {
-    this.getMilestonesSub = this.milestonesService
-      .getMilestones()
-      .subscribe((res: any) => {
-        this.populateMilestones(res);
-      });
-  }
+    const savedFilter = sessionStorage.getItem('filterFormMilestones');
+    const filters = savedFilter ? JSON.parse(savedFilter) : null;
 
-  // resize(event: UIEvent) {
-  //   const mutatedEvent = event.target as Window;
-  //   this.handlePendingActionsList(mutatedEvent.innerWidth);
-  // }
+    if (filters) {
+      this.filterForm = filters;
+      this.fetchMilestones({
+        page: this.currentPageNumber - 1,
+        numberOfElementsToDisplay: this.pageSizeNumber,
+      });
+      this.resetForm(this.filterForm);
+    } else {
+      this.fetchMilestones({
+        page: this.currentPageNumber - 1,
+        numberOfElementsToDisplay: this.pageSizeNumber,
+      });
+    }
+  }
+  addingArchiveFilter() {
+    if (this.readOnly) this.filterForm.archive = true;
+    else this.filterForm.archive = false;
+  }
 
   showPendingActionsBtn: boolean = false;
 
@@ -524,14 +771,27 @@ export class MilestonesComponent
   }
 
   handlePendingActionsList(width: number) {
-    if (width < 1630) {
+    const MIN_TABLE_WIDTH = 1165;
+    const PANE_WIDTH = 600;
+    const GAP = 40; // approximate padding/margins
+    const enoughSpace = width >= MIN_TABLE_WIDTH + PANE_WIDTH + GAP;
+
+    if (!this.pendingActionsCanRender) {
       this.tableCols = 12;
-      this.showPendingActionsBtn = true;
-      this.isPendingListClosable = true;
-    } else if (width > 1630) {
-      this.showPendingActionsBtn = false;
       this.isPendingListClosable = false;
+      this.showPendingActionsBtn = false;
+      return;
+    }
+
+    if (enoughSpace) {
       this.tableCols = 8;
+      this.isPendingListClosable = false;
+      this.pendingActionsShown = 'in';
+      this.showPendingActionsBtn = false;
+    } else {
+      this.tableCols = 12;
+      this.isPendingListClosable = true;
+      this.showPendingActionsBtn = true;
     }
   }
 
@@ -540,5 +800,25 @@ export class MilestonesComponent
     this.userSub?.unsubscribe();
     this.getAssigneeTasks?.unsubscribe();
     this.formChangesSub?.unsubscribe();
+  }
+  get canAddMilestone(): boolean {
+    if (this.readOnly) return false;
+    const restricted =
+      this.milestonesService.checkIsBusinessSpoc() ||
+      this.milestonesService.checkIsDirector() ||
+      this.milestonesService.checkIsGovernance() ||
+      this.milestonesService.checkIsExecutive() ||
+      this.milestonesService.checkIsPMO() ||
+      this.milestonesService.checkIsAdmin();
+    return !restricted;
+  }
+
+  get pendingActionsCanRender(): boolean {
+    return (
+      !this.milestonesService.checkIsAdmin() &&
+      !this.milestonesService.checkIsExecutive() &&
+      !this.milestonesService.checkIsPMO() &&
+      !this.readOnly
+    );
   }
 }

@@ -1,10 +1,80 @@
+@if(!activityTable()) {
 <table cellpadding="10" [class.psrTable]="psrTable()">
+  @if(!activityTable()) {
+  <tbody>
+    <tr class="table-header">
+      @for(header of headers(); track header){
+      <th (click)="changeCurrentSortingColumn(header.key)" [ngStyle]="{
+          'font-family': fontFamily() ? fontFamily() : '',
+          'text-align': header.align ? header.align : (activityLogTable ? 'center' : 'left')
+        }">
+        <div class="header-cell-holder" [ngStyle]="{
+            'justify-content': header.align ? (header.align === 'center' ? 'center' : header.align === 'right' ? 'flex-end' : 'flex-start') : (activityLogTable ? 'center' : 'flex-start')
+          }">
+          <div>{{ header.label }}</div>
+          @if (sort && header.key !== 'actions' && !activityLogTable) {
+          <div class="arrows-holder">
+            <div>
+              <i class="ri-arrow-left-s-fill hashed-arrow" [ngClass]="{
+                  'active-arrow':
+                    (currentSortedByColumn$ | async) === header.key &&
+                    sortingDirection === 'asc'
+                }"></i>
+              <i class="ri-arrow-right-s-fill hashed-arrow" [ngClass]="{
+                  'active-arrow':
+                    (currentSortedByColumn$ | async) === header.key &&
+                    sortingDirection === 'desc'
+                }"></i>
+            </div>
+          </div>
+          }
+        </div>
+      </th>
+      }
+    </tr>
+    <tr class="mat-row" *ngIf="items && items.length === 0">
+      @if(!activityLogTable) {
+      <td class="mat-cell" [attr.colspan]="headers().length">
+        <div class="message-box">
+          <img src="assets/Group 590.png" alt="" />
+          <h3>{{ 'No data found' }}</h3>
+        </div>
+      </td>
+      }
+    </tr>
+
+    @if(itemsInView){
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"></ng-container>
+    }@else {
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: items }"></ng-container>
+    }
+  </tbody>
+  }
+  <!-- //Activity Logs// -->
+  @if(activityTable()) {
   <tbody>
     <tr class="table-header">
       @for(header of headers(); track header){
       <th (click)="changeCurrentSortingColumn(header.key)"
-        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '' }">
-        <div class="header-cell-holder">
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '', 'text-align': header.align ? header.align : 'left' }">
+        <div class="header-cell-holder" [ngStyle]="{ 'justify-content': header.align ? (header.align === 'center' ? 'center' : header.align === 'right' ? 'flex-end' : 'flex-start') : 'flex-start' }">
+          <div>{{ header.label }}</div>
+        </div>
+      </th>
+      }
+    </tr>
+    <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: items }"></ng-container>
+  </tbody>
+  }
+</table>
+} @if(activityTable()){
+<table cellpadding="10" [class.activityTable]="activityTable()">
+  <tbody>
+    <tr class="table-header">
+      @for(header of headers(); track header){
+      <th (click)="changeCurrentSortingColumn(header.key)"
+        [ngStyle]="{ 'font-family': fontFamily() ? fontFamily() : '', 'text-align': header.align ? header.align : 'left' }">
+        <div class="header-cell-holder" [ngStyle]="{ 'justify-content': header.align ? (header.align === 'center' ? 'center' : header.align === 'right' ? 'flex-end' : 'flex-start') : 'flex-start' }">
           <div>{{ header.label }}</div>
           @if (sort && header.key !== 'actions') {
           <div class="arrows-holder">
@@ -35,7 +105,6 @@
       </td>
     </tr>
 
-
     @if(itemsInView){
     <ng-container *ngTemplateOutlet="tableBody; context: { tableItems: itemsInView }"></ng-container>
     }@else {
@@ -43,13 +112,17 @@
     }
   </tbody>
 </table>
-@if(psrTable() && items.length === 0) {
+} @if(psrTable() && items && items.length === 0) {
 <p [ngStyle]="{ 'font-family': fontFamily() }" class="empty-details">
-  there are no details
+  there are no data
 </p>
-} @if(psrTable() && userRoles() !== "BE_VIEWERS") {
+} @if(psrTable() && userRoles() !== "BE_VIEWERS" &&userRoles() !== "BE_PM" && !isDeleted()) {
 <button type="button" class="add-record-btn" [ngStyle]="{ 'font-family': fontFamily() }" (click)="addNewRecord()">
-  <img src="assets/images/add-square.svg" alt="" />
+  <img [src]="
+      activityLogTable
+        ? 'assets/images/eye.svg'
+        : 'assets/images/add-square.svg'
+    " alt="" />
   <span> add new record </span>
 </button>
 } @if(paginate && length > 0){
@@ -61,10 +134,10 @@
 <ng-template #tableBody let-tableItems="tableItems">
   @for(item of tableItems | filterArray: filterStrStored; track item){
 
-  <tr>
+  <tr (click)="onRowClick(item)" [class.clickable-row]="rowClickEnabled && rowClickAction">
     @for(header of headers(); track header){ @if(header.type !== 'actions' &&
     header.type !== 'custom'){ @if(header.complexViewTemp){
-    <td>
+    <td [ngStyle]="{ 'text-align': header.align ? header.align : (psrTable() ? 'center' : 'left') }">
       <ng-container *ngTemplateOutlet="
           header.complexViewTemp;
           context: { header: header, item: item }
@@ -79,44 +152,56 @@
           header.label === 'Duration')
       " [class.psrTabldMajor]="
         psrTable() && header.label === 'Major Activities/Deliverables'
-      " [class.psrTabldLevel]="psrTable() && header.label === 'Completion Level'" [ngStyle]="{
-        'font-family': fontFamily() && psrTable() ? fontFamily() : ''
+      " [class.psrTabldLevel]="
+        psrTable() &&
+        (header.label === 'Completion Level' || header.label === 'weight')
+      " [ngStyle]="{
+        'font-family': fontFamily() && psrTable() ? fontFamily() : '',
+        color: header.key === 'time' ? '#8E9AA0' : '#363636',
+        'text-align': header.align ? header.align : (psrTable() ? 'center' : 'left')
       }">
-      @if(!isEditMode()) { @if(header.key === '' && userRoles() !== "BE_VIEWERS") {
-      <div class="delete-btn" (click)="deleteRecord(item)" [ngStyle]="{
+      @if(!isEditMode()) { @if(header.key === '' && userRoles() !== "BE_VIEWERS"
+      && !isDeleted()) {
+      <div class="delete-btn" (click)="deleteRecord(item); $event.stopPropagation()" [ngStyle]="{
           'font-family': fontFamily() && psrTable() ? fontFamily() : ''
         }">
         <img src="assets/images/trash.svg" alt="" />
         delete
       </div>
       } @else {
-      {{ item[header.key] }}
+      {{
+      header.label === 'Completion Level' || header.label === 'weight'
+      ? item[header.key] || item[header.key] === 0
+      ? item[header.key]
+      : '-'
+      : item[header.key]
+      ? item[header.key]
+      : '-'
+      }}
       } @if(psrTable() && header.label === 'Completion Level') { % } } @else {
-      @if(header.key !== '') { @if(header.key !== 'id') {
-      @if(header.key === 'major')
-      {
+      @if(header.key !== '') { @if(header.key !== 'id') { @if(header.key ===
+      'major') {
       <div class="position-relative">
-        <input type="text" [(ngModel)]="item[header.key]" class="edit-input"
+        <input type="text" [disabled]="userRoles() === 'BE_PM'" [(ngModel)]="item[header.key]" class="edit-input"
           (ngModelChange)="inputChanged(item['id'])" />
-        @if(item[header.key] === '')
-        {
+        @if(item[header.key] === '') {
         <small class="empty-data-msg">This field is required</small>
         }
       </div>
       } @else {
       <div class="position-relative">
-        @if(header.key === 'completionLevel')
-        {
-        <input type="number" [(ngModel)]="item[header.key]" class="edit-input" (keypress)="keyPress2($event)"
+        @if(header.key === 'completionLevel' || header.key === 'weight') {
+        <input type="number" [disabled]="userRoles() === 'BE_PM' &&  header.key === 'weight' "
+          [(ngModel)]="item[header.key]" class="edit-input" (keypress)="keyPress2($event)"
           (ngModelChange)="inputChanged(item['id'])" max="100" />
         } @else {
         <p-calendar dateFormat="dd/mm/yy" styleClass="custom-calendar2" class="custom-calendar2" appendTo="body"
-          [(ngModel)]="item[header.key]" (ngModelChange)="inputChanged(item['id'])" />
+          [ngModel]="item[header.key]" (ngModelChange)="setValue(item, header.key, $event); inputChanged(item['id'])"
+          [disabled]="userRoles() === 'BE_PM'" />
         <!-- {{item['endDate']}} -->
         <!-- {{parseDate(item['startDate']) > parseDate(item['endDate'])}}  -->
-        @if(parseDate(item['startDate']) > parseDate(item['endDate']) && header.key === 'startDate' && item['endDate']
-        !== null)
-        {
+        @if(parseDate(item['startDate']) > parseDate(item['endDate']) &&
+        header.key === 'startDate' && item['endDate'] !== null) {
         <small class="empty-data-msg empty-data-msg2">end date must be greater than start date</small>
         }
         <!-- <input
@@ -126,35 +211,32 @@
                 (ngModelChange)="inputChanged(item['id'])"
                 (keypress)="keyPress($event)"
               /> -->
-        }
-        @if(item[header.key] === null)
-        {
+        } @if(item[header.key] === null) {
         <small class="empty-data-msg">This field is required</small>
         }
       </div>
-      }
-      } @else {
+      } } @else {
       {{ item[header.key] }}
       } } }
     </td>
-    } } @else if(header.type === 'actions') {
+    } } @else if(header.type === 'actions' &&
+    ((!header?.actions?.includes('details') && (!item.latestWorkflowId && item.status !== 'Completed' &&
+    item.userHasEditPermission && !item.hasOngoingUpdateApproval)) ||
+    (header?.actions?.includes('details')))) {
 
-    <td>
+    <td [ngStyle]="{ 'text-align': header.align ? header.align : (psrTable() ? 'center' : 'left') }">
       <div class="actions-row d-flex">
         @if((header.actions ?? []).length > 0){
 
-        <span class="actions-span" mat-button [matMenuTriggerFor]="menu">
+        <span class="actions-span" mat-button [matMenuTriggerFor]="menu" (click)="$event.stopPropagation()">
           <i class="ri-more-2-fill"></i>
         </span>
         <mat-menu #menu="matMenu">
           <div class="menu-btns-wrapper">
-
             <ng-container *ngTemplateOutlet="
                 btnsTemp;
                 context: { header: header, item: item }
               "></ng-container>
-
-
           </div>
         </mat-menu>
 
@@ -176,44 +258,40 @@
   <div class="details">
     @if(header.complexViewTemp){
     <ng-container *ngTemplateOutlet="
-            header.complexViewTemp;
-            context: { header: header, item: item }
-          "></ng-container>
+        header.complexViewTemp;
+        context: { header: header, item: item }
+      "></ng-container>
 
-    }
-    @else {
-    @for(action of header?.actions; track action; let i = $index){
+    } @else { @for(action of header?.actions; track action; let i = $index){
+    @if(action === 'edit' && !item.latestWorkflowId ){
+    <ng-container *ngIf="item.userHasEditPermission && !item.hasOngoingUpdateApproval && item.status !== 'Completed'">
+      <div class="edit-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
+        <i class="ri-edit-box-line edit-icon"></i>
+        Edit
+      </div>
+    </ng-container>
 
-    @if(action
-    === 'edit' && !item.latestWorkflowId){
-    <div class="edit-option action-option" (click)="raiseAction(action, item)">
-      <i class="ri-edit-box-line edit-icon"></i>
-      Edit
-    </div>
-    }
-    @else if (action === 'delete' && !item.latestWorkflowId) {
+    } @else if (action === 'delete' && !item.latestWorkflowId && item.status !== 'Completed' ) {
+    <ng-container *ngIf="item.userHasEditPermission &&
+    !item.hasOngoingUpdateApproval">
+      <div class="delete-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
+        <i class="ri-delete-bin-line"></i>
+        Delete
+      </div>
+    </ng-container>
 
-    <div class="delete-option action-option" (click)="raiseAction(action, item)">
-      <i class="ri-delete-bin-line"></i>
-      Delete
-    </div>
-    }
-    @else if(action === 'details'){
+    } @else if(action === 'details'){
 
-    <div class="details-option action-option" (click)="raiseAction(action, item)">
+    <div class="details-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
       <i class="ri-arrow-right-up-line"></i>
       Show Details
     </div>
-    }
-    @else if(action === 'updateProgress' && !item.latestWorkflowId &&
+    } @else if(action === 'updateProgress' && !item.latestWorkflowId &&
     item.status !== 'Planned' && item.status !== 'Completed'){
-    <div class="update-option action-option" (click)="raiseAction(action, item)">
+    <div class="update-option action-option" (click)="raiseAction(action, item); $event.stopPropagation()">
       <i class="ri-arrow-left-right-line"></i>
       Update Progress
     </div>
-    }
-    }
-
-    }
+    } } }
   </div>
 </ng-template>

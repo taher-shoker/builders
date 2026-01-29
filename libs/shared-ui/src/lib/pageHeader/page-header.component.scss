@@ -1,0 +1,33 @@
+// @import '../../../styles/fonts';
+.page-header-section-welcome-text {
+  text-transform: capitalize;
+  font-size: 19px;
+  // @extend .stcFont;
+  span {
+    // @extend .mediunPoppins;
+    font-size: 22px;
+  }
+  img {
+    display: inline-block;
+    margin-left: 10px;
+    position: relative;
+    top: -3px;
+  }
+}
+.page-header-section-title {
+  font-size: 24px;
+  text-transform: capitalize;
+  font-weight: normal;
+  // @extend .stcFont;
+  font-size: 22px;
+  span {
+    font-size: 27px;
+    // @extend .blackPoppins;
+  }
+  .pi-arrow-left {
+    display: inline-block;
+    font-size: 1.1rem;
+    cursor: pointer;
+    margin-right: 10px;
+  }
+}

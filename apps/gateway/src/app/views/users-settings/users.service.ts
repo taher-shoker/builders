@@ -2,19 +2,20 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import * as _ from 'lodash';
 
-import { environment } from '../../../environments/environment';
 import { CookieService } from 'ngx-cookie';
+import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 import {
   app_sector_labels,
   di_labels,
   fraud_labels,
 } from '../../shared/constant/labels';
-import { Observable } from 'rxjs';
 import {
-  User,
+  Page,
   RequestUser,
-  Team,
   Role,
+  Team,
+  User,
   UserGroup,
 } from '../../shared/models/users-settings.model';
 
@@ -38,6 +39,11 @@ export class UsersService {
 
   getUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.endpoint}/users`, {
+      params: this.setSystemParam(),
+    });
+  }
+  getPages(): Observable<Page[]> {
+    return this.http.get<Page[]>(`${this.endpoint}/page-access`, {
       params: this.setSystemParam(),
     });
   }
@@ -71,6 +77,13 @@ export class UsersService {
       { params: this.setSystemParam() }
     );
   }
+  updateUserManager(userId: number, data: { id: string }): Observable<User> {
+    return this.http.patch<User>(
+      `${this.endpoint}/users/manager/${userId}`,
+      data,
+      { params: this.setSystemParam() }
+    );
+  }
 
   deleteUser(id: number): Observable<number> {
     return this.http.delete<number>(`${this.endpoint}/users/${id}`, {
@@ -90,7 +103,6 @@ export class UsersService {
   }
 
   addUserGroup(data?: Partial<UserGroup>): Observable<User> {
-    console.log(data);
     return this.http.patch<User>(`${this.endpoint}/users/groups`, data);
   }
 
@@ -139,8 +151,11 @@ export class UsersService {
     if (
       this.getCurrentSystem() === 'DI_Milestones' ||
       this.getCurrentSystem() === 'Business_Excellence_Dashboard' ||
+      this.getCurrentSystem() === 'ChatBI' ||
       this.getCurrentSystem() === 'Score_Card_Report_DB' ||
-      this.getCurrentSystem() === 'Strategic_Dashboard'
+      this.getCurrentSystem() === 'Strategic_Dashboard' ||
+      this.getCurrentSystem() === 'TU_BRAIN' ||
+      this.getCurrentSystem() === 'FNI_Nokia'
     ) {
       allRoles = this.allGroups
         .filter((g) => g.roles[0].roleName !== 'ADMINS')

@@ -1,0 +1,66 @@
+<div class="tab-card" (click)="getCurrentTab()">
+  <div class="tab-card-top">
+    <div class="left-side">
+      <div class="image">
+        <img [src]="tabData().image" alt="" />
+      </div>
+      <div class="info">
+        <p>{{ tabData().title }}</p>
+        <span>{{ tabData().subTitle }}</span>
+      </div>
+    </div>
+    <div class="right-side">
+      <img src="assets/images/mobile/arrow-left.svg" alt="" />
+    </div>
+  </div>
+  <div class="tab-card-bottom">
+    @if(tabData().kpisNumber && tabData().verticalNumber) {
+    <div class="kpis-tabs-number">
+      <div class="vertical-num">
+        <span>{{ tabData().verticalNumber }}</span>
+        <p>verticals</p>
+      </div>
+      <div class="vertical-num kpis-num">
+        <span>{{ tabData().kpisNumber }}</span>
+        <p>KPIs</p>
+      </div>
+    </div>
+    } @else if(tabData().aNumber && tabData().rNumber && tabData().gNumber) {
+    <div class="kpis-tabs-number">
+      <div class="vertical-num">
+        <div class="bullet red"></div>
+        <span>{{ tabData().rNumber }}</span>
+        <p>R</p>
+      </div>
+      <div class="vertical-num kpis-num">
+        <div class="bullet yellow"></div>
+        <span>{{ tabData().aNumber }}</span>
+        <p>A</p>
+      </div>
+      <div class="vertical-num kpis-num">
+        <div class="bullet green"></div>
+        <span>{{ tabData().gNumber }}</span>
+        <p>G</p>
+      </div>
+      @if(tabData().cNumber){
+      <div class="vertical-num kpis-num">
+        <div class="bullet cyan"></div>
+        <span>{{ tabData().cNumber }}</span>
+        <p>C</p>
+      </div>
+      }
+    </div>
+    } @else {
+    <div class="kpis-tabs-number">
+      <div class="vertical-num">
+        <span>{{ tabData().capexSpend }}</span>
+        <p>CAPEX Spent</p>
+      </div>
+      <div class="vertical-num kpis-num">
+        <span>{{ tabData().opexSpend }}</span>
+        <p>OPEX Spent</p>
+      </div>
+    </div>
+    }
+  </div>
+</div>

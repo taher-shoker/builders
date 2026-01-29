@@ -20,7 +20,7 @@ export class EditUserComponent implements OnInit {
   ) {}
 
   getUser(id: string) {
-    this.userService.getUser(id).subscribe((res: User) => {
+    this.userService.getUser(id)?.subscribe((res: User) => {
       this.userData = res;
     });
   }

@@ -18,7 +18,6 @@ import {
   ValidationErrors,
   Validators,
 } from '@angular/forms';
-import { PageHeaderComponent } from '../../../../components/pageHeader/page-header.component';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { StrategyProgramService } from '../../../../services/strategy-program.service';
 import {
@@ -28,13 +27,15 @@ import {
 import { take } from 'rxjs';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ConfirmationService } from 'primeng/api';
+import { UserModel } from '../../../../models/scorecard.model';
+import { ScorecardService } from '../../../../services/scorecard.service';
 @Component({
   selector: 'stc-apps-add-project-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, PageHeaderComponent , SharedUiModule],
+  imports: [CommonModule, ReactiveFormsModule, SharedUiModule],
   templateUrl: './add-project-form.component.html',
   styleUrl: './add-project-form.component.scss',
-  providers : [ConfirmationService]
+  providers: [ConfirmationService],
 })
 export class AddProjectFormComponent implements OnInit, OnChanges {
   formBuilder = inject(FormBuilder);
@@ -49,7 +50,14 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
   objectiveNumber!: number;
   title!: string;
   prevProjects: StrategyProgramKpiProjectsDetailsModel[] = [];
+  userData!: UserModel;
+  scorecardService = inject(ScorecardService);
   ngOnInit(): void {
+    if (this.scorecardService.getUserGroups()) {
+      this.userData = JSON.parse(
+        decodeURIComponent(this.scorecardService.getUserGroups())
+      );
+    }
     this.addProjectForm = this.formBuilder.group({
       projects: this.formBuilder.array([]),
     });
@@ -89,16 +97,50 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
         }
       },
     });
-    console.log(this.projectsList.controls);
+    // console.log(this.projectsList.controls);
   }
-  createProjectFormGroup(data?:StrategyProgramKpiProjectsDetailsModel): FormGroup {
+  // newIndex = this.projectsList.length;
+  createProjectFormGroup(
+    data?: StrategyProgramKpiProjectsDetailsModel
+  ): FormGroup {
+    if (data && data.id) {
+      return this.formBuilder.group({
+        id: data && data.id ? data.id : null,
+        project: [
+          data && data.project ? data.project : null,
+          [
+            Validators.required,
+            this.noSpacesValidator,
+            Validators.maxLength(300),
+          ],
+        ],
+        actual: [
+          data && (data.actual || data.actual === 0) ? data.actual : null,
+          [Validators.required, this.rangeValidator],
+        ],
+        planned: [
+          data && (data.planned || data.planned === 0) ? data.planned : null,
+          [Validators.required, this.rangeValidator],
+        ],
+      });
+    }
     return this.formBuilder.group({
       project: [
         data && data.project ? data.project : null,
-        [Validators.required, this.noSpacesValidator, Validators.maxLength(300)],
+        [
+          Validators.required,
+          this.noSpacesValidator,
+          Validators.maxLength(300),
+        ],
       ],
-      actual: [data && (data.actual || data.actual === 0) ? data.actual : null, [Validators.required, this.rangeValidator]],
-      planned: [data && (data.planned || data.planned === 0) ? data.planned : null, [Validators.required, this.rangeValidator]],
+      actual: [
+        data && (data.actual || data.actual === 0) ? data.actual : null,
+        [Validators.required, this.rangeValidator],
+      ],
+      planned: [
+        data && (data.planned || data.planned === 0) ? data.planned : null,
+        [Validators.required, this.rangeValidator],
+      ],
     });
   }
   get projectsList(): FormArray {
@@ -136,12 +178,13 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
   save() {
     if (this.addProjectForm.valid) {
       const projectArr = this.addProjectForm.value.projects;
+      // console.log(projectArr);
       this.strategyService
         .updateProjects(this.title, this.objectiveNumber, projectArr)
         .subscribe({
           next: () => {
             this.confirmationService.confirm({
-              key: 'added-project-success'
+              key: 'added-project-success',
             });
           },
         });
@@ -170,17 +213,15 @@ export class AddProjectFormComponent implements OnInit, OnChanges {
       e.preventDefault();
     }
   }
-  deletedProj!:number;
-  showDeleteDialog(index:number)
-  {
+  deletedProj!: number;
+  showDeleteDialog(index: number) {
     this.deletedProj = index;
     this.confirmationService.confirm({
-      key: 'delete-project'
+      key: 'delete-project',
     });
   }
-  visible!:boolean;
-  close()
-  {
-    this.confirmationService.close()
+  visible!: boolean;
+  close() {
+    this.confirmationService.close();
   }
 }

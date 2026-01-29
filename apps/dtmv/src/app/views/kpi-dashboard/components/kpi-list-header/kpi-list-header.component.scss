@@ -1,0 +1,23 @@
+.kpi-list {
+    &_header {
+        border-bottom: none;
+        background-color: transparent;
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &_actons {
+        display: flex;
+        gap: 16px;
+
+        stc-apps-button {
+            ::ng-deep {
+
+                button,
+                i {
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+}

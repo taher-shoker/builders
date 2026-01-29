@@ -1,6 +1,3 @@
-/* eslint-disable @nx/enforce-module-boundaries */
-/* eslint-disable @typescript-eslint/no-inferrable-types */
-
 import { trigger, transition, style, animate } from '@angular/animations';
 import {
   Component,
@@ -11,18 +8,38 @@ import {
   signal,
   computed,
 } from '@angular/core';
-import { DTStream } from 'apps/dtmv/src/app/services/models/milestones.models';
 
+export type MilestoneStatus = 'Planned' | 'Delayed' | 'On Track' | 'Completed';
+
+export interface Activity {
+  activityName: string;
+  milestones: {
+    milestoneName: string;
+    endDate: string;
+    status: MilestoneStatus;
+    timeSpan?: number;
+  }[];
+}
+
+export interface DTStream {
+  streamName: string;
+  year: number;
+  month: number;
+  activities: Activity[];
+}
 @Component({
   selector: 'stc-apps-timeline-chart',
   templateUrl: './timeline-chart.component.html',
   styleUrls: ['./timeline-chart.component.scss'],
-  standalone : false,
+  standalone: false,
   animations: [
     trigger('slideIn', [
       transition(':enter', [
         style({ left: '0' }),
-        animate('{{ duration }}ms ease-in-out', style({ left: '{{ timeSpan }}%' })),
+        animate(
+          '{{ duration }}ms ease-in-out',
+          style({ left: '{{ timeSpan }}%' })
+        ),
       ]),
     ]),
   ],
@@ -35,9 +52,8 @@ export class TimelineChartComponent implements OnInit {
   todayDate: WritableSignal<number | null> = signal(null);
 
   dtStreamMutated: Signal<DTStream> = computed(() => {
-
     const copiedStream = this.dtStream();
-    
+
     for (const act of copiedStream.activities) {
       for (const milestone of act.milestones) {
         milestone['timeSpan'] = this.calculatePercentageOfDate(

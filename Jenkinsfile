@@ -1,27 +1,36 @@
+properties([
+    parameters([
+        choice(name: 'NX_APP', choices: ['chatBI', 'dtmv', 'ebe', 'dt-drf', 'di', 'd2d'], description: 'Select the application to build.'),
+        choice(name: 'NX_APP_PATH', choices: ['chat_bi', 'dtmilestones', 'business-excellence-workspace', 'dynamic-rf-workspace', 'dtworkspace', 'fraudworkspace'], description: 'Select the app path under Apache Tomcat.')
+    ])
+])
+
 pipeline {
     agent any
 
-    environment {
-        APP_NAME = "chat_bi"
-        WAR_FILE = "/var/lib/jenkins/workspace/chatBI_frontend/dist/apps/chatBI/"
-        SERVER_1 = "10.21.196.243"
-        SERVER_2 = "10.21.196.244"
-        REMOTE_DEPLOY_DIR = "/data/tools/apache-tomcat-8.5.59/webapps"
-        BACKUP_DIR = "/data/tools/apache-tomcat-8.5.59/webapps/backup"
-        SSH_USER = "osadmin"
-        SSH_PASSWORD = "CEM435@#qeema"
-		BUILD_URL = "chatBI_frontend_Deployment"
-    }
-
     stages {
-        stage('Package Installation') {
+        stage('Install Dependencies') {
+            steps {
+                sh '/usr/bin/npm install --legacy-peer-deps --no-fund --no-audit'
+            }
+        }
+
+        stage('Build Specific App') {
             steps {
                 script {
-                    sh "npm run install"
+                    if (params.NX_APP == '') {
+                        error "You must specify an app to build!"
+                    }
+
+                    if (params.NX_APP_PATH == '') {
+                        error "You must specify an app path to build!"
+                    }
+
+                    sh "npx nx run ${params.NX_APP}:build --configuration=production --base-href=/cem/reporting/${params.NX_APP_PATH}/"
                 }
             }
         }
-        
+
         stage('Build') {
             steps {
                 script {
@@ -29,7 +38,7 @@ pipeline {
                 }
             }
         }
-		
+
 		stage('Send Approval Email') {
             steps {
                 script {
@@ -41,11 +50,11 @@ pipeline {
                                     <h2>Hello Mohamed Fawzy,</h2>
                                     <p>Please review the build and approve or reject it.</p>
                                     <p>
-                                        <strong>Approve:</strong> 
+                                        <strong>Approve:</strong>
                                         <a href="${env.BUILD_URL}input/Approval/proceed">Click here to Approve</a>
                                     </p>
                                     <p>
-                                        <strong>Reject:</strong> 
+                                        <strong>Reject:</strong>
                                         <a href="${env.BUILD_URL}input/Approval/abort">Click here to Reject</a>
                                     </p>
                                     <p>Thank you!</p>
@@ -63,8 +72,44 @@ pipeline {
             steps {
                 script {
                     def userInput = input(
-                        id: 'Approval', 
-                        message: 'Please approve or reject the build', 
+                        id: 'Approval',
+                        message: 'Please approve or reject the build',
+                        parameters: [
+                            choice(name: 'action', choices: ['Approve', 'Reject'], description: 'Approve or Reject the build')
+                        ]
+                    )
+
+
+        stage('Send Approval Email') {
+            steps {
+                script {
+                    emailext (
+                        subject: "Approval Required: Build #${env.BUILD_NUMBER}",
+                        body: """
+                            <html>
+                                <body>
+                                    <h2>Hello Mohamed Fawzy,</h2>
+                                    <p>Please review the build for ${params.NX_APP} and approve or reject it through this <a href='http://10.24.44.12:8090/'>link</a></p>
+                                    <br/>
+                                    <br/>
+                                    <br/>
+                                    <p>Thank you!</p>
+                                    <p><em>Jenkins Pipeline</em></p>
+                                </body>
+                            </html>
+                        """,
+                        to: 'mohfibrahim.c@stc.com.sa',
+                    )
+                }
+            }
+        }
+
+        stage('Wait for Approval') {
+            steps {
+                script {
+                    def userInput = input(
+                        id: 'Approval',
+                        message: 'Please approve or reject the build',
                         parameters: [
                             choice(name: 'action', choices: ['Approve', 'Reject'], description: 'Approve or Reject the build')
                         ]
@@ -78,57 +123,50 @@ pipeline {
                 }
             }
         }
-        
         stage('Deploy on Server 243') {
             steps {
                 script {
                     sh """
+
                         sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_1}:${REMOTE_DEPLOY_DIR}/
+
                     """
                 }
             }
         }
-        
-        stage('Rename & Backup 243') {
+
+        stage('Backup & Rename 243') {
             steps {
                 script {
                     sh """
-                        sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_1} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
+                        sshpass -p 'CEM435@#qeema' ssh -o StrictHostKeyChecking=no osadmin@10.21.196.243 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
                     """
                 }
             }
         }
-        
+
         stage('Deploy on Server 244') {
             steps {
                 script {
                     sh """
-                        sshpass -p ${SSH_PASSWORD} scp -r ${WAR_FILE} ${SSH_USER}@${SERVER_2}:${REMOTE_DEPLOY_DIR}/
+                        sshpass -p 'CEM435@#qeema' scp -r /var/lib/jenkins/workspace/stc-apps/dist/apps/${params.NX_APP} osadmin@10.21.196.244:/data/tools/apache-tomcat-8.5.59/webapps/
                     """
                 }
             }
         }
-        
-        stage('Rename & Backup 244') {
+
+        stage('Backup & Rename 244') {
             steps {
                 script {
                     sh """
-                        sshpass -p ${SSH_PASSWORD} ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SERVER_2} "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_chatbi.sh"
+                        sshpass -p 'CEM435@#qeema' ssh -o StrictHostKeyChecking=no osadmin@10.21.196.244 "/data/tools/apache-tomcat-8.5.59/webapps/scripts/rename_${params.NX_APP_PATH}.sh"
+
                     """
                 }
-            }
         }
     }
-    
+
     post {
         always {
             echo 'Pipeline execution complete.'
-        }
-        success {
-            echo 'Application deployed successfully!'
-        }
-        failure {
-            echo 'Pipeline execution failed!'
-        }
-    }
 }

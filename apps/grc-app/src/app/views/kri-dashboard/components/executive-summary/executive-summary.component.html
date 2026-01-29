@@ -1,0 +1,156 @@
+<section class="executive-summary">
+  <div class="executive-summary-header">
+    <p>Executive Summary</p>
+    <div class="filter-options">
+      <form class="filter-dropdowns" [formGroup]="filtersForm">
+        <stc-apps-select-drop-down
+          [label]="''"
+          formControlName="quarter"
+          [options]="quarters"
+          [outputValue]="'name'"
+          (selectChange)="onChangeValue()"
+        />
+        <stc-apps-select-drop-down
+          [label]="''"
+          formControlName="quarterType"
+          [options]="quarterTypes"
+          [outputValue]="'name'"
+          (selectChange)="onChangeValue()"
+        />
+        <stc-apps-select-drop-down
+          [label]="''"
+          formControlName="year"
+          [options]="yearsdata"
+          [outputValue]="'id'"
+          (selectChange)="onChangeValue()"
+        />
+      </form>
+      <span class="divider"></span>
+      <div class="import-export-buttons">
+        <button class="import-button" (click)="showUploadDialog()">
+          <img src="assets/images/import-icon.svg" alt="Import" />
+          Import
+        </button>
+        <button class="export-button" (click)="exportExecutiveSummary()">
+          <img src="assets/images/export-icon.svg" alt="Export" />
+          Export
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="executive-summary-legends">
+    <div class="legends">
+      @for (legend of statusLegends;track legend.name) {
+      <stc-apps-status-legend [legend]="legend" />
+      }
+    </div>
+  </div>
+  <div class="executive-summary-body">
+    <div class="content">
+      <div class="content2">
+        <div class="card-box">
+          <div class="overall-performance-card">
+            <p>overall performance</p>
+            <div class="overall-performance-chart" style="height: 350px">
+              @if(donatChartData.length > 0){
+              <stc-apps-donut-chart
+                [data]="donatChartData"
+                [colors]="donutColors"
+                textInside="test"
+                [showLegends]="true"
+                [label]="acceptableNumber"
+              />
+              }@else {
+              <span class="empty-data-message">there are no data</span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="card-box">
+          <div class="overall-performance-card">
+            <p>KRI Status Per GD</p>
+            <div class="overall-performance-chart" style="height: 350px">
+              @if(KRIStatusPerGDChartData.length > 0){
+              <stc-apps-stacked-bar-chart [data]="KRIStatusPerGDChartData" />
+              } @else {
+              <span class="empty-data-message">there are no data</span>
+              }
+            </div>
+          </div>
+        </div>
+        <div class="card-box card-box2">
+          <div class="overall-performance-card">
+            <p>KRIs Trend analysis</p>
+            <div class="overall-performance-chart" style="height: 300px">
+              @if(KRITrendAnalysisData.length > 0){
+              <stc-apps-triple-line-chart [data]="KRITrendAnalysisData" />
+              }@else {
+              <span class="empty-data-message">there are no data</span>
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card-box">
+        <div class="overall-performance-card">
+          <p>Unacceptable KRIs Per GD (4)</p>
+          <div
+            class="overall-performance-chart rounded-bar-chart-container"
+            style="height: 300px"
+          >
+            @if(executiveSummaryData &&
+            executiveSummaryData.unacceptableKriPerGd.length > 0){
+            <stc-apps-rounded-bar-chart
+              [data]="executiveSummaryData.unacceptableKriPerGd"
+            />
+            }@else {
+            <span class="empty-data-message">there are no data</span>
+            }
+          </div>
+        </div>
+        <div
+          class="kris-details"
+          [class.no-data2]="
+            executiveSummaryData &&
+            executiveSummaryData.unacceptableProjectDetails.length === 0
+          "
+        >
+          <div class="kris-details-header">
+            <p>KRIs Details</p>
+            <form class="filter-dropdowns" [formGroup]="KrisfiltersForm">
+              <stc-apps-select-drop-down
+                [label]="''"
+                formControlName="kriCategory"
+                [options]="KrisDropdownData"
+                [outputValue]="'id'"
+                (selectChange)="changeGD()"
+              />
+            </form>
+          </div>
+          <div
+            class="kris-details-data"
+            [class.no-data]="
+              executiveSummaryData &&
+              executiveSummaryData.unacceptableProjectDetails.length === 0
+            "
+          >
+            @if(executiveSummaryData){ @for(kri of
+            executiveSummaryData.unacceptableProjectDetails;track $index){
+            <div class="child">
+              <stc-apps-kri-item [kri]="kri" />
+            </div>
+            } @empty {
+            <span class="empty-data-message">there are no data</span>
+            } }
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<stc-apps-file-upload-dialog
+  [showDialog]="showUploadFileDialog"
+  (dialogHide)="showUploadFileDialog = false"
+  fileType="xlsx"
+  (uploadFile)="uploadFile($event)"
+/>

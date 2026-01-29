@@ -394,3 +394,7 @@ table {
   background-color: $stcColor;
   color: #fff;
 }
+
+::ng-deep td {
+  text-align: center;
+}

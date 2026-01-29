@@ -1,0 +1,173 @@
+@import '../../../styles/fonts.scss';
+::ng-deep .file-upload-dialog {
+  min-width: 50%;
+  .p-dialog-content {
+    border-radius: 10px !important;
+    padding: 20px !important;
+    .dialog-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      p {
+        color: #000000;
+        @extend .stcFont;
+        font-size: 18px;
+        font-weight: 500;
+        margin: 0;
+      }
+      span {
+        cursor: pointer;
+        color: #000000;
+        i {
+          font-size: 20px;
+          cursor: pointer;
+        }
+      }
+    }
+    .dialog-body {
+      margin-top: 20px;
+      .upload-container {
+        width: 100%;
+        margin: 0 auto;
+        text-align: center;
+      }
+      .file-upload-box {
+        border: 3px dashed #4f008c;
+        padding: 20px;
+        margin-bottom: 20px;
+        border-radius: 10px;
+        height: 200px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+      }
+      input[type='file'] {
+        display: none;
+      }
+      button {
+        margin-top: 10px;
+        padding: 10px 20px;
+        background-color: #6c5ce7;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+      p {
+        margin: 0;
+        @extend .stcFont;
+        font-size: 18px;
+      }
+      .upload-file-text {
+        padding: 10px 0 5px !important;
+        color: #000000;
+        font-weight: 500;
+      }
+      .upload-file-hint {
+        color: #545454;
+      }
+      button:hover {
+        background-color: #4f3cbf;
+      }
+
+      .error {
+        color: red;
+        font-size: 14px;
+      }
+      .hint-msg {
+        color: #2563eb;
+        background: #f0f7ff;
+        border: 1px solid #bfdbfe;
+        border-radius: 6px;
+        text-align: left;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        span {
+          font-size: 14px;
+          @extend .stcFont;
+        }
+      }
+      .error-msg {
+        color: #dc2626;
+        background: #fef3f3;
+        border: 1px solid #fecaca;
+        border-radius: 6px;
+        text-align: left;
+        margin-top: 20px;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        span {
+          font-size: 14px;
+          @extend .stcFont;
+        }
+      }
+      .file-details {
+        border: 1px solid #22c55e;
+        border-radius: 10px;
+        padding: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 132px;
+        &.invalid-file {
+          border-color: #dc2626;
+        }
+        .file-selected-info {
+          display: flex;
+          align-items: center;
+          gap: 15px;
+          .file-name {
+            color: #000000;
+            @extend .stcFont;
+            font-size: 18px;
+            font-weight: 500;
+            margin-bottom: 5px;
+          }
+          .file-size {
+            color: #545454;
+            font-size: 16px;
+          }
+        }
+        i {
+          font-size: 25px;
+          cursor: pointer;
+        }
+      }
+      .buttons {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 10px;
+        align-items: center;
+        button {
+          width: 197px;
+          height: 54px;
+          border: none;
+          cursor: pointer;
+          font-size: 18px;
+          @extend .stcFont;
+          font-weight: 500;
+          border-radius: 10px;
+          &.cancel-button {
+            color: #8e9aa0;
+            border: 1px solid #8e9aa0;
+            background-color: transparent;
+          }
+          &.upload-button {
+            background-color: #4f008c;
+            color: #ffffff;
+            &.disabled-button {
+              opacity: 0.6;
+              cursor: not-allowed;
+            }
+          }
+        }
+      }
+    }
+  }
+}

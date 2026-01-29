@@ -1,0 +1,11 @@
+<div class="header d-flex">
+  <button (click)="goBack()" class="back-button">
+    <i class="fa fa-arrow-left"></i>
+  </button>
+  <div class="title">{{ title() }}</div>
+  @if (!newChatScreenFlag()) {
+  <div (click)="startChat()" class="new-chat-btn">
+    <img src="assets/images/Add.svg" />
+  </div>
+  }
+</div>

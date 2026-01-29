@@ -1,85 +1,259 @@
-import { Component, EventEmitter, inject, input, InputSignal, OnChanges, Output, ViewChild } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  inject,
+  input,
+  InputSignal,
+  OnChanges,
+  OnInit,
+  Output,
+  signal,
+  ViewChild,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PSRChartDataModel, PSRDataModel } from '../../../../models/psr.model';
-import { SharedUiModule } from "@stc-apps/shared-ui";
+import { SharedUiModule } from '@stc-apps/shared-ui';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { OverlayPanel, OverlayPanelModule } from 'primeng/overlaypanel';
 import { MenuModule } from 'primeng/menu';
 import { ConfirmationService } from 'primeng/api';
+import { DatePipe } from '@angular/common';
+import {
+  ActivityLogData,
+  ColumnsSchema,
+} from '../../../../models/activity-logs';
+import { Subject, takeUntil } from 'rxjs';
+import { ActivityLogService } from '../../../../services/activity-logs.service';
+import { ScorecardService } from '../../../../services/scorecard.service';
+import { PSRService } from '../../../../services/psr.service';
 @Component({
   selector: 'stc-apps-psr-project-card',
   standalone: true,
-  imports: [CommonModule , SharedUiModule , RouterModule , OverlayPanelModule , MenuModule],
+  imports: [
+    CommonModule,
+    SharedUiModule,
+    RouterModule,
+    OverlayPanelModule,
+    MenuModule,
+  ],
   templateUrl: './project-card.component.html',
   styleUrl: './project-card.component.scss',
-  providers : [ConfirmationService]
+  providers: [ConfirmationService],
 })
-export class PSRProjectCardComponent implements OnChanges {
+export class PSRProjectCardComponent implements OnChanges, OnInit {
   router = inject(Router);
   route = inject(ActivatedRoute);
-  isAllowed = input<boolean>()
-  @Output() ProgramId:EventEmitter<number> = new EventEmitter();
+  isAdmin = input<boolean>();
+  isPMO = input<boolean>(false);
+  isDeleted = input<boolean>(false);
+  datePipe = inject(DatePipe);
+  activityLogsTableHeader = signal<ColumnsSchema[]>([]);
+  activityLogsTableBody = signal<ActivityLogData[]>([]);
+  isMobile = input<boolean>(false);
+  @Output() ProgramId: EventEmitter<number> = new EventEmitter();
+  months: string[] = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
   maxTextLength = 0;
-  items = [
-    {
-        items: [
-            {
-                label: 'Edit',
-                icon: 'pi pi-pen-to-square'
-            },
-            {
-                label: 'Delete',
-                icon: 'pi pi-trash'
-            }
-        ]
-    }
-];
+  items: any[] = [];
   @ViewChild('overlayPanel') overlayPanel!: OverlayPanel;
+  @ViewChild('actionsPanel') actionsPanel!: OverlayPanel;
   @ViewChild('overlayPanel2') overlayPanel2!: OverlayPanel;
-  project:InputSignal<PSRDataModel> = input.required<PSRDataModel>();
-  colors:string[] = ['#4F008C' , '#B999D1'];
-  chartData!:PSRChartDataModel;
+  project: InputSignal<PSRDataModel> = input.required<PSRDataModel>();
+  activityLogService = inject(ActivityLogService);
+  colors: string[] = ['#4F008C', '#B999D1'];
+  chartData!: PSRChartDataModel;
   private confirmationService = inject(ConfirmationService);
-  ngOnChanges(): void {    
-    this.chartData = {
-      actual : this.project().actual ? this.project().actual : 0,
-      planned : this.project().planned ? this.project().planned : 0
+  scorecardService = inject(ScorecardService);
+  psrService = inject(PSRService);
+  ngOnInit(): void {
+    this.scorecardService.toggleSwitchBtn.subscribe({
+      next: (res) => {
+        this.showActivityLogsPopup = false;
+        this.actionsPanel?.hide();
+      },
+    });
+    this.activityLogsTableHeader.set([
+      {
+        key: 'username',
+        type: 'text',
+        label: 'User Name',
+      },
+      {
+        key: 'type',
+        type: 'text',
+        label: 'Activity Type',
+      },
+      {
+        key: 'details',
+        type: 'text',
+        label: 'Activity Details',
+      },
+      {
+        key: 'time',
+        type: 'text',
+        label: 'Time Stamp',
+      },
+      {
+        key: 'oldValue',
+        type: 'text',
+        label: 'Old Value',
+      },
+      {
+        key: 'newValue',
+        type: 'text',
+        label: 'New Value',
+      },
+    ]);
+    if (this.isAdmin()) {
+      if (this.isDeleted()) {
+        this.items = [
+          {
+            label: 'Activity Logs',
+            icon: 'pi pi-clock',
+          },
+        ];
+      } else {
+        this.items = [
+          {
+            label: 'Edit',
+            icon: 'pi pi-pen-to-square',
+          },
+          {
+            label: 'Delete',
+            icon: 'pi pi-trash',
+          },
+          {
+            label: 'Activity Logs',
+            icon: 'pi pi-clock',
+          },
+        ];
+      }
+    } else if (this.psrService.isPMUser()) {
+      this.items = [];
+    } else {
+      this.items = [
+        {
+          label: 'Edit',
+          icon: 'pi pi-pen-to-square',
+        },
+        {
+          label: 'Delete',
+          icon: 'pi pi-trash',
+        },
+      ];
     }
-    const textArr:string[] = this.project().details?.trim()?.split(' ') ?? [];
-    const filteredArray = textArr.filter(item => item !== '');
-    this.maxTextLength = filteredArray.length;
-    // console.log(filteredArray);
+    if (this.isPMO()) {
+      this.items = [
+        {
+          label: 'Edit',
+          icon: 'pi pi-pen-to-square',
+        },
+      ];
+    }
   }
-  displayDrilldown()
-  {
+  showActivityLogsPopup = false;
+  $endScorecardActivityLogsSub: Subject<any> = new Subject();
+  private getSpecificActivityLog(
+    moduleName: string,
+    subModule?: string,
+    projectName?: string,
+    entity?: string,
+    showParentData?: boolean
+  ) {
+    this.activityLogService
+      .getSpecificActivityLog(
+        moduleName,
+        this.isDeleted() ? 'Add,Edit,Delete' : 'Add,Edit',
+        subModule,
+        projectName,
+        entity,
+        showParentData
+      )
+      .pipe(takeUntil(this.$endScorecardActivityLogsSub))
+      .subscribe({
+        next: (activityLogs: ActivityLogData[]) => {
+          this.activityLogsTableBody.set(activityLogs);
+        },
+      });
+  }
+  showActivityLogs() {
+    // this.activityLogsPanel.toggle(event);
+    this.showActivityLogsPopup = !this.showActivityLogsPopup;
+    this.getSpecificActivityLog(
+      'PSR_executive',
+      this.project().id.toString(),
+      '',
+      '',
+      true
+    );
+  }
+  popupClosed() {
+    this.showActivityLogsPopup = false;
+    this.actionsPanel.hide();
+    this.$endScorecardActivityLogsSub.complete();
+  }
+
+  ngOnChanges(): void {
+    this.chartData = {
+      actual: this.project().actual ? this.project().actual : 0,
+      planned: this.project().planned ? this.project().planned : 0,
+    };
+    const textArr: string[] = this.project().details?.trim()?.split(' ') ?? [];
+    const filteredArray = textArr.filter((item) => item !== '');
+    this.maxTextLength = filteredArray.length;
+  }
+  openActionsMenu() {
+    this.actionsPanel.toggle(event);
+  }
+  formatDate(date: string | null) {
+    if (date) {
+      const fullDate = date.split('-');
+      const day = fullDate[2];
+      const monthName = this.months[+fullDate[1] - 1];
+      const year = fullDate[0];
+      return `${day} ${monthName}-${year}`;
+    }
+    return '';
+  }
+  displayDrilldown() {
     this.overlayPanel.toggle(event);
   }
-  displayDrilldown2()
-  {
+  displayDrilldown2() {
     this.overlayPanel2.toggle(event);
   }
-  gotoEditPage()
-  {
+  gotoEditPage() {
     // this.router.navigateByUrl(`/psr/edit-project/${this.project().sector}`);
-    this.router.navigate(['edit-program' , this.project().id] , { relativeTo: this.route })
-  }
-  showDeleteDialog()
-  {
-    this.confirmationService.confirm({
-      key: 'delete-program'
+    this.router.navigate(['edit-program', this.project().id], {
+      relativeTo: this.route,
     });
   }
-  close()
-  {
-    this.confirmationService.close()
+  showDeleteDialog() {
+    this.actionsPanel.hide();
+    this.confirmationService.confirm({
+      key: 'delete-program',
+    });
   }
-  deleteProgram()
-  {
-    console.log(this.project());
+  close() {
+    this.confirmationService.close();
+  }
+  deleteProgram() {
+    // console.log(this.project());
     this.ProgramId.emit(this.project().id);
     this.close();
   }
-  gotoProjectDetailsPage(){
-   localStorage.setItem("sector" , this.project().sector) 
+  gotoProjectDetailsPage() {
+    localStorage.setItem('sector', this.project().sector);
   }
 }

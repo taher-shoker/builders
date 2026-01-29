@@ -25,51 +25,51 @@
   }
 }
 ::ng-deep .p-tabview-scrollable {
-  max-width: 925px !important;
-  @media all and (min-width:800px) and (max-width:999px)
-  {
-    max-width: 425px !important;
-  }
-  @media all and (min-width:1000px) and (max-width:1199px)
-  {
-    max-width: 525px !important;
-  }
-  @media all and (min-width:1200px) and (max-width:1299px)
-  {
-    max-width: 682px !important;
-  }
-  @media all and (min-width:1300px) and (max-width:1500px)
-  {
-    max-width: 830px !important;
-  }
-  @media all and (min-width:1600px)
-  {
-    max-width: 1027px !important;
-  }
-  @media all and (min-width:1900px)
-  {
-    max-width: 1200px !important;
-  }
-  @media all and (min-width:2000px)
-  {
-    max-width: 1300px !important;
-  }
-  @media all and (min-width:2300px)
-  {
-    max-width: 1500px !important;
-  }
-  @media all and (min-width:2600px)
-  {
-    max-width: 2151px !important;
-  }
-  @media all and (min-width:3500px)
-  {
-    max-width: 3001px !important;
-  }
-  @media all and (min-width:5000px)
-  {
-    max-width: 4000px !important;
-  }
+  // max-width: 925px !important;
+  // @media all and (min-width:800px) and (max-width:999px)
+  // {
+  //   max-width: 425px !important;
+  // }
+  // @media all and (min-width:1000px) and (max-width:1199px)
+  // {
+  //   max-width: 525px !important;
+  // }
+  // @media all and (min-width:1200px) and (max-width:1299px)
+  // {
+  //   max-width: 682px !important;
+  // }
+  // @media all and (min-width:1300px) and (max-width:1500px)
+  // {
+  //   max-width: 830px !important;
+  // }
+  // @media all and (min-width:1600px)
+  // {
+  //   max-width: 1027px !important;
+  // }
+  // @media all and (min-width:1900px)
+  // {
+  //   max-width: 1200px !important;
+  // }
+  // @media all and (min-width:2000px)
+  // {
+  //   max-width: 1300px !important;
+  // }
+  // @media all and (min-width:2300px)
+  // {
+  //   max-width: 1500px !important;
+  // }
+  // @media all and (min-width:2600px)
+  // {
+  //   max-width: 2151px !important;
+  // }
+  // @media all and (min-width:3500px)
+  // {
+  //   max-width: 3001px !important;
+  // }
+  // @media all and (min-width:5000px)
+  // {
+  //   max-width: 4000px !important;
+  // }
   .p-tabview-panels {
     display: none !important;
   }
@@ -78,8 +78,8 @@
     height: 30px !important;
     border-radius: 50% !important;
     align-items: center !important;
-    background-color: rgba(255, 255, 255, .5) !important;
-    color:#ffffff !important;
+    background-color: rgba(255, 255, 255, 0.5) !important;
+    color: #ffffff !important;
     position: absolute !important;
     top: 18% !important;
   }
@@ -94,14 +94,14 @@
         // text-transform: capitalize !important;
         font-size: 18px !important;
         cursor: pointer !important;
-        padding: 7px 15px !important;
+        padding: 7px 0px 7px 15px !important;
         border-radius: 5px !important;
         transition: 0.3s !important;
         min-width: 102px !important;
         text-align: center !important;
         text-decoration: none !important;
-        gap:30px !important;
-        font-weight:500 !important;
+        gap: 30px !important;
+        font-weight: 500 !important;
         position: relative !important;
         left: -13px !important;
       }
@@ -116,6 +116,94 @@
   padding: 7px 15px !important;
   border-radius: 5px !important;
   transition: 0.3s !important;
-  min-width: 102px !important;
+  // min-width: 102px !important;
   text-align: center !important;
+  &.ActivityLogTable {
+    @media all and (max-width: 1500px) {
+      min-width: 230px !important;
+    }
+  }
+}
+::ng-deep .mobile-view {
+  .p-tabview-nav-next,
+  .p-tabview-nav-prev {
+    display: none;
+  }
+  .p-tabview-nav li a {
+    gap: 15px !important;
+  }
+  .tap {
+    box-shadow: 0px 2px 4px -1px #1212170f;
+    // box-shadow: 0px 4px 6px -1px #12121714;
+    font-size: 16px !important;
+    width: max-content;
+  }
+}
+// ::ng-deep .custom-tabview .p-tabview-nav-container {
+//   width: 100% !important;
+//   overflow: hidden !important;
+// }
+
+// ::ng-deep .custom-tabview .p-tabview-nav {
+//   display: flex !important;
+//   max-width: calc(3 * 300px) !important; // Adjust width based on tab size
+//   overflow: hidden !important;
+//   white-space: nowrap !important;
+// }
+
+// ::ng-deep .custom-tabview .p-tabview-nav-btn {
+//   position: absolute !important;
+//   top: 0% !important;
+//   transform: translateY(-50%) !important;
+//   z-index: 10 !important;
+//   background: white !important;
+//   border-radius: 50% !important;
+//   box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2) !important;
+// }
+
+// // Position arrows outside the tab container
+// ::ng-deep .custom-tabview .p-tabview-nav-prev {
+//   left: -2rem !important;
+// }
+
+// ::ng-deep .custom-tabview .p-tabview-nav-next {
+//   right: -2rem !important;
+// }
+.tabs-container {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  // justify-content: center;
+  white-space: nowrap;
+  .tabs-wrapper {
+    position: relative;
+    // background: #401664; // Adjust to your theme
+    // width:70%;
+    overflow: hidden;
+    // overflow-x: auto;
+    scroll-behavior: smooth;
+    // flex-grow: 1;
+    // max-width: 90%;
+  }
+  .tabs {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    white-space: nowrap;
+  }
+  .prev-button {
+    padding: 5px;
+    border-radius: 50%;
+    align-items: center;
+    background-color: #ffffff80;
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    // width: 40px;
+    cursor: pointer;
+    i {
+      font-size: 20px;
+    }
+  }
 }

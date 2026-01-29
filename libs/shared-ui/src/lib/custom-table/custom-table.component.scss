@@ -25,7 +25,7 @@ table {
 }
 
 td {
-  max-width: 150px;
+  max-width: 135px;
   word-wrap: break-word;
   color: var(--grey-color);
 }
@@ -38,6 +38,14 @@ tr:not(.table-header) {
   td {
     padding: 20px 10px;
   }
+}
+
+.clickable-row {
+  cursor: pointer;
+}
+
+.clickable-row:hover {
+  background-color: rgba(79, 0, 140, 0.06);
 }
 
 .action-option {
@@ -75,7 +83,7 @@ tr:not(.table-header) {
     cursor: pointer;
   }
 }
-.psrTable {
+.psrTable,.activityTable {
   .table-header {
     height: 70px;
     th {
@@ -111,6 +119,12 @@ tr:not(.table-header) {
       font-weight: bold;
       font-size: 20px;
     }
+  }
+}
+.activityTable
+{
+  td {
+    text-align: left;
   }
 }
 .empty-details {

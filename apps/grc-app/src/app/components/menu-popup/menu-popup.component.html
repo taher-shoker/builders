@@ -1,0 +1,35 @@
+<div (click)="actionsPanel.toggle($event)" class="icon-container">
+  <i class="pi pi-ellipsis-v"></i>
+</div>
+<p-overlayPanel
+  #actionsPanel
+  dismissable="false"
+  appendTo="body"
+  styleClass="actions-logs"
+  (onHide)="hidePanel()"
+>
+  <div class="actions-logs-table">
+    @for (item of menuItems(); track $index) {
+      <div class="action" (click)="menuActions(item.label)">
+        <i [class]="item.icon"></i>
+        <p>{{item.label}}</p>
+      </div>
+    }
+  </div>
+</p-overlayPanel>
+<!-- <p-menu
+  #menu
+  [popup]="true"
+  [model]="menuItems()"
+  appendTo="body"
+  styleClass="activity-logs"
+>
+  <ng-template pTemplate="item" let-item>
+    <div class="activity-logs-menu-container">
+      <div class="menu-item" (click)="menuActions(item.label)">
+        <i [class]="item.icon"></i>
+        <p>{{ item.label }}</p>
+      </div>
+    </div>
+  </ng-template>
+</p-menu> -->

@@ -1,0 +1,23 @@
+mat-tab-group {
+    .tab-label-content {
+        font-size: 16px;
+        font-weight: 700;
+    }
+
+    ::ng-deep {
+        .mat-mdc-tab-body-content {
+            overflow: hidden;
+        }
+
+        .mat-mdc-tab {
+            &.mdc-tab--active {
+                background-color: var(--stc-white-color) !important;
+            }
+
+            &:not(.mdc-tab--active) {
+                color: #64748B !important;
+            }
+        }
+    }
+
+    }

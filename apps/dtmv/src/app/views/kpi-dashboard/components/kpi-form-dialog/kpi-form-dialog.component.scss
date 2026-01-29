@@ -1,0 +1,131 @@
+.dialog {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 80vh;
+    max-height: 80vh;
+    overflow: hidden;
+
+    &_header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        h2 {
+            color: var(--stc-color);
+            font-size: 20px;
+            padding: 0;
+            font-weight: 600;
+        }
+
+        button {
+            border: none;
+            background-color: transparent;
+            line-height: 0;
+
+            mat-icon {
+                color: #8a8aa3;
+            }
+        }
+    }
+
+    &_body {
+        flex: 1;
+        overflow-y: auto;
+        padding-left: 32px; /* increased left padding per design */
+        padding-right: 36px; /* extra right padding to account for scrollbar */
+        .row {
+            margin-left: 0;
+            margin-right: 0;
+        }
+
+        /* Responsive two-column form layout */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px 24px;
+            margin-bottom: 8px;
+        }
+        .form-grid--single {
+            grid-template-columns: 1fr;
+        }
+        .form-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        @media (max-width: 768px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+        }
+        /* Harmonize spacing for shared input component */
+        .custom-input {
+            margin-bottom: 0;
+        }
+
+        /* Make input and select visuals consistent with design */
+        stc-apps-input {
+            ::ng-deep {
+                label {
+                    font-size: 1rem !important;
+                }
+                .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+                    background-color: transparent;
+                    border: 1px solid #CBD5E1;
+                    border-radius: 10px !important;
+                }
+            }
+        }
+        stc-apps-numeric-input {
+            ::ng-deep {
+                label {
+                    font-size: 1rem !important;
+                }
+                .mdc-text-field--filled:not(.mdc-text-field--disabled) {
+                    background-color: transparent;
+                    border: 1px solid #CBD5E1;
+                    border-radius: 10px !important;
+                }
+            }
+        }
+        stc-apps-select-drop-down {
+            ::ng-deep {
+                label {
+                    font-size: 1rem !important;
+                }
+                .mdc-text-field--filled {
+                    background-color: transparent;
+                    border: 1px solid #CBD5E1;
+                    border-radius: 10px !important;
+                }
+                .mdc-floating-label {
+                    font-size: 1rem !important;
+                }
+            }
+        }
+    }
+
+    &_footer {
+        display: flex;
+        justify-content: flex-end;
+        gap: 16px;
+
+        .footer-error {
+            margin-right: auto;
+            align-self: center;
+            color: #d32f2f; /* Material error color */
+            font-size: 0.875rem; /* slightly smaller than labels */
+        }
+
+        stc-apps-button {
+            ::ng-deep {
+                button {
+                    font-size: 16px;
+                }
+            }
+        }
+    }
+}

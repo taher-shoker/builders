@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject, tap } from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { CookieService } from 'ngx-cookie';
-import { environment } from '../../../environments/environment';
-import { ToastrService } from 'ngx-toastr';
+import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie';
+import { ToastrService } from 'ngx-toastr';
+import { BehaviorSubject, tap } from 'rxjs';
+import { environment } from '../../../environments/environment';
+import { AuthResponseData, LoggedUser, System } from '../models/auth.model';
 import { TPUserModel } from '../models/TP/TPUserModel';
 import { UserData, UserGroup } from '../models/users-settings.model';
-import { AuthResponseData, LoggedUser, System } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +26,7 @@ export class AuthService {
 
   user = new BehaviorSubject<User | null>(null);
 
-  loggedInUser!: LoggedUser | null;
+  loggedInUser: LoggedUser | null = null;
 
   loggedUserStream: BehaviorSubject<LoggedUser | null> =
     new BehaviorSubject<LoggedUser | null>(null);
@@ -79,20 +79,15 @@ export class AuthService {
    * Checks if the current user has admin role.
    * @returns True if the user has an admin role, otherwise false
    */
-  isAdminUser() {
-    const user =
-      this.getLoggedInUser().getValue() || this.cookieService.get('token');
+  isAdminUser(): boolean {
+    const user = this.loggedInUser || this.cookieService.get('token');
+    const isAdminRole =
+      this.loggedInUser?.userGroups[0]?.roles[0]?.roleName.includes('ADMINS') ??
+      false;
 
-    const isAdminRole = this.loggedUserStream
-      .getValue()
-      ?.userGroups[0].roles[0].roleName.includes('ADMINS');
-
-    if (user != null && isAdminRole == true) {
-      return true;
-    } else {
-      return false;
-    }
+    return user != null && isAdminRole;
   }
+
   private handleAuthentication(displayName: string, token: string) {
     const user = new User(displayName, token);
     this.user.next(user);
@@ -144,7 +139,11 @@ export class AuthService {
       res.dto.systems.includes('Dynamic_Report_Flow') ||
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
       res.dto.systems.includes('Score_Card_Report_DB') ||
-      res.dto.systems.includes('Strategic_Dashboard')
+      res.dto.systems.includes('Strategic_Dashboard') ||
+      res.dto.systems.includes('ChatBI') ||
+      res.dto.systems.includes('TU_BRAIN') ||
+      res.dto.systems.includes('FNI_Nokia') ||
+      res.dto.systems.includes('GRC_Dashboard')
     ) {
       this.handleFraudOrDIManagementAccess(res);
     }
@@ -159,14 +158,6 @@ export class AuthService {
    * @param res - User data response
    */
   private handleMultipleSystemAccess(res: UserData) {
-    this.loggedInUser = {
-      name: res.dto.displayName,
-      id: res.dto.id,
-      email: res.dto.username,
-      username: res.dto.username,
-      jobTitle: '',
-      userGroups: res.dto.userGroupedMenusDTO,
-    };
     if (res.dto.systems.includes('TP_DashboardUsers')) {
       this.handleTPSysNeeds(res);
     }
@@ -181,7 +172,11 @@ export class AuthService {
       res.dto.systems.includes('Business_Excellence_Dashboard') ||
       res.dto.systems.includes('Jira_Dahsboard') ||
       res.dto.systems.includes('Score_Card_Report_DB') ||
-      res.dto.systems.includes('Strategic_Dashboard')
+      res.dto.systems.includes('Strategic_Dashboard') ||
+      res.dto.systems.includes('ChatBI') ||
+      res.dto.systems.includes('TU_BRAIN') ||
+      res.dto.systems.includes('GRC_Dashboard') ||
+      res.dto.systems.includes('FNI_Nokia')
     ) {
       this.setLoggedInUser();
     }
@@ -222,6 +217,18 @@ export class AuthService {
     if (res.dto.systems.includes('Strategic_Dashboard')) {
       this.gratnedSystems.push('Strategic_Dashboard');
     }
+    if (res.dto.systems.includes('ChatBI')) {
+      this.gratnedSystems.push('ChatBI');
+    }
+    if (res.dto.systems.includes('TU_BRAIN')) {
+      this.gratnedSystems.push('TU_BRAIN');
+    }
+    if (res.dto.systems.includes('FNI_Nokia')) {
+      this.gratnedSystems.push('FNI_Nokia');
+    }
+    if (res.dto.systems.includes('GRC_Dashboard')) {
+      this.gratnedSystems.push('GRC_Dashboard');
+    }
     this.setLoggedInUser();
   }
 
@@ -248,6 +255,7 @@ export class AuthService {
             email: res.email,
             userDelegates: res.userDelegates,
             userGroups: res.userGroups,
+            pageAccess: res.pageAccess,
           };
           this.cookieService.put(
             'MODERN_SYSTEM_USER',
@@ -263,7 +271,6 @@ export class AuthService {
    */
   private handleSingleGrantedSystem(res: LoggedUser) {
     if (this.gratnedSystems.length == 1) {
-      console.log(res.userGroups[0].roles[0].roleName);
       if (
         res.userGroups[0].roles[0].roleName === 'ADMINS'
         // res.userGroups[0].roles[0].roleName === 'BUSINESS_USER'
@@ -291,6 +298,10 @@ export class AuthService {
         environment.systems.business_excellence_system,
       Score_Card_Report_DB: environment.systems.score_card_report_db,
       Strategic_Dashboard: environment.systems.strategic_dashboard,
+      ChatBI: environment.systems.chat_bi,
+      TU_BRAIN: environment.systems.tu_brain,
+      FNI_Nokia: environment.systems.nokia_chat,
+      GRC_Dashboard: environment.systems.grc_dashboard,
     };
     const url = systemUrls[system];
     if (url) {
@@ -356,19 +367,19 @@ export class AuthService {
   applyUserValuesCookies(user: TPUserModel) {
     this.cookieService.put('username', user.username, {
       // httpOnly: true,
-      secure: true,
+      // secure: true,
     });
     this.cookieService.put('token', user.token, {
       // httpOnly: true,
-      secure: true,
+      // secure: true,
     });
     this.cookieService.put('displayName', user.displayName, {
       // httpOnly: true,
-      secure: true,
+      // secure: true,
     });
     this.cookieService.put('userTeam', user.userTeam, {
       // httpOnly: true,
-      secure: true,
+      //secure: true,
     });
     // this.cookieService.put('tokenType', 'Web', {
     //   // httpOnly: true,
@@ -407,6 +418,7 @@ export class AuthService {
                   window.location.origin + environment.systems.tp_system,
                 name: 'TP Dashboard',
                 displayName: 'TP Dashboard',
+                mobileView: false,
               });
               break;
             case 'CEO_DashboardUsers':
@@ -416,6 +428,7 @@ export class AuthService {
                   this.cookieService.get('ceo-username'),
                 name: 'CCEX Workspace',
                 displayName: 'CCEX Workspace',
+                mobileView: true,
               });
               break;
             case 'FRAUD_ManagementUsers':
@@ -425,6 +438,7 @@ export class AuthService {
                   window.location.origin + environment.systems.fraud_system,
                 name: 'Fraud Management Workspace',
                 displayName: 'Fraud Management Workspace',
+                mobileView: false,
               });
               break;
             case 'DI_Management':
@@ -434,6 +448,7 @@ export class AuthService {
                   window.location.origin + environment.systems.di_system,
                 name: 'DT Workspace',
                 displayName: 'DT Workspace',
+                mobileView: false,
               });
               break;
             case 'DI_Milestones':
@@ -444,6 +459,7 @@ export class AuthService {
                   environment.systems.di_milestones_system,
                 name: 'DT Milestones Validation',
                 displayName: 'DT Milestones Validation',
+                mobileView: false,
               });
               break;
             case 'Dynamic_Report_Flow':
@@ -454,6 +470,7 @@ export class AuthService {
                   environment.systems.dynamic_rf_system,
                 name: 'Dynamic Report Flow',
                 displayName: 'Dynamic Report Flow',
+                mobileView: false,
               });
               break;
             case 'Business_Excellence_Dashboard':
@@ -464,6 +481,7 @@ export class AuthService {
                   environment.systems.business_excellence_system,
                 name: 'Business Excellence Dashboard',
                 displayName: 'Business Excellence Dashboard',
+                mobileView: true,
               });
               break;
             case 'Jira_Dahsboard':
@@ -473,6 +491,7 @@ export class AuthService {
                   window.location.origin + environment.systems.jira_system,
                 name: 'Jira Dashboard',
                 displayName: 'Jira Dashboard',
+                mobileView: false,
               });
               break;
             case 'Score_Card_Report_DB':
@@ -483,6 +502,7 @@ export class AuthService {
                   environment.systems.score_card_report_db,
                 name: 'Score Card Report',
                 displayName: 'Score Card Report',
+                mobileView: false,
               });
               break;
             case 'Strategic_Dashboard':
@@ -493,6 +513,45 @@ export class AuthService {
                   environment.systems.strategic_dashboard,
                 name: 'Strategic Dashboard',
                 displayName: 'Strategic Dashboard',
+                mobileView: false,
+              });
+              break;
+            case 'ChatBI':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl: window.location.origin + environment.systems.chat_bi,
+                name: 'TU Brain',
+                displayName: 'TU Brain',
+                mobileView: true,
+              });
+              break;
+            case 'TU_BRAIN':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl: environment.systems.tu_brain,
+                name: 'STC Brain',
+                displayName: 'STC Brain',
+                mobileView: true,
+              });
+              break;
+            case 'FNI_Nokia':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin + environment.systems.nokia_chat,
+                name: 'FNI Vision',
+                displayName: 'FNI Vision',
+                mobileView: true,
+              });
+              break;
+            case 'GRC_Dashboard':
+              this.setLoggedInUser();
+              this.passedSystems.push({
+                systemUrl:
+                  window.location.origin + environment.systems.grc_dashboard,
+                name: 'GRC Dashboard',
+                displayName: 'GRC Dashboard',
+                mobileView: true,
               });
               break;
             default:

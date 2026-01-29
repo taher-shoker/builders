@@ -22,7 +22,7 @@
             [inputId]="'description'" [inputName]="'Add note'" formControlName="note"></stc-apps-textarea>
         </div>
 
-        @if (data.showAttachment) {
+        @if (data.showAttachment ) {
         <stc-apps-file-uploader [multiple]="false" [chooseLabel]="'add_attachment' | translate"
           (onformchange)="onUploadFile($event)" [attachmentFiles]="form.controls['attachment'].value"
           formControlName="attachment" [isLoading]="isLoading"

@@ -1,0 +1,29 @@
+.stc-input-group {
+  width: 100%;
+}
+
+.stc-input-group .plain-input-wrapper input {
+  width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  height: 40px;
+  background: #ffffff;
+  color: #111827;
+  outline: none;
+}
+
+.stc-input-group .plain-input-wrapper input:focus {
+  border-color: var(--stc-purple-color);
+  caret-color: var(--stc-purple-color);
+}
+
+.stc-input-group .plain-input-wrapper .errors {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #EF4444;
+}
+
+::ng-deep .stc-input-group .mat-mdc-form-field .mdc-text-field.mdc-text-field--focused {
+  border-color: var(--stc-purple-color);
+}

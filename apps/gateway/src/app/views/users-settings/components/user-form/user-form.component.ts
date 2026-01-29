@@ -23,6 +23,7 @@ import { ToastrService } from 'ngx-toastr';
 import { DialogService } from '@stc-apps/shared-ui';
 import { forkJoin } from 'rxjs';
 import {
+  Page,
   Role,
   Team,
   User,
@@ -42,19 +43,31 @@ export class UserFormComponent implements OnInit, OnChanges {
   form!: FormGroup;
   // privilages: Role[] = [];
   privilages: WritableSignal<any[]> = signal([]);
-
+  pages!: Page[];
+  filterPages!: Page[];
+  selectedPage!: string[];
   teams: Team[] = [];
   allUsers: User[] = [];
-  userDelegate: any[] = [];
+  //userDelegate: any[] = [];
+  userDelegate: WritableSignal<any[]> = signal([]);
+
+  escaltionManager: WritableSignal<any[]> = signal([]);
   selectedPrivilege!: Role;
   selectedTeam!: { id: number; name: string };
   selectedDelegates: any;
   selectedGroup: number[] = [];
+  selectedPages: any = [];
   addGroups = false;
   showInputs = true;
   userTeam = '';
   userId = 0;
   isSubmitLoader = false;
+  private initializing = true;
+  private dataReady = false;
+  private rolesReady = false;
+  private initialBindingDone = false;
+  private rebindingPrivilege = false;
+  private userSelectedPrivilege = false;
 
   @HostListener('document:click', ['$event'])
   onClick(event: Event) {
@@ -77,25 +90,77 @@ export class UserFormComponent implements OnInit, OnChanges {
     protected dialogService: DialogService,
     private el: ElementRef,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) {
+    if (!this.form) {
+      this.initializeUserForm();
+    }
+  }
 
   ngOnInit() {
-    this.initializeUserForm();
+    if (!this.form) {
+      this.initializeUserForm();
+    }
     if (!this.isEditing) {
       this.disableFields();
       this.showInputs = false;
     }
     this.handleGrouping();
-    this.getusersList();
+    if (this.userService.getCurrentSystem() !== 'DI_Milestones') {
+      this.getUsersList();
+    }
+    this.getAccessPages();
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) {
       this.data = changes['data'].currentValue;
-      if (this.data) {
+      if (!this.form) {
+        this.initializeUserForm();
+      }
+      if (this.data && this.form) {
         this.restFormWithValue(this.data);
+        this.dataReady = true;
+        if (
+          this.rolesReady &&
+          !this.initialBindingDone &&
+          !this.userSelectedPrivilege
+        ) {
+          this.getRoles();
+          this.initialBindingDone = true;
+        }
+        if (this.data.pageAccess) {
+          this.selectedPages = this.data.pageAccess.map((p: Page) => p.id);
+        }
       }
     }
   }
+  getAccessPages() {
+    this.userService.getPages().subscribe((res) => {
+      if (!res) return;
+      this.pages = res;
+      this.filterPages = res;
+      if (this.data) {
+        if (this.data.pageAccess) {
+          this.handlePageAccess();
+        }
+      }
+    });
+  }
+  private handlePageAccess(): void {
+    const pageAccess = this.data?.pageAccess;
+    const roleName = this.checkSystem(this.data.userGroups)?.roles?.[0]
+      ?.roleName;
+    const pageName = pageAccess?.[0]?.name;
+
+    if (pageAccess?.length) {
+      if (roleName === 'BE_PM' && pageName === 'Project Execution') {
+        this.form.get('pageAccess')?.disable();
+      }
+
+      this.selectedPages = pageAccess.map((p: Page) => p.id);
+      this.applyPageSelection(this.selectedPages);
+    }
+  }
+
   private noWhitespaceValidator(control: FormControl) {
     const isWhitespace = (control.value || '').trim().length === 0;
     const isValid = !isWhitespace;
@@ -117,17 +182,34 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.userService.getCurrentSystem() === 'Dynamic_Report_Flow' ||
         this.userService.getCurrentSystem() ===
           'Business_Excellence_Dashboard' ||
-        this.userService.getCurrentSystem() === 'Strategic_Dashboard'
+        this.userService.getCurrentSystem() === 'ChatBI' ||
+        this.userService.getCurrentSystem() === 'Strategic_Dashboard' ||
+        this.userService.getCurrentSystem() === 'TU_BRAIN' ||
+        this.userService.getCurrentSystem() === 'FNI_Nokia'
           ? Validators.nullValidator
           : Validators.required,
       ],
       userDelegates: [[]],
-      viewer: [''],
-      editor: [''],
-      pmo: [''],
+      manager: [{}],
+      viewer: [false],
+      editor: [false],
+      DT_Governance_Approver: [false],
+      ticketAdmin: [false],
+      edit_delete: [false],
+      pageAccess: [
+        [],
+        this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
+          ? Validators.required
+          : Validators.nullValidator,
+      ],
     });
   }
 
+  // handleUserDelegate(item: any) {
+  //   this.escaltionManager.update((managers) =>
+  //     managers.filter((manager) => manager.email !== item.email)
+  //   );
+  // }
   // Getter for viewerControl
   get viewerControl(): AbstractControl | null {
     return this.form.get('viewer');
@@ -139,180 +221,19 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   // Getter for pmoControl
   get pmoControl(): AbstractControl | null {
-    return this.form.get('pmo');
+    return this.form.get('DT_Governance_Approver');
   }
 
-  // onSubmit() {
-  //   if (this.form.valid) {
-  //     let dataForm;
-  //     this.isSubmitLoader = true;
-  //     // Check the current system
-  //     if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         teams: this.form.get('teamDto')?.value.map((e: number) => {
-  //           return { id: e };
-  //         }),
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //       if (this.viewerControl?.value) {
-  //         const viewerObj = this.userService
-  //           .getRoles()
-  //           .filter((r) => r.groupName === 'DT_VP_Dashboard_Viewer')[0];
-  //         dataForm.userGroups.push({ id: viewerObj.id });
-  //         if (this.editorControl?.value) {
-  //           const editorObj = this.userService
-  //             .getRoles()
-  //             .filter((r) => r.groupName === 'DT_VP_Dashboard_Editor')[0];
-  //           dataForm.userGroups.push({ id: editorObj.id });
-  //         }
-  //         if (this.pmoControl?.value) {
-  //           const pmoObj = this.userService
-  //             .getRoles()
-  //             .filter((r) => r.groupName === 'PMO')[0];
-  //           dataForm.userGroups.push({ id: pmoObj.id });
-  //         }
-  //       }
-  //     } else if (
-  //       this.userService.getCurrentSystem() === 'Dynamic_Report_Flow'
-  //     ) {
-  //       console.log(this.form.get('userDelegates')?.value);
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //         userDelegates:
-  //           this.form.get('userDelegates')?.value &&
-  //           this.form.get('userDelegates')?.value.length > 0
-  //             ? [
-  //                 {
-  //                   delegateName: this.form.get('userDelegates')?.value,
-  //                   systemName: this.userService.getCurrentSystem(),
-  //                 },
-  //               ]
-  //             : [],
-  //       };
-  //     } else if (this.userService.getCurrentSystem() === 'DI_Management') {
-  //       dataForm = {
-  //         userGroups: this.form
-  //           .get('teamDto')
-  //           ?.value.map((g: { id: number; name: string }) => ({ id: g })),
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //     } else if (
-  //       this.userService.getCurrentSystem() === 'Score_Card_Report_DB'
-  //     ) {
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         teams: this.form.get('teamDto')?.value.map((e: number) => {
-  //           return { id: e };
-  //         }),
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //     } else {
-  //       dataForm = {
-  //         userGroups: [{ id: this.form.get('teamDto')?.value.id }],
-  //         email: this.form.get('email')?.value,
-  //         name: this.form.get('name')?.value,
-  //         jobTitle: this.form.get('jobTitle')?.value,
-  //       };
-  //     }
+  get ticketAdminControl(): AbstractControl | null {
+    return this.form.get('ticketAdmin');
+  }
+  get dtUserEdit_Delete_Control(): AbstractControl | null {
+    return this.form.get('edit_delete');
+  }
+  get groupName(): string | null {
+    return this.form?.get('userGroups')?.value?.groupName ?? null;
+  }
 
-  //     const onSuccess = (message: string) => {
-  //       this.isSubmitLoader = false;
-  //       this.toastr.success(message);
-  //       this.form.reset();
-  //       this.router.navigate(['./users-setting']);
-  //     };
-
-  //     const handleError = (error: unknown) => {
-  //       this.isSubmitLoader = false;
-  //       console.error('Error:', error);
-  //     };
-
-  //     if (this.isEditing) {
-  //       this.updateUser(
-  //         { id: this.data.id, ...dataForm },
-  //         onSuccess,
-  //         handleError
-  //       );
-  //     } else if (this.addGroups) {
-  //       let data = {
-  //         id: this.userId,
-  //         userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //         teams: [{ id: this.form.get('teamDto')?.value.id }],
-  //       };
-
-  //       const currentSystem = this.userService.getCurrentSystem();
-  //       const teamDtoValue = this.form
-  //         .get('teamDto')
-  //         ?.value.map((t: number) => ({
-  //           id: t,
-  //         }));
-  //       if (currentSystem === 'Score_Card_Report_DB') {
-  //         if (teamDtoValue?.length > 0) {
-  //           data = {
-  //             ...data,
-  //             teams: teamDtoValue,
-  //           };
-  //         }
-  //       } else if (currentSystem === 'DI_Milestones') {
-  //         if (teamDtoValue?.length > 0) {
-  //           data = {
-  //             ...data,
-  //             teams: teamDtoValue,
-  //             userGroups: [{ id: this.form.get('userGroups')?.value.id }],
-  //           };
-  //           if (this.viewerControl?.value) {
-  //             const viewerObj = this.userService
-  //               .getRoles()
-  //               .filter((r) => r.groupName === 'DT_VP_Dashboard_Viewer')[0];
-  //             dataForm.userGroups.push({ id: viewerObj.id });
-  //             if (this.editorControl?.value) {
-  //               const editorObj = this.userService
-  //                 .getRoles()
-  //                 .filter((r) => r.groupName === 'DT_VP_Dashboard_Editor')[0];
-  //               dataForm.userGroups.push({ id: editorObj.id });
-  //             }
-  //             if (this.pmoControl?.value) {
-  //               const pmoObj = this.userService
-  //                 .getRoles()
-  //                 .filter((r) => r.groupName === 'PMO')[0];
-  //               dataForm.userGroups.push({ id: pmoObj.id });
-  //             }
-  //           }
-  //         }
-  //       } else if (
-  //         currentSystem === 'DI_Management' ||
-  //         currentSystem === 'FRAUD_ManagementUsers'
-  //       ) {
-  //         data = {
-  //           id: this.userId,
-  //           userGroups: [{ id: this.form.get('teamDto')?.value.id }],
-  //           teams: [],
-  //         };
-  //       }
-  //       this.userService.addUserGroup(data).subscribe(() => {
-  //         const email = this.form.get('userDelegates')?.value;
-  //         if (email) {
-  //           this.updateUserDelegate(email);
-  //         }
-  //         onSuccess('User Group is added successfully');
-  //       }, handleError);
-  //     } else {
-  //       this.createUser(dataForm, onSuccess, handleError);
-  //     }
-  //   } else {
-  //     this.markFormFieldsAsTouched();
-  //   }
-  // }
   onSubmit() {
     if (!this.form.valid) {
       this.markFormFieldsAsTouched();
@@ -330,29 +251,52 @@ export class UserFormComponent implements OnInit, OnChanges {
     const email = this.form.get('email')?.value;
     const name = this.form.get('name')?.value;
     const jobTitle = this.form.get('jobTitle')?.value;
+    const pageAccess =
+      this.form.get('pageAccess')?.value.length > 0
+        ? this.form.get('pageAccess')?.value.map((p: number) => {
+            return { id: p };
+          })
+        : [];
 
     if (currentSystem === 'DI_Milestones') {
       dataForm = { userGroups, teams, email, name, jobTitle };
       if (this.viewerControl?.value) {
         const viewerObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_VP_Dashboard_Viewer');
+          .find((r) => r.groupName === 'VP_VIEWER');
         viewerObj && dataForm.userGroups.push({ id: viewerObj.id });
       }
       if (this.editorControl?.value) {
         const editorObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'DT_VP_Dashboard_Editor');
+          .find((r) => r.groupName === 'VP_EDITOR');
         editorObj && dataForm.userGroups.push({ id: editorObj.id });
       }
       if (this.pmoControl?.value) {
         const pmoObj = this.userService
           .getRoles()
-          .find((r) => r.groupName === 'PMO');
+          .find((r) => r.groupName === 'DT_Governance_Approver');
         pmoObj && dataForm.userGroups.push({ id: pmoObj.id });
+      }
+      if (this.ticketAdminControl?.value) {
+        const ticketAdminObj = this.userService
+          .getRoles()
+          .find((r) => r.groupName === 'TICKET_ADMIN');
+
+        ticketAdminObj && dataForm.userGroups.push({ id: ticketAdminObj.id });
+      }
+
+      if (this.dtUserEdit_Delete_Control?.value) {
+        const dtUserEdit_DeleteObj = this.userService
+          .getRoles()
+          .find((r) => r.groupName === 'DT_User_Edit_Delete');
+
+        dtUserEdit_DeleteObj &&
+          dataForm.userGroups.push({ id: dtUserEdit_DeleteObj.id });
       }
     } else if (currentSystem === 'Dynamic_Report_Flow') {
       const userDelegates = this.form.get('userDelegates')?.value || [];
+      const UserEscaltion = this.form.get('manager')?.value || 0;
       dataForm = {
         userGroups,
         email,
@@ -361,6 +305,7 @@ export class UserFormComponent implements OnInit, OnChanges {
         userDelegates: userDelegates.length
           ? [{ delegateName: userDelegates, systemName: currentSystem }]
           : [],
+        manager: UserEscaltion > 0 ? { id: UserEscaltion } : null,
       };
     } else if (currentSystem === 'DI_Management') {
       dataForm = { userGroups: teams, email, name, jobTitle };
@@ -369,6 +314,12 @@ export class UserFormComponent implements OnInit, OnChanges {
     } else if (currentSystem === 'Strategic_Dashboard') {
       dataForm = { userGroups, email, name, jobTitle };
     } else if (currentSystem === 'Business_Excellence_Dashboard') {
+      dataForm = { userGroups, email, name, jobTitle, pageAccess };
+    } else if (
+      currentSystem === 'ChatBI' ||
+      currentSystem === 'TU_BRAIN' ||
+      currentSystem === 'FNI_Nokia'
+    ) {
       dataForm = { userGroups, email, name, jobTitle };
     } else {
       dataForm = { userGroups: teams, email, name, jobTitle };
@@ -393,47 +344,54 @@ export class UserFormComponent implements OnInit, OnChanges {
         handleError
       );
     } else if (this.addGroups) {
-      let data = { id: this.userId, userGroups, teams };
-      if (currentSystem === 'Score_Card_Report_DB' && teams?.length > 0) {
-        data.teams = teams;
-      }
-      if (currentSystem === 'Strategic_Dashboard' && teams?.length > 0) {
-        data.teams = null;
-      }
-      console.log(userGroups);
+      const baseData = { id: this.userId, userGroups, teams };
+      let data: any;
 
-      if (
-        currentSystem === 'Dynamic_Report_Flow' ||
-        currentSystem === 'Business_Excellence_Dashboard'
-      ) {
-        data = { ...data, teams, userGroups };
-        delete data.teams;
-        // if (this.viewerControl?.value) {
-        //   const viewerObj = this.userService
-        //     .getRoles()
-        //     .find((r) => r.groupName === 'DT_VP_Dashboard_Viewer');
-        //   viewerObj && data.userGroups.push({ id: viewerObj.id });
-        // } else if (this.editorControl?.value) {
-        //   const editorObj = this.userService
-        //     .getRoles()
-        //     .find((r) => r.groupName === 'DT_VP_Dashboard_Editor');
-        //   editorObj && data.userGroups.push({ id: editorObj.id });
-        // } else if (this.pmoControl?.value) {
-        //   const pmoObj = this.userService
-        //     .getRoles()
-        //     .find((r) => r.groupName === 'PMO');
-        //   pmoObj && data.userGroups.push({ id: pmoObj.id });
-        // }
+      switch (currentSystem) {
+        case 'Score_Card_Report_DB':
+          data = { ...baseData, teams: teams?.length > 0 ? teams : undefined };
+          break;
+
+        case 'Strategic_Dashboard':
+          data = { ...baseData, teams: null };
+          break;
+
+        case 'Dynamic_Report_Flow':
+        case 'ChatBI':
+        case 'TU_BRAIN':
+        case 'FNI_Nokia':
+          data = { ...baseData, userGroups }; // omit teams directly
+          break;
+
+        case 'Business_Excellence_Dashboard':
+          data = {
+            ...baseData,
+            userGroups: userGroups,
+            pageAccess,
+          };
+          delete data.teams; // optional if you want to guarantee no teams
+          break;
+
+        case 'DI_Management':
+          data = { ...baseData, userGroups: teams, teams: userGroups };
+          delete data.teams;
+          break;
+
+        default:
+          data = baseData;
       }
-      if (currentSystem === 'DI_Management') {
-        data = { ...data, userGroups: teams, teams: userGroups };
-        delete data.teams;
-      }
+
       this.userService.addUserGroup(data).subscribe(() => {
         const delegateEmail = this.form.get('userDelegates')?.value;
         if (delegateEmail) {
           this.updateUserDelegate(delegateEmail);
         }
+
+        const escaltionManager = this.form.get('manager')?.value;
+        if (escaltionManager) {
+          this.updateUserEscalationManger({ id: escaltionManager });
+        }
+
         onSuccess('User Group is added successfully');
       }, handleError);
     } else {
@@ -469,6 +427,16 @@ export class UserFormComponent implements OnInit, OnChanges {
         });
     }
   }
+  updateUserEscalationManger(data: any) {
+    if (this.addGroups) {
+      this.userService.updateUserManager(this.userId, data).subscribe((res) => {
+        if (!res) {
+          return;
+        }
+        // Additional logic can be added here if needed
+      });
+    }
+  }
 
   /**
    * Creates user.
@@ -497,10 +465,22 @@ export class UserFormComponent implements OnInit, OnChanges {
       .getRoles()
       .filter(
         (r) =>
-          r.groupName !== 'DT_VP_Dashboard_Viewer' &&
-          r.groupName !== 'DT_VP_Dashboard_Editor' &&
-          r.groupName !== 'PMO'
+          r.groupName !== 'VP_VIEWER' &&
+          r.groupName !== 'VP_EDITOR' &&
+          r.groupName !== 'DT_Governance_Approver' &&
+          r.groupName !== 'TICKET_ADMIN' &&
+          r.groupName !== 'DT_User_Edit_Delete'
       );
+
+    if (filteredRoles.length >= 2) {
+      const lastIndex = filteredRoles.length - 1;
+      const secondLastIndex = filteredRoles.length - 2;
+      // Swap the last two elements
+      [filteredRoles[lastIndex], filteredRoles[secondLastIndex]] = [
+        filteredRoles[secondLastIndex],
+        filteredRoles[lastIndex],
+      ];
+    }
 
     if (
       this.userService.getCurrentSystem() === 'Business_Excellence_Dashboard'
@@ -516,32 +496,103 @@ export class UserFormComponent implements OnInit, OnChanges {
       this.privilages.set(filteredRoles);
     }
     if (this.data) {
+      if (this.userSelectedPrivilege) {
+        this.initialBindingDone = true;
+        return;
+      }
       const currentSystem = this.userService.getCurrentSystem();
       if (currentSystem === 'DI_Milestones') {
-        this.selectedPrivilege = this.privilages().filter(
-          (p) => p.id === this.checkSystem(this.data.userGroups)?.id
-        )[0];
+        const options = this.privilages();
+        const candidateIds = options.map((p) => p.id);
+        const preferredOrder = [
+          'DT_User',
+          'DT_Director',
+          'PMO',
+          'DT_Governance',
+          'DT_Executive',
+        ];
+        const preferredMatch = preferredOrder
+          .map((name) => this.searchGroupByName(this.data.userGroups, name))
+          .find((g) => g && candidateIds.includes(g.id));
+        const fallbackMatch = this.data.userGroups.find(
+          (g) =>
+            g.roles?.some((r) => r.system?.name === currentSystem) &&
+            candidateIds.includes(g.id)
+        );
+        const activeGroup = preferredMatch || fallbackMatch;
+        this.selectedPrivilege = options.find((p) => p.id === activeGroup?.id);
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'DI_Management') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'Score_Card_Report_DB') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'Strategic_Dashboard') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else if (currentSystem === 'FRAUD_ManagementUsers') {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.roles[0].id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       } else {
         this.selectedPrivilege = this.privilages().filter(
           (p) => p.id === this.checkSystem(this.data.userGroups)?.id
         )[0];
+        if (this.selectedPrivilege) {
+          this.form
+            .get('userGroups')
+            ?.setValue(this.selectedPrivilege, { emitEvent: false });
+          this.rebindingPrivilege = true;
+          this.handleTeam(this.selectedPrivilege as unknown as Role);
+          this.rebindingPrivilege = false;
+        }
       }
+    }
+    if (this.data) {
+      this.initialBindingDone = true;
     }
   }
 
@@ -581,6 +632,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           this.selectedGroup = this.data.teams.map(
             (t: { name: string; id: number }) => t.id
           );
+          this.form
+            .get('teamDto')
+            ?.setValue(this.selectedGroup, { emitEvent: false });
         }
       } else if (this.userService.getCurrentSystem() === 'DI_Management') {
         this.teams = this.userService
@@ -611,6 +665,9 @@ export class UserFormComponent implements OnInit, OnChanges {
           );
           this.form.get('teamDto')?.setValidators(null);
           this.form.get('teamDto')?.updateValueAndValidity();
+          this.form
+            .get('teamDto')
+            ?.setValue(this.selectedGroup, { emitEvent: false });
         }
       } else {
         this.selectedTeam = this.teams.filter(
@@ -622,27 +679,6 @@ export class UserFormComponent implements OnInit, OnChanges {
 
   cancel() {
     this.router.navigate(['./users-setting']);
-  }
-
-  handleTeam(value: Role) {
-    if (this.userService.getCurrentSystem() === 'DI_Milestones') {
-      this.form.get('viewer')?.enable();
-      this.form.get('viewer')?.setValue(false);
-      this.form.get('teamDto')?.setValue([]);
-      this.checkDtUserPermissions(value.groupName);
-      this.teams = this.userService.allTeams;
-    } else if (this.userService.getCurrentSystem() === 'Score_Card_Report_DB') {
-      this.teams = this.userService.getTeams();
-    }
-    // else if (this.userService.getCurrentSystem() === 'Strategic_Dashboard') {
-    //   this.teams = this.userService.getTeams();
-    // }
-    else {
-      this.form?.get('teamDto')?.setValue('');
-      this.teams = this.userService
-        .getTeams()
-        .filter((x) => x.roleName == value.groupName);
-    }
   }
 
   checkUserExist() {
@@ -657,6 +693,7 @@ export class UserFormComponent implements OnInit, OnChanges {
             }
             this.addGroups = true;
             this.userId = res?.id || 0;
+            this.data = res;
             this.restFormWithValue(res);
             this.enableFields();
           },
@@ -673,7 +710,10 @@ export class UserFormComponent implements OnInit, OnChanges {
     if (value === 'DT_User') {
       this.form.get('viewer')?.setValue(true);
       this.form.get('editor')?.setValue(false);
-      this.form.get('pmo')?.setValue(false);
+      this.form.get('DT_Governance_Approver')?.setValue(false);
+      this.form.get('ticketAdmin')?.setValue(false);
+      this.form.get('edit_delete')?.setValue(false);
+      this.cdr.detectChanges();
     }
   }
   oncheckBoxSelect(ele: { name: string; value: boolean }) {
@@ -692,14 +732,15 @@ export class UserFormComponent implements OnInit, OnChanges {
     }
   }
   restFormWithValue(data: User) {
-    this.getusersList();
-    forkJoin([this.userService.getUsers()]).subscribe(() => {
-      this.form.patchValue({
-        email: data.email,
-        name: data.name,
-        jobTitle: data.jobTitle,
-        userDelegates: this.data?.userDelegates?.[0]?.delegateName,
-      });
+    if (!this.form) {
+      return;
+    }
+    this.form.patchValue({
+      email: data.email,
+      name: data.name,
+      jobTitle: data.jobTitle,
+      userDelegates: this.data?.userDelegates?.[0]?.delegateName,
+      manager: this.data?.manager?.id,
     });
 
     if (!this.addGroups) {
@@ -708,9 +749,9 @@ export class UserFormComponent implements OnInit, OnChanges {
         this.selectedGroup = this.data.userGroups
           .filter((s) => s.roles[0].system.name === 'DI_Management')
           .map((group: UserGroup) => group.id);
-        this.selectedGroup = this.data.userGroups.map(
-          (group: UserGroup) => group.id
-        );
+        // this.selectedGroup = this.data.userGroups.map(
+        //   (group: UserGroup) => group.id
+        // );
       } else if (this.userService.getCurrentSystem() === 'DI_Milestones') {
         this.handleDI_Milestones();
       } else if (
@@ -733,12 +774,14 @@ export class UserFormComponent implements OnInit, OnChanges {
    */
   handleDI_Milestones() {
     if (this.data.userGroups.length > 1) {
-      this.form?.get('viewer')?.setValue(true);
+      if (this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')) {
+        this.form?.get('viewer')?.setValue(true);
+      }
 
       // If user group contains DT_VP_Dashboard_Editor role, set editor to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'DT_VP_Dashboard_Editor')
-          ?.groupName === 'DT_VP_Dashboard_Editor'
+        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')?.groupName ===
+        'VP_EDITOR'
       ) {
         this.form?.get('editor')?.setValue(true);
         this.form?.get('viewer')?.disable();
@@ -746,11 +789,25 @@ export class UserFormComponent implements OnInit, OnChanges {
 
       // If user group contains PMO role, set pmo to true
       if (
-        this.searchGroupByName(this.data.userGroups, 'PMO')?.groupName === 'PMO'
+        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')
+          ?.groupName === 'DT_Governance_Approver'
       ) {
-        this.form?.get('pmo')?.setValue(true);
+        this.form?.get('DT_Governance_Approver')?.setValue(true);
         this.form?.get('viewer')?.disable();
       }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'TICKET_ADMIN')
+          ?.groupName === 'TICKET_ADMIN'
+      ) {
+        this.form?.get('ticketAdmin')?.setValue(true);
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_User_Edit_Delete')
+          ?.groupName === 'DT_User_Edit_Delete'
+      ) {
+        this.form?.get('edit_delete')?.setValue(true);
+      }
+      this.cdr.detectChanges();
     }
   }
   searchGroupByName(groups: UserGroup[], groupName: string) {
@@ -768,46 +825,183 @@ export class UserFormComponent implements OnInit, OnChanges {
   }
 
   handleGrouping() {
-    this.userService.getAllTeams().subscribe((res) => {
-      this.userService.allTeams = res;
-    });
-    this.userService.getGroups().subscribe((res: UserGroup[]) => {
-      if (res) {
-        this.userService.getGroups().subscribe((res: UserGroup[]) => {
-          if (res) {
-            this.userService.allGroups = res;
-            this.getTeams(this.data?.userGroups[0]);
-            this.getRoles();
-          }
-        });
-
-        if (this.data) {
-          this.selectedGroup = this.data.userGroups.map(
-            (group: UserGroup) => group.id
-          );
-        }
+    forkJoin([
+      this.userService.getAllTeams(),
+      this.userService.getGroups(),
+    ]).subscribe(([teams, groups]) => {
+      this.userService.allTeams = teams || [];
+      this.userService.allGroups = groups || [];
+      this.rolesReady = true;
+      if (this.data) {
+        this.getTeams(this.data.userGroups[0]);
       }
+      if (this.dataReady && !this.initialBindingDone) {
+        this.getRoles();
+      }
+
+      if (this.isEditing === false) {
+        this.getTeams(this.data?.userGroups[0]);
+        this.getRoles();
+      }
+      // Do not override team selections with group IDs
+      this.initializing = false;
     });
   }
-  getusersList() {
+  getUsersList() {
     this.userService.getUsers().subscribe((res) => {
-      if (res) {
-        this.allUsers = res.filter(
-          (l) => l.userGroups[0].roles[0].roleName !== 'ADMINS'
-        );
+      if (!res) return;
 
-        if (this.isEditing && this.data) {
-          this.userDelegate = this.allUsers.filter(
-            (l) => l.email !== this.data?.email
-          );
-        } else {
-          this.userDelegate = this.allUsers;
-        }
-      }
+      this.allUsers = res.filter(
+        (user) => user.userGroups?.[0]?.roles?.[0]?.roleName !== 'ADMINS'
+      );
+
+      const updatedUsers =
+        this.isEditing && this.data
+          ? this.allUsers.filter((user) => user.email !== this.data.email)
+          : this.allUsers;
+
+      this.userDelegate.set(updatedUsers); // Update the signal
+      this.escaltionManager.set(updatedUsers);
     });
   }
   closeDialog() {
     this.dialogService.close();
     this.router.navigate(['/users-setting']);
+  }
+  // Suppress form value changes on initial privilege binding
+  // Avoid clearing team selections set from existing user data
+  handleTeam(value: Role) {
+    if (!this.rebindingPrivilege && !this.initializing) {
+      this.userSelectedPrivilege = true;
+    }
+    if (this.initializing && !this.rebindingPrivilege) {
+      return;
+    }
+    const currentSystem = this.userService.getCurrentSystem();
+    const isProgrammaticInit =
+      this.rebindingPrivilege ||
+      (this.data && !this.userSelectedPrivilege && !this.initialBindingDone);
+    if (!isProgrammaticInit) {
+      this.resetPrivilegeCheckboxes();
+    }
+    if (currentSystem === 'DI_Milestones') {
+      this.form.get('viewer')?.enable();
+      this.checkDtUserPermissions(value.groupName);
+      this.teams = this.userService.allTeams;
+      if (isProgrammaticInit) {
+        this.rehydrateMilestonesCheckboxes();
+      }
+    } else if (currentSystem === 'Score_Card_Report_DB') {
+      this.teams = this.userService.getTeams();
+    } else if (currentSystem === 'Business_Excellence_Dashboard') {
+      if (value.groupName === 'BE_EDITORS') {
+        this.filterPages = this.pages;
+        const availableIds = this.availableIdsFrom(this.filterPages);
+        const selection = this.computePageSelection(availableIds);
+        this.applyPageSelection(selection);
+      } else if (value.groupName === 'BE_PM') {
+        this.applyPageSelection([3]);
+        this.form.get('pageAccess')?.disable();
+      } else {
+        this.form.get('pageAccess')?.enable();
+        this.filterPages = this.pages.filter(
+          (r) => r.name !== 'Activity Log Center'
+        );
+        const availableIds = this.availableIdsFrom(this.filterPages);
+        const selection = this.computePageSelection(availableIds);
+        this.applyPageSelection(selection);
+      }
+    } else {
+      this.teams = this.userService
+        .getTeams()
+        .filter((x) => x.roleName == value.groupName);
+      if (this.initializing && !this.rebindingPrivilege) {
+        return;
+      }
+      const current = this.form?.get('teamDto')?.value;
+      const availableIds = (this.teams || []).map((t) => t.id);
+      if (Array.isArray(current)) {
+        const preserved = current.filter((id: number) =>
+          availableIds.includes(id)
+        );
+        this.form.get('teamDto')?.setValue(preserved, { emitEvent: false });
+      } else if (current && typeof current === 'object' && 'id' in current) {
+        const id = (current as any).id;
+        if (!availableIds.includes(id)) {
+          this.form.get('teamDto')?.setValue([], { emitEvent: false });
+        }
+      }
+    }
+  }
+
+  private resetPrivilegeCheckboxes(): void {
+    this.form.get('viewer')?.setValue(false, { emitEvent: false });
+    this.form.get('editor')?.setValue(false, { emitEvent: false });
+    this.form
+      .get('DT_Governance_Approver')
+      ?.setValue(false, { emitEvent: false });
+    this.form.get('ticketAdmin')?.setValue(false, { emitEvent: false });
+    this.form.get('edit_delete')?.setValue(false, { emitEvent: false });
+    this.viewerControl?.enable();
+    this.cdr.detectChanges();
+  }
+
+  private normalizeIds(val: any): number[] {
+    if (!Array.isArray(val)) return [];
+    return val.map((id: any) => Number(id));
+  }
+
+  private availableIdsFrom(pages: Page[]): number[] {
+    return (pages || []).map((p) => Number(p.id));
+  }
+
+  private computePageSelection(availableIds: number[]): number[] {
+    const current = this.normalizeIds(this.form.get('pageAccess')?.value || []);
+    const preserved = current.filter((id) => availableIds.includes(id));
+    const initial = this.normalizeIds(this.selectedPages || []).filter((id) =>
+      availableIds.includes(id)
+    );
+    return preserved.length > 0 ? preserved : initial;
+  }
+
+  private applyPageSelection(ids: number[]): void {
+    this.form.get('pageAccess')?.setValue(ids, { emitEvent: false });
+  }
+
+  private rehydrateMilestonesCheckboxes(): void {
+    if (this.data?.userGroups?.length > 1) {
+      if (this.searchGroupByName(this.data.userGroups, 'VP_VIEWER')) {
+        this.form?.get('viewer')?.setValue(true, { emitEvent: false });
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'VP_EDITOR')?.groupName ===
+        'VP_EDITOR'
+      ) {
+        this.form?.get('editor')?.setValue(true, { emitEvent: false });
+        this.viewerControl?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_Governance_Approver')
+          ?.groupName === 'DT_Governance_Approver'
+      ) {
+        this.form?.get('DT_Governance_Approver')?.setValue(true, {
+          emitEvent: false,
+        });
+        this.viewerControl?.disable();
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'TICKET_ADMIN')
+          ?.groupName === 'TICKET_ADMIN'
+      ) {
+        this.form?.get('ticketAdmin')?.setValue(true, { emitEvent: false });
+      }
+      if (
+        this.searchGroupByName(this.data.userGroups, 'DT_User_Edit_Delete')
+          ?.groupName === 'DT_User_Edit_Delete'
+      ) {
+        this.form?.get('edit_delete')?.setValue(true, { emitEvent: false });
+      }
+      this.cdr.detectChanges();
+    }
   }
 }

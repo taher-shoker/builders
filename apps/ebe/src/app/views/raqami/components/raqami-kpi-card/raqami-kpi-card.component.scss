@@ -1,0 +1,113 @@
+@import '../../../../../styles/fonts';
+.raqami-kpi-card
+{
+    text-align: left;
+    background-color: var(--stc-light-pink-color);
+    border-radius: 10px;
+    padding: 20px 15px;
+    &-title {
+        color: var(--stc-purple-light-color);
+        @extend .stcFont;
+        text-transform: capitalize;
+        font-weight: 600;
+        font-size: 17px;
+        margin: 0;
+        .read-more
+        {
+            font-size: 13px;
+            cursor: pointer;
+            text-decoration: underline;
+        }
+    }
+    &-cards
+    {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+    }
+    &-weights
+    {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 25px;
+        &-weight , &-um
+        {
+            background-color: #fff;
+            border-radius: 10px;
+            text-align: center;
+            width: 100%;
+            padding:15px 0;
+            p
+            {
+                margin: 0;
+                @extend .stcFont;
+                &.weight-name
+                {
+                    color:var(--stc-grey-dark-color);
+                    font-size: 15px;
+                }
+                &.weight-num
+                {
+                    color:var(--stc-dark-blue-color);
+                    font-size: 15px;
+                    margin-top: 10px;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+    &-baselines
+    {
+        background-color: #fff;
+        border-radius: 10px;
+        width: 100%;
+        padding:25px 15px;
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns:30% 70%;
+        text-align: center;
+        @extend .stcFont;
+        &-baseline
+        {
+            border-right: 1px solid var(--stc-grey-dark-color);
+            &-title
+            {
+                color:var(--stc-dark-blue-color);
+                text-transform: capitalize;
+                font-weight: 600;
+                padding-bottom: 20px;
+            }
+            &-year
+            {
+                color:var(--stc-grey-dark-color);
+                font-size: 16px;
+            }
+            &-val
+            {
+                color:var(--stc-dark-blue-color);
+                font-size: 17px;
+                padding-top: 20px;
+                font-weight: 600;
+            }
+        }
+        &-target
+        {
+            padding-left: 15px;
+            .targets
+            {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+        }
+    }
+}
+.popover-section2
+{
+  max-width: 350px;
+  margin: 0;
+  color: var(--stc-purple-light-color);
+}

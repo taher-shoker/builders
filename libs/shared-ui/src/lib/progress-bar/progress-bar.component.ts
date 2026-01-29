@@ -17,35 +17,36 @@ export interface ProgressInfo {
 interface Index {
   caption: string;
   value: number;
-  progressValue?:number
+  progressValue?: number;
   // position?: 'up' | 'down';
   position?: 'up' | 'down';
-  actualBarColor?:string;
+  actualBarColor?: string;
 }
 
 @Component({
   selector: 'stc-apps-progress-bar',
   templateUrl: './progress-bar.component.html',
   styleUrls: ['./progress-bar.component.scss'],
-  standalone : false
+  standalone: false,
 })
 export class ProgressBarComponent {
   data = input.required<ProgressInfo>();
   isProject = input<boolean>(false);
   isPSRProject = input<boolean>(false);
   fontFamily = input<string>('');
-  @Output() displayDrilldown:EventEmitter<boolean> = new EventEmitter(false);
+  @Output() displayDrilldown: EventEmitter<boolean> = new EventEmitter(false);
   isClicked = false;
-  showDrilldown()
-  {
-    if(this.isPSRProject())
-    {
+  showDrilldown() {
+    if (this.isPSRProject()) {
       this.isClicked = !this.isClicked;
       this.displayDrilldown.emit(this.isClicked);
     }
   }
-
   get unit(): string {
     return this.data().unit || '%';
+  }
+  getLeftPosition(index: Index): string {
+    const v = (typeof index.progressValue === 'number' ? index.progressValue : index.value ?? 0);
+    return (v >= 100 ? 100 : v) + '%';
   }
 }

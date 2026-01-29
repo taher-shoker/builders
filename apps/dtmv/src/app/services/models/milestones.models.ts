@@ -64,6 +64,8 @@ export class Actions {
     'Approve progress',
     'Approve progress'
   );
+  static readonly approveModification = new Actions('Approve', 'Approve');
+  static readonly returnModification = new Actions('Reject', 'Reject');
   static readonly returnProgress = new Actions('Return progress', 'Return');
 
   static readonly returnJustification = new Actions(
@@ -128,6 +130,12 @@ export interface MilestoneDetails {
     updatedBy: string;
     status: string;
   };
+  milestoneChangeRequest: {
+    id: number;
+    changeType: string;
+    workflowId: number;
+    requestedBy: string;
+  };
 }
 
 export interface MilestoneAttachment {
@@ -184,7 +192,9 @@ export interface HighlightImpactReport {
   status: string;
   clarityStrategicProgramReflectionLevel: ReflectionLevel[];
   erpStatus: string;
+  dataEnablementStatus: string;
   erpStatusReflectionLevel: ReflectionLevel[];
+  dataEnablementStatusReflectionLevel: ReflectionLevel[];
 }
 
 export interface HighlightImpartReportResponse extends HighlightImpactReport {
@@ -242,6 +252,8 @@ export interface PendingTask {
     milestone_progress_id: string | number;
     team: string;
     status: string;
+    comment: string;
+    overall_progress: string;
   };
   taskName: 'Add Remarks';
   taskStatus: 'pending';
@@ -277,7 +289,9 @@ export interface ReportData {
   diScore: number;
   editedBy: string;
   erpStatus: string;
+  dataEnablementStatus: string;
   erpStatusReflectionLevel: ReflectionLevel;
+  dataEnablementStatusReflectionLevel: ReflectionLevel;
   status: string;
   stcDiScore: number;
   supportNeeded: string;
@@ -293,7 +307,7 @@ export interface ReportDataWorkflow {
   taskName:
     | 'Approve Report Data'
     | 'Edit Report Data'
-    | 'Approve Report Data PMO'
+    | 'Approve Report Data Governance'
     | 'Approve Report Data Director';
   userDisplayName: string | null;
   username: string | null;

@@ -1,0 +1,74 @@
+.kpi-actions {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+  flex-shrink: 0;
+  white-space: nowrap;
+
+  span {
+    color: var(--stc-color);
+    cursor: pointer;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: var(--button-label-font-weight, 500);
+    line-height: normal;
+    text-decoration-line: underline;
+    text-decoration-style: solid;
+    text-decoration-skip-ink: none;
+    text-decoration-thickness: auto;
+    text-underline-offset: auto;
+    text-underline-position: from-font;
+    white-space: nowrap;
+
+    &:hover {
+      font-weight: 600;
+    }
+  }
+
+  stc-apps-button {
+    ::ng-deep {
+      button {
+        background-color: var(--stc-pink-color);
+        color: var(--whiteColor);
+        font-size: 14px;
+        transition: transform 180ms ease, box-shadow 180ms ease,
+          filter 180ms ease;
+
+        i{
+          font-size: 14px;
+        }
+
+        &:hover{
+          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+          filter: brightness(1.05);
+        }
+
+        &:active{
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+          filter: brightness(1.0);
+        }
+      }
+    }
+    flex: 0 0 auto;
+  }
+
+  .menu-button {
+    border: none;
+    background: transparent;
+    color: var(--stc-color) !important;
+    flex: 0 0 auto;
+
+    mat-icon {
+      color: var(--stc-color) !important;
+    }
+  }
+}
+
+::ng-deep {
+  .mat-mdc-menu-content {
+    button,
+    mat-icon {
+      color: var(--stc-color) !important;
+    }
+  }
+}

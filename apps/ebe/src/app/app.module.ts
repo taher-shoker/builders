@@ -3,11 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { AppComponent } from './app.component';
 import { appRoutes } from './app.routes';
-import { NxWelcomeComponent } from './nx-welcome.component';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 // import { SharedUiModule } from '@stc-apps/shared-ui';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  HttpClientModule,
+} from '@angular/common/http';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { HttpLoadingInterceptor } from './interceptors/http-loader.interceptor';
@@ -16,18 +19,26 @@ import { CookieModule } from 'ngx-cookie';
 import { ToastrModule } from 'ngx-toastr';
 import { ErrorInterceptor } from './interceptors/errors-handler.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
-// import { HttpUrlInterceptor } from './interceptors/http.interceptor';
-// export function HttpLoaderFactory(http: HttpClient) {
-//   return new TranslateHttpLoader(http, environment.languageFilesPath, '.json');
-// }
-// export const provideTranslation = () => ({
-//   defaultLanguage: 'en',
-//   loader: {
-//     provide: TranslateLoader,
-//     useFactory: HttpLoaderFactory,
-//     deps: [HttpClient],
-//   },
-// });
+import { HomepageMobileComponent } from './views/homepage-mobile/homepage-mobile.component';
+import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
+import { environment } from '../environments/environment';
+
+export function HttpLoaderFactory(http: HttpClient) {
+  return new TranslateHttpLoader(
+    http,
+    window.location.origin + environment.languageFilesPath,
+    '.json'
+  );
+}
+export const provideTranslation = () => ({
+  defaultLanguage: 'en',
+  loader: {
+    provide: TranslateLoader,
+    useFactory: HttpLoaderFactory,
+    deps: [HttpClient],
+  },
+});
 @NgModule({
   declarations: [AppComponent, MainLayoutComponent],
   imports: [
@@ -35,19 +46,17 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     RouterModule.forRoot(appRoutes),
     BrowserAnimationsModule,
     SharedUiModule,
-    NgxSpinnerModule.forRoot({type : "ball-spin"}),
+    NgxSpinnerModule.forRoot({ type: 'ball-spin' }),
     CookieModule.withOptions(),
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    HomepageMobileComponent,
   ],
   providers: [
+    importProvidersFrom([HttpClientModule]),
     importProvidersFrom([
-      HttpClientModule
+      HttpClientModule,
+      TranslateModule.forRoot(provideTranslation()),
     ]),
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: HttpUrlInterceptor,
-    //   multi: true,
-    // },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpInterceptorService,
@@ -65,8 +74,8 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
     },
     {
       provide: LocationStrategy,
-      useClass: HashLocationStrategy
-    }
+      useClass: HashLocationStrategy,
+    },
   ],
   bootstrap: [AppComponent],
 })

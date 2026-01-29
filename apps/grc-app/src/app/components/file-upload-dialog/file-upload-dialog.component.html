@@ -1,0 +1,82 @@
+<p-dialog
+  [(visible)]="showDialog2"
+  [modal]="true"
+  (onHide)="hideDialog()"
+  ismissableMask="true"
+  transitionOptions="300ms cubic-bezier(0, 0, 0.2, 1)"
+  resizable="false"
+  draggable="false"
+  showHeader="false"
+  closable="true"
+  closeOnEscape="true"
+  styleClass="file-upload-dialog"
+>
+  <div class="dialog-header">
+    <p>Upload File</p>
+    <span class="close-icon" (click)="hideDialog()">
+      <i class="pi pi-times"></i>
+    </span>
+  </div>
+  <div class="dialog-body">
+    @if(!selectedFile){
+    <div class="upload-container" (click)="fileInput.click()">
+      <div class="file-upload-box">
+        <input
+          type="file"
+          #fileInput
+          (change)="onFileSelected($event)"
+          [accept]="'.' + fileType()"
+        />
+        <img
+          src="assets/images/export5.svg"
+          class="upload-icon"
+          alt="Upload Icon"
+        />
+        <p class="upload-file-text">Choose file to upload</p>
+        <p class="upload-file-hint">
+          supported format: {{ fileType().toUpperCase() }}
+        </p>
+      </div>
+      <p class="hint-msg">
+        <img src="assets/images/Icon.svg" alt="" />
+        <span>Date must be like this format DD/MM/YY</span>
+      </p>
+    </div>
+    } @else {
+    <div class="file-details" [class.invalid-file]="errorMessage">
+      <div class="file-selected-info">
+        <img src="assets/images/excel.png" width="50" alt="" />
+        <div class="file-info">
+          <p class="file-name">{{ selectedFileName }}</p>
+          <p class="file-size">{{ selectedFileSize }}</p>
+        </div>
+      </div>
+      <i class="pi pi-times-circle" (click)="clearFileData()"></i>
+    </div>
+    @if(errorMessage){
+    <p class="error-msg">
+      <img src="assets/images/elements.svg" alt="" />
+      <span>{{ errorMessage }}</span>
+    </p>
+    <!-- <p class="error-msg">
+      <img src="assets/images/elements.svg" alt="" />
+      <span>
+        File is missing Required Data,please reupload with correct
+        format/required data
+      </span>
+    </p> -->
+    }
+    <div class="buttons">
+      <button class="cancel-button" (click)="hideDialog()">Cancel</button>
+      <button
+        class="upload-button"
+        (click)="onUpload()"
+        [disabled]="errorMessage"
+        [class.disabled-button]="errorMessage"
+      >
+        Confirm
+      </button>
+    </div>
+    }
+  </div>
+</p-dialog>

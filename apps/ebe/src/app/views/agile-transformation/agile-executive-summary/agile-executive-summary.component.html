@@ -1,0 +1,295 @@
+<section class="agile-executive-summary">
+  <div class="section-header">
+    <div class="header-text">
+      <div class="title-container">
+        <img src="assets/images/icon-title.png" height="25" width="25" />
+        <h2>AI&DS Sector - Overall Maturity Overview</h2>
+      </div>
+      <p>High-level agile maturity assessment across all business units</p>
+    </div>
+    <div class="top-filters">
+      <div class="filter">
+        <label>Year</label>
+        <stc-apps-custom-dropdown
+          [list]="years()"
+          [displayNameProperty]="'displayName'"
+          [valueProperty]="'value'"
+          [outputProperty]="'value'"
+          [ngModel]="selectedYear()"
+          [highlightSelected]="true"
+          (itemSelected)="onSelectYear($event)"
+        ></stc-apps-custom-dropdown>
+      </div>
+      <div class="filter">
+        <label>Quarter</label>
+        <stc-apps-custom-dropdown
+          [list]="quarters()"
+          [displayNameProperty]="'displayName'"
+          [valueProperty]="'value'"
+          [outputProperty]="'value'"
+          [ngModel]="selectedQuarter()"
+          [highlightSelected]="true"
+          (itemSelected)="onSelectQuarter($event)"
+        ></stc-apps-custom-dropdown>
+      </div>
+    </div>
+  </div>
+  @if (currentMode === 'editMode') {
+  <stc-apps-export-import-bar
+    [showExport]="true"
+    [showImport]="true"
+    importLabel="Import Overall Maturity index"
+    exportLabel="Export Overall Maturity index Template"
+    (import)="showDialog()"
+    (export)="downloadOverallMaturityIndexTemplate()"
+  />
+  }
+  <div class="overview-grid">
+    <div class="time-period-card card">
+      @if (overviewScore() !== null && targetProgress() !== null) {
+      <div class="score">
+        <div class="score-row">
+          <div class="score-left">
+            <div class="score-title-row">
+              <h1>{{ overviewScore()! }}</h1>
+              <img [src]="performanceImage()" [alt]="performanceLabel()" height="60" class="score-stage-image" />
+            </div>
+            <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="progress-section">
+        <div class="progress-labels">
+          <span class="label-left">Progress to Target ({{ progressToTarget()  | number:'1.0-2' }})</span>
+          <span class="label-right">{{ targetProgress()! | number:'1.0-2' }}%</span>
+        </div>
+        <stc-apps-progress-bar
+          [data]="{
+            prefixText: '',
+            prefixValue: 0,
+            suffixText: '',
+            suffixValue: '',
+            progressValue: targetProgress()!,
+            barColor: '#000000',
+            bgBarColor: '#EBE0F5',
+            indexes: []
+          }"
+        ></stc-apps-progress-bar>
+      </div>
+      } @else {
+      <div class="empty-state">
+        No overview data available for the selected period.
+      </div>
+      }
+    </div>
+
+    <div class="maturity-index-card card">
+      <div class="card-header">
+        <h3>AI&DS Sector Overall Maturity index</h3>
+        <span>Sector-wide view across People, Process, and Technology</span>
+      </div>
+
+      @if (sectorLabels.length && sectorBubbles.length) {
+      <shared-radar-bubble-chart
+        [labels]="sectorLabels"
+        [levels]="4"
+        [outerRadius]="170"
+        [innerZoneRatio]="0.5"
+        [bubbles]="sectorBubbles"
+        [startAngleDeg]="-108"
+        [labelOffset]="22"
+      >
+      </shared-radar-bubble-chart>
+      } @else {
+      <div class="empty-state">
+        No maturity index data available for the selected filters.
+      </div>
+      }
+    </div>
+  </div>
+
+  <div class="heatmap-section card">
+     @if (currentMode === 'editMode') {
+        <stc-apps-export-import-bar
+          [showExport]="true"
+          [showImport]="true"
+          exportLabel="Export Heatmap Template"
+          importLabel="Import Heatmap"
+          (export)="downloadHeatmapTemplate()"
+          (import)="showHeatmapImportDialog()"
+        />
+        }
+    <div class="heatmap-header">
+
+        <h3>Heat map</h3>
+        <div class="heatmap-filters">
+          <div class="filter">
+            <label>Line of business</label>
+            <stc-apps-custom-dropdown
+              [list]="lobDropdownList()"
+              [displayNameProperty]="'displayName'"
+              [valueProperty]="'value'"
+              [outputProperty]="'value'"
+              [ngModel]="selectedHeatmapLOB()"
+              [highlightSelected]="true"
+              (itemSelected)="onSelectHeatmapLOB($event)"
+            ></stc-apps-custom-dropdown>
+          </div>
+          <div class="filter">
+            <label>Tribe name</label>
+            <stc-apps-custom-dropdown
+              [list]="tribeDropdownList()"
+              [displayNameProperty]="'displayName'"
+              [valueProperty]="'value'"
+              [outputProperty]="'value'"
+              [ngModel]="selectedTribe()"
+              [highlightSelected]="true"
+              (itemSelected)="onSelectTribe($event)"
+            ></stc-apps-custom-dropdown>
+          </div>
+        </div>
+      </div>
+
+      @if (currentMode === 'editMode') {
+      <stc-apps-export-import-bar
+        [showExport]="true"
+        [showImport]="true"
+        exportLabel="Export Squads Template"
+        importLabel="Import Squads"
+        (export)="downloadHeatmapSquadsTemplate()"
+        (import)="showHeatmapSquadsImportDialog()"
+      />
+    } @if (squads.length > 0) {
+    <app-heatmap-performance [dimensions]="dimensions" [squads]="squads">
+    </app-heatmap-performance>
+    } @else {
+    <div class="empty-state">
+      No heatmap data available for the selected filters.
+    </div>
+    }
+  </div>
+
+  <div class="card lob-tabs-card">
+    <div class="lob-tabs-section">
+      <h3>Line of business</h3>
+
+      <div class="tabs-list">
+        @for (lob of lobOptions(); track lob.key) {
+        <button
+          class="tab-btn"
+          [class.active]="selectedLOB() === lob.key"
+          (click)="onSelectLOB(lob.key)"
+        >
+          {{ lob.label }}
+        </button>
+        }
+      </div>
+      @if (currentMode === 'editMode') {
+      <stc-apps-export-import-bar
+        [showExport]="false"
+        [showImport]="true"
+        importLabel="Edit"
+        importIconClass="pi pi-pencil"
+        (import)="showEditMaturityIndex()"
+      />
+      }
+
+      <div class="bottom-grid">
+        <div class="card maturity-index-card">
+          <div class="card-header">
+            <h3>AI&DS Agile Maturity Index</h3>
+          </div>
+
+          @if (labels.length && bubbles.length) {
+          <shared-radar-bubble-chart
+            [labels]="labels"
+            [levels]="4"
+            [outerRadius]="170"
+            [innerZoneRatio]="0.5"
+            [bubbles]="bubbles"
+            [startAngleDeg]="-108"
+            [labelOffset]="22"
+          >
+          </shared-radar-bubble-chart>
+          } @else {
+          <div class="empty-state">
+            No maturity index data available for the selected line of business.
+          </div>
+          }
+        </div>
+        <div class="card highlights-card">
+          <div class="card-header">
+            <h3>Key Highlights</h3>
+            <div class="lob-badge">
+              <img src="assets/images/lob-badge.png" alt="LOB Badge" />
+              <span class="text">{{ selectedLOB() }}</span>
+            </div>
+          </div>
+          <div class="highlight-subtitle" *ngIf="keyHighlights().title">
+            {{ keyHighlights().title }}
+          </div>
+
+          @if (keyHighlights().items.length) {
+          <div class="highlights-content" [innerHTML]="keyHighlights().items.join('') | safeHtml"></div>
+          } @else {
+          <div class="empty-state">
+            No key highlights available for the selected line of business.
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<stc-apps-dialog-modal
+  [visible]="visible"
+  (ImportedFile)="importData($event)"
+  (onhide)="onHide()"
+/>
+<stc-apps-form-sidebar
+  [(visible)]="editSidebarVisible"
+  [title]="importContext === 'heatmap' ? 'Import Heatmap' : 'Import Heatmap Squads'"
+  [position]="'right'"
+  [showCloseIcon]="false"
+  (onHide)="hideSidebar()"
+  (onShow)="showSidebar()"
+>
+  <stc-apps-file-upload-input
+    [fileType]="'.csv'"
+    (uploadedFile)="onUploadFileSelected($event)"
+  ></stc-apps-file-upload-input>
+  <div style="margin-top: 16px; display: flex; gap: 8px; justify-content: flex-end">
+    <button class="ei-btn import" (click)="confirmImport()">
+      <i class="ri-cloud-upload-line"></i>
+      Import
+    </button>
+    <button class="ei-btn export" (click)="editSidebarVisible=false; hideSidebar()">
+      <i class="pi pi-times"></i>
+      Cancel
+    </button>
+  </div>
+</stc-apps-form-sidebar>
+  <stc-apps-form-sidebar
+    [(visible)]="editMaturitySidebarVisible"
+    [title]="'Edit Maturity Index'"
+    [position]="'right'"
+    [showCloseIcon]="false"
+    (onHide)="hideSidebar()"
+    (onShow)="showSidebar()"
+  >
+    <stc-apps-agile-maturity-edit-form
+      [initialValues]="{
+        values: {
+          strategy: maturityEditValues.strategy ?? undefined,
+          structure: maturityEditValues.structure ?? undefined,
+          processes: maturityEditValues.processes ?? undefined,
+          people: maturityEditValues.people ?? undefined,
+          technology: maturityEditValues.technology ?? undefined
+        },
+        keyHighlightsTitle: keyHighlights().title,
+        keyHighlightsContentHtml: keyHighlights().items[0]
+      }"
+      (save)="onSaveMaturityEdit($event)"
+      (cancel)="onCancelMaturityEdit()"
+    ></stc-apps-agile-maturity-edit-form>
+  </stc-apps-form-sidebar>

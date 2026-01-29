@@ -8,11 +8,12 @@ export interface AuthResponseData {
 export interface LoggedUser {
   id: number;
   email: string;
-  name: string;
-  jobTitle: string;
+  name?: string;
+  jobTitle?: string;
   userGroups: UserGroup[];
   username: null | string;
   userDelegates?: any[];
+  pageAccess?: any[];
 }
 
 export interface System {
@@ -21,4 +22,5 @@ export interface System {
   systemUrl?: string;
   displayName?: string;
   tpGroupedMenuId?: number;
+  mobileView?: boolean;
 }
