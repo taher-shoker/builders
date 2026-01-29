@@ -65,29 +65,36 @@ export class RadarBubbleChartComponent implements AfterViewInit, OnChanges {
   @Input() labelOffset = 16;
 
   /** Zones (outer + inner) */
-  @Input() zoneOuterFill = '#E0F5F1';
+  @Input() zoneOuterFill = '#ffff';
   @Input() zoneOuterOpacity = 1;
 
-  @Input() zoneInnerFill = '#FFF5EB';
+  @Input() zoneInnerFill = '#ffff';
   @Input() zoneInnerOpacity = 1;
 
   /** inner radius = outerRadius * innerZoneRatio */
   @Input() innerZoneRatio = 0.5;
 
   /** Ring styling */
-  @Input() ringStroke = '#CFE7E2';
+  // @Input() ringStroke = '#CFE7E2';
+  @Input() ringStroke = '#ffff';
   @Input() ringStrokeOpacity = 0.9;
   @Input() ringStrokeWidth = 1;
 
   /** Axis styling */
-  @Input() axisStroke = '#D9E3E1';
+  // @Input() axisStroke = '#D9E3E1';
+  @Input() axisStroke = '#ffff';
   @Input() axisStrokeOpacity = 1;
   @Input() axisStrokeWidth = 1;
 
   /** Label styling */
-  @Input() labelColor = '#979797';
+  @Input() labelColor = '#000000';
   @Input() labelFontSize = 13.5;
   @Input() labelFontFamily = 'Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial';
+  // @Input() ringFillPalette: string[] = ['#59168b', '#8200db', '#ad46ff', '#fcd0ff'];
+  @Input() ringFillPalette: string[] = ['#8200db', '#c27bff', '#e2a3ff', '#fcd0ff'];
+  @Input() ringFillOpacity = 0.85;
+  @Input() bubbleFillColor = '#ffffff';
+  @Input() bubbleFillOpacity = 1;
 
   /** Scale max value */
   @Input() maxValue = 4;
@@ -179,7 +186,18 @@ export class RadarBubbleChartComponent implements AfterViewInit, OnChanges {
     this.setAttr(innerZone, 'filter', 'url(#zone-glow)');
     svg.appendChild(innerZone);
 
-    // 2) Rings
+    // 2) Ring fills (purple palette light -> dark)
+    const ringFillsGroup = this.makeGroup();
+    for (let i = this.levels; i >= 1; i--) {
+      const r = (this.outerRadius / this.levels) * i;
+      const t = (this.levels - i) / Math.max(1, this.levels - 1);
+      const idx = Math.floor(t * (this.ringFillPalette.length - 1));
+      const color = this.ringFillPalette[idx] || this.ringFillPalette[0];
+      ringFillsGroup.appendChild(this.makeCircle(cx, cy, r, color, this.ringFillOpacity));
+    }
+    svg.appendChild(ringFillsGroup);
+
+    // 3) Ring strokes
     const ringsGroup = this.makeGroup();
     this.setAttr(ringsGroup, 'stroke', this.ringStroke);
     this.setAttr(ringsGroup, 'opacity', String(this.ringStrokeOpacity));
@@ -192,7 +210,7 @@ export class RadarBubbleChartComponent implements AfterViewInit, OnChanges {
     }
     svg.appendChild(ringsGroup);
 
-    // 3) Axes
+    // 4) Axes
     const axesGroup = this.makeGroup();
     this.setAttr(axesGroup, 'stroke', this.axisStroke);
     this.setAttr(axesGroup, 'opacity', String(this.axisStrokeOpacity));
@@ -205,11 +223,12 @@ export class RadarBubbleChartComponent implements AfterViewInit, OnChanges {
     }
     svg.appendChild(axesGroup);
 
-    // 4) Labels
+    // 5) Labels
     const labelsGroup = this.makeGroup();
     this.setAttr(labelsGroup, 'fill', this.labelColor);
     this.setAttr(labelsGroup, 'font-size', String(this.labelFontSize));
     this.setAttr(labelsGroup, 'font-family', this.labelFontFamily);
+    this.setAttr(labelsGroup, 'class', 'chart-labels');
 
     const labelRadius = this.outerRadius + this.labelOffset;
     const step = (Math.PI * 2) / axisCount;
@@ -244,15 +263,16 @@ export class RadarBubbleChartComponent implements AfterViewInit, OnChanges {
     }
     svg.appendChild(labelsGroup);
 
-    // 5) Bubbles
+    // 6) Bubbles
     const bubblesGroup = this.makeGroup();
     for (const b of this.bubbles ?? []) {
       const strokeWidth = b.strokeWidth ?? 2;
 
       // Determine colors based on value if not provided
       const val = b.value ?? 0;
-      const fill = b.fill || (val >= 2 ? '#00BC7D' : '#FF9F40');
-      const stroke = b.stroke || (val >= 2 ? '#00BC7D' : '#FF9F40');
+      const fill = b.fill ?? this.bubbleFillColor;
+      // const stroke = b.stroke ?? (val >= 2 ? '#00BC7D' : '#FF9F40');
+      const stroke = b.stroke ?? (val >= 2 ? '#ff375e' : '#ff375e');
 
       let bx = cx;
       let by = cy;
@@ -276,7 +296,7 @@ export class RadarBubbleChartComponent implements AfterViewInit, OnChanges {
         by = p.y;
       }
 
-      const c = this.makeCircle(bx, by, b.r, fill, 0.3);
+      const c = this.makeCircle(bx, by, b.r, fill, this.bubbleFillOpacity);
       this.setAttr(c, 'stroke', stroke);
       this.setAttr(c, 'stroke-width', String(strokeWidth));
 
@@ -301,6 +321,17 @@ export class RadarBubbleChartComponent implements AfterViewInit, OnChanges {
       });
 
       bubblesGroup.appendChild(c);
+
+      const numberText = typeof b.value === 'number' ? String(b.value) : '';
+      if (numberText) {
+        const t = this.makeText(bx, by, numberText, 'middle');
+        this.setAttr(t, 'dominant-baseline', 'middle');
+        this.setAttr(t, 'class', 'bubble-number');
+        this.setAttr(t, 'font-size', String(Math.max(10, Math.floor(b.r * 0.9))));
+        this.setAttr(t, 'fill', '#000000');
+        this.setAttr(t, 'pointer-events', 'none');
+        bubblesGroup.appendChild(t);
+      }
     }
     svg.appendChild(bubblesGroup);
   }

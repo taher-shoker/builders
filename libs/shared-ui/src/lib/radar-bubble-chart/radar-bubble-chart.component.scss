@@ -14,6 +14,10 @@
   display: block;
 }
 
+::ng-deep .chart-labels text {
+  fill: #000000;
+}
+
 ::ng-deep .chart-bubble {
   transform-box: fill-box;
   transform-origin: center;
@@ -25,6 +29,13 @@
   &:hover {
     fill-opacity: 0.8;
   }
+}
+
+::ng-deep .bubble-number {
+  fill: #000000;
+  font-weight: 600;
+  user-select: none;
+  pointer-events: none;
 }
 
 @keyframes popIn {

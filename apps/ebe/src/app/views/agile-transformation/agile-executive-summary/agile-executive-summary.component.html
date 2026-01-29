@@ -48,8 +48,15 @@
     <div class="time-period-card card">
       @if (overviewScore() !== null && targetProgress() !== null) {
       <div class="score">
-        <h1>{{ overviewScore()! }}</h1>
-        <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
+        <div class="score-row">
+          <div class="score-left">
+            <div class="score-title-row">
+              <h1>{{ overviewScore()! }}</h1>
+              <img [src]="performanceImage()" [alt]="performanceLabel()" height="60" class="score-stage-image" />
+            </div>
+            <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
+          </div>
+        </div>
       </div>
       <div class="progress-section">
         <div class="progress-labels">

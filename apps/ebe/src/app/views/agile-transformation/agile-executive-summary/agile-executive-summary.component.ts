@@ -46,8 +46,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   years = signal<{ displayName: string; value: string }[]>([]);
   quarters = signal<{ displayName: string; value: string }[]>([]);
-  selectedYear = signal<string>('');
-  selectedQuarter = signal<string>('Q1');
+  selectedYear = signal<string>('2025');
+  selectedQuarter = signal<string>('Q4');
   selectedTribe = signal<string>('');
   selectedHeatmapLOB = signal<string>('');
   tribeDropdownList = signal<{ displayName: string; value: string }[]>([]);
@@ -265,8 +265,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
     this.years.set(yearOptions);
     this.quarters.set(quarterOptions);
-    this.selectedYear.set(String(currentYear));
-    this.selectedQuarter.set(currentQuarter);
+    // this.selectedYear.set(String(currentYear));
+    // this.selectedQuarter.set(currentQuarter);
     this.loadOverallMaturityIndex();
     this.loadAgileMaturityIndex();
     this.loadHeatmapMetadata();
@@ -304,6 +304,26 @@ export class AgileExecutiveSummaryComponent implements OnInit {
           ];
         }
       });
+  }
+
+  performanceLabel(): 'Fly' | 'Run' | 'Walk' | 'Crawl' | '' {
+    const s = this.overviewScore();
+    if (s === null || typeof s !== 'number') return '';
+    if (s >= 3.5) return 'Fly';
+    if (s >= 2.5) return 'Run';
+    if (s >= 1.5) return 'Walk';
+    return 'Crawl';
+  }
+
+  performanceImage(): string {
+    const label = this.performanceLabel();
+    const map: Record<string, string> = {
+      Fly: 'assets/images/fly.png',
+      Run: 'assets/images/run.png',
+      Walk: 'assets/images/walk.png',
+      Crawl: 'assets/images/crawl.png',
+    };
+    return map[label] ?? '';
   }
 
   private loadAgileMaturityIndex() {
