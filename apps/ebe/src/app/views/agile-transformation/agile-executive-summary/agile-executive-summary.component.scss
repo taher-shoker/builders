@@ -105,6 +105,7 @@ h3 {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
+    position: relative;
     margin-bottom: 20px;
     padding-left: 0;
 
@@ -113,6 +114,28 @@ h3 {
       color: #1f2937;
       font-size: 18px;
       font-weight: 700;
+    }
+    .lob-score {
+      display: flex;
+      align-items: center;
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+    .lob-score .score-title-row {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+    }
+    .lob-score h1 {
+      margin: 0;
+      font-size: 60px;
+      font-weight: 600;
+      line-height: 1;
+    }
+    .lob-score .score-stage-image {
+      display: inline-block;
+      align-self: flex-end;
     }
   }
 
@@ -172,7 +195,6 @@ h3 {
 .time-period-card .score .score-stage-image {
   display: inline-block;
   align-self: flex-end;
-  transform: translateY(-20px);
 }
 .time-period-card .score h1 {
   font-size: 180px;
@@ -184,7 +206,8 @@ h3 {
 }
 .time-period-card .score p {
   // margin: 1px 0 0 0;
-  color: var(--stc-purple-glow-color);
+  // color: var(--stc-purple-glow-color);
+  color: var(--stc-grey-dark-color);
   font-size: 20px;
   line-height: 28px;
   font-weight: 400;

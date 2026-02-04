@@ -51,8 +51,12 @@
         <div class="score-row">
           <div class="score-left">
             <div class="score-title-row">
-              <h1>{{ overviewScore()! }}</h1>
-              <img [src]="performanceImage()" [alt]="performanceLabel()" height="60" class="score-stage-image" />
+              <h1 [style.color]="performanceColor()">{{ overviewScore()! | number:'1.1-1' }}</h1>
+              <span
+                class="score-stage-image"
+                [ngStyle]="stageImageStyles()"
+                [attr.aria-label]="performanceLabel()"
+              ></span>
             </div>
             <p>{{ selectedQuarter() }} {{ selectedYear() }}</p>
           </div>
@@ -70,8 +74,8 @@
             suffixText: '',
             suffixValue: '',
             progressValue: targetProgress()!,
-            barColor: '#000000',
-            bgBarColor: '#EBE0F5',
+            barColor: '#8200db',
+            bgBarColor: '#8400db33',
             indexes: []
           }"
         ></stc-apps-progress-bar>
@@ -198,6 +202,18 @@
         <div class="card maturity-index-card">
           <div class="card-header">
             <h3>AI&DS Agile Maturity Index</h3>
+            @if (bubbles.length) {
+            <div class="lob-score">
+              <div class="score-title-row">
+                <h1 style="color:var(--stc-green-dark-color)">{{ lobAverage()! | number:'1.1-1' }}</h1>
+                <span
+                  class="score-stage-image"
+                  [ngStyle]="lobStageImageStyles()"
+                  [attr.aria-label]="lobPerformanceLabel()"
+                ></span>
+              </div>
+            </div>
+            }
           </div>
 
           @if (labels.length && bubbles.length) {
