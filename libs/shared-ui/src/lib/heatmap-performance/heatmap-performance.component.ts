@@ -57,6 +57,7 @@ export class HeatmapPerformanceComponent implements OnChanges {
 
   // Infinite number of squads => this array can be huge (scroll horizontally)
   @Input() squads: Squad[] = [];
+  @Input() showTotalColumn = true;
 
   // Performance scale (editable)
   @Input() scale: ScaleBand[] = [
@@ -124,7 +125,10 @@ export class HeatmapPerformanceComponent implements OnChanges {
 
   gridTemplateColumns(): string {
     // left label column + N squad columns + total tribe column
-    return `${this.leftColWidth}px repeat(${this.squads.length}, ${this.squadColWidth}px) ${this.totalColWidth}px`;
+    const left = `${this.leftColWidth}px`;
+    const squads = `repeat(${this.squads.length}, ${this.squadColWidth}px)`;
+    const total = this.showTotalColumn ? ` ${this.totalColWidth}px` : '';
+    return `${left} ${squads}${total}`;
   }
 
   format(v: number | null | undefined): string {

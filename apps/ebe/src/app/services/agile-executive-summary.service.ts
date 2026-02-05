@@ -122,6 +122,21 @@ export class AgileExecutiveSummaryService {
     );
   }
 
+  getHeatmapMetadataByLOB(
+    lineOfBusiness: string,
+    year: number,
+    quarter: string
+  ): Observable<HeatmapMetadataResponse> {
+    const params = new HttpParams()
+      .set('lineOfBusiness', lineOfBusiness)
+      .set('year', String(year))
+      .set('quarter', quarter);
+    return this.http.get<HeatmapMetadataResponse>(
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/heatmap-metadata`,
+      { params }
+    );
+  }
+
   getAgileMaturityIndex(
     year: number,
     quarter: string,
@@ -146,17 +161,19 @@ export class AgileExecutiveSummaryService {
     lineOfBusiness: string,
     tribe: string
   ): Observable<HeatmapSquadsValuesResponse> {
-    const params = new URLSearchParams({
-      year: String(year),
-      quarter,
-      lineOfBusiness,
-      tribe,
-    });
+    let params = new HttpParams()
+      .set('year', String(year))
+      .set('quarter', quarter);
+    if (lineOfBusiness && lineOfBusiness !== 'All') {
+      params = params.set('lineOfBusiness', lineOfBusiness);
+    }
+    if (tribe && tribe !== 'All') {
+      params = params.set('tribe', tribe);
+    }
 
     return this.http.get<HeatmapSquadsValuesResponse>(
-      `${
-        environment.apiUrl
-      }/business-excellence/agile/executive-summary/heatmap-squads-values?${params.toString()}`
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/heatmap-squads-values`,
+      { params }
     );
   }
 

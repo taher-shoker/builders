@@ -46,10 +46,10 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   years = signal<{ displayName: string; value: string }[]>([]);
   quarters = signal<{ displayName: string; value: string }[]>([]);
-  selectedYear = signal<string>('2025');
-  selectedQuarter = signal<string>('Q4');
-  selectedTribe = signal<string>('');
-  selectedHeatmapLOB = signal<string>('');
+  selectedYear = signal<string>('2026');
+  selectedQuarter = signal<string>('Q1');
+  selectedTribe = signal<string>('All');
+  selectedHeatmapLOB = signal<string>('All');
   tribeDropdownList = signal<{ displayName: string; value: string }[]>([]);
   currentMode: 'editMode' | 'viewMode' = 'viewMode';
   isAdmin = false;
@@ -163,7 +163,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   onSelectHeatmapLOB(event: any) {
     this.selectedHeatmapLOB.set(event as string);
-    this.loadHeatmapSquadsValues();
+    this.selectedTribe.set('All');
+    this.loadTribesForSelectedLOB();
   }
 
   onSelectTribe(event: any) {
@@ -201,6 +202,25 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       });
   }
 
+  private loadTribesForSelectedLOB() {
+    const lob = this.selectedHeatmapLOB();
+    const year = Number(this.selectedYear());
+    const quarter = this.selectedQuarter();
+    this.selectedTribe.set('All');
+    const obs =
+      lob && lob !== 'All'
+        ? this.agileService.getHeatmapMetadataByLOB(lob, year, quarter)
+        : this.agileService.getHeatmapMetadata(year, quarter);
+    obs.subscribe((data: HeatmapMetadataResponse) => {
+      const tribes = data.tribes ?? [];
+      const tribesList = tribes.map((t) => ({ displayName: t, value: t }));
+      tribesList.unshift({ displayName: 'All', value: 'All' });
+      this.tribeDropdownList.set(tribesList);
+      this.selectedTribe.set('All');
+      this.loadHeatmapSquadsValues();
+    });
+  }
+
   private resetHeatmapContext() {
     this.lobDropdownList.set([]);
     this.tribeDropdownList.set([]);
@@ -218,27 +238,30 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       .getHeatmapMetadata(year, quarter)
       .subscribe((data: HeatmapMetadataResponse) => {
         if (data.lineOfBusinesses && data.lineOfBusinesses.length) {
+
           const lobList = data.lineOfBusinesses.map((lob) => ({
             displayName: lob,
             value: lob,
           }));
+          lobList.unshift({ displayName: 'All', value: 'All' });
           this.lobDropdownList.set(lobList);
           if (!this.selectedHeatmapLOB() && lobList.length > 0) {
             this.selectedHeatmapLOB.set(lobList[0].value);
           }
-        }
 
        if (data.tribes && data.tribes.length) {
           const tribesList = data.tribes.map((tribe) => ({
             displayName: tribe,
             value: tribe,
           }));
+          tribesList.unshift({ displayName: 'All', value: 'All' });
           this.tribeDropdownList.set(tribesList);
           if (!this.selectedTribe() && tribesList.length > 0) {
             this.selectedTribe.set(tribesList[0].value);
           }
         }
 
+        }
         this.loadHeatmapSquadsValues();
 
       });

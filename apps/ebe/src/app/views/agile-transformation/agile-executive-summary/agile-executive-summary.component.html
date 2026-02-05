@@ -164,7 +164,11 @@
         (import)="showHeatmapSquadsImportDialog()"
       />
     } @if (squads.length > 0) {
-    <app-heatmap-performance [dimensions]="dimensions" [squads]="squads">
+        <!-- [showTotalColumn]="selectedHeatmapLOB() !== 'All' && selectedTribe() !== 'All'" -->
+    <app-heatmap-performance
+      [dimensions]="dimensions"
+      [squads]="squads"
+    >
     </app-heatmap-performance>
     } @else {
     <div class="empty-state">
