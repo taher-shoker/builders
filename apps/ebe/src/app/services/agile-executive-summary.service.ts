@@ -218,8 +218,8 @@ export class AgileExecutiveSummaryService {
     opts: {
       year: number;
       quarter: string;
-      lineOfBusiness?: string;
-      tribe?: string;
+      // lineOfBusiness?: string;
+      // tribe?: string;
     }
   ): Observable<any> {
     const formData = new FormData();
@@ -231,12 +231,12 @@ export class AgileExecutiveSummaryService {
     const shouldIncludeContext =
       dashboardName !== 'overall_maturity_index' &&
       dashboardName !== 'executive_summary_performance_heatmap';
-    if (shouldIncludeContext && opts.lineOfBusiness) {
-      params = params.set('lineOfBusiness', opts.lineOfBusiness);
-    }
-    if (shouldIncludeContext && opts.tribe) {
-      params = params.set('tribe', opts.tribe);
-    }
+    // if (shouldIncludeContext && opts.lineOfBusiness) {
+    //   params = params.set('lineOfBusiness', opts.lineOfBusiness);
+    // }
+    // if (shouldIncludeContext && opts.tribe) {
+    //   params = params.set('tribe', opts.tribe);
+    // }
     return this.http.post<any>(
       `${environment.apiUrl}/business-excellence/agile/executive-summary/import`,
       formData,

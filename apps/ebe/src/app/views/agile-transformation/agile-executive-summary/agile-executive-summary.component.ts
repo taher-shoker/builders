@@ -46,8 +46,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   years = signal<{ displayName: string; value: string }[]>([]);
   quarters = signal<{ displayName: string; value: string }[]>([]);
-  selectedYear = signal<string>('2026');
-  selectedQuarter = signal<string>('Q1');
+  selectedYear = signal<string>('2025');
+  selectedQuarter = signal<string>('Q4');
   selectedTribe = signal<string>('All');
   selectedHeatmapLOB = signal<string>('All');
   tribeDropdownList = signal<{ displayName: string; value: string }[]>([]);
@@ -539,9 +539,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     this.agileService
       .importExecutiveSummary(dashboardName, this.selectedImportFile, {
         year,
-        quarter,
-        lineOfBusiness,
-        tribe,
+        quarter
       })
       .subscribe({
         next: () => {
@@ -575,9 +573,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       this.agileService
         .importExecutiveSummary(dashboardName, e, {
           year,
-          quarter,
-          lineOfBusiness,
-          tribe,
+          quarter
         })
         .subscribe({
           next: () => {
