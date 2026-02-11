@@ -1,0 +1,109 @@
+<div class="linked-milestones-dialog">
+  <div class="dialog-header">
+    <h3>Linked Milestones</h3>
+    <button mat-icon-button (click)="close()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+
+  <div class="dialog-content">
+    <div class="search-bar-wrapper">
+      <div class="search-bar">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          type="text"
+          placeholder="Search in Linked Milestones"
+          [formControl]="searchControl"
+        />
+      </div>
+    </div>
+
+    <div class="milestones-list">
+      @if (loading()) {
+        <div class="loading-state">
+          <mat-progress-spinner [diameter]="36" mode="indeterminate"></mat-progress-spinner>
+          <div class="loading-text">Loading milestones...</div>
+        </div>
+      } @else if (visibleMilestones().length === 0) {
+        <div class="empty-state">
+          <mat-icon>inbox</mat-icon>
+          <div class="empty-title">No milestones yet</div>
+          <div class="empty-subtitle">There are no milestones linked to this KPI.</div>
+        </div>
+      } @else if (filteredMilestones().length === 0) {
+        <div class="empty-state">
+          <mat-icon>search_off</mat-icon>
+          <div class="empty-title">No milestones found</div>
+          <div class="empty-subtitle">Try a different search term.</div>
+        </div>
+      } @else {
+        @for (milestone of filteredMilestones(); track milestone.id) {
+          <div class="milestone-record" [class.selected]="milestone.selected">
+            @if (canEdit) {
+              <div class="record-cell checkbox-cell">
+                <mat-checkbox
+                  [checked]="milestone.selected"
+                  color="primary"
+                  (change)="onToggle(milestone.id, $event.checked)"
+                ></mat-checkbox>
+              </div>
+            }
+
+            <div class="record-cell name-cell">
+              <span class="label">Milestone Name</span>
+              <span class="value">{{ milestone.milestoneName }}</span>
+            </div>
+
+            <div class="record-cell status-cell">
+              <span class="label">Status</span>
+              <span
+                class="status-badge"
+                [ngClass]="{
+                  'completed-status': milestone.status === 'Completed',
+                  'delayed-status': milestone.status === 'Delayed',
+                  'on-track-status': milestone.status === 'On Track',
+                  'at-risk-status': milestone.status === 'At Risk',
+                  'planned-status': milestone.status === 'Planned'
+                }"
+              >
+                {{ milestone.status }}
+              </span>
+            </div>
+
+            <div class="record-cell level-cell">
+              <span class="label">Completion Level</span>
+              <span class="value">{{ milestone.completionLevel }}%</span>
+            </div>
+
+            <div class="record-cell date-cell">
+              <span class="label">Start Date</span>
+              <span class="value">{{ milestone.startDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+
+            <div class="record-cell date-cell">
+              <span class="label">End Date</span>
+              <span class="value">{{ milestone.endDate | date: 'dd/MM/yyyy' }}</span>
+            </div>
+          </div>
+        }
+      }
+    </div>
+
+  </div>
+
+  <div class="dialog-actions">
+    <stc-apps-button
+      [buttonText]="'Cancel'"
+      [buttonType]="'gray-outline'"
+      (btnClick)="close()"
+    ></stc-apps-button>
+    @if (canEdit) {
+      <stc-apps-button
+        [buttonText]="'Submit'"
+        [buttonType]="'primary'"
+        [buttonDisable]="selectedIds().length === 0 || submitting()"
+        (btnClick)="submit()"
+      ></stc-apps-button>
+    }
+  </div>
+</div>

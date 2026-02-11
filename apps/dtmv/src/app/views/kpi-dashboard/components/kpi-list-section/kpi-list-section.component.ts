@@ -28,6 +28,7 @@ export class KpiListSectionComponent {
   chartGrouping = signal<'monthly' | 'quarterly'>('monthly');
   chartData = signal<any[]>([]);
   chartLoading = signal<boolean>(false);
+  selectedKpiFormula = signal<string>('');
 
   private clearSelectionState(): void {
     this.selectedKpi.set(null);
@@ -35,6 +36,7 @@ export class KpiListSectionComponent {
     this.chartData.set([]);
     this.attributesLoading.set(false);
     this.chartLoading.set(false);
+    this.selectedKpiFormula.set('');
   }
 
   // Inputs from parent (Dashboard)
@@ -66,8 +68,9 @@ export class KpiListSectionComponent {
   onKpiSelected(kpi: KPI): void {
     this.selectedKpi.set(kpi);
     // Convert KPI id (string | undefined) to a number for API
-    const idStr = kpi.id;
-    const idNum = typeof idStr === 'string' ? Number(idStr) : NaN;
+    const idRaw = kpi.id;
+    const idNum =
+      typeof idRaw === 'number' ? idRaw : Number(idRaw ?? '');
     if (Number.isFinite(idNum)) {
       this.attributesLoading.set(true);
       // Optionally clear current attributes while loading
@@ -75,11 +78,20 @@ export class KpiListSectionComponent {
       this.fetchAttributesForKpi(idNum);
       // Fetch chart values with current grouping
       this.fetchKpiValues(idNum, this.chartGrouping());
+      this.kpiService.getKpiById(idNum).subscribe({
+        next: (details) => {
+          this.selectedKpiFormula.set(details.formula ?? '');
+        },
+        error: () => {
+          this.selectedKpiFormula.set('');
+        },
+      });
     } else {
-      console.warn('Invalid KPI id; cannot load attributes.', idStr);
+      console.warn('Invalid KPI id; cannot load attributes.', idRaw);
       this.attributes.set([]);
       this.attributesLoading.set(false);
       this.chartData.set([]);
+      this.selectedKpiFormula.set('');
     }
   }
 
@@ -126,6 +138,7 @@ export class KpiListSectionComponent {
             };
             // Update the selected card info
             this.selectedKpi.set(updated);
+            this.selectedKpiFormula.set(details.formula ?? '');
             // Also update the item in the rendered list so the card reflects latest name/dimension
             const currentList = this.kpis || [];
             const targetId = String(details.id);
@@ -195,6 +208,17 @@ export class KpiListSectionComponent {
       if (result && result.success) {
         this.onKpiSelected(kpi);
         this.toastr.success('KPI actual value updated successfully');
+      }
+    });
+  }
+
+  onLinkedMilestone(kpi: KPI): void {
+    const canEdit = this.permissionRole === 'editor';
+    this.dialogService.openLinkedMilestonesDialog(kpi, this.year ?? null, canEdit).subscribe((result) => {
+      if (result) {
+        // Handle result (selected milestones)
+        console.log('Selected milestones:', result);
+        this.toastr.success('Milestones linked successfully');
       }
     });
   }
@@ -291,13 +315,19 @@ export class KpiListSectionComponent {
   }
 
   private fetchAttributesForKpi(kpiId: number): void {
-    this.kpiService.getKpiAttributes(kpiId).subscribe({
+    const yearValue = typeof this.year === 'number' ? this.year : undefined;
+    this.kpiService.getKpiAttributes(kpiId, yearValue).subscribe({
       next: (resp: KpiAttributes) => {
         const items = [
           {
             label: 'Current Value',
             value: resp.currentValue,
             icon: 'assets/images/kpi-dashboard/chart-bar.svg',
+          },
+          {
+            label: 'Milestones Progress',
+            value: `${Math.round((resp.completionRatio || 0) * 100)}%`,
+            icon: 'assets/images/kpi-dashboard/fatrows.svg',
           },
           {
             label: 'Weight',
@@ -321,6 +351,7 @@ export class KpiListSectionComponent {
           },
         ];
         this.attributes.set(items);
+        this.selectedKpiFormula.set(resp.formula ?? '');
         this.attributesLoading.set(false);
       },
       error: (err: HttpErrorResponse) => {

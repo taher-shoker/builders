@@ -1,7 +1,7 @@
-import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, of } from 'rxjs';
-import { shareReplay, finalize } from 'rxjs/operators';
+import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
+import { finalize, shareReplay } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface TeamSummary {
@@ -54,12 +54,16 @@ export interface KpiAttributes {
   unitId: number;
   kpiId: number;
   dimension: string;
+  formula: string;
   currentValue: number;
-  weight: number; // 0..1 (fraction)
+  weight: number;
   baseline: number;
   target: number;
   ambition: number;
   direction: number;
+  completedCount: number;
+  totalCount: number;
+  completionRatio: number;
 }
 
 export interface KpiValueRecord {
@@ -72,6 +76,22 @@ export interface KpiValueRecord {
   month: number; // 1..12
   progressDate: string; // ISO date
   value: number;
+}
+
+export interface KpiMilestone {
+  id: number;
+  milestoneName: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string; // YYYY-MM-DD
+  completionLevel: number;
+  lastApprovedProgress: number;
+  validationStatus: string;
+  status: string;
+  kpiId: number | null;
+}
+
+export interface LinkKpiMilestonesPayload {
+  milestoneIds: number[];
 }
 
 // API models for KPI Log endpoint
@@ -289,8 +309,14 @@ export class KpiService {
   /**
    * Fetches KPI attributes by KPI ID.
    */
-  getKpiAttributes(kpiId: number): Observable<KpiAttributes> {
-    const url = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/attributes`;
+  getKpiAttributes(kpiId: number, year?: number): Observable<KpiAttributes> {
+    const baseUrl = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/attributes`;
+    let params = new HttpParams();
+    if (typeof year === 'number') {
+      params = params.set('year', String(year));
+    }
+    const query = params.toString();
+    const url = query ? `${baseUrl}?${query}` : baseUrl;
     return this.dedupGet<KpiAttributes>(url);
   }
 
@@ -306,6 +332,35 @@ export class KpiService {
     const selectedGrouping = grouping ?? 'monthly';
     const url = `${base}?grouping=${selectedGrouping}`;
     return this.dedupGet<KpiValueRecord[]>(url);
+  }
+
+  /**
+   * Fetch KPI milestones by KPI ID with optional year filter.
+   */
+  getKpiMilestones(kpiId: number, year?: number): Observable<KpiMilestone[]> {
+    const baseUrl = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/milestones`;
+    let params = new HttpParams();
+    if (typeof year === 'number') {
+      params = params.set('year', String(year));
+    }
+    const query = params.toString();
+    const url = query ? `${baseUrl}?${query}` : baseUrl;
+    return this.dedupGet<KpiMilestone[]>(url);
+  }
+
+  linkKpiMilestones(
+    kpiId: number,
+    payload: LinkKpiMilestonesPayload,
+    year?: number
+  ): Observable<unknown> {
+    const baseUrl = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/milestones`;
+    let params = new HttpParams();
+    if (typeof year === 'number') {
+      params = params.set('year', String(year));
+    }
+    const query = params.toString();
+    const url = query ? `${baseUrl}?${query}` : baseUrl;
+    return this.http.post<unknown>(url, payload);
   }
 
   /**
