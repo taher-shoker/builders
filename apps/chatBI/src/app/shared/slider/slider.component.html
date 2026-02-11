@@ -6,7 +6,7 @@
   >
     <div
       class="card-group"
-      *ngFor="let group of chunkedMessages; let i = index"
+      *ngFor="let group of chunkedMessages(); let i = index"
       [class.active]="activeIndex() === i"
     >
       <div class="card" *ngFor="let msg of group" (click)="cardClick(msg)">
@@ -17,7 +17,7 @@
 
   <div class="dots">
     <span
-      *ngFor="let group of chunkedMessages; let i = index"
+      *ngFor="let group of chunkedMessages(); let i = index"
       class="dot"
       [class.active]="activeIndex() === i"
       (click)="goToSlide(i)"

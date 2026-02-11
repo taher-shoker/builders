@@ -8,6 +8,7 @@ import {
 import { ChatService } from './services/chat.service';
 import {
   chatArray,
+  chatBody,
   chunkData,
   responseBody,
   sqlData,
@@ -16,6 +17,7 @@ import {
 import { ChatStreamService } from './services/chat-stream.service';
 
 import { Subscription } from 'rxjs';
+import { QuestionService } from './services/questions.service';
 
 @Component({
   selector: 'stc-apps-chat-view',
@@ -33,6 +35,7 @@ export class ChatViewComponent implements OnInit {
   isFocused = false;
   messageType = 1;
   modelQuery = '';
+  activeModelQuery = '';
   // this flag represents wether the api respond or not.
   pendingFlag = signal(false);
   isAnimated = false;
@@ -40,10 +43,17 @@ export class ChatViewComponent implements OnInit {
   stage = '';
   isPaused = false;
   newMessageIsSent = false;
-
+  conversationID = '';
+  queryID = '';
   autoScrollEnabled = true;
   chunkStream: chunkData[] = [];
+  suggestedQuestions = [];
+
   ngOnInit() {
+    this.questionService.getSuggestedQuestions().subscribe((data) => {
+      this.suggestedQuestions = data.suggestedQuestions;
+    });
+
     setTimeout(() => {
       this.isAnimated = true;
     }, 100);
@@ -51,10 +61,30 @@ export class ChatViewComponent implements OnInit {
   }
   constructor(
     private chatService: ChatService,
-    private chatStreamService: ChatStreamService
-  ) {}
+    private chatStreamService: ChatStreamService,
+    private questionService: QuestionService
+  ) {
+    console.log('constructor');
+
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        console.log('visibility state');
+
+        if (this.chatStreamService.activeStreamBody) {
+          if (
+            this.messagesStreamList[this.messagesStreamList.length - 1]
+              .content == 'Something went wrong! Please try again.'
+          ) {
+            this.messagesStreamList.pop();
+            this.connectToStream();
+          }
+        }
+      }
+    });
+  }
   addingStartMessage() {
     this.newMessageIsSent = false;
+    this.chatStreamService.activeStreamBody = null;
     this.messagesStreamList.push({
       messageType: 1,
       newChat: true,
@@ -80,6 +110,8 @@ export class ChatViewComponent implements OnInit {
     this.messagesStreamList.length !== 0 ? this.completeStream() : '';
   }
   handleNewChat() {
+    this.conversationID = '';
+    this.queryID = '';
     this.messagesStreamList = [];
     this.handlePauseStream();
     this.addingStartMessage();
@@ -111,15 +143,25 @@ export class ChatViewComponent implements OnInit {
     this.pendingFlag.set(true);
     this.chunkStream = [];
     this.stage = '';
+    const chatBody: chatBody = {
+      content: this.modelQuery,
+      conversationUUID: this.conversationID,
+      queryUUID: this.queryID,
+    };
     this.messageSubscription = this.chatStreamService
-      .getStreamChatMessages(this.modelQuery)
+      .getStreamChatMessages(chatBody)
       .subscribe({
         next: (chunk) => {
           if (this.isPaused) return;
 
           const stageContent =
             this.chatStreamService.getStageChunkContent(chunk);
-          if (this.stage !== chunk.stage && chunk.stage !== 'COMPLETE') {
+
+          if (
+            this.stage !== chunk.stage &&
+            chunk.stage !== 'COMPLETE' &&
+            chunk.stage !== 'Conversation'
+          ) {
             const newChunk: chunkData = {
               stageTitle: chunk.stage,
               stageContent: stageContent,
@@ -134,20 +176,28 @@ export class ChatViewComponent implements OnInit {
               this.chunkStream,
               chunk
             );
+          } else if (chunk.stage === 'Conversation') {
+            this.conversationID = chunk.data.conversationUUID;
+            this.queryID = chunk.data.queryUUID;
           }
-          const cloned = this.chunkStream.map((obj) => ({ ...obj }));
-          this.chatStreamService.chunkStageSubject.next(cloned);
+          if (chunk.stage !== 'Conversation') {
+            const cloned = this.chunkStream.map((obj) => ({ ...obj }));
+            this.chatStreamService.chunkStageSubject.next(cloned);
+          }
+
           setTimeout(() => {
             this.scrollToBottom();
           });
         },
-        error: (err) => {
+        error: () => {
           this.messagesStreamList.pop();
           this.reset();
           this.messagesStreamList.push({
             content: 'Something went wrong! Please try again.',
             messageType: 0,
           });
+          this.chatStreamService.abortController?.abort();
+          this.chatStreamService.abortController = null;
         },
         complete: () => {
           this.completeStream();
@@ -165,6 +215,9 @@ export class ChatViewComponent implements OnInit {
     });
   }
   completeStream() {
+    this.queryID = '';
+    this.modelQuery = '';
+    this.chatStreamService.activeStreamBody = null;
     this.reset();
     const lastResponse =
       this.messagesStreamList[this.messagesStreamList.length - 1];
@@ -178,6 +231,9 @@ export class ChatViewComponent implements OnInit {
   }
   pauseStream() {
     this.messageSubscription?.unsubscribe(); // Stops data from arriving
+    this.chatStreamService.abortController?.abort();
+    this.chatStreamService.abortController = null;
+    this.chatStreamService.activeStreamBody = null;
   }
   sendStreamMessage() {
     this.newMessageIsSent = true;
@@ -226,7 +282,6 @@ export class ChatViewComponent implements OnInit {
     }
   }
   reset() {
-    this.modelQuery = '';
     this.pendingFlag.set(false);
     setTimeout(() => {
       this.scrollToBottom();

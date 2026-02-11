@@ -17,8 +17,8 @@
       </div>
     </div>
 
-    <div class="cell header total sticky-right sticky-top">
-      <div class="cell-inner">Total Tribe</div>
+    <div class="cell header total sticky-right sticky-top" *ngIf="showTotalColumn">
+      <div class="cell-inner">Total Average</div>
     </div>
 
     <!-- Dimension rows -->
@@ -56,7 +56,7 @@
       </div>
 
       <!-- Total Tribe per dimension -->
-      <div class="cell value total sticky-right">
+      <div class="cell value total sticky-right" *ngIf="showTotalColumn">
         <div
           class="cell-inner"
           [ngStyle]="cellStyle(tribeTotalsByDimension[d.key], 'tribe')"
@@ -81,7 +81,7 @@
       {{ format(squadTotals[s.id]) }}
     </div>
 
-    <div class="cell value footer total sticky-right">
+    <div class="cell value footer total sticky-right" *ngIf="showTotalColumn">
       <div
         class="cell-inner"
         [ngStyle]="cellStyle(overallTotal, 'footer')"

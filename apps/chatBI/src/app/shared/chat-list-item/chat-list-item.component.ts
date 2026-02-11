@@ -15,6 +15,7 @@ import {
   input,
   InputSignal,
   OnChanges,
+  OnInit,
   Output,
   signal,
   SimpleChanges,
@@ -22,6 +23,7 @@ import {
 } from '@angular/core';
 import { chunkData, sqlData } from '../../views/chat-view/models/chatModel';
 import { ChatStreamService } from '../../views/chat-view/services/chat-stream.service';
+import { QuestionService } from '../../views/chat-view/services/questions.service';
 @Component({
   selector: 'stc-apps-chat-list-item',
   templateUrl: './chat-list-item.component.html',
@@ -39,21 +41,25 @@ import { ChatStreamService } from '../../views/chat-view/services/chat-stream.se
   ],
 })
 export class ChatListItemComponent {
+  @ViewChild('container') myElementRef!: ElementRef;
+  @Output() questionEvent = new EventEmitter<string>();
+
   message: InputSignal<string> = input('');
   header: InputSignal<string> = input('');
   messageDate: InputSignal<string> = input('');
   newChat: InputSignal<boolean> = input(false);
   messagesChunks: InputSignal<chunkData[]> = input([{} as chunkData]);
+  suggestedQuestions: InputSignal<string[]> = input<string[]>([]);
   messageType: InputSignal<number> = input(0);
   isLoading: InputSignal<boolean> = input(false);
-  @Output() questionEvent = new EventEmitter<string>();
+  emptyQuestions = true;
+
   chunkStream: chunkData[] = [];
   errorMessage = 'Something went wrong! Please try again.';
   showPopUp = false;
   selectedImage = '';
   processedMessage = '';
   popUpClick = false;
-  @ViewChild('container') myElementRef!: ElementRef;
 
   previousContent = '';
   newChunk = '';
@@ -66,7 +72,10 @@ export class ChatListItemComponent {
   chartShowType = '';
   chartSqlData = { xList: [], yList: [], title: '' };
 
-  constructor(private chatStreamService: ChatStreamService) {
+  constructor(
+    private chatStreamService: ChatStreamService,
+    private questionService: QuestionService
+  ) {
     effect(() => {
       if (this.messagesChunks()) {
         this.dataQueryIndex = this.messagesChunks().findIndex(
@@ -95,6 +104,7 @@ export class ChatListItemComponent {
       }
     });
   }
+
   formattingNewChunk(fullContent: string) {
     this.newChunk = fullContent.slice(this.previousContent.length);
     this.words = this.newChunk.split(' ');
@@ -134,5 +144,9 @@ export class ChatListItemComponent {
   }
   questionClick(question: string) {
     this.questionEvent.emit(question);
+  }
+  hideSubHeadingMessage(emptyQuestions: boolean) {
+    this.emptyQuestions = emptyQuestions;
+    console.log(this.emptyQuestions);
   }
 }

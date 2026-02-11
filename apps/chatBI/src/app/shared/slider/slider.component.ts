@@ -1,13 +1,19 @@
 import {
   AfterViewInit,
   Component,
+  computed,
+  effect,
   ElementRef,
   EventEmitter,
+  input,
+  InputSignal,
+  OnInit,
   Output,
   signal,
   ViewChild,
 } from '@angular/core';
-import suggestedQuestions from '../../views/chat-view/models/chatModel';
+
+import { QuestionService } from '../../views/chat-view/services/questions.service';
 
 @Component({
   selector: 'stc-apps-slider',
@@ -19,19 +25,18 @@ export class SliderComponent implements AfterViewInit {
   currentSlide = 0;
   transitionStyle = 'transform 0.7s ease';
   activeIndex = signal(0);
-  // ngOnInit() {
-  //   setInterval(() => {
-  //     const nextIndex = (this.activeIndex() + 1) % this.messages.length;
-  //     this.activeIndex.set(nextIndex);
-  //   }, 4000);
-  // }
+  suggestedQuestions: InputSignal<string[]> = input(['']);
+  chunkedMessages = computed(() =>
+    this.chunkMessages(this.suggestedQuestions(), 3)
+  );
 
-  messages = suggestedQuestions;
+  @Output() questionEvent = new EventEmitter<string>();
+
+  constructor(private questionService: QuestionService) {}
+
   touchStartX = 0;
   touchEndX = 0;
 
-  chunkedMessages = this.chunkMessages(this.messages, 3);
-  @Output() questionEvent = new EventEmitter<string>();
   ngAfterViewInit() {
     this.setupSwipeGestures();
   }
@@ -70,14 +75,14 @@ export class SliderComponent implements AfterViewInit {
   }
 
   nextSlide() {
-    const nextIndex = (this.activeIndex() + 1) % this.chunkedMessages.length;
+    const nextIndex = (this.activeIndex() + 1) % this.chunkedMessages().length;
     this.activeIndex.set(nextIndex);
   }
 
   prevSlide() {
     const prevIndex =
-      (this.activeIndex() - 1 + this.chunkedMessages.length) %
-      this.chunkedMessages.length;
+      (this.activeIndex() - 1 + this.chunkedMessages().length) %
+      this.chunkedMessages().length;
     this.activeIndex.set(prevIndex);
   }
   chunkMessages(arr: string[], size: number): string[][] {
@@ -85,7 +90,6 @@ export class SliderComponent implements AfterViewInit {
     for (let i = 0; i < arr.length; i += size) {
       result.push(arr.slice(i, i + size));
     }
-    console.log(result);
 
     return result;
   }

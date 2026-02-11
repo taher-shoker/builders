@@ -122,6 +122,21 @@ export class AgileExecutiveSummaryService {
     );
   }
 
+  getHeatmapMetadataByLOB(
+    lineOfBusiness: string,
+    year: number,
+    quarter: string
+  ): Observable<HeatmapMetadataResponse> {
+    const params = new HttpParams()
+      .set('lineOfBusiness', lineOfBusiness)
+      .set('year', String(year))
+      .set('quarter', quarter);
+    return this.http.get<HeatmapMetadataResponse>(
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/heatmap-metadata`,
+      { params }
+    );
+  }
+
   getAgileMaturityIndex(
     year: number,
     quarter: string,
@@ -146,17 +161,19 @@ export class AgileExecutiveSummaryService {
     lineOfBusiness: string,
     tribe: string
   ): Observable<HeatmapSquadsValuesResponse> {
-    const params = new URLSearchParams({
-      year: String(year),
-      quarter,
-      lineOfBusiness,
-      tribe,
-    });
+    let params = new HttpParams()
+      .set('year', String(year))
+      .set('quarter', quarter);
+    if (lineOfBusiness && lineOfBusiness !== 'All') {
+      params = params.set('lineOfBusiness', lineOfBusiness);
+    }
+    if (tribe && tribe !== 'All') {
+      params = params.set('tribe', tribe);
+    }
 
     return this.http.get<HeatmapSquadsValuesResponse>(
-      `${
-        environment.apiUrl
-      }/business-excellence/agile/executive-summary/heatmap-squads-values?${params.toString()}`
+      `${environment.apiUrl}/business-excellence/agile/executive-summary/heatmap-squads-values`,
+      { params }
     );
   }
 
@@ -201,8 +218,8 @@ export class AgileExecutiveSummaryService {
     opts: {
       year: number;
       quarter: string;
-      lineOfBusiness?: string;
-      tribe?: string;
+      // lineOfBusiness?: string;
+      // tribe?: string;
     }
   ): Observable<any> {
     const formData = new FormData();
@@ -214,12 +231,12 @@ export class AgileExecutiveSummaryService {
     const shouldIncludeContext =
       dashboardName !== 'overall_maturity_index' &&
       dashboardName !== 'executive_summary_performance_heatmap';
-    if (shouldIncludeContext && opts.lineOfBusiness) {
-      params = params.set('lineOfBusiness', opts.lineOfBusiness);
-    }
-    if (shouldIncludeContext && opts.tribe) {
-      params = params.set('tribe', opts.tribe);
-    }
+    // if (shouldIncludeContext && opts.lineOfBusiness) {
+    //   params = params.set('lineOfBusiness', opts.lineOfBusiness);
+    // }
+    // if (shouldIncludeContext && opts.tribe) {
+    //   params = params.set('tribe', opts.tribe);
+    // }
     return this.http.post<any>(
       `${environment.apiUrl}/business-excellence/agile/executive-summary/import`,
       formData,

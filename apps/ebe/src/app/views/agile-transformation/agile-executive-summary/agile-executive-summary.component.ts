@@ -48,8 +48,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
   quarters = signal<{ displayName: string; value: string }[]>([]);
   selectedYear = signal<string>('2025');
   selectedQuarter = signal<string>('Q4');
-  selectedTribe = signal<string>('');
-  selectedHeatmapLOB = signal<string>('');
+  selectedTribe = signal<string>('All');
+  selectedHeatmapLOB = signal<string>('All');
   tribeDropdownList = signal<{ displayName: string; value: string }[]>([]);
   currentMode: 'editMode' | 'viewMode' = 'viewMode';
   isAdmin = false;
@@ -163,7 +163,8 @@ export class AgileExecutiveSummaryComponent implements OnInit {
 
   onSelectHeatmapLOB(event: any) {
     this.selectedHeatmapLOB.set(event as string);
-    this.loadHeatmapSquadsValues();
+    this.selectedTribe.set('All');
+    this.loadTribesForSelectedLOB();
   }
 
   onSelectTribe(event: any) {
@@ -201,6 +202,25 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       });
   }
 
+  private loadTribesForSelectedLOB() {
+    const lob = this.selectedHeatmapLOB();
+    const year = Number(this.selectedYear());
+    const quarter = this.selectedQuarter();
+    this.selectedTribe.set('All');
+    const obs =
+      lob && lob !== 'All'
+        ? this.agileService.getHeatmapMetadataByLOB(lob, year, quarter)
+        : this.agileService.getHeatmapMetadata(year, quarter);
+    obs.subscribe((data: HeatmapMetadataResponse) => {
+      const tribes = data.tribes ?? [];
+      const tribesList = tribes.map((t) => ({ displayName: t, value: t }));
+      tribesList.unshift({ displayName: 'All', value: 'All' });
+      this.tribeDropdownList.set(tribesList);
+      this.selectedTribe.set('All');
+      this.loadHeatmapSquadsValues();
+    });
+  }
+
   private resetHeatmapContext() {
     this.lobDropdownList.set([]);
     this.tribeDropdownList.set([]);
@@ -218,27 +238,30 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       .getHeatmapMetadata(year, quarter)
       .subscribe((data: HeatmapMetadataResponse) => {
         if (data.lineOfBusinesses && data.lineOfBusinesses.length) {
+
           const lobList = data.lineOfBusinesses.map((lob) => ({
             displayName: lob,
             value: lob,
           }));
+          lobList.unshift({ displayName: 'All', value: 'All' });
           this.lobDropdownList.set(lobList);
           if (!this.selectedHeatmapLOB() && lobList.length > 0) {
             this.selectedHeatmapLOB.set(lobList[0].value);
           }
-        }
 
        if (data.tribes && data.tribes.length) {
           const tribesList = data.tribes.map((tribe) => ({
             displayName: tribe,
             value: tribe,
           }));
+          tribesList.unshift({ displayName: 'All', value: 'All' });
           this.tribeDropdownList.set(tribesList);
           if (!this.selectedTribe() && tribesList.length > 0) {
             this.selectedTribe.set(tribesList[0].value);
           }
         }
 
+        }
         this.loadHeatmapSquadsValues();
 
       });
@@ -326,6 +349,116 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     return map[label] ?? '';
   }
 
+  performanceColor(): string {
+    const label = this.performanceLabel();
+    const map: Record<string, string> = {
+      Fly: 'var(--stc-green-dark-color)',
+      Run: 'var(--stc-green-dark-color)',
+      Walk: 'var(--stc-green-dark-color)',
+      Crawl: 'var(--stc-green-dark-color)',
+      // Fly: 'var(--stc-purple-glow-color-dark)',
+      // Run: 'var(--stc-green-dark-color)',
+      // Walk: '#CC89FF',
+      // Crawl: 'var(--stc-green-dark-color)',
+    };
+    return map[label] ?? 'var(--stc-purple-glow-color-dark)';
+  }
+
+  stageImageStyles(): { [key: string]: string } {
+    const url = this.performanceImage();
+    const color = this.performanceColor();
+    const label = this.performanceLabel();
+    if (!url) return { display: 'none' };
+    const translateY = label === 'Crawl' ? -14 : -20;
+    const stcColor= label == "Crawl" ? "#fcd0ff" : label=="Walk" ? "#e2a3ff" :label == "Run" ? "#c27bff" : "#8200db";
+    return {
+      width: '60px',
+      height: '60px',
+      backgroundColor: stcColor,
+      transform: `translateY(${translateY}px)`,
+      filter: [
+        `drop-shadow(0 1px 0 #000`,
+        `drop-shadow(0 -1px 0 #000`,
+        `drop-shadow(1px 0 0 #000`,
+        `drop-shadow(-1px 0 0 #000`,
+        `drop-shadow(1px 1px 0 #000`,
+        `drop-shadow(1px -1px 0 #000`,
+        `drop-shadow(-1px 1px 0 #000`,
+        `drop-shadow(-1px -1px 0 #000`,
+      ].join(' '),
+      '-webkit-mask-image': `url(${url})`,
+      'mask-image': `url(${url})`,
+      '-webkit-mask-repeat': 'no-repeat',
+      'mask-repeat': 'no-repeat',
+      '-webkit-mask-position': 'center',
+      'mask-position': 'center',
+      '-webkit-mask-size': 'contain',
+      'mask-size': 'contain',
+    };
+  }
+
+  lobAverage(): number | null {
+    const arr = this.bubbles;
+    if (!arr || !arr.length) return null;
+    const sum = arr.reduce((acc, b) => acc + (typeof b.value === 'number' ? b.value : Number(b.value ?? 0)), 0);
+    return sum / arr.length;
+  }
+  lobPerformanceLabel(): 'Fly' | 'Run' | 'Walk' | 'Crawl' | '' {
+    const s = this.lobAverage();
+    if (s === null || typeof s !== 'number') return '';
+    if (s >= 3.5) return 'Fly';
+    if (s >= 2.5) return 'Run';
+    if (s >= 1.5) return 'Walk';
+    return 'Crawl';
+  }
+  lobPerformanceColor(): string {
+    const label = this.lobPerformanceLabel();
+    const map: Record<string, string> = {
+      Crawl: '#fcd0ff',
+      Walk: '#e2a3ff',
+      Run: '#c27bff',
+      Fly: '#8200db',
+    };
+    return map[label] ?? '#8200db';
+  }
+  lobStageImageStyles(): { [key: string]: string } {
+    const label = this.lobPerformanceLabel();
+    const urlMap: Record<string, string> = {
+      Fly: 'assets/images/fly.png',
+      Run: 'assets/images/run.png',
+      Walk: 'assets/images/walk.png',
+      Crawl: 'assets/images/crawl.png',
+    };
+    const url = urlMap[label] ?? '';
+    const stcColor = this.lobPerformanceColor();
+    if (!url) return { display: 'none' };
+    const translateY = label === 'Crawl' ? 1 : -6;
+    return {
+      width: '44px',
+      height: '44px',
+      backgroundColor: stcColor,
+      transform: `translateY(${translateY}px)`,
+      filter: [
+        `drop-shadow(0 1px 0 ${stcColor})`,
+        `drop-shadow(0 -1px 0 ${stcColor})`,
+        `drop-shadow(1px 0 0 ${stcColor})`,
+        `drop-shadow(-1px 0 0 ${stcColor})`,
+        `drop-shadow(1px 1px 0 ${stcColor})`,
+        `drop-shadow(1px -1px 0 ${stcColor})`,
+        `drop-shadow(-1px 1px 0 ${stcColor})`,
+        `drop-shadow(-1px -1px 0 ${stcColor})`,
+      ].join(' '),
+      '-webkit-mask-image': `url(${url})`,
+      'mask-image': `url(${url})`,
+      '-webkit-mask-repeat': 'no-repeat',
+      'mask-repeat': 'no-repeat',
+      '-webkit-mask-position': 'center',
+      'mask-position': 'center',
+      '-webkit-mask-size': 'contain',
+      'mask-size': 'contain',
+    };
+  }
+
   private loadAgileMaturityIndex() {
     const year = Number(this.selectedYear());
     const quarter = this.selectedQuarter();
@@ -406,9 +539,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
     this.agileService
       .importExecutiveSummary(dashboardName, this.selectedImportFile, {
         year,
-        quarter,
-        lineOfBusiness,
-        tribe,
+        quarter
       })
       .subscribe({
         next: () => {
@@ -442,9 +573,7 @@ export class AgileExecutiveSummaryComponent implements OnInit {
       this.agileService
         .importExecutiveSummary(dashboardName, e, {
           year,
-          quarter,
-          lineOfBusiness,
-          tribe,
+          quarter
         })
         .subscribe({
           next: () => {

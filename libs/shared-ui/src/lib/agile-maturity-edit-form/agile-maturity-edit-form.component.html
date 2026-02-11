@@ -71,7 +71,7 @@
     </div>
     }
     <label style="margin-top: 12px"
-      >Content @if(!isHasHighlightContent()){
+      >Content @if(form.get('keyHighlightsContentHtml')?.touched && !isHasHighlightContent()){
       <span class="required-star">*</span>}</label
     >
     <p-editor
@@ -91,7 +91,7 @@
   </div>
 </div>
 <div class="actions">
-  <button class="btn save" (click)="onSave()" [disabled]="form.invalid || !isHasHighlightContent()">
+  <button class="btn save" (click)="onSave()" [disabled]="form.invalid || (form.get('keyHighlightsContentHtml')?.touched && !isHasHighlightContent())">
     Save
   </button>
   <button class="btn cancel" (click)="onCancel()">Cancel</button>
