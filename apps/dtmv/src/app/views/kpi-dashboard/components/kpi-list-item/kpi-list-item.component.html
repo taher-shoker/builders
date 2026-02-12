@@ -13,6 +13,7 @@
         [kpi]="kpi()"
         (edit)="onEdit(kpi())"
         (updateValue)="onUpdateValue(kpi())"
+        (linkedMilestone)="onLinkedMilestone(kpi())"
         (delete)="onDelete(kpi())"
         (activityLog)="onActivityLog(kpi())"
         [permissionRole]="permissionRole"
@@ -20,12 +21,51 @@
     </div>
   </div>
 
+
+
   <div class="kpi-list-item_attributes">
     <h4 class="kpi-list-item_title">Attributes</h4>
     <stc-apps-kpi-attributes-list
       [attributes]="attributes()"
       [loading]="attributesLoading()"
     ></stc-apps-kpi-attributes-list>
+
+  @if (formula()) {
+    <div class="kpi-formula-block">
+      <div class="kpi-formula-block_main">
+        <div class="kpi-formula-block_text">
+          <span class="kpi-formula_label">Formula :</span>
+          <span
+            #formulaText
+            class="kpi-formula_text"
+            [class.is-collapsed]="!showFullFormula()"
+          >{{ formula() }}</span>
+        </div>
+        <div class="kpi-formula_actions">
+          @if (formulaHasOverflow()) {
+            <button
+              type="button"
+              class="kpi-formula_toggle"
+              (click)="toggleFormulaText(); $event.stopPropagation()"
+            >
+              <span>{{ showFullFormula() ? 'Hide Details' : 'Show Details' }}</span>
+              <i class="fas" [class.fa-caret-down]="!showFullFormula()" [class.fa-caret-up]="showFullFormula()"></i>
+            </button>
+          }
+        </div>
+      </div>
+      @if (showFormulaDetails() && (formulaDetails().length || 0) > 0) {
+        <div class="kpi-formula_details">
+          @for (d of formulaDetails(); track d.key) {
+            <div class="kpi-formula_detail">
+              <span class="kpi-formula_detail_key">{{ d.key }}:</span>
+              <span class="kpi-formula_detail_text">{{ d.text }}</span>
+            </div>
+          }
+        </div>
+      }
+    </div>
+  }
   </div>
 
   <div class="kpi-list-item_chart">

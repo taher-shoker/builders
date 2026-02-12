@@ -1,4 +1,4 @@
-import { Component, EventEmitter, input, Output, Input } from '@angular/core';
+import { Component, EventEmitter, input, Input, Output } from '@angular/core';
 import { KPI } from '../../models/kpi.model';
 
 @Component({
@@ -11,6 +11,7 @@ export class KpiActionsComponent {
 
   @Output() activityLog = new EventEmitter<KPI>();
   @Output() updateValue = new EventEmitter<KPI>();
+  @Output() linkedMilestone = new EventEmitter<KPI>();
   @Output() viewList = new EventEmitter<KPI>();
   @Output() edit = new EventEmitter<KPI>();
   @Output() delete = new EventEmitter<KPI>();
@@ -22,6 +23,10 @@ export class KpiActionsComponent {
 
   onUpdateValue(): void {
     this.updateValue.emit(this.kpi());
+  }
+
+  onLinkedMilestone(): void {
+    this.linkedMilestone.emit(this.kpi());
   }
 
   onViewList(): void {

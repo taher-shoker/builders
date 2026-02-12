@@ -1,5 +1,13 @@
 <div class="kpi-actions">
+  <!-- <button class="linked-milestone-btn" (click)="onLinkedMilestone()" *ngIf="permissionRole === 'editor'">Linked Milestones</button> -->
   <span (click)="onUpdateValue()" *ngIf="permissionRole === 'editor'">Update Actual Value</span>
+
+    <stc-apps-button
+    [buttonText]="'Linked Milestones'"
+    [buttonType]="'stc-color-outline'"
+    (click)="onLinkedMilestone()"
+    [buttonIconV6]="'fas fa-link'"
+  ></stc-apps-button>
 
   <!-- Activity Log Button -->
   <stc-apps-button

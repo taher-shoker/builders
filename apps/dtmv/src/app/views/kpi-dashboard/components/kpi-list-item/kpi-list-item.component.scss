@@ -39,6 +39,97 @@
     max-height: 400px;
   }
 
+  .kpi-formula-block {
+    width: 100%;
+    background-color: var(--stc-lightGrey-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 32px;
+  }
+
+  .kpi-formula-block_main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .kpi-formula-block_text {
+    display: block;
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: normal;
+  }
+
+  .kpi-formula_label {
+    font-size: 16px;
+    font-weight: 900;
+    color: #000;
+    white-space: nowrap;
+    word-break: keep-all;
+  }
+
+  .kpi-formula_text {
+    display: block;
+    font-size: 16px;
+    color: #000;
+    word-break: normal;
+    overflow-wrap: anywhere;
+    line-height: 22px;
+  }
+
+  .kpi-formula_text.is-collapsed {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .kpi-formula_actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .kpi-formula_toggle {
+    margin-left: auto;
+    color: var(--stc-color);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap;
+  }
+
+  .kpi-formula_details {
+    display: grid;
+    gap: 6px;
+  }
+
+  .kpi-formula_detail {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 6px;
+    font-size: 14px;
+    color: #212121;
+  }
+
+  .kpi-formula_detail_key {
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  .kpi-formula_detail_text {
+    font-weight: 400;
+  }
+
   &_chart_header {
     display: flex;
     align-items: center;

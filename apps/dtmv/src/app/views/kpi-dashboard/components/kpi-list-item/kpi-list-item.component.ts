@@ -1,25 +1,29 @@
 /* eslint-disable @nx/enforce-module-boundaries */
 import {
+  AfterViewInit,
   Component,
   computed,
+  effect,
+  ElementRef,
   EventEmitter,
   input,
-  InputSignal,
-  Output,
-  effect,
   Input,
+  InputSignal,
+  OnDestroy,
+  Output,
+  signal,
+  ViewChild,
 } from '@angular/core';
 import { LegendSettings } from 'libs/shared-ui/src/lib/chat-charts/line-chart/lineChart.component';
-import { KPI } from '../../models/kpi.model';
-import { signal } from '@angular/core';
 import { AttributeItem } from '../../models/attribute-item.model';
+import { KPI } from '../../models/kpi.model';
 
 @Component({
   selector: 'stc-apps-kpi-list-item',
   templateUrl: './kpi-list-item.component.html',
   styleUrls: ['./kpi-list-item.component.scss'],
 })
-export class KpiListItemComponent {
+export class KpiListItemComponent implements AfterViewInit, OnDestroy {
   kpi: InputSignal<KPI> = input.required<KPI>();
   isSelected: InputSignal<boolean> = input(false);
   attributes: InputSignal<AttributeItem[]> = input<AttributeItem[]>([]);
@@ -38,6 +42,7 @@ export class KpiListItemComponent {
   @Output() selectKpi = new EventEmitter<any>();
   @Output() activityLog = new EventEmitter<KPI>();
   @Output() updateValue = new EventEmitter<KPI>();
+  @Output() linkedMilestone = new EventEmitter<KPI>();
   @Output() viewList = new EventEmitter<KPI>();
   @Output() edit = new EventEmitter<KPI>();
   @Output() delete = new EventEmitter<KPI>();
@@ -83,12 +88,43 @@ export class KpiListItemComponent {
     { allowSignalWrites: true }
   );
 
+  formula: InputSignal<string> = input<string>('');
+  formulaDetails: InputSignal<{ key: string; text: string }[]> = input<
+    { key: string; text: string }[]
+  >([]);
+  showFormulaDetails = signal<boolean>(false);
+  showFullFormula = signal<boolean>(false);
+  formulaHasOverflow = signal<boolean>(false);
+  @ViewChild('formulaText') formulaTextRef?: ElementRef<HTMLElement>;
+  private resizeObserver?: ResizeObserver;
+
+  formulaOverflowEffect = effect(
+    () => {
+      this.formula();
+      this.showFullFormula.set(false);
+      queueMicrotask(() => this.checkFormulaOverflow());
+    },
+    { allowSignalWrites: true }
+  );
+
+  toggleFormulaDetails(): void {
+    this.showFormulaDetails.set(!this.showFormulaDetails());
+  }
+
+  toggleFormulaText(): void {
+    this.showFullFormula.set(!this.showFullFormula());
+  }
+
   onActivityLog(kpi: KPI): void {
     this.activityLog.emit(kpi);
   }
 
   onUpdateValue(kpi: KPI): void {
     this.updateValue.emit(kpi);
+  }
+
+  onLinkedMilestone(kpi: KPI): void {
+    this.linkedMilestone.emit(kpi);
   }
 
   onViewList(kpi: KPI): void {
@@ -101,6 +137,32 @@ export class KpiListItemComponent {
 
   onDelete(kpi: KPI): void {
     this.delete.emit(kpi);
+  }
+
+  ngAfterViewInit(): void {
+    this.checkFormulaOverflow();
+    if (this.formulaTextRef?.nativeElement) {
+      this.resizeObserver = new ResizeObserver(() => this.checkFormulaOverflow());
+      this.resizeObserver.observe(this.formulaTextRef.nativeElement);
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.resizeObserver?.disconnect();
+  }
+
+  private checkFormulaOverflow(): void {
+    const el = this.formulaTextRef?.nativeElement;
+    if (!el) return;
+    const style = window.getComputedStyle(el);
+    const lineHeight = parseFloat(style.lineHeight || '0');
+    if (!lineHeight) return;
+    const lines = Math.round(el.scrollHeight / lineHeight);
+    const hasOverflow = lines > 1;
+    this.formulaHasOverflow.set(hasOverflow);
+    if (!hasOverflow) {
+      this.showFullFormula.set(true);
+    }
   }
 
   private initializeDummyChartData(): void {
