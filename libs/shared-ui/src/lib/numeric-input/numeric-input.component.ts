@@ -38,6 +38,7 @@ export class NumericInputComponent
   @Input() min?: number;
   @Input() max?: number;
   @Input() appearance: 'material' | 'plain' = 'material';
+  @Input() showRequiredStar = false;
   @Output() valueKeyDown: EventEmitter<KeyboardEvent> =
     new EventEmitter<KeyboardEvent>();
 
