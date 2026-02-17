@@ -101,7 +101,7 @@
       <stc-apps-button
         [buttonText]="'Submit'"
         [buttonType]="'primary'"
-        [buttonDisable]="selectedIds().length === 0 || submitting()"
+        [buttonDisable]="submitting()"
         (btnClick)="submit()"
       ></stc-apps-button>
     }

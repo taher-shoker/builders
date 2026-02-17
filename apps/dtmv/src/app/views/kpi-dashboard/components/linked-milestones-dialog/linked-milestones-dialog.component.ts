@@ -110,7 +110,7 @@ export class LinkedMilestonesDialogComponent {
       return;
     }
     const selected = this.selectedIds();
-    if (selected.length === 0 || this.submitting()) {
+    if (this.submitting()) {
       return;
     }
     const idRaw = this.data?.kpi?.id;

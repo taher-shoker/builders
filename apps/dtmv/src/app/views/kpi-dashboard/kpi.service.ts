@@ -326,11 +326,17 @@ export class KpiService {
    */
   getKpiValues(
     kpiId: number,
-    grouping?: 'monthly' | 'quarterly'
+    grouping?: 'monthly' | 'quarterly',
+    year?: number
   ): Observable<KpiValueRecord[]> {
     const base = `${this.baseUrl}v2/dt-milestone-service/kpi/${kpiId}/values`;
     const selectedGrouping = grouping ?? 'monthly';
-    const url = `${base}?grouping=${selectedGrouping}`;
+    let params = new HttpParams().set('grouping', selectedGrouping);
+    if (typeof year === 'number') {
+      params = params.set('year', String(year));
+    }
+    const query = params.toString();
+    const url = query ? `${base}?${query}` : base;
     return this.dedupGet<KpiValueRecord[]>(url);
   }
 
