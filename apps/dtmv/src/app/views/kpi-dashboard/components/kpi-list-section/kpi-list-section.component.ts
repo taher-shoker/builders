@@ -219,6 +219,13 @@ export class KpiListSectionComponent {
         // Handle result (selected milestones)
         console.log('Selected milestones:', result);
         this.toastr.success('Milestones linked successfully');
+        const idRaw = kpi.id;
+        const idNum =
+          typeof idRaw === 'number' ? idRaw : Number(idRaw ?? '');
+        if (Number.isFinite(idNum)) {
+          this.attributesLoading.set(true);
+          this.fetchAttributesForKpi(idNum);
+        }
       }
     });
   }
@@ -365,7 +372,8 @@ export class KpiListSectionComponent {
 
   private fetchKpiValues(kpiId: number, grouping: 'monthly' | 'quarterly'): void {
     this.chartLoading.set(true);
-    this.kpiService.getKpiValues(kpiId, grouping).subscribe({
+    const yearValue = typeof this.year === 'number' ? this.year : undefined;
+    this.kpiService.getKpiValues(kpiId, grouping, yearValue).subscribe({
       next: (resp: KpiValueRecord[]) => {
         const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const items = resp.map((r) => {

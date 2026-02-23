@@ -18,12 +18,26 @@
   caret-color: var(--stc-purple-color);
 }
 
-.stc-input-group .plain-input-wrapper .errors {
-  margin-top: 4px;
+.stc-input-group .plain-input-wrapper .errors,
+.stc-input-group .errors {
+  margin-top: 2px;
   font-size: 12px;
-  color: #EF4444;
+  color: #ef4444;
 }
 
-::ng-deep .stc-input-group .mat-mdc-form-field .mdc-text-field.mdc-text-field--focused {
+::ng-deep
+  .stc-input-group
+  .mat-mdc-form-field
+  .mdc-text-field.mdc-text-field--focused {
   border-color: var(--stc-purple-color);
+}
+
+::ng-deep .stc-input-group .mat-mdc-form-field-subscript-wrapper {
+  margin-top: -12px !important;
+  z-index: -10;
+}
+
+.stc-input-group label .required-star {
+  color: #ef4444;
+  margin-left: 4px;
 }
