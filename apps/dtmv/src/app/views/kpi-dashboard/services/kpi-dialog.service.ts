@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
-import { DialogConfig, DialogResult, KPI } from '../models/kpi.model';
 import { MatDialog } from '@angular/material/dialog';
 import { Observable } from 'rxjs';
-import { KpiFormDialogComponent } from '../components/kpi-form-dialog/kpi-form-dialog.component';
-import { UpdateValueDialogComponent } from '../components/update-value-dialog/update-value-dialog.component';
 import { ActivityLogComponent } from '../components/activity-log/activity-log.component';
+import { KpiFormDialogComponent } from '../components/kpi-form-dialog/kpi-form-dialog.component';
+import { LinkedMilestonesDialogComponent } from '../components/linked-milestones-dialog/linked-milestones-dialog.component';
+import { UpdateValueDialogComponent } from '../components/update-value-dialog/update-value-dialog.component';
+import { DialogConfig, DialogResult, KPI } from '../models/kpi.model';
 
 @Injectable({
   providedIn: 'root',
@@ -55,6 +56,24 @@ export class KpiDialogService {
         panelClass: 'right-side-panel-dialog',
         enterAnimationDuration: '300ms',
         exitAnimationDuration: '300ms',
+      })
+      .afterClosed();
+  }
+
+  openLinkedMilestonesDialog(
+    kpi: KPI,
+    year?: number | null,
+    canEdit?: boolean
+  ): Observable<any> {
+    return this.dialog
+      .open(LinkedMilestonesDialogComponent, {
+        ...this.defaultConfig,
+        width: '800px',
+        data: {
+          kpi,
+          year: typeof year === 'number' ? year : undefined,
+          canEdit: Boolean(canEdit),
+        },
       })
       .afterClosed();
   }

@@ -1,13 +1,31 @@
 .kpi-attributes-list {
   display: flex;
+  flex-wrap: wrap;
   gap: 16px;
+  align-items: stretch;
 
   &_item {
     background-color: var(--stc-lightGrey-color);
     border-radius: 8px;
     display: flex;
+    align-items: flex-start;
     padding: 16px;
-    gap: 24px;
+    gap: 12px;
+    justify-content: space-between;
+    flex: 1 1 150px;
+    min-width: 150px;
+
+    .kpi-attributes-list_item_content {
+      flex: 1 1 auto;
+      min-width: 0;
+      padding-right: 8px;
+    }
+
+    .kpi-attributes-list_item_icon {
+      flex: 0 0 24px;
+      width: 24px;
+      margin-left: auto;
+    }
 
     .kpi-attributes-list_item_icon img {
       width: 24px;
@@ -35,14 +53,22 @@
       display: flex;
       flex-direction: column;
       gap: 10px;
+      min-width: 0;
 
       .attribute-label {
         font-size: 16px;
         font-weight: 300;
+        white-space: normal;
+        overflow-wrap: normal;
+        word-break: keep-all;
+        hyphens: none;
       }
       .attribute-value {
         font-size: 18px;
         font-weight: 600;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
       }
     }
   }
