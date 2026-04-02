@@ -127,10 +127,10 @@ export class ApiTestComponent implements OnInit {
         parentTestId: responseItem?.parentTestId,
         result: result,
         summaryFileJson: responseItem?.summaryFileJson
-          ? `${environment.apiUrl}${responseItem.summaryFileJson}`
+          ? `${environment.apiUrl}${responseItem.summaryFileJson.replace(/^\/api/, '')}`
           : '',
         summaryFileHtml: responseItem?.summaryFileHtml
-          ? `${environment.apiUrl}${responseItem.summaryFileHtml}`
+          ? `${environment.apiUrl}${responseItem.summaryFileHtml.replace(/^\/api/, '')}`
           : '',
         standardId: item?.standardId,
         testStatus: responseItem?.testStatus,
