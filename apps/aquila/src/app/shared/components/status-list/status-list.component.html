@@ -2,25 +2,17 @@
   <div class="status-list_header">
     <h5>{{ title() }}</h5>
     @if (title() == 'Queue - In Progress') {
-    <stc-apps-button
-      [buttonText]="'Run all'"
-      [buttonType]="'warn'"
-      [buttonDisable]="items().length <= 0"
-      (click)="runAll()"
-    ></stc-apps-button>
+    <stc-apps-button [buttonText]="'Run all'" [buttonType]="'primary'" [buttonDisable]="items().length <= 0"
+      (click)="runAll()"></stc-apps-button>
     }
   </div>
   <div class="status-list_items">
     @for (item of items(); let i = $index; track item) {
 
-    <div
-      class="card"
-      [ngClass]="{
+    <div class="card" [ngClass]="{
         'selected-card': selectedItem === item,
         dimmed: !item.parentTestId
-      }"
-      (click)="item.parentTestId && onItemClick(item)"
-    >
+      }" (click)="item.parentTestId && onItemClick(item)">
       <div class="card-header">
         @if (item?.parentTestId) {
         <strong>ID: #{{ item?.parentTestId }}</strong>
@@ -31,11 +23,7 @@
         @if (!item.hasRun) {
         <div class="actions">
           @if (item.hasReload) {
-          <button
-            class="btn reload"
-            [disabled]="!item.apiUrl || !item.standardId"
-            (click)="runItem(item)"
-          >
+          <button class="btn reload" [disabled]="!item.apiUrl || !item.standardId" (click)="runItem(item)">
             <i class="pi pi-refresh"></i>
           </button>
           }
@@ -48,13 +36,10 @@
           <mat-spinner diameter="24"></mat-spinner>
         </div>
         } @else {
-        <strong
-          [ngClass]="{
+        <strong [ngClass]="{
             'text-success': item.result === 'pass',
             'text-danger': item.result === 'failed',
-          }"
-          >{{ item.result }}</strong
-        >
+          }">{{ item.result }}</strong>
         }
       </div>
       <div class="card-body">
@@ -65,11 +50,11 @@
         <p>
           <strong>Selected Standard:</strong>
           {{
-            item.standardId?.name +
-              ' - ' +
-              item.standardId?.domain +
-              ' - ' +
-              item.standardId?.version
+          item.standardId?.name +
+          ' - ' +
+          item.standardId?.domain +
+          ' - ' +
+          item.standardId?.version
           }}
         </p>
         @if (item.hasCompleted) {
@@ -77,20 +62,13 @@
         } } @else {
         <!-- API Link  -->
         <div class="filter-field">
-          <stc-apps-input-group
-            [placeholder]="'API link'"
-            [addonText]="'http://'"
-            [(ngModel)]="item.apiUrl"
-          ></stc-apps-input-group>
+          <stc-apps-input-group [placeholder]="'API link'" [addonText]="'http://'"
+            [(ngModel)]="item.apiUrl"></stc-apps-input-group>
         </div>
         <!-- Standard -->
         <div class="filter-field">
-          <stc-apps-filter-dropdown
-            [dropdownOptions]="item.standardList"
-            [placeholder]="'Select Standard'"
-            [selectedValue]="item.standardId"
-            (valueChange)="onStandardChanged($event, i)"
-          ></stc-apps-filter-dropdown>
+          <stc-apps-filter-dropdown [dropdownOptions]="item.standardList" [placeholder]="'Select Standard'"
+            [selectedValue]="item.standardId" (valueChange)="onStandardChanged($event, i)"></stc-apps-filter-dropdown>
         </div>
         }
       </div>
