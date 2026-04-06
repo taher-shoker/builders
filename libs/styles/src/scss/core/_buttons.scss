@@ -30,6 +30,9 @@
   &.primary {
     background-color: $stcColor !important;
     color: $whiteColor !important;
+    &:hover {
+      background-color: #003dcc !important;
+    }
     .loader {
       border-color: $whiteColor !important;
       border-bottom-color: transparent !important;
