@@ -59,7 +59,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.logoSrc = 'assets/images/mobily.svg';
+    this.logoSrc = 'assets/images/mobily-white.svg';
     if (window.innerWidth > 768) {
       this.isSidebarVisible = true;
     }

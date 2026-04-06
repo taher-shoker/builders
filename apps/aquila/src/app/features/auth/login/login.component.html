@@ -1,7 +1,7 @@
 <div class="login">
   <div class="card">
     <div class="card-img">
-      <img src="assets/images/login/stc.png" alt="stc" />
+      <img src="assets/images/mobily-white.svg" alt="stc" />
     </div>
     <div class="shape3"></div>
     <div class="card-body">
@@ -14,17 +14,12 @@
       <div class="col-md-6 offset-md-3">
         <form [formGroup]="form">
           <div class="mb-2 custom-field-wrapper" #emailInput>
-            <stc-apps-input
-              [inputName]="'email'"
-              [className]="'stc-input outline-input'"
-              [inputPlaceholder]="'Enter your email'"
-              [inputId]="'email'"
-              formControlName="email"
-              [inputIcon]="'fa-user'"
-            ></stc-apps-input>
+            <stc-apps-input [inputName]="'email'" [className]="'stc-input outline-input'"
+              [inputPlaceholder]="'Enter your email'" [inputId]="'email'" formControlName="email"
+              [inputIcon]="'fa-user'"></stc-apps-input>
             @if(form.get('email')?.touched && form.get('email')?.invalid) {
             <div class="custom-error">
-             @if(form.get('email')?.hasError('stcDomain')) {
+              @if(form.get('email')?.hasError('stcDomain')) {
               <mat-error>{{ 'must_contain_stc_domain' | translate }}</mat-error>
               }
             </div>
@@ -32,24 +27,13 @@
             }
           </div>
           <div class="mb-2">
-            <stc-apps-input
-              [inputType]="'password'"
-              [inputId]="'password'"
-              [inputName]="'Password'"
-              [className]="'stc-input outline-input'"
-              [inputPlaceholder]="'Enter password'"
-              [inputId]="'password'"
-              formControlName="password"
-              [inputIcon]="'fa-lock'"
-            ></stc-apps-input>
+            <stc-apps-input [inputType]="'password'" [inputId]="'password'" [inputName]="'Password'"
+              [className]="'stc-input outline-input'" [inputPlaceholder]="'Enter password'" [inputId]="'password'"
+              formControlName="password" [inputIcon]="'fa-lock'"></stc-apps-input>
           </div>
 
-          <stc-apps-button
-            [buttonText]="'login' | translate"
-            [buttonType]="'primary'"
-            [buttonDisable]="false"
-            (btnClick)="onSubmit()"
-          ></stc-apps-button>
+          <stc-apps-button [buttonText]="'login' | translate" [buttonType]="'primary'" [buttonDisable]="false"
+            (btnClick)="onSubmit()"></stc-apps-button>
         </form>
       </div>
     </div>

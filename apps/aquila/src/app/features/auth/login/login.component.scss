@@ -24,7 +24,7 @@
   .card {
     text-align: center;
     width: 50%;
-    background-color: var(--stc-color);
+    background-color: #124f75;
     position: relative;
     min-height: 630px;
     border-radius: unset;
@@ -78,7 +78,10 @@
     width: 50%;
 
     ::ng-deep {
-      .hide-internal-errors stc-apps-input .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+      .hide-internal-errors
+        stc-apps-input
+        .mat-mdc-form-field
+        .mat-mdc-form-field-subscript-wrapper {
         display: none !important;
         height: 0 !important;
         min-height: 0 !important;
@@ -87,7 +90,10 @@
         visibility: hidden !important;
       }
 
-      .show-internal-errors stc-apps-input .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper {
+      .show-internal-errors
+        stc-apps-input
+        .mat-mdc-form-field
+        .mat-mdc-form-field-subscript-wrapper {
         display: block !important;
         height: auto !important;
         min-height: 1.34375em !important;
@@ -109,7 +115,7 @@
         display: block;
         font-size: 12px;
         color: #f44336;
-        font-family: Roboto, "Helvetica Neue", sans-serif;
+        font-family: Roboto, 'Helvetica Neue', sans-serif;
         font-weight: 400;
         line-height: 1.2;
         margin-top: 4px;
