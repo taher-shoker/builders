@@ -10,7 +10,11 @@ import {
 import { SharedUiModule } from '@stc-apps/shared-ui';
 import { StatusListComponent } from '../../shared/components/status-list/status-list.component';
 import { Standard } from '.././../shared/models/standards.models';
-import { QueueItem } from '.././../shared/models/run-test.models';
+import {
+  QueueItem,
+  RunMultipleTestsResponse,
+  TestResult,
+} from '.././../shared/models/run-test.models';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ColumnsSchema } from 'libs/shared-ui/src/lib/custom-table/custom-table.component';
 import { InputTextModule } from 'primeng/inputtext';
@@ -42,6 +46,9 @@ import { HttpClient } from '@angular/common/http';
   styleUrls: ['./api-test.component.scss'],
 })
 export class ApiTestComponent implements OnInit {
+  private readonly summaryApiPrefixRegex = /^\/api/;
+  private readonly queueIdMax = 1000000;
+
   private standardsService = inject(StandardsService);
   private runTestService = inject(RunTestService);
   private sanitizer = inject(DomSanitizer);
@@ -57,10 +64,6 @@ export class ApiTestComponent implements OnInit {
   selectedStandard: Standard | null = null;
   sanitizedUrls: Map<string, SafeResourceUrl> = new Map();
   standards: Standard[] = [];
-  standardOptions = this.standards.map((standard) => ({
-    label: standard,
-    value: standard,
-  }));
 
   exportItems: { icon: string; label: string; command: () => void }[] = [];
   queueItems: QueueItem[] = [];
@@ -77,6 +80,8 @@ export class ApiTestComponent implements OnInit {
   displayedColumns: string[] = this.columnsSchema.map((col) => col.key);
   displayPageName: string | null = null;
   selectedItem: any | null = null;
+
+  private readonly defaultErrorMessage = 'Failed to run tests';
 
   ngOnInit(): void {
     this.loadStandards();
@@ -109,33 +114,13 @@ export class ApiTestComponent implements OnInit {
     this.apiTestForm.reset();
   }
 
-  private handleTestCompletion(response: any, items: QueueItem[]): void {
-    const updatedCompletedItems = items.map((item, index) => {
-      const responseItem = response.testResults[index];
-      // const result = responseItem?.parentTestId != null ? 'pass' : 'failed';
-      let result;
-      if (responseItem.totalFails > 0) {
-        result = 'failed';
-      } else {
-        result = responseItem?.parentTestId != null ? 'pass' : 'failed';
-      }
-      return {
-        ...item,
-        hasCompleted: true,
-        date: new Date(),
-        standardList: item.standardList,
-        parentTestId: responseItem?.parentTestId,
-        result: result,
-        summaryFileJson: responseItem?.summaryFileJson
-          ? `${environment.apiUrl}${responseItem.summaryFileJson.replace(/^\/api/, '')}`
-          : '',
-        summaryFileHtml: responseItem?.summaryFileHtml
-          ? `${environment.apiUrl}${responseItem.summaryFileHtml.replace(/^\/api/, '')}`
-          : '',
-        standardId: item?.standardId,
-        testStatus: responseItem?.testStatus,
-      };
-    });
+  private handleTestCompletion(
+    response: RunMultipleTestsResponse,
+    items: QueueItem[]
+  ): void {
+    const updatedCompletedItems = items.map((item, index) =>
+      this.buildCompletedItem(item, response?.testResults?.[index])
+    );
 
     this.completedItems = [...updatedCompletedItems, ...this.completedItems];
     this.messageService.add({
@@ -152,9 +137,9 @@ export class ApiTestComponent implements OnInit {
   }
   private handleTestError(error: any, failedItems: QueueItem[]): void {
     console.error('API failed:', error.message);
-    let errorMessage = 'Failed to run tests';
+    let errorMessage = this.defaultErrorMessage;
 
-    if (error.error.errorMessage) {
+    if (error?.error?.errorMessage) {
       errorMessage = error.error.errorMessage;
     }
     this.messageService.add({
@@ -177,59 +162,32 @@ export class ApiTestComponent implements OnInit {
   }
 
   sendToQueue(): void {
-    const { apiUrl, standardId } = this.apiTestForm.value;
-
-    if (apiUrl && standardId) {
-      const newItem = {
-        id: this.generateId(),
-        standardList: this.standardsDropdown,
-        ...this.apiTestForm.value,
-        standardId: this.selectedStandard,
-        hasRun: false,
-        hasCompleted: false,
-      };
-      this.queueItems.unshift(newItem);
-      this.resetForm();
-      this.selectedStandard = null;
+    const newItem = this.buildQueueItem({ hasRun: false });
+    if (!newItem) {
+      return;
     }
+
+    this.queueItems.unshift(newItem);
+    this.clearSelectionState();
   }
 
   async sendToQueueAndRun() {
-    const { apiUrl, standardId } = this.apiTestForm.value;
+    const newItem = this.buildQueueItem({ hasRun: true });
+    if (!newItem) {
+      return;
+    }
 
-    if (apiUrl && standardId) {
-      const newItem = {
-        id: this.generateId(),
-        standardList: this.standardsDropdown,
-        ...this.apiTestForm.value,
-        standardId: this.selectedStandard,
+    const itemsToRun = [
+      newItem,
+      ...this.queueItems.map((item) => ({
+        ...item,
         hasRun: true,
         hasCompleted: false,
-      };
-
-      this.queueItems = [
-        newItem,
-        ...this.queueItems.map((item) => ({
-          ...item,
-          hasRun: true,
-          hasCompleted: false,
-        })),
-      ];
-
-      try {
-        const response = await firstValueFrom(
-          this.handleRunTestBatch(this.queueItems)
-        );
-        if (response) {
-          this.handleTestCompletion(response, this.queueItems);
-        }
-      } catch (error) {
-        this.handleTestError(error, this.queueItems);
-      }
-
-      this.resetForm();
-      this.selectedStandard = null;
-    }
+      })),
+    ];
+    this.queueItems = itemsToRun;
+    await this.executeItems(itemsToRun);
+    this.clearSelectionState();
   }
 
   getSafeUrl(url: string): SafeResourceUrl {
@@ -243,7 +201,7 @@ export class ApiTestComponent implements OnInit {
   }
 
   private generateId(): number {
-    return Math.floor(Math.random() * 1000000);
+    return Math.floor(Math.random() * this.queueIdMax);
   }
 
   async onItemsChange(updatedItems: QueueItem[]): Promise<void> {
@@ -260,16 +218,7 @@ export class ApiTestComponent implements OnInit {
         return updatedItem || queueItem;
       });
 
-      try {
-        const response = await firstValueFrom(
-          this.handleRunTestBatch(itemsToRun)
-        );
-        if (response) {
-          this.handleTestCompletion(response, itemsToRun);
-        }
-      } catch (error) {
-        this.handleTestError(error, itemsToRun);
-      }
+      await this.executeItems(itemsToRun);
     }
   }
 
@@ -389,5 +338,87 @@ export class ApiTestComponent implements OnInit {
       json: 'application/json',
     };
     return mimeTypes[extension || ''] || 'application/octet-stream';
+  }
+
+  private clearSelectionState(): void {
+    this.resetForm();
+    this.selectedStandard = null;
+  }
+
+  private buildQueueItem({
+    hasRun,
+  }: {
+    hasRun: boolean;
+  }): (QueueItem & { hasRun: boolean; hasCompleted: boolean }) | null {
+    const { apiUrl, standardId } = this.apiTestForm.value;
+    if (!apiUrl || !standardId) {
+      return null;
+    }
+
+    return {
+      id: this.generateId(),
+      standardList: this.standardsDropdown,
+      ...this.apiTestForm.value,
+      standardId: this.selectedStandard,
+      hasRun,
+      hasCompleted: false,
+    };
+  }
+
+  private async executeItems(itemsToRun: QueueItem[]): Promise<void> {
+    try {
+      const response = await firstValueFrom(this.handleRunTestBatch(itemsToRun));
+      if (response) {
+        this.handleTestCompletion(response, itemsToRun);
+      }
+    } catch (error) {
+      this.handleTestError(error, itemsToRun);
+    }
+  }
+
+  private buildCompletedItem(item: QueueItem, responseItem: any): QueueItem {
+    const result =
+      responseItem?.totalFails > 0
+        ? 'failed'
+        : responseItem?.parentTestId != null
+          ? 'pass'
+          : 'failed';
+
+    return {
+      ...item,
+      hasCompleted: true,
+      date: new Date(),
+      standardList: item.standardList,
+      parentTestId: responseItem?.parentTestId,
+      result,
+      summaryFileJson: this.buildSummaryFileUrl(responseItem?.summaryFileJson),
+      summaryFileHtml: this.buildSummaryFileUrl(responseItem?.summaryFileHtml),
+      standardId: item?.standardId,
+      testStatus: responseItem?.testStatus,
+    };
+  }
+
+  private buildSummaryFileUrl(path?: string): string {
+    if (!path) {
+      return '';
+    }
+
+    return `${environment.apiUrl}${path.replace(this.summaryApiPrefixRegex, '')}`;
+  }
+
+  private extractErrorMessage(error: unknown): string {
+    if (
+      typeof error === 'object' &&
+      error !== null &&
+      'error' in error &&
+      typeof error.error === 'object' &&
+      error.error !== null &&
+      'errorMessage' in error.error &&
+      typeof error.error.errorMessage === 'string'
+    ) {
+      return error.error.errorMessage;
+    }
+
+    return this.defaultErrorMessage;
   }
 }

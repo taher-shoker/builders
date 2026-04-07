@@ -3,10 +3,14 @@ import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
+  DestroyRef,
   inject,
+  OnDestroy,
   OnInit,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NavigationStart, Router, RouterModule } from '@angular/router';
+import { filter } from 'rxjs';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { ApiTestIconComponent } from 'apps/aquila/src/assets/icons/api-test-icon/api-test-icon.component';
@@ -31,46 +35,60 @@ import { PresentionIconComponent } from 'apps/aquila/src/assets/icons/presention
     LoaderComponent,
   ],
 })
-export class MainLayoutComponent implements OnInit, AfterViewInit {
+export class MainLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   loaderService = inject(LoaderService);
   cdr = inject(ChangeDetectorRef);
   router = inject(Router);
+  private destroyRef = inject(DestroyRef);
   logoSrc!: string;
   isAllowed!: boolean;
   isSidebarVisible = false;
-  private mediaQueryListener!: () => void;
+  private mediaQuery?: MediaQueryList;
+  private mediaQueryListener?: (event: MediaQueryListEvent) => void;
+  private readonly mobileBreakpoint = 768;
 
   toggleSidebar() {
     this.isSidebarVisible = !this.isSidebarVisible;
   }
 
   ngAfterViewInit(): void {
-    this.loaderService.isLoading$.subscribe((res) => {
-      this.cdr.detectChanges();
-    });
+    this.loaderService.isLoading$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => {
+        this.cdr.detectChanges();
+      });
 
-    const mediaQuery = window.matchMedia('(min-width: 768px)');
-    this.mediaQueryListener = () => {
-      if (mediaQuery.matches) {
+    this.mediaQuery = window.matchMedia(
+      `(min-width: ${this.mobileBreakpoint}px)`
+    );
+    this.mediaQueryListener = (event: MediaQueryListEvent) => {
+      if (event.matches) {
         this.isSidebarVisible = true;
       }
     };
-    mediaQuery.addEventListener('change', this.mediaQueryListener);
+    this.mediaQuery.addEventListener('change', this.mediaQueryListener);
   }
 
   ngOnInit(): void {
     this.logoSrc = 'assets/images/mobily-white.svg';
-    if (window.innerWidth > 768) {
-      this.isSidebarVisible = true;
-    }
+    this.isSidebarVisible = window.innerWidth > this.mobileBreakpoint;
 
-    this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        if (window.innerWidth <= 768) {
+    this.router.events
+      .pipe(
+        filter((event): event is NavigationStart => event instanceof NavigationStart),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        if (window.innerWidth <= this.mobileBreakpoint) {
           this.isSidebarVisible = false;
         }
-      }
-    });
+      });
+  }
+
+  ngOnDestroy(): void {
+    if (this.mediaQuery && this.mediaQueryListener) {
+      this.mediaQuery.removeEventListener('change', this.mediaQueryListener);
+    }
   }
 
   navItems = [
