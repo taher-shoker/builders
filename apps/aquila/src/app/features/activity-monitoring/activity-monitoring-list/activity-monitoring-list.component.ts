@@ -117,14 +117,15 @@ export class ActivityMonitoringListComponent
   }
 
   onPageChange(event: {
-    page: number;
-    rows: number;
-    first: number;
+    page?: number;
+    rows?: number;
+    first?: number;
+    pageSize?: number;
   }): void {
-    const pageNumber = event.page + 1;
-    const pageSize = event.rows;
+    const pageNumber = (event.page ?? 0) + 1;
+    const pageSize = event.rows ?? event.pageSize ?? this.rows;
 
-    this.first = event.first;
+    this.first = event.first ?? (pageNumber - 1) * pageSize;
     this.rows = pageSize;
 
     this.updateStorageValues(pageNumber, pageSize);

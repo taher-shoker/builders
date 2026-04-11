@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import {
-  themeConfig,
-  ThemeColors,
-  ThemeName,
-} from '../../../environments/theme.config';
+import { themeConfig, ThemeColors, ThemeName } from '../../../environments/theme.config';
+export type { ThemeName } from '../../../environments/theme.config';
 
 export interface ThemeOption {
   label: string;

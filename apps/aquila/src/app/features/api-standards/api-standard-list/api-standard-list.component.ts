@@ -21,7 +21,10 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
-import { StandardFiltersFormValue } from '../api-standard-filters/api-standard-filters.component';
+import {
+  ProcessedStandardFiltersFormValue,
+  StandardFiltersFormValue,
+} from '../api-standard-filters/api-standard-filters.component';
 
 @Component({
   selector: 'stc-apps-api-standard-list',
@@ -118,7 +121,7 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
 
   private applyFilters(
     standards: Standard[],
-    filters?: StandardFiltersFormValue
+    filters?: ProcessedStandardFiltersFormValue
   ): Standard[] {
     if (!filters || Object.values(filters).every((value) => !value)) {
       return standards;
@@ -214,7 +217,7 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
   }
 
   onFiltersChanged(filters: StandardFiltersFormValue): void {
-    const processedFilters: StandardFiltersFormValue = {
+    const processedFilters: ProcessedStandardFiltersFormValue = {
       ...filters,
       publishUpdate: filters.publishUpdate
         ? this.formatDate(filters.publishUpdate)

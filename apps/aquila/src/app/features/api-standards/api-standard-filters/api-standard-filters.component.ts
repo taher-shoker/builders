@@ -19,8 +19,15 @@ import { SharedUiModule } from '@stc-apps/shared-ui';
 
 export interface StandardFiltersFormValue {
   name: string;
-  publishUpdate: Date | null;
-  lastUpdate: Date | null;
+  publishUpdate: Date | string | null;
+  lastUpdate: Date | string | null;
+  businessArea: string | null;
+}
+
+export interface ProcessedStandardFiltersFormValue {
+  name: string;
+  publishUpdate: string | null;
+  lastUpdate: string | null;
   businessArea: string | null;
 }
 
