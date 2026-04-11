@@ -1,11 +1,13 @@
 import {
   Component,
+  DestroyRef,
   ElementRef,
   inject,
   OnInit,
   Renderer2,
   ViewChild,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { CommonModule } from '@angular/common';
 import {
   FormBuilder,
@@ -20,6 +22,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AuthService } from '../services/auth.service';
 import { ToastrService } from 'ngx-toastr';
 import { MatError } from '@angular/material/form-field';
+import { ThemeService } from '../../../core/services/theme.service';
 
 @Component({
   selector: 'stc-apps-login',
@@ -40,12 +43,21 @@ export class LoginComponent implements OnInit {
   private authService = inject(AuthService);
   private toastr = inject(ToastrService);
   private renderer = inject(Renderer2);
+  private readonly themeService = inject(ThemeService);
+  private readonly destroyRef = inject(DestroyRef);
 
   @ViewChild('emailInput') emailInput!: ElementRef;
   form!: FormGroup;
+  loginLogoPath = '';
 
   ngOnInit(): void {
     this.loginForm();
+    this.loginLogoPath = this.themeService.getLoginLogoPath();
+    this.themeService.loginLogoPath$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((path) => {
+        this.loginLogoPath = path;
+      });
   }
 
   loginForm() {

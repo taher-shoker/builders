@@ -17,6 +17,13 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { debounceTime } from 'rxjs';
 import { SharedUiModule } from '@stc-apps/shared-ui';
 
+export interface StandardFiltersFormValue {
+  name: string;
+  publishUpdate: Date | null;
+  lastUpdate: Date | null;
+  businessArea: string | null;
+}
+
 @Component({
   selector: 'stc-apps-api-standard-filters',
   standalone: true,
@@ -37,7 +44,7 @@ export class ApiStandardFiltersComponent implements OnInit {
   businessAreaOptions: InputSignal<{ label: string; value: any }[]> = input<
     { label: string; value: any }[]
   >([]);
-  @Output() filtersChanged = new EventEmitter<any>();
+  @Output() filtersChanged = new EventEmitter<StandardFiltersFormValue>();
   @Output() sortChanged = new EventEmitter<{
     label: string;
     value: 'asc' | 'desc';

@@ -21,6 +21,9 @@ import { LoaderService } from '../../core/services/loader.service';
 import { LoaderComponent } from '../components/loader/loader.component';
 // eslint-disable-next-line @nx/enforce-module-boundaries
 import { PresentionIconComponent } from 'apps/aquila/src/assets/icons/presention-icon/presention-icon.component';
+// eslint-disable-next-line @nx/enforce-module-boundaries
+import { SettingsIconComponent } from 'apps/aquila/src/assets/icons/settings-icon/settings-icon.component';
+import { ThemeService } from '../../core/services/theme.service';
 
 @Component({
   selector: 'stc-apps-main-layout',
@@ -39,6 +42,7 @@ export class MainLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   loaderService = inject(LoaderService);
   cdr = inject(ChangeDetectorRef);
   router = inject(Router);
+  themeService = inject(ThemeService);
   private destroyRef = inject(DestroyRef);
   logoSrc!: string;
   isAllowed!: boolean;
@@ -70,7 +74,12 @@ export class MainLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.logoSrc = 'assets/images/mobily-white.svg';
+    this.logoSrc = this.themeService.getAppLogoPath();
+    this.themeService.appLogoPath$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe((path) => {
+        this.logoSrc = path;
+      });
     this.isSidebarVisible = window.innerWidth > this.mobileBreakpoint;
 
     this.router.events
@@ -109,6 +118,12 @@ export class MainLayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       name: 'Activity Monitoring',
       url: 'activity-monitoring',
       iconPath: PresentionIconComponent,
+    },
+    {
+      id: 4,
+      name: 'Settings',
+      url: 'settings',
+      iconPath: SettingsIconComponent,
     },
   ];
 

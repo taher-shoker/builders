@@ -21,6 +21,7 @@ import { ConfirmationService, MessageService } from 'primeng/api';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
+import { StandardFiltersFormValue } from '../api-standard-filters/api-standard-filters.component';
 
 @Component({
   selector: 'stc-apps-api-standard-list',
@@ -117,7 +118,7 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
 
   private applyFilters(
     standards: Standard[],
-    filters?: Record<string, unknown>
+    filters?: StandardFiltersFormValue
   ): Standard[] {
     if (!filters || Object.values(filters).every((value) => !value)) {
       return standards;
@@ -126,21 +127,21 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
     return standards.filter((standard) => {
       const matches = {
         name:
-          !filters['name'] ||
+          !filters.name ||
           standard.name
             .toLowerCase()
-            .includes(String(filters['name']).toLowerCase()),
+            .includes(String(filters.name).toLowerCase()),
         publishUpdate:
-          !filters['publishUpdate'] ||
+          !filters.publishUpdate ||
           this.formatDate(standard.publishUpdate as Date).slice(0, -3) ===
-            this.formatDate(filters['publishUpdate'] as Date),
+            this.formatDate(filters.publishUpdate),
         lastUpdate:
-          !filters['lastUpdate'] ||
+          !filters.lastUpdate ||
           this.formatDate(standard.lastUpdate as Date).slice(0, -3) ===
-            this.formatDate(filters['lastUpdate'] as Date).slice(0, -3),
+            this.formatDate(filters.lastUpdate).slice(0, -3),
         businessArea:
-          !filters['businessArea'] ||
-          standard.businessArea === filters['businessArea'],
+          !filters.businessArea ||
+          standard.businessArea === filters.businessArea,
       };
 
       return Object.values(matches).every(Boolean);
@@ -212,14 +213,14 @@ export class ApiStandardListComponent implements OnInit, AfterViewInit {
     });
   }
 
-  onFiltersChanged(filters: Record<string, unknown>): void {
-    const processedFilters = {
+  onFiltersChanged(filters: StandardFiltersFormValue): void {
+    const processedFilters: StandardFiltersFormValue = {
       ...filters,
-      publishUpdate: filters['publishUpdate']
-        ? this.formatDate(filters['publishUpdate'] as Date)
+      publishUpdate: filters.publishUpdate
+        ? this.formatDate(filters.publishUpdate)
         : null,
-      lastUpdate: filters['lastUpdate']
-        ? this.formatDate(filters['lastUpdate'] as Date)
+      lastUpdate: filters.lastUpdate
+        ? this.formatDate(filters.lastUpdate)
         : null,
     };
 

@@ -24,7 +24,7 @@
   .card {
     text-align: center;
     width: 50%;
-    background-color: #124f75;
+    background-color: var(--theme-sidebar-bg, #124f75);
     position: relative;
     min-height: 630px;
     border-radius: unset;

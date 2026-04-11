@@ -22,7 +22,7 @@
         filter.label +
         ': ' +
         (filter.key === 'startedAt'
-          ? ($any(filter.value) | date : 'dd MMM yyyy \'at\' hh:mm a')
+          ? (formatDateFilterValue(filter.value) | date : 'dd MMM yyyy \'at\' hh:mm a')
           : filter.value)
       "
       [removable]="true"

@@ -1,0 +1,203 @@
+<div class="settings-page">
+  <h3>Settings</h3>
+
+  <div class="settings-page_section">
+    <h4>Theme</h4>
+    <p>Choose your preferred application theme.</p>
+
+    <div class="settings-page_theme-options">
+      @for (option of themeOptions; track option.value) {
+      <button
+        type="button"
+        class="settings-page_theme-btn"
+        [ngClass]="{ active: selectedTheme === option.value }"
+        (click)="onThemeChanged(option.value)"
+      >
+        <span class="settings-page_theme-name">{{ option.label }}</span>
+      </button>
+      }
+    </div>
+
+    @if (selectedTheme === 'custom') {
+    <div class="settings-page_custom-theme">
+      <h4>Custom Theme Colors</h4>
+      <p>Choose your colors and submit to apply and save override.</p>
+
+      <div class="settings-page_import-block">
+        <label class="settings-page_color-field">
+          <span>Paste generated object / JSON</span>
+          <textarea
+            class="settings-page_snippet-input"
+            [ngModel]="importSnippet"
+            (ngModelChange)="importSnippet = $event"
+            placeholder="Paste custom object here, then click Parse"
+            rows="6"
+          ></textarea>
+        </label>
+        <div class="settings-page_actions start">
+          <stc-apps-button
+            [buttonText]="'Parse Snippet'"
+            [buttonType]="'stc-color-outline'"
+            (btnClick)="applyImportedSnippet()"
+          ></stc-apps-button>
+          @if (importStatusMessage) {
+          <div class="import-status-message">{{ importStatusMessage }}</div>
+          }
+        </div>
+      </div>
+
+      <div class="settings-page_custom-grid">
+        <label class="settings-page_color-field">
+          <span>Primary Color</span>
+          <div class="settings-page_color-inputs">
+            <input
+              type="color"
+              class="settings-page_color-picker"
+              [(ngModel)]="customColors.primaryColor"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+            <input
+              type="text"
+              class="settings-page_hex-input"
+              [(ngModel)]="customColors.primaryColor"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+          </div>
+        </label>
+
+        <label class="settings-page_color-field">
+          <span>Primary Hover Color</span>
+          <div class="settings-page_color-inputs">
+            <input
+              type="color"
+              class="settings-page_color-picker"
+              [(ngModel)]="customColors.primaryHoverColor"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+            <input
+              type="text"
+              class="settings-page_hex-input"
+              [(ngModel)]="customColors.primaryHoverColor"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+          </div>
+        </label>
+
+        <label class="settings-page_color-field">
+          <span>Sidebar Background</span>
+          <div class="settings-page_color-inputs">
+            <input
+              type="color"
+              class="settings-page_color-picker"
+              [(ngModel)]="customColors.sidebarBg"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+            <input
+              type="text"
+              class="settings-page_hex-input"
+              [(ngModel)]="customColors.sidebarBg"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+          </div>
+        </label>
+
+        <label class="settings-page_color-field">
+          <span>Sidebar Hover Background</span>
+          <div class="settings-page_color-inputs">
+            <input
+              type="color"
+              class="settings-page_color-picker"
+              [(ngModel)]="customColors.sidebarLinkHoverBg"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+            <input
+              type="text"
+              class="settings-page_hex-input"
+              [(ngModel)]="customColors.sidebarLinkHoverBg"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+          </div>
+        </label>
+
+        <label class="settings-page_color-field">
+          <span>Page Background</span>
+          <div class="settings-page_color-inputs">
+            <input
+              type="color"
+              class="settings-page_color-picker"
+              [(ngModel)]="customColors.pageBg"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+            <input
+              type="text"
+              class="settings-page_hex-input"
+              [(ngModel)]="customColors.pageBg"
+              (ngModelChange)="onCustomColorChanged()"
+            />
+          </div>
+        </label>
+      </div>
+
+      <label class="settings-page_color-field settings-page_logo-field">
+        <span>App Logo Path</span>
+        <input
+          type="text"
+          class="settings-page_hex-input"
+          [ngModel]="logoPath"
+          (ngModelChange)="onLogoPathChanged($event)"
+          placeholder="assets/images/mobily-white.svg"
+        />
+      </label>
+
+      <label class="settings-page_color-field settings-page_logo-field">
+        <span>Login Logo Path</span>
+        <input
+          type="text"
+          class="settings-page_hex-input"
+          [ngModel]="loginLogoPath"
+          (ngModelChange)="onLoginLogoPathChanged($event)"
+          placeholder="assets/images/mobily-white.svg"
+        />
+      </label>
+
+      <div class="settings-page_actions">
+        <stc-apps-button
+          [buttonText]="'Submit Theme'"
+          [buttonType]="'primary'"
+          (btnClick)="submitTheme()"
+        ></stc-apps-button>
+      </div>
+
+      @if (showGeneratedThemePopup) {
+      <div class="settings-page_generated-config-overlay">
+        <div class="settings-page_generated-config">
+          <button
+            class="close-button"
+            type="button"
+            (click)="closeGeneratedThemePopup()"
+          >
+            X
+          </button>
+          <div class="settings-page_generated-header">
+            <h4 class="settings-page_custom-title">Generated Config Object</h4>
+            <stc-apps-button
+              [buttonText]="'Copy'"
+              [buttonType]="'stc-color-outline'"
+              (btnClick)="copyGeneratedThemeSnippet()"
+            ></stc-apps-button>
+          </div>
+          <p>
+            Copy this object and paste it under <code>themes.custom</code> in
+            <code>theme.config.ts</code>.
+          </p>
+          <pre class="settings-page_config-preview">{{ generatedThemeSnippet }}</pre>
+          @if (copyStatusMessage) {
+          <div class="copy-status-message">{{ copyStatusMessage }}</div>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    }
+  </div>
+</div>

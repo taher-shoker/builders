@@ -6,7 +6,7 @@
 @import "https://fonts.googleapis.com/icon?family=Material+Icons";
 
 body {
-    background-color: #F9FAFB;
+    background-color: var(--theme-page-bg, #F9FAFB);
 
     button {
         padding: 8px 12px;
@@ -27,4 +27,21 @@ body {
 /* Scope Mobily branding to Aquila only; keep shared tokens global-default. */
 :root {
     --stc-color: #2d9ad6;
+    --stc-color-hover: #2276a3;
+    --theme-sidebar-bg: #124f75;
+    --theme-sidebar-link-hover-bg: #ffffff2e;
+    --theme-page-bg: #f9fafb;
+}
+
+.btn.primary,
+.p-button.p-button-primary:not(.p-button-outlined) {
+    background-color: var(--stc-color) !important;
+    border-color: var(--stc-color) !important;
+    color: var(--whiteColor) !important;
+}
+
+.btn.primary:hover,
+.p-button.p-button-primary:not(.p-button-outlined):hover {
+    background-color: var(--stc-color-hover) !important;
+    border-color: var(--stc-color-hover) !important;
 }

@@ -58,6 +58,13 @@ export const appRoutes: Route[] = [
             './features/activity-monitoring/activity-monitoring-list/activity-monitoring-list.component'
           ).then((m) => m.ActivityMonitoringListComponent),
       },
+      {
+        path: 'settings',
+        loadComponent: () =>
+          import('./features/settings/settings.component').then(
+            (m) => m.SettingsComponent
+          ),
+      },
     ],
   },
   {

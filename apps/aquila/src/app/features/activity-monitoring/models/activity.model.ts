@@ -19,3 +19,5 @@ export interface ActivityApiResponse {
   userActivities: Activity[];
   count: number;
 }
+
+export type ActivityStatus = Activity['status'];

@@ -16,7 +16,7 @@ import { ActivityMonitoringFiltersComponent } from '../activity-monitoring-filte
 import { ActivityMonitoringService } from '../services/activity-monitoring.service';
 import { ChipModule } from 'primeng/chip';
 import { Subject, takeUntil } from 'rxjs';
-import { Activity } from '../models/activity.model';
+import { Activity, ActivityStatus } from '../models/activity.model';
 import { PaginatorModule } from 'primeng/paginator';
 import { TooltipModule } from 'primeng/tooltip';
 
@@ -116,7 +116,11 @@ export class ActivityMonitoringListComponent
       });
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: {
+    page: number;
+    rows: number;
+    first: number;
+  }): void {
     const pageNumber = event.page + 1;
     const pageSize = event.rows;
 
@@ -180,6 +184,22 @@ export class ActivityMonitoringListComponent
     return key === 'startedAt' && typeof value === 'string'
       ? new Date(value)
       : value;
+  }
+
+  formatDateFilterValue(value: unknown): Date | string | undefined {
+    if (value instanceof Date) {
+      return value;
+    }
+
+    if (typeof value === 'string') {
+      return new Date(value);
+    }
+
+    return undefined;
+  }
+
+  isActivityStatus(value: unknown): value is ActivityStatus {
+    return value === 'SUCCESS' || value === 'FAILED';
   }
 
   removeFilter(

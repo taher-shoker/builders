@@ -31,7 +31,7 @@ p-splitbutton {
       &-primary:not(.p-button-outlined) {
         background-color: var(--stc-color);
         &:hover {
-          background-color: #003dcc;
+          background-color: var(--stc-color-hover);
         }
       }
 
